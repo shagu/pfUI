@@ -1,0 +1,28 @@
+## Interface: 11200
+## Title: |cff33ffccpf|cffffffffUI
+## Author: Eric (Shagu) Mauser, 2016
+## Notes: An User Intface written completely from scratch
+## Version: 0.1 BETA
+# XXSavedVariables: pfUI.config, pfUI.playerDB
+
+# main
+pfUI.lua
+
+env\colors.lua
+env\locales.lua
+
+modules\actionbar.lua
+modules\chat.lua
+modules\font.lua
+modules\panel.lua
+modules\player.lua
+modules\target.lua
+modules\targettarget.lua
+modules\pet.lua
+modules\minimap.lua
+modules\skin.lua
+modules\xpbar.lua
+modules\autoshift.lua
+modules\bags.lua
+modules\cooldown.lua
+modules\uf_tukui.lua
