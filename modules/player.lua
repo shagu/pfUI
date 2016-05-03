@@ -8,7 +8,7 @@ pfUI.uf.player:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOM", -75, 125)
 pfUI.uf.player:RegisterForClicks('LeftButtonUp', 'RightButtonUp')
 pfUI.uf.player:SetScript("OnClick", function ()
     if arg1 == "RightButton" then
-      ToggleDropDownMenu(1, nil, pfUI.uf.player.dropdown,"cursor")
+      ToggleDropDownMenu(1, nil, pfUI.uf.player.Dropdown,"cursor")
       if UnitIsPartyLeader("player") then
         UIDropDownMenu_AddButton({text = "Reset Instances", func = ResetInstances, notCheckable = 1}, 1)
       end
@@ -17,15 +17,15 @@ pfUI.uf.player:SetScript("OnClick", function ()
     end
   end)
 
-pfUI.uf.player.dropdown = getglobal("PlayerFrameDropDown")
-pfUI.uf.player.dropdowni = function()
+pfUI.uf.player.Dropdown = getglobal("PlayerFrameDropDown")
+function pfUI.uf.player.Dropdowni()
   -- add reset button when alone
   if not (UnitInRaid("player") or GetNumPartyMembers() > 0) then
     UIDropDownMenu_AddButton({text = "Reset Instances", func = ResetInstances, notCheckable = 1}, 1)
   end
-  UnitPopup_ShowMenu(pfUI.uf.player.dropdown, "SELF", "player")
+  UnitPopup_ShowMenu(pfUI.uf.player.Dropdown, "SELF", "player")
 end
-UIDropDownMenu_Initialize(pfUI.uf.player.dropdown, pfUI.uf.player.dropdowni, "MENU")
+UIDropDownMenu_Initialize(pfUI.uf.player.Dropdown, pfUI.uf.player.Dropdowni, "MENU")
 
 pfUI.uf.player:RegisterEvent("PLAYER_ENTERING_WORLD")
 pfUI.uf.player:RegisterEvent("UNIT_HEALTH")
@@ -121,10 +121,10 @@ pfUI.uf.player.hp.bar.portrait:SetAllPoints(pfUI.uf.player.hp.bar)
 pfUI.uf.player.hp.bar.portrait:RegisterEvent("UNIT_PORTRAIT_UPDATE")
 pfUI.uf.player.hp.bar.portrait:RegisterEvent("UNIT_MODEL_CHANGED")
 pfUI.uf.player.hp.bar.portrait:RegisterEvent("PLAYER_ENTERING_WORLD")
-pfUI.uf.player.hp.bar.portrait:SetScript("OnEvent", function() this.update() end)
-pfUI.uf.player.hp.bar.portrait:SetScript("OnShow", function() this.update() end)
+pfUI.uf.player.hp.bar.portrait:SetScript("OnEvent", function() this:Update() end)
+pfUI.uf.player.hp.bar.portrait:SetScript("OnShow", function() this:Update() end)
 
-pfUI.uf.player.hp.bar.portrait.update = function ()
+function pfUI.uf.player.hp.bar.portrait.Update()
   pfUI.uf.player.hp.bar.portrait:SetUnit("player");
   pfUI.uf.player.hp.bar.portrait:SetCamera(0)
   pfUI.uf.player.hp.bar.portrait:SetAlpha(0.10)
@@ -168,7 +168,7 @@ pfUI.uf.player.powerText:SetPoint("LEFT",pfUI.uf.player.hp.bar, "LEFT", 10, 0)
 pfUI.uf.player.buff = CreateFrame("Frame", nil)
 pfUI.uf.player.buff:RegisterEvent("PLAYER_AURAS_CHANGED")
 pfUI.uf.player.buff:SetScript("OnEvent", function()
-    pfUI.uf.player.buff.refreshBuffs()
+    pfUI.uf.player.buff.RefreshBuffs()
   end)
 
 pfUI.uf.player.buff.buffs = {}
@@ -224,7 +224,7 @@ for i=1, 16 do
 
 end
 
-pfUI.uf.player.buff.refreshBuffs = function ()
+function pfUI.uf.player.buff.RefreshBuffs()
   for i=1, 16 do
     local stacks = GetPlayerBuffApplications(GetPlayerBuff(i-1,"HELPFUL"))
     pfUI.uf.player.buff.buffs[i]:SetBackdrop(
@@ -251,7 +251,7 @@ end
 pfUI.uf.player.debuff = CreateFrame("Frame", nil)
 pfUI.uf.player.debuff:RegisterEvent("PLAYER_AURAS_CHANGED")
 pfUI.uf.player.debuff:SetScript("OnEvent", function()
-    pfUI.uf.player.debuff.refreshBuffs()
+    pfUI.uf.player.debuff.RefreshBuffs()
   end)
 
 pfUI.uf.player.debuff.debuffs = {}
@@ -312,7 +312,7 @@ for i=1, 16 do
 
 end
 
-pfUI.uf.player.debuff.refreshBuffs = function ()
+function pfUI.uf.player.debuff.RefreshBuffs()
   for i=1, 16 do
     local row = 0;
     local top = 0;

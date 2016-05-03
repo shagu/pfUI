@@ -171,10 +171,10 @@ pfUI.uf.target.hp.bar.portrait:RegisterEvent("UNIT_MODEL_CHANGED")
 pfUI.uf.target.hp.bar.portrait:RegisterEvent("PLAYER_ENTERING_WORLD")
 pfUI.uf.target.hp.bar.portrait:RegisterEvent("PLAYER_TARGET_CHANGED")
 
-pfUI.uf.target.hp.bar.portrait:SetScript("OnEvent", function() this.update() end)
-pfUI.uf.target.hp.bar.portrait:SetScript("OnShow", function() this.update() end)
+pfUI.uf.target.hp.bar.portrait:SetScript("OnEvent", function() this:Update() end)
+pfUI.uf.target.hp.bar.portrait:SetScript("OnShow", function() this:Update() end)
 
-pfUI.uf.target.hp.bar.portrait.update = function ()
+function pfUI.uf.target.hp.bar.portrait.Update()
   pfUI.uf.target.hp.bar.portrait:SetUnit("target");
   pfUI.uf.target.hp.bar.portrait:SetCamera(0)
   pfUI.uf.target.hp.bar.portrait:SetAlpha(0.10)
@@ -269,7 +269,7 @@ pfUI.uf.target.buff:RegisterEvent("PLAYER_AURAS_CHANGED")
 pfUI.uf.target.buff:RegisterEvent("PLAYER_TARGET_CHANGED")
 pfUI.uf.target.buff:RegisterEvent("UNIT_AURA")
 pfUI.uf.target.buff:SetScript("OnEvent", function()
-    pfUI.uf.target.buff.refreshBuffs()
+    pfUI.uf.target.buff.RefreshBuffs()
   end)
 
 pfUI.uf.target.buff.buffs = {}
@@ -303,7 +303,7 @@ for i=1, 16 do
     end)
 end
 
-pfUI.uf.target.buff.refreshBuffs = function ()
+function pfUI.uf.target.buff.RefreshBuffs()
   for i=1, 16 do
     local texture, stacks = UnitBuff("target",i)
     pfUI.uf.target.buff.buffs[i]:SetBackdrop(
@@ -330,7 +330,7 @@ pfUI.uf.target.debuff:RegisterEvent("PLAYER_AURAS_CHANGED")
 pfUI.uf.target.debuff:RegisterEvent("PLAYER_TARGET_CHANGED")
 pfUI.uf.target.debuff:RegisterEvent("UNIT_AURA")
 pfUI.uf.target.debuff:SetScript("OnEvent", function()
-    pfUI.uf.target.debuff.refreshBuffs()
+    pfUI.uf.target.debuff.RefreshBuffs()
   end)
 
 pfUI.uf.target.debuff.debuffs = {}
@@ -373,7 +373,7 @@ for i=1, 16 do
     end)
 end
 
-pfUI.uf.target.debuff.refreshBuffs = function ()
+function pfUI.uf.target.debuff.RefreshBuffs()
   for i=1, 16 do
     local row = 0;
     local top = 0;

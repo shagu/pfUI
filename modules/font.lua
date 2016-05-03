@@ -4,10 +4,10 @@ pfUI.font:RegisterEvent("VARIABLES_LOADED")
 pfUI.font:RegisterEvent("ADDON_LOADED")
 
 pfUI.font:SetScript("OnEvent", function()
-    pfUI.font:loadFonts()
+    pfUI.font:LoadFonts()
   end)
 
-pfUI.font.loadFonts = function ()
+function pfUI.font.LoadFonts()
   local font = "Interface\\AddOns\\pfUI\\fonts\\arial.ttf"
   local combat_font = "Interface\\AddOns\\pfUI\\fonts\\combat_font.ttf"
 

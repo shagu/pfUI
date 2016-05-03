@@ -125,7 +125,7 @@ pfUI.uf.pet.buff:RegisterEvent("PLAYER_AURAS_CHANGED")
 pfUI.uf.pet.buff:RegisterEvent("PLAYER_TARGET_CHANGED")
 pfUI.uf.pet.buff:RegisterEvent("UNIT_AURA")
 pfUI.uf.pet.buff:SetScript("OnEvent", function()
-    pfUI.uf.pet.buff.refreshBuffs()
+    pfUI.uf.pet.buff.RefreshBuffs()
   end)
 
 pfUI.uf.pet.buff.buffs = {}
@@ -160,7 +160,7 @@ for i=1, 16 do
     end)
 end
 
-pfUI.uf.pet.buff.refreshBuffs = function ()
+function pfUI.uf.pet.buff.RefreshBuffs()
   local buffsize = pfUI.uf.pet.hp:GetWidth()/8 - 1
   for i=1, 16 do
     local texture, stacks = UnitBuff("pet",i)
@@ -188,7 +188,7 @@ pfUI.uf.pet.debuff:RegisterEvent("PLAYER_AURAS_CHANGED")
 pfUI.uf.pet.debuff:RegisterEvent("PLAYER_TARGET_CHANGED")
 pfUI.uf.pet.debuff:RegisterEvent("UNIT_AURA")
 pfUI.uf.pet.debuff:SetScript("OnEvent", function()
-    pfUI.uf.pet.debuff.refreshBuffs()
+    pfUI.uf.pet.debuff.RefreshBuffs()
   end)
 
 pfUI.uf.pet.debuff.debuffs = {}
@@ -232,7 +232,7 @@ for i=1, 16 do
     end)
 end
 
-pfUI.uf.pet.debuff.refreshBuffs = function ()
+function pfUI.uf.pet.debuff.RefreshBuffs()
   local debuffsize = pfUI.uf.pet.hp:GetWidth()/8 - 1
   for i=1, 16 do
     local row = 0;

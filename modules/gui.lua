@@ -19,7 +19,7 @@ pfUI.gui:SetScript("OnMouseUp",function()
     pfUI.gui:StopMovingOrSizing()
   end)
 
-function pfUI.gui.switchTab(frame)
+function pfUI.gui.SwitchTab(frame)
   local elements = { pfUI.gui.global, pfUI.gui.uf }
   for _, hide in pairs(elements) do
     hide:Hide()
@@ -88,7 +88,7 @@ pfUI.gui.global.switch.text:SetPoint("CENTER", 0, 0)
 pfUI.gui.global.switch.text:SetFontObject(GameFontWhite)
 pfUI.gui.global.switch.text:SetText("Global")
 pfUI.gui.global.switch:SetScript("OnClick", function()
-    pfUI.gui.switchTab(pfUI.gui.global)
+    pfUI.gui.SwitchTab(pfUI.gui.global)
   end)
 
 pfUI.gui.global.title = pfUI.gui.global:CreateFontString("Status", "LOW", "GameFontNormal")
@@ -120,7 +120,7 @@ pfUI.gui.uf.switch.text:SetPoint("CENTER", 0, 0)
 pfUI.gui.uf.switch.text:SetFontObject(GameFontWhite)
 pfUI.gui.uf.switch.text:SetText("UnitFrames")
 pfUI.gui.uf.switch:SetScript("OnClick", function()
-    pfUI.gui.switchTab(pfUI.gui.uf)
+    pfUI.gui.SwitchTab(pfUI.gui.uf)
   end)
 
 pfUI.gui.uf.title = pfUI.gui.uf:CreateFontString("Status", "LOW", "GameFontNormal")
@@ -148,4 +148,4 @@ pfUI.gui.unlockFrames:SetScript("OnClick", function()
   end)
 
 -- Switch to default View: global
-pfUI.gui.switchTab(pfUI.gui.global)
+pfUI.gui.SwitchTab(pfUI.gui.global)

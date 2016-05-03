@@ -51,8 +51,8 @@ pfUI.chat:SetScript("OnEvent", function()
         v:SetVertexColor(RAID_CLASS_COLORS[class].r + .3 * .5, RAID_CLASS_COLORS[class].g +.3 * .5, RAID_CLASS_COLORS[class].b +.3 * .5,1)
       end
 
-      pfUI.chat.setupPositions()
-      pfUI.chat.setupChannels()
+      pfUI.chat.SetupPositions()
+      pfUI.chat.SetupChannels()
 
       for i=1, NUM_CHAT_WINDOWS do
         for j,v in ipairs({getglobal("ChatFrame" .. i .. "Tab"):GetRegions()}) do
@@ -170,7 +170,7 @@ function ChatFrame_OnUpdate (arg1)
   Hook_ChatFrame_OnUpdate(arg1)
 end
 
-pfUI.chat.setupPositions = function ()
+function pfUI.chat.SetupPositions()
   -- set position of Main Window
   ChatFrame1:ClearAllPoints()
   ChatFrame1:SetPoint("TOPLEFT", pfUI.chat.left ,"TOPLEFT", 5, -25)
@@ -199,7 +199,7 @@ pfUI.chat.setupPositions = function ()
   ChatFrame3:SetUserPlaced(1);
 end
 
-pfUI.chat.setupChannels = function ()
+function pfUI.chat.SetupChannels()
   ChatFrame_RemoveAllMessageGroups(ChatFrame1)
   ChatFrame_RemoveAllMessageGroups(ChatFrame3)
 
