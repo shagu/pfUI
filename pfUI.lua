@@ -1,6 +1,15 @@
-SLASH_RELOAD1 = '/rl'; -- 3.
-function SlashCmdList.RELOAD(msg, editbox) -- 4.
+SLASH_RELOAD1 = '/rl';
+function SlashCmdList.RELOAD(msg, editbox)
   ReloadUI()
+end
+
+SLASH_PFUI1 = '/pfui';
+function SlashCmdList.PFUI(msg, editbox)
+  if pfUI.gui:IsShown() then
+    pfUI.gui:Hide()
+  else
+    pfUI.gui:Show()
+  end
 end
 
 pfUI = CreateFrame("Frame",nil,UIParent)
