@@ -11,8 +11,8 @@ pfUI.uf.target:SetScript("OnEvent", function()
       pfUI.uf.target:Hide()
     end
   end)
-pfUI.uf.target:SetWidth(pfUI.config.unitframes.width)
-pfUI.uf.target:SetHeight(pfUI.config.unitframes.height+pfUI.config.unitframes.pheight)
+pfUI.uf.target:SetWidth(pfUI.config.unitframes.target.width)
+pfUI.uf.target:SetHeight(pfUI.config.unitframes.target.height+pfUI.config.unitframes.target.pheight)
 pfUI.uf.target:SetPoint("BOTTOMLEFT", UIParent, "BOTTOM", 75, 125)
 
 pfUI.uf.target:RegisterForClicks('LeftButtonUp', 'RightButtonUp')
@@ -150,7 +150,7 @@ pfUI.uf.target:SetScript("OnUpdate", function()
 
 pfUI.uf.target.hp = CreateFrame("Frame",nil, pfUI.uf.target)
 pfUI.uf.target.hp:SetBackdrop(pfUI.backdrop)
-pfUI.uf.target.hp:SetHeight(pfUI.config.unitframes.height)
+pfUI.uf.target.hp:SetHeight(pfUI.config.unitframes.target.height)
 pfUI.uf.target.hp:SetPoint("TOPLEFT",pfUI.uf.target,"TOPLEFT")
 pfUI.uf.target.hp:SetPoint("TOPRIGHT",pfUI.uf.target,"TOPRIGHT")
 

@@ -28,9 +28,16 @@ pfUI.config = {
     buff_size = "22",
     debuff_size = "22",
     layout = "default",
-    width = 200,
-    height = 50,
-    pheight = 10,
+    ["player"] = {
+      width = 200,
+      height = 50,
+      pheight = 10,
+    },
+    ["target"] = {
+      width = 200,
+      height = 50,
+      pheight = 10,
+    },
   },
   ["bars"] = {
     icon_size = "22",
