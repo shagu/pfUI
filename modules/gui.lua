@@ -27,6 +27,44 @@ function pfUI.gui.switchTab(frame)
   frame:Show()
 end
 
+function pfUI.gui.UnlockFrames()
+  -- don't call it "grid" to avoid confusion with grid (addon) module
+  pfUI.gitter = CreateFrame("Frame", nil, UIParent)
+  pfUI.gitter:SetFrameStrata("BACKGROUND")
+  pfUI.gitter:SetPoint("TOPLEFT", 0, 0, "TOPLEFT")
+  pfUI.gitter:SetPoint("BOTTOMRIGHT", 0, 0, "BOTTOMRIGHT")
+  pfUI.gitter:SetBackdrop(pfUI.backdrop_gitter)
+  pfUI.gitter:SetBackdropColor(0,0,0,1)
+
+  local movable = { pfUI.minimap, pfUI.chat.left, pfUI.chat.right,
+    pfUI.uf.player, pfUI.uf.target, pfUI.uf.targettarget, pfUI.uf.pet,
+    pfUI.bars.shapeshift, pfUI.bars.bottomleft, pfUI.bars.bottomright,
+    pfUI.bars.vertical, pfUI.bars.pet, pfUI.bars.bottom }
+
+  for _,frame in pairs(movable) do
+    local frame = frame
+    frame:Show()
+    frame:SetMovable(true)
+
+    frame.drag = CreateFrame("Frame", nil, frame)
+    frame.drag:SetAllPoints(frame)
+    frame.drag:SetFrameStrata("DIALOG")
+    frame.drag.bg = frame.drag:CreateTexture()
+    frame.drag.bg:SetAllPoints(frame.drag)
+    frame.drag.bg:SetTexture(.2,1,.8,1)
+    frame.drag:SetAlpha(.25)
+    frame.drag:EnableMouse(true)
+
+    frame.drag:SetScript("OnMouseDown",function()
+        frame:StartMoving()
+      end)
+
+    frame.drag:SetScript("OnMouseUp",function()
+        frame:StopMovingOrSizing()
+      end)
+  end
+end
+
 -- Global Settings
 pfUI.gui.global = CreateFrame("Frame", nil, pfUI.gui)
 pfUI.gui.global:SetWidth(400)
@@ -91,4 +129,23 @@ pfUI.gui.uf.title:SetPoint("TOP", 0, -10)
 pfUI.gui.uf.title:SetFontObject(GameFontWhite)
 pfUI.gui.uf.title:SetText("UnitFrame Settings")
 
+-- Unlock Frames
+pfUI.gui.unlockFrames = CreateFrame("Button", nil, pfUI.gui)
+pfUI.gui.unlockFrames:ClearAllPoints()
+pfUI.gui.unlockFrames:SetWidth(80)
+pfUI.gui.unlockFrames:SetHeight(20)
+pfUI.gui.unlockFrames:SetPoint("BOTTOMLEFT", 0, 0)
+pfUI.gui.unlockFrames:SetBackdrop(pfUI.backdrop)
+pfUI.gui.unlockFrames.text = pfUI.gui.unlockFrames:CreateFontString("Status", "LOW", "GameFontNormal")
+pfUI.gui.unlockFrames.text:SetFont("Interface\\AddOns\\pfUI\\fonts\\arial.ttf", 9, "OUTLINE")
+pfUI.gui.unlockFrames.text:ClearAllPoints()
+pfUI.gui.unlockFrames.text:SetAllPoints(pfUI.gui.unlockFrames)
+pfUI.gui.unlockFrames.text:SetPoint("CENTER", 0, 0)
+pfUI.gui.unlockFrames.text:SetFontObject(GameFontWhite)
+pfUI.gui.unlockFrames.text:SetText("Unlock Frames")
+pfUI.gui.unlockFrames:SetScript("OnClick", function()
+    pfUI.gui.UnlockFrames()
+  end)
+
+-- Switch to default View: global
 pfUI.gui.switchTab(pfUI.gui.global)

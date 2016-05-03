@@ -45,44 +45,6 @@ pfUI.config = {
   }
 }
 
-function moveit()
-  -- don't call it "grid" to avoid confusion with grid (addon) module
-  pfUI.gitter = CreateFrame("Frame", nil, UIParent)
-  pfUI.gitter:SetFrameStrata("BACKGROUND")
-  pfUI.gitter:SetPoint("TOPLEFT", 0, 0, "TOPLEFT")
-  pfUI.gitter:SetPoint("BOTTOMRIGHT", 0, 0, "BOTTOMRIGHT")
-  pfUI.gitter:SetBackdrop(pfUI.backdrop_gitter)
-  pfUI.gitter:SetBackdropColor(0,0,0,1)
-
-  local movable = { pfUI.minimap, pfUI.chat.left, pfUI.chat.right,
-    pfUI.uf.player, pfUI.uf.target, pfUI.uf.targettarget, pfUI.uf.pet,
-    pfUI.bars.shapeshift, pfUI.bars.bottomleft, pfUI.bars.bottomright,
-    pfUI.bars.vertical, pfUI.bars.pet, pfUI.bars.bottom }
-
-  for _,frame in pairs(movable) do
-    local frame = frame
-    frame:Show()
-    frame:SetMovable(true)
-
-    frame.drag = CreateFrame("Frame", nil, frame)
-    frame.drag:SetAllPoints(frame)
-    frame.drag:SetFrameStrata("DIALOG")
-    frame.drag.bg = frame.drag:CreateTexture()
-    frame.drag.bg:SetAllPoints(frame.drag)
-    frame.drag.bg:SetTexture(.2,1,.8,1)
-    frame.drag:SetAlpha(.25)
-    frame.drag:EnableMouse(true)
-
-    frame.drag:SetScript("OnMouseDown",function()
-        frame:StartMoving()
-      end)
-
-    frame.drag:SetScript("OnMouseUp",function()
-        frame:StopMovingOrSizing()
-      end)
-  end
-end
-
 pfUI.cache = CreateFrame("Frame",nil,UIParent)
 pfUI.cache:RegisterEvent("PLAYER_ENTERING_WORLD")
 pfUI.cache:SetScript("OnEvent", function()
