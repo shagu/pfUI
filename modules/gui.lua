@@ -27,6 +27,43 @@ function pfUI.gui.SwitchTab(frame)
   frame:Show()
 end
 
+function pfUI.gui.CreateConfig(parent, caption, category, config)
+  -- basic frame
+	local frame = CreateFrame("Frame", nil, parent)
+  frame:SetWidth(350)
+  frame:SetHeight(25)
+  frame:SetBackdrop(pfUI.backdrop_underline)
+  frame:SetBackdropBorderColor(1,1,1,.25)
+
+  -- caption
+  frame.caption = frame:CreateFontString("Status", "LOW", "GameFontNormal")
+  frame.caption:SetFont("Interface\\AddOns\\pfUI\\fonts\\arial.ttf", 12, "OUTLINE")
+  frame.caption:SetAllPoints(frame)
+  frame.caption:SetFontObject(GameFontWhite)
+  frame.caption:SetJustifyH("LEFT")
+  frame.caption:SetText(caption)
+  frame.configCategory = category
+  frame.configEntry = config
+
+  -- input field
+  frame.input = CreateFrame("EditBox", nil, frame)
+  frame.input:SetTextColor(.2,1.1,1)
+  frame.input:SetJustifyH("RIGHT")
+
+  frame.input:SetWidth(100)
+  frame.input:SetHeight(20)
+  frame.input:SetPoint("TOPRIGHT" , 0, 0)
+  frame.input:SetFontObject(GameFontNormal)
+  frame.input:SetAutoFocus(false)
+  frame.input:SetText(pfUI.config[category][config])
+  frame.input:SetScript("OnEscapePressed", function(self)
+    pfUI.config[this:GetParent().configCategory][this:GetParent().configEntry] = this:GetText()
+    this:ClearFocus()
+  end)
+
+	return frame
+end
+
 function pfUI.gui.UnlockFrames()
   -- don't call it "grid" to avoid confusion with grid (addon) module
   pfUI.gitter = CreateFrame("Frame", nil, UIParent)
@@ -128,6 +165,9 @@ pfUI.gui.uf.title:SetFont("Interface\\AddOns\\pfUI\\fonts\\arial.ttf", 12, "OUTL
 pfUI.gui.uf.title:SetPoint("TOP", 0, -10)
 pfUI.gui.uf.title:SetFontObject(GameFontWhite)
 pfUI.gui.uf.title:SetText("UnitFrame Settings")
+
+pfUI.gui.uf.animation_speed = pfUI.gui.CreateConfig(pfUI.gui.uf, "Animation Speed", "unitframes", "animation_speed")
+pfUI.gui.uf.animation_speed:SetPoint("TOPLEFT", 25,-25)
 
 -- Unlock Frames
 pfUI.gui.unlockFrames = CreateFrame("Button", nil, pfUI.gui)
