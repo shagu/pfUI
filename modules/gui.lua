@@ -28,12 +28,20 @@ function pfUI.gui.SwitchTab(frame)
 end
 
 function pfUI.gui.CreateConfig(parent, caption, category, config)
+  -- parent object placement
+  if parent.objectCount == nil then
+    parent.objectCount = 1
+  else
+    parent.objectCount = parent.objectCount + 1
+  end
+
   -- basic frame
-	local frame = CreateFrame("Frame", nil, parent)
+  local frame = CreateFrame("Frame", nil, parent)
   frame:SetWidth(350)
   frame:SetHeight(25)
   frame:SetBackdrop(pfUI.backdrop_underline)
   frame:SetBackdropBorderColor(1,1,1,.25)
+  frame:SetPoint("TOPLEFT", 25, parent.objectCount * -25)
 
   -- caption
   frame.caption = frame:CreateFontString("Status", "LOW", "GameFontNormal")
@@ -55,9 +63,11 @@ function pfUI.gui.CreateConfig(parent, caption, category, config)
   frame.input:SetPoint("TOPRIGHT" , 0, 0)
   frame.input:SetFontObject(GameFontNormal)
   frame.input:SetAutoFocus(false)
-  frame.input:SetText(pfUI.config[category][config])
+  frame.input:SetText(category[config])
+  frame.category = category
+  frame.config = config
   frame.input:SetScript("OnEscapePressed", function(self)
-    pfUI.config[this:GetParent().configCategory][this:GetParent().configEntry] = this:GetText()
+    this:GetParent().category[this:GetParent().config] = this:GetText()
     this:ClearFocus()
   end)
 
@@ -166,8 +176,19 @@ pfUI.gui.uf.title:SetPoint("TOP", 0, -10)
 pfUI.gui.uf.title:SetFontObject(GameFontWhite)
 pfUI.gui.uf.title:SetText("UnitFrame Settings")
 
-pfUI.gui.uf.animation_speed = pfUI.gui.CreateConfig(pfUI.gui.uf, "Animation Speed", "unitframes", "animation_speed")
-pfUI.gui.uf.animation_speed:SetPoint("TOPLEFT", 25,-25)
+pfUI.gui.CreateConfig(pfUI.gui.uf, "Animation speed", pfUI_config.unitframes, "animation_speed")
+pfUI.gui.CreateConfig(pfUI.gui.uf, "Buff size", pfUI_config.unitframes, "buff_size")
+pfUI.gui.CreateConfig(pfUI.gui.uf, "Debuff size", pfUI_config.unitframes, "debuff_size")
+pfUI.gui.CreateConfig(pfUI.gui.uf, "Layout", pfUI_config.unitframes, "layout")
+
+pfUI.gui.CreateConfig(pfUI.gui.uf, "Player width", pfUI_config.unitframes.player, "width")
+pfUI.gui.CreateConfig(pfUI.gui.uf, "Player height", pfUI_config.unitframes.player, "height")
+pfUI.gui.CreateConfig(pfUI.gui.uf, "Player powerbar height", pfUI_config.unitframes.player, "pheight")
+
+pfUI.gui.CreateConfig(pfUI.gui.uf, "Target width", pfUI_config.unitframes.target, "width")
+pfUI.gui.CreateConfig(pfUI.gui.uf, "Target height", pfUI_config.unitframes.target, "height")
+pfUI.gui.CreateConfig(pfUI.gui.uf, "Target powerbar height", pfUI_config.unitframes.target, "pheight")
+
 
 -- Unlock Frames
 pfUI.gui.unlockFrames = CreateFrame("Button", nil, pfUI.gui)
