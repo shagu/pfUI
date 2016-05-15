@@ -11,8 +11,8 @@ pfUI.uf.target:SetScript("OnEvent", function()
       pfUI.uf.target:Hide()
     end
   end)
-pfUI.uf.target:SetWidth(pfUI.config.unitframes.target.width)
-pfUI.uf.target:SetHeight(pfUI.config.unitframes.target.height+pfUI.config.unitframes.target.pheight)
+pfUI.uf.target:SetWidth(pfUI_config.unitframes.target.width)
+pfUI.uf.target:SetHeight(pfUI_config.unitframes.target.height+pfUI_config.unitframes.target.pheight)
 pfUI.uf.target:SetPoint("BOTTOMLEFT", UIParent, "BOTTOM", 75, 125)
 
 pfUI.uf.target:RegisterForClicks('LeftButtonUp', 'RightButtonUp')
@@ -132,9 +132,9 @@ pfUI.uf.target:SetScript("OnUpdate", function()
     local hpDiff = abs(hpReal - hpDisplay)
 
     if hpDisplay < hpReal then
-      pfUI.uf.target.hp.bar:SetValue(hpDisplay + ceil(hpDiff / pfUI.config.unitframes.animation_speed))
+      pfUI.uf.target.hp.bar:SetValue(hpDisplay + ceil(hpDiff / pfUI_config.unitframes.animation_speed))
     elseif hpDisplay > hpReal then
-      pfUI.uf.target.hp.bar:SetValue(hpDisplay - ceil(hpDiff / pfUI.config.unitframes.animation_speed))
+      pfUI.uf.target.hp.bar:SetValue(hpDisplay - ceil(hpDiff / pfUI_config.unitframes.animation_speed))
     end
 
     local powerDisplay = pfUI.uf.target.power.bar:GetValue()
@@ -142,15 +142,15 @@ pfUI.uf.target:SetScript("OnUpdate", function()
     local powerDiff = abs(powerReal - powerDisplay)
 
     if powerDisplay < powerReal then
-      pfUI.uf.target.power.bar:SetValue(powerDisplay + ceil(powerDiff / pfUI.config.unitframes.animation_speed))
+      pfUI.uf.target.power.bar:SetValue(powerDisplay + ceil(powerDiff / pfUI_config.unitframes.animation_speed))
     elseif powerDisplay > powerReal then
-      pfUI.uf.target.power.bar:SetValue(powerDisplay - ceil(powerDiff / pfUI.config.unitframes.animation_speed))
+      pfUI.uf.target.power.bar:SetValue(powerDisplay - ceil(powerDiff / pfUI_config.unitframes.animation_speed))
     end
   end)
 
 pfUI.uf.target.hp = CreateFrame("Frame",nil, pfUI.uf.target)
 pfUI.uf.target.hp:SetBackdrop(pfUI.backdrop)
-pfUI.uf.target.hp:SetHeight(pfUI.config.unitframes.target.height)
+pfUI.uf.target.hp:SetHeight(pfUI_config.unitframes.target.height)
 pfUI.uf.target.hp:SetPoint("TOPLEFT",pfUI.uf.target,"TOPLEFT")
 pfUI.uf.target.hp:SetPoint("TOPRIGHT",pfUI.uf.target,"TOPRIGHT")
 
@@ -289,9 +289,9 @@ for i=1, 16 do
 
   pfUI.uf.target.buff.buffs[i]:RegisterForClicks("RightButtonUp")
   pfUI.uf.target.buff.buffs[i]:ClearAllPoints()
-  pfUI.uf.target.buff.buffs[i]:SetPoint("BOTTOMLEFT", pfUI.uf.target, "TOPLEFT", (i-8*row)*1 + (i-8*row)*pfUI.config.unitframes.buff_size - pfUI.config.unitframes.buff_size -1 , 1*row + pfUI.config.unitframes.buff_size*row +1)
-  pfUI.uf.target.buff.buffs[i]:SetWidth(pfUI.config.unitframes.buff_size)
-  pfUI.uf.target.buff.buffs[i]:SetHeight(pfUI.config.unitframes.buff_size)
+  pfUI.uf.target.buff.buffs[i]:SetPoint("BOTTOMLEFT", pfUI.uf.target, "TOPLEFT", (i-8*row)*1 + (i-8*row)*pfUI_config.unitframes.buff_size - pfUI_config.unitframes.buff_size -1 , 1*row + pfUI_config.unitframes.buff_size*row +1)
+  pfUI.uf.target.buff.buffs[i]:SetWidth(pfUI_config.unitframes.buff_size)
+  pfUI.uf.target.buff.buffs[i]:SetHeight(pfUI_config.unitframes.buff_size)
   pfUI.uf.target.buff.buffs[i]:SetNormalTexture(nil)
   pfUI.uf.target.buff.buffs[i]:SetScript("OnEnter", function()
       GameTooltip:SetOwner(this, "ANCHOR_BOTTOMRIGHT")
@@ -307,7 +307,7 @@ function pfUI.uf.target.buff.RefreshBuffs()
   for i=1, 16 do
     local texture, stacks = UnitBuff("target",i)
     pfUI.uf.target.buff.buffs[i]:SetBackdrop(
-      { bgFile = texture, tile = false, tileSize = pfUI.config.unitframes.buff_size,
+      { bgFile = texture, tile = false, tileSize = pfUI_config.unitframes.buff_size,
         edgeFile = "Interface\\AddOns\\pfUI\\img\\border", edgeSize = 8,
         insets = { left = 0, right = 0, top = 0, bottom = 0}
       })
@@ -354,12 +354,12 @@ for i=1, 16 do
   if pfUI.uf.target.buff.buffs[9]:IsShown() then top = top + 1 end
 
   pfUI.uf.target.debuff.debuffs[i]:SetPoint("BOTTOMLEFT", pfUI.uf.target, "TOPLEFT",
-    (i-8*row)*1 + (i-8*row)*pfUI.config.unitframes.debuff_size - pfUI.config.unitframes.debuff_size -1 ,
-    1*row + pfUI.config.unitframes.debuff_size*row +1 + (top*(pfUI.config.unitframes.debuff_size+1))
+    (i-8*row)*1 + (i-8*row)*pfUI_config.unitframes.debuff_size - pfUI_config.unitframes.debuff_size -1 ,
+    1*row + pfUI_config.unitframes.debuff_size*row +1 + (top*(pfUI_config.unitframes.debuff_size+1))
   )
 
-  pfUI.uf.target.debuff.debuffs[i]:SetWidth(pfUI.config.unitframes.debuff_size)
-  pfUI.uf.target.debuff.debuffs[i]:SetHeight(pfUI.config.unitframes.debuff_size)
+  pfUI.uf.target.debuff.debuffs[i]:SetWidth(pfUI_config.unitframes.debuff_size)
+  pfUI.uf.target.debuff.debuffs[i]:SetHeight(pfUI_config.unitframes.debuff_size)
   pfUI.uf.target.debuff.debuffs[i]:SetNormalTexture(nil)
   pfUI.uf.target.debuff.debuffs[i]:SetScript("OnEnter", function()
       GameTooltip:SetOwner(this, "ANCHOR_BOTTOMRIGHT")
@@ -382,12 +382,12 @@ function pfUI.uf.target.debuff.RefreshBuffs()
     if pfUI.uf.target.buff.buffs[9]:IsShown() then top = top + 1 end
 
     pfUI.uf.target.debuff.debuffs[i]:SetPoint("BOTTOMLEFT", pfUI.uf.target, "TOPLEFT",
-      (i-8*row)*1 + (i-8*row)*pfUI.config.unitframes.debuff_size - pfUI.config.unitframes.debuff_size -1 ,
-      1*row + pfUI.config.unitframes.debuff_size*row +1 + (top*(pfUI.config.unitframes.debuff_size+1))
+      (i-8*row)*1 + (i-8*row)*pfUI_config.unitframes.debuff_size - pfUI_config.unitframes.debuff_size -1 ,
+      1*row + pfUI_config.unitframes.debuff_size*row +1 + (top*(pfUI_config.unitframes.debuff_size+1))
     )
     local texture, stacks = UnitDebuff("target",i)
     pfUI.uf.target.debuff.debuffs[i]:SetBackdrop(
-      { bgFile = texture, tile = false, tileSize = pfUI.config.unitframes.debuff_size,
+      { bgFile = texture, tile = false, tileSize = pfUI_config.unitframes.debuff_size,
         edgeFile = "Interface\\AddOns\\pfUI\\img\\border_col", edgeSize = 8,
         insets = { left = 0, right = 0, top = 0, bottom = 0}
       })

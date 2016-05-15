@@ -36,7 +36,7 @@ pfUI.backdrop_underline = {
 
 pfUI.playerDB = {}
 
-pfUI.config = {
+pfUI_config = {
   ["unitframes"] = {
     animation_speed = 1,
     buff_size = "22",

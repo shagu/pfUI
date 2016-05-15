@@ -1,4 +1,4 @@
-if pfUI.config.unitframes.layout == "tukui" then
+if pfUI_config.unitframes.layout == "tukui" then
   pfUI.uf.player.caption = CreateFrame("Frame",nil, pfUI.uf.player)
   pfUI.uf.player.caption:SetBackdrop(pfUI.backdrop)
   pfUI.uf.player.caption:SetHeight(18)

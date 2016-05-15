@@ -43,9 +43,9 @@ pfUI.uf.targettarget:SetScript("OnUpdate", function()
     real = UnitHealth("targettarget")
     diff = abs(real - display)
     if display < real then
-      pfUI.uf.targettarget.hp.bar:SetValue(display + ceil(diff / pfUI.config.unitframes.animation_speed))
+      pfUI.uf.targettarget.hp.bar:SetValue(display + ceil(diff / pfUI_config.unitframes.animation_speed))
     elseif display > real then
-      pfUI.uf.targettarget.hp.bar:SetValue(display - ceil(diff / pfUI.config.unitframes.animation_speed))
+      pfUI.uf.targettarget.hp.bar:SetValue(display - ceil(diff / pfUI_config.unitframes.animation_speed))
     end
 
     PowerColor = ManaBarColor[UnitPowerType("targettarget")];
@@ -57,9 +57,9 @@ pfUI.uf.targettarget:SetScript("OnUpdate", function()
     real = UnitMana("targettarget")
     diff = abs(real - display)
     if display < real then
-      pfUI.uf.targettarget.power.bar:SetValue(display + ceil(diff / pfUI.config.unitframes.animation_speed))
+      pfUI.uf.targettarget.power.bar:SetValue(display + ceil(diff / pfUI_config.unitframes.animation_speed))
     elseif display > real then
-      pfUI.uf.targettarget.power.bar:SetValue(display - ceil(diff / pfUI.config.unitframes.animation_speed))
+      pfUI.uf.targettarget.power.bar:SetValue(display - ceil(diff / pfUI_config.unitframes.animation_speed))
     end
   end)
 

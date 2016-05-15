@@ -65,9 +65,9 @@ pfUI.uf.pet:SetScript("OnUpdate", function()
     local hpDiff = abs(hpReal - hpDisplay)
 
     if hpDisplay < hpReal then
-      pfUI.uf.pet.hp.bar:SetValue(hpDisplay + ceil(hpDiff / pfUI.config.unitframes.animation_speed))
+      pfUI.uf.pet.hp.bar:SetValue(hpDisplay + ceil(hpDiff / pfUI_config.unitframes.animation_speed))
     elseif hpDisplay > hpReal then
-      pfUI.uf.pet.hp.bar:SetValue(hpDisplay - ceil(hpDiff / pfUI.config.unitframes.animation_speed))
+      pfUI.uf.pet.hp.bar:SetValue(hpDisplay - ceil(hpDiff / pfUI_config.unitframes.animation_speed))
     end
 
     -- animation power
@@ -76,9 +76,9 @@ pfUI.uf.pet:SetScript("OnUpdate", function()
     local powerDiff = abs(powerReal - powerDisplay)
 
     if powerDisplay < powerReal then
-      pfUI.uf.pet.power.bar:SetValue(powerDisplay + ceil(powerDiff / pfUI.config.unitframes.animation_speed))
+      pfUI.uf.pet.power.bar:SetValue(powerDisplay + ceil(powerDiff / pfUI_config.unitframes.animation_speed))
     elseif hpDisplay > hpReal then
-      pfUI.uf.pet.power.bar:SetValue(powerDisplay - ceil(powerDiff / pfUI.config.unitframes.animation_speed))
+      pfUI.uf.pet.power.bar:SetValue(powerDisplay - ceil(powerDiff / pfUI_config.unitframes.animation_speed))
     end
   end)
 

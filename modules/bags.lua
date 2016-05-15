@@ -52,7 +52,7 @@ end
 
 pfUI.bag.close = CreateFrame("Button")
 pfUI.bag.close:SetParent(pfUI.bag)
-pfUI.bag.close:SetPoint("TOPRIGHT", -pfUI.config.bars.border*2,-pfUI.config.bars.border*2 )
+pfUI.bag.close:SetPoint("TOPRIGHT", -pfUI_config.bars.border*2,-pfUI_config.bars.border*2 )
 pfUI.bag.close:SetBackdrop(pfUI.backdrop)
 pfUI.bag.close:SetHeight(15)
 pfUI.bag.close:SetWidth(15)
@@ -75,7 +75,7 @@ pfUI.bag.search = CreateFrame("Frame", pfUI.bag)
 pfUI.bag.search:SetParent(pfUI.bag)
 pfUI.bag.search:SetHeight(15)
 pfUI.bag.search:SetWidth(100)
-pfUI.bag.search:SetPoint("TOPLEFT", pfUI.bag, "TOPLEFT", pfUI.config.bars.border*2, -pfUI.config.bars.border*2)
+pfUI.bag.search:SetPoint("TOPLEFT", pfUI.bag, "TOPLEFT", pfUI_config.bars.border*2, -pfUI_config.bars.border*2)
 pfUI.bag.search:SetBackdrop(pfUI.backdrop)
 pfUI.bag.search:SetBackdropBorderColor(0,0,0,1)
 
@@ -89,8 +89,8 @@ pfUI.bag.search.edit:SetScript("OnEditFocusGained", function()
     pfUI.bag.search:SetBackdropBorderColor(1,1,1,1)
     this:SetText("")
 
-    pfUI.bag.search:SetPoint("TOPLEFT", pfUI.bag, "TOPLEFT", pfUI.config.bars.border*2, -pfUI.config.bars.border*2)
-    pfUI.bag.search:SetPoint("TOPRIGHT", pfUI.bag, "TOPRIGHT", -pfUI.config.bars.border*2 - 16, -pfUI.config.bars.border*2)
+    pfUI.bag.search:SetPoint("TOPLEFT", pfUI.bag, "TOPLEFT", pfUI_config.bars.border*2, -pfUI_config.bars.border*2)
+    pfUI.bag.search:SetPoint("TOPRIGHT", pfUI.bag, "TOPRIGHT", -pfUI_config.bars.border*2 - 16, -pfUI_config.bars.border*2)
 
     pfUI.bag.money:Hide()
   end)
@@ -101,7 +101,7 @@ pfUI.bag.search.edit:SetScript("OnEditFocusLost", function()
 
     pfUI.bag.search:ClearAllPoints()
     pfUI.bag.search:SetWidth(100)
-    pfUI.bag.search:SetPoint("TOPLEFT", pfUI.bag, "TOPLEFT", pfUI.config.bars.border*2, -pfUI.config.bars.border*2)
+    pfUI.bag.search:SetPoint("TOPLEFT", pfUI.bag, "TOPLEFT", pfUI_config.bars.border*2, -pfUI_config.bars.border*2)
 
     for j=1, 12 do
       local frame, container = nil
@@ -120,8 +120,8 @@ pfUI.bag.search.edit:SetScript("OnEditFocusLost", function()
     pfUI.bag.money:Show()
   end)
 
-pfUI.bag.search.edit:SetPoint("TOPLEFT", pfUI.bag.search, "TOPLEFT", pfUI.config.bars.border*2, 0)
-pfUI.bag.search.edit:SetPoint("BOTTOMRIGHT", pfUI.bag.search, "BOTTOMRIGHT", -pfUI.config.bars.border*2, 0)
+pfUI.bag.search.edit:SetPoint("TOPLEFT", pfUI.bag.search, "TOPLEFT", pfUI_config.bars.border*2, 0)
+pfUI.bag.search.edit:SetPoint("BOTTOMRIGHT", pfUI.bag.search, "BOTTOMRIGHT", -pfUI_config.bars.border*2, 0)
 
 pfUI.bag.search.edit:SetFont("Interface\\AddOns\\pfUI\\fonts\\arial.ttf", 10, "OUTLINE")
 pfUI.bag.search.edit:SetAutoFocus(false)
@@ -176,7 +176,7 @@ pfUI.bag:SetScript("OnEvent", function()
     local y = 0
     local x_max = 10
 
-    local button_size = (this:GetWidth() - pfUI.config.bars.border*3) / x_max - pfUI.config.bars.border
+    local button_size = (this:GetWidth() - pfUI_config.bars.border*3) / x_max - pfUI_config.bars.border
 
     for j=1, 5 do
       for i=1, GetContainerNumSlots(j-1) do
@@ -187,7 +187,7 @@ pfUI.bag:SetScript("OnEvent", function()
         f = getglobal("ContainerFrame" .. j .. "Item" .. i)
         f:SetParent(pfUI.bag[j])
         f:SetID(i)
-        f:SetPoint("TOPLEFT", pfUI.bag, "TOPLEFT", pfUI.config.bars.border*2 + x*button_size + x*pfUI.config.bars.border, -pfUI.config.bars.border*2 - y*button_size - y * pfUI.config.bars.border - 17)
+        f:SetPoint("TOPLEFT", pfUI.bag, "TOPLEFT", pfUI_config.bars.border*2 + x*button_size + x*pfUI_config.bars.border, -pfUI_config.bars.border*2 - y*button_size - y * pfUI_config.bars.border - 17)
         f:Show()
         f:SetHeight(button_size)
         f:SetWidth(button_size)
@@ -195,7 +195,7 @@ pfUI.bag:SetScript("OnEvent", function()
         f:SetNormalTexture(nil)
 
         f:SetBackdrop(
-          { bgFile = texture, tile = false, tileSize = pfUI.config.unitframes.buff_size,
+          { bgFile = texture, tile = false, tileSize = pfUI_config.unitframes.buff_size,
             edgeFile = "Interface\\AddOns\\pfUI\\img\\border_col", edgeSize = 8,
             insets = { left = 0, right = 0, top = 0, bottom = 0}
           })
@@ -228,7 +228,7 @@ pfUI.bag:SetScript("OnEvent", function()
       end
     end
     y = y + 1
-    pfUI.bag:SetHeight( y * button_size + y * pfUI.config.bars.border + pfUI.config.bars.border*3 + 17 + 17)
+    pfUI.bag:SetHeight( y * button_size + y * pfUI_config.bars.border + pfUI_config.bars.border*3 + 17 + 17)
   end)
 
 pfUI.bank:RegisterEvent("BAG_UPDATE");
@@ -252,7 +252,7 @@ pfUI.bank:SetScript("OnEvent", function()
     local y = 0
     local x_max = 10
 
-    local button_size = (this:GetWidth() - pfUI.config.bars.border*3) / x_max - pfUI.config.bars.border
+    local button_size = (this:GetWidth() - pfUI_config.bars.border*3) / x_max - pfUI_config.bars.border
 
     for j=5, 11 do
       local frame, container = nil
@@ -272,7 +272,7 @@ pfUI.bank:SetScript("OnEvent", function()
         if j == 5 then f:SetParent(pfUI.bank[12]) else f:SetParent(pfUI.bank[j]) end
         f:Show()
         f:SetID(i)
-        f:SetPoint("TOPLEFT", pfUI.bank, "TOPLEFT", pfUI.config.bars.border*2 + x*button_size + x*pfUI.config.bars.border, -pfUI.config.bars.border*2 - y*button_size - y * pfUI.config.bars.border)
+        f:SetPoint("TOPLEFT", pfUI.bank, "TOPLEFT", pfUI_config.bars.border*2 + x*button_size + x*pfUI_config.bars.border, -pfUI_config.bars.border*2 - y*button_size - y * pfUI_config.bars.border)
         f:SetAlpha(1)
         f:SetHeight(button_size)
         f:SetWidth(button_size)
@@ -280,7 +280,7 @@ pfUI.bank:SetScript("OnEvent", function()
         f:SetNormalTexture(nil)
 
         f:SetBackdrop(
-          { bgFile = texture, tile = false, tileSize = pfUI.config.unitframes.buff_size,
+          { bgFile = texture, tile = false, tileSize = pfUI_config.unitframes.buff_size,
             edgeFile = "Interface\\AddOns\\pfUI\\img\\border_col", edgeSize = 8,
             insets = { left = 0, right = 0, top = 0, bottom = 0}
           })
@@ -314,5 +314,5 @@ pfUI.bank:SetScript("OnEvent", function()
       end
     end
     y = y + 1
-    pfUI.bank:SetHeight( y * button_size + y * pfUI.config.bars.border + pfUI.config.bars.border*3 + 17)
+    pfUI.bank:SetHeight( y * button_size + y * pfUI_config.bars.border + pfUI_config.bars.border*3 + 17)
   end)
