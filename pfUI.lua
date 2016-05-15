@@ -13,6 +13,31 @@ function SlashCmdList.PFUI(msg, editbox)
 end
 
 pfUI = CreateFrame("Frame",nil,UIParent)
+pfUI:RegisterEvent("ADDON_LOADED")
+pfUI:SetScript("OnEvent", function()
+  if arg1 == "pfUI" then
+    pfUI:Debug("pfUI module loader:")
+    for i,m in pairs(this.modules) do
+      pfUI:Debug("=> " ..  m)
+      pfUI.module[m]()
+    end
+  end
+end)
+
+pfUI.module = {}
+pfUI.modules = {}
+
+function pfUI:RegisterModule(n, f)
+  pfUI.module[n] = f
+  table.insert(pfUI.modules, n)
+end
+
+function pfUI:Debug(msg)
+  if pfUI_config.debug == 1 then
+    DEFAULT_CHAT_FRAME:AddMessage(msg)
+  end
+end
+
 pfUI.backdrop = {
   bgFile = "Interface\\AddOns\\pfUI\\img\\bg", tile = true, tileSize = 8,
   edgeFile = "Interface\\AddOns\\pfUI\\img\\border", edgeSize = 8,
@@ -35,8 +60,8 @@ pfUI.backdrop_underline = {
 }
 
 pfUI.playerDB = {}
-
 pfUI_config = {
+  debug = 1,
   ["unitframes"] = {
     animation_speed = 1,
     buff_size = "22",

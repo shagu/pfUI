@@ -1,118 +1,120 @@
-pfUI.uf.targettargetNotify = CreateFrame("Button",nil,UIParent)
-pfUI.uf.targettargetNotify:SetScript("OnUpdate", function()
-    if UnitExists("targettarget") then pfUI.uf.targettarget:Show() else pfUI.uf.targettarget:Hide() end
-  end)
+pfUI:RegisterModule("targettarget", function ()
+  pfUI.uf.targettargetNotify = CreateFrame("Button",nil,UIParent)
+  pfUI.uf.targettargetNotify:SetScript("OnUpdate", function()
+      if UnitExists("targettarget") then pfUI.uf.targettarget:Show() else pfUI.uf.targettarget:Hide() end
+    end)
 
-pfUI.uf.targettarget = CreateFrame("Button",nil,UIParent)
-pfUI.uf.targettarget:Hide()
+  pfUI.uf.targettarget = CreateFrame("Button",nil,UIParent)
+  pfUI.uf.targettarget:Hide()
 
-pfUI.uf.targettarget:SetWidth(100)
-pfUI.uf.targettarget:SetHeight(25)
-pfUI.uf.targettarget:SetPoint("BOTTOM", UIParent , "BOTTOM", 0, 125)
-pfUI.uf.targettarget:SetBackdrop(pfUI.backdrop)
+  pfUI.uf.targettarget:SetWidth(100)
+  pfUI.uf.targettarget:SetHeight(25)
+  pfUI.uf.targettarget:SetPoint("BOTTOM", UIParent , "BOTTOM", 0, 125)
+  pfUI.uf.targettarget:SetBackdrop(pfUI.backdrop)
 
-pfUI.uf.targettarget:RegisterForClicks('LeftButtonUp', 'RightButtonUp')
-pfUI.uf.targettarget:SetScript("OnClick", function ()
-    TargetUnit("targettarget")
-  end)
-pfUI.uf.targettarget.bg = CreateFrame("Frame",nil,pfUI.uf.targettarget)
-pfUI.uf.targettarget.bg = pfUI.uf.targettarget:CreateTexture(nil,"BACKGROUND")
-pfUI.uf.targettarget.bg:SetAllPoints(pfUI.uf.targettarget)
+  pfUI.uf.targettarget:RegisterForClicks('LeftButtonUp', 'RightButtonUp')
+  pfUI.uf.targettarget:SetScript("OnClick", function ()
+      TargetUnit("targettarget")
+    end)
+  pfUI.uf.targettarget.bg = CreateFrame("Frame",nil,pfUI.uf.targettarget)
+  pfUI.uf.targettarget.bg = pfUI.uf.targettarget:CreateTexture(nil,"BACKGROUND")
+  pfUI.uf.targettarget.bg:SetAllPoints(pfUI.uf.targettarget)
 
-pfUI.uf.targettarget:SetScript("OnUpdate", function()
-    if not UnitExists("targettarget") then pfUI.uf.targettarget:Hide(); return end
+  pfUI.uf.targettarget:SetScript("OnUpdate", function()
+      if not UnitExists("targettarget") then pfUI.uf.targettarget:Hide(); return end
 
-    local color
-    if UnitIsPlayer("targettarget") then
-      _, class = UnitClass("targettarget")
-      color = RAID_CLASS_COLORS[class]
-    else
-      color = UnitReactionColor[UnitReaction("targettarget", "player")]
-    end
+      local color
+      if UnitIsPlayer("targettarget") then
+        _, class = UnitClass("targettarget")
+        color = RAID_CLASS_COLORS[class]
+      else
+        color = UnitReactionColor[UnitReaction("targettarget", "player")]
+      end
 
-    pfUI.uf.targettarget.hp.bar:SetMinMaxValues(0, UnitHealthMax("targettarget"))
+      pfUI.uf.targettarget.hp.bar:SetMinMaxValues(0, UnitHealthMax("targettarget"))
 
-    local r, g, b = (color.r + .5) * .5, (color.g + .5) * .5, (color.b + .5) * .5
+      local r, g, b = (color.r + .5) * .5, (color.g + .5) * .5, (color.b + .5) * .5
 
-    pfUI.uf.targettarget.hp.bar:SetStatusBarColor(r, g, b, UnitHealth("targettarget") / UnitHealthMax("targettarget") / 4 + .75)
-    pfUI.uf.targettarget.hp.text:SetTextColor(r+.3,g+.3,b+.3, 1)
-    pfUI.uf.targettarget.hp.text:SetText( UnitName("targettarget"))
+      pfUI.uf.targettarget.hp.bar:SetStatusBarColor(r, g, b, UnitHealth("targettarget") / UnitHealthMax("targettarget") / 4 + .75)
+      pfUI.uf.targettarget.hp.text:SetTextColor(r+.3,g+.3,b+.3, 1)
+      pfUI.uf.targettarget.hp.text:SetText( UnitName("targettarget"))
 
-    local display, real
-    display = pfUI.uf.targettarget.hp.bar:GetValue()
-    real = UnitHealth("targettarget")
-    diff = abs(real - display)
-    if display < real then
-      pfUI.uf.targettarget.hp.bar:SetValue(display + ceil(diff / pfUI_config.unitframes.animation_speed))
-    elseif display > real then
-      pfUI.uf.targettarget.hp.bar:SetValue(display - ceil(diff / pfUI_config.unitframes.animation_speed))
-    end
+      local display, real
+      display = pfUI.uf.targettarget.hp.bar:GetValue()
+      real = UnitHealth("targettarget")
+      diff = abs(real - display)
+      if display < real then
+        pfUI.uf.targettarget.hp.bar:SetValue(display + ceil(diff / pfUI_config.unitframes.animation_speed))
+      elseif display > real then
+        pfUI.uf.targettarget.hp.bar:SetValue(display - ceil(diff / pfUI_config.unitframes.animation_speed))
+      end
 
-    PowerColor = ManaBarColor[UnitPowerType("targettarget")];
-    pfUI.uf.targettarget.power.bar:SetStatusBarColor(PowerColor.r + .5, PowerColor.g +.5, PowerColor.b +.5, 1)
-    pfUI.uf.targettarget.power.bar:SetMinMaxValues(0, UnitManaMax("targettarget"))
+      PowerColor = ManaBarColor[UnitPowerType("targettarget")];
+      pfUI.uf.targettarget.power.bar:SetStatusBarColor(PowerColor.r + .5, PowerColor.g +.5, PowerColor.b +.5, 1)
+      pfUI.uf.targettarget.power.bar:SetMinMaxValues(0, UnitManaMax("targettarget"))
 
-    local display, real
-    display = pfUI.uf.targettarget.power.bar:GetValue()
-    real = UnitMana("targettarget")
-    diff = abs(real - display)
-    if display < real then
-      pfUI.uf.targettarget.power.bar:SetValue(display + ceil(diff / pfUI_config.unitframes.animation_speed))
-    elseif display > real then
-      pfUI.uf.targettarget.power.bar:SetValue(display - ceil(diff / pfUI_config.unitframes.animation_speed))
-    end
-  end)
+      local display, real
+      display = pfUI.uf.targettarget.power.bar:GetValue()
+      real = UnitMana("targettarget")
+      diff = abs(real - display)
+      if display < real then
+        pfUI.uf.targettarget.power.bar:SetValue(display + ceil(diff / pfUI_config.unitframes.animation_speed))
+      elseif display > real then
+        pfUI.uf.targettarget.power.bar:SetValue(display - ceil(diff / pfUI_config.unitframes.animation_speed))
+      end
+    end)
 
-pfUI.uf.targettarget.hp = CreateFrame("Frame",nil, pfUI.uf.targettarget)
-pfUI.uf.targettarget.hp:SetBackdrop(pfUI.backdrop)
-pfUI.uf.targettarget.hp:SetPoint("TOPLEFT", pfUI.uf.targettarget, "TOPLEFT", 0, 0)
-pfUI.uf.targettarget.hp:SetPoint("BOTTOMRIGHT", pfUI.uf.targettarget, "BOTTOMRIGHT", 0, 0)
-pfUI.uf.targettarget.hp:SetPoint("TOP",pfUI.uf.targettarget,"TOP")
-pfUI.uf.targettarget.hp.bar = CreateFrame("StatusBar", nil, pfUI.uf.targettarget.hp)
-pfUI.uf.targettarget.hp.bar:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
-pfUI.uf.targettarget.hp.bar:ClearAllPoints()
-pfUI.uf.targettarget.hp.bar:SetPoint("TOPLEFT", pfUI.uf.targettarget.hp, "TOPLEFT", 3, -3)
-pfUI.uf.targettarget.hp.bar:SetPoint("BOTTOMRIGHT", pfUI.uf.targettarget.hp, "BOTTOMRIGHT", -3, 3)
-pfUI.uf.targettarget.hp.bar:SetMinMaxValues(0, 100)
-pfUI.uf.targettarget.hp.bar:SetValue(100)
+  pfUI.uf.targettarget.hp = CreateFrame("Frame",nil, pfUI.uf.targettarget)
+  pfUI.uf.targettarget.hp:SetBackdrop(pfUI.backdrop)
+  pfUI.uf.targettarget.hp:SetPoint("TOPLEFT", pfUI.uf.targettarget, "TOPLEFT", 0, 0)
+  pfUI.uf.targettarget.hp:SetPoint("BOTTOMRIGHT", pfUI.uf.targettarget, "BOTTOMRIGHT", 0, 0)
+  pfUI.uf.targettarget.hp:SetPoint("TOP",pfUI.uf.targettarget,"TOP")
+  pfUI.uf.targettarget.hp.bar = CreateFrame("StatusBar", nil, pfUI.uf.targettarget.hp)
+  pfUI.uf.targettarget.hp.bar:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
+  pfUI.uf.targettarget.hp.bar:ClearAllPoints()
+  pfUI.uf.targettarget.hp.bar:SetPoint("TOPLEFT", pfUI.uf.targettarget.hp, "TOPLEFT", 3, -3)
+  pfUI.uf.targettarget.hp.bar:SetPoint("BOTTOMRIGHT", pfUI.uf.targettarget.hp, "BOTTOMRIGHT", -3, 3)
+  pfUI.uf.targettarget.hp.bar:SetMinMaxValues(0, 100)
+  pfUI.uf.targettarget.hp.bar:SetValue(100)
 
-pfUI.uf.targettarget.hp.bar.portrait = CreateFrame("PlayerModel",nil,pfUI.uf.targettarget.hp.bar)
-pfUI.uf.targettarget.hp.bar.portrait:SetAllPoints(pfUI.uf.targettarget.hp.bar)
-pfUI.uf.targettarget.hp.bar.portrait:RegisterEvent("UNIT_PORTRAIT_UPDATE")
-pfUI.uf.targettarget.hp.bar.portrait:RegisterEvent("UNIT_MODEL_CHANGED")
-pfUI.uf.targettarget.hp.bar.portrait:RegisterEvent("PLAYER_ENTERING_WORLD")
-pfUI.uf.targettarget.hp.bar.portrait:RegisterEvent("PLAYER_TARGET_CHANGED")
+  pfUI.uf.targettarget.hp.bar.portrait = CreateFrame("PlayerModel",nil,pfUI.uf.targettarget.hp.bar)
+  pfUI.uf.targettarget.hp.bar.portrait:SetAllPoints(pfUI.uf.targettarget.hp.bar)
+  pfUI.uf.targettarget.hp.bar.portrait:RegisterEvent("UNIT_PORTRAIT_UPDATE")
+  pfUI.uf.targettarget.hp.bar.portrait:RegisterEvent("UNIT_MODEL_CHANGED")
+  pfUI.uf.targettarget.hp.bar.portrait:RegisterEvent("PLAYER_ENTERING_WORLD")
+  pfUI.uf.targettarget.hp.bar.portrait:RegisterEvent("PLAYER_TARGET_CHANGED")
 
-pfUI.uf.targettarget.hp.bar.portrait:SetScript("OnEvent", function() this.Update() end)
-pfUI.uf.targettarget.hp.bar.portrait:SetScript("OnShow", function() this.Update() end)
+  pfUI.uf.targettarget.hp.bar.portrait:SetScript("OnEvent", function() this.Update() end)
+  pfUI.uf.targettarget.hp.bar.portrait:SetScript("OnShow", function() this.Update() end)
 
-function pfUI.uf.targettarget.hp.bar.portrait.Update()
-  pfUI.uf.targettarget.hp.bar.portrait:SetUnit("targettarget");
-  pfUI.uf.targettarget.hp.bar.portrait:SetCamera(0)
-  pfUI.uf.targettarget.hp.bar.portrait:SetAlpha(0.10)
-end
+  function pfUI.uf.targettarget.hp.bar.portrait.Update()
+    pfUI.uf.targettarget.hp.bar.portrait:SetUnit("targettarget");
+    pfUI.uf.targettarget.hp.bar.portrait:SetCamera(0)
+    pfUI.uf.targettarget.hp.bar.portrait:SetAlpha(0.10)
+  end
 
-pfUI.uf.targettarget.power = CreateFrame("Frame",nil, pfUI.uf.targettarget)
-pfUI.uf.targettarget.power:SetBackdrop(pfUI.backdrop)
-pfUI.uf.targettarget.power:SetPoint("TOPLEFT", pfUI.uf.targettarget.hp, "BOTTOMLEFT", 0, -3)
-pfUI.uf.targettarget.power:SetPoint("TOPRIGHT", pfUI.uf.targettarget.hp, "BOTTOMRIGHT", 0, -3)
-pfUI.uf.targettarget.power:SetHeight(8)
-pfUI.uf.targettarget.power:SetPoint("TOPLEFT",pfUI.uf.targettarget.hp,"BOTTOMLEFT",0,3)
-pfUI.uf.targettarget.power.bar = CreateFrame("StatusBar", nil, pfUI.uf.targettarget.power)
-pfUI.uf.targettarget.power.bar:ClearAllPoints()
-pfUI.uf.targettarget.power.bar:SetPoint("TOPLEFT", pfUI.uf.targettarget.power, "TOPLEFT", 3, -3)
-pfUI.uf.targettarget.power.bar:SetPoint("BOTTOMRIGHT", pfUI.uf.targettarget.power, "BOTTOMRIGHT", -3, 3)
-pfUI.uf.targettarget.power.bar:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
-pfUI.uf.targettarget.power.bar:SetBackdropColor(0,0,0,1)
-pfUI.uf.targettarget.power.bar:SetStatusBarColor(0,0,0)
-pfUI.uf.targettarget.power.bar:SetMinMaxValues(0, 100)
-pfUI.uf.targettarget.power.bar:SetValue(100)
+  pfUI.uf.targettarget.power = CreateFrame("Frame",nil, pfUI.uf.targettarget)
+  pfUI.uf.targettarget.power:SetBackdrop(pfUI.backdrop)
+  pfUI.uf.targettarget.power:SetPoint("TOPLEFT", pfUI.uf.targettarget.hp, "BOTTOMLEFT", 0, -3)
+  pfUI.uf.targettarget.power:SetPoint("TOPRIGHT", pfUI.uf.targettarget.hp, "BOTTOMRIGHT", 0, -3)
+  pfUI.uf.targettarget.power:SetHeight(8)
+  pfUI.uf.targettarget.power:SetPoint("TOPLEFT",pfUI.uf.targettarget.hp,"BOTTOMLEFT",0,3)
+  pfUI.uf.targettarget.power.bar = CreateFrame("StatusBar", nil, pfUI.uf.targettarget.power)
+  pfUI.uf.targettarget.power.bar:ClearAllPoints()
+  pfUI.uf.targettarget.power.bar:SetPoint("TOPLEFT", pfUI.uf.targettarget.power, "TOPLEFT", 3, -3)
+  pfUI.uf.targettarget.power.bar:SetPoint("BOTTOMRIGHT", pfUI.uf.targettarget.power, "BOTTOMRIGHT", -3, 3)
+  pfUI.uf.targettarget.power.bar:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
+  pfUI.uf.targettarget.power.bar:SetBackdropColor(0,0,0,1)
+  pfUI.uf.targettarget.power.bar:SetStatusBarColor(0,0,0)
+  pfUI.uf.targettarget.power.bar:SetMinMaxValues(0, 100)
+  pfUI.uf.targettarget.power.bar:SetValue(100)
 
-pfUI.uf.targettarget.hp.text = pfUI.uf.targettarget.hp.bar:CreateFontString("Status", "LOW", "GameFontNormal")
-pfUI.uf.targettarget.hp.text:SetFont("Interface\\AddOns\\pfUI\\fonts\\homespun.ttf", 8, "OUTLINE")
-pfUI.uf.targettarget.hp.text:ClearAllPoints()
-pfUI.uf.targettarget.hp.text:SetAllPoints(pfUI.uf.targettarget.hp.bar)
-pfUI.uf.targettarget.hp.text:SetPoint("CENTER", 0, 0)
-pfUI.uf.targettarget.hp.text:SetJustifyH("CENTER")
-pfUI.uf.targettarget.hp.text:SetFontObject(GameFontWhite)
-pfUI.uf.targettarget.hp.text:SetText("n/a")
+  pfUI.uf.targettarget.hp.text = pfUI.uf.targettarget.hp.bar:CreateFontString("Status", "LOW", "GameFontNormal")
+  pfUI.uf.targettarget.hp.text:SetFont("Interface\\AddOns\\pfUI\\fonts\\homespun.ttf", 8, "OUTLINE")
+  pfUI.uf.targettarget.hp.text:ClearAllPoints()
+  pfUI.uf.targettarget.hp.text:SetAllPoints(pfUI.uf.targettarget.hp.bar)
+  pfUI.uf.targettarget.hp.text:SetPoint("CENTER", 0, 0)
+  pfUI.uf.targettarget.hp.text:SetJustifyH("CENTER")
+  pfUI.uf.targettarget.hp.text:SetFontObject(GameFontWhite)
+  pfUI.uf.targettarget.hp.text:SetText("n/a")
+end)
