@@ -77,20 +77,22 @@ pfUI:RegisterModule("targettarget", function ()
   pfUI.uf.targettarget.hp.bar:SetMinMaxValues(0, 100)
   pfUI.uf.targettarget.hp.bar:SetValue(100)
 
-  pfUI.uf.targettarget.hp.bar.portrait = CreateFrame("PlayerModel",nil,pfUI.uf.targettarget.hp.bar)
-  pfUI.uf.targettarget.hp.bar.portrait:SetAllPoints(pfUI.uf.targettarget.hp.bar)
-  pfUI.uf.targettarget.hp.bar.portrait:RegisterEvent("UNIT_PORTRAIT_UPDATE")
-  pfUI.uf.targettarget.hp.bar.portrait:RegisterEvent("UNIT_MODEL_CHANGED")
-  pfUI.uf.targettarget.hp.bar.portrait:RegisterEvent("PLAYER_ENTERING_WORLD")
-  pfUI.uf.targettarget.hp.bar.portrait:RegisterEvent("PLAYER_TARGET_CHANGED")
+  if pfUI_config.unitframes.portrait == "1" then
+    pfUI.uf.targettarget.hp.bar.portrait = CreateFrame("PlayerModel",nil,pfUI.uf.targettarget.hp.bar)
+    pfUI.uf.targettarget.hp.bar.portrait:SetAllPoints(pfUI.uf.targettarget.hp.bar)
+    pfUI.uf.targettarget.hp.bar.portrait:RegisterEvent("UNIT_PORTRAIT_UPDATE")
+    pfUI.uf.targettarget.hp.bar.portrait:RegisterEvent("UNIT_MODEL_CHANGED")
+    pfUI.uf.targettarget.hp.bar.portrait:RegisterEvent("PLAYER_ENTERING_WORLD")
+    pfUI.uf.targettarget.hp.bar.portrait:RegisterEvent("PLAYER_TARGET_CHANGED")
 
-  pfUI.uf.targettarget.hp.bar.portrait:SetScript("OnEvent", function() this.Update() end)
-  pfUI.uf.targettarget.hp.bar.portrait:SetScript("OnShow", function() this.Update() end)
+    pfUI.uf.targettarget.hp.bar.portrait:SetScript("OnEvent", function() this.Update() end)
+    pfUI.uf.targettarget.hp.bar.portrait:SetScript("OnShow", function() this.Update() end)
 
-  function pfUI.uf.targettarget.hp.bar.portrait.Update()
-    pfUI.uf.targettarget.hp.bar.portrait:SetUnit("targettarget");
-    pfUI.uf.targettarget.hp.bar.portrait:SetCamera(0)
-    pfUI.uf.targettarget.hp.bar.portrait:SetAlpha(0.10)
+    function pfUI.uf.targettarget.hp.bar.portrait.Update()
+      pfUI.uf.targettarget.hp.bar.portrait:SetUnit("targettarget");
+      pfUI.uf.targettarget.hp.bar.portrait:SetCamera(0)
+      pfUI.uf.targettarget.hp.bar.portrait:SetAlpha(0.10)
+    end
   end
 
   pfUI.uf.targettarget.power = CreateFrame("Frame",nil, pfUI.uf.targettarget)

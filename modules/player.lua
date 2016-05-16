@@ -117,18 +117,20 @@ pfUI:RegisterModule("player", function ()
 
   pfUI.uf.player.hp.bar:SetMinMaxValues(0, 100)
 
-  pfUI.uf.player.hp.bar.portrait = CreateFrame("PlayerModel",nil,pfUI.uf.player.hp.bar)
-  pfUI.uf.player.hp.bar.portrait:SetAllPoints(pfUI.uf.player.hp.bar)
-  pfUI.uf.player.hp.bar.portrait:RegisterEvent("UNIT_PORTRAIT_UPDATE")
-  pfUI.uf.player.hp.bar.portrait:RegisterEvent("UNIT_MODEL_CHANGED")
-  pfUI.uf.player.hp.bar.portrait:RegisterEvent("PLAYER_ENTERING_WORLD")
-  pfUI.uf.player.hp.bar.portrait:SetScript("OnEvent", function() this:Update() end)
-  pfUI.uf.player.hp.bar.portrait:SetScript("OnShow", function() this:Update() end)
+  if pfUI_config.unitframes.portrait == "1" then
+    pfUI.uf.player.hp.bar.portrait = CreateFrame("PlayerModel",nil,pfUI.uf.player.hp.bar)
+    pfUI.uf.player.hp.bar.portrait:SetAllPoints(pfUI.uf.player.hp.bar)
+    pfUI.uf.player.hp.bar.portrait:RegisterEvent("UNIT_PORTRAIT_UPDATE")
+    pfUI.uf.player.hp.bar.portrait:RegisterEvent("UNIT_MODEL_CHANGED")
+    pfUI.uf.player.hp.bar.portrait:RegisterEvent("PLAYER_ENTERING_WORLD")
+    pfUI.uf.player.hp.bar.portrait:SetScript("OnEvent", function() this:Update() end)
+    pfUI.uf.player.hp.bar.portrait:SetScript("OnShow", function() this:Update() end)
 
-  function pfUI.uf.player.hp.bar.portrait.Update()
-    pfUI.uf.player.hp.bar.portrait:SetUnit("player");
-    pfUI.uf.player.hp.bar.portrait:SetCamera(0)
-    pfUI.uf.player.hp.bar.portrait:SetAlpha(0.10)
+    function pfUI.uf.player.hp.bar.portrait.Update()
+      pfUI.uf.player.hp.bar.portrait:SetUnit("player");
+      pfUI.uf.player.hp.bar.portrait:SetCamera(0)
+      pfUI.uf.player.hp.bar.portrait:SetAlpha(0.10)
+    end
   end
 
   pfUI.uf.player.power = CreateFrame("Frame",nil, pfUI.uf.player)

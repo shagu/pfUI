@@ -64,6 +64,7 @@ pfUI_config = {
   debug = 1,
   ["unitframes"] = {
     animation_speed = 1,
+    portrait = 1,
     buff_size = "22",
     debuff_size = "22",
     layout = "default",

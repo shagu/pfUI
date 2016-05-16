@@ -178,6 +178,7 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.uf.title:SetText("UnitFrame Settings")
 
   pfUI.gui.CreateConfig(pfUI.gui.uf, "Animation speed", pfUI_config.unitframes, "animation_speed")
+  pfUI.gui.CreateConfig(pfUI.gui.uf, "Show portrait", pfUI_config.unitframes, "portrait")
   pfUI.gui.CreateConfig(pfUI.gui.uf, "Buff size", pfUI_config.unitframes, "buff_size")
   pfUI.gui.CreateConfig(pfUI.gui.uf, "Debuff size", pfUI_config.unitframes, "debuff_size")
   pfUI.gui.CreateConfig(pfUI.gui.uf, "Layout", pfUI_config.unitframes, "layout")
