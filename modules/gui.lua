@@ -68,8 +68,11 @@ pfUI:RegisterModule("gui", function ()
     frame.category = category
     frame.config = config
     frame.input:SetScript("OnEscapePressed", function(self)
-      this:GetParent().category[this:GetParent().config] = this:GetText()
       this:ClearFocus()
+    end)
+
+    frame.input:SetScript("OnEditFocusLost", function(self)
+      this:GetParent().category[this:GetParent().config] = this:GetText()
     end)
 
     return frame
