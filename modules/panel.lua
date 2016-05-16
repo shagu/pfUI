@@ -1,5 +1,150 @@
 pfUI:RegisterModule("panel", function ()
   pfUI.panel = CreateFrame("Frame",nil,UIParent)
+  pfUI.panel:RegisterEvent("PLAYER_ENTERING_WORLD")
+  pfUI.panel:RegisterEvent("UNIT_AURA")
+  pfUI.panel:RegisterEvent("PLAYER_MONEY")
+  pfUI.panel:RegisterEvent("PLAYER_XP_UPDATE")
+  pfUI.panel:RegisterEvent("FRIENDLIST_UPDATE")
+  pfUI.panel:RegisterEvent("GUILD_ROSTER_UPDATE")
+  pfUI.panel:RegisterEvent("PLAYER_GUILD_UPDATE")
+  pfUI.panel:RegisterEvent("PLAYER_REGEN_ENABLED")
+  pfUI.panel:RegisterEvent("PLAYER_DEAD")
+  pfUI.panel:SetScript("OnEvent", function()
+    if event == "PLAYER_ENTERING_WORLD" then
+      pfUI.panel:UpdateGold()
+      pfUI.panel:UpdateRepair();
+      pfUI.panel:UpdateExp()
+      pfUI.panel:UpdateFriend()
+      pfUI.panel:UpdateGuild();
+      pfUI.panel:UpdateRepair();
+    elseif event == "PLAYER_MONEY" then
+      pfUI.panel:UpdateGold()
+      pfUI.panel:UpdateRepair();
+    elseif event == "PLAYER_XP_UPDATE" then
+      pfUI.panel:UpdateExp()
+    elseif event == "FRIENDLIST_UPDATE" then
+      pfUI.panel:UpdateFriend()
+    elseif event == "GUILD_ROSTER_UPDATE" or event == "PLAYER_GUILD_UPDATE" then
+      pfUI.panel:UpdateGuild();
+    elseif event == "PLAYER_REGEN_ENABLED" or event == "PLAYER_DEAD" then
+      pfUI.panel:UpdateRepair();
+    end
+  end)
+
+  -- Update "exp"
+  function pfUI.panel:UpdateExp ()
+    if UnitLevel("player") ~= 60 then
+      curexp = UnitXP("player")
+      if oldexp ~= nil then
+        difexp = curexp - oldexp
+        maxexp = UnitXPMax("player")
+        remexp = floor((maxexp - curexp)/difexp)
+        remstring = "|cff555555 [" .. remexp .. "]|r"
+      end
+      oldexp = curexp
+
+      local a=UnitXP("player")
+      local b=UnitXPMax("player")
+      local xprested = tonumber(GetXPExhaustion())
+      if remstring == nil then remstring = "" end
+      if xprested ~= nil then
+        pfUI.panel:OutputPanel("exp", "Exp:|cffaaaaff "..floor((a/b)*100).."%"..remstring)
+      else
+        pfUI.panel:OutputPanel("exp", "Exp: " .. floor((a/b)*100) .. "%" .. remstring)
+      end
+    else
+      pfUI.panel:OutputPanel("exp", "Exp: N/A")
+    end
+  end
+
+  -- Update "gold"
+  function pfUI.panel:UpdateGold ()
+    local gold = floor(GetMoney()/ 100 / 100);
+    local silver = floor(mod((GetMoney()/100),100));
+    local copper = floor(mod(GetMoney(),100));
+    pfUI.panel:OutputPanel("gold", gold .. "|cffffd700g|r " .. silver .. "|cffc7c7cfs|r " .. copper .. "|cffeda55fc|r")
+  end
+
+  -- Update "friends"
+  function pfUI.panel:UpdateFriend ()
+    local online = 0;
+    local all = GetNumFriends();
+    for friendIndex=1, all do
+      friend_name, friend_level, friend_class, friend_area, friend_connected = GetFriendInfo(friendIndex);
+      if ( friend_connected ) then
+        online = online + 1;
+      end
+    end
+    pfUI.panel:OutputPanel("friends", "Friends: " .. online)
+  end
+
+  -- Update "guild"
+  function pfUI.panel:UpdateGuild ()
+    GuildRoster()
+    local online = GetNumGuildMembers();
+    local all = GetNumGuildMembers(true);
+    pfUI.panel:OutputPanel("guild", "Guild: "..online)
+  end
+
+  -- Update "durability"
+  local repairToolTip = CreateFrame('GameTooltip', "repairToolTip", this, "GameTooltipTemplate")
+  function pfUI.panel:UpdateRepair ()
+    local slotnames = { "Head", "Shoulder", "Chest", "Wrist",
+      "Hands", "Waist", "Legs", "Feet", "MainHand", "SecondaryHand", "Ranged", };
+    local id, hasItem, repairCost;
+    local itemName, durability, tmpText, midpt, lval, rval;
+
+    duraLowestslotName = nil;
+    repPercent = 100;
+    lowestPercent = 100;
+
+    for i,slotName in pairs(slotnames) do
+      id, _ = GetInventorySlotInfo(slotName.. "Slot");
+      repairToolTip:Hide()
+      repairToolTip:SetOwner(this, "ANCHOR_LEFT");
+      hasItem, _, repCost = repairToolTip:SetInventoryItem("player", id);
+      if (not hasItem) then repairToolTip:ClearLines()
+      else
+        for i=1, 30, 1 do
+          tmpText = getglobal("repairToolTipTextLeft"..i);
+          if (tmpText ~= nil) and (tmpText:GetText()) then
+            local searchstr = string.gsub(DURABILITY_TEMPLATE, "%%[^%s]+", "(.+)")
+            _, _, lval, rval = string.find(tmpText:GetText(), searchstr);
+            if (lval and rval) then
+              repPercent = math.floor(lval / rval * 100)
+              break;
+            end
+          end
+        end
+      end
+      if repPercent < lowestPercent then
+        lowestPercent = repPercent
+      end
+    end
+    repairToolTip:Hide()
+    pfUI.panel:OutputPanel("durability", lowestPercent .. "% Armor")
+  end
+
+  function pfUI.panel:OutputPanel(entry, value)
+    if pfUI_config.panel.left.left == entry then
+      pfUI.panel.left.left.text:SetText(value)
+    end
+    if pfUI_config.panel.left.center == entry then
+      pfUI.panel.left.center.text:SetText(value)
+    end
+    if pfUI_config.panel.left.right == entry then
+      pfUI.panel.left.right.text:SetText(value)
+    end
+    if pfUI_config.panel.right.left == entry then
+      pfUI.panel.right.left.text:SetText(value)
+    end
+    if pfUI_config.panel.right.center == entry then
+      pfUI.panel.right.center.text:SetText(value)
+    end
+    if pfUI_config.panel.right.right == entry then
+      pfUI.panel.right.right.text:SetText(value)
+    end
+  end
 
   pfUI.panel.left = CreateFrame("Frame", "leftChatPanelBottom", pfUI.panel)
   pfUI.panel.left:ClearAllPoints()
@@ -129,3 +274,5 @@ pfUI:RegisterModule("panel", function ()
   pfUI.panel.right.right.text:SetFontObject(GameFontWhite)
   pfUI.panel.right.right.text:SetText("[DUMMY]")
 end)
+
+

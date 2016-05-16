@@ -82,6 +82,18 @@ pfUI_config = {
   ["bars"] = {
     icon_size = "22",
     border = 2,
+  },
+  ["panel"] = {
+    ["left"] = {
+      left = "exp",
+      center = "friends",
+      right = "guild",
+    },
+    ["right"] = {
+      left = "durability",
+      center = "gold",
+      right = "gold",
+    },
   }
 }
 
