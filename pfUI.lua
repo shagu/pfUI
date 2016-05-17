@@ -59,7 +59,7 @@ pfUI.backdrop_underline = {
   insets = {left = 0, right = 0, top = 0, bottom = 0},
 }
 
-pfUI.playerDB = {}
+pfUI_playerDB = {}
 pfUI_config = {
   debug = 1,
   ["unitframes"] = {

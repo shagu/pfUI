@@ -111,7 +111,7 @@ pfUI:RegisterModule("chat", function ()
           if pfLocaleClass[GetLocale()] and pfLocaleClass[GetLocale()][Class] then
             Class = pfLocaleClass[GetLocale()][Class]
           end
-          pfUI.playerDB[Name] = { class = Class, level = Level }
+          pfUI_playerDB[Name] = { class = Class, level = Level }
         end
       elseif event == "GUILD_ROSTER_UPDATE" or event == "PLAYER_ENTERING_WORLD" then
         local Name, Class, Level
@@ -120,7 +120,7 @@ pfUI:RegisterModule("chat", function ()
           if pfLocaleClass[GetLocale()] and pfLocaleClass[GetLocale()][Class] then
             Class = pfLocaleClass[GetLocale()][Class]
           end
-          pfUI.playerDB[Name] = { class = Class, level = Level }
+          pfUI_playerDB[Name] = { class = Class, level = Level }
         end
 
       elseif event == "RAID_ROSTER_UPDATE" or event == "PLAYER_ENTERING_WORLD" then
@@ -130,7 +130,7 @@ pfUI:RegisterModule("chat", function ()
           if pfLocaleClass[GetLocale()] and pfLocaleClass[GetLocale()].Class then
             Class = pfLocaleClass[GetLocale()][Class]
           end
-          pfUI.playerDB[Name] = { class = Class, level = Level }
+          pfUI_playerDB[Name] = { class = Class, level = Level }
         end
 
       elseif event == "PARTY_MEMBERS_CHANGED" or event == "PLAYER_ENTERING_WORLD" then
@@ -138,7 +138,7 @@ pfUI:RegisterModule("chat", function ()
         for i = 1, GetNumPartyMembers() do
           Unit = "party" .. i
           _, Class = UnitClass(Unit)
-          pfUI.playerDB[UnitName(Unit)] = { class = Class, level = UnitLevel(Unit) }
+          pfUI_playerDB[UnitName(Unit)] = { class = Class, level = UnitLevel(Unit) }
         end
 
       elseif event == "PLAYER_TARGET_CHANGED" then
@@ -147,7 +147,7 @@ pfUI:RegisterModule("chat", function ()
           return
         end
         _, Class = UnitClass("target")
-        pfUI.playerDB[UnitName("target")] = { class = Class, level = UnitLevel("target") }
+        pfUI_playerDB[UnitName("target")] = { class = Class, level = UnitLevel("target") }
 
       elseif event == "WHO_LIST_UPDATE" or event == "CHAT_MSG_SYSTEM" then
         local Name, Class, Level
@@ -156,7 +156,7 @@ pfUI:RegisterModule("chat", function ()
           if pfLocaleClass[GetLocale()] and pfLocaleClass[GetLocale()][Class] then
             Class = pfLocaleClass[GetLocale()][Class]
           end
-          pfUI.playerDB[Name] = { class = Class, level = Level }
+          pfUI_playerDB[Name] = { class = Class, level = Level }
         end
       end
     end)
@@ -323,8 +323,8 @@ pfUI:RegisterModule("chat", function ()
     getglobal("ChatFrame"..i).AddMessage = function (frame, text, ...)
       if text then
         local Name = string.gsub(text, ".*|Hplayer:(.-)|h.*", "%1")
-        if pfUI.playerDB[Name] and pfUI.playerDB[Name].class ~= nil then
-          local Class = pfUI.playerDB[Name].class
+        if pfUI_playerDB[Name] and pfUI_playerDB[Name].class ~= nil then
+          local Class = pfUI_playerDB[Name].class
           if RAID_CLASS_COLORS[Class] ~= nil then
             local Color = string.format("%02x%02x%02x",
               RAID_CLASS_COLORS[Class].r * 255,

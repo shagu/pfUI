@@ -3,7 +3,7 @@
 ## Author: Eric (Shagu) Mauser, 2016
 ## Notes: An User Intface written completely from scratch
 ## Version: 0.1 BETA
-## SavedVariables: pfUI_config, pfUI_playerDB, pfUI_modules
+## SavedVariables: pfUI_config, pfUI_playerDB
 
 # main
 pfUI.lua
