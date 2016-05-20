@@ -79,32 +79,39 @@ pfUI:RegisterModule("gui", function ()
   end
 
   function pfUI.gui.UnlockFrames()
-    -- don't call it "grid" to avoid confusion with grid (addon) module
-    pfUI.gitter = CreateFrame("Frame", nil, UIParent)
-    pfUI.gitter:SetFrameStrata("BACKGROUND")
-    pfUI.gitter:SetPoint("TOPLEFT", 0, 0, "TOPLEFT")
-    pfUI.gitter:SetPoint("BOTTOMRIGHT", 0, 0, "BOTTOMRIGHT")
-    pfUI.gitter:SetBackdrop(pfUI.backdrop_gitter)
-    pfUI.gitter:SetBackdropColor(0,0,0,1)
-
     local movable = { pfUI.minimap, pfUI.chat.left, pfUI.chat.right,
       pfUI.uf.player, pfUI.uf.target, pfUI.uf.targettarget, pfUI.uf.pet,
       pfUI.bars.shapeshift, pfUI.bars.bottomleft, pfUI.bars.bottomright,
       pfUI.bars.vertical, pfUI.bars.pet, pfUI.bars.bottom }
 
+    if not pfUI.gitter then
+      pfUI.gitter = CreateFrame("Frame", nil, UIParent)
+      pfUI.gitter:SetFrameStrata("BACKGROUND")
+      pfUI.gitter:SetPoint("TOPLEFT", 0, 0, "TOPLEFT")
+      pfUI.gitter:SetPoint("BOTTOMRIGHT", 0, 0, "BOTTOMRIGHT")
+      pfUI.gitter:SetBackdrop(pfUI.backdrop_gitter)
+      pfUI.gitter:SetBackdropColor(0,0,0,1)
+      pfUI.gitter:Hide()
+    end
+
+    if pfUI.gitter:IsShown() then
+      pfUI.gitter:Hide()
+    else
+      pfUI.gitter:Show()
+    end
+
+
     for _,frame in pairs(movable) do
       local frame = frame
-      frame:Show()
-      frame:SetMovable(true)
-
-      frame.drag = CreateFrame("Frame", nil, frame)
-      frame.drag:SetAllPoints(frame)
-      frame.drag:SetFrameStrata("DIALOG")
-      frame.drag.bg = frame.drag:CreateTexture()
-      frame.drag.bg:SetAllPoints(frame.drag)
-      frame.drag.bg:SetTexture(.2,1,.8,1)
-      frame.drag:SetAlpha(.25)
-      frame.drag:EnableMouse(true)
+      if not frame.drag then
+        frame.drag = CreateFrame("Frame", nil, frame)
+        frame.drag:SetAllPoints(frame)
+        frame.drag:SetFrameStrata("DIALOG")
+        frame.drag.bg = frame.drag:CreateTexture()
+        frame.drag.bg:SetAllPoints(frame.drag)
+        frame.drag.bg:SetTexture(.2,1,.8,1)
+        frame.drag:SetAlpha(.25)
+      end
 
       frame.drag:SetScript("OnMouseDown",function()
           frame:StartMoving()
@@ -113,6 +120,16 @@ pfUI:RegisterModule("gui", function ()
       frame.drag:SetScript("OnMouseUp",function()
           frame:StopMovingOrSizing()
         end)
+    
+      if pfUI.gitter:IsShown() then
+        frame:SetMovable(true)
+        frame.drag:EnableMouse(true)
+        frame.drag:Show()
+      else
+        frame:SetMovable(false)
+        frame.drag:EnableMouse(false)
+        frame.drag:Hide()
+      end
     end
   end
 
