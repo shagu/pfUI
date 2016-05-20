@@ -120,7 +120,9 @@ pfUI:RegisterModule("chat", function ()
           if pfLocaleClass[GetLocale()] and pfLocaleClass[GetLocale()][Class] then
             Class = pfLocaleClass[GetLocale()][Class]
           end
-          pfUI_playerDB[Name] = { class = Class, level = Level }
+          if Name and Level and Class and pfUI_playerDB then
+            pfUI_playerDB[Name] = { class = Class, level = Level }
+          end
         end
 
       elseif event == "RAID_ROSTER_UPDATE" or event == "PLAYER_ENTERING_WORLD" then
