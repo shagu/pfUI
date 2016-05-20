@@ -52,7 +52,7 @@ pfUI:RegisterModule("minimap", function ()
   pfUI.minimapLocation.background:SetTexture(0,0,0,1)
   pfUI.minimapLocation.background:SetAllPoints(pfUI.minimapLocation)
   -- Create text
-  pfUI.minimapLocation.text = pfUI.minimapLocation:CreateFontString("Status", "LOW", "GameFontNormal")
+  pfUI.minimapLocation.text = pfUI.minimapLocation:CreateFontString("MinimapZoneText", "LOW", "GameFontNormal")
   pfUI.minimapLocation.text:SetFont("Interface\\AddOns\\pfUI\\fonts\\arial.ttf", 9, "OUTLINE")
   pfUI.minimapLocation.text:SetPoint("CENTER", 0, 0)
   pfUI.minimapLocation.text:SetFontObject(GameFontWhite)
@@ -64,5 +64,37 @@ pfUI:RegisterModule("minimap", function ()
   pfUI.minimapLocation:SetScript("OnEvent", zoneChangeEventHandler)
   -- Initiate zone text
   zoneChangeEventHandler()
+
+  -- Coordinates in minimap
+  -- Create location text frame in bottom left corner of minimap
+  pfUI.minimapCoordinates = CreateFrame("Frame", nil, pfUI.minimap)
+  pfUI.minimapCoordinates:SetPoint("BOTTOMLEFT", 3, 3)
+  pfUI.minimapCoordinates:SetHeight(20)
+  pfUI.minimapCoordinates:SetWidth(40)
+  pfUI.minimapCoordinates:SetFrameStrata("BACKGROUND")
+  pfUI.minimapCoordinates.background = pfUI.minimapCoordinates:CreateTexture(nil,"BACKGROUND")
+  pfUI.minimapCoordinates.background:SetTexture(0,0,0,1)
+  pfUI.minimapCoordinates.background:SetAllPoints(pfUI.minimapCoordinates)
+  -- Create text
+  pfUI.minimapCoordinates.text = pfUI.minimapCoordinates:CreateFontString("MinimapCoordinatesText", "LOW", "GameFontNormal")
+  pfUI.minimapCoordinates.text:SetFont("Interface\\AddOns\\pfUI\\fonts\\arial.ttf", 11, "OUTLINE")
+  pfUI.minimapCoordinates.text:SetPoint("LEFT", 0, 0)
+  pfUI.minimapCoordinates.text:SetFontObject(GameFontWhite)
+  pfUI.minimapCoordinates.text:SetText("X, Y")
+  pfUI.minimapCoordinates:Hide()
+
+  -- Minimap hover event
+  -- Update and toggle showing of coordinates on mouse enter/leave
+  Minimap:SetScript("OnEnter", function()
+    SetMapToCurrentZone()
+    local posX, posY = GetPlayerMapPosition("player")
+    local roundedX = ceil(posX * 1000)/10
+    local roundedY = ceil(posY * 1000)/10
+    pfUI.minimapCoordinates.text:SetText(roundedX..", "..roundedY)
+    pfUI.minimapCoordinates:Show()
+  end)
+  Minimap:SetScript("OnLeave", function()
+    pfUI.minimapCoordinates:Hide()
+  end)
 
 end)
