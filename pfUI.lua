@@ -18,8 +18,10 @@ pfUI:SetScript("OnEvent", function()
   if arg1 == "pfUI" then
     pfUI:Debug("pfUI module loader:")
     for i,m in pairs(this.modules) do
-      pfUI:Debug("=> " ..  m)
-      pfUI.module[m]()
+      if not pfUI[m] then
+        pfUI.module[m]()
+        pfUI:Debug("=> " ..  m)
+      end
     end
   end
 end)
