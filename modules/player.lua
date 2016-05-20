@@ -217,10 +217,14 @@ pfUI:RegisterModule("player", function ()
     pfUI.uf.player.buff.buffs[i]:SetScript("OnUpdate", function()
         for i=1, 16 do
           local timeleft = GetPlayerBuffTimeLeft(GetPlayerBuff(i-1,"HELPFUL"))
-          if timeleft ~= nil and timeleft < 99 and timeleft ~= 0 then
-            pfUI.uf.player.buff.buffs[i].cd:SetText(ceil(timeleft))
-          else
-            pfUI.uf.player.buff.buffs[i].cd:SetText("")
+          if timeleft ~= nil and timeleft ~= 0 then
+            if timeleft < 60 then
+              pfUI.uf.player.buff.buffs[i].cd:SetText(ceil(timeleft))
+            elseif timeleft < 3600 then
+              pfUI.uf.player.buff.buffs[i].cd:SetText(ceil(timeleft/60) .. 'm')
+            else
+              pfUI.uf.player.buff.buffs[i].cd:SetText(ceil(timeleft/3600) .. 'h')
+            end
           end
         end
       end)
@@ -305,10 +309,14 @@ pfUI:RegisterModule("player", function ()
     pfUI.uf.player.debuff.debuffs[i]:SetScript("OnUpdate", function()
         for i=1, 16 do
           local timeleft = GetPlayerBuffTimeLeft(GetPlayerBuff(i-1,"HARMFUL"))
-          if timeleft ~= nil and timeleft < 99 and timeleft ~= 0 then
-            pfUI.uf.player.debuff.debuffs[i].cd:SetText(ceil(timeleft))
-          else
-            pfUI.uf.player.debuff.debuffs[i].cd:SetText("")
+          if timeleft ~= nil and timeleft ~= 0 then
+            if timeleft < 60 then
+              pfUI.uf.player.debuff.debuffs[i].cd:SetText(ceil(timeleft))
+            elseif timeleft < 3600 then
+              pfUI.uf.player.debuff.debuffs[i].cd:SetText(ceil(timeleft/60)..'m')
+            else
+              pfUI.uf.player.buff.buffs[i].cd:SetText(ceil(timeleft/3600) .. 'h')
+            end
           end
         end
       end)
