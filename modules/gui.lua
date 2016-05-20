@@ -21,7 +21,7 @@ pfUI:RegisterModule("gui", function ()
     end)
 
   function pfUI.gui.SwitchTab(frame)
-    local elements = { pfUI.gui.global, pfUI.gui.uf }
+    local elements = { pfUI.gui.global, pfUI.gui.uf , pfUI.gui.bar }
     for _, hide in pairs(elements) do
       hide:Hide()
     end
@@ -193,6 +193,42 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.CreateConfig(pfUI.gui.uf, "Target width", pfUI_config.unitframes.target, "width")
   pfUI.gui.CreateConfig(pfUI.gui.uf, "Target height", pfUI_config.unitframes.target, "height")
   pfUI.gui.CreateConfig(pfUI.gui.uf, "Target powerbar height", pfUI_config.unitframes.target, "pheight")
+
+
+  -- ActionBar settings
+  pfUI.gui.bar = CreateFrame("Frame", nil, pfUI.gui)
+  pfUI.gui.bar:SetWidth(400)
+  pfUI.gui.bar:SetHeight(320)
+
+  pfUI.gui.bar:SetBackdrop(pfUI.backdrop)
+  pfUI.gui.bar:SetBackdropColor(0,0,0,.50);
+  pfUI.gui.bar:SetPoint("RIGHT",0,0)
+
+  pfUI.gui.bar.switch = CreateFrame("Button", nil, pfUI.gui)
+  pfUI.gui.bar.switch:ClearAllPoints()
+  pfUI.gui.bar.switch:SetWidth(80)
+  pfUI.gui.bar.switch:SetHeight(20)
+  pfUI.gui.bar.switch:SetPoint("TOPLEFT", 0, -40)
+  pfUI.gui.bar.switch:SetBackdrop(pfUI.backdrop)
+  pfUI.gui.bar.switch.text = pfUI.gui.bar.switch:CreateFontString("Status", "LOW", "GameFontNormal")
+  pfUI.gui.bar.switch.text:SetFont("Interface\\AddOns\\pfUI\\fonts\\arial.ttf", 9, "OUTLINE")
+  pfUI.gui.bar.switch.text:ClearAllPoints()
+  pfUI.gui.bar.switch.text:SetAllPoints(pfUI.gui.bar.switch)
+  pfUI.gui.bar.switch.text:SetPoint("CENTER", 0, 0)
+  pfUI.gui.bar.switch.text:SetFontObject(GameFontWhite)
+  pfUI.gui.bar.switch.text:SetText("ActionBars")
+  pfUI.gui.bar.switch:SetScript("OnClick", function()
+      pfUI.gui.SwitchTab(pfUI.gui.bar)
+    end)
+
+  pfUI.gui.bar.title = pfUI.gui.bar:CreateFontString("Status", "LOW", "GameFontNormal")
+  pfUI.gui.bar.title:SetFont("Interface\\AddOns\\pfUI\\fonts\\arial.ttf", 12, "OUTLINE")
+  pfUI.gui.bar.title:SetPoint("TOP", 0, -10)
+  pfUI.gui.bar.title:SetFontObject(GameFontWhite)
+  pfUI.gui.bar.title:SetText("ActionBar Settings")
+
+  pfUI.gui.CreateConfig(pfUI.gui.bar, "Icon Size", pfUI_config.bars, "icon_size")
+  pfUI.gui.CreateConfig(pfUI.gui.bar, "Border", pfUI_config.bars, "border")
 
 
   -- Unlock Frames
