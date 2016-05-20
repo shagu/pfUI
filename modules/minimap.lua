@@ -56,14 +56,14 @@ pfUI:RegisterModule("minimap", function ()
   pfUI.minimapLocation.text:SetFont("Interface\\AddOns\\pfUI\\fonts\\arial.ttf", 9, "OUTLINE")
   pfUI.minimapLocation.text:SetPoint("CENTER", 0, 0)
   pfUI.minimapLocation.text:SetFontObject(GameFontWhite)
+  -- Initiate zone text
+  pfUI.minimapLocation.text:SetText(GetMinimapZoneText())
   -- Register zone change event
-  pfUI.minimapLocation:RegisterEvent("ZONE_CHANGED")
+  pfUI.minimapLocation:RegisterEvent("MINIMAP_ZONE_CHANGED")
   local function zoneChangeEventHandler(self, event, ...)
-    pfUI.minimapLocation.text:SetText(GetZoneText())
+    pfUI.minimapLocation.text:SetText(GetMinimapZoneText())
   end
   pfUI.minimapLocation:SetScript("OnEvent", zoneChangeEventHandler)
-  -- Initiate zone text
-  zoneChangeEventHandler()
 
   -- Coordinates in minimap
   -- Create location text frame in bottom left corner of minimap
