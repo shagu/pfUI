@@ -1,6 +1,11 @@
 pfUI:RegisterModule("target", function ()
+    -- Hide Blizzard target frame and unregister all events to prevent it from popping up again
   TargetFrame:Hide()
   TargetFrame:UnregisterAllEvents()
+
+  -- Hide Blizzard combo point frame and unregister all events to prevent it from popping up again
+  ComboFrame:Hide()
+  ComboFrame:UnregisterAllEvents()
 
   pfUI.uf.target = CreateFrame("Button",nil,UIParent)
   pfUI.uf.target:Hide()
