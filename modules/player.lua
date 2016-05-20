@@ -218,13 +218,20 @@ pfUI:RegisterModule("player", function ()
         for i=1, 16 do
           local timeleft = GetPlayerBuffTimeLeft(GetPlayerBuff(i-1,"HELPFUL"))
           if timeleft ~= nil and timeleft ~= 0 then
+            -- if there are more than 0 seconds left
             if timeleft < 60 then
+              -- show seconds if less than 60 seconds
               pfUI.uf.player.buff.buffs[i].cd:SetText(ceil(timeleft))
             elseif timeleft < 3600 then
+              -- show minutes if less than 3600 seconds (1 hour)
               pfUI.uf.player.buff.buffs[i].cd:SetText(ceil(timeleft/60) .. 'm')
             else
+              -- otherwise show hours
               pfUI.uf.player.buff.buffs[i].cd:SetText(ceil(timeleft/3600) .. 'h')
             end
+          else
+            -- if there's no time left or not set, empty buff text
+            pfUI.uf.player.buff.buffs[i].cd:SetText("")
           end
         end
       end)
@@ -310,13 +317,20 @@ pfUI:RegisterModule("player", function ()
         for i=1, 16 do
           local timeleft = GetPlayerBuffTimeLeft(GetPlayerBuff(i-1,"HARMFUL"))
           if timeleft ~= nil and timeleft ~= 0 then
+            -- if there are more than 0 seconds left
             if timeleft < 60 then
+              -- show seconds if less than 60 seconds
               pfUI.uf.player.debuff.debuffs[i].cd:SetText(ceil(timeleft))
             elseif timeleft < 3600 then
+              -- show minutes if less than 3600 seconds (1 hour)
               pfUI.uf.player.debuff.debuffs[i].cd:SetText(ceil(timeleft/60)..'m')
             else
+              -- otherwise show hours
               pfUI.uf.player.buff.buffs[i].cd:SetText(ceil(timeleft/3600) .. 'h')
             end
+          else
+            -- if there's no time left or not set, empty buff text
+            pfUI.uf.player.buff.buffs[i].cd:SetText("")
           end
         end
       end)
