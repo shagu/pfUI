@@ -38,4 +38,31 @@ pfUI:RegisterModule("minimap", function ()
   MiniMapMailIcon:SetTexture("Interface\\AddOns\\pfUI\\img\\mail")
 
   MiniMapTrackingFrame:SetFrameStrata("LOW")
+
+  -- Current location
+  -- Create location text frame under minimap
+  pfUI.minimapLocation = CreateFrame("Frame", nil, UIParent)
+  pfUI.minimapLocation:SetBackdrop(pfUI.backdrop)
+  pfUI.minimapLocation:SetBackdropColor(0,0,0,0)
+  pfUI.minimapLocation:SetPoint("TOPRIGHT",UIParent, -5, -7 - Minimap:GetHeight())
+  pfUI.minimapLocation:SetHeight(20)
+  pfUI.minimapLocation:SetWidth(Minimap:GetWidth())
+  pfUI.minimapLocation:SetFrameStrata("BACKGROUND")
+  pfUI.minimapLocation.background = pfUI.minimapLocation:CreateTexture(nil,"BACKGROUND")
+  pfUI.minimapLocation.background:SetTexture(0,0,0,1)
+  pfUI.minimapLocation.background:SetAllPoints(pfUI.minimapLocation)
+  -- Create text
+  pfUI.minimapLocation.text = pfUI.minimapLocation:CreateFontString("Status", "LOW", "GameFontNormal")
+  pfUI.minimapLocation.text:SetFont("Interface\\AddOns\\pfUI\\fonts\\arial.ttf", 9, "OUTLINE")
+  pfUI.minimapLocation.text:SetPoint("CENTER", 0, 0)
+  pfUI.minimapLocation.text:SetFontObject(GameFontWhite)
+  -- Register zone change event
+  pfUI.minimapLocation:RegisterEvent("ZONE_CHANGED")
+  local function zoneChangeEventHandler(self, event, ...)
+    pfUI.minimapLocation.text:SetText(GetZoneText())
+  end
+  pfUI.minimapLocation:SetScript("OnEvent", zoneChangeEventHandler)
+  -- Initiate zone text
+  zoneChangeEventHandler()
+
 end)
