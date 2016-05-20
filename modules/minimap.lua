@@ -30,5 +30,12 @@ pfUI:RegisterModule("minimap", function ()
   Minimap:SetPoint("TOPLEFT", pfUI.minimap, "TOPLEFT", 3, -3)
   Minimap:SetPoint("BOTTOMRIGHT", pfUI.minimap, "BOTTOMRIGHT", -3, 3)
 
+  -- Set new mail frame position to top right corner of the minimap
+  -- mostly taken from TukUI
+  MiniMapMailFrame:ClearAllPoints()
+  MiniMapMailFrame:SetPoint("TOPRIGHT", pfUI.minimap, "TOPRIGHT", 0, 0)
+  MiniMapMailBorder:Hide()
+  MiniMapMailIcon:SetTexture("Interface\\AddOns\\pfUI\\img\\mail")
+
   MiniMapTrackingFrame:SetFrameStrata("LOW")
 end)
