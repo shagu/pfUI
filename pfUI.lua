@@ -87,13 +87,13 @@ pfUI_config = {
   },
   ["panel"] = {
     ["left"] = {
-      left = "exp",
-      center = "friends",
-      right = "guild",
+      left = "guild",
+      center = "durability",
+      right = "friends",
     },
     ["right"] = {
-      left = "durability",
-      center = "gold",
+      left = "fps",
+      center = "time",
       right = "gold",
     },
     ["other"] = {

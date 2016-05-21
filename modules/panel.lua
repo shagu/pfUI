@@ -33,6 +33,19 @@ pfUI:RegisterModule("panel", function ()
       pfUI.panel:UpdateZone()
     end
   end)
+
+  pfUI.panel.clock = CreateFrame("Frame",nil,UIParent)
+  pfUI.panel.clock:SetScript("OnUpdate",function(s,e)
+    if not pfUI.panel.clock.tick then pfUI.panel.clock.tick = GetTime() - 1 end
+    if GetTime() >= pfUI.panel.clock.tick + 1 then
+      pfUI.panel.clock.tick = GetTime()
+      pfUI.panel:OutputPanel("time", date("%H:%M:%S"))
+      local _, _, lag = GetNetStats();
+      local fps = floor(GetFramerate());
+      pfUI.panel:OutputPanel("fps", floor(GetFramerate()) .. " fps & " .. lag .. " ms")
+    end
+  end);
+
   -- Update "exp"
   function pfUI.panel:UpdateExp ()
     if UnitLevel("player") ~= 60 then
