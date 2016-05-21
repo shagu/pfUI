@@ -9,7 +9,9 @@ pfUI:RegisterModule("panel", function ()
   pfUI.panel:RegisterEvent("PLAYER_GUILD_UPDATE")
   pfUI.panel:RegisterEvent("PLAYER_REGEN_ENABLED")
   pfUI.panel:RegisterEvent("PLAYER_DEAD")
-  pfUI.panel:SetScript("OnEvent", function()
+  pfUI.panel:RegisterEvent("MINIMAP_ZONE_CHANGED")
+
+ pfUI.panel:SetScript("OnEvent", function()
     if event == "PLAYER_ENTERING_WORLD" then
       pfUI.panel:UpdateGold()
       pfUI.panel:UpdateRepair();
