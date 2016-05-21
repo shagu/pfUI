@@ -17,6 +17,7 @@ pfUI:RegisterModule("panel", function ()
       pfUI.panel:UpdateFriend()
       pfUI.panel:UpdateGuild();
       pfUI.panel:UpdateRepair();
+      pfUI.panel:UpdateZone();
     elseif event == "PLAYER_MONEY" then
       pfUI.panel:UpdateGold()
       pfUI.panel:UpdateRepair();
@@ -28,9 +29,10 @@ pfUI:RegisterModule("panel", function ()
       pfUI.panel:UpdateGuild();
     elseif event == "PLAYER_REGEN_ENABLED" or event == "PLAYER_DEAD" then
       pfUI.panel:UpdateRepair();
+    elseif event == "MINIMAP_ZONE_CHANGED" then
+      pfUI.panel:UpdateZone()
     end
   end)
-
   -- Update "exp"
   function pfUI.panel:UpdateExp ()
     if UnitLevel("player") ~= 60 then
@@ -125,6 +127,10 @@ pfUI:RegisterModule("panel", function ()
     pfUI.panel:OutputPanel("durability", lowestPercent .. "% Armor")
   end
 
+  function pfUI.panel:UpdateZone ()
+    pfUI.panel:OutputPanel("zone", GetMinimapZoneText())
+  end
+
   function pfUI.panel:OutputPanel(entry, value)
     if pfUI_config.panel.left.left == entry then
       pfUI.panel.left.left.text:SetText(value)
@@ -143,6 +149,9 @@ pfUI:RegisterModule("panel", function ()
     end
     if pfUI_config.panel.right.right == entry then
       pfUI.panel.right.right.text:SetText(value)
+    end
+    if pfUI_config.panel.other.minimap == entry then
+      pfUI.panel.minimap.text:SetText(value)
     end
   end
 
@@ -273,6 +282,19 @@ pfUI:RegisterModule("panel", function ()
   pfUI.panel.right.right.text:SetPoint("CENTER", 0, 0)
   pfUI.panel.right.right.text:SetFontObject(GameFontWhite)
   pfUI.panel.right.right.text:SetText("[DUMMY]")
+
+  pfUI.panel.minimap = CreateFrame("Frame", nil, UIParent)
+  pfUI.panel.minimap:SetBackdrop(pfUI.backdrop)
+  pfUI.panel.minimap:SetPoint("TOPRIGHT",UIParent, -5, -7 - Minimap:GetHeight())
+  pfUI.panel.minimap:SetHeight(20)
+  pfUI.panel.minimap:SetWidth(Minimap:GetWidth())
+  pfUI.panel.minimap:SetFrameStrata("BACKGROUND")
+  pfUI.panel.minimap.text = pfUI.panel.minimap:CreateFontString("MinimapZoneText", "LOW", "GameFontNormal")
+  pfUI.panel.minimap.text:SetFont("Interface\\AddOns\\pfUI\\fonts\\arial.ttf", 9, "OUTLINE")
+  pfUI.panel.minimap.text:SetPoint("CENTER", 0, 0)
+  pfUI.panel.minimap.text:SetFontObject(GameFontWhite)
+  pfUI.panel.minimap.text:SetText("[DUMMY]")
+
 end)
 
 

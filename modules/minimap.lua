@@ -39,31 +39,6 @@ pfUI:RegisterModule("minimap", function ()
 
   MiniMapTrackingFrame:SetFrameStrata("LOW")
 
-  -- Current location
-  -- Create location text frame under minimap
-  pfUI.minimapLocation = CreateFrame("Frame", nil, UIParent)
-  pfUI.minimapLocation:SetBackdrop(pfUI.backdrop)
-  pfUI.minimapLocation:SetBackdropColor(0,0,0,0)
-  pfUI.minimapLocation:SetPoint("TOPRIGHT",UIParent, -5, -7 - Minimap:GetHeight())
-  pfUI.minimapLocation:SetHeight(20)
-  pfUI.minimapLocation:SetWidth(Minimap:GetWidth())
-  pfUI.minimapLocation:SetFrameStrata("BACKGROUND")
-  pfUI.minimapLocation.background = pfUI.minimapLocation:CreateTexture(nil,"BACKGROUND")
-  pfUI.minimapLocation.background:SetTexture(0,0,0,1)
-  pfUI.minimapLocation.background:SetAllPoints(pfUI.minimapLocation)
-  -- Create text
-  pfUI.minimapLocation.text = pfUI.minimapLocation:CreateFontString("MinimapZoneText", "LOW", "GameFontNormal")
-  pfUI.minimapLocation.text:SetFont("Interface\\AddOns\\pfUI\\fonts\\arial.ttf", 9, "OUTLINE")
-  pfUI.minimapLocation.text:SetPoint("CENTER", 0, 0)
-  pfUI.minimapLocation.text:SetFontObject(GameFontWhite)
-  -- Initiate zone text
-  pfUI.minimapLocation.text:SetText(GetMinimapZoneText())
-  -- Register zone change event
-  pfUI.minimapLocation:RegisterEvent("MINIMAP_ZONE_CHANGED")
-  local function zoneChangeEventHandler(self, event, ...)
-    pfUI.minimapLocation.text:SetText(GetMinimapZoneText())
-  end
-  pfUI.minimapLocation:SetScript("OnEvent", zoneChangeEventHandler)
 
   -- Coordinates in minimap
   -- Create location text frame in bottom left corner of minimap
@@ -72,13 +47,10 @@ pfUI:RegisterModule("minimap", function ()
   pfUI.minimapCoordinates:SetHeight(20)
   pfUI.minimapCoordinates:SetWidth(40)
   pfUI.minimapCoordinates:SetFrameStrata("BACKGROUND")
-  pfUI.minimapCoordinates.background = pfUI.minimapCoordinates:CreateTexture(nil,"BACKGROUND")
-  pfUI.minimapCoordinates.background:SetTexture(0,0,0,1)
-  pfUI.minimapCoordinates.background:SetAllPoints(pfUI.minimapCoordinates)
   -- Create text
   pfUI.minimapCoordinates.text = pfUI.minimapCoordinates:CreateFontString("MinimapCoordinatesText", "LOW", "GameFontNormal")
   pfUI.minimapCoordinates.text:SetFont("Interface\\AddOns\\pfUI\\fonts\\arial.ttf", 11, "OUTLINE")
-  pfUI.minimapCoordinates.text:SetPoint("LEFT", 0, 0)
+  pfUI.minimapCoordinates.text:SetPoint("LEFT", 4, 0)
   pfUI.minimapCoordinates.text:SetFontObject(GameFontWhite)
   pfUI.minimapCoordinates.text:SetText("X, Y")
   pfUI.minimapCoordinates:Hide()

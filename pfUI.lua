@@ -96,6 +96,9 @@ pfUI_config = {
       center = "gold",
       right = "gold",
     },
+    ["other"] = {
+      minimap = "zone",
+    },
   }
 }
 
