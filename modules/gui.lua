@@ -21,7 +21,7 @@ pfUI:RegisterModule("gui", function ()
     end)
 
   function pfUI.gui.SwitchTab(frame)
-    local elements = { pfUI.gui.global, pfUI.gui.uf , pfUI.gui.bar }
+    local elements = { pfUI.gui.global, pfUI.gui.uf , pfUI.gui.bar, pfUI.gui.panel }
     for _, hide in pairs(elements) do
       hide:Hide()
     end
@@ -247,6 +247,47 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.CreateConfig(pfUI.gui.bar, "Icon Size", pfUI_config.bars, "icon_size")
   pfUI.gui.CreateConfig(pfUI.gui.bar, "Border", pfUI_config.bars, "border")
 
+  -- Panel settings
+  pfUI.gui.panel = CreateFrame("Frame", nil, pfUI.gui)
+  pfUI.gui.panel:SetWidth(400)
+  pfUI.gui.panel:SetHeight(320)
+
+  pfUI.gui.panel:SetBackdrop(pfUI.backdrop)
+  pfUI.gui.panel:SetBackdropColor(0,0,0,.50);
+  pfUI.gui.panel:SetPoint("RIGHT",0,0)
+
+  pfUI.gui.panel.switch = CreateFrame("Button", nil, pfUI.gui)
+  pfUI.gui.panel.switch:ClearAllPoints()
+  pfUI.gui.panel.switch:SetWidth(80)
+  pfUI.gui.panel.switch:SetHeight(20)
+  pfUI.gui.panel.switch:SetPoint("TOPLEFT", 0, -60)
+  pfUI.gui.panel.switch:SetBackdrop(pfUI.backdrop)
+  pfUI.gui.panel.switch.text = pfUI.gui.panel.switch:CreateFontString("Status", "LOW", "GameFontNormal")
+  pfUI.gui.panel.switch.text:SetFont("Interface\\AddOns\\pfUI\\fonts\\arial.ttf", 9, "OUTLINE")
+  pfUI.gui.panel.switch.text:ClearAllPoints()
+  pfUI.gui.panel.switch.text:SetAllPoints(pfUI.gui.panel.switch)
+  pfUI.gui.panel.switch.text:SetPoint("CENTER", 0, 0)
+  pfUI.gui.panel.switch.text:SetFontObject(GameFontWhite)
+  pfUI.gui.panel.switch.text:SetText("Panels")
+  pfUI.gui.panel.switch:SetScript("OnClick", function()
+      pfUI.gui.SwitchTab(pfUI.gui.panel)
+    end)
+
+  pfUI.gui.panel.title = pfUI.gui.panel:CreateFontString("Status", "LOW", "GameFontNormal")
+  pfUI.gui.panel.title:SetFont("Interface\\AddOns\\pfUI\\fonts\\arial.ttf", 12, "OUTLINE")
+  pfUI.gui.panel.title:SetPoint("TOP", 0, -10)
+  pfUI.gui.panel.title:SetFontObject(GameFontWhite)
+  pfUI.gui.panel.title:SetText("Panel Settings")
+
+  pfUI.gui.CreateConfig(pfUI.gui.panel, "Left Panel: Left", pfUI_config.panel.left, "left")
+  pfUI.gui.CreateConfig(pfUI.gui.panel, "Left Panel: Center", pfUI_config.panel.left, "center")
+  pfUI.gui.CreateConfig(pfUI.gui.panel, "Left Panel: Right", pfUI_config.panel.left, "right")
+
+  pfUI.gui.CreateConfig(pfUI.gui.panel, "Right Panel: Left", pfUI_config.panel.right, "left")
+  pfUI.gui.CreateConfig(pfUI.gui.panel, "Right Panel: Center", pfUI_config.panel.right, "center")
+  pfUI.gui.CreateConfig(pfUI.gui.panel, "Right Panel: Right", pfUI_config.panel.right, "right")
+
+  pfUI.gui.CreateConfig(pfUI.gui.panel, "Other Panel: Minimap", pfUI_config.panel.other, "minimap")
 
   -- Unlock Frames
   pfUI.gui.unlockFrames = CreateFrame("Button", nil, pfUI.gui)
