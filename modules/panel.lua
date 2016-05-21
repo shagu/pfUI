@@ -11,7 +11,11 @@ pfUI:RegisterModule("panel", function ()
   pfUI.panel:RegisterEvent("PLAYER_DEAD")
   pfUI.panel:RegisterEvent("MINIMAP_ZONE_CHANGED")
 
- pfUI.panel:SetScript("OnEvent", function()
+  -- list of available panel fields
+  pfUI.panel.options = { "time", "fps", "exp", "gold", "friends", 
+                         "guild", "durability", "zone" }
+
+  pfUI.panel:SetScript("OnEvent", function()
     if event == "PLAYER_ENTERING_WORLD" then
       pfUI.panel:UpdateGold()
       pfUI.panel:UpdateRepair();
