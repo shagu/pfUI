@@ -10,6 +10,7 @@ pfUI.lua
 
 env\colors.lua
 env\locales.lua
+env\functions.lua
 
 modules\gui.lua
 modules\actionbar.lua
@@ -26,4 +27,5 @@ modules\xpbar.lua
 modules\autoshift.lua
 modules\bags.lua
 modules\cooldown.lua
+modules\tooltip.lua
 modules\uf_tukui.lua

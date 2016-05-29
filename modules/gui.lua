@@ -21,7 +21,7 @@ pfUI:RegisterModule("gui", function ()
     end)
 
   function pfUI.gui.SwitchTab(frame)
-    local elements = { pfUI.gui.global, pfUI.gui.uf , pfUI.gui.bar, pfUI.gui.panel }
+    local elements = { pfUI.gui.global, pfUI.gui.uf , pfUI.gui.bar, pfUI.gui.panel, pfUI.gui.tooltip }
     for _, hide in pairs(elements) do
       hide:Hide()
     end
@@ -288,6 +288,42 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.CreateConfig(pfUI.gui.panel, "Right Panel: Right", pfUI_config.panel.right, "right")
 
   pfUI.gui.CreateConfig(pfUI.gui.panel, "Other Panel: Minimap", pfUI_config.panel.other, "minimap")
+
+
+  -- Tooltip settings
+  pfUI.gui.tooltip = CreateFrame("Frame", nil, pfUI.gui)
+  pfUI.gui.tooltip:SetWidth(400)
+  pfUI.gui.tooltip:SetHeight(320)
+
+  pfUI.gui.tooltip:SetBackdrop(pfUI.backdrop)
+  pfUI.gui.tooltip:SetBackdropColor(0,0,0,.50);
+  pfUI.gui.tooltip:SetPoint("RIGHT",0,0)
+
+  pfUI.gui.tooltip.switch = CreateFrame("Button", nil, pfUI.gui)
+  pfUI.gui.tooltip.switch:ClearAllPoints()
+  pfUI.gui.tooltip.switch:SetWidth(80)
+  pfUI.gui.tooltip.switch:SetHeight(20)
+  pfUI.gui.tooltip.switch:SetPoint("TOPLEFT", 0, -80)
+  pfUI.gui.tooltip.switch:SetBackdrop(pfUI.backdrop)
+  pfUI.gui.tooltip.switch.text = pfUI.gui.tooltip.switch:CreateFontString("Status", "LOW", "GameFontNormal")
+  pfUI.gui.tooltip.switch.text:SetFont("Interface\\AddOns\\pfUI\\fonts\\arial.ttf", 9, "OUTLINE")
+  pfUI.gui.tooltip.switch.text:ClearAllPoints()
+  pfUI.gui.tooltip.switch.text:SetAllPoints(pfUI.gui.tooltip.switch)
+  pfUI.gui.tooltip.switch.text:SetPoint("CENTER", 0, 0)
+  pfUI.gui.tooltip.switch.text:SetFontObject(GameFontWhite)
+  pfUI.gui.tooltip.switch.text:SetText("Tooltips")
+  pfUI.gui.tooltip.switch:SetScript("OnClick", function()
+      pfUI.gui.SwitchTab(pfUI.gui.tooltip)
+    end)
+
+  pfUI.gui.tooltip.title = pfUI.gui.tooltip:CreateFontString("Status", "LOW", "GameFontNormal")
+  pfUI.gui.tooltip.title:SetFont("Interface\\AddOns\\pfUI\\fonts\\arial.ttf", 12, "OUTLINE")
+  pfUI.gui.tooltip.title:SetPoint("TOP", 0, -10)
+  pfUI.gui.tooltip.title:SetFontObject(GameFontWhite)
+  pfUI.gui.tooltip.title:SetText("Tooltip Settings")
+
+  pfUI.gui.CreateConfig(pfUI.gui.tooltip, "Tooltip Position:", pfUI_config.tooltip, "position")
+
 
   -- Unlock Frames
   pfUI.gui.unlockFrames = CreateFrame("Button", nil, pfUI.gui)

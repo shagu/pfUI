@@ -99,7 +99,10 @@ pfUI_config = {
     ["other"] = {
       minimap = "zone",
     },
-  }
+  },
+  ["tooltip"] = {
+    position = "bottom"
+  },
 }
 
 pfUI.cache = CreateFrame("Frame",nil,UIParent)
@@ -108,7 +111,6 @@ pfUI.cache:SetScript("OnEvent", function()
     _, class = UnitClass("player")
     local color = RAID_CLASS_COLORS[class]
     pfUI.cache.class_r, pfUI.cache.class_g, pfUI.cache.class_b = (color.r + .5) * .5, (color.g + .5) * .5, (color.b + .5) * .5
-
   end)
 
 message = function (msg)
