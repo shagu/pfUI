@@ -1,5 +1,5 @@
 pfUI:RegisterModule("pet", function ()
-  pfUI.uf.pet = CreateFrame("Button",nil,UIParent)
+  pfUI.uf.pet = CreateFrame("Button","pfPet",UIParent)
 
   pfUI.uf.pet:SetWidth(100)
   pfUI.uf.pet:SetHeight(23)

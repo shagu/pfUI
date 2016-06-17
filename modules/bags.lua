@@ -1,19 +1,19 @@
 pfUI:RegisterModule("bags", function ()
-  pfUI.bag = CreateFrame("Frame", "pfBagFrame")
+  pfUI.bag = CreateFrame("Frame", "pfBag")
   pfUI.bag:SetFrameStrata("MEDIUM")
   pfUI.bag:SetPoint("BOTTOMLEFT", pfUI.chat.right, "BOTTOMLEFT", 0, 0)
   pfUI.bag:SetPoint("BOTTOMRIGHT", pfUI.chat.right, "BOTTOMRIGHT", 0, 0)
   pfUI.bag:SetBackdrop(pfUI.backdrop)
   pfUI.bag:Hide()
 
-  pfUI.bank = CreateFrame("Frame", "pfBankFrame")
+  pfUI.bank = CreateFrame("Frame", "pfBank")
   pfUI.bank:SetFrameStrata("MEDIUM")
   pfUI.bank:SetPoint("BOTTOMLEFT", pfUI.chat.left, "BOTTOMLEFT", 0, 0)
   pfUI.bank:SetPoint("BOTTOMRIGHT", pfUI.chat.left, "BOTTOMRIGHT", 0, 0)
   pfUI.bank:SetBackdrop(pfUI.backdrop)
   pfUI.bank:Hide()
 
-  tinsert(UISpecialFrames,"pfBagFrame");
+  tinsert(UISpecialFrames,"pfBag");
 
   function OpenAllBags()
     if pfUI.bag:IsShown() then

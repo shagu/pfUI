@@ -35,11 +35,11 @@ pfUI:RegisterModule("actionbar", function ()
   pfUI.bars:RegisterEvent("PET_BAR_SHOWGRID")
   pfUI.bars:RegisterEvent("PET_BAR_HIDEGRID")
 
-  pfUI.bars.shapeshift = CreateFrame("Frame", "pfBarBottom", UIParent)
-  pfUI.bars.bottomleft = CreateFrame("Frame", "pfBarBottom", UIParent)
-  pfUI.bars.bottomright = CreateFrame("Frame", "pfBarBottom", UIParent)
-  pfUI.bars.vertical = CreateFrame("Frame", "pfBarBottom", UIParent)
-  pfUI.bars.pet = CreateFrame("Frame", "pfBarBottom", UIParent)
+  pfUI.bars.shapeshift = CreateFrame("Frame", "pfBarShapeshift", UIParent)
+  pfUI.bars.bottomleft = CreateFrame("Frame", "pfBarBottomLeft", UIParent)
+  pfUI.bars.bottomright = CreateFrame("Frame", "pfBarBottomRight", UIParent)
+  pfUI.bars.vertical = CreateFrame("Frame", "pfBarVertical", UIParent)
+  pfUI.bars.pet = CreateFrame("Frame", "pfBarPet", UIParent)
 
   PetActionBarFrame:SetParent(pfUI.bars.pet)
 

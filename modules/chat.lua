@@ -1,7 +1,7 @@
 pfUI:RegisterModule("chat", function ()
   pfUI.chat = CreateFrame("Frame",nil,UIParent)
 
-  pfUI.chat.left = CreateFrame("Frame", "leftChat", UIParent)
+  pfUI.chat.left = CreateFrame("Frame", "pfChatLeft", UIParent)
   pfUI.chat.left:SetFrameStrata("BACKGROUND")
   pfUI.chat.left:SetWidth(350)
   pfUI.chat.left:SetHeight(150)
@@ -17,7 +17,7 @@ pfUI:RegisterModule("chat", function ()
   pfUI.chat.left.panelTop:SetBackdrop(pfUI.backdrop)
   pfUI.chat.left.panelTop:SetBackdropColor(0,0,0,.75)
 
-  pfUI.chat.right = CreateFrame("Frame", "leftChat", UIParent)
+  pfUI.chat.right = CreateFrame("Frame", "pfChatRight", UIParent)
   pfUI.chat.right:SetFrameStrata("BACKGROUND")
   pfUI.chat.right:SetWidth(350)
   pfUI.chat.right:SetHeight(150)

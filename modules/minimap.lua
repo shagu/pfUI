@@ -14,7 +14,7 @@ pfUI:RegisterModule("minimap", function ()
       if(arg1 > 0) then Minimap_ZoomIn() else Minimap_ZoomOut() end
     end)
 
-  pfUI.minimap = CreateFrame("Frame",nil,UIParent)
+  pfUI.minimap = CreateFrame("Frame","pfMinimap",UIParent)
   pfUI.minimap:SetBackdrop(pfUI.backdrop)
   pfUI.minimap:SetBackdropColor(0,0,0,0)
   pfUI.minimap:SetPoint("TOPRIGHT", UIParent, -5, -5)

@@ -7,7 +7,7 @@ pfUI:RegisterModule("target", function ()
   ComboFrame:Hide()
   ComboFrame:UnregisterAllEvents()
 
-  pfUI.uf.target = CreateFrame("Button",nil,UIParent)
+  pfUI.uf.target = CreateFrame("Button","pfTarget",UIParent)
   pfUI.uf.target:Hide()
   pfUI.uf.target:RegisterEvent("PLAYER_TARGET_CHANGED")
   pfUI.uf.target:SetScript("OnEvent", function()

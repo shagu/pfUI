@@ -2,7 +2,7 @@ pfUI:RegisterModule("player", function ()
   PlayerFrame:Hide()
   PlayerFrame:UnregisterAllEvents()
 
-  pfUI.uf.player = CreateFrame("Button",nil,UIParent)
+  pfUI.uf.player = CreateFrame("Button","pfPlayer",UIParent)
   pfUI.uf.player:SetWidth(pfUI_config.unitframes.player.width)
   pfUI.uf.player:SetHeight(pfUI_config.unitframes.player.height+pfUI_config.unitframes.player.pheight)
   pfUI.uf.player:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOM", -75, 125)

@@ -174,7 +174,7 @@ pfUI:RegisterModule("panel", function ()
     end
   end
 
-  pfUI.panel.left = CreateFrame("Frame", "leftChatPanelBottom", pfUI.panel)
+  pfUI.panel.left = CreateFrame("Frame", "pfPanelLeft", pfUI.panel)
   pfUI.panel.left:ClearAllPoints()
   pfUI.panel.left:SetHeight(19)
   pfUI.panel.left:SetPoint("BOTTOMLEFT", pfUI.chat.left, "BOTTOMLEFT", 2, 2)
@@ -238,7 +238,7 @@ pfUI:RegisterModule("panel", function ()
   pfUI.panel.left.right.text:SetFontObject(GameFontWhite)
   pfUI.panel.left.right.text:SetText("[DUMMY]")
 
-  pfUI.panel.right = CreateFrame("Frame", "rightChatPanelBottom", pfUI.panel)
+  pfUI.panel.right = CreateFrame("Frame", "pfPanelRight", pfUI.panel)
   pfUI.panel.right:ClearAllPoints()
   pfUI.panel.right:SetHeight(19)
   pfUI.panel.right:SetPoint("BOTTOMLEFT", pfUI.chat.right, "BOTTOMLEFT", 2, 2)
@@ -302,7 +302,7 @@ pfUI:RegisterModule("panel", function ()
   pfUI.panel.right.right.text:SetFontObject(GameFontWhite)
   pfUI.panel.right.right.text:SetText("[DUMMY]")
 
-  pfUI.panel.minimap = CreateFrame("Frame", nil, UIParent)
+  pfUI.panel.minimap = CreateFrame("Frame", "pfPanelMinimap", UIParent)
   pfUI.panel.minimap:SetBackdrop(pfUI.backdrop)
   pfUI.panel.minimap:SetPoint("TOPRIGHT",UIParent, -5, -7 - Minimap:GetHeight())
   pfUI.panel.minimap:SetHeight(20)

@@ -4,7 +4,7 @@ pfUI:RegisterModule("targettarget", function ()
       if UnitExists("targettarget") then pfUI.uf.targettarget:Show() else pfUI.uf.targettarget:Hide() end
     end)
 
-  pfUI.uf.targettarget = CreateFrame("Button",nil,UIParent)
+  pfUI.uf.targettarget = CreateFrame("Button","pfTargetTarget",UIParent)
   pfUI.uf.targettarget:Hide()
 
   pfUI.uf.targettarget:SetWidth(100)
