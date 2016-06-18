@@ -10,6 +10,7 @@ pfUI:RegisterModule("targettarget", function ()
   pfUI.uf.targettarget:SetWidth(100)
   pfUI.uf.targettarget:SetHeight(25)
   pfUI.uf.targettarget:SetPoint("BOTTOM", UIParent , "BOTTOM", 0, 125)
+  pfUI.utils:loadPosition(pfUI.uf.targettarget)
   pfUI.uf.targettarget:SetBackdrop(pfUI.backdrop)
 
   pfUI.uf.targettarget:RegisterForClicks('LeftButtonUp', 'RightButtonUp')

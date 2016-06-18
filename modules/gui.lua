@@ -73,6 +73,7 @@ pfUI:RegisterModule("gui", function ()
 
     frame.input:SetScript("OnEditFocusLost", function(self)
       this:GetParent().category[this:GetParent().config] = this:GetText()
+      pfUI.gui.settingChanged = true
     end)
 
     return frame
@@ -119,16 +120,26 @@ pfUI:RegisterModule("gui", function ()
 
       frame.drag:SetScript("OnMouseUp",function()
           frame:StopMovingOrSizing()
+          _, _, _, xpos, ypos = frame:GetPoint()
+
+          if not pfUI_config.position[frame:GetName()] then
+            pfUI_config.position[frame:GetName()] = {}
+          end
+
+          pfUI_config.position[frame:GetName()]["xpos"] = xpos
+          pfUI_config.position[frame:GetName()]["ypos"] = ypos
         end)
     
       if pfUI.gitter:IsShown() then
         frame:SetMovable(true)
         frame.drag:EnableMouse(true)
         frame.drag:Show()
+        pfUI.gui.unlockFrames.text:SetText("Lock Frames")
       else
         frame:SetMovable(false)
         frame.drag:EnableMouse(false)
         frame.drag:Hide()
+        pfUI.gui.unlockFrames.text:SetText("Unlock Frames")
       end
     end
   end
@@ -324,6 +335,24 @@ pfUI:RegisterModule("gui", function ()
 
   pfUI.gui.CreateConfig(pfUI.gui.tooltip, "Tooltip Position:", pfUI_config.tooltip, "position")
 
+    -- Reset Frames
+  pfUI.gui.resetFrames = CreateFrame("Button", nil, pfUI.gui)
+  pfUI.gui.resetFrames:ClearAllPoints()
+  pfUI.gui.resetFrames:SetWidth(80)
+  pfUI.gui.resetFrames:SetHeight(20)
+  pfUI.gui.resetFrames:SetPoint("BOTTOMLEFT", 0, 40)
+  pfUI.gui.resetFrames:SetBackdrop(pfUI.backdrop)
+  pfUI.gui.resetFrames.text = pfUI.gui.resetFrames:CreateFontString("Status", "LOW", "GameFontNormal")
+  pfUI.gui.resetFrames.text:SetFont("Interface\\AddOns\\pfUI\\fonts\\arial.ttf", 9, "OUTLINE")
+  pfUI.gui.resetFrames.text:ClearAllPoints()
+  pfUI.gui.resetFrames.text:SetAllPoints(pfUI.gui.resetFrames)
+  pfUI.gui.resetFrames.text:SetPoint("CENTER", 0, 0)
+  pfUI.gui.resetFrames.text:SetFontObject(GameFontWhite)
+  pfUI.gui.resetFrames.text:SetText("Reset Frames")
+  pfUI.gui.resetFrames:SetScript("OnClick", function()
+      pfUI_config["position"] = {}
+      pfUI.gui.reloadDialog:Show()
+    end)
 
   -- Unlock Frames
   pfUI.gui.unlockFrames = CreateFrame("Button", nil, pfUI.gui)
@@ -358,9 +387,47 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.hideGUI.text:SetFontObject(GameFontWhite)
   pfUI.gui.hideGUI.text:SetText("Close")
   pfUI.gui.hideGUI:SetScript("OnClick", function()
+    if pfUI.gui.settingChanged then
+      pfUI.gui.reloadDialog:Show()
+    end
     pfUI.gui:Hide()
   end)
 
   -- Switch to default View: global
   pfUI.gui.SwitchTab(pfUI.gui.global)
+  
+  
+  pfUI.gui.reloadDialog = CreateFrame("Frame","pfReloadDiag",UIParent)
+  pfUI.gui.reloadDialog:SetFrameStrata("TOOLTIP")
+  pfUI.gui.reloadDialog:SetWidth(300)
+  pfUI.gui.reloadDialog:SetHeight(100)
+  pfUI.gui.reloadDialog:Hide()
+  tinsert(UISpecialFrames, "pfReloadDiag")
+
+  pfUI.gui.reloadDialog:SetBackdrop(pfUI.backdrop)
+  pfUI.gui.reloadDialog:SetPoint("CENTER",0,0)
+
+  pfUI.gui.reloadDialog.text = pfUI.gui.reloadDialog:CreateFontString("Status", "LOW", "GameFontNormal")
+  pfUI.gui.reloadDialog.text:SetFontObject(GameFontWhite)
+  pfUI.gui.reloadDialog.text:SetPoint("TOP", 0, -15)
+  pfUI.gui.reloadDialog.text:SetText("Some settings need to reload the UI to take effect.\nDo you want to reloadUI now?")
+
+  pfUI.gui.reloadDialog.yes = CreateFrame("Button", "pfReloadYes", pfUI.gui.reloadDialog, "UIPanelButtonTemplate")
+  pfUI.gui.reloadDialog.yes:SetBackdrop(pfUI.backdrop)
+  pfUI.gui.reloadDialog.yes:SetWidth(100)
+  pfUI.gui.reloadDialog.yes:SetHeight(20) -- width, height
+  pfUI.gui.reloadDialog.yes:SetPoint("BOTTOMLEFT", 20,15)
+  pfUI.gui.reloadDialog.yes:SetText("Yes")
+  pfUI.gui.reloadDialog.yes:SetScript("OnClick", function()
+      pfUI.gui.settingChanged = nil
+      ReloadUI();
+    end)
+  pfUI.gui.reloadDialog.no = CreateFrame("Button", "pfReloadNo", pfUI.gui.reloadDialog, "UIPanelButtonTemplate")
+  pfUI.gui.reloadDialog.no:SetWidth(100)
+  pfUI.gui.reloadDialog.no:SetHeight(20) -- width, height
+  pfUI.gui.reloadDialog.no:SetPoint("BOTTOMRIGHT", -20,15)
+  pfUI.gui.reloadDialog.no:SetText("No")
+  pfUI.gui.reloadDialog.no:SetScript("OnClick", function()
+      pfUI.gui.reloadDialog:Hide()
+    end)
 end)

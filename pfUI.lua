@@ -103,7 +103,18 @@ pfUI_config = {
   ["tooltip"] = {
     position = "bottom"
   },
+  ["position"] = {
+  }
 }
+
+pfUI.utils = CreateFrame("Frame",nil,UIParent)
+
+function pfUI.utils:loadPosition(frame)
+  if pfUI_config["position"][frame:GetName()] then
+    frame:ClearAllPoints()
+    frame:SetPoint("TOPLEFT", pfUI_config["position"][frame:GetName()].xpos, pfUI_config["position"][frame:GetName()].ypos)
+  end
+end
 
 message = function (msg)
   DEFAULT_CHAT_FRAME:AddMessage("|cffcccc33INFO: |cffffff55"..msg)

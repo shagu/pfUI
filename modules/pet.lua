@@ -6,6 +6,7 @@ pfUI:RegisterModule("pet", function ()
   pfUI.uf.pet:ClearAllPoints()
   pfUI.uf.pet:SetPoint("TOPLEFT", pfUI.uf.player.hp , "TOPRIGHT", 0, 0)
   pfUI.uf.pet:SetPoint("BOTTOMRIGHT", pfUI.uf.target.hp, "BOTTOMLEFT", 0, 0)
+  pfUI.utils:loadPosition(pfUI.uf.pet)
 
   pfUI.uf.pet:RegisterForClicks('LeftButtonUp', 'RightButtonUp')
   pfUI.uf.pet:SetScript("OnClick", function ()
