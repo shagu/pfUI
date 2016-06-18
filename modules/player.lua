@@ -46,6 +46,8 @@ pfUI:RegisterModule("player", function ()
 
       local hp, hpmax = UnitHealth("player"), UnitHealthMax("player")
       local power, powermax = UnitMana("player"), UnitManaMax("player")
+      _, class = UnitClass("player")
+      local color = RAID_CLASS_COLORS[class]
 
       local cr, cg, cb = (color.r + .5) * .5, (color.g + .5) * .5, (color.b + .5) * .5
       local perc = hp / hpmax
