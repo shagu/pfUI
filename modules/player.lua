@@ -47,7 +47,7 @@ pfUI:RegisterModule("player", function ()
       local hp, hpmax = UnitHealth("player"), UnitHealthMax("player")
       local power, powermax = UnitMana("player"), UnitManaMax("player")
 
-      local cr, cg, cb = pfUI.cache.class_r, pfUI.cache.class_g, pfUI.cache.class_b
+      local cr, cg, cb = (color.r + .5) * .5, (color.g + .5) * .5, (color.b + .5) * .5
       local perc = hp / hpmax
 
       pfUI.uf.player.hp.bar:SetMinMaxValues(0, hpmax)

@@ -105,14 +105,6 @@ pfUI_config = {
   },
 }
 
-pfUI.cache = CreateFrame("Frame",nil,UIParent)
-pfUI.cache:RegisterEvent("PLAYER_ENTERING_WORLD")
-pfUI.cache:SetScript("OnEvent", function()
-    _, class = UnitClass("player")
-    local color = RAID_CLASS_COLORS[class]
-    pfUI.cache.class_r, pfUI.cache.class_g, pfUI.cache.class_b = (color.r + .5) * .5, (color.g + .5) * .5, (color.b + .5) * .5
-  end)
-
 message = function (msg)
   DEFAULT_CHAT_FRAME:AddMessage("|cffcccc33INFO: |cffffff55"..msg)
 end
