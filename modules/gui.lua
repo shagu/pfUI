@@ -82,7 +82,7 @@ pfUI:RegisterModule("gui", function ()
     local movable = { pfUI.minimap, pfUI.chat.left, pfUI.chat.right,
       pfUI.uf.player, pfUI.uf.target, pfUI.uf.targettarget, pfUI.uf.pet,
       pfUI.bars.shapeshift, pfUI.bars.bottomleft, pfUI.bars.bottomright,
-      pfUI.bars.vertical, pfUI.bars.pet, pfUI.bars.bottom }
+      pfUI.bars.vertical, pfUI.bars.pet, pfUI.bars.bottom, pfUI.panel.minimap }
 
     if not pfUI.gitter then
       pfUI.gitter = CreateFrame("Frame", nil, UIParent)
