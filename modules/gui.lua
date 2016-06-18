@@ -390,6 +390,7 @@ pfUI:RegisterModule("gui", function ()
     if pfUI.gui.settingChanged then
       pfUI.gui.reloadDialog:Show()
     end
+    if pfUI.gitter:IsShown() then pfUI.gui:UnlockFrames() end
     pfUI.gui:Hide()
   end)
 
