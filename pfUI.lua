@@ -15,6 +15,7 @@ end
 pfUI = CreateFrame("Frame",nil,UIParent)
 pfUI:RegisterEvent("ADDON_LOADED")
 pfUI:SetScript("OnEvent", function()
+  pfUI:LoadConfig()
   if arg1 == "pfUI" then
     pfUI:Debug("pfUI module loader:")
     for i,m in pairs(this.modules) do
@@ -35,9 +36,7 @@ function pfUI:RegisterModule(n, f)
 end
 
 function pfUI:Debug(msg)
-  if pfUI_config.debug == 1 then
-    DEFAULT_CHAT_FRAME:AddMessage(msg)
-  end
+  -- DEFAULT_CHAT_FRAME:AddMessage(msg)
 end
 
 pfUI.backdrop = {
@@ -59,52 +58,6 @@ pfUI.backdrop_col = {
 pfUI.backdrop_underline = {
   edgeFile = "Interface\\AddOns\\pfUI\\img\\underline", edgeSize = 8,
   insets = {left = 0, right = 0, top = 0, bottom = 0},
-}
-
-pfUI_playerDB = {}
-pfUI_config = {
-  debug = 1,
-  ["unitframes"] = {
-    animation_speed = 5,
-    portrait = 1,
-    buff_size = "22",
-    debuff_size = "22",
-    layout = "default",
-    ["player"] = {
-      width = 200,
-      height = 50,
-      pheight = 10,
-    },
-    ["target"] = {
-      width = 200,
-      height = 50,
-      pheight = 10,
-    },
-  },
-  ["bars"] = {
-    icon_size = "22",
-    border = 2,
-  },
-  ["panel"] = {
-    ["left"] = {
-      left = "guild",
-      center = "durability",
-      right = "friends",
-    },
-    ["right"] = {
-      left = "fps",
-      center = "time",
-      right = "gold",
-    },
-    ["other"] = {
-      minimap = "zone",
-    },
-  },
-  ["tooltip"] = {
-    position = "bottom"
-  },
-  ["position"] = {
-  }
 }
 
 pfUI.utils = CreateFrame("Frame",nil,UIParent)

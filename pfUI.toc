@@ -12,6 +12,7 @@ env\colors.lua
 env\locales.lua
 env\functions.lua
 
+modules\config.lua
 modules\gui.lua
 modules\actionbar.lua
 modules\chat.lua
