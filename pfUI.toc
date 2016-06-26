@@ -11,6 +11,7 @@ pfUI.lua
 env\colors.lua
 env\locales.lua
 env\functions.lua
+env\fonts.lua
 
 modules\config.lua
 modules\gui.lua
