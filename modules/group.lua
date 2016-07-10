@@ -132,7 +132,7 @@ pfUI:RegisterModule("group", function ()
     pfUI.uf.group[i].hp.raidIcon.texture:SetTexture("Interface\\TargetingFrame\\UI-RaidTargetingIcons")
     pfUI.uf.group[i].hp.raidIcon.texture:SetAllPoints(pfUI.uf.group[i].hp.raidIcon)
     pfUI.uf.group[i].hp.raidIcon:SetPoint("TOP", pfUI.uf.group[i].hp, "TOP", -4, 4)
-    pfUI.uf.group[i].hp.raidIcon:Show()
+    pfUI.uf.group[i].hp.raidIcon:Hide()
 
     pfUI.uf.group[i]:RegisterForClicks('LeftButtonUp', 'RightButtonUp')
 
