@@ -12,7 +12,7 @@ pfUI:RegisterModule("panel", function ()
   pfUI.panel:RegisterEvent("MINIMAP_ZONE_CHANGED")
 
   -- list of available panel fields
-  pfUI.panel.options = { "time", "fps", "exp", "gold", "friends", 
+  pfUI.panel.options = { "time", "fps", "exp", "gold", "friends",
                          "guild", "durability", "zone" }
 
   pfUI.panel:SetScript("OnEvent", function()

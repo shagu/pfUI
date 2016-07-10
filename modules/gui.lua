@@ -129,7 +129,7 @@ pfUI:RegisterModule("gui", function ()
           pfUI_config.position[frame:GetName()]["xpos"] = xpos
           pfUI_config.position[frame:GetName()]["ypos"] = ypos
         end)
-    
+
       if pfUI.gitter:IsShown() then
         frame:SetMovable(true)
         frame.drag:EnableMouse(true)
@@ -396,8 +396,8 @@ pfUI:RegisterModule("gui", function ()
 
   -- Switch to default View: global
   pfUI.gui.SwitchTab(pfUI.gui.global)
-  
-  
+
+
   pfUI.gui.reloadDialog = CreateFrame("Frame","pfReloadDiag",UIParent)
   pfUI.gui.reloadDialog:SetFrameStrata("TOOLTIP")
   pfUI.gui.reloadDialog:SetWidth(300)
