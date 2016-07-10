@@ -1,17 +1,19 @@
 pfUI:RegisterModule("group", function ()
   pfUI.uf.group = CreateFrame("Button","pfGroup",UIParent)
   pfUI.uf.group:Hide()
-  pfUI.uf.group:RegisterEvent("PARTY_MEMBERS_CHANGED");
-  pfUI.uf.group:RegisterEvent("PARTY_LEADER_CHANGED");
-  pfUI.uf.group:RegisterEvent("PARTY_MEMBER_ENABLE");
-  pfUI.uf.group:RegisterEvent("PARTY_MEMBER_DISABLE");
-  pfUI.uf.group:RegisterEvent("PARTY_LOOT_METHOD_CHANGED");
-  pfUI.uf.group:RegisterEvent("UNIT_FACTION");
-  pfUI.uf.group:RegisterEvent("UNIT_AURA");
-  pfUI.uf.group:RegisterEvent("UNIT_PET");
-  pfUI.uf.group:RegisterEvent("VARIABLES_LOADED");
-  pfUI.uf.group:RegisterEvent("RAID_ROSTER_UPDATE");
-  pfUI.uf.group:RegisterEvent("GROUP_ROSTER_UPDATE");
+
+  pfUI.uf.group:RegisterEvent("PARTY_MEMBERS_CHANGED")
+  pfUI.uf.group:RegisterEvent("PARTY_LEADER_CHANGED")
+  pfUI.uf.group:RegisterEvent("PARTY_MEMBER_ENABLE")
+  pfUI.uf.group:RegisterEvent("PARTY_MEMBER_DISABLE")
+  pfUI.uf.group:RegisterEvent("PARTY_LOOT_METHOD_CHANGED")
+  pfUI.uf.group:RegisterEvent("UNIT_FACTION")
+  pfUI.uf.group:RegisterEvent("UNIT_AURA")
+  pfUI.uf.group:RegisterEvent("UNIT_PET")
+  pfUI.uf.group:RegisterEvent("VARIABLES_LOADED")
+  pfUI.uf.group:RegisterEvent("RAID_ROSTER_UPDATE")
+  pfUI.uf.group:RegisterEvent("GROUP_ROSTER_UPDATE")
+  pfUI.uf.group:RegisterEvent("RAID_TARGET_UPDATE")
 
   pfUI.uf.group:SetScript("OnEvent", function()
     PartyMemberBackground:Hide()
@@ -29,6 +31,11 @@ pfUI:RegisterModule("group", function ()
           pfUI.uf.group[i]:SetAlpha(.25)
         end
 
+        local raidIcon = GetRaidTargetIndex("party" .. i)
+        if raidIcon then
+         SetRaidTargetIconTexture(pfUI.uf.group[i].hp.raidIcon.texture, raidIcon)
+         pfUI.uf.group[i].hp.raidIcon:Show()
+        end
         if UnitIsPartyLeader("party"..i) then
           pfUI.uf.group[i].hp.leaderIcon:Show()
         else
@@ -101,9 +108,8 @@ pfUI:RegisterModule("group", function ()
     pfUI.uf.group[i].caption:SetText("NAME")
 
     pfUI.uf.group[i].hp.leaderIcon = CreateFrame("Frame",nil,pfUI.uf.group[i].hp)
-    pfUI.uf.group[i].hp.leaderIcon:SetFrameStrata("HIGH")
-    pfUI.uf.group[i].hp.leaderIcon:SetWidth(10) -- Set these to whatever height/width is needed
-    pfUI.uf.group[i].hp.leaderIcon:SetHeight(10) -- for your Texture
+    pfUI.uf.group[i].hp.leaderIcon:SetWidth(10)
+    pfUI.uf.group[i].hp.leaderIcon:SetHeight(10)
     pfUI.uf.group[i].hp.leaderIcon.texture = pfUI.uf.group[i].hp.leaderIcon:CreateTexture(nil,"BACKGROUND")
     pfUI.uf.group[i].hp.leaderIcon.texture:SetTexture("Interface\\GROUPFRAME\\UI-Group-LeaderIcon")
     pfUI.uf.group[i].hp.leaderIcon.texture:SetAllPoints(pfUI.uf.group[i].hp.leaderIcon)
@@ -111,16 +117,23 @@ pfUI:RegisterModule("group", function ()
     pfUI.uf.group[i].hp.leaderIcon:Hide()
 
     pfUI.uf.group[i].hp.lootIcon = CreateFrame("Frame",nil,pfUI.uf.group[i].hp)
-    pfUI.uf.group[i].hp.lootIcon:SetFrameStrata("HIGH")
-    pfUI.uf.group[i].hp.lootIcon:SetWidth(10) -- Set these to whatever height/width is needed
-    pfUI.uf.group[i].hp.lootIcon:SetHeight(10) -- for your Texture
+    pfUI.uf.group[i].hp.lootIcon:SetWidth(10)
+    pfUI.uf.group[i].hp.lootIcon:SetHeight(10)
     pfUI.uf.group[i].hp.lootIcon.texture = pfUI.uf.group[i].hp.lootIcon:CreateTexture(nil,"BACKGROUND")
     pfUI.uf.group[i].hp.lootIcon.texture:SetTexture("Interface\\GROUPFRAME\\UI-Group-MasterLooter")
     pfUI.uf.group[i].hp.lootIcon.texture:SetAllPoints(pfUI.uf.group[i].hp.lootIcon)
     pfUI.uf.group[i].hp.lootIcon:SetPoint("TOPLEFT", pfUI.uf.group[i].hp, "LEFT", -4, 4)
     pfUI.uf.group[i].hp.lootIcon:Hide()
 
-    pfUI.uf.group[i]:RegisterEvent("RAID_ROSTER_UPDATE")
+    pfUI.uf.group[i].hp.raidIcon = CreateFrame("Frame",nil,pfUI.uf.group[i].hp.bar)
+    pfUI.uf.group[i].hp.raidIcon:SetWidth(24)
+    pfUI.uf.group[i].hp.raidIcon:SetHeight(24)
+    pfUI.uf.group[i].hp.raidIcon.texture = pfUI.uf.group[i].hp.raidIcon:CreateTexture(nil,"ARTWORK")
+    pfUI.uf.group[i].hp.raidIcon.texture:SetTexture("Interface\\TargetingFrame\\UI-RaidTargetingIcons")
+    pfUI.uf.group[i].hp.raidIcon.texture:SetAllPoints(pfUI.uf.group[i].hp.raidIcon)
+    pfUI.uf.group[i].hp.raidIcon:SetPoint("TOP", pfUI.uf.group[i].hp, "TOP", -4, 4)
+    pfUI.uf.group[i].hp.raidIcon:Show()
+
     pfUI.uf.group[i]:RegisterForClicks('LeftButtonUp', 'RightButtonUp')
 
     pfUI.uf.group[i]:SetScript("OnEnter", function()
