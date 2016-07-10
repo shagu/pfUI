@@ -43,7 +43,12 @@ pfUI:RegisterModule("target", function ()
   pfUI.uf.target:RegisterEvent("UNIT_MAXENERGY")
 
   pfUI.uf.target:SetScript("OnEvent", function()
-      if UnitExists("target") then pfUI.uf.target:Show() else
+      if UnitExists("target") then
+        pfUI.uf.target:Show()
+      elseif (pfUI.gitter and pfUI.gitter:IsShown()) then
+        pfUI.uf.target:Show()
+        return
+      else
         pfUI.uf.target:Hide()
         return
       end

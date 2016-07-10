@@ -1,11 +1,14 @@
 pfUI:RegisterModule("targettarget", function ()
   pfUI.uf.targettargetNotify = CreateFrame("Button",nil,UIParent)
   pfUI.uf.targettargetNotify:SetScript("OnUpdate", function()
-      if UnitExists("targettarget") then pfUI.uf.targettarget:Show() else pfUI.uf.targettarget:Hide() end
+      if UnitExists("targettarget") or (pfUI.gitter and pfUI.gitter:IsShown()) then
+        pfUI.uf.targettarget:Show()
+      else
+        pfUI.uf.targettarget:Hide()
+      end
     end)
 
   pfUI.uf.targettarget = CreateFrame("Button","pfTargetTarget",UIParent)
-  pfUI.uf.targettarget:Hide()
 
   pfUI.uf.targettarget:SetWidth(100)
   pfUI.uf.targettarget:SetHeight(25)
@@ -22,7 +25,15 @@ pfUI:RegisterModule("targettarget", function ()
   pfUI.uf.targettarget.bg:SetAllPoints(pfUI.uf.targettarget)
 
   pfUI.uf.targettarget:SetScript("OnUpdate", function()
-      if not UnitExists("targettarget") then pfUI.uf.targettarget:Hide(); return end
+      if UnitExists("targettarget") then
+        pfUI.uf.targettarget:Show()
+      elseif (pfUI.gitter and pfUI.gitter:IsShown()) then
+        pfUI.uf.targettarget:Show()
+        return
+      else
+        pfUI.uf.targettarget:Hide()
+        return
+      end
 
       local color
       if UnitIsPlayer("targettarget") then

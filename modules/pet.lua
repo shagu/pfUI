@@ -33,7 +33,15 @@ pfUI:RegisterModule("pet", function ()
   pfUI.uf.pet:RegisterEvent("UNIT_MAXFOCUS")
 
   pfUI.uf.pet:SetScript("OnEvent", function(arg1)
-      if UnitExists("pet") then pfUI.uf.pet:Show() else pfUI.uf.pet:Hide() end
+      if UnitExists("pet") then
+        pfUI.uf.pet:Show()
+      elseif (pfUI.gitter and pfUI.gitter:IsShown()) then
+        pfUI.uf.pet:Show()
+        return
+      else
+        pfUI.uf.pet:Hide()
+      end
+
       local hp, hpmax = UnitHealth("pet"), UnitHealthMax("pet")
       local power, powermax = UnitMana("pet"), UnitManaMax("pet")
 

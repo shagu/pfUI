@@ -104,6 +104,10 @@ pfUI:RegisterModule("gui", function ()
 
     for _,frame in pairs(movable) do
       local frame = frame
+      if not frame:IsShown() then
+        frame.hideLater = true
+      end
+
       if not frame.drag then
         frame.drag = CreateFrame("Frame", nil, frame)
         frame.drag:SetAllPoints(frame)
@@ -134,11 +138,15 @@ pfUI:RegisterModule("gui", function ()
         frame:SetMovable(true)
         frame.drag:EnableMouse(true)
         frame.drag:Show()
+        frame:Show()
         pfUI.gui.unlockFrames.text:SetText("Lock Frames")
       else
         frame:SetMovable(false)
         frame.drag:EnableMouse(false)
         frame.drag:Hide()
+        if frame.hideLater == true then
+          frame:Hide()
+        end
         pfUI.gui.unlockFrames.text:SetText("Unlock Frames")
       end
     end
