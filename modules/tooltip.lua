@@ -2,14 +2,42 @@ pfUI:RegisterModule("tooltip", function ()
   GameTooltip:SetBackdrop(pfUI.backdrop)
 
   if pfUI_config.tooltip.position == "cursor" then
-    function GameTooltip_SetDefaultAnchor(tooltip, parent)		
+    function GameTooltip_SetDefaultAnchor(tooltip, parent)
       tooltip:SetOwner(parent, "ANCHOR_CURSOR");
     end
   end
 
-  pfUI.tooltip = CreateFrame('Frame', nil, GameTooltip) 
+  pfUI.tooltip = CreateFrame('Frame', nil, GameTooltip)
+  function pfUI.tooltip:GetUnit()
+    pfUI.tooltip.unit = "none"
+
+    for i, unit in pairs({"mouseover", "player", "pet", "target", "party", "partypet", "raid", "raidpet"}) do
+      if unit == "party" or unit == "partypet" then
+        for i=1,4 do
+          if UnitName(unit .. i) == GameTooltipTextLeft1:GetText() or UnitPVPName(unit .. i) == GameTooltipTextLeft1:GetText() then
+            pfUI.tooltip.unit = unit .. i
+          end
+        end
+      elseif unit == "raid" or unit == "raidpet" then
+        for i=1,40 do
+          if UnitName(unit .. i) == GameTooltipTextLeft1:GetText() or UnitPVPName(unit .. i) == GameTooltipTextLeft1:GetText() then
+            pfUI.tooltip.unit = unit .. i
+          end
+        end
+      else
+        if UnitName(unit) == GameTooltipTextLeft1:GetText() or UnitPVPName(unit) == GameTooltipTextLeft1:GetText() then
+          pfUI.tooltip.unit = unit
+        end
+      end
+    end
+
+    return pfUI.tooltip.unit
+  end
+
   pfUI.tooltip:SetAllPoints()
   pfUI.tooltip:SetScript("OnShow", function()
+      pfUI.tooltip:GetUnit()
+
       if GameTooltip:GetAnchorType() == "ANCHOR_NONE" then
         GameTooltip:ClearAllPoints();
         if pfUI_config.tooltip.position == "bottom" then
@@ -20,17 +48,18 @@ pfUI:RegisterModule("tooltip", function ()
       end
     end)
 
-  pfUI.tooltipStatusBar = CreateFrame('Frame', nil, GameTooltipStatusBar) 
+  pfUI.tooltipStatusBar = CreateFrame('Frame', nil, GameTooltipStatusBar)
   pfUI.tooltipStatusBar:SetScript("OnUpdate", function()
-      if(not UnitExists('mouseover')) then 
+      if unit == "none" then return end
+      local unit = pfUI.tooltip:GetUnit()
+      if unit == "none" then return end
 
-        return 
-      end
-      local _, class = UnitClass("mouseover")
-      local reaction = UnitReaction("mouseover", "player")
 
-      local hp = UnitHealth("mouseover")
-      local hpm = UnitHealthMax("mouseover")
+      local _, class = UnitClass(unit)
+      local reaction = UnitReaction(unit, "player")
+
+      local hp = UnitHealth(unit)
+      local hpm = UnitHealthMax(unit)
 
       if pfUI.tooltipStatusBar.HP == nil then
         pfUI.tooltipStatusBar.HP = GameTooltipStatusBar:CreateFontString("Status", "DIALOG", "GameFontNormal")
@@ -46,10 +75,11 @@ pfUI:RegisterModule("tooltip", function ()
         pfUI.tooltipStatusBar.HP:SetText(hp .. " / " .. hpm)
       end
 
-      if class and reaction then
-        if UnitIsPlayer("mouseover") then
+      if class or reaction then
+        if UnitIsPlayer(unit) then
           local color = RAID_CLASS_COLORS[class]
           GameTooltipStatusBar:SetStatusBarColor(color.r, color.g, color.b)
+          GameTooltipTextLeft1:SetTextColor(color.r, color.g, color.b)
         else
           local color = UnitReactionColor[reaction]
           GameTooltipStatusBar:SetStatusBarColor(color.r, color.g, color.b)
@@ -60,18 +90,20 @@ pfUI:RegisterModule("tooltip", function ()
   pfUI.tooltipEvent = CreateFrame("Frame")
   pfUI.tooltipEvent:RegisterEvent("UPDATE_MOUSEOVER_UNIT")
   pfUI.tooltipEvent:SetScript("OnEvent", function()
-      local pvpname = UnitPVPName("mouseover")
-      local name = UnitName("mouseover")
-      local target = UnitName("mouseovertarget")
-      local _, targetClass = UnitClass("mouseovertarget")
-      local targetReaction = UnitReaction("player","mouseovertarget")
-      local _, class = UnitClass("mouseover")
-      local guild = GetGuildInfo("mouseover")
-      local reaction = UnitReaction("player", "mouseover")
+      local unit = pfUI.tooltip:GetUnit()
+      if unit == "none" then return end
+      local pvpname = UnitPVPName(unit)
+      local name = UnitName(unit)
+      local target = UnitName(unit .. "target")
+      local _, targetClass = UnitClass(unit .. "target")
+      local targetReaction = UnitReaction("player",unit .. "target")
+      local _, class = UnitClass(unit)
+      local guild = GetGuildInfo(unit)
+      local reaction = UnitReaction("player", unit)
       local pvptitle = gsub(pvpname," "..name, "", 1)
 
       if name and reaction then
-        if UnitIsPlayer("mouseover") and class then
+        if UnitIsPlayer(unit) and class then
           local color = RAID_CLASS_COLORS[class]
           GameTooltipStatusBar:SetStatusBarColor(color.r, color.g, color.b)
           GameTooltip:SetBackdropBorderColor(color.r, color.g, color.b)
@@ -92,7 +124,7 @@ pfUI:RegisterModule("tooltip", function ()
       end
 
       if target and ( targetClass or targetReaction ) then
-        if UnitIsPlayer("mouseovertarget") then
+        if UnitIsPlayer(unit .. "target") then
           local color = RAID_CLASS_COLORS[targetClass]
           GameTooltip:AddLine(target, color.r, color.g, color.b)
         elseif targetReaction ~= nil then
