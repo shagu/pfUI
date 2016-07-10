@@ -41,6 +41,9 @@ pfUI:RegisterModule("target", function ()
   pfUI.uf.target:RegisterEvent("UNIT_MAXRAGE")
   pfUI.uf.target:RegisterEvent("UNIT_ENERGY")
   pfUI.uf.target:RegisterEvent("UNIT_MAXENERGY")
+  pfUI.uf.target:RegisterEvent("RAID_TARGET_UPDATE")
+  pfUI.uf.target:RegisterEvent("PARTY_LEADER_CHANGED")
+  pfUI.uf.target:RegisterEvent("PARTY_LOOT_METHOD_CHANGED")
 
   pfUI.uf.target:SetScript("OnEvent", function()
       if UnitExists("target") then
@@ -52,6 +55,27 @@ pfUI:RegisterModule("target", function ()
         pfUI.uf.target:Hide()
         return
       end
+
+    local raidIcon = GetRaidTargetIndex("target")
+      if raidIcon then
+        SetRaidTargetIconTexture(pfUI.uf.target.hp.raidIcon.texture, raidIcon)
+        pfUI.uf.target.hp.raidIcon:Show()
+      else
+        pfUI.uf.target.hp.raidIcon:Hide()
+      end
+      if UnitIsPartyLeader("target") then
+        pfUI.uf.target.hp.leaderIcon:Show()
+      else
+        pfUI.uf.target.hp.leaderIcon:Hide()
+      end
+
+      local _, lootmaster = GetLootMethod()
+      if lootmaster and pfUI.uf.target.id == lootmaster then
+        pfUI.uf.target.hp.lootIcon:Show()
+      else
+        pfUI.uf.target.hp.lootIcon:Hide()
+      end
+
 
       if event == "PLAYER_TARGET_CHANGED" or event == "PLAYER_ENTERING_WORLD" then
         pfUI.uf.target.power.bar:SetValue(0)
@@ -169,13 +193,41 @@ pfUI:RegisterModule("target", function ()
 
   pfUI.uf.target.hp.bar = CreateFrame("StatusBar", nil, pfUI.uf.target.hp)
   pfUI.uf.target.hp.bar:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
-
   pfUI.uf.target.hp.bar:ClearAllPoints()
   pfUI.uf.target.hp.bar:SetPoint("TOPLEFT", pfUI.uf.target.hp, "TOPLEFT", 3, -3)
   pfUI.uf.target.hp.bar:SetPoint("BOTTOMRIGHT", pfUI.uf.target.hp, "BOTTOMRIGHT", -3, 3)
-
   pfUI.uf.target.hp.bar:SetMinMaxValues(0, 100)
   pfUI.uf.target.hp.bar:SetValue(100)
+
+  pfUI.uf.target.hp.leaderIcon = CreateFrame("Frame",nil,pfUI.uf.target.hp)
+  pfUI.uf.target.hp.leaderIcon:SetWidth(10)
+  pfUI.uf.target.hp.leaderIcon:SetHeight(10)
+  pfUI.uf.target.hp.leaderIcon.texture = pfUI.uf.target.hp.leaderIcon:CreateTexture(nil,"BACKGROUND")
+  pfUI.uf.target.hp.leaderIcon.texture:SetTexture("Interface\\GROUPFRAME\\UI-Group-LeaderIcon")
+  pfUI.uf.target.hp.leaderIcon.texture:SetAllPoints(pfUI.uf.target.hp.leaderIcon)
+  pfUI.uf.target.hp.leaderIcon:SetPoint("TOPLEFT", pfUI.uf.target.hp, "TOPLEFT", -4, 4)
+  pfUI.uf.target.hp.leaderIcon:Hide()
+
+  pfUI.uf.target.hp.lootIcon = CreateFrame("Frame",nil,pfUI.uf.target.hp)
+  pfUI.uf.target.hp.lootIcon:SetWidth(10)
+  pfUI.uf.target.hp.lootIcon:SetHeight(10)
+  pfUI.uf.target.hp.lootIcon.texture = pfUI.uf.target.hp.lootIcon:CreateTexture(nil,"BACKGROUND")
+  pfUI.uf.target.hp.lootIcon.texture:SetTexture("Interface\\GROUPFRAME\\UI-Group-MasterLooter")
+  pfUI.uf.target.hp.lootIcon.texture:SetAllPoints(pfUI.uf.target.hp.lootIcon)
+  pfUI.uf.target.hp.lootIcon:SetPoint("TOPLEFT", pfUI.uf.target.hp, "LEFT", -4, 4)
+  pfUI.uf.target.hp.lootIcon:Hide()
+
+  pfUI.uf.target.hp.raidIcon = CreateFrame("Frame",nil,pfUI.uf.target.hp)
+  pfUI.uf.target.hp.raidIcon:SetFrameStrata("MEDIUM")
+  pfUI.uf.target.hp.raidIcon:SetParent(pfUI.uf.target.hp.bar)
+  pfUI.uf.target.hp.raidIcon:SetWidth(24)
+  pfUI.uf.target.hp.raidIcon:SetHeight(24)
+  pfUI.uf.target.hp.raidIcon.texture = pfUI.uf.target.hp.raidIcon:CreateTexture(nil,"ARTWORK")
+  pfUI.uf.target.hp.raidIcon.texture:SetTexture("Interface\\AddOns\\pfUI\\img\\raidicons")
+  pfUI.uf.target.hp.raidIcon.texture:SetAllPoints(pfUI.uf.target.hp.raidIcon)
+  pfUI.uf.target.hp.raidIcon:SetPoint("TOP", pfUI.uf.target.hp, "TOP", 0, 6)
+  pfUI.uf.target.hp.raidIcon:Hide()
+
 
   if pfUI_config.unitframes.portrait == "1" then
     pfUI.uf.target.hp.bar.portrait = CreateFrame("PlayerModel",nil,pfUI.uf.target.hp.bar)

@@ -35,6 +35,14 @@ pfUI:RegisterModule("targettarget", function ()
         return
       end
 
+      local raidIcon = GetRaidTargetIndex("targettarget")
+      if raidIcon then
+        SetRaidTargetIconTexture(pfUI.uf.targettarget.hp.raidIcon.texture, raidIcon)
+        pfUI.uf.targettarget.hp.raidIcon:Show()
+      else
+        pfUI.uf.targettarget.hp.raidIcon:Hide()
+      end
+
       local color
       if UnitIsPlayer("targettarget") then
         _, class = UnitClass("targettarget")
@@ -88,6 +96,17 @@ pfUI:RegisterModule("targettarget", function ()
   pfUI.uf.targettarget.hp.bar:SetPoint("BOTTOMRIGHT", pfUI.uf.targettarget.hp, "BOTTOMRIGHT", -3, 3)
   pfUI.uf.targettarget.hp.bar:SetMinMaxValues(0, 100)
   pfUI.uf.targettarget.hp.bar:SetValue(100)
+
+  pfUI.uf.targettarget.hp.raidIcon = CreateFrame("Frame",nil,pfUI.uf.targettarget.hp)
+  pfUI.uf.targettarget.hp.raidIcon:SetFrameStrata("MEDIUM")
+  pfUI.uf.targettarget.hp.raidIcon:SetParent(pfUI.uf.targettarget.hp.bar)
+  pfUI.uf.targettarget.hp.raidIcon:SetWidth(16)
+  pfUI.uf.targettarget.hp.raidIcon:SetHeight(16)
+  pfUI.uf.targettarget.hp.raidIcon.texture = pfUI.uf.targettarget.hp.raidIcon:CreateTexture(nil,"ARTWORK")
+  pfUI.uf.targettarget.hp.raidIcon.texture:SetTexture("Interface\\AddOns\\pfUI\\img\\raidicons")
+  pfUI.uf.targettarget.hp.raidIcon.texture:SetAllPoints(pfUI.uf.targettarget.hp.raidIcon)
+  pfUI.uf.targettarget.hp.raidIcon:SetPoint("TOP", pfUI.uf.targettarget.hp, "TOP", 0, 6)
+  pfUI.uf.targettarget.hp.raidIcon:Hide()
 
   if pfUI_config.unitframes.portrait == "1" then
     pfUI.uf.targettarget.hp.bar.portrait = CreateFrame("PlayerModel",nil,pfUI.uf.targettarget.hp.bar)

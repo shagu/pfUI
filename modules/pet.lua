@@ -31,6 +31,7 @@ pfUI:RegisterModule("pet", function ()
   pfUI.uf.pet:RegisterEvent("UNIT_MAXENERGY")
   pfUI.uf.pet:RegisterEvent("UNIT_FOCUS")
   pfUI.uf.pet:RegisterEvent("UNIT_MAXFOCUS")
+  pfUI.uf.pet:RegisterEvent("RAID_TARGET_UPDATE")
 
   pfUI.uf.pet:SetScript("OnEvent", function(arg1)
       if UnitExists("pet") then
@@ -40,6 +41,14 @@ pfUI:RegisterModule("pet", function ()
         return
       else
         pfUI.uf.pet:Hide()
+      end
+
+      local raidIcon = GetRaidTargetIndex("pet")
+      if raidIcon then
+        SetRaidTargetIconTexture(pfUI.uf.pet.hp.raidIcon.texture, raidIcon)
+        pfUI.uf.pet.hp.raidIcon:Show()
+      else
+        pfUI.uf.pet.hp.raidIcon:Hide()
       end
 
       local hp, hpmax = UnitHealth("pet"), UnitHealthMax("pet")
@@ -104,6 +113,17 @@ pfUI:RegisterModule("pet", function ()
   pfUI.uf.pet.hp.bar:SetPoint("BOTTOMRIGHT", pfUI.uf.pet.hp, "BOTTOMRIGHT", -3, 3)
   pfUI.uf.pet.hp.bar:SetMinMaxValues(0, 100)
   pfUI.uf.pet.hp.bar:SetValue(100)
+
+  pfUI.uf.pet.hp.raidIcon = CreateFrame("Frame",nil,pfUI.uf.pet.hp)
+  pfUI.uf.pet.hp.raidIcon:SetFrameStrata("MEDIUM")
+  pfUI.uf.pet.hp.raidIcon:SetParent(pfUI.uf.pet.hp.bar)
+  pfUI.uf.pet.hp.raidIcon:SetWidth(16)
+  pfUI.uf.pet.hp.raidIcon:SetHeight(16)
+  pfUI.uf.pet.hp.raidIcon.texture = pfUI.uf.pet.hp.raidIcon:CreateTexture(nil,"ARTWORK")
+  pfUI.uf.pet.hp.raidIcon.texture:SetTexture("Interface\\AddOns\\pfUI\\img\\raidicons")
+  pfUI.uf.pet.hp.raidIcon.texture:SetAllPoints(pfUI.uf.pet.hp.raidIcon)
+  pfUI.uf.pet.hp.raidIcon:SetPoint("TOP", pfUI.uf.pet.hp, "TOP", 0, 6)
+  pfUI.uf.pet.hp.raidIcon:Hide()
 
   pfUI.uf.pet.power = CreateFrame("Frame",nil, pfUI.uf.pet)
   pfUI.uf.pet.power:SetBackdrop(pfUI.backdrop)

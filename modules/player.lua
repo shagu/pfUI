@@ -39,10 +39,33 @@ pfUI:RegisterModule("player", function ()
   pfUI.uf.player:RegisterEvent("UNIT_MAXRAGE")
   pfUI.uf.player:RegisterEvent("UNIT_ENERGY")
   pfUI.uf.player:RegisterEvent("UNIT_MAXENERGY")
+  pfUI.uf.player:RegisterEvent("RAID_TARGET_UPDATE")
+  pfUI.uf.player:RegisterEvent("PARTY_LEADER_CHANGED")
+  pfUI.uf.player:RegisterEvent("PARTY_LOOT_METHOD_CHANGED")
 
   pfUI.uf.player:SetScript("OnEvent", function()
       if event == "UNIT_DISPLAYPOWER" or event == "PLAYER_ENTERING_WORLD" then
         pfUI.uf.player.power.bar:SetValue(0)
+      end
+
+      local raidIcon = GetRaidTargetIndex("player")
+      if raidIcon then
+        SetRaidTargetIconTexture(pfUI.uf.player.hp.raidIcon.texture, raidIcon)
+        pfUI.uf.player.hp.raidIcon:Show()
+      else
+        pfUI.uf.player.hp.raidIcon:Hide()
+      end
+      if UnitIsPartyLeader("player") then
+        pfUI.uf.player.hp.leaderIcon:Show()
+      else
+        pfUI.uf.player.hp.leaderIcon:Hide()
+      end
+
+      local _, lootmaster = GetLootMethod()
+      if lootmaster and pfUI.uf.player.id == lootmaster then
+        pfUI.uf.player.hp.lootIcon:Show()
+      else
+        pfUI.uf.player.hp.lootIcon:Hide()
       end
 
       local hp, hpmax = UnitHealth("player"), UnitHealthMax("player")
@@ -110,6 +133,34 @@ pfUI:RegisterModule("player", function ()
   pfUI.uf.player.hp:SetHeight(pfUI_config.unitframes.player.height)
   pfUI.uf.player.hp:SetPoint("TOPRIGHT",pfUI.uf.player,"TOPRIGHT")
   pfUI.uf.player.hp:SetPoint("TOPLEFT",pfUI.uf.player,"TOPLEFT")
+
+  pfUI.uf.player.hp.leaderIcon = CreateFrame("Frame",nil,pfUI.uf.player.hp)
+  pfUI.uf.player.hp.leaderIcon:SetWidth(10)
+  pfUI.uf.player.hp.leaderIcon:SetHeight(10)
+  pfUI.uf.player.hp.leaderIcon.texture = pfUI.uf.player.hp.leaderIcon:CreateTexture(nil,"BACKGROUND")
+  pfUI.uf.player.hp.leaderIcon.texture:SetTexture("Interface\\GROUPFRAME\\UI-Group-LeaderIcon")
+  pfUI.uf.player.hp.leaderIcon.texture:SetAllPoints(pfUI.uf.player.hp.leaderIcon)
+  pfUI.uf.player.hp.leaderIcon:SetPoint("TOPLEFT", pfUI.uf.player.hp, "TOPLEFT", -4, 4)
+  pfUI.uf.player.hp.leaderIcon:Hide()
+
+  pfUI.uf.player.hp.lootIcon = CreateFrame("Frame",nil,pfUI.uf.player.hp)
+  pfUI.uf.player.hp.lootIcon:SetWidth(10)
+  pfUI.uf.player.hp.lootIcon:SetHeight(10)
+  pfUI.uf.player.hp.lootIcon.texture = pfUI.uf.player.hp.lootIcon:CreateTexture(nil,"BACKGROUND")
+  pfUI.uf.player.hp.lootIcon.texture:SetTexture("Interface\\GROUPFRAME\\UI-Group-MasterLooter")
+  pfUI.uf.player.hp.lootIcon.texture:SetAllPoints(pfUI.uf.player.hp.lootIcon)
+  pfUI.uf.player.hp.lootIcon:SetPoint("TOPLEFT", pfUI.uf.player.hp, "LEFT", -4, 4)
+  pfUI.uf.player.hp.lootIcon:Hide()
+
+  pfUI.uf.player.hp.raidIcon = CreateFrame("Frame",nil,pfUI.uf.player.hp)
+  pfUI.uf.player.hp.raidIcon:SetFrameStrata("HIGH")
+  pfUI.uf.player.hp.raidIcon:SetWidth(24)
+  pfUI.uf.player.hp.raidIcon:SetHeight(24)
+  pfUI.uf.player.hp.raidIcon.texture = pfUI.uf.player.hp.raidIcon:CreateTexture(nil,"ARTWORK")
+  pfUI.uf.player.hp.raidIcon.texture:SetTexture("Interface\\AddOns\\pfUI\\img\\raidicons")
+  pfUI.uf.player.hp.raidIcon.texture:SetAllPoints(pfUI.uf.player.hp.raidIcon)
+  pfUI.uf.player.hp.raidIcon:SetPoint("TOP", pfUI.uf.player.hp, "TOP", 0, 6)
+  pfUI.uf.player.hp.raidIcon:Hide()
 
   pfUI.uf.player.hp.bar = CreateFrame("StatusBar", nil, pfUI.uf.player.hp)
   pfUI.uf.player.hp.bar:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
