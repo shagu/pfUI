@@ -23,6 +23,7 @@ modules\player.lua
 modules\target.lua
 modules\targettarget.lua
 modules\pet.lua
+modules\group.lua
 modules\minimap.lua
 modules\skin.lua
 modules\xpbar.lua
