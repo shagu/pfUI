@@ -327,16 +327,17 @@ pfUI:RegisterModule("bags", function ()
       pfUI.bank.bagframe:SetWidth(3 * pfUI_config.bars.border + 6*(pfUI_config.bars.border+button_size))
       pfUI.bank.bagframe:SetHeight(button_size + 2 * (pfUI_config.bars.border*2))
 
+      BankFramePurchaseButton:SetParent(pfUI.bank.bagframe)
       BankFramePurchaseButton:SetAlpha(1)
-      BankFramePurchaseButton:SetWidth(button_size*2/3)
-      BankFramePurchaseButton:SetHeight(button_size*2/3)
-      BankFramePurchaseButton:SetPoint("RIGHT", pfUI.bank.bagframe, "RIGHT",  -pfUI_config.bars.border*3, 0)
+      BankFramePurchaseButton:SetWidth(button_size)
+      BankFramePurchaseButton:SetHeight(button_size)
+      BankFramePurchaseButton:SetPoint("RIGHT", pfUI.bank.bagframe, "RIGHT",  -pfUI_config.bars.border*2, 0)
       BankFramePurchaseButton:SetText("+")
       BankFramePurchaseButton:SetBackdrop(pfUI.backdrop)
       BankFramePurchaseButton:SetNormalTexture(nil)
       BankFramePurchaseButton:SetPushedTexture(nil)
       if BankFramePurchaseInfo:IsShown() then
-        pfUI.bank.bagframe:SetWidth(pfUI.bank.bagframe:GetWidth() + button_size*2/3 + pfUI_config.bars.border)
+        pfUI.bank.bagframe:SetWidth(pfUI.bank.bagframe:GetWidth() + button_size + pfUI_config.bars.border)
       end
 
       for i=1, 6 do
