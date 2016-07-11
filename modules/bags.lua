@@ -59,8 +59,6 @@ pfUI:RegisterModule("bags", function ()
     pfUI.bag[i]:SetID(i-1)
     pfUI.bag[i]:SetParent(pfUI.bag)
     pfUI.bag[i]:SetAllPoints(pfUI.bag)
-    local bag = getglobal("BankFrameBag" .. i)
-    bag:SetPoint("CENTER", 50, 25*i)
   end
 
   for i=6, 12 do
