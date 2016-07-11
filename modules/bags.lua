@@ -1,10 +1,19 @@
 pfUI:RegisterModule("bags", function ()
+
+  -- remove this function to avoid vertexcolor updates on item buttons
+  function SetItemButtonNormalTextureVertexColor () return end
+
   pfUI.bag = CreateFrame("Frame", "pfBag")
   pfUI.bag:SetFrameStrata("MEDIUM")
   pfUI.bag:SetPoint("BOTTOMLEFT", pfUI.chat.right, "BOTTOMLEFT", 0, 0)
   pfUI.bag:SetPoint("BOTTOMRIGHT", pfUI.chat.right, "BOTTOMRIGHT", 0, 0)
   pfUI.bag:SetBackdrop(pfUI.backdrop)
   pfUI.bag:Hide()
+
+  pfUI.bag.bagframe = CreateFrame("Frame", "pfBagBags", pfUI.bank)
+  pfUI.bag.bagframe:SetFrameStrata("MEDIUM")
+  pfUI.bag.bagframe:SetBackdrop(pfUI.backdrop)
+  pfUI.bag.bagframe:Hide()
 
   pfUI.bank = CreateFrame("Frame", "pfBank")
   pfUI.bank:SetFrameStrata("MEDIUM")
@@ -16,7 +25,7 @@ pfUI:RegisterModule("bags", function ()
   pfUI.bank.bagframe = CreateFrame("Frame", "pfBankBags", pfUI.bank)
   pfUI.bank.bagframe:SetFrameStrata("MEDIUM")
   pfUI.bank.bagframe:SetBackdrop(pfUI.backdrop)
-  pfUI.bank.bagframe:Show()
+  pfUI.bank.bagframe:Hide()
 
   for i=1, 6 do
     local bag = getglobal("BankFrameBag" .. i)
@@ -70,6 +79,7 @@ pfUI:RegisterModule("bags", function ()
 
   pfUI.bag.close = CreateFrame("Button")
   pfUI.bag.close:SetParent(pfUI.bag)
+  pfUI.bag.close:RegisterForClicks("LeftButtonUp", "RightButtonUp")
   pfUI.bag.close:SetPoint("TOPRIGHT", -pfUI_config.bars.border*2,-pfUI_config.bars.border*2 )
   pfUI.bag.close:SetBackdrop(pfUI.backdrop)
   pfUI.bag.close:SetHeight(15)
@@ -87,7 +97,21 @@ pfUI:RegisterModule("bags", function ()
       pfUI.bag.close:SetBackdropBorderColor(1,1,1,1)
     end)
 
-  pfUI.bag.close:SetScript("OnClick", CloseAllBags)
+  pfUI.bag.close:SetScript("OnClick", function()
+    if arg1 == "RightButton" then
+      if pfUI.bag.bagframe:IsShown() then
+        pfUI.bag.bagframe:Hide()
+        pfUI.bank.bagframe:Hide()
+      else
+        pfUI.bag.bagframe:Show()
+        pfUI.bank.bagframe:Show()
+      end
+    else
+      pfUI.bag.bagframe:Hide()
+      pfUI.bank.bagframe:Hide()
+      CloseAllBags()
+    end
+  end)
 
   pfUI.bag.search = CreateFrame("Frame", pfUI.bag)
   pfUI.bag.search:SetParent(pfUI.bag)
@@ -182,7 +206,6 @@ pfUI:RegisterModule("bags", function ()
   for i,v in ipairs({pfUIBagsMoneySilverButton:GetRegions()}) do if i == 1 then v:SetHeight(10); v:SetWidth(10) end end
   pfUIBagsMoneyCopperButton:SetFont("Interface\\AddOns\\pfUI\\fonts\\arial.ttf", 10, "OUTLINE")
   for i,v in ipairs({pfUIBagsMoneyCopperButton:GetRegions()}) do if i == 1 then v:SetHeight(10); v:SetWidth(10) end end
-
   pfUI.bag:RegisterEvent("BAG_UPDATE");
   pfUI.bag:RegisterEvent("BAG_CLOSED");
   pfUI.bag:RegisterEvent("BAG_OPEN");
@@ -195,6 +218,33 @@ pfUI:RegisterModule("bags", function ()
       local x_max = 10
 
       local button_size = (this:GetWidth() - pfUI_config.bars.border*3) / x_max - pfUI_config.bars.border
+
+      pfUI.bag.bagframe:SetPoint("BOTTOMLEFT", pfUI.bag, "TOPLEFT", 0, pfUI_config.bars.border)
+      pfUI.bag.bagframe:SetWidth(3 * pfUI_config.bars.border + 4*(pfUI_config.bars.border+button_size))
+      pfUI.bag.bagframe:SetHeight(button_size + 2 * (pfUI_config.bars.border*2))
+
+      for i=0, 3 do
+        local bag = getglobal("CharacterBag" .. i .. "Slot")
+        bag:ClearAllPoints()
+        bag:SetParent(pfUI.bag.bagframe)
+        bag:SetWidth(button_size)
+        bag:SetHeight(button_size)
+        bag:SetNormalTexture(nil)
+        bag:SetPushedTexture(nil)
+        bag:SetBackdrop(
+            { bgFile = texture, tile = false, tileSize = pfUI_config.unitframes.buff_size,
+              edgeFile = "Interface\\AddOns\\pfUI\\img\\border_col", edgeSize = 8,
+              insets = { left = 0, right = 0, top = 0, bottom = 0}
+            })
+
+        bag:SetBackdropBorderColor(.3,.3,.3,1)
+        bag.SetBackdrop = function () return end
+
+        bag:SetPoint("TOPLEFT", pfUI.bag.bagframe, "TOPLEFT", pfUI_config.bars.border*2 + i*button_size + i*pfUI_config.bars.border, -pfUI_config.bars.border*2)
+        bag:SetAlpha(1)
+        bag:Show()
+      end
+
 
       for j=1, 5 do
         for i=1, GetContainerNumSlots(j-1) do
@@ -303,6 +353,7 @@ pfUI:RegisterModule("bags", function ()
               insets = { left = 0, right = 0, top = 0, bottom = 0}
             })
         bag:SetBackdropBorderColor(.3,.3,.3,1)
+        bag.SetBackdrop = function () return end
 
         bag:SetPoint("TOPLEFT", pfUI.bank.bagframe, "TOPLEFT", pfUI_config.bars.border*2 + (i-1)*button_size + (i-1)*pfUI_config.bars.border, -pfUI_config.bars.border*2)
         bag:SetAlpha(1)
