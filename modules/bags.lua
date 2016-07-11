@@ -13,6 +13,23 @@ pfUI:RegisterModule("bags", function ()
   pfUI.bank:SetBackdrop(pfUI.backdrop)
   pfUI.bank:Hide()
 
+  pfUI.bank.bagframe = CreateFrame("Frame", "pfBankBags", pfUI.bank)
+  pfUI.bank.bagframe:SetFrameStrata("MEDIUM")
+  pfUI.bank.bagframe:SetBackdrop(pfUI.backdrop)
+  pfUI.bank.bagframe:Show()
+
+  for i=1, 6 do
+    local bag = getglobal("BankFrameBag" .. i)
+    bag:SetNormalTexture(nil)
+    bag:SetPushedTexture(nil)
+    bag:SetBackdrop(
+      { bgFile = texture, tile = false, tileSize = pfUI_config.unitframes.buff_size,
+        edgeFile = "Interface\\AddOns\\pfUI\\img\\border_col", edgeSize = 8,
+        insets = { left = 0, right = 0, top = 0, bottom = 0}
+      })
+    bag:SetBackdropBorderColor(.3,.3,.3,1)
+  end
+
   tinsert(UISpecialFrames,"pfBag");
 
   function OpenAllBags()
@@ -42,6 +59,8 @@ pfUI:RegisterModule("bags", function ()
     pfUI.bag[i]:SetID(i-1)
     pfUI.bag[i]:SetParent(pfUI.bag)
     pfUI.bag[i]:SetAllPoints(pfUI.bag)
+    local bag = getglobal("BankFrameBag" .. i)
+    bag:SetPoint("CENTER", 50, 25*i)
   end
 
   for i=6, 12 do
@@ -254,6 +273,42 @@ pfUI:RegisterModule("bags", function ()
       local x_max = 10
 
       local button_size = (this:GetWidth() - pfUI_config.bars.border*3) / x_max - pfUI_config.bars.border
+
+      -- put bagslots into pfUI bagslot frame
+      pfUI.bank.bagframe:SetPoint("BOTTOMLEFT", pfUI.bank, "TOPLEFT", 0, pfUI_config.bars.border)
+      pfUI.bank.bagframe:SetWidth(3 * pfUI_config.bars.border + 6*(pfUI_config.bars.border+button_size))
+      pfUI.bank.bagframe:SetHeight(button_size + 2 * (pfUI_config.bars.border*2))
+
+      BankFramePurchaseButton:SetAlpha(1)
+      BankFramePurchaseButton:SetWidth(button_size*2/3)
+      BankFramePurchaseButton:SetHeight(button_size*2/3)
+      BankFramePurchaseButton:SetPoint("RIGHT", pfUI.bank.bagframe, "RIGHT",  -pfUI_config.bars.border*3, 0)
+      BankFramePurchaseButton:SetText("+")
+      BankFramePurchaseButton:SetBackdrop(pfUI.backdrop)
+      BankFramePurchaseButton:SetNormalTexture(nil)
+      BankFramePurchaseButton:SetPushedTexture(nil)
+      if BankFramePurchaseInfo:IsShown() then
+        pfUI.bank.bagframe:SetWidth(pfUI.bank.bagframe:GetWidth() + button_size*2/3 + pfUI_config.bars.border)
+      end
+
+      for i=1, 6 do
+        local bag = getglobal("BankFrameBag" .. i)
+        bag:ClearAllPoints()
+        bag:SetParent(pfUI.bank.bagframe)
+        bag:SetWidth(button_size)
+        bag:SetHeight(button_size)
+        bag:SetNormalTexture(nil)
+        bag:SetPushedTexture(nil)
+        bag:SetBackdrop(
+            { bgFile = texture, tile = false, tileSize = pfUI_config.unitframes.buff_size,
+              edgeFile = "Interface\\AddOns\\pfUI\\img\\border_col", edgeSize = 8,
+              insets = { left = 0, right = 0, top = 0, bottom = 0}
+            })
+        bag:SetBackdropBorderColor(.3,.3,.3,1)
+
+        bag:SetPoint("TOPLEFT", pfUI.bank.bagframe, "TOPLEFT", pfUI_config.bars.border*2 + (i-1)*button_size + (i-1)*pfUI_config.bars.border, -pfUI_config.bars.border*2)
+        bag:SetAlpha(1)
+      end
 
       for j=5, 11 do
         local frame, container = nil
