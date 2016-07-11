@@ -10,7 +10,7 @@ pfUI:RegisterModule("bags", function ()
   pfUI.bag:SetBackdrop(pfUI.backdrop)
   pfUI.bag:Hide()
 
-  pfUI.bag.bagframe = CreateFrame("Frame", "pfBagBags", pfUI.bank)
+  pfUI.bag.bagframe = CreateFrame("Frame", "pfBagBags", pfUI.bag)
   pfUI.bag.bagframe:SetFrameStrata("MEDIUM")
   pfUI.bag.bagframe:SetBackdrop(pfUI.backdrop)
   pfUI.bag.bagframe:Hide()
@@ -107,8 +107,6 @@ pfUI:RegisterModule("bags", function ()
         pfUI.bank.bagframe:Show()
       end
     else
-      pfUI.bag.bagframe:Hide()
-      pfUI.bank.bagframe:Hide()
       CloseAllBags()
     end
   end)
