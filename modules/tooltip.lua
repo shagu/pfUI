@@ -16,28 +16,29 @@ pfUI:RegisterModule("tooltip", function ()
         for i=1,4 do
           if UnitName(unit .. i) == GameTooltipTextLeft1:GetText() or UnitPVPName(unit .. i) == GameTooltipTextLeft1:GetText() then
             pfUI.tooltip.unit = unit .. i
+            return pfUI.tooltip.unit
           end
         end
       elseif unit == "raid" or unit == "raidpet" then
         for i=1,40 do
           if UnitName(unit .. i) == GameTooltipTextLeft1:GetText() or UnitPVPName(unit .. i) == GameTooltipTextLeft1:GetText() then
             pfUI.tooltip.unit = unit .. i
+            return pfUI.tooltip.unit
           end
         end
       else
         if UnitName(unit) == GameTooltipTextLeft1:GetText() or UnitPVPName(unit) == GameTooltipTextLeft1:GetText() then
           pfUI.tooltip.unit = unit
+          return pfUI.tooltip.unit
         end
       end
     end
-
     return pfUI.tooltip.unit
   end
 
   pfUI.tooltip:SetAllPoints()
   pfUI.tooltip:SetScript("OnShow", function()
-      pfUI.tooltip:GetUnit()
-
+      pfUI.tooltip:Update()
       if GameTooltip:GetAnchorType() == "ANCHOR_NONE" then
         GameTooltip:ClearAllPoints();
         if pfUI_config.tooltip.position == "bottom" then
@@ -46,50 +47,34 @@ pfUI:RegisterModule("tooltip", function ()
           GameTooltip:SetPoint("BOTTOMRIGHT",pfUI.chat.right,"TOPRIGHT",0,0)
         end
       end
+
     end)
+
 
   pfUI.tooltipStatusBar = CreateFrame('Frame', nil, GameTooltipStatusBar)
   pfUI.tooltipStatusBar:SetScript("OnUpdate", function()
-      if unit == "none" then return end
-      local unit = pfUI.tooltip:GetUnit()
-      if unit == "none" then return end
-
-
-      local _, class = UnitClass(unit)
-      local reaction = UnitReaction(unit, "player")
-
-      local hp = UnitHealth(unit)
-      local hpm = UnitHealthMax(unit)
-
-      if pfUI.tooltipStatusBar.HP == nil then
-        pfUI.tooltipStatusBar.HP = GameTooltipStatusBar:CreateFontString("Status", "DIALOG", "GameFontNormal")
-        pfUI.tooltipStatusBar.HP:SetPoint("TOP", 0,8)
-        pfUI.tooltipStatusBar.HP:SetNonSpaceWrap(false)
-        pfUI.tooltipStatusBar.HP:SetFontObject(GameFontWhite)
-        pfUI.tooltipStatusBar.HP:SetFont("Interface\\AddOns\\pfUI\\fonts\\arial.ttf", 12, "OUTLINE")
-      end
+      hp = GameTooltipStatusBar:GetValue()
+      _, hpm = GameTooltipStatusBar:GetMinMaxValues()
 
       if hp and hpm then
         if hp >= 1000 then hp = round(hp / 1000, 1) .. "k" end
         if hpm >= 1000 then hpm = round(hpm / 1000, 1) .. "k" end
         pfUI.tooltipStatusBar.HP:SetText(hp .. " / " .. hpm)
       end
+  end)
 
-      if class or reaction then
-        if UnitIsPlayer(unit) then
-          local color = RAID_CLASS_COLORS[class]
-          GameTooltipStatusBar:SetStatusBarColor(color.r, color.g, color.b)
-          GameTooltipTextLeft1:SetTextColor(color.r, color.g, color.b)
-        else
-          local color = UnitReactionColor[reaction]
-          GameTooltipStatusBar:SetStatusBarColor(color.r, color.g, color.b)
-        end
-      end
-    end)
+  GameTooltipStatusBar:SetHeight(6)
+  GameTooltipStatusBar:ClearAllPoints()
+  GameTooltipStatusBar:SetPoint("BOTTOMLEFT", GameTooltip, "TOPLEFT", 1, 2)
+  GameTooltipStatusBar:SetPoint("BOTTOMRIGHT", GameTooltip, "TOPRIGHT", -1, 2)
+  GameTooltipStatusBar:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
+  GameTooltipStatusBar:SetBackdrop( { bgFile = [[Interface\Tooltips\UI-Tooltip-Background]],
+                                    insets = {left = -1, right = -1, top = -1, bottom = -1} })
+  GameTooltipStatusBar:SetBackdropColor(0, 0, 0, 1)
+  GameTooltipStatusBar.SetStatusBarColor_orig = GameTooltipStatusBar.SetStatusBarColor
+  GameTooltipStatusBar.SetStatusBarColor = function() return end
 
-  pfUI.tooltipEvent = CreateFrame("Frame")
-  pfUI.tooltipEvent:RegisterEvent("UPDATE_MOUSEOVER_UNIT")
-  pfUI.tooltipEvent:SetScript("OnEvent", function()
+  function pfUI.tooltip:Update()
       local unit = pfUI.tooltip:GetUnit()
       if unit == "none" then return end
       local pvpname = UnitPVPName(unit)
@@ -100,22 +85,23 @@ pfUI:RegisterModule("tooltip", function ()
       local _, class = UnitClass(unit)
       local guild = GetGuildInfo(unit)
       local reaction = UnitReaction("player", unit)
-      local pvptitle = gsub(pvpname," "..name, "", 1)
+      local pvptitle = gsub(pvpname or name," "..name, "", 1)
+      local hp = UnitHealth(unit)
+      local hpm = UnitHealthMax(unit)
 
-      if name and reaction then
+      if name then
         if UnitIsPlayer(unit) and class then
           local color = RAID_CLASS_COLORS[class]
-          GameTooltipStatusBar:SetStatusBarColor(color.r, color.g, color.b)
+          GameTooltipStatusBar:SetStatusBarColor_orig(color.r, color.g, color.b)
           GameTooltip:SetBackdropBorderColor(color.r, color.g, color.b)
           if color.colorStr then
             GameTooltipTextLeft1:SetText("|c" .. color.colorStr .. name)
           end
-        else
+        elseif reaction then
           local color = UnitReactionColor[reaction]
-          GameTooltipStatusBar:SetStatusBarColor(color.r, color.g, color.b)
+          GameTooltipStatusBar:SetStatusBarColor_orig(color.r, color.g, color.b)
           GameTooltip:SetBackdropBorderColor(color.r, color.g, color.b)
         end
-
         if pvptitle ~= name then
           GameTooltip:AppendText(" |cff666666["..pvptitle.."]|r")
         end
@@ -135,16 +121,25 @@ pfUI:RegisterModule("tooltip", function ()
         end
       end
 
+      if pfUI.tooltipStatusBar.HP == nil then
+        pfUI.tooltipStatusBar.HP = GameTooltipStatusBar:CreateFontString("Status", "DIALOG", "GameFontNormal")
+        pfUI.tooltipStatusBar.HP:SetPoint("TOP", 0,8)
+        pfUI.tooltipStatusBar.HP:SetNonSpaceWrap(false)
+        pfUI.tooltipStatusBar.HP:SetFontObject(GameFontWhite)
+        pfUI.tooltipStatusBar.HP:SetFont("Interface\\AddOns\\pfUI\\fonts\\arial.ttf", 12, "OUTLINE")
+      end
+
+      if hp and hpm then
+        if hp >= 1000 then hp = round(hp / 1000, 1) .. "k" end
+        if hpm >= 1000 then hpm = round(hpm / 1000, 1) .. "k" end
+        pfUI.tooltipStatusBar.HP:SetText(hp .. " / " .. hpm)
+      end
+    end
+
+  pfUI.tooltipEvent = CreateFrame("Frame")
+  pfUI.tooltipEvent:RegisterEvent("UPDATE_MOUSEOVER_UNIT")
+  pfUI.tooltipEvent:SetScript("OnEvent", function()
+      pfUI.tooltip:Update()
       GameTooltip:Show()
     end)
-
-  GameTooltipStatusBar:SetHeight(6)
-  GameTooltipStatusBar:ClearAllPoints()
-  GameTooltipStatusBar:SetPoint("BOTTOMLEFT", GameTooltip, "TOPLEFT", 1, 2)
-  GameTooltipStatusBar:SetPoint("BOTTOMRIGHT", GameTooltip, "TOPRIGHT", -1, 2)
-  GameTooltipStatusBar:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
-  GameTooltipStatusBar:SetBackdrop( { bgFile = [[Interface\Tooltips\UI-Tooltip-Background]],
-                                    insets = {left = -1, right = -1, top = -1, bottom = -1} })
-  GameTooltipStatusBar:SetBackdropColor(0, 0, 0, 1)
-
 end)
