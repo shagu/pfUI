@@ -107,6 +107,7 @@ pfUI:RegisterModule("tooltip", function ()
           local color = RAID_CLASS_COLORS[class]
           GameTooltipStatusBar:SetStatusBarColor(color.r, color.g, color.b)
           GameTooltip:SetBackdropBorderColor(color.r, color.g, color.b)
+          GameTooltipTextLeft1:SetText("|c" .. color.colorStr .. name)
         else
           local color = UnitReactionColor[reaction]
           GameTooltipStatusBar:SetStatusBarColor(color.r, color.g, color.b)
