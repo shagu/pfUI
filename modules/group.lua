@@ -105,7 +105,7 @@ pfUI:RegisterModule("group", function ()
     pfUI.uf.group[i].caption:SetPoint("LEFT",pfUI.uf.group[i].hp.bar, "LEFT", 10, 0)
     pfUI.uf.group[i].caption:SetJustifyH("LEFT")
     pfUI.uf.group[i].caption:SetFontObject(GameFontWhite)
-    pfUI.uf.group[i].caption:SetText("NAME")
+    pfUI.uf.group[i].caption:SetText("Group"..i)
 
     pfUI.uf.group[i].hp.leaderIcon = CreateFrame("Frame",nil,pfUI.uf.group[i].hp)
     pfUI.uf.group[i].hp.leaderIcon:SetWidth(10)
