@@ -111,11 +111,11 @@ pfUI:RegisterModule("tooltip", function ()
         GameTooltip:AddLine("<" .. guild .. ">", 0.3, 1, 0.5)
       end
 
-      if target and ( targetClass or targetReaction ) then
-        if UnitIsPlayer(unit .. "target") then
+      if target then
+        if UnitIsPlayer(unit .. "target") and targetClass then
           local color = RAID_CLASS_COLORS[targetClass]
           GameTooltip:AddLine(target, color.r, color.g, color.b)
-        elseif targetReaction ~= nil then
+        elseif targetReaction then
           local color = UnitReactionColor[targetReaction]
           GameTooltip:AddLine(target, color.r, color.g, color.b)
         end
@@ -134,12 +134,6 @@ pfUI:RegisterModule("tooltip", function ()
         if hpm >= 1000 then hpm = round(hpm / 1000, 1) .. "k" end
         pfUI.tooltipStatusBar.HP:SetText(hp .. " / " .. hpm)
       end
-    end
-
-  pfUI.tooltipEvent = CreateFrame("Frame")
-  pfUI.tooltipEvent:RegisterEvent("UPDATE_MOUSEOVER_UNIT")
-  pfUI.tooltipEvent:SetScript("OnEvent", function()
-      pfUI.tooltip:Update()
       GameTooltip:Show()
-    end)
+    end
 end)
