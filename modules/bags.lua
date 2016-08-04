@@ -86,7 +86,7 @@ pfUI:RegisterModule("bags", function ()
   pfUI.bag.close:SetWidth(15)
   pfUI.bag.close:SetText("x")
   pfUI.bag.close:SetTextColor(1,.25,.25,1)
-  pfUI.bag.close:SetFont("Interface\\AddOns\\pfUI\\fonts\\arial.ttf", 10, "OUTLINE")
+  pfUI.bag.close:SetFont("Interface\\AddOns\\pfUI\\fonts\\arial.ttf", pfUI_config.global.font_size, "OUTLINE")
   pfUI.bag.close:SetScript("OnEnter", function ()
       pfUI.bag.close:SetBackdrop(pfUI.backdrop_col)
       pfUI.bag.close:SetBackdropBorderColor(1,.25,.25,1)
@@ -163,7 +163,7 @@ pfUI:RegisterModule("bags", function ()
   pfUI.bag.search.edit:SetPoint("TOPLEFT", pfUI.bag.search, "TOPLEFT", pfUI_config.bars.border*2, 0)
   pfUI.bag.search.edit:SetPoint("BOTTOMRIGHT", pfUI.bag.search, "BOTTOMRIGHT", -pfUI_config.bars.border*2, 0)
 
-  pfUI.bag.search.edit:SetFont("Interface\\AddOns\\pfUI\\fonts\\arial.ttf", 10, "OUTLINE")
+  pfUI.bag.search.edit:SetFont("Interface\\AddOns\\pfUI\\fonts\\arial.ttf", pfUI_config.global.font_size, "OUTLINE")
   pfUI.bag.search.edit:SetAutoFocus(false)
   pfUI.bag.search.edit:SetText("Search")
   pfUI.bag.search.edit:SetTextColor(.5,.5,.5,1)
@@ -198,11 +198,11 @@ pfUI:RegisterModule("bags", function ()
   pfUI.bag.money = CreateFrame("Frame", "pfUIBagsMoney", pfUI.bag, "SmallMoneyFrameTemplate")
   pfUI.bag.money:ClearAllPoints()
   pfUI.bag.money:SetPoint("TOPRIGHT", pfUI.bag, "TOPRIGHT", -13, -6)
-  pfUIBagsMoneyGoldButton:SetFont("Interface\\AddOns\\pfUI\\fonts\\arial.ttf", 10, "OUTLINE")
+  pfUIBagsMoneyGoldButton:SetFont("Interface\\AddOns\\pfUI\\fonts\\arial.ttf", pfUI_config.global.font_size, "OUTLINE")
   for i,v in ipairs({pfUIBagsMoneyGoldButton:GetRegions()}) do if i == 1 then v:SetHeight(10); v:SetWidth(10) end end
-  pfUIBagsMoneySilverButton:SetFont("Interface\\AddOns\\pfUI\\fonts\\arial.ttf", 10, "OUTLINE")
+  pfUIBagsMoneySilverButton:SetFont("Interface\\AddOns\\pfUI\\fonts\\arial.ttf", pfUI_config.global.font_size, "OUTLINE")
   for i,v in ipairs({pfUIBagsMoneySilverButton:GetRegions()}) do if i == 1 then v:SetHeight(10); v:SetWidth(10) end end
-  pfUIBagsMoneyCopperButton:SetFont("Interface\\AddOns\\pfUI\\fonts\\arial.ttf", 10, "OUTLINE")
+  pfUIBagsMoneyCopperButton:SetFont("Interface\\AddOns\\pfUI\\fonts\\arial.ttf", pfUI_config.global.font_size, "OUTLINE")
   for i,v in ipairs({pfUIBagsMoneyCopperButton:GetRegions()}) do if i == 1 then v:SetHeight(10); v:SetWidth(10) end end
   pfUI.bag:RegisterEvent("BAG_UPDATE");
   pfUI.bag:RegisterEvent("BAG_CLOSED");
@@ -285,7 +285,7 @@ pfUI:RegisterModule("bags", function ()
           end
 
           getglobal("ContainerFrame" .. j .. "Item" .. i .. "Count"):SetPoint("BOTTOMLEFT", 0,0)
-          getglobal("ContainerFrame" .. j .. "Item" .. i .. "Count"):SetFont("Interface\\AddOns\\pfUI\\fonts\\arial.ttf", 9, "OUTLINE")
+          getglobal("ContainerFrame" .. j .. "Item" .. i .. "Count"):SetFont("Interface\\AddOns\\pfUI\\fonts\\arial.ttf", pfUI_config.global.font_size, "OUTLINE")
 
           for i,v in ipairs({f:GetRegions()}) do
             -- 2 is stack count
@@ -407,7 +407,7 @@ pfUI:RegisterModule("bags", function ()
           end
 
           getglobal(frame .. "Item" .. i .. "Count"):SetPoint("BOTTOMLEFT", 0,0)
-          getglobal(frame .. "Item" .. i .. "Count"):SetFont("Interface\\AddOns\\pfUI\\fonts\\arial.ttf", 9, "OUTLINE")
+          getglobal(frame .. "Item" .. i .. "Count"):SetFont("Interface\\AddOns\\pfUI\\fonts\\arial.ttf", pfUI_config.global.font_size, "OUTLINE")
 
           for i,v in ipairs({f:GetRegions()}) do
             -- 2 is stack count

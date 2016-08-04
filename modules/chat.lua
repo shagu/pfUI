@@ -81,7 +81,7 @@ pfUI:RegisterModule("chat", function ()
           getglobal("ChatFrame" .. i .. "TabFlash"):SetAlpha(0)
           local _, class = UnitClass("player")
           getglobal("ChatFrame" .. i .. "TabText"):SetTextColor(RAID_CLASS_COLORS[class].r + .3 * .5, RAID_CLASS_COLORS[class].g + .3 * .5, RAID_CLASS_COLORS[class].b + .3 * .5, 1)
-          getglobal("ChatFrame" .. i .. "TabText"):SetFont("Interface\\AddOns\\pfUI\\fonts\\arial.ttf", 9, "OUTLINE")
+          getglobal("ChatFrame" .. i .. "TabText"):SetFont("Interface\\AddOns\\pfUI\\fonts\\arial.ttf", pfUI_config.global.font_size, "OUTLINE")
 
           if getglobal("ChatFrame" .. i).isDocked or getglobal("ChatFrame" .. i):IsVisible() then
             getglobal("ChatFrame" .. i .. "Tab"):Show()

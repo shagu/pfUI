@@ -48,7 +48,7 @@ pfUI:RegisterModule("skin", function ()
         b:SetBackdrop(pfUI.backdrop)
         b:SetBackdropBorderColor(1,1,1,1)
       end)
-    b:SetFont("Interface\\AddOns\\pfUI\\fonts\\arial.ttf", 10, "OUTLINE")
+    b:SetFont("Interface\\AddOns\\pfUI\\fonts\\arial.ttf", pfUI_config.global.font_size, "OUTLINE")
   end
 
   for _, box in pairs(boxes) do
@@ -61,7 +61,7 @@ pfUI:RegisterModule("skin", function ()
     if v.SetTextColor then
       v:SetTextColor(1,1,1,.5)
       v:SetPoint("TOP", GameMenuFrame, "TOP", 0, -6)
-      v:SetFont("Interface\\AddOns\\pfUI\\fonts\\arial.ttf", 10, "OUTLINE")
+      v:SetFont("Interface\\AddOns\\pfUI\\fonts\\arial.ttf", pfUI_config.global.font_size, "OUTLINE")
     end
   end
 end)

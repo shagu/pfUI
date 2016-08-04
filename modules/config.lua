@@ -3,6 +3,7 @@ pfUI_config = {}
 
 function pfUI:LoadConfig()
   --                MODULE        SUBGROUP   ENTRY               VALUE
+	pfUI:UpdateConfig("global",     nil,       "font_size",        "10")
   pfUI:UpdateConfig("unitframes", nil,       "animation_speed",  "5")
   pfUI:UpdateConfig("unitframes", nil,       "portrait",         "1")
   pfUI:UpdateConfig("unitframes", nil,       "buff_size",        "22")
