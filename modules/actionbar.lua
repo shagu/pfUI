@@ -48,7 +48,15 @@ pfUI:RegisterModule("actionbar", function ()
       pfUI.bars.bottom:SetWidth(pfUI_config.bars.border*3 + pfUI_config.bars.icon_size * 12 + pfUI_config.bars.border * 12)
       pfUI.bars.bottom:SetHeight(pfUI_config.bars.border*3 + pfUI_config.bars.icon_size * bpc + pfUI_config.bars.border * bpc)
 
+      -- hide background texture of petactionbar
+      SlidingActionBarTexture0:Hide()
+      SlidingActionBarTexture0.Show = function () return end
+
+      SlidingActionBarTexture1:Hide()
+      SlidingActionBarTexture1.Show = function () return end
+
       PetActionBar_Update()
+
       if (PetHasActionBar()) then
         --ShowPetActionBar()
         --LockPetActionBar()
