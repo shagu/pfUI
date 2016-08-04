@@ -103,6 +103,8 @@ pfUI:RegisterModule("target", function ()
       else
         color = UnitReactionColor[UnitReaction("target", "player")]
       end
+      if not color then color.r, color.g, color.b = 1, 1, 1 end
+
       local r, g, b = (color.r + .5) * .5, (color.g + .5) * .5, (color.b + .5) * .5
 
       pfUI.uf.target.hp.bar:SetMinMaxValues(0, hpmax)
