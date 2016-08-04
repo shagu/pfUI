@@ -111,7 +111,6 @@ pfUI:RegisterModule("gui", function ()
       pfUI.gitter:Show()
     end
 
-
     for _,frame in pairs(movable) do
       local frame = frame
       if not frame:IsShown() then
@@ -194,8 +193,6 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.global.title:SetFontObject(GameFontWhite)
   pfUI.gui.global.title:SetText("Global Settings")
 
-	pfUI.gui.CreateConfig(pfUI.gui.global, "Fontsize", pfUI_config.global, "font_size")
-
   -- UnitFrame settings
   pfUI.gui.uf = CreateFrame("Frame", nil, pfUI.gui)
   pfUI.gui.uf:SetWidth(400)
@@ -227,21 +224,6 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.uf.title:SetPoint("TOP", 0, -10)
   pfUI.gui.uf.title:SetFontObject(GameFontWhite)
   pfUI.gui.uf.title:SetText("UnitFrame Settings")
-
-  pfUI.gui.CreateConfig(pfUI.gui.uf, "Animation speed", pfUI_config.unitframes, "animation_speed")
-  pfUI.gui.CreateConfig(pfUI.gui.uf, "Show portrait", pfUI_config.unitframes, "portrait")
-  pfUI.gui.CreateConfig(pfUI.gui.uf, "Buff size", pfUI_config.unitframes, "buff_size")
-  pfUI.gui.CreateConfig(pfUI.gui.uf, "Debuff size", pfUI_config.unitframes, "debuff_size")
-  pfUI.gui.CreateConfig(pfUI.gui.uf, "Layout", pfUI_config.unitframes, "layout")
-
-  pfUI.gui.CreateConfig(pfUI.gui.uf, "Player width", pfUI_config.unitframes.player, "width")
-  pfUI.gui.CreateConfig(pfUI.gui.uf, "Player height", pfUI_config.unitframes.player, "height")
-  pfUI.gui.CreateConfig(pfUI.gui.uf, "Player powerbar height", pfUI_config.unitframes.player, "pheight")
-
-  pfUI.gui.CreateConfig(pfUI.gui.uf, "Target width", pfUI_config.unitframes.target, "width")
-  pfUI.gui.CreateConfig(pfUI.gui.uf, "Target height", pfUI_config.unitframes.target, "height")
-  pfUI.gui.CreateConfig(pfUI.gui.uf, "Target powerbar height", pfUI_config.unitframes.target, "pheight")
-
 
   -- ActionBar settings
   pfUI.gui.bar = CreateFrame("Frame", nil, pfUI.gui)
@@ -275,9 +257,6 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.bar.title:SetFontObject(GameFontWhite)
   pfUI.gui.bar.title:SetText("ActionBar Settings")
 
-  pfUI.gui.CreateConfig(pfUI.gui.bar, "Icon Size", pfUI_config.bars, "icon_size")
-  pfUI.gui.CreateConfig(pfUI.gui.bar, "Border", pfUI_config.bars, "border")
-
   -- Panel settings
   pfUI.gui.panel = CreateFrame("Frame", nil, pfUI.gui)
   pfUI.gui.panel:SetWidth(400)
@@ -310,17 +289,6 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.panel.title:SetFontObject(GameFontWhite)
   pfUI.gui.panel.title:SetText("Panel Settings")
 
-  pfUI.gui.CreateConfig(pfUI.gui.panel, "Left Panel: Left", pfUI_config.panel.left, "left")
-  pfUI.gui.CreateConfig(pfUI.gui.panel, "Left Panel: Center", pfUI_config.panel.left, "center")
-  pfUI.gui.CreateConfig(pfUI.gui.panel, "Left Panel: Right", pfUI_config.panel.left, "right")
-
-  pfUI.gui.CreateConfig(pfUI.gui.panel, "Right Panel: Left", pfUI_config.panel.right, "left")
-  pfUI.gui.CreateConfig(pfUI.gui.panel, "Right Panel: Center", pfUI_config.panel.right, "center")
-  pfUI.gui.CreateConfig(pfUI.gui.panel, "Right Panel: Right", pfUI_config.panel.right, "right")
-
-  pfUI.gui.CreateConfig(pfUI.gui.panel, "Other Panel: Minimap", pfUI_config.panel.other, "minimap")
-
-
   -- Tooltip settings
   pfUI.gui.tooltip = CreateFrame("Frame", nil, pfUI.gui)
   pfUI.gui.tooltip:SetWidth(400)
@@ -352,8 +320,6 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.tooltip.title:SetPoint("TOP", 0, -10)
   pfUI.gui.tooltip.title:SetFontObject(GameFontWhite)
   pfUI.gui.tooltip.title:SetText("Tooltip Settings")
-
-  pfUI.gui.CreateConfig(pfUI.gui.tooltip, "Tooltip Position:", pfUI_config.tooltip, "position")
 
     -- Reset Frames
   pfUI.gui.resetFrames = CreateFrame("Button", nil, pfUI.gui)
@@ -451,4 +417,36 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.reloadDialog.no:SetScript("OnClick", function()
       pfUI.gui.reloadDialog:Hide()
     end)
+
+  -- global
+  pfUI.gui.CreateConfig(pfUI.gui.global, "Fontsize", pfUI_config.global, "font_size")
+
+  -- unitframes
+  pfUI.gui.CreateConfig(pfUI.gui.uf, "Animation speed", pfUI_config.unitframes, "animation_speed")
+  pfUI.gui.CreateConfig(pfUI.gui.uf, "Show portrait", pfUI_config.unitframes, "portrait")
+  pfUI.gui.CreateConfig(pfUI.gui.uf, "Buff size", pfUI_config.unitframes, "buff_size")
+  pfUI.gui.CreateConfig(pfUI.gui.uf, "Debuff size", pfUI_config.unitframes, "debuff_size")
+  pfUI.gui.CreateConfig(pfUI.gui.uf, "Layout", pfUI_config.unitframes, "layout")
+  pfUI.gui.CreateConfig(pfUI.gui.uf, "Player width", pfUI_config.unitframes.player, "width")
+  pfUI.gui.CreateConfig(pfUI.gui.uf, "Player height", pfUI_config.unitframes.player, "height")
+  pfUI.gui.CreateConfig(pfUI.gui.uf, "Player powerbar height", pfUI_config.unitframes.player, "pheight")
+  pfUI.gui.CreateConfig(pfUI.gui.uf, "Target width", pfUI_config.unitframes.target, "width")
+  pfUI.gui.CreateConfig(pfUI.gui.uf, "Target height", pfUI_config.unitframes.target, "height")
+  pfUI.gui.CreateConfig(pfUI.gui.uf, "Target powerbar height", pfUI_config.unitframes.target, "pheight")
+
+  -- actionbar
+  pfUI.gui.CreateConfig(pfUI.gui.bar, "Icon Size", pfUI_config.bars, "icon_size")
+  pfUI.gui.CreateConfig(pfUI.gui.bar, "Border", pfUI_config.bars, "border")
+
+  -- panels
+  pfUI.gui.CreateConfig(pfUI.gui.panel, "Left Panel: Left", pfUI_config.panel.left, "left")
+  pfUI.gui.CreateConfig(pfUI.gui.panel, "Left Panel: Center", pfUI_config.panel.left, "center")
+  pfUI.gui.CreateConfig(pfUI.gui.panel, "Left Panel: Right", pfUI_config.panel.left, "right")
+  pfUI.gui.CreateConfig(pfUI.gui.panel, "Right Panel: Left", pfUI_config.panel.right, "left")
+  pfUI.gui.CreateConfig(pfUI.gui.panel, "Right Panel: Center", pfUI_config.panel.right, "center")
+  pfUI.gui.CreateConfig(pfUI.gui.panel, "Right Panel: Right", pfUI_config.panel.right, "right")
+  pfUI.gui.CreateConfig(pfUI.gui.panel, "Other Panel: Minimap", pfUI_config.panel.other, "minimap")
+
+  -- tooltip
+  pfUI.gui.CreateConfig(pfUI.gui.tooltip, "Tooltip Position:", pfUI_config.tooltip, "position")
 end)
