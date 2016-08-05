@@ -21,7 +21,7 @@ pfUI:RegisterModule("gui", function ()
     end)
 
   function pfUI.gui.SwitchTab(frame)
-    local elements = { pfUI.gui.global, pfUI.gui.uf , pfUI.gui.bar, pfUI.gui.panel, pfUI.gui.tooltip }
+    local elements = { pfUI.gui.global, pfUI.gui.uf , pfUI.gui.bar, pfUI.gui.panel, pfUI.gui.tooltip, pfUI.gui.castbar }
     for _, hide in pairs(elements) do
       hide:Hide()
     end
@@ -321,7 +321,39 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.tooltip.title:SetFontObject(GameFontWhite)
   pfUI.gui.tooltip.title:SetText("Tooltip Settings")
 
-    -- Reset Frames
+  -- Castbar settings
+  pfUI.gui.castbar = CreateFrame("Frame", nil, pfUI.gui)
+  pfUI.gui.castbar:SetWidth(400)
+  pfUI.gui.castbar:SetHeight(320)
+
+  pfUI.gui.castbar:SetBackdrop(pfUI.backdrop)
+  pfUI.gui.castbar:SetBackdropColor(0,0,0,.50);
+  pfUI.gui.castbar:SetPoint("RIGHT",0,0)
+
+  pfUI.gui.castbar.switch = CreateFrame("Button", nil, pfUI.gui)
+  pfUI.gui.castbar.switch:ClearAllPoints()
+  pfUI.gui.castbar.switch:SetWidth(80)
+  pfUI.gui.castbar.switch:SetHeight(20)
+  pfUI.gui.castbar.switch:SetPoint("TOPLEFT", 0, -100)
+  pfUI.gui.castbar.switch:SetBackdrop(pfUI.backdrop)
+  pfUI.gui.castbar.switch.text = pfUI.gui.castbar.switch:CreateFontString("Status", "LOW", "GameFontNormal")
+  pfUI.gui.castbar.switch.text:SetFont("Interface\\AddOns\\pfUI\\fonts\\arial.ttf", pfUI_config.global.font_size, "OUTLINE")
+  pfUI.gui.castbar.switch.text:ClearAllPoints()
+  pfUI.gui.castbar.switch.text:SetAllPoints(pfUI.gui.castbar.switch)
+  pfUI.gui.castbar.switch.text:SetPoint("CENTER", 0, 0)
+  pfUI.gui.castbar.switch.text:SetFontObject(GameFontWhite)
+  pfUI.gui.castbar.switch.text:SetText("Castbar")
+  pfUI.gui.castbar.switch:SetScript("OnClick", function()
+      pfUI.gui.SwitchTab(pfUI.gui.castbar)
+    end)
+
+  pfUI.gui.castbar.title = pfUI.gui.castbar:CreateFontString("Status", "LOW", "GameFontNormal")
+  pfUI.gui.castbar.title:SetFont("Interface\\AddOns\\pfUI\\fonts\\arial.ttf", pfUI_config.global.font_size + 2, "OUTLINE")
+  pfUI.gui.castbar.title:SetPoint("TOP", 0, -10)
+  pfUI.gui.castbar.title:SetFontObject(GameFontWhite)
+  pfUI.gui.castbar.title:SetText("Castbar Settings")
+
+  -- Reset Frames
   pfUI.gui.resetFrames = CreateFrame("Button", nil, pfUI.gui)
   pfUI.gui.resetFrames:ClearAllPoints()
   pfUI.gui.resetFrames:SetWidth(80)
@@ -449,4 +481,8 @@ pfUI:RegisterModule("gui", function ()
 
   -- tooltip
   pfUI.gui.CreateConfig(pfUI.gui.tooltip, "Tooltip Position:", pfUI_config.tooltip, "position")
+
+  -- castbar
+  pfUI.gui.CreateConfig(pfUI.gui.castbar, "Hide blizzards castbar:", pfUI_config.castbar.player, "hide_blizz")
+
 end)

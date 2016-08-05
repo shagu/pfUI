@@ -25,6 +25,7 @@ modules\targettarget.lua
 modules\pet.lua
 modules\group.lua
 modules\raid.lua
+modules\castbar.lua
 modules\minimap.lua
 modules\skin.lua
 modules\xpbar.lua
