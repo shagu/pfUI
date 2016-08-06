@@ -29,6 +29,8 @@ end)
 
 pfUI.module = {}
 pfUI.modules = {}
+pfLocaleClass = {}
+pfLocaleSpells = {}
 
 function pfUI:RegisterModule(n, f)
   pfUI.module[n] = f

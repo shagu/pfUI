@@ -8,11 +8,19 @@
 # main
 pfUI.lua
 
+# locales
+env\locales_enUS.lua
+env\locales_frFR.lua
+env\locales_deDE.lua
+env\locales_zhCN.lua
+env\locales_ruRU.lua
+
+# environment
 env\colors.lua
-env\locales.lua
 env\functions.lua
 env\fonts.lua
 
+# modules
 modules\config.lua
 modules\gui.lua
 modules\actionbar.lua
