@@ -1,14 +1,30 @@
 pfLocaleClass["deDE"] = {
-    ["Hexenmeister"] = "WARLOCK",
-    ["Krieger"] = "WARRIOR",
-    ["Jäger"] = "HUNTER",
-    ["Magier"] = "MAGE",
-    ["Priester"] = "PRIEST",
-    ["Druide"] = "DRUID",
-    ["Paladin"] = "PALADIN",
-    ["Schamane"] = "SHAMAN",
-    ["Schurke"] = "ROGUE",
-  }
+  ["Hexenmeister"] = "WARLOCK",
+  ["Krieger"] = "WARRIOR",
+  ["Jäger"] = "HUNTER",
+  ["Magier"] = "MAGE",
+  ["Priester"] = "PRIEST",
+  ["Druide"] = "DRUID",
+  ["Paladin"] = "PALADIN",
+  ["Schamane"] = "SHAMAN",
+  ["Schurke"] = "ROGUE",
+}
+
+pfLocaleSpellEvents["deDE"] = {
+  ['SPELL_GAINS'] = "(.+) bekommt (.+).",
+  ['SPELL_CAST'] = "(.+) beginnt (.+) zu wirken.",
+  ['SPELL_PERFORM'] = "(.+) beginnt (.+) auszuf\195\188hren.",
+  ['SPELL_AFFLICTED'] = "(.+) ist von (.+) betroffen.",
+  ['SPELL_HIT'] = "(.+) von Euch trifft (.+) f\195\188r %d+\.",
+  ['OTHER_SPELL_HIT'] = "%a+'s (.+) trifft (.+) f\195\188r %d+\.",
+}
+
+pfLocaleSpellInterrupts["deDE"] = {
+  ["Schildhieb"] = true;
+  ["Zuschlagen"] = true;
+  ["Tritt"] = true;
+  ["Erdschock"] = true;
+}
 
 pfLocaleSpells["deDE"] = {
   ['Eisenherz nimmt wieder Huhngestalt an'] = {t=1000, icon="Ability_Racial_BearForm" };

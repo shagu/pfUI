@@ -31,6 +31,8 @@ pfUI.module = {}
 pfUI.modules = {}
 pfLocaleClass = {}
 pfLocaleSpells = {}
+pfLocaleSpellEvents = {}
+pfLocaleSpellInterrupts = {}
 
 function pfUI:RegisterModule(n, f)
   pfUI.module[n] = f

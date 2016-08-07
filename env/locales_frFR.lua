@@ -1,14 +1,30 @@
 pfLocaleClass["frFR"] = {
-    ["D\195\169moniste"] = "WARLOCK",
-    ["Guerrier"] = "WARRIOR",
-    ["Chasseur"] = "HUNTER",
-    ["Mage"] = "MAGE",
-    ["Pr\195\170tre"] = "PRIEST",
-    ["Druide"] = "DRUID",
-    ["Paladin"] = "PALADIN",
-    ["Chaman"] = "SHAMAN",
-    ["Voleur"] = "ROGUE",
-  }
+  ["D\195\169moniste"] = "WARLOCK",
+  ["Guerrier"] = "WARRIOR",
+  ["Chasseur"] = "HUNTER",
+  ["Mage"] = "MAGE",
+  ["Pr\195\170tre"] = "PRIEST",
+  ["Druide"] = "DRUID",
+  ["Paladin"] = "PALADIN",
+  ["Chaman"] = "SHAMAN",
+  ["Voleur"] = "ROGUE",
+}
+
+pfLocaleSpellEvents["frFR"] = { -- TODO
+  ['SPELL_GAINS'] = "(.+) gains (.+).",
+  ['SPELL_CAST'] = "(.+) begins to cast (.+)."
+  ['SPELL_PERFORM'] = "(.+) begins to perform (.+)."
+  ['SPELL_AFFLICTED'] = "(.+) %a+ afflicted by (.+)."
+  ['SPELL_HIT'] = "Your (.+) %a%a?its (.+) for %d+\."
+  ['OTHER_SPELL_HIT'] = "%a+'s (.+) %a%a?its (.+) for %d+\."
+}
+
+pfLocaleSpellInterrupts["frFR"] = { -- TODO
+  ["Shield Bash"] = true;
+  ["Pummel"] = true;
+  ["Kick"] = true;
+  ["Earth Shock"] = true;
+}
 
 pfLocaleSpells["frFR"] = {
   ['Le Brave reprend sa forme de poulet'] = {t=1000, icon="Ability_Racial_BearForm" };

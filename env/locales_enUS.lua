@@ -1,14 +1,30 @@
 pfLocaleClass["enUS"] = {
-    ["Warlock"] = "WARLOCK",
-    ["Warrior"] = "WARRIOR",
-    ["Hunter"] = "HUNTER",
-    ["Mage"] = "MAGE",
-    ["Priest"] = "PRIEST",
-    ["Druid"] = "DRUID",
-    ["Paladin"] = "PALADIN",
-    ["Shaman"] = "SHAMAN",
-    ["Rogue"] = "ROGUE",
-  }
+  ["Warlock"] = "WARLOCK",
+  ["Warrior"] = "WARRIOR",
+  ["Hunter"] = "HUNTER",
+  ["Mage"] = "MAGE",
+  ["Priest"] = "PRIEST",
+  ["Druid"] = "DRUID",
+  ["Paladin"] = "PALADIN",
+  ["Shaman"] = "SHAMAN",
+  ["Rogue"] = "ROGUE",
+}
+
+pfLocaleSpellEvents["enUS"] = {
+  ['SPELL_GAINS'] = "(.+) gains (.+).",
+  ['SPELL_CAST'] = "(.+) begins to cast (.+)."
+  ['SPELL_PERFORM'] = "(.+) begins to perform (.+)."
+  ['SPELL_AFFLICTED'] = "(.+) %a+ afflicted by (.+)."
+  ['SPELL_HIT'] = "Your (.+) %a%a?its (.+) for %d+\."
+  ['OTHER_SPELL_HIT'] = "%a+'s (.+) %a%a?its (.+) for %d+\."
+}
+
+pfLocaleSpellInterrupts["enUS"] = {
+  ["Shield Bash"] = true;
+  ["Pummel"] = true;
+  ["Kick"] = true;
+  ["Earth Shock"] = true;
+}
 
 pfLocaleSpells["enUS"] = {
   ['"Plucky" Resumes Chicken Form'] = {t=1000, icon="Ability_Racial_BearForm" };

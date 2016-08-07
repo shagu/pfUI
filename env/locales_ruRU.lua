@@ -1,14 +1,30 @@
 pfLocaleClass["ruRU"] = {
-    ["Чернокнижница"] = "WARLOCK",
-    ["Воин"] = "WARRIOR",
-    ["Охотница"] = "HUNTER",
-    ["Маг"] = "MAGE",
-    ["Жрица"] = "PRIEST",
-    ["Друид"] = "DRUID",
-    ["Паладин"] = "PALADIN",
-    ["Шаманка"] = "SHAMAN",
-    ["Разбойница"] = "ROGUE",
-  }
+  ["Чернокнижница"] = "WARLOCK",
+  ["Воин"] = "WARRIOR",
+  ["Охотница"] = "HUNTER",
+  ["Маг"] = "MAGE",
+  ["Жрица"] = "PRIEST",
+  ["Друид"] = "DRUID",
+  ["Паладин"] = "PALADIN",
+  ["Шаманка"] = "SHAMAN",
+  ["Разбойница"] = "ROGUE",
+}
+
+pfLocaleSpellEvents["ruRU"] = { -- TODO
+  ['SPELL_GAINS'] = "(.+) gains (.+).",
+  ['SPELL_CAST'] = "(.+) begins to cast (.+)."
+  ['SPELL_PERFORM'] = "(.+) begins to perform (.+)."
+  ['SPELL_AFFLICTED'] = "(.+) %a+ afflicted by (.+)."
+  ['SPELL_HIT'] = "Your (.+) %a%a?its (.+) for %d+\."
+  ['OTHER_SPELL_HIT'] = "%a+'s (.+) %a%a?its (.+) for %d+\."
+}
+
+pfLocaleSpellInterrupts["ruRU"] = { -- TODO
+  ["Shield Bash"] = true;
+  ["Pummel"] = true;
+  ["Kick"] = true;
+  ["Earth Shock"] = true;
+}
 
 pfLocaleSpells["ruRU"] = {
   ['"Отчаянный" снова принимает облик цыпленка"'] = {t=1000, icon="Ability_Racial_BearForm" };
