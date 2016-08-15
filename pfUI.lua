@@ -12,6 +12,11 @@ function SlashCmdList.PFUI(msg, editbox)
   end
 end
 
+SLASH_GM1, SLASH_GM2 = '/gm', '/support';
+function SlashCmdList.GM(msg, editbox)
+  ToggleHelpFrame(1)
+end
+
 pfUI = CreateFrame("Frame",nil,UIParent)
 pfUI:RegisterEvent("ADDON_LOADED")
 pfUI:SetScript("OnEvent", function()
