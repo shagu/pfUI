@@ -71,7 +71,7 @@ pfUI:RegisterModule("autoshift", function ()
 
   pfUI.autoshift:SetScript("OnEvent", function()
       pfUI.autoshift.lastError = arg1
-
+      local CancelLater = nil
       for id, errorstring in pairs(pfUI.autoshift.errors) do
         if arg1 == errorstring then
           for i=0,15,1 do
@@ -79,11 +79,18 @@ pfUI:RegisterModule("autoshift", function ()
             if (currBuffTex) then
               for id, bufftype in pairs(pfUI.autoshift.buffs) do
                 if string.find(string.lower(currBuffTex), bufftype) then
-                  CancelPlayerBuff(i)
-                  return
+                  if string.find(string.lower(currBuffTex), "spell_shadow_shadowform") then
+                    CancelLater = i
+                  else
+                    CancelPlayerBuff(i)
+                    return
+                  end
                 end
               end
             end
+          end
+          if CancelLater then
+            CancelPlayerBuff(CancelLater)
           end
         end
       end
