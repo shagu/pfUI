@@ -3,17 +3,17 @@
 An educational project for World of Warcraft (1.12) mostly known as "Vanilla" 
 which aimes to be a full replacement for the original Wow interface. The design 
 is highly inspired by TukUI and ElvUI (which I never used) as well as several 
-other screenshots found around the web during the last 10 years. 
+other screenshots I found around the web during the last 10 years. 
 It is completely written from scratch without any inclusion of 3rd party addons 
 or libraries. This is **not** an addon-pack like 
 [ShaguUI](http://shaguaddons.ericmauser.de/shaguui/) which means that no 
 external Addons will be included. There will be support for external addons like 
 MobHealth3 and HealComm, but they will be never shipped within the package.
 
-***Notice**: pfUI is still in early stages and under heavy development. 
+**Notice**: pfUI is still in early stages and under heavy development. 
 Please report all bugs and errors in the 
 [Bugtracker](https://github.com/shagu/pfUI/issues). 
-Feature-Requests might not be processed right now.*
+Feature-Requests might not be processed right now.
 
 ## Commands
 
