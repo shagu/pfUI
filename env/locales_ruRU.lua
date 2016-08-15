@@ -10,6 +10,17 @@ pfLocaleClass["ruRU"] = {
   ["Разбойница"] = "ROGUE",
 }
 
+pfLocaleShift["ruRU"] = { -- TODO
+  ['BattleStance'] = "Battle Stance",
+  ['DefensiveStance'] = "Defensive Stance",
+  ['BerserkerStance'] = "Berserker Stance",
+  ['wantBattleStance'] = "Must be in Battle Stance",
+  ['wantDefensiveStance'] = "Must be in Defensive Stance",
+  ['wantBerserkerStance'] = "Must be in Berserker Stance",
+  ['wantBattleDefStance'] = "Must be in Battle Stance, Defensive Stance",
+  ['wantBattleBerserkStance'] = "Must be in Battle Stance, Berserker Stance",
+}
+
 pfLocaleSpellEvents["ruRU"] = { -- TODO
   ['SPELL_GAINS'] = "(.+) gains (.+).",
   ['SPELL_CAST'] = "(.+) begins to cast (.+).",

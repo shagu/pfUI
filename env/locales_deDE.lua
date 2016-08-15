@@ -10,6 +10,17 @@ pfLocaleClass["deDE"] = {
   ["Schurke"] = "ROGUE",
 }
 
+pfLocaleShift["deDE"] = {
+  ['BattleStance'] = "Kampfhaltung",
+  ['DefensiveStance'] = "Verteidigungshaltung",
+  ['BerserkerStance'] = "Berserkerhaltung",
+  ['wantBattleStance'] = "Muss in Kampfhaltung sein.",
+  ['wantDefensiveStance'] = "Muss in Verteidigungshaltung sein.",
+  ['wantBerserkerStance'] = "Muss in Berserkerhaltung sein.",
+  ['wantBattleDefStance'] = "Muss in Kampfhaltung, Verteidigungshaltung sein.",
+  ['wantBattleBerserkStance'] = "Muss in Kampfhaltung, Berserkerhaltung sein.",
+}
+
 pfLocaleSpellEvents["deDE"] = {
   ['SPELL_GAINS'] = "(.+) bekommt (.+).",
   ['SPELL_CAST'] = "(.+) beginnt (.+) zu wirken.",

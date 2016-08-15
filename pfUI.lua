@@ -46,6 +46,7 @@ pfUI.cache = {}
 pfUI.module = {}
 pfUI.modules = {}
 pfLocaleClass = {}
+pfLocaleShift = {}
 pfLocaleSpells = {}
 pfLocaleSpellEvents = {}
 pfLocaleSpellInterrupts = {}
