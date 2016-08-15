@@ -10,10 +10,10 @@ or libraries. This is **not** an addon-pack like
 external Addons will be included. There will be support for external addons like 
 MobHealth3 and HealComm, but they will be never shipped within the package.
 
-**Notice**: pfUI is still in early stages and under heavy development. 
+**Notice**: *pfUI is still in early stages and under heavy development. 
 Please report all bugs and errors in the 
 [Bugtracker](https://github.com/shagu/pfUI/issues). 
-Feature-Requests might not be processed right now.
+Feature-Requests might not be processed right now.*
 
 ## Commands
 
