@@ -1,8 +1,8 @@
 ## Interface: 11200
 ## Title: |cff33ffccpf|cffffffffUI
-## Author: Eric (Shagu) Mauser, 2016
-## Notes: An User Intface written completely from scratch
-## Version: 0.1 BETA
+## Author: Shagu, 2016
+## Notes: A complete user interface replacement.
+## Version: 0.1
 ## SavedVariables: pfUI_config, pfUI_playerDB
 
 # main
