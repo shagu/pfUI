@@ -66,5 +66,5 @@ You can't. I'm doing that for fun. Enjoy!
 **How can I contribute?**  
 Report LUA-Errors and Issues in the [Bugtracker](https://github.com/shagu/pfUI/issues).
 
-**Everything from scratch?! WTF?**  
-:D
+**Everything from scratch?! Are you insane?**  
+Yes.
