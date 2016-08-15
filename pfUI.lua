@@ -20,6 +20,16 @@ end
 pfUI = CreateFrame("Frame",nil,UIParent)
 pfUI:RegisterEvent("ADDON_LOADED")
 pfUI:SetScript("OnEvent", function()
+
+  pfUI.cache["locale"] = GetLocale()
+  if pfUI.cache["locale"] ~= "enUS" and
+     pfUI.cache["locale"] ~= "frFR" and
+     pfUI.cache["locale"] ~= "deDE" and
+     pfUI.cache["locale"] ~= "zhCN" and
+     pfUI.cache["locale"] ~= "ruRU" then
+     pfUI.cache["locale"] = "enUS"
+  end
+
   pfUI:LoadConfig()
   if arg1 == "pfUI" then
     pfUI:Debug("pfUI module loader:")
@@ -32,6 +42,7 @@ pfUI:SetScript("OnEvent", function()
   end
 end)
 
+pfUI.cache = {}
 pfUI.module = {}
 pfUI.modules = {}
 pfLocaleClass = {}

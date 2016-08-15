@@ -110,8 +110,8 @@ pfUI:RegisterModule("chat", function ()
         local Name, Class, Level
         for i = 1, GetNumFriends() do
           Name, Level, Class = GetFriendInfo(i)
-          if pfLocaleClass[GetLocale()] and pfLocaleClass[GetLocale()][Class] then
-            Class = pfLocaleClass[GetLocale()][Class]
+          if pfLocaleClass[pfUI.cache["locale"]] and pfLocaleClass[pfUI.cache["locale"]][Class] then
+            Class = pfLocaleClass[pfUI.cache["locale"]][Class]
           end
           pfUI_playerDB[Name] = { class = Class, level = Level }
         end
@@ -119,8 +119,8 @@ pfUI:RegisterModule("chat", function ()
         local Name, Class, Level
         for i = 1, GetNumGuildMembers() do
           Name, _, _, Level, Class = GetGuildRosterInfo(i)
-          if pfLocaleClass[GetLocale()] and pfLocaleClass[GetLocale()][Class] then
-            Class = pfLocaleClass[GetLocale()][Class]
+          if pfLocaleClass[pfUI.cache["locale"]] and pfLocaleClass[pfUI.cache["locale"]][Class] then
+            Class = pfLocaleClass[pfUI.cache["locale"]][Class]
           end
           if Name and Level and Class and pfUI_playerDB then
             pfUI_playerDB[Name] = { class = Class, level = Level }
@@ -131,8 +131,8 @@ pfUI:RegisterModule("chat", function ()
         local Name, Class, SubGroup, Level
         for i = 1, GetNumRaidMembers() do
           Name, _, SubGroup, Level, Class = GetRaidRosterInfo(i)
-          if pfLocaleClass[GetLocale()] and pfLocaleClass[GetLocale()].Class then
-            Class = pfLocaleClass[GetLocale()][Class]
+          if pfLocaleClass[pfUI.cache["locale"]] and pfLocaleClass[pfUI.cache["locale"]].Class then
+            Class = pfLocaleClass[pfUI.cache["locale"]][Class]
           end
           pfUI_playerDB[Name] = { class = Class, level = Level }
         end
@@ -157,8 +157,8 @@ pfUI:RegisterModule("chat", function ()
         local Name, Class, Level
         for i = 1, GetNumWhoResults() do
           Name, _, Level, _, Class, _ = GetWhoInfo(i)
-          if pfLocaleClass[GetLocale()] and pfLocaleClass[GetLocale()][Class] then
-            Class = pfLocaleClass[GetLocale()][Class]
+          if pfLocaleClass[pfUI.cache["locale"]] and pfLocaleClass[pfUI.cache["locale"]][Class] then
+            Class = pfLocaleClass[pfUI.cache["locale"]][Class]
           end
           pfUI_playerDB[Name] = { class = Class, level = Level }
         end
