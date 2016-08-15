@@ -175,6 +175,7 @@ pfUI:RegisterModule("panel", function ()
   end
 
   pfUI.panel.left = CreateFrame("Frame", "pfPanelLeft", pfUI.panel)
+  pfUI.panel.left:SetFrameStrata("HIGH")
   pfUI.panel.left:ClearAllPoints()
   pfUI.panel.left:SetHeight(pfUI_config.global.font_size*2)
   pfUI.panel.left:SetPoint("BOTTOMLEFT", pfUI.chat.left, "BOTTOMLEFT", 2, 2)
@@ -239,6 +240,7 @@ pfUI:RegisterModule("panel", function ()
   pfUI.panel.left.right.text:SetText("[DUMMY]")
 
   pfUI.panel.right = CreateFrame("Frame", "pfPanelRight", pfUI.panel)
+  pfUI.panel.right:SetFrameStrata("HIGH")
   pfUI.panel.right:ClearAllPoints()
   pfUI.panel.right:SetHeight(pfUI_config.global.font_size*2)
   pfUI.panel.right:SetPoint("BOTTOMLEFT", pfUI.chat.right, "BOTTOMLEFT", 2, 2)
