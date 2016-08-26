@@ -271,14 +271,17 @@ pfUI:RegisterModule("castbar", function ()
             pfUI.castbar.target:Action(mob, spell, "afflicted")
             return
           end
-          for spell, mob in string.gfind(arg1, pfLocaleSpellEvents[pfUI.cache["locale"]]['SPELL_HIT']) do
-            pfUI.castbar.target:Action(mob, spell, "hit")
-            return
-          end
-          for spell, mob in string.gfind(arg1, pfLocaleSpellEvents[pfUI.cache["locale"]]['OTHER_SPELL_HIT']) do
-            pfUI.castbar.target:Action(mob, spell, "hit")
-            return
-          end
+          -- this part will be used for interruption of spells
+          --for spell, mob in string.gfind(arg1, pfLocaleSpellEvents[pfUI.cache["locale"]]['SPELL_HIT']) do
+          --  -- you hit mob with XX
+          --  -- pfUI.castbar.target:Action(mob, spell, "hit")
+          --  return
+          --end
+          --for spell, mob in string.gfind(arg1, pfLocaleSpellEvents[pfUI.cache["locale"]]['OTHER_SPELL_HIT']) do
+          --  -- someone hits mob with XX
+          --  -- pfUI.castbar.target:Action(mob, spell, "hit")
+          --  return
+          --end
         end
 
         if UnitExists("target") and pfUI.castbar.target.casterDB[UnitName("target")] then
