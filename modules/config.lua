@@ -24,8 +24,9 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("panel",      "right",   "center",           "time")
   pfUI:UpdateConfig("panel",      "right",   "right",            "gold")
   pfUI:UpdateConfig("panel",      "other",   "minimap",          "zone")
-  pfUI:UpdateConfig("castbar",    "player",  "hide_blizz",        "1")
+  pfUI:UpdateConfig("castbar",    "player",  "hide_blizz",       "1")
   pfUI:UpdateConfig("tooltip",    nil,       "position",         "bottom")
+  pfUI:UpdateConfig("thirdparty", "dpsmate", "enable",           "1")
   pfUI:UpdateConfig("position",   nil,       nil,                nil)
 end
 

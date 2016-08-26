@@ -43,3 +43,4 @@ modules\bags.lua
 modules\cooldown.lua
 modules\tooltip.lua
 modules\uf_tukui.lua
+modules\thirdparty.lua

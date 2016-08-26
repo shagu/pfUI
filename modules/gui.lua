@@ -21,7 +21,9 @@ pfUI:RegisterModule("gui", function ()
     end)
 
   function pfUI.gui.SwitchTab(frame)
-    local elements = { pfUI.gui.global, pfUI.gui.uf , pfUI.gui.bar, pfUI.gui.panel, pfUI.gui.tooltip, pfUI.gui.castbar }
+    local elements = { pfUI.gui.global, pfUI.gui.uf , pfUI.gui.bar, pfUI.gui.panel, pfUI.gui.tooltip,
+                       pfUI.gui.castbar, pfUI.gui.thirdparty }
+
     for _, hide in pairs(elements) do
       hide:Hide()
     end
@@ -353,6 +355,38 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.castbar.title:SetFontObject(GameFontWhite)
   pfUI.gui.castbar.title:SetText("Castbar Settings")
 
+  -- Thirdparty settings
+  pfUI.gui.thirdparty = CreateFrame("Frame", nil, pfUI.gui)
+  pfUI.gui.thirdparty:SetWidth(400)
+  pfUI.gui.thirdparty:SetHeight(320)
+
+  pfUI.gui.thirdparty:SetBackdrop(pfUI.backdrop)
+  pfUI.gui.thirdparty:SetBackdropColor(0,0,0,.50);
+  pfUI.gui.thirdparty:SetPoint("RIGHT",0,0)
+
+  pfUI.gui.thirdparty.switch = CreateFrame("Button", nil, pfUI.gui)
+  pfUI.gui.thirdparty.switch:ClearAllPoints()
+  pfUI.gui.thirdparty.switch:SetWidth(80)
+  pfUI.gui.thirdparty.switch:SetHeight(20)
+  pfUI.gui.thirdparty.switch:SetPoint("TOPLEFT", 0, -120)
+  pfUI.gui.thirdparty.switch:SetBackdrop(pfUI.backdrop)
+  pfUI.gui.thirdparty.switch.text = pfUI.gui.thirdparty.switch:CreateFontString("Status", "LOW", "GameFontNormal")
+  pfUI.gui.thirdparty.switch.text:SetFont("Interface\\AddOns\\pfUI\\fonts\\arial.ttf", pfUI_config.global.font_size, "OUTLINE")
+  pfUI.gui.thirdparty.switch.text:ClearAllPoints()
+  pfUI.gui.thirdparty.switch.text:SetAllPoints(pfUI.gui.thirdparty.switch)
+  pfUI.gui.thirdparty.switch.text:SetPoint("CENTER", 0, 0)
+  pfUI.gui.thirdparty.switch.text:SetFontObject(GameFontWhite)
+  pfUI.gui.thirdparty.switch.text:SetText("Thirdparty")
+  pfUI.gui.thirdparty.switch:SetScript("OnClick", function()
+      pfUI.gui.SwitchTab(pfUI.gui.thirdparty)
+    end)
+
+  pfUI.gui.thirdparty.title = pfUI.gui.thirdparty:CreateFontString("Status", "LOW", "GameFontNormal")
+  pfUI.gui.thirdparty.title:SetFont("Interface\\AddOns\\pfUI\\fonts\\arial.ttf", pfUI_config.global.font_size + 2, "OUTLINE")
+  pfUI.gui.thirdparty.title:SetPoint("TOP", 0, -10)
+  pfUI.gui.thirdparty.title:SetFontObject(GameFontWhite)
+  pfUI.gui.thirdparty.title:SetText("Thirdparty Addons")
+
   -- Reset Frames
   pfUI.gui.resetFrames = CreateFrame("Button", nil, pfUI.gui)
   pfUI.gui.resetFrames:ClearAllPoints()
@@ -484,5 +518,8 @@ pfUI:RegisterModule("gui", function ()
 
   -- castbar
   pfUI.gui.CreateConfig(pfUI.gui.castbar, "Hide blizzards castbar:", pfUI_config.castbar.player, "hide_blizz")
+
+  -- thirdparty
+  pfUI.gui.CreateConfig(pfUI.gui.thirdparty, "DPSMate:", pfUI_config.thirdparty.dpsmate, "enable")
 
 end)
