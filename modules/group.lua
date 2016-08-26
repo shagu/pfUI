@@ -1,4 +1,13 @@
 pfUI:RegisterModule("group", function ()
+
+  -- hide blizzard group frames
+  for i=1, 5 do
+    if getglobal("PartyMemberFrame" .. i) then
+      getglobal("PartyMemberFrame" .. i):Hide()
+      getglobal("PartyMemberFrame" .. i).Show = function () return end
+    end
+  end
+
   pfUI.uf.group = CreateFrame("Button","pfGroup",UIParent)
   pfUI.uf.group:Hide()
 
@@ -19,10 +28,6 @@ pfUI:RegisterModule("group", function ()
     PartyMemberBackground:Hide()
 
     for i=1, 5 do
-      if getglobal("PartyMemberFrame" .. i) then
-        getglobal("PartyMemberFrame" .. i):Hide()
-      end
-
       if GetNumPartyMembers() >= i then
         pfUI.uf.group[i]:Show()
         if UnitIsConnected("party"..i) then
