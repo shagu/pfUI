@@ -19,6 +19,7 @@ env\locales_ruRU.lua
 env\colors.lua
 env\functions.lua
 env\fonts.lua
+env\hacks.lua
 
 # modules
 modules\config.lua
