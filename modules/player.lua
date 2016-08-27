@@ -44,7 +44,7 @@ pfUI:RegisterModule("player", function ()
   pfUI.uf.player:RegisterEvent("PARTY_LOOT_METHOD_CHANGED")
 
   pfUI.uf.player:SetScript("OnEvent", function()
-      if event == "UNIT_DISPLAYPOWER" or event == "PLAYER_ENTERING_WORLD" then
+      if ( event == "UNIT_DISPLAYPOWER" and arg1 and arg1 == "player" ) or event == "PLAYER_ENTERING_WORLD" then
         pfUI.uf.player.power.bar:SetValue(0)
       end
 
