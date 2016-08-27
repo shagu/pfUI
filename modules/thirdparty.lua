@@ -16,6 +16,9 @@ pfUI:RegisterModule("thirdparty", function ()
     DPSMateSettings["windows"][1]["bartexture"] = "BantoBar"
     DPSMateSettings["windows"][1]["barfont"] = "Accidental Presidency"
 
+    DPSMateSettings["windows"][1]["bgopacity"] = 1
+    DPSMateSettings["windows"][1]["opacity"] = 1
+    DPSMateSettings["windows"][1]["contentbgtexture"] = "Solid Background"
     DPSMateSettings["windows"][1]["contentbgcolor"][1] = 0
     DPSMateSettings["windows"][1]["contentbgcolor"][2] = 0
     DPSMateSettings["windows"][1]["contentbgcolor"][3] = 0
