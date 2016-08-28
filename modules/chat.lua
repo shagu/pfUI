@@ -357,7 +357,7 @@ pfUI:RegisterModule("chat", function ()
         if pfUI_config.chat.text.time == "1" then
           local left = string.sub(pfUI_config.chat.text.timebracket, 1, 1)
           local right = string.sub(pfUI_config.chat.text.timebracket, 2, 2)
-          text = "|cff" .. pfUI_config.chat.text.timecolor .. left .. date(pfUI_config.chat.text.timeformat) .. right .. "|r" .. text
+          text = "|cff" .. pfUI_config.chat.text.timecolor .. left .. date(pfUI_config.chat.text.timeformat) .. right .. "|r " .. text
         end
 
         HookAddMessage(frame, text, unpack(arg))
