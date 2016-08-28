@@ -345,7 +345,7 @@ pfUI:RegisterModule("chat", function ()
           channel = string.gsub(channel, "(%d+)%..*", "channel%1")
           channel = string.gsub(channel, "channel", "")
           pattern = "%[%d+%..-" .. pattern
-          text = string.gsub(text, pattern, "["..channel.."]".."%1")
+          text = string.gsub(text, pattern, "["..channel.."] ".."%1")
         end
 
         -- show timestamp in chat
