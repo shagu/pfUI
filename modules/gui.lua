@@ -22,7 +22,7 @@ pfUI:RegisterModule("gui", function ()
 
   function pfUI.gui.SwitchTab(frame)
     local elements = { pfUI.gui.global, pfUI.gui.uf , pfUI.gui.bar, pfUI.gui.panel, pfUI.gui.tooltip,
-                       pfUI.gui.castbar, pfUI.gui.thirdparty }
+                       pfUI.gui.castbar, pfUI.gui.thirdparty, pfUI.gui.chat }
 
     for _, hide in pairs(elements) do
       hide:Hide()
@@ -355,6 +355,38 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.castbar.title:SetFontObject(GameFontWhite)
   pfUI.gui.castbar.title:SetText("Castbar Settings")
 
+    -- chat settings
+  pfUI.gui.chat = CreateFrame("Frame", nil, pfUI.gui)
+  pfUI.gui.chat:SetWidth(400)
+  pfUI.gui.chat:SetHeight(320)
+
+  pfUI.gui.chat:SetBackdrop(pfUI.backdrop)
+  pfUI.gui.chat:SetBackdropColor(0,0,0,.50);
+  pfUI.gui.chat:SetPoint("RIGHT",0,0)
+
+  pfUI.gui.chat.switch = CreateFrame("Button", nil, pfUI.gui)
+  pfUI.gui.chat.switch:ClearAllPoints()
+  pfUI.gui.chat.switch:SetWidth(80)
+  pfUI.gui.chat.switch:SetHeight(20)
+  pfUI.gui.chat.switch:SetPoint("TOPLEFT", 0, -120)
+  pfUI.gui.chat.switch:SetBackdrop(pfUI.backdrop)
+  pfUI.gui.chat.switch.text = pfUI.gui.chat.switch:CreateFontString("Status", "LOW", "GameFontNormal")
+  pfUI.gui.chat.switch.text:SetFont("Interface\\AddOns\\pfUI\\fonts\\arial.ttf", pfUI_config.global.font_size, "OUTLINE")
+  pfUI.gui.chat.switch.text:ClearAllPoints()
+  pfUI.gui.chat.switch.text:SetAllPoints(pfUI.gui.chat.switch)
+  pfUI.gui.chat.switch.text:SetPoint("CENTER", 0, 0)
+  pfUI.gui.chat.switch.text:SetFontObject(GameFontWhite)
+  pfUI.gui.chat.switch.text:SetText("Chat")
+  pfUI.gui.chat.switch:SetScript("OnClick", function()
+      pfUI.gui.SwitchTab(pfUI.gui.chat)
+    end)
+
+  pfUI.gui.chat.title = pfUI.gui.chat:CreateFontString("Status", "LOW", "GameFontNormal")
+  pfUI.gui.chat.title:SetFont("Interface\\AddOns\\pfUI\\fonts\\arial.ttf", pfUI_config.global.font_size + 2, "OUTLINE")
+  pfUI.gui.chat.title:SetPoint("TOP", 0, -10)
+  pfUI.gui.chat.title:SetFontObject(GameFontWhite)
+  pfUI.gui.chat.title:SetText("Chat")
+
   -- Thirdparty settings
   pfUI.gui.thirdparty = CreateFrame("Frame", nil, pfUI.gui)
   pfUI.gui.thirdparty:SetWidth(400)
@@ -368,7 +400,7 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.thirdparty.switch:ClearAllPoints()
   pfUI.gui.thirdparty.switch:SetWidth(80)
   pfUI.gui.thirdparty.switch:SetHeight(20)
-  pfUI.gui.thirdparty.switch:SetPoint("TOPLEFT", 0, -120)
+  pfUI.gui.thirdparty.switch:SetPoint("TOPLEFT", 0, -140)
   pfUI.gui.thirdparty.switch:SetBackdrop(pfUI.backdrop)
   pfUI.gui.thirdparty.switch.text = pfUI.gui.thirdparty.switch:CreateFontString("Status", "LOW", "GameFontNormal")
   pfUI.gui.thirdparty.switch.text:SetFont("Interface\\AddOns\\pfUI\\fonts\\arial.ttf", pfUI_config.global.font_size, "OUTLINE")
@@ -518,6 +550,12 @@ pfUI:RegisterModule("gui", function ()
 
   -- castbar
   pfUI.gui.CreateConfig(pfUI.gui.castbar, "Hide blizzards castbar:", pfUI_config.castbar.player, "hide_blizz")
+
+  -- chat
+  pfUI.gui.CreateConfig(pfUI.gui.chat, "Timestamp in chat:", pfUI_config.chat.text, "time")
+  pfUI.gui.CreateConfig(pfUI.gui.chat, "Timestamp format:", pfUI_config.chat.text, "timeformat")
+  pfUI.gui.CreateConfig(pfUI.gui.chat, "Timestamp brackets:", pfUI_config.chat.text, "timebracket")
+  pfUI.gui.CreateConfig(pfUI.gui.chat, "Timestamp color:", pfUI_config.chat.text, "timecolor")
 
   -- thirdparty
   pfUI.gui.CreateConfig(pfUI.gui.thirdparty, "DPSMate:", pfUI_config.thirdparty.dpsmate, "enable")
