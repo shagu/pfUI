@@ -302,11 +302,6 @@ pfUI:RegisterModule("chat", function ()
   end
   ChatFrameEditBox:SetAltArrowKeyMode(false)
 
-  local shortnames = { channel1 = "[1]", channel2 = "[2]",
-    channel3 = "[3]", channel4 = "[4]", channel5 = "[5]",
-    channel6 = "[6]", channel7 = "[7]", channel8 = "[8]",
-    channel9 = "[9]", channel10 = "[10]", }
-
   local default = " " .. "%s" .. "|r:" .. "\32"
   CHAT_CHANNEL_GET = "%s" .. "|r:" .. "\32";
   CHAT_GUILD_GET = '[G]' .. default
