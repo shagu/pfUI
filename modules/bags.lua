@@ -61,6 +61,19 @@ pfUI:RegisterModule("bags", function ()
     end
   end
 
+  function OpenBackpack()
+    if ( pfUI.bag:IsShown() ) then
+      ContainerFrame1.backpackWasOpen = 1
+      return;
+    else
+      ContainerFrame1.backpackWasOpen = nil
+    end
+
+    if ( not ContainerFrame1.backpackWasOpen ) then
+      ToggleBackpack()
+    end
+  end
+
   function ToggleBag() end
 
   for i=1, 5 do
