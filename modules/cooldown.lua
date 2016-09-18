@@ -1,7 +1,6 @@
 pfUI:RegisterModule("cooldown", function ()
   function CooldownFrame_SetTimer(this, start, duration, enable)
     if ( start > 0 and duration > 0 and enable > 0) then
-
       this.start = start;
       this.duration = duration;
       this.stopping = 0;
@@ -28,8 +27,8 @@ pfUI:RegisterModule("cooldown", function ()
       this:Show();
     else
       this:Hide()
+      if this.cd then this.cd:Hide() end
     end
-
     this:SetAlpha(0)
   end
 
