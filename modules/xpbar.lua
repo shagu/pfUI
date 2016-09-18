@@ -30,6 +30,7 @@ pfUI:RegisterModule("xpbar", function ()
     end)
 
   pfUI.xp:SetScript("OnUpdate",function()
+      if pfUI_config.panel.xp.showalways == "1" then return end
       if pfUI.xp:GetAlpha() == 0 or pfUI.xp.mouseover == true then return end
       if not pfUI.xp.tick then
         pfUI.xp.tick = GetTime() + 0.01
@@ -109,12 +110,12 @@ pfUI:RegisterModule("xpbar", function ()
           pfUI.rep.bar:SetStatusBarColor((color.r + .5) * .5, (color.g + .5) * .5, (color.b + .5) * .5, 1)
           pfUI.rep:SetAlpha(1)
           pfUI.rep.tick = GetTime() + 3.00
-
         end
       end
     end)
 
   pfUI.rep:SetScript("OnUpdate",function()
+      if pfUI_config.panel.xp.showalways == "1" then return end
       if pfUI.rep:GetAlpha() == 0 or pfUI.rep.mouseover == true then return end
       if not pfUI.rep.tick then
         pfUI.rep.tick = GetTime() + 0.01
