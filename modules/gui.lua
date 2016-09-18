@@ -419,6 +419,27 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.thirdparty.title:SetFontObject(GameFontWhite)
   pfUI.gui.thirdparty.title:SetText("Thirdparty Addons")
 
+  -- Reset All
+  pfUI.gui.resetAll = CreateFrame("Button", nil, pfUI.gui)
+  pfUI.gui.resetAll:ClearAllPoints()
+  pfUI.gui.resetAll:SetWidth(80)
+  pfUI.gui.resetAll:SetHeight(20)
+  pfUI.gui.resetAll:SetPoint("BOTTOMLEFT", 0, 60)
+  pfUI.gui.resetAll:SetBackdrop(pfUI.backdrop)
+  pfUI.gui.resetAll.text = pfUI.gui.resetAll:CreateFontString("Status", "LOW", "GameFontNormal")
+  pfUI.gui.resetAll.text:SetFont("Interface\\AddOns\\pfUI\\fonts\\arial.ttf", pfUI_config.global.font_size, "OUTLINE")
+  pfUI.gui.resetAll.text:ClearAllPoints()
+  pfUI.gui.resetAll.text:SetAllPoints(pfUI.gui.resetAll)
+  pfUI.gui.resetAll.text:SetPoint("CENTER", 0, 0)
+  pfUI.gui.resetAll.text:SetFontObject(GameFontWhite)
+  pfUI.gui.resetAll.text:SetText("Reset pfUI")
+  pfUI.gui.resetAll:SetScript("OnClick", function()
+      pfUI_init = {}
+      pfUI_config = {}
+      pfUI:LoadConfig()
+      pfUI.gui.reloadDialog:Show()
+    end)
+
   -- Reset Frames
   pfUI.gui.resetFrames = CreateFrame("Button", nil, pfUI.gui)
   pfUI.gui.resetFrames:ClearAllPoints()
@@ -432,7 +453,7 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.resetFrames.text:SetAllPoints(pfUI.gui.resetFrames)
   pfUI.gui.resetFrames.text:SetPoint("CENTER", 0, 0)
   pfUI.gui.resetFrames.text:SetFontObject(GameFontWhite)
-  pfUI.gui.resetFrames.text:SetText("Reset Frames")
+  pfUI.gui.resetFrames.text:SetText("Reset Positions")
   pfUI.gui.resetFrames:SetScript("OnClick", function()
       pfUI_config["position"] = {}
       pfUI.gui.reloadDialog:Show()
