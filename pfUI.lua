@@ -30,6 +30,10 @@ pfUI:SetScript("OnEvent", function()
      pfUI.cache["locale"] = "enUS"
   end
 
+  if not pfUI_init then
+    pfUI_init = {}
+  end
+
   pfUI:LoadConfig()
   if arg1 == "pfUI" then
     pfUI:Debug("pfUI module loader:")

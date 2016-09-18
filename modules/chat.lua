@@ -54,8 +54,11 @@ pfUI:RegisterModule("chat", function ()
           v:SetVertexColor(RAID_CLASS_COLORS[class].r + .3 * .5, RAID_CLASS_COLORS[class].g +.3 * .5, RAID_CLASS_COLORS[class].b +.3 * .5,1)
         end
 
-        pfUI.chat.SetupPositions()
-        pfUI.chat.SetupChannels()
+        if not pfUI_init["chat"] then
+          pfUI.chat.SetupPositions()
+          pfUI.chat.SetupChannels()
+          pfUI_init["chat"] = true
+        end
 
         for i=1, NUM_CHAT_WINDOWS do
           for j,v in ipairs({getglobal("ChatFrame" .. i .. "Tab"):GetRegions()}) do

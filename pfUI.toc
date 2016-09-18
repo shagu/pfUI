@@ -4,6 +4,7 @@
 ## Notes: A complete user interface replacement.
 ## Version: 0.1
 ## SavedVariables: pfUI_config, pfUI_playerDB
+## SavedVariablesPerCharacter: pfUI_init
 
 # main
 pfUI.lua
