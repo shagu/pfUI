@@ -38,7 +38,7 @@ pfUI:RegisterModule("cooldown", function ()
       local remaining = this.duration - (GetTime() - this.start)
 
       -- disable GCD notify
-      if (remaining >= 0 and this.duration > 1.5) then
+      if (remaining >= 0 and this.duration > 2) then
         this.cd:Show()
         local unit = ""
         if remaining > 99 then
