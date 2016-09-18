@@ -54,6 +54,14 @@ pfUI:RegisterModule("chat", function ()
           v:SetVertexColor(RAID_CLASS_COLORS[class].r + .3 * .5, RAID_CLASS_COLORS[class].g +.3 * .5, RAID_CLASS_COLORS[class].b +.3 * .5,1)
         end
 
+        ChatFrame1:ClearAllPoints()
+        ChatFrame1:SetPoint("TOPLEFT", pfUI.chat.left ,"TOPLEFT", 5, -25)
+        ChatFrame1:SetPoint("BOTTOMRIGHT", pfUI.chat.left ,"BOTTOMRIGHT", -5, 25)
+
+        ChatFrame3:ClearAllPoints()
+        ChatFrame3:SetPoint("TOPLEFT", pfUI.chat.right ,"TOPLEFT", 5, -25)
+        ChatFrame3:SetPoint("BOTTOMRIGHT", pfUI.chat.right ,"BOTTOMRIGHT", -5, 25)
+
         if not pfUI_init["chat"] then
           pfUI.chat.SetupPositions()
           pfUI.chat.SetupChannels()
@@ -179,30 +187,22 @@ pfUI:RegisterModule("chat", function ()
   end
 
   function pfUI.chat.SetupPositions()
-    -- set position of Main Window
-    ChatFrame1:ClearAllPoints()
-    ChatFrame1:SetPoint("TOPLEFT", pfUI.chat.left ,"TOPLEFT", 5, -25)
-    ChatFrame1:SetPoint("BOTTOMRIGHT", pfUI.chat.left ,"BOTTOMRIGHT", -5, 25)
-
     FCF_SetLocked(ChatFrame1, 1)
     FCF_SetWindowColor(ChatFrame1, 0, 0, 0);
     FCF_SetWindowAlpha(ChatFrame1, 0);
     FCF_SetChatWindowFontSize(ChatFrame1, 12)
-    -- set position of Loot & Spam
+
+    FCF_SetLocked(ChatFrame3, 1)
+    FCF_SetWindowColor(ChatFrame3, 0, 0, 0);
+    FCF_SetWindowAlpha(ChatFrame3, 0);
+    FCF_SetChatWindowFontSize(ChatFrame3, 12)
+
+    FCF_SetWindowName(ChatFrame3, "Loot & Spam", 1 )
+    FCF_UnDockFrame(ChatFrame3)
     if not ChatFrame3.isDocked == 1 or not ChatFrame3:IsShown() then
       FCF_OpenNewWindow("Loot & Spam")
     end
 
-    FCF_SetWindowColor(ChatFrame3, 0, 0, 0);
-    FCF_SetWindowAlpha(ChatFrame3, 0);
-    FCF_SetChatWindowFontSize(ChatFrame3, 12)
-    FCF_SetWindowName(ChatFrame3, "Loot & Spam", 1 )
-    FCF_UnDockFrame(ChatFrame3)
-    ChatFrame3:ClearAllPoints()
-    ChatFrame3:SetPoint("TOPLEFT", pfUI.chat.right ,"TOPLEFT", 5, -25)
-    ChatFrame3:SetPoint("BOTTOMRIGHT", pfUI.chat.right ,"BOTTOMRIGHT", -5, 25)
-    FCF_SetLocked(ChatFrame3, 1)
-    -- save positions on logout
     ChatFrame1:SetUserPlaced(1);
     ChatFrame3:SetUserPlaced(1);
   end
