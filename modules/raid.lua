@@ -113,7 +113,10 @@ pfUI:RegisterModule("raid", function ()
         GameTooltip:SetOwner(this, "ANCHOR_NONE");
         GameTooltip:SetUnit("raid" .. this.id);
         GameTooltip:Show()
+      end)
 
+      pfUI.uf.raid[i]:SetScript("OnLeave", function()
+        GameTooltip:FadeOut()
       end)
 
       pfUI.uf.raid[i]:SetScript("OnClick", function ()

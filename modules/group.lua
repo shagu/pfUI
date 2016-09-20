@@ -145,7 +145,10 @@ pfUI:RegisterModule("group", function ()
       GameTooltip:SetOwner(this, "ANCHOR_NONE");
       GameTooltip:SetUnit("party" .. this.id);
       GameTooltip:Show()
+    end)
 
+    pfUI.uf.group[i]:SetScript("OnLeave", function()
+      GameTooltip:FadeOut()
     end)
 
     pfUI.uf.group[i]:SetScript("OnClick", function ()
