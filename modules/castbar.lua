@@ -267,11 +267,11 @@ pfUI:RegisterModule("castbar", function ()
             pfUI.castbar.target:Action(mob, spell, "gains")
             return
           end
-          for mob, spell in string.gfind(arg1, pfLocaleSpellEvents[pfUI.cache["locale"]]['SPELL_AFFLICTED']) do
-            pfUI.castbar.target:Action(mob, spell, "afflicted")
-            return
-          end
           -- this part will be used for interruption of spells
+          --for mob, spell in string.gfind(arg1, pfLocaleSpellEvents[pfUI.cache["locale"]]['SPELL_AFFLICTED']) do
+          --  pfUI.castbar.target:Action(mob, spell, "afflicted")
+          --  return
+          --end
           --for spell, mob in string.gfind(arg1, pfLocaleSpellEvents[pfUI.cache["locale"]]['SPELL_HIT']) do
           --  -- you hit mob with XX
           --  -- pfUI.castbar.target:Action(mob, spell, "hit")
