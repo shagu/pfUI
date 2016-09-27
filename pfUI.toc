@@ -46,3 +46,4 @@ modules\tooltip.lua
 modules\uf_tukui.lua
 modules\thirdparty.lua
 modules\buff.lua
+modules\nameplates.lua

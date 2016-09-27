@@ -22,7 +22,7 @@ pfUI:RegisterModule("gui", function ()
 
   function pfUI.gui.SwitchTab(frame)
     local elements = { pfUI.gui.global, pfUI.gui.uf , pfUI.gui.bar, pfUI.gui.panel, pfUI.gui.tooltip,
-                       pfUI.gui.castbar, pfUI.gui.thirdparty, pfUI.gui.chat }
+                       pfUI.gui.castbar, pfUI.gui.thirdparty, pfUI.gui.chat, pfUI.gui.nameplates }
 
     for _, hide in pairs(elements) do
       hide:Hide()
@@ -387,6 +387,38 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.chat.title:SetFontObject(GameFontWhite)
   pfUI.gui.chat.title:SetText("Chat")
 
+  -- nameplate settings
+  pfUI.gui.nameplates = CreateFrame("Frame", nil, pfUI.gui)
+  pfUI.gui.nameplates:SetWidth(400)
+  pfUI.gui.nameplates:SetHeight(320)
+
+  pfUI.gui.nameplates:SetBackdrop(pfUI.backdrop)
+  pfUI.gui.nameplates:SetBackdropColor(0,0,0,.50);
+  pfUI.gui.nameplates:SetPoint("RIGHT",0,0)
+
+  pfUI.gui.nameplates.switch = CreateFrame("Button", nil, pfUI.gui)
+  pfUI.gui.nameplates.switch:ClearAllPoints()
+  pfUI.gui.nameplates.switch:SetWidth(80)
+  pfUI.gui.nameplates.switch:SetHeight(20)
+  pfUI.gui.nameplates.switch:SetPoint("TOPLEFT", 0, -140)
+  pfUI.gui.nameplates.switch:SetBackdrop(pfUI.backdrop)
+  pfUI.gui.nameplates.switch.text = pfUI.gui.nameplates.switch:CreateFontString("Status", "LOW", "GameFontNormal")
+  pfUI.gui.nameplates.switch.text:SetFont("Interface\\AddOns\\pfUI\\fonts\\arial.ttf", pfUI_config.global.font_size, "OUTLINE")
+  pfUI.gui.nameplates.switch.text:ClearAllPoints()
+  pfUI.gui.nameplates.switch.text:SetAllPoints(pfUI.gui.nameplates.switch)
+  pfUI.gui.nameplates.switch.text:SetPoint("CENTER", 0, 0)
+  pfUI.gui.nameplates.switch.text:SetFontObject(GameFontWhite)
+  pfUI.gui.nameplates.switch.text:SetText("Nameplates")
+  pfUI.gui.nameplates.switch:SetScript("OnClick", function()
+      pfUI.gui.SwitchTab(pfUI.gui.nameplates)
+    end)
+
+  pfUI.gui.nameplates.title = pfUI.gui.nameplates:CreateFontString("Status", "LOW", "GameFontNormal")
+  pfUI.gui.nameplates.title:SetFont("Interface\\AddOns\\pfUI\\fonts\\arial.ttf", pfUI_config.global.font_size + 2, "OUTLINE")
+  pfUI.gui.nameplates.title:SetPoint("TOP", 0, -10)
+  pfUI.gui.nameplates.title:SetFontObject(GameFontWhite)
+  pfUI.gui.nameplates.title:SetText("Nameplates")
+
   -- Thirdparty settings
   pfUI.gui.thirdparty = CreateFrame("Frame", nil, pfUI.gui)
   pfUI.gui.thirdparty:SetWidth(400)
@@ -400,7 +432,7 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.thirdparty.switch:ClearAllPoints()
   pfUI.gui.thirdparty.switch:SetWidth(80)
   pfUI.gui.thirdparty.switch:SetHeight(20)
-  pfUI.gui.thirdparty.switch:SetPoint("TOPLEFT", 0, -140)
+  pfUI.gui.thirdparty.switch:SetPoint("TOPLEFT", 0, -160)
   pfUI.gui.thirdparty.switch:SetBackdrop(pfUI.backdrop)
   pfUI.gui.thirdparty.switch.text = pfUI.gui.thirdparty.switch:CreateFontString("Status", "LOW", "GameFontNormal")
   pfUI.gui.thirdparty.switch.text:SetFont("Interface\\AddOns\\pfUI\\fonts\\arial.ttf", pfUI_config.global.font_size, "OUTLINE")
@@ -597,6 +629,11 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.CreateConfig(pfUI.gui.chat, "Timestamp format:", pfUI_config.chat.text, "timeformat")
   pfUI.gui.CreateConfig(pfUI.gui.chat, "Timestamp brackets:", pfUI_config.chat.text, "timebracket")
   pfUI.gui.CreateConfig(pfUI.gui.chat, "Timestamp color:", pfUI_config.chat.text, "timecolor")
+
+  -- nameplates
+  pfUI.gui.CreateConfig(pfUI.gui.nameplates, "Show castbars:", pfUI_config.nameplates, "showcastbar")
+  pfUI.gui.CreateConfig(pfUI.gui.nameplates, "Show debuffs:", pfUI_config.nameplates, "showdebuffs")
+  pfUI.gui.CreateConfig(pfUI.gui.nameplates, "Enable Clickthrough:", pfUI_config.nameplates, "clickthrough")
 
   -- thirdparty
   pfUI.gui.CreateConfig(pfUI.gui.thirdparty, "DPSMate:", pfUI_config.thirdparty.dpsmate, "enable")
