@@ -207,7 +207,7 @@ pfUI:RegisterModule("nameplates", function ()
             healthbar.castbar:SetStatusBarColor(.9,.8,0,1)
 
             if healthbar.castbar.bg == nil then
-              healthbar.castbar.bg = healthbar.castbar:CreateTexture(nil, "BORDER")
+              healthbar.castbar.bg = healthbar.castbar:CreateTexture(nil, "BACKGROUND")
               healthbar.castbar.bg:SetTexture(0,0,0,0.90)
               healthbar.castbar.bg:ClearAllPoints()
               healthbar.castbar.bg:SetPoint("CENTER", healthbar.castbar, "CENTER", 0, 0)
@@ -233,7 +233,7 @@ pfUI:RegisterModule("nameplates", function ()
             end
 
             if healthbar.castbar.icon.bg == nil then
-              healthbar.castbar.icon.bg = healthbar.castbar:CreateTexture(nil, "BORDER")
+              healthbar.castbar.icon.bg = healthbar.castbar:CreateTexture(nil, "BACKGROUND")
               healthbar.castbar.icon.bg:SetTexture(0,0,0,0.90)
               healthbar.castbar.icon.bg:ClearAllPoints()
               healthbar.castbar.icon.bg:SetPoint("CENTER", healthbar.castbar.icon, "CENTER", 0, 0)
