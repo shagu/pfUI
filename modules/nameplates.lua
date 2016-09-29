@@ -256,10 +256,10 @@ pfUI:RegisterModule("nameplates", function ()
               healthbar.castbar.icon:SetTexCoord(.1,.9,.1,.9)
             end
           end
+        elseif healthbar.castbar then
+          healthbar.castbar:Hide()
         end
       end
     end
   end)
 end)
-
-
