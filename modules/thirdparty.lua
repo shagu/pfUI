@@ -26,7 +26,9 @@ pfUI:RegisterModule("thirdparty", function ()
 
     DPSMate_DPSMate:Hide()
 
-    pfUIhookDPSMate_Show = DPSMate_DPSMate.Show
+    if not pfUIhookDPSMate_Show then
+      pfUIhookDPSMate_Show = DPSMate_DPSMate.Show
+    end
     function DPSMate_DPSMate.Show ()
       pfUIhookDPSMate_Show(DPSMate_DPSMate)
       DPSMate_DPSMate:ClearAllPoints()

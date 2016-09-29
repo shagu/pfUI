@@ -176,7 +176,11 @@ pfUI:RegisterModule("chat", function ()
       end
     end)
 
-  Hook_ChatFrame_OnUpdate = ChatFrame_OnUpdate
+
+  if not Hook_ChatFrame_OnUpdate then
+    Hook_ChatFrame_OnUpdate = ChatFrame_OnUpdate
+  end
+
   function ChatFrame_OnUpdate (arg1)
     for i=1, NUM_CHAT_WINDOWS do
       getglobal("ChatFrame" .. i .. "UpButton"):Hide()
@@ -329,7 +333,9 @@ pfUI:RegisterModule("chat", function ()
   CHAT_YELL_GET = '[Y]' .. default
 
   for i=1,NUM_CHAT_WINDOWS do
-    local HookAddMessage = getglobal("ChatFrame"..i).AddMessage
+    if not getglobal("ChatFrame"..i).HookAddMessage then
+      getglobal("ChatFrame"..i).HookAddMessage = getglobal("ChatFrame"..i).AddMessage
+    end
     getglobal("ChatFrame"..i).AddMessage = function (frame, text, ...)
       if text then
         local Name = string.gsub(text, ".*|Hplayer:(.-)|h.*", "%1")
@@ -366,7 +372,7 @@ pfUI:RegisterModule("chat", function ()
           text = "|cff" .. pfUI_config.chat.text.timecolor .. left .. date(pfUI_config.chat.text.timeformat) .. right .. "|r " .. text
         end
 
-        HookAddMessage(frame, text, unpack(arg))
+        getglobal("ChatFrame"..i).HookAddMessage(frame, text, unpack(arg))
       end
     end
   end

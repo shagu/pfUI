@@ -3,9 +3,18 @@ pfUI:RegisterModule("autoshift", function ()
   pfUI.autoshift:RegisterEvent("UI_ERROR_MESSAGE")
 
   pfUI.autoshift.lastError = ""
-  pfUI.autoshift.hookCastSpell = CastSpell
-  pfUI.autoshift.hookCastSpellByName = CastSpellByName
-  pfUI.autoshift.hookUseAction = UseAction
+
+  if not pfUI.autoshift.hookCastSpell then
+    pfUI.autoshift.hookCastSpell = CastSpell
+  end
+
+  if not pfUI.autoshift.hookCastSpellByName then
+    pfUI.autoshift.hookCastSpellByName = CastSpellByName
+  end
+
+  if not pfUI.autoshift.hookUseAction then
+    pfUI.autoshift.hookUseAction = UseAction
+  end
 
   function CastSpell(spellId, spellbookTabNum)
     if pfUI.autoshift.lastError == pfLocaleShift[pfUI.cache["locale"]]['wantBattleStance'] then

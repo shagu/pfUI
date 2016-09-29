@@ -3,13 +3,19 @@ pfUI:RegisterModule("actionbar", function ()
   function ActionButton_ShowGrid(button) return end
   function ActionButton_HideGrid(button) return end
 
-  Hook_ShowBonusActionBar = ShowBonusActionBar
+  if not Hook_ShowBonusActionBar then
+    Hook_ShowBonusActionBar = ShowBonusActionBar
+  end
+
   function ShowBonusActionBar()
     for i=1, 12 do getglobal("ActionButton" .. i):SetAlpha(0) end
     Hook_ShowBonusActionBar()
   end
 
-  Hook_HideBonusActionBar = HideBonusActionBar
+  if not Hook_HideBonusActionBar then
+    Hook_HideBonusActionBar = HideBonusActionBar
+  end
+
   function HideBonusActionBar()
     for i=1, 12 do getglobal("ActionButton" .. i):SetAlpha(1) end
     Hook_HideBonusActionBar()
