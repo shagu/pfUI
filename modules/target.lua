@@ -68,7 +68,8 @@ pfUI:RegisterModule("target", function ()
         pfUI.uf.target.hp.lootIcon:Hide()
       end
 
-      if event == "PLAYER_ENTERING_WORLD" then
+
+      if event == "PLAYER_TARGET_CHANGED" or event == "PLAYER_ENTERING_WORLD" then
         pfUI.uf.target.power.bar:SetValue(0)
         pfUI.uf.target.hp.bar:SetValue(0)
       end
