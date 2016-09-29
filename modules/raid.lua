@@ -132,6 +132,38 @@ pfUI:RegisterModule("raid", function ()
             DropItemOnUnit("raid" .. this.id);
           else
             TargetUnit("raid" .. this.id);
+            -- clickcast: Shift-modifier
+            if IsShiftKeyDown() then
+              if pfUI_config.unitframes.raid.clickcast_shift ~= "" then
+                CastSpellByName(pfUI_config.unitframes.raid.clickcast_shift)
+                TargetLastTarget()
+                return
+              end
+            -- clickcast: alt modifier
+            elseif IsAltKeyDown() then
+              if pfUI_config.unitframes.raid.clickcast_alt ~= "" then
+                CastSpellByName(pfUI_config.unitframes.raid.clickcast_alt)
+                TargetLastTarget()
+                return
+              end
+            -- clickcast: ctrl modifier
+            elseif IsControlKeyDown() then
+              if pfUI_config.unitframes.raid.clickcast_ctrl ~= "" then
+                CastSpellByName(pfUI_config.unitframes.raid.clickcast_ctrl)
+                TargetLastTarget()
+                return
+              end
+            -- clickcast: default
+            else
+              if pfUI_config.unitframes.raid.clickcast ~= "" then
+                CastSpellByName(pfUI_config.unitframes.raid.clickcast)
+                TargetLastTarget()
+                return
+              else
+                -- no clickcast: default action
+                TargetUnit("raid" .. this.id);
+              end
+            end
           end
         else
           ToggleDropDownMenu(1, nil, getglobal("RaidMemberFrame" .. this.id .. "DropDown"), "cursor")
