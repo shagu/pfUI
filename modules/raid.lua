@@ -132,10 +132,11 @@ pfUI:RegisterModule("raid", function ()
             DropItemOnUnit("raid" .. this.id);
           else
             TargetUnit("raid" .. this.id);
-            -- clickcast: Shift-modifier
+            -- clickcast: shift modifier
             if IsShiftKeyDown() then
               if pfUI_config.unitframes.raid.clickcast_shift ~= "" then
                 CastSpellByName(pfUI_config.unitframes.raid.clickcast_shift)
+                pfUI.uf.target.noanim = "yes"
                 TargetLastTarget()
                 return
               end
@@ -143,6 +144,7 @@ pfUI:RegisterModule("raid", function ()
             elseif IsAltKeyDown() then
               if pfUI_config.unitframes.raid.clickcast_alt ~= "" then
                 CastSpellByName(pfUI_config.unitframes.raid.clickcast_alt)
+                pfUI.uf.target.noanim = "yes"
                 TargetLastTarget()
                 return
               end
@@ -150,6 +152,7 @@ pfUI:RegisterModule("raid", function ()
             elseif IsControlKeyDown() then
               if pfUI_config.unitframes.raid.clickcast_ctrl ~= "" then
                 CastSpellByName(pfUI_config.unitframes.raid.clickcast_ctrl)
+                pfUI.uf.target.noanim = "yes"
                 TargetLastTarget()
                 return
               end
@@ -157,6 +160,7 @@ pfUI:RegisterModule("raid", function ()
             else
               if pfUI_config.unitframes.raid.clickcast ~= "" then
                 CastSpellByName(pfUI_config.unitframes.raid.clickcast)
+                pfUI.uf.target.noanim = "yes"
                 TargetLastTarget()
                 return
               else

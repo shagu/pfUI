@@ -68,7 +68,6 @@ pfUI:RegisterModule("target", function ()
         pfUI.uf.target.hp.lootIcon:Hide()
       end
 
-
       if event == "PLAYER_TARGET_CHANGED" or event == "PLAYER_ENTERING_WORLD" then
         pfUI.uf.target.power.bar:SetValue(0)
         pfUI.uf.target.hp.bar:SetValue(0)
@@ -162,7 +161,9 @@ pfUI:RegisterModule("target", function ()
       local hpReal = pfUI.uf.target.hpReal
       local hpDiff = abs(hpReal - hpDisplay)
 
-      if hpDisplay < hpReal then
+      if pfUI.uf.target.noanim == "yes" then
+        pfUI.uf.target.hp.bar:SetValue(hpReal)
+      elseif hpDisplay < hpReal then
         pfUI.uf.target.hp.bar:SetValue(hpDisplay + ceil(hpDiff / pfUI_config.unitframes.animation_speed))
       elseif hpDisplay > hpReal then
         pfUI.uf.target.hp.bar:SetValue(hpDisplay - ceil(hpDiff / pfUI_config.unitframes.animation_speed))
@@ -172,11 +173,15 @@ pfUI:RegisterModule("target", function ()
       local powerReal = pfUI.uf.target.powerReal
       local powerDiff = abs(powerReal - powerDisplay)
 
-      if powerDisplay < powerReal then
+      if pfUI.uf.target.noanim == "yes" then
+        pfUI.uf.target.power.bar:SetValue(powerReal)
+      elseif powerDisplay < powerReal then
         pfUI.uf.target.power.bar:SetValue(powerDisplay + ceil(powerDiff / pfUI_config.unitframes.animation_speed))
       elseif powerDisplay > powerReal then
         pfUI.uf.target.power.bar:SetValue(powerDisplay - ceil(powerDiff / pfUI_config.unitframes.animation_speed))
       end
+
+      pfUI.uf.target.noanim = "no"
     end)
 
   pfUI.uf.target.hp = CreateFrame("Frame",nil, pfUI.uf.target)
