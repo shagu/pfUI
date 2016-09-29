@@ -38,7 +38,7 @@ pfUI:RegisterModule("buff", function ()
 
     if border then
       buff:SetBackdrop({
-        bgFile = icon:GetTexture(), tile = false, tileSize = pfUI_config.unitframes.buff_size,
+        bgFile = icon:GetTexture(), tile = false, tileSize = 16,
         edgeFile = "Interface\\AddOns\\pfUI\\img\\border_col", edgeSize = 8,
         insets = { left = 0, right = 0, top = 0, bottom = 0}
       })
@@ -46,7 +46,7 @@ pfUI:RegisterModule("buff", function ()
       border:Hide()
     else
       buff:SetBackdrop({
-        bgFile = icon:GetTexture(), tile = false, tileSize = pfUI_config.unitframes.buff_size,
+        bgFile = icon:GetTexture(), tile = false, tileSize = 16,
         edgeFile = "Interface\\AddOns\\pfUI\\img\\border", edgeSize = 8,
         insets = { left = 0, right = 0, top = 0, bottom = 0}
       })
@@ -71,7 +71,7 @@ pfUI:RegisterModule("buff", function ()
 
       if buff then
         buff:SetBackdrop({
-          bgFile = icon:GetTexture(), tile = false, tileSize = pfUI_config.unitframes.buff_size,
+          bgFile = icon:GetTexture(), tile = false, tileSize = 16,
           edgeFile = "Interface\\AddOns\\pfUI\\img\\border_col", edgeSize = 8,
           insets = { left = 0, right = 0, top = 0, bottom = 0}
         })
