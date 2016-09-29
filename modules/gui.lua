@@ -5,7 +5,7 @@ pfUI:RegisterModule("gui", function ()
 
   pfUI.gui:SetFrameStrata("DIALOG")
   pfUI.gui:SetWidth(480)
-  pfUI.gui:SetHeight(320)
+  pfUI.gui:SetHeight(420)
   pfUI.gui:Hide()
 
   pfUI.gui:SetBackdrop(pfUI.backdrop)
@@ -166,7 +166,7 @@ pfUI:RegisterModule("gui", function ()
   -- Global Settings
   pfUI.gui.global = CreateFrame("Frame", nil, pfUI.gui)
   pfUI.gui.global:SetWidth(400)
-  pfUI.gui.global:SetHeight(320)
+  pfUI.gui.global:SetHeight(420)
 
   pfUI.gui.global:SetBackdrop(pfUI.backdrop)
   pfUI.gui.global:SetBackdropColor(0,0,0,.50);
@@ -198,7 +198,7 @@ pfUI:RegisterModule("gui", function ()
   -- UnitFrame settings
   pfUI.gui.uf = CreateFrame("Frame", nil, pfUI.gui)
   pfUI.gui.uf:SetWidth(400)
-  pfUI.gui.uf:SetHeight(320)
+  pfUI.gui.uf:SetHeight(420)
 
   pfUI.gui.uf:SetBackdrop(pfUI.backdrop)
   pfUI.gui.uf:SetBackdropColor(0,0,0,.50);
@@ -230,7 +230,7 @@ pfUI:RegisterModule("gui", function ()
   -- ActionBar settings
   pfUI.gui.bar = CreateFrame("Frame", nil, pfUI.gui)
   pfUI.gui.bar:SetWidth(400)
-  pfUI.gui.bar:SetHeight(320)
+  pfUI.gui.bar:SetHeight(420)
 
   pfUI.gui.bar:SetBackdrop(pfUI.backdrop)
   pfUI.gui.bar:SetBackdropColor(0,0,0,.50);
@@ -262,7 +262,7 @@ pfUI:RegisterModule("gui", function ()
   -- Panel settings
   pfUI.gui.panel = CreateFrame("Frame", nil, pfUI.gui)
   pfUI.gui.panel:SetWidth(400)
-  pfUI.gui.panel:SetHeight(320)
+  pfUI.gui.panel:SetHeight(420)
 
   pfUI.gui.panel:SetBackdrop(pfUI.backdrop)
   pfUI.gui.panel:SetBackdropColor(0,0,0,.50);
@@ -294,7 +294,7 @@ pfUI:RegisterModule("gui", function ()
   -- Tooltip settings
   pfUI.gui.tooltip = CreateFrame("Frame", nil, pfUI.gui)
   pfUI.gui.tooltip:SetWidth(400)
-  pfUI.gui.tooltip:SetHeight(320)
+  pfUI.gui.tooltip:SetHeight(420)
 
   pfUI.gui.tooltip:SetBackdrop(pfUI.backdrop)
   pfUI.gui.tooltip:SetBackdropColor(0,0,0,.50);
@@ -326,7 +326,7 @@ pfUI:RegisterModule("gui", function ()
   -- Castbar settings
   pfUI.gui.castbar = CreateFrame("Frame", nil, pfUI.gui)
   pfUI.gui.castbar:SetWidth(400)
-  pfUI.gui.castbar:SetHeight(320)
+  pfUI.gui.castbar:SetHeight(420)
 
   pfUI.gui.castbar:SetBackdrop(pfUI.backdrop)
   pfUI.gui.castbar:SetBackdropColor(0,0,0,.50);
@@ -358,7 +358,7 @@ pfUI:RegisterModule("gui", function ()
     -- chat settings
   pfUI.gui.chat = CreateFrame("Frame", nil, pfUI.gui)
   pfUI.gui.chat:SetWidth(400)
-  pfUI.gui.chat:SetHeight(320)
+  pfUI.gui.chat:SetHeight(420)
 
   pfUI.gui.chat:SetBackdrop(pfUI.backdrop)
   pfUI.gui.chat:SetBackdropColor(0,0,0,.50);
@@ -390,7 +390,7 @@ pfUI:RegisterModule("gui", function ()
   -- nameplate settings
   pfUI.gui.nameplates = CreateFrame("Frame", nil, pfUI.gui)
   pfUI.gui.nameplates:SetWidth(400)
-  pfUI.gui.nameplates:SetHeight(320)
+  pfUI.gui.nameplates:SetHeight(420)
 
   pfUI.gui.nameplates:SetBackdrop(pfUI.backdrop)
   pfUI.gui.nameplates:SetBackdropColor(0,0,0,.50);
@@ -422,7 +422,7 @@ pfUI:RegisterModule("gui", function ()
   -- Thirdparty settings
   pfUI.gui.thirdparty = CreateFrame("Frame", nil, pfUI.gui)
   pfUI.gui.thirdparty:SetWidth(400)
-  pfUI.gui.thirdparty:SetHeight(320)
+  pfUI.gui.thirdparty:SetHeight(420)
 
   pfUI.gui.thirdparty:SetBackdrop(pfUI.backdrop)
   pfUI.gui.thirdparty:SetBackdropColor(0,0,0,.50);
