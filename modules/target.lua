@@ -9,14 +9,6 @@ pfUI:RegisterModule("target", function ()
 
   pfUI.uf.target = CreateFrame("Button","pfTarget",UIParent)
   pfUI.uf.target:Hide()
-  pfUI.uf.target:RegisterEvent("PLAYER_TARGET_CHANGED")
-  pfUI.uf.target:SetScript("OnEvent", function()
-      if UnitExists("target") then
-        pfUI.uf.target:Show()
-      else
-        pfUI.uf.target:Hide()
-      end
-    end)
   pfUI.uf.target:SetWidth(pfUI_config.unitframes.target.width)
   pfUI.uf.target:SetHeight(pfUI_config.unitframes.target.height+pfUI_config.unitframes.target.pheight)
   pfUI.uf.target:SetPoint("BOTTOMLEFT", UIParent, "BOTTOM", 75, 125)
