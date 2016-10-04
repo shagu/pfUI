@@ -164,7 +164,7 @@ pfUI:RegisterModule("nameplates", function ()
 
         -- adjust healthbar color
         local red, green, blue, _ = healthbar:GetStatusBarColor()
-        if pfUI_playerDB[name:GetText()] and pfUI_playerDB[name:GetText()]["class"] then
+        if pfUI_playerDB[name:GetText()] and pfUI_playerDB[name:GetText()]["class"] and RAID_CLASS_COLORS[pfUI_playerDB[name:GetText()]["class"]] then
           healthbar:SetStatusBarColor(
             RAID_CLASS_COLORS[pfUI_playerDB[name:GetText()]["class"]].r,
             RAID_CLASS_COLORS[pfUI_playerDB[name:GetText()]["class"]].g,
