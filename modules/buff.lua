@@ -92,6 +92,8 @@ pfUI:RegisterModule("buff", function ()
             pfUI.buff.mainHand.stacks:SetText(mainhand)
             pfUI.buff.mainHand:SetAllPoints(buff)
             pfUI.buff.mainHand:Show()
+          else
+            pfUI.buff.mainHand:Hide()
           end
         end
       else
@@ -111,6 +113,8 @@ pfUI:RegisterModule("buff", function ()
             pfUI.buff.offHand.stacks:SetText(offhand)
             pfUI.buff.offHand:SetAllPoints(buff)
             pfUI.buff.offHand:Show()
+          else
+            pfUI.buff.offHand:Hide()
           end
         end
       else
