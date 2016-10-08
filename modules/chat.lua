@@ -1,4 +1,5 @@
 pfUI:RegisterModule("chat", function ()
+  FOOBAR_WHISPER = 1
   pfUI.chat = CreateFrame("Frame",nil,UIParent)
 
   pfUI.chat.left = CreateFrame("Frame", "pfChatLeft", UIParent)
@@ -17,6 +18,139 @@ pfUI:RegisterModule("chat", function ()
   pfUI.chat.left.panelTop:SetPoint("TOPRIGHT", pfUI.chat.left, "TOPRIGHT", -2, -2)
   pfUI.chat.left.panelTop:SetBackdrop(pfUI.backdrop)
   pfUI.chat.left.panelTop:SetBackdropColor(0,0,0,.75)
+
+  -- whisper forwarding
+  pfUI.chat.left.panelTop.proxy = CreateFrame("Button", "leftChatWhisperProxy", pfUI.chat.left.panelTop)
+  pfUI.chat.left.panelTop.proxy:RegisterEvent("CHAT_MSG_WHISPER")
+  pfUI.chat.left.panelTop.proxy:SetPoint("TOPRIGHT", pfUI.chat.left, "TOPRIGHT", -20, -6)
+  pfUI.chat.left.panelTop.proxy:SetWidth(12)
+  pfUI.chat.left.panelTop.proxy:SetHeight(12)
+  pfUI.chat.left.panelTop.proxy:SetNormalTexture("Interface\\AddOns\\pfUI\\img\\proxy")
+  pfUI.chat.left.panelTop.proxy:SetAlpha(0.25)
+  for i,v in ipairs({pfUI.chat.left.panelTop.proxy:GetRegions()}) do
+    if v.SetVertexColor then v:SetVertexColor(1,1,1,1) end
+  end
+
+  pfUI.chat.left.panelTop.proxy.enabled = false
+  pfUI.chat.left.panelTop.proxy.forwardto = ""
+
+  function pfUI.chat.left.panelTop.proxy.toggle()
+    if pfUI.chat.left.panelTop.proxy.enabled == true then
+      -- redirect inactive
+      pfUI.chat.left.panelTop.proxy.enabled = false
+      pfUI.chat.left.panelTop.proxy:SetAlpha(0.25)
+      for i,v in ipairs({pfUI.chat.left.panelTop.proxy:GetRegions()}) do
+        if v.SetVertexColor then v:SetVertexColor(1,1,1,1) end
+      end
+      DEFAULT_CHAT_FRAME:AddMessage("Forwarding to |cff33ffcc" .. pfUI.chat.left.panelTop.proxy.forwardto .. "|r has been disabled")
+    elseif pfUI.chat.left.panelTop.proxy.forwardto ~= "" then
+      -- redirect active
+      pfUI.chat.left.panelTop.proxy.enabled = true
+      pfUI.chat.left.panelTop.proxy:SetAlpha(1)
+      for i,v in ipairs({pfUI.chat.left.panelTop.proxy:GetRegions()}) do
+        if v.SetVertexColor then v:SetVertexColor(1,.25,.25,1) end
+      end
+      DEFAULT_CHAT_FRAME:AddMessage("All messages will be forwarded to |cff33ffcc" .. pfUI.chat.left.panelTop.proxy.forwardto)
+    end
+  end
+
+  pfUI.chat.left.panelTop.proxy:RegisterForClicks("LeftButtonUp", "RightButtonUp")
+  pfUI.chat.left.panelTop.proxy:SetScript("OnClick", function()
+    if arg1 == "RightButton" then
+      if pfUI.chat.left.panelTop.proxyName:IsShown() then
+        pfUI.chat.left.panelTop.proxyName:Hide()
+      else
+        pfUI.chat.left.panelTop.proxyName:Show()
+      end
+    else
+      pfUI.chat.left.panelTop.proxy.toggle()
+    end
+  end)
+
+  pfUI.chat.left.panelTop.proxy:SetScript("OnEvent", function()
+    local forwardto = pfUI.chat.left.panelTop.proxy.forwardto
+    if pfUI.chat.left.panelTop.proxy.enabled == false then return end
+
+    if arg2 ~= UnitName("player") and arg2 ~=  forwardto  and forwardto ~= UnitName("player") then
+      SendChatMessage("[" .. arg2 .. "]: " .. arg1, "WHISPER", nil, forwardto);
+    end
+
+    if arg2 == forwardto then
+      local isForward, _, name, message = string.find(arg1, "(.*): (.*)")
+      if isForward then
+        SendChatMessage(message, "WHISPER", nil, name);
+        SendChatMessage("-> " .. name, "WHISPER", nil, forwardto);
+      end
+    end
+  end)
+
+  pfUI.chat.left.panelTop.proxyName = CreateFrame("Frame", "leftChatWhisperProxyName")
+  pfUI.chat.left.panelTop.proxyName:SetPoint("CENTER", 0, 0)
+  pfUI.chat.left.panelTop.proxyName:SetHeight(100)
+  pfUI.chat.left.panelTop.proxyName:SetWidth(200)
+  pfUI.chat.left.panelTop.proxyName:SetBackdrop(pfUI.backdrop)
+  pfUI.chat.left.panelTop.proxyName:SetScript("OnShow", function() 
+    pfUI.chat.left.panelTop.proxyName.input:SetText(pfUI.chat.left.panelTop.proxy.forwardto)
+  end)
+
+  pfUI.chat.left.panelTop.proxyName.caption = pfUI.chat.left.panelTop.proxyName:CreateFontString("Status", "LOW", "GameFontNormal")
+  pfUI.chat.left.panelTop.proxyName.caption:SetFont("Interface\\AddOns\\pfUI\\fonts\\arial.ttf", pfUI_config.global.font_size + 2, "OUTLINE")
+  pfUI.chat.left.panelTop.proxyName.caption:SetPoint("TOP", 0, -20)
+  pfUI.chat.left.panelTop.proxyName.caption:SetFontObject(GameFontWhite)
+  pfUI.chat.left.panelTop.proxyName.caption:SetJustifyH("CENTER")
+  pfUI.chat.left.panelTop.proxyName.caption:SetText("Forward all whispers to:")
+
+  pfUI.chat.left.panelTop.proxyName.input = CreateFrame("EditBox", nil, pfUI.chat.left.panelTop.proxyName)
+  pfUI.chat.left.panelTop.proxyName.input:SetTextColor(.2,1.1,1)
+  pfUI.chat.left.panelTop.proxyName.input:SetJustifyH("CENTER")
+  pfUI.chat.left.panelTop.proxyName.input:SetBackdrop(pfUI.backdrop)
+  pfUI.chat.left.panelTop.proxyName.input:SetPoint("TOPLEFT" , pfUI.chat.left.panelTop.proxyName, "TOPLEFT", 20, -40)
+  pfUI.chat.left.panelTop.proxyName.input:SetPoint("BOTTOMRIGHT" , pfUI.chat.left.panelTop.proxyName, "BOTTOMRIGHT", -20, 40)
+  pfUI.chat.left.panelTop.proxyName.input:SetFontObject(GameFontWhite)
+  pfUI.chat.left.panelTop.proxyName.input:SetAutoFocus(false)
+  pfUI.chat.left.panelTop.proxyName.input:SetText(pfUI.chat.left.panelTop.proxy.forwardto)
+  pfUI.chat.left.panelTop.proxyName.input:SetScript("OnEscapePressed", function(self)
+    pfUI.chat.left.panelTop.proxyName:Hide()
+  end)
+
+  pfUI.chat.left.panelTop.proxyName.okay = CreateFrame("Button", nil, pfUI.chat.left.panelTop.proxyName)
+  pfUI.chat.left.panelTop.proxyName.okay:SetWidth(80)
+  pfUI.chat.left.panelTop.proxyName.okay:SetHeight(20)
+  pfUI.chat.left.panelTop.proxyName.okay:SetPoint("BOTTOMRIGHT", -10, 10)
+  pfUI.chat.left.panelTop.proxyName.okay:SetBackdrop(pfUI.backdrop)
+  pfUI.chat.left.panelTop.proxyName.okay.text = pfUI.chat.left.panelTop.proxyName.okay:CreateFontString("Status", "LOW", "GameFontNormal")
+  pfUI.chat.left.panelTop.proxyName.okay.text:SetFont("Interface\\AddOns\\pfUI\\fonts\\arial.ttf", pfUI_config.global.font_size, "OUTLINE")
+  pfUI.chat.left.panelTop.proxyName.okay.text:ClearAllPoints()
+  pfUI.chat.left.panelTop.proxyName.okay.text:SetAllPoints(pfUI.chat.left.panelTop.proxyName.okay)
+  pfUI.chat.left.panelTop.proxyName.okay.text:SetPoint("CENTER", 0, 0)
+  pfUI.chat.left.panelTop.proxyName.okay.text:SetFontObject(GameFontWhite)
+  pfUI.chat.left.panelTop.proxyName.okay.text:SetText("Save")
+  pfUI.chat.left.panelTop.proxyName.okay:SetScript("OnClick", function()
+    pfUI.chat.left.panelTop.proxy.forwardto = pfUI.chat.left.panelTop.proxyName.input:GetText()
+    if pfUI.chat.left.panelTop.proxy.enabled == true then
+      DEFAULT_CHAT_FRAME:AddMessage("All messages will now be forwarded to |cff33ffcc" .. pfUI.chat.left.panelTop.proxy.forwardto)
+    end
+    pfUI.chat.left.panelTop.proxyName:Hide()
+  end)
+
+  pfUI.chat.left.panelTop.proxyName.abort = CreateFrame("Button", nil, pfUI.chat.left.panelTop.proxyName)
+  pfUI.chat.left.panelTop.proxyName.abort:SetWidth(80)
+  pfUI.chat.left.panelTop.proxyName.abort:SetHeight(20)
+  pfUI.chat.left.panelTop.proxyName.abort:SetPoint("BOTTOMLEFT", 10, 10)
+  pfUI.chat.left.panelTop.proxyName.abort:SetBackdrop(pfUI.backdrop)
+  pfUI.chat.left.panelTop.proxyName.abort.text = pfUI.chat.left.panelTop.proxyName.abort:CreateFontString("Status", "LOW", "GameFontNormal")
+  pfUI.chat.left.panelTop.proxyName.abort.text:SetFont("Interface\\AddOns\\pfUI\\fonts\\arial.ttf", pfUI_config.global.font_size, "OUTLINE")
+  pfUI.chat.left.panelTop.proxyName.abort.text:ClearAllPoints()
+  pfUI.chat.left.panelTop.proxyName.abort.text:SetAllPoints(pfUI.chat.left.panelTop.proxyName.abort)
+  pfUI.chat.left.panelTop.proxyName.abort.text:SetPoint("CENTER", 0, 0)
+  pfUI.chat.left.panelTop.proxyName.abort.text:SetFontObject(GameFontWhite)
+  pfUI.chat.left.panelTop.proxyName.abort.text:SetText("Abort")
+  pfUI.chat.left.panelTop.proxyName.abort:SetScript("OnClick", function()
+    pfUI.chat.left.panelTop.proxyName:Hide()
+  end)
+
+  pfUI.chat.left.panelTop.proxyName:Hide()
+
 
   pfUI.chat.right = CreateFrame("Frame", "pfChatRight", UIParent)
   pfUI.chat.right:SetFrameStrata("BACKGROUND")
