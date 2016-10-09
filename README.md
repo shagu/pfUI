@@ -68,3 +68,6 @@ Report LUA-Errors and Issues in the [Bugtracker](https://github.com/shagu/pfUI/i
 
 **Everything from scratch?! Are you insane?**  
 Yes.
+
+**How can I swap bags?**
+Right-clicking in the `[x]` in the normal bag view will open the bag panel.
