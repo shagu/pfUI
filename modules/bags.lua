@@ -175,11 +175,6 @@ pfUI:RegisterModule("bags", function ()
           pfUI.bags[bag].slots[slot].frame:SetID(slot)
         end
 
-        if bag == -1 then
-          local count = getglobal("pfUIbag" .. bag .. "item" .. slot .. "Count")
-          count:Hide()
-        end
-
         pfUI.bags[bag].slots[slot].frame:ClearAllPoints()
         pfUI.bags[bag].slots[slot].frame:SetPoint("TOPLEFT", x*(pfUI.bag.button_size+pfUI_config.bars.border) + (pfUI_config.bars.border * 2), - (y*(pfUI.bag.button_size+pfUI_config.bars.border) + (pfUI_config.bars.border * 2)+ topspace))
         pfUI.bags[bag].slots[slot].frame:SetHeight(pfUI.bag.button_size)
@@ -234,21 +229,23 @@ pfUI:RegisterModule("bags", function ()
       pfUI.bags[bag].slots[slot].frame:SetBackdropBorderColor(.3,.3,.3,1)
     end
 
-    if not pfUI.bags[bag].slots[slot].count then
-      pfUI.bags[bag].slots[slot].count = pfUI.bags[bag].slots[slot].frame:CreateFontString("Status", "DIALOG", "GameFontWhite")
-      pfUI.bags[bag].slots[slot].count:SetFont("Interface\\AddOns\\pfUI\\fonts\\homespun.ttf", pfUI_config.global.font_size, "OUTLINE")
-      pfUI.bags[bag].slots[slot].count:SetParent(pfUI.bags[bag].slots[slot].frame)
-      pfUI.bags[bag].slots[slot].count:SetAllPoints(pfUI.bags[bag].slots[slot].frame)
-      pfUI.bags[bag].slots[slot].count:SetJustifyV("BOTTOM")
-      pfUI.bags[bag].slots[slot].count:SetJustifyH("RIGHT")
+    if not pfUI.bags[bag].slots[slot].stacks then
+      pfUI.bags[bag].slots[slot].stacks = pfUI.bags[bag].slots[slot].frame:CreateFontString("Status", "DIALOG", "GameFontWhite")
+      pfUI.bags[bag].slots[slot].stacks:SetFont("Interface\\AddOns\\pfUI\\fonts\\homespun.ttf", pfUI_config.global.font_size, "OUTLINE")
+      pfUI.bags[bag].slots[slot].stacks:SetParent(pfUI.bags[bag].slots[slot].frame)
+      pfUI.bags[bag].slots[slot].stacks:SetAllPoints(pfUI.bags[bag].slots[slot].frame)
+      pfUI.bags[bag].slots[slot].stacks:SetJustifyV("BOTTOM")
+      pfUI.bags[bag].slots[slot].stacks:SetJustifyH("RIGHT")
     end
 
     if count and count > 1 then
-      pfUI.bags[bag].slots[slot].count:SetText(count)
-      pfUI.bags[bag].slots[slot].count:Show()
+      pfUI.bags[bag].slots[slot].frame.count = count
+      pfUI.bags[bag].slots[slot].stacks:SetText(count)
+      pfUI.bags[bag].slots[slot].stacks:Show()
     else
-      pfUI.bags[bag].slots[slot].count:SetText("")
-      pfUI.bags[bag].slots[slot].count:Hide()
+      pfUI.bags[bag].slots[slot].frame.count = 0
+      pfUI.bags[bag].slots[slot].stacks:SetText("")
+      pfUI.bags[bag].slots[slot].stacks:Hide()
     end
 
     -- hide duplicate itemcount in bankframe
