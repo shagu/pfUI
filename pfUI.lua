@@ -70,10 +70,6 @@ pfUI.backdrop = {
   insets = {left = 0, right = 0, top = 0, bottom = 0},
 }
 
-pfUI.backdrop_gitter = {
-  bgFile = "Interface\\AddOns\\pfUI\\img\\gitter", tile = true, tileSize = 8,
-}
-
 pfUI.backdrop_col = {
   bgFile = "Interface\\AddOns\\pfUI\\img\\bg", tile = true, tileSize = 8,
   edgeFile = "Interface\\AddOns\\pfUI\\img\\border_col", edgeSize = 8,

@@ -30,7 +30,7 @@ pfUI:RegisterModule("group", function ()
     for i=1, 5 do
       if GetNumPartyMembers() >= i then
         pfUI.uf.group[i]:Show()
-        if UnitIsConnected("party"..i) then
+        if UnitIsConnected("party"..i) or not UnitName("raid" .. this.id) then
           pfUI.uf.group[i]:SetAlpha(1)
         else
           pfUI.uf.group[i]:SetAlpha(.25)
@@ -110,7 +110,6 @@ pfUI:RegisterModule("group", function ()
     pfUI.uf.group[i].caption:SetPoint("LEFT",pfUI.uf.group[i].hp.bar, "LEFT", 10, 0)
     pfUI.uf.group[i].caption:SetJustifyH("LEFT")
     pfUI.uf.group[i].caption:SetFontObject(GameFontWhite)
-    pfUI.uf.group[i].caption:SetText("Group"..i)
 
     pfUI.uf.group[i].hp.leaderIcon = CreateFrame("Frame",nil,pfUI.uf.group[i].hp)
     pfUI.uf.group[i].hp.leaderIcon:SetWidth(10)
@@ -172,7 +171,7 @@ pfUI:RegisterModule("group", function ()
     end)
 
     pfUI.uf.group[i]:SetScript("OnUpdate", function ()
-      if CheckInteractDistance("party" .. this.id, 4) then
+      if CheckInteractDistance("party" .. this.id, 4) or not UnitName("raid" .. this.id) then
         this:SetAlpha(1)
       else
         this:SetAlpha(.5)

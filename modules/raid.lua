@@ -78,7 +78,6 @@ pfUI:RegisterModule("raid", function ()
       pfUI.uf.raid[i].caption:SetPoint("CENTER",pfUI.uf.raid[i].hp.bar, "CENTER", 0, 0)
       pfUI.uf.raid[i].caption:SetJustifyH("CENTER")
       pfUI.uf.raid[i].caption:SetFontObject(GameFontWhite)
-      pfUI.uf.raid[i].caption:SetText("Raid"..i)
 
       pfUI.uf.raid[i].hp.leaderIcon = CreateFrame("Frame",nil,pfUI.uf.raid[i].hp)
       pfUI.uf.raid[i].hp.leaderIcon:SetWidth(10)
@@ -178,7 +177,7 @@ pfUI:RegisterModule("raid", function ()
       end)
 
       pfUI.uf.raid[i]:SetScript("OnUpdate", function ()
-        if CheckInteractDistance("raid" .. this.id, 4) then
+        if CheckInteractDistance("raid" .. this.id, 4) or not UnitName("raid" .. this.id) then
           this:SetAlpha(1)
         else
           this:SetAlpha(.5)

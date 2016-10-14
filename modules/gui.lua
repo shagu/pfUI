@@ -99,11 +99,51 @@ pfUI:RegisterModule("gui", function ()
 
     if not pfUI.gitter then
       pfUI.gitter = CreateFrame("Frame", nil, UIParent)
+      pfUI.gitter:SetAllPoints(WorldFrame)
       pfUI.gitter:SetFrameStrata("BACKGROUND")
-      pfUI.gitter:SetPoint("TOPLEFT", 0, 0, "TOPLEFT")
-      pfUI.gitter:SetPoint("BOTTOMRIGHT", 0, 0, "BOTTOMRIGHT")
-      pfUI.gitter:SetBackdrop(pfUI.backdrop_gitter)
-      pfUI.gitter:SetBackdropColor(0,0,0,1)
+
+      local size = 1
+      local width = GetScreenWidth()
+      local ratio = width / GetScreenHeight()
+      local height = GetScreenHeight() * ratio
+
+      local wStep = width / 128
+      local hStep = height / 128
+
+      for i = 0, 128 do
+        local tx = pfUI.gitter:CreateTexture(nil, 'BACKGROUND')
+        if i == 128 / 2 then
+          tx:SetTexture(.2, 1, .8)
+        else
+          tx:SetTexture(0, 0, 0)
+        end
+        tx:SetPoint("TOPLEFT", pfUI.gitter, "TOPLEFT", i*wStep - (size/2), 0)
+        tx:SetPoint('BOTTOMRIGHT', pfUI.gitter, 'BOTTOMLEFT', i*wStep + (size/2), 0)
+      end
+
+      local height = GetScreenHeight()
+
+      for i = 0, 128 do
+        local tx = pfUI.gitter:CreateTexture(nil, 'BACKGROUND')
+        tx:SetTexture(.2, 1, .8)
+        tx:SetPoint("TOPLEFT", pfUI.gitter, "TOPLEFT", 0, -(height/2) + (size/2))
+        tx:SetPoint('BOTTOMRIGHT', pfUI.gitter, 'TOPRIGHT', 0, -(height/2 + size/2))
+      end
+
+      for i = 1, floor((height/2)/hStep) do
+        local tx = pfUI.gitter:CreateTexture(nil, 'BACKGROUND')
+        tx:SetTexture(0, 0, 0)
+
+        tx:SetPoint("TOPLEFT", pfUI.gitter, "TOPLEFT", 0, -(height/2+i*hStep) + (size/2))
+        tx:SetPoint('BOTTOMRIGHT', pfUI.gitter, 'TOPRIGHT', 0, -(height/2+i*hStep + size/2))
+
+        tx = pfUI.gitter:CreateTexture(nil, 'BACKGROUND')
+        tx:SetTexture(0, 0, 0)
+
+        tx:SetPoint("TOPLEFT", pfUI.gitter, "TOPLEFT", 0, -(height/2-i*hStep) + (size/2))
+        tx:SetPoint('BOTTOMRIGHT', pfUI.gitter, 'TOPRIGHT', 0, -(height/2-i*hStep + size/2))
+      end
+
       pfUI.gitter:Hide()
     end
 
@@ -123,10 +163,17 @@ pfUI:RegisterModule("gui", function ()
         frame.drag = CreateFrame("Frame", nil, frame)
         frame.drag:SetAllPoints(frame)
         frame.drag:SetFrameStrata("DIALOG")
-        frame.drag.bg = frame.drag:CreateTexture()
-        frame.drag.bg:SetAllPoints(frame.drag)
-        frame.drag.bg:SetTexture(.2,1,.8,1)
-        frame.drag:SetAlpha(.25)
+        frame.drag:SetBackdrop(pfUI.backdrop_col)
+        frame.drag:SetBackdropBorderColor(.2, 1, .8)
+        frame.drag:SetBackdropColor(1,1,1,.75)
+        frame.drag.text = frame.drag:CreateFontString("Status", "LOW", "GameFontNormal")
+        frame.drag.text:SetFont("Interface\\AddOns\\pfUI\\fonts\\arial.ttf", pfUI_config.global.font_size, "OUTLINE")
+        frame.drag.text:ClearAllPoints()
+        frame.drag.text:SetAllPoints(frame.drag)
+        frame.drag.text:SetPoint("CENTER", 0, 0)
+        frame.drag.text:SetFontObject(GameFontWhite)
+        frame.drag.text:SetText(strsub(frame:GetName(),3))
+        frame.drag:SetAlpha(1)
       end
 
       frame.drag:SetScript("OnMouseDown",function()
