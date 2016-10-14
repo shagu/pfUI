@@ -124,4 +124,144 @@ pfUI:RegisterModule("thirdparty", function ()
       end
     end)
   end
+
+  -- HealComm Integration
+  -- Show HealComm bonus healthbars in pfUI frames
+  pfUI.healComm = CreateFrame("Frame", nil)
+  pfUI.healComm:RegisterEvent("UPDATE_FACTION")
+
+  pfUI.healComm:SetScript("OnEvent", function ()
+    -- return if already exists
+    if pfUI.healComm.createIncHeal or pfUI_config.thirdparty.healcomm.enable == "0" then return end
+
+    if AceLibrary and AceLibrary:HasInstance("HealComm-1.0") then
+      local HealComm = AceLibrary("HealComm-1.0")
+      local AceEvent = AceLibrary("AceEvent-2.0")
+
+      function pfUI.healComm.createIncHeal(unit)
+        if unit == "player" then
+          if pfUI.uf.player and not pfUI.uf.player.incHeal then
+            pfUI.uf.player.incHeal = CreateFrame("StatusBar", "PlayerFrameIncHealBar", pfUI.uf.player)
+            pfUI.uf.player.incHeal:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
+            pfUI.uf.player.incHeal:SetMinMaxValues(0, 1)
+            pfUI.uf.player.incHeal:SetValue(1)
+            pfUI.uf.player.incHeal:SetStatusBarColor(0, 1, 0, 0.5)
+            pfUI.uf.player.incHeal:SetHeight(pfUI.uf.player.hp:GetHeight() - (2*3))
+            pfUI.uf.player.incHeal:Hide()
+          end
+          return pfUI.uf.player
+        end
+
+        if unit == "target" then
+          if pfUI.uf.target and not pfUI.uf.target.incHeal then
+            pfUI.uf.target.incHeal = CreateFrame("StatusBar", "PlayerFrameIncHealBar", pfUI.uf.target)
+            pfUI.uf.target.incHeal:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
+            pfUI.uf.target.incHeal:SetMinMaxValues(0, 1)
+            pfUI.uf.target.incHeal:SetValue(1)
+            pfUI.uf.target.incHeal:SetStatusBarColor(0, 1, 0, 0.5)
+            pfUI.uf.target.incHeal:SetHeight(pfUI.uf.target.hp:GetHeight() - (2*3))
+            pfUI.uf.target.incHeal:Hide()
+          end
+          return pfUI.uf.target
+        end
+
+        if strsub(unit,0,5) == "party" then
+          local id = tonumber(strsub(unit,6))
+          if pfUI.uf.group[id] and not pfUI.uf.group[id].incHeal then
+            pfUI.uf.group[id].incHeal = CreateFrame("StatusBar", "PlayerFrameIncHealBar", pfUI.uf.group[id])
+            pfUI.uf.group[id].incHeal:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
+            pfUI.uf.group[id].incHeal:SetMinMaxValues(0, 1)
+            pfUI.uf.group[id].incHeal:SetValue(1)
+            pfUI.uf.group[id].incHeal:SetStatusBarColor(0, 1, 0, 0.5)
+            pfUI.uf.group[id].incHeal:SetHeight(pfUI.uf.group[id].hp:GetHeight() - (2*3))
+            pfUI.uf.group[id].incHeal:Hide()
+          end
+          return pfUI.uf.group[id]
+        end
+
+        if strsub(unit,0,4) == "raid" then
+          local rid = tonumber(strsub(unit,5))
+          local id = nil
+
+          for i=1,40 do
+            if pfUI.uf.raid[i] and pfUI.uf.raid[i].id == rid then id = i end
+          end
+
+          if id == nil then return end
+
+          if pfUI.uf.raid[id] and not pfUI.uf.raid[id].incHeal then
+            pfUI.uf.raid[id].incHeal = CreateFrame("StatusBar", "PlayerFrameIncHealBar", pfUI.uf.raid[id])
+            pfUI.uf.raid[id].incHeal:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
+            pfUI.uf.raid[id].incHeal:SetMinMaxValues(0, 1)
+            pfUI.uf.raid[id].incHeal:SetValue(1)
+            pfUI.uf.raid[id].incHeal:SetStatusBarColor(0, 1, 0, 0.5)
+            pfUI.uf.raid[id].incHeal:SetHeight(pfUI.uf.raid[id].hp:GetHeight() - (2*3))
+            pfUI.uf.raid[id].incHeal:Hide()
+          end
+          return pfUI.uf.raid[id]
+        end
+
+        return nil
+      end
+
+      function pfUI.healComm.onEvent(unitname)
+        if UnitName("target") == unitname then
+          pfUI.healComm.onHeal("target")
+        end
+
+        if UnitName("player") == unitname then
+          pfUI.healComm.onHeal("player")
+        end
+
+        if UnitInRaid("player") then
+          for i=1,40 do
+            if UnitName("raid" .. i) == unitname then
+              pfUI.healComm.onHeal("raid" .. i)
+            end
+          end
+        end
+
+        for i=1,4 do
+          if UnitName("party" .. i) == unitname then
+            pfUI.healComm.onHeal("party" .. i)
+          end
+        end
+      end
+
+      function pfUI.healComm.onEventHealthChange(unit)
+        pfUI.healComm.onHeal(unit)
+      end
+
+      function pfUI.healComm.TargetChanged()
+        pfUI.healComm.onHeal("target")
+      end
+
+      function pfUI.healComm.onHeal(unit)
+        local frame = pfUI.healComm.createIncHeal(unit)
+        if not frame then return end
+
+        local healed = HealComm:getHeal(UnitName(unit))
+
+        local health, maxHealth = UnitHealth(unit), UnitHealthMax(unit)
+        if( healed > 0 and (health < maxHealth or OVERHEALPERCENT > 0 )) and frame:IsVisible() then
+          frame.incHeal:Show()
+          local healthWidth = frame:GetWidth() * (health / maxHealth)
+          local incWidth = (frame:GetWidth()-6) * (healed / maxHealth)
+          if (healthWidth + incWidth) > (frame:GetWidth() * (1+(OVERHEALPERCENT/100)) ) then
+            incWidth = frame:GetWidth() * (1+(OVERHEALPERCENT/100)) - healthWidth
+          end
+          frame.incHeal:SetWidth(incWidth)
+          frame.incHeal:ClearAllPoints()
+          frame.incHeal:SetPoint("TOPLEFT", frame, "TOPLEFT", healthWidth-3, -3)
+        else
+          frame.incHeal:Hide()
+        end
+      end
+
+      AceEvent:RegisterEvent("HealComm_Healupdate", pfUI.healComm.onEvent)
+      AceEvent:RegisterEvent("UNIT_HEALTH", pfUI.healComm.onEventHealthChange)
+      AceEvent:RegisterEvent("PLAYER_TARGET_CHANGED", pfUI.healComm.TargetChanged)
+    end
+  end)
+
 end)

@@ -642,5 +642,6 @@ pfUI:RegisterModule("gui", function ()
   -- thirdparty
   pfUI.gui.CreateConfig(pfUI.gui.thirdparty, "DPSMate:", pfUI_config.thirdparty.dpsmate, "enable")
   pfUI.gui.CreateConfig(pfUI.gui.thirdparty, "WIM:", pfUI_config.thirdparty.wim, "enable")
+  pfUI.gui.CreateConfig(pfUI.gui.thirdparty, "HealComm:", pfUI_config.thirdparty.healcomm, "enable")
 
 end)
