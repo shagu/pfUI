@@ -34,6 +34,11 @@ pfUI will support and contain language specific code for the following languages
 
 ![Moving Frames](http://mephis.he-hosting.de/shaguaddons/pfUI/mmobase/moveit.jpg)
 
+## Recommended Addons
+* [DPSMate](https://bitbucket.org/tomdy/dpsmate)
+* [HealComm](https://github.com/Aviana/HealComm/releases)
+* [WIM](http://addons.us.to/addon/wim)
+
 ## Installation (common)
 1. Download from Github as Zip, unpack and rename the folder pfUI-master to pfUI.
 2. Copy "pfUI" to Wow-Directory\Interface\AddOns
