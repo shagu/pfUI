@@ -113,7 +113,7 @@ pfUI:RegisterModule("thirdparty", function ()
 
           getglobal("WIM_msgFrame" .. user .. "ShortcutFrameButton4"):SetBackdrop(pfUI.backdrop)
           for i,v in ipairs({getglobal("WIM_msgFrame" .. user .. "ShortcutFrameButton4"):GetRegions()}) do
-            if i >= 2 and i < 7then v:SetTexture(.1,.1,.1,0) end
+            if i >= 2 and i < 7 then v:SetTexture(.1,.1,.1,0) end
           end
 
           getglobal("WIM_msgFrame" .. user .. "ShortcutFrameButton5"):SetBackdrop(pfUI.backdrop)
