@@ -38,6 +38,7 @@ pfUI will support and contain language specific code for the following languages
 * [DPSMate](https://bitbucket.org/tomdy/dpsmate)
 * [HealComm](https://github.com/Aviana/HealComm/releases)
 * [WIM](http://addons.us.to/addon/wim)
+* [MobHealth3](http://addons.us.to/addon/mobhealth)
 
 ## Installation (common)
 1. Download from Github as Zip, unpack and rename the folder pfUI-master to pfUI.
