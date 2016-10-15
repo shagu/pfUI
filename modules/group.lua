@@ -30,7 +30,7 @@ pfUI:RegisterModule("group", function ()
     for i=1, 5 do
       if GetNumPartyMembers() >= i then
         pfUI.uf.group[i]:Show()
-        if UnitIsConnected("party"..i) or not UnitName("raid" .. this.id) then
+        if UnitIsConnected("party"..i) or not UnitName("party" .. this.id) then
           pfUI.uf.group[i]:SetAlpha(1)
         else
           pfUI.uf.group[i]:SetAlpha(.25)
