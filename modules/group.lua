@@ -171,7 +171,7 @@ pfUI:RegisterModule("group", function ()
     end)
 
     pfUI.uf.group[i]:SetScript("OnUpdate", function ()
-      if CheckInteractDistance("party" .. this.id, 4) or not UnitName("raid" .. this.id) then
+      if CheckInteractDistance("party" .. this.id, 4) or not UnitName("party" .. this.id) then
         this:SetAlpha(1)
       else
         this:SetAlpha(.5)
