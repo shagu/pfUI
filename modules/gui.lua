@@ -313,7 +313,7 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui:CreateConfig(pfUI.gui.global, "Fontsize", pfUI_config.global, "font_size")
 
   -- unitframes
-  pfUI.gui.uf = pfUI.gui:CreateConfigTab("UnitFrame Settings")
+  pfUI.gui.uf = pfUI.gui:CreateConfigTab("UnitFrames")
   pfUI.gui:CreateConfig(pfUI.gui.uf, "Animation speed", pfUI_config.unitframes, "animation_speed")
   pfUI.gui:CreateConfig(pfUI.gui.uf, "Show portrait", pfUI_config.unitframes, "portrait")
   pfUI.gui:CreateConfig(pfUI.gui.uf, "Buff size", pfUI_config.unitframes, "buff_size")
@@ -331,12 +331,12 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui:CreateConfig(pfUI.gui.uf, "Click-cast on Raidframe (Ctrl)", pfUI_config.unitframes.raid, "clickcast_ctrl")
 
   -- actionbar
-  pfUI.gui.bar = pfUI.gui:CreateConfigTab("ActionBar Settings")
+  pfUI.gui.bar = pfUI.gui:CreateConfigTab("ActionBar")
   pfUI.gui:CreateConfig(pfUI.gui.bar, "Icon Size", pfUI_config.bars, "icon_size")
   pfUI.gui:CreateConfig(pfUI.gui.bar, "Border", pfUI_config.bars, "border")
 
   -- panels
-  pfUI.gui.panel = pfUI.gui:CreateConfigTab("Panel Settings")
+  pfUI.gui.panel = pfUI.gui:CreateConfigTab("Panel")
   pfUI.gui:CreateConfig(pfUI.gui.panel, "Left Panel: Left", pfUI_config.panel.left, "left")
   pfUI.gui:CreateConfig(pfUI.gui.panel, "Left Panel: Center", pfUI_config.panel.left, "center")
   pfUI.gui:CreateConfig(pfUI.gui.panel, "Left Panel: Right", pfUI_config.panel.left, "right")
@@ -347,28 +347,28 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui:CreateConfig(pfUI.gui.panel, "Always show XP and Reputation Bar", pfUI_config.panel.xp, "showalways")
 
   -- tooltip
-  pfUI.gui.tooltip = pfUI.gui:CreateConfigTab("Tooltip Settings")
+  pfUI.gui.tooltip = pfUI.gui:CreateConfigTab("Tooltip")
   pfUI.gui:CreateConfig(pfUI.gui.tooltip, "Tooltip Position:", pfUI_config.tooltip, "position")
 
   -- castbar
-  pfUI.gui.castbar = pfUI.gui:CreateConfigTab("Castbar Settings")
+  pfUI.gui.castbar = pfUI.gui:CreateConfigTab("Castbar")
   pfUI.gui:CreateConfig(pfUI.gui.castbar, "Hide blizzards castbar:", pfUI_config.castbar.player, "hide_blizz")
 
   -- chat
-  pfUI.gui.chat = pfUI.gui:CreateConfigTab("Chat Settings")
+  pfUI.gui.chat = pfUI.gui:CreateConfigTab("Chat")
   pfUI.gui:CreateConfig(pfUI.gui.chat, "Timestamp in chat:", pfUI_config.chat.text, "time")
   pfUI.gui:CreateConfig(pfUI.gui.chat, "Timestamp format:", pfUI_config.chat.text, "timeformat")
   pfUI.gui:CreateConfig(pfUI.gui.chat, "Timestamp brackets:", pfUI_config.chat.text, "timebracket")
   pfUI.gui:CreateConfig(pfUI.gui.chat, "Timestamp color:", pfUI_config.chat.text, "timecolor")
 
   -- nameplates
-  pfUI.gui.nameplates = pfUI.gui:CreateConfigTab("Nameplate Settings")
+  pfUI.gui.nameplates = pfUI.gui:CreateConfigTab("Nameplates")
   pfUI.gui:CreateConfig(pfUI.gui.nameplates, "Show castbars:", pfUI_config.nameplates, "showcastbar")
   pfUI.gui:CreateConfig(pfUI.gui.nameplates, "Show debuffs:", pfUI_config.nameplates, "showdebuffs")
   pfUI.gui:CreateConfig(pfUI.gui.nameplates, "Enable Clickthrough:", pfUI_config.nameplates, "clickthrough")
 
   -- thirdparty
-  pfUI.gui.thirdparty = pfUI.gui:CreateConfigTab("Thirdparty Addons")
+  pfUI.gui.thirdparty = pfUI.gui:CreateConfigTab("Thirdparty")
   pfUI.gui:CreateConfig(pfUI.gui.thirdparty, "DPSMate:", pfUI_config.thirdparty.dpsmate, "enable")
   pfUI.gui:CreateConfig(pfUI.gui.thirdparty, "WIM:", pfUI_config.thirdparty.wim, "enable")
   pfUI.gui:CreateConfig(pfUI.gui.thirdparty, "HealComm:", pfUI_config.thirdparty.healcomm, "enable")
@@ -385,7 +385,7 @@ pfUI:RegisterModule("gui", function ()
   end)
 
   -- Unlock Frames
-  pfUI.gui.unlockFrames = pfUI.gui:CreateConfigTab("Unlock Frames", "bottom", function()
+  pfUI.gui.unlockFrames = pfUI.gui:CreateConfigTab("Unlock", "bottom", function()
       pfUI.gui.UnlockFrames()
   end)
 
