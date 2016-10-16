@@ -37,9 +37,7 @@ pfUI:SetScript("OnEvent", function()
   pfUI:LoadConfig()
   if arg1 == "pfUI" then
     for i,m in pairs(this.modules) do
-      if not pfUI[m] then
-        pfUI.module[m]()
-      end
+      pfUI.module[m]()
     end
   end
 end)
