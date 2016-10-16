@@ -52,19 +52,16 @@ function pfUI:UpdateConfig(group, subgroup, entry, value)
 
   -- update config
   if not subgroup and entry and value and not pfUI_config[group][entry] then
-    pfUI:Debug("Creating Config: " .. entry .. " with value " .. value)
     pfUI_config[group][entry] = value
   end
 
   -- check for missing config subgroups
   if subgroup and not pfUI_config[group][subgroup] then
-    pfUI:Debug("Creating Subgroup: " .. subgroup)
     pfUI_config[group][subgroup] = {}
   end
 
   -- update config in subgroup
   if subgroup and entry and value and not pfUI_config[group][subgroup][entry] then
-    pfUI:Debug("Creating Config in Subgroup (" .. subgroup .. "): " .. entry .. " with value " .. value)
     pfUI_config[group][subgroup][entry] = value
   end
 end

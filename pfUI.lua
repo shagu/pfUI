@@ -36,11 +36,9 @@ pfUI:SetScript("OnEvent", function()
 
   pfUI:LoadConfig()
   if arg1 == "pfUI" then
-    pfUI:Debug("pfUI module loader:")
     for i,m in pairs(this.modules) do
       if not pfUI[m] then
         pfUI.module[m]()
-        pfUI:Debug("=> " ..  m)
       end
     end
   end
@@ -58,10 +56,6 @@ pfLocaleSpellInterrupts = {}
 function pfUI:RegisterModule(n, f)
   pfUI.module[n] = f
   table.insert(pfUI.modules, n)
-end
-
-function pfUI:Debug(msg)
-  -- DEFAULT_CHAT_FRAME:AddMessage(msg)
 end
 
 pfUI.backdrop = {
