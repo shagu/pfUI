@@ -5,7 +5,7 @@ pfUI:RegisterModule("gui", function ()
 
   pfUI.gui:SetFrameStrata("DIALOG")
   pfUI.gui:SetWidth(480)
-  pfUI.gui:SetHeight(420)
+  pfUI.gui:SetHeight(320)
   pfUI.gui:Hide()
 
   pfUI.gui:SetBackdrop(pfUI.backdrop)
@@ -190,6 +190,9 @@ pfUI:RegisterModule("gui", function ()
     for _, hide in pairs(elements) do
       hide:Hide()
     end
+    pfUI.gui.scroll:SetScrollChild(frame)
+    pfUI.gui.scroll:UpdateScrollState()
+    pfUI.gui.scroll:SetVerticalScroll(0)
     frame:Show()
   end
 
@@ -211,11 +214,7 @@ pfUI:RegisterModule("gui", function ()
 
     local frame = CreateFrame("Frame", nil, pfUI.gui)
     frame:SetWidth(400)
-    frame:SetHeight(420)
-
-    frame:SetBackdrop(pfUI.backdrop)
-    frame:SetBackdropColor(0,0,0,.50);
-    frame:SetPoint("RIGHT",0,0)
+    frame:SetHeight(320)
 
     frame.switch = CreateFrame("Button", nil, pfUI.gui)
     frame.switch:ClearAllPoints()
@@ -307,6 +306,109 @@ pfUI:RegisterModule("gui", function ()
   end
 
   -- [[ config section ]] --
+  pfUI.gui.deco = CreateFrame("Frame", nil, pfUI.gui)
+  pfUI.gui.deco:ClearAllPoints()
+  pfUI.gui.deco:SetPoint("TOPLEFT", pfUI.gui, "TOPLEFT", 80,0)
+  pfUI.gui.deco:SetPoint("BOTTOMRIGHT", pfUI.gui, "BOTTOMRIGHT", 0,0)
+  pfUI.gui.deco:SetBackdrop(pfUI.backdrop)
+  pfUI.gui.deco:SetBackdropColor(0,0,0,.50);
+
+  pfUI.gui.deco.up = CreateFrame("Frame", nil, pfUI.gui.deco)
+  pfUI.gui.deco.up:SetPoint("TOPRIGHT", 0,0)
+  pfUI.gui.deco.up:SetHeight(16)
+  pfUI.gui.deco.up:SetWidth(400)
+  pfUI.gui.deco.up:SetAlpha(0)
+  pfUI.gui.deco.up.visible = 0
+  pfUI.gui.deco.up.texture = pfUI.gui.deco.up:CreateTexture()
+  pfUI.gui.deco.up.texture:SetAllPoints()
+  pfUI.gui.deco.up.texture:SetTexture("Interface\\AddOns\\pfUI\\img\\gradient_up")
+  pfUI.gui.deco.up.texture:SetVertexColor(.2,1,.8)
+  pfUI.gui.deco.up:SetScript("OnUpdate", function()
+    pfUI.gui.scroll:UpdateScrollState()
+    if pfUI.gui.deco.up.visible == 0 and pfUI.gui.deco.up:GetAlpha() > 0 then
+      pfUI.gui.deco.up:SetAlpha(pfUI.gui.deco.up:GetAlpha() - 0.01)
+    elseif pfUI.gui.deco.up.visible == 0 and pfUI.gui.deco.up:GetAlpha() <= 0 then
+      pfUI.gui.deco.up:Hide()
+    end
+
+    if pfUI.gui.deco.up.visible == 1 and pfUI.gui.deco.up:GetAlpha() > .15 then
+      pfUI.gui.deco.up:SetAlpha(pfUI.gui.deco.up:GetAlpha() - 0.01)
+    end
+  end)
+
+  pfUI.gui.deco.down = CreateFrame("Frame", nil, pfUI.gui.deco)
+  pfUI.gui.deco.down:SetPoint("BOTTOMRIGHT", 0,0)
+  pfUI.gui.deco.down:SetHeight(16)
+  pfUI.gui.deco.down:SetWidth(400)
+  pfUI.gui.deco.down:SetAlpha(0)
+  pfUI.gui.deco.down.visible = 0
+  pfUI.gui.deco.down.texture = pfUI.gui.deco.down:CreateTexture()
+  pfUI.gui.deco.down.texture:SetAllPoints()
+  pfUI.gui.deco.down.texture:SetTexture("Interface\\AddOns\\pfUI\\img\\gradient_down")
+  pfUI.gui.deco.down.texture:SetVertexColor(.2,1,.8)
+  pfUI.gui.deco.down:SetScript("OnUpdate", function()
+    pfUI.gui.scroll:UpdateScrollState()
+    if pfUI.gui.deco.down.visible == 0 and pfUI.gui.deco.down:GetAlpha() > 0 then
+      pfUI.gui.deco.down:SetAlpha(pfUI.gui.deco.down:GetAlpha() - 0.01)
+    elseif pfUI.gui.deco.down.visible == 0 and pfUI.gui.deco.down:GetAlpha() <= 0 then
+      pfUI.gui.deco.down:Hide()
+    end
+
+    if pfUI.gui.deco.down.visible == 1 and pfUI.gui.deco.down:GetAlpha() > .15 then
+      pfUI.gui.deco.down:SetAlpha(pfUI.gui.deco.down:GetAlpha() - 0.01)
+    end
+  end)
+
+  pfUI.gui.scroll = CreateFrame("ScrollFrame", nil, pfUI.gui)
+  pfUI.gui.scroll:ClearAllPoints()
+  pfUI.gui.scroll:SetPoint("TOPLEFT", pfUI.gui, "TOPLEFT", 80,-10)
+  pfUI.gui.scroll:SetPoint("BOTTOMRIGHT", pfUI.gui, "BOTTOMRIGHT", 0,10)
+  pfUI.gui.scroll:EnableMouseWheel(1)
+  function pfUI.gui.scroll:UpdateScrollState()
+    local current = pfUI.gui.scroll:GetVerticalScroll()
+    local max = pfUI.gui.scroll:GetVerticalScrollRange() + 10
+    pfUI.gui.deco.up:Show()
+    pfUI.gui.deco.down:Show()
+    if max > 31 then
+      if current < max then
+        pfUI.gui.deco.down.visible = 1
+        pfUI.gui.deco.down:Show()
+        pfUI.gui.deco.down:SetAlpha(.2)
+      end
+      if current > 5 then
+          pfUI.gui.deco.up.visible = 1
+          pfUI.gui.deco.up:Show()
+          pfUI.gui.deco.up:SetAlpha(.2)
+      end
+      if current > max - 5 then
+        pfUI.gui.deco.down.visible = 0
+      end
+      if current < 5 then
+        pfUI.gui.deco.up.visible = 0
+      end
+    else
+      pfUI.gui.deco.up.visible = 0
+      pfUI.gui.deco.down.visible = 0
+    end
+  end
+
+  pfUI.gui.scroll:SetScript("OnMouseWheel", function()
+    local current = pfUI.gui.scroll:GetVerticalScroll()
+    local new = current + arg1*-10
+    local max = pfUI.gui.scroll:GetVerticalScrollRange() + 10
+    if max > 31 then
+      if new < 0 then
+          pfUI.gui.scroll:SetVerticalScroll(0)
+          pfUI.gui.deco.up:SetAlpha(.3)
+      elseif new > max then
+        pfUI.gui.scroll:SetVerticalScroll(max)
+        pfUI.gui.deco.down:SetAlpha(.3)
+      else
+        pfUI.gui.scroll:SetVerticalScroll(new)
+      end
+    end
+    pfUI.gui.scroll:UpdateScrollState()
+  end)
 
   -- global
   pfUI.gui.global = pfUI.gui:CreateConfigTab("Global Settings")
