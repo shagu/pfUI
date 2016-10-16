@@ -8,6 +8,7 @@ pfUI:RegisterModule("skin", function ()
   local cr, cg, cb = color.r , color.g, color.b
 
   local buttons = {
+    "GameMenuButtonPFUI",
     "GameMenuButtonOptions",
     "GameMenuButtonSoundOptions",
     "GameMenuButtonUIOptions",
@@ -32,6 +33,17 @@ pfUI:RegisterModule("skin", function ()
     "DropDownList1Backdrop",
     "DropDownList2Backdrop",
   }
+
+  local pfUIButton = CreateFrame("Button", "GameMenuButtonPFUI", GameMenuFrame, "GameMenuButtonTemplate")
+  pfUIButton:SetPoint("TOP", 0, -10)
+  pfUIButton:SetText("\"pfUI\" Settings")
+  pfUIButton:SetScript("OnClick", function()
+    pfUI.gui:Show()
+    HideUIPanel(GameMenuFrame)
+  end)
+  GameMenuButtonOptions:SetPoint("TOP", 0, -35)
+  GameMenuButtonContinue:ClearAllPoints()
+  GameMenuButtonContinue:SetPoint("BOTTOM", 0, 10)
 
   for _, button in pairs(buttons) do
     local b = getglobal(button)
@@ -59,9 +71,9 @@ pfUI:RegisterModule("skin", function ()
 
   for i,v in ipairs({GameMenuFrame:GetRegions()}) do
     if v.SetTextColor then
-      v:SetTextColor(1,1,1,.5)
-      v:SetPoint("TOP", GameMenuFrame, "TOP", 0, -6)
-      v:SetFont("Interface\\AddOns\\pfUI\\fonts\\arial.ttf", pfUI_config.global.font_size, "OUTLINE")
+      v:SetTextColor(1,1,1,1)
+      v:SetPoint("TOP", GameMenuFrame, "TOP", 0, 16)
+      v:SetFont("Interface\\AddOns\\pfUI\\fonts\\arial.ttf", pfUI_config.global.font_size + 2, "OUTLINE")
     end
   end
 end)
