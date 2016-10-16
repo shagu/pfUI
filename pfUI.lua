@@ -37,7 +37,12 @@ pfUI:SetScript("OnEvent", function()
   pfUI:LoadConfig()
   if arg1 == "pfUI" then
     for i,m in pairs(this.modules) do
-      pfUI.module[m]()
+      -- do not load disabled modules
+      if pfUI_config["disabled"] and pfUI_config["disabled"][m]  == "1" then
+        -- message("DEBUG: module " .. m .. " has been disabled")
+      else
+        pfUI.module[m]()
+      end
     end
   end
 end)

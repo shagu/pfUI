@@ -184,8 +184,8 @@ pfUI:RegisterModule("gui", function ()
   end
 
   function pfUI.gui:SwitchTab(frame)
-    local elements = { pfUI.gui.global, pfUI.gui.uf , pfUI.gui.bar, pfUI.gui.panel, pfUI.gui.tooltip,
-                       pfUI.gui.castbar, pfUI.gui.thirdparty, pfUI.gui.chat, pfUI.gui.nameplates }
+    local elements = { pfUI.gui.global, pfUI.gui.modules, pfUI.gui.uf , pfUI.gui.bar, pfUI.gui.panel,
+      pfUI.gui.tooltip, pfUI.gui.castbar, pfUI.gui.thirdparty, pfUI.gui.chat, pfUI.gui.nameplates }
 
     for _, hide in pairs(elements) do
       hide:Hide()
@@ -413,6 +413,14 @@ pfUI:RegisterModule("gui", function ()
   -- global
   pfUI.gui.global = pfUI.gui:CreateConfigTab("Global Settings")
   pfUI.gui:CreateConfig(pfUI.gui.global, "Fontsize", pfUI_config.global, "font_size")
+
+  -- modules
+  pfUI.gui.modules = pfUI.gui:CreateConfigTab("Modules")
+  for i,m in pairs(pfUI.modules) do
+    -- create disabled entry if not existing and display
+    pfUI:UpdateConfig("disabled", nil, m, "0")
+    pfUI.gui:CreateConfig(pfUI.gui.modules, "Disable " .. m, pfUI_config.disabled, m)
+  end
 
   -- unitframes
   pfUI.gui.uf = pfUI.gui:CreateConfigTab("UnitFrames")
