@@ -87,14 +87,13 @@ pfUI:RegisterModule("target", function ()
         pfUI.uf.target.hpText:SetText( hp)
       end
 
-      local color
+      local color = { r = 1, g = 1, b = 1 }
       if UnitIsPlayer("target") then
         _, class = UnitClass("target")
         color = RAID_CLASS_COLORS[class]
       else
         color = UnitReactionColor[UnitReaction("target", "player")]
       end
-      if not color then color.r, color.g, color.b = 1, 1, 1 end
 
       local r, g, b = (color.r + .5) * .5, (color.g + .5) * .5, (color.b + .5) * .5
 
