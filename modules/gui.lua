@@ -73,9 +73,12 @@ pfUI:RegisterModule("gui", function ()
       }
 
     if not pfUI.gitter then
-      pfUI.gitter = CreateFrame("Frame", nil, UIParent)
+      pfUI.gitter = CreateFrame("Button", nil, UIParent)
       pfUI.gitter:SetAllPoints(WorldFrame)
       pfUI.gitter:SetFrameStrata("BACKGROUND")
+      pfUI.gitter:SetScript("OnClick", function()
+        pfUI.gui.UnlockFrames()
+      end)
 
       local size = 1
       local width = GetScreenWidth()
@@ -124,8 +127,10 @@ pfUI:RegisterModule("gui", function ()
 
     if pfUI.gitter:IsShown() then
       pfUI.gitter:Hide()
+      pfUI.gui:Show()
     else
       pfUI.gitter:Show()
+      pfUI.gui:Hide()
     end
 
     for _,frame in pairs(movable) do
