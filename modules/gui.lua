@@ -88,7 +88,7 @@ pfUI:RegisterModule("gui", function ()
       for i = 0, 128 do
         local tx = pfUI.gitter:CreateTexture(nil, 'BACKGROUND')
         if i == 128 / 2 then
-          tx:SetTexture(.2, 1, .8)
+          tx:SetTexture(.1, .5, .4)
         else
           tx:SetTexture(0, 0, 0)
         end
@@ -100,7 +100,7 @@ pfUI:RegisterModule("gui", function ()
 
       for i = 0, 128 do
         local tx = pfUI.gitter:CreateTexture(nil, 'BACKGROUND')
-        tx:SetTexture(.2, 1, .8)
+        tx:SetTexture(.1, .5, .4)
         tx:SetPoint("TOPLEFT", pfUI.gitter, "TOPLEFT", 0, -(height/2) + (size/2))
         tx:SetPoint('BOTTOMRIGHT', pfUI.gitter, 'TOPRIGHT', 0, -(height/2 + size/2))
       end
@@ -189,10 +189,14 @@ pfUI:RegisterModule("gui", function ()
 
     for _, hide in pairs(elements) do
       hide:Hide()
+      hide.switch:SetBackdropBorderColor(1,1,1)
+      hide.switch:SetBackdrop(pfUI.backdrop)
     end
     pfUI.gui.scroll:SetScrollChild(frame)
     pfUI.gui.scroll:UpdateScrollState()
     pfUI.gui.scroll:SetVerticalScroll(0)
+    frame.switch:SetBackdrop(pfUI.backdrop_col)
+    frame.switch:SetBackdropBorderColor(.2,1,.8)
     frame:Show()
   end
 
@@ -287,7 +291,7 @@ pfUI:RegisterModule("gui", function ()
     if not widget or widget == "text" then
       -- input field
       frame.input = CreateFrame("EditBox", nil, frame)
-      frame.input:SetTextColor(.2,1.1,1)
+      frame.input:SetTextColor(.2,1,.8,1)
       frame.input:SetJustifyH("RIGHT")
 
       frame.input:SetWidth(100)
