@@ -280,6 +280,9 @@ pfUI:RegisterModule("gui", function ()
     frame.configCategory = category
     frame.configEntry = config
 
+    frame.category = category
+    frame.config = config
+
     -- use text widget (default)
     if not widget or widget == "text" then
       -- input field
@@ -293,8 +296,6 @@ pfUI:RegisterModule("gui", function ()
       frame.input:SetFontObject(GameFontNormal)
       frame.input:SetAutoFocus(false)
       frame.input:SetText(category[config])
-      frame.category = category
-      frame.config = config
       frame.input:SetScript("OnEscapePressed", function(self)
         this:ClearFocus()
       end)
@@ -317,8 +318,6 @@ pfUI:RegisterModule("gui", function ()
       frame.input:SetHeight(14)
       frame.input:SetPoint("TOPRIGHT" , 0, -4)
 --      frame.input:SetText(category[config])
-      frame.category = category
-      frame.config = config
       frame.input:SetScript("OnClick", function ()
         if this:GetChecked() then
           this:GetParent().category[this:GetParent().config] = "1"
@@ -329,6 +328,49 @@ pfUI:RegisterModule("gui", function ()
       end)
 
       if category[config] == "1" then frame.input:SetChecked() end
+    end
+
+    -- use dropdown widget
+    if widget == "dropdown" and values then
+      if not pfUI.gui.ddc then pfUI.gui.ddc = 1 else pfUI.gui.ddc = pfUI.gui.ddc + 1 end
+      frame.input = CreateFrame("Frame", "pfUIDropDownMenu" .. pfUI.gui.ddc, frame, "UIDropDownMenuTemplate")
+      frame.input:ClearAllPoints()
+      frame.input:SetPoint("TOPRIGHT" , 20, 3)
+      frame.input:Show()
+      frame.input.point = "TOPRIGHT"
+      frame.input.relativePoint = "BOTTOMRIGHT"
+
+      local function createValues()
+        local info = {}
+        for i, k in pairs(values) do
+          info.text = k
+          info.checked = false
+          info.func = function()
+            UIDropDownMenu_SetSelectedID(frame.input, this:GetID(), 0)
+            if category[config] ~= this:GetText() then
+              pfUI.gui.settingChanged = true
+              category[config] = this:GetText()
+            end
+          end
+
+          UIDropDownMenu_AddButton(info)
+          if category[config] == k then
+            frame.input.current = i
+          end
+        end
+      end
+
+      UIDropDownMenu_Initialize(frame.input, createValues)
+      UIDropDownMenu_SetWidth(120, frame.input);
+      UIDropDownMenu_SetButtonWidth(125, frame.input)
+      UIDropDownMenu_JustifyText("RIGHT", frame.input)
+      UIDropDownMenu_SetSelectedID(frame.input, frame.input.current)
+
+      for i,v in ipairs({frame.input:GetRegions()}) do
+        if v.SetTexture then v:Hide() end
+        if v.SetTextColor then v:SetTextColor(.2,1,.8) end
+        if v.SetBackdrop then v:SetBackdrop(pfUI.backdrop) end
+      end
     end
 
     return frame
@@ -457,7 +499,7 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui:CreateConfig(pfUI.gui.uf, "Show portrait", pfUI_config.unitframes, "portrait", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.uf, "Buff size", pfUI_config.unitframes, "buff_size")
   pfUI.gui:CreateConfig(pfUI.gui.uf, "Debuff size", pfUI_config.unitframes, "debuff_size")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Layout", pfUI_config.unitframes, "layout")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "Layout", pfUI_config.unitframes, "layout", "dropdown", { "default", "tukui" })
   pfUI.gui:CreateConfig(pfUI.gui.uf, "Player width", pfUI_config.unitframes.player, "width")
   pfUI.gui:CreateConfig(pfUI.gui.uf, "Player height", pfUI_config.unitframes.player, "height")
   pfUI.gui:CreateConfig(pfUI.gui.uf, "Player powerbar height", pfUI_config.unitframes.player, "pheight")
@@ -476,18 +518,19 @@ pfUI:RegisterModule("gui", function ()
 
   -- panels
   pfUI.gui.panel = pfUI.gui:CreateConfigTab("Panel")
-  pfUI.gui:CreateConfig(pfUI.gui.panel, "Left Panel: Left", pfUI_config.panel.left, "left")
-  pfUI.gui:CreateConfig(pfUI.gui.panel, "Left Panel: Center", pfUI_config.panel.left, "center")
-  pfUI.gui:CreateConfig(pfUI.gui.panel, "Left Panel: Right", pfUI_config.panel.left, "right")
-  pfUI.gui:CreateConfig(pfUI.gui.panel, "Right Panel: Left", pfUI_config.panel.right, "left")
-  pfUI.gui:CreateConfig(pfUI.gui.panel, "Right Panel: Center", pfUI_config.panel.right, "center")
-  pfUI.gui:CreateConfig(pfUI.gui.panel, "Right Panel: Right", pfUI_config.panel.right, "right")
-  pfUI.gui:CreateConfig(pfUI.gui.panel, "Other Panel: Minimap", pfUI_config.panel.other, "minimap")
+  local values = { "time", "fps", "exp", "gold", "friends", "guild", "durability", "zone" }
+  pfUI.gui:CreateConfig(pfUI.gui.panel, "Left Panel: Left", pfUI_config.panel.left, "left", "dropdown", values )
+  pfUI.gui:CreateConfig(pfUI.gui.panel, "Left Panel: Center", pfUI_config.panel.left, "center", "dropdown", values)
+  pfUI.gui:CreateConfig(pfUI.gui.panel, "Left Panel: Right", pfUI_config.panel.left, "right", "dropdown", values)
+  pfUI.gui:CreateConfig(pfUI.gui.panel, "Right Panel: Left", pfUI_config.panel.right, "left", "dropdown", values)
+  pfUI.gui:CreateConfig(pfUI.gui.panel, "Right Panel: Center", pfUI_config.panel.right, "center", "dropdown", values)
+  pfUI.gui:CreateConfig(pfUI.gui.panel, "Right Panel: Right", pfUI_config.panel.right, "right", "dropdown", values)
+  pfUI.gui:CreateConfig(pfUI.gui.panel, "Other Panel: Minimap", pfUI_config.panel.other, "minimap", "dropdown", values)
   pfUI.gui:CreateConfig(pfUI.gui.panel, "Always show XP and Reputation Bar", pfUI_config.panel.xp, "showalways", "checkbox")
 
   -- tooltip
   pfUI.gui.tooltip = pfUI.gui:CreateConfigTab("Tooltip")
-  pfUI.gui:CreateConfig(pfUI.gui.tooltip, "Tooltip Position:", pfUI_config.tooltip, "position")
+  pfUI.gui:CreateConfig(pfUI.gui.tooltip, "Tooltip Position:", pfUI_config.tooltip, "position", "dropdown", { "bottom", "chat", "cursor" })
 
   -- castbar
   pfUI.gui.castbar = pfUI.gui:CreateConfigTab("Castbar")
