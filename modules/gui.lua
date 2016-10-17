@@ -39,7 +39,7 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.reloadDialog.yes = CreateFrame("Button", "pfReloadYes", pfUI.gui.reloadDialog, "UIPanelButtonTemplate")
   pfUI.gui.reloadDialog.yes:SetBackdrop(pfUI.backdrop)
   pfUI.gui.reloadDialog.yes:SetWidth(100)
-  pfUI.gui.reloadDialog.yes:SetHeight(20) -- width, height
+  pfUI.gui.reloadDialog.yes:SetHeight(20)
   pfUI.gui.reloadDialog.yes:SetPoint("BOTTOMLEFT", 20,15)
   pfUI.gui.reloadDialog.yes:SetText("Yes")
   pfUI.gui.reloadDialog.yes:SetScript("OnClick", function()
@@ -49,7 +49,7 @@ pfUI:RegisterModule("gui", function ()
 
   pfUI.gui.reloadDialog.no = CreateFrame("Button", "pfReloadNo", pfUI.gui.reloadDialog, "UIPanelButtonTemplate")
   pfUI.gui.reloadDialog.no:SetWidth(100)
-  pfUI.gui.reloadDialog.no:SetHeight(20) -- width, height
+  pfUI.gui.reloadDialog.no:SetHeight(20)
   pfUI.gui.reloadDialog.no:SetPoint("BOTTOMRIGHT", -20,15)
   pfUI.gui.reloadDialog.no:SetText("No")
   pfUI.gui.reloadDialog.no:SetScript("OnClick", function()
