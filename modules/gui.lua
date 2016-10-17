@@ -254,7 +254,7 @@ pfUI:RegisterModule("gui", function ()
     return frame
   end
 
-  function pfUI.gui:CreateConfig(parent, caption, category, config)
+  function pfUI.gui:CreateConfig(parent, caption, category, config, widget, values)
     -- parent object placement
     if parent.objectCount == nil then
       parent.objectCount = 1
@@ -280,27 +280,56 @@ pfUI:RegisterModule("gui", function ()
     frame.configCategory = category
     frame.configEntry = config
 
-    -- input field
-    frame.input = CreateFrame("EditBox", nil, frame)
-    frame.input:SetTextColor(.2,1.1,1)
-    frame.input:SetJustifyH("RIGHT")
+    -- use text widget (default)
+    if not widget or widget == "text" then
+      -- input field
+      frame.input = CreateFrame("EditBox", nil, frame)
+      frame.input:SetTextColor(.2,1.1,1)
+      frame.input:SetJustifyH("RIGHT")
 
-    frame.input:SetWidth(100)
-    frame.input:SetHeight(20)
-    frame.input:SetPoint("TOPRIGHT" , 0, 0)
-    frame.input:SetFontObject(GameFontNormal)
-    frame.input:SetAutoFocus(false)
-    frame.input:SetText(category[config])
-    frame.category = category
-    frame.config = config
-    frame.input:SetScript("OnEscapePressed", function(self)
-      this:ClearFocus()
-    end)
+      frame.input:SetWidth(100)
+      frame.input:SetHeight(20)
+      frame.input:SetPoint("TOPRIGHT" , 0, 0)
+      frame.input:SetFontObject(GameFontNormal)
+      frame.input:SetAutoFocus(false)
+      frame.input:SetText(category[config])
+      frame.category = category
+      frame.config = config
+      frame.input:SetScript("OnEscapePressed", function(self)
+        this:ClearFocus()
+      end)
 
-    frame.input:SetScript("OnEditFocusLost", function(self)
-      this:GetParent().category[this:GetParent().config] = this:GetText()
-      pfUI.gui.settingChanged = true
-    end)
+      frame.input:SetScript("OnEditFocusLost", function(self)
+        this:GetParent().category[this:GetParent().config] = this:GetText()
+        pfUI.gui.settingChanged = true
+      end)
+    end
+
+    -- use checkbox widget
+    if widget == "checkbox" then
+      -- input field
+      frame.input = CreateFrame("CheckButton", nil, frame, "UICheckButtonTemplate")
+      frame.input:SetNormalTexture("")
+      frame.input:SetPushedTexture("")
+      frame.input:SetHighlightTexture("")
+      frame.input:SetBackdrop(pfUI.backdrop)
+      frame.input:SetWidth(14)
+      frame.input:SetHeight(14)
+      frame.input:SetPoint("TOPRIGHT" , 0, -4)
+--      frame.input:SetText(category[config])
+      frame.category = category
+      frame.config = config
+      frame.input:SetScript("OnClick", function ()
+        if this:GetChecked() then
+          this:GetParent().category[this:GetParent().config] = "1"
+        else
+          this:GetParent().category[this:GetParent().config] = "0"
+        end
+        pfUI.gui.settingChanged = true
+      end)
+
+      if category[config] == "1" then frame.input:SetChecked() end
+    end
 
     return frame
   end
@@ -419,13 +448,13 @@ pfUI:RegisterModule("gui", function ()
   for i,m in pairs(pfUI.modules) do
     -- create disabled entry if not existing and display
     pfUI:UpdateConfig("disabled", nil, m, "0")
-    pfUI.gui:CreateConfig(pfUI.gui.modules, "Disable " .. m, pfUI_config.disabled, m)
+    pfUI.gui:CreateConfig(pfUI.gui.modules, "Disable " .. m, pfUI_config.disabled, m, "checkbox")
   end
 
   -- unitframes
   pfUI.gui.uf = pfUI.gui:CreateConfigTab("UnitFrames")
   pfUI.gui:CreateConfig(pfUI.gui.uf, "Animation speed", pfUI_config.unitframes, "animation_speed")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Show portrait", pfUI_config.unitframes, "portrait")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "Show portrait", pfUI_config.unitframes, "portrait", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.uf, "Buff size", pfUI_config.unitframes, "buff_size")
   pfUI.gui:CreateConfig(pfUI.gui.uf, "Debuff size", pfUI_config.unitframes, "debuff_size")
   pfUI.gui:CreateConfig(pfUI.gui.uf, "Layout", pfUI_config.unitframes, "layout")
@@ -454,7 +483,7 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui:CreateConfig(pfUI.gui.panel, "Right Panel: Center", pfUI_config.panel.right, "center")
   pfUI.gui:CreateConfig(pfUI.gui.panel, "Right Panel: Right", pfUI_config.panel.right, "right")
   pfUI.gui:CreateConfig(pfUI.gui.panel, "Other Panel: Minimap", pfUI_config.panel.other, "minimap")
-  pfUI.gui:CreateConfig(pfUI.gui.panel, "Always show XP and Reputation Bar", pfUI_config.panel.xp, "showalways")
+  pfUI.gui:CreateConfig(pfUI.gui.panel, "Always show XP and Reputation Bar", pfUI_config.panel.xp, "showalways", "checkbox")
 
   -- tooltip
   pfUI.gui.tooltip = pfUI.gui:CreateConfigTab("Tooltip")
@@ -462,26 +491,26 @@ pfUI:RegisterModule("gui", function ()
 
   -- castbar
   pfUI.gui.castbar = pfUI.gui:CreateConfigTab("Castbar")
-  pfUI.gui:CreateConfig(pfUI.gui.castbar, "Hide blizzards castbar:", pfUI_config.castbar.player, "hide_blizz")
+  pfUI.gui:CreateConfig(pfUI.gui.castbar, "Hide blizzards castbar:", pfUI_config.castbar.player, "hide_blizz", "checkbox")
 
   -- chat
   pfUI.gui.chat = pfUI.gui:CreateConfigTab("Chat")
-  pfUI.gui:CreateConfig(pfUI.gui.chat, "Timestamp in chat:", pfUI_config.chat.text, "time")
+  pfUI.gui:CreateConfig(pfUI.gui.chat, "Timestamp in chat:", pfUI_config.chat.text, "time", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.chat, "Timestamp format:", pfUI_config.chat.text, "timeformat")
   pfUI.gui:CreateConfig(pfUI.gui.chat, "Timestamp brackets:", pfUI_config.chat.text, "timebracket")
   pfUI.gui:CreateConfig(pfUI.gui.chat, "Timestamp color:", pfUI_config.chat.text, "timecolor")
 
   -- nameplates
   pfUI.gui.nameplates = pfUI.gui:CreateConfigTab("Nameplates")
-  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "Show castbars:", pfUI_config.nameplates, "showcastbar")
-  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "Show debuffs:", pfUI_config.nameplates, "showdebuffs")
-  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "Enable Clickthrough:", pfUI_config.nameplates, "clickthrough")
+  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "Show castbars:", pfUI_config.nameplates, "showcastbar", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "Show debuffs:", pfUI_config.nameplates, "showdebuffs", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "Enable Clickthrough:", pfUI_config.nameplates, "clickthrough", "checkbox")
 
   -- thirdparty
   pfUI.gui.thirdparty = pfUI.gui:CreateConfigTab("Thirdparty")
-  pfUI.gui:CreateConfig(pfUI.gui.thirdparty, "DPSMate:", pfUI_config.thirdparty.dpsmate, "enable")
-  pfUI.gui:CreateConfig(pfUI.gui.thirdparty, "WIM:", pfUI_config.thirdparty.wim, "enable")
-  pfUI.gui:CreateConfig(pfUI.gui.thirdparty, "HealComm:", pfUI_config.thirdparty.healcomm, "enable")
+  pfUI.gui:CreateConfig(pfUI.gui.thirdparty, "DPSMate:", pfUI_config.thirdparty.dpsmate, "enable", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.thirdparty, "WIM:", pfUI_config.thirdparty.wim, "enable", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.thirdparty, "HealComm:", pfUI_config.thirdparty.healcomm, "enable", "checkbox")
 
   -- [[ bottom section ]] --
 
