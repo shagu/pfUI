@@ -61,11 +61,8 @@ pfUI:RegisterModule("actionbar", function ()
       SlidingActionBarTexture1:Hide()
       SlidingActionBarTexture1.Show = function () return end
 
-      PetActionBar_Update()
-
       if (PetHasActionBar()) then
-        --ShowPetActionBar()
-        --LockPetActionBar()
+        PetActionBar_Update()
         pfUI.bars.pet:Show()
         pfUI.bars.pet:SetFrameStrata("LOW")
         pfUI.bars.pet:SetPoint("BOTTOM", pfUI.bars.bottom, "TOP", 0, 5)
@@ -75,7 +72,7 @@ pfUI:RegisterModule("actionbar", function ()
         pfUI.bars.pet:SetHeight(pfUI_config.bars.border*3 + pfUI_config.bars.icon_size * 1 + pfUI_config.bars.border)
 
         PetActionBarFrame:ClearAllPoints()
-        PetActionBarFrame:SetAllPoints(pfUI.bars.pet)
+        PetActionBarFrame:Hide()
 
         PetActionButton1:ClearAllPoints()
         PetActionButton1:SetParent(pfUI.bars.pet)
@@ -83,7 +80,7 @@ pfUI:RegisterModule("actionbar", function ()
         for i=2, 10 do
           local b = getglobal("PetActionButton"..i)
           local b2 = getglobal("PetActionButton"..i-1)
-          b:SetAllPoints(pfUI.bars.pet)
+          b:SetParent(pfUI.bars.pet)
           b:ClearAllPoints()
           b:SetPoint("LEFT", b2, "RIGHT", pfUI_config.bars.border, 0)
         end
