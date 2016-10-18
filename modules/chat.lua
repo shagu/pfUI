@@ -1,5 +1,4 @@
 pfUI:RegisterModule("chat", function ()
-  FOOBAR_WHISPER = 1
   pfUI.chat = CreateFrame("Frame",nil,UIParent)
 
   pfUI.chat.left = CreateFrame("Frame", "pfChatLeft", UIParent)
