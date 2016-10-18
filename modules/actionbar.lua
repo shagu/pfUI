@@ -94,9 +94,8 @@ pfUI:RegisterModule("actionbar", function ()
       ShapeshiftButton1:ClearAllPoints()
       ShapeshiftButton1:SetParent(pfUI.bars.shapeshift)
       ShapeshiftButton1:SetPoint("BOTTOMLEFT", pfUI_config.bars.border*2, pfUI_config.bars.border*2)
-      local shapeshiftbuttons = 0
+      local shapeshiftbuttons = 1
       if ShapeshiftButton1:IsShown() then
-        shapeshiftbuttons = 1
         pfUI.bars.shapeshift:Show()
       else
         pfUI.bars.shapeshift:Hide()
