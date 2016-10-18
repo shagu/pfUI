@@ -207,16 +207,16 @@ pfUI:RegisterModule("chat", function ()
             if j==5 then v:SetTexture(0,0,0,0) end
           end
 
-          local _, relativeTo = getglobal("ChatFrame" .. i):GetPoint(1)
-          getglobal("ChatFrame" .. i .. "Tab"):SetParent(pfUI.chat.left.panelTop)
           getglobal("ChatFrame" .. i .. "ResizeBottom"):Hide()
-
+          local _, relativeTo = getglobal("ChatFrame" .. i):GetPoint(1)
           if relativeTo == pfUI.chat.left then
             getglobal("ChatFrame" .. i .. "Tab"):SetParent(pfUI.chat.left.panelTop)
-            getglobal("ChatFrame" .. i):SetParent(pfUI.chat.left.panelTop)
+            getglobal("ChatFrame" .. i):SetParent(pfUI.chat.left)
           elseif relativeTo == pfUI.chat.right then
             getglobal("ChatFrame" .. i .. "Tab"):SetParent(pfUI.chat.right.panelTop)
-            getglobal("ChatFrame" .. i):SetParent(pfUI.chat.right.panelTop)
+          else
+            getglobal("ChatFrame" .. i .. "Tab"):SetParent(pfUI.chat.left.panelTop)
+            getglobal("ChatFrame" .. i):SetParent(pfUI.chat.left)
           end
 
           getglobal("ChatFrame" .. i .. "TabText"):SetJustifyV("TOP")
