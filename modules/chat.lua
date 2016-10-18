@@ -436,17 +436,31 @@ pfUI:RegisterModule("chat", function ()
   ChatFrameMenuButton:SetHeight(6)
   ChatFrameMenuButton:SetWidth(6)
 
-  ChatFrameEditBox:ClearAllPoints()
-  ChatFrameEditBox:SetHeight(22)
-  ChatFrameEditBox:SetPoint("BOTTOMLEFT", pfUI.bars.bottom, "TOPLEFT", 0, 5)
-  ChatFrameEditBox:SetPoint("BOTTOMRIGHT", pfUI.bars.bottom, "TOPRIGHT", 0, 5)
+  pfUI.chat.editbox = CreateFrame("Frame", "pfChatInputBox", UIParent)
+  if pfUI_config.chat.text.input_height == "0" then
+    pfUI.chat.editbox:SetHeight(22)
+  else
+    pfUI.chat.editbox:SetHeight(pfUI_config.chat.text.input_height)
+  end
 
+  if pfUI_config.chat.text.input_width == "0" then
+    pfUI.chat.editbox:SetWidth(pfUI_config.bars.border*3 + pfUI_config.bars.icon_size * 12 + pfUI_config.bars.border * 12) -- actionbar size
+  else
+    pfUI.chat.editbox:SetWidth(pfUI_config.chat.text.input_width)
+  end
+
+  pfUI.chat.editbox:ClearAllPoints()
+  pfUI.chat.editbox:SetPoint("BOTTOM", pfUI.bars.bottom, "TOP", 0, 5)
+  pfUI.utils:loadPosition(pfUI.chat.editbox)
+
+  ChatFrameEditBox:SetParent(pfUI.chat.editbox)
   ChatFrameEditBox:SetBackdrop(pfUI.backdrop)
+  ChatFrameEditBox:SetAllPoints(pfUI.chat.editbox)
 
   for i,v in ipairs({ChatFrameEditBox:GetRegions()}) do
-    if i==6 or i==7 or i==8 then
-      v:SetTexture(0,0,0,1)
-      v:SetHeight(ChatFrameEditBox:GetHeight())
+    if i==6 or i==7 or i==8 then v:Hide() end
+    if v.SetFont then
+      v:SetFont("Interface\\AddOns\\pfUI\\fonts\\arial.ttf", pfUI_config.global.font_size + 1, "OUTLINE")
     end
   end
   ChatFrameEditBox:SetAltArrowKeyMode(false)

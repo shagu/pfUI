@@ -70,6 +70,7 @@ pfUI:RegisterModule("gui", function ()
       pfUI.uf.raid[26], pfUI.uf.raid[27], pfUI.uf.raid[28], pfUI.uf.raid[29], pfUI.uf.raid[30],
       pfUI.uf.raid[31], pfUI.uf.raid[32], pfUI.uf.raid[33], pfUI.uf.raid[34], pfUI.uf.raid[35],
       pfUI.uf.raid[36], pfUI.uf.raid[37], pfUI.uf.raid[38], pfUI.uf.raid[39], pfUI.uf.raid[40],
+      pfUI.chat.editbox,
       }
 
     if not pfUI.gitter then
@@ -547,6 +548,8 @@ pfUI:RegisterModule("gui", function ()
 
   -- chat
   pfUI.gui.chat = pfUI.gui:CreateConfigTab("Chat")
+  pfUI.gui:CreateConfig(pfUI.gui.chat, "Chat inputbox width:", pfUI_config.chat.text, "input_width")
+  pfUI.gui:CreateConfig(pfUI.gui.chat, "Chat inputbox height:", pfUI_config.chat.text, "input_height")
   pfUI.gui:CreateConfig(pfUI.gui.chat, "Timestamp in chat:", pfUI_config.chat.text, "time", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.chat, "Timestamp format:", pfUI_config.chat.text, "timeformat")
   pfUI.gui:CreateConfig(pfUI.gui.chat, "Timestamp brackets:", pfUI_config.chat.text, "timebracket")
