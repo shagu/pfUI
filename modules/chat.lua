@@ -213,6 +213,7 @@ pfUI:RegisterModule("chat", function ()
             getglobal("ChatFrame" .. i):SetParent(pfUI.chat.left)
           elseif relativeTo == pfUI.chat.right then
             getglobal("ChatFrame" .. i .. "Tab"):SetParent(pfUI.chat.right.panelTop)
+            getglobal("ChatFrame" .. i):SetParent(pfUI.chat.right)
           else
             getglobal("ChatFrame" .. i .. "Tab"):SetParent(pfUI.chat.left.panelTop)
             getglobal("ChatFrame" .. i):SetParent(pfUI.chat.left)
