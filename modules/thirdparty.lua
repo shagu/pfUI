@@ -243,6 +243,10 @@ pfUI:RegisterModule("thirdparty", function ()
         local healed = HealComm:getHeal(UnitName(unit))
 
         local health, maxHealth = UnitHealth(unit), UnitHealthMax(unit)
+        if strsub(unit,0,4) == "raid" and pfUI_config.unitframes.raid.invert_healthbar == "1" then
+          health = maxHealth - health
+        end
+
         if( healed > 0 and (health < maxHealth or OVERHEALPERCENT > 0 )) and frame:IsVisible() then
           frame.incHeal:Show()
           local healthWidth = frame:GetWidth() * (health / maxHealth)
@@ -252,7 +256,13 @@ pfUI:RegisterModule("thirdparty", function ()
           end
           frame.incHeal:SetWidth(incWidth)
           frame.incHeal:ClearAllPoints()
-          frame.incHeal:SetPoint("TOPLEFT", frame, "TOPLEFT", healthWidth-3, -3)
+
+          if strsub(unit,0,4) == "raid" and pfUI_config.unitframes.raid.invert_healthbar == "1" then
+            frame.incHeal:SetPoint("TOPLEFT", frame, "TOPLEFT", 3, -3)
+            frame.incHeal:SetFrameStrata("HIGH")
+          else
+            frame.incHeal:SetPoint("TOPLEFT", frame, "TOPLEFT", healthWidth-3, -3)
+          end
         else
           frame.incHeal:Hide()
         end

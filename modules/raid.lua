@@ -54,7 +54,9 @@ pfUI:RegisterModule("raid", function ()
       pfUI.uf.raid[i].hp.bar:SetPoint("BOTTOMRIGHT", pfUI.uf.raid[i].hp, "BOTTOMRIGHT", -3, 3)
 
       pfUI.uf.raid[i].hp.bar:SetStatusBarColor(0,1,0)
+
       pfUI.uf.raid[i].hp.bar:SetMinMaxValues(0, 100)
+      pfUI.uf.raid[i].hp.bar:SetValue(0)
 
       pfUI.uf.raid[i].power = CreateFrame("Frame",nil, pfUI.uf.raid[i])
       pfUI.uf.raid[i].power:SetBackdrop(pfUI.backdrop)
@@ -191,6 +193,12 @@ pfUI:RegisterModule("raid", function ()
           local hpReal = UnitHealth("raid"..this.id)
           local hpDiff = abs(hpReal - hpDisplay)
 
+          if pfUI_config.unitframes.raid.invert_healthbar == "1" then
+            hpDisplay = this.hp.bar:GetValue()
+            hpReal = UnitHealthMax("raid"..this.id) - UnitHealth("raid"..this.id)
+            hpDiff = abs(hpReal - hpDisplay)
+          end
+
           if hpDisplay < hpReal then
             this.hp.bar:SetValue(hpDisplay + ceil(hpDiff / pfUI_config.unitframes.animation_speed))
           elseif hpDisplay > hpReal then
@@ -224,7 +232,13 @@ pfUI:RegisterModule("raid", function ()
           this.power.bar:SetValue(0)
         end
         if UnitName("raid"..this.id) then
-          this.caption:SetText(UnitName("raid"..this.id))
+          if UnitHealthMax("raid"..this.id) ~= UnitHealth("raid"..this.id) and pfUI_config.unitframes.raid.show_missing == "1" then
+            this.caption:SetText("-" .. UnitHealthMax("raid"..this.id) - UnitHealth("raid"..this.id))
+            this.caption:SetTextColor(1,.3,.3)
+          else
+            this.caption:SetText(UnitName("raid"..this.id))
+            this.caption:SetTextColor(1,1,1)
+          end
           this.caption:SetAllPoints(this.hp.bar)
         end
       end)
