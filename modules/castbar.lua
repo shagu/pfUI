@@ -256,15 +256,15 @@ pfUI:RegisterModule("castbar", function ()
       pfUI.castbar.target:SetScript("OnEvent", function()
         if (arg1 ~= nil) then
           for mob, spell in string.gfind(arg1, pfLocaleSpellEvents[pfUI.cache["locale"]]['SPELL_CAST']) do
-            pfUI.castbar.target:Action(mob, spell, "casts")
+            pfUI.castbar.target:Action(mob, spell)
             return
           end
           for mob, spell in string.gfind(arg1, pfLocaleSpellEvents[pfUI.cache["locale"]]['SPELL_PERFORM']) do
-            pfUI.castbar.target:Action(mob, spell, "performs")
+            pfUI.castbar.target:Action(mob, spell)
             return
           end
           for mob, spell in string.gfind(arg1, pfLocaleSpellEvents[pfUI.cache["locale"]]['SPELL_GAINS']) do
-            pfUI.castbar.target:Action(mob, spell, "gains")
+            pfUI.castbar.target:Action(mob, spell, true)
             return
           end
           -- this part will be used for interruption of spells
@@ -316,8 +316,12 @@ pfUI:RegisterModule("castbar", function ()
           end
       end)
 
-      function pfUI.castbar.target:Action(mob, spell, special)
+      function pfUI.castbar.target:Action(mob, spell, gains)
         if pfLocaleSpells[pfUI.cache["locale"]][spell] ~= nil then
+          if gains and pfUI.castbar.target.casterDB[mob] and pfUI.castbar.target.casterDB[mob]["cast"] == spell then
+            pfUI.castbar.target.casterDB[mob] = nil
+            return
+          end
           casttime = pfLocaleSpells[pfUI.cache["locale"]][spell].t / 1000
           icon = pfLocaleSpells[pfUI.cache["locale"]][spell].icon
           pfUI.castbar.target.casterDB[mob] = {cast = spell, starttime = GetTime(), casttime = casttime, icon = icon}
