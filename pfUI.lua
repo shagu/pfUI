@@ -51,6 +51,7 @@ pfUI.cache = {}
 pfUI.module = {}
 pfUI.modules = {}
 pfLocaleClass = {}
+pfLocaleBagtypes = {}
 pfLocaleShift = {}
 pfLocaleSpells = {}
 pfLocaleSpellEvents = {}

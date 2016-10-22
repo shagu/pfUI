@@ -10,6 +10,12 @@ pfLocaleClass["deDE"] = {
   ["Schurke"] = "ROGUE",
 }
 
+pfLocaleBagtypes["deDE"] = {
+  ["Köcher"] = "QUIVER",
+  ["Seelentasche"] = "SOULBAG",
+  ["Behälter"] = "DEFAULT",
+}
+
 pfLocaleShift["deDE"] = {
   ['BattleStance'] = "Kampfhaltung",
   ['DefensiveStance'] = "Verteidigungshaltung",

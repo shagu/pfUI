@@ -226,7 +226,29 @@ pfUI:RegisterModule("bags", function ()
     if quality and quality > 1 then
       pfUI.bags[bag].slots[slot].frame:SetBackdropBorderColor(GetItemQualityColor(quality))
     else
-      pfUI.bags[bag].slots[slot].frame:SetBackdropBorderColor(.3,.3,.3,1)
+      local bagtype
+      if bag > 0 then
+        local _, _, id = strfind(GetInventoryItemLink("player", ContainerIDToInventoryID(bag)) or "", "item:(%d+)");
+        local _, _, _, _, itemType, subType = GetItemInfo(id);
+        bagtype = pfLocaleBagtypes[pfUI.cache["locale"]][itemType]
+        bagsubtype = pfLocaleBagtypes[pfUI.cache["locale"]][subType]
+
+        if bagsubtype == "SOULBAG" then
+          bagtype = "SOULBAG"
+        elseif not (bagsubtype and bagsubtype == "DEFAULT") and bagtype ~= "QUIVER" and bagtype ~= "SOULBAG" then
+          bagtype = "SPECIAL"
+        end
+      end
+
+      if bagtype == "QUIVER" then
+        pfUI.bags[bag].slots[slot].frame:SetBackdropBorderColor(.8,.8,.2,1)
+      elseif bagtype == "SOULBAG" then
+        pfUI.bags[bag].slots[slot].frame:SetBackdropBorderColor(.5,.2,.2,1)
+      elseif bagtype == "SPECIAL" then
+        pfUI.bags[bag].slots[slot].frame:SetBackdropBorderColor(.2,.2,.8,1)
+      else
+        pfUI.bags[bag].slots[slot].frame:SetBackdropBorderColor(.3,.3,.3,1)
+      end
     end
 
     if not pfUI.bags[bag].slots[slot].stacks then

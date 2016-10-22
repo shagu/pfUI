@@ -10,6 +10,12 @@ pfLocaleClass["frFR"] = {
   ["Voleur"] = "ROGUE",
 }
 
+pfLocaleBagtypes["frFR"] = {
+  ["Carquois"] = "QUIVER",
+  ["Sac d'\195\162me"] = "SOULBAG",
+  ["Conteneur"] = "DEFAULT"
+}
+
 pfLocaleShift["frFR"] = { -- TODO
   ['BattleStance'] = "Battle Stance",
   ['DefensiveStance'] = "Defensive Stance",

@@ -10,6 +10,12 @@ pfLocaleClass["ruRU"] = {
   ["Разбойница"] = "ROGUE",
 }
 
+pfLocaleBagtypes["ruRU"] = {
+  ["Амуниция"] = "QUIVER",
+  ["Сумка душ"] = "SOULBAG",
+  ["Сумка"] = "DEFAULT"
+}
+
 pfLocaleShift["ruRU"] = { -- TODO
   ['BattleStance'] = "Battle Stance",
   ['DefensiveStance'] = "Defensive Stance",

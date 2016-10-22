@@ -10,6 +10,12 @@ pfLocaleClass["zhCN"] = {
   ["盗贼"] = "ROGUE",
 }
 
+pfLocaleBagtypes["zhCN"] = {
+  ["箭袋"] = "QUIVER",
+  ["灵魂袋"] = "SOULBAG",
+  ["包裹"] = "DEFAULT"
+}
+
 pfLocaleShift["zhCN"] = { -- TODO
   ['BattleStance'] = "Battle Stance",
   ['DefensiveStance'] = "Defensive Stance",
