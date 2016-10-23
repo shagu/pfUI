@@ -28,6 +28,11 @@ pfUI:RegisterModule("group", function ()
     PartyMemberBackground:Hide()
 
     for i=1, 5 do
+      if pfUI_config.unitframes.group.hide_in_raid == "1" and UnitInRaid("player") then
+        pfUI.uf.group[i]:Hide()
+        return
+      end
+
       if GetNumPartyMembers() >= i then
         pfUI.uf.group[i]:Show()
         if UnitIsConnected("party"..i) or not UnitName("party"..i) then
