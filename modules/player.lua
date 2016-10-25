@@ -141,6 +141,8 @@ pfUI:RegisterModule("player", function ()
         pfUI.uf.player.hp.bar:SetValue(hpDisplay + ceil(hpDiff / pfUI_config.unitframes.animation_speed))
       elseif hpDisplay > hpReal then
         pfUI.uf.player.hp.bar:SetValue(hpDisplay - ceil(hpDiff / pfUI_config.unitframes.animation_speed))
+      elseif hpDisplay ~= hpReal then
+        pfUI.uf.player.hp.bar:SetValue(hpReal)
       end
 
       local powerDisplay = pfUI.uf.player.power.bar:GetValue()
