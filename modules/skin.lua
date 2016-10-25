@@ -76,4 +76,7 @@ pfUI:RegisterModule("skin", function ()
       v:SetFont("Interface\\AddOns\\pfUI\\fonts\\arial.ttf", pfUI_config.global.font_size + 2, "OUTLINE")
     end
   end
+
+  ShoppingTooltip1:SetBackdrop(pfUI.backdrop)
+  ShoppingTooltip2:SetBackdrop(pfUI.backdrop)
 end)
