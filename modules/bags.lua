@@ -126,15 +126,17 @@ pfUI:RegisterModule("bags", function ()
     local iterate = {}
 
     if object == "bank" then
-      if not pfUI.bag.left then pfUI.bag.left = CreateFrame("Frame", "pfBank") end
+      if not pfUI.bag.left then pfUI.bag.left = CreateFrame("Frame", "pfBank", nil) end
       pfUI.bag.left:SetPoint("BOTTOMLEFT", pfUI.chat.left, "BOTTOMLEFT", 0, 0)
       pfUI.bag.left:SetPoint("BOTTOMRIGHT", pfUI.chat.left, "BOTTOMRIGHT", 0, 0)
+      pfUI.bag.left:EnableMouse(1)
       iterate = pfUI.BANK
       frame = pfUI.bag.left
     else
-      if not pfUI.bag.right then pfUI.bag.right = CreateFrame("Frame", "pfBag") end
+      if not pfUI.bag.right then pfUI.bag.right = CreateFrame("Frame", "pfBag", nil) end
       pfUI.bag.right:SetPoint("BOTTOMLEFT", pfUI.chat.right, "BOTTOMLEFT", 0, 0)
       pfUI.bag.right:SetPoint("BOTTOMRIGHT", pfUI.chat.right, "BOTTOMRIGHT", 0, 0)
+      pfUI.bag.right:EnableMouse(1)
       iterate = pfUI.BACKPACK
       frame = pfUI.bag.right
       pfUI.bag:CreateAdditions(frame)
