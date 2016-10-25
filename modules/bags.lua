@@ -150,7 +150,7 @@ pfUI:RegisterModule("bags", function ()
 
     for id, bag in pairs(iterate) do
       if not pfUI.bags[bag] then
-        pfUI.bags[bag] = CreateFrame("Frame", nil,  frame)
+        pfUI.bags[bag] = CreateFrame("Frame", "pfBag" .. bag,  frame)
         pfUI.bags[bag]:SetAllPoints(frame)
         pfUI.bags[bag].slots = {}
       end
@@ -169,7 +169,7 @@ pfUI:RegisterModule("bags", function ()
 	        local tpl = "ContainerFrameItemButtonTemplate"
           if bag == -1 then tpl = "BankItemButtonGenericTemplate" end
           pfUI.bags[bag].slots[slot] = {}
-          pfUI.bags[bag].slots[slot].frame = CreateFrame("Button", "pfUIbag" .. bag .. "item" .. slot,  pfUI.bags[bag], tpl)
+          pfUI.bags[bag].slots[slot].frame = CreateFrame("Button", "pfBag" .. bag .. "item" .. slot,  pfUI.bags[bag], tpl)
           pfUI.bags[bag].slots[slot].bag = bag
           pfUI.bags[bag].slots[slot].slot = slot
           pfUI.bags[bag].slots[slot].frame:SetID(slot)
@@ -272,7 +272,7 @@ pfUI:RegisterModule("bags", function ()
 
     -- hide duplicate itemcount in bankframe
     if bag == -1 then
-      local count = getglobal("pfUIbag" .. bag .. "item" .. slot .. "Count")
+      local count = getglobal("pfBag" .. bag .. "item" .. slot .. "Count")
       function count.Show() return end
       count:Hide()
     end
@@ -285,7 +285,7 @@ pfUI:RegisterModule("bags", function ()
 
   function pfUI.bag:CreateBagSlots(frame)
     if not frame.bagslots then
-      frame.bagslots = CreateFrame("Frame", nil, frame)
+      frame.bagslots = CreateFrame("Frame", "pfBagSlots", frame)
       frame.bagslots.slots = {}
     end
 
@@ -356,7 +356,7 @@ pfUI:RegisterModule("bags", function ()
     if frame == pfUI.bag.left then
       if GetNumBankSlots() < 6 then
         if not frame.bagslots.buy then
-          frame.bagslots.buy = CreateFrame("Button", nil, frame.bagslots)
+          frame.bagslots.buy = CreateFrame("Button", "pfBagSlotBuy", frame.bagslots)
         end
         frame.bagslots.buy:SetPoint("RIGHT", frame.bagslots, "RIGHT", -2 * pfUI_config.bars.border, 0)
         frame.bagslots.buy:SetBackdrop(pfUI.backdrop)
@@ -398,7 +398,7 @@ pfUI:RegisterModule("bags", function ()
 
     -- bag close button
     if not frame.close then
-      frame.close = CreateFrame("Button")
+      frame.close = CreateFrame("Button", "pfBagClose", UIParent)
       frame.close:SetParent(frame)
       frame.close:SetPoint("TOPRIGHT", -pfUI_config.bars.border*2,-pfUI_config.bars.border*2 )
       frame.close:SetBackdrop(pfUI.backdrop)
@@ -427,7 +427,7 @@ pfUI:RegisterModule("bags", function ()
 
     -- bags button
     if not frame.bags then
-      frame.bags = CreateFrame("Button")
+      frame.bags = CreateFrame("Button", "pfBagSlotShow", UIParent)
       frame.bags:SetParent(frame)
       frame.bags:SetPoint("TOPRIGHT", -pfUI_config.bars.border*2 - 15 , -pfUI_config.bars.border*2 )
       frame.bags:SetBackdrop(pfUI.backdrop)
@@ -467,7 +467,7 @@ pfUI:RegisterModule("bags", function ()
 
     -- bag search
     if not frame.search then
-      frame.search = CreateFrame("Frame", frame)
+      frame.search = CreateFrame("Frame", "pfBagSearch", UIParent)
       frame.search:SetParent(frame)
       frame.search:SetHeight(15)
       frame.search:SetWidth(100)
