@@ -94,8 +94,8 @@ pfUI:RegisterModule("nameplates", function ()
 
         -- raidtarget
         raidicon:ClearAllPoints()
-        raidicon:SetWidth(15)
-        raidicon:SetHeight(15)
+        raidicon:SetWidth(pfUI_config.nameplates.raidiconsize)
+        raidicon:SetHeight(pfUI_config.nameplates.raidiconsize)
         raidicon:SetPoint("CENTER", healthbar, "CENTER", 0, -5)
 
         -- debuffs
