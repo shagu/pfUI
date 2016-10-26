@@ -1,5 +1,8 @@
 pfUI:RegisterModule("cooldown", function ()
   function CooldownFrame_SetTimer(this, start, duration, enable)
+    -- disable animation
+    this:SetPosition(1,1,1);
+
     if ( start > 0 and duration > 0 and enable > 0) then
       this.start = start;
       this.duration = duration;
@@ -9,18 +12,18 @@ pfUI:RegisterModule("cooldown", function ()
       if not this.cd then
         this.cd = CreateFrame("Frame")
         this.cd:SetAllPoints(this)
-        this.cd:SetParent(this:GetParent())
 
         this.cd.back = this.cd:CreateTexture(nil,"BACKGROUND")
         this.cd.back:SetTexture(0,0,0,1)
         this.cd.back:SetAlpha(.5)
-        this.cd.back:SetAllPoints(this.cd)
+        this.cd.back:SetParent(this)
+        this.cd.back:SetAllPoints(this)
 
         this.cd.text = this.cd:CreateFontString("Status", "HIGH", "GameFontNormal")
         this.cd.text:SetFont("Interface\\AddOns\\pfUI\\fonts\\homespun.ttf", pfUI_config.global.font_size, "OUTLINE")
         this.cd.text:ClearAllPoints()
-        this.cd.text:SetParent(this.cd)
-        this.cd.text:SetAllPoints(this.cd)
+        this.cd.text:SetParent(this)
+        this.cd.text:SetAllPoints(this)
         this.cd.text:SetJustifyH("CENTER")
         this.cd.text:SetFontObject(GameFontWhite)
       end
@@ -29,7 +32,6 @@ pfUI:RegisterModule("cooldown", function ()
       this:Hide()
       if this.cd then this.cd:Hide() end
     end
-    this:SetAlpha(0)
   end
 
   function CooldownFrame_OnUpdateModel()
