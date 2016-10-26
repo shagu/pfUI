@@ -553,6 +553,8 @@ pfUI:RegisterModule("gui", function ()
 
   -- chat
   pfUI.gui.chat = pfUI.gui:CreateConfigTab("Chat")
+  pfUI.gui:CreateConfig(pfUI.gui.chat, "Left chat height:", pfUI_config.chat.text, "left_chat_height") 
+  pfUI.gui:CreateConfig(pfUI.gui.chat, "Right chat height:", pfUI_config.chat.text, "right_chat_height") 
   pfUI.gui:CreateConfig(pfUI.gui.chat, "Chat inputbox width:", pfUI_config.chat.text, "input_width")
   pfUI.gui:CreateConfig(pfUI.gui.chat, "Chat inputbox height:", pfUI_config.chat.text, "input_height")
   pfUI.gui:CreateConfig(pfUI.gui.chat, "Timestamp in chat:", pfUI_config.chat.text, "time", "checkbox")
