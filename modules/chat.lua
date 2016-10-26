@@ -325,31 +325,53 @@ pfUI:RegisterModule("chat", function ()
   end
 
   function pfUI.chat.SetupPositions()
+    -- close all chat windows
+    for i=1, NUM_CHAT_WINDOWS do
+      FCF_Close(getglobal("ChatFrame"..i))
+    end
+
     -- set position of Main Window
     ChatFrame1:ClearAllPoints()
     ChatFrame1:SetPoint("TOPLEFT", pfUI.chat.left ,"TOPLEFT", 5, -25)
     ChatFrame1:SetPoint("BOTTOMRIGHT", pfUI.chat.left ,"BOTTOMRIGHT", -5, 25)
 
     FCF_SetLocked(ChatFrame1, 1)
+    FCF_SetWindowName(ChatFrame1, GENERAL)
     FCF_SetWindowColor(ChatFrame1, 0, 0, 0);
     FCF_SetWindowAlpha(ChatFrame1, 0);
     FCF_SetChatWindowFontSize(ChatFrame1, 12)
+
+    -- set position of Combat
+    if not ChatFrame2:IsShown() then
+      FCF_OpenNewWindow("Combat Log")
+    end
+    FCF_SetLocked(ChatFrame2, 1);
+    FCF_SetWindowName(ChatFrame2, COMBAT_LOG);
+    FCF_SetWindowColor(ChatFrame2, 0, 0, 0);
+    FCF_SetWindowAlpha(ChatFrame2, 0);
+    FCF_SetChatWindowFontSize(ChatFrame2, 12)
+    ChatFrame_RemoveAllChannels(ChatFrame2);
+    ChatFrame_RemoveAllMessageGroups(ChatFrame2);
+    ChatFrame_ActivateCombatMessages(ChatFrame2);
+
     -- set position of Loot & Spam
-    if not ChatFrame3.isDocked == 1 or not ChatFrame3:IsShown() then
+    if not ChatFrame3:IsShown() then
       FCF_OpenNewWindow("Loot & Spam")
     end
-
+    FCF_SetLocked(ChatFrame3, 1)
+    FCF_SetWindowName(ChatFrame3, "Loot & Spam")
     FCF_SetWindowColor(ChatFrame3, 0, 0, 0);
     FCF_SetWindowAlpha(ChatFrame3, 0);
     FCF_SetChatWindowFontSize(ChatFrame3, 12)
-    FCF_SetWindowName(ChatFrame3, "Loot & Spam", 1 )
     FCF_UnDockFrame(ChatFrame3)
+    FCF_SetTabPosition(ChatFrame3, 0);
     ChatFrame3:ClearAllPoints()
     ChatFrame3:SetPoint("TOPLEFT", pfUI.chat.right ,"TOPLEFT", 5, -25)
     ChatFrame3:SetPoint("BOTTOMRIGHT", pfUI.chat.right ,"BOTTOMRIGHT", -5, 25)
-    FCF_SetLocked(ChatFrame3, 1)
+
     -- save positions on logout
     ChatFrame1:SetUserPlaced(1);
+    ChatFrame2:SetUserPlaced(1);
     ChatFrame3:SetUserPlaced(1);
   end
 
@@ -365,7 +387,7 @@ pfUI:RegisterModule("chat", function ()
       ChatFrame_AddMessageGroup(ChatFrame1, group)
     end
 
-    local spamg = { "COMBAT_XP_GAIN", "COMBAT_HONOR_GAIN", "COMBAT_FACTION_CHANGE", "LOOT", "MONEY" }
+    local spamg = { "COMBAT_XP_GAIN", "COMBAT_HONOR_GAIN", "COMBAT_FACTION_CHANGE", "SKILL", "LOOT", "MONEY" }
     for _,group in pairs(spamg) do
       ChatFrame_AddMessageGroup(ChatFrame3, group)
     end
