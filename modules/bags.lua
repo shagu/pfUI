@@ -55,6 +55,7 @@ pfUI:RegisterModule("bags", function ()
   pfUI.bag:RegisterEvent("BAG_CLOSED")
   pfUI.bag:RegisterEvent("BANKFRAME_CLOSED")
   pfUI.bag:RegisterEvent("BANKFRAME_OPENED")
+  pfUI.bag:RegisterEvent("ITEM_LOCK_CHANGED")
 
   pfUI.bag:SetScript("OnEvent", function()
     if event == "PLAYER_ENTERING_WORLD" or event == "UPDATE_FACTION" then
@@ -107,6 +108,21 @@ pfUI:RegisterModule("bags", function ()
     if event == "BANKFRAME_CLOSED" then
       pfUI.bag:CreateBags("bank")
       pfUI.bag.left:Hide()
+    end
+
+    if event == "ITEM_LOCK_CHANGED" then
+      for bag=-2, 11 do
+        for slot=1, GetContainerNumSlots(bag) do
+          if pfUI.bags[bag].slots[slot].frame:IsShown() then
+            local _, _, locked, _ = GetContainerItemInfo(bag, slot)
+            if locked then
+              pfUI.bags[bag].slots[slot].frame:SetAlpha(.5)
+            else
+              pfUI.bags[bag].slots[slot].frame:SetAlpha(1)
+            end
+          end
+        end
+      end
     end
   end)
 
