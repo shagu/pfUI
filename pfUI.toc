@@ -47,3 +47,4 @@ modules\uf_tukui.lua
 modules\thirdparty.lua
 modules\buff.lua
 modules\nameplates.lua
+modules\loot.lua
