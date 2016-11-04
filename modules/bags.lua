@@ -247,14 +247,16 @@ pfUI:RegisterModule("bags", function ()
       local bagtype
       if bag > 0 then
         local _, _, id = strfind(GetInventoryItemLink("player", ContainerIDToInventoryID(bag)) or "", "item:(%d+)");
-        local _, _, _, _, itemType, subType = GetItemInfo(id);
-        bagtype = pfLocaleBagtypes[pfUI.cache["locale"]][itemType]
-        bagsubtype = pfLocaleBagtypes[pfUI.cache["locale"]][subType]
+        if id then
+          local _, _, _, _, itemType, subType = GetItemInfo(id);
+          bagtype = pfLocaleBagtypes[pfUI.cache["locale"]][itemType]
+          bagsubtype = pfLocaleBagtypes[pfUI.cache["locale"]][subType]
 
-        if bagsubtype == "SOULBAG" then
-          bagtype = "SOULBAG"
-        elseif not (bagsubtype and bagsubtype == "DEFAULT") and bagtype ~= "QUIVER" and bagtype ~= "SOULBAG" then
-          bagtype = "SPECIAL"
+          if bagsubtype == "SOULBAG" then
+            bagtype = "SOULBAG"
+          elseif not (bagsubtype and bagsubtype == "DEFAULT") and bagtype ~= "QUIVER" and bagtype ~= "SOULBAG" then
+            bagtype = "SPECIAL"
+          end
         end
       end
 
