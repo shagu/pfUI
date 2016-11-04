@@ -37,9 +37,6 @@ pfUI:RegisterModule("bags", function ()
     return
   end
 
-  -- avoid vertexcolor updates on item buttons
-  function SetItemButtonNormalTextureVertexColor() return end
-
   -- hide blizzard's bankframe
   BankFrame:SetScale(0.001)
   BankFrame:SetPoint("TOPLEFT", 0,0)
@@ -211,6 +208,9 @@ pfUI:RegisterModule("bags", function ()
           if bag == -1 then tpl = "BankItemButtonGenericTemplate" end
           pfUI.bags[bag].slots[slot] = {}
           pfUI.bags[bag].slots[slot].frame = CreateFrame("Button", "pfBag" .. bag .. "item" .. slot,  pfUI.bags[bag], tpl)
+          if bag == -1 then
+            for i,v in ipairs({pfUI.bags[bag].slots[slot].frame:GetRegions()}) do v:SetAlpha(0) end
+          end
           pfUI.bags[bag].slots[slot].bag = bag
           pfUI.bags[bag].slots[slot].slot = slot
           pfUI.bags[bag].slots[slot].frame:SetID(slot)
@@ -255,6 +255,7 @@ pfUI:RegisterModule("bags", function ()
     pfUI.bags[bag].slots[slot].frame:SetNormalTexture("")
     pfUI.bags[bag].slots[slot].frame:Show()
 
+    -- avoid vertexcolor updates on item buttons
     function SetItemButtonNormalTextureVertexColor() return end
 
 	  local texture, count, locked, quality = GetContainerItemInfo(bag, slot)
@@ -330,6 +331,7 @@ pfUI:RegisterModule("bags", function ()
     if not frame.bagslots then
       frame.bagslots = CreateFrame("Frame", "pfBagSlots", frame)
       frame.bagslots.slots = {}
+      frame.bagslots:Hide()
     end
 
     local min, max = 0, 3
@@ -374,17 +376,36 @@ pfUI:RegisterModule("bags", function ()
       frame.bagslots.slots[slot].frame:SetHeight(pfUI.bag.button_size/5*4)
       frame.bagslots.slots[slot].frame:SetWidth(pfUI.bag.button_size/5*4)
 
-      local id, texture, checkRelic = GetInventorySlotInfo("Bag" .. slot .. append)
+      local id, texture = GetInventorySlotInfo("Bag" .. slot .. append)
       frame.bagslots.slots[slot].frame:SetBackdrop({
         bgFile = texture, tile = true, tileSize = pfUI.bag.button_size/5*4,
         edgeFile = "Interface\\AddOns\\pfUI\\img\\border_col", edgeSize = 8,
         insets = {left = 0, right = 0, top = 0, bottom = 0},
       })
-      frame.bagslots.slots[slot].frame:SetBackdropBorderColor(.3,.3,.3,1)
-      frame.bagslots.slots[slot].frame.SetBackdrop = function () return end
 
-      frame.bagslots.slots[slot].frame:SetNormalTexture(nil)
-      frame.bagslots.slots[slot].frame:SetPushedTexture(nil)
+      frame.bagslots.slots[slot].frame:SetScript("OnUpdate", function()
+        if this.UpdateDone == true then return end
+        local texture
+        for i,v in ipairs({this:GetRegions()}) do
+          if v.GetTexture and v:GetTexture() and i == 1 then
+            v:SetAlpha(0)
+            texture = v:GetTexture()
+          end
+        end
+
+        this:SetBackdrop({
+          bgFile = texture, tile = true, tileSize = pfUI.bag.button_size/5*4,
+          edgeFile = "Interface\\AddOns\\pfUI\\img\\border_col", edgeSize = 8,
+          insets = {left = 0, right = 0, top = 0, bottom = 0},
+        })
+
+        this:SetBackdropBorderColor(.3,.3,.3,1)
+        this.UpdateDone = true
+      end)
+
+      frame.bagslots.slots[slot].frame:SetNormalTexture("")
+      frame.bagslots.slots[slot].frame:SetPushedTexture("")
+      frame.bagslots.slots[slot].frame:SetCheckedTexture("")
 
       frame.bagslots.slots[slot].frame:Show()
 
@@ -421,7 +442,6 @@ pfUI:RegisterModule("bags", function ()
         if frame.bagslots.buy then frame.bagslots.buy:Hide() end
       end
     end
-    frame.bagslots:Hide()
   end
 
   function pfUI.bag:CreateAdditions(frame)
