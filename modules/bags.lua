@@ -57,6 +57,31 @@ pfUI:RegisterModule("bags", function ()
   pfUI.bag:RegisterEvent("BANKFRAME_OPENED")
   pfUI.bag:RegisterEvent("ITEM_LOCK_CHANGED")
 
+  pfUI.bag.updater = CreateFrame("Frame", "pfBagUpdater", UIParent)
+  pfUI.bag.updater.lastUpdate = 0
+  pfUI.bag.updater.updateInterval = .5
+
+  function pfUI.bag.updater:ResetDelay()
+    pfUI.bag.updater.lastUpdate = 0
+    pfUI.bag.updater.updateInterval = .5
+    pfUI.bag.updater:Show()
+  end
+
+  pfUI.bag.updater:SetScript("OnUpdate", function()
+    if pfUI.bag.updater.lastUpdate + pfUI.bag.updater.updateInterval < GetTime() then
+      pfUI.buff:UpdateSkin()
+      pfUI.bag.updater.lastUpdate  = GetTime()
+      pfUI.bag.updater.updateInterval  =   pfUI.bag.updater.updateInterval +  pfUI.bag.updater.updateInterval
+
+      pfUI.bag:CreateBags()
+      pfUI.bag:CreateBags("bank")
+    end
+
+    if pfUI.bag.updater.updateInterval  > 3 then
+      pfUI.bag.updater:Hide()
+    end
+  end)
+
   pfUI.bag:SetScript("OnEvent", function()
     if event == "PLAYER_ENTERING_WORLD" or event == "UPDATE_FACTION" then
       pfUI.bag:CreateBags()
@@ -85,9 +110,7 @@ pfUI:RegisterModule("bags", function ()
     end
 
     if event == "BAG_CLOSED" and arg1 then
-      pfUI.bag:CreateBags()
-      pfUI.bag:CreateBags("bank")
-      pfUI.bag.nextUpdateIsFull = "yes"
+      pfUI.bag.updater:ResetDelay()
     end
 
     if event == "PLAYERBANKSLOTS_CHANGED" then
