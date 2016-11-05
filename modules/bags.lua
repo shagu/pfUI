@@ -204,7 +204,7 @@ pfUI:RegisterModule("bags", function ()
 
       for slot=1, GetContainerNumSlots(bag) do
         if not pfUI.bags[bag].slots[slot] then
-	        local tpl = "ContainerFrameItemButtonTemplate"
+          local tpl = "ContainerFrameItemButtonTemplate"
           if bag == -1 then tpl = "BankItemButtonGenericTemplate" end
           pfUI.bags[bag].slots[slot] = {}
           pfUI.bags[bag].slots[slot].frame = CreateFrame("Button", "pfBag" .. bag .. "item" .. slot,  pfUI.bags[bag], tpl)
@@ -258,7 +258,7 @@ pfUI:RegisterModule("bags", function ()
     -- avoid vertexcolor updates on item buttons
     function SetItemButtonNormalTextureVertexColor() return end
 
-	  local texture, count, locked, quality = GetContainerItemInfo(bag, slot)
+    local texture, count, locked, quality = GetContainerItemInfo(bag, slot)
     pfUI.bags[bag].slots[slot].frame:SetBackdrop({
       bgFile = texture, tile = true, tileSize = pfUI.bag.button_size,
       edgeFile = "Interface\\AddOns\\pfUI\\img\\border_col", edgeSize = 8,
@@ -371,8 +371,8 @@ pfUI:RegisterModule("bags", function ()
       local left = (slot-min)*(pfUI.bag.button_size/5*4+pfUI_config.bars.border) + pfUI_config.bars.border*2
       local top = -2 * pfUI_config.bars.border
 
-			frame.bagslots.slots[slot].frame:ClearAllPoints()
-			frame.bagslots.slots[slot].frame:SetPoint("TOPLEFT", frame.bagslots, "TOPLEFT", left, top)
+      frame.bagslots.slots[slot].frame:ClearAllPoints()
+      frame.bagslots.slots[slot].frame:SetPoint("TOPLEFT", frame.bagslots, "TOPLEFT", left, top)
       frame.bagslots.slots[slot].frame:SetHeight(pfUI.bag.button_size/5*4)
       frame.bagslots.slots[slot].frame:SetWidth(pfUI.bag.button_size/5*4)
 
@@ -409,12 +409,12 @@ pfUI:RegisterModule("bags", function ()
 
       frame.bagslots.slots[slot].frame:Show()
 
-	    local numSlots, full = GetNumBankSlots()
-		  if ( slot <= numSlots ) then
-				frame.bagslots.slots[slot].frame.tooltipText = BANK_BAG
-			else
-				frame.bagslots.slots[slot].frame.tooltipText = BANK_BAG_PURCHASE
-			end
+      local numSlots, full = GetNumBankSlots()
+      if ( slot <= numSlots ) then
+        frame.bagslots.slots[slot].frame.tooltipText = BANK_BAG
+      else
+        frame.bagslots.slots[slot].frame.tooltipText = BANK_BAG_PURCHASE
+      end
     end
 
     if frame == pfUI.bag.left then
