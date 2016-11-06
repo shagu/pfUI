@@ -199,6 +199,10 @@ pfUI:RegisterModule("gui", function ()
           else
             pfUI.gui:SaveScale(frame, scale)
           end
+
+          -- repaint hackfix for panels
+          pfUI.panel.left:SetScale(pfUI.chat.left:GetScale())
+          pfUI.panel.right:SetScale(pfUI.chat.right:GetScale())
         end)
       end
 

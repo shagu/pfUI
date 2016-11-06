@@ -174,7 +174,8 @@ pfUI:RegisterModule("panel", function ()
     end
   end
 
-  pfUI.panel.left = CreateFrame("Frame", "pfPanelLeft", pfUI.chat.left)
+  pfUI.panel.left = CreateFrame("Frame", "pfPanelLeft", pfUI.panel)
+  pfUI.panel.left:SetScale(pfUI.chat.left:GetScale())
   pfUI.panel.left:SetFrameStrata("HIGH")
   pfUI.panel.left:ClearAllPoints()
   pfUI.panel.left:SetHeight(pfUI_config.global.font_size*2)
@@ -238,7 +239,8 @@ pfUI:RegisterModule("panel", function ()
   pfUI.panel.left.right.text:SetFontObject(GameFontWhite)
   pfUI.panel.left.right.text:SetText("[DUMMY]")
 
-  pfUI.panel.right = CreateFrame("Frame", "pfPanelRight", pfUI.chat.right)
+  pfUI.panel.right = CreateFrame("Frame", "pfPanelRight", pfUI.panel)
+  pfUI.panel.right:SetScale(pfUI.chat.right:GetScale())
   pfUI.panel.right:SetFrameStrata("HIGH")
   pfUI.panel.right:ClearAllPoints()
   pfUI.panel.right:SetHeight(pfUI_config.global.font_size*2)
