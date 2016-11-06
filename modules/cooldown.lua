@@ -1,5 +1,6 @@
 pfUI:RegisterModule("cooldown", function ()
   function CooldownFrame_SetTimer(this, start, duration, enable)
+    if not this then return end
     -- disable animation
     this:SetPosition(1,1,1);
 
