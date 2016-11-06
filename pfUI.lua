@@ -83,8 +83,14 @@ pfUI.utils = CreateFrame("Frame",nil,UIParent)
 
 function pfUI.utils:loadPosition(frame)
   if pfUI_config["position"][frame:GetName()] then
-    frame:ClearAllPoints()
-    frame:SetPoint("TOPLEFT", pfUI_config["position"][frame:GetName()].xpos, pfUI_config["position"][frame:GetName()].ypos)
+    if pfUI_config["position"][frame:GetName()]["scale"] then
+      frame:SetScale(pfUI_config["position"][frame:GetName()].scale)
+    end
+
+    if pfUI_config["position"][frame:GetName()]["xpos"] then
+      frame:ClearAllPoints()
+      frame:SetPoint("TOPLEFT", pfUI_config["position"][frame:GetName()].xpos, pfUI_config["position"][frame:GetName()].ypos)
+    end
   end
 end
 
