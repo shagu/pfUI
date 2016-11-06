@@ -5,7 +5,7 @@ pfUI:RegisterModule("gui", function ()
 
   pfUI.gui:SetFrameStrata("DIALOG")
   pfUI.gui:SetWidth(480)
-  pfUI.gui:SetHeight(320)
+  pfUI.gui:SetHeight(360)
   pfUI.gui:Hide()
 
   pfUI.gui:SetBackdrop(pfUI.backdrop)
@@ -223,8 +223,8 @@ pfUI:RegisterModule("gui", function ()
     end
 
     local frame = CreateFrame("Frame", nil, pfUI.gui)
-    frame:SetWidth(400)
-    frame:SetHeight(320)
+    frame:SetWidth(100)
+    frame:SetHeight(100)
 
     frame.switch = CreateFrame("Button", nil, pfUI.gui)
     frame.switch:ClearAllPoints()
@@ -446,11 +446,11 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.scroll:SetPoint("BOTTOMRIGHT", pfUI.gui, "BOTTOMRIGHT", 0,10)
   pfUI.gui.scroll:EnableMouseWheel(1)
   function pfUI.gui.scroll:UpdateScrollState()
-    local current = pfUI.gui.scroll:GetVerticalScroll()
-    local max = pfUI.gui.scroll:GetVerticalScrollRange() + 10
+    local current = ceil(pfUI.gui.scroll:GetVerticalScroll())
+    local max = ceil(pfUI.gui.scroll:GetVerticalScrollRange() + 10)
     pfUI.gui.deco.up:Show()
     pfUI.gui.deco.down:Show()
-    if max > 31 then
+    if max > 20 then
       if current < max then
         pfUI.gui.deco.down.visible = 1
         pfUI.gui.deco.down:Show()
@@ -602,6 +602,13 @@ pfUI:RegisterModule("gui", function ()
       pfUI_init["chat"] = nil
       pfUI.gui.reloadDialog:Show()
   end)
+
+  -- Reset Player Cache
+  pfUI.gui.resetCache = pfUI.gui:CreateConfigTab("Reset Player Cache", "bottom", function()
+      pfUI_playerDB = {}
+      pfUI.gui.reloadDialog:Show()
+  end)
+
 
   -- Reset All
   pfUI.gui.resetAll = pfUI.gui:CreateConfigTab("Reset All", "bottom", function()
