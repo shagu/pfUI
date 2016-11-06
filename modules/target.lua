@@ -144,6 +144,7 @@ pfUI:RegisterModule("target", function ()
       end
 
       pfUI.uf.target.powerText:SetText( "|cff" .. levelcolor .. level .. "|r " .. name)
+      pfUI.uf.target.powerText:SetWidth(pfUI.uf.target:GetWidth() -30 - pfUI.uf.target.hpText:GetStringWidth())
 
       PowerColor = ManaBarColor[UnitPowerType("target")];
       pfUI.uf.target.power.bar:SetStatusBarColor(PowerColor.r + .5, PowerColor.g +.5, PowerColor.b +.5, 1)
@@ -278,6 +279,8 @@ pfUI:RegisterModule("target", function ()
   pfUI.uf.target.powerText:SetPoint("LEFT",pfUI.uf.target.hp.bar, "LEFT", 10, 0)
   pfUI.uf.target.powerText:SetJustifyH("LEFT")
   pfUI.uf.target.powerText:SetFontObject(GameFontWhite)
+  pfUI.uf.target.powerText:SetHeight(pfUI_config.global.font_size)
+  pfUI.uf.target.powerText:SetNonSpaceWrap(true)
   pfUI.uf.target.powerText:SetText("5000")
 
   pfUI.uf.target.combopoints = CreateFrame("Frame")
