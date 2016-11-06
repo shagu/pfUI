@@ -79,4 +79,20 @@ pfUI:RegisterModule("skin", function ()
 
   ShoppingTooltip1:SetBackdrop(pfUI.backdrop)
   ShoppingTooltip2:SetBackdrop(pfUI.backdrop)
+
+  TicketStatusFrame:SetBackdrop(pfUI.backdrop)
+  TicketStatusFrame:ClearAllPoints()
+  TicketStatusFrame:SetPoint("TOPLEFT", 5, -5)
+  function TicketStatusFrame_OnEvent()
+    if ( event == "PLAYER_ENTERING_WORLD" ) then
+      GetGMTicket();
+    else
+      if ( arg1 ~= 0 ) then
+        this:Show();
+        refreshTime = GMTICKET_CHECK_INTERVAL;
+      else
+        this:Hide();
+      end
+    end
+  end
 end)
