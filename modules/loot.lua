@@ -41,13 +41,17 @@ pfUI:RegisterModule("loot", function ()
         GameTooltip:SetLootItem(this:GetID())
         CursorUpdate()
       end
-      this.hover:Show()
+      if this.hover then
+        this.hover:Show()
+      end
     end)
 
     frame:SetScript("OnLeave", function()
       GameTooltip:Hide()
       ResetCursor()
-      this.hover:Hide()
+      if this.hover then
+        this.hover:Hide()
+      end
     end)
 
     frame.ficon = CreateFrame("Frame", "pfLootButtonIcon", frame)
