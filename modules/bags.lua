@@ -54,31 +54,6 @@ pfUI:RegisterModule("bags", function ()
   pfUI.bag:RegisterEvent("BANKFRAME_OPENED")
   pfUI.bag:RegisterEvent("ITEM_LOCK_CHANGED")
 
-  pfUI.bag.updater = CreateFrame("Frame", "pfBagUpdater", UIParent)
-  pfUI.bag.updater.lastUpdate = 0
-  pfUI.bag.updater.updateInterval = .5
-
-  function pfUI.bag.updater:ResetDelay()
-    pfUI.bag.updater.lastUpdate = 0
-    pfUI.bag.updater.updateInterval = .5
-    pfUI.bag.updater:Show()
-  end
-
-  pfUI.bag.updater:SetScript("OnUpdate", function()
-    if pfUI.bag.updater.lastUpdate + pfUI.bag.updater.updateInterval < GetTime() then
-      pfUI.buff:UpdateSkin()
-      pfUI.bag.updater.lastUpdate  = GetTime()
-      pfUI.bag.updater.updateInterval  =   pfUI.bag.updater.updateInterval +  pfUI.bag.updater.updateInterval
-
-      pfUI.bag:CreateBags()
-      pfUI.bag:CreateBags("bank")
-    end
-
-    if pfUI.bag.updater.updateInterval  > 3 then
-      pfUI.bag.updater:Hide()
-    end
-  end)
-
   pfUI.bag:SetScript("OnEvent", function()
     if event == "PLAYER_ENTERING_WORLD" or event == "UPDATE_FACTION" then
       pfUI.bag:CreateBags()
@@ -91,43 +66,18 @@ pfUI:RegisterModule("bags", function ()
       pfUI.bag:CreateBagSlots(pfUI.bag.left)
     end
 
-    if event == "BAG_UPDATE" and arg1 then
-      if pfUI.bag.nextUpdateIsFull then
-        pfUI.bag:CreateBags()
-        pfUI.bag:CreateBags("bank")
-        pfUI.bag.nextUpdateIsFull = nil
-      else
-        pfUI.bag:UpdateBag(arg1)
-      end
+    if event == "BAG_CLOSED" or event == "PLAYERBANKSLOTS_CHANGED" or
+       event == "PLAYERBANKBAGSLOTS_CHANGED" or event == "BAG_UPDATE" or
+       event == "BANKFRAME_OPENED" or event == "BANKFRAME_CLOSED" then
+      pfUI.bag:CheckFullUpdate()
     end
 
     if event == "BAG_UPDATE_COOLDOWN" then
-      pfUI.bag:CreateBags()
-      pfUI.bag:CreateBags("bank")
-    end
-
-    if event == "BAG_CLOSED" and arg1 then
-      pfUI.bag.updater:ResetDelay()
-    end
-
-    if event == "PLAYERBANKSLOTS_CHANGED" then
-      pfUI.bag:UpdateBag(-1)
-    end
-
-    if event == "PLAYERBANKBAGSLOTS_CHANGED" then
-      pfUI.bag:CreateBagSlots(pfUI.bag.left)
-      pfUI.bag.left.bagslots:Show()
-    end
-
-    if event == "BANKFRAME_OPENED" then
-      pfUI.bag:CreateBags("bank")
-      pfUI.bag.left:Show()
-      OpenBackpack()
-    end
-
-    if event == "BANKFRAME_CLOSED" then
-      pfUI.bag:CreateBags("bank")
-      pfUI.bag.left:Hide()
+      for bag=-2, 11 do
+        for slot=1, GetContainerNumSlots(bag) do
+          ContainerFrame_UpdateCooldown(bag, pfUI.bags[bag].slots[slot].frame)
+        end
+      end
     end
 
     if event == "ITEM_LOCK_CHANGED" then
@@ -135,14 +85,27 @@ pfUI:RegisterModule("bags", function ()
         for slot=1, GetContainerNumSlots(bag) do
           if pfUI.bags[bag].slots[slot].frame:IsShown() then
             local _, _, locked, _ = GetContainerItemInfo(bag, slot)
-            if locked then
-              pfUI.bags[bag].slots[slot].frame:SetAlpha(.5)
-            else
-              pfUI.bags[bag].slots[slot].frame:SetAlpha(1)
-            end
+            SetItemButtonDesaturated(pfUI.bags[bag].slots[slot].frame, locked, 0.5, 0.5, 0.5)
           end
         end
       end
+    end
+
+    if event == "BAG_UPDATE" then
+      pfUI.bag:UpdateBag(arg1)
+    end
+
+    if event == "PLAYERBANKBAGSLOTS_CHANGED" then
+      pfUI.bag:CreateBagSlots(pfUI.bag.left)
+    end
+
+    if event == "BANKFRAME_OPENED" then
+      pfUI.bag.left:Show()
+      OpenBackpack()
+    end
+
+    if event == "BANKFRAME_CLOSED" then
+      pfUI.bag.left:Hide()
     end
   end)
 
@@ -154,6 +117,24 @@ pfUI:RegisterModule("bags", function ()
 
   pfUI.bags = {}
   pfUI.slots = {}
+
+  function pfUI.bag:CheckFullUpdate()
+    local maxslots = 0
+    for bag = -1,11 do maxslots = maxslots + GetContainerNumSlots(bag) end
+    if maxslots ~= pfUI.bag.maxslots then
+      for bag = -1,11 do
+        for slot, f in ipairs(pfUI.bags[bag].slots) do
+          if slot >  GetContainerNumSlots(bag) then
+            pfUI.bags[bag].slots[slot].frame:Hide()
+          end
+        end
+      end
+
+      pfUI.bag:CreateBags()
+      pfUI.bag:CreateBags("bank")
+      pfUI.bag.maxslots = maxslots
+    end
+  end
 
   function pfUI.bag:CreateBags(object)
     local x = 0
@@ -193,35 +174,14 @@ pfUI:RegisterModule("bags", function ()
         pfUI.bags[bag].slots = {}
       end
       pfUI.bags[bag]:SetID(bag)
-
-      -- clean other buttons
-      for slot=GetContainerNumSlots(bag), 30 do
-        if pfUI.bags[bag].slots[slot] then
-          pfUI.bags[bag].slots[slot].frame:Hide()
-          pfUI.bags[bag].slots[slot] = nil
-        end
-      end
-
       for slot=1, GetContainerNumSlots(bag) do
-        if not pfUI.bags[bag].slots[slot] then
-          local tpl = "ContainerFrameItemButtonTemplate"
-          if bag == -1 then tpl = "BankItemButtonGenericTemplate" end
-          pfUI.bags[bag].slots[slot] = {}
-          pfUI.bags[bag].slots[slot].frame = CreateFrame("Button", "pfBag" .. bag .. "item" .. slot,  pfUI.bags[bag], tpl)
-          if bag == -1 then
-            for i,v in ipairs({pfUI.bags[bag].slots[slot].frame:GetRegions()}) do v:SetAlpha(0) end
-          end
-          pfUI.bags[bag].slots[slot].bag = bag
-          pfUI.bags[bag].slots[slot].slot = slot
-          pfUI.bags[bag].slots[slot].frame:SetID(slot)
-        end
+        pfUI.bag:UpdateSlot(bag, slot)
 
         pfUI.bags[bag].slots[slot].frame:ClearAllPoints()
         pfUI.bags[bag].slots[slot].frame:SetPoint("TOPLEFT", x*(pfUI.bag.button_size+pfUI_config.bars.border) + (pfUI_config.bars.border * 2), - (y*(pfUI.bag.button_size+pfUI_config.bars.border) + (pfUI_config.bars.border * 2)+ topspace))
         pfUI.bags[bag].slots[slot].frame:SetHeight(pfUI.bag.button_size)
         pfUI.bags[bag].slots[slot].frame:SetWidth(pfUI.bag.button_size)
 
-        pfUI.bag:UpdateSlot(bag, slot)
         if x >= 9 then
           y = y + 1
           x = 0
@@ -245,26 +205,47 @@ pfUI:RegisterModule("bags", function ()
   end
 
   function pfUI.bag:UpdateSlot(bag, slot)
-    if not pfUI.bags[bag] or not pfUI.bags[bag].slots[slot] then
-      pfUI.bag:CreateBags()
-      pfUI.bag:CreateBags("bank")
-      return
+    if not pfUI.bags[bag] then return end
+
+    if not pfUI.bags[bag].slots[slot] then
+      local tpl = "ContainerFrameItemButtonTemplate"
+      if bag == -1 then tpl = "BankItemButtonGenericTemplate" end
+      pfUI.bags[bag].slots[slot] = {}
+      pfUI.bags[bag].slots[slot].frame = CreateFrame("Button", "pfBag" .. bag .. "item" .. slot,  pfUI.bags[bag], tpl)
+      pfUI.bags[bag].slots[slot].frame:SetBackdrop(pfUI.backdrop_col)
+      pfUI.bags[bag].slots[slot].frame:SetNormalTexture("")
+
+      pfUI.bags[bag].slots[slot].bag = bag
+      pfUI.bags[bag].slots[slot].slot = slot
+      pfUI.bags[bag].slots[slot].frame:SetID(slot)
     end
 
-    pfUI.bags[bag].slots[slot].frame:SetPushedTexture("")
-    pfUI.bags[bag].slots[slot].frame:SetNormalTexture("")
-    pfUI.bags[bag].slots[slot].frame:Show()
-
-    -- avoid vertexcolor updates on item buttons
-    function SetItemButtonNormalTextureVertexColor() return end
-
     local texture, count, locked, quality = GetContainerItemInfo(bag, slot)
-    pfUI.bags[bag].slots[slot].frame:SetBackdrop({
-      bgFile = texture, tile = true, tileSize = pfUI.bag.button_size,
-      edgeFile = "Interface\\AddOns\\pfUI\\img\\border_col", edgeSize = 8,
-      insets = {left = 0, right = 0, top = 0, bottom = 0},
-    })
+    SetItemButtonTexture(pfUI.bags[bag].slots[slot].frame, texture)
+    SetItemButtonCount(pfUI.bags[bag].slots[slot].frame, count)
+    SetItemButtonDesaturated(pfUI.bags[bag].slots[slot].frame, locked, 0.5, 0.5, 0.5)
 
+    -- bankframe does not support cooldowns
+    if bag ~= -1 then
+      ContainerFrame_UpdateCooldown(bag, pfUI.bags[bag].slots[slot].frame)
+    end
+
+    local count = getglobal(pfUI.bags[bag].slots[slot].frame:GetName() .. "Count")
+    count:SetFont("Interface\\AddOns\\pfUI\\fonts\\homespun.ttf", pfUI_config.global.font_size, "OUTLINE")
+    count:SetAllPoints()
+    count:SetJustifyH("RIGHT")
+    count:SetJustifyV("BOTTOM")
+
+    local icon = getglobal(pfUI.bags[bag].slots[slot].frame:GetName() .. "IconTexture")
+    icon:SetTexCoord(.08, .92, .08, .92)
+    icon:ClearAllPoints()
+    icon:SetPoint("TOPLEFT", 3, -3)
+    icon:SetPoint("BOTTOMRIGHT", -3, 3)
+
+    local border = getglobal(pfUI.bags[bag].slots[slot].frame:GetName() .. "NormalTexture")
+    border:SetTexture("")
+
+    -- detect backdrop border color
     if quality and quality > 1 then
       pfUI.bags[bag].slots[slot].frame:SetBackdropBorderColor(GetItemQualityColor(quality))
     else
@@ -295,36 +276,7 @@ pfUI:RegisterModule("bags", function ()
       end
     end
 
-    if not pfUI.bags[bag].slots[slot].stacks then
-      pfUI.bags[bag].slots[slot].stacks = pfUI.bags[bag].slots[slot].frame:CreateFontString("Status", "DIALOG", "GameFontWhite")
-      pfUI.bags[bag].slots[slot].stacks:SetFont("Interface\\AddOns\\pfUI\\fonts\\homespun.ttf", pfUI_config.global.font_size, "OUTLINE")
-      pfUI.bags[bag].slots[slot].stacks:SetParent(pfUI.bags[bag].slots[slot].frame)
-      pfUI.bags[bag].slots[slot].stacks:SetAllPoints(pfUI.bags[bag].slots[slot].frame)
-      pfUI.bags[bag].slots[slot].stacks:SetJustifyV("BOTTOM")
-      pfUI.bags[bag].slots[slot].stacks:SetJustifyH("RIGHT")
-    end
-
-    if count and count > 1 then
-      pfUI.bags[bag].slots[slot].frame.count = count
-      pfUI.bags[bag].slots[slot].stacks:SetText(count)
-      pfUI.bags[bag].slots[slot].stacks:Show()
-    else
-      pfUI.bags[bag].slots[slot].frame.count = 0
-      pfUI.bags[bag].slots[slot].stacks:SetText("")
-      pfUI.bags[bag].slots[slot].stacks:Hide()
-    end
-
-    -- hide duplicate itemcount in bankframe
-    if bag == -1 then
-      local count = getglobal("pfBag" .. bag .. "item" .. slot .. "Count")
-      function count.Show() return end
-      count:Hide()
-    end
-
-    -- bankframe does not have a cooldown
-    if bag ~= -1 then
-      ContainerFrame_UpdateCooldown(bag, pfUI.bags[bag].slots[slot].frame)
-    end
+    pfUI.bags[bag].slots[slot].frame:Show()
   end
 
   function pfUI.bag:CreateBagSlots(frame)
@@ -361,6 +313,15 @@ pfUI:RegisterModule("bags", function ()
       if not frame.bagslots.slots[slot] then
         frame.bagslots.slots[slot] = {}
         frame.bagslots.slots[slot].frame = CreateFrame("CheckButton", name .. slot .. append, frame.bagslots, tpl)
+
+        local icon = getglobal(frame.bagslots.slots[slot].frame:GetName() .. "IconTexture")
+        local border = getglobal(frame.bagslots.slots[slot].frame:GetName() .. "NormalTexture")
+        icon:SetTexCoord(.08, .92, .08, .92)
+        icon:ClearAllPoints()
+        icon:SetPoint("TOPLEFT", 3, -3)
+        icon:SetPoint("BOTTOMRIGHT", -3, 3)
+        border:SetTexture("")
+
         if frame == pfUI.bag.left then
           frame.bagslots.slots[slot].frame:SetID(slot + 4)
         else
@@ -377,36 +338,7 @@ pfUI:RegisterModule("bags", function ()
       frame.bagslots.slots[slot].frame:SetWidth(pfUI.bag.button_size/5*4)
 
       local id, texture = GetInventorySlotInfo("Bag" .. slot .. append)
-      frame.bagslots.slots[slot].frame:SetBackdrop({
-        bgFile = texture, tile = true, tileSize = pfUI.bag.button_size/5*4,
-        edgeFile = "Interface\\AddOns\\pfUI\\img\\border_col", edgeSize = 8,
-        insets = {left = 0, right = 0, top = 0, bottom = 0},
-      })
-
-      frame.bagslots.slots[slot].frame:SetScript("OnUpdate", function()
-        if this.UpdateDone == true then return end
-        local texture
-        for i,v in ipairs({this:GetRegions()}) do
-          if v.GetTexture and v:GetTexture() and i == 1 then
-            v:SetAlpha(0)
-            texture = v:GetTexture()
-          end
-        end
-
-        this:SetBackdrop({
-          bgFile = texture, tile = true, tileSize = pfUI.bag.button_size/5*4,
-          edgeFile = "Interface\\AddOns\\pfUI\\img\\border_col", edgeSize = 8,
-          insets = {left = 0, right = 0, top = 0, bottom = 0},
-        })
-
-        this:SetBackdropBorderColor(.3,.3,.3,1)
-        this.UpdateDone = true
-      end)
-
-      frame.bagslots.slots[slot].frame:SetNormalTexture("")
-      frame.bagslots.slots[slot].frame:SetPushedTexture("")
-      frame.bagslots.slots[slot].frame:SetCheckedTexture("")
-
+      frame.bagslots.slots[slot].frame:SetBackdrop(pfUI.backdrop)
       frame.bagslots.slots[slot].frame:Show()
 
       local numSlots, full = GetNumBankSlots()
