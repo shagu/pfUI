@@ -147,7 +147,10 @@ pfUI:RegisterModule("gui", function ()
       pfUI.gitter:Hide()
     end
 
-    pfUI.info:ShowInfoBox("|cff33ffccUnlock Mode|r\nThis mode allows you to move frames by dragging them using the mouse cursor. Frames can be scaled by scrolling up and down.\nTo scale multiple frames at once (eg. raidframes), hold down the shift key while scrolling. Click into an empty space to go back to the pfUI menu.", 15, pfUI.gitter)
+    pfUI.info:ShowInfoBox("|cff33ffccUnlock Mode|r\n" ..
+      "This mode allows you to move frames by dragging them using the mouse cursor. " ..
+      "Frames can be scaled by scrolling up and down.\nTo scale multiple frames at once (eg. raidframes), " ..
+      "hold down the shift key while scrolling. Click into an empty space to go back to the pfUI menu.", 15, pfUI.gitter)
 
     if pfUI.gitter:IsShown() then
       pfUI.gitter:Hide()
@@ -265,7 +268,7 @@ pfUI:RegisterModule("gui", function ()
     end
 
     local frame = CreateFrame("Frame", nil, pfUI.gui)
-    frame:SetWidth(100)
+    frame:SetWidth(400)
     frame:SetHeight(100)
 
     frame.switch = CreateFrame("Button", nil, pfUI.gui)
@@ -299,7 +302,7 @@ pfUI:RegisterModule("gui", function ()
       frame.title = frame:CreateFontString("Status", "LOW", "GameFontNormal")
       frame.title:SetFont("Interface\\AddOns\\pfUI\\fonts\\arial.ttf", pfUI_config.global.font_size + 2, "OUTLINE")
       frame.title:SetPoint("TOP", 0, -10)
-      frame.title:SetFontObject(GameFontWhite)
+      frame.title:SetTextColor(.2,1,.8)
       frame.title:SetText(text)
     end
 
@@ -335,6 +338,16 @@ pfUI:RegisterModule("gui", function ()
     frame.category = category
     frame.config = config
 
+    if widget == "warning" then
+      frame:SetBackdrop(pfUI.backdrop_col)
+      frame:SetBackdropBorderColor(1,.5,.5)
+      frame:SetHeight(50)
+      frame:SetPoint("TOPLEFT", 25, parent.objectCount * -35)
+      parent.objectCount = parent.objectCount + 2
+      frame.caption:SetJustifyH("CENTER")
+      frame.caption:SetJustifyV("CENTER")
+    end
+
     -- use text widget (default)
     if not widget or widget == "text" then
       -- input field
@@ -369,7 +382,6 @@ pfUI:RegisterModule("gui", function ()
       frame.input:SetWidth(14)
       frame.input:SetHeight(14)
       frame.input:SetPoint("TOPRIGHT" , 0, -4)
---      frame.input:SetText(category[config])
       frame.input:SetScript("OnClick", function ()
         if this:GetChecked() then
           this:GetParent().category[this:GetParent().config] = "1"
@@ -539,6 +551,8 @@ pfUI:RegisterModule("gui", function ()
 
   -- modules
   pfUI.gui.modules = pfUI.gui:CreateConfigTab("Modules")
+  pfUI.gui:CreateConfig(pfUI.gui.modules, "|cffff5555Warning:\n|cffffaaaa Disabling modules is highly experimental.\nDo not disable modules if you don't know how to fix errors.|r", nil, nil, "warning")
+
   for i,m in pairs(pfUI.modules) do
     -- create disabled entry if not existing and display
     pfUI:UpdateConfig("disabled", nil, m, "0")
