@@ -147,9 +147,7 @@ pfUI:RegisterModule("gui", function ()
       pfUI.gitter:Hide()
     end
 
-    pfUI.info:ShowInfoBox("|cff33ffccUnlock Mode|r\
-    This mode allows you to move frames by dragging them using the mouse cursor. Frames can be scaled by scrolling up and down.\
-    To scale multiple frames at once (eg. raidframes), hold down the shift key while scrolling. Click into an empty space to go back to the pfUI menu.", 15, pfUI.gitter)
+    pfUI.info:ShowInfoBox("|cff33ffccUnlock Mode|r\nThis mode allows you to move frames by dragging them using the mouse cursor. Frames can be scaled by scrolling up and down.\nTo scale multiple frames at once (eg. raidframes), hold down the shift key while scrolling. Click into an empty space to go back to the pfUI menu.", 15, pfUI.gitter)
 
     if pfUI.gitter:IsShown() then
       pfUI.gitter:Hide()
