@@ -74,7 +74,9 @@ pfUI:RegisterModule("bags", function ()
 
     if event == "BAG_UPDATE_COOLDOWN" then
       for bag=-2, 11 do
-        for slot=1, GetContainerNumSlots(bag) do
+        local bagsize = GetContainerNumSlots(bag)
+        if bag == -2 and pfUI.bag.showKeyring == true then bagsize = GetKeyRingSize() end
+        for slot=1, bagsize do
           ContainerFrame_UpdateCooldown(bag, pfUI.bags[bag].slots[slot].frame)
         end
       end
@@ -82,7 +84,9 @@ pfUI:RegisterModule("bags", function ()
 
     if event == "ITEM_LOCK_CHANGED" then
       for bag=-2, 11 do
-        for slot=1, GetContainerNumSlots(bag) do
+        local bagsize = GetContainerNumSlots(bag)
+        if bag == -2 and pfUI.bag.showKeyring == true then bagsize = GetKeyRingSize() end
+        for slot=1, bagsize do
           if pfUI.bags[bag].slots[slot].frame:IsShown() then
             local _, _, locked, _ = GetContainerItemInfo(bag, slot)
             SetItemButtonDesaturated(pfUI.bags[bag].slots[slot].frame, locked, 0.5, 0.5, 0.5)
@@ -111,20 +115,29 @@ pfUI:RegisterModule("bags", function ()
 
   tinsert(UISpecialFrames,"pfBag")
 
-  pfUI.BACKPACK = { 0, 1, 2, 3, 4 }
+  pfUI.BACKPACK = { -2, 0, 1, 2, 3, 4 }
   pfUI.BANK = { -1, 5, 6, 7, 8, 9, 10, 11 }
-  pfUI.KEYRING = { -2 }
 
   pfUI.bags = {}
   pfUI.slots = {}
 
   function pfUI.bag:CheckFullUpdate()
     local maxslots = 0
-    for bag = -1,11 do maxslots = maxslots + GetContainerNumSlots(bag) end
+
+    for bag = -2,11 do
+      local bagsize = GetContainerNumSlots(bag)
+      if bag == -2 and pfUI.bag.showKeyring == true then bagsize = GetKeyRingSize() end
+
+      maxslots = maxslots + bagsize
+    end
+
     if maxslots ~= pfUI.bag.maxslots then
-      for bag = -1,11 do
+      for bag = -2,11 do
         for slot, f in ipairs(pfUI.bags[bag].slots) do
-          if slot >  GetContainerNumSlots(bag) then
+          local bagsize = GetContainerNumSlots(bag)
+          if bag == -2 and pfUI.bag.showKeyring == true then bagsize = GetKeyRingSize() end
+
+          if slot > bagsize then
             pfUI.bags[bag].slots[slot].frame:Hide()
           end
         end
@@ -174,7 +187,9 @@ pfUI:RegisterModule("bags", function ()
         pfUI.bags[bag].slots = {}
       end
       pfUI.bags[bag]:SetID(bag)
-      for slot=1, GetContainerNumSlots(bag) do
+      local bagsize = GetContainerNumSlots(bag)
+      if bag == -2 and pfUI.bag.showKeyring == true then bagsize = GetKeyRingSize() end
+      for slot=1, bagsize do
         pfUI.bag:UpdateSlot(bag, slot)
 
         pfUI.bags[bag].slots[slot].frame:ClearAllPoints()
@@ -199,7 +214,9 @@ pfUI:RegisterModule("bags", function ()
   end
 
   function pfUI.bag:UpdateBag(bag)
-    for slot=1, GetContainerNumSlots(bag) do
+    local bagsize = GetContainerNumSlots(bag)
+    if bag == -2 and pfUI.bag.showKeyring == true then bagsize = GetKeyRingSize() end
+    for slot=1, bagsize do
       pfUI.bag:UpdateSlot(bag, slot)
     end
   end
@@ -271,6 +288,8 @@ pfUI:RegisterModule("bags", function ()
         pfUI.bags[bag].slots[slot].frame:SetBackdropBorderColor(.5,.2,.2,1)
       elseif bagtype == "SPECIAL" then
         pfUI.bags[bag].slots[slot].frame:SetBackdropBorderColor(.2,.2,.8,1)
+      elseif bag == -2 then
+        pfUI.bags[bag].slots[slot].frame:SetBackdropBorderColor(.2,.8,.8,1)
       else
         pfUI.bags[bag].slots[slot].frame:SetBackdropBorderColor(.3,.3,.3,1)
       end
@@ -381,7 +400,7 @@ pfUI:RegisterModule("bags", function ()
     if not frame.money then
       frame.money = CreateFrame("Frame", "pfUIBagsMoney", frame, "SmallMoneyFrameTemplate")
       frame.money:ClearAllPoints()
-      frame.money:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -23, -6)
+      frame.money:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -40, -6)
 
       pfUIBagsMoneyGoldButton:SetFont("Interface\\AddOns\\pfUI\\fonts\\arial.ttf", pfUI_config.global.font_size, "OUTLINE")
       for i,v in ipairs({pfUIBagsMoneyGoldButton:GetRegions()}) do if i == 1 then v:SetHeight(10); v:SetWidth(10) end end
@@ -460,6 +479,45 @@ pfUI:RegisterModule("bags", function ()
       end)
     end
 
+    -- key button
+    if not frame.keys then
+      frame.keys = CreateFrame("Button", "pfBagSlotShow", UIParent)
+      frame.keys:SetParent(frame)
+      frame.keys:SetPoint("TOPRIGHT", -pfUI_config.bars.border*2 - 30 , -pfUI_config.bars.border*2 )
+      frame.keys:SetBackdrop(pfUI.backdrop)
+      frame.keys:SetHeight(15)
+      frame.keys:SetWidth(15)
+      frame.keys:SetTextColor(1,1,.25,1)
+      frame.keys:SetFont("Interface\\AddOns\\pfUI\\fonts\\arial.ttf", pfUI_config.global.font_size, "OUTLINE")
+      frame.keys.texture = frame.keys:CreateTexture("pfBagArrowUp")
+      frame.keys.texture:SetTexture("Interface\\AddOns\\pfUI\\img\\key")
+      frame.keys.texture:ClearAllPoints()
+      frame.keys.texture:SetPoint("TOPLEFT", frame.keys, "TOPLEFT", 5, -3)
+      frame.keys.texture:SetPoint("BOTTOMRIGHT", frame.keys, "BOTTOMRIGHT", -5, 3)
+      frame.keys.texture:SetVertexColor(.25,.25,.25,1)
+
+      frame.keys:SetScript("OnEnter", function ()
+          frame.keys:SetBackdrop(pfUI.backdrop_col)
+          frame.keys:SetBackdropBorderColor(1,1,.25,1)
+          frame.keys.texture:SetVertexColor(1,1,.25,1)
+        end)
+
+      frame.keys:SetScript("OnLeave", function ()
+          frame.keys:SetBackdrop(pfUI.backdrop)
+          frame.keys:SetBackdropBorderColor(1,1,1,1)
+          frame.keys.texture:SetVertexColor(.25,.25,.25,1)
+        end)
+
+      frame.keys:SetScript("OnClick", function()
+        if not pfUI.bag.showKeyring then
+          pfUI.bag.showKeyring = true
+        else
+          pfUI.bag.showKeyring = nil
+        end
+        pfUI.bag:CheckFullUpdate()
+      end)
+    end
+
     -- bag search
     if not frame.search then
       frame.search = CreateFrame("Frame", "pfBagSearch", UIParent)
@@ -489,8 +547,10 @@ pfUI:RegisterModule("bags", function ()
 
       frame.search.edit:SetScript("OnEditFocusLost", function()
         this:SetText("Search")
-        for bag=-1, 11 do
-          for slot=1, GetContainerNumSlots(bag) do
+        for bag=-2, 11 do
+          local bagsize = GetContainerNumSlots(bag)
+          if bag == -2 and pfUI.bag.showKeyring == true then bagsize = GetKeyRingSize() end
+          for slot=1, bagsize do
             local texture, itemCount, locked, quality, readable = GetContainerItemInfo(bag, slot)
             if itemCount then
               pfUI.bags[bag].slots[slot].frame:SetAlpha(1)
@@ -501,8 +561,10 @@ pfUI:RegisterModule("bags", function ()
 
       frame.search.edit:SetScript("OnTextChanged", function()
         if this:GetText() == "Search" then return end
-        for bag=-1, 11 do
-          for slot=1, GetContainerNumSlots(bag) do
+        for bag=-2, 11 do
+          local bagsize = GetContainerNumSlots(bag)
+          if bag == -2 and pfUI.bag.showKeyring == true then bagsize = GetKeyRingSize() end
+          for slot=1, bagsize do
             local texture, itemCount, locked, quality, readable = GetContainerItemInfo(bag, slot)
             if itemCount then
               local itemLink = GetContainerItemLink(bag, slot)
