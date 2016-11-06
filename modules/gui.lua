@@ -81,7 +81,8 @@ pfUI:RegisterModule("gui", function ()
     local movable = { pfUI.minimap, pfUI.chat.left, pfUI.chat.right,
       pfUI.uf.player, pfUI.uf.target, pfUI.uf.targettarget, pfUI.uf.pet,
       pfUI.bars.shapeshift, pfUI.bars.bottomleft, pfUI.bars.bottomright,
-      pfUI.bars.vertical, pfUI.bars.pet, pfUI.bars.bottom, pfUI.panel.minimap,
+      pfUI.bars.vertical, pfUI.bars.pet, pfUI.bars.bottom,
+      pfUI.panel.minimap, pfUI.panel.microbutton,
       pfUI.uf.group[1], pfUI.uf.group[2], pfUI.uf.group[3], pfUI.uf.group[4],
       pfUI.uf.raid[1], pfUI.uf.raid[2], pfUI.uf.raid[3], pfUI.uf.raid[4], pfUI.uf.raid[5],
       pfUI.uf.raid[6], pfUI.uf.raid[7], pfUI.uf.raid[8], pfUI.uf.raid[9], pfUI.uf.raid[10],
@@ -602,6 +603,7 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui:CreateConfig(pfUI.gui.panel, "Right Panel: Right", pfUI_config.panel.right, "right", "dropdown", values)
   pfUI.gui:CreateConfig(pfUI.gui.panel, "Other Panel: Minimap", pfUI_config.panel.other, "minimap", "dropdown", values)
   pfUI.gui:CreateConfig(pfUI.gui.panel, "Always show XP and Reputation Bar", pfUI_config.panel.xp, "showalways", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.panel, "Show Menubar", pfUI_config.panel.micro, "enable", "checkbox")
 
   -- tooltip
   pfUI.gui.tooltip = pfUI.gui:CreateConfigTab("Tooltip")

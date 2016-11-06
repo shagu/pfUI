@@ -316,4 +316,41 @@ pfUI:RegisterModule("panel", function ()
   pfUI.panel.minimap.text:SetPoint("CENTER", 0, 0)
   pfUI.panel.minimap.text:SetFontObject(GameFontWhite)
   pfUI.panel.minimap.text:SetText("[DUMMY]")
+
+  -- MicroButtons
+  if pfUI_config.panel.micro.enable == "1" then
+    pfUI.panel.microbutton = CreateFrame("Frame", "pfPanelMicroButton", UIParent)
+    pfUI.panel.microbutton:SetPoint("TOP", 0, 0)
+    pfUI.utils:loadPosition(pfUI.panel.microbutton)
+    pfUI.panel.microbutton:SetHeight(23)
+    pfUI.panel.microbutton:SetWidth(145)
+    pfUI.panel.microbutton:SetFrameStrata("BACKGROUND")
+
+    local MICRO_BUTTONS = {
+      'CharacterMicroButton', 'SpellbookMicroButton', 'TalentMicroButton',
+      'QuestLogMicroButton', 'SocialsMicroButton', 'WorldMapMicroButton',
+      'MainMenuMicroButton', 'HelpMicroButton',
+    }
+
+    for i=1,table.getn(MICRO_BUTTONS) do
+      local anchor = getglobal(MICRO_BUTTONS[i-1]) or pfUI.panel.microbutton
+      local button = getglobal(MICRO_BUTTONS[i])
+      button:ClearAllPoints()
+      button:SetParent(pfUI.panel.microbutton)
+      if i == 1 then
+        button:SetPoint("LEFT", pfUI.panel.microbutton, "LEFT", 1, 10)
+      else
+        button:SetPoint("TOPLEFT", anchor, "TOPRIGHT", 1, 0)
+      end
+
+      button:SetScale(.6)
+      button.frame = CreateFrame("Frame", "backdrop", button)
+      button.frame:SetScale(1.4)
+      button.frame:SetPoint("TOPLEFT", button, "TOPLEFT", 1, -16)
+      button.frame:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", -1, 1)
+      button.frame:SetBackdrop(pfUI.backdrop)
+      button.frame:SetBackdropColor(0,0,0,0)
+      button:Show()
+    end
+  end
 end)
