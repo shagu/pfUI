@@ -1,6 +1,7 @@
 pfUI:RegisterModule("loot", function ()
   pfUI.loot = CreateFrame("Frame", "pfLootFrame", UIParent)
   pfUI.loot:Hide()
+  pfUI.loot:SetFrameStrata("DIALOG")
   pfUI.loot:RegisterEvent("LOOT_OPENED")
   pfUI.loot:RegisterEvent("LOOT_CLOSED")
   pfUI.loot:RegisterEvent("LOOT_SLOT_CLEARED")
@@ -74,10 +75,9 @@ pfUI:RegisterModule("loot", function ()
     frame.count:SetText(1)
 
     frame.name = frame:CreateFontString(nil, "OVERLAY")
-    frame.name:SetJustifyH"LEFT"
+    frame.name:SetJustifyH("LEFT")
     frame.name:ClearAllPoints()
-    frame.name:SetPoint("LEFT", frame)
-    frame.name:SetPoint("RIGHT", icon, "LEFT")
+    frame.name:SetAllPoints(frame)
     frame.name:SetNonSpaceWrap(true)
     frame.name:SetFont("Interface\\AddOns\\pfUI\\fonts\\arial.ttf", pfUI_config.global.font_size, "OUTLINE")
 
