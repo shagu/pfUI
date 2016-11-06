@@ -104,3 +104,60 @@ ScriptErrors:SetScript("OnShow", function(msg)
   end)
 
 pfUI.uf = CreateFrame("Frame",nil,UIParent)
+
+pfUI.info = CreateFrame("Button", "pfInfoBox", UIParent)
+pfUI.info:Hide()
+
+pfUI.info.text = pfUI.info:CreateFontString("Status", "HIGH", "GameFontNormal")
+pfUI.info.text:SetFont("Interface\\AddOns\\pfUI\\fonts\\arial.ttf", 14, "OUTLINE")
+pfUI.info.text:ClearAllPoints()
+pfUI.info.text:SetFontObject(GameFontWhite)
+
+pfUI.info.timeout = CreateFrame("StatusBar", nil, pfUI.info)
+pfUI.info.timeout:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
+pfUI.info.timeout:SetStatusBarColor(.3,1,.8,1)
+
+function pfUI.info:ShowInfoBox(text, time, parent, height)
+  if not text then return end
+  if not time then time = 5 end
+  if not parent then parent = UIParent end
+  if not height then height = 100 end
+
+  pfUI.info:SetParent(parent)
+  pfUI.info:ClearAllPoints()
+  pfUI.info.text:SetAllPoints(pfUI.info)
+  pfUI.info.text:SetText(text)
+
+  pfUI.info:SetWidth(pfUI.info.text:GetStringWidth() + 50)
+  pfUI.info:SetHeight(height)
+  pfUI.info:SetBackdrop(pfUI.backdrop)
+  pfUI.info:SetBackdropColor(0,0,0,.75)
+  pfUI.info:SetPoint("TOP", 0, -25)
+
+  pfUI.info.timeout:ClearAllPoints()
+  pfUI.info.timeout:SetPoint("TOPLEFT", pfUI.info, "TOPLEFT", 3, -3)
+  pfUI.info.timeout:SetPoint("TOPRIGHT", pfUI.info, "TOPRIGHT", -3, 3)
+  pfUI.info.timeout:SetHeight(2)
+  pfUI.info.timeout:SetMinMaxValues(0, time)
+  pfUI.info.timeout:SetValue(time)
+
+  pfUI.info.duration = time
+  pfUI.info.lastshow = GetTime()
+  pfUI.info:Show()
+end
+
+pfUI.info:SetScript("OnUpdate", function()
+  local time = pfUI.info.lastshow + pfUI.info.duration - GetTime()
+  pfUI.info.timeout:SetValue(time)
+
+  if GetTime() > pfUI.info.lastshow + pfUI.info.duration then
+    pfUI.info:SetAlpha(pfUI.info:GetAlpha()-0.05)
+  end
+
+  if pfUI.info:GetAlpha() <= 0.1 then
+    pfUI.info:Hide()
+    pfUI.info:SetAlpha(1)
+  end
+end)
+
+pfUI.info:SetScript("OnClick", function() this:Hide() end)
