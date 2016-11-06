@@ -21,6 +21,27 @@ pfUI:RegisterModule("gui", function ()
     pfUI.gui:StopMovingOrSizing()
   end)
 
+  function pfUI.gui:SaveScale(frame, scale)
+    frame:SetScale(scale)
+
+    if not pfUI_config.position[frame:GetName()] then
+      pfUI_config.position[frame:GetName()] = {}
+    end
+    pfUI_config.position[frame:GetName()]["scale"] = scale
+
+    frame.drag.text:SetText("Scale: " .. scale)
+    frame.drag.text:SetAlpha(1)
+
+    frame.drag:SetScript("OnUpdate", function()
+      this.text:SetAlpha(this.text:GetAlpha() -0.05)
+      if this.text:GetAlpha() < 0.1 then
+        this.text:SetText(strsub(this:GetParent():GetName(),3))
+        this.text:SetAlpha(1)
+        this:SetScript("OnUpdate", function() return end)
+      end
+    end)
+  end
+
   pfUI.gui.reloadDialog = CreateFrame("Frame","pfReloadDiag",UIParent)
   pfUI.gui.reloadDialog:SetFrameStrata("TOOLTIP")
   pfUI.gui.reloadDialog:SetWidth(300)
@@ -159,24 +180,20 @@ pfUI:RegisterModule("gui", function ()
 
         frame.drag:SetScript("OnMouseWheel", function()
           local scale = round(frame:GetScale() + arg1/10, 1)
-          frame:SetScale(scale)
 
-          if not pfUI_config.position[frame:GetName()] then
-            pfUI_config.position[frame:GetName()] = {}
-          end
-          pfUI_config.position[frame:GetName()]["scale"] = scale
-
-          frame.drag.text:SetText("Scale: " .. scale)
-          frame.drag.text:SetAlpha(1)
-
-          frame.drag:SetScript("OnUpdate", function()
-            this.text:SetAlpha(this.text:GetAlpha() -0.05)
-            if this.text:GetAlpha() < 0.1 then
-              this.text:SetText(strsub(this:GetParent():GetName(),3))
-              this.text:SetAlpha(1)
-              this:SetScript("OnUpdate", function() return end)
+          if IsShiftKeyDown() and strsub(frame:GetName(),0,6) == "pfRaid" then
+            for i=1,40 do
+              local frame = getglobal("pfRaid" .. i)
+              pfUI.gui:SaveScale(frame, scale)
             end
-          end)
+          elseif IsShiftKeyDown() and strsub(frame:GetName(),0,7) == "pfGroup" then
+            for i=1,4 do
+              local frame = getglobal("pfGroup" .. i)
+              pfUI.gui:SaveScale(frame, scale)
+            end
+          else
+            pfUI.gui:SaveScale(frame, scale)
+          end
         end)
       end
 
