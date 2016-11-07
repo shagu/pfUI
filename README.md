@@ -39,6 +39,7 @@ pfUI will support and contain language specific code for the following languages
 * [HealComm](https://github.com/Aviana/HealComm/releases)
 * [WIM](http://addons.us.to/addon/wim), [WIM (continued)](https://github.com/shirsig/WIM)
 * [MobHealth3](http://addons.us.to/addon/mobhealth)
+* [Clean_Up](https://github.com/shirsig/Clean_Up-lib)
 
 ## Installation (common)
 1. Download from Github as Zip, unpack and rename the folder pfUI-master to pfUI.

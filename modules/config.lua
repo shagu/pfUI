@@ -52,6 +52,7 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("thirdparty", "dpsmate", "enable",           "1")
   pfUI:UpdateConfig("thirdparty", "wim",     "enable",           "1")
   pfUI:UpdateConfig("thirdparty", "healcomm","enable",           "1")
+  pfUI:UpdateConfig("thirdparty", "cleanup", "enable",           "1")
   pfUI:UpdateConfig("position",   nil,       nil,                nil)
   pfUI:UpdateConfig("disabled",   nil,       nil,                nil)
 end

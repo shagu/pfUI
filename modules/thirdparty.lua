@@ -1,4 +1,6 @@
 pfUI:RegisterModule("thirdparty", function ()
+  pfUI.thirdparty = {}
+
   -- DPSMate Integration
   -- Move DPSMate to right chat and let the chat-hide button toggle it
   if DPSMate and pfUI_config.thirdparty.dpsmate.enable == "1" then
@@ -274,4 +276,53 @@ pfUI:RegisterModule("thirdparty", function ()
     end
   end)
 
+
+  -- CleanUp Integration
+  -- Integrate CleanUp bag sorting into pfUI
+  if Clean_Up and pfUI_config.thirdparty.cleanup.enable == "1" then
+    pfUI.thirdparty.cleanup = CreateFrame("Frame", nil)
+    pfUI.thirdparty.cleanup:RegisterEvent("BAG_UPDATE")
+    pfUI.thirdparty.cleanup:SetScript("OnEvent", function()
+      -- make sure bagframe was already created
+      if not pfUI.bag or not pfUI.bag.right then return end
+      pfUI.thirdparty.cleanup:UnregisterAllEvents()
+
+      -- draw the button
+      if not pfUI.bag.right.sort then
+        pfUI.bag.right.money:ClearAllPoints()
+        pfUI.bag.right.money:SetPoint("TOPRIGHT", pfUI.bag.right, "TOPRIGHT", -55, -6)
+
+        pfUI.bag.right.sort = CreateFrame("Button", "pfBagSlotShow", UIParent)
+        pfUI.bag.right.sort:SetParent(pfUI.bag.right)
+        pfUI.bag.right.sort:SetPoint("TOPRIGHT", -pfUI_config.bars.border*2 - 45 , -pfUI_config.bars.border*2 )
+        pfUI.bag.right.sort:SetBackdrop(pfUI.backdrop)
+        pfUI.bag.right.sort:SetHeight(15)
+        pfUI.bag.right.sort:SetWidth(15)
+        pfUI.bag.right.sort:SetTextColor(1,1,.25,1)
+        pfUI.bag.right.sort:SetFont("Interface\\AddOns\\pfUI\\fonts\\arial.ttf", pfUI_config.global.font_size, "OUTLINE")
+        pfUI.bag.right.sort.texture = pfUI.bag.right.sort:CreateTexture("pfBagArrowUp")
+        pfUI.bag.right.sort.texture:SetTexture("Interface\\AddOns\\pfUI\\img\\sort")
+        pfUI.bag.right.sort.texture:ClearAllPoints()
+        pfUI.bag.right.sort.texture:SetPoint("TOPLEFT", pfUI.bag.right.sort, "TOPLEFT", 3, -3)
+        pfUI.bag.right.sort.texture:SetPoint("BOTTOMRIGHT", pfUI.bag.right.sort, "BOTTOMRIGHT", -3, 3)
+        pfUI.bag.right.sort.texture:SetVertexColor(.25,.25,.25,1)
+
+        pfUI.bag.right.sort:SetScript("OnEnter", function ()
+            pfUI.bag.right.sort:SetBackdrop(pfUI.backdrop_col)
+            pfUI.bag.right.sort:SetBackdropBorderColor(1,1,.25,1)
+            pfUI.bag.right.sort.texture:SetVertexColor(1,1,.25,1)
+          end)
+
+        pfUI.bag.right.sort:SetScript("OnLeave", function ()
+            pfUI.bag.right.sort:SetBackdrop(pfUI.backdrop)
+            pfUI.bag.right.sort:SetBackdropBorderColor(1,1,1,1)
+            pfUI.bag.right.sort.texture:SetVertexColor(.25,.25,.25,1)
+          end)
+
+        pfUI.bag.right.sort:SetScript("OnClick", function()
+          Clean_Up("bags")
+        end)
+      end
+    end)
+  end
 end)
