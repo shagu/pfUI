@@ -21,10 +21,40 @@ pfUI:RegisterModule("actionbar", function ()
     Hook_HideBonusActionBar()
   end
 
+  function ActionButton_GetPagedID(button)
+    if ( button.isBonus and CURRENT_ACTIONBAR_PAGE == 1 ) then
+      local offset = GetBonusBarOffset();
+      if ( offset == 0 and BonusActionBarFrame and BonusActionBarFrame.lastBonusBar ) then
+        offset = BonusActionBarFrame.lastBonusBar;
+      end
+      return (button:GetID() + ((NUM_ACTIONBAR_PAGES + offset - 1) * NUM_ACTIONBAR_BUTTONS));
+    end
+
+    local parentName = button:GetParent():GetName();
+    if ( parentName == "pfMultiBarBottomLeft" or parentName == "MultiBarBottomLeft" )  then
+      return (button:GetID() + ((BOTTOMLEFT_ACTIONBAR_PAGE - 1) * NUM_ACTIONBAR_BUTTONS));
+    elseif ( parentName == "pfMultiBarBottomRight" or parentName == "MultiBarBottomRight" ) then
+      return (button:GetID() + ((BOTTOMRIGHT_ACTIONBAR_PAGE - 1) * NUM_ACTIONBAR_BUTTONS));
+    elseif ( parentName == "pfMultiBarLeft" or parentName == "MultiBarLeft" ) then
+      return (button:GetID() + ((LEFT_ACTIONBAR_PAGE - 1) * NUM_ACTIONBAR_BUTTONS));
+    elseif ( parentName == "pfMultiBarRight" or parentName == "MultiBarRight" ) then
+      return (button:GetID() + ((RIGHT_ACTIONBAR_PAGE - 1) * NUM_ACTIONBAR_BUTTONS));
+    else
+      return (button:GetID() + ((CURRENT_ACTIONBAR_PAGE - 1) * NUM_ACTIONBAR_BUTTONS))
+    end
+  end
+
   -- hide default blizz
   MainMenuBar:Hide()
   BonusActionBarTexture0:Hide()
   BonusActionBarTexture1:Hide()
+
+  -- hide background texture of petactionbar
+  SlidingActionBarTexture0:Hide()
+  SlidingActionBarTexture0.Show = function () return end
+
+  SlidingActionBarTexture1:Hide()
+  SlidingActionBarTexture1.Show = function () return end
 
   -- create action bar frame
   pfUI.bars = CreateFrame("Frame",nil,UIParent)
@@ -54,13 +84,6 @@ pfUI:RegisterModule("actionbar", function ()
       pfUI.bars.bottom:SetWidth(pfUI_config.bars.border*3 + pfUI_config.bars.icon_size * 12 + pfUI_config.bars.border * 12)
       pfUI.bars.bottom:SetHeight(pfUI_config.bars.border*3 + pfUI_config.bars.icon_size * bpc + pfUI_config.bars.border * bpc)
 
-      -- hide background texture of petactionbar
-      SlidingActionBarTexture0:Hide()
-      SlidingActionBarTexture0.Show = function () return end
-
-      SlidingActionBarTexture1:Hide()
-      SlidingActionBarTexture1.Show = function () return end
-
       if (PetHasActionBar()) then
         PetActionBar_Update()
         pfUI.bars.pet:Show()
@@ -74,39 +97,41 @@ pfUI:RegisterModule("actionbar", function ()
         PetActionBarFrame:ClearAllPoints()
         PetActionBarFrame:Hide()
 
-        PetActionButton1:ClearAllPoints()
-        PetActionButton1:SetParent(pfUI.bars.pet)
-        PetActionButton1:SetPoint("BOTTOMLEFT", pfUI_config.bars.border*2, pfUI_config.bars.border*2)
-        for i=2, 10 do
+        for i=1, 10 do
           local b = getglobal("PetActionButton"..i)
-          local b2 = getglobal("PetActionButton"..i-1)
-          b:SetParent(pfUI.bars.pet)
+          local b2 = getglobal("PetActionButton"..i-1) or b
           b:ClearAllPoints()
-          b:SetPoint("LEFT", b2, "RIGHT", pfUI_config.bars.border, 0)
+          b:SetParent(pfUI.bars.pet)
+          if i == 1 then
+            b:SetPoint("BOTTOMLEFT", pfUI_config.bars.border*2, pfUI_config.bars.border*2)
+          else
+            b:SetPoint("LEFT", b2, "RIGHT", pfUI_config.bars.border, 0)
+          end
         end
       else
         pfUI.bars.pet:Hide()
       end
 
-      ShapeshiftBarFrame:ClearAllPoints()
-      ShapeshiftBarFrame:SetAllPoints(pfUI.bars.shapeshift)
-
-      ShapeshiftButton1:ClearAllPoints()
-      ShapeshiftButton1:SetParent(pfUI.bars.shapeshift)
-      ShapeshiftButton1:SetPoint("BOTTOMLEFT", pfUI_config.bars.border*2, pfUI_config.bars.border*2)
-      local shapeshiftbuttons = 1
+      local shapeshiftbuttons = 0
       if ShapeshiftButton1:IsShown() then
         pfUI.bars.shapeshift:Show()
       else
         pfUI.bars.shapeshift:Hide()
       end
-      for i=2, 10 do
+
+      ShapeshiftBarFrame:ClearAllPoints()
+      ShapeshiftBarFrame:SetAllPoints(pfUI.bars.shapeshift)
+
+      for i=1, 10 do
         local b = getglobal("ShapeshiftButton"..i)
-        local b2 = getglobal("ShapeshiftButton"..i-1)
-        b:SetAllPoints(pfUI.bars.shapeshift)
-        b:SetParent(pfUI.bars.shapeshift)
+        local b2 = getglobal("ShapeshiftButton"..i-1) or b
         b:ClearAllPoints()
-        b:SetPoint("LEFT", b2, "RIGHT", pfUI_config.bars.border, 0)
+        b:SetParent(pfUI.bars.shapeshift)
+        if i == 1 then
+          b:SetPoint("BOTTOMLEFT", pfUI_config.bars.border*2, pfUI_config.bars.border*2)
+        else
+          b:SetPoint("LEFT", b2, "RIGHT", pfUI_config.bars.border, 0)
+        end
         if b:IsShown() then shapeshiftbuttons = shapeshiftbuttons + 1 end
       end
 
@@ -122,13 +147,22 @@ pfUI:RegisterModule("actionbar", function ()
         MultiBarBottomLeft:ClearAllPoints()
         MultiBarBottomLeft:SetAllPoints(pfUI.bars.bottom)
 
-        MultiBarBottomLeftButton1:ClearAllPoints()
-        MultiBarBottomLeftButton1:SetPoint("BOTTOM", ActionButton1, "TOP", 0, pfUI_config.bars.border)
-        for i=2, 12 do
+        -- create temp frame to give a named parent to the buttons
+        local tf = CreateFrame("Frame", "pfMultiBarBottomLeft", UIParent )
+        tf:SetParent(pfUI.bars.bottom)
+        tf:SetAllPoints(pfUI.bars.bottom)
+
+        for i=1, 12 do
           local b = getglobal("MultiBarBottomLeftButton"..i)
-          local b2 = getglobal("MultiBarBottomLeftButton"..i-1)
+          local b2 = getglobal("MultiBarBottomLeftButton"..i-1) or b
           b:ClearAllPoints()
-          b:SetPoint("LEFT", b2, "RIGHT", pfUI_config.bars.border, 0)
+          b:SetParent(tf)
+
+          if i == 1 then
+            b:SetPoint("BOTTOM", ActionButton1, "TOP", 0, pfUI_config.bars.border)
+          else
+            b:SetPoint("LEFT", b2, "RIGHT", pfUI_config.bars.border, 0)
+          end
         end
       end
 
@@ -145,18 +179,29 @@ pfUI:RegisterModule("actionbar", function ()
         MultiBarBottomRight:ClearAllPoints()
         MultiBarBottomRight:SetAllPoints(pfUI.bars.bottomleft)
 
-        MultiBarBottomRightButton1:ClearAllPoints()
-        MultiBarBottomRightButton1:SetPoint("BOTTOMLEFT", pfUI_config.bars.border*2, pfUI_config.bars.border*2)
-        for i=2, 6 do
+        -- create temp frame to give a named parent to the buttons
+        local tf = CreateFrame("Frame", "pfMultiBarBottomRight", UIParent )
+        tf:SetParent(pfUI.bars.bottomleft)
+        tf:SetAllPoints(pfUI.bars.bottomleft)
+
+        for i=1, 6 do
           local b = getglobal("MultiBarBottomRightButton"..i)
-          local b2 = getglobal("MultiBarBottomRightButton"..i-1)
+          local b2 = getglobal("MultiBarBottomRightButton"..i-1) or b
           b:ClearAllPoints()
-          b:SetPoint("LEFT", b2, "RIGHT", pfUI_config.bars.border, 0)
+          b:SetParent(tf)
+
+          if i == 1 then
+            b:SetPoint("BOTTOMLEFT", pfUI_config.bars.border*2, pfUI_config.bars.border*2)
+          else
+            b:SetPoint("LEFT", b2, "RIGHT", pfUI_config.bars.border, 0)
+          end
         end
         for i=7, 12 do
           local b = getglobal("MultiBarBottomRightButton"..i)
           local b2 = getglobal("MultiBarBottomRightButton"..i-6)
           b:ClearAllPoints()
+          b:SetParent(tf)
+
           b:SetPoint("LEFT", b2, "RIGHT", -pfUI_config.bars.icon_size, pfUI_config.bars.icon_size + pfUI_config.bars.border)
         end
       else
@@ -176,18 +221,29 @@ pfUI:RegisterModule("actionbar", function ()
         MultiBarRight:ClearAllPoints()
         MultiBarRight:SetAllPoints(pfUI.bars.bottomright)
 
-        MultiBarRightButton1:ClearAllPoints()
-        MultiBarRightButton1:SetPoint("BOTTOMLEFT", pfUI_config.bars.border*2, pfUI_config.bars.border*2)
-        for i=2, 6 do
+        -- create temp frame to give a named parent to the buttons
+        local tf = CreateFrame("Frame", "pfMultiBarRight", UIParent )
+        tf:SetParent(pfUI.bars.bottomright)
+        tf:SetAllPoints(pfUI.bars.bottomright)
+
+        for i=1, 6 do
           local b = getglobal("MultiBarRightButton"..i)
-          local b2 = getglobal("MultiBarRightButton"..i-1)
+          local b2 = getglobal("MultiBarRightButton"..i-1) or b
           b:ClearAllPoints()
-          b:SetPoint("LEFT", b2, "RIGHT", pfUI_config.bars.border, 0)
+          b:SetParent(tf)
+
+          if i == 1 then
+            b:SetPoint("BOTTOMLEFT", pfUI_config.bars.border*2, pfUI_config.bars.border*2)
+          else
+            b:SetPoint("LEFT", b2, "RIGHT", pfUI_config.bars.border, 0)
+          end
         end
         for i=7, 12 do
           local b = getglobal("MultiBarRightButton"..i)
           local b2 = getglobal("MultiBarRightButton"..i-6)
           b:ClearAllPoints()
+          b:SetParent(tf)
+
           b:SetPoint("LEFT", b2, "RIGHT", -pfUI_config.bars.icon_size, pfUI_config.bars.icon_size + pfUI_config.bars.border)
         end
       else
@@ -207,13 +263,22 @@ pfUI:RegisterModule("actionbar", function ()
         MultiBarLeft:ClearAllPoints()
         MultiBarLeft:SetAllPoints(pfUI.bars.vertical)
 
-        MultiBarLeftButton1:ClearAllPoints()
-        MultiBarLeftButton1:SetPoint("TOPLEFT", pfUI_config.bars.border*2, -pfUI_config.bars.border*2)
-        for i=2, 12 do
+        -- create temp frame to give a named parent to the buttons
+        local tf = CreateFrame("Frame", "pfMultiBarLeft", UIParent )
+        tf:SetParent(pfUI.bars.vertical)
+        tf:SetAllPoints(pfUI.bars.vertical)
+
+        for i=1, 12 do
           local b = getglobal("MultiBarLeftButton"..i)
-          local b2 = getglobal("MultiBarLeftButton"..i-1)
+          local b2 = getglobal("MultiBarLeftButton"..i-1) or b
           b:ClearAllPoints()
-          b:SetPoint("TOP", b2, "BOTTOM", 0, -pfUI_config.bars.border)
+          b:SetParent(tf)
+
+          if i == 1 then
+            b:SetPoint("TOPLEFT", pfUI_config.bars.border*2, -pfUI_config.bars.border*2)
+          else
+            b:SetPoint("TOP", b2, "BOTTOM", 0, -pfUI_config.bars.border)
+          end
         end
       else
         pfUI.bars.vertical:Hide()
@@ -227,34 +292,37 @@ pfUI:RegisterModule("actionbar", function ()
   pfUI.utils:loadPosition(pfUI.bars.bottom)
   pfUI.bars.bottom:SetBackdrop(pfUI.backdrop)
 
-  ActionButton1:SetParent(pfUI.bars.bottom)
-  ActionButton1:ClearAllPoints()
-  ActionButton1:SetPoint("BOTTOMLEFT", pfUI_config.bars.border*2, pfUI_config.bars.border*2)
-  for i=2, 12 do
+  for i=1, 12 do
     local b = getglobal("ActionButton"..i)
-    local b2 = getglobal("ActionButton"..i-1)
-    b:SetParent(pfUI.bars.bottom)
+    local b2 = getglobal("ActionButton"..i-1) or b
     b:ClearAllPoints()
-    b:SetPoint("LEFT", b2, "RIGHT", pfUI_config.bars.border, 0)
+    b:SetParent(pfUI.bars.bottom)
+    if i == 1 then
+      b:SetPoint("BOTTOMLEFT", pfUI_config.bars.border*2, pfUI_config.bars.border*2)
+    else
+      b:SetPoint("LEFT", b2, "RIGHT", pfUI_config.bars.border, 0)
+    end
   end
 
   BonusActionBarFrame:SetParent(pfUI.bars.bottom)
   BonusActionBarFrame:ClearAllPoints()
   BonusActionBarFrame:SetAllPoints(pfUI.bars.bottom)
 
-  BonusActionButton1:ClearAllPoints()
-  BonusActionButton1:SetPoint("BOTTOMLEFT", pfUI_config.bars.border*2 -4, pfUI_config.bars.border*2)
-  for i=2, 12 do
+  for i=1, 12 do
     local b = getglobal("BonusActionButton"..i)
-    local b2 = getglobal("BonusActionButton"..i-1)
+    local b2 = getglobal("BonusActionButton"..i-1) or b
     b:ClearAllPoints()
-    b:SetPoint("LEFT", b2, "RIGHT", pfUI_config.bars.border, 0)
+    b:SetParent(pfUI.bars.bottom)
+    if i == 1 then
+      b:SetPoint("BOTTOMLEFT", pfUI_config.bars.border*2 -4, pfUI_config.bars.border*2)
+    else
+      b:SetPoint("LEFT", b2, "RIGHT", pfUI_config.bars.border, 0)
+    end
   end
 
   for i = 1, 10 do
     getglobal("ShapeshiftButton"..i):SetBackdrop(pfUI.backdrop)
     getglobal("ShapeshiftButton"..i):SetBackdropColor(0,0,0,0)
-
     getglobal("ShapeshiftButton"..i):SetWidth(pfUI_config.bars.icon_size)
     getglobal("ShapeshiftButton"..i):SetHeight(pfUI_config.bars.icon_size)
     getglobal("ShapeshiftButton"..i):Show()
@@ -287,10 +355,7 @@ pfUI:RegisterModule("actionbar", function ()
     getglobal("PetActionButton"..i).showgrid = 1
     getglobal("PetActionButton"..i..'AutoCast'):SetScale(.75)
     getglobal("PetActionButton"..i..'AutoCast'):SetAlpha(.50)
-
     getglobal("PetActionButton"..i..'AutoCastable'):SetAlpha(0)
-    --getglobal("PetActionButton"..i..'Cooldown'):SetScale(.75)
-
     getglobal("PetActionButton"..i..'Icon'):SetAllPoints(getglobal("PetActionButton"..i))
     getglobal("PetActionButton"..i..'Border'):SetTexture(1,1,0,1)
     getglobal("PetActionButton"..i..'NormalTexture2'):SetAlpha(0)
@@ -325,8 +390,6 @@ pfUI:RegisterModule("actionbar", function ()
       getglobal(button..i):Show()
       getglobal(button..i).showgrid = 1
 
-      --getglobal(button..i..'Icon'):SetTexCoord(.3,.7,.3,.7)
-      --getglobal(button..i..'Cooldown'):SetScale(.75)
       getglobal(button..i..'Icon'):SetAllPoints(getglobal(button..i))
       getglobal(button..i..'Border'):SetTexture(1,1,0,1)
       getglobal(button..i..'NormalTexture'):SetPoint("TOPLEFT", getglobal(button..i) ,"TOPLEFT", -5, 5)
