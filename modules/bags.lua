@@ -95,6 +95,10 @@ pfUI:RegisterModule("bags", function ()
       end
     end
 
+    if event == "PLAYERBANKSLOTS_CHANGED" then
+      pfUI.bag:UpdateBag(-1)
+    end
+
     if event == "BAG_UPDATE" then
       pfUI.bag:UpdateBag(arg1)
     end
