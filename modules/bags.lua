@@ -149,6 +149,22 @@ pfUI:RegisterModule("bags", function ()
     end
   end
 
+  function pfUI.bag:BrushButton(parent)
+    local button = CreateFrame('Button', nil, parent)
+    button:SetWidth(28)
+    button:SetHeight(26)
+    button:SetNormalTexture[[Interface\AddOns\pfUI\img\Bags]]
+    button:GetNormalTexture():SetTexCoord(.12109375, .23046875, .7265625, .9296875)
+    button:SetPushedTexture[[Interface\AddOns\pfUI\img\Bags]]
+    button:GetPushedTexture():SetTexCoord(.00390625, .11328125, .7265625, .9296875)
+    button:SetHighlightTexture[[Interface\Buttons\ButtonHilight-Square]]
+    button:GetHighlightTexture():ClearAllPoints()
+    button:GetHighlightTexture():SetPoint('CENTER', 0, 0)
+    button:GetHighlightTexture():SetWidth(24)
+    button:GetHighlightTexture():SetHeight(23)
+    return button
+  end
+
   function pfUI.bag:CreateBags(object)
     local x = 0
     local y = 0
@@ -400,7 +416,7 @@ pfUI:RegisterModule("bags", function ()
     if not frame.money then
       frame.money = CreateFrame("Frame", "pfUIBagsMoney", frame, "SmallMoneyFrameTemplate")
       frame.money:ClearAllPoints()
-      frame.money:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -40, -6)
+      frame.money:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -62, -6)
 
       pfUIBagsMoneyGoldButton:SetFont("Interface\\AddOns\\pfUI\\fonts\\arial.ttf", pfUI_config.global.font_size, "OUTLINE")
       for i,v in ipairs({pfUIBagsMoneyGoldButton:GetRegions()}) do if i == 1 then v:SetHeight(10); v:SetWidth(10) end end
@@ -408,6 +424,24 @@ pfUI:RegisterModule("bags", function ()
       for i,v in ipairs({pfUIBagsMoneySilverButton:GetRegions()}) do if i == 1 then v:SetHeight(10); v:SetWidth(10) end end
       pfUIBagsMoneyCopperButton:SetFont("Interface\\AddOns\\pfUI\\fonts\\arial.ttf", pfUI_config.global.font_size, "OUTLINE")
       for i,v in ipairs({pfUIBagsMoneyCopperButton:GetRegions()}) do if i == 1 then v:SetHeight(10); v:SetWidth(10) end end
+    end
+
+    if not frame.sort then
+      frame.sort = pfUI.bag:BrushButton(frame)
+      frame.sort:SetScale(.7)
+      frame.sort:SetPoint('TOPRIGHT', -73, -5)
+      frame.sort:SetScript('OnClick', function()
+        PlaySoundFile[[Interface\AddOns\pfUI\UI_BagSorting_01.ogg]]
+        Clean_Up'bags'
+      end)
+      frame.sort:SetScript('OnEnter', function()
+        GameTooltip:SetOwner(this)
+        GameTooltip:AddLine('Clean Up Bags')
+        GameTooltip:Show()
+      end)
+      frame.sort:SetScript('OnLeave', function()
+        GameTooltip:Hide()
+      end)
     end
 
     -- bag close button
