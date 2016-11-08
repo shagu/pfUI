@@ -6,6 +6,8 @@
 ## SavedVariables: pfUI_playerDB
 ## SavedVariablesPerCharacter: pfUI_config, pfUI_init
 
+libs\Clean_Up.lua
+
 # main
 pfUI.lua
 
