@@ -314,7 +314,7 @@ pfUI:RegisterModule("actionbar", function ()
     b:ClearAllPoints()
     b:SetParent(pfUI.bars.bottom)
     if i == 1 then
-      b:SetPoint("BOTTOMLEFT", pfUI_config.bars.border*2 -4, pfUI_config.bars.border*2)
+      b:SetPoint("BOTTOMLEFT", pfUI_config.bars.border*2, pfUI_config.bars.border*2)
     else
       b:SetPoint("LEFT", b2, "RIGHT", pfUI_config.bars.border, 0)
     end
