@@ -47,7 +47,7 @@ pfUI:RegisterModule("minimap", function ()
   pfUI.minimapCoordinates:SetFrameStrata("BACKGROUND")
   -- Create text
   pfUI.minimapCoordinates.text = pfUI.minimapCoordinates:CreateFontString("MinimapCoordinatesText", "LOW", "GameFontNormal")
-  pfUI.minimapCoordinates.text:SetFont("Interface\\AddOns\\pfUI\\fonts\\arial.ttf", pfUI_config.global.font_size, "OUTLINE")
+  pfUI.minimapCoordinates.text:SetFont("Interface\\AddOns\\pfUI\\fonts\\" .. pfUI_config.global.font_default .. ".ttf", pfUI_config.global.font_size, "OUTLINE")
   pfUI.minimapCoordinates.text:SetPoint("LEFT", 4, 0)
   pfUI.minimapCoordinates.text:SetFontObject(GameFontWhite)
   pfUI.minimapCoordinates.text:SetText("X, Y")

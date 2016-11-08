@@ -19,8 +19,22 @@ end
 
 pfUI = CreateFrame("Frame",nil,UIParent)
 pfUI:RegisterEvent("ADDON_LOADED")
-pfUI:SetScript("OnEvent", function()
+--pfUI:RegisterEvent("PLAYER_ENTERING_WORLD")
 
+-- initialize default variables
+pfUI.cache = {}
+pfUI.module = {}
+pfUI.modules = {}
+pfUI.environment = {}
+
+pfLocaleClass = {}
+pfLocaleBagtypes = {}
+pfLocaleShift = {}
+pfLocaleSpells = {}
+pfLocaleSpellEvents = {}
+pfLocaleSpellInterrupts = {}
+
+pfUI:SetScript("OnEvent", function()
   pfUI.cache["locale"] = GetLocale()
   if pfUI.cache["locale"] ~= "enUS" and
      pfUI.cache["locale"] ~= "frFR" and
@@ -35,6 +49,11 @@ pfUI:SetScript("OnEvent", function()
   end
 
   pfUI:LoadConfig()
+
+  -- reload environment
+  pfUI.environment:UpdateFonts()
+  pfUI.environment:UpdateColors()
+
   if arg1 == "pfUI" then
     for i,m in pairs(this.modules) do
       -- do not load disabled modules
@@ -46,16 +65,6 @@ pfUI:SetScript("OnEvent", function()
     end
   end
 end)
-
-pfUI.cache = {}
-pfUI.module = {}
-pfUI.modules = {}
-pfLocaleClass = {}
-pfLocaleBagtypes = {}
-pfLocaleShift = {}
-pfLocaleSpells = {}
-pfLocaleSpellEvents = {}
-pfLocaleSpellInterrupts = {}
 
 function pfUI:RegisterModule(n, f)
   pfUI.module[n] = f
@@ -109,7 +118,6 @@ pfUI.info = CreateFrame("Button", "pfInfoBox", UIParent)
 pfUI.info:Hide()
 
 pfUI.info.text = pfUI.info:CreateFontString("Status", "HIGH", "GameFontNormal")
-pfUI.info.text:SetFont("Interface\\AddOns\\pfUI\\fonts\\arial.ttf", 14, "OUTLINE")
 pfUI.info.text:ClearAllPoints()
 pfUI.info.text:SetFontObject(GameFontWhite)
 
@@ -127,6 +135,7 @@ function pfUI.info:ShowInfoBox(text, time, parent, height)
   pfUI.info:ClearAllPoints()
   pfUI.info.text:SetAllPoints(pfUI.info)
   pfUI.info.text:SetText(text)
+  pfUI.info.text:SetFont("Interface\\AddOns\\pfUI\\fonts\\" .. pfUI_config.global.font_default .. ".ttf", 14, "OUTLINE")
 
   pfUI.info:SetWidth(pfUI.info.text:GetStringWidth() + 50)
   pfUI.info:SetHeight(height)

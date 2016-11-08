@@ -176,7 +176,7 @@ pfUI:RegisterModule("gui", function ()
         frame.drag:SetBackdropColor(1,1,1,.75)
         frame.drag:EnableMouseWheel(1)
         frame.drag.text = frame.drag:CreateFontString("Status", "LOW", "GameFontNormal")
-        frame.drag.text:SetFont("Interface\\AddOns\\pfUI\\fonts\\arial.ttf", pfUI_config.global.font_size, "OUTLINE")
+        frame.drag.text:SetFont("Interface\\AddOns\\pfUI\\fonts\\" .. pfUI_config.global.font_default .. ".ttf", pfUI_config.global.font_size, "OUTLINE")
         frame.drag.text:ClearAllPoints()
         frame.drag.text:SetAllPoints(frame.drag)
         frame.drag.text:SetPoint("CENTER", 0, 0)
@@ -288,7 +288,7 @@ pfUI:RegisterModule("gui", function ()
     end
     frame.switch:SetBackdrop(pfUI.backdrop)
     frame.switch.text = frame.switch:CreateFontString("Status", "LOW", "GameFontNormal")
-    frame.switch.text:SetFont("Interface\\AddOns\\pfUI\\fonts\\arial.ttf", pfUI_config.global.font_size, "OUTLINE")
+    frame.switch.text:SetFont("Interface\\AddOns\\pfUI\\fonts\\" .. pfUI_config.global.font_default .. ".ttf", pfUI_config.global.font_size, "OUTLINE")
     frame.switch.text:ClearAllPoints()
     frame.switch.text:SetAllPoints(frame.switch)
     frame.switch.text:SetPoint("CENTER", 0, 0)
@@ -305,7 +305,7 @@ pfUI:RegisterModule("gui", function ()
     -- do not show title on bottom buttons
     if not bottom and not func then
       frame.title = frame:CreateFontString("Status", "LOW", "GameFontNormal")
-      frame.title:SetFont("Interface\\AddOns\\pfUI\\fonts\\arial.ttf", pfUI_config.global.font_size + 2, "OUTLINE")
+      frame.title:SetFont("Interface\\AddOns\\pfUI\\fonts\\" .. pfUI_config.global.font_default .. ".ttf", pfUI_config.global.font_size + 2, "OUTLINE")
       frame.title:SetPoint("TOP", 0, -10)
       frame.title:SetTextColor(.2,1,.8)
       frame.title:SetText(text)
@@ -332,7 +332,7 @@ pfUI:RegisterModule("gui", function ()
 
     -- caption
     frame.caption = frame:CreateFontString("Status", "LOW", "GameFontNormal")
-    frame.caption:SetFont("Interface\\AddOns\\pfUI\\fonts\\arial.ttf", pfUI_config.global.font_size + 2, "OUTLINE")
+    frame.caption:SetFont("Interface\\AddOns\\pfUI\\fonts\\" .. pfUI_config.global.font_default .. ".ttf", pfUI_config.global.font_size + 2, "OUTLINE")
     frame.caption:SetAllPoints(frame)
     frame.caption:SetFontObject(GameFontWhite)
     frame.caption:SetJustifyH("LEFT")
@@ -552,7 +552,11 @@ pfUI:RegisterModule("gui", function ()
 
   -- global
   pfUI.gui.global = pfUI.gui:CreateConfigTab("Global Settings")
+  local values = { "arial", "homespun", "diediedie" }
   pfUI.gui:CreateConfig(pfUI.gui.global, "Fontsize", pfUI_config.global, "font_size")
+  pfUI.gui:CreateConfig(pfUI.gui.global, "Default Font", pfUI_config.global, "font_default", "dropdown", values)
+  pfUI.gui:CreateConfig(pfUI.gui.global, "Square Font", pfUI_config.global, "font_square", "dropdown", values)
+  pfUI.gui:CreateConfig(pfUI.gui.global, "Combat Font", pfUI_config.global, "font_combat", "dropdown", values)
 
   -- modules
   pfUI.gui.modules = pfUI.gui:CreateConfigTab("Modules")

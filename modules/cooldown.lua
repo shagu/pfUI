@@ -21,7 +21,7 @@ pfUI:RegisterModule("cooldown", function ()
         this.cd.back:SetAllPoints(this)
 
         this.cd.text = this.cd:CreateFontString("Status", "HIGH", "GameFontNormal")
-        this.cd.text:SetFont("Interface\\AddOns\\pfUI\\fonts\\homespun.ttf", pfUI_config.global.font_size, "OUTLINE")
+        this.cd.text:SetFont("Interface\\AddOns\\pfUI\\fonts\\" .. pfUI_config.global.font_square .. ".ttf", pfUI_config.global.font_size, "OUTLINE")
         this.cd.text:ClearAllPoints()
         this.cd.text:SetParent(this)
         this.cd.text:SetAllPoints(this)
