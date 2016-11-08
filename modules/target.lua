@@ -152,6 +152,7 @@ pfUI:RegisterModule("target", function ()
 
       pfUI.uf.target.hpReal = hp
       pfUI.uf.target.powerReal = power
+      pfUI.uf.target.tapped  = nil
     end)
 
   pfUI.uf.target:SetScript("OnUpdate", function()
@@ -182,6 +183,11 @@ pfUI:RegisterModule("target", function ()
       end
 
       pfUI.uf.target.noanim = "no"
+
+      if not pfUI.uf.target.tapped and UnitIsTapped("target") and not UnitIsTappedByPlayer("target") then
+        pfUI.uf.target.hp.bar:SetStatusBarColor(.5,.5,.5,.5)
+        pfUI.uf.target.tapped = true
+      end
     end)
 
   pfUI.uf.target.hp = CreateFrame("Frame",nil, pfUI.uf.target)
