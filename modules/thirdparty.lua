@@ -282,6 +282,7 @@ pfUI:RegisterModule("thirdparty", function ()
   if Clean_Up and pfUI_config.thirdparty.cleanup.enable == "1" then
     pfUI.thirdparty.cleanup = CreateFrame("Frame", nil)
     pfUI.thirdparty.cleanup:RegisterEvent("BAG_UPDATE")
+    pfUI.thirdparty.cleanup:RegisterEvent("PLAYER_ENTERING_WORLD")
     pfUI.thirdparty.cleanup:SetScript("OnEvent", function()
       -- make sure bagframe was already created
       if not pfUI.bag or not pfUI.bag.right then return end
