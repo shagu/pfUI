@@ -136,6 +136,8 @@ pfUI:RegisterModule("castbar", function ()
       end)
 
       pfUI.castbar.player:SetScript("OnUpdate", function ()
+        if pfUI_config.castbar.player.hide_pfui == "1" then pfUI.castbar.player:Hide() return end
+
         -- fadeout
         if pfUI.castbar.player.fadeout and pfUI.castbar.player:GetAlpha() > 0 then
           pfUI.castbar.player:SetAlpha(pfUI.castbar.player:GetAlpha()-0.025)
@@ -297,6 +299,7 @@ pfUI:RegisterModule("castbar", function ()
       end)
 
       pfUI.castbar.target.bar:SetScript("OnUpdate", function()
+          if pfUI_config.castbar.target.hide_pfui == "1" then pfUI.castbar.target:Hide() return end
           if UnitExists("target") and pfUI.castbar.target.casterDB[UnitName("target")] then
             local spellname = pfUI.castbar.target.casterDB[UnitName("target")].cast or 0
             local starttime = pfUI.castbar.target.casterDB[UnitName("target")].starttime or 0

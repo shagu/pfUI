@@ -616,6 +616,9 @@ pfUI:RegisterModule("gui", function ()
   -- castbar
   pfUI.gui.castbar = pfUI.gui:CreateConfigTab("Castbar")
   pfUI.gui:CreateConfig(pfUI.gui.castbar, "Hide blizzards castbar:", pfUI_config.castbar.player, "hide_blizz", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.castbar, "Hide pfUI player castbar:", pfUI_config.castbar.player, "hide_pfui", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.castbar, "Hide pfUI target castbar:", pfUI_config.castbar.target, "hide_pfui", "checkbox")
+
 
   -- chat
   pfUI.gui.chat = pfUI.gui:CreateConfigTab("Chat")
