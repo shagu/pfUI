@@ -304,17 +304,17 @@ pfUI:RegisterModule("actionbar", function ()
     end
   end
 
-  BonusActionBarFrame:SetParent(pfUI.bars.bottom)
   BonusActionBarFrame:ClearAllPoints()
+  BonusActionBarFrame:SetParent(pfUI.bars.bottom)
   BonusActionBarFrame:SetAllPoints(pfUI.bars.bottom)
 
   for i=1, 12 do
     local b = getglobal("BonusActionButton"..i)
     local b2 = getglobal("BonusActionButton"..i-1) or b
     b:ClearAllPoints()
-    b:SetParent(pfUI.bars.bottom)
+    b:SetParent(BonusActionBarFrame)
     if i == 1 then
-      b:SetPoint("BOTTOMLEFT", pfUI_config.bars.border*2, pfUI_config.bars.border*2)
+      b:SetPoint("BOTTOMLEFT", pfUI_config.bars.border*2 - 4, pfUI_config.bars.border*2)
     else
       b:SetPoint("LEFT", b2, "RIGHT", pfUI_config.bars.border, 0)
     end
