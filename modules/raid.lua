@@ -14,7 +14,7 @@ pfUI:RegisterModule("raid", function ()
 
     -- sort players into roster
     for i=1, GetNumRaidMembers() do
-      local name, _, subgroup  = GetRaidRosterInfo(i);
+      local name, _, subgroup  = GetRaidRosterInfo(i)
       if name then
         for subindex = 1, 5 do
           ids = subindex + 5*(subgroup-1)
@@ -111,8 +111,8 @@ pfUI:RegisterModule("raid", function ()
       pfUI.uf.raid[i]:RegisterForClicks('LeftButtonUp', 'RightButtonUp')
 
       pfUI.uf.raid[i]:SetScript("OnEnter", function()
-        GameTooltip:SetOwner(this, "ANCHOR_NONE");
-        GameTooltip:SetUnit("raid" .. this.id);
+        GameTooltip:SetOwner(this, "ANCHOR_NONE")
+        GameTooltip:SetUnit("raid" .. this.id)
         GameTooltip:Show()
       end)
 
@@ -122,17 +122,17 @@ pfUI:RegisterModule("raid", function ()
 
       pfUI.uf.raid[i]:SetScript("OnClick", function ()
         if ( SpellIsTargeting() and arg1 == "RightButton" ) then
-          SpellStopTargeting();
-          return;
+          SpellStopTargeting()
+          return
         end
 
         if ( arg1 == "LeftButton" ) then
           if ( SpellIsTargeting() ) then
-            SpellTargetUnit("raid" .. this.id);
+            SpellTargetUnit("raid" .. this.id)
           elseif ( CursorHasItem() ) then
-            DropItemOnUnit("raid" .. this.id);
+            DropItemOnUnit("raid" .. this.id)
           else
-            TargetUnit("raid" .. this.id);
+            TargetUnit("raid" .. this.id)
             -- clickcast: shift modifier
             if IsShiftKeyDown() then
               if pfUI_config.unitframes.raid.clickcast_shift ~= "" then
@@ -166,15 +166,15 @@ pfUI:RegisterModule("raid", function ()
                 return
               else
                 -- no clickcast: default action
-                TargetUnit("raid" .. this.id);
+                TargetUnit("raid" .. this.id)
               end
             end
           end
         else
           ToggleDropDownMenu(1, nil, getglobal("RaidMemberFrame" .. this.id .. "DropDown"), "cursor")
-          FriendsDropDown.initialize = RaidFrameDropDown_Initialize;
-          FriendsDropDown.displayMode = "MENU";
-          ToggleDropDownMenu(1, nil, FriendsDropDown, "cursor");
+          FriendsDropDown.initialize = RaidFrameDropDown_Initialize
+          FriendsDropDown.displayMode = "MENU"
+          ToggleDropDownMenu(1, nil, FriendsDropDown, "cursor")
         end
       end)
 
@@ -222,7 +222,7 @@ pfUI:RegisterModule("raid", function ()
 
           this.hp.bar:SetStatusBarColor(cr, cg, cb)
 
-          local pcolor = ManaBarColor[UnitPowerType("raid"..this.id)];
+          local pcolor = ManaBarColor[UnitPowerType("raid"..this.id)]
           this.power.bar:SetStatusBarColor(pcolor.r + .5, pcolor.g +.5, pcolor.b +.5, 1)
 
         else

@@ -1,7 +1,7 @@
 pfUI:RegisterModule("gui", function ()
   pfUI.gui = CreateFrame("Frame",nil,UIParent)
 
-  pfUI.gui:RegisterEvent("PLAYER_ENTERING_WORLD");
+  pfUI.gui:RegisterEvent("PLAYER_ENTERING_WORLD")
 
   pfUI.gui:SetFrameStrata("DIALOG")
   pfUI.gui:SetWidth(480)
@@ -9,7 +9,7 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui:Hide()
 
   pfUI.gui:SetBackdrop(pfUI.backdrop)
-  pfUI.gui:SetBackdropColor(0,0,0,.75);
+  pfUI.gui:SetBackdropColor(0,0,0,.75)
   pfUI.gui:SetPoint("CENTER",0,0)
   pfUI.gui:SetMovable(true)
   pfUI.gui:EnableMouse(true)
@@ -65,7 +65,7 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.reloadDialog.yes:SetText("Yes")
   pfUI.gui.reloadDialog.yes:SetScript("OnClick", function()
     pfUI.gui.settingChanged = nil
-    ReloadUI();
+    ReloadUI()
   end)
 
   pfUI.gui.reloadDialog.no = CreateFrame("Button", "pfReloadNo", pfUI.gui.reloadDialog, "UIPanelButtonTemplate")
@@ -430,7 +430,7 @@ pfUI:RegisterModule("gui", function ()
       end
 
       UIDropDownMenu_Initialize(frame.input, createValues)
-      UIDropDownMenu_SetWidth(120, frame.input);
+      UIDropDownMenu_SetWidth(120, frame.input)
       UIDropDownMenu_SetButtonWidth(125, frame.input)
       UIDropDownMenu_JustifyText("RIGHT", frame.input)
       UIDropDownMenu_SetSelectedID(frame.input, frame.input.current)
@@ -451,7 +451,7 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.deco:SetPoint("TOPLEFT", pfUI.gui, "TOPLEFT", 80,0)
   pfUI.gui.deco:SetPoint("BOTTOMRIGHT", pfUI.gui, "BOTTOMRIGHT", 0,0)
   pfUI.gui.deco:SetBackdrop(pfUI.backdrop)
-  pfUI.gui.deco:SetBackdropColor(0,0,0,.50);
+  pfUI.gui.deco:SetBackdropColor(0,0,0,.50)
 
   pfUI.gui.deco.up = CreateFrame("Frame", nil, pfUI.gui.deco)
   pfUI.gui.deco.up:SetPoint("TOPRIGHT", 0,0)

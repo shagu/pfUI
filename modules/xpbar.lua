@@ -41,7 +41,7 @@ pfUI:RegisterModule("xpbar", function ()
         pfUI.xp:SetAlpha(pfUI.xp:GetAlpha() - .05)
         pfUI.xp.restedbar:SetAlpha(pfUI.xp:GetAlpha()/2)
       end
-    end);
+    end)
 
   pfUI.xp:EnableMouse()
   pfUI.xp:SetScript("OnEnter", function()
@@ -98,15 +98,15 @@ pfUI:RegisterModule("xpbar", function ()
   pfUI.rep:SetScript("OnEvent", function()
       pfUI.rep:SetAlpha(0)
       for i=1, GetNumFactions() do
-        local name, description, standingID, barMin, barMax, barValue, atWarWith, canToggleAtWar, isHeader, isCollapsed, isWatched = GetFactionInfo(i);
+        local name, description, standingID, barMin, barMax, barValue, atWarWith, canToggleAtWar, isHeader, isCollapsed, isWatched = GetFactionInfo(i)
         if isWatched then
-          barMax = barMax - barMin;
-          barValue = barValue - barMin;
-          barMin = 0;
+          barMax = barMax - barMin
+          barValue = barValue - barMin
+          barMin = 0
 
           pfUI.rep.bar:SetMinMaxValues(barMin, barMax)
           pfUI.rep.bar:SetValue(barValue)
-          local color = FACTION_BAR_COLORS[standingID];
+          local color = FACTION_BAR_COLORS[standingID]
           pfUI.rep.bar:SetStatusBarColor((color.r + .5) * .5, (color.g + .5) * .5, (color.b + .5) * .5, 1)
           pfUI.rep:SetAlpha(1)
           pfUI.rep.tick = GetTime() + 3.00

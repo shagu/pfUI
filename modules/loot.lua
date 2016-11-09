@@ -21,10 +21,10 @@ pfUI:RegisterModule("loot", function ()
 
     frame:SetScript("OnClick", function()
       if ( IsControlKeyDown() ) then
-        DressUpItemLink(GetLootSlotLink(this:GetID()));
+        DressUpItemLink(GetLootSlotLink(this:GetID()))
       elseif ( IsShiftKeyDown() ) then
         if ( ChatFrameEditBox:IsVisible() ) then
-          ChatFrameEditBox:Insert(GetLootSlotLink(this:GetID()));
+          ChatFrameEditBox:Insert(GetLootSlotLink(this:GetID()))
         end
       end
 
@@ -182,7 +182,7 @@ pfUI:RegisterModule("loot", function ()
 
     if event == "LOOT_CLOSED" then
       StaticPopup_Hide("LOOT_BIND")
-      HideUIPanel(this);
+      HideUIPanel(this)
       for _, v in pairs(this.slots) do
         v:Hide()
       end
@@ -194,14 +194,14 @@ pfUI:RegisterModule("loot", function ()
 
   function GroupLootDropDown_GiveLoot()
     if ( pfUI.loot.selectedQuality >= MASTER_LOOT_THREHOLD ) then
-      local dialog = StaticPopup_Show("CONFIRM_LOOT_DISTRIBUTION", ITEM_QUALITY_COLORS[LootFrame.selectedQuality].hex..pfUI.loot.selectedItemName..FONT_COLOR_CODE_CLOSE, this:GetText());
+      local dialog = StaticPopup_Show("CONFIRM_LOOT_DISTRIBUTION", ITEM_QUALITY_COLORS[LootFrame.selectedQuality].hex..pfUI.loot.selectedItemName..FONT_COLOR_CODE_CLOSE, this:GetText())
       if ( dialog ) then
-        dialog.data = this.value;
+        dialog.data = this.value
       end
     else
-      GiveMasterLoot(pfUI.loot.selectedSlot, this.value);
+      GiveMasterLoot(pfUI.loot.selectedSlot, this.value)
     end
-    CloseDropDownMenus();
+    CloseDropDownMenus()
   end
 
   StaticPopupDialogs["CONFIRM_LOOT_DISTRIBUTION"].OnAccept = function(data)

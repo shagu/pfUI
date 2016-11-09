@@ -18,23 +18,23 @@ pfUI:RegisterModule("panel", function ()
   pfUI.panel:SetScript("OnEvent", function()
     if event == "PLAYER_ENTERING_WORLD" then
       pfUI.panel:UpdateGold()
-      pfUI.panel:UpdateRepair();
+      pfUI.panel:UpdateRepair()
       pfUI.panel:UpdateExp()
       pfUI.panel:UpdateFriend()
-      pfUI.panel:UpdateGuild();
-      pfUI.panel:UpdateRepair();
-      pfUI.panel:UpdateZone();
+      pfUI.panel:UpdateGuild()
+      pfUI.panel:UpdateRepair()
+      pfUI.panel:UpdateZone()
     elseif event == "PLAYER_MONEY" then
       pfUI.panel:UpdateGold()
-      pfUI.panel:UpdateRepair();
+      pfUI.panel:UpdateRepair()
     elseif event == "PLAYER_XP_UPDATE" then
       pfUI.panel:UpdateExp()
     elseif event == "FRIENDLIST_UPDATE" then
       pfUI.panel:UpdateFriend()
     elseif event == "GUILD_ROSTER_UPDATE" or event == "PLAYER_GUILD_UPDATE" then
-      pfUI.panel:UpdateGuild();
+      pfUI.panel:UpdateGuild()
     elseif event == "PLAYER_REGEN_ENABLED" or event == "PLAYER_DEAD" then
-      pfUI.panel:UpdateRepair();
+      pfUI.panel:UpdateRepair()
     elseif event == "MINIMAP_ZONE_CHANGED" then
       pfUI.panel:UpdateZone()
     end
@@ -46,11 +46,11 @@ pfUI:RegisterModule("panel", function ()
     if GetTime() >= pfUI.panel.clock.tick + 1 then
       pfUI.panel.clock.tick = GetTime()
       pfUI.panel:OutputPanel("time", date("%H:%M:%S"))
-      local _, _, lag = GetNetStats();
-      local fps = floor(GetFramerate());
+      local _, _, lag = GetNetStats()
+      local fps = floor(GetFramerate())
       pfUI.panel:OutputPanel("fps", floor(GetFramerate()) .. " fps & " .. lag .. " ms")
     end
-  end);
+  end)
 
   -- Update "exp"
   function pfUI.panel:UpdateExp ()
@@ -147,12 +147,12 @@ pfUI:RegisterModule("panel", function ()
 
   -- Update "friends"
   function pfUI.panel:UpdateFriend ()
-    local online = 0;
-    local all = GetNumFriends();
+    local online = 0
+    local all = GetNumFriends()
     for friendIndex=1, all do
-      friend_name, friend_level, friend_class, friend_area, friend_connected = GetFriendInfo(friendIndex);
+      friend_name, friend_level, friend_class, friend_area, friend_connected = GetFriendInfo(friendIndex)
       if ( friend_connected ) then
-        online = online + 1;
+        online = online + 1
       end
     end
     pfUI.panel:OutputPanel("friends", "Friends: " .. online)
@@ -161,8 +161,8 @@ pfUI:RegisterModule("panel", function ()
   -- Update "guild"
   function pfUI.panel:UpdateGuild ()
     GuildRoster()
-    local online = GetNumGuildMembers();
-    local all = GetNumGuildMembers(true);
+    local online = GetNumGuildMembers()
+    local all = GetNumGuildMembers(true)
     pfUI.panel:OutputPanel("guild", "Guild: "..online)
   end
 
@@ -170,29 +170,29 @@ pfUI:RegisterModule("panel", function ()
   local repairToolTip = CreateFrame('GameTooltip', "repairToolTip", this, "GameTooltipTemplate")
   function pfUI.panel:UpdateRepair ()
     local slotnames = { "Head", "Shoulder", "Chest", "Wrist",
-      "Hands", "Waist", "Legs", "Feet", "MainHand", "SecondaryHand", "Ranged", };
-    local id, hasItem, repairCost;
-    local itemName, durability, tmpText, midpt, lval, rval;
+      "Hands", "Waist", "Legs", "Feet", "MainHand", "SecondaryHand", "Ranged", }
+    local id, hasItem, repairCost
+    local itemName, durability, tmpText, midpt, lval, rval
 
-    duraLowestslotName = nil;
-    repPercent = 100;
-    lowestPercent = 100;
+    duraLowestslotName = nil
+    repPercent = 100
+    lowestPercent = 100
 
     for i,slotName in pairs(slotnames) do
-      id, _ = GetInventorySlotInfo(slotName.. "Slot");
+      id, _ = GetInventorySlotInfo(slotName.. "Slot")
       repairToolTip:Hide()
-      repairToolTip:SetOwner(this, "ANCHOR_LEFT");
-      hasItem, _, repCost = repairToolTip:SetInventoryItem("player", id);
+      repairToolTip:SetOwner(this, "ANCHOR_LEFT")
+      hasItem, _, repCost = repairToolTip:SetInventoryItem("player", id)
       if (not hasItem) then repairToolTip:ClearLines()
       else
         for i=1, 30, 1 do
-          tmpText = getglobal("repairToolTipTextLeft"..i);
+          tmpText = getglobal("repairToolTipTextLeft"..i)
           if (tmpText ~= nil) and (tmpText:GetText()) then
             local searchstr = string.gsub(DURABILITY_TEMPLATE, "%%[^%s]+", "(.+)")
-            _, _, lval, rval = string.find(tmpText:GetText(), searchstr);
+            _, _, lval, rval = string.find(tmpText:GetText(), searchstr)
             if (lval and rval) then
               repPercent = math.floor(lval / rval * 100)
-              break;
+              break
             end
           end
         end
@@ -207,7 +207,7 @@ pfUI:RegisterModule("panel", function ()
 
   function pfUI.panel:UpdateZone ()
     local tooltip = function ()
-      local posX, posY = GetPlayerMapPosition("player");
+      local posX, posY = GetPlayerMapPosition("player")
       local real = GetRealZoneText()
       local sub = GetSubZoneText()
       GameTooltip:ClearLines()

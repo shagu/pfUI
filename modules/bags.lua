@@ -272,9 +272,9 @@ pfUI:RegisterModule("bags", function ()
     else
       local bagtype
       if bag > 0 then
-        local _, _, id = strfind(GetInventoryItemLink("player", ContainerIDToInventoryID(bag)) or "", "item:(%d+)");
+        local _, _, id = strfind(GetInventoryItemLink("player", ContainerIDToInventoryID(bag)) or "", "item:(%d+)")
         if id then
-          local _, _, _, _, itemType, subType = GetItemInfo(id);
+          local _, _, _, _, itemType, subType = GetItemInfo(id)
           bagtype = pfLocaleBagtypes[pfUI.cache["locale"]][itemType]
           bagsubtype = pfLocaleBagtypes[pfUI.cache["locale"]][subType]
 

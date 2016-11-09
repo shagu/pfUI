@@ -70,7 +70,7 @@ pfUI:RegisterModule("targettarget", function ()
         pfUI.uf.targettarget.hp.bar:SetValue(display - ceil(diff / pfUI_config.unitframes.animation_speed))
       end
 
-      PowerColor = ManaBarColor[UnitPowerType("targettarget")];
+      PowerColor = ManaBarColor[UnitPowerType("targettarget")]
       pfUI.uf.targettarget.power.bar:SetStatusBarColor(PowerColor.r + .5, PowerColor.g +.5, PowerColor.b +.5, 1)
       pfUI.uf.targettarget.power.bar:SetMinMaxValues(0, UnitManaMax("targettarget"))
 
@@ -121,7 +121,7 @@ pfUI:RegisterModule("targettarget", function ()
     pfUI.uf.targettarget.hp.bar.portrait:SetScript("OnShow", function() this.Update() end)
 
     function pfUI.uf.targettarget.hp.bar.portrait.Update()
-      pfUI.uf.targettarget.hp.bar.portrait:SetUnit("targettarget");
+      pfUI.uf.targettarget.hp.bar.portrait:SetUnit("targettarget")
       pfUI.uf.targettarget.hp.bar.portrait:SetCamera(0)
       pfUI.uf.targettarget.hp.bar.portrait:SetAlpha(0.10)
     end

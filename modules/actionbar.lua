@@ -23,22 +23,22 @@ pfUI:RegisterModule("actionbar", function ()
 
   function ActionButton_GetPagedID(button)
     if ( button.isBonus and CURRENT_ACTIONBAR_PAGE == 1 ) then
-      local offset = GetBonusBarOffset();
+      local offset = GetBonusBarOffset()
       if ( offset == 0 and BonusActionBarFrame and BonusActionBarFrame.lastBonusBar ) then
-        offset = BonusActionBarFrame.lastBonusBar;
+        offset = BonusActionBarFrame.lastBonusBar
       end
-      return (button:GetID() + ((NUM_ACTIONBAR_PAGES + offset - 1) * NUM_ACTIONBAR_BUTTONS));
+      return (button:GetID() + ((NUM_ACTIONBAR_PAGES + offset - 1) * NUM_ACTIONBAR_BUTTONS))
     end
 
-    local parentName = button:GetParent():GetName();
+    local parentName = button:GetParent():GetName()
     if ( parentName == "pfMultiBarBottomLeft" or parentName == "MultiBarBottomLeft" )  then
-      return (button:GetID() + ((BOTTOMLEFT_ACTIONBAR_PAGE - 1) * NUM_ACTIONBAR_BUTTONS));
+      return (button:GetID() + ((BOTTOMLEFT_ACTIONBAR_PAGE - 1) * NUM_ACTIONBAR_BUTTONS))
     elseif ( parentName == "pfMultiBarBottomRight" or parentName == "MultiBarBottomRight" ) then
-      return (button:GetID() + ((BOTTOMRIGHT_ACTIONBAR_PAGE - 1) * NUM_ACTIONBAR_BUTTONS));
+      return (button:GetID() + ((BOTTOMRIGHT_ACTIONBAR_PAGE - 1) * NUM_ACTIONBAR_BUTTONS))
     elseif ( parentName == "pfMultiBarLeft" or parentName == "MultiBarLeft" ) then
-      return (button:GetID() + ((LEFT_ACTIONBAR_PAGE - 1) * NUM_ACTIONBAR_BUTTONS));
+      return (button:GetID() + ((LEFT_ACTIONBAR_PAGE - 1) * NUM_ACTIONBAR_BUTTONS))
     elseif ( parentName == "pfMultiBarRight" or parentName == "MultiBarRight" ) then
-      return (button:GetID() + ((RIGHT_ACTIONBAR_PAGE - 1) * NUM_ACTIONBAR_BUTTONS));
+      return (button:GetID() + ((RIGHT_ACTIONBAR_PAGE - 1) * NUM_ACTIONBAR_BUTTONS))
     else
       return (button:GetID() + ((CURRENT_ACTIONBAR_PAGE - 1) * NUM_ACTIONBAR_BUTTONS))
     end

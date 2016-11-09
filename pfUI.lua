@@ -1,9 +1,9 @@
-SLASH_RELOAD1 = '/rl';
+SLASH_RELOAD1 = '/rl'
 function SlashCmdList.RELOAD(msg, editbox)
   ReloadUI()
 end
 
-SLASH_PFUI1 = '/pfui';
+SLASH_PFUI1 = '/pfui'
 function SlashCmdList.PFUI(msg, editbox)
   if pfUI.gui:IsShown() then
     pfUI.gui:Hide()
@@ -12,7 +12,7 @@ function SlashCmdList.PFUI(msg, editbox)
   end
 end
 
-SLASH_GM1, SLASH_GM2 = '/gm', '/support';
+SLASH_GM1, SLASH_GM2 = '/gm', '/support'
 function SlashCmdList.GM(msg, editbox)
   ToggleHelpFrame(1)
 end

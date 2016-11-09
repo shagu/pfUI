@@ -71,14 +71,14 @@ pfUI:RegisterModule("chat", function ()
     if pfUI.chat.left.panelTop.proxy.enabled == false then return end
 
     if arg2 ~= UnitName("player") and arg2 ~=  forwardto  and forwardto ~= UnitName("player") then
-      SendChatMessage("[" .. arg2 .. "]: " .. arg1, "WHISPER", nil, forwardto);
+      SendChatMessage("[" .. arg2 .. "]: " .. arg1, "WHISPER", nil, forwardto)
     end
 
     if arg2 == forwardto then
       local isForward, _, name, message = string.find(arg1, "(.*): (.*)")
       if isForward then
-        SendChatMessage(message, "WHISPER", nil, name);
-        SendChatMessage("-> " .. name, "WHISPER", nil, forwardto);
+        SendChatMessage(message, "WHISPER", nil, name)
+        SendChatMessage("-> " .. name, "WHISPER", nil, forwardto)
       end
     end
   end)
@@ -88,7 +88,7 @@ pfUI:RegisterModule("chat", function ()
   pfUI.chat.left.panelTop.proxyName:SetHeight(100)
   pfUI.chat.left.panelTop.proxyName:SetWidth(200)
   pfUI.chat.left.panelTop.proxyName:SetBackdrop(pfUI.backdrop)
-  pfUI.chat.left.panelTop.proxyName:SetScript("OnShow", function() 
+  pfUI.chat.left.panelTop.proxyName:SetScript("OnShow", function()
     pfUI.chat.left.panelTop.proxyName.input:SetText(pfUI.chat.left.panelTop.proxy.forwardto)
   end)
 
@@ -337,22 +337,22 @@ pfUI:RegisterModule("chat", function ()
 
     FCF_SetLocked(ChatFrame1, 1)
     FCF_SetWindowName(ChatFrame1, GENERAL)
-    FCF_SetWindowColor(ChatFrame1, 0, 0, 0);
-    FCF_SetWindowAlpha(ChatFrame1, 0);
+    FCF_SetWindowColor(ChatFrame1, 0, 0, 0)
+    FCF_SetWindowAlpha(ChatFrame1, 0)
     FCF_SetChatWindowFontSize(ChatFrame1, 12)
 
     -- set position of Combat
     if not ChatFrame2:IsShown() then
       FCF_OpenNewWindow("Combat Log")
     end
-    FCF_SetLocked(ChatFrame2, 1);
-    FCF_SetWindowName(ChatFrame2, COMBAT_LOG);
-    FCF_SetWindowColor(ChatFrame2, 0, 0, 0);
-    FCF_SetWindowAlpha(ChatFrame2, 0);
+    FCF_SetLocked(ChatFrame2, 1)
+    FCF_SetWindowName(ChatFrame2, COMBAT_LOG)
+    FCF_SetWindowColor(ChatFrame2, 0, 0, 0)
+    FCF_SetWindowAlpha(ChatFrame2, 0)
     FCF_SetChatWindowFontSize(ChatFrame2, 12)
-    ChatFrame_RemoveAllChannels(ChatFrame2);
-    ChatFrame_RemoveAllMessageGroups(ChatFrame2);
-    ChatFrame_ActivateCombatMessages(ChatFrame2);
+    ChatFrame_RemoveAllChannels(ChatFrame2)
+    ChatFrame_RemoveAllMessageGroups(ChatFrame2)
+    ChatFrame_ActivateCombatMessages(ChatFrame2)
 
     -- set position of Loot & Spam
     if not ChatFrame3:IsShown() then
@@ -360,19 +360,19 @@ pfUI:RegisterModule("chat", function ()
     end
     FCF_SetLocked(ChatFrame3, 1)
     FCF_SetWindowName(ChatFrame3, "Loot & Spam")
-    FCF_SetWindowColor(ChatFrame3, 0, 0, 0);
-    FCF_SetWindowAlpha(ChatFrame3, 0);
+    FCF_SetWindowColor(ChatFrame3, 0, 0, 0)
+    FCF_SetWindowAlpha(ChatFrame3, 0)
     FCF_SetChatWindowFontSize(ChatFrame3, 12)
     FCF_UnDockFrame(ChatFrame3)
-    FCF_SetTabPosition(ChatFrame3, 0);
+    FCF_SetTabPosition(ChatFrame3, 0)
     ChatFrame3:ClearAllPoints()
     ChatFrame3:SetPoint("TOPLEFT", pfUI.chat.right ,"TOPLEFT", 5, -25)
     ChatFrame3:SetPoint("BOTTOMRIGHT", pfUI.chat.right ,"BOTTOMRIGHT", -5, 25)
 
     -- save positions on logout
-    ChatFrame1:SetUserPlaced(1);
-    ChatFrame2:SetUserPlaced(1);
-    ChatFrame3:SetUserPlaced(1);
+    ChatFrame1:SetUserPlaced(1)
+    ChatFrame2:SetUserPlaced(1)
+    ChatFrame3:SetUserPlaced(1)
   end
 
   function pfUI.chat.SetupChannels()
@@ -408,46 +408,46 @@ pfUI:RegisterModule("chat", function ()
     -- Need to draw the dock regions for a frame to define their rects
     if ( not ChatFrame1.init ) then
       for i=1, NUM_CHAT_WINDOWS do
-        getglobal("ChatFrame"..i.."TabDockRegion"):Show();
-        FCF_UpdateButtonSide(getglobal("ChatFrame"..i));
+        getglobal("ChatFrame"..i.."TabDockRegion"):Show()
+        FCF_UpdateButtonSide(getglobal("ChatFrame"..i))
       end
-      ChatFrame1.init = 1;
-      return;
+      ChatFrame1.init = 1
+      return
     elseif ( ChatFrame1.init == 1 ) then
       for i=1, NUM_CHAT_WINDOWS do
-        getglobal("ChatFrame"..i.."TabDockRegion"):Hide();
+        getglobal("ChatFrame"..i.."TabDockRegion"):Hide()
       end
-      ChatFrame1.init = 2;
+      ChatFrame1.init = 2
     end
 
     -- Detect if mouse is over any chat frames and if so show their tabs, if not hide them
-    local chatFrame, chatTab;
+    local chatFrame, chatTab
 
     if ( MOVING_CHATFRAME ) then
       -- Set buttons to the left or right side of the frame
       -- If the the side of the buttons changes and the frame is the default frame, then set every docked frames buttons to the same side
-      local updateAllButtons = nil;
+      local updateAllButtons = nil
       if (FCF_UpdateButtonSide(MOVING_CHATFRAME) and MOVING_CHATFRAME == DEFAULT_CHAT_FRAME ) then
-        updateAllButtons = 1;
+        updateAllButtons = 1
       end
-      local dockRegion;
+      local dockRegion
       for index, value in DOCKED_CHAT_FRAMES do
         if ( updateAllButtons ) then
-          FCF_UpdateButtonSide(value);
+          FCF_UpdateButtonSide(value)
         end
 
-        dockRegion = getglobal(value:GetName().."TabDockRegion");
+        dockRegion = getglobal(value:GetName().."TabDockRegion")
         if ( MouseIsOver(dockRegion) and MOVING_CHATFRAME ~= DEFAULT_CHAT_FRAME ) then
-          dockRegion:Show();
+          dockRegion:Show()
         else
-          dockRegion:Hide();
+          dockRegion:Hide()
         end
       end
     end
 
     -- If the default chat frame is resizing, then resize the dock
     if ( DEFAULT_CHAT_FRAME.resizing ) then
-      FCF_DockUpdate();
+      FCF_DockUpdate()
     end
   end
 
@@ -488,7 +488,7 @@ pfUI:RegisterModule("chat", function ()
   ChatFrameEditBox:SetAltArrowKeyMode(false)
 
   local default = " " .. "%s" .. "|r:" .. "\32"
-  CHAT_CHANNEL_GET = "%s" .. "|r:" .. "\32";
+  CHAT_CHANNEL_GET = "%s" .. "|r:" .. "\32"
   CHAT_GUILD_GET = '[G]' .. default
   CHAT_OFFICER_GET = '[O]'.. default
   CHAT_PARTY_GET = '[P]' .. default

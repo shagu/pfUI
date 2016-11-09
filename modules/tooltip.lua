@@ -3,7 +3,7 @@ pfUI:RegisterModule("tooltip", function ()
 
   if pfUI_config.tooltip.position == "cursor" then
     function GameTooltip_SetDefaultAnchor(tooltip, parent)
-      tooltip:SetOwner(parent, "ANCHOR_CURSOR");
+      tooltip:SetOwner(parent, "ANCHOR_CURSOR")
     end
   end
 
@@ -40,7 +40,7 @@ pfUI:RegisterModule("tooltip", function ()
   pfUI.tooltip:SetScript("OnShow", function()
       pfUI.tooltip:Update()
       if GameTooltip:GetAnchorType() == "ANCHOR_NONE" then
-        GameTooltip:ClearAllPoints();
+        GameTooltip:ClearAllPoints()
         if pfUI_config.tooltip.position == "bottom" then
           GameTooltip:SetPoint("BOTTOMRIGHT",pfUI.panel.right,"TOPRIGHT",0,0)
         elseif pfUI_config.tooltip.position == "chat" then

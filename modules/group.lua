@@ -146,8 +146,8 @@ pfUI:RegisterModule("group", function ()
     pfUI.uf.group[i]:RegisterForClicks('LeftButtonUp', 'RightButtonUp')
 
     pfUI.uf.group[i]:SetScript("OnEnter", function()
-      GameTooltip:SetOwner(this, "ANCHOR_NONE");
-      GameTooltip:SetUnit("party" .. this.id);
+      GameTooltip:SetOwner(this, "ANCHOR_NONE")
+      GameTooltip:SetUnit("party" .. this.id)
       GameTooltip:Show()
     end)
 
@@ -157,20 +157,20 @@ pfUI:RegisterModule("group", function ()
 
     pfUI.uf.group[i]:SetScript("OnClick", function ()
       if ( SpellIsTargeting() and arg1 == "RightButton" ) then
-        SpellStopTargeting();
-        return;
+        SpellStopTargeting()
+        return
       end
 
       if ( arg1 == "LeftButton" ) then
         if ( SpellIsTargeting() ) then
-          SpellTargetUnit("party" .. this.id);
+          SpellTargetUnit("party" .. this.id)
         elseif ( CursorHasItem() ) then
-          DropItemOnUnit("party" .. this.id);
+          DropItemOnUnit("party" .. this.id)
         else
-          TargetUnit("party" .. this.id);
+          TargetUnit("party" .. this.id)
         end
       else
-        local x, y = GetCursorPosition();
+        local x, y = GetCursorPosition()
         ToggleDropDownMenu(1, nil, getglobal("PartyMemberFrame" .. this.id .. "DropDown"), "cursor")
       end
     end)
@@ -213,7 +213,7 @@ pfUI:RegisterModule("group", function ()
 
         this.hp.bar:SetStatusBarColor(cr, cg, cb)
 
-        local pcolor = ManaBarColor[UnitPowerType("party"..this.id)];
+        local pcolor = ManaBarColor[UnitPowerType("party"..this.id)]
         this.power.bar:SetStatusBarColor(pcolor.r + .5, pcolor.g +.5, pcolor.b +.5, 1)
 
         this.caption:SetText(UnitName("party"..this.id))

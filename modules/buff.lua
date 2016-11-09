@@ -47,7 +47,7 @@ pfUI:RegisterModule("buff", function ()
 
     -- weapon enchants
     for _,buff in pairs ({TempEnchant1,TempEnchant2}) do
-      local icon = getglobal(buff:GetName().."Icon");
+      local icon = getglobal(buff:GetName().."Icon")
       local border = getglobal(buff:GetName().."Border")
       local _, _, mainhand, _, _, offhand = GetWeaponEnchantInfo()
 
@@ -62,7 +62,7 @@ pfUI:RegisterModule("buff", function ()
 
       if buff:GetID() == 16 then
         local link = GetInventoryItemLink("player", 16)
-        local _, _, itemLink = string.find(link, "(item:%d+:%d+:%d+:%d+)");
+        local _, _, itemLink = string.find(link, "(item:%d+:%d+:%d+:%d+)")
         local _, _, itemRarity, itemLevel, _, _, _, itemEquipLoc, _ = GetItemInfo(itemLink)
         if itemRarity then buff:SetBackdropBorderColor(GetItemQualityColor(itemRarity)) end
 
@@ -74,7 +74,7 @@ pfUI:RegisterModule("buff", function ()
         end
       elseif buff:GetID() == 17 then
         local link = GetInventoryItemLink("player", 17)
-        local _, _, itemLink = string.find(link, "(item:%d+:%d+:%d+:%d+)");
+        local _, _, itemLink = string.find(link, "(item:%d+:%d+:%d+:%d+)")
         local _, _, itemRarity, itemLevel, _, _, _, itemEquipLoc, _ = GetItemInfo(itemLink)
         if itemRarity then buff:SetBackdropBorderColor(GetItemQualityColor(itemRarity)) end
         if offhand and offhand > 0 then
@@ -89,7 +89,7 @@ pfUI:RegisterModule("buff", function ()
     -- buffs
     for i=0,15,1 do
       local buff = getglobal("BuffButton" .. i)
-      local icon = getglobal(buff:GetName().."Icon");
+      local icon = getglobal(buff:GetName().."Icon")
       local border = getglobal(buff:GetName().."Border")
       if border then
         buff:SetBackdrop({

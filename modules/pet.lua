@@ -14,11 +14,11 @@ pfUI:RegisterModule("pet", function ()
 
   pfUI.uf.pet:RegisterEvent("PLAYER_ENTERING_WORLD")
   pfUI.uf.pet:RegisterEvent("UNIT_PET")
-  pfUI.uf.pet:RegisterEvent("UNIT_COMBAT");
-  pfUI.uf.pet:RegisterEvent("UNIT_AURA");
-  pfUI.uf.pet:RegisterEvent("PET_ATTACK_START");
-  pfUI.uf.pet:RegisterEvent("PET_ATTACK_STOP");
-  pfUI.uf.pet:RegisterEvent("UNIT_HAPPINESS");
+  pfUI.uf.pet:RegisterEvent("UNIT_COMBAT")
+  pfUI.uf.pet:RegisterEvent("UNIT_AURA")
+  pfUI.uf.pet:RegisterEvent("PET_ATTACK_START")
+  pfUI.uf.pet:RegisterEvent("PET_ATTACK_STOP")
+  pfUI.uf.pet:RegisterEvent("UNIT_HAPPINESS")
 
   pfUI.uf.pet:RegisterEvent("UNIT_HEALTH")
   pfUI.uf.pet:RegisterEvent("UNIT_MAXHEALTH")
@@ -71,7 +71,7 @@ pfUI:RegisterModule("pet", function ()
       pfUI.uf.pet.hpReal = hp
       pfUI.uf.pet.powerReal = power
 
-      PowerColor = ManaBarColor[UnitPowerType("pet")];
+      PowerColor = ManaBarColor[UnitPowerType("pet")]
       pfUI.uf.pet.power.bar:SetStatusBarColor(PowerColor.r + .5, PowerColor.g +.5, PowerColor.b +.5, 1)
       pfUI.uf.pet.power.bar:SetMinMaxValues(0, UnitManaMax("pet"))
     end)
@@ -234,8 +234,8 @@ pfUI:RegisterModule("pet", function ()
     pfUI.uf.pet.debuff.debuffs[i]:RegisterForClicks("RightButtonUp")
     pfUI.uf.pet.debuff.debuffs[i]:ClearAllPoints()
 
-    local row = 0;
-    local top = 0;
+    local row = 0
+    local top = 0
     local debuffsize = pfUI.uf.pet.hp:GetWidth()/8 - 1
     if i > 8 then row = 1 end
     if pfUI.uf.pet.buff.buffs[1]:IsShown() then top = top + 1 end
@@ -264,8 +264,8 @@ pfUI:RegisterModule("pet", function ()
   function pfUI.uf.pet.debuff.RefreshBuffs()
     local debuffsize = pfUI.uf.pet.hp:GetWidth()/8 - 1
     for i=1, 16 do
-      local row = 0;
-      local top = 0;
+      local row = 0
+      local top = 0
       if i > 8 then row = 1 end
       if pfUI.uf.pet.buff.buffs[1]:IsShown() then top = top + 1 end
       if pfUI.uf.pet.buff.buffs[9]:IsShown() then top = top + 1 end

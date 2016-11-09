@@ -2,13 +2,13 @@ pfUI:RegisterModule("cooldown", function ()
   function CooldownFrame_SetTimer(this, start, duration, enable)
     if not this then return end
     -- disable animation
-    this:SetPosition(1,1,1);
+    this:SetPosition(1,1,1)
 
     if ( start > 0 and duration > 0 and enable > 0) then
-      this.start = start;
-      this.duration = duration;
-      this.stopping = 0;
-      this:SetSequence(0);
+      this.start = start
+      this.duration = duration
+      this.stopping = 0
+      this:SetSequence(0)
 
       if not this.cd then
         this.cd = CreateFrame("Frame")
@@ -28,7 +28,7 @@ pfUI:RegisterModule("cooldown", function ()
         this.cd.text:SetJustifyH("CENTER")
         this.cd.text:SetFontObject(GameFontWhite)
       end
-      this:Show();
+      this:Show()
     else
       this:Hide()
       if this.cd then this.cd:Hide() end
@@ -55,16 +55,16 @@ pfUI:RegisterModule("cooldown", function ()
 
         this.cd.text:SetText(ceil(remaining)..unit)
       else
-        this:Hide();
+        this:Hide()
         this.cd:Hide()
-        this.stopping = 1;
+        this.stopping = 1
       end
     end
   end
 
   function CooldownFrame_OnAnimFinished()
     if ( this.stopping == 1 ) then
-      this:Hide();
+      this:Hide()
       this.cd:Hide()
     end
   end

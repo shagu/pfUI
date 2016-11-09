@@ -120,7 +120,7 @@ pfUI:RegisterModule("player", function ()
         pfUI.uf.player.hpText:SetText(hp)
       end
 
-      PowerColor = ManaBarColor[UnitPowerType("player")];
+      PowerColor = ManaBarColor[UnitPowerType("player")]
       pfUI.uf.player.power.bar:SetStatusBarColor(PowerColor.r + .5, PowerColor.g +.5, PowerColor.b +.5, 1)
       pfUI.uf.player.power.bar:SetMinMaxValues(0, UnitManaMax("player"))
 
@@ -209,7 +209,7 @@ pfUI:RegisterModule("player", function ()
     pfUI.uf.player.hp.bar.portrait:SetScript("OnShow", function() this:Update() end)
 
     function pfUI.uf.player.hp.bar.portrait.Update()
-      pfUI.uf.player.hp.bar.portrait:SetUnit("player");
+      pfUI.uf.player.hp.bar.portrait:SetUnit("player")
       pfUI.uf.player.hp.bar.portrait:SetCamera(0)
       pfUI.uf.player.hp.bar.portrait:SetAlpha(0.10)
     end
@@ -372,8 +372,8 @@ pfUI:RegisterModule("player", function ()
     pfUI.uf.player.debuff.debuffs[i]:RegisterForClicks("RightButtonUp")
     pfUI.uf.player.debuff.debuffs[i]:ClearAllPoints()
 
-    local row = 0;
-    local top = 0;
+    local row = 0
+    local top = 0
     if i > 8 then row = 1 end
     if pfUI.uf.player.buff.buffs[1]:IsShown() then top = top + 1 end
     if pfUI.uf.player.buff.buffs[9]:IsShown() then top = top + 1 end
@@ -421,8 +421,8 @@ pfUI:RegisterModule("player", function ()
 
   function pfUI.uf.player.debuff.RefreshBuffs()
     for i=1, 16 do
-      local row = 0;
-      local top = 0;
+      local row = 0
+      local top = 0
       if i > 8 then row = 1 end
       if pfUI.uf.player.buff.buffs[1]:IsShown() then top = top + 1 end
       if pfUI.uf.player.buff.buffs[9]:IsShown() then top = top + 1 end

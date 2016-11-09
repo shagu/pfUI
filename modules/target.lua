@@ -146,7 +146,7 @@ pfUI:RegisterModule("target", function ()
       pfUI.uf.target.powerText:SetText( "|cff" .. levelcolor .. level .. "|r " .. name)
       pfUI.uf.target.powerText:SetWidth(pfUI.uf.target:GetWidth() -30 - pfUI.uf.target.hpText:GetStringWidth())
 
-      PowerColor = ManaBarColor[UnitPowerType("target")];
+      PowerColor = ManaBarColor[UnitPowerType("target")]
       pfUI.uf.target.power.bar:SetStatusBarColor(PowerColor.r + .5, PowerColor.g +.5, PowerColor.b +.5, 1)
       pfUI.uf.target.power.bar:SetMinMaxValues(0, UnitManaMax("target"))
 
@@ -246,7 +246,7 @@ pfUI:RegisterModule("target", function ()
     pfUI.uf.target.hp.bar.portrait:SetScript("OnShow", function() this:Update() end)
 
     function pfUI.uf.target.hp.bar.portrait.Update()
-      pfUI.uf.target.hp.bar.portrait:SetUnit("target");
+      pfUI.uf.target.hp.bar.portrait:SetUnit("target")
       pfUI.uf.target.hp.bar.portrait:SetCamera(0)
       pfUI.uf.target.hp.bar.portrait:SetAlpha(0.10)
     end
@@ -295,7 +295,7 @@ pfUI:RegisterModule("target", function ()
   pfUI.uf.target.combopoints:RegisterEvent("PLAYER_COMBO_POINTS")
   pfUI.uf.target.combopoints:RegisterEvent("UNIT_DISPLAYPOWER")
   pfUI.uf.target.combopoints:RegisterEvent("PLAYER_TARGET_CHANGED")
-  pfUI.uf.target.combopoints:RegisterEvent('UNIT_ENERGY');
+  pfUI.uf.target.combopoints:RegisterEvent('UNIT_ENERGY')
   pfUI.uf.target.combopoints:RegisterEvent("PLAYER_ENTERING_WORLD")
 
   pfUI.uf.target.combopoint1 = CreateFrame("Frame")
@@ -421,8 +421,8 @@ pfUI:RegisterModule("target", function ()
     pfUI.uf.target.debuff.debuffs[i]:RegisterForClicks("RightButtonUp")
     pfUI.uf.target.debuff.debuffs[i]:ClearAllPoints()
 
-    local row = 0;
-    local top = 0;
+    local row = 0
+    local top = 0
     if i > 8 then row = 1 end
     if pfUI.uf.target.buff.buffs[1]:IsShown() then top = top + 1 end
     if pfUI.uf.target.buff.buffs[9]:IsShown() then top = top + 1 end
@@ -449,8 +449,8 @@ pfUI:RegisterModule("target", function ()
 
   function pfUI.uf.target.debuff.RefreshBuffs()
     for i=1, 16 do
-      local row = 0;
-      local top = 0;
+      local row = 0
+      local top = 0
       if i > 8 then row = 1 end
       if pfUI.uf.target.buff.buffs[1]:IsShown() then top = top + 1 end
       if pfUI.uf.target.buff.buffs[9]:IsShown() then top = top + 1 end
