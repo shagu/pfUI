@@ -80,10 +80,69 @@ pfUI:RegisterModule("panel", function ()
 
   -- Update "gold"
   function pfUI.panel:UpdateGold ()
-    local gold = floor(GetMoney()/ 100 / 100);
-    local silver = floor(mod((GetMoney()/100),100));
-    local copper = floor(mod(GetMoney(),100));
-    pfUI.panel:OutputPanel("gold", gold .. "|cffffd700g|r " .. silver .. "|cffc7c7cfs|r " .. copper .. "|cffeda55fc|r")
+    local gold = floor(GetMoney()/ 100 / 100)
+    local silver = floor(mod((GetMoney()/100),100))
+    local copper = floor(mod(GetMoney(),100))
+
+    local tooltip = function ()
+      if not pfUI.panel.initMoney then pfUI.panel.initMoney = GetMoney() end
+      local dmoney = GetMoney() - pfUI.panel.initMoney
+
+      -- initial gold
+      local igold = floor(pfUI.panel.initMoney/ 100 / 100)
+      local isilver = floor(mod((pfUI.panel.initMoney/100),100))
+      local icopper = floor(mod(pfUI.panel.initMoney,100))
+
+      -- current gold
+      local gold = floor(GetMoney()/ 100 / 100)
+      local silver = floor(mod((GetMoney()/100),100))
+      local copper = floor(mod(GetMoney(),100))
+
+      -- diff gold
+      local dgold = floor(abs(dmoney/100/100))
+      local dsilver = floor(abs(mod((dmoney/100),100)))
+      local dcopper = floor(abs(mod(dmoney,100)))
+
+      local dmod, dchar = "", ""
+      if dmoney < 0 then
+        dmod = "|cffffaaaa"
+        dchar = "|cffff8888-"
+      elseif dmoney > 0 then
+        dmod = "|cffaaffaa"
+        dchar = "|cff88ff88+"
+      end
+
+      GameTooltip:SetOwner(this, "ANCHOR_NONE")
+      GameTooltip:ClearLines()
+
+      GameTooltip:AddLine("|cff555555Money")
+
+      GameTooltip:AddDoubleLine("Login:",
+        "|cffffffff " .. igold .. "|cffffd700g" ..
+        "|cffffffff " .. isilver .. "|cffc7c7cfs" ..
+        "|cffffffff " .. icopper .. "|cffeda55fc")
+
+      GameTooltip:AddDoubleLine("Now:",
+        "|cffffffff " .. gold .. "|cffffd700g" ..
+        "|cffffffff " .. silver .. "|cffc7c7cfs" ..
+        "|cffffffff " .. copper .. "|cffeda55fc")
+
+      GameTooltip:AddDoubleLine("|cffffffff","")
+
+      GameTooltip:AddDoubleLine("This Session:",
+        dchar ..
+        "|cffffffff " .. dmod .. dgold .. "|cffffd700g" ..
+        "|cffffffff " .. dmod .. dsilver .. "|cffc7c7cfs" ..
+        "|cffffffff " .. dmod .. dcopper .. "|cffeda55fc")
+
+      GameTooltip:Show()
+    end
+
+    local click = function ()
+      OpenAllBags()
+    end
+
+    pfUI.panel:OutputPanel("gold", gold .. "|cffffd700g|r " .. silver .. "|cffc7c7cfs|r " .. copper .. "|cffeda55fc|r", tooltip, click)
   end
 
   -- Update "friends"
