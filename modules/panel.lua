@@ -150,27 +150,33 @@ pfUI:RegisterModule("panel", function ()
     pfUI.panel:OutputPanel("zone", GetMinimapZoneText())
   end
 
-  function pfUI.panel:OutputPanel(entry, value)
-    if pfUI_config.panel.left.left == entry then
-      pfUI.panel.left.left.text:SetText(value)
-    end
-    if pfUI_config.panel.left.center == entry then
-      pfUI.panel.left.center.text:SetText(value)
-    end
-    if pfUI_config.panel.left.right == entry then
-      pfUI.panel.left.right.text:SetText(value)
-    end
-    if pfUI_config.panel.right.left == entry then
-      pfUI.panel.right.left.text:SetText(value)
-    end
-    if pfUI_config.panel.right.center == entry then
-      pfUI.panel.right.center.text:SetText(value)
-    end
-    if pfUI_config.panel.right.right == entry then
-      pfUI.panel.right.right.text:SetText(value)
-    end
-    if pfUI_config.panel.other.minimap == entry then
-      pfUI.panel.minimap.text:SetText(value)
+  function pfUI.panel:OutputPanel(entry, value, tooltip, func)
+    local panels = {
+      { pfUI.panel.left.left,    pfUI_config.panel.left.left },
+      { pfUI.panel.left.center,  pfUI_config.panel.left.center },
+      { pfUI.panel.left.right,   pfUI_config.panel.left.right },
+      { pfUI.panel.right.left,   pfUI_config.panel.right.left },
+      { pfUI.panel.right.center, pfUI_config.panel.right.center },
+      { pfUI.panel.right.right,  pfUI_config.panel.right.right },
+      { pfUI.panel.minimap,      pfUI_config.panel.other.minimap },
+    }
+
+    for i,p in pairs(panels) do
+      local frame, config = p[1], p[2]
+      if config == entry then
+        frame.text:SetText(value)
+        if not frame.initialized or frame.initialized ~= entry then
+          if tooltip then
+            frame:SetScript("OnEnter", tooltip)
+            frame:SetScript("OnLeave", function() GameTooltip:Hide() end)
+          end
+
+          if func then
+            frame:SetScript("OnClick", func)
+          end
+          frame.initialized = entry
+        end
+      end
     end
   end
 
@@ -200,7 +206,7 @@ pfUI:RegisterModule("panel", function ()
       if pfUI.chat.left:IsShown() then pfUI.chat.left:Hide() else pfUI.chat.left:Show() end
     end)
 
-  pfUI.panel.left.left = CreateFrame("Frame", nil, pfUI.panel.left)
+  pfUI.panel.left.left = CreateFrame("Button", nil, pfUI.panel.left)
   pfUI.panel.left.left:ClearAllPoints()
   pfUI.panel.left.left:SetWidth(115)
   pfUI.panel.left.left:SetHeight(pfUI.panel.left:GetHeight())
@@ -213,7 +219,7 @@ pfUI:RegisterModule("panel", function ()
   pfUI.panel.left.left.text:SetFontObject(GameFontWhite)
   pfUI.panel.left.left.text:SetText("[DUMMY]")
 
-  pfUI.panel.left.center = CreateFrame("Frame", nil, pfUI.panel.left)
+  pfUI.panel.left.center = CreateFrame("Button", nil, pfUI.panel.left)
   pfUI.panel.left.center:ClearAllPoints()
   pfUI.panel.left.center:SetWidth(115)
   pfUI.panel.left.center:SetHeight(pfUI.panel.left:GetHeight())
@@ -226,7 +232,7 @@ pfUI:RegisterModule("panel", function ()
   pfUI.panel.left.center.text:SetFontObject(GameFontWhite)
   pfUI.panel.left.center.text:SetText("[DUMMY]")
 
-  pfUI.panel.left.right = CreateFrame("Frame", nil, pfUI.panel.left)
+  pfUI.panel.left.right = CreateFrame("Button", nil, pfUI.panel.left)
   pfUI.panel.left.right:ClearAllPoints()
   pfUI.panel.left.right:SetWidth(115)
   pfUI.panel.left.right:SetHeight(pfUI.panel.left:GetHeight())
@@ -265,7 +271,7 @@ pfUI:RegisterModule("panel", function ()
       if pfUI.chat.right:IsShown() then pfUI.chat.right:Hide() else pfUI.chat.right:Show() end
     end)
 
-  pfUI.panel.right.left = CreateFrame("Frame", nil, pfUI.panel.right)
+  pfUI.panel.right.left = CreateFrame("Button", nil, pfUI.panel.right)
   pfUI.panel.right.left:ClearAllPoints()
   pfUI.panel.right.left:SetWidth(115)
   pfUI.panel.right.left:SetHeight(pfUI.panel.right:GetHeight())
@@ -278,7 +284,7 @@ pfUI:RegisterModule("panel", function ()
   pfUI.panel.right.left.text:SetFontObject(GameFontWhite)
   pfUI.panel.right.left.text:SetText("[DUMMY]")
 
-  pfUI.panel.right.center = CreateFrame("Frame", nil, pfUI.panel.right)
+  pfUI.panel.right.center = CreateFrame("Button", nil, pfUI.panel.right)
   pfUI.panel.right.center:ClearAllPoints()
   pfUI.panel.right.center:SetWidth(115)
   pfUI.panel.right.center:SetHeight(pfUI.panel.right:GetHeight())
@@ -291,7 +297,7 @@ pfUI:RegisterModule("panel", function ()
   pfUI.panel.right.center.text:SetFontObject(GameFontWhite)
   pfUI.panel.right.center.text:SetText("[DUMMY]")
 
-  pfUI.panel.right.right = CreateFrame("Frame", nil, pfUI.panel.right)
+  pfUI.panel.right.right = CreateFrame("Button", nil, pfUI.panel.right)
   pfUI.panel.right.right:ClearAllPoints()
   pfUI.panel.right.right:SetWidth(115)
   pfUI.panel.right.right:SetHeight(pfUI.panel.right:GetHeight())
@@ -304,7 +310,7 @@ pfUI:RegisterModule("panel", function ()
   pfUI.panel.right.right.text:SetFontObject(GameFontWhite)
   pfUI.panel.right.right.text:SetText("[DUMMY]")
 
-  pfUI.panel.minimap = CreateFrame("Frame", "pfPanelMinimap", UIParent)
+  pfUI.panel.minimap = CreateFrame("Button", "pfPanelMinimap", UIParent)
   pfUI.panel.minimap:SetBackdrop(pfUI.backdrop)
   pfUI.panel.minimap:SetPoint("TOPRIGHT",UIParent, -5, -7 - Minimap:GetHeight() - 5)
   pfUI.utils:loadPosition(pfUI.panel.minimap)
