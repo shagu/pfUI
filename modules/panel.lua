@@ -147,7 +147,27 @@ pfUI:RegisterModule("panel", function ()
   end
 
   function pfUI.panel:UpdateZone ()
-    pfUI.panel:OutputPanel("zone", GetMinimapZoneText())
+    local tooltip = function ()
+      local posX, posY = GetPlayerMapPosition("player");
+      local real = GetRealZoneText()
+      local sub = GetSubZoneText()
+      GameTooltip:ClearLines()
+      GameTooltip:SetOwner(this, "ANCHOR_NONE")
+      GameTooltip:AddLine("|cffffffff" .. real)
+      GameTooltip:AddLine(sub)
+      GameTooltip:AddLine("|cffaaaaaa" .. round(posX,2) .. " / " .. round(posY,2))
+      GameTooltip:Show()
+    end
+
+    local click = function ()
+      if WorldMapFrame:IsShown() then
+        WorldMapFrame:Hide()
+      else
+        WorldMapFrame:Show()
+      end
+    end
+
+    pfUI.panel:OutputPanel("zone", GetMinimapZoneText(), tooltip, click)
   end
 
   function pfUI.panel:OutputPanel(entry, value, tooltip, func)
