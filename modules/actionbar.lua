@@ -307,6 +307,7 @@ pfUI:RegisterModule("actionbar", function ()
   BonusActionBarFrame:ClearAllPoints()
   BonusActionBarFrame:SetParent(pfUI.bars.bottom)
   BonusActionBarFrame:SetAllPoints(pfUI.bars.bottom)
+  BonusActionBarFrame:EnableMouse(0)
 
   for i=1, 12 do
     local b = getglobal("BonusActionButton"..i)
