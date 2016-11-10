@@ -557,6 +557,7 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui:CreateConfig(pfUI.gui.global, "Default Font", pfUI_config.global, "font_default", "dropdown", values)
   pfUI.gui:CreateConfig(pfUI.gui.global, "Square Font", pfUI_config.global, "font_square", "dropdown", values)
   pfUI.gui:CreateConfig(pfUI.gui.global, "Combat Font", pfUI_config.global, "font_combat", "dropdown", values)
+  pfUI.gui:CreateConfig(pfUI.gui.global, "Minimal Cooldown duration (seconds)", pfUI_config.global, "cooldown_min")
 
   -- modules
   pfUI.gui.modules = pfUI.gui:CreateConfigTab("Modules")
