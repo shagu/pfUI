@@ -214,7 +214,7 @@ pfUI:RegisterModule("panel", function ()
       GameTooltip:SetOwner(this, "ANCHOR_NONE")
       GameTooltip:AddLine("|cffffffff" .. real)
       GameTooltip:AddLine(sub)
-      GameTooltip:AddLine("|cffaaaaaa" .. round(posX,2) .. " / " .. round(posY,2))
+      GameTooltip:AddLine("|cffaaaaaa" .. round(posX*100,1) .. " / " .. round(posY*100,1))
       GameTooltip:Show()
     end
 
