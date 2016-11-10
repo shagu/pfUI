@@ -4,7 +4,7 @@ pfUI:RegisterModule("cooldown", function ()
     -- disable animation
     this:SetPosition(1,1,1)
 
-    if ( start > 0 and duration > 0 and enable > 0) then
+    if ( start > 0 and duration > 2 and enable > 0) then
       this.start = start
       this.duration = duration
       this.stopping = 0
