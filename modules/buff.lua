@@ -62,6 +62,7 @@ pfUI:RegisterModule("buff", function ()
 
       if buff:GetID() == 16 then
         local link = GetInventoryItemLink("player", 16)
+        if not link then break end
         local _, _, itemLink = string.find(link, "(item:%d+:%d+:%d+:%d+)")
         local _, _, itemRarity, itemLevel, _, _, _, itemEquipLoc, _ = GetItemInfo(itemLink)
         if itemRarity then buff:SetBackdropBorderColor(GetItemQualityColor(itemRarity)) end
@@ -74,6 +75,7 @@ pfUI:RegisterModule("buff", function ()
         end
       elseif buff:GetID() == 17 then
         local link = GetInventoryItemLink("player", 17)
+        if not link then break end
         local _, _, itemLink = string.find(link, "(item:%d+:%d+:%d+:%d+)")
         local _, _, itemRarity, itemLevel, _, _, _, itemEquipLoc, _ = GetItemInfo(itemLink)
         if itemRarity then buff:SetBackdropBorderColor(GetItemQualityColor(itemRarity)) end
