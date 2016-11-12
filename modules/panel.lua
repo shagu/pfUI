@@ -98,9 +98,40 @@ pfUI:RegisterModule("panel", function ()
       pfUI.panel:OutputPanel("time", date("%H:%M:%S"), tooltip, click)
 
       -- lag fps
+      local tooltip = function ()
+        local active = 0
+        GameTooltip:ClearLines()
+        GameTooltip:SetOwner(this, "ANCHOR_NONE")
+        GameTooltip:AddLine("|cff555555Systeminfo")
+        for i=1, GetNumAddOns() do
+          if IsAddOnLoaded(i) then
+            active = active + 1
+          end
+        end
+        GameTooltip:AddDoubleLine("Active Addons", "|cffffffff" .. active .. "|cff555555 / |cffffffff" .. GetNumAddOns())
+        GameTooltip:AddLine(" ")
+        local nin, nout, nping = GetNetStats()
+        GameTooltip:AddDoubleLine("Network Down", "|cffffffff" .. round(nin,1) .. "KB/s")
+        GameTooltip:AddDoubleLine("Network Up", "|cffffffff" .. round(nout,1) .. "KB/s")
+        GameTooltip:AddDoubleLine("Network Latency", "|cffffffff" .. nping .. "ms")
+        GameTooltip:AddLine(" ")
+        GameTooltip:AddDoubleLine("Graphic Renderer", "|cffffffff" .. GetCVar("gxApi"))
+        GameTooltip:AddDoubleLine("Screen Resolution", "|cffffffff" .. GetCVar("gxResolution"))
+        GameTooltip:AddDoubleLine("UI-Scale", "|cffffffff" .. round(UIParent:GetEffectiveScale(),2))
+        GameTooltip:Show()
+      end
+
+      local click = function ()
+        if pfUI.addons:IsShown() then
+          pfUI.addons:Hide()
+        else
+          pfUI.addons:Show()
+        end
+      end
+
       local _, _, lag = GetNetStats()
       local fps = floor(GetFramerate())
-      pfUI.panel:OutputPanel("fps", floor(GetFramerate()) .. " fps & " .. lag .. " ms")
+      pfUI.panel:OutputPanel("fps", floor(GetFramerate()) .. " fps & " .. lag .. " ms", tooltip, click)
     end
   end)
 
