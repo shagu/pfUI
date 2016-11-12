@@ -310,18 +310,13 @@ pfUI:RegisterModule("chat", function ()
       end
     end)
 
-
-  if not Hook_ChatFrame_OnUpdate then
-    Hook_ChatFrame_OnUpdate = ChatFrame_OnUpdate
-  end
-
-  function ChatFrame_OnUpdate (arg1)
-    for i=1, NUM_CHAT_WINDOWS do
-      getglobal("ChatFrame" .. i .. "UpButton"):Hide()
-      getglobal("ChatFrame" .. i .. "DownButton"):Hide()
-      getglobal("ChatFrame" .. i .. "BottomButton"):Hide()
-    end
-    Hook_ChatFrame_OnUpdate(arg1)
+  for i=1, NUM_CHAT_WINDOWS do
+    getglobal("ChatFrame" .. i .. "UpButton"):Hide()
+    getglobal("ChatFrame" .. i .. "UpButton").Show = function() return end
+    getglobal("ChatFrame" .. i .. "DownButton"):Hide()
+    getglobal("ChatFrame" .. i .. "DownButton").Show = function() return end
+    getglobal("ChatFrame" .. i .. "BottomButton"):Hide()
+    getglobal("ChatFrame" .. i .. "BottomButton").Show = function() return end
   end
 
   function pfUI.chat.SetupPositions()
