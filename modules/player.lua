@@ -263,6 +263,8 @@ pfUI:RegisterModule("player", function ()
     if i <= 8 then row = 0 else row = 1 end
 
     pfUI.uf.player.buff.buffs[i] = CreateFrame("Button", "pfUIPlayerBuff" .. i, pfUI.uf.player)
+    pfUI.uf.player.buff.buffs[i]:SetID(i)
+
     pfUI.uf.player.buff.buffs[i].stacks = pfUI.uf.player.buff.buffs[i]:CreateFontString(nil, "OVERLAY", pfUI.uf.player.buff.buffs[i])
     pfUI.uf.player.buff.buffs[i].stacks:SetFont("Interface\\AddOns\\pfUI\\fonts\\" .. pfUI_config.global.font_square .. ".ttf", pfUI_config.global.font_size, "OUTLINE")
     pfUI.uf.player.buff.buffs[i].stacks:SetPoint("BOTTOMRIGHT", pfUI.uf.player.buff.buffs[i], 2, -2)
@@ -285,39 +287,37 @@ pfUI:RegisterModule("player", function ()
     pfUI.uf.player.buff.buffs[i]:SetHeight(pfUI_config.unitframes.buff_size)
     pfUI.uf.player.buff.buffs[i]:SetNormalTexture(nil)
     pfUI.uf.player.buff.buffs[i]:SetScript("OnEnter", function()
-        GameTooltip:SetOwner(this, "ANCHOR_BOTTOMRIGHT")
-        GameTooltip:SetPlayerBuff(GetPlayerBuff(id-1,"HELPFUL"))
-      end)
+      GameTooltip:SetOwner(this, "ANCHOR_BOTTOMRIGHT")
+      GameTooltip:SetPlayerBuff(GetPlayerBuff(id-1,"HELPFUL"))
+    end)
 
     pfUI.uf.player.buff.buffs[i]:SetScript("OnLeave", function()
-        GameTooltip:Hide()
-      end)
+      GameTooltip:Hide()
+    end)
 
     pfUI.uf.player.buff.buffs[i]:SetScript("OnClick", function()
-        CancelPlayerBuff(GetPlayerBuff(id-1,"HELPFUL"))
-      end)
-    pfUI.uf.player.buff.buffs[i]:SetScript("OnUpdate", function()
-        for i=1, 16 do
-          local timeleft = GetPlayerBuffTimeLeft(GetPlayerBuff(i-1,"HELPFUL"))
-          if timeleft ~= nil and timeleft ~= 0 then
-            -- if there are more than 0 seconds left
-            if timeleft < 60 then
-              -- show seconds if less than 60 seconds
-              pfUI.uf.player.buff.buffs[i].cd:SetText(ceil(timeleft))
-            elseif timeleft < 3600 then
-              -- show minutes if less than 3600 seconds (1 hour)
-              pfUI.uf.player.buff.buffs[i].cd:SetText(ceil(timeleft/60) .. 'm')
-            else
-              -- otherwise show hours
-              pfUI.uf.player.buff.buffs[i].cd:SetText(ceil(timeleft/3600) .. 'h')
-            end
-          else
-            -- if there's no time left or not set, empty buff text
-            pfUI.uf.player.buff.buffs[i].cd:SetText("")
-          end
-        end
-      end)
+      CancelPlayerBuff(GetPlayerBuff(id-1,"HELPFUL"))
+    end)
 
+    pfUI.uf.player.buff.buffs[i]:SetScript("OnUpdate", function()
+      local timeleft = GetPlayerBuffTimeLeft(GetPlayerBuff(this:GetID()-1,"HELPFUL"))
+      if timeleft ~= nil and timeleft ~= 0 then
+        -- if there are more than 0 seconds left
+        if timeleft < 60 then
+          -- show seconds if less than 60 seconds
+          this.cd:SetText(ceil(timeleft))
+        elseif timeleft < 3600 then
+          -- show minutes if less than 3600 seconds (1 hour)
+          this.cd:SetText(ceil(timeleft/60) .. 'm')
+        else
+          -- otherwise show hours
+          this.cd:SetText(ceil(timeleft/3600) .. 'h')
+        end
+      else
+        -- if there's no time left or not set, empty buff text
+        this.cd:SetText("")
+      end
+    end)
   end
 
   function pfUI.uf.player.buff.RefreshBuffs()
