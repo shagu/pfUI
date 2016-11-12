@@ -41,11 +41,63 @@ pfUI:RegisterModule("panel", function ()
   end)
 
   pfUI.panel.clock = CreateFrame("Frame",nil,UIParent)
+
+  pfUI.panel.clock.timerFrame = CreateFrame("Frame", "pfUITimer", UIParent)
+  pfUI.panel.clock.timerFrame:Hide()
+  pfUI.panel.clock.timerFrame:SetWidth(120)
+  pfUI.panel.clock.timerFrame:SetHeight(35)
+  pfUI.panel.clock.timerFrame:SetPoint("TOP", 0, -100)
+  pfUI.utils:loadPosition(pfUI.panel.clock.timerFrame)
+
+  pfUI.panel.clock.timerFrame.text = pfUI.panel.clock.timerFrame:CreateFontString("Status", "LOW", "GameFontNormal")
+  pfUI.panel.clock.timerFrame.text:SetFontObject(GameFontWhite)
+  pfUI.panel.clock.timerFrame.text:SetFont("Interface\\AddOns\\pfUI\\fonts\\" .. pfUI_config.global.font_default .. ".ttf", pfUI_config.global.font_size, "OUTLINE")
+  pfUI.panel.clock.timerFrame.text:SetAllPoints(pfUI.panel.clock.timerFrame)
+
+  pfUI.panel.clock.timerFrame:SetScript("OnUpdate", function()
+      if not pfUI.panel.clock.timerFrame.Snapshot then pfUI.panel.clock.timerFrame.Snapshot = GetTime() end
+      pfUI.panel.clock.timerFrame.curTime = SecondsToTime(floor(GetTime() - pfUI.panel.clock.timerFrame.Snapshot))
+      if pfUI.panel.clock.timerFrame.curTime ~= "" then
+        pfUI.panel.clock.timerFrame.text:SetText("|c33cccccc" .. pfUI.panel.clock.timerFrame.curTime)
+      else
+        pfUI.panel.clock.timerFrame.text:SetText("|cffff3333 --- NEW TIMER ---")
+      end
+    end)
+
   pfUI.panel.clock:SetScript("OnUpdate",function(s,e)
     if not pfUI.panel.clock.tick then pfUI.panel.clock.tick = GetTime() - 1 end
     if GetTime() >= pfUI.panel.clock.tick + 1 then
+      -- time date
+      local tooltip = function ()
+        local posX, posY = GetPlayerMapPosition("player")
+        local real = GetRealZoneText()
+        local sub = GetSubZoneText()
+        GameTooltip:ClearLines()
+        GameTooltip:SetOwner(this, "ANCHOR_NONE")
+        GameTooltip:AddLine("|cff555555Timer")
+        GameTooltip:AddDoubleLine("Left Click", "|cffffffffShow/Hide Timer")
+        GameTooltip:AddDoubleLine("Right Click", "|cffffffffReset Timer")
+        GameTooltip:Show()
+      end
+
+      local click = function ()
+        this:RegisterForClicks("LeftButtonUp", "RightButtonUp")
+        if arg1 == "LeftButton" then
+          if pfUI.panel.clock.timerFrame:IsShown() then
+            pfUI.panel.clock.timerFrame:Hide()
+          else
+            pfUI.panel.clock.timerFrame:Show()
+          end
+        elseif arg1 == "RightButton" then
+          pfUI.panel.clock.timerFrame.Snapshot = GetTime()
+        end
+
+      end
+
       pfUI.panel.clock.tick = GetTime()
-      pfUI.panel:OutputPanel("time", date("%H:%M:%S"))
+      pfUI.panel:OutputPanel("time", date("%H:%M:%S"), tooltip, click)
+
+      -- lag fps
       local _, _, lag = GetNetStats()
       local fps = floor(GetFramerate())
       pfUI.panel:OutputPanel("fps", floor(GetFramerate()) .. " fps & " .. lag .. " ms")

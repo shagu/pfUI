@@ -82,7 +82,7 @@ pfUI:RegisterModule("gui", function ()
       pfUI.uf.player, pfUI.uf.target, pfUI.uf.targettarget, pfUI.uf.pet,
       pfUI.bars.shapeshift, pfUI.bars.bottomleft, pfUI.bars.bottomright,
       pfUI.bars.vertical, pfUI.bars.pet, pfUI.bars.bottom,
-      pfUI.panel.minimap, pfUI.panel.microbutton,
+      pfUI.panel.minimap, pfUI.panel.microbutton, pfUI.panel.clock.timerFrame,
       pfUI.uf.group[1], pfUI.uf.group[2], pfUI.uf.group[3], pfUI.uf.group[4],
       pfUI.uf.raid[1], pfUI.uf.raid[2], pfUI.uf.raid[3], pfUI.uf.raid[4], pfUI.uf.raid[5],
       pfUI.uf.raid[6], pfUI.uf.raid[7], pfUI.uf.raid[8], pfUI.uf.raid[9], pfUI.uf.raid[10],
