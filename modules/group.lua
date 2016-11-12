@@ -146,7 +146,7 @@ pfUI:RegisterModule("group", function ()
     pfUI.uf.group[i]:RegisterForClicks('LeftButtonUp', 'RightButtonUp')
 
     pfUI.uf.group[i]:SetScript("OnEnter", function()
-      GameTooltip:SetOwner(this, "ANCHOR_NONE")
+      GameTooltip_SetDefaultAnchor(GameTooltip, this)
       GameTooltip:SetUnit("party" .. this.id)
       GameTooltip:Show()
     end)

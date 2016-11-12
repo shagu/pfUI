@@ -73,7 +73,7 @@ pfUI:RegisterModule("panel", function ()
         local real = GetRealZoneText()
         local sub = GetSubZoneText()
         GameTooltip:ClearLines()
-        GameTooltip:SetOwner(this, "ANCHOR_NONE")
+        GameTooltip_SetDefaultAnchor(GameTooltip, this)
         GameTooltip:AddLine("|cff555555Timer")
         GameTooltip:AddDoubleLine("Left Click", "|cffffffffShow/Hide Timer")
         GameTooltip:AddDoubleLine("Right Click", "|cffffffffReset Timer")
@@ -101,7 +101,7 @@ pfUI:RegisterModule("panel", function ()
       local tooltip = function ()
         local active = 0
         GameTooltip:ClearLines()
-        GameTooltip:SetOwner(this, "ANCHOR_NONE")
+        GameTooltip_SetDefaultAnchor(GameTooltip, this)
         GameTooltip:AddLine("|cff555555Systeminfo")
         for i=1, GetNumAddOns() do
           if IsAddOnLoaded(i) then
@@ -195,7 +195,7 @@ pfUI:RegisterModule("panel", function ()
         dchar = "|cff88ff88+"
       end
 
-      GameTooltip:SetOwner(this, "ANCHOR_NONE")
+      GameTooltip_SetDefaultAnchor(GameTooltip, this)
       GameTooltip:ClearLines()
 
       GameTooltip:AddLine("|cff555555Money")
@@ -294,7 +294,7 @@ pfUI:RegisterModule("panel", function ()
       local real = GetRealZoneText()
       local sub = GetSubZoneText()
       GameTooltip:ClearLines()
-      GameTooltip:SetOwner(this, "ANCHOR_NONE")
+      GameTooltip_SetDefaultAnchor(GameTooltip, this)
       GameTooltip:AddLine("|cffffffff" .. real)
       GameTooltip:AddLine(sub)
       GameTooltip:AddLine("|cffaaaaaa" .. round(posX*100,1) .. " / " .. round(posY*100,1))

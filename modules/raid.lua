@@ -111,7 +111,7 @@ pfUI:RegisterModule("raid", function ()
       pfUI.uf.raid[i]:RegisterForClicks('LeftButtonUp', 'RightButtonUp')
 
       pfUI.uf.raid[i]:SetScript("OnEnter", function()
-        GameTooltip:SetOwner(this, "ANCHOR_NONE")
+        GameTooltip_SetDefaultAnchor(GameTooltip, this)
         GameTooltip:SetUnit("raid" .. this.id)
         GameTooltip:Show()
       end)
