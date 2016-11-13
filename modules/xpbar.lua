@@ -149,9 +149,6 @@ pfUI:RegisterModule("xpbar", function ()
 
   pfUI.rep:EnableMouse()
   pfUI.rep:SetScript("OnEnter", function()
-      pfUI.rep.mouseover = true
-      pfUI.rep:SetAlpha(1)
-
       for i=1, GetNumFactions() do
         local name, description, standingID, barMin, barMax, barValue, atWarWith, canToggleAtWar, isHeader, isCollapsed, isWatched = GetFactionInfo(i)
         if isWatched then
@@ -169,6 +166,9 @@ pfUI:RegisterModule("xpbar", function ()
           GameTooltip:AddLine(name .. " (" .. GetText("FACTION_STANDING_LABEL"..standingID, gender) .. ")", color.r + .3, color.g + .3, color.b + .3)
           GameTooltip:AddLine(barValue .. " / " .. barMax .. " (" .. round(barValue / barMax * 100) .. "%)",1,1,1)
           GameTooltip:Show()
+
+          pfUI.rep.mouseover = true
+          pfUI.rep:SetAlpha(1)
         end
       end
     end)
