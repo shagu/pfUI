@@ -347,9 +347,21 @@ pfUI:RegisterModule("bags", function ()
 
         if frame == pfUI.bag.left then
           frame.bagslots.slots[slot].frame:SetID(slot + 4)
+          frame.bagslots.slots[slot].frame.slot = slot + 3
         else
+          frame.bagslots.slots[slot].frame.slot = slot
           frame.bagslots.slots[slot].slot = slot
         end
+
+        frame.bagslots.slots[slot].frame:SetScript("OnEnter", function()
+           for slot, f in ipairs(pfUI.bags[this.slot + 1].slots) do
+              f.frame:SetBackdrop(pfUI.backdrop_col)
+              f.frame:SetBackdropBorderColor(.2,1,.8,1)
+            end
+          end)
+        frame.bagslots.slots[slot].frame:SetScript("OnLeave", function()
+          pfUI.bag:UpdateBag(this.slot + 1)
+        end)
       end
 
       local left = (slot-min)*(pfUI.bag.button_size/5*4+pfUI_config.bars.border) + pfUI_config.bars.border*2
