@@ -354,6 +354,7 @@ pfUI:RegisterModule("player", function ()
   for i=1, 16 do
     local id = i
     pfUI.uf.player.debuff.debuffs[i] = CreateFrame("Button", "pfUIPlayerDebuff" .. i, pfUI.uf.player)
+    pfUI.uf.player.debuff.debuffs[i]:SetID(i)
     pfUI.uf.player.debuff.debuffs[i].stacks = pfUI.uf.player.debuff.debuffs[i]:CreateFontString(nil, "OVERLAY", pfUI.uf.player.debuff.debuffs[i])
     pfUI.uf.player.debuff.debuffs[i].stacks:SetFont("Interface\\AddOns\\pfUI\\fonts\\" .. pfUI_config.global.font_square .. ".ttf", pfUI_config.global.font_size, "OUTLINE")
     pfUI.uf.player.debuff.debuffs[i].stacks:SetPoint("BOTTOMRIGHT", pfUI.uf.player.debuff.debuffs[i], 2, -2)
@@ -384,38 +385,37 @@ pfUI:RegisterModule("player", function ()
     pfUI.uf.player.debuff.debuffs[i]:SetHeight(pfUI_config.unitframes.debuff_size)
     pfUI.uf.player.debuff.debuffs[i]:SetNormalTexture(nil)
     pfUI.uf.player.debuff.debuffs[i]:SetScript("OnEnter", function()
-        GameTooltip:SetOwner(this, "ANCHOR_BOTTOMRIGHT")
-        GameTooltip:SetPlayerBuff(GetPlayerBuff(id-1,"HARMFUL"))
-      end)
+      GameTooltip:SetOwner(this, "ANCHOR_BOTTOMRIGHT")
+      GameTooltip:SetPlayerBuff(GetPlayerBuff(id-1,"HARMFUL"))
+    end)
 
     pfUI.uf.player.debuff.debuffs[i]:SetScript("OnLeave", function()
-        GameTooltip:Hide()
-      end)
+      GameTooltip:Hide()
+    end)
 
     pfUI.uf.player.debuff.debuffs[i]:SetScript("OnClick", function()
-        CancelPlayerBuff(GetPlayerBuff(id-1,"HARMFUL"))
-      end)
+      CancelPlayerBuff(GetPlayerBuff(id-1,"HARMFUL"))
+    end)
+
     pfUI.uf.player.debuff.debuffs[i]:SetScript("OnUpdate", function()
-        for i=1, 16 do
-          local timeleft = GetPlayerBuffTimeLeft(GetPlayerBuff(i-1,"HARMFUL"))
-          if timeleft ~= nil and timeleft ~= 0 then
-            -- if there are more than 0 seconds left
-            if timeleft < 60 then
-              -- show seconds if less than 60 seconds
-              pfUI.uf.player.debuff.debuffs[i].cd:SetText(ceil(timeleft))
-            elseif timeleft < 3600 then
-              -- show minutes if less than 3600 seconds (1 hour)
-              pfUI.uf.player.debuff.debuffs[i].cd:SetText(ceil(timeleft/60)..'m')
-            else
-              -- otherwise show hours
-              pfUI.uf.player.buff.buffs[i].cd:SetText(ceil(timeleft/3600) .. 'h')
-            end
-          else
-            -- if there's no time left or not set, empty buff text
-            pfUI.uf.player.buff.buffs[i].cd:SetText("")
-          end
+      local timeleft = GetPlayerBuffTimeLeft(GetPlayerBuff(this:GetID()-1,"HARMFUL"))
+      if timeleft ~= nil and timeleft ~= 0 then
+        -- if there are more than 0 seconds left
+        if timeleft < 60 then
+          -- show seconds if less than 60 seconds
+          pfUI.uf.player.debuff.debuffs[i].cd:SetText(ceil(timeleft))
+        elseif timeleft < 3600 then
+          -- show minutes if less than 3600 seconds (1 hour)
+          pfUI.uf.player.debuff.debuffs[i].cd:SetText(ceil(timeleft/60)..'m')
+        else
+          -- otherwise show hours
+          pfUI.uf.player.buff.buffs[i].cd:SetText(ceil(timeleft/3600) .. 'h')
         end
-      end)
+      else
+        -- if there's no time left or not set, empty buff text
+        pfUI.uf.player.buff.buffs[i].cd:SetText("")
+      end
+    end)
 
   end
 
