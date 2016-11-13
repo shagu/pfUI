@@ -17,7 +17,6 @@ pfUI:RegisterModule("xpbar", function ()
           pfUI.xp.restedbar:Show()
           pfUI.xp.restedbar:SetMinMaxValues(0, UnitXPMax("player"))
           pfUI.xp.restedbar:SetValue(UnitXP("player") + GetXPExhaustion())
-          pfUI.xp.restedbar:SetAlpha(pfUI.xp:GetAlpha()/2)
         else
           pfUI.xp.restedbar:Hide()
         end
@@ -39,7 +38,6 @@ pfUI:RegisterModule("xpbar", function ()
       if GetTime() >= pfUI.xp.tick then
         pfUI.xp.tick = nil
         pfUI.xp:SetAlpha(pfUI.xp:GetAlpha() - .05)
-        pfUI.xp.restedbar:SetAlpha(pfUI.xp:GetAlpha()/2)
       end
     end)
 
@@ -47,8 +45,6 @@ pfUI:RegisterModule("xpbar", function ()
   pfUI.xp:SetScript("OnEnter", function()
       pfUI.xp.mouseover = true
       pfUI.xp:SetAlpha(1)
-      pfUI.xp.restedbar:SetAlpha(pfUI.xp:GetAlpha()/2)
-
     end)
 
   pfUI.xp:SetScript("OnLeave", function()
@@ -61,6 +57,7 @@ pfUI:RegisterModule("xpbar", function ()
   pfUI.xp.bar:ClearAllPoints()
   pfUI.xp.bar:SetPoint("TOPLEFT", pfUI.xp, "TOPLEFT", 3, -3)
   pfUI.xp.bar:SetPoint("BOTTOMRIGHT", pfUI.xp, "BOTTOMRIGHT", -3, 3)
+  pfUI.xp.bar:SetFrameStrata("MEDIUM")
   pfUI.xp.bar:SetStatusBarColor(.25,.25,1,1)
   pfUI.xp.bar:SetMinMaxValues(0, 100)
   pfUI.xp.bar:SetOrientation("VERTICAL")
@@ -72,7 +69,7 @@ pfUI:RegisterModule("xpbar", function ()
   pfUI.xp.restedbar:SetPoint("TOPLEFT", pfUI.xp, "TOPLEFT", 3, -3)
   pfUI.xp.restedbar:SetPoint("BOTTOMRIGHT", pfUI.xp, "BOTTOMRIGHT", -3, 3)
   pfUI.xp.restedbar:SetFrameStrata("HIGH")
-  pfUI.xp.restedbar:SetStatusBarColor(1,.25,1,1)
+  pfUI.xp.restedbar:SetStatusBarColor(1,.25,1,.5)
   pfUI.xp.restedbar:SetMinMaxValues(0, 100)
   pfUI.xp.restedbar:SetOrientation("VERTICAL")
 
