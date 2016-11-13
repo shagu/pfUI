@@ -45,11 +45,31 @@ pfUI:RegisterModule("xpbar", function ()
   pfUI.xp:SetScript("OnEnter", function()
       pfUI.xp.mouseover = true
       pfUI.xp:SetAlpha(1)
+      local xp, xpmax, exh = UnitXP("player"), UnitXPMax("player"), GetXPExhaustion()
+      local xp_perc = round(xp / xpmax * 100)
+      local exh_perc = round(GetXPExhaustion() / xpmax * 100)
+      local remaining = xpmax - xp
+      local remaining_perc = round(remaining / xpmax * 100)
+
+      GameTooltip:ClearLines()
+      GameTooltip_SetDefaultAnchor(GameTooltip, this)
+      GameTooltip:SetOwner(this, "ANCHOR_CURSOR")
+      GameTooltip:AddDoubleLine("|cff555555Experience")
+      GameTooltip:AddDoubleLine("XP", "|cffffffff" .. xp .. " / " .. xpmax .. " (" .. xp_perc .. "%)")
+      GameTooltip:AddDoubleLine("Remaining", "|cffffffff" .. remaining .. " (" .. remaining_perc .. "%)")
+      if IsResting() then
+        GameTooltip:AddDoubleLine("Status", "|cffffffffResting")
+      end
+      if GetXPExhaustion() > 0 then
+        GameTooltip:AddDoubleLine("Rested", "|cff5555ff+" .. exh .. " (" .. exh_perc .. "%)")
+      end
+      GameTooltip:Show()
     end)
 
   pfUI.xp:SetScript("OnLeave", function()
       pfUI.xp.mouseover = false
       pfUI.xp.tick = GetTime() + 3.00
+      GameTooltip:Hide()
     end)
 
   pfUI.xp.bar = CreateFrame("StatusBar", nil, pfUI.xp)
@@ -128,10 +148,31 @@ pfUI:RegisterModule("xpbar", function ()
   pfUI.rep:SetScript("OnEnter", function()
       pfUI.rep.mouseover = true
       pfUI.rep:SetAlpha(1)
+
+      for i=1, GetNumFactions() do
+        local name, description, standingID, barMin, barMax, barValue, atWarWith, canToggleAtWar, isHeader, isCollapsed, isWatched = GetFactionInfo(i)
+        if isWatched then
+          barMax = barMax - barMin
+          barValue = barValue - barMin
+          barMin = 0
+
+          local color = FACTION_BAR_COLORS[standingID]
+          if not color then color = 1,1,1 end
+
+          GameTooltip:ClearLines()
+          GameTooltip_SetDefaultAnchor(GameTooltip, this)
+          GameTooltip:SetOwner(this, "ANCHOR_CURSOR")
+          GameTooltip:AddLine("|cff555555Reputation")
+          GameTooltip:AddLine(name .. " (" .. GetText("FACTION_STANDING_LABEL"..standingID, gender) .. ")", color.r + .3, color.g + .3, color.b + .3)
+          GameTooltip:AddLine(barValue .. " / " .. barMax .. " (" .. round(barValue / barMax * 100) .. "%)",1,1,1)
+          GameTooltip:Show()
+        end
+      end
     end)
 
   pfUI.rep:SetScript("OnLeave", function()
       pfUI.rep.mouseover = false
       pfUI.rep.tick = GetTime() + 3.00
+      GameTooltip:Hide()
     end)
 end)
