@@ -47,9 +47,12 @@ pfUI:RegisterModule("xpbar", function ()
       pfUI.xp:SetAlpha(1)
       local xp, xpmax, exh = UnitXP("player"), UnitXPMax("player"), GetXPExhaustion()
       local xp_perc = round(xp / xpmax * 100)
-      local exh_perc = round(GetXPExhaustion() / xpmax * 100)
       local remaining = xpmax - xp
       local remaining_perc = round(remaining / xpmax * 100)
+      local exh_perc = 0
+      if GetXPExhaustion() then
+        exh_perc = round(GetXPExhaustion() / xpmax * 100)
+      end
 
       GameTooltip:ClearLines()
       GameTooltip_SetDefaultAnchor(GameTooltip, this)
@@ -60,7 +63,7 @@ pfUI:RegisterModule("xpbar", function ()
       if IsResting() then
         GameTooltip:AddDoubleLine("Status", "|cffffffffResting")
       end
-      if GetXPExhaustion() > 0 then
+      if GetXPExhaustion() then
         GameTooltip:AddDoubleLine("Rested", "|cff5555ff+" .. exh .. " (" .. exh_perc .. "%)")
       end
       GameTooltip:Show()
