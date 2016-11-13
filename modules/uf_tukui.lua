@@ -1,4 +1,7 @@
 pfUI:RegisterModule("uf_tukui", function ()
+  -- do not go further on disabled UFs
+  if pfUI_config.unitframes.disable == "1" then return end
+
   if pfUI_config.unitframes.layout == "tukui" then
     pfUI.uf.player.caption = CreateFrame("Frame",nil, pfUI.uf.player)
     pfUI.uf.player.caption:SetBackdrop(pfUI.backdrop)

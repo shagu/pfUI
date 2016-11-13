@@ -1,4 +1,7 @@
 pfUI:RegisterModule("targettarget", function ()
+  -- do not go further on disabled UFs
+  if pfUI_config.unitframes.disable == "1" then return end
+
   pfUI.uf.targettargetNotify = CreateFrame("Button",nil,UIParent)
   pfUI.uf.targettargetNotify:SetScript("OnUpdate", function()
       if UnitExists("targettarget") or (pfUI.gitter and pfUI.gitter:IsShown()) then

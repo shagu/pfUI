@@ -1,4 +1,7 @@
 pfUI:RegisterModule("raid", function ()
+  -- do not go further on disabled UFs
+  if pfUI_config.unitframes.disable == "1" then return end
+
   pfUI.uf.raid = CreateFrame("Button","pfRaid",UIParent)
   pfUI.uf.raid:Hide()
 

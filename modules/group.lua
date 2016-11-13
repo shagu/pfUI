@@ -1,4 +1,6 @@
 pfUI:RegisterModule("group", function ()
+  -- do not go further on disabled UFs
+  if pfUI_config.unitframes.disable == "1" then return end
 
   -- hide blizzard group frames
   for i=1, 5 do

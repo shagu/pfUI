@@ -1,4 +1,7 @@
 pfUI:RegisterModule("player", function ()
+  -- do not go further on disabled UFs
+  if pfUI_config.unitframes.disable == "1" then return end
+
   PlayerFrame:Hide()
   PlayerFrame:UnregisterAllEvents()
 

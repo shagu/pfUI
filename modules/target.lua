@@ -1,4 +1,7 @@
 pfUI:RegisterModule("target", function ()
+  -- do not go further on disabled UFs
+  if pfUI_config.unitframes.disable == "1" then return end
+
     -- Hide Blizzard target frame and unregister all events to prevent it from popping up again
   TargetFrame:Hide()
   TargetFrame:UnregisterAllEvents()
