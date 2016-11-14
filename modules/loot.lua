@@ -83,14 +83,14 @@ pfUI:RegisterModule("loot", function ()
 
     frame.rarity = frame:CreateTexture(nil, "ARTWORK")
     frame.rarity:SetTexture"Interface\\AddOns\\pfUI\\img\\bar"
-    frame.rarity:SetPoint("LEFT", icon, "RIGHT", 0, 0)
+    frame.rarity:SetPoint("LEFT", frame.ficon, "RIGHT", 0, 0)
     frame.rarity:SetPoint("RIGHT", frame)
     frame.rarity:SetAlpha(.15)
     frame.rarity:SetAllPoints(frame)
 
     frame.hover = frame:CreateTexture(nil, "ARTWORK")
     frame.hover:SetTexture"Interface\\AddOns\\pfUI\\img\\bar"
-    frame.hover:SetPoint("LEFT", icon, "RIGHT", 0, 0)
+    frame.hover:SetPoint("LEFT", frame.ficon, "RIGHT", 0, 0)
     frame.hover:SetPoint("RIGHT", frame)
     frame.hover:SetAlpha(.15)
     frame.hover:SetAllPoints(frame)
