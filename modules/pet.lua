@@ -1,4 +1,7 @@
 pfUI:RegisterModule("pet", function ()
+  -- do not go further on disabled UFs
+  if pfUI_config.unitframes.disable == "1" then return end
+  
   pfUI.uf.pet = CreateFrame("Button","pfPet",UIParent)
 
   pfUI.uf.pet:SetWidth(100)
