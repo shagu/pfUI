@@ -5,10 +5,42 @@ pfUI:RegisterModule("raid", function ()
   pfUI.uf.raid = CreateFrame("Button","pfRaid",UIParent)
   pfUI.uf.raid:Hide()
 
+
+  function pfUI.uf.raid:RefreshUnit(unit)
+    if not unit.cache then unit.cache = {} end
+    unit.cache.hp = UnitHealth("raid"..unit.id)
+    unit.cache.hpmax = UnitHealthMax("raid"..unit.id)
+    unit.cache.power = UnitMana("raid" .. unit.id)
+    unit.cache.powermax = UnitManaMax("raid" .. unit.id)
+
+    unit.hp.bar:SetMinMaxValues(0, unit.cache.hpmax)
+    unit.power.bar:SetMinMaxValues(0, unit.cache.powermax)
+
+    _, class = UnitClass("raid"..unit.id)
+    local c = RAID_CLASS_COLORS[class]
+    local cr, cg, cb = 0, 0, 0
+    if c then cr, cg, cb =(c.r + .5) * .5, (c.g + .5) * .5, (c.b + .5) * .5 end
+    unit.hp.bar:SetStatusBarColor(cr, cg, cb)
+
+    local p = ManaBarColor[UnitPowerType("raid"..unit.id)]
+    local pr, pg, pb = 0, 0, 0
+    if p then pr, pg, pb = p.r + .5, p.g +.5, p.b +.5 end
+    unit.power.bar:SetStatusBarColor(pr, pg, pb)
+
+    if UnitName("raid"..unit.id) then
+      if unit.cache.hpmax ~= unit.cache.hp and pfUI_config.unitframes.raid.show_missing == "1" then
+        unit.caption:SetText("-" .. unit.cache.hpmax - unit.cache.hp)
+        unit.caption:SetTextColor(1,.3,.3)
+      else
+        unit.caption:SetText(UnitName("raid"..unit.id))
+        unit.caption:SetTextColor(1,1,1)
+      end
+      unit.caption:SetAllPoints(unit.hp.bar)
+    end
+  end
+
   pfUI.uf.raid:RegisterEvent("RAID_ROSTER_UPDATE")
   pfUI.uf.raid:RegisterEvent("VARIABLES_LOADED")
-  pfUI.uf.raid:RegisterEvent("UNIT_AURA")
-
   pfUI.uf.raid:SetScript("OnEvent", function()
     for i=1, 40 do
       pfUI.uf.raid[i].id = 0
@@ -24,6 +56,7 @@ pfUI:RegisterModule("raid", function ()
           if pfUI.uf.raid[ids].id == 0 then
             pfUI.uf.raid[ids].id = i
             pfUI.uf.raid[ids]:Show()
+            pfUI.uf.raid:RefreshUnit(pfUI.uf.raid[ids])
             break
           end
         end
@@ -181,6 +214,19 @@ pfUI:RegisterModule("raid", function ()
         end
       end)
 
+      pfUI.uf.raid[i]:RegisterEvent("UNIT_AURA")
+      pfUI.uf.raid[i]:RegisterEvent("UNIT_HEALTH")
+      pfUI.uf.raid[i]:RegisterEvent("UNIT_MAXHEALTH")
+      pfUI.uf.raid[i]:RegisterEvent("UNIT_MANA")
+      pfUI.uf.raid[i]:RegisterEvent("UNIT_MANAMAX")
+      pfUI.uf.raid[i]:RegisterEvent("RAID_ROSTER_UPDATE")
+
+      pfUI.uf.raid[i]:SetScript("OnEvent", function ()
+        if arg1 == "raid" .. this.id or event == "RAID_ROSTER_UPDATE" then
+          pfUI.uf.raid:RefreshUnit(this)
+        end
+      end)
+
       pfUI.uf.raid[i]:SetScript("OnUpdate", function ()
         if CheckInteractDistance("raid" .. this.id, 4) or not UnitName("raid" .. this.id) then
           this:SetAlpha(1)
@@ -189,16 +235,15 @@ pfUI:RegisterModule("raid", function ()
         end
 
         if UnitIsConnected("raid" .. this.id) then
-          this.hp.bar:SetMinMaxValues(0, UnitHealthMax("raid"..this.id))
-          this.power.bar:SetMinMaxValues(0, UnitManaMax("raid"..this.id))
+          if not this.cache then return end
 
           local hpDisplay = this.hp.bar:GetValue()
-          local hpReal = UnitHealth("raid"..this.id)
+          local hpReal = this.cache.hp
           local hpDiff = abs(hpReal - hpDisplay)
 
           if pfUI_config.unitframes.raid.invert_healthbar == "1" then
             hpDisplay = this.hp.bar:GetValue()
-            hpReal = UnitHealthMax("raid"..this.id) - UnitHealth("raid"..this.id)
+            hpReal = this.cache.hpmax - this.cache.hp
             hpDiff = abs(hpReal - hpDisplay)
           end
 
@@ -206,43 +251,26 @@ pfUI:RegisterModule("raid", function ()
             this.hp.bar:SetValue(hpDisplay + ceil(hpDiff / pfUI_config.unitframes.animation_speed))
           elseif hpDisplay > hpReal then
             this.hp.bar:SetValue(hpDisplay - ceil(hpDiff / pfUI_config.unitframes.animation_speed))
+          else
+            this.hp.bar:SetValue(this.cache.hp)
           end
 
           local powerDisplay = this.power.bar:GetValue()
-          local powerReal = UnitMana("raid"..this.id)
+          local powerReal = this.cache.power
           local powerDiff = abs(powerReal - powerDisplay)
 
           if powerDisplay < powerReal then
             this.power.bar:SetValue(powerDisplay + ceil(powerDiff / pfUI_config.unitframes.animation_speed))
           elseif powerDisplay > powerReal then
             this.power.bar:SetValue(powerDisplay - ceil(powerDiff / pfUI_config.unitframes.animation_speed))
+          else
+            this.power.bar:SetValue(this.cache.power)
           end
-
-          _, class = UnitClass("raid"..this.id)
-          local c = RAID_CLASS_COLORS[class]
-          local cr, cg, cb = 0, 0, 0
-          if c then cr, cg, cb =(c.r + .5) * .5, (c.g + .5) * .5, (c.b + .5) * .5 end
-
-          this.hp.bar:SetStatusBarColor(cr, cg, cb)
-
-          local pcolor = ManaBarColor[UnitPowerType("raid"..this.id)]
-          this.power.bar:SetStatusBarColor(pcolor.r + .5, pcolor.g +.5, pcolor.b +.5, 1)
-
         else
           this.hp.bar:SetMinMaxValues(0, 100)
           this.power.bar:SetMinMaxValues(0, 100)
           this.hp.bar:SetValue(0)
           this.power.bar:SetValue(0)
-        end
-        if UnitName("raid"..this.id) then
-          if UnitHealthMax("raid"..this.id) ~= UnitHealth("raid"..this.id) and pfUI_config.unitframes.raid.show_missing == "1" then
-            this.caption:SetText("-" .. UnitHealthMax("raid"..this.id) - UnitHealth("raid"..this.id))
-            this.caption:SetTextColor(1,.3,.3)
-          else
-            this.caption:SetText(UnitName("raid"..this.id))
-            this.caption:SetTextColor(1,1,1)
-          end
-          this.caption:SetAllPoints(this.hp.bar)
         end
       end)
     end
