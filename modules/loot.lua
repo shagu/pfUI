@@ -100,6 +100,11 @@ pfUI:RegisterModule("loot", function ()
     return frame
   end
 
+  pfUI.loot:SetScript("OnHide", function()
+    StaticPopup_Hide("CONFIRM_LOOT_DISTRIBUTION")
+    CloseLoot()
+  end)
+
   pfUI.loot:SetScript("OnEvent", function()
     local maxrarity, maxwidth = 0, 0
     if event == "OPEN_MASTER_LOOT_LIST" then
