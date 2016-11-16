@@ -32,25 +32,24 @@ pfUI:RegisterModule("player", function ()
   end
   UIDropDownMenu_Initialize(pfUI.uf.player.Dropdown, pfUI.uf.player.Dropdowni, "MENU")
 
+  pfUI.uf.player:RegisterEvent("UPDATE_FACTION")
+  pfUI.uf.player:RegisterEvent("RAID_TARGET_UPDATE")
+  pfUI.uf.player:RegisterEvent("PARTY_LEADER_CHANGED")
+  pfUI.uf.player:RegisterEvent("PARTY_LOOT_METHOD_CHANGED")
+
   pfUI.uf.player:RegisterEvent("PLAYER_ENTERING_WORLD")
+  pfUI.uf.player:RegisterEvent("UNIT_DISPLAYPOWER")
+
   pfUI.uf.player:RegisterEvent("UNIT_HEALTH")
   pfUI.uf.player:RegisterEvent("UNIT_MAXHEALTH")
-  pfUI.uf.player:RegisterEvent("UNIT_DISPLAYPOWER")
   pfUI.uf.player:RegisterEvent("UNIT_MANA")
   pfUI.uf.player:RegisterEvent("UNIT_MAXMANA")
   pfUI.uf.player:RegisterEvent("UNIT_RAGE")
   pfUI.uf.player:RegisterEvent("UNIT_MAXRAGE")
   pfUI.uf.player:RegisterEvent("UNIT_ENERGY")
   pfUI.uf.player:RegisterEvent("UNIT_MAXENERGY")
-  pfUI.uf.player:RegisterEvent("RAID_TARGET_UPDATE")
-  pfUI.uf.player:RegisterEvent("PARTY_LEADER_CHANGED")
-  pfUI.uf.player:RegisterEvent("PARTY_LOOT_METHOD_CHANGED")
-  pfUI.uf.player:RegisterEvent("UPDATE_FACTION")
 
   pfUI.uf.player:SetScript("OnEvent", function()
-      if ( event == "UNIT_DISPLAYPOWER" and arg1 and arg1 == "player" ) or event == "PLAYER_ENTERING_WORLD" then
-        pfUI.uf.player.power.bar:SetValue(0)
-      end
       if event == "UPDATE_FACTION" then
         if pfUI_config.unitframes.player.showPVP == "1" and UnitIsPVP("player") then
           if pfUI.uf.player.pvpicon == nil then
@@ -76,63 +75,81 @@ pfUI:RegisterModule("player", function ()
         elseif pfUI.uf.player.pvpicon then
           pfUI.uf.player.pvpicon:Hide()
         end
-      end
-      local raidIcon = GetRaidTargetIndex("player")
-      if raidIcon then
-        SetRaidTargetIconTexture(pfUI.uf.player.hp.raidIcon.texture, raidIcon)
-        pfUI.uf.player.hp.raidIcon:Show()
-      else
-        pfUI.uf.player.hp.raidIcon:Hide()
-      end
-      if UnitIsPartyLeader("player") then
-        pfUI.uf.player.hp.leaderIcon:Show()
-      else
-        pfUI.uf.player.hp.leaderIcon:Hide()
+        return
       end
 
-      local _, lootmaster = GetLootMethod()
-      if lootmaster and pfUI.uf.player.id == lootmaster then
-        pfUI.uf.player.hp.lootIcon:Show()
-      else
-        pfUI.uf.player.hp.lootIcon:Hide()
+      if event == "RAID_TARGET_UPDATE" or event == "PLAYER_ENTERING_WORLD" then
+        local raidIcon = GetRaidTargetIndex("player")
+        if raidIcon then
+          SetRaidTargetIconTexture(pfUI.uf.player.hp.raidIcon.texture, raidIcon)
+          pfUI.uf.player.hp.raidIcon:Show()
+        else
+          pfUI.uf.player.hp.raidIcon:Hide()
+        end
+        if event == "RAID_TARGET_UPDATE" then return end
       end
 
-      local hp, hpmax = UnitHealth("player"), UnitHealthMax("player")
-      local power, powermax = UnitMana("player"), UnitManaMax("player")
-      _, class = UnitClass("player")
-      local color = RAID_CLASS_COLORS[class]
-
-      local cr, cg, cb = (color.r + .5) * .5, (color.g + .5) * .5, (color.b + .5) * .5
-      local perc = hp / hpmax
-
-      pfUI.uf.player.hp.bar:SetMinMaxValues(0, hpmax)
-      pfUI.uf.player.hp.bar:SetStatusBarColor(cr, cg, cb, hp / hpmax / 4 + .75)
-
-      local r1, g1, b1, r2, g2, b2
-      if perc <= 0.5 then
-        perc = perc * 2; r1, g1, b1 = .9, .5, .5; r2, g2, b2 = .9, .9, .5
-      else
-        perc = perc * 2 - 1; r1, g1, b1 = .9, .9, .5; r2, g2, b2 = .5, .9, .5
-      end
-      local hr, hg, hb = r1 + (r2 - r1)*perc, g1 + (g2 - g1)*perc, b1 + (b2 - b1)*perc
-      pfUI.uf.player.hpText:SetTextColor(hr, hg, hb,1)
-
-      if hp ~= hpmax then
-        pfUI.uf.player.hpText:SetText(hp .. " - " .. ceil(hp / hpmax * 100) .. "%")
-      else
-        pfUI.uf.player.hpText:SetText(hp)
+      if event == "PARTY_LEADER_CHANGED" or event == "PLAYER_ENTERING_WORLD" then
+        if UnitIsPartyLeader("player") then
+          pfUI.uf.player.hp.leaderIcon:Show()
+        else
+          pfUI.uf.player.hp.leaderIcon:Hide()
+        end
+        if event == "PARTY_LEADER_CHANGED" then return end
       end
 
-      PowerColor = ManaBarColor[UnitPowerType("player")]
-      pfUI.uf.player.power.bar:SetStatusBarColor(PowerColor.r + .5, PowerColor.g +.5, PowerColor.b +.5, 1)
-      pfUI.uf.player.power.bar:SetMinMaxValues(0, UnitManaMax("player"))
+      if event == "PARTY_LOOT_METHOD_CHANGED" or event == "PLAYER_ENTERING_WORLD" then
+        local _, lootmaster = GetLootMethod()
+        if lootmaster and pfUI.uf.player.id == lootmaster then
+          pfUI.uf.player.hp.lootIcon:Show()
+        else
+          pfUI.uf.player.hp.lootIcon:Hide()
+        end
+        if event == "PARTY_LOOT_METHOD_CHANGED" then return end
+      end
 
-      pfUI.uf.player.powerText:SetTextColor(PowerColor.r + .5, PowerColor.g +.5, PowerColor.b +.5,1)
+      if (arg1 and arg1 == "player") or event == "PLAYER_ENTERING_WORLD" then
+        if event == "UNIT_DISPLAYPOWER" or event == "PLAYER_ENTERING_WORLD" then
+          pfUI.uf.player.power.bar:SetValue(0)
+        end
 
-      pfUI.uf.player.powerText:SetText( UnitMana("player") )
+        local hp, hpmax = UnitHealth("player"), UnitHealthMax("player")
+        local power, powermax = UnitMana("player"), UnitManaMax("player")
+        _, class = UnitClass("player")
+        local color = RAID_CLASS_COLORS[class]
 
-      pfUI.uf.player.hpReal = hp
-      pfUI.uf.player.powerReal = power
+        local cr, cg, cb = (color.r + .5) * .5, (color.g + .5) * .5, (color.b + .5) * .5
+        local perc = hp / hpmax
+
+        pfUI.uf.player.hp.bar:SetMinMaxValues(0, hpmax)
+        pfUI.uf.player.hp.bar:SetStatusBarColor(cr, cg, cb, hp / hpmax / 4 + .75)
+
+        local r1, g1, b1, r2, g2, b2
+        if perc <= 0.5 then
+          perc = perc * 2; r1, g1, b1 = .9, .5, .5; r2, g2, b2 = .9, .9, .5
+        else
+          perc = perc * 2 - 1; r1, g1, b1 = .9, .9, .5; r2, g2, b2 = .5, .9, .5
+        end
+        local hr, hg, hb = r1 + (r2 - r1)*perc, g1 + (g2 - g1)*perc, b1 + (b2 - b1)*perc
+        pfUI.uf.player.hpText:SetTextColor(hr, hg, hb,1)
+
+        if hp ~= hpmax then
+          pfUI.uf.player.hpText:SetText(hp .. " - " .. ceil(hp / hpmax * 100) .. "%")
+        else
+          pfUI.uf.player.hpText:SetText(hp)
+        end
+
+        PowerColor = ManaBarColor[UnitPowerType("player")]
+        pfUI.uf.player.power.bar:SetStatusBarColor(PowerColor.r + .5, PowerColor.g +.5, PowerColor.b +.5, 1)
+        pfUI.uf.player.power.bar:SetMinMaxValues(0, UnitManaMax("player"))
+
+        pfUI.uf.player.powerText:SetTextColor(PowerColor.r + .5, PowerColor.g +.5, PowerColor.b +.5,1)
+
+        pfUI.uf.player.powerText:SetText( UnitMana("player") )
+
+        pfUI.uf.player.hpReal = hp
+        pfUI.uf.player.powerReal = power
+      end
     end)
 
   pfUI.uf.player:SetScript("OnUpdate", function()
