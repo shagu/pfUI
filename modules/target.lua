@@ -25,8 +25,13 @@ pfUI:RegisterModule("target", function ()
       end
     end)
 
-  pfUI.uf.target:RegisterEvent("PLAYER_ENTERING_WORLD")
+  pfUI.uf.target:RegisterEvent("RAID_TARGET_UPDATE")
+  pfUI.uf.target:RegisterEvent("PARTY_LEADER_CHANGED")
+  pfUI.uf.target:RegisterEvent("PARTY_LEADER_CHANGED")
+  pfUI.uf.target:RegisterEvent("PARTY_LOOT_METHOD_CHANGED")
   pfUI.uf.target:RegisterEvent("PLAYER_TARGET_CHANGED")
+
+  pfUI.uf.target:RegisterEvent("PLAYER_ENTERING_WORLD")
   pfUI.uf.target:RegisterEvent("UNIT_HEALTH")
   pfUI.uf.target:RegisterEvent("UNIT_MAXHEALTH")
   pfUI.uf.target:RegisterEvent("UNIT_DISPLAYPOWER")
@@ -36,9 +41,6 @@ pfUI:RegisterModule("target", function ()
   pfUI.uf.target:RegisterEvent("UNIT_MAXRAGE")
   pfUI.uf.target:RegisterEvent("UNIT_ENERGY")
   pfUI.uf.target:RegisterEvent("UNIT_MAXENERGY")
-  pfUI.uf.target:RegisterEvent("RAID_TARGET_UPDATE")
-  pfUI.uf.target:RegisterEvent("PARTY_LEADER_CHANGED")
-  pfUI.uf.target:RegisterEvent("PARTY_LOOT_METHOD_CHANGED")
 
   pfUI.uf.target:SetScript("OnEvent", function()
       if UnitExists("target") then
@@ -51,24 +53,31 @@ pfUI:RegisterModule("target", function ()
         return
       end
 
-    local raidIcon = GetRaidTargetIndex("target")
-      if raidIcon then
-        SetRaidTargetIconTexture(pfUI.uf.target.hp.raidIcon.texture, raidIcon)
-        pfUI.uf.target.hp.raidIcon:Show()
-      else
-        pfUI.uf.target.hp.raidIcon:Hide()
-      end
-      if UnitIsPartyLeader("target") then
-        pfUI.uf.target.hp.leaderIcon:Show()
-      else
-        pfUI.uf.target.hp.leaderIcon:Hide()
+      if event == "RAID_TARGET_UPDATE" or event == "PLAYER_TARGET_CHANGED" then
+        local raidIcon = GetRaidTargetIndex("target")
+        if raidIcon then
+          SetRaidTargetIconTexture(pfUI.uf.target.hp.raidIcon.texture, raidIcon)
+          pfUI.uf.target.hp.raidIcon:Show()
+        else
+          pfUI.uf.target.hp.raidIcon:Hide()
+        end
       end
 
-      local _, lootmaster = GetLootMethod()
-      if lootmaster and pfUI.uf.target.id == lootmaster then
-        pfUI.uf.target.hp.lootIcon:Show()
-      else
-        pfUI.uf.target.hp.lootIcon:Hide()
+      if event == "PARTY_LEADER_CHANGED" or event == "PLAYER_TARGET_CHANGED" then
+        if UnitIsPartyLeader("target") then
+          pfUI.uf.target.hp.leaderIcon:Show()
+        else
+          pfUI.uf.target.hp.leaderIcon:Hide()
+        end
+      end
+
+      if event == "PARTY_LOOT_METHOD_CHANGED" or event == "PLAYER_TARGET_CHANGED" then
+        local _, lootmaster = GetLootMethod()
+        if lootmaster and pfUI.uf.target.id == lootmaster then
+          pfUI.uf.target.hp.lootIcon:Show()
+        else
+          pfUI.uf.target.hp.lootIcon:Hide()
+        end
       end
 
       if event == "PLAYER_TARGET_CHANGED" or event == "PLAYER_ENTERING_WORLD" then
@@ -76,86 +85,88 @@ pfUI:RegisterModule("target", function ()
         pfUI.uf.target.hp.bar:SetValue(0)
       end
 
-      local hp, hpmax
-      if MobHealth3 then
-        hp, hpmax = MobHealth3:GetUnitHealth("target")
-      else
-        hp, hpmax = UnitHealth("target"), UnitHealthMax("target")
+      if (arg1 and arg1 == "target") or event == "PLAYER_TARGET_CHANGED" then
+        local hp, hpmax
+        if MobHealth3 then
+          hp, hpmax = MobHealth3:GetUnitHealth("target")
+        else
+          hp, hpmax = UnitHealth("target"), UnitHealthMax("target")
+        end
+        local power, powermax = UnitMana("target"), UnitManaMax("target")
+
+        if hp ~= hpmax and hpmax ~= 100 then
+          pfUI.uf.target.hpText:SetText( hp .. " - " .. ceil(hp / hpmax * 100) .. "%")
+        else
+          pfUI.uf.target.hpText:SetText( hp)
+        end
+
+        local color = { r = 1, g = 1, b = 1 }
+        if UnitIsPlayer("target") then
+          _, class = UnitClass("target")
+          color = RAID_CLASS_COLORS[class]
+        else
+          color = UnitReactionColor[UnitReaction("target", "player")]
+        end
+
+        local r, g, b = (color.r + .5) * .5, (color.g + .5) * .5, (color.b + .5) * .5
+
+        pfUI.uf.target.hp.bar:SetMinMaxValues(0, hpmax)
+        pfUI.uf.target.hp.bar:SetStatusBarColor(r, g, b, hp / hpmax / 4 + .75)
+        pfUI.uf.target.powerText:SetTextColor(r, g, b, 1)
+
+        local perc = hp / hpmax
+        local r1, g1, b1, r2, g2, b2
+        if perc <= 0.5 then
+          perc = perc * 2; r1, g1, b1 = .9, .5, .5; r2, g2, b2 = .9, .9, .5
+        else
+          perc = perc * 2 - 1; r1, g1, b1 = .9, .9, .5; r2, g2, b2 = .5, .9, .5
+        end
+        local r, g, b = r1 + (r2 - r1)*perc, g1 + (g2 - g1)*perc, b1 + (b2 - b1)*perc
+        pfUI.uf.target.hpText:SetTextColor(r, g, b,1)
+
+        local leveldiff = UnitLevel("player") - UnitLevel("target")
+        local levelcolor
+        if leveldiff >= 9 then
+          levelcolor = "555555"
+        elseif leveldiff >= 3 then
+          levelcolor = "55ff55"
+        elseif leveldiff >= -2 then
+          levelcolor = "aaff55"
+        elseif leveldiff >= -4 then
+          levelcolor = "ffaa55"
+        else
+          levelcolor = "ff5555"
+        end
+
+        local name = string.sub(UnitName("target"),1,25)
+        if strlen(UnitName("target")) > 25 then
+          name = name .. "..."
+        end
+
+        local level = UnitLevel("target")
+        if level == -1 then level = "??" end
+
+        if UnitClassification("target") == "worldboss" then
+          level = level .. "B"
+        elseif UnitClassification("target") == "rareelite" then
+          level = level .. "R+"
+        elseif UnitClassification("target") == "elite" then
+          level = level .. "+"
+        elseif UnitClassification("target") == "rare" then
+          level = level .. "R"
+        end
+
+        pfUI.uf.target.powerText:SetText( "|cff" .. levelcolor .. level .. "|r " .. name)
+        pfUI.uf.target.powerText:SetWidth(pfUI.uf.target:GetWidth() -30 - pfUI.uf.target.hpText:GetStringWidth())
+
+        PowerColor = ManaBarColor[UnitPowerType("target")]
+        pfUI.uf.target.power.bar:SetStatusBarColor(PowerColor.r + .5, PowerColor.g +.5, PowerColor.b +.5, 1)
+        pfUI.uf.target.power.bar:SetMinMaxValues(0, UnitManaMax("target"))
+
+        pfUI.uf.target.hpReal = hp
+        pfUI.uf.target.powerReal = power
+        pfUI.uf.target.tapped  = nil
       end
-      local power, powermax = UnitMana("target"), UnitManaMax("target")
-
-      if hp ~= hpmax and hpmax ~= 100 then
-        pfUI.uf.target.hpText:SetText( hp .. " - " .. ceil(hp / hpmax * 100) .. "%")
-      else
-        pfUI.uf.target.hpText:SetText( hp)
-      end
-
-      local color = { r = 1, g = 1, b = 1 }
-      if UnitIsPlayer("target") then
-        _, class = UnitClass("target")
-        color = RAID_CLASS_COLORS[class]
-      else
-        color = UnitReactionColor[UnitReaction("target", "player")]
-      end
-
-      local r, g, b = (color.r + .5) * .5, (color.g + .5) * .5, (color.b + .5) * .5
-
-      pfUI.uf.target.hp.bar:SetMinMaxValues(0, hpmax)
-      pfUI.uf.target.hp.bar:SetStatusBarColor(r, g, b, hp / hpmax / 4 + .75)
-      pfUI.uf.target.powerText:SetTextColor(r, g, b, 1)
-
-      local perc = hp / hpmax
-      local r1, g1, b1, r2, g2, b2
-      if perc <= 0.5 then
-        perc = perc * 2; r1, g1, b1 = .9, .5, .5; r2, g2, b2 = .9, .9, .5
-      else
-        perc = perc * 2 - 1; r1, g1, b1 = .9, .9, .5; r2, g2, b2 = .5, .9, .5
-      end
-      local r, g, b = r1 + (r2 - r1)*perc, g1 + (g2 - g1)*perc, b1 + (b2 - b1)*perc
-      pfUI.uf.target.hpText:SetTextColor(r, g, b,1)
-
-      local leveldiff = UnitLevel("player") - UnitLevel("target")
-      local levelcolor
-      if leveldiff >= 9 then
-        levelcolor = "555555"
-      elseif leveldiff >= 3 then
-        levelcolor = "55ff55"
-      elseif leveldiff >= -2 then
-        levelcolor = "aaff55"
-      elseif leveldiff >= -4 then
-        levelcolor = "ffaa55"
-      else
-        levelcolor = "ff5555"
-      end
-
-      local name = string.sub(UnitName("target"),1,25)
-      if strlen(UnitName("target")) > 25 then
-        name = name .. "..."
-      end
-
-      local level = UnitLevel("target")
-      if level == -1 then level = "??" end
-
-      if UnitClassification("target") == "worldboss" then
-        level = level .. "B"
-      elseif UnitClassification("target") == "rareelite" then
-        level = level .. "R+"
-      elseif UnitClassification("target") == "elite" then
-        level = level .. "+"
-      elseif UnitClassification("target") == "rare" then
-        level = level .. "R"
-      end
-
-      pfUI.uf.target.powerText:SetText( "|cff" .. levelcolor .. level .. "|r " .. name)
-      pfUI.uf.target.powerText:SetWidth(pfUI.uf.target:GetWidth() -30 - pfUI.uf.target.hpText:GetStringWidth())
-
-      PowerColor = ManaBarColor[UnitPowerType("target")]
-      pfUI.uf.target.power.bar:SetStatusBarColor(PowerColor.r + .5, PowerColor.g +.5, PowerColor.b +.5, 1)
-      pfUI.uf.target.power.bar:SetMinMaxValues(0, UnitManaMax("target"))
-
-      pfUI.uf.target.hpReal = hp
-      pfUI.uf.target.powerReal = power
-      pfUI.uf.target.tapped  = nil
     end)
 
   pfUI.uf.target:SetScript("OnUpdate", function()
