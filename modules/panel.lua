@@ -1,7 +1,6 @@
 pfUI:RegisterModule("panel", function ()
   pfUI.panel = CreateFrame("Frame",nil,UIParent)
   pfUI.panel:RegisterEvent("PLAYER_ENTERING_WORLD")
-  pfUI.panel:RegisterEvent("UNIT_AURA")
   pfUI.panel:RegisterEvent("PLAYER_MONEY")
   pfUI.panel:RegisterEvent("PLAYER_XP_UPDATE")
   pfUI.panel:RegisterEvent("FRIENDLIST_UPDATE")
