@@ -336,8 +336,8 @@ pfUI:RegisterModule("castbar", function ()
           pfUI.castbar.target.casterDB[mob] = nil
           return
         end
-        casttime = pfLocaleSpells[pfUI.cache["locale"]][spell].t / 1000
-        icon = pfLocaleSpells[pfUI.cache["locale"]][spell].icon
+        local casttime = pfLocaleSpells[pfUI.cache["locale"]][spell].t / 1000
+        local icon = pfLocaleSpells[pfUI.cache["locale"]][spell].icon
         pfUI.castbar.target.casterDB[mob] = {cast = spell, starttime = GetTime(), casttime = casttime, icon = icon}
         if UnitExists("target") and pfUI.castbar.target.casterDB[UnitName("target")] then
           if pfUI_config.castbar.target.hide_pfui == "1" then
