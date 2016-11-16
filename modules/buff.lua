@@ -5,6 +5,7 @@ pfUI:RegisterModule("buff", function ()
   pfUI.buff:RegisterEvent("UNIT_AURA")
   pfUI.buff:RegisterEvent("UNIT_MODEL_CHANGED")
   pfUI.buff:SetScript("OnEvent", function ()
+    if event == "UNIT_AURA" and arg1 ~= "player" then return end
     pfUI.buff:UpdateSkin()
   end)
 
