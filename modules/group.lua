@@ -13,18 +13,16 @@ pfUI:RegisterModule("group", function ()
   pfUI.uf.group = CreateFrame("Button","pfGroup",UIParent)
   pfUI.uf.group:Hide()
 
-  pfUI.uf.group:RegisterEvent("PARTY_MEMBERS_CHANGED")
+  pfUI.uf.group:RegisterEvent("RAID_TARGET_UPDATE")
   pfUI.uf.group:RegisterEvent("PARTY_LEADER_CHANGED")
+  pfUI.uf.group:RegisterEvent("PARTY_LOOT_METHOD_CHANGED")
+
+  pfUI.uf.group:RegisterEvent("PLAYER_ENTERING_WORLD")
+  pfUI.uf.group:RegisterEvent("PARTY_MEMBERS_CHANGED")
   pfUI.uf.group:RegisterEvent("PARTY_MEMBER_ENABLE")
   pfUI.uf.group:RegisterEvent("PARTY_MEMBER_DISABLE")
-  pfUI.uf.group:RegisterEvent("PARTY_LOOT_METHOD_CHANGED")
-  pfUI.uf.group:RegisterEvent("UNIT_FACTION")
-  pfUI.uf.group:RegisterEvent("UNIT_AURA")
-  pfUI.uf.group:RegisterEvent("UNIT_PET")
-  pfUI.uf.group:RegisterEvent("VARIABLES_LOADED")
   pfUI.uf.group:RegisterEvent("RAID_ROSTER_UPDATE")
   pfUI.uf.group:RegisterEvent("GROUP_ROSTER_UPDATE")
-  pfUI.uf.group:RegisterEvent("RAID_TARGET_UPDATE")
 
   pfUI.uf.group:SetScript("OnEvent", function()
     PartyMemberBackground:Hide()
@@ -35,30 +33,39 @@ pfUI:RegisterModule("group", function ()
         return
       end
 
+      if event == "RAID_TARGET_UPDATE" or event == "PLAYER_ENTERING_WORLD" then
+        local raidIcon = GetRaidTargetIndex("party" .. i)
+        if raidIcon then
+          SetRaidTargetIconTexture(pfUI.uf.group[i].hp.raidIcon.texture, raidIcon)
+          pfUI.uf.group[i].hp.raidIcon:Show()
+        else
+          pfUI.uf.group[i].hp.raidIcon:Hide()
+        end
+      end
+
+      if event == "PARTY_LEADER_CHANGED" or event == "PLAYER_ENTERING_WORLD" then
+        if UnitIsPartyLeader("party"..i) then
+          pfUI.uf.group[i].hp.leaderIcon:Show()
+        else
+          pfUI.uf.group[i].hp.leaderIcon:Hide()
+        end
+      end
+
+      if event == "PARTY_LOOT_METHOD_CHANGED" or event == "PLAYER_ENTERING_WORLD" then
+        local _, lootmaster = GetLootMethod()
+        if lootmaster and pfUI.uf.group[i].id == lootmaster then
+          pfUI.uf.group[i].hp.lootIcon:Show()
+        else
+          pfUI.uf.group[i].hp.lootIcon:Hide()
+        end
+      end
+
       if GetNumPartyMembers() >= i then
         pfUI.uf.group[i]:Show()
         if UnitIsConnected("party"..i) or not UnitName("party"..i) then
           pfUI.uf.group[i]:SetAlpha(1)
         else
           pfUI.uf.group[i]:SetAlpha(.25)
-        end
-
-        local raidIcon = GetRaidTargetIndex("party" .. i)
-        if raidIcon then
-         SetRaidTargetIconTexture(pfUI.uf.group[i].hp.raidIcon.texture, raidIcon)
-         pfUI.uf.group[i].hp.raidIcon:Show()
-        end
-        if UnitIsPartyLeader("party"..i) then
-          pfUI.uf.group[i].hp.leaderIcon:Show()
-        else
-          pfUI.uf.group[i].hp.leaderIcon:Hide()
-        end
-
-        local _, lootmaster = GetLootMethod()
-        if lootmaster and pfUI.uf.group[i].id == lootmaster then
-          pfUI.uf.group[i].hp.lootIcon:Show()
-        else
-          pfUI.uf.group[i].hp.lootIcon:Hide()
         end
       else
         if pfUI.uf.group[i] then
