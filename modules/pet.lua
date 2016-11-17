@@ -1,14 +1,14 @@
 pfUI:RegisterModule("pet", function ()
   -- do not go further on disabled UFs
   if pfUI_config.unitframes.disable == "1" then return end
-  
+
   pfUI.uf.pet = CreateFrame("Button","pfPet",UIParent)
 
   pfUI.uf.pet:SetWidth(100)
   pfUI.uf.pet:SetHeight(23)
   pfUI.uf.pet:ClearAllPoints()
   pfUI.uf.pet:SetPoint("BOTTOM", UIParent , "BOTTOM", 0, 163)
-  pfUI.utils:loadPosition(pfUI.uf.pet)
+  pfUI.utils:UpdateMovable(pfUI.uf.pet)
 
   pfUI.uf.pet:RegisterForClicks('LeftButtonUp', 'RightButtonUp')
   pfUI.uf.pet:SetScript("OnClick", function ()

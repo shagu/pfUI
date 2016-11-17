@@ -26,6 +26,7 @@ pfUI.cache = {}
 pfUI.module = {}
 pfUI.modules = {}
 pfUI.environment = {}
+pfUI.movables = {}
 
 pfLocaleClass = {}
 pfLocaleBagtypes = {}
@@ -90,7 +91,14 @@ pfUI.backdrop_underline = {
 
 pfUI.utils = CreateFrame("Frame",nil,UIParent)
 
-function pfUI.utils:loadPosition(frame)
+function pfUI.utils:UpdateMovable(frame)
+  local name = frame:GetName()
+
+  if not pfUI.movables[name] then
+    pfUI.movables[name] = true
+    table.insert(pfUI.movables, name)
+  end
+
   if pfUI_config["position"][frame:GetName()] then
     if pfUI_config["position"][frame:GetName()]["scale"] then
       frame:SetScale(pfUI_config["position"][frame:GetName()].scale)

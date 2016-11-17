@@ -72,7 +72,7 @@ pfUI:RegisterModule("raid", function ()
       pfUI.uf.raid[i]:SetWidth(50)
       pfUI.uf.raid[i]:SetHeight(35)
       pfUI.uf.raid[i]:SetPoint("BOTTOMLEFT", (r-1) * 52 + 5, 160 + ((g-1)*37))
-      pfUI.utils:loadPosition(pfUI.uf.raid[i])
+      pfUI.utils:UpdateMovable(pfUI.uf.raid[i])
       pfUI.uf.raid[i]:Hide()
       pfUI.uf.raid[i].id = 0
 

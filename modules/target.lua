@@ -15,8 +15,7 @@ pfUI:RegisterModule("target", function ()
   pfUI.uf.target:SetWidth(pfUI_config.unitframes.target.width)
   pfUI.uf.target:SetHeight(pfUI_config.unitframes.target.height+pfUI_config.unitframes.target.pheight)
   pfUI.uf.target:SetPoint("BOTTOMLEFT", UIParent, "BOTTOM", 75, 125)
-  pfUI.utils:loadPosition(pfUI.uf.target)
-
+  pfUI.utils:UpdateMovable(pfUI.uf.target)
 
   pfUI.uf.target:RegisterForClicks('LeftButtonUp', 'RightButtonUp')
   pfUI.uf.target:SetScript("OnClick", function ()

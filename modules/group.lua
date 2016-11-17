@@ -81,7 +81,7 @@ pfUI:RegisterModule("group", function ()
     pfUI.uf.group[i]:SetWidth(175)
     pfUI.uf.group[i]:SetHeight(40)
     pfUI.uf.group[i]:SetPoint("TOPLEFT", 5, -5 - ((i-1)*55))
-    pfUI.utils:loadPosition(pfUI.uf.group[i])
+    pfUI.utils:UpdateMovable(pfUI.uf.group[i])
     pfUI.uf.group[i]:Hide()
     pfUI.uf.group[i].id = i
 

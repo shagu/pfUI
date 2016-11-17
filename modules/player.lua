@@ -9,7 +9,7 @@ pfUI:RegisterModule("player", function ()
   pfUI.uf.player:SetWidth(pfUI_config.unitframes.player.width)
   pfUI.uf.player:SetHeight(pfUI_config.unitframes.player.height+pfUI_config.unitframes.player.pheight)
   pfUI.uf.player:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOM", -75, 125)
-  pfUI.utils:loadPosition(pfUI.uf.player)
+  pfUI.utils:UpdateMovable(pfUI.uf.player)
   pfUI.uf.player:RegisterForClicks('LeftButtonUp', 'RightButtonUp')
   pfUI.uf.player:SetScript("OnClick", function ()
       if arg1 == "RightButton" then

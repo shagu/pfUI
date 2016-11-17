@@ -78,23 +78,6 @@ pfUI:RegisterModule("gui", function ()
   end)
 
   function pfUI.gui.UnlockFrames()
-    local movable = { pfUI.minimap, pfUI.chat.left, pfUI.chat.right,
-      pfUI.uf.player, pfUI.uf.target, pfUI.uf.targettarget, pfUI.uf.pet,
-      pfUI.bars.shapeshift, pfUI.bars.bottomleft, pfUI.bars.bottomright,
-      pfUI.bars.vertical, pfUI.bars.pet, pfUI.bars.bottom,
-      pfUI.panel.minimap, pfUI.panel.microbutton, pfUI.panel.clock.timerFrame,
-      pfUI.uf.group[1], pfUI.uf.group[2], pfUI.uf.group[3], pfUI.uf.group[4],
-      pfUI.uf.raid[1], pfUI.uf.raid[2], pfUI.uf.raid[3], pfUI.uf.raid[4], pfUI.uf.raid[5],
-      pfUI.uf.raid[6], pfUI.uf.raid[7], pfUI.uf.raid[8], pfUI.uf.raid[9], pfUI.uf.raid[10],
-      pfUI.uf.raid[11], pfUI.uf.raid[12], pfUI.uf.raid[13], pfUI.uf.raid[14], pfUI.uf.raid[15],
-      pfUI.uf.raid[16], pfUI.uf.raid[17], pfUI.uf.raid[18], pfUI.uf.raid[19], pfUI.uf.raid[20],
-      pfUI.uf.raid[21], pfUI.uf.raid[22], pfUI.uf.raid[23], pfUI.uf.raid[24], pfUI.uf.raid[25],
-      pfUI.uf.raid[26], pfUI.uf.raid[27], pfUI.uf.raid[28], pfUI.uf.raid[29], pfUI.uf.raid[30],
-      pfUI.uf.raid[31], pfUI.uf.raid[32], pfUI.uf.raid[33], pfUI.uf.raid[34], pfUI.uf.raid[35],
-      pfUI.uf.raid[36], pfUI.uf.raid[37], pfUI.uf.raid[38], pfUI.uf.raid[39], pfUI.uf.raid[40],
-      pfUI.chat.editbox,
-      }
-
     if not pfUI.gitter then
       pfUI.gitter = CreateFrame("Button", nil, UIParent)
       pfUI.gitter:SetAllPoints(WorldFrame)
@@ -161,79 +144,82 @@ pfUI:RegisterModule("gui", function ()
       pfUI.gui:Hide()
     end
 
-    for _,frame in pairs(movable) do
-      local frame = frame
-      if not frame:IsShown() then
-        frame.hideLater = true
-      end
+    for _,frame in pairs(pfUI.movables) do
+      local frame = getglobal(frame)
 
-      if not frame.drag then
-        frame.drag = CreateFrame("Frame", nil, frame)
-        frame.drag:SetAllPoints(frame)
-        frame.drag:SetFrameStrata("DIALOG")
-        frame.drag:SetBackdrop(pfUI.backdrop_col)
-        frame.drag:SetBackdropBorderColor(.2, 1, .8)
-        frame.drag:SetBackdropColor(1,1,1,.75)
-        frame.drag:EnableMouseWheel(1)
-        frame.drag.text = frame.drag:CreateFontString("Status", "LOW", "GameFontNormal")
-        frame.drag.text:SetFont("Interface\\AddOns\\pfUI\\fonts\\" .. pfUI_config.global.font_default .. ".ttf", pfUI_config.global.font_size, "OUTLINE")
-        frame.drag.text:ClearAllPoints()
-        frame.drag.text:SetAllPoints(frame.drag)
-        frame.drag.text:SetPoint("CENTER", 0, 0)
-        frame.drag.text:SetFontObject(GameFontWhite)
-        frame.drag.text:SetText(strsub(frame:GetName(),3))
-        frame.drag:SetAlpha(1)
+      if frame then
+        if not frame:IsShown() then
+          frame.hideLater = true
+        end
 
-        frame.drag:SetScript("OnMouseWheel", function()
-          local scale = round(frame:GetScale() + arg1/10, 1)
+        if not frame.drag then
+          frame.drag = CreateFrame("Frame", nil, frame)
+          frame.drag:SetAllPoints(frame)
+          frame.drag:SetFrameStrata("DIALOG")
+          frame.drag:SetBackdrop(pfUI.backdrop_col)
+          frame.drag:SetBackdropBorderColor(.2, 1, .8)
+          frame.drag:SetBackdropColor(1,1,1,.75)
+          frame.drag:EnableMouseWheel(1)
+          frame.drag.text = frame.drag:CreateFontString("Status", "LOW", "GameFontNormal")
+          frame.drag.text:SetFont("Interface\\AddOns\\pfUI\\fonts\\" .. pfUI_config.global.font_default .. ".ttf", pfUI_config.global.font_size, "OUTLINE")
+          frame.drag.text:ClearAllPoints()
+          frame.drag.text:SetAllPoints(frame.drag)
+          frame.drag.text:SetPoint("CENTER", 0, 0)
+          frame.drag.text:SetFontObject(GameFontWhite)
+          frame.drag.text:SetText(strsub(frame:GetName(),3))
+          frame.drag:SetAlpha(1)
 
-          if IsShiftKeyDown() and strsub(frame:GetName(),0,6) == "pfRaid" then
-            for i=1,40 do
-              local frame = getglobal("pfRaid" .. i)
+          frame.drag:SetScript("OnMouseWheel", function()
+            local scale = round(frame:GetScale() + arg1/10, 1)
+
+            if IsShiftKeyDown() and strsub(frame:GetName(),0,6) == "pfRaid" then
+              for i=1,40 do
+                local frame = getglobal("pfRaid" .. i)
+                pfUI.gui:SaveScale(frame, scale)
+              end
+            elseif IsShiftKeyDown() and strsub(frame:GetName(),0,7) == "pfGroup" then
+              for i=1,4 do
+                local frame = getglobal("pfGroup" .. i)
+                pfUI.gui:SaveScale(frame, scale)
+              end
+            else
               pfUI.gui:SaveScale(frame, scale)
             end
-          elseif IsShiftKeyDown() and strsub(frame:GetName(),0,7) == "pfGroup" then
-            for i=1,4 do
-              local frame = getglobal("pfGroup" .. i)
-              pfUI.gui:SaveScale(frame, scale)
+
+            -- repaint hackfix for panels
+            pfUI.panel.left:SetScale(pfUI.chat.left:GetScale())
+            pfUI.panel.right:SetScale(pfUI.chat.right:GetScale())
+          end)
+        end
+
+        frame.drag:SetScript("OnMouseDown",function()
+            frame:StartMoving()
+          end)
+
+        frame.drag:SetScript("OnMouseUp",function()
+            frame:StopMovingOrSizing()
+            _, _, _, xpos, ypos = frame:GetPoint()
+
+            if not pfUI_config.position[frame:GetName()] then
+              pfUI_config.position[frame:GetName()] = {}
             end
-          else
-            pfUI.gui:SaveScale(frame, scale)
+
+            pfUI_config.position[frame:GetName()]["xpos"] = xpos
+            pfUI_config.position[frame:GetName()]["ypos"] = ypos
+          end)
+
+        if pfUI.gitter:IsShown() then
+          frame:SetMovable(true)
+          frame.drag:EnableMouse(true)
+          frame.drag:Show()
+          frame:Show()
+        else
+          frame:SetMovable(false)
+          frame.drag:EnableMouse(false)
+          frame.drag:Hide()
+          if frame.hideLater == true then
+            frame:Hide()
           end
-
-          -- repaint hackfix for panels
-          pfUI.panel.left:SetScale(pfUI.chat.left:GetScale())
-          pfUI.panel.right:SetScale(pfUI.chat.right:GetScale())
-        end)
-      end
-
-      frame.drag:SetScript("OnMouseDown",function()
-          frame:StartMoving()
-        end)
-
-      frame.drag:SetScript("OnMouseUp",function()
-          frame:StopMovingOrSizing()
-          _, _, _, xpos, ypos = frame:GetPoint()
-
-          if not pfUI_config.position[frame:GetName()] then
-            pfUI_config.position[frame:GetName()] = {}
-          end
-
-          pfUI_config.position[frame:GetName()]["xpos"] = xpos
-          pfUI_config.position[frame:GetName()]["ypos"] = ypos
-        end)
-
-      if pfUI.gitter:IsShown() then
-        frame:SetMovable(true)
-        frame.drag:EnableMouse(true)
-        frame.drag:Show()
-        frame:Show()
-      else
-        frame:SetMovable(false)
-        frame.drag:EnableMouse(false)
-        frame.drag:Hide()
-        if frame.hideLater == true then
-          frame:Hide()
         end
       end
     end
