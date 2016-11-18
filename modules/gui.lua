@@ -193,12 +193,79 @@ pfUI:RegisterModule("gui", function ()
         end
 
         frame.drag:SetScript("OnMouseDown",function()
-            frame:StartMoving()
-          end)
+          if IsShiftKeyDown() then
+            if strsub(frame:GetName(),0,6) == "pfRaid" then
+              for i=1,40 do
+                local cframe = getglobal("pfRaid" .. i)
+                cframe:StartMoving()
+                cframe:StopMovingOrSizing()
+                cframe.drag:SetBackdropBorderColor(1,1,1,1)
+              end
+            end
+            if strsub(frame:GetName(),0,7) == "pfGroup" then
+              for i=1,4 do
+                local cframe = getglobal("pfGroup" .. i)
+                cframe:StartMoving()
+                cframe:StopMovingOrSizing()
+                cframe.drag:SetBackdropBorderColor(1,1,1,1)
+              end
+            end
+            _, _, _, xpos, ypos = frame:GetPoint()
+            frame.oldPos = { xpos, ypos }
+          else
+            frame.oldPos = nil
+          end
+          frame.drag:SetBackdropBorderColor(1,1,1,1)
+          frame:StartMoving()
+        end)
 
         frame.drag:SetScript("OnMouseUp",function()
             frame:StopMovingOrSizing()
             _, _, _, xpos, ypos = frame:GetPoint()
+            frame.drag:SetBackdropBorderColor(.2,1,.8,1)
+
+            if frame.oldPos then
+              local diffxpos = frame.oldPos[1] - xpos
+              local diffypos = frame.oldPos[2] - ypos
+
+              if strsub(frame:GetName(),0,6) == "pfRaid" then
+                for i=1,40 do
+                  local cframe = getglobal("pfRaid" .. i)
+                  cframe.drag:SetBackdropBorderColor(.2,1,.8,1)
+                  if cframe:GetName() ~= frame:GetName() then
+                    local _, _, _, xpos, ypos = cframe:GetPoint()
+                    cframe:SetPoint("TOPLEFT", xpos - diffxpos, ypos - diffypos)
+
+                    local _, _, _, xpos, ypos = cframe:GetPoint()
+
+                    if not pfUI_config.position[cframe:GetName()] then
+                      pfUI_config.position[cframe:GetName()] = {}
+                    end
+
+                    pfUI_config.position[cframe:GetName()]["xpos"] = xpos
+                    pfUI_config.position[cframe:GetName()]["ypos"] = ypos
+                  end
+                end
+              elseif strsub(frame:GetName(),0,7) == "pfGroup" then
+                for i=1,4 do
+                  local cframe = getglobal("pfGroup" .. i)
+                  cframe.drag:SetBackdropBorderColor(.2,1,.8,1)
+                  if cframe:GetName() ~= frame:GetName() then
+                    local _, _, _, xpos, ypos = cframe:GetPoint()
+                    cframe:SetPoint("TOPLEFT", xpos - diffxpos, ypos - diffypos)
+
+                    local _, _, _, xpos, ypos = cframe:GetPoint()
+
+                    if not pfUI_config.position[cframe:GetName()] then
+                      pfUI_config.position[cframe:GetName()] = {}
+                    end
+
+                    pfUI_config.position[cframe:GetName()]["xpos"] = xpos
+                    pfUI_config.position[cframe:GetName()]["ypos"] = ypos
+                  end
+                end
+              end
+            end
 
             if not pfUI_config.position[frame:GetName()] then
               pfUI_config.position[frame:GetName()] = {}
@@ -206,7 +273,7 @@ pfUI:RegisterModule("gui", function ()
 
             pfUI_config.position[frame:GetName()]["xpos"] = xpos
             pfUI_config.position[frame:GetName()]["ypos"] = ypos
-          end)
+        end)
 
         if pfUI.gitter:IsShown() then
           frame:SetMovable(true)

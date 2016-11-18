@@ -3,7 +3,7 @@ pfUI:RegisterModule("group", function ()
   if pfUI_config.unitframes.disable == "1" then return end
 
   -- hide blizzard group frames
-  for i=1, 5 do
+  for i=1, 4 do
     if getglobal("PartyMemberFrame" .. i) then
       getglobal("PartyMemberFrame" .. i):Hide()
       getglobal("PartyMemberFrame" .. i).Show = function () return end
@@ -27,7 +27,7 @@ pfUI:RegisterModule("group", function ()
   pfUI.uf.group:SetScript("OnEvent", function()
     PartyMemberBackground:Hide()
 
-    for i=1, 5 do
+    for i=1, 4 do
       if pfUI_config.unitframes.group.hide_in_raid == "1" and UnitInRaid("player") then
         pfUI.uf.group[i]:Hide()
         return
@@ -75,7 +75,7 @@ pfUI:RegisterModule("group", function ()
     end
   end)
 
-  for i=1, 5 do
+  for i=1, 4 do
     pfUI.uf.group[i] = CreateFrame("Button","pfGroup" .. i,UIParent)
 
     pfUI.uf.group[i]:SetWidth(175)
