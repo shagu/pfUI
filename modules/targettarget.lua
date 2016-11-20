@@ -2,6 +2,11 @@ pfUI:RegisterModule("targettarget", function ()
   -- do not go further on disabled UFs
   if pfUI_config.unitframes.disable == "1" then return end
 
+  local default_border = pfUI_config.appearance.border.default
+  if pfUI_config.appearance.border.unitframes ~= "-1" then
+    default_border = pfUI_config.appearance.border.unitframes
+  end
+
   pfUI.uf.targettargetNotify = CreateFrame("Button",nil,UIParent)
   pfUI.uf.targettargetNotify:SetScript("OnUpdate", function()
       if UnitExists("targettarget") or (pfUI.gitter and pfUI.gitter:IsShown()) then
@@ -14,18 +19,14 @@ pfUI:RegisterModule("targettarget", function ()
   pfUI.uf.targettarget = CreateFrame("Button","pfTargetTarget",UIParent)
 
   pfUI.uf.targettarget:SetWidth(100)
-  pfUI.uf.targettarget:SetHeight(25)
+  pfUI.uf.targettarget:SetHeight(20 + 2*default_border + pfUI_config.unitframes.ttarget.pspace)
   pfUI.uf.targettarget:SetPoint("BOTTOM", UIParent , "BOTTOM", 0, 125)
   pfUI.utils:UpdateMovable(pfUI.uf.targettarget)
-  pfUI.uf.targettarget:SetBackdrop(pfUI.backdrop)
 
   pfUI.uf.targettarget:RegisterForClicks('LeftButtonUp', 'RightButtonUp')
   pfUI.uf.targettarget:SetScript("OnClick", function ()
       TargetUnit("targettarget")
     end)
-  pfUI.uf.targettarget.bg = CreateFrame("Frame",nil,pfUI.uf.targettarget)
-  pfUI.uf.targettarget.bg = pfUI.uf.targettarget:CreateTexture(nil,"BACKGROUND")
-  pfUI.uf.targettarget.bg:SetAllPoints(pfUI.uf.targettarget)
 
   pfUI.uf.targettarget:SetScript("OnUpdate", function()
       if UnitExists("targettarget") then
@@ -89,17 +90,15 @@ pfUI:RegisterModule("targettarget", function ()
     end)
 
   pfUI.uf.targettarget.hp = CreateFrame("Frame",nil, pfUI.uf.targettarget)
-  pfUI.uf.targettarget.hp:SetBackdrop(pfUI.backdrop)
-  pfUI.uf.targettarget.hp:SetPoint("TOPLEFT", pfUI.uf.targettarget, "TOPLEFT", 0, 0)
-  pfUI.uf.targettarget.hp:SetPoint("BOTTOMRIGHT", pfUI.uf.targettarget, "BOTTOMRIGHT", 0, 0)
-  pfUI.uf.targettarget.hp:SetPoint("TOP",pfUI.uf.targettarget,"TOP")
+  pfUI.uf.targettarget.hp:SetPoint("TOP", 0, 0)
+  pfUI.uf.targettarget.hp:SetWidth(100)
+  pfUI.uf.targettarget.hp:SetHeight(17)
+  pfUI.utils:CreateBackdrop(pfUI.uf.targettarget.hp, default_border)
+
   pfUI.uf.targettarget.hp.bar = CreateFrame("StatusBar", nil, pfUI.uf.targettarget.hp)
   pfUI.uf.targettarget.hp.bar:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
-  pfUI.uf.targettarget.hp.bar:ClearAllPoints()
-  pfUI.uf.targettarget.hp.bar:SetPoint("TOPLEFT", pfUI.uf.targettarget.hp, "TOPLEFT", 3, -3)
-  pfUI.uf.targettarget.hp.bar:SetPoint("BOTTOMRIGHT", pfUI.uf.targettarget.hp, "BOTTOMRIGHT", -3, 3)
+  pfUI.uf.targettarget.hp.bar:SetAllPoints(pfUI.uf.targettarget.hp)
   pfUI.uf.targettarget.hp.bar:SetMinMaxValues(0, 100)
-  pfUI.uf.targettarget.hp.bar:SetValue(100)
 
   pfUI.uf.targettarget.hp.raidIcon = CreateFrame("Frame",nil,pfUI.uf.targettarget.hp)
   pfUI.uf.targettarget.hp.raidIcon:SetFrameStrata("MEDIUM")
@@ -131,20 +130,15 @@ pfUI:RegisterModule("targettarget", function ()
   end
 
   pfUI.uf.targettarget.power = CreateFrame("Frame",nil, pfUI.uf.targettarget)
-  pfUI.uf.targettarget.power:SetBackdrop(pfUI.backdrop)
-  pfUI.uf.targettarget.power:SetPoint("TOPLEFT", pfUI.uf.targettarget.hp, "BOTTOMLEFT", 0, -3)
-  pfUI.uf.targettarget.power:SetPoint("TOPRIGHT", pfUI.uf.targettarget.hp, "BOTTOMRIGHT", 0, -3)
-  pfUI.uf.targettarget.power:SetHeight(8)
-  pfUI.uf.targettarget.power:SetPoint("TOPLEFT",pfUI.uf.targettarget.hp,"BOTTOMLEFT",0,3)
+  pfUI.utils:CreateBackdrop(pfUI.uf.targettarget.power, default_border)
+  pfUI.uf.targettarget.power:SetPoint("BOTTOM", 0, 0)
+  pfUI.uf.targettarget.power:SetWidth(100)
+  pfUI.uf.targettarget.power:SetHeight(4)
+
   pfUI.uf.targettarget.power.bar = CreateFrame("StatusBar", nil, pfUI.uf.targettarget.power)
-  pfUI.uf.targettarget.power.bar:ClearAllPoints()
-  pfUI.uf.targettarget.power.bar:SetPoint("TOPLEFT", pfUI.uf.targettarget.power, "TOPLEFT", 3, -3)
-  pfUI.uf.targettarget.power.bar:SetPoint("BOTTOMRIGHT", pfUI.uf.targettarget.power, "BOTTOMRIGHT", -3, 3)
   pfUI.uf.targettarget.power.bar:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
-  pfUI.uf.targettarget.power.bar:SetBackdropColor(0,0,0,1)
-  pfUI.uf.targettarget.power.bar:SetStatusBarColor(0,0,0)
+  pfUI.uf.targettarget.power.bar:SetAllPoints(pfUI.uf.targettarget.power)
   pfUI.uf.targettarget.power.bar:SetMinMaxValues(0, 100)
-  pfUI.uf.targettarget.power.bar:SetValue(100)
 
   pfUI.uf.targettarget.hp.text = pfUI.uf.targettarget.hp.bar:CreateFontString("Status", "LOW", "GameFontNormal")
   pfUI.uf.targettarget.hp.text:SetFont("Interface\\AddOns\\pfUI\\fonts\\" .. pfUI_config.global.font_square .. ".ttf", pfUI_config.global.font_size - 2, "OUTLINE")

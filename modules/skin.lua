@@ -47,26 +47,24 @@ pfUI:RegisterModule("skin", function ()
 
   for _, button in pairs(buttons) do
     local b = getglobal(button)
-    b:SetBackdrop(pfUI.backdrop)
+    pfUI.utils:CreateBackdrop(b, nil, true)
     b:SetNormalTexture(nil)
     b:SetHighlightTexture(nil)
     b:SetPushedTexture(nil)
     b:SetDisabledTexture(nil)
     b:SetScript("OnEnter", function()
-        b:SetBackdrop(pfUI.backdrop_col)
-        b:SetBackdropBorderColor(cr,cg,cb,1)
-      end)
+      pfUI.utils:CreateBackdrop(b, nil, true)
+      b:SetBackdropBorderColor(cr,cg,cb,1)
+    end)
     b:SetScript("OnLeave", function()
-        b:SetBackdrop(pfUI.backdrop)
-        b:SetBackdropBorderColor(1,1,1,1)
-      end)
+      pfUI.utils:CreateBackdrop(b, nil, true)
+    end)
     b:SetFont("Interface\\AddOns\\pfUI\\fonts\\" .. pfUI_config.global.font_default .. ".ttf", pfUI_config.global.font_size, "OUTLINE")
   end
 
   for _, box in pairs(boxes) do
     local b = getglobal(box)
-    b:SetBackdrop(pfUI.backdrop)
-    b:SetBackdropColor(0,0,0,.5)
+    pfUI.utils:CreateBackdrop(b, nil, true, true)
   end
 
   for i,v in ipairs({GameMenuFrame:GetRegions()}) do
@@ -77,10 +75,10 @@ pfUI:RegisterModule("skin", function ()
     end
   end
 
-  ShoppingTooltip1:SetBackdrop(pfUI.backdrop)
-  ShoppingTooltip2:SetBackdrop(pfUI.backdrop)
+pfUI.utils:CreateBackdrop(ShoppingTooltip1)
+pfUI.utils:CreateBackdrop(ShoppingTooltip2)
 
-  TicketStatusFrame:SetBackdrop(pfUI.backdrop)
+pfUI.utils:CreateBackdrop(TicketStatusFrame)
   TicketStatusFrame:ClearAllPoints()
   TicketStatusFrame:SetPoint("TOP", 0, -5)
   function TicketStatusFrame_OnEvent()

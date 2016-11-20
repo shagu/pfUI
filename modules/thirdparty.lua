@@ -35,17 +35,15 @@ pfUI:RegisterModule("thirdparty", function ()
       pfUIhookDPSMate_Show(DPSMate_DPSMate)
       DPSMate_DPSMate:ClearAllPoints()
       DPSMate_DPSMate:SetAllPoints(pfUI.chat.right)
-      DPSMate_DPSMate:SetWidth(pfUI.chat.right:GetWidth()-6)
-      DPSMate_DPSMate:SetPoint("TOPLEFT", pfUI.chat.right, "TOPLEFT", 3, -3)
-      DPSMate_DPSMate:SetPoint("BOTTOMRIGHT", pfUI.chat.right, "BOTTOMRIGHT", -3, 3)
 
       if DPSMate_DPSMate_ScrollFrame then
         DPSMate_DPSMate_ScrollFrame:ClearAllPoints()
         DPSMate_DPSMate_ScrollFrame:SetAllPoints(pfUI.chat.right)
-        DPSMate_DPSMate_ScrollFrame:SetWidth(pfUI.chat.right:GetWidth()-6)
+        DPSMate_DPSMate_ScrollFrame:SetWidth(pfUI.chat.right:GetWidth())
 
-        DPSMate_DPSMate_ScrollFrame:SetPoint("TOPLEFT", pfUI.chat.right, "TOPLEFT", 3, -23)
-        DPSMate_DPSMate_ScrollFrame:SetPoint("BOTTOMRIGHT", pfUI.chat.right, "BOTTOMRIGHT", -3, 23)
+        DPSMate_DPSMate_ScrollFrame:SetPoint("TOPLEFT", DPSMate_DPSMate_Head, "BOTTOMLEFT", 0, 0)
+        DPSMate_DPSMate_ScrollFrame:SetPoint("BOTTOMRIGHT", pfUI.chat.right, "BOTTOMRIGHT", 0, pfUI.panel.right:GetHeight())
+        DPSMate_DPSMate_Resize:Hide()
       end
     end
 
@@ -70,7 +68,7 @@ pfUI:RegisterModule("thirdparty", function ()
         pfUIhookWIM_PostMessage = WIM_PostMessage
         WIM_PostMessage = function(user, msg, ttype, from, raw_msg)
           pfUIhookWIM_PostMessage(user, msg, ttype, from, raw_msg)
-          getglobal("WIM_msgFrame" .. user):SetBackdrop(pfUI.backdrop)
+          pfUI.utils:CreateBackdrop(getglobal("WIM_msgFrame" .. user))
           getglobal("WIM_msgFrame" .. user .. "From"):ClearAllPoints()
           getglobal("WIM_msgFrame" .. user .. "From"):SetPoint("TOP", 0, -10)
 
@@ -88,37 +86,37 @@ pfUI:RegisterModule("thirdparty", function ()
           getglobal("WIM_msgFrame" .. user .. "ScrollingMessageFrame"):SetPoint("BOTTOMRIGHT", getglobal("WIM_msgFrame" .. user), "BOTTOMRIGHT", -32, 32)
           getglobal("WIM_msgFrame" .. user .. "ScrollingMessageFrame"):SetFont(STANDARD_TEXT_FONT, 12)
 
-          getglobal("WIM_msgFrame" .. user .. "MsgBox"):SetBackdrop(pfUI.backdrop)
+          pfUI.utils:CreateBackdrop(getglobal("WIM_msgFrame" .. user .. "MsgBox"))
           getglobal("WIM_msgFrame" .. user .. "MsgBox"):ClearAllPoints()
-          getglobal("WIM_msgFrame" .. user .. "MsgBox"):SetPoint("TOPLEFT", getglobal("WIM_msgFrame" .. user .. "ScrollingMessageFrame"), "BOTTOMLEFT", 0, -2)
-          getglobal("WIM_msgFrame" .. user .. "MsgBox"):SetPoint("TOPRIGHT", getglobal("WIM_msgFrame" .. user .. "ScrollingMessageFrame"), "BOTTOMRIGHT", 0, -2)
+          getglobal("WIM_msgFrame" .. user .. "MsgBox"):SetPoint("TOPLEFT", getglobal("WIM_msgFrame" .. user .. "ScrollingMessageFrame"), "BOTTOMLEFT", 0, -5)
+          getglobal("WIM_msgFrame" .. user .. "MsgBox"):SetPoint("TOPRIGHT", getglobal("WIM_msgFrame" .. user .. "ScrollingMessageFrame"), "BOTTOMRIGHT", 0, -5)
           getglobal("WIM_msgFrame" .. user .. "MsgBox"):SetTextInsets(5, 5, 5, 5)
-          getglobal("WIM_msgFrame" .. user .. "MsgBox"):SetHeight(24)
+          getglobal("WIM_msgFrame" .. user .. "MsgBox"):SetHeight(20)
           for i,v in ipairs({getglobal("WIM_msgFrame" .. user .. "MsgBox"):GetRegions()}) do
             if i==6  then v:SetTexture(.1,.1,.1,.5) end
           end
 
-          getglobal("WIM_msgFrame" .. user .. "ShortcutFrameButton1"):SetBackdrop(pfUI.backdrop)
+          pfUI.utils:CreateBackdrop(getglobal("WIM_msgFrame" .. user .. "ShortcutFrameButton1"))
           for i,v in ipairs({getglobal("WIM_msgFrame" .. user .. "ShortcutFrameButton1"):GetRegions()}) do
             if i >= 2 and i < 7 then v:SetTexture(.1,.1,.1,0) end
           end
 
-          getglobal("WIM_msgFrame" .. user .. "ShortcutFrameButton2"):SetBackdrop(pfUI.backdrop)
+          pfUI.utils:CreateBackdrop(getglobal("WIM_msgFrame" .. user .. "ShortcutFrameButton2"))
           for i,v in ipairs({getglobal("WIM_msgFrame" .. user .. "ShortcutFrameButton2"):GetRegions()}) do
             if i >= 2 and i < 7 then v:SetTexture(.1,.1,.1,0) end
           end
 
-          getglobal("WIM_msgFrame" .. user .. "ShortcutFrameButton3"):SetBackdrop(pfUI.backdrop)
+          pfUI.utils:CreateBackdrop(getglobal("WIM_msgFrame" .. user .. "ShortcutFrameButton3"))
           for i,v in ipairs({getglobal("WIM_msgFrame" .. user .. "ShortcutFrameButton3"):GetRegions()}) do
             if i >= 2 and i < 7 then v:SetTexture(.1,.1,.1,0) end
           end
 
-          getglobal("WIM_msgFrame" .. user .. "ShortcutFrameButton4"):SetBackdrop(pfUI.backdrop)
+          pfUI.utils:CreateBackdrop(getglobal("WIM_msgFrame" .. user .. "ShortcutFrameButton4"))
           for i,v in ipairs({getglobal("WIM_msgFrame" .. user .. "ShortcutFrameButton4"):GetRegions()}) do
             if i >= 2 and i < 7 then v:SetTexture(.1,.1,.1,0) end
           end
 
-          getglobal("WIM_msgFrame" .. user .. "ShortcutFrameButton5"):SetBackdrop(pfUI.backdrop)
+          pfUI.utils:CreateBackdrop(getglobal("WIM_msgFrame" .. user .. "ShortcutFrameButton5"))
           for i,v in ipairs({getglobal("WIM_msgFrame" .. user .. "ShortcutFrameButton5"):GetRegions()}) do
             if i >= 2 and i < 7 then v:SetTexture(.1,.1,.1,0) end
           end
@@ -148,7 +146,7 @@ pfUI:RegisterModule("thirdparty", function ()
             pfUI.uf.player.incHeal:SetMinMaxValues(0, 1)
             pfUI.uf.player.incHeal:SetValue(1)
             pfUI.uf.player.incHeal:SetStatusBarColor(0, 1, 0, 0.5)
-            pfUI.uf.player.incHeal:SetHeight(pfUI.uf.player.hp:GetHeight() - (2*3))
+            pfUI.uf.player.incHeal:SetHeight(pfUI.uf.player.hp:GetHeight())
             pfUI.uf.player.incHeal:Hide()
           end
           return pfUI.uf.player
@@ -161,7 +159,7 @@ pfUI:RegisterModule("thirdparty", function ()
             pfUI.uf.target.incHeal:SetMinMaxValues(0, 1)
             pfUI.uf.target.incHeal:SetValue(1)
             pfUI.uf.target.incHeal:SetStatusBarColor(0, 1, 0, 0.5)
-            pfUI.uf.target.incHeal:SetHeight(pfUI.uf.target.hp:GetHeight() - (2*3))
+            pfUI.uf.target.incHeal:SetHeight(pfUI.uf.target.hp:GetHeight())
             pfUI.uf.target.incHeal:Hide()
           end
           return pfUI.uf.target
@@ -175,7 +173,7 @@ pfUI:RegisterModule("thirdparty", function ()
             pfUI.uf.group[id].incHeal:SetMinMaxValues(0, 1)
             pfUI.uf.group[id].incHeal:SetValue(1)
             pfUI.uf.group[id].incHeal:SetStatusBarColor(0, 1, 0, 0.5)
-            pfUI.uf.group[id].incHeal:SetHeight(pfUI.uf.group[id].hp:GetHeight() - (2*3))
+            pfUI.uf.group[id].incHeal:SetHeight(pfUI.uf.group[id].hp:GetHeight())
             pfUI.uf.group[id].incHeal:Hide()
           end
           return pfUI.uf.group[id]
@@ -197,7 +195,7 @@ pfUI:RegisterModule("thirdparty", function ()
             pfUI.uf.raid[id].incHeal:SetMinMaxValues(0, 1)
             pfUI.uf.raid[id].incHeal:SetValue(1)
             pfUI.uf.raid[id].incHeal:SetStatusBarColor(0, 1, 0, 0.5)
-            pfUI.uf.raid[id].incHeal:SetHeight(pfUI.uf.raid[id].hp:GetHeight() - (2*3))
+            pfUI.uf.raid[id].incHeal:SetHeight(pfUI.uf.raid[id].hp:GetHeight())
             pfUI.uf.raid[id].incHeal:Hide()
           end
           return pfUI.uf.raid[id]
@@ -260,10 +258,10 @@ pfUI:RegisterModule("thirdparty", function ()
           frame.incHeal:ClearAllPoints()
 
           if strsub(unit,0,4) == "raid" and pfUI_config.unitframes.raid.invert_healthbar == "1" then
-            frame.incHeal:SetPoint("TOPLEFT", frame, "TOPLEFT", 3, -3)
+            frame.incHeal:SetPoint("TOPLEFT", frame, "TOPLEFT", 0, 0)
             frame.incHeal:SetFrameStrata("HIGH")
           else
-            frame.incHeal:SetPoint("TOPLEFT", frame, "TOPLEFT", healthWidth-3, -3)
+            frame.incHeal:SetPoint("TOPLEFT", frame, "TOPLEFT", healthWidth, 0)
           end
         else
           frame.incHeal:Hide()
@@ -290,39 +288,40 @@ pfUI:RegisterModule("thirdparty", function ()
 
       -- draw the button
       if not pfUI.bag.right.sort then
-        pfUI.bag.right.money:ClearAllPoints()
-        pfUI.bag.right.money:SetPoint("TOPRIGHT", pfUI.bag.right, "TOPRIGHT", -55, -6)
-
         pfUI.bag.right.sort = CreateFrame("Button", "pfBagSlotShow", UIParent)
         pfUI.bag.right.sort:SetParent(pfUI.bag.right)
-        pfUI.bag.right.sort:SetPoint("TOPRIGHT", -pfUI_config.bars.border*2 - 45 , -pfUI_config.bars.border*2 )
-        pfUI.bag.right.sort:SetBackdrop(pfUI.backdrop)
-        pfUI.bag.right.sort:SetHeight(15)
-        pfUI.bag.right.sort:SetWidth(15)
+        pfUI.bag.right.sort:SetPoint("TOPRIGHT", -pfUI_config.appearance.border.default*14 - 45, -pfUI_config.appearance.border.default)
+        pfUI.bag.right.sort:SetPoint("TOPRIGHT", pfUI.bag.right.keys, "TOPLEFT", -pfUI_config.appearance.border.default*3, 0)
+
+        pfUI.utils:CreateBackdrop(pfUI.bag.right.sort)
+        pfUI.bag.right.sort:SetHeight(12)
+        pfUI.bag.right.sort:SetWidth(12)
         pfUI.bag.right.sort:SetTextColor(1,1,.25,1)
         pfUI.bag.right.sort:SetFont("Interface\\AddOns\\pfUI\\fonts\\" .. pfUI_config.global.font_default .. ".ttf", pfUI_config.global.font_size, "OUTLINE")
         pfUI.bag.right.sort.texture = pfUI.bag.right.sort:CreateTexture("pfBagArrowUp")
         pfUI.bag.right.sort.texture:SetTexture("Interface\\AddOns\\pfUI\\img\\sort")
         pfUI.bag.right.sort.texture:ClearAllPoints()
-        pfUI.bag.right.sort.texture:SetPoint("TOPLEFT", pfUI.bag.right.sort, "TOPLEFT", 3, -3)
-        pfUI.bag.right.sort.texture:SetPoint("BOTTOMRIGHT", pfUI.bag.right.sort, "BOTTOMRIGHT", -3, 3)
+        pfUI.bag.right.sort.texture:SetPoint("TOPLEFT", pfUI.bag.right.sort, "TOPLEFT", 2, -2)
+        pfUI.bag.right.sort.texture:SetPoint("BOTTOMRIGHT", pfUI.bag.right.sort, "BOTTOMRIGHT", -2, 2)
         pfUI.bag.right.sort.texture:SetVertexColor(.25,.25,.25,1)
 
         pfUI.bag.right.sort:SetScript("OnEnter", function ()
-            pfUI.bag.right.sort:SetBackdrop(pfUI.backdrop_col)
-            pfUI.bag.right.sort:SetBackdropBorderColor(1,1,.25,1)
-            pfUI.bag.right.sort.texture:SetVertexColor(1,1,.25,1)
-          end)
+          pfUI.bag.right.sort.backdrop:SetBackdropBorderColor(1,1,.25,1)
+          pfUI.bag.right.sort.texture:SetVertexColor(1,1,.25,1)
+        end)
 
         pfUI.bag.right.sort:SetScript("OnLeave", function ()
-            pfUI.bag.right.sort:SetBackdrop(pfUI.backdrop)
-            pfUI.bag.right.sort:SetBackdropBorderColor(1,1,1,1)
-            pfUI.bag.right.sort.texture:SetVertexColor(.25,.25,.25,1)
-          end)
+          pfUI.utils:CreateBackdrop(pfUI.bag.right.sort)
+          pfUI.bag.right.sort.texture:SetVertexColor(.25,.25,.25,1)
+        end)
 
         pfUI.bag.right.sort:SetScript("OnClick", function()
           Clean_Up("bags")
         end)
+
+        pfUI.bag.right.search:ClearAllPoints()
+        pfUI.bag.right.search:SetPoint("TOPLEFT", pfUI.bag.right, "TOPLEFT", pfUI_config.appearance.border.default, -pfUI_config.appearance.border.default)
+        pfUI.bag.right.search:SetPoint("TOPRIGHT", pfUI.bag.right.sort, "TOPLEFT", -pfUI_config.appearance.border.default*3, -pfUI_config.appearance.border.default)
       end
     end)
   end

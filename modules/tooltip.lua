@@ -1,5 +1,5 @@
 pfUI:RegisterModule("tooltip", function ()
-  GameTooltip:SetBackdrop(pfUI.backdrop)
+pfUI.utils:CreateBackdrop(  GameTooltip)
 
   if pfUI_config.tooltip.position == "cursor" then
     function GameTooltip_SetDefaultAnchor(tooltip, parent)
@@ -42,14 +42,12 @@ pfUI:RegisterModule("tooltip", function ()
       if GameTooltip:GetAnchorType() == "ANCHOR_NONE" then
         GameTooltip:ClearAllPoints()
         if pfUI_config.tooltip.position == "bottom" then
-          GameTooltip:SetPoint("BOTTOMRIGHT",pfUI.panel.right,"TOPRIGHT",0,0)
+          GameTooltip:SetPoint("BOTTOMRIGHT",pfUI.panel.right,"TOPRIGHT",0,pfUI_config.appearance.border.default*2)
         elseif pfUI_config.tooltip.position == "chat" then
-          GameTooltip:SetPoint("BOTTOMRIGHT",pfUI.chat.right,"TOPRIGHT",0,0)
+          GameTooltip:SetPoint("BOTTOMRIGHT",pfUI.chat.right,"TOPRIGHT",0,pfUI_config.appearance.border.default*2)
         end
       end
-
     end)
-
 
   pfUI.tooltipStatusBar = CreateFrame('Frame', nil, GameTooltipStatusBar)
   pfUI.tooltipStatusBar:SetScript("OnUpdate", function()
@@ -65,12 +63,10 @@ pfUI:RegisterModule("tooltip", function ()
 
   GameTooltipStatusBar:SetHeight(6)
   GameTooltipStatusBar:ClearAllPoints()
-  GameTooltipStatusBar:SetPoint("BOTTOMLEFT", GameTooltip, "TOPLEFT", 1, 2)
-  GameTooltipStatusBar:SetPoint("BOTTOMRIGHT", GameTooltip, "TOPRIGHT", -1, 2)
+  GameTooltipStatusBar:SetPoint("BOTTOMLEFT", GameTooltip, "TOPLEFT", 0, 0)
+  GameTooltipStatusBar:SetPoint("BOTTOMRIGHT", GameTooltip, "TOPRIGHT", 0, 0)
   GameTooltipStatusBar:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
-  GameTooltipStatusBar:SetBackdrop( { bgFile = [[Interface\Tooltips\UI-Tooltip-Background]],
-                                    insets = {left = -1, right = -1, top = -1, bottom = -1} })
-  GameTooltipStatusBar:SetBackdropColor(0, 0, 0, 1)
+  pfUI.utils:CreateBackdrop(GameTooltipStatusBar)
   GameTooltipStatusBar.SetStatusBarColor_orig = GameTooltipStatusBar.SetStatusBarColor
   GameTooltipStatusBar.SetStatusBarColor = function() return end
 

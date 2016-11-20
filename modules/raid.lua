@@ -2,6 +2,11 @@ pfUI:RegisterModule("raid", function ()
   -- do not go further on disabled UFs
   if pfUI_config.unitframes.disable == "1" then return end
 
+  local default_border = pfUI_config.appearance.border.default
+  if pfUI_config.appearance.border.raidframes ~= "-1" then
+    default_border = pfUI_config.appearance.border.raidframes
+  end
+
   pfUI.uf.raid = CreateFrame("Button","pfRaid",UIParent)
   pfUI.uf.raid:Hide()
 
@@ -70,42 +75,32 @@ pfUI:RegisterModule("raid", function ()
       pfUI.uf.raid[i] = CreateFrame("Button","pfRaid" .. i,UIParent)
 
       pfUI.uf.raid[i]:SetWidth(50)
-      pfUI.uf.raid[i]:SetHeight(35)
-      pfUI.uf.raid[i]:SetPoint("BOTTOMLEFT", (r-1) * 52 + 5, 160 + ((g-1)*37))
+      pfUI.uf.raid[i]:SetHeight(30 + 2*default_border + pfUI_config.unitframes.raid.pspace)
+      pfUI.uf.raid[i]:SetPoint("BOTTOMLEFT", (r-1) * (54+default_border) + 5, 160 + ((g-1)*(37+default_border))+default_border)
       pfUI.utils:UpdateMovable(pfUI.uf.raid[i])
       pfUI.uf.raid[i]:Hide()
       pfUI.uf.raid[i].id = 0
 
       pfUI.uf.raid[i].hp = CreateFrame("Frame",nil, pfUI.uf.raid[i])
-      pfUI.uf.raid[i].hp:SetBackdrop(pfUI.backdrop)
-      pfUI.uf.raid[i].hp:SetHeight(30)
-      pfUI.uf.raid[i].hp:SetPoint("TOPLEFT",pfUI.uf.raid[i],"TOPLEFT")
-      pfUI.uf.raid[i].hp:SetPoint("TOPRIGHT",pfUI.uf.raid[i],"TOPRIGHT")
+      pfUI.uf.raid[i].hp:SetPoint("TOP", 0, 0)
+      pfUI.uf.raid[i].hp:SetWidth(50)
+      pfUI.uf.raid[i].hp:SetHeight(27)
+      pfUI.utils:CreateBackdrop(pfUI.uf.raid[i].hp, default_border)
 
       pfUI.uf.raid[i].hp.bar = CreateFrame("StatusBar", nil, pfUI.uf.raid[i].hp)
       pfUI.uf.raid[i].hp.bar:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
-
-      pfUI.uf.raid[i].hp.bar:ClearAllPoints()
-      pfUI.uf.raid[i].hp.bar:SetPoint("TOPLEFT", pfUI.uf.raid[i].hp, "TOPLEFT", 3, -3)
-      pfUI.uf.raid[i].hp.bar:SetPoint("BOTTOMRIGHT", pfUI.uf.raid[i].hp, "BOTTOMRIGHT", -3, 3)
-
-      pfUI.uf.raid[i].hp.bar:SetStatusBarColor(0,1,0)
-
+      pfUI.uf.raid[i].hp.bar:SetAllPoints(pfUI.uf.raid[i].hp)
       pfUI.uf.raid[i].hp.bar:SetMinMaxValues(0, 100)
-      pfUI.uf.raid[i].hp.bar:SetValue(0)
 
       pfUI.uf.raid[i].power = CreateFrame("Frame",nil, pfUI.uf.raid[i])
-      pfUI.uf.raid[i].power:SetBackdrop(pfUI.backdrop)
-      pfUI.uf.raid[i].power:SetPoint("TOPLEFT",pfUI.uf.raid[i].hp,"BOTTOMLEFT",0,3)
-      pfUI.uf.raid[i].power:SetPoint("BOTTOMRIGHT",pfUI.uf.raid[i],"BOTTOMRIGHT",0,0)
+      pfUI.uf.raid[i].power:SetPoint("BOTTOM", 0, 0)
+      pfUI.uf.raid[i].power:SetWidth(50)
+      pfUI.uf.raid[i].power:SetHeight(3)
+      pfUI.utils:CreateBackdrop(pfUI.uf.raid[i].power, default_border)
 
       pfUI.uf.raid[i].power.bar = CreateFrame("StatusBar", nil, pfUI.uf.raid[i].power)
-      pfUI.uf.raid[i].power.bar:ClearAllPoints()
-      pfUI.uf.raid[i].power.bar:SetPoint("TOPLEFT", pfUI.uf.raid[i].power, "TOPLEFT", 3, -3)
-      pfUI.uf.raid[i].power.bar:SetPoint("BOTTOMRIGHT", pfUI.uf.raid[i].power, "BOTTOMRIGHT", -3, 3)
       pfUI.uf.raid[i].power.bar:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
-
-      pfUI.uf.raid[i].power.bar:SetStatusBarColor(1,0,0)
+      pfUI.uf.raid[i].power.bar:SetAllPoints(pfUI.uf.raid[i].power)
       pfUI.uf.raid[i].power.bar:SetMinMaxValues(0, 100)
 
       pfUI.uf.raid[i].caption = pfUI.uf.raid[i]:CreateFontString("Status", "HIGH", "GameFontNormal")
@@ -252,7 +247,7 @@ pfUI:RegisterModule("raid", function ()
           elseif hpDisplay > hpReal then
             this.hp.bar:SetValue(hpDisplay - ceil(hpDiff / pfUI_config.unitframes.animation_speed))
           else
-            this.hp.bar:SetValue(this.cache.hp)
+            this.hp.bar:SetValue(hpReal)
           end
 
           local powerDisplay = this.power.bar:GetValue()

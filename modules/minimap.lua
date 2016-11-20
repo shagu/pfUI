@@ -15,18 +15,16 @@ pfUI:RegisterModule("minimap", function ()
     end)
 
   pfUI.minimap = CreateFrame("Frame","pfMinimap",UIParent)
-  pfUI.minimap:SetBackdrop(pfUI.backdrop)
-  pfUI.minimap:SetBackdropColor(0,0,0,0)
+  pfUI.utils:CreateBackdrop(pfUI.minimap)
   pfUI.minimap:SetPoint("TOPRIGHT", UIParent, -5, -5)
   pfUI.utils:UpdateMovable(pfUI.minimap)
-  pfUI.minimap:SetWidth(Minimap:GetWidth() + 5)
-  pfUI.minimap:SetHeight(Minimap:GetHeight() + 5)
+  pfUI.minimap:SetWidth(Minimap:GetWidth())
+  pfUI.minimap:SetHeight(Minimap:GetHeight())
   pfUI.minimap:SetFrameStrata("BACKGROUND")
 
   Minimap:SetParent(pfUI.minimap)
   Minimap:ClearAllPoints()
-  Minimap:SetPoint("TOPLEFT", pfUI.minimap, "TOPLEFT", 3, -3)
-  Minimap:SetPoint("BOTTOMRIGHT", pfUI.minimap, "BOTTOMRIGHT", -2, 2)
+  Minimap:SetAllPoints(pfUI.minimap)
 
   -- Set new mail frame position to top right corner of the minimap
   -- mostly taken from TukUI

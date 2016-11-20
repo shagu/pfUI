@@ -8,16 +8,16 @@ pfUI:RegisterModule("loot", function ()
   pfUI.loot:RegisterEvent("OPEN_MASTER_LOOT_LIST")
   pfUI.loot:RegisterEvent("UPDATE_MASTER_LOOT_LIST")
 
-  pfUI.loot:SetWidth(160+pfUI_config.bars.border*2)
+  pfUI.loot:SetWidth(160+pfUI_config.appearance.border.default*2)
   pfUI.loot.slots = {}
   function pfUI.loot:CreateSlot(id)
     local frame = CreateFrame("LootButton", 'pfLootButton'..id, pfUI.loot)
-    frame:SetPoint("LEFT", pfUI_config.bars.border*2, 0)
-    frame:SetPoint("RIGHT", -pfUI_config.bars.border*2, 0)
+    frame:SetPoint("LEFT", pfUI_config.appearance.border.default*2, 0)
+    frame:SetPoint("RIGHT", -pfUI_config.appearance.border.default*2, 0)
     frame:SetHeight(22)
     frame:SetID(id)
     frame:SetSlot(id)
-    frame:SetPoint("TOP", pfUI.loot, 4, (-pfUI_config.bars.border*2+22)-(id*22))
+    frame:SetPoint("TOP", pfUI.loot, 4, (-pfUI_config.appearance.border.default*2+22)-(id*22))
 
     frame:SetScript("OnClick", function()
       if ( IsControlKeyDown() ) then
@@ -56,16 +56,15 @@ pfUI:RegisterModule("loot", function ()
     end)
 
     frame.ficon = CreateFrame("Frame", "pfLootButtonIcon", frame)
-    frame.ficon:SetHeight(22)
-    frame.ficon:SetWidth(22)
+    frame.ficon:SetHeight(frame:GetHeight() - 2*pfUI_config.appearance.border.default)
+    frame.ficon:SetWidth(frame:GetHeight() - 2*pfUI_config.appearance.border.default)
     frame.ficon:ClearAllPoints()
     frame.ficon:SetPoint("RIGHT", frame)
-    frame.ficon:SetBackdrop(pfUI.backdrop_col)
+    pfUI.utils:CreateBackdrop(frame.ficon)
 
     frame.icon = frame.ficon:CreateTexture(nil, "ARTWORK")
     frame.icon:SetTexCoord(.07, .93, .07, .93)
-    frame.icon:SetPoint("TOPLEFT", frame.ficon, "TOPLEFT", 2, -2)
-    frame.icon:SetPoint("BOTTOMRIGHT", frame.ficon, "BOTTOMRIGHT", -2, 2)
+    frame.icon:SetAllPoints(frame.ficon)
 
     frame.count = frame.ficon:CreateFontString(nil, "OVERLAY")
     frame.count:ClearAllPoints()
@@ -149,10 +148,10 @@ pfUI:RegisterModule("loot", function ()
 
           if(quality > 1) then
             slot.rarity:SetVertexColor(color.r, color.g, color.b)
-            slot.ficon:SetBackdropBorderColor(color.r, color.g, color.b)
+            slot.ficon.backdrop:SetBackdropBorderColor(color.r, color.g, color.b)
             slot.rarity:Show()
           else
-            slot.ficon:SetBackdropBorderColor(.5,.5,.5)
+            slot.ficon.backdrop:SetBackdropBorderColor(.3,.3,.3)
             slot.rarity:Hide()
           end
 
@@ -169,14 +168,13 @@ pfUI:RegisterModule("loot", function ()
         end
         local color = ITEM_QUALITY_COLORS[maxrarity]
         if maxrarity <= 1 then
-          this:SetBackdrop(pfUI.backdrop)
-          this:SetBackdropBorderColor(1, 1, 1)
+          pfUI.utils:CreateBackdrop(this)
         else
-          this:SetBackdrop(pfUI.backdrop_col)
-          this:SetBackdropBorderColor(color.r, color.g, color.b, 1)
+          pfUI.utils:CreateBackdrop(this)
+          this.backdrop:SetBackdropBorderColor(color.r, color.g, color.b, 1)
         end
-        this:SetHeight(math.max((items*22)+4*pfUI_config.bars.border), 20)
-        this:SetWidth(maxwidth + 22 + 8*pfUI_config.bars.border )
+        this:SetHeight(math.max((items*22)+4*pfUI_config.appearance.border.default), 20)
+        this:SetWidth(maxwidth + 22 + 8*pfUI_config.appearance.border.default )
       end
     end
 

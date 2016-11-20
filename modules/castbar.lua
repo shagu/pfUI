@@ -1,4 +1,10 @@
 pfUI:RegisterModule("castbar", function ()
+
+    local default_border = pfUI_config.appearance.border.default
+    if pfUI_config.appearance.border.unitframes ~= "-1" then
+      default_border = pfUI_config.appearance.border.unitframes
+    end
+
     pfUI.castbar = CreateFrame("Frame")
 
     if pfUI.uf.player then
@@ -11,10 +17,10 @@ pfUI:RegisterModule("castbar", function ()
 
       -- setup player castbar
       pfUI.castbar.player = CreateFrame("Frame",nil, pfUI.uf.player)
-      pfUI.castbar.player:SetBackdrop(pfUI.backdrop)
+      pfUI.utils:CreateBackdrop(pfUI.castbar.player, default_border)
       pfUI.castbar.player:SetHeight(pfUI_config.global.font_size * 2)
-      pfUI.castbar.player:SetPoint("TOPRIGHT",pfUI.uf.player,"BOTTOMRIGHT",0,-1)
-      pfUI.castbar.player:SetPoint("TOPLEFT",pfUI.uf.player,"BOTTOMLEFT",0,-1)
+      pfUI.castbar.player:SetPoint("TOPRIGHT",pfUI.uf.player,"BOTTOMRIGHT",0,-default_border*3)
+      pfUI.castbar.player:SetPoint("TOPLEFT",pfUI.uf.player,"BOTTOMLEFT",0,-default_border*3)
       pfUI.castbar.player:Hide()
       pfUI.castbar.player.delay = 0
 
@@ -22,8 +28,7 @@ pfUI:RegisterModule("castbar", function ()
       pfUI.castbar.player.bar = CreateFrame("StatusBar", nil, pfUI.castbar.player)
       pfUI.castbar.player.bar:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
       pfUI.castbar.player.bar:ClearAllPoints()
-      pfUI.castbar.player.bar:SetPoint("TOPLEFT", pfUI.castbar.player, "TOPLEFT", 3, -3)
-      pfUI.castbar.player.bar:SetPoint("BOTTOMRIGHT", pfUI.castbar.player, "BOTTOMRIGHT", -3, 3)
+      pfUI.castbar.player.bar:SetAllPoints(pfUI.castbar.player)
       pfUI.castbar.player.bar:SetMinMaxValues(0, 100)
       pfUI.castbar.player.bar:SetValue(20)
       pfUI.castbar.player.bar:SetStatusBarColor(.7,.7,.9,.8)
@@ -194,17 +199,16 @@ pfUI:RegisterModule("castbar", function ()
 
     if pfUI.uf.target then
       pfUI.castbar.target = CreateFrame("Frame")
-      pfUI.castbar.target:SetBackdrop(pfUI.backdrop)
+      pfUI.utils:CreateBackdrop(pfUI.castbar.target, default_border)
       pfUI.castbar.target:SetHeight(pfUI_config.global.font_size * 2)
-      pfUI.castbar.target:SetPoint("TOPRIGHT",pfUI.uf.target,"BOTTOMRIGHT",0,-1)
-      pfUI.castbar.target:SetPoint("TOPLEFT",pfUI.uf.target,"BOTTOMLEFT",0,-1)
+      pfUI.castbar.target:SetPoint("TOPRIGHT",pfUI.uf.target,"BOTTOMRIGHT",0,-default_border*3)
+      pfUI.castbar.target:SetPoint("TOPLEFT",pfUI.uf.target,"BOTTOMLEFT",0,-default_border*3)
 
       -- statusbar
       pfUI.castbar.target.bar = CreateFrame("StatusBar", nil, pfUI.castbar.target)
       pfUI.castbar.target.bar:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
       pfUI.castbar.target.bar:ClearAllPoints()
-      pfUI.castbar.target.bar:SetPoint("TOPLEFT", pfUI.castbar.target, "TOPLEFT", 3, -3)
-      pfUI.castbar.target.bar:SetPoint("BOTTOMRIGHT", pfUI.castbar.target, "BOTTOMRIGHT", -3, 3)
+      pfUI.castbar.target.bar:SetAllPoints(pfUI.castbar.target)
       pfUI.castbar.target.bar:SetMinMaxValues(0, 100)
       pfUI.castbar.target.bar:SetValue(20)
       pfUI.castbar.target.bar:SetStatusBarColor(.7,.7,.9,.8)

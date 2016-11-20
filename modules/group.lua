@@ -2,6 +2,11 @@ pfUI:RegisterModule("group", function ()
   -- do not go further on disabled UFs
   if pfUI_config.unitframes.disable == "1" then return end
 
+  local default_border = pfUI_config.appearance.border.default
+  if pfUI_config.appearance.border.groupframes ~= "-1" then
+    default_border = pfUI_config.appearance.border.groupframes
+  end
+
   -- hide blizzard group frames
   for i=1, 4 do
     if getglobal("PartyMemberFrame" .. i) then
@@ -79,43 +84,33 @@ pfUI:RegisterModule("group", function ()
     pfUI.uf.group[i] = CreateFrame("Button","pfGroup" .. i,UIParent)
 
     pfUI.uf.group[i]:SetWidth(175)
-    pfUI.uf.group[i]:SetHeight(40)
+    pfUI.uf.group[i]:SetHeight(40 + 2*default_border + pfUI_config.unitframes.group.pspace)
     pfUI.uf.group[i]:SetPoint("TOPLEFT", 5, -5 - ((i-1)*55))
     pfUI.utils:UpdateMovable(pfUI.uf.group[i])
     pfUI.uf.group[i]:Hide()
     pfUI.uf.group[i].id = i
 
     pfUI.uf.group[i].hp = CreateFrame("Frame",nil, pfUI.uf.group[i])
-    pfUI.uf.group[i].hp:SetBackdrop(pfUI.backdrop)
+    pfUI.uf.group[i].hp:SetWidth(175)
     pfUI.uf.group[i].hp:SetHeight(30)
-    pfUI.uf.group[i].hp:SetPoint("TOPLEFT",pfUI.uf.group[i],"TOPLEFT")
-    pfUI.uf.group[i].hp:SetPoint("TOPRIGHT",pfUI.uf.group[i],"TOPRIGHT")
+    pfUI.uf.group[i].hp:SetPoint("TOP", 0, 0)
+    pfUI.utils:CreateBackdrop(pfUI.uf.group[i].hp, default_border)
 
     pfUI.uf.group[i].hp.bar = CreateFrame("StatusBar", nil, pfUI.uf.group[i].hp)
     pfUI.uf.group[i].hp.bar:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
-
-    pfUI.uf.group[i].hp.bar:ClearAllPoints()
-    pfUI.uf.group[i].hp.bar:SetPoint("TOPLEFT", pfUI.uf.group[i].hp, "TOPLEFT", 3, -3)
-    pfUI.uf.group[i].hp.bar:SetPoint("BOTTOMRIGHT", pfUI.uf.group[i].hp, "BOTTOMRIGHT", -3, 3)
-
-    pfUI.uf.group[i].hp.bar:SetStatusBarColor(0,1,0)
+    pfUI.uf.group[i].hp.bar:SetAllPoints(pfUI.uf.group[i].hp)
     pfUI.uf.group[i].hp.bar:SetMinMaxValues(0, 100)
-    pfUI.uf.group[i].hp.bar:SetValue(i*10)
 
     pfUI.uf.group[i].power = CreateFrame("Frame",nil, pfUI.uf.group[i])
-    pfUI.uf.group[i].power:SetBackdrop(pfUI.backdrop)
-    pfUI.uf.group[i].power:SetPoint("TOPLEFT",pfUI.uf.group[i].hp,"BOTTOMLEFT",0,3)
-    pfUI.uf.group[i].power:SetPoint("BOTTOMRIGHT",pfUI.uf.group[i],"BOTTOMRIGHT",0,0)
+    pfUI.uf.group[i].power:SetWidth(175)
+    pfUI.uf.group[i].power:SetHeight(10)
+    pfUI.uf.group[i].power:SetPoint("BOTTOM", 0, 0)
+    pfUI.utils:CreateBackdrop(pfUI.uf.group[i].power, default_border)
 
     pfUI.uf.group[i].power.bar = CreateFrame("StatusBar", nil, pfUI.uf.group[i].power)
-    pfUI.uf.group[i].power.bar:ClearAllPoints()
-    pfUI.uf.group[i].power.bar:SetPoint("TOPLEFT", pfUI.uf.group[i].power, "TOPLEFT", 3, -3)
-    pfUI.uf.group[i].power.bar:SetPoint("BOTTOMRIGHT", pfUI.uf.group[i].power, "BOTTOMRIGHT", -3, 3)
     pfUI.uf.group[i].power.bar:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
-
-    pfUI.uf.group[i].power.bar:SetStatusBarColor(1,0,0)
+    pfUI.uf.group[i].power.bar:SetAllPoints(pfUI.uf.group[i].power)
     pfUI.uf.group[i].power.bar:SetMinMaxValues(0, 100)
-    pfUI.uf.group[i].power.bar:SetValue(i*20)
 
     pfUI.uf.group[i].caption = pfUI.uf.group[i]:CreateFontString("Status", "HIGH", "GameFontNormal")
     pfUI.uf.group[i].caption:SetFont("Interface\\AddOns\\pfUI\\fonts\\" .. pfUI_config.global.font_square .. ".ttf", pfUI_config.global.font_size, "OUTLINE")

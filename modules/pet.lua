@@ -2,10 +2,15 @@ pfUI:RegisterModule("pet", function ()
   -- do not go further on disabled UFs
   if pfUI_config.unitframes.disable == "1" then return end
 
+  local default_border = pfUI_config.appearance.border.default
+  if pfUI_config.appearance.border.unitframes ~= "-1" then
+    default_border = pfUI_config.appearance.border.unitframes
+  end
+
   pfUI.uf.pet = CreateFrame("Button","pfPet",UIParent)
 
   pfUI.uf.pet:SetWidth(100)
-  pfUI.uf.pet:SetHeight(23)
+  pfUI.uf.pet:SetHeight(20 + 2*default_border + pfUI_config.unitframes.pet.pspace)
   pfUI.uf.pet:ClearAllPoints()
   pfUI.uf.pet:SetPoint("BOTTOM", UIParent , "BOTTOM", 0, 163)
   pfUI.utils:UpdateMovable(pfUI.uf.pet)
@@ -104,17 +109,15 @@ pfUI:RegisterModule("pet", function ()
     end)
 
   pfUI.uf.pet.hp = CreateFrame("Frame",nil, pfUI.uf.pet)
-  pfUI.uf.pet.hp:SetBackdrop(pfUI.backdrop)
   pfUI.uf.pet.hp:SetWidth(100)
-  pfUI.uf.pet.hp:SetHeight(20)
-  pfUI.uf.pet.hp:SetPoint("TOP",pfUI.uf.pet,"TOP")
+  pfUI.uf.pet.hp:SetHeight(17)
+  pfUI.uf.pet.hp:SetPoint("TOP", 0, 0)
+  pfUI.utils:CreateBackdrop(pfUI.uf.pet.hp, default_border)
+
   pfUI.uf.pet.hp.bar = CreateFrame("StatusBar", nil, pfUI.uf.pet.hp)
   pfUI.uf.pet.hp.bar:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
-  pfUI.uf.pet.hp.bar:ClearAllPoints()
-  pfUI.uf.pet.hp.bar:SetPoint("TOPLEFT", pfUI.uf.pet.hp, "TOPLEFT", 3, -3)
-  pfUI.uf.pet.hp.bar:SetPoint("BOTTOMRIGHT", pfUI.uf.pet.hp, "BOTTOMRIGHT", -3, 3)
+  pfUI.uf.pet.hp.bar:SetAllPoints(pfUI.uf.pet.hp)
   pfUI.uf.pet.hp.bar:SetMinMaxValues(0, 100)
-  pfUI.uf.pet.hp.bar:SetValue(100)
 
   pfUI.uf.pet.hp.raidIcon = CreateFrame("Frame",nil,pfUI.uf.pet.hp)
   pfUI.uf.pet.hp.raidIcon:SetFrameStrata("MEDIUM")
@@ -128,19 +131,15 @@ pfUI:RegisterModule("pet", function ()
   pfUI.uf.pet.hp.raidIcon:Hide()
 
   pfUI.uf.pet.power = CreateFrame("Frame",nil, pfUI.uf.pet)
-  pfUI.uf.pet.power:SetBackdrop(pfUI.backdrop)
+  pfUI.uf.pet.power:SetPoint("BOTTOM", 0, 0)
   pfUI.uf.pet.power:SetWidth(100)
-  pfUI.uf.pet.power:SetHeight(8)
-  pfUI.uf.pet.power:SetPoint("TOPLEFT",pfUI.uf.pet.hp,"BOTTOMLEFT",0,3)
+  pfUI.uf.pet.power:SetHeight(3)
+  pfUI.utils:CreateBackdrop(pfUI.uf.pet.power, default_border)
+
   pfUI.uf.pet.power.bar = CreateFrame("StatusBar", nil, pfUI.uf.pet.power)
-  pfUI.uf.pet.power.bar:ClearAllPoints()
-  pfUI.uf.pet.power.bar:SetPoint("TOPLEFT", pfUI.uf.pet.power, "TOPLEFT", 3, -3)
-  pfUI.uf.pet.power.bar:SetPoint("BOTTOMRIGHT", pfUI.uf.pet.power, "BOTTOMRIGHT", -3, 3)
   pfUI.uf.pet.power.bar:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
-  pfUI.uf.pet.power.bar:SetBackdropColor(0,0,0,1)
-  pfUI.uf.pet.power.bar:SetStatusBarColor(0,0,0)
+  pfUI.uf.pet.power.bar:SetAllPoints(pfUI.uf.pet.power)
   pfUI.uf.pet.power.bar:SetMinMaxValues(0, 100)
-  pfUI.uf.pet.power.bar:SetValue(100)
 
   pfUI.uf.pet.hp.text = pfUI.uf.pet.hp.bar:CreateFontString("Status", "LOW", "GameFontNormal")
   pfUI.uf.pet.hp.text:SetFont("Interface\\AddOns\\pfUI\\fonts\\" .. pfUI_config.global.font_square .. ".ttf", pfUI_config.global.font_size - 2, "OUTLINE")
@@ -178,7 +177,9 @@ pfUI:RegisterModule("pet", function ()
 
     pfUI.uf.pet.buff.buffs[i]:RegisterForClicks("RightButtonUp")
     pfUI.uf.pet.buff.buffs[i]:ClearAllPoints()
-    pfUI.uf.pet.buff.buffs[i]:SetPoint("BOTTOMLEFT", pfUI.uf.pet.hp, "TOPLEFT", (i-8*row)*1 + (i-8*row)*buffsize - buffsize -1 , 1*row + buffsize*row +1)
+    pfUI.uf.pet.buff.buffs[i]:SetPoint("BOTTOMLEFT", pfUI.uf.pet.hp, "TOPLEFT",
+    (i-1-8*row)*((2*default_border) + buffsize + 1),
+    (row)*((2*default_border) + buffsize + 1) + 2*default_border + 1)
     pfUI.uf.pet.buff.buffs[i]:SetWidth(buffsize)
     pfUI.uf.pet.buff.buffs[i]:SetHeight(buffsize)
     pfUI.uf.pet.buff.buffs[i]:SetNormalTexture(nil)
@@ -196,11 +197,11 @@ pfUI:RegisterModule("pet", function ()
     local buffsize = pfUI.uf.pet.hp:GetWidth()/8 - 1
     for i=1, 16 do
       local texture, stacks = UnitBuff("pet",i)
-      pfUI.uf.pet.buff.buffs[i]:SetBackdrop(
-        { bgFile = texture, tile = false, tileSize = buffsize,
-          edgeFile = "Interface\\AddOns\\pfUI\\img\\border", edgeSize = 8,
-          insets = { left = 0, right = 0, top = 0, bottom = 0}
-        })
+      pfUI.utils:CreateBackdrop(pfUI.uf.pet.buff.buffs[i], default_border)
+      pfUI.uf.pet.buff.buffs[i]:SetNormalTexture(texture)
+      for i,v in ipairs({pfUI.uf.pet.buff.buffs[i]:GetRegions()}) do
+        if v.SetTexCoord then v:SetTexCoord(.08, .92, .08, .92) end
+      end
 
       if texture then
         pfUI.uf.pet.buff.buffs[i]:Show()
@@ -226,6 +227,8 @@ pfUI:RegisterModule("pet", function ()
   pfUI.uf.pet.debuff.debuffs = {}
   for i=1, 16 do
     local id = i
+    local debuffsize = pfUI.uf.pet.hp:GetWidth()/8 - 1
+
     pfUI.uf.pet.debuff.debuffs[i] = CreateFrame("Button", "pfUITargetDebuff" .. i, pfUI.uf.pet)
     pfUI.uf.pet.debuff.debuffs[i].stacks = pfUI.uf.pet.debuff.debuffs[i]:CreateFontString(nil, "OVERLAY", pfUI.uf.pet.debuff.debuffs[i])
     pfUI.uf.pet.debuff.debuffs[i].stacks:SetFont("Interface\\AddOns\\pfUI\\fonts\\" .. pfUI_config.global.font_square .. ".ttf", pfUI_config.global.font_size, "OUTLINE")
@@ -236,18 +239,6 @@ pfUI:RegisterModule("pet", function ()
     pfUI.uf.pet.debuff.debuffs[i].stacks:SetTextColor(1,1,.5)
     pfUI.uf.pet.debuff.debuffs[i]:RegisterForClicks("RightButtonUp")
     pfUI.uf.pet.debuff.debuffs[i]:ClearAllPoints()
-
-    local row = 0
-    local top = 0
-    local debuffsize = pfUI.uf.pet.hp:GetWidth()/8 - 1
-    if i > 8 then row = 1 end
-    if pfUI.uf.pet.buff.buffs[1]:IsShown() then top = top + 1 end
-    if pfUI.uf.pet.buff.buffs[9]:IsShown() then top = top + 1 end
-
-    pfUI.uf.pet.debuff.debuffs[i]:SetPoint("BOTTOMLEFT", pfUI.uf.pet.hp, "TOPLEFT",
-      (i-8*row)*1 + (i-8*row)*debuffsize - debuffsize -1 ,
-      1*row + debuffsize*row +1 + (top*(debuffsize+1))
-    )
 
     pfUI.uf.pet.debuff.debuffs[i]:SetWidth(debuffsize)
     pfUI.uf.pet.debuff.debuffs[i]:SetHeight(debuffsize)
@@ -272,27 +263,29 @@ pfUI:RegisterModule("pet", function ()
       if i > 8 then row = 1 end
       if pfUI.uf.pet.buff.buffs[1]:IsShown() then top = top + 1 end
       if pfUI.uf.pet.buff.buffs[9]:IsShown() then top = top + 1 end
+      local buffsize = pfUI.uf.pet.hp:GetWidth()/8 - 1
 
       pfUI.uf.pet.debuff.debuffs[i]:SetPoint("BOTTOMLEFT", pfUI.uf.pet.hp, "TOPLEFT",
-        (i-8*row)*1 + (i-8*row)*debuffsize - debuffsize -1 ,
-        1*row + debuffsize*row +1 + (top*(debuffsize+1))
-      )
+      (i-1-row)*((2*default_border) + buffsize + 1),
+      (top)*((2*default_border) + buffsize + 1) +
+      (row)*((2*default_border) + buffsize + 1) + (2*default_border + 1))
+
       local texture, stacks = UnitDebuff("pet",i)
-      pfUI.uf.pet.debuff.debuffs[i]:SetBackdrop(
-        { bgFile = texture, tile = false, tileSize = debuffsize,
-          edgeFile = "Interface\\AddOns\\pfUI\\img\\border_col", edgeSize = 8,
-          insets = { left = 0, right = 0, top = 0, bottom = 0}
-        })
+      pfUI.utils:CreateBackdrop(pfUI.uf.pet.debuff.debuffs[i], default_border)
+      pfUI.uf.pet.debuff.debuffs[i]:SetNormalTexture(texture)
+      for i,v in ipairs({pfUI.uf.pet.debuff.debuffs[i]:GetRegions()}) do
+        if v.SetTexCoord then v:SetTexCoord(.08, .92, .08, .92) end
+      end
 
       local _,_,dtype = UnitDebuff("pet", i)
       if dtype == "Magic" then
-        pfUI.uf.pet.debuff.debuffs[i]:SetBackdropBorderColor(0,1,1,1)
+        pfUI.uf.pet.debuff.debuffs[i].backdrop:SetBackdropBorderColor(0,1,1,1)
       elseif dtype == "Poison" then
-        pfUI.uf.pet.debuff.debuffs[i]:SetBackdropBorderColor(0,1,0,1)
+        pfUI.uf.pet.debuff.debuffs[i].backdrop:SetBackdropBorderColor(0,1,0,1)
       elseif dtype == "Curse" then
-        pfUI.uf.pet.debuff.debuffs[i]:SetBackdropBorderColor(1,0,1,1)
+        pfUI.uf.pet.debuff.debuffs[i].backdrop:SetBackdropBorderColor(1,0,1,1)
       else
-        pfUI.uf.pet.debuff.debuffs[i]:SetBackdropBorderColor(1,0,0,1)
+        pfUI.uf.pet.debuff.debuffs[i].backdrop:SetBackdropBorderColor(1,0,0,1)
       end
 
       if texture then

@@ -51,13 +51,9 @@ pfUI:RegisterModule("buff", function ()
       local icon = getglobal(buff:GetName().."Icon")
       local border = getglobal(buff:GetName().."Border")
       local _, _, mainhand, _, _, offhand = GetWeaponEnchantInfo()
-
       if buff then
-        buff:SetBackdrop({
-          bgFile = icon:GetTexture(), tile = false, tileSize = 16,
-          edgeFile = "Interface\\AddOns\\pfUI\\img\\border_col", edgeSize = 8,
-          insets = { left = 0, right = 0, top = 0, bottom = 0}
-        })
+        pfUI.utils:CreateBackdrop(buff)
+        icon:SetTexCoord(.08, .92, .08, .92)
         border:Hide()
       end
 
@@ -66,7 +62,7 @@ pfUI:RegisterModule("buff", function ()
         if not link then break end
         local _, _, itemLink = string.find(link, "(item:%d+:%d+:%d+:%d+)")
         local _, _, itemRarity, itemLevel, _, _, _, itemEquipLoc, _ = GetItemInfo(itemLink)
-        if itemRarity then buff:SetBackdropBorderColor(GetItemQualityColor(itemRarity)) end
+        if itemRarity then buff.backdrop:SetBackdropBorderColor(GetItemQualityColor(itemRarity)) end
 
         if mainhand and mainhand > 0 then
           buff.stacks:SetText(mainhand)
@@ -79,7 +75,7 @@ pfUI:RegisterModule("buff", function ()
         if not link then break end
         local _, _, itemLink = string.find(link, "(item:%d+:%d+:%d+:%d+)")
         local _, _, itemRarity, itemLevel, _, _, _, itemEquipLoc, _ = GetItemInfo(itemLink)
-        if itemRarity then buff:SetBackdropBorderColor(GetItemQualityColor(itemRarity)) end
+        if itemRarity then buff.backdrop:SetBackdropBorderColor(GetItemQualityColor(itemRarity)) end
         if offhand and offhand > 0 then
           buff.stacks:SetText(offhand)
           buff.stacks:Show()
@@ -90,24 +86,27 @@ pfUI:RegisterModule("buff", function ()
     end
 
     -- buffs
-    for i=0,15,1 do
+    for i=0,32 do
       local buff = getglobal("BuffButton" .. i)
-      local icon = getglobal(buff:GetName().."Icon")
-      local border = getglobal(buff:GetName().."Border")
-      if border then
-        buff:SetBackdrop({
-          bgFile = icon:GetTexture(), tile = false, tileSize = 16,
-          edgeFile = "Interface\\AddOns\\pfUI\\img\\border_col", edgeSize = 8,
-          insets = { left = 0, right = 0, top = 0, bottom = 0}
-        })
-        buff:SetBackdropBorderColor(border:GetVertexColor())
-        border:Hide()
-      else
-        buff:SetBackdrop({
-          bgFile = icon:GetTexture(), tile = false, tileSize = 16,
-          edgeFile = "Interface\\AddOns\\pfUI\\img\\border", edgeSize = 8,
-          insets = { left = 0, right = 0, top = 0, bottom = 0}
-        })
+      if buff then
+        local icon = getglobal(buff:GetName().."Icon")
+        local border = getglobal(buff:GetName().."Border")
+        local text = getglobal(buff:GetName().."Duration")
+
+        if i < 8 and i > 0 then
+          buff:SetPoint("TOPRIGHT", getglobal("BuffButton" .. i-1), "TOPLEFT", -7, 0)
+        elseif i < 16 and i > 8 then
+            buff:SetPoint("TOPRIGHT", getglobal("BuffButton" .. i-1), "TOPLEFT", -7, 0)
+        elseif i > 16 then
+          buff:SetPoint("TOPRIGHT", getglobal("BuffButton" .. i-1), "TOPLEFT", -7, 0)
+        end
+        pfUI.utils:CreateBackdrop(buff)
+        text:SetPoint("TOP", buff, "BOTTOM", 0 , -pfUI_config.appearance.border.default*2)
+        icon:SetTexCoord(.08, .92, .08, .92)
+        if border then
+          buff.backdrop:SetBackdropBorderColor(border:GetVertexColor())
+          border:Hide()
+        end
       end
     end
   end

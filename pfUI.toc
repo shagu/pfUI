@@ -29,6 +29,7 @@ modules\actionbar.lua
 modules\chat.lua
 modules\font.lua
 modules\addons.lua
+modules\minimap.lua
 modules\panel.lua
 modules\player.lua
 modules\target.lua
@@ -37,7 +38,6 @@ modules\pet.lua
 modules\group.lua
 modules\raid.lua
 modules\castbar.lua
-modules\minimap.lua
 modules\skin.lua
 modules\xpbar.lua
 modules\autoshift.lua

@@ -2,6 +2,11 @@ pfUI:RegisterModule("target", function ()
   -- do not go further on disabled UFs
   if pfUI_config.unitframes.disable == "1" then return end
 
+  local default_border = pfUI_config.appearance.border.default
+  if pfUI_config.appearance.border.unitframes ~= "-1" then
+    default_border = pfUI_config.appearance.border.unitframes
+  end
+
     -- Hide Blizzard target frame and unregister all events to prevent it from popping up again
   TargetFrame:Hide()
   TargetFrame:UnregisterAllEvents()
@@ -13,7 +18,7 @@ pfUI:RegisterModule("target", function ()
   pfUI.uf.target = CreateFrame("Button","pfTarget",UIParent)
   pfUI.uf.target:Hide()
   pfUI.uf.target:SetWidth(pfUI_config.unitframes.target.width)
-  pfUI.uf.target:SetHeight(pfUI_config.unitframes.target.height+pfUI_config.unitframes.target.pheight)
+  pfUI.uf.target:SetHeight(pfUI_config.unitframes.target.height + pfUI_config.unitframes.target.pheight + 2*default_border + pfUI_config.unitframes.target.pspace)
   pfUI.uf.target:SetPoint("BOTTOMLEFT", UIParent, "BOTTOM", 75, 125)
   pfUI.utils:UpdateMovable(pfUI.uf.target)
 
@@ -204,18 +209,15 @@ pfUI:RegisterModule("target", function ()
     end)
 
   pfUI.uf.target.hp = CreateFrame("Frame",nil, pfUI.uf.target)
-  pfUI.uf.target.hp:SetBackdrop(pfUI.backdrop)
+  pfUI.uf.target.hp:SetWidth(pfUI_config.unitframes.target.width)
   pfUI.uf.target.hp:SetHeight(pfUI_config.unitframes.target.height)
-  pfUI.uf.target.hp:SetPoint("TOPLEFT",pfUI.uf.target,"TOPLEFT")
-  pfUI.uf.target.hp:SetPoint("TOPRIGHT",pfUI.uf.target,"TOPRIGHT")
+  pfUI.uf.target.hp:SetPoint("TOP", 0, 0)
+  pfUI.utils:CreateBackdrop(pfUI.uf.target.hp, default_border)
 
   pfUI.uf.target.hp.bar = CreateFrame("StatusBar", nil, pfUI.uf.target.hp)
   pfUI.uf.target.hp.bar:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
-  pfUI.uf.target.hp.bar:ClearAllPoints()
-  pfUI.uf.target.hp.bar:SetPoint("TOPLEFT", pfUI.uf.target.hp, "TOPLEFT", 3, -3)
-  pfUI.uf.target.hp.bar:SetPoint("BOTTOMRIGHT", pfUI.uf.target.hp, "BOTTOMRIGHT", -3, 3)
+  pfUI.uf.target.hp.bar:SetAllPoints(pfUI.uf.target.hp)
   pfUI.uf.target.hp.bar:SetMinMaxValues(0, 100)
-  pfUI.uf.target.hp.bar:SetValue(100)
 
   pfUI.uf.target.hp.leaderIcon = CreateFrame("Frame",nil,pfUI.uf.target.hp)
   pfUI.uf.target.hp.leaderIcon:SetWidth(10)
@@ -266,21 +268,15 @@ pfUI:RegisterModule("target", function ()
   end
 
   pfUI.uf.target.power = CreateFrame("Frame",nil, pfUI.uf.target)
-
-  pfUI.uf.target.power:SetBackdrop(pfUI.backdrop)
-  pfUI.uf.target.power:SetPoint("TOPLEFT",pfUI.uf.target.hp,"BOTTOMLEFT",0,3)
-  pfUI.uf.target.power:SetPoint("BOTTOMRIGHT",pfUI.uf.target,"BOTTOMRIGHT",0,0)
+  pfUI.uf.target.power:SetPoint("BOTTOM", 0, 0)
+  pfUI.uf.target.power:SetWidth(pfUI_config.unitframes.target.width)
+  pfUI.uf.target.power:SetHeight(pfUI_config.unitframes.target.pheight)
+  pfUI.utils:CreateBackdrop(pfUI.uf.target.power, default_border)
 
   pfUI.uf.target.power.bar = CreateFrame("StatusBar", nil, pfUI.uf.target.power)
-  pfUI.uf.target.power.bar:ClearAllPoints()
-  pfUI.uf.target.power.bar:SetPoint("TOPLEFT", pfUI.uf.target.power, "TOPLEFT", 3, -3)
-  pfUI.uf.target.power.bar:SetPoint("BOTTOMRIGHT", pfUI.uf.target.power, "BOTTOMRIGHT", -3, 3)
   pfUI.uf.target.power.bar:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
-
-  pfUI.uf.target.power.bar:SetBackdropColor(0,0,0,1)
-  pfUI.uf.target.power.bar:SetStatusBarColor(0,0,0)
+  pfUI.uf.target.power.bar:SetAllPoints(pfUI.uf.target.power)
   pfUI.uf.target.power.bar:SetMinMaxValues(0, 100)
-  pfUI.uf.target.power.bar:SetValue(100)
 
   pfUI.uf.target.hpText = pfUI.uf.target:CreateFontString("Status", "HIGH", "GameFontNormal")
   pfUI.uf.target.hpText:SetFont("Interface\\AddOns\\pfUI\\fonts\\" .. pfUI_config.global.font_square .. ".ttf", pfUI_config.global.font_size, "OUTLINE")
@@ -321,21 +317,22 @@ pfUI:RegisterModule("target", function ()
       if event == "PLAYER_ENTERING_WORLD" then
         for point=1, 5 do
           pfUI.uf.target["combopoint" .. point]:SetFrameStrata("HIGH")
-          pfUI.uf.target["combopoint" .. point]:SetWidth(12)
-          pfUI.uf.target["combopoint" .. point]:SetHeight(12)
-          pfUI.uf.target["combopoint" .. point]:SetBackdrop({
-              bgFile = "Interface\\AddOns\\pfUI\\img\\bar", tile = true, tileSize = 8,
-              edgeFile = "Interface\\AddOns\\pfUI\\img\\border", edgeSize = 8,
-              insets = {left = 0, right = 0, top = 0, bottom = 0},
-            })
-          pfUI.uf.target["combopoint" .. point]:SetPoint("TOPLEFT", pfUI.uf.target, "TOPRIGHT", 3, -(point - 1) * 13)
-
+          pfUI.uf.target["combopoint" .. point]:SetWidth(5)
+          pfUI.uf.target["combopoint" .. point]:SetHeight(5)
+          pfUI.utils:CreateBackdrop(pfUI.uf.target["combopoint" .. point])
+          pfUI.uf.target["combopoint" .. point]:SetPoint("TOPLEFT", pfUI.uf.target, "TOPRIGHT", pfUI_config.appearance.border.default*3, -(point - 1) * (5 + pfUI_config.appearance.border.default*3))
           if point < 3 then
-            pfUI.uf.target["combopoint" .. point]:SetBackdropColor(1, .3, .3, .75)
+            local tex = pfUI.uf.target["combopoint" .. point]:CreateTexture("OVERLAY")
+            tex:SetAllPoints(pfUI.uf.target["combopoint" .. point])
+            tex:SetTexture(1, .3, .3, .75)
           elseif point < 4 then
-            pfUI.uf.target["combopoint" .. point]:SetBackdropColor(1, 1, .3, .75)
+            local tex = pfUI.uf.target["combopoint" .. point]:CreateTexture("OVERLAY")
+            tex:SetAllPoints(pfUI.uf.target["combopoint" .. point])
+            tex:SetTexture(1, 1, .3, .75)
           else
-            pfUI.uf.target["combopoint" .. point]:SetBackdropColor(.3, 1, .3, .75)
+            local tex = pfUI.uf.target["combopoint" .. point]:CreateTexture("OVERLAY")
+            tex:SetAllPoints(pfUI.uf.target["combopoint" .. point])
+            tex:SetTexture(.3, 1, .3, .75)
           end
           pfUI.uf.target["combopoint" .. point]:Hide()
         end
@@ -376,7 +373,9 @@ pfUI:RegisterModule("target", function ()
 
     pfUI.uf.target.buff.buffs[i]:RegisterForClicks("RightButtonUp")
     pfUI.uf.target.buff.buffs[i]:ClearAllPoints()
-    pfUI.uf.target.buff.buffs[i]:SetPoint("BOTTOMLEFT", pfUI.uf.target, "TOPLEFT", (i-8*row)*1 + (i-8*row)*pfUI_config.unitframes.buff_size - pfUI_config.unitframes.buff_size -1 , 1*row + pfUI_config.unitframes.buff_size*row +1)
+    pfUI.uf.target.buff.buffs[i]:SetPoint("BOTTOMLEFT", pfUI.uf.target, "TOPLEFT",
+    (i-1-8*row)*((2*default_border) + pfUI_config.unitframes.buff_size + 1),
+    (row)*((2*default_border) + pfUI_config.unitframes.buff_size + 1) + 2*default_border + 1)
     pfUI.uf.target.buff.buffs[i]:SetWidth(pfUI_config.unitframes.buff_size)
     pfUI.uf.target.buff.buffs[i]:SetHeight(pfUI_config.unitframes.buff_size)
     pfUI.uf.target.buff.buffs[i]:SetNormalTexture(nil)
@@ -393,11 +392,11 @@ pfUI:RegisterModule("target", function ()
   function pfUI.uf.target.buff.RefreshBuffs()
     for i=1, 16 do
       local texture, stacks = UnitBuff("target",i)
-      pfUI.uf.target.buff.buffs[i]:SetBackdrop(
-        { bgFile = texture, tile = false, tileSize = pfUI_config.unitframes.buff_size,
-          edgeFile = "Interface\\AddOns\\pfUI\\img\\border", edgeSize = 8,
-          insets = { left = 0, right = 0, top = 0, bottom = 0}
-        })
+      pfUI.utils:CreateBackdrop(pfUI.uf.target.buff.buffs[i], default_border)
+      pfUI.uf.target.buff.buffs[i]:SetNormalTexture(texture)
+      for i,v in ipairs({pfUI.uf.target.buff.buffs[i]:GetRegions()}) do
+        if v.SetTexCoord then v:SetTexCoord(.08, .92, .08, .92) end
+      end
 
       if texture then
         pfUI.uf.target.buff.buffs[i]:Show()
@@ -434,17 +433,6 @@ pfUI:RegisterModule("target", function ()
     pfUI.uf.target.debuff.debuffs[i]:RegisterForClicks("RightButtonUp")
     pfUI.uf.target.debuff.debuffs[i]:ClearAllPoints()
 
-    local row = 0
-    local top = 0
-    if i > 8 then row = 1 end
-    if pfUI.uf.target.buff.buffs[1]:IsShown() then top = top + 1 end
-    if pfUI.uf.target.buff.buffs[9]:IsShown() then top = top + 1 end
-
-    pfUI.uf.target.debuff.debuffs[i]:SetPoint("BOTTOMLEFT", pfUI.uf.target, "TOPLEFT",
-      (i-8*row)*1 + (i-8*row)*pfUI_config.unitframes.debuff_size - pfUI_config.unitframes.debuff_size -1 ,
-      1*row + pfUI_config.unitframes.debuff_size*row +1 + (top*(pfUI_config.unitframes.debuff_size+1))
-    )
-
     pfUI.uf.target.debuff.debuffs[i]:SetWidth(pfUI_config.unitframes.debuff_size)
     pfUI.uf.target.debuff.debuffs[i]:SetHeight(pfUI_config.unitframes.debuff_size)
     pfUI.uf.target.debuff.debuffs[i]:SetNormalTexture(nil)
@@ -469,25 +457,26 @@ pfUI:RegisterModule("target", function ()
       if pfUI.uf.target.buff.buffs[9]:IsShown() then top = top + 1 end
 
       pfUI.uf.target.debuff.debuffs[i]:SetPoint("BOTTOMLEFT", pfUI.uf.target, "TOPLEFT",
-        (i-8*row)*1 + (i-8*row)*pfUI_config.unitframes.debuff_size - pfUI_config.unitframes.debuff_size -1 ,
-        1*row + pfUI_config.unitframes.debuff_size*row +1 + (top*(pfUI_config.unitframes.debuff_size+1))
-      )
+      (i-1-row)*((2*default_border) + pfUI_config.unitframes.debuff_size + 1),
+      (top)*((2*default_border) + pfUI_config.unitframes.buff_size + 1) +
+      (row)*((2*default_border) + pfUI_config.unitframes.debuff_size + 1)  + (2*default_border + 1))
+
       local texture, stacks = UnitDebuff("target",i)
-      pfUI.uf.target.debuff.debuffs[i]:SetBackdrop(
-        { bgFile = texture, tile = false, tileSize = pfUI_config.unitframes.debuff_size,
-          edgeFile = "Interface\\AddOns\\pfUI\\img\\border_col", edgeSize = 8,
-          insets = { left = 0, right = 0, top = 0, bottom = 0}
-        })
+      pfUI.utils:CreateBackdrop(pfUI.uf.target.debuff.debuffs[i], default_border)
+      pfUI.uf.target.debuff.debuffs[i]:SetNormalTexture(texture)
+      for i,v in ipairs({pfUI.uf.target.debuff.debuffs[i]:GetRegions()}) do
+        if v.SetTexCoord then v:SetTexCoord(.08, .92, .08, .92) end
+      end
 
       local _,_,dtype = UnitDebuff("target", i)
       if dtype == "Magic" then
-        pfUI.uf.target.debuff.debuffs[i]:SetBackdropBorderColor(0,1,1,1)
+        pfUI.uf.target.debuff.debuffs[i].backdrop:SetBackdropBorderColor(0,1,1,1)
       elseif dtype == "Poison" then
-        pfUI.uf.target.debuff.debuffs[i]:SetBackdropBorderColor(0,1,0,1)
+        pfUI.uf.target.debuff.debuffs[i].backdrop:SetBackdropBorderColor(0,1,0,1)
       elseif dtype == "Curse" then
-        pfUI.uf.target.debuff.debuffs[i]:SetBackdropBorderColor(1,0,1,1)
+        pfUI.uf.target.debuff.debuffs[i].backdrop:SetBackdropBorderColor(1,0,1,1)
       else
-        pfUI.uf.target.debuff.debuffs[i]:SetBackdropBorderColor(1,0,0,1)
+        pfUI.uf.target.debuff.debuffs[i].backdrop:SetBackdropBorderColor(1,0,0,1)
       end
 
       if texture then
