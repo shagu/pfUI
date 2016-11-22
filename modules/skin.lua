@@ -93,4 +93,22 @@ pfUI.utils:CreateBackdrop(TicketStatusFrame)
       end
     end
   end
+
+  -- due to the fontsize, the auctionhouse dropdown menu is misplaced.
+  -- This hackfix rearranges it, by setting the width of it, as soon as
+  -- the auctionhouse window is ready to get hooked.
+  local pfAuctionHouseFix = CreateFrame("Frame", nil)
+  pfAuctionHouseFix:RegisterEvent("AUCTION_HOUSE_SHOW")
+  pfAuctionHouseFix:RegisterEvent("ADDON_LOADED")
+  pfAuctionHouseFix:SetScript("OnEvent", function ()
+    if not pfAuctionFrame_OnShow and AuctionFrame_OnShow then
+      pfAuctionFrame_OnShow = AuctionFrame_OnShow
+      function AuctionFrame_OnShow ()
+        pfAuctionFrame_OnShow()
+        BrowseLevelText:SetWidth(70)
+      end
+      pfAuctionHouseFix:UnregisterAllEvents()
+    end
+  end)
+
 end)
