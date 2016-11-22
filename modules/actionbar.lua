@@ -105,6 +105,7 @@ pfUI:RegisterModule("actionbar", function ()
           b:ClearAllPoints()
           b:SetParent(pfUI.bars.pet)
           pfUI.utils:CreateBackdrop(b, default_border)
+
           if i == 1 then
             b:SetPoint("BOTTOMLEFT", tonumber(default_border), tonumber(default_border))
           else
@@ -131,6 +132,7 @@ pfUI:RegisterModule("actionbar", function ()
         b:ClearAllPoints()
         b:SetParent(pfUI.bars.shapeshift)
         pfUI.utils:CreateBackdrop(b, default_border)
+
         if i == 1 then
           b:SetPoint("BOTTOMLEFT", tonumber(default_border), tonumber(default_border))
         else
@@ -161,6 +163,7 @@ pfUI:RegisterModule("actionbar", function ()
           local b2 = getglobal("MultiBarBottomLeftButton"..i-1) or b
           b:ClearAllPoints()
           b:SetParent(tf)
+          pfUI.utils:CreateBackdrop(b, default_border)
 
           if i == 1 then
             b:SetPoint("TOPLEFT", tonumber(default_border), -tonumber(default_border))
@@ -193,6 +196,7 @@ pfUI:RegisterModule("actionbar", function ()
           local b2 = getglobal("MultiBarBottomRightButton"..i-1) or b
           b:ClearAllPoints()
           b:SetParent(tf)
+          pfUI.utils:CreateBackdrop(b, default_border)
 
           if i == 1 then
             b:SetPoint("BOTTOMLEFT", tonumber(default_border), tonumber(default_border))
@@ -205,6 +209,7 @@ pfUI:RegisterModule("actionbar", function ()
           local b2 = getglobal("MultiBarBottomRightButton"..i-6)
           b:ClearAllPoints()
           b:SetParent(tf)
+          pfUI.utils:CreateBackdrop(b, default_border)
 
           b:SetPoint("LEFT", b2, "RIGHT", -pfUI_config.bars.icon_size, pfUI_config.bars.icon_size + default_border*3)
         end
@@ -236,6 +241,7 @@ pfUI:RegisterModule("actionbar", function ()
           local b2 = getglobal("MultiBarRightButton"..i-1) or b
           b:ClearAllPoints()
           b:SetParent(tf)
+          pfUI.utils:CreateBackdrop(b, default_border)
 
           if i == 1 then
             b:SetPoint("BOTTOMLEFT", tonumber(default_border), tonumber(default_border))
@@ -248,6 +254,7 @@ pfUI:RegisterModule("actionbar", function ()
           local b2 = getglobal("MultiBarRightButton"..i-6)
           b:ClearAllPoints()
           b:SetParent(tf)
+          pfUI.utils:CreateBackdrop(b, default_border)
 
           b:SetPoint("LEFT", b2, "RIGHT", -pfUI_config.bars.icon_size, pfUI_config.bars.icon_size + default_border*3)
         end
@@ -278,6 +285,7 @@ pfUI:RegisterModule("actionbar", function ()
           local b2 = getglobal("MultiBarLeftButton"..i-1) or b
           b:ClearAllPoints()
           b:SetParent(tf)
+          pfUI.utils:CreateBackdrop(b, default_border)
 
           if i == 1 then
             b:SetPoint("TOPLEFT", tonumber(default_border), -tonumber(default_border))
@@ -302,6 +310,8 @@ pfUI:RegisterModule("actionbar", function ()
     local b2 = getglobal("ActionButton"..i-1) or b
     b:ClearAllPoints()
     b:SetParent(pfUI.bars.bottom)
+    pfUI.utils:CreateBackdrop(b, default_border)
+
     if i == 1 then
       b:SetPoint("BOTTOMLEFT", tonumber(default_border), tonumber(default_border))
     else
@@ -319,6 +329,8 @@ pfUI:RegisterModule("actionbar", function ()
     local b2 = getglobal("BonusActionButton"..i-1) or b
     b:ClearAllPoints()
     b:SetParent(BonusActionBarFrame)
+    pfUI.utils:CreateBackdrop(b, default_border)
+
     if i == 1 then
       b:SetPoint("BOTTOMLEFT", tonumber(default_border) - 4, tonumber(default_border))
     else
@@ -364,7 +376,6 @@ pfUI:RegisterModule("actionbar", function ()
   for i = 1, 12 do
     for _, button in pairs(actionbars) do
       getglobal(button..i..'NormalTexture'):SetAlpha(0)
-      pfUI.utils:CreateBackdrop(getglobal(button..i), default_border)
       getglobal(button..i):SetWidth(pfUI_config.bars.icon_size)
       getglobal(button..i):SetHeight(pfUI_config.bars.icon_size)
       getglobal(button..i):Show()
