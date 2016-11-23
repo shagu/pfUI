@@ -45,6 +45,7 @@ pfUI:RegisterModule("target", function ()
   pfUI.uf.target:RegisterEvent("UNIT_MAXRAGE")
   pfUI.uf.target:RegisterEvent("UNIT_ENERGY")
   pfUI.uf.target:RegisterEvent("UNIT_MAXENERGY")
+  pfUI.uf.target:RegisterEvent("UNIT_FOCUS")
 
   pfUI.uf.target:SetScript("OnEvent", function()
       if UnitExists("target") then
