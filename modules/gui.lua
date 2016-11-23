@@ -656,6 +656,9 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui:CreateConfig(pfUI.gui.uf, "Click-cast on Raidframe (Shift)", pfUI_config.unitframes.raid, "clickcast_shift")
   pfUI.gui:CreateConfig(pfUI.gui.uf, "Click-cast on Raidframe (Alt)", pfUI_config.unitframes.raid, "clickcast_alt")
   pfUI.gui:CreateConfig(pfUI.gui.uf, "Click-cast on Raidframe (Ctrl)", pfUI_config.unitframes.raid, "clickcast_ctrl")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "Show Buffs on Raidframes", pfUI_config.unitframes.raid, "buffs_buffs")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "Show Hots on Raidframes", pfUI_config.unitframes.raid, "buffs_hots")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "Only display Hots of my class", pfUI_config.unitframes.raid, "buffs_classonly")
 
   -- actionbar
   pfUI.gui.bar = pfUI.gui:CreateConfigTab("ActionBar")

@@ -10,9 +10,87 @@ pfUI:RegisterModule("raid", function ()
   pfUI.uf.raid = CreateFrame("Button","pfRaid",UIParent)
   pfUI.uf.raid:Hide()
 
+  function pfUI.uf.raid:AddIcon(frame, pos, icon)
+    local iconsize = 10
+    if not frame.hp then return end
+    local frame = frame.hp.bar
+    if pos > floor(frame:GetWidth() / iconsize) then return end
+
+    if not frame.icon then frame.icon = {} end
+
+    for i=1,6 do
+      if not frame.icon[i] then
+        frame.icon[i] = CreateFrame("Frame", frame)
+        frame.icon[i]:SetPoint("TOPLEFT", frame, "TOPLEFT", (i-1)*iconsize, 0)
+        frame.icon[i]:SetWidth(iconsize)
+        frame.icon[i]:SetHeight(iconsize)
+        frame.icon[i]:SetAlpha(.7)
+        frame.icon[i]:SetParent(frame)
+        frame.icon[i].tex = frame.icon[i]:CreateTexture("OVERLAY")
+        frame.icon[i].tex:SetAllPoints(frame.icon[i])
+        frame.icon[i].tex:SetTexCoord(.08, .92, .08, .92)
+      end
+    end
+    frame.icon[pos].tex:SetTexture(icon)
+    frame.icon[pos]:Show()
+  end
+
+  function pfUI.uf.raid:HideIcon(frame, pos)
+    if not frame or not frame.hp or not frame.hp.bar then return end
+
+    local frame = frame.hp.bar
+    if frame.icon and frame.icon[pos] then
+      frame.icon[pos]:Hide()
+    end
+  end
+
+  function pfUI.uf.raid:SetupBuffFilter()
+    if pfUI.uf.raid.buffs then return end
+
+    local _, myclass = UnitClass("player")
+
+    pfUI.uf.raid.buffs = {}
+
+    -- [[ DRUID ]]
+    if myclass == "DRUID" and pfUI_config.unitframes.raid.buffs_buffs == "1" then
+      -- Gift of the Wild
+      table.insert(pfUI.uf.raid.buffs, "Interface\\Icons\\Spell_Nature_Regeneration")
+
+      -- Thorns
+      table.insert(pfUI.uf.raid.buffs, "Interface\\Icons\\Spell_Nature_Thorns")
+    end
+
+    if (pfUI_config.unitframes.raid.buffs_classonly ~= "1" or myclass == "DRUID") and pfUI_config.unitframes.raid.buffs_hots == "1" then
+      -- Regrowth
+      table.insert(pfUI.uf.raid.buffs, "Interface\\Icons\\Spell_Nature_ResistNature")
+
+      -- Rejuvenation
+      table.insert(pfUI.uf.raid.buffs, "Interface\\Icons\\Spell_Nature_Rejuvenation")
+    end
+
+
+    -- [[ PRIEST ]]
+    if myclass == "PRIEST" and pfUI_config.unitframes.raid.buffs_buffs == "1" then
+      -- Prayer Of Fortitude"
+      table.insert(pfUI.uf.raid.buffs, "Interface\\Icons\\Spell_Holy_WordFortitude")
+      table.insert(pfUI.uf.raid.buffs, "Interface\\Icons\\Spell_Holy_PrayerOfFortitude")
+
+      -- Prayer of Spirit
+      table.insert(pfUI.uf.raid.buffs, "Interface\\Icons\\Spell_DivineSpirit")
+      table.insert(pfUI.uf.raid.buffs, "Interface\\Icons\\Spell_Holy_PrayerofSpirit")
+    end
+
+    if (pfUI_config.unitframes.raid.buffs_classonly ~= "1" or myclass == "PRIEST") and pfUI_config.unitframes.raid.buffs_hots == "1" then
+      -- Renew
+      table.insert(pfUI.uf.raid.buffs, "Interface\\Icons\\Spell_Holy_Renew")
+    end
+
+  end
+
 
   function pfUI.uf.raid:RefreshUnit(unit)
     if not unit.cache then unit.cache = {} end
+
     unit.cache.hp = UnitHealth("raid"..unit.id)
     unit.cache.hpmax = UnitHealthMax("raid"..unit.id)
     unit.cache.power = UnitMana("raid" .. unit.id)
@@ -20,6 +98,33 @@ pfUI:RegisterModule("raid", function ()
 
     unit.hp.bar:SetMinMaxValues(0, unit.cache.hpmax)
     unit.power.bar:SetMinMaxValues(0, unit.cache.powermax)
+
+    pfUI.uf.raid:SetupBuffFilter()
+    if table.getn(pfUI.uf.raid.buffs) > 0 then
+      local active = {}
+
+      for i=1,32 do
+        local texture = UnitBuff("raid" .. unit.id,i)
+
+        -- match filter
+        for _, filter in pairs(pfUI.uf.raid.buffs) do
+          if filter == texture then
+            table.insert(active, texture)
+            break
+          end
+        end
+
+        -- add icons for every found buff
+        for pos, icon in pairs(active) do
+          pfUI.uf.raid:AddIcon(this, pos, icon)
+        end
+
+        -- hide unued icon slots
+        for pos=table.getn(active)+1, 6 do
+          pfUI.uf.raid:HideIcon(this, pos)
+        end
+      end
+    end
 
     _, class = UnitClass("raid"..unit.id)
     local c = RAID_CLASS_COLORS[class]
@@ -215,6 +320,9 @@ pfUI:RegisterModule("raid", function ()
       pfUI.uf.raid[i]:RegisterEvent("UNIT_MANA")
       pfUI.uf.raid[i]:RegisterEvent("UNIT_MANAMAX")
       pfUI.uf.raid[i]:RegisterEvent("RAID_ROSTER_UPDATE")
+      pfUI.uf.raid[i]:SetScript("OnShow", function ()
+        pfUI.uf.raid:RefreshUnit(this)
+      end)
 
       pfUI.uf.raid[i]:SetScript("OnEvent", function ()
         if arg1 == "raid" .. this.id or event == "RAID_ROSTER_UPDATE" then
