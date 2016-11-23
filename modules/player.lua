@@ -436,7 +436,7 @@ pfUI:RegisterModule("player", function ()
 
 
       pfUI.uf.player.debuff.debuffs[i]:SetPoint("BOTTOMLEFT", pfUI.uf.player, "TOPLEFT",
-      (i-1-row)*((2*default_border) + pfUI_config.unitframes.debuff_size + 1),
+      (i-1-8*row)*((2*default_border) + pfUI_config.unitframes.debuff_size + 1),
       (top)*((2*default_border) + pfUI_config.unitframes.buff_size + 1) +
       (row)*((2*default_border) + pfUI_config.unitframes.debuff_size + 1) + (2*default_border + 1))
 

@@ -457,9 +457,9 @@ pfUI:RegisterModule("target", function ()
       if pfUI.uf.target.buff.buffs[9]:IsShown() then top = top + 1 end
 
       pfUI.uf.target.debuff.debuffs[i]:SetPoint("BOTTOMLEFT", pfUI.uf.target, "TOPLEFT",
-      (i-1-row)*((2*default_border) + pfUI_config.unitframes.debuff_size + 1),
+      (i-1-8*row)*((2*default_border) + pfUI_config.unitframes.debuff_size + 1),
       (top)*((2*default_border) + pfUI_config.unitframes.buff_size + 1) +
-      (row)*((2*default_border) + pfUI_config.unitframes.debuff_size + 1)  + (2*default_border + 1))
+      (row)*((2*default_border) + pfUI_config.unitframes.debuff_size + 1) + (2*default_border + 1))
 
       local texture, stacks = UnitDebuff("target",i)
       pfUI.utils:CreateBackdrop(pfUI.uf.target.debuff.debuffs[i], default_border)
