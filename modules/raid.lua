@@ -32,6 +32,7 @@ pfUI:RegisterModule("raid", function ()
       end
     end
     frame.icon[pos].tex:SetTexture(icon)
+    pfUI.utils:CreateBackdrop(frame.icon[pos], nil, true)
     frame.icon[pos]:Show()
   end
 
@@ -54,37 +55,75 @@ pfUI:RegisterModule("raid", function ()
     -- [[ DRUID ]]
     if myclass == "DRUID" and pfUI_config.unitframes.raid.buffs_buffs == "1" then
       -- Gift of the Wild
-      table.insert(pfUI.uf.raid.buffs, "Interface\\Icons\\Spell_Nature_Regeneration")
+      table.insert(pfUI.uf.raid.buffs, "interface\\icons\\spell_nature_regeneration")
 
       -- Thorns
-      table.insert(pfUI.uf.raid.buffs, "Interface\\Icons\\Spell_Nature_Thorns")
+      table.insert(pfUI.uf.raid.buffs, "interface\\icons\\spell_nature_thorns")
     end
 
     if (pfUI_config.unitframes.raid.buffs_classonly ~= "1" or myclass == "DRUID") and pfUI_config.unitframes.raid.buffs_hots == "1" then
       -- Regrowth
-      table.insert(pfUI.uf.raid.buffs, "Interface\\Icons\\Spell_Nature_ResistNature")
+      table.insert(pfUI.uf.raid.buffs, "interface\\icons\\spell_nature_resistnature")
 
       -- Rejuvenation
-      table.insert(pfUI.uf.raid.buffs, "Interface\\Icons\\Spell_Nature_Rejuvenation")
+      table.insert(pfUI.uf.raid.buffs, "interface\\icons\\spell_nature_rejuvenation")
     end
 
 
     -- [[ PRIEST ]]
     if myclass == "PRIEST" and pfUI_config.unitframes.raid.buffs_buffs == "1" then
       -- Prayer Of Fortitude"
-      table.insert(pfUI.uf.raid.buffs, "Interface\\Icons\\Spell_Holy_WordFortitude")
-      table.insert(pfUI.uf.raid.buffs, "Interface\\Icons\\Spell_Holy_PrayerOfFortitude")
+      table.insert(pfUI.uf.raid.buffs, "interface\\icons\\spell_holy_wordfortitude")
+      table.insert(pfUI.uf.raid.buffs, "interface\\icons\\spell_holy_prayeroffortitude")
 
       -- Prayer of Spirit
-      table.insert(pfUI.uf.raid.buffs, "Interface\\Icons\\Spell_DivineSpirit")
-      table.insert(pfUI.uf.raid.buffs, "Interface\\Icons\\Spell_Holy_PrayerofSpirit")
+      table.insert(pfUI.uf.raid.buffs, "interface\\icons\\spell_divinespirit")
+      table.insert(pfUI.uf.raid.buffs, "interface\\icons\\spell_holy_prayerofspirit")
     end
 
     if (pfUI_config.unitframes.raid.buffs_classonly ~= "1" or myclass == "PRIEST") and pfUI_config.unitframes.raid.buffs_hots == "1" then
       -- Renew
-      table.insert(pfUI.uf.raid.buffs, "Interface\\Icons\\Spell_Holy_Renew")
+      table.insert(pfUI.uf.raid.buffs, "interface\\icons\\spell_holy_renew")
     end
 
+    if (pfUI_config.unitframes.raid.buffs_classonly ~= "1" or myclass == "PRIEST") and pfUI_config.unitframes.raid.buffs_procs == "1" then
+      -- Inspiration
+      table.insert(pfUI.uf.raid.buffs, "interface\\icons\\inv_shield_06")
+    end
+
+
+    -- [[ PALADIN ]]
+    if myclass == "PALADIN" and pfUI_config.unitframes.raid.buffs_buffs == "1" then
+      -- Blessing of Salvation
+      table.insert(pfUI.uf.raid.buffs, "interface\\icons\\spell_holy_greaterblessingofsalvation")
+      table.insert(pfUI.uf.raid.buffs, "interface\\icons\\spell_holy_sealofsalvation")
+
+      -- Blessing of Wisdom
+      table.insert(pfUI.uf.raid.buffs, "interface\\icons\\spell_holy_sealofwisdom")
+      table.insert(pfUI.uf.raid.buffs, "interface\\icons\\spell_holy_greaterblessingofwisdom")
+
+      -- Blessing of Sanctuary
+      table.insert(pfUI.uf.raid.buffs, "interface\\icons\\spell_nature_lightningshield")
+      table.insert(pfUI.uf.raid.buffs, "interface\\icons\\spell_holy_greaterblessingofsanctuary")
+
+      -- Blessing of Kings
+      table.insert(pfUI.uf.raid.buffs, "interface\\icons\\spell_magic_magearmor")
+      table.insert(pfUI.uf.raid.buffs, "interface\\icons\\spell_magic_greaterblessingofkings")
+
+      -- Blessing of Might
+      table.insert(pfUI.uf.raid.buffs, "interface\\icons\\spell_holy_fistofjustice")
+      table.insert(pfUI.uf.raid.buffs, "interface\\icons\\spell_holy_greaterblessingofkings")
+    end
+
+
+    -- [[ SHAMAN ]]
+    if (pfUI_config.unitframes.raid.buffs_classonly ~= "1" or myclass == "SHAMAN") and pfUI_config.unitframes.raid.buffs_procs == "1" then
+      -- Ancestral Fortitude
+      table.insert(pfUI.uf.raid.buffs, "interface\\icons\\spell_nature_undyingstrength")
+
+      -- Healing Way
+      table.insert(pfUI.uf.raid.buffs, "interface\\icons\\spell_nature_healingway")
+    end
   end
 
 
@@ -106,22 +145,24 @@ pfUI:RegisterModule("raid", function ()
       for i=1,32 do
         local texture = UnitBuff("raid" .. unit.id,i)
 
-        -- match filter
-        for _, filter in pairs(pfUI.uf.raid.buffs) do
-          if filter == texture then
-            table.insert(active, texture)
-            break
+        if texture then
+          -- match filter
+          for _, filter in pairs(pfUI.uf.raid.buffs) do
+            if filter == string.lower(texture) then
+              table.insert(active, texture)
+              break
+            end
           end
-        end
 
-        -- add icons for every found buff
-        for pos, icon in pairs(active) do
-          pfUI.uf.raid:AddIcon(this, pos, icon)
-        end
+          -- add icons for every found buff
+          for pos, icon in pairs(active) do
+            pfUI.uf.raid:AddIcon(this, pos, icon)
+          end
 
-        -- hide unued icon slots
-        for pos=table.getn(active)+1, 6 do
-          pfUI.uf.raid:HideIcon(this, pos)
+          -- hide unued icon slots
+          for pos=table.getn(active)+1, 6 do
+            pfUI.uf.raid:HideIcon(this, pos)
+          end
         end
       end
     end
