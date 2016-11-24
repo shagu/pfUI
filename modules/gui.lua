@@ -658,7 +658,6 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui:CreateConfig(pfUI.gui.uf, "Click-cast on Raidframe (Ctrl)", pfUI_config.unitframes.raid, "clickcast_ctrl")
   pfUI.gui:CreateConfig(pfUI.gui.uf, "Show Buffs on Raidframes", pfUI_config.unitframes.raid, "buffs_buffs", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.uf, "Show Hots on Raidframes", pfUI_config.unitframes.raid, "buffs_hots", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Show Procs on Raidframes", pfUI_config.unitframes.raid, "buffs_procs", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.uf, "Only display Hots of my class", pfUI_config.unitframes.raid, "buffs_classonly", "checkbox")
 
   -- actionbar
@@ -677,6 +676,7 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui:CreateConfig(pfUI.gui.panel, "Other Panel: Minimap", pfUI_config.panel.other, "minimap", "dropdown", values)
   pfUI.gui:CreateConfig(pfUI.gui.panel, "Always show XP and Reputation Bar", pfUI_config.panel.xp, "showalways", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.panel, "Show Menubar", pfUI_config.panel.micro, "enable", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.panel, "Show Right Panel", pfUI_config.panel.right, "enable", "checkbox")
 
   -- tooltip
   pfUI.gui.tooltip = pfUI.gui:CreateConfigTab("Tooltip")

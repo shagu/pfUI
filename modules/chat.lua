@@ -160,14 +160,18 @@ pfUI:RegisterModule("chat", function ()
   pfUI.chat.right:SetHeight(pfUI_config.chat.right.height)
   pfUI.chat.right:SetPoint("BOTTOMRIGHT", -5,5)
   pfUI.utils:UpdateMovable(pfUI.chat.right)
-  pfUI.utils:CreateBackdrop(pfUI.chat.right, default_border, nil, true)
+  if pfUI_config.panel.right.enable == "0" then
+    pfUI.utils:CreateBackdrop(pfUI.chat.right, default_border, nil, true)
+  end
 
   pfUI.chat.right.panelTop = CreateFrame("Frame", "rightChatPanelTop", pfUI.chat.right)
   pfUI.chat.right.panelTop:ClearAllPoints()
   pfUI.chat.right.panelTop:SetHeight(pfUI_config.global.font_size+default_border*2)
   pfUI.chat.right.panelTop:SetPoint("TOPLEFT", pfUI.chat.right, "TOPLEFT", default_border, -default_border)
   pfUI.chat.right.panelTop:SetPoint("TOPRIGHT", pfUI.chat.right, "TOPRIGHT", -default_border, -default_border)
-  pfUI.utils:CreateBackdrop(pfUI.chat.right.panelTop, default_border, nil, true)
+  if pfUI_config.panel.right.enable == "0" then
+    pfUI.utils:CreateBackdrop(pfUI.chat.right.panelTop, default_border, nil, true)
+  end
 
   pfUI.chat:RegisterEvent("PLAYER_ENTERING_WORLD")
   pfUI.chat:RegisterEvent("UI_SCALE_CHANGED")
