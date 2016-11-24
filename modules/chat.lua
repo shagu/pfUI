@@ -160,18 +160,14 @@ pfUI:RegisterModule("chat", function ()
   pfUI.chat.right:SetHeight(pfUI_config.chat.right.height)
   pfUI.chat.right:SetPoint("BOTTOMRIGHT", -5,5)
   pfUI.utils:UpdateMovable(pfUI.chat.right)
-  if pfUI_config.panel.right.enable == "0" then
-    pfUI.utils:CreateBackdrop(pfUI.chat.right, default_border, nil, true)
-  end
+  pfUI.utils:CreateBackdrop(pfUI.chat.right, default_border, nil, true)
 
   pfUI.chat.right.panelTop = CreateFrame("Frame", "rightChatPanelTop", pfUI.chat.right)
   pfUI.chat.right.panelTop:ClearAllPoints()
   pfUI.chat.right.panelTop:SetHeight(pfUI_config.global.font_size+default_border*2)
   pfUI.chat.right.panelTop:SetPoint("TOPLEFT", pfUI.chat.right, "TOPLEFT", default_border, -default_border)
   pfUI.chat.right.panelTop:SetPoint("TOPRIGHT", pfUI.chat.right, "TOPRIGHT", -default_border, -default_border)
-  if pfUI_config.panel.right.enable == "0" then
-    pfUI.utils:CreateBackdrop(pfUI.chat.right.panelTop, default_border, nil, true)
-  end
+  pfUI.utils:CreateBackdrop(pfUI.chat.right.panelTop, default_border, nil, true)
 
   pfUI.chat:RegisterEvent("PLAYER_ENTERING_WORLD")
   pfUI.chat:RegisterEvent("UI_SCALE_CHANGED")
@@ -550,4 +546,11 @@ pfUI:RegisterModule("chat", function ()
       end
     end
   end
+
+  -- Hide Right Chat panel
+  if pfUI_config.panel.right.enable == "0" then
+    pfUI.chat.right:Hide()
+    pfUI.chat.right.panelTop:Hide()
+  end
+
 end)
