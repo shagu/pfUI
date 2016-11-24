@@ -158,12 +158,12 @@ pfUI:RegisterModule("raid", function ()
           for pos, icon in pairs(active) do
             pfUI.uf.raid:AddIcon(this, pos, icon)
           end
-
-          -- hide unued icon slots
-          for pos=table.getn(active)+1, 6 do
-            pfUI.uf.raid:HideIcon(this, pos)
-          end
         end
+      end
+
+      -- hide unued icon slots
+      for pos=table.getn(active)+1, 6 do
+        pfUI.uf.raid:HideIcon(this, pos)
       end
     end
 
