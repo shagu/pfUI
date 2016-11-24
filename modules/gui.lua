@@ -660,6 +660,8 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui:CreateConfig(pfUI.gui.uf, "Show Hots on Raidframes", pfUI_config.unitframes.raid, "buffs_hots", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.uf, "Show Procs on Raidframes", pfUI_config.unitframes.raid, "buffs_procs", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.uf, "Only display Hots of my class", pfUI_config.unitframes.raid, "buffs_classonly", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "Show Debuff indicators on Raidframes", pfUI_config.unitframes.raid, "debuffs_enable", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "Only display Debuffs for my class", pfUI_config.unitframes.raid, "debuffs_class", "checkbox")
 
   -- actionbar
   pfUI.gui.bar = pfUI.gui:CreateConfigTab("ActionBar")

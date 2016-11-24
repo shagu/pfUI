@@ -45,6 +45,30 @@ pfUI:RegisterModule("raid", function ()
     end
   end
 
+  function pfUI.uf.raid:SetupDebuffFilter()
+    if pfUI.uf.raid.debuffs then return end
+
+    local _, myclass = UnitClass("player")
+    pfUI.uf.raid.debuffs = {}
+    if pfUI_config.unitframes.raid.debuffs_enable == "1" then
+      if myclass == "PALADIN" or myclass == "PRIEST" or pfUI_config.unitframes.raid.debuffs_class ~= "1" then
+        table.insert(pfUI.uf.raid.debuffs, "magic")
+      end
+
+      if myclass == "DRUID" or myclass == "PALADIN" or myclass == "SHAMAN" or pfUI_config.unitframes.raid.debuffs_class ~= "1" then
+        table.insert(pfUI.uf.raid.debuffs, "poison")
+      end
+
+      if myclass == "PRIEST" or myclass == "PALADIN" or myclass == "SHAMAN" or pfUI_config.unitframes.raid.debuffs_class ~= "1" then
+        table.insert(pfUI.uf.raid.debuffs, "disease")
+      end
+
+      if myclass == "DRUID" or myclass == "MAGE" or pfUI_config.unitframes.raid.debuffs_class ~= "1" then
+        table.insert(pfUI.uf.raid.debuffs, "curse")
+      end
+    end
+  end
+
   function pfUI.uf.raid:SetupBuffFilter()
     if pfUI.uf.raid.buffs then return end
 
@@ -137,6 +161,74 @@ pfUI:RegisterModule("raid", function ()
 
     unit.hp.bar:SetMinMaxValues(0, unit.cache.hpmax)
     unit.power.bar:SetMinMaxValues(0, unit.cache.powermax)
+
+    pfUI.uf.raid:SetupDebuffFilter()
+    if table.getn(pfUI.uf.raid.debuffs) > 0 then
+      local infected = false
+      for i=1,32 do
+        local _,_,dtype = UnitDebuff("raid" .. unit.id, i)
+        if dtype then
+          for _, filter in pairs(pfUI.uf.raid.debuffs) do
+            if filter == string.lower(dtype) then
+              if dtype == "Magic" then
+                if not unit.hp.bar.magic then
+                  unit.hp.bar.magic = CreateFrame("Frame", unit.hp.bar)
+                  unit.hp.bar.magic:SetAllPoints(unit)
+                  unit.hp.bar.magic:SetParent(unit.hp.bar)
+                  unit.hp.bar.magic.tex = unit.hp.bar.magic:CreateTexture("OVERLAY")
+                  unit.hp.bar.magic.tex:SetAllPoints(unit.hp.bar.magic)
+                  unit.hp.bar.magic.tex:SetTexture(.2,.8,.8,.4)
+                end
+                unit.hp.bar.magic:Show()
+                infected = true
+
+              elseif dtype == "Poison" then
+                if not unit.hp.bar.poison then
+                  unit.hp.bar.poison = CreateFrame("Frame", unit.hp.bar)
+                  unit.hp.bar.poison:SetAllPoints(unit)
+                  unit.hp.bar.poison:SetParent(unit.hp.bar)
+                  unit.hp.bar.poison.tex = unit.hp.bar.poison:CreateTexture("OVERLAY")
+                  unit.hp.bar.poison.tex:SetAllPoints(unit.hp.bar.poison)
+                  unit.hp.bar.poison.tex:SetTexture(.2,.8,.2,.4)
+                end
+                unit.hp.bar.poison:Show()
+                infected = true
+
+              elseif dtype == "Curse" then
+                if not unit.hp.bar.curse then
+                  unit.hp.bar.curse = CreateFrame("Frame", unit.hp.bar)
+                  unit.hp.bar.curse:SetAllPoints(unit)
+                  unit.hp.bar.curse:SetParent(unit.hp.bar)
+                  unit.hp.bar.curse.tex = unit.hp.bar.curse:CreateTexture("OVERLAY")
+                  unit.hp.bar.curse.tex:SetAllPoints(unit.hp.bar.curse)
+                  unit.hp.bar.curse.tex:SetTexture(.8,.2,.8,.4)
+                end
+                unit.hp.bar.curse:Show()
+                infected = true
+
+              elseif dtype == "Disease" then
+                if not unit.hp.bar.disease then
+                  unit.hp.bar.disease = CreateFrame("Frame", unit.hp.bar)
+                  unit.hp.bar.disease:SetAllPoints(unit)
+                  unit.hp.bar.disease:SetParent(unit.hp.bar)
+                  unit.hp.bar.disease.tex = unit.hp.bar.disease:CreateTexture("OVERLAY")
+                  unit.hp.bar.disease.tex:SetAllPoints(unit.hp.bar.disease)
+                  unit.hp.bar.disease.tex:SetTexture(.8,.8,.2,.4)
+                end
+                unit.hp.bar.disease:Show()
+                infected = true
+              end
+            end
+          end
+        end
+      end
+      if infected == false then
+        if unit.hp.bar.magic then unit.hp.bar.magic:Hide() end
+        if unit.hp.bar.poison then unit.hp.bar.poison:Hide() end
+        if unit.hp.bar.curse then unit.hp.bar.curse:Hide() end
+        if unit.hp.bar.disease then unit.hp.bar.disease:Hide() end
+      end
+    end
 
     pfUI.uf.raid:SetupBuffFilter()
     if table.getn(pfUI.uf.raid.buffs) > 0 then
