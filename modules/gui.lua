@@ -426,6 +426,9 @@ pfUI:RegisterModule("gui", function ()
 
       frame.input:SetScript("OnTextChanged", function(self)
         this:GetParent().category[this:GetParent().config] = this:GetText()
+      end)
+
+      frame.input:SetScript("OnEditFocusGained", function(self)
         pfUI.gui.settingChanged = true
       end)
     end
