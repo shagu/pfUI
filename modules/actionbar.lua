@@ -364,9 +364,10 @@ pfUI:RegisterModule("actionbar", function ()
     getglobal("PetActionButton"..i..'NormalTexture2'):SetAlpha(0)
     getglobal("PetActionButton"..i..'AutoCastable'):SetAlpha(0)
     getglobal("PetActionButton"..i..'Border'):SetAlpha(0)
-
-    getglobal("PetActionButton"..i..'AutoCast'):SetScale(.75)
-    getglobal("PetActionButton"..i..'AutoCast'):SetAlpha(.50)
+    getglobal("PetActionButton"..i..'AutoCast'):SetScale(pfUI_config.bars.icon_size / 30)
+    getglobal("PetActionButton"..i..'AutoCast'):SetPoint("TOPLEFT", getglobal("PetActionButton"..i), "TOPLEFT", 0, 0)
+    getglobal("PetActionButton"..i..'AutoCast'):SetPoint("BOTTOMRIGHT", getglobal("PetActionButton"..i), "BOTTOMRIGHT", 1, -1)
+    getglobal("PetActionButton"..i..'AutoCast'):SetAlpha(.1)
   end
 
   -- theme all actionbars (spacing, size, border, text position and style)
