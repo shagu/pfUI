@@ -82,7 +82,9 @@ pfUI:RegisterModule("bags", function ()
         local bagsize = GetContainerNumSlots(bag)
         if bag == -2 and pfUI.bag.showKeyring == true then bagsize = GetKeyRingSize() end
         for slot=1, bagsize do
-          ContainerFrame_UpdateCooldown(bag, pfUI.bags[bag].slots[slot].frame)
+          if pfUI.bags[bag].slots[slot].frame.hasItem then
+            ContainerFrame_UpdateCooldown(bag, pfUI.bags[bag].slots[slot].frame)
+          end
         end
       end
     end
@@ -252,6 +254,12 @@ pfUI:RegisterModule("bags", function ()
     SetItemButtonTexture(pfUI.bags[bag].slots[slot].frame, texture)
     SetItemButtonCount(pfUI.bags[bag].slots[slot].frame, count)
     SetItemButtonDesaturated(pfUI.bags[bag].slots[slot].frame, locked, 0.5, 0.5, 0.5)
+
+    if texture then
+      pfUI.bags[bag].slots[slot].frame.hasItem = 1
+    else
+      pfUI.bags[bag].slots[slot].frame.hasItem = nil
+    end
 
     -- bankframe does not support cooldowns
     if bag ~= -1 then
