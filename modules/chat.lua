@@ -13,6 +13,10 @@ pfUI:RegisterModule("chat", function ()
   pfUI.chat.left:SetPoint("BOTTOMLEFT", 5,5)
   pfUI.utils:UpdateMovable(pfUI.chat.left)
   pfUI.utils:CreateBackdrop(pfUI.chat.left, default_border, nil, true)
+  if pfUI_config.chat.global.custombg == "1" then
+    local r, g, b = strsplit(",", pfUI_config.chat.global.bgcolor)
+    pfUI.chat.left.backdrop:SetBackdropColor(tonumber(r), tonumber(g), tonumber(b), tonumber(pfUI_config.chat.global.bgtransp))
+  end
 
   pfUI.chat.left.panelTop = CreateFrame("Frame", "leftChatPanelTop", pfUI.chat.left)
   pfUI.chat.left.panelTop:ClearAllPoints()
@@ -161,6 +165,10 @@ pfUI:RegisterModule("chat", function ()
   pfUI.chat.right:SetPoint("BOTTOMRIGHT", -5,5)
   pfUI.utils:UpdateMovable(pfUI.chat.right)
   pfUI.utils:CreateBackdrop(pfUI.chat.right, default_border, nil, true)
+  if pfUI_config.chat.global.custombg == "1" then
+    local r, g, b = strsplit(",", pfUI_config.chat.global.bgcolor)
+    pfUI.chat.right.backdrop:SetBackdropColor(tonumber(r), tonumber(g), tonumber(b), tonumber(pfUI_config.chat.global.bgtransp))
+  end
 
   pfUI.chat.right.panelTop = CreateFrame("Frame", "rightChatPanelTop", pfUI.chat.right)
   pfUI.chat.right.panelTop:ClearAllPoints()
