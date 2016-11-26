@@ -92,7 +92,7 @@ pfUI:RegisterModule("actionbar", function ()
         pfUI.bars.pet:SetFrameStrata("LOW")
         pfUI.bars.pet:SetPoint("BOTTOM", pfUI.bars.bottom, "TOP", 0, default_border * 5)
         pfUI.utils:UpdateMovable(pfUI.bars.pet)
-        pfUI.utils:CreateBackdrop(pfUI.bars.pet, default_border)
+        if pfUI_config.bars.background == "1" then pfUI.utils:CreateBackdrop(pfUI.bars.pet, default_border) end
         pfUI.bars.pet:SetWidth((pfUI_config.bars.icon_size + default_border*3) * 10 - default_border)
         pfUI.bars.pet:SetHeight((pfUI_config.bars.icon_size + default_border*3) * 1 - default_border)
 
@@ -144,7 +144,7 @@ pfUI:RegisterModule("actionbar", function ()
       --pfUI.bars.shapeshift:SetFrameStrata("LOW")
       pfUI.bars.shapeshift:SetPoint("BOTTOM", pfUI.bars.bottom, "TOP", 0, default_border * 5)
       pfUI.utils:UpdateMovable(pfUI.bars.shapeshift)
-      pfUI.utils:CreateBackdrop(pfUI.bars.shapeshift, default_border)
+      if pfUI_config.bars.background == "1" then pfUI.utils:CreateBackdrop(pfUI.bars.shapeshift, default_border) end
       pfUI.bars.shapeshift:SetWidth((pfUI_config.bars.icon_size + default_border*3) * shapeshiftbuttons - default_border)
       pfUI.bars.shapeshift:SetHeight((pfUI_config.bars.icon_size + default_border*3) * 1 - default_border)
 
@@ -178,7 +178,7 @@ pfUI:RegisterModule("actionbar", function ()
         pfUI.bars.bottomleft:SetFrameStrata("LOW")
         pfUI.bars.bottomleft:SetPoint("BOTTOMRIGHT", pfUI.bars.bottom, "BOTTOMLEFT", -default_border*5, 0)
         pfUI.utils:UpdateMovable(pfUI.bars.bottomleft)
-        pfUI.utils:CreateBackdrop(pfUI.bars.bottomleft, default_border)
+        if pfUI_config.bars.background == "1" then pfUI.utils:CreateBackdrop(pfUI.bars.bottomleft, default_border) end
         pfUI.bars.bottomleft:SetWidth((pfUI_config.bars.icon_size + default_border*3) * 6 - default_border)
         pfUI.bars.bottomleft:SetHeight((pfUI_config.bars.icon_size + default_border*3) * 2 - default_border)
 
@@ -222,7 +222,7 @@ pfUI:RegisterModule("actionbar", function ()
         pfUI.bars.bottomright:SetFrameStrata("LOW")
         pfUI.bars.bottomright:SetPoint("BOTTOMLEFT", pfUI.bars.bottom, "BOTTOMRIGHT", default_border*5, 0)
         pfUI.utils:UpdateMovable(pfUI.bars.bottomright)
-        pfUI.utils:CreateBackdrop(pfUI.bars.bottomright, default_border)
+        if pfUI_config.bars.background == "1" then pfUI.utils:CreateBackdrop(pfUI.bars.bottomright, default_border) end
 
         pfUI.bars.bottomright:SetWidth((pfUI_config.bars.icon_size + default_border*3) * 6 - default_border)
         pfUI.bars.bottomright:SetHeight((pfUI_config.bars.icon_size + default_border*3) * 2 - default_border)
@@ -267,7 +267,7 @@ pfUI:RegisterModule("actionbar", function ()
         pfUI.bars.vertical:SetFrameStrata("LOW")
         pfUI.bars.vertical:SetPoint("RIGHT", -5, 0)
         pfUI.utils:UpdateMovable(pfUI.bars.vertical)
-        pfUI.utils:CreateBackdrop(pfUI.bars.vertical, default_border)
+        if pfUI_config.bars.background == "1" then pfUI.utils:CreateBackdrop(pfUI.bars.vertical, default_border) end
         pfUI.bars.vertical:SetWidth((pfUI_config.bars.icon_size + default_border*3) * 1 - default_border)
         pfUI.bars.vertical:SetHeight((pfUI_config.bars.icon_size + default_border*3) * 12 - default_border)
 
@@ -303,7 +303,7 @@ pfUI:RegisterModule("actionbar", function ()
   pfUI.bars.bottom:SetFrameStrata("LOW")
   pfUI.bars.bottom:SetPoint("BOTTOM", 0, 5)
   pfUI.utils:UpdateMovable(pfUI.bars.bottom)
-  pfUI.utils:CreateBackdrop(pfUI.bars.bottom, default_border)
+  if pfUI_config.bars.background == "1" then pfUI.utils:CreateBackdrop(pfUI.bars.bottom, default_border) end
 
   for i=1, 12 do
     local b = getglobal("ActionButton"..i)

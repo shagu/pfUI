@@ -672,6 +672,7 @@ pfUI:RegisterModule("gui", function ()
   -- actionbar
   pfUI.gui.bar = pfUI.gui:CreateConfigTab("ActionBar")
   pfUI.gui:CreateConfig(pfUI.gui.bar, "Icon Size", pfUI_config.bars, "icon_size")
+  pfUI.gui:CreateConfig(pfUI.gui.bar, "Show actionbar backgrounds", pfUI_config.bars, "background", "checkbox")
 
   -- panels
   pfUI.gui.panel = pfUI.gui:CreateConfigTab("Panel")
