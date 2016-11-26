@@ -673,6 +673,13 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.bar = pfUI.gui:CreateConfigTab("ActionBar")
   pfUI.gui:CreateConfig(pfUI.gui.bar, "Icon Size", pfUI_config.bars, "icon_size")
   pfUI.gui:CreateConfig(pfUI.gui.bar, "Show actionbar backgrounds", pfUI_config.bars, "background", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.bar, "Seconds to wait until hide bars", pfUI_config.bars, "hide_time")
+  pfUI.gui:CreateConfig(pfUI.gui.bar, "Autohide bottom actionbar", pfUI_config.bars, "hide_bottom", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.bar, "Autohide bottomleft actionbar", pfUI_config.bars, "hide_bottomleft", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.bar, "Autohide bottomright actionbar", pfUI_config.bars, "hide_bottomright", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.bar, "Autohide vertical actionbar", pfUI_config.bars, "hide_vertical", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.bar, "Autohide shapeshift actionbar", pfUI_config.bars, "hide_shapeshift", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.bar, "Autohide pet actionbar", pfUI_config.bars, "hide_pet", "checkbox")
 
   -- panels
   pfUI.gui.panel = pfUI.gui:CreateConfigTab("Panel")

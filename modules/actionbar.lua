@@ -73,6 +73,7 @@ pfUI:RegisterModule("actionbar", function ()
   pfUI.bars:RegisterEvent("PET_BAR_SHOWGRID")
   pfUI.bars:RegisterEvent("PET_BAR_HIDEGRID")
 
+  pfUI.bars.bottom = CreateFrame("Frame", "pfBarBottom", UIParent)
   pfUI.bars.shapeshift = CreateFrame("Frame", "pfBarShapeshift", UIParent)
   pfUI.bars.bottomleft = CreateFrame("Frame", "pfBarBottomLeft", UIParent)
   pfUI.bars.bottomright = CreateFrame("Frame", "pfBarBottomRight", UIParent)
@@ -154,21 +155,24 @@ pfUI:RegisterModule("actionbar", function ()
         MultiBarBottomLeft:SetAllPoints(pfUI.bars.bottom)
 
         -- create temp frame to give a named parent to the buttons
-        local tf = CreateFrame("Frame", "pfMultiBarBottomLeft", UIParent )
-        tf:SetParent(pfUI.bars.bottom)
-        tf:SetAllPoints(pfUI.bars.bottom)
+        if not pfUI.bars.bottom.setuptf then
+          pfUI.bars.bottom.setuptf = true
+          local tf = CreateFrame("Frame", "pfMultiBarBottomLeft", UIParent )
+          tf:SetParent(pfUI.bars.bottom)
+          tf:SetAllPoints(pfUI.bars.bottom)
 
-        for i=1, 12 do
-          local b = getglobal("MultiBarBottomLeftButton"..i)
-          local b2 = getglobal("MultiBarBottomLeftButton"..i-1) or b
-          b:ClearAllPoints()
-          b:SetParent(tf)
-          pfUI.utils:CreateBackdrop(b, default_border)
+          for i=1, 12 do
+            local b = getglobal("MultiBarBottomLeftButton"..i)
+            local b2 = getglobal("MultiBarBottomLeftButton"..i-1) or b
+            b:ClearAllPoints()
+            b:SetParent(tf)
+            pfUI.utils:CreateBackdrop(b, default_border)
 
-          if i == 1 then
-            b:SetPoint("TOPLEFT", tonumber(default_border), -tonumber(default_border))
-          else
-            b:SetPoint("LEFT", b2, "RIGHT", default_border*3, 0)
+            if i == 1 then
+              b:SetPoint("TOPLEFT", tonumber(default_border), -tonumber(default_border))
+            else
+              b:SetPoint("LEFT", b2, "RIGHT", default_border*3, 0)
+            end
           end
         end
       end
@@ -187,31 +191,34 @@ pfUI:RegisterModule("actionbar", function ()
         MultiBarBottomRight:SetAllPoints(pfUI.bars.bottomleft)
 
         -- create temp frame to give a named parent to the buttons
-        local tf = CreateFrame("Frame", "pfMultiBarBottomRight", UIParent )
-        tf:SetParent(pfUI.bars.bottomleft)
-        tf:SetAllPoints(pfUI.bars.bottomleft)
+        if not pfUI.bars.bottomleft.setuptf then
+          pfUI.bars.bottomleft.setuptf = true
+          local tf = CreateFrame("Frame", "pfMultiBarBottomRight", UIParent )
+          tf:SetParent(pfUI.bars.bottomleft)
+          tf:SetAllPoints(pfUI.bars.bottomleft)
 
-        for i=1, 6 do
-          local b = getglobal("MultiBarBottomRightButton"..i)
-          local b2 = getglobal("MultiBarBottomRightButton"..i-1) or b
-          b:ClearAllPoints()
-          b:SetParent(tf)
-          pfUI.utils:CreateBackdrop(b, default_border)
+          for i=1, 6 do
+            local b = getglobal("MultiBarBottomRightButton"..i)
+            local b2 = getglobal("MultiBarBottomRightButton"..i-1) or b
+            b:ClearAllPoints()
+            b:SetParent(tf)
+            pfUI.utils:CreateBackdrop(b, default_border)
 
-          if i == 1 then
-            b:SetPoint("BOTTOMLEFT", tonumber(default_border), tonumber(default_border))
-          else
-            b:SetPoint("LEFT", b2, "RIGHT", default_border*3, 0)
+            if i == 1 then
+              b:SetPoint("BOTTOMLEFT", tonumber(default_border), tonumber(default_border))
+            else
+              b:SetPoint("LEFT", b2, "RIGHT", default_border*3, 0)
+            end
           end
-        end
-        for i=7, 12 do
-          local b = getglobal("MultiBarBottomRightButton"..i)
-          local b2 = getglobal("MultiBarBottomRightButton"..i-6)
-          b:ClearAllPoints()
-          b:SetParent(tf)
-          pfUI.utils:CreateBackdrop(b, default_border)
+          for i=7, 12 do
+            local b = getglobal("MultiBarBottomRightButton"..i)
+            local b2 = getglobal("MultiBarBottomRightButton"..i-6)
+            b:ClearAllPoints()
+            b:SetParent(tf)
+            pfUI.utils:CreateBackdrop(b, default_border)
 
-          b:SetPoint("LEFT", b2, "RIGHT", -pfUI_config.bars.icon_size, pfUI_config.bars.icon_size + default_border*3)
+            b:SetPoint("LEFT", b2, "RIGHT", -pfUI_config.bars.icon_size, pfUI_config.bars.icon_size + default_border*3)
+          end
         end
       else
         pfUI.bars.bottomleft:Hide()
@@ -232,31 +239,34 @@ pfUI:RegisterModule("actionbar", function ()
         MultiBarRight:SetAllPoints(pfUI.bars.bottomright)
 
         -- create temp frame to give a named parent to the buttons
-        local tf = CreateFrame("Frame", "pfMultiBarRight", UIParent )
-        tf:SetParent(pfUI.bars.bottomright)
-        tf:SetAllPoints(pfUI.bars.bottomright)
+        if not pfUI.bars.bottomright.setuptf then
+          pfUI.bars.bottomright.setuptf = true
+          local tf = CreateFrame("Frame", "pfMultiBarRight", UIParent )
+          tf:SetParent(pfUI.bars.bottomright)
+          tf:SetAllPoints(pfUI.bars.bottomright)
 
-        for i=1, 6 do
-          local b = getglobal("MultiBarRightButton"..i)
-          local b2 = getglobal("MultiBarRightButton"..i-1) or b
-          b:ClearAllPoints()
-          b:SetParent(tf)
-          pfUI.utils:CreateBackdrop(b, default_border)
+          for i=1, 6 do
+            local b = getglobal("MultiBarRightButton"..i)
+            local b2 = getglobal("MultiBarRightButton"..i-1) or b
+            b:ClearAllPoints()
+            b:SetParent(tf)
+            pfUI.utils:CreateBackdrop(b, default_border)
 
-          if i == 1 then
-            b:SetPoint("BOTTOMLEFT", tonumber(default_border), tonumber(default_border))
-          else
-            b:SetPoint("LEFT", b2, "RIGHT", default_border*3, 0)
+            if i == 1 then
+              b:SetPoint("BOTTOMLEFT", tonumber(default_border), tonumber(default_border))
+            else
+              b:SetPoint("LEFT", b2, "RIGHT", default_border*3, 0)
+            end
           end
-        end
-        for i=7, 12 do
-          local b = getglobal("MultiBarRightButton"..i)
-          local b2 = getglobal("MultiBarRightButton"..i-6)
-          b:ClearAllPoints()
-          b:SetParent(tf)
-          pfUI.utils:CreateBackdrop(b, default_border)
+          for i=7, 12 do
+            local b = getglobal("MultiBarRightButton"..i)
+            local b2 = getglobal("MultiBarRightButton"..i-6)
+            b:ClearAllPoints()
+            b:SetParent(tf)
+            pfUI.utils:CreateBackdrop(b, default_border)
 
-          b:SetPoint("LEFT", b2, "RIGHT", -pfUI_config.bars.icon_size, pfUI_config.bars.icon_size + default_border*3)
+            b:SetPoint("LEFT", b2, "RIGHT", -pfUI_config.bars.icon_size, pfUI_config.bars.icon_size + default_border*3)
+          end
         end
       else
         pfUI.bars.bottomright:Hide()
@@ -276,21 +286,24 @@ pfUI:RegisterModule("actionbar", function ()
         MultiBarLeft:SetAllPoints(pfUI.bars.vertical)
 
         -- create temp frame to give a named parent to the buttons
-        local tf = CreateFrame("Frame", "pfMultiBarLeft", UIParent )
-        tf:SetParent(pfUI.bars.vertical)
-        tf:SetAllPoints(pfUI.bars.vertical)
+        if not pfUI.bars.vertical.setuptf then
+          pfUI.bars.vertical.setuptf = true
+          local tf = CreateFrame("Frame", "pfMultiBarLeft", UIParent )
+          tf:SetParent(pfUI.bars.vertical)
+          tf:SetAllPoints(pfUI.bars.vertical)
 
-        for i=1, 12 do
-          local b = getglobal("MultiBarLeftButton"..i)
-          local b2 = getglobal("MultiBarLeftButton"..i-1) or b
-          b:ClearAllPoints()
-          b:SetParent(tf)
-          pfUI.utils:CreateBackdrop(b, default_border)
+          for i=1, 12 do
+            local b = getglobal("MultiBarLeftButton"..i)
+            local b2 = getglobal("MultiBarLeftButton"..i-1) or b
+            b:ClearAllPoints()
+            b:SetParent(tf)
+            pfUI.utils:CreateBackdrop(b, default_border)
 
-          if i == 1 then
-            b:SetPoint("TOPLEFT", tonumber(default_border), -tonumber(default_border))
-          else
-            b:SetPoint("TOP", b2, "BOTTOM", 0, -default_border*3)
+            if i == 1 then
+              b:SetPoint("TOPLEFT", tonumber(default_border), -tonumber(default_border))
+            else
+              b:SetPoint("TOP", b2, "BOTTOM", 0, -default_border*3)
+            end
           end
         end
       else
@@ -299,7 +312,6 @@ pfUI:RegisterModule("actionbar", function ()
     end)
 
   -- create bottom bar frame
-  pfUI.bars.bottom = CreateFrame("Frame", "pfBarBottom", UIParent)
   pfUI.bars.bottom:SetFrameStrata("LOW")
   pfUI.bars.bottom:SetPoint("BOTTOM", 0, 5)
   pfUI.utils:UpdateMovable(pfUI.bars.bottom)
@@ -396,5 +408,79 @@ pfUI:RegisterModule("actionbar", function ()
       getglobal(button..i..'Name'):SetJustifyH("CENTER")
       getglobal(button..i..'Name'):SetJustifyV("BOTTOM")
     end
+  end
+
+  local function pfEnableAutohide(frame)
+    frame.hover = CreateFrame("Frame", frame:GetName() .. "Autohide", frame)
+    frame.hover:SetParent(frame)
+    frame.hover:SetPoint("TOPLEFT", frame, "TOPLEFT", -5, 5)
+    frame.hover:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", 5, -5)
+
+    frame.hover:SetFrameStrata("BACKGROUND")
+
+    frame.hover:SetScript("OnUpdate", function()
+      -- reset frame positions to UIParent
+      if not this.resetpos then
+        this:SetMovable(1)
+        this:StartMoving()
+        this:StopMovingOrSizing()
+        this:SetMovable(0)
+        this.resetpos = true
+      end
+
+      -- cache frame positions
+      if not this.x then
+        local _, _, _, fx, fy = this:GetPoint()
+        fy = GetScreenHeight() + fy
+        local fxmax = fx+this:GetWidth()
+        local fymax = fy-this:GetHeight()
+
+        this.x = fx
+        this.xmax = fxmax
+
+        this.y = fy
+        this.ymax = fymax
+      end
+
+      -- get cursor position
+      local x, y = GetCursorPosition()
+      x = x / UIParent:GetEffectiveScale()
+      y = y / UIParent:GetEffectiveScale()
+
+      if not this.activeTo then this.activeTo = GetTime() + tonumber(pfUI_config.bars.hide_time) end
+      if x > this.x and x < this.xmax and y < this.y and y > this.ymax then
+        this.activeTo = GetTime() + tonumber(pfUI_config.bars.hide_time)
+        this:GetParent():SetAlpha(1)
+      else
+        if this.activeTo < GetTime() and this:GetParent():GetAlpha() > 0 then
+          this:GetParent():SetAlpha(this:GetParent():GetAlpha() - 0.1)
+        end
+      end
+    end)
+  end
+
+  -- configure autohiding frames
+  if pfUI_config.bars.hide_bottom == "1" then
+    pfEnableAutohide(pfUI.bars.bottom)
+  end
+
+  if pfUI_config.bars.hide_bottomleft == "1" then
+    pfEnableAutohide(pfUI.bars.bottomleft)
+  end
+
+  if pfUI_config.bars.hide_bottomright == "1" then
+    pfEnableAutohide(pfUI.bars.bottomright)
+  end
+
+  if pfUI_config.bars.hide_vertical == "1" then
+  pfEnableAutohide(pfUI.bars.vertical)
+  end
+
+  if pfUI_config.bars.hide_shapeshift == "1" then
+    pfEnableAutohide(pfUI.bars.shapeshift)
+  end
+
+  if pfUI_config.bars.hide_pet == "1" then
+    pfEnableAutohide(pfUI.bars.pet)
   end
 end)
