@@ -288,7 +288,7 @@ pfUI:RegisterModule("thirdparty", function ()
 
       -- draw the button
       if not pfUI.bag.right.sort then
-        pfUI.bag.right.sort = CreateFrame("Button", "pfBagSlotShow", UIParent)
+        pfUI.bag.right.sort = CreateFrame("Button", "pfBagSlotSort", UIParent)
         pfUI.bag.right.sort:SetParent(pfUI.bag.right)
         pfUI.bag.right.sort:SetPoint("TOPRIGHT", -pfUI_config.appearance.border.default*14 - 45, -pfUI_config.appearance.border.default)
         pfUI.bag.right.sort:SetPoint("TOPRIGHT", pfUI.bag.right.keys, "TOPLEFT", -pfUI_config.appearance.border.default*3, 0)
@@ -322,6 +322,40 @@ pfUI:RegisterModule("thirdparty", function ()
         pfUI.bag.right.search:ClearAllPoints()
         pfUI.bag.right.search:SetPoint("TOPLEFT", pfUI.bag.right, "TOPLEFT", pfUI_config.appearance.border.default, -pfUI_config.appearance.border.default)
         pfUI.bag.right.search:SetPoint("TOPRIGHT", pfUI.bag.right.sort, "TOPLEFT", -pfUI_config.appearance.border.default*3, -pfUI_config.appearance.border.default)
+      end
+
+      -- draw the button
+      if not pfUI.bag.left.sort then
+        pfUI.bag.left.sort = CreateFrame("Button", "pfBankSlotSort", UIParent)
+        pfUI.bag.left.sort:SetParent(pfUI.bag.left)
+        pfUI.bag.left.sort:SetPoint("TOPRIGHT", -pfUI_config.appearance.border.default*14 - 45, -pfUI_config.appearance.border.default)
+        pfUI.bag.left.sort:SetPoint("TOPRIGHT", pfUI.bag.left.bags, "TOPLEFT", -pfUI_config.appearance.border.default*3, 0)
+
+        pfUI.utils:CreateBackdrop(pfUI.bag.left.sort)
+        pfUI.bag.left.sort:SetHeight(12)
+        pfUI.bag.left.sort:SetWidth(12)
+        pfUI.bag.left.sort:SetTextColor(1,1,.25,1)
+        pfUI.bag.left.sort:SetFont("Interface\\AddOns\\pfUI\\fonts\\" .. pfUI_config.global.font_default .. ".ttf", pfUI_config.global.font_size, "OUTLINE")
+        pfUI.bag.left.sort.texture = pfUI.bag.left.sort:CreateTexture("pfBagArrowUp")
+        pfUI.bag.left.sort.texture:SetTexture("Interface\\AddOns\\pfUI\\img\\sort")
+        pfUI.bag.left.sort.texture:ClearAllPoints()
+        pfUI.bag.left.sort.texture:SetPoint("TOPLEFT", pfUI.bag.left.sort, "TOPLEFT", 2, -2)
+        pfUI.bag.left.sort.texture:SetPoint("BOTTOMRIGHT", pfUI.bag.left.sort, "BOTTOMRIGHT", -2, 2)
+        pfUI.bag.left.sort.texture:SetVertexColor(.25,.25,.25,1)
+
+        pfUI.bag.left.sort:SetScript("OnEnter", function ()
+          pfUI.bag.left.sort.backdrop:SetBackdropBorderColor(1,1,.25,1)
+          pfUI.bag.left.sort.texture:SetVertexColor(1,1,.25,1)
+        end)
+
+        pfUI.bag.left.sort:SetScript("OnLeave", function ()
+          pfUI.utils:CreateBackdrop(pfUI.bag.left.sort)
+          pfUI.bag.left.sort.texture:SetVertexColor(.25,.25,.25,1)
+        end)
+
+        pfUI.bag.left.sort:SetScript("OnClick", function()
+          Clean_Up("bank")
+        end)
       end
     end)
   end

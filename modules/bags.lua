@@ -180,8 +180,9 @@ pfUI:RegisterModule("bags", function ()
       pfUI.bag.right:EnableMouse(1)
       iterate = pfUI.BACKPACK
       frame = pfUI.bag.right
-      pfUI.bag:CreateAdditions(frame)
     end
+
+    pfUI.bag:CreateAdditions(frame)
 
     frame:SetFrameStrata("HIGH")
     pfUI.utils:CreateBackdrop(frame, default_border)
@@ -189,7 +190,6 @@ pfUI:RegisterModule("bags", function ()
     pfUI.bag.button_size = (frame:GetWidth() + default_border - 10*default_border*3) / 10
     --message(frame:GetWidth() .. " should be " .. pfUI.bag.button_size*10 + 10*default_border*3)
     local topspace = pfUI.bag.right.close:GetHeight() + default_border * 2
-    if object == "bank" then topspace = 0 end
 
     for id, bag in pairs(iterate) do
       if not pfUI.bags[bag] then
@@ -341,7 +341,7 @@ pfUI:RegisterModule("bags", function ()
 
     local extra = 0
     if frame == pfUI.bag.left and GetNumBankSlots() < 6 then extra = 1 end
-    local width = default_border*3 + (pfUI.bag.button_size/5*4 + default_border*2) * (max-min+1+extra)
+    local width = (pfUI.bag.button_size/5*4 + default_border*2) * (max-min+1+extra)
     local height = default_border + (pfUI.bag.button_size/5*4 + default_border)
 
     frame.bagslots:SetWidth(width)
@@ -379,7 +379,7 @@ pfUI:RegisterModule("bags", function ()
         end)
       end
 
-      local left = (slot-min)*(pfUI.bag.button_size/5*4+default_border*3) + default_border
+      local left = (slot-min)*(pfUI.bag.button_size/5*4+default_border*2) + default_border
       local top = -default_border
 
       frame.bagslots.slots[slot].frame:ClearAllPoints()
@@ -404,7 +404,7 @@ pfUI:RegisterModule("bags", function ()
         if not frame.bagslots.buy then
           frame.bagslots.buy = CreateFrame("Button", "pfBagSlotBuy", frame.bagslots)
         end
-        frame.bagslots.buy:SetPoint("RIGHT", frame.bagslots, "RIGHT", -2 * default_border, 0)
+        frame.bagslots.buy:SetPoint("RIGHT", frame.bagslots, "RIGHT", -default_border, 0)
         pfUI.utils:CreateBackdrop(frame.bagslots.buy, default_border)
         frame.bagslots.buy:SetHeight(pfUI.bag.button_size/5*4)
         frame.bagslots.buy:SetWidth(pfUI.bag.button_size/5*4)
@@ -427,167 +427,234 @@ pfUI:RegisterModule("bags", function ()
   end
 
   function pfUI.bag:CreateAdditions(frame)
-    -- bag close button
-    if not frame.close then
-      frame.close = CreateFrame("Button", "pfBagClose", UIParent)
-      frame.close:SetParent(frame)
-      frame.close:SetPoint("TOPRIGHT", -default_border*1,-default_border )
-      pfUI.utils:CreateBackdrop(frame.close, default_border)
-      frame.close:SetHeight(12)
-      frame.close:SetWidth(12)
-      frame.close.texture = frame.close:CreateTexture("pfBagClose")
-      frame.close.texture:SetTexture("Interface\\AddOns\\pfUI\\img\\close")
-      frame.close.texture:ClearAllPoints()
-      frame.close.texture:SetPoint("TOPLEFT", frame.close, "TOPLEFT", 2, -2)
-      frame.close.texture:SetPoint("BOTTOMRIGHT", frame.close, "BOTTOMRIGHT", -2, 2)
-      frame.close.texture:SetVertexColor(1,.25,.25,1)
-      frame.close:SetScript("OnEnter", function ()
-        frame.close.backdrop:SetBackdropBorderColor(1,.25,.25,1)
-      end)
-
-      frame.close:SetScript("OnLeave", function ()
+    -- bag additions
+    if frame == pfUI.bag.right then
+      -- bag close button
+      if not frame.close then
+        frame.close = CreateFrame("Button", "pfBagClose", UIParent)
+        frame.close:SetParent(frame)
+        frame.close:SetPoint("TOPRIGHT", -default_border*1,-default_border )
         pfUI.utils:CreateBackdrop(frame.close, default_border)
-      end)
+        frame.close:SetHeight(12)
+        frame.close:SetWidth(12)
+        frame.close.texture = frame.close:CreateTexture("pfBagClose")
+        frame.close.texture:SetTexture("Interface\\AddOns\\pfUI\\img\\close")
+        frame.close.texture:ClearAllPoints()
+        frame.close.texture:SetPoint("TOPLEFT", frame.close, "TOPLEFT", 2, -2)
+        frame.close.texture:SetPoint("BOTTOMRIGHT", frame.close, "BOTTOMRIGHT", -2, 2)
+        frame.close.texture:SetVertexColor(1,.25,.25,1)
+        frame.close:SetScript("OnEnter", function ()
+          frame.close.backdrop:SetBackdropBorderColor(1,.25,.25,1)
+        end)
 
-     frame.close:SetScript("OnClick", function()
-       CloseAllBags()
-      end)
-    end
+        frame.close:SetScript("OnLeave", function ()
+          pfUI.utils:CreateBackdrop(frame.close, default_border)
+        end)
 
-    -- bags button
-    if not frame.bags then
-      frame.bags = CreateFrame("Button", "pfBagSlotShow", UIParent)
-      frame.bags:SetParent(frame)
-      frame.bags:SetPoint("TOPRIGHT", frame.close, "TOPLEFT", -default_border*3, 0)
-      pfUI.utils:CreateBackdrop(frame.bags, default_border)
-      frame.bags:SetHeight(12)
-      frame.bags:SetWidth(12)
-      frame.bags:SetTextColor(1,1,.25,1)
-      frame.bags:SetFont("Interface\\AddOns\\pfUI\\fonts\\" .. pfUI_config.global.font_default .. ".ttf", pfUI_config.global.font_size, "OUTLINE")
-      frame.bags.texture = frame.bags:CreateTexture("pfBagArrowUp")
-      frame.bags.texture:SetTexture("Interface\\AddOns\\pfUI\\img\\up")
-      frame.bags.texture:ClearAllPoints()
-      frame.bags.texture:SetPoint("TOPLEFT", frame.bags, "TOPLEFT", 3, -1)
-      frame.bags.texture:SetPoint("BOTTOMRIGHT", frame.bags, "BOTTOMRIGHT", -3, 1)
-      frame.bags.texture:SetVertexColor(.25,.25,.25,1)
+       frame.close:SetScript("OnClick", function()
+         CloseAllBags()
+        end)
+      end
 
-      frame.bags:SetScript("OnEnter", function ()
-        frame.bags.backdrop:SetBackdropBorderColor(1,1,.25,1)
-        frame.bags.texture:SetVertexColor(1,1,.25,1)
-      end)
-
-      frame.bags:SetScript("OnLeave", function ()
+      -- bags button
+      if not frame.bags then
+        frame.bags = CreateFrame("Button", "pfBagSlotShow", UIParent)
+        frame.bags:SetParent(frame)
+        frame.bags:SetPoint("TOPRIGHT", frame.close, "TOPLEFT", -default_border*3, 0)
         pfUI.utils:CreateBackdrop(frame.bags, default_border)
+        frame.bags:SetHeight(12)
+        frame.bags:SetWidth(12)
+        frame.bags:SetTextColor(1,1,.25,1)
+        frame.bags:SetFont("Interface\\AddOns\\pfUI\\fonts\\" .. pfUI_config.global.font_default .. ".ttf", pfUI_config.global.font_size, "OUTLINE")
+        frame.bags.texture = frame.bags:CreateTexture("pfBagArrowUp")
+        frame.bags.texture:SetTexture("Interface\\AddOns\\pfUI\\img\\up")
+        frame.bags.texture:ClearAllPoints()
+        frame.bags.texture:SetPoint("TOPLEFT", frame.bags, "TOPLEFT", 3, -1)
+        frame.bags.texture:SetPoint("BOTTOMRIGHT", frame.bags, "BOTTOMRIGHT", -3, 1)
         frame.bags.texture:SetVertexColor(.25,.25,.25,1)
-      end)
 
-      frame.bags:SetScript("OnClick", function()
-        if pfUI.bag.right.bagslots:IsShown() then
-          pfUI.bag.right.bagslots:Hide()
-          pfUI.bag.left.bagslots:Hide()
-        else
-          pfUI.bag.left.bagslots:Show()
-          pfUI.bag.right.bagslots:Show()
-        end
-      end)
-    end
+        frame.bags:SetScript("OnEnter", function ()
+          frame.bags.backdrop:SetBackdropBorderColor(1,1,.25,1)
+          frame.bags.texture:SetVertexColor(1,1,.25,1)
+        end)
 
-    -- key button
-    if not frame.keys then
-      frame.keys = CreateFrame("Button", "pfBagSlotShow", UIParent)
-      frame.keys:SetParent(frame)
-      frame.keys:SetPoint("TOPRIGHT", frame.bags, "TOPLEFT", -default_border*3, 0)
-      pfUI.utils:CreateBackdrop(frame.keys, default_border)
-      frame.keys:SetHeight(12)
-      frame.keys:SetWidth(12)
-      frame.keys:SetTextColor(1,1,.25,1)
-      frame.keys:SetFont("Interface\\AddOns\\pfUI\\fonts\\" .. pfUI_config.global.font_default .. ".ttf", pfUI_config.global.font_size, "OUTLINE")
-      frame.keys.texture = frame.keys:CreateTexture("pfBagArrowUp")
-      frame.keys.texture:SetTexture("Interface\\AddOns\\pfUI\\img\\key")
-      frame.keys.texture:ClearAllPoints()
-      frame.keys.texture:SetPoint("TOPLEFT", frame.keys, "TOPLEFT", 3, -1)
-      frame.keys.texture:SetPoint("BOTTOMRIGHT", frame.keys, "BOTTOMRIGHT", -3, 1)
-      frame.keys.texture:SetVertexColor(.25,.25,.25,1)
+        frame.bags:SetScript("OnLeave", function ()
+          pfUI.utils:CreateBackdrop(frame.bags, default_border)
+          frame.bags.texture:SetVertexColor(.25,.25,.25,1)
+        end)
 
-      frame.keys:SetScript("OnEnter", function ()
-        frame.keys.backdrop:SetBackdropBorderColor(1,1,.25,1)
-        frame.keys.texture:SetVertexColor(1,1,.25,1)
-      end)
-
-      frame.keys:SetScript("OnLeave", function ()
-        pfUI.utils:CreateBackdrop(frame.keys, default_border)
-        frame.keys.texture:SetVertexColor(.25,.25,.25,1)
-      end)
-
-      frame.keys:SetScript("OnClick", function()
-        if not pfUI.bag.showKeyring then
-          pfUI.bag.showKeyring = true
-        else
-          pfUI.bag.showKeyring = nil
-        end
-        pfUI.bag:CheckFullUpdate()
-      end)
-    end
-
-    -- bag search
-    if not frame.search then
-      frame.search = CreateFrame("Frame", "pfBagSearch", UIParent)
-      frame.search:SetParent(frame)
-      frame.search:SetHeight(12)
-      frame.search:SetPoint("TOPLEFT", frame, "TOPLEFT", default_border, -default_border)
-      frame.search:SetPoint("TOPRIGHT", frame.keys, "TOPLEFT", -default_border*3, -default_border)
-      pfUI.utils:CreateBackdrop(frame.search, default_border)
-
-      frame.search.edit = CreateFrame("EditBox", "pfUIBagSearch", frame.search, "InputBoxTemplate")
-      pfUIBagSearchLeft:SetTexture(nil)
-      pfUIBagSearchMiddle:SetTexture(nil)
-      pfUIBagSearchRight:SetTexture(nil)
-      frame.search.edit:ClearAllPoints()
-      frame.search.edit:SetPoint("TOPLEFT", frame.search, "TOPLEFT", default_border*2, 0)
-      frame.search.edit:SetPoint("BOTTOMRIGHT", frame.search, "BOTTOMRIGHT", -default_border*2, 0)
-
-      frame.search.edit:SetFont("Interface\\AddOns\\pfUI\\fonts\\" .. pfUI_config.global.font_default .. ".ttf", pfUI_config.global.font_size, "OUTLINE")
-      frame.search.edit:SetAutoFocus(false)
-      frame.search.edit:SetText("Search")
-      frame.search.edit:SetTextColor(.5,.5,.5,1)
-
-      frame.search.edit:SetScript("OnEditFocusGained", function()
-        this:SetText("")
-      end)
-
-      frame.search.edit:SetScript("OnEditFocusLost", function()
-        this:SetText("Search")
-        for bag=-2, 11 do
-          local bagsize = GetContainerNumSlots(bag)
-          if bag == -2 and pfUI.bag.showKeyring == true then bagsize = GetKeyRingSize() end
-          for slot=1, bagsize do
-            local texture, itemCount, locked, quality, readable = GetContainerItemInfo(bag, slot)
-            if itemCount then
-              pfUI.bags[bag].slots[slot].frame:SetAlpha(1)
-            end
+        frame.bags:SetScript("OnClick", function()
+          if pfUI.bag.right.bagslots:IsShown() then
+            pfUI.bag.right.bagslots:Hide()
+          else
+            pfUI.bag.right.bagslots:Show()
           end
-        end
-      end)
+        end)
+      end
 
-      frame.search.edit:SetScript("OnTextChanged", function()
-        if this:GetText() == "Search" then return end
-        for bag=-2, 11 do
-          local bagsize = GetContainerNumSlots(bag)
-          if bag == -2 and pfUI.bag.showKeyring == true then bagsize = GetKeyRingSize() end
-          for slot=1, bagsize do
-            local texture, itemCount, locked, quality, readable = GetContainerItemInfo(bag, slot)
-            if itemCount then
-              local itemLink = GetContainerItemLink(bag, slot)
-              local itemstring = string.sub(itemLink, string.find(itemLink, "%[")+1, string.find(itemLink, "%]")-1)
-              if strfind(strlower(itemstring), strlower(this:GetText())) then
+      -- key button
+      if not frame.keys then
+        frame.keys = CreateFrame("Button", "pfBagSlotShow", UIParent)
+        frame.keys:SetParent(frame)
+        frame.keys:SetPoint("TOPRIGHT", frame.bags, "TOPLEFT", -default_border*3, 0)
+        pfUI.utils:CreateBackdrop(frame.keys, default_border)
+        frame.keys:SetHeight(12)
+        frame.keys:SetWidth(12)
+        frame.keys:SetTextColor(1,1,.25,1)
+        frame.keys:SetFont("Interface\\AddOns\\pfUI\\fonts\\" .. pfUI_config.global.font_default .. ".ttf", pfUI_config.global.font_size, "OUTLINE")
+        frame.keys.texture = frame.keys:CreateTexture("pfBagArrowUp")
+        frame.keys.texture:SetTexture("Interface\\AddOns\\pfUI\\img\\key")
+        frame.keys.texture:ClearAllPoints()
+        frame.keys.texture:SetPoint("TOPLEFT", frame.keys, "TOPLEFT", 3, -1)
+        frame.keys.texture:SetPoint("BOTTOMRIGHT", frame.keys, "BOTTOMRIGHT", -3, 1)
+        frame.keys.texture:SetVertexColor(.25,.25,.25,1)
+
+        frame.keys:SetScript("OnEnter", function ()
+          frame.keys.backdrop:SetBackdropBorderColor(1,1,.25,1)
+          frame.keys.texture:SetVertexColor(1,1,.25,1)
+        end)
+
+        frame.keys:SetScript("OnLeave", function ()
+          pfUI.utils:CreateBackdrop(frame.keys, default_border)
+          frame.keys.texture:SetVertexColor(.25,.25,.25,1)
+        end)
+
+        frame.keys:SetScript("OnClick", function()
+          if not pfUI.bag.showKeyring then
+            pfUI.bag.showKeyring = true
+          else
+            pfUI.bag.showKeyring = nil
+          end
+          pfUI.bag:CheckFullUpdate()
+        end)
+      end
+
+      -- bag search
+      if not frame.search then
+        frame.search = CreateFrame("Frame", "pfBagSearch", UIParent)
+        frame.search:SetParent(frame)
+        frame.search:SetHeight(12)
+        frame.search:SetPoint("TOPLEFT", frame, "TOPLEFT", default_border, -default_border)
+        frame.search:SetPoint("TOPRIGHT", frame.keys, "TOPLEFT", -default_border*3, -default_border)
+        pfUI.utils:CreateBackdrop(frame.search, default_border)
+
+        frame.search.edit = CreateFrame("EditBox", "pfUIBagSearch", frame.search, "InputBoxTemplate")
+        pfUIBagSearchLeft:SetTexture(nil)
+        pfUIBagSearchMiddle:SetTexture(nil)
+        pfUIBagSearchRight:SetTexture(nil)
+        frame.search.edit:ClearAllPoints()
+        frame.search.edit:SetPoint("TOPLEFT", frame.search, "TOPLEFT", default_border*2, 0)
+        frame.search.edit:SetPoint("BOTTOMRIGHT", frame.search, "BOTTOMRIGHT", -default_border*2, 0)
+
+        frame.search.edit:SetFont("Interface\\AddOns\\pfUI\\fonts\\" .. pfUI_config.global.font_default .. ".ttf", pfUI_config.global.font_size, "OUTLINE")
+        frame.search.edit:SetAutoFocus(false)
+        frame.search.edit:SetText("Search")
+        frame.search.edit:SetTextColor(.5,.5,.5,1)
+
+        frame.search.edit:SetScript("OnEditFocusGained", function()
+          this:SetText("")
+        end)
+
+        frame.search.edit:SetScript("OnEditFocusLost", function()
+          this:SetText("Search")
+          for bag=-2, 11 do
+            local bagsize = GetContainerNumSlots(bag)
+            if bag == -2 and pfUI.bag.showKeyring == true then bagsize = GetKeyRingSize() end
+            for slot=1, bagsize do
+              local texture, itemCount, locked, quality, readable = GetContainerItemInfo(bag, slot)
+              if itemCount then
                 pfUI.bags[bag].slots[slot].frame:SetAlpha(1)
-              else
-                pfUI.bags[bag].slots[slot].frame:SetAlpha(.25)
               end
             end
           end
-        end
-      end)
+        end)
+
+        frame.search.edit:SetScript("OnTextChanged", function()
+          if this:GetText() == "Search" then return end
+          for bag=-2, 11 do
+            local bagsize = GetContainerNumSlots(bag)
+            if bag == -2 and pfUI.bag.showKeyring == true then bagsize = GetKeyRingSize() end
+            for slot=1, bagsize do
+              local texture, itemCount, locked, quality, readable = GetContainerItemInfo(bag, slot)
+              if itemCount then
+                local itemLink = GetContainerItemLink(bag, slot)
+                local itemstring = string.sub(itemLink, string.find(itemLink, "%[")+1, string.find(itemLink, "%]")-1)
+                if strfind(strlower(itemstring), strlower(this:GetText())) then
+                  pfUI.bags[bag].slots[slot].frame:SetAlpha(1)
+                else
+                  pfUI.bags[bag].slots[slot].frame:SetAlpha(.25)
+                end
+              end
+            end
+          end
+        end)
+      end
+    else
+      -- bankframe
+
+      -- bag close button
+      if not frame.close then
+        frame.close = CreateFrame("Button", "pfBagClose", UIParent)
+        frame.close:SetParent(frame)
+        frame.close:SetPoint("TOPRIGHT", -default_border*1,-default_border )
+        pfUI.utils:CreateBackdrop(frame.close, default_border)
+        frame.close:SetHeight(12)
+        frame.close:SetWidth(12)
+        frame.close.texture = frame.close:CreateTexture("pfBagClose")
+        frame.close.texture:SetTexture("Interface\\AddOns\\pfUI\\img\\close")
+        frame.close.texture:ClearAllPoints()
+        frame.close.texture:SetPoint("TOPLEFT", frame.close, "TOPLEFT", 2, -2)
+        frame.close.texture:SetPoint("BOTTOMRIGHT", frame.close, "BOTTOMRIGHT", -2, 2)
+        frame.close.texture:SetVertexColor(1,.25,.25,1)
+        frame.close:SetScript("OnEnter", function ()
+          frame.close.backdrop:SetBackdropBorderColor(1,.25,.25,1)
+        end)
+
+        frame.close:SetScript("OnLeave", function ()
+          pfUI.utils:CreateBackdrop(frame.close, default_border)
+        end)
+
+       frame.close:SetScript("OnClick", function()
+         CloseBankFrame()
+        end)
+      end
+
+      -- bags button
+      if not frame.bags then
+        frame.bags = CreateFrame("Button", "pfBagSlotShow", UIParent)
+        frame.bags:SetParent(frame)
+        frame.bags:SetPoint("TOPRIGHT", frame.close, "TOPLEFT", -default_border*3, 0)
+        pfUI.utils:CreateBackdrop(frame.bags, default_border)
+        frame.bags:SetHeight(12)
+        frame.bags:SetWidth(12)
+        frame.bags:SetTextColor(1,1,.25,1)
+        frame.bags:SetFont("Interface\\AddOns\\pfUI\\fonts\\" .. pfUI_config.global.font_default .. ".ttf", pfUI_config.global.font_size, "OUTLINE")
+        frame.bags.texture = frame.bags:CreateTexture("pfBagArrowUp")
+        frame.bags.texture:SetTexture("Interface\\AddOns\\pfUI\\img\\up")
+        frame.bags.texture:ClearAllPoints()
+        frame.bags.texture:SetPoint("TOPLEFT", frame.bags, "TOPLEFT", 3, -1)
+        frame.bags.texture:SetPoint("BOTTOMRIGHT", frame.bags, "BOTTOMRIGHT", -3, 1)
+        frame.bags.texture:SetVertexColor(.25,.25,.25,1)
+
+        frame.bags:SetScript("OnEnter", function ()
+          frame.bags.backdrop:SetBackdropBorderColor(1,1,.25,1)
+          frame.bags.texture:SetVertexColor(1,1,.25,1)
+        end)
+
+        frame.bags:SetScript("OnLeave", function ()
+          pfUI.utils:CreateBackdrop(frame.bags, default_border)
+          frame.bags.texture:SetVertexColor(.25,.25,.25,1)
+        end)
+
+        frame.bags:SetScript("OnClick", function()
+          if pfUI.bag.left.bagslots:IsShown() then
+            pfUI.bag.left.bagslots:Hide()
+          else
+            pfUI.bag.left.bagslots:Show()
+          end
+        end)
+      end
+
     end
   end
 end)
