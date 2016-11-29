@@ -31,7 +31,7 @@ pfUI:RegisterModule("target", function ()
 
   pfUI.uf.target:RegisterEvent("RAID_TARGET_UPDATE")
   pfUI.uf.target:RegisterEvent("PARTY_LEADER_CHANGED")
-  pfUI.uf.target:RegisterEvent("PARTY_LEADER_CHANGED")
+  pfUI.uf.target:RegisterEvent("PARTY_MEMBERS_CHANGED")
   pfUI.uf.target:RegisterEvent("PARTY_LOOT_METHOD_CHANGED")
   pfUI.uf.target:RegisterEvent("PLAYER_TARGET_CHANGED")
 
@@ -68,7 +68,7 @@ pfUI:RegisterModule("target", function ()
         end
       end
 
-      if event == "PARTY_LEADER_CHANGED" or event == "PLAYER_TARGET_CHANGED" then
+      if event == "PARTY_LEADER_CHANGED" or event == "PARTY_MEMBERS_CHANGED" or event == "PLAYER_TARGET_CHANGED" then
         if UnitIsPartyLeader("target") then
           pfUI.uf.target.hp.leaderIcon:Show()
         else

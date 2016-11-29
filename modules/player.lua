@@ -40,6 +40,7 @@ pfUI:RegisterModule("player", function ()
   pfUI.uf.player:RegisterEvent("UPDATE_FACTION")
   pfUI.uf.player:RegisterEvent("RAID_TARGET_UPDATE")
   pfUI.uf.player:RegisterEvent("PARTY_LEADER_CHANGED")
+  pfUI.uf.player:RegisterEvent("PARTY_MEMBERS_CHANGED")
   pfUI.uf.player:RegisterEvent("PARTY_LOOT_METHOD_CHANGED")
 
   pfUI.uf.player:RegisterEvent("PLAYER_ENTERING_WORLD")
@@ -94,7 +95,7 @@ pfUI:RegisterModule("player", function ()
         if event == "RAID_TARGET_UPDATE" then return end
       end
 
-      if event == "PARTY_LEADER_CHANGED" or event == "PLAYER_ENTERING_WORLD" then
+      if event == "PARTY_LEADER_CHANGED" or event == "PARTY_MEMBERS_CHANGED" or event == "PLAYER_ENTERING_WORLD" then
         if UnitIsPartyLeader("player") then
           pfUI.uf.player.hp.leaderIcon:Show()
         else
