@@ -198,7 +198,7 @@ pfUI:RegisterModule("castbar", function ()
     end
 
     if pfUI.uf.target then
-      pfUI.castbar.target = CreateFrame("Frame")
+      pfUI.castbar.target = CreateFrame("Frame",nil, pfUI.uf.target)
       pfUI.utils:CreateBackdrop(pfUI.castbar.target, default_border)
       pfUI.castbar.target:SetHeight(pfUI_config.global.font_size * 2)
       pfUI.castbar.target:SetPoint("TOPRIGHT",pfUI.uf.target,"BOTTOMRIGHT",0,-default_border*3)
