@@ -253,7 +253,7 @@ pfUI:RegisterModule("nameplates", function ()
               healthbar.castbar.spell:SetNonSpaceWrap(false)
               healthbar.castbar.spell:SetFontObject(GameFontWhite)
               healthbar.castbar.spell:SetTextColor(1,1,1,1)
-              healthbar.castbar.text:SetFont(STANDARD_TEXT_FONT, 10, "OUTLINE")
+              healthbar.castbar.spell:SetFont(STANDARD_TEXT_FONT, 10, "OUTLINE")
             end
 
             if healthbar.castbar.icon == nil then
