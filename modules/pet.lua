@@ -62,6 +62,7 @@ pfUI:RegisterModule("pet", function ()
       local power, powermax = UnitMana("pet"), UnitManaMax("pet")
 
       local happiness = GetPetHappiness()
+      local color = .2, .2, .2
       if happiness == 1 then
         color = { r = 1, g = 0, b = 0 }
       elseif happiness == 2 then
@@ -69,11 +70,26 @@ pfUI:RegisterModule("pet", function ()
       else
         color = { r = 0, g = 1, b = 0 }
       end
-      local r, g, b = (color.r + .5) * .5, (color.g + .5) * .5, (color.b + .5) * .5
+
+      local r, g, b = .2, .2, .2
+      if pfUI_config.unitframes.dark == "1" and color then
+        pfUI.uf.pet.hp.bar:SetStatusBarColor(r, g, b, hp / hpmax / 4 + .75)
+        if pfUI_config.unitframes.pastel == "1" then
+          r, g, b = (color.r + .5) * .5, (color.g + .5) * .5, (color.b + .5) * .5
+        else
+          r, g, b = color.r, color.g, color.b
+        end
+      elseif color then
+        if pfUI_config.unitframes.pastel == "1" then
+          r, g, b = (color.r + .5) * .5, (color.g + .5) * .5, (color.b + .5) * .5
+        else
+          r, g, b = color.r, color.g, color.b
+        end
+        pfUI.uf.pet.hp.bar:SetStatusBarColor(r, g, b, hp / hpmax / 4 + .75)
+      end
+      pfUI.uf.pet.hp.text:SetTextColor(r, g, b)
 
       pfUI.uf.pet.hp.bar:SetMinMaxValues(0, hpmax)
-      pfUI.uf.pet.hp.bar:SetStatusBarColor(r, g, b, hp / hpmax / 4 + .75)
-      pfUI.uf.pet.hp.text:SetTextColor(r+.3,g+.3,b+.3, 1)
       pfUI.uf.pet.hp.text:SetText(UnitName("pet"))
 
       pfUI.uf.pet.hpReal = hp

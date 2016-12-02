@@ -58,9 +58,24 @@ pfUI:RegisterModule("targettarget", function ()
       pfUI.uf.targettarget.hp.bar:SetMinMaxValues(0, UnitHealthMax("targettarget"))
 
       if color then
-        local r, g, b = (color.r + .5) * .5, (color.g + .5) * .5, (color.b + .5) * .5
-        pfUI.uf.targettarget.hp.bar:SetStatusBarColor(r, g, b, UnitHealth("targettarget") / UnitHealthMax("targettarget") / 4 + .75)
-        pfUI.uf.targettarget.hp.text:SetTextColor(r+.3,g+.3,b+.3, 1)
+        local r, g, b = .2, .2, .2
+        if pfUI_config.unitframes.dark == "1" then
+          pfUI.uf.targettarget.hp.bar:SetStatusBarColor(r, g, b, UnitHealth("targettarget") / UnitHealthMax("targettarget") / 4 + .75)
+          if pfUI_config.unitframes.pastel == "1" then
+            r, g, b = (color.r + .5) * .5, (color.g + .5) * .5, (color.b + .5) * .5
+          else
+            r, g, b = color.r, color.g, color.b
+          end
+        else
+          if pfUI_config.unitframes.pastel == "1" then
+            r, g, b = (color.r + .5) * .5, (color.g + .5) * .5, (color.b + .5) * .5
+          else
+            r, g, b = color.r, color.g, color.b
+          end
+          pfUI.uf.targettarget.hp.bar:SetStatusBarColor(r, g, b, UnitHealth("targettarget") / UnitHealthMax("targettarget") / 4 + .75)
+        end
+
+        pfUI.uf.targettarget.hp.text:SetTextColor(r, g, b, 1)
       end
       pfUI.uf.targettarget.hp.text:SetText( UnitName("targettarget"))
 

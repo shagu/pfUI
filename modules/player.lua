@@ -124,7 +124,15 @@ pfUI:RegisterModule("player", function ()
         _, class = UnitClass("player")
         local color = RAID_CLASS_COLORS[class]
 
-        local cr, cg, cb = (color.r + .5) * .5, (color.g + .5) * .5, (color.b + .5) * .5
+        local cr, cg, cb
+        if pfUI_config.unitframes.dark == "1" then
+          cr, cg, cb = .2,.2,.2
+        elseif pfUI_config.unitframes.pastel == "1" then
+          cr, cg, cb = (color.r + .5) * .5, (color.g + .5) * .5, (color.b + .5) * .5
+        else
+          cr, cg, cb = color.r, color.g, color.b
+        end
+
         local perc = hp / hpmax
 
         pfUI.uf.player.hp.bar:SetMinMaxValues(0, hpmax)

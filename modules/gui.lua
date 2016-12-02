@@ -636,6 +636,8 @@ pfUI:RegisterModule("gui", function ()
   -- unitframes
   pfUI.gui.uf = pfUI.gui:CreateConfigTab("UnitFrames")
   pfUI.gui:CreateConfig(pfUI.gui.uf, "Disable pfUI-UnitFrames", pfUI_config.unitframes, "disable", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "Use pastel colors", pfUI_config.unitframes, "pastel", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "Use dark shades for healthbars", pfUI_config.unitframes, "dark", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.uf, "Animation speed", pfUI_config.unitframes, "animation_speed")
   pfUI.gui:CreateConfig(pfUI.gui.uf, "Show portrait", pfUI_config.unitframes, "portrait", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.uf, "Buff size", pfUI_config.unitframes, "buff_size")

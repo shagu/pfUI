@@ -260,10 +260,25 @@ pfUI:RegisterModule("raid", function ()
     end
 
     _, class = UnitClass("raid"..unit.id)
-    local c = RAID_CLASS_COLORS[class]
-    local cr, cg, cb = 0, 0, 0
-    if c then cr, cg, cb =(c.r + .5) * .5, (c.g + .5) * .5, (c.b + .5) * .5 end
-    unit.hp.bar:SetStatusBarColor(cr, cg, cb)
+    local color = RAID_CLASS_COLORS[class]
+
+    local r, g, b = .2, .2, .2
+    if pfUI_config.unitframes.dark == "1" and color then
+      unit.hp.bar:SetStatusBarColor(r, g, b)
+      if pfUI_config.unitframes.pastel == "1" then
+        r, g, b = (color.r + .5) * .5, (color.g + .5) * .5, (color.b + .5) * .5
+      else
+        r, g, b = color.r, color.g, color.b
+      end
+    elseif color then
+      if pfUI_config.unitframes.pastel == "1" then
+        r, g, b = (color.r + .5) * .5, (color.g + .5) * .5, (color.b + .5) * .5
+      else
+        r, g, b = color.r, color.g, color.b
+      end
+      unit.hp.bar:SetStatusBarColor(r, g, b)
+    end
+    unit.caption:SetTextColor(r,g,b)
 
     local p = ManaBarColor[UnitPowerType("raid"..unit.id)]
     local pr, pg, pb = 0, 0, 0
@@ -276,7 +291,9 @@ pfUI:RegisterModule("raid", function ()
         unit.caption:SetTextColor(1,.3,.3)
       else
         unit.caption:SetText(UnitName("raid"..unit.id))
-        unit.caption:SetTextColor(1,1,1)
+        if pfUI_config.unitframes.dark ~= "1" then
+          unit.caption:SetTextColor(1,1,1)
+        end
       end
       unit.caption:SetAllPoints(unit.hp.bar)
     end

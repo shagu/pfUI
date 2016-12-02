@@ -211,11 +211,25 @@ pfUI:RegisterModule("group", function ()
         end
 
         _, class = UnitClass("party"..this.id)
-        local c = RAID_CLASS_COLORS[class]
-        local cr, cg, cb = 0, 0, 0
-        if c then cr, cg, cb =(c.r + .5) * .5, (c.g + .5) * .5, (c.b + .5) * .5 end
-
-        this.hp.bar:SetStatusBarColor(cr, cg, cb)
+        local color = RAID_CLASS_COLORS[class]
+        local r, g, b = .2, .2, .2
+        if pfUI_config.unitframes.dark == "1" and color then
+          this.hp.bar:SetStatusBarColor(r, g, b)
+          if pfUI_config.unitframes.pastel == "1" then
+            r, g, b = (color.r + .5) * .5, (color.g + .5) * .5, (color.b + .5) * .5
+          else
+            r, g, b = color.r, color.g, color.b
+          end
+          this.caption:SetTextColor(r,g,b)
+        elseif color then
+          if pfUI_config.unitframes.pastel == "1" then
+            r, g, b = (color.r + .5) * .5, (color.g + .5) * .5, (color.b + .5) * .5
+          else
+            r, g, b = color.r, color.g, color.b
+          end
+          this.hp.bar:SetStatusBarColor(r, g, b)
+          this.caption:SetTextColor(1,1,1)
+        end
 
         local pcolor = ManaBarColor[UnitPowerType("party"..this.id)]
         this.power.bar:SetStatusBarColor(pcolor.r + .5, pcolor.g +.5, pcolor.b +.5, 1)
