@@ -725,6 +725,7 @@ pfUI:RegisterModule("gui", function ()
   -- nameplates
   pfUI.gui.nameplates = pfUI.gui:CreateConfigTab("Nameplates")
   pfUI.gui:CreateConfig(pfUI.gui.nameplates, "Show castbars:", pfUI_config.nameplates, "showcastbar", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "Show spellname:", pfUI_config.nameplates, "spellname", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.nameplates, "Show debuffs:", pfUI_config.nameplates, "showdebuffs", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.nameplates, "Enable Clickthrough:", pfUI_config.nameplates, "clickthrough", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.nameplates, "Raidicon size:", pfUI_config.nameplates, "raidiconsize")

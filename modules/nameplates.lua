@@ -224,6 +224,15 @@ pfUI:RegisterModule("nameplates", function ()
               healthbar.castbar.text:SetFont(STANDARD_TEXT_FONT, 10, "OUTLINE")
             end
 
+            if healthbar.castbar.spell == nil then
+              healthbar.castbar.spell = healthbar.castbar:CreateFontString("Status", "DIALOG", "GameFontNormal")
+              healthbar.castbar.spell:SetPoint("CENTER", healthbar.castbar, "CENTER")
+              healthbar.castbar.spell:SetNonSpaceWrap(false)
+              healthbar.castbar.spell:SetFontObject(GameFontWhite)
+              healthbar.castbar.spell:SetTextColor(1,1,1,1)
+              healthbar.castbar.text:SetFont(STANDARD_TEXT_FONT, 10, "OUTLINE")
+            end
+
             if healthbar.castbar.icon == nil then
               healthbar.castbar.icon = healthbar.castbar:CreateTexture(nil, "BORDER")
               healthbar.castbar.icon:ClearAllPoints()
@@ -249,6 +258,13 @@ pfUI:RegisterModule("nameplates", function ()
             healthbar.castbar:SetMinMaxValues(0,  pfUI.castbar.target.casterDB[name:GetText()]["casttime"])
             healthbar.castbar:SetValue(GetTime() -  pfUI.castbar.target.casterDB[name:GetText()]["starttime"])
             healthbar.castbar.text:SetText(round( pfUI.castbar.target.casterDB[name:GetText()]["starttime"] +  pfUI.castbar.target.casterDB[name:GetText()]["casttime"] - GetTime(),1))
+            if healthbar.castbar.spell then
+              if pfUI_config.nameplates.spellname == "1" then
+                healthbar.castbar.spell:SetText(pfUI.castbar.target.casterDB[name:GetText()]["cast"])
+              else
+                healthbar.castbar.spell:SetText("")
+              end
+            end
             healthbar.castbar:Show()
 
             if pfUI.castbar.target.casterDB[name:GetText()]["icon"] then
