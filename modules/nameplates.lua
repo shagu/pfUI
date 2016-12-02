@@ -41,6 +41,12 @@ pfUI:RegisterModule("nameplates", function ()
         local healthbar = nameplate:GetChildren()
         local border, glow, name, level, levelicon , raidicon = nameplate:GetRegions()
 
+        if pfUI_config.nameplates.players == "1" then
+          if not pfUI_playerDB[name:GetText()] or not pfUI_playerDB[name:GetText()]["class"] then
+            nameplate:Hide()
+          end
+        end
+
         -- scan player (idle targeting)
         if pfUI.nameplates.targets[name:GetText()] == nil and UnitName("target") == nil then
           TargetByName(name:GetText(), true)
@@ -79,7 +85,7 @@ pfUI:RegisterModule("nameplates", function ()
         -- healthbar
         healthbar:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
         healthbar:ClearAllPoints()
-        healthbar:SetPoint("CENTER", nameplate, "CENTER", 0, -10)
+        healthbar:SetPoint("TOP", nameplate, "TOP", 0, tonumber(pfUI_config.nameplates.vpos))
         healthbar:SetWidth(110)
         healthbar:SetHeight(7)
 
@@ -87,9 +93,24 @@ pfUI:RegisterModule("nameplates", function ()
           healthbar.bg = healthbar:CreateTexture(nil, "BORDER")
           healthbar.bg:SetTexture(0,0,0,0.90)
           healthbar.bg:ClearAllPoints()
-          healthbar.bg:SetPoint("CENTER", nameplate, "CENTER", 0, -10)
+          healthbar.bg:SetPoint("CENTER", healthbar, "CENTER", 0, 0)
           healthbar.bg:SetWidth(healthbar:GetWidth() + 3)
           healthbar.bg:SetHeight(healthbar:GetHeight() + 3)
+        end
+
+        if pfUI_config.nameplates.showhp == "1" then
+          if healthbar.hptext == nil then
+            healthbar.hptext = healthbar:CreateFontString("Status", "DIALOG", "GameFontNormal")
+            healthbar.hptext:SetPoint("RIGHT", healthbar, "RIGHT")
+            healthbar.hptext:SetNonSpaceWrap(false)
+            healthbar.hptext:SetFontObject(GameFontWhite)
+            healthbar.hptext:SetTextColor(1,1,1,1)
+            healthbar.hptext:SetFont(STANDARD_TEXT_FONT, 10)
+          end
+
+          local min, max = healthbar:GetMinMaxValues()
+          local cur = healthbar:GetValue()
+          healthbar.hptext:SetText(cur .. " / " .. max)
         end
 
         -- raidtarget
@@ -143,8 +164,10 @@ pfUI:RegisterModule("nameplates", function ()
         -- adjust font
         name:SetFont(STANDARD_TEXT_FONT,12,"OUTLINE")
         name:SetPoint("BOTTOM", healthbar, "CENTER", 0, 7)
-        level:SetFont(STANDARD_TEXT_FONT,12, "OUTLINE") --
+        level:SetFont(STANDARD_TEXT_FONT,12, "OUTLINE")
+        level:ClearAllPoints()
         level:SetPoint("RIGHT", healthbar, "LEFT", -1, 0)
+        levelicon:ClearAllPoints()
         levelicon:SetPoint("RIGHT", healthbar, "LEFT", -1, 0)
 
         -- tweak the colors to match the rest

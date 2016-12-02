@@ -729,6 +729,9 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui:CreateConfig(pfUI.gui.nameplates, "Show debuffs:", pfUI_config.nameplates, "showdebuffs", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.nameplates, "Enable Clickthrough:", pfUI_config.nameplates, "clickthrough", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.nameplates, "Raidicon size:", pfUI_config.nameplates, "raidiconsize")
+  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "Show Players only:", pfUI_config.nameplates, "players", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "Show Healthpoints:", pfUI_config.nameplates, "showhp", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "Vertical position:", pfUI_config.nameplates, "vpos")
 
   -- thirdparty
   pfUI.gui.thirdparty = pfUI.gui:CreateConfigTab("Thirdparty")
