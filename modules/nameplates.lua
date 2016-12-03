@@ -122,20 +122,19 @@ pfUI:RegisterModule("nameplates", function ()
         -- debuffs
         if nameplate.debuffs == nil then nameplate.debuffs = {} end
         for j=1, 16, 1 do
-          if nameplate.debuffs[j] == nil and j <= 8 then
+          if nameplate.debuffs[j] == nil then
             nameplate.debuffs[j] = nameplate:CreateTexture(nil, "BORDER")
             nameplate.debuffs[j]:SetTexture(0,0,0,0)
             nameplate.debuffs[j]:ClearAllPoints()
-            nameplate.debuffs[j]:SetPoint("BOTTOMLEFT", healthbar, "BOTTOMLEFT", (j-1) * 12, -15)
             nameplate.debuffs[j]:SetWidth(12)
             nameplate.debuffs[j]:SetHeight(12)
-          elseif nameplate.debuffs[j] == nil and j > 8 then
-            nameplate.debuffs[j] = nameplate:CreateTexture(nil, "BORDER")
-            nameplate.debuffs[j]:SetTexture(0,0,0,0)
-            nameplate.debuffs[j]:ClearAllPoints()
-            nameplate.debuffs[j]:SetPoint("BOTTOMLEFT", healthbar, "BOTTOMLEFT", (j-9) * 12, -28)
-            nameplate.debuffs[j]:SetWidth(12)
-            nameplate.debuffs[j]:SetHeight(12)
+            if j == 1 then
+              nameplate.debuffs[j]:SetPoint("TOPLEFT", healthbar, "BOTTOMLEFT", 0, -3)
+            elseif j <= 8 then
+              nameplate.debuffs[j]:SetPoint("LEFT", nameplate.debuffs[j-1], "RIGHT", 1, 0)
+            elseif j > 8 then
+              nameplate.debuffs[j]:SetPoint("TOPLEFT", nameplate.debuffs[1], "BOTTOMLEFT", (j-9) * 13, -1)
+            end
           end
         end
 
@@ -289,6 +288,7 @@ pfUI:RegisterModule("nameplates", function ()
               end
             end
             healthbar.castbar:Show()
+            nameplate.debuffs[1]:SetPoint("TOPLEFT", healthbar.castbar, "BOTTOMLEFT", 0, -3)
 
             if pfUI.castbar.target.casterDB[name:GetText()]["icon"] then
               healthbar.castbar.icon:SetTexture("Interface\\Icons\\" ..  pfUI.castbar.target.casterDB[name:GetText()]["icon"])
@@ -297,6 +297,7 @@ pfUI:RegisterModule("nameplates", function ()
           end
         elseif healthbar.castbar then
           healthbar.castbar:Hide()
+          nameplate.debuffs[1]:SetPoint("TOPLEFT", healthbar, "BOTTOMLEFT", 0, -3)
         end
       end
     end
