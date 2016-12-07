@@ -273,6 +273,7 @@ pfUI:RegisterModule("gui", function ()
 
             pfUI_config.position[frame:GetName()]["xpos"] = xpos
             pfUI_config.position[frame:GetName()]["ypos"] = ypos
+            pfUI.gui.settingChanged = true
         end)
 
         if pfUI.gitter:IsShown() then
