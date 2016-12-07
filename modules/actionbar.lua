@@ -415,8 +415,12 @@ pfUI:RegisterModule("actionbar", function ()
     frame.hover:SetParent(frame)
     frame.hover:SetPoint("TOPLEFT", frame, "TOPLEFT", -5, 5)
     frame.hover:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", 5, -5)
-
     frame.hover:SetFrameStrata("BACKGROUND")
+
+    frame.hover:RegisterEvent("CVAR_UPDATE")
+    frame.hover:SetScript("OnEvent", function()
+      this.x = nil
+    end)
 
     frame.hover:SetScript("OnUpdate", function()
       -- reset frame positions to UIParent
@@ -436,10 +440,10 @@ pfUI:RegisterModule("actionbar", function ()
         local fymax = fy-this:GetHeight()
 
         this.x = fx
-        this.xmax = fxmax
+        this.xmax = floor(fxmax)
 
         this.y = fy
-        this.ymax = fymax
+        this.ymax = floor(fymax)
       end
 
       -- get cursor position
