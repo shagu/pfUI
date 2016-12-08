@@ -554,4 +554,11 @@ pfUI:RegisterModule("chat", function ()
       end
     end
   end
+
+  -- Hide Right Chat panel
+  if pfUI_config.panel.right.enable == "0" then
+    pfUI.chat.right:Hide()
+    pfUI.chat.right.panelTop:Hide()
+  end
+
 end)
