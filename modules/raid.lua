@@ -331,7 +331,7 @@ pfUI:RegisterModule("raid", function ()
 
       pfUI.uf.raid[i]:SetWidth(50)
       pfUI.uf.raid[i]:SetHeight(30 + 2*default_border + pfUI_config.unitframes.raid.pspace)
-      pfUI.uf.raid[i]:SetPoint("BOTTOMLEFT", (r-1) * (54+default_border) + 5, 160 + ((g-1)*(37+default_border))+default_border)
+      pfUI.uf.raid[i]:SetPoint("BOTTOMLEFT", (r-1) * (54+default_border) + 5, pfUI_config.chat.left.height + 10 + ((g-1)*(37+default_border))+default_border)
       pfUI.utils:UpdateMovable(pfUI.uf.raid[i])
       pfUI.uf.raid[i]:Hide()
       pfUI.uf.raid[i].id = 0
