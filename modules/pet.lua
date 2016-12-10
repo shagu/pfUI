@@ -8,7 +8,7 @@ pfUI:RegisterModule("pet", function ()
   end
 
   pfUI.uf.pet = CreateFrame("Button","pfPet",UIParent)
-
+  pfUI.uf.pet:SetFrameStrata("LOW")
   pfUI.uf.pet:SetWidth(100)
   pfUI.uf.pet:SetHeight(20 + 2*default_border + pfUI_config.unitframes.pet.pspace)
   pfUI.uf.pet:ClearAllPoints()
