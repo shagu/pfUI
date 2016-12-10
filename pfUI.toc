@@ -25,6 +25,7 @@ env\hacks.lua
 # modules
 modules\config.lua
 modules\gui.lua
+modules\pixelperfect.lua
 modules\actionbar.lua
 modules\chat.lua
 modules\font.lua
