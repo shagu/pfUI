@@ -1,8 +1,13 @@
 pfUI:RegisterModule("xpbar", function ()
   pfUI.xp = CreateFrame("Frame",nil, UIParent)
   pfUI.xp:SetWidth(5)
-  pfUI.xp:SetPoint("TOPLEFT",pfUI.chat.left,"TOPRIGHT", pfUI_config.appearance.border.default*2, 0)
-  pfUI.xp:SetPoint("BOTTOMLEFT",pfUI.chat.left,"BOTTOMRIGHT", pfUI_config.appearance.border.default*2, 0)
+  if pfUI.chat then
+    pfUI.xp:SetPoint("TOPLEFT", pfUI.chat.left, "TOPRIGHT", pfUI_config.appearance.border.default*2, 0)
+    pfUI.xp:SetPoint("BOTTOMLEFT", pfUI.chat.left, "BOTTOMRIGHT", pfUI_config.appearance.border.default*2, 0)
+  else
+    pfUI.xp:SetPoint("TOPLEFT", UIParent, "TOPLEFT", 0, 0)
+    pfUI.xp:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", 0, 0)
+  end
   pfUI.xp:SetFrameStrata("BACKGROUND")
   pfUI.utils:CreateBackdrop(pfUI.xp)
   pfUI.xp:RegisterEvent("PLAYER_LEVEL_UP")
@@ -96,8 +101,13 @@ pfUI:RegisterModule("xpbar", function ()
 
   pfUI.rep = CreateFrame("Frame",nil, UIParent)
   pfUI.rep:SetWidth(5)
-  pfUI.rep:SetPoint("TOPRIGHT",pfUI.chat.right,"TOPLEFT", -pfUI_config.appearance.border.default*2, 0)
-  pfUI.rep:SetPoint("BOTTOMRIGHT",pfUI.chat.right,"BOTTOMLEFT",-pfUI_config.appearance.border.default*2, 0)
+  if pfUI.chat then
+    pfUI.rep:SetPoint("TOPRIGHT",pfUI.chat.right,"TOPLEFT", -pfUI_config.appearance.border.default*2, 0)
+    pfUI.rep:SetPoint("BOTTOMRIGHT",pfUI.chat.right,"BOTTOMLEFT",-pfUI_config.appearance.border.default*2, 0)
+  else
+    pfUI.rep:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", 0, 0)
+    pfUI.rep:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", 0, 0)
+  end
   pfUI.rep:SetFrameStrata("BACKGROUND")
   pfUI.utils:CreateBackdrop(pfUI.rep)
 
