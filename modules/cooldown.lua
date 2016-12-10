@@ -14,6 +14,9 @@ pfUI:RegisterModule("cooldown", function ()
       if this.next > GetTime() then return end
       this.next = GetTime() + .1
 
+      -- fix own alpha value (should be inherited, but isn't)
+      this:SetAlpha(this:GetParent():GetAlpha())
+
       local remaining = this.duration - (GetTime() - this.start)
       if remaining >= 0 then
         local r, g, b, a = 1, 1, 1, 1
