@@ -419,6 +419,11 @@ pfUI:RegisterModule("gui", function ()
           local r,g,b = ColorPickerFrame:GetColorRGB()
           local a = 1 - OpacitySliderFrame:GetValue()
 
+          r = round(r, 1)
+          g = round(g, 1)
+          b = round(b, 1)
+          a = round(a, 1)
+
           preview:SetTexture(r,g,b,a)
 
           if not this:GetParent():IsShown() then
