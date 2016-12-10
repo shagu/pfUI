@@ -474,7 +474,13 @@ pfUI:RegisterModule("chat", function ()
   end
 
   pfUI.chat.editbox:ClearAllPoints()
-  pfUI.chat.editbox:SetPoint("BOTTOM", pfUI.bars.bottom, "TOP", 0, default_border*4)
+  local anchor
+  if pfUI.bars then
+    anchor = pfUI.bars.bottom
+  else
+    anchor = pfUI.chat.left
+  end
+  pfUI.chat.editbox:SetPoint("BOTTOM", anchor, "TOP", 0, default_border*4)
   pfUI.utils:UpdateMovable(pfUI.chat.editbox)
 
   if pfUI_config.chat.text.input_width == "0" then
