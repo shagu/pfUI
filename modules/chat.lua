@@ -553,7 +553,10 @@ pfUI:RegisterModule("chat", function ()
         if pfUI_config.chat.text.time == "1" then
           local left = string.sub(pfUI_config.chat.text.timebracket, 1, 1)
           local right = string.sub(pfUI_config.chat.text.timebracket, 2, 2)
-          text = "|cff" .. pfUI_config.chat.text.timecolor .. left .. date(pfUI_config.chat.text.timeformat) .. right .. "|r " .. text
+
+          local r,g,b,a = strsplit(",", pfUI_config.chat.text.timecolor)
+          local chex = string.format("%02x%02x%02x%02x", a*255, r*255, g*255, b*255)
+          text = "|c" .. chex .. left .. date(pfUI_config.chat.text.timeformat) .. right .. "|r " .. text
         end
 
         getglobal("ChatFrame"..i).HookAddMessage(frame, text, unpack(arg))
