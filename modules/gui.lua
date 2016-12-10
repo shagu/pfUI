@@ -398,6 +398,49 @@ pfUI:RegisterModule("gui", function ()
     frame.category = category
     frame.config = config
 
+    if widget == "color" then
+      -- color picker
+      frame.color = CreateFrame("Button", nil, frame)
+      frame.color:SetWidth(12)
+      frame.color:SetHeight(12)
+      pfUI.utils:CreateBackdrop(frame.color)
+      frame.color:SetPoint("TOPRIGHT" , 0, -4)
+      frame.color.prev = frame.color.backdrop:CreateTexture("OVERLAY")
+      frame.color.prev:SetAllPoints(frame.color)
+
+      local cr, cg, cb, ca = strsplit(",", category[config])
+      frame.color.prev:SetTexture(cr,cg,cb,ca)
+
+      frame.color:SetScript("OnClick", function()
+        local cr, cg, cb, ca = strsplit(",", category[config])
+        local preview = this.prev
+
+        function ColorPickerFrame.func()
+          local r,g,b = ColorPickerFrame:GetColorRGB()
+          local a = 1 - OpacitySliderFrame:GetValue()
+
+          preview:SetTexture(r,g,b,a)
+
+          if not this:GetParent():IsShown() then
+            category[config] = r .. "," .. g .. "," .. b .. "," .. a
+            pfUI.gui.settingChanged = true
+          end
+        end
+
+        function ColorPickerFrame.cancelFunc()
+          preview:SetTexture(cr,cg,cb,ca)
+        end
+
+        ColorPickerFrame.opacityFunc = ColorPickerFrame.func
+        ColorPickerFrame.element = this
+        ColorPickerFrame.opacity = 1 - ca
+        ColorPickerFrame.hasOpacity = 1
+        ColorPickerFrame:SetColorRGB(cr,cg,cb)
+        ColorPickerFrame:Show()
+        ColorPickerFrame:SetFrameStrata("DIALOG")
+      end)
+    end
+
     if widget == "warning" then
       pfUI.utils:CreateBackdrop(frame, nil, true)
       frame:SetBackdropBorderColor(1,.5,.5)
