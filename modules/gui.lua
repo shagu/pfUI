@@ -764,8 +764,7 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui:CreateConfig(pfUI.gui.chat, "Right chat width:", pfUI_config.chat.right, "width")
   pfUI.gui:CreateConfig(pfUI.gui.chat, "Right chat height:", pfUI_config.chat.right, "height")
   pfUI.gui:CreateConfig(pfUI.gui.chat, "Use custom background:", pfUI_config.chat.global, "custombg", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.chat, "Background color:", pfUI_config.chat.global, "bgcolor")
-  pfUI.gui:CreateConfig(pfUI.gui.chat, "Background transparency:", pfUI_config.chat.global, "bgtransp")
+  pfUI.gui:CreateConfig(pfUI.gui.chat, "Background color:", pfUI_config.chat.global, "background", "color")
 
   -- nameplates
   pfUI.gui.nameplates = pfUI.gui:CreateConfigTab("Nameplates")

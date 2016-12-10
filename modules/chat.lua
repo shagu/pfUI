@@ -14,8 +14,8 @@ pfUI:RegisterModule("chat", function ()
   pfUI.utils:UpdateMovable(pfUI.chat.left)
   pfUI.utils:CreateBackdrop(pfUI.chat.left, default_border, nil, true)
   if pfUI_config.chat.global.custombg == "1" then
-    local r, g, b = strsplit(",", pfUI_config.chat.global.bgcolor)
-    pfUI.chat.left.backdrop:SetBackdropColor(tonumber(r), tonumber(g), tonumber(b), tonumber(pfUI_config.chat.global.bgtransp))
+    local r, g, b, a = strsplit(",", pfUI_config.chat.global.background)
+    pfUI.chat.left.backdrop:SetBackdropColor(tonumber(r), tonumber(g), tonumber(b), tonumber(a))
   end
 
   pfUI.chat.left.panelTop = CreateFrame("Frame", "leftChatPanelTop", pfUI.chat.left)
@@ -166,8 +166,8 @@ pfUI:RegisterModule("chat", function ()
   pfUI.utils:UpdateMovable(pfUI.chat.right)
   pfUI.utils:CreateBackdrop(pfUI.chat.right, default_border, nil, true)
   if pfUI_config.chat.global.custombg == "1" then
-    local r, g, b = strsplit(",", pfUI_config.chat.global.bgcolor)
-    pfUI.chat.right.backdrop:SetBackdropColor(tonumber(r), tonumber(g), tonumber(b), tonumber(pfUI_config.chat.global.bgtransp))
+    local r, g, b, a = strsplit(",", pfUI_config.chat.global.background)
+    pfUI.chat.right.backdrop:SetBackdropColor(tonumber(r), tonumber(g), tonumber(b), tonumber(a))
   end
 
   pfUI.chat.right.panelTop = CreateFrame("Frame", "rightChatPanelTop", pfUI.chat.right)
