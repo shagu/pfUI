@@ -214,7 +214,7 @@ pfUI:RegisterModule("nameplates", function ()
         end
 
         -- show castbar
-        if pfUI_config.nameplates["showcastbar"] == "1" and pfUI.castbar.target.casterDB[name:GetText()] ~= nil and pfUI.castbar.target.casterDB[name:GetText()]["cast"] ~= nil then
+        if pfUI.castbar and pfUI_config.nameplates["showcastbar"] == "1" and pfUI.castbar.target.casterDB[name:GetText()] ~= nil and pfUI.castbar.target.casterDB[name:GetText()]["cast"] ~= nil then
 
           -- create frames
           if healthbar.castbar == nil then
