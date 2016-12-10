@@ -37,11 +37,10 @@ pfUI:RegisterModule("actionbar", function ()
         this.rangeTimer = this.rangeTimer - elapsed
         if ( this.rangeTimer <= 0.1 ) then
           if ( IsActionInRange( ActionButton_GetPagedID(this)) == 0 ) then
-            getglobal(this:GetName() .. 'Icon'):SetVertexColor(1.0, 0.1, 0.1)
-            getglobal(this:GetName() .. 'NormalTexture'):SetVertexColor(1.0, 0.1, 0.1)
+            local r,g,b,a = strsplit(",", pfUI_config.bars.rangecolor)
+            getglobal(this:GetName() .. 'Icon'):SetVertexColor(r,g,b,a)
           else
             getglobal(this:GetName() .. 'Icon'):SetVertexColor(1,1,1)
-            getglobal(this:GetName() .. 'NormalTexture'):SetVertexColor(1,1,1)
           end
           this.rangeTimer = TOOLTIP_UPDATE_TIME
         end
