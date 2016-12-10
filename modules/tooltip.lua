@@ -1,5 +1,5 @@
 pfUI:RegisterModule("tooltip", function ()
-pfUI.utils:CreateBackdrop(  GameTooltip)
+pfUI.utils:CreateBackdrop(GameTooltip)
 
   if pfUI_config.tooltip.position == "cursor" then
     function GameTooltip_SetDefaultAnchor(tooltip, parent)

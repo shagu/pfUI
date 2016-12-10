@@ -78,6 +78,18 @@ pfUI:RegisterModule("skin", function ()
 pfUI.utils:CreateBackdrop(ShoppingTooltip1)
 pfUI.utils:CreateBackdrop(ShoppingTooltip2)
 
+ShoppingTooltip1:SetScript("OnShow", function()
+  local a, b, c, _, _ = this:GetPoint()
+  local border = tonumber(pfUI_config.appearance.border.default)
+  this:SetPoint(a, b, c, border*2+1, 0)
+end)
+
+ShoppingTooltip2:SetScript("OnShow", function()
+  local a, b, c, _, _ = this:GetPoint()
+  local border = tonumber(pfUI_config.appearance.border.default)
+  this:SetPoint(a, b, c, border*2+1, 0)
+end)
+
 pfUI.utils:CreateBackdrop(TicketStatusFrame)
   TicketStatusFrame:ClearAllPoints()
   TicketStatusFrame:SetPoint("TOP", 0, -5)
