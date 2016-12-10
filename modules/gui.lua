@@ -630,9 +630,11 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui:CreateConfig(pfUI.gui.modules, "|cffff5555Warning:\n|cffffaaaa Disabling modules is highly experimental.\nDo not disable modules if you don't know how to fix errors.|r", nil, nil, "warning")
 
   for i,m in pairs(pfUI.modules) do
-    -- create disabled entry if not existing and display
-    pfUI:UpdateConfig("disabled", nil, m, "0")
-    pfUI.gui:CreateConfig(pfUI.gui.modules, "Disable " .. m, pfUI_config.disabled, m, "checkbox")
+    if m ~= "gui" then
+      -- create disabled entry if not existing and display
+      pfUI:UpdateConfig("disabled", nil, m, "0")
+      pfUI.gui:CreateConfig(pfUI.gui.modules, "Disable " .. m, pfUI_config.disabled, m, "checkbox")
+    end
   end
 
   -- unitframes
