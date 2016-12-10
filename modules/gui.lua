@@ -708,7 +708,6 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui:CreateConfig(pfUI.gui.castbar, "Hide pfUI player castbar:", pfUI_config.castbar.player, "hide_pfui", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.castbar, "Hide pfUI target castbar:", pfUI_config.castbar.target, "hide_pfui", "checkbox")
 
-
   -- chat
   pfUI.gui.chat = pfUI.gui:CreateConfigTab("Chat")
   pfUI.gui:CreateConfig(pfUI.gui.chat, "Chat inputbox width:", pfUI_config.chat.text, "input_width")
@@ -717,9 +716,10 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui:CreateConfig(pfUI.gui.chat, "Timestamp format:", pfUI_config.chat.text, "timeformat")
   pfUI.gui:CreateConfig(pfUI.gui.chat, "Timestamp brackets:", pfUI_config.chat.text, "timebracket")
   pfUI.gui:CreateConfig(pfUI.gui.chat, "Timestamp color:", pfUI_config.chat.text, "timecolor")
+  pfUI.gui:CreateConfig(pfUI.gui.chat, "Left chat width:", pfUI_config.chat.left, "width")
   pfUI.gui:CreateConfig(pfUI.gui.chat, "Left chat height:", pfUI_config.chat.left, "height")
+  pfUI.gui:CreateConfig(pfUI.gui.chat, "Right chat width:", pfUI_config.chat.right, "width")
   pfUI.gui:CreateConfig(pfUI.gui.chat, "Right chat height:", pfUI_config.chat.right, "height")
-
   pfUI.gui:CreateConfig(pfUI.gui.chat, "Use custom background:", pfUI_config.chat.global, "custombg", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.chat, "Background color:", pfUI_config.chat.global, "bgcolor")
   pfUI.gui:CreateConfig(pfUI.gui.chat, "Background transparency:", pfUI_config.chat.global, "bgtransp")
