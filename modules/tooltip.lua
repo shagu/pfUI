@@ -42,9 +42,15 @@ pfUI.utils:CreateBackdrop(  GameTooltip)
       if GameTooltip:GetAnchorType() == "ANCHOR_NONE" then
         GameTooltip:ClearAllPoints()
         if pfUI_config.tooltip.position == "bottom" then
-          GameTooltip:SetPoint("BOTTOMRIGHT",pfUI.panel.right,"TOPRIGHT",0,pfUI_config.appearance.border.default*2)
+          if pfUI.panel then
+            GameTooltip:SetPoint("BOTTOMRIGHT", pfUI.panel.right, "TOPRIGHT", 0, pfUI_config.appearance.border.default*2)
+          else
+            GameTooltip:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", 0, -pfUI_config.appearance.border.default*2)
+          end
         elseif pfUI_config.tooltip.position == "chat" then
-          GameTooltip:SetPoint("BOTTOMRIGHT",pfUI.chat.right,"TOPRIGHT",0,pfUI_config.appearance.border.default*2)
+          local anchor = ChatFrame3
+          if pfUI.chat then anchor = pfUI.chat.right end
+          GameTooltip:SetPoint("BOTTOMRIGHT", anchor, "TOPRIGHT", 0, pfUI_config.appearance.border.default*2)
         end
       end
     end)
