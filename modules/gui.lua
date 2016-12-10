@@ -627,8 +627,6 @@ pfUI:RegisterModule("gui", function ()
 
   -- modules
   pfUI.gui.modules = pfUI.gui:CreateConfigTab("Modules")
-  pfUI.gui:CreateConfig(pfUI.gui.modules, "|cffff5555Warning:\n|cffffaaaa Disabling modules is highly experimental.\nDo not disable modules if you don't know how to fix errors.|r", nil, nil, "warning")
-
   for i,m in pairs(pfUI.modules) do
     if m ~= "gui" then
       -- create disabled entry if not existing and display
