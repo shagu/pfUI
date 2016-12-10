@@ -44,7 +44,7 @@ pfUI:RegisterModule("buff", function ()
   function pfUI.buff:UpdateSkin()
     -- buff positions
     TemporaryEnchantFrame:ClearAllPoints()
-    TemporaryEnchantFrame:SetPoint("TOPRIGHT", pfUI.minimap, "TOPLEFT", -25,0)
+    TemporaryEnchantFrame:SetPoint("TOPRIGHT", pfUI.minimap or Minimap, "TOPLEFT", -25,0)
 
     -- weapon enchants
     for _,buff in pairs ({TempEnchant1,TempEnchant2}) do
