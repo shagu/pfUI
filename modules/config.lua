@@ -3,7 +3,7 @@ pfUI_config = {}
 
 function pfUI:LoadConfig()
   --                MODULE        SUBGROUP   ENTRY               VALUE
-  pfUI:UpdateConfig("global",     nil,       "font_size",        "10")
+  pfUI:UpdateConfig("global",     nil,       "font_size",        "12")
   pfUI:UpdateConfig("global",     nil,       "font_default",     "arial")
   pfUI:UpdateConfig("global",     nil,       "font_square",      "homespun")
   pfUI:UpdateConfig("global",     nil,       "font_combat",      "diediedie")
@@ -56,7 +56,7 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("unitframes", "raid",    "buffs_classonly",  "0")
   pfUI:UpdateConfig("unitframes", "raid",    "debuffs_enable",   "0")
   pfUI:UpdateConfig("unitframes", "raid",    "debuffs_class",    "0")
-  pfUI:UpdateConfig("bars",       nil,       "icon_size",        "18")
+  pfUI:UpdateConfig("bars",       nil,       "icon_size",        "24")
   pfUI:UpdateConfig("bars",       nil,       "background",       "1")
   pfUI:UpdateConfig("bars",       nil,       "hide_time",        "1")
   pfUI:UpdateConfig("bars",       nil,       "hide_bottom",      "0")
