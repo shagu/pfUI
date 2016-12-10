@@ -18,13 +18,12 @@ pfUI:RegisterModule("minimap", function ()
   pfUI.utils:CreateBackdrop(pfUI.minimap)
   pfUI.minimap:SetPoint("TOPRIGHT", UIParent, -5, -5)
   pfUI.utils:UpdateMovable(pfUI.minimap)
-  pfUI.minimap:SetWidth(Minimap:GetWidth())
-  pfUI.minimap:SetHeight(Minimap:GetHeight())
+  pfUI.minimap:SetWidth(140)
+  pfUI.minimap:SetHeight(140)
   pfUI.minimap:SetFrameStrata("BACKGROUND")
 
   Minimap:SetParent(pfUI.minimap)
-  Minimap:ClearAllPoints()
-  Minimap:SetAllPoints(pfUI.minimap)
+  Minimap:SetPoint("CENTER", pfUI.minimap, "CENTER", 0.5, -.5)
 
   -- Set new mail frame position to top right corner of the minimap
   -- mostly taken from TukUI
@@ -34,7 +33,6 @@ pfUI:RegisterModule("minimap", function ()
   MiniMapMailIcon:SetTexture("Interface\\AddOns\\pfUI\\img\\mail")
 
   MiniMapTrackingFrame:SetFrameStrata("LOW")
-
 
   -- Coordinates in minimap
   -- Create location text frame in bottom left corner of minimap
