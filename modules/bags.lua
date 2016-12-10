@@ -168,15 +168,25 @@ pfUI:RegisterModule("bags", function ()
 
     if object == "bank" then
       if not pfUI.bag.left then pfUI.bag.left = CreateFrame("Frame", "pfBank", nil) end
-      pfUI.bag.left:SetPoint("BOTTOMLEFT", pfUI.chat.left, "BOTTOMLEFT", 0, 0)
-      pfUI.bag.left:SetPoint("BOTTOMRIGHT", pfUI.chat.left, "BOTTOMRIGHT", 0, 0)
+      if pfUI.chat then
+        pfUI.bag.left:SetPoint("BOTTOMLEFT", pfUI.chat.left, "BOTTOMLEFT", 0, 0)
+        pfUI.bag.left:SetPoint("BOTTOMRIGHT", pfUI.chat.left, "BOTTOMRIGHT", 0, 0)
+      else
+        pfUI.bag.left:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", 5, 5)
+        pfUI.bag.left:SetWidth(pfUI_config.chat.left.width)
+      end
       pfUI.bag.left:EnableMouse(1)
       iterate = pfUI.BANK
       frame = pfUI.bag.left
     else
       if not pfUI.bag.right then pfUI.bag.right = CreateFrame("Frame", "pfBag", nil) end
-      pfUI.bag.right:SetPoint("BOTTOMLEFT", pfUI.chat.right, "BOTTOMLEFT", 0, 0)
-      pfUI.bag.right:SetPoint("BOTTOMRIGHT", pfUI.chat.right, "BOTTOMRIGHT", 0, 0)
+      if pfUI.chat then
+        pfUI.bag.right:SetPoint("BOTTOMLEFT", pfUI.chat.right, "BOTTOMLEFT", 0, 0)
+        pfUI.bag.right:SetPoint("BOTTOMRIGHT", pfUI.chat.right, "BOTTOMRIGHT", 0, 0)
+      else
+        pfUI.bag.right:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", -5, 5)
+        pfUI.bag.right:SetWidth(pfUI_config.chat.right.width)
+      end
       pfUI.bag.right:EnableMouse(1)
       iterate = pfUI.BACKPACK
       frame = pfUI.bag.right
@@ -220,7 +230,8 @@ pfUI:RegisterModule("bags", function ()
     end
 
     if x > 0 then y = y + 1 end
-    frame:SetHeight( default_border*2 + y*(pfUI.bag.button_size+default_border*3) + topspace + pfUI.panel.right:GetHeight())
+    if pfUI.panel then topspace = topspace + pfUI.panel.right:GetHeight() end
+    frame:SetHeight( default_border*2 + y*(pfUI.bag.button_size+default_border*3) + topspace)
 
     frame:SetScript("OnShow", function() pfUI.bag:CreateBags(object) end)
     frame:SetScript("OnHide", function() pfUI.bag:CreateBags(object) end)
