@@ -26,6 +26,30 @@ pfUI:RegisterModule("actionbar", function ()
     Hook_HideBonusActionBar()
   end
 
+  if pfUI_config.bars.glowrange == "1" then
+    if not Hook_ActionButton_OnUpdate then
+      Hook_ActionButton_OnUpdate = ActionButton_OnUpdate
+    end
+
+    function ActionButton_OnUpdate(elapsed)
+      -- Handle range indicator
+      if ( this.rangeTimer ) then
+        this.rangeTimer = this.rangeTimer - elapsed
+        if ( this.rangeTimer <= 0.1 ) then
+          if ( IsActionInRange( ActionButton_GetPagedID(this)) == 0 ) then
+            getglobal(this:GetName() .. 'Icon'):SetVertexColor(1.0, 0.1, 0.1)
+            getglobal(this:GetName() .. 'NormalTexture'):SetVertexColor(1.0, 0.1, 0.1)
+          else
+            getglobal(this:GetName() .. 'Icon'):SetVertexColor(1,1,1)
+            getglobal(this:GetName() .. 'NormalTexture'):SetVertexColor(1,1,1)
+          end
+          this.rangeTimer = TOOLTIP_UPDATE_TIME
+        end
+      end
+      Hook_ActionButton_OnUpdate(elapsed)
+    end
+  end
+
   function ActionButton_GetPagedID(button)
     if ( button.isBonus and CURRENT_ACTIONBAR_PAGE == 1 ) then
       local offset = GetBonusBarOffset()
