@@ -317,6 +317,9 @@ pfUI:RegisterModule("panel", function ()
   end
 
   function pfUI.panel:OutputPanel(entry, value, tooltip, func)
+    -- return if not yet fully initialized
+    if not pfUI.panel.minimap then return end
+
     local panels = {
       { pfUI.panel.left.left,    pfUI_config.panel.left.left },
       { pfUI.panel.left.center,  pfUI_config.panel.left.center },
@@ -346,13 +349,23 @@ pfUI:RegisterModule("panel", function ()
     end
   end
 
+
   pfUI.panel.left = CreateFrame("Frame", "pfPanelLeft", pfUI.panel)
-  pfUI.panel.left:SetScale(pfUI.chat.left:GetScale())
+
+
   pfUI.panel.left:SetFrameStrata("HIGH")
   pfUI.panel.left:ClearAllPoints()
+
+  if pfUI.chat then
+    pfUI.panel.left:SetScale(pfUI.chat.left:GetScale())
+    pfUI.panel.left:SetPoint("BOTTOMLEFT", pfUI.chat.left, "BOTTOMLEFT", 2, 2)
+    pfUI.panel.left:SetPoint("BOTTOMRIGHT", pfUI.chat.left, "BOTTOMRIGHT", -2, 2)
+  else
+    pfUI.panel.left:SetWidth(pfUI_config.chat.left.width)
+    pfUI.panel.left:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", 5, 5)
+  end
+
   pfUI.panel.left:SetHeight(pfUI_config.global.font_size+default_border*2)
-  pfUI.panel.left:SetPoint("BOTTOMLEFT", pfUI.chat.left, "BOTTOMLEFT", 2, 2)
-  pfUI.panel.left:SetPoint("BOTTOMRIGHT", pfUI.chat.left, "BOTTOMRIGHT", -2, 2)
   pfUI.utils:CreateBackdrop(pfUI.panel.left, default_border, nil, true)
 
   pfUI.panel.left.hide = CreateFrame("Button", nil, pfUI.panel.left)
@@ -411,12 +424,17 @@ pfUI:RegisterModule("panel", function ()
   pfUI.panel.left.right.text:SetText("[DUMMY]")
 
   pfUI.panel.right = CreateFrame("Frame", "pfPanelRight", pfUI.panel)
-  pfUI.panel.right:SetScale(pfUI.chat.right:GetScale())
   pfUI.panel.right:SetFrameStrata("HIGH")
   pfUI.panel.right:ClearAllPoints()
+  if pfUI.chat then
+    pfUI.panel.right:SetScale(pfUI.chat.left:GetScale())
+    pfUI.panel.right:SetPoint("BOTTOMLEFT", pfUI.chat.right, "BOTTOMLEFT", 2, 2)
+    pfUI.panel.right:SetPoint("BOTTOMRIGHT", pfUI.chat.right, "BOTTOMRIGHT", -2, 2)
+  else
+    pfUI.panel.right:SetWidth(pfUI_config.chat.right.width)
+    pfUI.panel.right:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", -5, 5)
+  end
   pfUI.panel.right:SetHeight(pfUI_config.global.font_size+default_border*2)
-  pfUI.panel.right:SetPoint("BOTTOMLEFT", pfUI.chat.right, "BOTTOMLEFT", 2, 2)
-  pfUI.panel.right:SetPoint("BOTTOMRIGHT", pfUI.chat.right, "BOTTOMRIGHT", -2, 2)
   pfUI.utils:CreateBackdrop(pfUI.panel.right, default_border, nil, true)
 
   pfUI.panel.right.hide = CreateFrame("Button", nil, pfUI.panel.right)
@@ -476,10 +494,15 @@ pfUI:RegisterModule("panel", function ()
 
   pfUI.panel.minimap = CreateFrame("Button", "pfPanelMinimap", UIParent)
   pfUI.utils:CreateBackdrop(pfUI.panel.minimap, default_border)
-  pfUI.panel.minimap:SetPoint("TOP", pfUI.minimap, "BOTTOM", 0 , -default_border*3)
   pfUI.utils:UpdateMovable(pfUI.panel.minimap)
   pfUI.panel.minimap:SetHeight(pfUI_config.global.font_size+default_border*2)
-  pfUI.panel.minimap:SetWidth(pfUI.minimap:GetWidth())
+  if pfUI.minimap then
+    pfUI.panel.minimap:SetPoint("TOP", pfUI.minimap, "BOTTOM", 0 , -default_border*3)
+    pfUI.panel.minimap:SetWidth(pfUI.minimap:GetWidth())
+  else
+    pfUI.panel.minimap:SetWidth(200)
+    pfUI.panel.minimap:SetPoint("TOP", UIParent, "TOP", 0, -5)
+  end
   pfUI.panel.minimap:SetFrameStrata("BACKGROUND")
   pfUI.panel.minimap.text = pfUI.panel.minimap:CreateFontString("MinimapZoneText", "LOW", "GameFontNormal")
   pfUI.panel.minimap.text:SetFont("Interface\\AddOns\\pfUI\\fonts\\" .. pfUI_config.global.font_default .. ".ttf", pfUI_config.global.font_size, "OUTLINE")
