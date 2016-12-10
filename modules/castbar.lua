@@ -31,7 +31,8 @@ pfUI:RegisterModule("castbar", function ()
       pfUI.castbar.player.bar:SetAllPoints(pfUI.castbar.player)
       pfUI.castbar.player.bar:SetMinMaxValues(0, 100)
       pfUI.castbar.player.bar:SetValue(20)
-      pfUI.castbar.player.bar:SetStatusBarColor(.7,.7,.9,.8)
+      local r,g,b,a = strsplit(",", pfUI_config.appearance.castbar.castbarcolor)
+      pfUI.castbar.player.bar:SetStatusBarColor(r,g,b,a)
 
       -- text left
       pfUI.castbar.player.bar.left = pfUI.castbar.player.bar:CreateFontString("Status", "DIALOG", "GameFontNormal")
@@ -72,7 +73,8 @@ pfUI:RegisterModule("castbar", function ()
           pfUI.castbar.player.delay = 0
           pfUI.castbar.player.spell = arg1
           pfUI.castbar.player.bar.left:SetText(arg1)
-          pfUI.castbar.player.bar:SetStatusBarColor(.7,.7,.9,.8)
+          local r,g,b,a = strsplit(",", pfUI_config.appearance.castbar.castbarcolor)
+          pfUI.castbar.player.bar:SetStatusBarColor(r,g,b,a)
           pfUI.castbar.player.startTime = GetTime()
           pfUI.castbar.player.maxValue = pfUI.castbar.player.startTime + (arg2 / 1000)
           pfUI.castbar.player.endTime = nil
@@ -89,7 +91,8 @@ pfUI:RegisterModule("castbar", function ()
           pfUI.castbar.player.delay = 0
           pfUI.castbar.player.spell = arg2
           pfUI.castbar.player.bar.left:SetText(arg2)
-          pfUI.castbar.player.bar:SetStatusBarColor(.9,.9,.7,.8)
+          local r,g,b,a = strsplit(",", pfUI_config.appearance.castbar.channelcolor)
+          pfUI.castbar.player.bar:SetStatusBarColor(r,g,b,a)
           pfUI.castbar.player.maxValue = nil
           pfUI.castbar.player.startTime = GetTime()
           pfUI.castbar.player.endTime = pfUI.castbar.player.startTime + (arg1 / 1000)
@@ -211,7 +214,8 @@ pfUI:RegisterModule("castbar", function ()
       pfUI.castbar.target.bar:SetAllPoints(pfUI.castbar.target)
       pfUI.castbar.target.bar:SetMinMaxValues(0, 100)
       pfUI.castbar.target.bar:SetValue(20)
-      pfUI.castbar.target.bar:SetStatusBarColor(.7,.7,.9,.8)
+      local r,g,b,a = strsplit(",", pfUI_config.appearance.castbar.castbarcolor)
+      pfUI.castbar.target.bar:SetStatusBarColor(r,g,b,a)
 
       -- text left
       pfUI.castbar.target.bar.left = pfUI.castbar.target.bar:CreateFontString("Status", "DIALOG", "GameFontNormal")
