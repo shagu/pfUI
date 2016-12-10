@@ -33,27 +33,32 @@ pfUI:RegisterModule("thirdparty", function ()
     end
     function DPSMate_DPSMate.Show ()
       pfUIhookDPSMate_Show(DPSMate_DPSMate)
-      DPSMate_DPSMate:ClearAllPoints()
-      DPSMate_DPSMate:SetAllPoints(pfUI.chat.right)
 
-      if DPSMate_DPSMate_ScrollFrame then
-        DPSMate_DPSMate_ScrollFrame:ClearAllPoints()
-        DPSMate_DPSMate_ScrollFrame:SetAllPoints(pfUI.chat.right)
-        DPSMate_DPSMate_ScrollFrame:SetWidth(pfUI.chat.right:GetWidth())
+      if pfUI.chat and pfUI.panel then
+        DPSMate_DPSMate:ClearAllPoints()
+        DPSMate_DPSMate:SetAllPoints(pfUI.chat.right)
 
-        DPSMate_DPSMate_ScrollFrame:SetPoint("TOPLEFT", DPSMate_DPSMate_Head, "BOTTOMLEFT", 0, 0)
-        DPSMate_DPSMate_ScrollFrame:SetPoint("BOTTOMRIGHT", pfUI.chat.right, "BOTTOMRIGHT", 0, pfUI.panel.right:GetHeight())
-        DPSMate_DPSMate_Resize:Hide()
+        if DPSMate_DPSMate_ScrollFrame then
+          DPSMate_DPSMate_ScrollFrame:ClearAllPoints()
+          DPSMate_DPSMate_ScrollFrame:SetAllPoints(pfUI.chat.right)
+          DPSMate_DPSMate_ScrollFrame:SetWidth(pfUI.chat.right:GetWidth())
+
+          DPSMate_DPSMate_ScrollFrame:SetPoint("TOPLEFT", DPSMate_DPSMate_Head, "BOTTOMLEFT", 0, 0)
+          DPSMate_DPSMate_ScrollFrame:SetPoint("BOTTOMRIGHT", pfUI.chat.right, "BOTTOMRIGHT", 0, pfUI.panel.right:GetHeight())
+          DPSMate_DPSMate_Resize:Hide()
+        end
       end
     end
 
-    pfUI.panel.right.hide:SetScript("OnClick", function()
-      if DPSMate_DPSMate:IsShown() then
-        DPSMate_DPSMate:Hide()
-      else
-        DPSMate_DPSMate:Show()
-      end
-    end)
+    if pfUI.panel then
+      pfUI.panel.right.hide:SetScript("OnClick", function()
+        if DPSMate_DPSMate:IsShown() then
+          DPSMate_DPSMate:Hide()
+        else
+          DPSMate_DPSMate:Show()
+        end
+      end)
+    end
 
   end
 
@@ -184,6 +189,7 @@ pfUI:RegisterModule("thirdparty", function ()
           local id = nil
 
           for i=1,40 do
+            if not pfUI.uf.raid then break end
             if pfUI.uf.raid[i] and pfUI.uf.raid[i].id == rid then id = i end
           end
 
