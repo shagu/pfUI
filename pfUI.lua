@@ -139,6 +139,11 @@ function pfUI.utils:CreateBackdrop(f, inset, legacy, transp)
     return
   end
 
+  -- increase clickable area if available
+  if f.SetHitRectInsets then
+    f:SetHitRectInsets(-border,-border,-border,-border)
+  end
+
   -- use new backdrop behaviour
   if not f.backdrop then
     f:SetBackdrop(nil)
