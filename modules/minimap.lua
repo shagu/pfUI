@@ -32,6 +32,38 @@ pfUI:RegisterModule("minimap", function ()
   MiniMapMailBorder:Hide()
   MiniMapMailIcon:SetTexture("Interface\\AddOns\\pfUI\\img\\mail")
 
+  MiniMapMailFrame:SetScript("OnShow", function()
+    if not this.highlight then
+      this.highlight = CreateFrame("Frame", nil, this)
+      this.highlight:SetAllPoints(this)
+      this.highlight:SetFrameLevel(this:GetFrameLevel() + 1)
+
+      this.highlight.tex = this.highlight:CreateTexture("OVERLAY")
+      this.highlight.tex:SetTexture("Interface\\AddOns\\pfUI\\img\\mail")
+      this.highlight.tex:SetPoint("TOPLEFT", MiniMapMailIcon, "TOPLEFT", -2, 2)
+      this.highlight.tex:SetPoint("BOTTOMRIGHT", MiniMapMailIcon, "BOTTOMRIGHT", 2, -2)
+      this.highlight.tex:SetVertexColor(1,.5,.5)
+
+      this.highlight:SetScript("OnUpdate", function()
+        if not this.count then this.count = 0 end
+        if not this.modifier then this.modifier = 1 end
+        if this.count >= 10 then this:Hide() end
+
+        this:SetAlpha(this:GetAlpha() + this.modifier)
+
+        if this:GetAlpha() <= 0.1 then
+          this.modifier = 0.05
+          this.count = this.count + 1
+        elseif this:GetAlpha() >= 0.9 then
+          this.modifier = -0.05
+        end
+      end)
+    end
+
+    this.highlight.count = 0
+    this.highlight:Show()
+  end)
+
   MiniMapTrackingFrame:SetFrameStrata("LOW")
 
   -- Coordinates in minimap
