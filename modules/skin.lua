@@ -122,4 +122,11 @@ pfUI.utils:CreateBackdrop(TicketStatusFrame)
     end
   end)
 
+  if pfUI_config.global.errors_limit == "1" then
+    UIErrorsFrame:SetHeight(25)
+  end
+
+  if pfUI_config.global.errors_hide == "1" then
+    UIErrorsFrame:Hide()
+  end
 end)

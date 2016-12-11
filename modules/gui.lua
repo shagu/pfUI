@@ -655,6 +655,8 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui:CreateConfig(pfUI.gui.global, "Default Font", pfUI_config.global, "font_default", "dropdown", values)
   pfUI.gui:CreateConfig(pfUI.gui.global, "Square Font", pfUI_config.global, "font_square", "dropdown", values)
   pfUI.gui:CreateConfig(pfUI.gui.global, "Combat Font", pfUI_config.global, "font_combat", "dropdown", values)
+  pfUI.gui:CreateConfig(pfUI.gui.global, "Limit UIErrors to one line", pfUI_config.global, "errors_limit", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.global, "Disable UIErrors", pfUI_config.global, "errors_hide", "checkbox")
 
   -- appearance
   pfUI.gui.appearance = pfUI.gui:CreateConfigTab("Appearance")
