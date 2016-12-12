@@ -57,7 +57,7 @@ pfUI:RegisterModule("addons", function ()
   end)
 
   -- list
-  pfUI.addons.list = CreateFrame("Frame", "pfAddonList", UIParent)
+  pfUI.addons.list = CreateFrame("Frame", "pfAddonList", pfUI.addons)
   pfUI.addons.list:SetHeight(GetNumAddOns() * 25)
   pfUI.addons.list:SetWidth(350)
   pfUI.addons.list:SetPoint("CENTER", 0,0)
