@@ -657,6 +657,8 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui:CreateConfig(pfUI.gui.global, "Combat Font", pfUI_config.global, "font_combat", "dropdown", values)
   pfUI.gui:CreateConfig(pfUI.gui.global, "Limit UIErrors to one line", pfUI_config.global, "errors_limit", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.global, "Disable UIErrors", pfUI_config.global, "errors_hide", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.global, "Hide Buffs", pfUI_config.global, "hidebuff", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.global, "Hide Weapon Buffs", pfUI_config.global, "hidewbuff", "checkbox")
 
   -- appearance
   pfUI.gui.appearance = pfUI.gui:CreateConfigTab("Appearance")

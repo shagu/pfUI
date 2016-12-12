@@ -46,66 +46,75 @@ pfUI:RegisterModule("buff", function ()
     TemporaryEnchantFrame:ClearAllPoints()
     TemporaryEnchantFrame:SetPoint("TOPRIGHT", pfUI.minimap or Minimap, "TOPLEFT", -25,0)
 
-    -- weapon enchants
-    for _,buff in pairs ({TempEnchant1,TempEnchant2}) do
-      local icon = getglobal(buff:GetName().."Icon")
-      local border = getglobal(buff:GetName().."Border")
-      local _, _, mainhand, _, _, offhand = GetWeaponEnchantInfo()
-      if buff then
-        pfUI.utils:CreateBackdrop(buff)
-        icon:SetTexCoord(.08, .92, .08, .92)
-        border:Hide()
-      end
-
-      if buff:GetID() == 16 then
-        local link = GetInventoryItemLink("player", 16)
-        if not link then break end
-        local _, _, itemLink = string.find(link, "(item:%d+:%d+:%d+:%d+)")
-        local _, _, itemRarity, itemLevel, _, _, _, itemEquipLoc, _ = GetItemInfo(itemLink)
-        if itemRarity then buff.backdrop:SetBackdropBorderColor(GetItemQualityColor(itemRarity)) end
-
-        if mainhand and mainhand > 0 then
-          buff.stacks:SetText(mainhand)
-          buff.stacks:Show()
-        else
-          buff.stacks:Hide()
+    if pfUI_config.global.hidewbuff == "1" then
+      TemporaryEnchantFrame:Hide()
+      BuffFrame:SetPoint("TOPRIGHT", pfUI.minimap or Minimap, "TOPLEFT", -25,0)
+    else
+      -- weapon enchants
+      for _,buff in pairs ({TempEnchant1,TempEnchant2}) do
+        local icon = getglobal(buff:GetName().."Icon")
+        local border = getglobal(buff:GetName().."Border")
+        local _, _, mainhand, _, _, offhand = GetWeaponEnchantInfo()
+        if buff then
+          pfUI.utils:CreateBackdrop(buff)
+          icon:SetTexCoord(.08, .92, .08, .92)
+          border:Hide()
         end
-      elseif buff:GetID() == 17 then
-        local link = GetInventoryItemLink("player", 17)
-        if not link then break end
-        local _, _, itemLink = string.find(link, "(item:%d+:%d+:%d+:%d+)")
-        local _, _, itemRarity, itemLevel, _, _, _, itemEquipLoc, _ = GetItemInfo(itemLink)
-        if itemRarity then buff.backdrop:SetBackdropBorderColor(GetItemQualityColor(itemRarity)) end
-        if offhand and offhand > 0 then
-          buff.stacks:SetText(offhand)
-          buff.stacks:Show()
-        else
-          buff.stacks:Hide()
+
+        if buff:GetID() == 16 then
+          local link = GetInventoryItemLink("player", 16)
+          if not link then break end
+          local _, _, itemLink = string.find(link, "(item:%d+:%d+:%d+:%d+)")
+          local _, _, itemRarity, itemLevel, _, _, _, itemEquipLoc, _ = GetItemInfo(itemLink)
+          if itemRarity then buff.backdrop:SetBackdropBorderColor(GetItemQualityColor(itemRarity)) end
+
+          if mainhand and mainhand > 0 then
+            buff.stacks:SetText(mainhand)
+            buff.stacks:Show()
+          else
+            buff.stacks:Hide()
+          end
+        elseif buff:GetID() == 17 then
+          local link = GetInventoryItemLink("player", 17)
+          if not link then break end
+          local _, _, itemLink = string.find(link, "(item:%d+:%d+:%d+:%d+)")
+          local _, _, itemRarity, itemLevel, _, _, _, itemEquipLoc, _ = GetItemInfo(itemLink)
+          if itemRarity then buff.backdrop:SetBackdropBorderColor(GetItemQualityColor(itemRarity)) end
+          if offhand and offhand > 0 then
+            buff.stacks:SetText(offhand)
+            buff.stacks:Show()
+          else
+            buff.stacks:Hide()
+          end
         end
       end
     end
 
-    -- buffs
-    for i=0,32 do
-      local buff = getglobal("BuffButton" .. i)
-      if buff then
-        local icon = getglobal(buff:GetName().."Icon")
-        local border = getglobal(buff:GetName().."Border")
-        local text = getglobal(buff:GetName().."Duration")
+    if pfUI_config.global.hidebuff == "1" then
+      BuffFrame:Hide()
+    else
+      -- buffs
+      for i=0,32 do
+        local buff = getglobal("BuffButton" .. i)
+        if buff then
+          local icon = getglobal(buff:GetName().."Icon")
+          local border = getglobal(buff:GetName().."Border")
+          local text = getglobal(buff:GetName().."Duration")
 
-        if i < 8 and i > 0 then
-          buff:SetPoint("TOPRIGHT", getglobal("BuffButton" .. i-1), "TOPLEFT", -7, 0)
-        elseif i < 16 and i > 8 then
+          if i < 8 and i > 0 then
             buff:SetPoint("TOPRIGHT", getglobal("BuffButton" .. i-1), "TOPLEFT", -7, 0)
-        elseif i > 16 then
-          buff:SetPoint("TOPRIGHT", getglobal("BuffButton" .. i-1), "TOPLEFT", -7, 0)
-        end
-        pfUI.utils:CreateBackdrop(buff)
-        text:SetPoint("TOP", buff, "BOTTOM", 0 , -pfUI_config.appearance.border.default*2)
-        icon:SetTexCoord(.08, .92, .08, .92)
-        if border then
-          buff.backdrop:SetBackdropBorderColor(border:GetVertexColor())
-          border:Hide()
+          elseif i < 16 and i > 8 then
+              buff:SetPoint("TOPRIGHT", getglobal("BuffButton" .. i-1), "TOPLEFT", -7, 0)
+          elseif i > 16 then
+            buff:SetPoint("TOPRIGHT", getglobal("BuffButton" .. i-1), "TOPLEFT", -7, 0)
+          end
+          pfUI.utils:CreateBackdrop(buff)
+          text:SetPoint("TOP", buff, "BOTTOM", 0 , -pfUI_config.appearance.border.default*2)
+          icon:SetTexCoord(.08, .92, .08, .92)
+          if border then
+            buff.backdrop:SetBackdropBorderColor(border:GetVertexColor())
+            border:Hide()
+          end
         end
       end
     end
