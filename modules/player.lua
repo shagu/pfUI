@@ -435,22 +435,23 @@ pfUI:RegisterModule("player", function ()
     end)
 
     pfUI.uf.player.debuff.debuffs[i]:SetScript("OnUpdate", function()
-      local timeleft = GetPlayerBuffTimeLeft(GetPlayerBuff(this:GetID()-1,"HARMFUL"))
+      local timeleft = GetPlayerBuffTimeLeft(this:GetID()-1,"HARMFUL")
+
       if timeleft ~= nil and timeleft ~= 0 then
         -- if there are more than 0 seconds left
         if timeleft < 60 then
           -- show seconds if less than 60 seconds
-          pfUI.uf.player.debuff.debuffs[i].cd:SetText(ceil(timeleft))
+          pfUI.uf.player.debuff.debuffs[this:GetID()].cd:SetText(ceil(timeleft))
         elseif timeleft < 3600 then
           -- show minutes if less than 3600 seconds (1 hour)
-          pfUI.uf.player.debuff.debuffs[i].cd:SetText(ceil(timeleft/60)..'m')
+          pfUI.uf.player.debuff.debuffs[this:GetID()].cd:SetText(ceil(timeleft/60)..'m')
         else
           -- otherwise show hours
-          pfUI.uf.player.buff.buffs[i].cd:SetText(ceil(timeleft/3600) .. 'h')
+          pfUI.uf.player.debuff.debuffs[this:GetID()].cd:SetText(ceil(timeleft/3600) .. 'h')
         end
       else
         -- if there's no time left or not set, empty buff text
-        pfUI.uf.player.buff.buffs[i].cd:SetText("")
+        pfUI.uf.player.debuff.debuffs[this:GetID()].cd:SetText("")
       end
     end)
 
@@ -493,7 +494,7 @@ pfUI:RegisterModule("player", function ()
 
       local stacks = GetPlayerBuffApplications(GetPlayerBuff(i-1,"HARMFUL"))
       pfUI.utils:CreateBackdrop(pfUI.uf.player.debuff.debuffs[i], default_border)
-      pfUI.uf.player.debuff.debuffs[i]:SetNormalTexture(GetPlayerBuffTexture(GetPlayerBuff(i-1,"HARMFUL")))
+      pfUI.uf.player.debuff.debuffs[i]:SetNormalTexture(UnitDebuff("player", i))
       for i,v in ipairs({pfUI.uf.player.debuff.debuffs[i]:GetRegions()}) do
         if v.SetTexCoord then v:SetTexCoord(.08, .92, .08, .92) end
       end
