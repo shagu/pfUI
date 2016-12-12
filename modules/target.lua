@@ -27,6 +27,38 @@ pfUI:RegisterModule("target", function ()
   pfUI.uf.target:SetScript("OnClick", function ()
       if arg1 == "RightButton" then
         ToggleDropDownMenu(1, nil, TargetFrameDropDown, "cursor")
+      else
+        if pfUI_config.unitframes.globalclick == "0" then return end
+
+        -- clickcast: shift modifier
+        if IsShiftKeyDown() then
+          if pfUI_config.unitframes.raid.clickcast_shift ~= "" then
+            CastSpellByName(pfUI_config.unitframes.raid.clickcast_shift)
+            pfUI.uf.target.noanim = "yes"
+            return
+          end
+        -- clickcast: alt modifier
+        elseif IsAltKeyDown() then
+          if pfUI_config.unitframes.raid.clickcast_alt ~= "" then
+            CastSpellByName(pfUI_config.unitframes.raid.clickcast_alt)
+            pfUI.uf.target.noanim = "yes"
+            return
+          end
+        -- clickcast: ctrl modifier
+        elseif IsControlKeyDown() then
+          if pfUI_config.unitframes.raid.clickcast_ctrl ~= "" then
+            CastSpellByName(pfUI_config.unitframes.raid.clickcast_ctrl)
+            pfUI.uf.target.noanim = "yes"
+            return
+          end
+        -- clickcast: default
+        else
+          if pfUI_config.unitframes.raid.clickcast ~= "" then
+            CastSpellByName(pfUI_config.unitframes.raid.clickcast)
+            pfUI.uf.target.noanim = "yes"
+            return
+          end
+        end
       end
     end)
 

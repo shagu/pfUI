@@ -25,8 +25,47 @@ pfUI:RegisterModule("targettarget", function ()
 
   pfUI.uf.targettarget:RegisterForClicks('LeftButtonUp', 'RightButtonUp')
   pfUI.uf.targettarget:SetScript("OnClick", function ()
-      TargetUnit("targettarget")
-    end)
+    TargetUnit("targettarget")
+
+    if pfUI_config.unitframes.globalclick == "0" then return end
+
+    -- clickcast: shift modifier
+    if IsShiftKeyDown() then
+      if pfUI_config.unitframes.raid.clickcast_shift ~= "" then
+        CastSpellByName(pfUI_config.unitframes.raid.clickcast_shift)
+        pfUI.uf.target.noanim = "yes"
+        TargetLastTarget()
+        return
+      end
+    -- clickcast: alt modifier
+    elseif IsAltKeyDown() then
+      if pfUI_config.unitframes.raid.clickcast_alt ~= "" then
+        CastSpellByName(pfUI_config.unitframes.raid.clickcast_alt)
+        pfUI.uf.target.noanim = "yes"
+        TargetLastTarget()
+        return
+      end
+    -- clickcast: ctrl modifier
+    elseif IsControlKeyDown() then
+      if pfUI_config.unitframes.raid.clickcast_ctrl ~= "" then
+        CastSpellByName(pfUI_config.unitframes.raid.clickcast_ctrl)
+        pfUI.uf.target.noanim = "yes"
+        TargetLastTarget()
+        return
+      end
+    -- clickcast: default
+    else
+      if pfUI_config.unitframes.raid.clickcast ~= "" then
+        CastSpellByName(pfUI_config.unitframes.raid.clickcast)
+        pfUI.uf.target.noanim = "yes"
+        TargetLastTarget()
+        return
+      else
+        -- no clickcast: default action
+        TargetUnit("targettarget")
+      end
+    end
+  end)
 
   pfUI.uf.targettarget:SetScript("OnUpdate", function()
       if UnitExists("targettarget") then
