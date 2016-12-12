@@ -530,6 +530,8 @@ pfUI:RegisterModule("target", function ()
         pfUI.uf.target.debuff.debuffs[i].backdrop:SetBackdropBorderColor(0,1,0,1)
       elseif dtype == "Curse" then
         pfUI.uf.target.debuff.debuffs[i].backdrop:SetBackdropBorderColor(1,0,1,1)
+      elseif dtype == "Disease" then
+        pfUI.uf.target.debuff.debuffs[i].backdrop:SetBackdropBorderColor(1,1,0,1)
       else
         pfUI.uf.target.debuff.debuffs[i].backdrop:SetBackdropBorderColor(1,0,0,1)
       end
