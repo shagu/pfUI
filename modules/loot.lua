@@ -10,14 +10,85 @@ pfUI:RegisterModule("loot", function ()
 
   pfUI.loot:SetWidth(160+pfUI_config.appearance.border.default*2)
   pfUI.loot.slots = {}
+  function pfUI.loot:UpdateLootFrame()
+    local maxrarity, maxwidth = 0, 0
+
+    local items = GetNumLootItems()
+    if(items > 0) then
+      local real = 0
+      for i=1, items do
+        local texture, item, quantity, quality, locked = GetLootSlotInfo(i)
+        if texture then real = real + 1 end
+      end
+
+      local slotid = 1
+      for id=0 ,GetNumLootItems() do
+        if GetLootSlotInfo(id) then
+          local slot = pfUI.loot.slots[slotid] or pfUI.loot:CreateSlot(slotid)
+          local texture, item, quantity, quality, locked = GetLootSlotInfo(id)
+          local color = ITEM_QUALITY_COLORS[quality]
+
+          if(LootSlotIsCoin(id)) then
+            item = string.gsub(item,"\n", ", ")
+          end
+
+          if(quantity > 1) then
+            slot.count:SetText(quantity)
+            slot.count:Show()
+          else
+            slot.count:Hide()
+          end
+
+          if(quality > 1) then
+            slot.rarity:SetVertexColor(color.r, color.g, color.b)
+            slot.ficon.backdrop:SetBackdropBorderColor(color.r, color.g, color.b)
+            slot.rarity:Show()
+          else
+            slot.ficon.backdrop:SetBackdropBorderColor(.3,.3,.3)
+            slot.rarity:Hide()
+          end
+
+          slot.quality = quality
+          slot.name:SetText(item)
+          slot.name:SetTextColor(color.r, color.g, color.b)
+          slot.icon:SetTexture(texture)
+
+          maxrarity = math.max(maxrarity, quality)
+          maxwidth = math.max(maxwidth, slot.name:GetStringWidth())
+
+          slot:SetID(id)
+          slot:SetSlot(id)
+
+          slot:Enable()
+          slot:Show()
+          slotid = slotid + 1
+        end
+
+        for i=real+1, GetNumLootItems() do
+          if pfUI.loot.slots[i] then
+            pfUI.loot.slots[i]:Hide()
+          end
+        end
+      end
+
+      local color = ITEM_QUALITY_COLORS[maxrarity]
+      if maxrarity <= 1 then
+        pfUI.utils:CreateBackdrop(pfUI.loot)
+      else
+        pfUI.utils:CreateBackdrop(pfUI.loot)
+        pfUI.loot.backdrop:SetBackdropBorderColor(color.r, color.g, color.b, 1)
+      end
+      pfUI.loot:SetHeight(math.max((real*22)+4*pfUI_config.appearance.border.default), 20)
+      pfUI.loot:SetWidth(maxwidth + 22 + 8*pfUI_config.appearance.border.default )
+    end
+  end
+
   function pfUI.loot:CreateSlot(id)
     local frame = CreateFrame("LootButton", 'pfLootButton'..id, pfUI.loot)
     frame:SetPoint("LEFT", pfUI_config.appearance.border.default*2, 0)
     frame:SetPoint("RIGHT", -pfUI_config.appearance.border.default*2, 0)
     frame:SetHeight(22)
-    frame:SetID(id)
-    frame:SetSlot(id)
-    frame:SetPoint("TOP", pfUI.loot, 4, (-pfUI_config.appearance.border.default*2+22)-(id*22))
+    frame:SetPoint("TOP", pfUI.loot, "TOP", 4, (-pfUI_config.appearance.border.default*2+22)-(id*22))
 
     frame:SetScript("OnClick", function()
       if ( IsControlKeyDown() ) then
@@ -54,6 +125,12 @@ pfUI:RegisterModule("loot", function ()
         this.hover:Hide()
       end
     end)
+
+    if pfUI_config.appearance.loot.autoresize == "1" then
+      frame:SetScript("OnUpdate", function()
+        pfUI.loot:UpdateLootFrame()
+      end)
+    end
 
     frame.ficon = CreateFrame("Frame", "pfLootButtonIcon", frame)
     frame.ficon:SetHeight(frame:GetHeight() - 2*pfUI_config.appearance.border.default)
@@ -105,7 +182,6 @@ pfUI:RegisterModule("loot", function ()
   end)
 
   pfUI.loot:SetScript("OnEvent", function()
-    local maxrarity, maxwidth = 0, 0
     if event == "OPEN_MASTER_LOOT_LIST" then
       ToggleDropDownMenu(1, nil, GroupLootDropDown, pfUI.loot.slots[pfUI.loot.selectedSlot], 0, 0)
     end
@@ -128,54 +204,7 @@ pfUI:RegisterModule("loot", function ()
       this:ClearAllPoints()
       this:SetPoint("TOPLEFT", nil, "BOTTOMLEFT", x-40, y+20)
 
-      local items = GetNumLootItems()
-      if(items > 0) then
-        for i=1, items do
-          local slot = pfUI.loot.slots[i] or pfUI.loot:CreateSlot(i)
-          local texture, item, quantity, quality, locked = GetLootSlotInfo(i)
-          local color = ITEM_QUALITY_COLORS[quality]
-
-          if(LootSlotIsCoin(i)) then
-            item = string.gsub(item,"\n", ", ")
-          end
-
-          if(quantity > 1) then
-            slot.count:SetText(quantity)
-            slot.count:Show()
-          else
-            slot.count:Hide()
-          end
-
-          if(quality > 1) then
-            slot.rarity:SetVertexColor(color.r, color.g, color.b)
-            slot.ficon.backdrop:SetBackdropBorderColor(color.r, color.g, color.b)
-            slot.rarity:Show()
-          else
-            slot.ficon.backdrop:SetBackdropBorderColor(.3,.3,.3)
-            slot.rarity:Hide()
-          end
-
-          slot.quality = quality
-          slot.name:SetText(item)
-          slot.name:SetTextColor(color.r, color.g, color.b)
-          slot.icon:SetTexture(texture)
-
-          maxrarity = math.max(maxrarity, quality)
-          maxwidth = math.max(maxwidth, slot.name:GetStringWidth())
-
-          slot:Enable()
-          slot:Show()
-        end
-        local color = ITEM_QUALITY_COLORS[maxrarity]
-        if maxrarity <= 1 then
-          pfUI.utils:CreateBackdrop(this)
-        else
-          pfUI.utils:CreateBackdrop(this)
-          this.backdrop:SetBackdropBorderColor(color.r, color.g, color.b, 1)
-        end
-        this:SetHeight(math.max((items*22)+4*pfUI_config.appearance.border.default), 20)
-        this:SetWidth(maxwidth + 22 + 8*pfUI_config.appearance.border.default )
-      end
+      pfUI.loot:UpdateLootFrame()
     end
 
     if event == "LOOT_SLOT_CLEARED" then
