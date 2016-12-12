@@ -387,9 +387,30 @@ pfUI:RegisterModule("target", function ()
 
     pfUI.uf.target.buff.buffs[i]:RegisterForClicks("RightButtonUp")
     pfUI.uf.target.buff.buffs[i]:ClearAllPoints()
-    pfUI.uf.target.buff.buffs[i]:SetPoint("BOTTOMLEFT", pfUI.uf.target, "TOPLEFT",
+
+    local invert, af, as
+    if pfUI_config.unitframes.target.buffs == "top" then
+      invert = 1
+      af = "BOTTOMLEFT"
+      as = "TOPLEFT"
+    elseif pfUI_config.unitframes.target.buffs == "bottom" then
+      invert = -1
+      af = "TOPLEFT"
+      as = "BOTTOMLEFT"
+    else
+      -- set fallback values
+      invert = 1
+      af = "BOTTOMLEFT"
+      as = "TOPLEFT"
+
+      -- disable bufs
+      pfUI.uf.target.buff.buffs[i]:Hide()
+      pfUI.uf.target.buff:UnregisterAllEvents()
+    end
+
+    pfUI.uf.target.buff.buffs[i]:SetPoint(af, pfUI.uf.target, as,
     (i-1-8*row)*((2*default_border) + pfUI_config.unitframes.buff_size + 1),
-    (row)*((2*default_border) + pfUI_config.unitframes.buff_size + 1) + 2*default_border + 1)
+    invert * (row)*((2*default_border) + pfUI_config.unitframes.buff_size + 1) + invert*(2*default_border + 1))
     pfUI.uf.target.buff.buffs[i]:SetWidth(pfUI_config.unitframes.buff_size)
     pfUI.uf.target.buff.buffs[i]:SetHeight(pfUI_config.unitframes.buff_size)
     pfUI.uf.target.buff.buffs[i]:SetNormalTexture(nil)
@@ -470,10 +491,30 @@ pfUI:RegisterModule("target", function ()
       if pfUI.uf.target.buff.buffs[1]:IsShown() then top = top + 1 end
       if pfUI.uf.target.buff.buffs[9]:IsShown() then top = top + 1 end
 
-      pfUI.uf.target.debuff.debuffs[i]:SetPoint("BOTTOMLEFT", pfUI.uf.target, "TOPLEFT",
+      local invert, af, as
+      if pfUI_config.unitframes.target.buffs == "top" then
+        invert = 1
+        af = "BOTTOMLEFT"
+        as = "TOPLEFT"
+      elseif pfUI_config.unitframes.target.buffs == "bottom" then
+        invert = -1
+        af = "TOPLEFT"
+        as = "BOTTOMLEFT"
+      else
+        -- set fallback values
+        invert = 1
+        af = "BOTTOMLEFT"
+        as = "TOPLEFT"
+
+        -- disable bufs
+        pfUI.uf.target.debuff.debuffs[i]:Hide()
+        pfUI.uf.target.debuff:UnregisterAllEvents()
+      end
+
+      pfUI.uf.target.debuff.debuffs[i]:SetPoint(af, pfUI.uf.target, as,
       (i-1-8*row)*((2*default_border) + pfUI_config.unitframes.debuff_size + 1),
-      (top)*((2*default_border) + pfUI_config.unitframes.buff_size + 1) +
-      (row)*((2*default_border) + pfUI_config.unitframes.debuff_size + 1) + (2*default_border + 1))
+      invert * (top)*((2*default_border) + pfUI_config.unitframes.buff_size + 1) +
+      invert * (row)*((2*default_border) + pfUI_config.unitframes.debuff_size + 1) + invert * (2*default_border + 1))
 
       local texture, stacks = UnitDebuff("target",i)
       pfUI.utils:CreateBackdrop(pfUI.uf.target.debuff.debuffs[i], default_border)

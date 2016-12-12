@@ -307,9 +307,30 @@ pfUI:RegisterModule("player", function ()
 
     pfUI.uf.player.buff.buffs[i]:RegisterForClicks("RightButtonUp")
     pfUI.uf.player.buff.buffs[i]:ClearAllPoints()
-    pfUI.uf.player.buff.buffs[i]:SetPoint("BOTTOMLEFT", pfUI.uf.player, "TOPLEFT",
+
+    local invert, af, as
+    if pfUI_config.unitframes.player.buffs == "top" then
+      invert = 1
+      af = "BOTTOMLEFT"
+      as = "TOPLEFT"
+    elseif pfUI_config.unitframes.player.buffs == "bottom" then
+      invert = -1
+      af = "TOPLEFT"
+      as = "BOTTOMLEFT"
+    else
+      -- set fallback values
+      invert = 1
+      af = "BOTTOMLEFT"
+      as = "TOPLEFT"
+
+      -- disable bufs
+      pfUI.uf.player.buff.buffs[i]:Hide()
+      pfUI.uf.player.buff:UnregisterAllEvents()
+    end
+
+    pfUI.uf.player.buff.buffs[i]:SetPoint(af, pfUI.uf.player, as,
     (i-1-8*row)*((2*default_border) + pfUI_config.unitframes.buff_size + 1),
-    (row)*((2*default_border) + pfUI_config.unitframes.buff_size + 1) + 2*default_border + 1)
+    invert * (row)*((2*default_border) + pfUI_config.unitframes.buff_size + 1) + invert*(2*default_border + 1))
     pfUI.uf.player.buff.buffs[i]:SetWidth(pfUI_config.unitframes.buff_size)
     pfUI.uf.player.buff.buffs[i]:SetHeight(pfUI_config.unitframes.buff_size)
     pfUI.uf.player.buff.buffs[i]:SetScript("OnEnter", function()
@@ -444,10 +465,30 @@ pfUI:RegisterModule("player", function ()
       if pfUI.uf.player.buff.buffs[9]:IsShown() then top = top + 1 end
 
 
-      pfUI.uf.player.debuff.debuffs[i]:SetPoint("BOTTOMLEFT", pfUI.uf.player, "TOPLEFT",
+      local invert, af, as
+      if pfUI_config.unitframes.player.buffs == "top" then
+        invert = 1
+        af = "BOTTOMLEFT"
+        as = "TOPLEFT"
+      elseif pfUI_config.unitframes.player.buffs == "bottom" then
+        invert = -1
+        af = "TOPLEFT"
+        as = "BOTTOMLEFT"
+      else
+        -- set fallback values
+        invert = 1
+        af = "BOTTOMLEFT"
+        as = "TOPLEFT"
+
+        -- disable bufs
+        pfUI.uf.player.debuff.debuffs[i]:Hide()
+        pfUI.uf.player.debuff:UnregisterAllEvents()
+      end
+
+      pfUI.uf.player.debuff.debuffs[i]:SetPoint(af, pfUI.uf.player, as,
       (i-1-8*row)*((2*default_border) + pfUI_config.unitframes.debuff_size + 1),
-      (top)*((2*default_border) + pfUI_config.unitframes.buff_size + 1) +
-      (row)*((2*default_border) + pfUI_config.unitframes.debuff_size + 1) + (2*default_border + 1))
+      invert * (top)*((2*default_border) + pfUI_config.unitframes.buff_size + 1) +
+      invert * (row)*((2*default_border) + pfUI_config.unitframes.debuff_size + 1) + invert*(2*default_border + 1))
 
 
       local stacks = GetPlayerBuffApplications(GetPlayerBuff(i-1,"HARMFUL"))
