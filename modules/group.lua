@@ -89,6 +89,8 @@ pfUI:RegisterModule("group", function ()
     pfUI.utils:UpdateMovable(pfUI.uf.group[i])
     pfUI.uf.group[i]:Hide()
     pfUI.uf.group[i].id = i
+    pfUI.uf.group[i].label = "party"
+
 
     pfUI.uf.group[i].hp = CreateFrame("Frame",nil, pfUI.uf.group[i])
     pfUI.uf.group[i].hp:SetWidth(175)
@@ -149,143 +151,6 @@ pfUI:RegisterModule("group", function ()
 
     pfUI.uf.group[i]:RegisterForClicks('LeftButtonUp', 'RightButtonUp')
 
-    pfUI.uf.group[i]:SetScript("OnEnter", function()
-      GameTooltip_SetDefaultAnchor(GameTooltip, this)
-      GameTooltip:SetUnit("party" .. this.id)
-      GameTooltip:Show()
-    end)
-
-    pfUI.uf.group[i]:SetScript("OnLeave", function()
-      GameTooltip:FadeOut()
-    end)
-
-    pfUI.uf.group[i]:SetScript("OnClick", function ()
-      if ( SpellIsTargeting() and arg1 == "RightButton" ) then
-        SpellStopTargeting()
-        return
-      end
-
-      if ( arg1 == "LeftButton" ) then
-        if ( SpellIsTargeting() ) then
-          SpellTargetUnit("party" .. this.id)
-        elseif ( CursorHasItem() ) then
-          DropItemOnUnit("party" .. this.id)
-        else
-          TargetUnit("party" .. this.id)
-
-          if pfUI_config.unitframes.globalclick == "0" then return end
-
-          -- clickcast: shift modifier
-          if IsShiftKeyDown() then
-            if pfUI_config.unitframes.raid.clickcast_shift ~= "" then
-              CastSpellByName(pfUI_config.unitframes.raid.clickcast_shift)
-              pfUI.uf.target.noanim = "yes"
-              TargetLastTarget()
-              return
-            end
-          -- clickcast: alt modifier
-          elseif IsAltKeyDown() then
-            if pfUI_config.unitframes.raid.clickcast_alt ~= "" then
-              CastSpellByName(pfUI_config.unitframes.raid.clickcast_alt)
-              pfUI.uf.target.noanim = "yes"
-              TargetLastTarget()
-              return
-            end
-          -- clickcast: ctrl modifier
-          elseif IsControlKeyDown() then
-            if pfUI_config.unitframes.raid.clickcast_ctrl ~= "" then
-              CastSpellByName(pfUI_config.unitframes.raid.clickcast_ctrl)
-              pfUI.uf.target.noanim = "yes"
-              TargetLastTarget()
-              return
-            end
-          -- clickcast: default
-          else
-            if pfUI_config.unitframes.raid.clickcast ~= "" then
-              CastSpellByName(pfUI_config.unitframes.raid.clickcast)
-              pfUI.uf.target.noanim = "yes"
-              TargetLastTarget()
-              return
-            else
-              -- no clickcast: default action
-              TargetUnit("party" .. this.id)
-            end
-          end
-        end
-      else
-        local x, y = GetCursorPosition()
-        ToggleDropDownMenu(1, nil, getglobal("PartyMemberFrame" .. this.id .. "DropDown"), "cursor")
-      end
-    end)
-
-    pfUI.uf.group[i]:SetScript("OnUpdate", function ()
-      if CheckInteractDistance("party" .. this.id, 4) or not UnitName("party" .. this.id) then
-        this:SetAlpha(1)
-      else
-        this:SetAlpha(.5)
-      end
-
-      if UnitIsConnected("party" .. this.id) then
-        this.hp.bar:SetMinMaxValues(0, UnitHealthMax("party"..this.id))
-        this.power.bar:SetMinMaxValues(0, UnitManaMax("party"..this.id))
-
-        local hpDisplay = this.hp.bar:GetValue()
-        local hpReal = UnitHealth("party"..this.id)
-        local hpDiff = abs(hpReal - hpDisplay)
-
-        if hpDisplay < hpReal then
-          this.hp.bar:SetValue(hpDisplay + ceil(hpDiff / pfUI_config.unitframes.animation_speed))
-        elseif hpDisplay > hpReal then
-          this.hp.bar:SetValue(hpDisplay - ceil(hpDiff / pfUI_config.unitframes.animation_speed))
-        end
-
-        local powerDisplay = this.power.bar:GetValue()
-        local powerReal = UnitMana("party"..this.id)
-        local powerDiff = abs(powerReal - powerDisplay)
-
-        if powerDisplay < powerReal then
-          this.power.bar:SetValue(powerDisplay + ceil(powerDiff / pfUI_config.unitframes.animation_speed))
-        elseif powerDisplay > powerReal then
-          this.power.bar:SetValue(powerDisplay - ceil(powerDiff / pfUI_config.unitframes.animation_speed))
-        end
-
-        _, class = UnitClass("party"..this.id)
-        local color = RAID_CLASS_COLORS[class]
-        local r, g, b = .2, .2, .2
-        if pfUI_config.unitframes.dark == "1" and color then
-          this.hp.bar:SetStatusBarColor(r, g, b)
-          if pfUI_config.unitframes.pastel == "1" then
-            r, g, b = (color.r + .5) * .5, (color.g + .5) * .5, (color.b + .5) * .5
-          else
-            r, g, b = color.r, color.g, color.b
-          end
-          this.caption:SetTextColor(r,g,b)
-        elseif color then
-          if pfUI_config.unitframes.pastel == "1" then
-            r, g, b = (color.r + .5) * .5, (color.g + .5) * .5, (color.b + .5) * .5
-          else
-            r, g, b = color.r, color.g, color.b
-          end
-          this.hp.bar:SetStatusBarColor(r, g, b)
-          this.caption:SetTextColor(1,1,1)
-        end
-
-        local pcolor = ManaBarColor[UnitPowerType("party"..this.id)]
-        this.power.bar:SetStatusBarColor(pcolor.r + .5, pcolor.g +.5, pcolor.b +.5, 1)
-
-        this.caption:SetText(UnitName("party"..this.id))
-
-      else
-        this.hp.bar:SetMinMaxValues(0, 100)
-        this.power.bar:SetMinMaxValues(0, 100)
-        this.hp.bar:SetValue(0)
-        this.power.bar:SetValue(0)
-        local name = UnitName("party"..this.id)
-        if name then
-          this.caption:SetText("[OFF]" .. name)
-        end
-      end
-    end)
+    pfUI.uf:CreateUnit(pfUI.uf.group[i])
   end
-
 end)

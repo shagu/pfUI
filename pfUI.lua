@@ -182,8 +182,6 @@ ScriptErrors:SetScript("OnShow", function(msg)
     ScriptErrors:Hide()
   end)
 
-pfUI.uf = CreateFrame("Frame",nil,UIParent)
-
 pfUI.info = CreateFrame("Button", "pfInfoBox", UIParent)
 pfUI.info:Hide()
 
