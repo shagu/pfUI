@@ -35,7 +35,7 @@ pfUI will support and contain language specific code for the following languages
 ![Moving Frames](http://mephis.he-hosting.de/shaguaddons/pfUI/mmobase/moveit.jpg)
 
 ## Recommended Addons
-* [DPSMate](https://bitbucket.org/tomdy/dpsmate) An advanced combat analyzation tool
+* [DPSMate](https://github.com/Geigerkind/DPSMate) An advanced combat analyzation tool
 * [HealComm](https://github.com/Aviana/HealComm/releases) Visual representation of incoming heals
 * [WIM](http://addons.us.to/addon/wim), [WIM (continued)](https://github.com/shirsig/WIM) Give whispers an instant messenger feel
 * [MobHealth3](http://addons.us.to/addon/mobhealth) Estimates a mob's health
