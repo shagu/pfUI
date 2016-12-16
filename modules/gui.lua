@@ -774,7 +774,7 @@ pfUI:RegisterModule("gui", function ()
 
   -- panels
   pfUI.gui.panel = pfUI.gui:CreateConfigTab("Panel")
-  local values = { "time", "fps", "exp", "gold", "friends", "guild", "durability", "zone" }
+  local values = { "time", "fps", "exp", "gold", "friends", "guild", "durability", "zone", "none" }
   pfUI.gui:CreateConfig(pfUI.gui.panel, "Left Panel: Left", pfUI_config.panel.left, "left", "dropdown", values )
   pfUI.gui:CreateConfig(pfUI.gui.panel, "Left Panel: Center", pfUI_config.panel.left, "center", "dropdown", values)
   pfUI.gui:CreateConfig(pfUI.gui.panel, "Left Panel: Right", pfUI_config.panel.left, "right", "dropdown", values)
