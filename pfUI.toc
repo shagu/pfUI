@@ -51,3 +51,4 @@ modules\thirdparty.lua
 modules\buff.lua
 modules\nameplates.lua
 modules\loot.lua
+modules\infight.lua

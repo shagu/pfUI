@@ -688,7 +688,10 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "Cooldown text threshold", pfUI_config.appearance.cd, "threshold")
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "Castbar color", pfUI_config.appearance.castbar, "castbarcolor", "color")
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "Castbar color (Channeling)", pfUI_config.appearance.castbar, "channelcolor", "color")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Auto-resize Lootframe)", pfUI_config.appearance.loot, "autoresize", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Auto-resize Lootframe", pfUI_config.appearance.loot, "autoresize", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Show combat glow effect on screen edges", pfUI_config.appearance.infight, "screen", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Show combat glow effect on common unit frames", pfUI_config.appearance.infight, "common", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Show combat glow effect on group frames", pfUI_config.appearance.infight, "group", "checkbox")
 
   -- modules
   pfUI.gui.modules = pfUI.gui:CreateConfigTab("Modules")
