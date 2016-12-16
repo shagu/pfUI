@@ -37,15 +37,12 @@ pfUI:RegisterModule("actionbar", function ()
         this.rangeTimer = this.rangeTimer - elapsed
         if ( this.rangeTimer <= 0.1 ) then
           if ( IsActionInRange( ActionButton_GetPagedID(this)) == 0 ) then
-            if not this.oor then
-              local r,g,b,a = strsplit(",", pfUI_config.bars.rangecolor)
-              this.oor = this:CreateTexture("OVERLAY")
-              this.oor:SetTexture(r,g,b,a)
-              this.oor:SetAllPoints(this)
+            if not this.a then
+              this.r,this.g,this.b,this.a = strsplit(",", pfUI_config.bars.rangecolor)
             end
-            this.oor:Show()
-          elseif this.oor then
-            this.oor:Hide()
+            getglobal(this:GetName() .. 'Icon'):SetVertexColor(this.r, this.g, this.b, this.a)
+          elseif IsUsableAction(ActionButton_GetPagedID(this)) then
+            getglobal(this:GetName() .. 'Icon'):SetVertexColor(1, 1, 1, 1)
           end
           this.rangeTimer = TOOLTIP_UPDATE_TIME
         end
