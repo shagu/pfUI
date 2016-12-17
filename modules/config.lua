@@ -51,6 +51,7 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("unitframes", "player",  "showPVPMinimap",   "0")
   pfUI:UpdateConfig("unitframes", "player",  "showPVP",          "0")
   pfUI:UpdateConfig("unitframes", "player",  "buffs",            "top")
+  pfUI:UpdateConfig("unitframes", "player",  "energy",           "1")
 
   pfUI:UpdateConfig("unitframes", "target",  "width",            "200")
   pfUI:UpdateConfig("unitframes", "target",  "height",           "50")

@@ -724,6 +724,7 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui:CreateConfig(pfUI.gui.uf, "Show PvP Icon", pfUI_config.unitframes.player, "showPVP", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.uf, "Align PvP Icon to Minimap", pfUI_config.unitframes.player, "showPVPMinimap", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.uf, "Buff position", pfUI_config.unitframes.player, "buffs", "dropdown", { "top", "bottom", "hide"})
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "Show energy ticks", pfUI_config.unitframes.player, "energy", "checkbox")
 
   pfUI.gui:CreateConfig(pfUI.gui.uf, "Target", nil, nil, "header")
   pfUI.gui:CreateConfig(pfUI.gui.uf, "Health width", pfUI_config.unitframes.target, "width")

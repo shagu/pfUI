@@ -295,6 +295,43 @@ pfUI:RegisterModule("player", function ()
   pfUI.uf.player.power.bar:SetAllPoints(pfUI.uf.player.power)
   pfUI.uf.player.power.bar:SetMinMaxValues(0, 100)
 
+  if pfUI_config.unitframes.player.energy == "1" then
+    pfUI.uf.player.power.tick = CreateFrame("Frame", nil, UIParent)
+    pfUI.uf.player.power.tick:RegisterEvent("VARIABLES_LOADED")
+    pfUI.uf.player.power.tick:RegisterEvent("UNIT_DISPLAYPOWER")
+
+    pfUI.uf.player.power.tick:SetScript("OnEvent", function()
+      if event == "VARIABLES_LOADED" then this.lastTick = GetTime() end
+      if event == "VARIABLES_LOADED" or ( event == "UNIT_DISPLAYPOWER" and arg1 == "player" ) then
+        if UnitPowerType("player") ~= 3 then
+          this.spark:Hide()
+        else
+          this.spark:Show()
+        end
+      end
+    end)
+
+    pfUI.uf.player.power.tick.spark = pfUI.uf.player.power.bar:CreateTexture(nil, 'OVERLAY')
+    pfUI.uf.player.power.tick.spark:SetTexture("Interface\\CastingBar\\UI-CastingBar-Spark")
+    pfUI.uf.player.power.tick.spark:SetHeight(pfUI_config.unitframes.player.pheight + 15)
+    pfUI.uf.player.power.tick.spark:SetWidth(pfUI_config.unitframes.player.pheight + 5)
+    pfUI.uf.player.power.tick.spark:SetBlendMode('ADD')
+
+    pfUI.uf.player.power.tick:SetScript("OnUpdate", function()
+      if not this.energy then this.energy = UnitMana("player") end
+
+      if(UnitMana("player") > this.energy or GetTime() >= this.lastTick + 2) then
+        this.lastTick = GetTime()
+      end
+
+      this.energy = UnitMana("player")
+
+      local value = round((GetTime() - this.lastTick) * 100)
+      local pos = pfUI_config.unitframes.player.width / 200 * value
+      this.spark:SetPoint("LEFT", pos-((pfUI_config.unitframes.player.pheight+5)/2), 0)
+    end)
+  end
+
   pfUI.uf.player.hpText = pfUI.uf.player:CreateFontString("Status", "HIGH", "GameFontNormal")
   pfUI.uf.player.hpText:SetFont("Interface\\AddOns\\pfUI\\fonts\\" .. pfUI_config.global.font_square .. ".ttf", pfUI_config.global.font_size, "OUTLINE")
   pfUI.uf.player.hpText:ClearAllPoints()
