@@ -19,6 +19,11 @@ pfUI:RegisterModule("mouseover", function ()
     TargetUnit(unit)
     CastSpellByName(msg)
 
-    if oldt then TargetLastTarget() end
+    if oldt then
+      if pfUI.uf.target then
+        pfUI.uf.target.noanim = "yes"
+      end
+      TargetLastTarget()
+    end
   end
 end)
