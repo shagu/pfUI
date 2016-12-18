@@ -3,8 +3,7 @@ pfUI:RegisterModule("thirdparty", function ()
 
   -- DPSMate Integration
   -- Move DPSMate to right chat and let the chat-hide button toggle it
-  if DPSMate and pfUI_config.thirdparty.dpsmate.enable == "1" then
-
+  local pfUIsetupDPSMate = function()
     -- set DPSMate appearance to match pfUI
     DPSMateSettings["windows"][1]["titlebarheight"] = 18
     DPSMateSettings["windows"][1]["titlebarfontsize"] = 12
@@ -59,6 +58,22 @@ pfUI:RegisterModule("thirdparty", function ()
         end
       end)
     end
+  end
+
+  if pfUI_config.thirdparty.dpsmate.enable == "1" then
+    if DPSMate_DPSMate then
+      pfUIsetupDPSMate()
+    else
+      local pfUIhookDPSMate = CreateFrame("Frame", nil)
+      -- we need this for DPSMate, because it finishes its UI init after it loads variables not at ADDON_LOADED
+      pfUIhookDPSMate:RegisterEvent("VARIABLES_LOADED")
+      pfUIhookDPSMate:SetScript("OnEvent",function()
+          if DPSMate_DPSMate then
+            pfUIhookDPSMate:UnregisterEvent("VARIABLES_LOADED")
+            pfUIsetupDPSMate()
+          end
+        end) 
+    end 
 
   end
 
