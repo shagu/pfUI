@@ -16,6 +16,8 @@ pfUI:RegisterModule("target", function ()
   ComboFrame:UnregisterAllEvents()
 
   pfUI.uf.target = CreateFrame("Button","pfTarget",UIParent)
+  pfUI.uf.target.label = "target"
+  pfUI.uf.target.id = ""
   pfUI.uf.target:SetFrameStrata("LOW")
   pfUI.uf.target:Hide()
   pfUI.uf.target:SetWidth(pfUI_config.unitframes.target.width)

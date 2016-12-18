@@ -11,6 +11,8 @@ pfUI:RegisterModule("player", function ()
   PlayerFrame:UnregisterAllEvents()
 
   pfUI.uf.player = CreateFrame("Button","pfPlayer",UIParent)
+  pfUI.uf.player.label = "player"
+  pfUI.uf.player.id = ""
   pfUI.uf.player:SetFrameStrata("LOW")
   pfUI.uf.player:SetWidth(pfUI_config.unitframes.player.width)
   pfUI.uf.player:SetHeight(pfUI_config.unitframes.player.height + pfUI_config.unitframes.player.pheight + 2*default_border + pfUI_config.unitframes.player.pspace)

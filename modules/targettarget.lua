@@ -17,6 +17,8 @@ pfUI:RegisterModule("targettarget", function ()
     end)
 
   pfUI.uf.targettarget = CreateFrame("Button","pfTargetTarget",UIParent)
+  pfUI.uf.targettarget.label = "targettarget"
+  pfUI.uf.targettarget.id = ""
   pfUI.uf.targettarget:SetFrameStrata("LOW")
   pfUI.uf.targettarget:SetWidth(100)
   pfUI.uf.targettarget:SetHeight(20 + 2*default_border + pfUI_config.unitframes.ttarget.pspace)

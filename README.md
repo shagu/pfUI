@@ -56,6 +56,9 @@ The term "*pfui!*" is german and simply stands for "*pooh!*", because I'm not a
 big fan of creating configuration UI's especially not via the Wow-API 
 (you might have noticed that in ShaguUI). 
 
+**How can I enable mouseover cast?**  
+Create a macro with "/pfcast SPELLNAME". 
+
 **How can I checkout the current state?**  
 See Installation Section. But be aware that things might not work for you.
 
