@@ -1,4 +1,4 @@
-pfUI:RegisterModule("loot", function ()
+pfUI:RegisterModule("infight", function ()
   local default_border = pfUI_config.appearance.border.default
   if pfUI_config.appearance.border.unitframes ~= "-1" then
     default_border = pfUI_config.appearance.border.unitframes
