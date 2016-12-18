@@ -17,6 +17,16 @@ pfUI:RegisterModule("player", function ()
   pfUI.uf.player:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOM", -75, 125)
   pfUI.utils:UpdateMovable(pfUI.uf.player)
   pfUI.uf.player:RegisterForClicks('LeftButtonUp', 'RightButtonUp')
+  pfUI.uf.player:SetScript("OnEnter", function()
+    GameTooltip_SetDefaultAnchor(GameTooltip, this)
+    GameTooltip:SetUnit(this.label .. this.id)
+    GameTooltip:Show()
+  end)
+
+  pfUI.uf.player:SetScript("OnLeave", function()
+    GameTooltip:FadeOut()
+  end)
+
   pfUI.uf.player:SetScript("OnClick", function ()
       if arg1 == "RightButton" then
         ToggleDropDownMenu(1, nil, pfUI.uf.player.Dropdown,"cursor")

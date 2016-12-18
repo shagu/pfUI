@@ -24,6 +24,15 @@ pfUI:RegisterModule("targettarget", function ()
   pfUI.utils:UpdateMovable(pfUI.uf.targettarget)
 
   pfUI.uf.targettarget:RegisterForClicks('LeftButtonUp', 'RightButtonUp')
+  pfUI.uf.targettarget:SetScript("OnEnter", function()
+    GameTooltip_SetDefaultAnchor(GameTooltip, this)
+    GameTooltip:SetUnit(this.label .. this.id)
+    GameTooltip:Show()
+  end)
+
+  pfUI.uf.targettarget:SetScript("OnLeave", function()
+    GameTooltip:FadeOut()
+  end)
   pfUI.uf.targettarget:SetScript("OnClick", function ()
     TargetUnit("targettarget")
 

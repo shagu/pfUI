@@ -16,6 +16,16 @@ pfUI:RegisterModule("pet", function ()
   pfUI.utils:UpdateMovable(pfUI.uf.pet)
 
   pfUI.uf.pet:RegisterForClicks('LeftButtonUp', 'RightButtonUp')
+  pfUI.uf.pet:SetScript("OnEnter", function()
+    GameTooltip_SetDefaultAnchor(GameTooltip, this)
+    GameTooltip:SetUnit(this.label .. this.id)
+    GameTooltip:Show()
+  end)
+
+  pfUI.uf.pet:SetScript("OnLeave", function()
+    GameTooltip:FadeOut()
+  end)
+
   pfUI.uf.pet:SetScript("OnClick", function ()
       TargetUnit("pet")
     end)
