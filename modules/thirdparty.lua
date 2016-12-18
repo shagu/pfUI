@@ -3,8 +3,7 @@ pfUI:RegisterModule("thirdparty", function ()
 
   -- DPSMate Integration
   -- Move DPSMate to right chat and let the chat-hide button toggle it
-  if DPSMate and pfUI_config.thirdparty.dpsmate.enable == "1" then
-
+  local function pfSetupDPSMate()
     -- set DPSMate appearance to match pfUI
     DPSMateSettings["windows"][1]["titlebarheight"] = 18
     DPSMateSettings["windows"][1]["titlebarfontsize"] = 12
@@ -59,7 +58,21 @@ pfUI:RegisterModule("thirdparty", function ()
         end
       end)
     end
+  end
 
+  if pfUI_config.thirdparty.dpsmate.enable == "1" then
+    if DPSMate_DPSMate then
+      pfSetupDPSMate()
+    else
+      local pfHookDPSMate = CreateFrame("Frame", nil)
+      pfHookDPSMate:RegisterEvent("VARIABLES_LOADED")
+      pfHookDPSMate:SetScript("OnEvent",function()
+          if DPSMate_DPSMate then
+            pfHookDPSMate:UnregisterEvent("VARIABLES_LOADED")
+            pfSetupDPSMate()
+          end
+        end)
+    end
   end
 
   -- WIM Integration
