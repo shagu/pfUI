@@ -39,6 +39,7 @@ modules\targettarget.lua
 modules\pet.lua
 modules\group.lua
 modules\raid.lua
+modules\mouseover.lua
 modules\castbar.lua
 modules\skin.lua
 modules\xpbar.lua

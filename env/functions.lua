@@ -9,7 +9,7 @@ function round(input, places)
 end
 
 function strsplit(delimiter, subject)
-	local ret = {}
+  local ret = {}
   local sector = subject
   while true do
     local pos = strfind(sector, delimiter)

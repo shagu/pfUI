@@ -8,6 +8,8 @@ pfUI:RegisterModule("pet", function ()
   end
 
   pfUI.uf.pet = CreateFrame("Button","pfPet",UIParent)
+  pfUI.uf.pet.label = "pet"
+  pfUI.uf.pet.id = ""
   pfUI.uf.pet:SetFrameStrata("LOW")
   pfUI.uf.pet:SetWidth(100)
   pfUI.uf.pet:SetHeight(20 + 2*default_border + pfUI_config.unitframes.pet.pspace)
@@ -16,6 +18,16 @@ pfUI:RegisterModule("pet", function ()
   pfUI.utils:UpdateMovable(pfUI.uf.pet)
 
   pfUI.uf.pet:RegisterForClicks('LeftButtonUp', 'RightButtonUp')
+  pfUI.uf.pet:SetScript("OnEnter", function()
+    GameTooltip_SetDefaultAnchor(GameTooltip, this)
+    GameTooltip:SetUnit(this.label .. this.id)
+    GameTooltip:Show()
+  end)
+
+  pfUI.uf.pet:SetScript("OnLeave", function()
+    GameTooltip:FadeOut()
+  end)
+
   pfUI.uf.pet:SetScript("OnClick", function ()
       TargetUnit("pet")
     end)
