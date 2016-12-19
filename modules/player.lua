@@ -308,13 +308,13 @@ pfUI:RegisterModule("player", function ()
   pfUI.uf.player.power.bar:SetMinMaxValues(0, 100)
 
   if pfUI_config.unitframes.player.energy == "1" then
-    pfUI.uf.player.power.tick = CreateFrame("Frame", nil, UIParent)
-    pfUI.uf.player.power.tick:RegisterEvent("VARIABLES_LOADED")
+    pfUI.uf.player.power.tick = CreateFrame("Frame", nil, pfUI.uf.player.power.bar)
+    pfUI.uf.player.power.tick:RegisterEvent("PLAYER_ENTERING_WORLD")
     pfUI.uf.player.power.tick:RegisterEvent("UNIT_DISPLAYPOWER")
 
     pfUI.uf.player.power.tick:SetScript("OnEvent", function()
-      if event == "VARIABLES_LOADED" then this.lastTick = GetTime() end
-      if event == "VARIABLES_LOADED" or ( event == "UNIT_DISPLAYPOWER" and arg1 == "player" ) then
+      if event == "PLAYER_ENTERING_WORLD" then this.lastTick = GetTime() end
+      if event == "PLAYER_ENTERING_WORLD" or ( event == "UNIT_DISPLAYPOWER" and arg1 == "player" ) then
         if UnitPowerType("player") ~= 3 then
           this.spark:Hide()
         else
