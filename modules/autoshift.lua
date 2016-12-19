@@ -81,6 +81,12 @@ pfUI:RegisterModule("autoshift", function ()
   pfUI.autoshift:SetScript("OnEvent", function()
       pfUI.autoshift.lastError = arg1
       local CancelLater = nil
+
+      if arg1 == SPELL_FAILED_NOT_STANDING then
+        SitOrStand()
+        return
+      end
+
       for id, errorstring in pairs(pfUI.autoshift.errors) do
         if arg1 == errorstring then
           for i=0,15,1 do
