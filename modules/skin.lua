@@ -59,7 +59,7 @@ pfUI:RegisterModule("skin", function ()
     b:SetScript("OnLeave", function()
       pfUI.utils:CreateBackdrop(b, nil, true)
     end)
-    b:SetFont("Interface\\AddOns\\pfUI\\fonts\\" .. pfUI_config.global.font_default .. ".ttf", pfUI_config.global.font_size, "OUTLINE")
+    b:SetFont(pfUI.font_default, pfUI_config.global.font_size, "OUTLINE")
   end
 
   for _, box in pairs(boxes) do
@@ -71,7 +71,7 @@ pfUI:RegisterModule("skin", function ()
     if v.SetTextColor then
       v:SetTextColor(1,1,1,1)
       v:SetPoint("TOP", GameMenuFrame, "TOP", 0, 16)
-      v:SetFont("Interface\\AddOns\\pfUI\\fonts\\" .. pfUI_config.global.font_default .. ".ttf", pfUI_config.global.font_size + 2, "OUTLINE")
+      v:SetFont(pfUI.font_default, pfUI_config.global.font_size + 2, "OUTLINE")
     end
   end
 

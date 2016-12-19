@@ -71,7 +71,7 @@ pfUI:RegisterModule("raid", function ()
       pfUI.uf.raid[i].power.bar:SetMinMaxValues(0, 100)
 
       pfUI.uf.raid[i].caption = pfUI.uf.raid[i]:CreateFontString("Status", "HIGH", "GameFontNormal")
-      pfUI.uf.raid[i].caption:SetFont("Interface\\AddOns\\pfUI\\fonts\\" .. pfUI_config.global.font_square .. ".ttf", pfUI_config.global.font_size, "OUTLINE")
+      pfUI.uf.raid[i].caption:SetFont(pfUI.font_square, pfUI_config.global.font_size, "OUTLINE")
       pfUI.uf.raid[i].caption:SetAllPoints(pfUI.uf.raid[i].hp.bar)
       pfUI.uf.raid[i].caption:ClearAllPoints()
       pfUI.uf.raid[i].caption:SetParent(pfUI.uf.raid[i].hp.bar)

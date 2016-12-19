@@ -115,7 +115,7 @@ pfUI:RegisterModule("group", function ()
     pfUI.uf.group[i].power.bar:SetMinMaxValues(0, 100)
 
     pfUI.uf.group[i].caption = pfUI.uf.group[i]:CreateFontString("Status", "HIGH", "GameFontNormal")
-    pfUI.uf.group[i].caption:SetFont("Interface\\AddOns\\pfUI\\fonts\\" .. pfUI_config.global.font_square .. ".ttf", pfUI_config.global.font_size, "OUTLINE")
+    pfUI.uf.group[i].caption:SetFont(pfUI.font_square, pfUI_config.global.font_size, "OUTLINE")
     pfUI.uf.group[i].caption:ClearAllPoints()
     pfUI.uf.group[i].caption:SetParent(pfUI.uf.group[i].hp.bar)
     pfUI.uf.group[i].caption:SetPoint("LEFT",pfUI.uf.group[i].hp.bar, "LEFT", 10, 0)

@@ -147,7 +147,7 @@ pfUI:RegisterModule("loot", function ()
     frame.count:ClearAllPoints()
     frame.count:SetJustifyH"RIGHT"
     frame.count:SetPoint("BOTTOMRIGHT", frame.ficon, 2, 2)
-    frame.count:SetFont("Interface\\AddOns\\pfUI\\fonts\\" .. pfUI_config.global.font_default .. ".ttf", pfUI_config.global.font_size, "OUTLINE")
+    frame.count:SetFont(pfUI.font_default, pfUI_config.global.font_size, "OUTLINE")
     frame.count:SetText(1)
 
     frame.name = frame:CreateFontString(nil, "OVERLAY")
@@ -155,7 +155,7 @@ pfUI:RegisterModule("loot", function ()
     frame.name:ClearAllPoints()
     frame.name:SetAllPoints(frame)
     frame.name:SetNonSpaceWrap(true)
-    frame.name:SetFont("Interface\\AddOns\\pfUI\\fonts\\" .. pfUI_config.global.font_default .. ".ttf", pfUI_config.global.font_size, "OUTLINE")
+    frame.name:SetFont(pfUI.font_default, pfUI_config.global.font_size, "OUTLINE")
 
     frame.rarity = frame:CreateTexture(nil, "ARTWORK")
     frame.rarity:SetTexture"Interface\\AddOns\\pfUI\\img\\bar"
