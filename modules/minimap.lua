@@ -75,7 +75,7 @@ pfUI:RegisterModule("minimap", function ()
   pfUI.minimapCoordinates:SetFrameStrata("BACKGROUND")
   -- Create text
   pfUI.minimapCoordinates.text = pfUI.minimapCoordinates:CreateFontString("MinimapCoordinatesText", "LOW", "GameFontNormal")
-  pfUI.minimapCoordinates.text:SetFont("Interface\\AddOns\\pfUI\\fonts\\" .. pfUI_config.global.font_default .. ".ttf", pfUI_config.global.font_size, "OUTLINE")
+  pfUI.minimapCoordinates.text:SetFont(pfUI.font_default, pfUI_config.global.font_size, "OUTLINE")
   pfUI.minimapCoordinates.text:SetPoint("LEFT", 4, 0)
   pfUI.minimapCoordinates.text:SetFontObject(GameFontWhite)
   pfUI.minimapCoordinates.text:SetText("X, Y")
@@ -86,9 +86,14 @@ pfUI:RegisterModule("minimap", function ()
   Minimap:SetScript("OnEnter", function()
     SetMapToCurrentZone()
     local posX, posY = GetPlayerMapPosition("player")
-    local roundedX = ceil(posX * 1000)/10
-    local roundedY = ceil(posY * 1000)/10
-    pfUI.minimapCoordinates.text:SetText(roundedX..", "..roundedY)
+    if posX ~= 0 and posY ~= 0 then
+      local roundedX = ceil(posX * 1000)/10
+      local roundedY = ceil(posY * 1000)/10
+      pfUI.minimapCoordinates.text:SetText(roundedX..", "..roundedY)
+    else
+      pfUI.minimapCoordinates.text:SetText("|cffffaaaaN/A")
+    end
+
     pfUI.minimapCoordinates:Show()
   end)
   Minimap:SetScript("OnLeave", function()

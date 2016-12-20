@@ -208,7 +208,7 @@ pfUI:RegisterModule("targettarget", function ()
   pfUI.uf.targettarget.power.bar:SetMinMaxValues(0, 100)
 
   pfUI.uf.targettarget.hp.text = pfUI.uf.targettarget.hp.bar:CreateFontString("Status", "LOW", "GameFontNormal")
-  pfUI.uf.targettarget.hp.text:SetFont("Interface\\AddOns\\pfUI\\fonts\\" .. pfUI_config.global.font_square .. ".ttf", pfUI_config.global.font_size - 2, "OUTLINE")
+  pfUI.uf.targettarget.hp.text:SetFont(pfUI.font_square, pfUI_config.global.font_size - 2, "OUTLINE")
   pfUI.uf.targettarget.hp.text:ClearAllPoints()
   pfUI.uf.targettarget.hp.text:SetAllPoints(pfUI.uf.targettarget.hp.bar)
   pfUI.uf.targettarget.hp.text:SetPoint("CENTER", 0, 0)

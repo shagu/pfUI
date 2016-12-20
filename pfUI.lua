@@ -203,7 +203,7 @@ function pfUI.info:ShowInfoBox(text, time, parent, height)
   pfUI.info:ClearAllPoints()
   pfUI.info.text:SetAllPoints(pfUI.info)
   pfUI.info.text:SetText(text)
-  pfUI.info.text:SetFont("Interface\\AddOns\\pfUI\\fonts\\" .. pfUI_config.global.font_default .. ".ttf", 14, "OUTLINE")
+  pfUI.info.text:SetFont(pfUI.font_default, 14, "OUTLINE")
 
   pfUI.info:SetWidth(pfUI.info.text:GetStringWidth() + 50)
   pfUI.info:SetHeight(height)

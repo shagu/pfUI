@@ -128,7 +128,7 @@ pfUI.utils:CreateBackdrop(GameTooltip)
         pfUI.tooltipStatusBar.HP:SetPoint("TOP", 0,8)
         pfUI.tooltipStatusBar.HP:SetNonSpaceWrap(false)
         pfUI.tooltipStatusBar.HP:SetFontObject(GameFontWhite)
-        pfUI.tooltipStatusBar.HP:SetFont("Interface\\AddOns\\pfUI\\fonts\\" .. pfUI_config.global.font_default .. ".ttf", pfUI_config.global.font_size + 2, "OUTLINE")
+        pfUI.tooltipStatusBar.HP:SetFont(pfUI.font_default, pfUI_config.global.font_size + 2, "OUTLINE")
       end
 
       if hp and hpm then

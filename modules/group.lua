@@ -38,7 +38,7 @@ pfUI:RegisterModule("group", function ()
         return
       end
 
-      if event == "RAID_TARGET_UPDATE" or event == "PLAYER_ENTERING_WORLD" then
+      if event == "RAID_TARGET_UPDATE" or event == "PLAYER_ENTERING_WORLD" or event == "PARTY_MEMBERS_CHANGED" then
         local raidIcon = GetRaidTargetIndex("party" .. i)
         if raidIcon then
           SetRaidTargetIconTexture(pfUI.uf.group[i].hp.raidIcon.texture, raidIcon)
@@ -48,7 +48,7 @@ pfUI:RegisterModule("group", function ()
         end
       end
 
-      if event == "PARTY_LEADER_CHANGED" or event == "PLAYER_ENTERING_WORLD" then
+      if event == "PARTY_LEADER_CHANGED" or event == "PLAYER_ENTERING_WORLD" or event == "PARTY_MEMBERS_CHANGED" then
         if UnitIsPartyLeader("party"..i) then
           pfUI.uf.group[i].hp.leaderIcon:Show()
         else
@@ -56,7 +56,7 @@ pfUI:RegisterModule("group", function ()
         end
       end
 
-      if event == "PARTY_LOOT_METHOD_CHANGED" or event == "PLAYER_ENTERING_WORLD" then
+      if event == "PARTY_LOOT_METHOD_CHANGED" or event == "PLAYER_ENTERING_WORLD" or event == "PARTY_MEMBERS_CHANGED" then
         local _, lootmaster = GetLootMethod()
         if lootmaster and pfUI.uf.group[i].id == lootmaster then
           pfUI.uf.group[i].hp.lootIcon:Show()
@@ -115,7 +115,7 @@ pfUI:RegisterModule("group", function ()
     pfUI.uf.group[i].power.bar:SetMinMaxValues(0, 100)
 
     pfUI.uf.group[i].caption = pfUI.uf.group[i]:CreateFontString("Status", "HIGH", "GameFontNormal")
-    pfUI.uf.group[i].caption:SetFont("Interface\\AddOns\\pfUI\\fonts\\" .. pfUI_config.global.font_square .. ".ttf", pfUI_config.global.font_size, "OUTLINE")
+    pfUI.uf.group[i].caption:SetFont(pfUI.font_square, pfUI_config.global.font_size, "OUTLINE")
     pfUI.uf.group[i].caption:ClearAllPoints()
     pfUI.uf.group[i].caption:SetParent(pfUI.uf.group[i].hp.bar)
     pfUI.uf.group[i].caption:SetPoint("LEFT",pfUI.uf.group[i].hp.bar, "LEFT", 10, 0)

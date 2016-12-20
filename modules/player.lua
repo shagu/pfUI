@@ -308,13 +308,13 @@ pfUI:RegisterModule("player", function ()
   pfUI.uf.player.power.bar:SetMinMaxValues(0, 100)
 
   if pfUI_config.unitframes.player.energy == "1" then
-    pfUI.uf.player.power.tick = CreateFrame("Frame", nil, UIParent)
-    pfUI.uf.player.power.tick:RegisterEvent("VARIABLES_LOADED")
+    pfUI.uf.player.power.tick = CreateFrame("Frame", nil, pfUI.uf.player.power.bar)
+    pfUI.uf.player.power.tick:RegisterEvent("PLAYER_ENTERING_WORLD")
     pfUI.uf.player.power.tick:RegisterEvent("UNIT_DISPLAYPOWER")
 
     pfUI.uf.player.power.tick:SetScript("OnEvent", function()
-      if event == "VARIABLES_LOADED" then this.lastTick = GetTime() end
-      if event == "VARIABLES_LOADED" or ( event == "UNIT_DISPLAYPOWER" and arg1 == "player" ) then
+      if event == "PLAYER_ENTERING_WORLD" then this.lastTick = GetTime() end
+      if event == "PLAYER_ENTERING_WORLD" or ( event == "UNIT_DISPLAYPOWER" and arg1 == "player" ) then
         if UnitPowerType("player") ~= 3 then
           this.spark:Hide()
         else
@@ -345,14 +345,14 @@ pfUI:RegisterModule("player", function ()
   end
 
   pfUI.uf.player.hpText = pfUI.uf.player:CreateFontString("Status", "HIGH", "GameFontNormal")
-  pfUI.uf.player.hpText:SetFont("Interface\\AddOns\\pfUI\\fonts\\" .. pfUI_config.global.font_square .. ".ttf", pfUI_config.global.font_size, "OUTLINE")
+  pfUI.uf.player.hpText:SetFont(pfUI.font_square, pfUI_config.global.font_size, "OUTLINE")
   pfUI.uf.player.hpText:ClearAllPoints()
   pfUI.uf.player.hpText:SetJustifyH("RIGHT")
   pfUI.uf.player.hpText:SetFontObject(GameFontWhite)
   pfUI.uf.player.hpText:SetText("5000")
 
   pfUI.uf.player.powerText = pfUI.uf.player:CreateFontString("Status", "HIGH", "GameFontNormal")
-  pfUI.uf.player.powerText:SetFont("Interface\\AddOns\\pfUI\\fonts\\" .. pfUI_config.global.font_square .. ".ttf", pfUI_config.global.font_size, "OUTLINE")
+  pfUI.uf.player.powerText:SetFont(pfUI.font_square, pfUI_config.global.font_size, "OUTLINE")
   pfUI.uf.player.powerText:ClearAllPoints()
   pfUI.uf.player.powerText:SetJustifyH("LEFT")
   pfUI.uf.player.powerText:SetFontObject(GameFontWhite)
@@ -379,14 +379,14 @@ pfUI:RegisterModule("player", function ()
     pfUI.uf.player.buff.buffs[i]:SetID(i)
 
     pfUI.uf.player.buff.buffs[i].stacks = pfUI.uf.player.buff.buffs[i]:CreateFontString(nil, "OVERLAY", pfUI.uf.player.buff.buffs[i])
-    pfUI.uf.player.buff.buffs[i].stacks:SetFont("Interface\\AddOns\\pfUI\\fonts\\" .. pfUI_config.global.font_square .. ".ttf", pfUI_config.global.font_size, "OUTLINE")
+    pfUI.uf.player.buff.buffs[i].stacks:SetFont(pfUI.font_square, pfUI_config.global.font_size, "OUTLINE")
     pfUI.uf.player.buff.buffs[i].stacks:SetPoint("BOTTOMRIGHT", pfUI.uf.player.buff.buffs[i], 2, -2)
     pfUI.uf.player.buff.buffs[i].stacks:SetJustifyH("LEFT")
     pfUI.uf.player.buff.buffs[i].stacks:SetShadowColor(0, 0, 0)
     pfUI.uf.player.buff.buffs[i].stacks:SetShadowOffset(0.8, -0.8)
     pfUI.uf.player.buff.buffs[i].stacks:SetTextColor(1,1,.5)
     pfUI.uf.player.buff.buffs[i].cd = pfUI.uf.player.buff.buffs[i]:CreateFontString(nil, "OVERLAY", pfUI.uf.player.buff.buffs[i])
-    pfUI.uf.player.buff.buffs[i].cd:SetFont("Interface\\AddOns\\pfUI\\fonts\\" .. pfUI_config.global.font_square .. ".ttf", pfUI_config.global.font_size, "OUTLINE")
+    pfUI.uf.player.buff.buffs[i].cd:SetFont(pfUI.font_square, pfUI_config.global.font_size, "OUTLINE")
     pfUI.uf.player.buff.buffs[i].cd:SetPoint("CENTER", pfUI.uf.player.buff.buffs[i], 0, 0)
     pfUI.uf.player.buff.buffs[i].cd:SetJustifyH("LEFT")
     pfUI.uf.player.buff.buffs[i].cd:SetShadowColor(0, 0, 0)
@@ -490,14 +490,14 @@ pfUI:RegisterModule("player", function ()
     pfUI.uf.player.debuff.debuffs[i] = CreateFrame("Button", "pfUIPlayerDebuff" .. i, pfUI.uf.player)
     pfUI.uf.player.debuff.debuffs[i]:SetID(i)
     pfUI.uf.player.debuff.debuffs[i].stacks = pfUI.uf.player.debuff.debuffs[i]:CreateFontString(nil, "OVERLAY", pfUI.uf.player.debuff.debuffs[i])
-    pfUI.uf.player.debuff.debuffs[i].stacks:SetFont("Interface\\AddOns\\pfUI\\fonts\\" .. pfUI_config.global.font_square .. ".ttf", pfUI_config.global.font_size, "OUTLINE")
+    pfUI.uf.player.debuff.debuffs[i].stacks:SetFont(pfUI.font_square, pfUI_config.global.font_size, "OUTLINE")
     pfUI.uf.player.debuff.debuffs[i].stacks:SetPoint("BOTTOMRIGHT", pfUI.uf.player.debuff.debuffs[i], 2, -2)
     pfUI.uf.player.debuff.debuffs[i].stacks:SetJustifyH("LEFT")
     pfUI.uf.player.debuff.debuffs[i].stacks:SetShadowColor(0, 0, 0)
     pfUI.uf.player.debuff.debuffs[i].stacks:SetShadowOffset(0.8, -0.8)
     pfUI.uf.player.debuff.debuffs[i].stacks:SetTextColor(1,1,.5)
     pfUI.uf.player.debuff.debuffs[i].cd = pfUI.uf.player.debuff.debuffs[i]:CreateFontString(nil, "OVERLAY", pfUI.uf.player.debuff.debuffs[i])
-    pfUI.uf.player.debuff.debuffs[i].cd:SetFont("Interface\\AddOns\\pfUI\\fonts\\" .. pfUI_config.global.font_square .. ".ttf", pfUI_config.global.font_size, "OUTLINE")
+    pfUI.uf.player.debuff.debuffs[i].cd:SetFont(pfUI.font_square, pfUI_config.global.font_size, "OUTLINE")
     pfUI.uf.player.debuff.debuffs[i].cd:SetPoint("CENTER", pfUI.uf.player.debuff.debuffs[i], 0, 0)
     pfUI.uf.player.debuff.debuffs[i].cd:SetJustifyH("LEFT")
     pfUI.uf.player.debuff.debuffs[i].cd:SetShadowColor(0, 0, 0)
