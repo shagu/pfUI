@@ -1,13 +1,13 @@
 pfLocaleClass["ruRU"] = {
-  ["Чернокнижница"] = "WARLOCK",
+  ["Чернокнижник"] = "WARLOCK",
   ["Воин"] = "WARRIOR",
-  ["Охотница"] = "HUNTER",
+  ["Охотник"] = "HUNTER",
   ["Маг"] = "MAGE",
-  ["Жрица"] = "PRIEST",
+  ["Жрец"] = "PRIEST",
   ["Друид"] = "DRUID",
   ["Паладин"] = "PALADIN",
-  ["Шаманка"] = "SHAMAN",
-  ["Разбойница"] = "ROGUE",
+  ["Шаман"] = "SHAMAN",
+  ["Разбойник"] = "ROGUE",
 }
 
 pfLocaleBagtypes["ruRU"] = {
@@ -16,40 +16,40 @@ pfLocaleBagtypes["ruRU"] = {
   ["Сумка"] = "DEFAULT"
 }
 
-pfLocaleInvtypes["ruRU"] = { -- TODO
-  ["INVTYPE_WAND"] = "Wand",
-  ["INVTYPE_GUN"] = "Gun",
-  ["INVTYPE_GUNPROJECTILE"] = "Projectile",
-  ["INVTYPE_BOWPROJECTILE"] = "Projectile",
-  ["INVTYPE_CROSSBOW"] = "Crossbow",
-  ["INVTYPE_THROWN"] = "Thrown",
+pfLocaleInvtypes["ruRU"] = { -- check
+  ["INVTYPE_WAND"] = "Жезл",
+  ["INVTYPE_GUN"] = "Огнестрельное",
+  ["INVTYPE_GUNPROJECTILE"] = "Пуля",
+  ["INVTYPE_BOWPROJECTILE"] = "Стрела",
+  ["INVTYPE_CROSSBOW"] = "Арбалет",
+  ["INVTYPE_THROWN"] = "Метательное",
 }
 
-pfLocaleShift["ruRU"] = { -- TODO
-  ['BattleStance'] = "Battle Stance",
-  ['DefensiveStance'] = "Defensive Stance",
-  ['BerserkerStance'] = "Berserker Stance",
-  ['wantBattleStance'] = "Must be in Battle Stance",
-  ['wantDefensiveStance'] = "Must be in Defensive Stance",
-  ['wantBerserkerStance'] = "Must be in Berserker Stance",
-  ['wantBattleDefStance'] = "Must be in Battle Stance, Defensive Stance",
-  ['wantBattleBerserkStance'] = "Must be in Battle Stance, Berserker Stance",
+pfLocaleShift["ruRU"] = { -- checkcheck
+  ['BattleStance'] = "Боевая стойка",
+  ['DefensiveStance'] = "Оборонительная стойка",
+  ['BerserkerStance'] = "Стойка берсерка",
+  ['wantBattleStance'] = "Необходимо находиться в Боевой стойке",
+  ['wantDefensiveStance'] = "Необходимо находиться в Оборонительной стойке",
+  ['wantBerserkerStance'] = "Необходимо находиться в Стойке берсерка",
+  ['wantBattleDefStance'] = "Необходимо находиться в Боевой стойке, Оборонительной стойке",
+  ['wantBattleBerserkStance'] = "Необходимо находиться в Боевой стойке, Стойке берсерка",
 }
 
-pfLocaleSpellEvents["ruRU"] = { -- TODO
-  ['SPELL_GAINS'] = "(.+) gains (.+).",
-  ['SPELL_CAST'] = "(.+) begins to cast (.+).",
-  ['SPELL_PERFORM'] = "(.+) begins to perform (.+).",
-  ['SPELL_AFFLICTED'] = "(.+) %a+ afflicted by (.+).",
-  ['SPELL_HIT'] = "Your (.+) %a%a?its (.+) for %d+\.",
-  ['OTHER_SPELL_HIT'] = "%a+'s (.+) %a%a?its (.+) for %d+\.",
+pfLocaleSpellEvents["ruRU"] = { -- checkcheck
+  ['SPELL_GAINS'] = "(.+) получает эффект \"%s\".", --"%s получает эффект \"%s\"."
+  ['SPELL_CAST'] = "(.+) начинает использовать \"%s\".", --"%s начинает использовать \"%s\"."
+  ['SPELL_PERFORM'] = "(.+) начинает выполнять действие \"%s\".", --"%s начинает выполнять действие \"%s\"."
+  ['SPELL_AFFLICTED'] = "(.+) находится под воздействием эффекта \"%s\".", --"%s находится под воздействием эффекта \"%s\"."
+  ['SPELL_HIT'] = "Ваше заклинание \"%s\" наносит (.+) %d+\ед. урона.", --"Ваше заклинание \"%s\" наносит %s %d ед. урона."
+  ['OTHER_SPELL_HIT'] = "%2$s %1$s наносит %3$s %4$d ед. урона.", --"\"%2$s\" %1$s наносит %3$s %4$d ед. урона."
 }
 
-pfLocaleSpellInterrupts["ruRU"] = { -- TODO
-  ["Shield Bash"] = true;
-  ["Pummel"] = true;
-  ["Kick"] = true;
-  ["Earth Shock"] = true;
+pfLocaleSpellInterrupts["ruRU"] = { -- check
+  ["Shield Bash"] = "Удар щитом";
+  ["Pummel"] = "Зуботычина";
+  ["Kick"] = "Пинок";
+  ["Earth Shock"] = "Земной шок";
 }
 
 pfLocaleSpells["ruRU"] = {
