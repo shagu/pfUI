@@ -11,6 +11,8 @@ pfUI:RegisterModule("mouseover", function ()
         unit = frame.label .. frame.id
       elseif GetCVar("autoSelfCast") == "1" then
         unit = "player"
+      elseif UnitExists("target") then
+        unit = "target"
       else
         return
       end
