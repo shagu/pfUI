@@ -15,24 +15,24 @@ pfUI:RegisterModule("sellvalue", function ()
 
       if pfSellData[tonumber(iid)] and itemName == getglobal("GameTooltipTextLeft1"):GetText() then
         local _, _, sell, buy = strfind(pfSellData[tonumber(iid)], "(.*),(.*)")
-        sell = sell * count
-        buy = buy * count
+        sell = tonumber(sell)
+        buy = tonumber(buy)
 
         if not MerchantFrame:IsShown() then
-          SetTooltipMoney(GameTooltip, sell)
+          if sell > 0 then SetTooltipMoney(GameTooltip, sell * count) end
         end
 
         if IsShiftKeyDown() then
           GameTooltip:AddLine(" ")
 
           if count > 1 then
-            GameTooltip:AddDoubleLine("Sell:", CreateGoldString(sell / count) .. "|cff555555  //  " .. CreateGoldString(sell), 1, 1, 1);
+            GameTooltip:AddDoubleLine("Sell:", CreateGoldString(sell) .. "|cff555555  //  " .. CreateGoldString(sell), 1, 1, 1);
           else
-            GameTooltip:AddDoubleLine("Sell:", CreateGoldString(sell), 1, 1, 1);
+            GameTooltip:AddDoubleLine("Sell:", CreateGoldString(sell * count), 1, 1, 1);
           end
 
           if count > 1 then
-            GameTooltip:AddDoubleLine("Buy:", CreateGoldString(buy / count) .. "|cff555555  //  " .. CreateGoldString(buy), 1, 1, 1);
+            GameTooltip:AddDoubleLine("Buy:", CreateGoldString(buy) .. "|cff555555  //  " .. CreateGoldString(buy*count), 1, 1, 1);
           else
             GameTooltip:AddDoubleLine("Buy:", CreateGoldString(buy), 1, 1, 1);
           end
