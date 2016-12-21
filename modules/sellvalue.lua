@@ -26,7 +26,7 @@ pfUI:RegisterModule("sellvalue", function ()
           GameTooltip:AddLine(" ")
 
           if count > 1 then
-            GameTooltip:AddDoubleLine("Sell:", CreateGoldString(sell) .. "|cff555555  //  " .. CreateGoldString(sell), 1, 1, 1);
+            GameTooltip:AddDoubleLine("Sell:", CreateGoldString(sell) .. "|cff555555  //  " .. CreateGoldString(sell*count), 1, 1, 1);
           else
             GameTooltip:AddDoubleLine("Sell:", CreateGoldString(sell * count), 1, 1, 1);
           end
