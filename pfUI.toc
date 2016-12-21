@@ -54,3 +54,4 @@ modules\nameplates.lua
 modules\loot.lua
 modules\infight.lua
 modules\sellvalue.lua
+modules\eqcompare.lua

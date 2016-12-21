@@ -16,6 +16,15 @@ pfLocaleBagtypes["deDE"] = {
   ["Behälter"] = "DEFAULT",
 }
 
+pfLocaleInvtypes["deDE"] = {
+  ["INVTYPE_WAND"] = "Zauberstab",
+  ["INVTYPE_GUN"] = "Schusswaffe",
+  ["INVTYPE_GUNPROJECTILE"] = "Projektil",
+  ["INVTYPE_BOWPROJECTILE"] = "Projektil",
+  ["INVTYPE_CROSSBOW"] = "Armbrust",
+  ["INVTYPE_THROWN"] = "Wurfwaffe",
+}
+
 pfLocaleShift["deDE"] = {
   ['BattleStance'] = "Kampfhaltung",
   ['DefensiveStance'] = "Verteidigungshaltung",

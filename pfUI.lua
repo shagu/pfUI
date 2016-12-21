@@ -29,6 +29,7 @@ pfUI.movables = {}
 
 pfLocaleClass = {}
 pfLocaleBagtypes = {}
+pfLocaleInvtypes = {}
 pfLocaleShift = {}
 pfLocaleSpells = {}
 pfLocaleSpellEvents = {}

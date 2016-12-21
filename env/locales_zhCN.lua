@@ -16,6 +16,15 @@ pfLocaleBagtypes["zhCN"] = {
   ["包裹"] = "DEFAULT"
 }
 
+pfLocaleInvtypes["zhCN"] = {
+  ["INVTYPE_WAND"] = "魔杖",
+  ["INVTYPE_GUN"] = "枪械",
+  ["INVTYPE_GUNPROJECTILE"] = "弹药",
+  ["INVTYPE_BOWPROJECTILE"] = "弹药",
+  ["INVTYPE_CROSSBOW"] = "弩",
+  ["INVTYPE_THROWN"] = "投掷武器",
+}
+
 pfLocaleShift["zhCN"] = { -- TODO
   ['BattleStance'] = "Battle Stance",
   ['DefensiveStance'] = "Defensive Stance",
