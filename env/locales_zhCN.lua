@@ -25,7 +25,7 @@ pfLocaleInvtypes["zhCN"] = {
   ["INVTYPE_THROWN"] = "投掷武器",
 }
 
-pfLocaleShift["zhCN"] = { -- TODO
+pfLocaleShift["zhCN"] = {
   ['BattleStance'] = "战斗姿态",
   ['DefensiveStance'] = "防御姿态",
   ['BerserkerStance'] = "狂暴姿态",
@@ -36,7 +36,7 @@ pfLocaleShift["zhCN"] = { -- TODO
   ['wantBattleBerserkStance'] = "必须在战斗姿态, 狂暴姿态中",
 }
 
-pfLocaleSpellEvents["zhCN"] = { -- TODO
+pfLocaleSpellEvents["zhCN"] = {
   ['SPELL_GAINS'] = "(.+)获得了(.+)的效果",
   ['SPELL_CAST'] = "(.+)开始施放(.+)",
   ['SPELL_PERFORM'] = "(.+)开始施展(.+)",
@@ -45,7 +45,7 @@ pfLocaleSpellEvents["zhCN"] = { -- TODO
   ['OTHER_SPELL_HIT'] = "(.+)的(.+)击中(.+)造成(.+)",
 }
 
-pfLocaleSpellInterrupts["zhCN"] = { -- TODO
+pfLocaleSpellInterrupts["zhCN"] = {
   ["盾击"] = true;
   ["拳击"] = true;
   ["脚踢"] = true;
