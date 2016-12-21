@@ -358,9 +358,6 @@ pfUI:RegisterModule("chat", function ()
     FCF_SetWindowColor(ChatFrame2, 0, 0, 0)
     FCF_SetWindowAlpha(ChatFrame2, 0)
     FCF_SetChatWindowFontSize(ChatFrame2, 12)
-    ChatFrame_RemoveAllChannels(ChatFrame2)
-    ChatFrame_RemoveAllMessageGroups(ChatFrame2)
-    ChatFrame_ActivateCombatMessages(ChatFrame2)
 
     -- set position of Loot & Spam
     if not ChatFrame3:IsShown() then
@@ -385,7 +382,12 @@ pfUI:RegisterModule("chat", function ()
 
   function pfUI.chat.SetupChannels()
     ChatFrame_RemoveAllMessageGroups(ChatFrame1)
+    ChatFrame_RemoveAllMessageGroups(ChatFrame2)
     ChatFrame_RemoveAllMessageGroups(ChatFrame3)
+
+    ChatFrame_RemoveAllChannels(ChatFrame1)
+    ChatFrame_RemoveAllChannels(ChatFrame2)
+    ChatFrame_RemoveAllChannels(ChatFrame3)
 
     local normalg = {"SAY", "EMOTE", "YELL", "GUILD", "OFFICER", "GUILD_ACHIEVEMENT", "WHISPER",
       "MONSTER_SAY", "MONSTER_EMOTE", "MONSTER_YELL", "MONSTER_WHISPER", "MONSTER_BOSS_EMOTE", "MONSTER_BOSS_WHISPER",
@@ -395,16 +397,16 @@ pfUI:RegisterModule("chat", function ()
       ChatFrame_AddMessageGroup(ChatFrame1, group)
     end
 
+    ChatFrame_ActivateCombatMessages(ChatFrame2)
+
     local spamg = { "COMBAT_XP_GAIN", "COMBAT_HONOR_GAIN", "COMBAT_FACTION_CHANGE", "SKILL", "LOOT", "MONEY" }
     for _,group in pairs(spamg) do
       ChatFrame_AddMessageGroup(ChatFrame3, group)
     end
 
-    local spamc = { "Trade", "General", "LocalDefense", "GuildRecruitment", "LookingForGroup",
-      "Handel", "Allgemein", "LokaleVerteidigung", "Gildenrekrutierung", "SucheNachGruppe", "World" }
-    for _,channel in pairs(spamc) do
-      ChatFrame_RemoveChannel(ChatFrame1, channel)
-      ChatFrame_AddChannel(ChatFrame3, channel)
+    for _, chan in pairs({EnumerateServerChannels()}) do
+      ChatFrame_AddChannel(ChatFrame3, chan)
+      ChatFrame_RemoveChannel(ChatFrame1, chan)
     end
 
     JoinChannelByName("World")
