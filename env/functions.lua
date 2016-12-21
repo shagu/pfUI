@@ -22,3 +22,16 @@ function strsplit(delimiter, subject)
     end
   end
 end
+
+function CreateGoldString(money)
+  local gold = floor(money/ 100 / 100)
+  local silver = floor(mod((money/100),100))
+  local copper = floor(mod(money,100))
+
+  local string = ""
+  if gold > 0 then string = string .. "|cffffffff" .. gold .. "|cffffd700g" end
+  if silver > 0 then string = string .. "|cffffffff " .. silver .. "|cffc7c7cfs" end
+  string = string .. "|cffffffff " .. copper .. "|cffeda55fc"
+
+  return string
+end
