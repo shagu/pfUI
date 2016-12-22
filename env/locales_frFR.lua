@@ -22,34 +22,34 @@ pfLocaleInvtypes["frFR"] = {
   ["INVTYPE_GUNPROJECTILE"] = "Projectile",
   ["INVTYPE_BOWPROJECTILE"] = "Projectile",
   ["INVTYPE_CROSSBOW"] = "Arbal\195\168te",
-  ["INVTYPE_THROWN"] = "Armes de jet",
+  ["INVTYPE_THROWN"] = "Arme de jet",
 }
 
-pfLocaleShift["frFR"] = { -- TODO
-  ['BattleStance'] = "Battle Stance",
-  ['DefensiveStance'] = "Defensive Stance",
-  ['BerserkerStance'] = "Berserker Stance",
-  ['wantBattleStance'] = "Must be in Battle Stance",
-  ['wantDefensiveStance'] = "Must be in Defensive Stance",
-  ['wantBerserkerStance'] = "Must be in Berserker Stance",
-  ['wantBattleDefStance'] = "Must be in Battle Stance, Defensive Stance",
-  ['wantBattleBerserkStance'] = "Must be in Battle Stance, Berserker Stance",
+pfLocaleShift["frFR"] = {
+  ['BattleStance'] = "Posture de combat",
+  ['DefensiveStance'] = "Posture défensive",
+  ['BerserkerStance'] = "Posture berserker",
+  ['wantBattleStance'] = "Requiert Posture de combat",
+  ['wantDefensiveStance'] = "Requiert Posture défensive",
+  ['wantBerserkerStance'] = "Requiert Posture berserker",
+  ['wantBattleDefStance'] = "Requiert Posture de combat, Posture défensive",
+  ['wantBattleBerserkStance'] = "Requiert Posture de combat, Posture berserker",
 }
 
-pfLocaleSpellEvents["frFR"] = { -- TODO
-  ['SPELL_GAINS'] = "(.+) gains (.+).",
-  ['SPELL_CAST'] = "(.+) begins to cast (.+).",
-  ['SPELL_PERFORM'] = "(.+) begins to perform (.+).",
-  ['SPELL_AFFLICTED'] = "(.+) %a+ afflicted by (.+).",
-  ['SPELL_HIT'] = "Your (.+) %a%a?its (.+) for %d+\.",
-  ['OTHER_SPELL_HIT'] = "%a+'s (.+) %a%a?its (.+) for %d+\.",
+pfLocaleSpellEvents["frFR"] = {
+  ['SPELL_GAINS'] = "(.+) gagne (.+).",
+  ['SPELL_CAST'] = "(.+) commence \195\160 incanter (.+).",
+  ['SPELL_PERFORM'] = "(.+) commence \195\160 effectuer (.+).",
+  ['SPELL_AFFLICTED'] = "(.+) %a+ affligé par (.+).",
+  ['SPELL_HIT'] = "Votre (.+) touche (.+) pour %d+\.",
+  ['OTHER_SPELL_HIT'] = "(.+) de %a+ touche (.+) pour %d+\.",
 }
 
-pfLocaleSpellInterrupts["frFR"] = { -- TODO
-  ["Shield Bash"] = true;
-  ["Pummel"] = true;
-  ["Kick"] = true;
-  ["Earth Shock"] = true;
+pfLocaleSpellInterrupts["frFR"] = {
+  ["Coup de bouclier"] = true;
+  ["Volée de coups"] = true;
+  ["Coup de pied"] = true;
+  ["Horion de terre"] = true;
 }
 
 pfLocaleSpells["frFR"] = {
