@@ -416,6 +416,9 @@ pfUI:RegisterModule("gui", function ()
 
       frame.color:SetScript("OnClick", function()
         local cr, cg, cb, ca = strsplit(",", category[config])
+        if not cr or not cg or not cb or not ca then
+          cr, cg, cb, ca = 1, 1, 1, 1
+        end
         local preview = this.prev
 
         function ColorPickerFrame.func()
