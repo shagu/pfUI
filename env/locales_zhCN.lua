@@ -16,31 +16,40 @@ pfLocaleBagtypes["zhCN"] = {
   ["包裹"] = "DEFAULT"
 }
 
-pfLocaleShift["zhCN"] = { -- TODO
-  ['BattleStance'] = "Battle Stance",
-  ['DefensiveStance'] = "Defensive Stance",
-  ['BerserkerStance'] = "Berserker Stance",
-  ['wantBattleStance'] = "Must be in Battle Stance",
-  ['wantDefensiveStance'] = "Must be in Defensive Stance",
-  ['wantBerserkerStance'] = "Must be in Berserker Stance",
-  ['wantBattleDefStance'] = "Must be in Battle Stance, Defensive Stance",
-  ['wantBattleBerserkStance'] = "Must be in Battle Stance, Berserker Stance",
+pfLocaleInvtypes["zhCN"] = {
+  ["INVTYPE_WAND"] = "魔杖",
+  ["INVTYPE_GUN"] = "枪械",
+  ["INVTYPE_GUNPROJECTILE"] = "弹药",
+  ["INVTYPE_BOWPROJECTILE"] = "弹药",
+  ["INVTYPE_CROSSBOW"] = "弩",
+  ["INVTYPE_THROWN"] = "投掷武器",
 }
 
-pfLocaleSpellEvents["zhCN"] = { -- TODO
-  ['SPELL_GAINS'] = "(.+) gains (.+).",
-  ['SPELL_CAST'] = "(.+) begins to cast (.+).",
-  ['SPELL_PERFORM'] = "(.+) begins to perform (.+).",
-  ['SPELL_AFFLICTED'] = "(.+) %a+ afflicted by (.+).",
-  ['SPELL_HIT'] = "Your (.+) %a%a?its (.+) for %d+\.",
-  ['OTHER_SPELL_HIT'] = "%a+'s (.+) %a%a?its (.+) for %d+\.",
+pfLocaleShift["zhCN"] = {
+  ['BattleStance'] = "战斗姿态",
+  ['DefensiveStance'] = "防御姿态",
+  ['BerserkerStance'] = "狂暴姿态",
+  ['wantBattleStance'] = "必须在战斗姿态中",
+  ['wantDefensiveStance'] = "必须在防御姿态中",
+  ['wantBerserkerStance'] = "必须在狂暴姿态中",
+  ['wantBattleDefStance'] = "必须在战斗姿态, 防御姿态中",
+  ['wantBattleBerserkStance'] = "必须在战斗姿态, 狂暴姿态中",
 }
 
-pfLocaleSpellInterrupts["zhCN"] = { -- TODO
-  ["Shield Bash"] = true;
-  ["Pummel"] = true;
-  ["Kick"] = true;
-  ["Earth Shock"] = true;
+pfLocaleSpellEvents["zhCN"] = {
+  ['SPELL_GAINS'] = "(.+)获得了(.+)的效果",
+  ['SPELL_CAST'] = "(.+)开始施放(.+)",
+  ['SPELL_PERFORM'] = "(.+)开始施展(.+)",
+  ['SPELL_AFFLICTED'] = "(.+)受到了(.+)效果的影响",
+  ['SPELL_HIT'] = "你的(.+)使(.+)受到了(.+)。",
+  ['OTHER_SPELL_HIT'] = "(.+)的(.+)击中(.+)造成(.+)",
+}
+
+pfLocaleSpellInterrupts["zhCN"] = {
+  ["盾击"] = true;
+  ["拳击"] = true;
+  ["脚踢"] = true;
+  ["地震术"] = true;
 }
 
 pfLocaleSpells["zhCN"] = {

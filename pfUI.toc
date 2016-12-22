@@ -20,7 +20,7 @@ env\locales_ruRU.lua
 env\colors.lua
 env\functions.lua
 env\fonts.lua
-env\hacks.lua
+env\selldata.lua
 
 # modules
 modules\config.lua
@@ -53,3 +53,5 @@ modules\buff.lua
 modules\nameplates.lua
 modules\loot.lua
 modules\infight.lua
+modules\sellvalue.lua
+modules\eqcompare.lua

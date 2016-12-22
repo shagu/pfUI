@@ -9,6 +9,8 @@ pfUI:RegisterModule("mouseover", function ()
       local frame = GetMouseFocus()
       if frame.label and frame.id then
         unit = frame.label .. frame.id
+      elseif UnitExists("target") then
+        unit = "target"
       elseif GetCVar("autoSelfCast") == "1" then
         unit = "player"
       else

@@ -79,15 +79,17 @@ pfUI.utils:CreateBackdrop(ShoppingTooltip1)
 pfUI.utils:CreateBackdrop(ShoppingTooltip2)
 
 ShoppingTooltip1:SetScript("OnShow", function()
-  local a, b, c, _, _ = this:GetPoint()
+  local a, b, c, d, e = this:GetPoint()
   local border = tonumber(pfUI_config.appearance.border.default)
-  this:SetPoint(a, b, c, border*2+1, 0)
+  if not d or d == 0 then d = (border*2)+d+1 end
+  this:SetPoint(a, b, c, d, e)
 end)
 
 ShoppingTooltip2:SetScript("OnShow", function()
-  local a, b, c, _, _ = this:GetPoint()
+  local a, b, c, d, e = this:GetPoint()
   local border = tonumber(pfUI_config.appearance.border.default)
-  this:SetPoint(a, b, c, border*2+1, 0)
+  if not d or d == 0 then d = (border*2)+d+1 end
+  this:SetPoint(a, b, c, d, e)
 end)
 
 pfUI.utils:CreateBackdrop(TicketStatusFrame)
