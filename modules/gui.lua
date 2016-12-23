@@ -369,29 +369,45 @@ pfUI:RegisterModule("gui", function ()
     return frame
   end
 
-  function pfUI.gui:CreateConfig(parent, caption, category, config, widget, values)
+  function pfUI.gui:CreateConfig(parent, caption, category, config, widget, values, skip, named)
     -- parent object placement
     if parent.objectCount == nil then
       parent.objectCount = 1
-    else
+    elseif not skip then
       parent.objectCount = parent.objectCount + 1
+      parent.lineCount = 1
+    end
+
+    if skip then
+      if parent.lineCount == nil then
+        parent.lineCount = 1
+      end
+
+      if skip then
+        parent.lineCount = parent.lineCount + 1
+      end
     end
 
     -- basic frame
     local frame = CreateFrame("Frame", nil, parent)
     frame:SetWidth(350)
     frame:SetHeight(25)
-    frame:SetBackdrop(pfUI.backdrop_underline)
-    frame:SetBackdropBorderColor(1,1,1,.25)
     frame:SetPoint("TOPLEFT", 25, parent.objectCount * -25)
 
-    -- caption
-    frame.caption = frame:CreateFontString("Status", "LOW", "GameFontNormal")
-    frame.caption:SetFont(pfUI.font_default, pfUI_config.global.font_size + 2, "OUTLINE")
-    frame.caption:SetAllPoints(frame)
-    frame.caption:SetFontObject(GameFontWhite)
-    frame.caption:SetJustifyH("LEFT")
-    frame.caption:SetText(caption)
+    if not widget or (widget and widget ~= "button") then
+
+      frame:SetBackdrop(pfUI.backdrop_underline)
+      frame:SetBackdropBorderColor(1,1,1,.25)
+
+      -- caption
+      frame.caption = frame:CreateFontString("Status", "LOW", "GameFontNormal")
+      frame.caption:SetFont(pfUI.font_default, pfUI_config.global.font_size + 2, "OUTLINE")
+      frame.caption:SetAllPoints(frame)
+      frame.caption:SetFontObject(GameFontWhite)
+      frame.caption:SetJustifyH("LEFT")
+      frame.caption:SetText(caption)
+    end
+
     frame.configCategory = category
     frame.configEntry = config
 
@@ -498,6 +514,19 @@ pfUI:RegisterModule("gui", function ()
       end)
     end
 
+    -- use button widget
+    if widget == "button" then
+      frame.button = CreateFrame("Button", "pfButton", frame, "UIPanelButtonTemplate")
+      pfUI.utils:CreateBackdrop(frame.button, nil, true)
+      pfUI.utils:SkinButton(frame.button)
+      frame.button:SetWidth(85)
+      frame.button:SetHeight(20)
+      frame.button:SetPoint("TOPRIGHT", -(parent.lineCount-1) * 90, -5)
+      frame.button:SetText(caption)
+      frame.button:SetTextColor(1,1,1,1)
+      frame.button:SetScript("OnClick", values)
+    end
+
     -- use checkbox widget
     if widget == "checkbox" then
       -- input field
@@ -524,34 +553,42 @@ pfUI:RegisterModule("gui", function ()
     -- use dropdown widget
     if widget == "dropdown" and values then
       if not pfUI.gui.ddc then pfUI.gui.ddc = 1 else pfUI.gui.ddc = pfUI.gui.ddc + 1 end
-      frame.input = CreateFrame("Frame", "pfUIDropDownMenu" .. pfUI.gui.ddc, frame, "UIDropDownMenuTemplate")
+      local name = pfUI.gui.ddc
+      if named then name = named end
+
+      frame.input = CreateFrame("Frame", "pfUIDropDownMenu" .. name, frame, "UIDropDownMenuTemplate")
       frame.input:ClearAllPoints()
       frame.input:SetPoint("TOPRIGHT" , 20, 3)
       frame.input:Show()
       frame.input.point = "TOPRIGHT"
       frame.input.relativePoint = "BOTTOMRIGHT"
+      frame.input.values = values
 
-      local function createValues()
-        local info = {}
-        for i, k in pairs(values) do
-          info.text = k
-          info.checked = false
-          info.func = function()
-            UIDropDownMenu_SetSelectedID(frame.input, this:GetID(), 0)
-            if category[config] ~= this:GetText() then
-              pfUI.gui.settingChanged = true
-              category[config] = this:GetText()
+      frame.input.Refresh = function()
+        local function CreateValues()
+          local info = {}
+          for i, k in pairs(frame.input.values) do
+            info.text = k
+            info.checked = false
+            info.func = function()
+              UIDropDownMenu_SetSelectedID(frame.input, this:GetID(), 0)
+              if category[config] ~= this:GetText() then
+                pfUI.gui.settingChanged = true
+                category[config] = this:GetText()
+              end
+            end
+
+            UIDropDownMenu_AddButton(info)
+            if category[config] == k then
+              frame.input.current = i
             end
           end
-
-          UIDropDownMenu_AddButton(info)
-          if category[config] == k then
-            frame.input.current = i
-          end
         end
+
+        UIDropDownMenu_Initialize(frame.input, CreateValues)
       end
 
-      UIDropDownMenu_Initialize(frame.input, createValues)
+      frame.input:Refresh()
       UIDropDownMenu_SetWidth(120, frame.input)
       UIDropDownMenu_SetButtonWidth(125, frame.input)
       UIDropDownMenu_JustifyText("RIGHT", frame.input)
