@@ -22,7 +22,7 @@ Feature-Requests might not be processed right now.*
     /rl     Reload the whole UI
 
 ## Languages
-pfUI will support and contain language specific code for the following languages.
+pfUI supports and contains language specific code for the following languages.
 * English (enUS)
 * French (frFR)
 * German (deDE)
