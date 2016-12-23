@@ -32,7 +32,10 @@ pfUI:RegisterModule("pet", function ()
     if arg1 == "RightButton" then
       ToggleDropDownMenu(1, nil, PetFrameDropDown, "cursor")
     else
-      TargetUnit("pet")
+      if ( CursorHasItem() ) then
+        DropItemOnUnit("pet");
+      else
+        TargetUnit("pet")
     end)
 
   pfUI.uf.pet:RegisterEvent("PLAYER_ENTERING_WORLD")
