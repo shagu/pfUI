@@ -714,6 +714,73 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui:CreateConfig(pfUI.gui.global, "Hide Buffs", pfUI_config.global, "hidebuff", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.global, "Hide Weapon Buffs", pfUI_config.global, "hidewbuff", "checkbox")
 
+  pfUI.gui:CreateConfig(pfUI.gui.global, "Profile", nil, nil, "header")
+  local values = {}
+  for name, config in pairs(pfUI_profiles) do table.insert(values, name) end
+
+  local function pfUpdateProfiles()
+    local values = {}
+    for name, config in pairs(pfUI_profiles) do table.insert(values, name) end
+    pfUIDropDownMenuProfile.values = values
+    pfUIDropDownMenuProfile.Refresh()
+  end
+
+  pfUI.gui:CreateConfig(pfUI.gui.global, "Select profile", pfUI_config.global, "profile", "dropdown", values, false, "Profile")
+
+  -- load profile
+  pfUI.gui:CreateConfig(pfUI.gui.global, "Load profile", pfUI_config.global, "profile", "button", function()
+    if pfUI_config.global.profile and pfUI_profiles[pfUI_config.global.profile] then
+      pfUI.utils:CreateQuestionDialog("Load profile '|cff33ffcc" .. pfUI_config.global.profile .. "|r'?", function()
+        local selp = pfUI_config.global.profile
+        pfUI_config = CopyTable(pfUI_profiles[pfUI_config.global.profile])
+        pfUI_config.global.profile = selp
+        ReloadUI()
+      end)
+    end
+  end)
+
+  -- delete profile
+  pfUI.gui:CreateConfig(pfUI.gui.global, "Delete profile", pfUI_config.global, "profile", "button", function()
+    if pfUI_config.global.profile and pfUI_profiles[pfUI_config.global.profile] then
+      pfUI.utils:CreateQuestionDialog("Delete profile '|cff33ffcc" .. pfUI_config.global.profile .. "|r'?", function()
+        pfUI_profiles[pfUI_config.global.profile] = nil
+        pfUpdateProfiles()
+        this:GetParent():Hide()
+      end)
+    end
+  end, true)
+
+  -- save profile
+  pfUI.gui:CreateConfig(pfUI.gui.global, "Save profile", pfUI_config.global, "profile", "button", function()
+    if pfUI_config.global.profile and pfUI_profiles[pfUI_config.global.profile] then
+      pfUI.utils:CreateQuestionDialog("Save current settings to profile '|cff33ffcc" .. pfUI_config.global.profile .. "|r'?", function()
+        if pfUI_profiles[pfUI_config.global.profile] then
+          pfUI_profiles[pfUI_config.global.profile] = CopyTable(pfUI_config)
+        end
+        this:GetParent():Hide()
+      end)
+    end
+  end, true)
+
+  -- create profile
+  pfUI.gui:CreateConfig(pfUI.gui.global, "Create Profile", pfUI_config.global, "profile", "button", function()
+    pfUI.utils:CreateQuestionDialog("Please enter a name for the new profile.\nExisting profiles sharing the same name will be overwritten.",
+    function()
+      local profile = this:GetParent().input:GetText()
+      local bad = string.gsub(profile,"([%w%s]+)","")
+      if bad~="" then
+        message('Cannot create profile: \"'..bad..'\"' .. " is not allowed in profile name")
+      else
+        profile = (string.gsub(profile,"^%s*(.-)%s*$", "%1"))
+        if profile and profile ~= "" then
+          pfUI_profiles[profile] = CopyTable(pfUI_config)
+          pfUpdateProfiles()
+          this:GetParent():Hide()
+        end
+      end
+    end, false, true)
+  end, true)
+
   -- appearance
   pfUI.gui.appearance = pfUI.gui:CreateConfigTab("Appearance")
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "Background Color", pfUI_config.appearance.border, "background", "color")
