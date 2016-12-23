@@ -40,6 +40,11 @@ pfUI:SetScript("OnEvent", function()
     pfUI_init = {}
   end
 
+  if not pfUI_profiles then
+    pfUI_profiles = {}
+    pfUI_profiles["default"] = pfUI_config
+  end
+
   pfUI:LoadConfig()
 
   -- reload environment

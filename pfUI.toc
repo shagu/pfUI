@@ -3,7 +3,7 @@
 ## Author: Shagu, 2016
 ## Notes: A complete user interface replacement.
 ## Version: 0.1
-## SavedVariables: pfUI_playerDB
+## SavedVariables: pfUI_profiles, pfUI_playerDB
 ## SavedVariablesPerCharacter: pfUI_config, pfUI_init
 
 # main
