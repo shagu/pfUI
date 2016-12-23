@@ -409,10 +409,16 @@ pfUI:RegisterModule("gui", function ()
       frame.color.prev:SetAllPoints(frame.color)
 
       local cr, cg, cb, ca = strsplit(",", category[config])
+      if not cr or not cg or not cb or not ca then
+        cr, cg, cb, ca = 1, 1, 1, 1
+      end
       frame.color.prev:SetTexture(cr,cg,cb,ca)
 
       frame.color:SetScript("OnClick", function()
         local cr, cg, cb, ca = strsplit(",", category[config])
+        if not cr or not cg or not cb or not ca then
+          cr, cg, cb, ca = 1, 1, 1, 1
+        end
         local preview = this.prev
 
         function ColorPickerFrame.func()

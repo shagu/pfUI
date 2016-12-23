@@ -523,7 +523,8 @@ pfUI:RegisterModule("player", function ()
     end)
 
     pfUI.uf.player.debuff.debuffs[i]:SetScript("OnUpdate", function()
-      local timeleft = GetPlayerBuffTimeLeft(this:GetID()-1,"HARMFUL")
+      local bid = GetPlayerBuff(this:GetID() - 1, "HARMFUL");
+      local timeleft = GetPlayerBuffTimeLeft(bid,"HARMFUL")
 
       if timeleft ~= nil and timeleft ~= 0 then
         -- if there are more than 0 seconds left
@@ -579,15 +580,15 @@ pfUI:RegisterModule("player", function ()
       invert * (top)*((2*default_border) + pfUI_config.unitframes.buff_size + 1) +
       invert * (row)*((2*default_border) + pfUI_config.unitframes.debuff_size + 1) + invert*(2*default_border + 1))
 
-
-      local stacks = GetPlayerBuffApplications(GetPlayerBuff(i-1,"HARMFUL"))
+      local bid = GetPlayerBuff(i-1, "HARMFUL");
+      local stacks = GetPlayerBuffApplications(bid)
       pfUI.utils:CreateBackdrop(pfUI.uf.player.debuff.debuffs[i], default_border)
-      pfUI.uf.player.debuff.debuffs[i]:SetNormalTexture(UnitDebuff("player", i))
+      pfUI.uf.player.debuff.debuffs[i]:SetNormalTexture(GetPlayerBuffTexture(bid))
       for i,v in ipairs({pfUI.uf.player.debuff.debuffs[i]:GetRegions()}) do
         if v.SetTexCoord then v:SetTexCoord(.08, .92, .08, .92) end
       end
 
-      local _,_,dtype = UnitDebuff("player", i)
+      local dtype = GetPlayerBuffDispelType(bid)
       if dtype == "Magic" then
         pfUI.uf.player.debuff.debuffs[i].backdrop:SetBackdropBorderColor(0,1,1,1)
       elseif dtype == "Poison" then
@@ -600,9 +601,9 @@ pfUI:RegisterModule("player", function ()
         pfUI.uf.player.debuff.debuffs[i].backdrop:SetBackdropBorderColor(1,0,0,1)
       end
 
-      if GetPlayerBuffTexture(GetPlayerBuff(i-1,"HARMFUL")) then
+      if GetPlayerBuffTexture(bid) then
         pfUI.uf.player.debuff.debuffs[i]:Show()
-        local stacks = GetPlayerBuffApplications(GetPlayerBuff(i-1,"HARMFUL"))
+        local stacks = GetPlayerBuffApplications(bid)
         if stacks > 1 then
           pfUI.uf.player.debuff.debuffs[i].stacks:SetText(stacks)
         else
