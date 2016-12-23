@@ -29,6 +29,9 @@ pfUI:RegisterModule("pet", function ()
   end)
 
   pfUI.uf.pet:SetScript("OnClick", function ()
+    if arg1 == "RightButton" then
+      ToggleDropDownMenu(1, nil, PetFrameDropDown, "cursor")
+    else
       TargetUnit("pet")
     end)
 
