@@ -36,31 +36,31 @@ pfLocaleSpellEvents = {}
 pfLocaleSpellInterrupts = {}
 
 pfUI:SetScript("OnEvent", function()
-  if not pfUI_init then
-    pfUI_init = {}
-  end
-
-  if not pfUI_profiles then
-    pfUI_profiles = {}
-  end
-
-  pfUI:LoadConfig()
-
-  -- reload environment
-  pfUI.environment:UpdateFonts()
-  pfUI.environment:UpdateColors()
-
-  -- fill the cache
-  pfUI.cache["locale"] = GetLocale()
-  if pfUI.cache["locale"] ~= "enUS" and
-     pfUI.cache["locale"] ~= "frFR" and
-     pfUI.cache["locale"] ~= "deDE" and
-     pfUI.cache["locale"] ~= "zhCN" and
-     pfUI.cache["locale"] ~= "ruRU" then
-     pfUI.cache["locale"] = "enUS"
-  end
-
   if arg1 == "pfUI" then
+    if not pfUI_init then
+      pfUI_init = {}
+    end
+
+    if not pfUI_profiles then
+      pfUI_profiles = {}
+    end
+
+    pfUI:LoadConfig()
+
+    -- reload environment
+    pfUI.environment:UpdateFonts()
+    pfUI.environment:UpdateColors()
+
+    -- fill the cache
+    pfUI.cache["locale"] = GetLocale()
+    if pfUI.cache["locale"] ~= "enUS" and
+       pfUI.cache["locale"] ~= "frFR" and
+       pfUI.cache["locale"] ~= "deDE" and
+       pfUI.cache["locale"] ~= "zhCN" and
+       pfUI.cache["locale"] ~= "ruRU" then
+       pfUI.cache["locale"] = "enUS"
+    end
+
     for i,m in pairs(this.modules) do
       -- do not load disabled modules
       if pfUI_config["disabled"] and pfUI_config["disabled"][m]  == "1" then
