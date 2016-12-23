@@ -42,7 +42,6 @@ pfUI:SetScript("OnEvent", function()
 
   if not pfUI_profiles then
     pfUI_profiles = {}
-    pfUI_profiles["default"] = pfUI_config
   end
 
   pfUI:LoadConfig()
