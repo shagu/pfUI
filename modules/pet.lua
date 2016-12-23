@@ -29,8 +29,15 @@ pfUI:RegisterModule("pet", function ()
   end)
 
   pfUI.uf.pet:SetScript("OnClick", function ()
-      TargetUnit("pet")
-    end)
+    _, playerClass = UnitClass("player");
+	if arg1 == "RightButton" then
+	  ToggleDropDownMenu(1, nil, PetFrameDropDown, "cursor")
+	elseif ( CursorHasItem() and playerClass == "HUNTER" ) then
+	  DropItemOnUnit("pet");
+	else
+	  TargetUnit("pet")
+	end
+  end)
 
   pfUI.uf.pet:RegisterEvent("PLAYER_ENTERING_WORLD")
   pfUI.uf.pet:RegisterEvent("UNIT_PET")
