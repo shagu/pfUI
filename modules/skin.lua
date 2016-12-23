@@ -46,20 +46,7 @@ pfUI:RegisterModule("skin", function ()
   GameMenuButtonContinue:SetPoint("BOTTOM", 0, 10)
 
   for _, button in pairs(buttons) do
-    local b = getglobal(button)
-    pfUI.utils:CreateBackdrop(b, nil, true)
-    b:SetNormalTexture(nil)
-    b:SetHighlightTexture(nil)
-    b:SetPushedTexture(nil)
-    b:SetDisabledTexture(nil)
-    b:SetScript("OnEnter", function()
-      pfUI.utils:CreateBackdrop(b, nil, true)
-      b:SetBackdropBorderColor(cr,cg,cb,1)
-    end)
-    b:SetScript("OnLeave", function()
-      pfUI.utils:CreateBackdrop(b, nil, true)
-    end)
-    b:SetFont(pfUI.font_default, pfUI_config.global.font_size, "OUTLINE")
+    pfUI.utils:SkinButton(button, cr, cg, cb)
   end
 
   for _, box in pairs(boxes) do
