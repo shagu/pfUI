@@ -293,10 +293,9 @@ pfUI:RegisterModule("thirdparty", function ()
     end
   end)
 
-
   -- CleanUp Integration
   -- Integrate CleanUp bag sorting into pfUI
-  if Clean_Up and pfUI_config.thirdparty.cleanup.enable == "1" then
+  local function pfSetupClean_Up()
     pfUI.thirdparty.cleanup = CreateFrame("Frame", nil)
     pfUI.thirdparty.cleanup:RegisterEvent("BAG_UPDATE")
     pfUI.thirdparty.cleanup:RegisterEvent("PLAYER_ENTERING_WORLD")
@@ -377,5 +376,20 @@ pfUI:RegisterModule("thirdparty", function ()
         end)
       end
     end)
+  end
+
+  if pfUI_config.thirdparty.cleanup.enable == "1" then
+    if Clean_Up then
+      pfSetupClean_Up()
+    else
+      local pfHookClean_Up = CreateFrame("Frame", nil)
+      pfHookClean_Up:RegisterEvent("VARIABLES_LOADED")
+      pfHookClean_Up:SetScript("OnEvent",function()
+          if Clean_Up then
+            pfHookClean_Up:UnregisterEvent("VARIABLES_LOADED")
+            pfSetupClean_Up()
+          end
+        end)
+    end
   end
 end)
