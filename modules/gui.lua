@@ -369,7 +369,7 @@ pfUI:RegisterModule("gui", function ()
     return frame
   end
 
-  function pfUI.gui:CreateConfig(parent, caption, category, config, widget, values, skip)
+  function pfUI.gui:CreateConfig(parent, caption, category, config, widget, values, skip, named)
     -- parent object placement
     if parent.objectCount == nil then
       parent.objectCount = 1
@@ -553,7 +553,10 @@ pfUI:RegisterModule("gui", function ()
     -- use dropdown widget
     if widget == "dropdown" and values then
       if not pfUI.gui.ddc then pfUI.gui.ddc = 1 else pfUI.gui.ddc = pfUI.gui.ddc + 1 end
-      frame.input = CreateFrame("Frame", "pfUIDropDownMenu" .. pfUI.gui.ddc, frame, "UIDropDownMenuTemplate")
+      local name = pfUI.gui.ddc
+      if named then name = named end
+
+      frame.input = CreateFrame("Frame", "pfUIDropDownMenu" .. name, frame, "UIDropDownMenuTemplate")
       frame.input:ClearAllPoints()
       frame.input:SetPoint("TOPRIGHT" , 20, 3)
       frame.input:Show()
