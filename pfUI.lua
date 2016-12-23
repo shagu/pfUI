@@ -197,6 +197,125 @@ function pfUI.utils:SkinButton(button, cr, cg, cb)
   b:SetFont(pfUI.font_default, pfUI_config.global.font_size, "OUTLINE")
 end
 
+function pfUI.utils:CreateQuestionDialog(text, yes, no, editbox)
+  -- do not allow multiple instances of question dialogs
+  if pfQuestionDialog and pfQuestionDialog:IsShown() then
+    pfQuestionDialog:Hide()
+    pfQuestionDialog = nil
+    return
+  end
+
+  -- add default values
+  if not yes then
+    yes = function() message("You clicked OK") end
+  end
+
+  if not no then
+    no = function() this:GetParent():Hide() end
+  end
+
+  if not text then
+    text = "Are you sure?"
+  end
+
+  local border = tonumber(pfUI_config.appearance.border.default)
+  local padding = 15
+  -- frame
+  local question = CreateFrame("Frame", "pfQuestionDialog", UIParent)
+  question:SetWidth(300)
+  question:SetHeight(100)
+  question:SetPoint("CENTER", 0, 0)
+  question:SetFrameStrata("TOOLTIP")
+  question:SetMovable(true)
+  question:EnableMouse(true)
+  question:SetScript("OnMouseDown",function()
+    this:StartMoving()
+  end)
+
+  question:SetScript("OnMouseUp",function()
+    this:StopMovingOrSizing()
+  end)
+  pfUI.utils:CreateBackdrop(question)
+
+  -- text
+  question.text = question:CreateFontString("Status", "LOW", "GameFontNormal")
+  question.text:SetFontObject(GameFontWhite)
+  question.text:SetPoint("TOP", 0, -padding)
+  question.text:SetText(text)
+  question.text:SetWidth(question:GetWidth() - border * 2)
+
+  -- editbox
+  if editbox then
+    question.input = CreateFrame("EditBox", "pfQuestionDialogEdit", question)
+    pfUI.utils:CreateBackdrop(question.input)
+    question.input:SetTextColor(.2,1,.8,1)
+    question.input:SetJustifyH("CENTER")
+    question.input:SetAutoFocus(false)
+    question.input:SetPoint("TOPLEFT", question.text, "BOTTOMLEFT", border, -padding)
+    question.input:SetPoint("TOPRIGHT", question.text, "BOTTOMRIGHT", -border, -padding)
+    question.input:SetHeight(20)
+
+    question.input:SetFontObject(GameFontNormal)
+    question.input:SetScript("OnEscapePressed", function() this:ClearFocus() end)
+  end
+
+  -- buttons
+  question.yes = CreateFrame("Button", "pfQuestionDialogYes", question, "UIPanelButtonTemplate")
+  pfUI.utils:SkinButton(question.yes)
+  question.yes:SetWidth(100)
+  question.yes:SetHeight(20)
+  question.yes:SetText("Okay")
+  question.yes:SetScript("OnClick", yes)
+
+  if question.input then
+    question.yes:SetPoint("TOPLEFT", question.input, "BOTTOMLEFT", -border, -padding)
+  else
+    question.yes:SetPoint("TOPLEFT", question.text, "BOTTOMLEFT", 0, -padding)
+  end
+
+  question.no = CreateFrame("Button", "pfQuestionDialogNo", question, "UIPanelButtonTemplate")
+  pfUI.utils:SkinButton(question.no)
+  question.no:SetWidth(85)
+  question.no:SetHeight(20)
+  question.no:SetText("Cancel")
+  question.no:SetScript("OnClick", no)
+
+  if question.input then
+    question.no:SetPoint("TOPRIGHT", question.input, "BOTTOMRIGHT", border, -padding)
+  else
+    question.no:SetPoint("TOPRIGHT", question.text, "BOTTOMRIGHT", 0, -padding)
+  end
+
+  question.close = CreateFrame("Button", "pfQuestionDialogClose", question)
+  question.close:SetPoint("TOPRIGHT", -border, -border)
+  pfUI.utils:CreateBackdrop(question.close)
+  question.close:SetHeight(10)
+  question.close:SetWidth(10)
+  question.close.texture = question.close:CreateTexture("pfQuestionDialogCloseTex")
+  question.close.texture:SetTexture("Interface\\AddOns\\pfUI\\img\\close")
+  question.close.texture:ClearAllPoints()
+  question.close.texture:SetAllPoints(question.close)
+  question.close.texture:SetVertexColor(1,.25,.25,1)
+  question.close:SetScript("OnEnter", function ()
+    this.backdrop:SetBackdropBorderColor(1,.25,.25,1)
+  end)
+
+  question.close:SetScript("OnLeave", function ()
+    pfUI.utils:CreateBackdrop(this)
+  end)
+
+  question.close:SetScript("OnClick", function()
+   this:GetParent():Hide()
+  end)
+
+  -- resize window
+  local textspace = question.text:GetHeight() + padding
+  local inputspace = 0
+  if question.input then inputspace = question.input:GetHeight() + padding end
+  local buttonspace = question.no:GetHeight() + padding
+  question:SetHeight(textspace + inputspace + buttonspace + border)
+end
+
 message = function (msg)
   DEFAULT_CHAT_FRAME:AddMessage("|cffcccc33INFO: |cffffff55"..msg)
 end
