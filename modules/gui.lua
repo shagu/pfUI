@@ -562,28 +562,33 @@ pfUI:RegisterModule("gui", function ()
       frame.input:Show()
       frame.input.point = "TOPRIGHT"
       frame.input.relativePoint = "BOTTOMRIGHT"
+      frame.input.values = values
 
-      local function createValues()
-        local info = {}
-        for i, k in pairs(values) do
-          info.text = k
-          info.checked = false
-          info.func = function()
-            UIDropDownMenu_SetSelectedID(frame.input, this:GetID(), 0)
-            if category[config] ~= this:GetText() then
-              pfUI.gui.settingChanged = true
-              category[config] = this:GetText()
+      frame.input.Refresh = function()
+        local function CreateValues()
+          local info = {}
+          for i, k in pairs(frame.input.values) do
+            info.text = k
+            info.checked = false
+            info.func = function()
+              UIDropDownMenu_SetSelectedID(frame.input, this:GetID(), 0)
+              if category[config] ~= this:GetText() then
+                pfUI.gui.settingChanged = true
+                category[config] = this:GetText()
+              end
+            end
+
+            UIDropDownMenu_AddButton(info)
+            if category[config] == k then
+              frame.input.current = i
             end
           end
-
-          UIDropDownMenu_AddButton(info)
-          if category[config] == k then
-            frame.input.current = i
-          end
         end
+
+        UIDropDownMenu_Initialize(frame.input, CreateValues)
       end
 
-      UIDropDownMenu_Initialize(frame.input, createValues)
+      frame.input:Refresh()
       UIDropDownMenu_SetWidth(120, frame.input)
       UIDropDownMenu_SetButtonWidth(125, frame.input)
       UIDropDownMenu_JustifyText("RIGHT", frame.input)
