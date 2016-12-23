@@ -369,29 +369,45 @@ pfUI:RegisterModule("gui", function ()
     return frame
   end
 
-  function pfUI.gui:CreateConfig(parent, caption, category, config, widget, values)
+  function pfUI.gui:CreateConfig(parent, caption, category, config, widget, values, skip)
     -- parent object placement
     if parent.objectCount == nil then
       parent.objectCount = 1
-    else
+    elseif not skip then
       parent.objectCount = parent.objectCount + 1
+      parent.lineCount = 1
+    end
+
+    if skip then
+      if parent.lineCount == nil then
+        parent.lineCount = 1
+      end
+
+      if skip then
+        parent.lineCount = parent.lineCount + 1
+      end
     end
 
     -- basic frame
     local frame = CreateFrame("Frame", nil, parent)
     frame:SetWidth(350)
     frame:SetHeight(25)
-    frame:SetBackdrop(pfUI.backdrop_underline)
-    frame:SetBackdropBorderColor(1,1,1,.25)
     frame:SetPoint("TOPLEFT", 25, parent.objectCount * -25)
 
-    -- caption
-    frame.caption = frame:CreateFontString("Status", "LOW", "GameFontNormal")
-    frame.caption:SetFont(pfUI.font_default, pfUI_config.global.font_size + 2, "OUTLINE")
-    frame.caption:SetAllPoints(frame)
-    frame.caption:SetFontObject(GameFontWhite)
-    frame.caption:SetJustifyH("LEFT")
-    frame.caption:SetText(caption)
+    if not widget or (widget and widget ~= "button") then
+
+      frame:SetBackdrop(pfUI.backdrop_underline)
+      frame:SetBackdropBorderColor(1,1,1,.25)
+
+      -- caption
+      frame.caption = frame:CreateFontString("Status", "LOW", "GameFontNormal")
+      frame.caption:SetFont(pfUI.font_default, pfUI_config.global.font_size + 2, "OUTLINE")
+      frame.caption:SetAllPoints(frame)
+      frame.caption:SetFontObject(GameFontWhite)
+      frame.caption:SetJustifyH("LEFT")
+      frame.caption:SetText(caption)
+    end
+
     frame.configCategory = category
     frame.configEntry = config
 
@@ -496,6 +512,19 @@ pfUI:RegisterModule("gui", function ()
       frame.input:SetScript("OnEditFocusGained", function(self)
         pfUI.gui.settingChanged = true
       end)
+    end
+
+    -- use button widget
+    if widget == "button" then
+      frame.button = CreateFrame("Button", "pfButton", frame, "UIPanelButtonTemplate")
+      pfUI.utils:CreateBackdrop(frame.button, nil, true)
+      pfUI.utils:SkinButton(frame.button)
+      frame.button:SetWidth(85)
+      frame.button:SetHeight(20)
+      frame.button:SetPoint("TOPRIGHT", -(parent.lineCount-1) * 90, -5)
+      frame.button:SetText(caption)
+      frame.button:SetTextColor(1,1,1,1)
+      frame.button:SetScript("OnClick", values)
     end
 
     -- use checkbox widget
