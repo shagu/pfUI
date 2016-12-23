@@ -9,6 +9,7 @@ pfUI:RegisterModule("cooldown", function ()
     cooldown.cd.text:SetPoint("CENTER", cooldown.cd, "CENTER", 0, 1)
 
     cooldown.cd:SetScript("OnUpdate", function()
+      if not this:GetParent() then this:Hide() end
       if not getglobal(this:GetParent():GetName() .. "Cooldown"):IsShown() then this:Hide() end
       if not this.next then this.next = GetTime() + .1 end
       if this.next > GetTime() then return end
@@ -48,8 +49,11 @@ pfUI:RegisterModule("cooldown", function ()
   -- hook
   if not pfCooldownFrame_SetTimer then pfCooldownFrame_SetTimer = CooldownFrame_SetTimer end
   function CooldownFrame_SetTimer(this, start, duration, enable)
-    -- realign all cooldown frames
-    if this:GetParent():GetWidth() / 36 > 0 then
+    -- break here if no this-reference is set
+    if not this then return end
+
+    -- realign guessed cooldown frames
+    if this:GetParent() and this:GetParent():GetWidth() / 36 > 0 then
         this:SetScale(this:GetParent():GetWidth() / 36)
         this:SetPoint("TOPLEFT", this:GetParent(), "TOPLEFT", 0, 0)
         this:SetPoint("BOTTOMRIGHT", this:GetParent(), "BOTTOMRIGHT", 1, -1)
