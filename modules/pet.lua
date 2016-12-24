@@ -15,7 +15,7 @@ pfUI:RegisterModule("pet", function ()
   pfUI.uf.pet:SetHeight(20 + 2*default_border + pfUI_config.unitframes.pet.pspace)
   pfUI.uf.pet:ClearAllPoints()
   pfUI.uf.pet:SetPoint("BOTTOM", UIParent , "BOTTOM", 0, 163)
-  pfUI.utils:UpdateMovable(pfUI.uf.pet)
+  pfUI.api:UpdateMovable(pfUI.uf.pet)
 
   pfUI.uf.pet:RegisterForClicks('LeftButtonUp', 'RightButtonUp')
   pfUI.uf.pet:SetScript("OnEnter", function()
@@ -140,7 +140,7 @@ pfUI:RegisterModule("pet", function ()
   pfUI.uf.pet.hp:SetWidth(100)
   pfUI.uf.pet.hp:SetHeight(17)
   pfUI.uf.pet.hp:SetPoint("TOP", 0, 0)
-  pfUI.utils:CreateBackdrop(pfUI.uf.pet.hp, default_border)
+  pfUI.api:CreateBackdrop(pfUI.uf.pet.hp, default_border)
 
   pfUI.uf.pet.hp.bar = CreateFrame("StatusBar", nil, pfUI.uf.pet.hp)
   pfUI.uf.pet.hp.bar:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
@@ -162,7 +162,7 @@ pfUI:RegisterModule("pet", function ()
   pfUI.uf.pet.power:SetPoint("BOTTOM", 0, 0)
   pfUI.uf.pet.power:SetWidth(100)
   pfUI.uf.pet.power:SetHeight(3)
-  pfUI.utils:CreateBackdrop(pfUI.uf.pet.power, default_border)
+  pfUI.api:CreateBackdrop(pfUI.uf.pet.power, default_border)
 
   pfUI.uf.pet.power.bar = CreateFrame("StatusBar", nil, pfUI.uf.pet.power)
   pfUI.uf.pet.power.bar:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
@@ -225,7 +225,7 @@ pfUI:RegisterModule("pet", function ()
     local buffsize = pfUI.uf.pet.hp:GetWidth()/8 - 1
     for i=1, 16 do
       local texture, stacks = UnitBuff("pet",i)
-      pfUI.utils:CreateBackdrop(pfUI.uf.pet.buff.buffs[i], default_border)
+      pfUI.api:CreateBackdrop(pfUI.uf.pet.buff.buffs[i], default_border)
       pfUI.uf.pet.buff.buffs[i]:SetNormalTexture(texture)
       for i,v in ipairs({pfUI.uf.pet.buff.buffs[i]:GetRegions()}) do
         if v.SetTexCoord then v:SetTexCoord(.08, .92, .08, .92) end
@@ -299,7 +299,7 @@ pfUI:RegisterModule("pet", function ()
       (row)*((2*default_border) + buffsize + 1) + (2*default_border + 1))
 
       local texture, stacks = UnitDebuff("pet",i)
-      pfUI.utils:CreateBackdrop(pfUI.uf.pet.debuff.debuffs[i], default_border)
+      pfUI.api:CreateBackdrop(pfUI.uf.pet.debuff.debuffs[i], default_border)
       pfUI.uf.pet.debuff.debuffs[i]:SetNormalTexture(texture)
       for i,v in ipairs({pfUI.uf.pet.debuff.debuffs[i]:GetRegions()}) do
         if v.SetTexCoord then v:SetTexCoord(.08, .92, .08, .92) end

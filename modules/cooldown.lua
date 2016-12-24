@@ -26,19 +26,19 @@ pfUI:RegisterModule("cooldown", function ()
         if remaining > 99 then
           remaining = remaining / 60
           unit = "m"
-          r,g,b,a = strsplit(",", pfUI_config.appearance.cd.mincolor)
+          r,g,b,a = pfUI.api.strsplit(",", pfUI_config.appearance.cd.mincolor)
         end
         if remaining > 99 then
           remaining = remaining / 60
           unit = "h"
-          r,g,b,a = strsplit(",", pfUI_config.appearance.cd.hourcolor)
+          r,g,b,a = pfUI.api.strsplit(",", pfUI_config.appearance.cd.hourcolor)
         end
         if remaining > 99 then
           remaining = remaining / 24
           unit = "d"
-          r,g,b,a = strsplit(",", pfUI_config.appearance.cd.daycolor)
+          r,g,b,a = pfUI.api.strsplit(",", pfUI_config.appearance.cd.daycolor)
         end
-        this.text:SetText(round(remaining) .. unit)
+        this.text:SetText(pfUI.api.round(remaining) .. unit)
         this.text:SetTextColor(r,g,b,a)
       else
         this:Hide()

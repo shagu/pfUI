@@ -9,7 +9,7 @@ pfUI:RegisterModule("xpbar", function ()
     pfUI.xp:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", 0, 0)
   end
   pfUI.xp:SetFrameStrata("BACKGROUND")
-  pfUI.utils:CreateBackdrop(pfUI.xp)
+  pfUI.api:CreateBackdrop(pfUI.xp)
   pfUI.xp:RegisterEvent("PLAYER_LEVEL_UP")
   pfUI.xp:RegisterEvent("PLAYER_XP_UPDATE")
   pfUI.xp:RegisterEvent("PLAYER_ENTERING_WORLD")
@@ -51,12 +51,12 @@ pfUI:RegisterModule("xpbar", function ()
       pfUI.xp.mouseover = true
       pfUI.xp:SetAlpha(1)
       local xp, xpmax, exh = UnitXP("player"), UnitXPMax("player"), GetXPExhaustion()
-      local xp_perc = round(xp / xpmax * 100)
+      local xp_perc = pfUI.api.round(xp / xpmax * 100)
       local remaining = xpmax - xp
-      local remaining_perc = round(remaining / xpmax * 100)
+      local remaining_perc = pfUI.api.round(remaining / xpmax * 100)
       local exh_perc = 0
       if GetXPExhaustion() then
-        exh_perc = round(GetXPExhaustion() / xpmax * 100)
+        exh_perc = pfUI.api.round(GetXPExhaustion() / xpmax * 100)
       end
 
       GameTooltip:ClearLines()
@@ -109,7 +109,7 @@ pfUI:RegisterModule("xpbar", function ()
     pfUI.rep:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", 0, 0)
   end
   pfUI.rep:SetFrameStrata("BACKGROUND")
-  pfUI.utils:CreateBackdrop(pfUI.rep)
+  pfUI.api:CreateBackdrop(pfUI.rep)
 
   pfUI.rep.bar = CreateFrame("StatusBar", nil, pfUI.rep)
   pfUI.rep.bar:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
@@ -171,7 +171,7 @@ pfUI:RegisterModule("xpbar", function ()
           GameTooltip:SetOwner(this, "ANCHOR_CURSOR")
           GameTooltip:AddLine("|cff555555Reputation")
           GameTooltip:AddLine(name .. " (" .. GetText("FACTION_STANDING_LABEL"..standingID, gender) .. ")", color.r + .3, color.g + .3, color.b + .3)
-          GameTooltip:AddLine(barValue .. " / " .. barMax .. " (" .. round(barValue / barMax * 100) .. "%)",1,1,1)
+          GameTooltip:AddLine(barValue .. " / " .. barMax .. " (" .. pfUI.api.round(barValue / barMax * 100) .. "%)",1,1,1)
           GameTooltip:Show()
 
           pfUI.rep.mouseover = true

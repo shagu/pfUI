@@ -11,10 +11,10 @@ pfUI:RegisterModule("chat", function ()
   pfUI.chat.left:SetWidth(pfUI_config.chat.left.width)
   pfUI.chat.left:SetHeight(pfUI_config.chat.left.height)
   pfUI.chat.left:SetPoint("BOTTOMLEFT", 5,5)
-  pfUI.utils:UpdateMovable(pfUI.chat.left)
-  pfUI.utils:CreateBackdrop(pfUI.chat.left, default_border, nil, true)
+  pfUI.api:UpdateMovable(pfUI.chat.left)
+  pfUI.api:CreateBackdrop(pfUI.chat.left, default_border, nil, true)
   if pfUI_config.chat.global.custombg == "1" then
-    local r, g, b, a = strsplit(",", pfUI_config.chat.global.background)
+    local r, g, b, a = pfUI.api.strsplit(",", pfUI_config.chat.global.background)
     pfUI.chat.left.backdrop:SetBackdropColor(tonumber(r), tonumber(g), tonumber(b), tonumber(a))
   end
 
@@ -23,7 +23,7 @@ pfUI:RegisterModule("chat", function ()
   pfUI.chat.left.panelTop:SetHeight(pfUI_config.global.font_size+default_border*2)
   pfUI.chat.left.panelTop:SetPoint("TOPLEFT", pfUI.chat.left, "TOPLEFT", default_border, -default_border)
   pfUI.chat.left.panelTop:SetPoint("TOPRIGHT", pfUI.chat.left, "TOPRIGHT", -default_border, -default_border)
-  pfUI.utils:CreateBackdrop(pfUI.chat.left.panelTop, default_border, nil, true)
+  pfUI.api:CreateBackdrop(pfUI.chat.left.panelTop, default_border, nil, true)
 
   -- whisper forwarding
   pfUI.chat.left.panelTop.proxy = CreateFrame("Button", "leftChatWhisperProxy", pfUI.chat.left.panelTop)
@@ -94,7 +94,7 @@ pfUI:RegisterModule("chat", function ()
   pfUI.chat.left.panelTop.proxyName:SetPoint("CENTER", 0, 0)
   pfUI.chat.left.panelTop.proxyName:SetHeight(100)
   pfUI.chat.left.panelTop.proxyName:SetWidth(200)
-  pfUI.utils:CreateBackdrop(pfUI.chat.left.panelTop.proxyName, default_border)
+  pfUI.api:CreateBackdrop(pfUI.chat.left.panelTop.proxyName, default_border)
   pfUI.chat.left.panelTop.proxyName:SetScript("OnShow", function()
     pfUI.chat.left.panelTop.proxyName.input:SetText(pfUI.chat.left.panelTop.proxy.forwardto)
   end)
@@ -109,7 +109,7 @@ pfUI:RegisterModule("chat", function ()
   pfUI.chat.left.panelTop.proxyName.input = CreateFrame("EditBox", nil, pfUI.chat.left.panelTop.proxyName)
   pfUI.chat.left.panelTop.proxyName.input:SetTextColor(.2,1.1,1)
   pfUI.chat.left.panelTop.proxyName.input:SetJustifyH("CENTER")
-  pfUI.utils:CreateBackdrop(pfUI.chat.left.panelTop.proxyName.input, default_border)
+  pfUI.api:CreateBackdrop(pfUI.chat.left.panelTop.proxyName.input, default_border)
   pfUI.chat.left.panelTop.proxyName.input:SetPoint("TOPLEFT" , pfUI.chat.left.panelTop.proxyName, "TOPLEFT", 20, -40)
   pfUI.chat.left.panelTop.proxyName.input:SetPoint("BOTTOMRIGHT" , pfUI.chat.left.panelTop.proxyName, "BOTTOMRIGHT", -20, 40)
   pfUI.chat.left.panelTop.proxyName.input:SetFontObject(GameFontWhite)
@@ -123,7 +123,7 @@ pfUI:RegisterModule("chat", function ()
   pfUI.chat.left.panelTop.proxyName.okay:SetWidth(80)
   pfUI.chat.left.panelTop.proxyName.okay:SetHeight(20)
   pfUI.chat.left.panelTop.proxyName.okay:SetPoint("BOTTOMRIGHT", -10, 10)
-  pfUI.utils:CreateBackdrop(pfUI.chat.left.panelTop.proxyName.okay, default_border)
+  pfUI.api:CreateBackdrop(pfUI.chat.left.panelTop.proxyName.okay, default_border)
   pfUI.chat.left.panelTop.proxyName.okay.text = pfUI.chat.left.panelTop.proxyName.okay:CreateFontString("Status", "LOW", "GameFontNormal")
   pfUI.chat.left.panelTop.proxyName.okay.text:SetFont(pfUI.font_default, pfUI_config.global.font_size, "OUTLINE")
   pfUI.chat.left.panelTop.proxyName.okay.text:ClearAllPoints()
@@ -143,7 +143,7 @@ pfUI:RegisterModule("chat", function ()
   pfUI.chat.left.panelTop.proxyName.abort:SetWidth(80)
   pfUI.chat.left.panelTop.proxyName.abort:SetHeight(20)
   pfUI.chat.left.panelTop.proxyName.abort:SetPoint("BOTTOMLEFT", 10, 10)
-  pfUI.utils:CreateBackdrop(pfUI.chat.left.panelTop.proxyName.abort, default_border)
+  pfUI.api:CreateBackdrop(pfUI.chat.left.panelTop.proxyName.abort, default_border)
   pfUI.chat.left.panelTop.proxyName.abort.text = pfUI.chat.left.panelTop.proxyName.abort:CreateFontString("Status", "LOW", "GameFontNormal")
   pfUI.chat.left.panelTop.proxyName.abort.text:SetFont(pfUI.font_default, pfUI_config.global.font_size, "OUTLINE")
   pfUI.chat.left.panelTop.proxyName.abort.text:ClearAllPoints()
@@ -163,10 +163,10 @@ pfUI:RegisterModule("chat", function ()
   pfUI.chat.right:SetWidth(pfUI_config.chat.right.width)
   pfUI.chat.right:SetHeight(pfUI_config.chat.right.height)
   pfUI.chat.right:SetPoint("BOTTOMRIGHT", -5,5)
-  pfUI.utils:UpdateMovable(pfUI.chat.right)
-  pfUI.utils:CreateBackdrop(pfUI.chat.right, default_border, nil, true)
+  pfUI.api:UpdateMovable(pfUI.chat.right)
+  pfUI.api:CreateBackdrop(pfUI.chat.right, default_border, nil, true)
   if pfUI_config.chat.global.custombg == "1" then
-    local r, g, b, a = strsplit(",", pfUI_config.chat.global.background)
+    local r, g, b, a = pfUI.api.strsplit(",", pfUI_config.chat.global.background)
     pfUI.chat.right.backdrop:SetBackdropColor(tonumber(r), tonumber(g), tonumber(b), tonumber(a))
   end
 
@@ -175,7 +175,7 @@ pfUI:RegisterModule("chat", function ()
   pfUI.chat.right.panelTop:SetHeight(pfUI_config.global.font_size+default_border*2)
   pfUI.chat.right.panelTop:SetPoint("TOPLEFT", pfUI.chat.right, "TOPLEFT", default_border, -default_border)
   pfUI.chat.right.panelTop:SetPoint("TOPRIGHT", pfUI.chat.right, "TOPRIGHT", -default_border, -default_border)
-  pfUI.utils:CreateBackdrop(pfUI.chat.right.panelTop, default_border, nil, true)
+  pfUI.api:CreateBackdrop(pfUI.chat.right.panelTop, default_border, nil, true)
 
   pfUI.chat:RegisterEvent("PLAYER_ENTERING_WORLD")
   pfUI.chat:RegisterEvent("UI_SCALE_CHANGED")
@@ -483,7 +483,7 @@ pfUI:RegisterModule("chat", function ()
     anchor = pfUI.chat.left
   end
   pfUI.chat.editbox:SetPoint("BOTTOM", anchor, "TOP", 0, default_border*4)
-  pfUI.utils:UpdateMovable(pfUI.chat.editbox)
+  pfUI.api:UpdateMovable(pfUI.chat.editbox)
 
   if pfUI_config.chat.text.input_width == "0" then
     pfUI.chat.editbox:SetWidth(default_border*3 + pfUI_config.bars.icon_size * 12 + default_border * 12) -- actionbar size
@@ -493,7 +493,7 @@ pfUI:RegisterModule("chat", function ()
 
   ChatFrameEditBox:SetParent(pfUI.chat.editbox)
   ChatFrameEditBox:SetAllPoints(pfUI.chat.editbox)
-  pfUI.utils:CreateBackdrop(ChatFrameEditBox, default_border)
+  pfUI.api:CreateBackdrop(ChatFrameEditBox, default_border)
 
   for i,v in ipairs({ChatFrameEditBox:GetRegions()}) do
     if i==6 or i==7 or i==8 then v:Hide() end
@@ -556,7 +556,7 @@ pfUI:RegisterModule("chat", function ()
           local left = string.sub(pfUI_config.chat.text.timebracket, 1, 1)
           local right = string.sub(pfUI_config.chat.text.timebracket, 2, 2)
 
-          local r,g,b,a = strsplit(",", pfUI_config.chat.text.timecolor)
+          local r,g,b,a = pfUI.api.strsplit(",", pfUI_config.chat.text.timecolor)
           local chex = string.format("%02x%02x%02x%02x", a*255, r*255, g*255, b*255)
           text = "|c" .. chex .. left .. date(pfUI_config.chat.text.timeformat) .. right .. "|r " .. text
         end

@@ -22,7 +22,7 @@ function pfUI.uf:AddIcon(frame, pos, icon)
     end
   end
   frame.icon[pos].tex:SetTexture(icon)
-  pfUI.utils:CreateBackdrop(frame.icon[pos], nil, true)
+  pfUI.api:CreateBackdrop(frame.icon[pos], nil, true)
   frame.icon[pos]:Show()
 end
 

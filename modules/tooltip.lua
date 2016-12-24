@@ -1,5 +1,5 @@
 pfUI:RegisterModule("tooltip", function ()
-pfUI.utils:CreateBackdrop(GameTooltip)
+pfUI.api:CreateBackdrop(GameTooltip)
 
   if pfUI_config.tooltip.position == "cursor" then
     function GameTooltip_SetDefaultAnchor(tooltip, parent)
@@ -61,8 +61,8 @@ pfUI.utils:CreateBackdrop(GameTooltip)
       _, hpm = GameTooltipStatusBar:GetMinMaxValues()
 
       if hp and hpm then
-        if hp >= 1000 then hp = round(hp / 1000, 1) .. "k" end
-        if hpm >= 1000 then hpm = round(hpm / 1000, 1) .. "k" end
+        if hp >= 1000 then hp = pfUI.api.round(hp / 1000, 1) .. "k" end
+        if hpm >= 1000 then hpm = pfUI.api.round(hpm / 1000, 1) .. "k" end
         pfUI.tooltipStatusBar.HP:SetText(hp .. " / " .. hpm)
       end
   end)
@@ -72,7 +72,7 @@ pfUI.utils:CreateBackdrop(GameTooltip)
   GameTooltipStatusBar:SetPoint("BOTTOMLEFT", GameTooltip, "TOPLEFT", 0, 0)
   GameTooltipStatusBar:SetPoint("BOTTOMRIGHT", GameTooltip, "TOPRIGHT", 0, 0)
   GameTooltipStatusBar:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
-  pfUI.utils:CreateBackdrop(GameTooltipStatusBar)
+  pfUI.api:CreateBackdrop(GameTooltipStatusBar)
   GameTooltipStatusBar.SetStatusBarColor_orig = GameTooltipStatusBar.SetStatusBarColor
   GameTooltipStatusBar.SetStatusBarColor = function() return end
 
@@ -132,8 +132,8 @@ pfUI.utils:CreateBackdrop(GameTooltip)
       end
 
       if hp and hpm then
-        if hp >= 1000 then hp = round(hp / 1000, 1) .. "k" end
-        if hpm >= 1000 then hpm = round(hpm / 1000, 1) .. "k" end
+        if hp >= 1000 then hp = pfUI.api.round(hp / 1000, 1) .. "k" end
+        if hpm >= 1000 then hpm = pfUI.api.round(hpm / 1000, 1) .. "k" end
         pfUI.tooltipStatusBar.HP:SetText(hp .. " / " .. hpm)
       end
       GameTooltip:Show()
