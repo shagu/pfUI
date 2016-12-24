@@ -14,7 +14,7 @@ pfUI:RegisterModule("chat", function ()
   pfUI.utils:UpdateMovable(pfUI.chat.left)
   pfUI.utils:CreateBackdrop(pfUI.chat.left, default_border, nil, true)
   if pfUI_config.chat.global.custombg == "1" then
-    local r, g, b, a = strsplit(",", pfUI_config.chat.global.background)
+    local r, g, b, a = pfUI:strsplit(",", pfUI_config.chat.global.background)
     pfUI.chat.left.backdrop:SetBackdropColor(tonumber(r), tonumber(g), tonumber(b), tonumber(a))
   end
 
@@ -166,7 +166,7 @@ pfUI:RegisterModule("chat", function ()
   pfUI.utils:UpdateMovable(pfUI.chat.right)
   pfUI.utils:CreateBackdrop(pfUI.chat.right, default_border, nil, true)
   if pfUI_config.chat.global.custombg == "1" then
-    local r, g, b, a = strsplit(",", pfUI_config.chat.global.background)
+    local r, g, b, a = pfUI:strsplit(",", pfUI_config.chat.global.background)
     pfUI.chat.right.backdrop:SetBackdropColor(tonumber(r), tonumber(g), tonumber(b), tonumber(a))
   end
 
@@ -556,7 +556,7 @@ pfUI:RegisterModule("chat", function ()
           local left = string.sub(pfUI_config.chat.text.timebracket, 1, 1)
           local right = string.sub(pfUI_config.chat.text.timebracket, 2, 2)
 
-          local r,g,b,a = strsplit(",", pfUI_config.chat.text.timecolor)
+          local r,g,b,a = pfUI:strsplit(",", pfUI_config.chat.text.timecolor)
           local chex = string.format("%02x%02x%02x%02x", a*255, r*255, g*255, b*255)
           text = "|c" .. chex .. left .. date(pfUI_config.chat.text.timeformat) .. right .. "|r " .. text
         end

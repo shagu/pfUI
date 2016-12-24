@@ -338,7 +338,7 @@ pfUI:RegisterModule("player", function ()
 
       this.energy = UnitMana("player")
 
-      local value = round((GetTime() - this.lastTick) * 100)
+      local value = pfUI:round((GetTime() - this.lastTick) * 100)
       local pos = pfUI_config.unitframes.player.width / 200 * value
       this.spark:SetPoint("LEFT", pos-((pfUI_config.unitframes.player.pheight+5)/2), 0)
     end)

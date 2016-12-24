@@ -1,5 +1,5 @@
 -- a real "round" instead of ceil or floor
-function round(input, places)
+function pfUI:round(input, places)
   if not places then places = 0 end
   if type(input) == "number" and type(places) == "number" then
     local pow = 1
@@ -8,7 +8,7 @@ function round(input, places)
   end
 end
 
-function strsplit(delimiter, subject)
+function pfUI:strsplit(delimiter, subject)
   local ret = {}
   local sector = subject
   while true do
@@ -23,7 +23,7 @@ function strsplit(delimiter, subject)
   end
 end
 
-function CreateGoldString(money)
+function pfUI:CreateGoldString(money)
   local gold = floor(money/ 100 / 100)
   local silver = floor(mod((money/100),100))
   local copper = floor(mod(money,100))
@@ -36,7 +36,7 @@ function CreateGoldString(money)
   return string
 end
 
-function CopyTable(src)
+function pfUI:CopyTable(src)
   local lookup_table = {}
   local function _copy(src)
     if type(src) ~= "table" then

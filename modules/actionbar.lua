@@ -38,7 +38,7 @@ pfUI:RegisterModule("actionbar", function ()
         if ( this.rangeTimer <= 0.1 ) then
           if ( IsActionInRange( ActionButton_GetPagedID(this)) == 0 ) then
             if not this.a then
-              this.r,this.g,this.b,this.a = strsplit(",", pfUI_config.bars.rangecolor)
+              this.r,this.g,this.b,this.a = pfUI:strsplit(",", pfUI_config.bars.rangecolor)
             end
             getglobal(this:GetName() .. 'Icon'):SetVertexColor(this.r, this.g, this.b, this.a)
           elseif IsUsableAction(ActionButton_GetPagedID(this)) then

@@ -31,7 +31,7 @@ pfUI:RegisterModule("castbar", function ()
       pfUI.castbar.player.bar:SetAllPoints(pfUI.castbar.player)
       pfUI.castbar.player.bar:SetMinMaxValues(0, 100)
       pfUI.castbar.player.bar:SetValue(20)
-      local r,g,b,a = strsplit(",", pfUI_config.appearance.castbar.castbarcolor)
+      local r,g,b,a = pfUI:strsplit(",", pfUI_config.appearance.castbar.castbarcolor)
       pfUI.castbar.player.bar:SetStatusBarColor(r,g,b,a)
 
       -- text left
@@ -73,7 +73,7 @@ pfUI:RegisterModule("castbar", function ()
           pfUI.castbar.player.delay = 0
           pfUI.castbar.player.spell = arg1
           pfUI.castbar.player.bar.left:SetText(arg1)
-          local r,g,b,a = strsplit(",", pfUI_config.appearance.castbar.castbarcolor)
+          local r,g,b,a = pfUI:strsplit(",", pfUI_config.appearance.castbar.castbarcolor)
           pfUI.castbar.player.bar:SetStatusBarColor(r,g,b,a)
           pfUI.castbar.player.startTime = GetTime()
           pfUI.castbar.player.maxValue = pfUI.castbar.player.startTime + (arg2 / 1000)
@@ -91,7 +91,7 @@ pfUI:RegisterModule("castbar", function ()
           pfUI.castbar.player.delay = 0
           pfUI.castbar.player.spell = arg2
           pfUI.castbar.player.bar.left:SetText(arg2)
-          local r,g,b,a = strsplit(",", pfUI_config.appearance.castbar.channelcolor)
+          local r,g,b,a = pfUI:strsplit(",", pfUI_config.appearance.castbar.channelcolor)
           pfUI.castbar.player.bar:SetStatusBarColor(r,g,b,a)
           pfUI.castbar.player.maxValue = nil
           pfUI.castbar.player.startTime = GetTime()
@@ -158,15 +158,15 @@ pfUI:RegisterModule("castbar", function ()
         -- cast
         if ( pfUI.castbar.player.casting ) then
           local status = GetTime()
-          local cur = round(GetTime() - pfUI.castbar.player.startTime,1)
-          local max = round(pfUI.castbar.player.maxValue - pfUI.castbar.player.startTime,1)
+          local cur = pfUI:round(GetTime() - pfUI.castbar.player.startTime,1)
+          local max = pfUI:round(pfUI.castbar.player.maxValue - pfUI.castbar.player.startTime,1)
           local delay = pfUI.castbar.player.delay
           if cur > max then cur = max end
           if ( status > pfUI.castbar.player.maxValue ) then
             status = pfUI.castbar.player.maxValue
           end
           if delay > 0 then
-            delay = "|cffffaaaa+" .. round(delay,1) .. " |r "
+            delay = "|cffffaaaa+" .. pfUI:round(delay,1) .. " |r "
             pfUI.castbar.player.bar.right:SetText(delay .. cur .. " / " .. max)
           else
             pfUI.castbar.player.bar.right:SetText(cur .. " / " .. max)
@@ -177,8 +177,8 @@ pfUI:RegisterModule("castbar", function ()
         elseif ( pfUI.castbar.player.channeling ) then
           local time = GetTime()
           local barValue = pfUI.castbar.player.startTime + (pfUI.castbar.player.endTime - time)
-          local cur = round(pfUI.castbar.player.endTime - GetTime(),1)
-          local max = round(pfUI.castbar.player.endTime - pfUI.castbar.player.startTime,1)
+          local cur = pfUI:round(pfUI.castbar.player.endTime - GetTime(),1)
+          local max = pfUI:round(pfUI.castbar.player.endTime - pfUI.castbar.player.startTime,1)
           local delay = pfUI.castbar.player.delay
           if cur > max then cur = max end
           if ( time > pfUI.castbar.player.endTime ) then
@@ -190,7 +190,7 @@ pfUI:RegisterModule("castbar", function ()
             return
           end
           if delay > 0 then
-            delay = "|cffffaaaa-" .. round(delay,1) .. " |r "
+            delay = "|cffffaaaa-" .. pfUI:round(delay,1) .. " |r "
             pfUI.castbar.player.bar.right:SetText(delay .. cur)
           else
             pfUI.castbar.player.bar.right:SetText(cur)
@@ -214,7 +214,7 @@ pfUI:RegisterModule("castbar", function ()
       pfUI.castbar.target.bar:SetAllPoints(pfUI.castbar.target)
       pfUI.castbar.target.bar:SetMinMaxValues(0, 100)
       pfUI.castbar.target.bar:SetValue(20)
-      local r,g,b,a = strsplit(",", pfUI_config.appearance.castbar.castbarcolor)
+      local r,g,b,a = pfUI:strsplit(",", pfUI_config.appearance.castbar.castbarcolor)
       pfUI.castbar.target.bar:SetStatusBarColor(r,g,b,a)
 
       -- text left
@@ -256,7 +256,7 @@ pfUI:RegisterModule("castbar", function ()
               pfUI.castbar.target.bar:SetMinMaxValues(0, casttime)
               pfUI.castbar.target.bar:SetValue(GetTime() - starttime)
               pfUI.castbar.target.bar.left:SetText(spellname)
-              pfUI.castbar.target.bar.right:SetText(round(GetTime() - starttime,1) .. " / " .. casttime)
+              pfUI.castbar.target.bar.right:SetText(pfUI:round(GetTime() - starttime,1) .. " / " .. casttime)
             end
           else
             pfUI.castbar.target.casterDB[UnitName("target")] = nil
