@@ -22,6 +22,16 @@ pfUI:RegisterModule("gui", function ()
     pfUI.gui:StopMovingOrSizing()
   end)
 
+  pfUI.gui:SetScript("OnHide",function()
+    if pfQuestionDialog and pfQuestionDialog:IsShown() then
+      pfQuestionDialog:Hide()
+      pfQuestionDialog = nil
+    end
+    if ColorPickerFrame and ColorPickerFrame:IsShown() then
+      ColorPickerFrame:Hide()
+    end
+  end)
+
   function pfUI.gui:SaveScale(frame, scale)
     frame:SetScale(scale)
 
