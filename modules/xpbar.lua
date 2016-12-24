@@ -51,12 +51,12 @@ pfUI:RegisterModule("xpbar", function ()
       pfUI.xp.mouseover = true
       pfUI.xp:SetAlpha(1)
       local xp, xpmax, exh = UnitXP("player"), UnitXPMax("player"), GetXPExhaustion()
-      local xp_perc = round(xp / xpmax * 100)
+      local xp_perc = pfUI:round(xp / xpmax * 100)
       local remaining = xpmax - xp
-      local remaining_perc = round(remaining / xpmax * 100)
+      local remaining_perc = pfUI:round(remaining / xpmax * 100)
       local exh_perc = 0
       if GetXPExhaustion() then
-        exh_perc = round(GetXPExhaustion() / xpmax * 100)
+        exh_perc = pfUI:round(GetXPExhaustion() / xpmax * 100)
       end
 
       GameTooltip:ClearLines()
@@ -171,7 +171,7 @@ pfUI:RegisterModule("xpbar", function ()
           GameTooltip:SetOwner(this, "ANCHOR_CURSOR")
           GameTooltip:AddLine("|cff555555Reputation")
           GameTooltip:AddLine(name .. " (" .. GetText("FACTION_STANDING_LABEL"..standingID, gender) .. ")", color.r + .3, color.g + .3, color.b + .3)
-          GameTooltip:AddLine(barValue .. " / " .. barMax .. " (" .. round(barValue / barMax * 100) .. "%)",1,1,1)
+          GameTooltip:AddLine(barValue .. " / " .. barMax .. " (" .. pfUI:round(barValue / barMax * 100) .. "%)",1,1,1)
           GameTooltip:Show()
 
           pfUI.rep.mouseover = true

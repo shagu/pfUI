@@ -22,6 +22,16 @@ pfUI:RegisterModule("gui", function ()
     pfUI.gui:StopMovingOrSizing()
   end)
 
+  pfUI.gui:SetScript("OnHide",function()
+    if pfQuestionDialog and pfQuestionDialog:IsShown() then
+      pfQuestionDialog:Hide()
+      pfQuestionDialog = nil
+    end
+    if ColorPickerFrame and ColorPickerFrame:IsShown() then
+      ColorPickerFrame:Hide()
+    end
+  end)
+
   function pfUI.gui:SaveScale(frame, scale)
     frame:SetScale(scale)
 
@@ -170,7 +180,7 @@ pfUI:RegisterModule("gui", function ()
           frame.drag:SetAlpha(1)
 
           frame.drag:SetScript("OnMouseWheel", function()
-            local scale = round(frame:GetScale() + arg1/10, 1)
+            local scale = pfUI:round(frame:GetScale() + arg1/10, 1)
 
             if IsShiftKeyDown() and strsub(frame:GetName(),0,6) == "pfRaid" then
               for i=1,40 do
@@ -424,14 +434,14 @@ pfUI:RegisterModule("gui", function ()
       frame.color.prev = frame.color.backdrop:CreateTexture("OVERLAY")
       frame.color.prev:SetAllPoints(frame.color)
 
-      local cr, cg, cb, ca = strsplit(",", category[config])
+      local cr, cg, cb, ca = pfUI:strsplit(",", category[config])
       if not cr or not cg or not cb or not ca then
         cr, cg, cb, ca = 1, 1, 1, 1
       end
       frame.color.prev:SetTexture(cr,cg,cb,ca)
 
       frame.color:SetScript("OnClick", function()
-        local cr, cg, cb, ca = strsplit(",", category[config])
+        local cr, cg, cb, ca = pfUI:strsplit(",", category[config])
         if not cr or not cg or not cb or not ca then
           cr, cg, cb, ca = 1, 1, 1, 1
         end
@@ -441,10 +451,10 @@ pfUI:RegisterModule("gui", function ()
           local r,g,b = ColorPickerFrame:GetColorRGB()
           local a = 1 - OpacitySliderFrame:GetValue()
 
-          r = round(r, 1)
-          g = round(g, 1)
-          b = round(b, 1)
-          a = round(a, 1)
+          r = pfUI:round(r, 1)
+          g = pfUI:round(g, 1)
+          b = pfUI:round(b, 1)
+          a = pfUI:round(a, 1)
 
           preview:SetTexture(r,g,b,a)
 
@@ -732,7 +742,7 @@ pfUI:RegisterModule("gui", function ()
     if pfUI_config.global.profile and pfUI_profiles[pfUI_config.global.profile] then
       pfUI.utils:CreateQuestionDialog("Load profile '|cff33ffcc" .. pfUI_config.global.profile .. "|r'?", function()
         local selp = pfUI_config.global.profile
-        pfUI_config = CopyTable(pfUI_profiles[pfUI_config.global.profile])
+        pfUI_config = pfUI:CopyTable(pfUI_profiles[pfUI_config.global.profile])
         pfUI_config.global.profile = selp
         ReloadUI()
       end)
@@ -755,7 +765,7 @@ pfUI:RegisterModule("gui", function ()
     if pfUI_config.global.profile and pfUI_profiles[pfUI_config.global.profile] then
       pfUI.utils:CreateQuestionDialog("Save current settings to profile '|cff33ffcc" .. pfUI_config.global.profile .. "|r'?", function()
         if pfUI_profiles[pfUI_config.global.profile] then
-          pfUI_profiles[pfUI_config.global.profile] = CopyTable(pfUI_config)
+          pfUI_profiles[pfUI_config.global.profile] = pfUI:CopyTable(pfUI_config)
         end
         this:GetParent():Hide()
       end)
@@ -773,7 +783,7 @@ pfUI:RegisterModule("gui", function ()
       else
         profile = (string.gsub(profile,"^%s*(.-)%s*$", "%1"))
         if profile and profile ~= "" then
-          pfUI_profiles[profile] = CopyTable(pfUI_config)
+          pfUI_profiles[profile] = pfUI:CopyTable(pfUI_config)
           pfUpdateProfiles()
           this:GetParent():Hide()
         end

@@ -126,8 +126,8 @@ function pfUI.utils:CreateBackdrop(f, inset, legacy, transp)
 
   -- bg and edge colors
   if not pfUI.cache.br then
-    local br, bg, bb, ba = strsplit(",", pfUI_config.appearance.border.background)
-    local er, eg, eb, ea = strsplit(",", pfUI_config.appearance.border.color)
+    local br, bg, bb, ba = pfUI:strsplit(",", pfUI_config.appearance.border.background)
+    local er, eg, eb, ea = pfUI:strsplit(",", pfUI_config.appearance.border.color)
     pfUI.cache.br, pfUI.cache.bg, pfUI.cache.bb, pfUI.cache.ba = br, bg, bb, ba
     pfUI.cache.er, pfUI.cache.eg, pfUI.cache.eb, pfUI.cache.ea = er, eg, eb, ea
   end

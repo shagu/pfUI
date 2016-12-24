@@ -61,8 +61,8 @@ pfUI.utils:CreateBackdrop(GameTooltip)
       _, hpm = GameTooltipStatusBar:GetMinMaxValues()
 
       if hp and hpm then
-        if hp >= 1000 then hp = round(hp / 1000, 1) .. "k" end
-        if hpm >= 1000 then hpm = round(hpm / 1000, 1) .. "k" end
+        if hp >= 1000 then hp = pfUI:round(hp / 1000, 1) .. "k" end
+        if hpm >= 1000 then hpm = pfUI:round(hpm / 1000, 1) .. "k" end
         pfUI.tooltipStatusBar.HP:SetText(hp .. " / " .. hpm)
       end
   end)
@@ -132,8 +132,8 @@ pfUI.utils:CreateBackdrop(GameTooltip)
       end
 
       if hp and hpm then
-        if hp >= 1000 then hp = round(hp / 1000, 1) .. "k" end
-        if hpm >= 1000 then hpm = round(hpm / 1000, 1) .. "k" end
+        if hp >= 1000 then hp = pfUI:round(hp / 1000, 1) .. "k" end
+        if hpm >= 1000 then hpm = pfUI:round(hpm / 1000, 1) .. "k" end
         pfUI.tooltipStatusBar.HP:SetText(hp .. " / " .. hpm)
       end
       GameTooltip:Show()
