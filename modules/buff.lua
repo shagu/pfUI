@@ -56,7 +56,7 @@ pfUI:RegisterModule("buff", function ()
         local border = getglobal(buff:GetName().."Border")
         local _, _, mainhand, _, _, offhand = GetWeaponEnchantInfo()
         if buff then
-          pfUI.utils:CreateBackdrop(buff)
+          pfUI.api:CreateBackdrop(buff)
           icon:SetTexCoord(.08, .92, .08, .92)
           border:Hide()
         end
@@ -108,7 +108,7 @@ pfUI:RegisterModule("buff", function ()
           elseif i > 16 then
             buff:SetPoint("TOPRIGHT", getglobal("BuffButton" .. i-1), "TOPLEFT", -7, 0)
           end
-          pfUI.utils:CreateBackdrop(buff)
+          pfUI.api:CreateBackdrop(buff)
           text:SetPoint("TOP", buff, "BOTTOM", 0 , -pfUI_config.appearance.border.default*2)
           icon:SetTexCoord(.08, .92, .08, .92)
           if border then

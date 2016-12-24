@@ -46,12 +46,12 @@ pfUI:RegisterModule("skin", function ()
   GameMenuButtonContinue:SetPoint("BOTTOM", 0, 10)
 
   for _, button in pairs(buttons) do
-    pfUI.utils:SkinButton(button, cr, cg, cb)
+    pfUI.api:SkinButton(button, cr, cg, cb)
   end
 
   for _, box in pairs(boxes) do
     local b = getglobal(box)
-    pfUI.utils:CreateBackdrop(b, nil, true, true)
+    pfUI.api:CreateBackdrop(b, nil, true, true)
   end
 
   for i,v in ipairs({GameMenuFrame:GetRegions()}) do
@@ -62,8 +62,8 @@ pfUI:RegisterModule("skin", function ()
     end
   end
 
-pfUI.utils:CreateBackdrop(ShoppingTooltip1)
-pfUI.utils:CreateBackdrop(ShoppingTooltip2)
+pfUI.api:CreateBackdrop(ShoppingTooltip1)
+pfUI.api:CreateBackdrop(ShoppingTooltip2)
 
 ShoppingTooltip1:SetScript("OnShow", function()
   local a, b, c, d, e = this:GetPoint()
@@ -79,7 +79,7 @@ ShoppingTooltip2:SetScript("OnShow", function()
   this:SetPoint(a, b, c, d, e)
 end)
 
-pfUI.utils:CreateBackdrop(TicketStatusFrame)
+pfUI.api:CreateBackdrop(TicketStatusFrame)
   TicketStatusFrame:ClearAllPoints()
   TicketStatusFrame:SetPoint("TOP", 0, -5)
   function TicketStatusFrame_OnEvent()

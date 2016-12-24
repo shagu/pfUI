@@ -17,8 +17,8 @@ env\locales_zhCN.lua
 env\locales_ruRU.lua
 
 # environment
+env\api.lua
 env\colors.lua
-env\functions.lua
 env\fonts.lua
 env\selldata.lua
 

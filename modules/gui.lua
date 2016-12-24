@@ -10,7 +10,7 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui:SetHeight(500)
   pfUI.gui:Hide()
 
-  pfUI.utils:CreateBackdrop(pfUI.gui, nil, nil, true)
+  pfUI.api:CreateBackdrop(pfUI.gui, nil, nil, true)
   pfUI.gui:SetPoint("CENTER",0,0)
   pfUI.gui:SetMovable(true)
   pfUI.gui:EnableMouse(true)
@@ -60,7 +60,7 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.reloadDialog:Hide()
   tinsert(UISpecialFrames, "pfReloadDiag")
 
-  pfUI.utils:CreateBackdrop(pfUI.gui.reloadDialog)
+  pfUI.api:CreateBackdrop(pfUI.gui.reloadDialog)
   pfUI.gui.reloadDialog:SetPoint("CENTER",0,0)
 
   pfUI.gui.reloadDialog.text = pfUI.gui.reloadDialog:CreateFontString("Status", "LOW", "GameFontNormal")
@@ -69,7 +69,7 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.reloadDialog.text:SetText("Some settings need to reload the UI to take effect.\nDo you want to reloadUI now?")
 
   pfUI.gui.reloadDialog.yes = CreateFrame("Button", "pfReloadYes", pfUI.gui.reloadDialog, "UIPanelButtonTemplate")
-  pfUI.utils:CreateBackdrop(pfUI.gui.reloadDialog.yes, nil, true)
+  pfUI.api:CreateBackdrop(pfUI.gui.reloadDialog.yes, nil, true)
   pfUI.gui.reloadDialog.yes:SetWidth(100)
   pfUI.gui.reloadDialog.yes:SetHeight(20)
   pfUI.gui.reloadDialog.yes:SetPoint("BOTTOMLEFT", 20,15)
@@ -167,7 +167,7 @@ pfUI:RegisterModule("gui", function ()
           frame.drag = CreateFrame("Frame", nil, frame)
           frame.drag:SetAllPoints(frame)
           frame.drag:SetFrameStrata("DIALOG")
-          pfUI.utils:CreateBackdrop(frame.drag, nil, nil, true)
+          pfUI.api:CreateBackdrop(frame.drag, nil, nil, true)
           frame.drag.backdrop:SetBackdropBorderColor(.2, 1, .8)
           frame.drag:EnableMouseWheel(1)
           frame.drag.text = frame.drag:CreateFontString("Status", "LOW", "GameFontNormal")
@@ -180,7 +180,7 @@ pfUI:RegisterModule("gui", function ()
           frame.drag:SetAlpha(1)
 
           frame.drag:SetScript("OnMouseWheel", function()
-            local scale = pfUI:round(frame:GetScale() + arg1/10, 1)
+            local scale = pfUI.api.round(frame:GetScale() + arg1/10, 1)
 
             if IsShiftKeyDown() and strsub(frame:GetName(),0,6) == "pfRaid" then
               for i=1,40 do
@@ -312,12 +312,12 @@ pfUI:RegisterModule("gui", function ()
 
     for _, hide in pairs(elements) do
       hide:Hide()
-      pfUI.utils:CreateBackdrop(hide.switch, nil, true)
+      pfUI.api:CreateBackdrop(hide.switch, nil, true)
     end
     pfUI.gui.scroll:SetScrollChild(frame)
     pfUI.gui.scroll:UpdateScrollState()
     pfUI.gui.scroll:SetVerticalScroll(0)
-    pfUI.utils:CreateBackdrop(frame.switch, nil, true)
+    pfUI.api:CreateBackdrop(frame.switch, nil, true)
     frame.switch:SetBackdropBorderColor(.2,1,.8)
     frame:Show()
   end
@@ -352,7 +352,7 @@ pfUI:RegisterModule("gui", function ()
     else
       frame.switch:SetPoint("TOPLEFT", default_border, -pfUI.gui.tabTop* (22 + default_border) -default_border)
     end
-    pfUI.utils:CreateBackdrop(frame.switch, nil, true)
+    pfUI.api:CreateBackdrop(frame.switch, nil, true)
     frame.switch.text = frame.switch:CreateFontString("Status", "LOW", "GameFontNormal")
     frame.switch.text:SetFont(pfUI.font_default, pfUI_config.global.font_size, "OUTLINE")
     frame.switch.text:SetAllPoints(frame.switch)
@@ -429,19 +429,19 @@ pfUI:RegisterModule("gui", function ()
       frame.color = CreateFrame("Button", nil, frame)
       frame.color:SetWidth(12)
       frame.color:SetHeight(12)
-      pfUI.utils:CreateBackdrop(frame.color)
+      pfUI.api:CreateBackdrop(frame.color)
       frame.color:SetPoint("TOPRIGHT" , 0, -4)
       frame.color.prev = frame.color.backdrop:CreateTexture("OVERLAY")
       frame.color.prev:SetAllPoints(frame.color)
 
-      local cr, cg, cb, ca = pfUI:strsplit(",", category[config])
+      local cr, cg, cb, ca = pfUI.api.strsplit(",", category[config])
       if not cr or not cg or not cb or not ca then
         cr, cg, cb, ca = 1, 1, 1, 1
       end
       frame.color.prev:SetTexture(cr,cg,cb,ca)
 
       frame.color:SetScript("OnClick", function()
-        local cr, cg, cb, ca = pfUI:strsplit(",", category[config])
+        local cr, cg, cb, ca = pfUI.api.strsplit(",", category[config])
         if not cr or not cg or not cb or not ca then
           cr, cg, cb, ca = 1, 1, 1, 1
         end
@@ -451,10 +451,10 @@ pfUI:RegisterModule("gui", function ()
           local r,g,b = ColorPickerFrame:GetColorRGB()
           local a = 1 - OpacitySliderFrame:GetValue()
 
-          r = pfUI:round(r, 1)
-          g = pfUI:round(g, 1)
-          b = pfUI:round(b, 1)
-          a = pfUI:round(a, 1)
+          r = pfUI.api.round(r, 1)
+          g = pfUI.api.round(g, 1)
+          b = pfUI.api.round(b, 1)
+          a = pfUI.api.round(a, 1)
 
           preview:SetTexture(r,g,b,a)
 
@@ -479,7 +479,7 @@ pfUI:RegisterModule("gui", function ()
     end
 
     if widget == "warning" then
-      pfUI.utils:CreateBackdrop(frame, nil, true)
+      pfUI.api:CreateBackdrop(frame, nil, true)
       frame:SetBackdropBorderColor(1,.5,.5)
       frame:SetHeight(50)
       frame:SetPoint("TOPLEFT", 25, parent.objectCount * -35)
@@ -527,8 +527,8 @@ pfUI:RegisterModule("gui", function ()
     -- use button widget
     if widget == "button" then
       frame.button = CreateFrame("Button", "pfButton", frame, "UIPanelButtonTemplate")
-      pfUI.utils:CreateBackdrop(frame.button, nil, true)
-      pfUI.utils:SkinButton(frame.button)
+      pfUI.api:CreateBackdrop(frame.button, nil, true)
+      pfUI.api:SkinButton(frame.button)
       frame.button:SetWidth(85)
       frame.button:SetHeight(20)
       frame.button:SetPoint("TOPRIGHT", -(parent.lineCount-1) * 90, -5)
@@ -544,7 +544,7 @@ pfUI:RegisterModule("gui", function ()
       frame.input:SetNormalTexture("")
       frame.input:SetPushedTexture("")
       frame.input:SetHighlightTexture("")
-      pfUI.utils:CreateBackdrop(frame.input, nil, true)
+      pfUI.api:CreateBackdrop(frame.input, nil, true)
       frame.input:SetWidth(14)
       frame.input:SetHeight(14)
       frame.input:SetPoint("TOPRIGHT" , 0, -4)
@@ -607,7 +607,7 @@ pfUI:RegisterModule("gui", function ()
       for i,v in ipairs({frame.input:GetRegions()}) do
         if v.SetTexture then v:Hide() end
         if v.SetTextColor then v:SetTextColor(.2,1,.8) end
-        if v.SetBackdrop then pfUI.utils:CreateBackdrop(v) end
+        if v.SetBackdrop then pfUI.api:CreateBackdrop(v) end
       end
     end
 
@@ -619,7 +619,7 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.deco:ClearAllPoints()
   pfUI.gui.deco:SetPoint("TOPLEFT", pfUI.gui, "TOPLEFT", 4*default_border + 100,-2*default_border)
   pfUI.gui.deco:SetPoint("BOTTOMRIGHT", pfUI.gui, "BOTTOMRIGHT", -2*default_border,2*default_border)
-  pfUI.utils:CreateBackdrop(pfUI.gui.deco, nil, nil, true)
+  pfUI.api:CreateBackdrop(pfUI.gui.deco, nil, nil, true)
 
   pfUI.gui.deco.up = CreateFrame("Frame", nil, pfUI.gui.deco)
   pfUI.gui.deco.up:SetPoint("TOPLEFT", pfUI.gui.deco, "TOPLEFT", 0,0)
@@ -740,9 +740,9 @@ pfUI:RegisterModule("gui", function ()
   -- load profile
   pfUI.gui:CreateConfig(pfUI.gui.global, "Load profile", pfUI_config.global, "profile", "button", function()
     if pfUI_config.global.profile and pfUI_profiles[pfUI_config.global.profile] then
-      pfUI.utils:CreateQuestionDialog("Load profile '|cff33ffcc" .. pfUI_config.global.profile .. "|r'?", function()
+      pfUI.api:CreateQuestionDialog("Load profile '|cff33ffcc" .. pfUI_config.global.profile .. "|r'?", function()
         local selp = pfUI_config.global.profile
-        pfUI_config = pfUI:CopyTable(pfUI_profiles[pfUI_config.global.profile])
+        pfUI_config = pfUI.api.CopyTable(pfUI_profiles[pfUI_config.global.profile])
         pfUI_config.global.profile = selp
         ReloadUI()
       end)
@@ -752,7 +752,7 @@ pfUI:RegisterModule("gui", function ()
   -- delete profile
   pfUI.gui:CreateConfig(pfUI.gui.global, "Delete profile", pfUI_config.global, "profile", "button", function()
     if pfUI_config.global.profile and pfUI_profiles[pfUI_config.global.profile] then
-      pfUI.utils:CreateQuestionDialog("Delete profile '|cff33ffcc" .. pfUI_config.global.profile .. "|r'?", function()
+      pfUI.api:CreateQuestionDialog("Delete profile '|cff33ffcc" .. pfUI_config.global.profile .. "|r'?", function()
         pfUI_profiles[pfUI_config.global.profile] = nil
         pfUpdateProfiles()
         this:GetParent():Hide()
@@ -763,9 +763,9 @@ pfUI:RegisterModule("gui", function ()
   -- save profile
   pfUI.gui:CreateConfig(pfUI.gui.global, "Save profile", pfUI_config.global, "profile", "button", function()
     if pfUI_config.global.profile and pfUI_profiles[pfUI_config.global.profile] then
-      pfUI.utils:CreateQuestionDialog("Save current settings to profile '|cff33ffcc" .. pfUI_config.global.profile .. "|r'?", function()
+      pfUI.api:CreateQuestionDialog("Save current settings to profile '|cff33ffcc" .. pfUI_config.global.profile .. "|r'?", function()
         if pfUI_profiles[pfUI_config.global.profile] then
-          pfUI_profiles[pfUI_config.global.profile] = pfUI:CopyTable(pfUI_config)
+          pfUI_profiles[pfUI_config.global.profile] = pfUI.api.CopyTable(pfUI_config)
         end
         this:GetParent():Hide()
       end)
@@ -774,7 +774,7 @@ pfUI:RegisterModule("gui", function ()
 
   -- create profile
   pfUI.gui:CreateConfig(pfUI.gui.global, "Create Profile", pfUI_config.global, "profile", "button", function()
-    pfUI.utils:CreateQuestionDialog("Please enter a name for the new profile.\nExisting profiles sharing the same name will be overwritten.",
+    pfUI.api:CreateQuestionDialog("Please enter a name for the new profile.\nExisting profiles sharing the same name will be overwritten.",
     function()
       local profile = this:GetParent().input:GetText()
       local bad = string.gsub(profile,"([%w%s]+)","")
@@ -783,7 +783,7 @@ pfUI:RegisterModule("gui", function ()
       else
         profile = (string.gsub(profile,"^%s*(.-)%s*$", "%1"))
         if profile and profile ~= "" then
-          pfUI_profiles[profile] = pfUI:CopyTable(pfUI_config)
+          pfUI_profiles[profile] = pfUI.api.CopyTable(pfUI_config)
           pfUpdateProfiles()
           this:GetParent():Hide()
         end

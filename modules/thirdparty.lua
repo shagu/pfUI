@@ -86,7 +86,7 @@ pfUI:RegisterModule("thirdparty", function ()
         pfUIhookWIM_PostMessage = WIM_PostMessage
         WIM_PostMessage = function(user, msg, ttype, from, raw_msg)
           pfUIhookWIM_PostMessage(user, msg, ttype, from, raw_msg)
-          pfUI.utils:CreateBackdrop(getglobal("WIM_msgFrame" .. user))
+          pfUI.api:CreateBackdrop(getglobal("WIM_msgFrame" .. user))
           getglobal("WIM_msgFrame" .. user .. "From"):ClearAllPoints()
           getglobal("WIM_msgFrame" .. user .. "From"):SetPoint("TOP", 0, -10)
 
@@ -104,7 +104,7 @@ pfUI:RegisterModule("thirdparty", function ()
           getglobal("WIM_msgFrame" .. user .. "ScrollingMessageFrame"):SetPoint("BOTTOMRIGHT", getglobal("WIM_msgFrame" .. user), "BOTTOMRIGHT", -32, 32)
           getglobal("WIM_msgFrame" .. user .. "ScrollingMessageFrame"):SetFont(STANDARD_TEXT_FONT, 12)
 
-          pfUI.utils:CreateBackdrop(getglobal("WIM_msgFrame" .. user .. "MsgBox"))
+          pfUI.api:CreateBackdrop(getglobal("WIM_msgFrame" .. user .. "MsgBox"))
           getglobal("WIM_msgFrame" .. user .. "MsgBox"):ClearAllPoints()
           getglobal("WIM_msgFrame" .. user .. "MsgBox"):SetPoint("TOPLEFT", getglobal("WIM_msgFrame" .. user .. "ScrollingMessageFrame"), "BOTTOMLEFT", 0, -5)
           getglobal("WIM_msgFrame" .. user .. "MsgBox"):SetPoint("TOPRIGHT", getglobal("WIM_msgFrame" .. user .. "ScrollingMessageFrame"), "BOTTOMRIGHT", 0, -5)
@@ -114,27 +114,27 @@ pfUI:RegisterModule("thirdparty", function ()
             if i==6  then v:SetTexture(.1,.1,.1,.5) end
           end
 
-          pfUI.utils:CreateBackdrop(getglobal("WIM_msgFrame" .. user .. "ShortcutFrameButton1"))
+          pfUI.api:CreateBackdrop(getglobal("WIM_msgFrame" .. user .. "ShortcutFrameButton1"))
           for i,v in ipairs({getglobal("WIM_msgFrame" .. user .. "ShortcutFrameButton1"):GetRegions()}) do
             if i >= 2 and i < 7 then v:SetTexture(.1,.1,.1,0) end
           end
 
-          pfUI.utils:CreateBackdrop(getglobal("WIM_msgFrame" .. user .. "ShortcutFrameButton2"))
+          pfUI.api:CreateBackdrop(getglobal("WIM_msgFrame" .. user .. "ShortcutFrameButton2"))
           for i,v in ipairs({getglobal("WIM_msgFrame" .. user .. "ShortcutFrameButton2"):GetRegions()}) do
             if i >= 2 and i < 7 then v:SetTexture(.1,.1,.1,0) end
           end
 
-          pfUI.utils:CreateBackdrop(getglobal("WIM_msgFrame" .. user .. "ShortcutFrameButton3"))
+          pfUI.api:CreateBackdrop(getglobal("WIM_msgFrame" .. user .. "ShortcutFrameButton3"))
           for i,v in ipairs({getglobal("WIM_msgFrame" .. user .. "ShortcutFrameButton3"):GetRegions()}) do
             if i >= 2 and i < 7 then v:SetTexture(.1,.1,.1,0) end
           end
 
-          pfUI.utils:CreateBackdrop(getglobal("WIM_msgFrame" .. user .. "ShortcutFrameButton4"))
+          pfUI.api:CreateBackdrop(getglobal("WIM_msgFrame" .. user .. "ShortcutFrameButton4"))
           for i,v in ipairs({getglobal("WIM_msgFrame" .. user .. "ShortcutFrameButton4"):GetRegions()}) do
             if i >= 2 and i < 7 then v:SetTexture(.1,.1,.1,0) end
           end
 
-          pfUI.utils:CreateBackdrop(getglobal("WIM_msgFrame" .. user .. "ShortcutFrameButton5"))
+          pfUI.api:CreateBackdrop(getglobal("WIM_msgFrame" .. user .. "ShortcutFrameButton5"))
           for i,v in ipairs({getglobal("WIM_msgFrame" .. user .. "ShortcutFrameButton5"):GetRegions()}) do
             if i >= 2 and i < 7 then v:SetTexture(.1,.1,.1,0) end
           end
@@ -311,7 +311,7 @@ pfUI:RegisterModule("thirdparty", function ()
         pfUI.bag.right.sort:SetPoint("TOPRIGHT", -pfUI_config.appearance.border.default*14 - 45, -pfUI_config.appearance.border.default)
         pfUI.bag.right.sort:SetPoint("TOPRIGHT", pfUI.bag.right.keys, "TOPLEFT", -pfUI_config.appearance.border.default*3, 0)
 
-        pfUI.utils:CreateBackdrop(pfUI.bag.right.sort)
+        pfUI.api:CreateBackdrop(pfUI.bag.right.sort)
         pfUI.bag.right.sort:SetHeight(12)
         pfUI.bag.right.sort:SetWidth(12)
         pfUI.bag.right.sort:SetTextColor(1,1,.25,1)
@@ -329,7 +329,7 @@ pfUI:RegisterModule("thirdparty", function ()
         end)
 
         pfUI.bag.right.sort:SetScript("OnLeave", function ()
-          pfUI.utils:CreateBackdrop(pfUI.bag.right.sort)
+          pfUI.api:CreateBackdrop(pfUI.bag.right.sort)
           pfUI.bag.right.sort.texture:SetVertexColor(.25,.25,.25,1)
         end)
 
@@ -349,7 +349,7 @@ pfUI:RegisterModule("thirdparty", function ()
         pfUI.bag.left.sort:SetPoint("TOPRIGHT", -pfUI_config.appearance.border.default*14 - 45, -pfUI_config.appearance.border.default)
         pfUI.bag.left.sort:SetPoint("TOPRIGHT", pfUI.bag.left.bags, "TOPLEFT", -pfUI_config.appearance.border.default*3, 0)
 
-        pfUI.utils:CreateBackdrop(pfUI.bag.left.sort)
+        pfUI.api:CreateBackdrop(pfUI.bag.left.sort)
         pfUI.bag.left.sort:SetHeight(12)
         pfUI.bag.left.sort:SetWidth(12)
         pfUI.bag.left.sort:SetTextColor(1,1,.25,1)
@@ -367,7 +367,7 @@ pfUI:RegisterModule("thirdparty", function ()
         end)
 
         pfUI.bag.left.sort:SetScript("OnLeave", function ()
-          pfUI.utils:CreateBackdrop(pfUI.bag.left.sort)
+          pfUI.api:CreateBackdrop(pfUI.bag.left.sort)
           pfUI.bag.left.sort.texture:SetVertexColor(.25,.25,.25,1)
         end)
 
