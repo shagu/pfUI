@@ -242,7 +242,8 @@ pfUI:RegisterModule("panel", function ()
         online = online + 1
       end
     end
-    pfUI.panel:OutputPanel("friends", "Friends: " .. online)
+    local click = function() ToggleFriendsFrame(1) end
+    pfUI.panel:OutputPanel("friends", "Friends: " .. online, nil, click)
   end
 
   -- Update "guild"
@@ -250,7 +251,8 @@ pfUI:RegisterModule("panel", function ()
     GuildRoster()
     local online = GetNumGuildMembers()
     local all = GetNumGuildMembers(true)
-    pfUI.panel:OutputPanel("guild", "Guild: "..online)
+    local click = function() ToggleFriendsFrame(3) end
+    pfUI.panel:OutputPanel("guild", "Guild: "..online, nil, click)
   end
 
   -- Update "durability"
