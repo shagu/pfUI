@@ -157,7 +157,7 @@ pfUI:RegisterModule("panel", function ()
       end
 
     elseif event == "PLAYER_ENTERING_WORLD" then
-      pfUI.panel:OutputPanel("combat", "-- Combat --")
+      pfUI.panel:OutputPanel("combat", "Combat: N/A")
     end
   end)
 
