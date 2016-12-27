@@ -514,7 +514,12 @@ pfUI:RegisterModule("chat", function ()
   CHAT_BATTLEGROUND_GET = '[BG]' .. default
   CHAT_BATTLEGROUND_LEADER_GET = '[BL]' .. default
   CHAT_SAY_GET = '[S]' .. default
-  CHAT_WHISPER_GET = '|cffffaaff[W]' .. default
+
+  local cr, cg, cb, ca = pfUI.api.strsplit(",", pfUI_config.chat.global.whisper)
+  cr, cg, cb = tonumber(cr), tonumber(cg), tonumber(cb)
+  local wcol = string.format("%02x%02x%02x",cr * 255,cg * 255, cb * 255)
+  CHAT_WHISPER_GET = '|cff' .. wcol .. '[W]' .. default
+
   CHAT_WHISPER_INFORM_GET = '[W]' .. default
   CHAT_YELL_GET = '[Y]' .. default
 
@@ -538,8 +543,8 @@ pfUI:RegisterModule("chat", function ()
         text = string.gsub(text, "|Hplayer:(.-)|h%[.-%]|h(.-:-)", "[|Hplayer:%1|h" .. Name .. "|h]" .. "%2")
 
         -- make incoming whispers lighter than outgoing
-        if string.find(text, '|cffffaaff') == 1 then
-          text = string.gsub(text, "|r", "|cffffaaff")
+        if string.find(text, '|cff'..wcol) == 1 then
+          text = string.gsub(text, "|r", "|cff" .. wcol)
         end
 
         local pattern = "%]%s+(.*|Hplayer)"
