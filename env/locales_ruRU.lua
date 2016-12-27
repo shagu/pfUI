@@ -29,11 +29,11 @@ pfLocaleShift["ruRU"] = {
   ['BattleStance'] = "Боевая стойка",
   ['DefensiveStance'] = "Оборонительная стойка",
   ['BerserkerStance'] = "Стойка берсерка",
-  ['wantBattleStance'] = "Необходимо находиться в Боевая стойке.",
-  ['wantDefensiveStance'] = "Необходимо находиться в Оборонительная стойка.",
-  ['wantBerserkerStance'] = "Необходимо находиться в Стойка берсерка.",
-  ['wantBattleDefStance'] = "Необходимо находиться в Боевая стойке, Оборонительная стойка.",
-  ['wantBattleBerserkStance'] = "Необходимо находиться в Боевая стойка, Стойка берсерка.",
+  ['wantBattleStance'] = "Необходимо находиться в Боевая стойка",
+  ['wantDefensiveStance'] = "Необходимо находиться в Оборонительная стойка",
+  ['wantBerserkerStance'] = "Необходимо находиться в Стойка берсерка",
+  ['wantBattleDefStance'] = "Необходимо находиться в Боевая стойка, Оборонительная стойка",
+  ['wantBattleBerserkStance'] = "Необходимо находиться в Боевая стойка, Стойка берсерка",
 }
 
 pfLocaleSpellEvents["ruRU"] = {
