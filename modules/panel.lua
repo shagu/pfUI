@@ -508,7 +508,7 @@ pfUI:RegisterModule("panel", function ()
   -- MicroButtons
   if pfUI_config.panel.micro.enable == "1" then
     pfUI.panel.microbutton = CreateFrame("Frame", "pfPanelMicroButton", UIParent)
-    pfUI.panel.microbutton:SetPoint("TOP", 0, 0)
+    pfUI.panel.microbutton:SetPoint("TOP", pfUI.panel.minimap, "BOTTOM", 0,  -2*default_border)
     pfUI.api:UpdateMovable(pfUI.panel.microbutton)
     pfUI.panel.microbutton:SetHeight(23)
     pfUI.panel.microbutton:SetWidth(145)
