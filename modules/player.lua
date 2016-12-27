@@ -177,8 +177,9 @@ pfUI:RegisterModule("player", function ()
         local color = RAID_CLASS_COLORS[class]
 
         local cr, cg, cb
-        if pfUI_config.unitframes.dark == "1" then
-          cr, cg, cb = .2,.2,.2
+        if pfUI_config.unitframes.custom == "1" then
+          local r, g, b, a = pfUI.api.strsplit(",", pfUI_config.unitframes.customcolor)
+          cr, cg, cb = tonumber(r), tonumber(g), tonumber(b)
         elseif pfUI_config.unitframes.pastel == "1" then
           cr, cg, cb = (color.r + .5) * .5, (color.g + .5) * .5, (color.b + .5) * .5
         else

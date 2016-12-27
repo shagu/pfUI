@@ -829,7 +829,8 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui:CreateConfig(pfUI.gui.uf, "Settings", nil, nil, "header")
   pfUI.gui:CreateConfig(pfUI.gui.uf, "Disable pfUI-UnitFrames", pfUI_config.unitframes, "disable", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.uf, "Use pastel colors", pfUI_config.unitframes, "pastel", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Use dark shades for healthbars", pfUI_config.unitframes, "dark", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "Use custom color for healthbars", pfUI_config.unitframes, "custom", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "Custom healthbar color", pfUI_config.unitframes, "customcolor", "color")
   pfUI.gui:CreateConfig(pfUI.gui.uf, "Animation speed", pfUI_config.unitframes, "animation_speed")
   pfUI.gui:CreateConfig(pfUI.gui.uf, "Show portrait", pfUI_config.unitframes, "portrait", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.uf, "Buff size", pfUI_config.unitframes, "buff_size")
@@ -896,8 +897,8 @@ pfUI:RegisterModule("gui", function ()
 
   -- panels
   pfUI.gui.panel = pfUI.gui:CreateConfigTab("Panel")
-  local values = { "time", "fps", "exp", "gold", "friends", "guild", "durability", "zone", "none" }
-  pfUI.gui:CreateConfig(pfUI.gui.panel, "Left Panel: Left", pfUI_config.panel.left, "left", "dropdown", values )
+  local values = { "time", "fps", "exp", "gold", "friends", "guild", "durability", "zone", "combat", "none" }
+  pfUI.gui:CreateConfig(pfUI.gui.panel, "Left Panel: Left", pfUI_config.panel.left, "left", "dropdown", values)
   pfUI.gui:CreateConfig(pfUI.gui.panel, "Left Panel: Center", pfUI_config.panel.left, "center", "dropdown", values)
   pfUI.gui:CreateConfig(pfUI.gui.panel, "Left Panel: Right", pfUI_config.panel.left, "right", "dropdown", values)
   pfUI.gui:CreateConfig(pfUI.gui.panel, "Right Panel: Left", pfUI_config.panel.right, "left", "dropdown", values)
@@ -910,6 +911,8 @@ pfUI:RegisterModule("gui", function ()
   -- tooltip
   pfUI.gui.tooltip = pfUI.gui:CreateConfigTab("Tooltip")
   pfUI.gui:CreateConfig(pfUI.gui.tooltip, "Tooltip Position:", pfUI_config.tooltip, "position", "dropdown", { "bottom", "chat", "cursor" })
+  pfUI.gui:CreateConfig(pfUI.gui.tooltip, "Always show comparison:", pfUI_config.tooltip.compare, "showalways", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.tooltip, "Always show extended vendor values:", pfUI_config.tooltip.vendor, "showalways", "checkbox")
 
   -- castbar
   pfUI.gui.castbar = pfUI.gui:CreateConfigTab("Castbar")
@@ -931,6 +934,7 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui:CreateConfig(pfUI.gui.chat, "Right chat height:", pfUI_config.chat.right, "height")
   pfUI.gui:CreateConfig(pfUI.gui.chat, "Use custom background:", pfUI_config.chat.global, "custombg", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.chat, "Background color:", pfUI_config.chat.global, "background", "color")
+  pfUI.gui:CreateConfig(pfUI.gui.chat, "Color of incoming whispers:", pfUI_config.chat.global, "whisper", "color")
 
   -- nameplates
   pfUI.gui.nameplates = pfUI.gui:CreateConfigTab("Nameplates")

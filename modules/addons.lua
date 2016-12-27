@@ -58,59 +58,64 @@ pfUI:RegisterModule("addons", function ()
 
   -- list
   pfUI.addons.list = CreateFrame("Frame", "pfAddonList", pfUI.addons)
+  pfUI.addons.list:RegisterEvent("ADDON_LOADED")
   pfUI.addons.list:SetHeight(GetNumAddOns() * 25)
   pfUI.addons.list:SetWidth(350)
   pfUI.addons.list:SetPoint("CENTER", 0,0)
+  pfUI.addons.list:SetScript("OnEvent", function()
+    for i=1, GetNumAddOns() do
+      local aname, atitle, anote = GetAddOnInfo(i)
 
-  for i=1, GetNumAddOns() do
-    local aname, atitle, anote = GetAddOnInfo(i)
+      -- basic frame
+      if not pfUI.addons.list[i] then
+        pfUI.addons.list[i] = CreateFrame("Frame", nil, pfUI.addons.list)
+        local frame = pfUI.addons.list[i]
 
-    -- basic frame
-    pfUI.addons.list[i] = CreateFrame("Frame", nil, pfUI.addons.list)
-    local frame = pfUI.addons.list[i]
-    frame:SetWidth(350)
-    frame:SetHeight(25)
-    frame:SetBackdrop(pfUI.backdrop_underline)
-    frame:SetBackdropBorderColor(.1,.1,.1,1)
-    frame:SetPoint("TOPLEFT", 12.5, i * -25 + 25)
+        frame:SetWidth(350)
+        frame:SetHeight(25)
+        frame:SetBackdrop(pfUI.backdrop_underline)
+        frame:SetBackdropBorderColor(.1,.1,.1,1)
+        frame:SetPoint("TOPLEFT", 12.5, i * -25 + 25)
 
-    -- caption
-    frame.caption = frame:CreateFontString("Status", "LOW", "GameFontNormal")
-    frame.caption:SetFont(pfUI.font_default, pfUI_config.global.font_size + 2, "OUTLINE")
-    frame.caption:SetAllPoints(frame)
-    frame.caption:SetFontObject(GameFontWhite)
-    frame.caption:SetJustifyH("LEFT")
-    frame.caption:SetText(atitle)
+        -- caption
+        frame.caption = frame:CreateFontString("Status", "LOW", "GameFontNormal")
+        frame.caption:SetFont(pfUI.font_default, pfUI_config.global.font_size + 2, "OUTLINE")
+        frame.caption:SetAllPoints(frame)
+        frame.caption:SetFontObject(GameFontWhite)
+        frame.caption:SetJustifyH("LEFT")
+        frame.caption:SetText(atitle)
 
-    -- input field
-    frame.input = CreateFrame("CheckButton", nil, frame, "UICheckButtonTemplate")
-    frame.input:SetFrameLevel(3)
-    frame.input:SetNormalTexture("")
-    frame.input:SetPushedTexture("")
-    frame.input:SetHighlightTexture("")
-    pfUI.api:CreateBackdrop(frame.input, nil, true)
-    --frame.input:SetBackdrop(pfUI.backdrop)
-    frame.input:SetBackdropBorderColor(.3,.3,.3,1)
-    frame.input:SetWidth(14)
-    frame.input:SetHeight(14)
-    frame.input:SetPoint("TOPRIGHT" , 0, -4)
-    frame.input:SetID(i)
-    frame.input:SetScript("OnClick", function ()
-      if this:GetChecked() then
-        EnableAddOn(this:GetID())
-      else
-        DisableAddOn(this:GetID())
+        -- input field
+        frame.input = CreateFrame("CheckButton", nil, frame, "UICheckButtonTemplate")
+        frame.input:SetFrameLevel(3)
+        frame.input:SetNormalTexture("")
+        frame.input:SetPushedTexture("")
+        frame.input:SetHighlightTexture("")
+        pfUI.api:CreateBackdrop(frame.input, nil, true)
+        --frame.input:SetBackdrop(pfUI.backdrop)
+        frame.input:SetBackdropBorderColor(.3,.3,.3,1)
+        frame.input:SetWidth(14)
+        frame.input:SetHeight(14)
+        frame.input:SetPoint("TOPRIGHT" , 0, -4)
+        frame.input:SetID(i)
+        frame.input:SetScript("OnClick", function ()
+          if this:GetChecked() then
+            EnableAddOn(this:GetID())
+          else
+            DisableAddOn(this:GetID())
+          end
+          pfUI.addons.hasChanged = true
+        end)
       end
-      pfUI.addons.hasChanged = true
-    end)
 
-    if IsAddOnLoaded(i) then
-      frame.input:SetChecked()
-      frame.caption:SetAlpha(1)
-    else
-      frame.caption:SetAlpha(.5)
+      if IsAddOnLoaded(i) then
+        pfUI.addons.list[i].input:SetChecked()
+        pfUI.addons.list[i].caption:SetAlpha(1)
+      else
+        pfUI.addons.list[i].caption:SetAlpha(.5)
+      end
     end
-  end
+  end)
 
   pfUI.addons.scroll = CreateFrame("ScrollFrame", "pfAddonListScroll", pfUI.addons)
   pfUI.addons.scroll:SetHeight(350)

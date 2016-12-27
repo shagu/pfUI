@@ -263,8 +263,10 @@ function pfUI.uf:RefreshUnit(unit)
   local color = RAID_CLASS_COLORS[class]
 
   local r, g, b = .2, .2, .2
-  if pfUI_config.unitframes.dark == "1" and color then
-    unit.hp.bar:SetStatusBarColor(r, g, b)
+  if pfUI_config.unitframes.custom == "1" and color then
+    local cr, cg, cb, ca = pfUI.api.strsplit(",", pfUI_config.unitframes.customcolor)
+    cr, cg, cb = tonumber(cr), tonumber(cg), tonumber(cb)
+    unit.hp.bar:SetStatusBarColor(cr, cg, cb)
     if pfUI_config.unitframes.pastel == "1" then
       r, g, b = (color.r + .5) * .5, (color.g + .5) * .5, (color.b + .5) * .5
     else
@@ -291,7 +293,7 @@ function pfUI.uf:RefreshUnit(unit)
       unit.caption:SetTextColor(1,.3,.3)
     else
       unit.caption:SetText(UnitName(unit.label..unit.id))
-      if pfUI_config.unitframes.dark ~= "1" then
+      if pfUI_config.unitframes.custom ~= "1" then
         unit.caption:SetTextColor(1,1,1)
       end
     end
