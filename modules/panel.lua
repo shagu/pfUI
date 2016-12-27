@@ -292,7 +292,7 @@ pfUI:RegisterModule("panel", function ()
       "Hands", "Waist", "Legs", "Feet", "MainHand", "SecondaryHand", "Ranged", }
     local id, hasItem, repairCost
     local itemName, durability, tmpText, midpt, lval, rval
-    local totalRep = 0
+    
     duraLowestslotName = nil
     repPercent = 100
     lowestPercent = 100
@@ -305,7 +305,6 @@ pfUI:RegisterModule("panel", function ()
       if (not hasItem) then
         repairToolTip:ClearLines()
       else
-        totalRep = totalRep + repCost
         for i=1, 30, 1 do
           tmpText = getglobal("repairToolTipTextLeft"..i)
           if (tmpText ~= nil) and (tmpText:GetText()) then
@@ -325,6 +324,15 @@ pfUI:RegisterModule("panel", function ()
     repairToolTip:Hide()
 
     local tooltip = function()
+      local totalRep = 0
+      for i,slotName in pairs(slotnames) do
+        local id, _ = GetInventorySlotInfo(slotName.. "Slot")
+        repairToolTip:Hide()
+        repairToolTip:SetOwner(this, "ANCHOR_LEFT")
+        local hasItem, _, repCost = repairToolTip:SetInventoryItem("player", id)
+        totalRep = totalRep + repCost
+      end
+      repairToolTip:Hide()
       GameTooltip:ClearLines()
       GameTooltip_SetDefaultAnchor(GameTooltip, this)
       GameTooltip:SetText("|cff555555"..(string.gsub(REPAIR_COST,":","")).."|r")
