@@ -21,6 +21,19 @@ function pfUI.api.strsplit(delimiter, subject)
   end
 end
 
+-- [ strvertical ]
+-- Creates vertical text using linebreaks. Multibyte char friendly.
+-- 'str'        [string]        String to columnize.
+-- return:      [string]        the string tranformed to a column.
+function pfUI.api.strvertical(str)
+   local _, len = string.gsub(str,"[^\128-\193]", "")
+   if (len == string.len(str)) then
+      return string.gsub(str, ".", "%1\n")
+   else
+      return string.gsub(str,"([%z\1-\127\194-\244][\128-\191]*)", "%1\n")
+   end
+end
+
 -- [ round ]
 -- Rounds a float number into specified places after comma.
 -- 'input'      [float]         the number that should be rounded.
@@ -319,4 +332,51 @@ function pfUI.api:CreateQuestionDialog(text, yes, no, editbox)
   if question.input then inputspace = question.input:GetHeight() + padding end
   local buttonspace = question.no:GetHeight() + padding
   question:SetHeight(textspace + inputspace + buttonspace + border)
+end
+
+-- barlength = {[formfactor]={cols, rows}}
+do
+  local gridmath = {
+    [1] = {{1,1}},
+    [2] = {{2,1},{1,2}},
+    [3] = {{3,1},{1,3}},
+    [4] = {{4,1},{2,2},{1,4}},
+    [5] = {{5,1},{1,5}},
+    [6] = {{6,1},{3,2},{2,3},{1,6}},
+    [7] = {{7,1},{1,7}},
+    [8] = {{8,1},{4,2},{2,4},{1,8}},
+    [9] = {{9,1},{3,3},{9,1}},
+    [10] = {{10,1},{5,2},{2,5},{1,10}},
+    [11] = {{11,1},{1,11}},
+    [12] = {{12,1},{6,2},{4,3},{3,4},{2,6},{1,12}}
+  }
+  -- 'bar'  frame reference, 
+  -- 'barsize'  number of buttons, 
+  -- 'formfactor'  index of cols,rows layout in gridmath[barsize]
+  function pfUI.api:BarLayoutSize(bar,barsize,formfactor,iconsize,bordersize)
+    --assert(barsize > 0 and barsize <= NUM_ACTIONBAR_BUTTONS,"BarLayoutSize: barsize "..tostring(barsize).." is invalid")
+    if not gridmath[barsize] then bar._size = {0,0} return end
+    local cols, rows = unpack(gridmath[barsize][formfactor])
+    local width = (iconsize + bordersize*3) * cols - bordersize
+    local height = (iconsize + bordersize*3) * rows - bordersize
+    bar._size = {width,height}
+    return bar._size
+  end
+  -- 'button'  frame reference
+  -- 'basename'  name of button frame without index
+  -- 'buttonindex'  index number of button on bar
+  -- 'formfactor'  index of cols,rows layout in gridmath[barsize]
+  function pfUI.api:BarButtonAnchor(button,basename,buttonindex,barsize,formfactor,iconsize,bordersize)
+    --assert(barsize > 0 and barsize <= NUM_ACTIONBAR_BUTTONS,"BarButtonAnchor: barsize "..tostring(barsize).." is invalid")
+    local parent = button:GetParent()
+    if not gridmath[barsize] then button._anchor = {"CENTER", parent, "CENTER", 0,0} return end
+    local cols, rows = unpack(gridmath[barsize][formfactor])
+    if buttonindex == 1 then
+      button._anchor = {"TOPLEFT", parent, "TOPLEFT", bordersize, -bordersize}
+    else
+      local col = buttonindex-((math.ceil(buttonindex/cols)-1)*cols)
+      button._anchor = col==1 and {"TOP",getglobal(basename..(buttonindex-cols)),"BOTTOM",0,-(bordersize*3)} or {"LEFT",getglobal(basename..(buttonindex-1)),"RIGHT",(bordersize*3),0}
+    end
+    return button._anchor
+  end
 end

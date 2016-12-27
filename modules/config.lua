@@ -90,10 +90,11 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("bars",       nil,       "glowrange",        "1")
   pfUI:UpdateConfig("bars",       nil,       "rangecolor",       "1,0.1,0.1,1")
   pfUI:UpdateConfig("bars",       nil,       "hide_time",        "1")
-  pfUI:UpdateConfig("bars",       nil,       "hide_bottom",      "0")
+  pfUI:UpdateConfig("bars",       nil,       "hide_actionmain",  "0") -- bottom > actionmain, add 
   pfUI:UpdateConfig("bars",       nil,       "hide_bottomleft",  "0")
   pfUI:UpdateConfig("bars",       nil,       "hide_bottomright", "0")
-  pfUI:UpdateConfig("bars",       nil,       "hide_vertical",    "0")
+  pfUI:UpdateConfig("bars",       nil,       "hide_right",       "0") -- new
+  pfUI:UpdateConfig("bars",       nil,       "hide_tworight",    "0") -- vertical > tworight
   pfUI:UpdateConfig("bars",       nil,       "hide_shapeshift",  "0")
   pfUI:UpdateConfig("bars",       nil,       "hide_pet",         "0")
   pfUI:UpdateConfig("panel",      "left",    "left",             "guild")
