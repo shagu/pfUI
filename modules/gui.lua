@@ -898,7 +898,7 @@ pfUI:RegisterModule("gui", function ()
   -- panels
   pfUI.gui.panel = pfUI.gui:CreateConfigTab("Panel")
   local values = { "time", "fps", "exp", "gold", "friends", "guild", "durability", "zone", "none" }
-  pfUI.gui:CreateConfig(pfUI.gui.panel, "Left Panel: Left", pfUI_config.panel.left, "left", "dropdown", values )
+  pfUI.gui:CreateConfig(pfUI.gui.panel, "Left Panel: Left", pfUI_config.panel.left, "left", "dropdown", values)
   pfUI.gui:CreateConfig(pfUI.gui.panel, "Left Panel: Center", pfUI_config.panel.left, "center", "dropdown", values)
   pfUI.gui:CreateConfig(pfUI.gui.panel, "Left Panel: Right", pfUI_config.panel.left, "right", "dropdown", values)
   pfUI.gui:CreateConfig(pfUI.gui.panel, "Right Panel: Left", pfUI_config.panel.right, "left", "dropdown", values)
@@ -911,6 +911,8 @@ pfUI:RegisterModule("gui", function ()
   -- tooltip
   pfUI.gui.tooltip = pfUI.gui:CreateConfigTab("Tooltip")
   pfUI.gui:CreateConfig(pfUI.gui.tooltip, "Tooltip Position:", pfUI_config.tooltip, "position", "dropdown", { "bottom", "chat", "cursor" })
+  pfUI.gui:CreateConfig(pfUI.gui.tooltip, "Always show comparison:", pfUI_config.tooltip.compare, "showalways", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.tooltip, "Always show extended vendor values:", pfUI_config.tooltip.vendor, "showalways", "checkbox")
 
   -- castbar
   pfUI.gui.castbar = pfUI.gui:CreateConfigTab("Castbar")
