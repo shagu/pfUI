@@ -13,6 +13,8 @@ pfUI:RegisterModule("panel", function ()
   pfUI.panel:RegisterEvent("PLAYER_GUILD_UPDATE")
   pfUI.panel:RegisterEvent("PLAYER_REGEN_ENABLED")
   pfUI.panel:RegisterEvent("PLAYER_DEAD")
+  pfUI.panel:RegisterEvent("PLAYER_UNGHOST")
+  pfUI.panel:RegisterEvent("UPDATE_INVENTORY_ALERTS")
   pfUI.panel:RegisterEvent("MINIMAP_ZONE_CHANGED")
 
   -- list of available panel fields
@@ -37,7 +39,8 @@ pfUI:RegisterModule("panel", function ()
       pfUI.panel:UpdateFriend()
     elseif event == "GUILD_ROSTER_UPDATE" or event == "PLAYER_GUILD_UPDATE" then
       pfUI.panel:UpdateGuild()
-    elseif event == "PLAYER_REGEN_ENABLED" or event == "PLAYER_DEAD" then
+    elseif event == "PLAYER_REGEN_ENABLED" or event == "PLAYER_DEAD"
+      or event == "PLAYER_UNGHOST" or event == "UPDATE_INVENTORY_ALERTS" then
       pfUI.panel:UpdateRepair()
     elseif event == "MINIMAP_ZONE_CHANGED" then
       pfUI.panel:UpdateZone()
@@ -289,7 +292,7 @@ pfUI:RegisterModule("panel", function ()
       "Hands", "Waist", "Legs", "Feet", "MainHand", "SecondaryHand", "Ranged", }
     local id, hasItem, repairCost
     local itemName, durability, tmpText, midpt, lval, rval
-
+    local totalRep = 0
     duraLowestslotName = nil
     repPercent = 100
     lowestPercent = 100
@@ -299,8 +302,10 @@ pfUI:RegisterModule("panel", function ()
       repairToolTip:Hide()
       repairToolTip:SetOwner(this, "ANCHOR_LEFT")
       hasItem, _, repCost = repairToolTip:SetInventoryItem("player", id)
-      if (not hasItem) then repairToolTip:ClearLines()
+      if (not hasItem) then
+        repairToolTip:ClearLines()
       else
+        totalRep = totalRep + repCost
         for i=1, 30, 1 do
           tmpText = getglobal("repairToolTipTextLeft"..i)
           if (tmpText ~= nil) and (tmpText:GetText()) then
@@ -318,7 +323,20 @@ pfUI:RegisterModule("panel", function ()
       end
     end
     repairToolTip:Hide()
-    pfUI.panel:OutputPanel("durability", lowestPercent .. "% Armor")
+
+    local tooltip = function()
+      GameTooltip:ClearLines()
+      GameTooltip_SetDefaultAnchor(GameTooltip, this)
+      GameTooltip:SetText("|cff555555"..(string.gsub(REPAIR_COST,":","")).."|r")
+      SetTooltipMoney(GameTooltip, totalRep)
+      GameTooltip:Show()
+    end
+
+    local click = function ()
+      ToggleCharacter("PaperDollFrame")
+    end
+
+    pfUI.panel:OutputPanel("durability", lowestPercent .. "% Armor", tooltip, click)
   end
 
   function pfUI.panel:UpdateZone ()
