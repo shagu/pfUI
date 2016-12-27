@@ -73,9 +73,6 @@ pfUI:RegisterModule("panel", function ()
     if GetTime() >= pfUI.panel.clock.tick + 1 then
       -- time date
       local tooltip = function ()
-        local posX, posY = GetPlayerMapPosition("player")
-        local real = GetRealZoneText()
-        local sub = GetSubZoneText()
         GameTooltip:ClearLines()
         GameTooltip_SetDefaultAnchor(GameTooltip, this)
         GameTooltip:AddLine("|cff555555Timer")
