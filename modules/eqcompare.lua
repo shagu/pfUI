@@ -43,7 +43,11 @@ pfUI:RegisterModule("eqcompare", function ()
 
   pfUI.eqcompare = CreateFrame( "Frame" , "pfEQCompare", GameTooltip )
   pfUI.eqcompare:SetScript("OnShow", function()
-    if not IsShiftKeyDown() then return end
+    if not IsShiftKeyDown() then 
+      ShoppingTooltip1:Hide();
+      ShoppingTooltip2:Hide();
+      return 
+    end
     local border = tonumber(pfUI_config.appearance.border.default)
 
     for i=1,GameTooltip:NumLines() do
