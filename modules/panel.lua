@@ -95,7 +95,6 @@ pfUI:RegisterModule("panel", function ()
         elseif arg1 == "RightButton" then
           pfUI.panel.clock.timerFrame.Snapshot = GetTime()
         end
-
       end
 
       pfUI.panel.clock.tick = GetTime()
@@ -136,6 +135,37 @@ pfUI:RegisterModule("panel", function ()
       local _, _, lag = GetNetStats()
       local fps = floor(GetFramerate())
       pfUI.panel:OutputPanel("fps", floor(GetFramerate()) .. " fps & " .. lag .. " ms", tooltip, click)
+    end
+  end)
+
+  -- Combat Timer
+  pfUI.panel.clock.combat = CreateFrame("Frame", "pfUICombatTimer", UIParent)
+  pfUI.panel.clock.combat:RegisterEvent("PLAYER_ENTERING_WORLD")
+  pfUI.panel.clock.combat:RegisterEvent("PLAYER_REGEN_ENABLED")
+  pfUI.panel.clock.combat:RegisterEvent("PLAYER_REGEN_DISABLED")
+  pfUI.panel.clock.combat:SetScript("OnEvent", function()
+    if event == "PLAYER_REGEN_DISABLED" then
+      if UnitAffectingCombat("player") and not this.combat then
+        this.combat = GetTime()
+      end
+
+    elseif event == "PLAYER_REGEN_ENABLED" then
+      if this.combat then
+        this.lastcombat = GetTime() - this.combat
+        this.combat = nil
+        pfUI.panel:OutputPanel("combat", "|cffffffff" .. SecondsToTime(ceil(this.lastcombat)))
+      end
+
+    elseif event == "PLAYER_ENTERING_WORLD" then
+      pfUI.panel:OutputPanel("combat", "-- Combat --")
+    end
+  end)
+
+  pfUI.panel.clock.combat:SetScript("OnUpdate", function()
+    if not this.tick then this.tick = GetTime() end
+    if GetTime() <= this.tick + 1 then return else this.tick = GetTime() end
+    if this.combat then
+      pfUI.panel:OutputPanel("combat", "|cffffaaaa" .. SecondsToTime(ceil(GetTime() - this.combat)))
     end
   end)
 
