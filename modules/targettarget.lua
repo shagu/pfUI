@@ -106,11 +106,12 @@ pfUI:RegisterModule("targettarget", function ()
       end
 
       pfUI.uf.targettarget.hp.bar:SetMinMaxValues(0, UnitHealthMax("targettarget"))
-
+      local r, g, b = .2, .2, .2
       if color then
-        local r, g, b = .2, .2, .2
-        if pfUI_config.unitframes.dark == "1" then
-          pfUI.uf.targettarget.hp.bar:SetStatusBarColor(r, g, b, UnitHealth("targettarget") / UnitHealthMax("targettarget") / 4 + .75)
+        if pfUI_config.unitframes.custom == "1" then
+          local cr, cg, cb, ca = pfUI.api.strsplit(",", pfUI_config.unitframes.customcolor)
+          cr, cg, cb = tonumber(cr), tonumber(cg), tonumber(cb)
+          pfUI.uf.targettarget.hp.bar:SetStatusBarColor(cr, cg, cb, UnitHealth("targettarget") / UnitHealthMax("targettarget") / 4 + .75)
           if pfUI_config.unitframes.pastel == "1" then
             r, g, b = (color.r + .5) * .5, (color.g + .5) * .5, (color.b + .5) * .5
           else
