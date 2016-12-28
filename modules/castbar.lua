@@ -301,11 +301,11 @@ pfUI:RegisterModule("castbar", function ()
           pfUI.castbar.target:Action(mob, spell)
           return
         end
-        for mob, spell in string.gfind(arg1, pfLocaleSpellEvents[pfUI.cache["locale"]]['SPELL_GAINS']) do
-          pfUI.castbar.target:Action(mob, spell, true)
-          return
-        end
         -- this part will be used for interruption of spells
+        --for mob, spell in string.gfind(arg1, pfLocaleSpellEvents[pfUI.cache["locale"]]['SPELL_GAINS']) do
+        --  pfUI.castbar.target:Action(mob, spell, true)
+        --  return
+        --end
         --for mob, spell in string.gfind(arg1, pfLocaleSpellEvents[pfUI.cache["locale"]]['SPELL_AFFLICTED']) do
         --  pfUI.castbar.target:Action(mob, spell, "afflicted")
         --  return
