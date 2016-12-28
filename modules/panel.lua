@@ -290,27 +290,22 @@ pfUI:RegisterModule("panel", function ()
   function pfUI.panel:UpdateRepair ()
     local slotnames = { "Head", "Shoulder", "Chest", "Wrist",
       "Hands", "Waist", "Legs", "Feet", "MainHand", "SecondaryHand", "Ranged", }
-    local id, hasItem, repairCost
-    local itemName, durability, tmpText, midpt, lval, rval
-    local totalRep = 0
-    duraLowestslotName = nil
-    repPercent = 100
-    lowestPercent = 100
+    local repPercent = 100
+    local lowestPercent = 100
 
     for i,slotName in pairs(slotnames) do
-      id, _ = GetInventorySlotInfo(slotName.. "Slot")
+      local id, _ = GetInventorySlotInfo(slotName.. "Slot")
       repairToolTip:Hide()
       repairToolTip:SetOwner(this, "ANCHOR_LEFT")
-      hasItem, _, repCost = repairToolTip:SetInventoryItem("player", id)
+      local hasItem, _, _ = repairToolTip:SetInventoryItem("player", id)
       if (not hasItem) then
         repairToolTip:ClearLines()
       else
-        totalRep = totalRep + repCost
         for i=1, 30, 1 do
-          tmpText = getglobal("repairToolTipTextLeft"..i)
+          local tmpText = getglobal("repairToolTipTextLeft"..i)
           if (tmpText ~= nil) and (tmpText:GetText()) then
             local searchstr = string.gsub(DURABILITY_TEMPLATE, "%%[^%s]+", "(.+)")
-            _, _, lval, rval = string.find(tmpText:GetText(), searchstr)
+            local _, _, lval, rval = string.find(tmpText:GetText(), searchstr)
             if (lval and rval) then
               repPercent = math.floor(lval / rval * 100)
               break
@@ -325,11 +320,25 @@ pfUI:RegisterModule("panel", function ()
     repairToolTip:Hide()
 
     local tooltip = function()
-      GameTooltip:ClearLines()
-      GameTooltip_SetDefaultAnchor(GameTooltip, this)
-      GameTooltip:SetText("|cff555555"..(string.gsub(REPAIR_COST,":","")).."|r")
-      SetTooltipMoney(GameTooltip, totalRep)
-      GameTooltip:Show()
+      -- recalculate repair costs
+      local totalRep = 0
+        for i,slotName in pairs(slotnames) do
+          local id, _ = GetInventorySlotInfo(slotName.. "Slot")
+          repairToolTip:Hide()
+          repairToolTip:SetOwner(this, "ANCHOR_LEFT")
+          local hasItem, _, repCost = repairToolTip:SetInventoryItem("player", id)
+          totalRep = totalRep + repCost
+        end
+      repairToolTip:Hide()
+
+      -- show tooltip
+      if totalRep > 0 then
+        GameTooltip:ClearLines()
+        GameTooltip_SetDefaultAnchor(GameTooltip, this)
+        GameTooltip:SetText("|cff555555"..(string.gsub(REPAIR_COST,":","")).."|r")
+        SetTooltipMoney(GameTooltip, totalRep)
+        GameTooltip:Show()
+      end
     end
 
     local click = function ()
