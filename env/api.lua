@@ -26,12 +26,12 @@ end
 -- 'str'        [string]        String to columnize.
 -- return:      [string]        the string tranformed to a column.
 function pfUI.api.strvertical(str)
-   local _, len = string.gsub(str,"[^\128-\193]", "")
-   if (len == string.len(str)) then
-      return string.gsub(str, ".", "%1\n")
-   else
+    local _, len = string.gsub(str,"[^\128-\193]", "")
+    if (len == string.len(str)) then
+      return string.gsub(str, "(.)", "%1\n")
+    else
       return string.gsub(str,"([%z\1-\127\194-\244][\128-\191]*)", "%1\n")
-   end
+    end
 end
 
 -- [ round ]
@@ -350,12 +350,42 @@ do
     [11] = {{11,1},{1,11}},
     [12] = {{12,1},{6,2},{4,3},{3,4},{2,6},{1,12}}
   }
+  -- 'barsize'  size of bar in number of buttons
+  -- returns:   array of options as strings for pfUI.gui.bar
+  function pfUI.api:BarLayoutOptions(barsize)
+    assert(barsize > 0 and barsize <= NUM_ACTIONBAR_BUTTONS,"BarLayoutOptions: barsize "..tostring(barsize).." is invalid")
+    local options = {}
+    for i,layout in ipairs(gridmath[barsize]) do
+      options[i] = string.format("%d x %d",layout[1],layout[2])
+    end
+    return options
+  end
+  
+  -- 'option'  string option as used in pfUI_config.bars[bar].option
+  -- returns:  integer formfactor
+  local formfactors = {} -- we'll use memoization so we only compute once, then lookup.
+  setmetatable(formfactors, {__mode = "v"}) -- weak table so values not referenced are collected on next gc
+  function pfUI.api:BarLayoutFormfactor(option)
+    if formfactors[option] then
+      return formfactors[option]
+    else
+      for barsize,_ in ipairs(gridmath) do
+        local options = pfUI.api:BarLayoutOptions(barsize)
+        for i,opt in ipairs(options) do
+          if opt == option then
+            formfactors[option] = i
+            return formfactors[option]
+          end
+        end
+      end
+    end
+  end
   -- 'bar'  frame reference, 
-  -- 'barsize'  number of buttons, 
-  -- 'formfactor'  index of cols,rows layout in gridmath[barsize]
+  -- 'barsize'  integer number of buttons, 
+  -- 'formfactor'  string formfactor in cols x rows
   function pfUI.api:BarLayoutSize(bar,barsize,formfactor,iconsize,bordersize)
-    --assert(barsize > 0 and barsize <= NUM_ACTIONBAR_BUTTONS,"BarLayoutSize: barsize "..tostring(barsize).." is invalid")
-    if not gridmath[barsize] then bar._size = {0,0} return end
+    assert(barsize > 0 and barsize <= NUM_ACTIONBAR_BUTTONS,"BarLayoutSize: barsize "..tostring(barsize).." is invalid")
+    local formfactor = pfUI.api:BarLayoutFormfactor(formfactor)
     local cols, rows = unpack(gridmath[barsize][formfactor])
     local width = (iconsize + bordersize*3) * cols - bordersize
     local height = (iconsize + bordersize*3) * rows - bordersize
@@ -365,11 +395,11 @@ do
   -- 'button'  frame reference
   -- 'basename'  name of button frame without index
   -- 'buttonindex'  index number of button on bar
-  -- 'formfactor'  index of cols,rows layout in gridmath[barsize]
+  -- 'formfactor'  string formfactor in cols x rows
   function pfUI.api:BarButtonAnchor(button,basename,buttonindex,barsize,formfactor,iconsize,bordersize)
-    --assert(barsize > 0 and barsize <= NUM_ACTIONBAR_BUTTONS,"BarButtonAnchor: barsize "..tostring(barsize).." is invalid")
+    assert(barsize > 0 and barsize <= NUM_ACTIONBAR_BUTTONS,"BarButtonAnchor: barsize "..tostring(barsize).." is invalid")
+    local formfactor = pfUI.api:BarLayoutFormfactor(formfactor)
     local parent = button:GetParent()
-    if not gridmath[barsize] then button._anchor = {"CENTER", parent, "CENTER", 0,0} return end
     local cols, rows = unpack(gridmath[barsize][formfactor])
     if buttonindex == 1 then
       button._anchor = {"TOPLEFT", parent, "TOPLEFT", bordersize, -bordersize}
