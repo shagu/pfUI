@@ -478,7 +478,7 @@ pfUI:RegisterModule("chat", function ()
   pfUI.chat.editbox:ClearAllPoints()
   local anchor
   if pfUI.bars then
-    anchor = pfUI.bars.bottom
+    anchor = pfUI.bars.actionmain
   else
     anchor = pfUI.chat.left
   end
