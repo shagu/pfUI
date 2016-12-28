@@ -52,6 +52,7 @@ modules\thirdparty.lua
 modules\buff.lua
 modules\nameplates.lua
 modules\loot.lua
+modules\roll.lua
 modules\infight.lua
 modules\sellvalue.lua
 modules\eqcompare.lua

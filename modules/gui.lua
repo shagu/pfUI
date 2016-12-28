@@ -192,6 +192,11 @@ pfUI:RegisterModule("gui", function ()
                 local frame = getglobal("pfGroup" .. i)
                 pfUI.gui:SaveScale(frame, scale)
               end
+            elseif IsShiftKeyDown() and strsub(frame:GetName(),0,15) == "pfLootRollFrame" then
+              for i=1,4 do
+                local frame = getglobal("pfLootRollFrame" .. i)
+                pfUI.gui:SaveScale(frame, scale)
+              end
             else
               pfUI.gui:SaveScale(frame, scale)
             end
@@ -215,6 +220,14 @@ pfUI:RegisterModule("gui", function ()
             if strsub(frame:GetName(),0,7) == "pfGroup" then
               for i=1,4 do
                 local cframe = getglobal("pfGroup" .. i)
+                cframe:StartMoving()
+                cframe:StopMovingOrSizing()
+                cframe.drag.backdrop:SetBackdropBorderColor(1,1,1,1)
+              end
+            end
+            if strsub(frame:GetName(),0,15) == "pfLootRollFrame" then
+              for i=1,4 do
+                local cframe = getglobal("pfLootRollFrame" .. i)
                 cframe:StartMoving()
                 cframe:StopMovingOrSizing()
                 cframe.drag.backdrop:SetBackdropBorderColor(1,1,1,1)
@@ -259,6 +272,24 @@ pfUI:RegisterModule("gui", function ()
               elseif strsub(frame:GetName(),0,7) == "pfGroup" then
                 for i=1,4 do
                   local cframe = getglobal("pfGroup" .. i)
+                  cframe.drag.backdrop:SetBackdropBorderColor(.2,1,.8,1)
+                  if cframe:GetName() ~= frame:GetName() then
+                    local _, _, _, xpos, ypos = cframe:GetPoint()
+                    cframe:SetPoint("TOPLEFT", xpos - diffxpos, ypos - diffypos)
+
+                    local _, _, _, xpos, ypos = cframe:GetPoint()
+
+                    if not pfUI_config.position[cframe:GetName()] then
+                      pfUI_config.position[cframe:GetName()] = {}
+                    end
+
+                    pfUI_config.position[cframe:GetName()]["xpos"] = xpos
+                    pfUI_config.position[cframe:GetName()]["ypos"] = ypos
+                  end
+                end
+              elseif strsub(frame:GetName(),0,15) == "pfLootRollFrame" then
+                for i=1,4 do
+                  local cframe = getglobal("pfLootRollFrame" .. i)
                   cframe.drag.backdrop:SetBackdropBorderColor(.2,1,.8,1)
                   if cframe:GetName() ~= frame:GetName() then
                     local _, _, _, xpos, ypos = cframe:GetPoint()
