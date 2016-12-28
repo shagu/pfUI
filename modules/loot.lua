@@ -226,7 +226,7 @@ pfUI:RegisterModule("loot", function ()
 
   function GroupLootDropDown_GiveLoot()
     if ( pfUI.loot.selectedQuality >= MASTER_LOOT_THREHOLD ) then
-      local dialog = StaticPopup_Show("CONFIRM_LOOT_DISTRIBUTION", ITEM_QUALITY_COLORS[LootFrame.selectedQuality].hex..pfUI.loot.selectedItemName..FONT_COLOR_CODE_CLOSE, this:GetText())
+      local dialog = StaticPopup_Show("CONFIRM_LOOT_DISTRIBUTION", ITEM_QUALITY_COLORS[pfUI.loot.selectedQuality].hex..pfUI.loot.selectedItemName..FONT_COLOR_CODE_CLOSE, this:GetText())
       if ( dialog ) then
         dialog.data = this.value
       end
