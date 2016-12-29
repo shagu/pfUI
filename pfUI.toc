@@ -17,10 +17,10 @@ env\locales_zhCN.lua
 env\locales_ruRU.lua
 
 # environment
+env\tables.lua
 env\api.lua
 env\colors.lua
 env\fonts.lua
-env\selldata.lua
 
 # modules
 modules\config.lua
