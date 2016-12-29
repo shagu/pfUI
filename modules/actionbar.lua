@@ -120,7 +120,7 @@ pfUI:RegisterModule("actionbar", function ()
         if pfUI.bars.bottomleft:IsShown() then
           anchor = pfUI.bars.bottomleft
         end
-        pfUI.bars.pet:SetPoint("BOTTOM", anchor, "TOP", 0, default_border * 5)
+        pfUI.bars.pet:SetPoint("BOTTOM", anchor, "TOP", 0, default_border * 3)
         pfUI.api:UpdateMovable(pfUI.bars.pet)
         pfUI.api:BarLayoutSize(pfUI.bars.pet, NUM_PET_ACTION_SLOTS, pfUI_config.bars.pet.formfactor, pfUI_config.bars.icon_size, default_border)
         pfUI.bars.pet:SetWidth(pfUI.bars.pet._size[1])
@@ -162,7 +162,7 @@ pfUI:RegisterModule("actionbar", function ()
         if pfUI.bars.bottomleft:IsShown() then
           anchor = pfUI.bars.bottomleft
         end
-        pfUI.bars.shapeshift:SetPoint("BOTTOM", anchor, "TOP", 0, default_border * 5)
+        pfUI.bars.shapeshift:SetPoint("BOTTOM", anchor, "TOP", 0, default_border * 3)
         pfUI.api:UpdateMovable(pfUI.bars.shapeshift)
         if pfUI_config.bars.background == "1" then pfUI.api:CreateBackdrop(pfUI.bars.shapeshift, default_border) end
         pfUI.api:BarLayoutSize(pfUI.bars.shapeshift, shapeshiftbuttons, pfUI_config.bars.shapeshift.formfactor, pfUI_config.bars.icon_size, default_border)
@@ -213,7 +213,7 @@ pfUI:RegisterModule("actionbar", function ()
       if SHOW_MULTI_ACTIONBAR_2 then
         pfUI.bars.bottomright:Show()
         pfUI.bars.bottomright:SetFrameStrata("LOW")
-        pfUI.bars.bottomright:SetPoint("BOTTOMRIGHT", pfUI.bars.actionmain, "BOTTOMLEFT", -default_border*5, 0)
+        pfUI.bars.bottomright:SetPoint("BOTTOMRIGHT", pfUI.bars.actionmain, "BOTTOMLEFT", -default_border*3, 0)
         pfUI.api:UpdateMovable(pfUI.bars.bottomright)
         if pfUI_config.bars.background == "1" then pfUI.api:CreateBackdrop(pfUI.bars.bottomright, default_border) end
 
@@ -248,7 +248,7 @@ pfUI:RegisterModule("actionbar", function ()
       if SHOW_MULTI_ACTIONBAR_3 then
         pfUI.bars.right:Show()
         pfUI.bars.right:SetFrameStrata("LOW")
-        pfUI.bars.right:SetPoint("BOTTOMLEFT", pfUI.bars.actionmain, "BOTTOMRIGHT", default_border*5, 0)
+        pfUI.bars.right:SetPoint("BOTTOMLEFT", pfUI.bars.actionmain, "BOTTOMRIGHT", default_border*3, 0)
         pfUI.api:UpdateMovable(pfUI.bars.right)
         if pfUI_config.bars.background == "1" then pfUI.api:CreateBackdrop(pfUI.bars.right, default_border) end
 

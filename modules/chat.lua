@@ -488,8 +488,8 @@ pfUI:RegisterModule("chat", function ()
       anchor = pfUI.bars.actionmain
     end
 
-    pfUI.chat.editbox:SetPoint("BOTTOMLEFT", anchor, "TOPLEFT", 0, default_border*4)
-    pfUI.chat.editbox:SetPoint("BOTTOMRIGHT", anchor, "TOPRIGHT", 0, default_border*4)
+    pfUI.chat.editbox:SetPoint("BOTTOMLEFT", anchor, "TOPLEFT", 0, default_border*3)
+    pfUI.chat.editbox:SetPoint("BOTTOMRIGHT", anchor, "TOPRIGHT", 0, default_border*3)
 
     pfUI.api:UpdateMovable(pfUI.chat.editbox)
   end)
