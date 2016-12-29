@@ -127,6 +127,7 @@ function pfUI.info:ShowInfoBox(text, time, parent, height)
 
   pfUI.info:SetWidth(pfUI.info.text:GetStringWidth() + 50)
   pfUI.info:SetHeight(height)
+  pfUI.info:SetFrameStrata("DIALOG")
   pfUI.api:CreateBackdrop(pfUI.info)
   pfUI.info:SetPoint("TOP", 0, -25)
 
