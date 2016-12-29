@@ -21,6 +21,19 @@ function pfUI.api.strsplit(delimiter, subject)
   end
 end
 
+-- [ strvertical ]
+-- Creates vertical text using linebreaks. Multibyte char friendly.
+-- 'str'        [string]        String to columnize.
+-- return:      [string]        the string tranformed to a column.
+function pfUI.api.strvertical(str)
+    local _, len = string.gsub(str,"[^\128-\193]", "")
+    if (len == string.len(str)) then
+      return string.gsub(str, "(.)", "%1\n")
+    else
+      return string.gsub(str,"([%z\1-\127\194-\244][\128-\191]*)", "%1\n")
+    end
+end
+
 -- [ round ]
 -- Rounds a float number into specified places after comma.
 -- 'input'      [float]         the number that should be rounded.
@@ -319,4 +332,81 @@ function pfUI.api:CreateQuestionDialog(text, yes, no, editbox)
   if question.input then inputspace = question.input:GetHeight() + padding end
   local buttonspace = question.no:GetHeight() + padding
   question:SetHeight(textspace + inputspace + buttonspace + border)
+end
+
+-- barlength = {[formfactor]={cols, rows}}
+do
+  local gridmath = {
+    [1] = {{1,1}},
+    [2] = {{2,1},{1,2}},
+    [3] = {{3,1},{1,3}},
+    [4] = {{4,1},{2,2},{1,4}},
+    [5] = {{5,1},{1,5}},
+    [6] = {{6,1},{3,2},{2,3},{1,6}},
+    [7] = {{7,1},{1,7}},
+    [8] = {{8,1},{4,2},{2,4},{1,8}},
+    [9] = {{9,1},{3,3},{9,1}},
+    [10] = {{10,1},{5,2},{2,5},{1,10}},
+    [11] = {{11,1},{1,11}},
+    [12] = {{12,1},{6,2},{4,3},{3,4},{2,6},{1,12}}
+  }
+  -- 'barsize'  size of bar in number of buttons
+  -- returns:   array of options as strings for pfUI.gui.bar
+  function pfUI.api:BarLayoutOptions(barsize)
+    assert(barsize > 0 and barsize <= NUM_ACTIONBAR_BUTTONS,"BarLayoutOptions: barsize "..tostring(barsize).." is invalid")
+    local options = {}
+    for i,layout in ipairs(gridmath[barsize]) do
+      options[i] = string.format("%d x %d",layout[1],layout[2])
+    end
+    return options
+  end
+  
+  -- 'option'  string option as used in pfUI_config.bars[bar].option
+  -- returns:  integer formfactor
+  local formfactors = {} -- we'll use memoization so we only compute once, then lookup.
+  setmetatable(formfactors, {__mode = "v"}) -- weak table so values not referenced are collected on next gc
+  function pfUI.api:BarLayoutFormfactor(option)
+    if formfactors[option] then
+      return formfactors[option]
+    else
+      for barsize,_ in ipairs(gridmath) do
+        local options = pfUI.api:BarLayoutOptions(barsize)
+        for i,opt in ipairs(options) do
+          if opt == option then
+            formfactors[option] = i
+            return formfactors[option]
+          end
+        end
+      end
+    end
+  end
+  -- 'bar'  frame reference, 
+  -- 'barsize'  integer number of buttons, 
+  -- 'formfactor'  string formfactor in cols x rows
+  function pfUI.api:BarLayoutSize(bar,barsize,formfactor,iconsize,bordersize)
+    assert(barsize > 0 and barsize <= NUM_ACTIONBAR_BUTTONS,"BarLayoutSize: barsize "..tostring(barsize).." is invalid")
+    local formfactor = pfUI.api:BarLayoutFormfactor(formfactor)
+    local cols, rows = unpack(gridmath[barsize][formfactor])
+    local width = (iconsize + bordersize*3) * cols - bordersize
+    local height = (iconsize + bordersize*3) * rows - bordersize
+    bar._size = {width,height}
+    return bar._size
+  end
+  -- 'button'  frame reference
+  -- 'basename'  name of button frame without index
+  -- 'buttonindex'  index number of button on bar
+  -- 'formfactor'  string formfactor in cols x rows
+  function pfUI.api:BarButtonAnchor(button,basename,buttonindex,barsize,formfactor,iconsize,bordersize)
+    assert(barsize > 0 and barsize <= NUM_ACTIONBAR_BUTTONS,"BarButtonAnchor: barsize "..tostring(barsize).." is invalid")
+    local formfactor = pfUI.api:BarLayoutFormfactor(formfactor)
+    local parent = button:GetParent()
+    local cols, rows = unpack(gridmath[barsize][formfactor])
+    if buttonindex == 1 then
+      button._anchor = {"TOPLEFT", parent, "TOPLEFT", bordersize, -bordersize}
+    else
+      local col = buttonindex-((math.ceil(buttonindex/cols)-1)*cols)
+      button._anchor = col==1 and {"TOP",getglobal(basename..(buttonindex-cols)),"BOTTOM",0,-(bordersize*3)} or {"LEFT",getglobal(basename..(buttonindex-1)),"RIGHT",(bordersize*3),0}
+    end
+    return button._anchor
+  end
 end
