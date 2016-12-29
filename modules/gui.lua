@@ -88,6 +88,13 @@ pfUI:RegisterModule("gui", function ()
     pfUI.gui.reloadDialog:Hide()
   end)
 
+  function pfUI.gui.HoverBind()
+    pfUI.gui:Hide()
+    if pfUI.hoverbind then
+      pfUI.hoverbind:Show()
+    end
+  end
+
   function pfUI.gui.UnlockFrames()
     if not pfUI.gitter then
       pfUI.gitter = CreateFrame("Button", nil, UIParent)
@@ -176,7 +183,11 @@ pfUI:RegisterModule("gui", function ()
           frame.drag.text:SetAllPoints(frame.drag)
           frame.drag.text:SetPoint("CENTER", 0, 0)
           frame.drag.text:SetFontObject(GameFontWhite)
-          frame.drag.text:SetText(strsub(frame:GetName(),3))
+          local label = (strsub(frame:GetName(),3))
+          if frame.drag:GetHeight() > (2 * frame.drag:GetWidth()) then
+            label = pfUI.api.strvertical(label)
+          end
+          frame.drag.text:SetText(label)
           frame.drag:SetAlpha(1)
 
           frame.drag:SetScript("OnMouseWheel", function()
@@ -202,8 +213,12 @@ pfUI:RegisterModule("gui", function ()
             end
 
             -- repaint hackfix for panels
-            pfUI.panel.left:SetScale(pfUI.chat.left:GetScale())
-            pfUI.panel.right:SetScale(pfUI.chat.right:GetScale())
+            if pfUI.panel and pfUI.chat then
+              pfUI.panel.left:SetScale(pfUI.chat.left:GetScale())
+              pfUI.panel.right:SetScale(pfUI.chat.right:GetScale())
+            end
+
+            if frame.OnMove then frame:OnMove() end
           end)
         end
 
@@ -240,6 +255,7 @@ pfUI:RegisterModule("gui", function ()
           end
           frame.drag.backdrop:SetBackdropBorderColor(1,1,1,1)
           frame:StartMoving()
+          if frame.OnMove then frame:OnMove() end
         end)
 
         frame.drag:SetScript("OnMouseUp",function()
@@ -919,12 +935,25 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui:CreateConfig(pfUI.gui.bar, "Use colored icon as range indicator", pfUI_config.bars, "glowrange", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.bar, "Range indicator Color", pfUI_config.bars, "rangecolor", "color")
   pfUI.gui:CreateConfig(pfUI.gui.bar, "Seconds to wait until hide bars", pfUI_config.bars, "hide_time")
-  pfUI.gui:CreateConfig(pfUI.gui.bar, "Autohide bottom actionbar", pfUI_config.bars, "hide_bottom", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.bar, "Autohide main actionbar", pfUI_config.bars, "hide_actionmain", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.bar, "Autohide bottomleft actionbar", pfUI_config.bars, "hide_bottomleft", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.bar, "Autohide bottomright actionbar", pfUI_config.bars, "hide_bottomright", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.bar, "Autohide vertical actionbar", pfUI_config.bars, "hide_vertical", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.bar, "Autohide right actionbar", pfUI_config.bars, "hide_right", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.bar, "Autohide 2nd right actionbar", pfUI_config.bars, "hide_tworight", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.bar, "Autohide shapeshift actionbar", pfUI_config.bars, "hide_shapeshift", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.bar, "Autohide pet actionbar", pfUI_config.bars, "hide_pet", "checkbox")
+
+  pfUI.gui:CreateConfig(pfUI.gui.bar, "Bar Layouts", nil, nil, "header")
+  local values = pfUI.api:BarLayoutOptions(NUM_ACTIONBAR_BUTTONS)
+  pfUI.gui:CreateConfig(pfUI.gui.bar, "Default Actionbar [ActionMain]", pfUI_config.bars.actionmain, "formfactor", "dropdown", values)
+  pfUI.gui:CreateConfig(pfUI.gui.bar, "Second Actionbar [BottomLeft]", pfUI_config.bars.bottomleft, "formfactor", "dropdown", values)
+  pfUI.gui:CreateConfig(pfUI.gui.bar, "Left Actionbar [BottomRight]", pfUI_config.bars.bottomright, "formfactor", "dropdown", values)
+  pfUI.gui:CreateConfig(pfUI.gui.bar, "Right Actionbar [Right]", pfUI_config.bars.right, "formfactor", "dropdown", values)
+  pfUI.gui:CreateConfig(pfUI.gui.bar, "Vertical Actionbar [TwoRight]", pfUI_config.bars.tworight, "formfactor", "dropdown", values)
+  local values = pfUI.api:BarLayoutOptions(NUM_SHAPESHIFT_SLOTS)
+  pfUI.gui:CreateConfig(pfUI.gui.bar, "Shapeshift Bar", pfUI_config.bars.shapeshift, "formfactor", "dropdown", values)
+  local values = pfUI.api:BarLayoutOptions(NUM_PET_ACTION_SLOTS)
+  pfUI.gui:CreateConfig(pfUI.gui.bar, "Pet Bar", pfUI_config.bars.pet, "formfactor", "dropdown", values)
 
   -- panels
   pfUI.gui.panel = pfUI.gui:CreateConfigTab("Panel")
@@ -1005,6 +1034,11 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.resetFrames = pfUI.gui:CreateConfigTab("Reset Positions", "bottom", function()
       pfUI_config["position"] = {}
       pfUI.gui.reloadDialog:Show()
+  end)
+
+  -- Hoverbind
+  pfUI.gui.hoverBind = pfUI.gui:CreateConfigTab("Hover Bind", "bottom", function()
+      pfUI.gui.HoverBind()
   end)
 
   -- Reset Chat

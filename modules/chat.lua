@@ -475,15 +475,24 @@ pfUI:RegisterModule("chat", function ()
     pfUI.chat.editbox:SetHeight(pfUI_config.chat.text.input_height)
   end
 
-  pfUI.chat.editbox:ClearAllPoints()
-  local anchor
-  if pfUI.bars then
-    anchor = pfUI.bars.bottom
-  else
-    anchor = pfUI.chat.left
-  end
-  pfUI.chat.editbox:SetPoint("BOTTOM", anchor, "TOP", 0, default_border*4)
-  pfUI.api:UpdateMovable(pfUI.chat.editbox)
+  -- to make sure SHOW_MULTI_ACTIONBAR_1 is set to the real value, we need to wait.
+  local pfChatArrangeFrame = CreateFrame("Frame", "pfChatArrange", UIParent)
+  pfChatArrangeFrame:RegisterEvent("CVAR_UPDATE")
+  pfChatArrangeFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
+  pfChatArrangeFrame:SetScript("OnEvent", function()
+    pfUI.chat.editbox:ClearAllPoints()
+    local anchor = pfUI.chat.left
+    if pfUI.bars and SHOW_MULTI_ACTIONBAR_1 then
+      anchor = pfUI.bars.bottomleft
+    elseif pfUI.bars and pfUI.bars.actionmain:IsShown() then
+      anchor = pfUI.bars.actionmain
+    end
+
+    pfUI.chat.editbox:SetPoint("BOTTOMLEFT", anchor, "TOPLEFT", 0, default_border*4)
+    pfUI.chat.editbox:SetPoint("BOTTOMRIGHT", anchor, "TOPRIGHT", 0, default_border*4)
+
+    pfUI.api:UpdateMovable(pfUI.chat.editbox)
+  end)
 
   if pfUI_config.chat.text.input_width == "0" then
     pfUI.chat.editbox:SetWidth(default_border*3 + pfUI_config.bars.icon_size * 12 + default_border * 12) -- actionbar size
