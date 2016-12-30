@@ -21,7 +21,8 @@ pfUI:RegisterModule("hunterbar", function ()
 
       pfUI.hunterbar.scanner:ClearLines()
       pfUI.hunterbar.scanner:SetAction(i)
-      if pfHunterBarScannerTextLeft1 then
+
+      if pfHunterBarScannerTextLeft1 and pfHunterBarScannerTextLeft1:GetText() then
         if pfHunterBarScannerTextLeft1:GetText() == pfLocaleHunterbars[pfUI.cache["locale"]]["MELEE"] then
           pfUI.hunterbar.melee = i
         elseif pfHunterBarScannerTextLeft1:GetText() == pfLocaleHunterbars[pfUI.cache["locale"]]["RANGED"] then

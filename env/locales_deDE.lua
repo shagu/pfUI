@@ -53,7 +53,7 @@ pfLocaleSpellInterrupts["deDE"] = {
 }
 
 pfLocaleHunterbars["deDE"] = {
-  ["MELEE"] = "Raptorstoß",
+  ["MELEE"] = "Zurechtstutzen",
   ["RANGED"] = "Arkaner Schuss",
 }
 

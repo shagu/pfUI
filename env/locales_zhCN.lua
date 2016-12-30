@@ -53,7 +53,7 @@ pfLocaleSpellInterrupts["zhCN"] = {
 }
 
 pfLocaleHunterbars["zhCN"] = {
-  ["MELEE"] = "猛禽一击",
+  ["MELEE"] = "摔绊",
   ["RANGED"] = "奥术射击",
 }
 

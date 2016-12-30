@@ -53,7 +53,7 @@ pfLocaleSpellInterrupts["frFR"] = {
 }
 
 pfLocaleHunterbars["frFR"] = {
-  ["MELEE"] = "Attaque du raptor",
+  ["MELEE"] = "Coupure d'ailes",
   ["RANGED"] = "Tir des Arcanes",
 }
 

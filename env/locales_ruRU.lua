@@ -53,7 +53,7 @@ pfLocaleSpellInterrupts["ruRU"] = {
 }
 
 pfLocaleHunterbars["ruRU"] = {
-  ["MELEE"] = "Удар ящера",
+  ["MELEE"] = "Подрезать крылья",
   ["RANGED"] = "Чародейский выстрел",
 }
 
