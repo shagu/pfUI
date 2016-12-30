@@ -90,6 +90,7 @@ pfUI:RegisterModule("player", function ()
   UIDropDownMenu_Initialize(pfUI.uf.player.Dropdown, pfUI.uf.player.Dropdowni, "MENU")
 
   pfUI.uf.player:RegisterEvent("UPDATE_FACTION")
+  pfUI.uf.player:RegisterEvent("UNIT_FACTION")
   pfUI.uf.player:RegisterEvent("RAID_TARGET_UPDATE")
   pfUI.uf.player:RegisterEvent("PARTY_LEADER_CHANGED")
   pfUI.uf.player:RegisterEvent("PARTY_MEMBERS_CHANGED")
@@ -108,7 +109,7 @@ pfUI:RegisterModule("player", function ()
   pfUI.uf.player:RegisterEvent("UNIT_MAXENERGY")
 
   pfUI.uf.player:SetScript("OnEvent", function()
-      if event == "UPDATE_FACTION" then
+      if event == "UPDATE_FACTION" or event == "UNIT_FACTION" then
         if pfUI_config.unitframes.player.showPVP == "1" and UnitIsPVP("player") then
           if pfUI.uf.player.pvpicon == nil then
             pfUI.uf.player.pvpicon = CreateFrame("Frame", "pfPvPIcon", UIParent)
