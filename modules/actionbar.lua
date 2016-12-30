@@ -14,6 +14,7 @@ pfUI:RegisterModule("actionbar", function ()
 
   function ShowBonusActionBar()
     for i=1, NUM_ACTIONBAR_BUTTONS do getglobal("ActionButton" .. i):Hide() end
+    if pfBonusBar then pfBonusBar:Show() end
     Hook_ShowBonusActionBar()
   end
 
@@ -23,6 +24,7 @@ pfUI:RegisterModule("actionbar", function ()
 
   function HideBonusActionBar()
     for i=1, NUM_ACTIONBAR_BUTTONS do getglobal("ActionButton" .. i):Show() end
+    if pfBonusBar then pfBonusBar:Hide() end
     Hook_HideBonusActionBar()
   end
 
