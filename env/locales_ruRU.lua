@@ -52,6 +52,11 @@ pfLocaleSpellInterrupts["ruRU"] = {
   ["Земной шок"] = true;
 }
 
+pfLocaleHunterbars["ruRU"] = {
+  ["MELEE"] = "Удар ящера",
+  ["RANGED"] = "Чародейский выстрел",
+}
+
 pfLocaleSpells["ruRU"] = {
   ['"Отчаянный" снова принимает облик цыпленка"'] = {t=1000, icon="Ability_Racial_BearForm" };
   ['Плевок мясника'] = {t=2500, icon="Spell_Nature_CorrosiveBreath" };

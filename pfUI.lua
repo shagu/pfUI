@@ -34,6 +34,7 @@ pfLocaleShift = {}
 pfLocaleSpells = {}
 pfLocaleSpellEvents = {}
 pfLocaleSpellInterrupts = {}
+pfLocaleHunterbars = {}
 
 pfUI:SetScript("OnEvent", function()
   if arg1 == "pfUI" then

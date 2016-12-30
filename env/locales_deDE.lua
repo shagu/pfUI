@@ -52,6 +52,11 @@ pfLocaleSpellInterrupts["deDE"] = {
   ["Erdschock"] = true;
 }
 
+pfLocaleHunterbars["deDE"] = {
+  ["MELEE"] = "Raptorstoß",
+  ["RANGED"] = "Arkaner Schuss",
+}
+
 pfLocaleSpells["deDE"] = {
   ['Eisenherz nimmt wieder Huhngestalt an'] = {t=1000, icon="Ability_Racial_BearForm" };
   ['Monstrositätenspucke'] = {t=2500, icon="Spell_Nature_CorrosiveBreath" };

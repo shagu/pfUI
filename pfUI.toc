@@ -28,6 +28,7 @@ modules\gui.lua
 modules\pixelperfect.lua
 modules\hoverbind.lua
 modules\actionbar.lua
+modules\hunterbar.lua
 modules\chat.lua
 modules\font.lua
 modules\addons.lua

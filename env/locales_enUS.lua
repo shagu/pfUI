@@ -52,6 +52,11 @@ pfLocaleSpellInterrupts["enUS"] = {
   ["Earth Shock"] = true;
 }
 
+pfLocaleHunterbars["enUS"] = {
+  ["MELEE"] = "Raptor Strike",
+  ["RANGED"] = "Arcane Shot",
+}
+
 pfLocaleSpells["enUS"] = {
   ['"Plucky" Resumes Chicken Form'] = {t=1000, icon="Ability_Racial_BearForm" };
   ['Abomination Spit'] = {t=2500, icon="Spell_Nature_CorrosiveBreath" };

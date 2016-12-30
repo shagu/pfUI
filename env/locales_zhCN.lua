@@ -52,6 +52,11 @@ pfLocaleSpellInterrupts["zhCN"] = {
   ["地震术"] = true;
 }
 
+pfLocaleHunterbars["zhCN"] = {
+  ["MELEE"] = "猛禽一击",
+  ["RANGED"] = "奥术射击",
+}
+
 pfLocaleSpells["zhCN"] = {
   ['"Plucky" Resumes Chicken Form'] = {t=1000, icon="Ability_Racial_BearForm" };
   ['憎恶喷吐'] = {t=2500, icon="Spell_Nature_CorrosiveBreath" };

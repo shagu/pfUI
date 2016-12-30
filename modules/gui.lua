@@ -934,6 +934,8 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui:CreateConfig(pfUI.gui.bar, "Show actionbar backgrounds", pfUI_config.bars, "background", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.bar, "Use colored icon as range indicator", pfUI_config.bars, "glowrange", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.bar, "Range indicator Color", pfUI_config.bars, "rangecolor", "color")
+  pfUI.gui:CreateConfig(pfUI.gui.bar, "Range based auto paging (Hunter)", pfUI_config.bars, "hunterbar", "checkbox")
+
   pfUI.gui:CreateConfig(pfUI.gui.bar, "Seconds to wait until hide bars", pfUI_config.bars, "hide_time")
   pfUI.gui:CreateConfig(pfUI.gui.bar, "Autohide main actionbar", pfUI_config.bars, "hide_actionmain", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.bar, "Autohide bottomleft actionbar", pfUI_config.bars, "hide_bottomleft", "checkbox")
