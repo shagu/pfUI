@@ -40,7 +40,7 @@ pfUI:RegisterModule("group", function ()
 
       if event == "RAID_TARGET_UPDATE" or event == "PLAYER_ENTERING_WORLD" or event == "PARTY_MEMBERS_CHANGED" then
         local raidIcon = GetRaidTargetIndex("party" .. i)
-        if raidIcon then
+        if raidIcon and UnitExists("party" .. i) then
           SetRaidTargetIconTexture(pfUI.uf.group[i].hp.raidIcon.texture, raidIcon)
           pfUI.uf.group[i].hp.raidIcon:Show()
         else
