@@ -13,6 +13,9 @@ pfUI:RegisterModule("hunterbar", function ()
   pfUI.hunterbar:RegisterEvent("ACTIONBAR_SLOT_CHANGED")
   pfUI.hunterbar:RegisterEvent("PLAYER_ENTERING_WORLD")
   pfUI.hunterbar:SetScript("OnEvent", function()
+    pfUI.hunterbar.melee = nil
+    pfUI.hunterbar.ranged = nil
+
     for i=1,120 do
       if pfUI.hunterbar.melee and pfUI.hunterbar.ranged then return end
 
