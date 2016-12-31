@@ -1002,36 +1002,64 @@ pfUI:RegisterModule("gui", function ()
       pfUI.gui.UnlockFrames()
   end)
 
-  -- Reset Frames
-  pfUI.gui.resetFrames = pfUI.gui:CreateConfigTab("Reset Positions", "bottom", function()
-      pfUI_config["position"] = {}
-      pfUI.gui:Reload()
-  end)
-
   -- Hoverbind
-  pfUI.gui.hoverBind = pfUI.gui:CreateConfigTab("Hover Bind", "bottom", function()
+  pfUI.gui.hoverBind = pfUI.gui:CreateConfigTab("Hover Keybind", "bottom", function()
       pfUI.gui.HoverBind()
   end)
 
+  -- Reset Cache
+  pfUI.gui.resetCache = pfUI.gui:CreateConfigTab("Reset Cache", "bottom", function()
+    pfUI.api:CreateQuestionDialog("Do you really want to reset the Cache?",
+      function()
+        pfUI_playerDB = {}
+        this:GetParent():Hide()
+        pfUI.gui:Reload()
+      end)
+  end)
+
+  -- Reset Frames
+  pfUI.gui.resetFrames = pfUI.gui:CreateConfigTab("Reset Positions", "bottom", function()
+    pfUI.api:CreateQuestionDialog("Do you really want to reset the Frame Positions?",
+      function()
+        pfUI_config["position"] = {}
+        this:GetParent():Hide()
+        pfUI.gui:Reload()
+      end)
+  end)
+
   -- Reset Chat
-  pfUI.gui.resetChat = pfUI.gui:CreateConfigTab("Reset Chat", "bottom", function()
-      pfUI_init["chat"] = nil
-      pfUI.gui:Reload()
+  pfUI.gui.resetChat = pfUI.gui:CreateConfigTab("Reset Firstrun", "bottom", function()
+    pfUI.api:CreateQuestionDialog("Do you really want to reset the Firstrun Wizard Settings?",
+      function()
+        pfUI_init = {}
+        this:GetParent():Hide()
+        pfUI.gui:Reload()
+      end)
   end)
 
-  -- Reset Player Cache
-  pfUI.gui.resetCache = pfUI.gui:CreateConfigTab("Reset Player Cache", "bottom", function()
-      pfUI_playerDB = {}
-      pfUI.gui:Reload()
+  -- Reset Config
+  pfUI.gui.resetConfig = pfUI.gui:CreateConfigTab("Reset Config", "bottom", function()
+    pfUI.api:CreateQuestionDialog("Do you really want to reset your configuration?\nThis also includes frame positions",
+      function()
+        pfUI_config = {}
+        pfUI:LoadConfig()
+        this:GetParent():Hide()
+        pfUI.gui:Reload()
+      end)
   end)
-
 
   -- Reset All
   pfUI.gui.resetAll = pfUI.gui:CreateConfigTab("Reset All", "bottom", function()
-    pfUI_init = {}
-    pfUI_config = {}
-    pfUI:LoadConfig()
-    pfUI.gui:Reload()
+    pfUI.api:CreateQuestionDialog("Do you really want to reset |cffffaaaaEVERYTHING|r?\nThis includes configuration, frame positions, firstrun settings,\n player cache, profiles and just EVERYTHING!",
+      function()
+        pfUI_init = {}
+        pfUI_config = {}
+        pfUI_playerDB = {}
+        pfUI_profiles = {}
+        pfUI:LoadConfig()
+        this:GetParent():Hide()
+        pfUI.gui:Reload()
+      end)
   end)
 
   -- Switch to default View: global
