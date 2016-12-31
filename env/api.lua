@@ -227,24 +227,14 @@ function pfUI.api:CreateQuestionDialog(text, yes, no, editbox)
     return
   end
 
-  -- add default values
-  if not yes then
-    yes = function() message("You clicked OK") end
-  end
-
-  if not no then
-    no = function() this:GetParent():Hide() end
-  end
-
-  if not text then
-    text = "Are you sure?"
-  end
+  if not text then text = "Are you sure?" end
 
   local border = tonumber(pfUI_config.appearance.border.default)
   local padding = 15
 
   -- frame
   local question = CreateFrame("Frame", "pfQuestionDialog", UIParent)
+  question:ClearAllPoints()
   question:SetPoint("CENTER", 0, 0)
   question:SetFrameStrata("TOOLTIP")
   question:SetMovable(true)
@@ -286,7 +276,10 @@ function pfUI.api:CreateQuestionDialog(text, yes, no, editbox)
   question.yes:SetWidth(100)
   question.yes:SetHeight(20)
   question.yes:SetText("Okay")
-  question.yes:SetScript("OnClick", yes)
+  question.yes:SetScript("OnClick", function()
+    if yes then yes() end
+    this:GetParent():Hide()
+  end)
 
   if question.input then
     question.yes:SetPoint("TOPLEFT", question.input, "BOTTOMLEFT", -border, -padding)
@@ -299,7 +292,10 @@ function pfUI.api:CreateQuestionDialog(text, yes, no, editbox)
   question.no:SetWidth(85)
   question.no:SetHeight(20)
   question.no:SetText("Cancel")
-  question.no:SetScript("OnClick", no)
+  question.no:SetScript("OnClick", function()
+    if no then no() end
+    this:GetParent():Hide()
+  end)
 
   if question.input then
     question.no:SetPoint("TOPRIGHT", question.input, "BOTTOMRIGHT", border, -padding)
@@ -339,7 +335,6 @@ function pfUI.api:CreateQuestionDialog(text, yes, no, editbox)
   local width = 200
   if question.text:GetStringWidth() > 200 then width = question.text:GetStringWidth() end
   question:SetWidth( width + 2*padding)
-
 end
 
 -- [ Bar Layout Options ] --
