@@ -242,10 +242,9 @@ function pfUI.api:CreateQuestionDialog(text, yes, no, editbox)
 
   local border = tonumber(pfUI_config.appearance.border.default)
   local padding = 15
+
   -- frame
   local question = CreateFrame("Frame", "pfQuestionDialog", UIParent)
-  question:SetWidth(300)
-  question:SetHeight(100)
   question:SetPoint("CENTER", 0, 0)
   question:SetFrameStrata("TOOLTIP")
   question:SetMovable(true)
@@ -262,9 +261,9 @@ function pfUI.api:CreateQuestionDialog(text, yes, no, editbox)
   -- text
   question.text = question:CreateFontString("Status", "LOW", "GameFontNormal")
   question.text:SetFontObject(GameFontWhite)
-  question.text:SetPoint("TOP", 0, -padding)
+  question.text:SetPoint("TOPLEFT", question, "TOPLEFT", padding, -padding)
+  question.text:SetPoint("TOPRIGHT", question, "TOPRIGHT", -padding, -padding)
   question.text:SetText(text)
-  question.text:SetWidth(question:GetWidth() - border * 2)
 
   -- editbox
   if editbox then
@@ -335,7 +334,12 @@ function pfUI.api:CreateQuestionDialog(text, yes, no, editbox)
   local inputspace = 0
   if question.input then inputspace = question.input:GetHeight() + padding end
   local buttonspace = question.no:GetHeight() + padding
-  question:SetHeight(textspace + inputspace + buttonspace + border)
+  question:SetHeight(textspace + inputspace + buttonspace + padding)
+
+  local width = 200
+  if question.text:GetStringWidth() > 200 then width = question.text:GetStringWidth() end
+  question:SetWidth( width + 2*padding)
+
 end
 
 -- [ Bar Layout Options ] --
