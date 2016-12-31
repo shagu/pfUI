@@ -21,8 +21,6 @@ pfUI:RegisterModule("skin", function ()
     "StaticPopup1Button2",
     "StaticPopup2Button1",
     "StaticPopup2Button2",
-    "pfReloadYes",
-    "pfReloadNo",
   }
   local boxes = {
     "StaticPopup1",

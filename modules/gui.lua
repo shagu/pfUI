@@ -23,14 +23,18 @@ pfUI:RegisterModule("gui", function ()
   end)
 
   pfUI.gui:SetScript("OnHide",function()
-    if pfQuestionDialog and pfQuestionDialog:IsShown() then
-      pfQuestionDialog:Hide()
-      pfQuestionDialog = nil
-    end
     if ColorPickerFrame and ColorPickerFrame:IsShown() then
       ColorPickerFrame:Hide()
     end
   end)
+
+  function pfUI.gui:Reload()
+    pfUI.api:CreateQuestionDialog("Some settings need to reload the UI to take effect.\nDo you want to reloadUI now?",
+      function()
+        pfUI.gui.settingChanged = nil
+        ReloadUI()
+      end)
+  end
 
   function pfUI.gui:SaveScale(frame, scale)
     frame:SetScale(scale)
@@ -52,41 +56,6 @@ pfUI:RegisterModule("gui", function ()
       end
     end)
   end
-
-  pfUI.gui.reloadDialog = CreateFrame("Frame","pfReloadDiag",UIParent)
-  pfUI.gui.reloadDialog:SetFrameStrata("TOOLTIP")
-  pfUI.gui.reloadDialog:SetWidth(300)
-  pfUI.gui.reloadDialog:SetHeight(100)
-  pfUI.gui.reloadDialog:Hide()
-  tinsert(UISpecialFrames, "pfReloadDiag")
-
-  pfUI.api:CreateBackdrop(pfUI.gui.reloadDialog)
-  pfUI.gui.reloadDialog:SetPoint("CENTER",0,0)
-
-  pfUI.gui.reloadDialog.text = pfUI.gui.reloadDialog:CreateFontString("Status", "LOW", "GameFontNormal")
-  pfUI.gui.reloadDialog.text:SetFontObject(GameFontWhite)
-  pfUI.gui.reloadDialog.text:SetPoint("TOP", 0, -15)
-  pfUI.gui.reloadDialog.text:SetText("Some settings need to reload the UI to take effect.\nDo you want to reloadUI now?")
-
-  pfUI.gui.reloadDialog.yes = CreateFrame("Button", "pfReloadYes", pfUI.gui.reloadDialog, "UIPanelButtonTemplate")
-  pfUI.api:CreateBackdrop(pfUI.gui.reloadDialog.yes, nil, true)
-  pfUI.gui.reloadDialog.yes:SetWidth(100)
-  pfUI.gui.reloadDialog.yes:SetHeight(20)
-  pfUI.gui.reloadDialog.yes:SetPoint("BOTTOMLEFT", 20,15)
-  pfUI.gui.reloadDialog.yes:SetText("Yes")
-  pfUI.gui.reloadDialog.yes:SetScript("OnClick", function()
-    pfUI.gui.settingChanged = nil
-    ReloadUI()
-  end)
-
-  pfUI.gui.reloadDialog.no = CreateFrame("Button", "pfReloadNo", pfUI.gui.reloadDialog, "UIPanelButtonTemplate")
-  pfUI.gui.reloadDialog.no:SetWidth(100)
-  pfUI.gui.reloadDialog.no:SetHeight(20)
-  pfUI.gui.reloadDialog.no:SetPoint("BOTTOMRIGHT", -20,15)
-  pfUI.gui.reloadDialog.no:SetText("No")
-  pfUI.gui.reloadDialog.no:SetScript("OnClick", function()
-    pfUI.gui.reloadDialog:Hide()
-  end)
 
   function pfUI.gui.HoverBind()
     pfUI.gui:Hide()
@@ -1022,7 +991,7 @@ pfUI:RegisterModule("gui", function ()
   -- Hide GUI
   pfUI.gui.hideGUI = pfUI.gui:CreateConfigTab("Close", "bottom", function()
     if pfUI.gui.settingChanged then
-      pfUI.gui.reloadDialog:Show()
+      pfUI.gui:Reload()
     end
     if pfUI.gitter and pfUI.gitter:IsShown() then pfUI.gui:UnlockFrames() end
     pfUI.gui:Hide()
@@ -1036,7 +1005,7 @@ pfUI:RegisterModule("gui", function ()
   -- Reset Frames
   pfUI.gui.resetFrames = pfUI.gui:CreateConfigTab("Reset Positions", "bottom", function()
       pfUI_config["position"] = {}
-      pfUI.gui.reloadDialog:Show()
+      pfUI.gui:Reload()
   end)
 
   -- Hoverbind
@@ -1047,13 +1016,13 @@ pfUI:RegisterModule("gui", function ()
   -- Reset Chat
   pfUI.gui.resetChat = pfUI.gui:CreateConfigTab("Reset Chat", "bottom", function()
       pfUI_init["chat"] = nil
-      pfUI.gui.reloadDialog:Show()
+      pfUI.gui:Reload()
   end)
 
   -- Reset Player Cache
   pfUI.gui.resetCache = pfUI.gui:CreateConfigTab("Reset Player Cache", "bottom", function()
       pfUI_playerDB = {}
-      pfUI.gui.reloadDialog:Show()
+      pfUI.gui:Reload()
   end)
 
 
@@ -1062,7 +1031,7 @@ pfUI:RegisterModule("gui", function ()
     pfUI_init = {}
     pfUI_config = {}
     pfUI:LoadConfig()
-    pfUI.gui.reloadDialog:Show()
+    pfUI.gui:Reload()
   end)
 
   -- Switch to default View: global
