@@ -103,6 +103,50 @@ ScriptErrors:SetScript("OnShow", function(msg)
     ScriptErrors:Hide()
   end)
 
+pfUI.firstrun = CreateFrame("Frame", "pfFirstRunWizard", UIParent)
+pfUI.firstrun.steps = {}
+pfUI.firstrun.next = nil
+
+pfUI.firstrun:RegisterEvent("PLAYER_ENTERING_WORLD")
+pfUI.firstrun:SetScript("OnEvent", function() pfUI.firstrun:NextStep() end)
+
+function pfUI.firstrun:AddStep(name, yfunc, nfunc, descr, cmpnt)
+  if not name then return end
+  pfUI.firstrun.steps[name] = {}
+  if yfunc then pfUI.firstrun.steps[name].yfunc = yfunc end
+  if nfunc then pfUI.firstrun.steps[name].nfunc = nfunc end
+  if descr then pfUI.firstrun.steps[name].descr = descr end
+  if cmpnt then pfUI.firstrun.steps[name].cmpnt = cmpnt end
+end
+
+function pfUI.firstrun:NextStep()
+  for name, step in pairs(pfUI.firstrun.steps) do
+    if not pfUI_init[name] then
+      local function yes()
+        pfUI_init[name] = true
+        if step.yfunc then step.yfunc() end
+        this:GetParent():Hide()
+        pfUI.firstrun:NextStep()
+      end
+
+      local function no()
+        pfUI_init[name] = true
+        if step.nfunc then step.nfunc() end
+        this:GetParent():Hide()
+        pfUI.firstrun:NextStep()
+      end
+
+      if step.cmpnt and step.cmpnt == "edit" then
+        pfUI.api:CreateQuestionDialog(step.descr, yes, no, true)
+      else
+        pfUI.api:CreateQuestionDialog(step.descr, yes, no, false)
+      end
+
+      return
+    end
+  end
+end
+
 pfUI.info = CreateFrame("Button", "pfInfoBox", UIParent)
 pfUI.info:Hide()
 
