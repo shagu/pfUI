@@ -49,7 +49,6 @@ pfUI:RegisterModule("bags", function ()
 
   pfUI.bag = CreateFrame("Frame", "pfUIBag")
   pfUI.bag:RegisterEvent("PLAYER_ENTERING_WORLD")
-  pfUI.bag:RegisterEvent("UPDATE_FACTION")
   pfUI.bag:RegisterEvent("BAG_UPDATE")
   pfUI.bag:RegisterEvent("PLAYERBANKSLOTS_CHANGED")
   pfUI.bag:RegisterEvent("PLAYERBANKBAGSLOTS_CHANGED")
@@ -60,7 +59,7 @@ pfUI:RegisterModule("bags", function ()
   pfUI.bag:RegisterEvent("ITEM_LOCK_CHANGED")
 
   pfUI.bag:SetScript("OnEvent", function()
-    if event == "PLAYER_ENTERING_WORLD" or event == "UPDATE_FACTION" then
+    if event == "PLAYER_ENTERING_WORLD" then
       pfUI.bag:CreateBags()
       pfUI.bag.right:Hide()
 
