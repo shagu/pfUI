@@ -9,8 +9,9 @@ pfUI:RegisterModule("cooldown", function ()
     cooldown.cd.text:SetPoint("CENTER", cooldown.cd, "CENTER", 0, 1)
 
     cooldown.cd:SetScript("OnUpdate", function()
-      if not this:GetParent() then this:Hide() end
-      if not getglobal(this:GetParent():GetName() .. "Cooldown"):IsShown() then this:Hide() end
+      if not this:GetParent() then 
+         if not getglobal(this:GetParent():GetName() .. "Cooldown"):IsShown() then this:Hide() end
+      end
       if not this.next then this.next = GetTime() + .1 end
       if this.next > GetTime() then return end
       this.next = GetTime() + .1
