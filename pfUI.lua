@@ -120,6 +120,27 @@ function pfUI.firstrun:AddStep(name, yfunc, nfunc, descr, cmpnt)
 end
 
 function pfUI.firstrun:NextStep()
+  if next(pfUI_init) == nil then
+    local yes = function()
+      this:GetParent():Hide()
+      pfUI_init["welcome"] = true
+      pfUI.firstrun:NextStep()
+    end
+
+    local no = function()
+      this:GetParent():Hide()
+    end
+
+    pfUI.api:CreateQuestionDialog("Welcome to |cff33ffccpf|cffffffffUI|r!\n\n"..
+    "I'm the first run wizzard that will guide you through some basic configuration.\n"..
+    "You'll now be prompted for several questions. To get a default installation,\n"..
+    "you might want to click \"Okay\" everywhere. A few settings are client settings\n"..
+    "(e.g chat questions) so if you don't want to lose your chat configurations, you\n"..
+    "should be careful with your choices.\n\n"..
+    "Visit |cff33ffcchttp://shagu.org|r to check for the latest version.", yes, no)
+    return
+  end
+
   for name, step in pairs(pfUI.firstrun.steps) do
     if not pfUI_init[name] then
       local function yes()
