@@ -56,6 +56,7 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("unitframes", "player",      "buffs",            "top")
   pfUI:UpdateConfig("unitframes", "player",      "energy",           "1")
 
+  pfUI:UpdateConfig("unitframes", "target",      "animation",        "0")
   pfUI:UpdateConfig("unitframes", "target",      "width",            "200")
   pfUI:UpdateConfig("unitframes", "target",      "height",           "50")
   pfUI:UpdateConfig("unitframes", "target",      "pheight",          "10")
