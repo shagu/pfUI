@@ -1,4 +1,8 @@
 pfUI:RegisterModule("chat", function ()
+
+  pfUI.firstrun:AddStep("chat_position", function() pfUI.chat.SetupPositions() end, nil, "Your chat window layout will now be aligned by |cff33ffccpf|cffffffffUI.\nPress \"Cancel\" to skip this step.")
+  pfUI.firstrun:AddStep("chat_channels", function() pfUI.chat.SetupChannels() end, nil, "Your chat channels will now be set up by |cff33ffccpf|cffffffffUI.\nPress \"Cancel\" to skip this step.")
+
   local default_border = pfUI_config.appearance.border.default
   if pfUI_config.appearance.border.chat ~= "-1" then
     default_border = pfUI_config.appearance.border.chat
@@ -205,12 +209,6 @@ pfUI:RegisterModule("chat", function ()
         ChatFrame3:ClearAllPoints()
         ChatFrame3:SetPoint("TOPLEFT", pfUI.chat.right ,"TOPLEFT", default_border, -panelheight)
         ChatFrame3:SetPoint("BOTTOMRIGHT", pfUI.chat.right ,"BOTTOMRIGHT", -default_border, panelheight)
-
-        if not pfUI_init["chat"] then
-          pfUI.chat.SetupPositions()
-          pfUI.chat.SetupChannels()
-          pfUI_init["chat"] = true
-        end
 
         for i=1, NUM_CHAT_WINDOWS do
           for j,v in ipairs({getglobal("ChatFrame" .. i .. "Tab"):GetRegions()}) do
