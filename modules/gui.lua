@@ -865,7 +865,7 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui:CreateConfig(pfUI.gui.uf, "Show energy ticks", pfUI_config.unitframes.player, "energy", "checkbox")
 
   pfUI.gui:CreateConfig(pfUI.gui.uf, "Target", nil, nil, "header")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Enable target switch animation", pfUI_config.unitframes.target, "animation")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "Enable target switch animation", pfUI_config.unitframes.target, "animation", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.uf, "Health width", pfUI_config.unitframes.target, "width")
   pfUI.gui:CreateConfig(pfUI.gui.uf, "Health height", pfUI_config.unitframes.target, "height")
   pfUI.gui:CreateConfig(pfUI.gui.uf, "Powerbar height", pfUI_config.unitframes.target, "pheight")
