@@ -18,7 +18,7 @@ pfUI:RegisterModule("addons", function ()
   pfUI.addons:Hide()
   pfUI.addons:SetScript("OnHide", function()
     if pfUI.addons.hasChanged then
-      pfUI.gui.reloadDialog:Show()
+      pfUI.gui:Reload()
       pfUI.addons.hasChanged = nil
     end
   end)
