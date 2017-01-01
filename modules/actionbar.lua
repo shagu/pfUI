@@ -135,6 +135,7 @@ pfUI:RegisterModule("actionbar", function ()
         for i=1, NUM_PET_ACTION_SLOTS do
           local b = getglobal("PetActionButton"..i)
           b:ClearAllPoints()
+          b:SetFrameLevel(pfUI.bars.pet:GetFrameLevel() + 1)
           b:SetParent(pfUI.bars.pet)
           pfUI.api:CreateBackdrop(b, default_border)
           pfUI.api:BarButtonAnchor(b, "PetActionButton", i, NUM_PET_ACTION_SLOTS, pfUI_config.bars.pet.formfactor, pfUI_config.bars.icon_size, default_border)
