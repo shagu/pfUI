@@ -1,0 +1,57 @@
+## Interface: 11200
+## Title: |cff33ffccpf|cffffffffUI
+## Author: Shagu, 2016
+## Notes: A complete user interface replacement.
+## Version: 0.1
+## SavedVariables: pfUI_profiles, pfUI_playerDB
+## SavedVariablesPerCharacter: pfUI_config, pfUI_init
+
+# main
+pfUI.lua
+
+# locales
+env\locales_enUS.lua
+env\locales_frFR.lua
+env\locales_deDE.lua
+env\locales_zhCN.lua
+env\locales_ruRU.lua
+
+# environment
+env\api.lua
+env\colors.lua
+env\fonts.lua
+env\selldata.lua
+
+# modules
+modules\config.lua
+modules\gui.lua
+modules\pixelperfect.lua
+modules\actionbar.lua
+modules\chat.lua
+modules\font.lua
+modules\addons.lua
+modules\minimap.lua
+modules\panel.lua
+modules\unitframes.lua
+modules\player.lua
+modules\target.lua
+modules\targettarget.lua
+modules\pet.lua
+modules\group.lua
+modules\raid.lua
+modules\mouseover.lua
+modules\castbar.lua
+modules\skin.lua
+modules\xpbar.lua
+modules\autoshift.lua
+modules\bags.lua
+modules\cooldown.lua
+modules\tooltip.lua
+modules\uf_tukui.lua
+modules\thirdparty.lua
+modules\buff.lua
+modules\nameplates.lua
+modules\loot.lua
+modules\infight.lua
+modules\sellvalue.lua
+modules\eqcompare.lua
