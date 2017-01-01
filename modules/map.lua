@@ -10,9 +10,11 @@ pfUI:RegisterModule("map", function ()
 
     WorldMapFrame:SetScript('OnShow', function()
       -- default events
-      UpdateMicroButtons();
-      PlaySound("igQuestLogOpen");
-      CloseDropDownMenus();
+      UpdateMicroButtons()
+      PlaySound("igQuestLogOpen")
+      CloseDropDownMenus()
+      SetMapToCurrentZone()
+      WorldMapFrame_PingPlayerPosition()
 
       -- customize
       WorldMapFrame:SetMovable(true)
