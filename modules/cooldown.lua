@@ -9,8 +9,16 @@ pfUI:RegisterModule("cooldown", function ()
     cooldown.cd.text:SetPoint("CENTER", cooldown.cd, "CENTER", 0, 1)
 
     cooldown.cd:SetScript("OnUpdate", function()
-      if not this:GetParent() then this:Hide() end
-      if not getglobal(this:GetParent():GetName() .. "Cooldown"):IsShown() then this:Hide() end
+      if not this:GetParent() then
+        this:Hide()
+      end
+
+      if this:GetParent() and this:GetParent():GetName() and getglobal(this:GetParent():GetName() .. "Cooldown") then
+        if not getglobal(this:GetParent():GetName() .. "Cooldown"):IsShown() then
+          this:Hide()
+        end
+      end
+
       if not this.next then this.next = GetTime() + .1 end
       if this.next > GetTime() then return end
       this.next = GetTime() + .1
@@ -54,9 +62,9 @@ pfUI:RegisterModule("cooldown", function ()
 
     -- realign guessed cooldown frames
     if this:GetParent() and this:GetParent():GetWidth() / 36 > 0 then
-        this:SetScale(this:GetParent():GetWidth() / 36)
-        this:SetPoint("TOPLEFT", this:GetParent(), "TOPLEFT", 0, 0)
-        this:SetPoint("BOTTOMRIGHT", this:GetParent(), "BOTTOMRIGHT", 1, -1)
+      this:SetScale(this:GetParent():GetWidth() / 36)
+      this:SetPoint("TOPLEFT", this:GetParent(), "TOPLEFT", 0, 0)
+      this:SetPoint("BOTTOMRIGHT", this:GetParent(), "BOTTOMRIGHT", 1, -1)
     end
 
     -- print time as text on cooldown frames
