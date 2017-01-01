@@ -49,7 +49,6 @@ pfUI:RegisterModule("bags", function ()
 
   pfUI.bag = CreateFrame("Frame", "pfUIBag")
   pfUI.bag:RegisterEvent("PLAYER_ENTERING_WORLD")
-  pfUI.bag:RegisterEvent("UPDATE_FACTION")
   pfUI.bag:RegisterEvent("BAG_UPDATE")
   pfUI.bag:RegisterEvent("PLAYERBANKSLOTS_CHANGED")
   pfUI.bag:RegisterEvent("PLAYERBANKBAGSLOTS_CHANGED")
@@ -60,7 +59,7 @@ pfUI:RegisterModule("bags", function ()
   pfUI.bag:RegisterEvent("ITEM_LOCK_CHANGED")
 
   pfUI.bag:SetScript("OnEvent", function()
-    if event == "PLAYER_ENTERING_WORLD" or event == "UPDATE_FACTION" then
+    if event == "PLAYER_ENTERING_WORLD" then
       pfUI.bag:CreateBags()
       pfUI.bag.right:Hide()
 
@@ -167,7 +166,7 @@ pfUI:RegisterModule("bags", function ()
     local iterate = {}
 
     if object == "bank" then
-      if not pfUI.bag.left then pfUI.bag.left = CreateFrame("Frame", "pfBank", nil) end
+      if not pfUI.bag.left then pfUI.bag.left = CreateFrame("Frame", "pfBank", UIParent) end
       if pfUI.chat then
         pfUI.bag.left:SetPoint("BOTTOMLEFT", pfUI.chat.left, "BOTTOMLEFT", 0, 0)
         pfUI.bag.left:SetPoint("BOTTOMRIGHT", pfUI.chat.left, "BOTTOMRIGHT", 0, 0)
@@ -179,7 +178,7 @@ pfUI:RegisterModule("bags", function ()
       iterate = pfUI.BANK
       frame = pfUI.bag.left
     else
-      if not pfUI.bag.right then pfUI.bag.right = CreateFrame("Frame", "pfBag", nil) end
+      if not pfUI.bag.right then pfUI.bag.right = CreateFrame("Frame", "pfBag", UIParent) end
       if pfUI.chat then
         pfUI.bag.right:SetPoint("BOTTOMLEFT", pfUI.chat.right, "BOTTOMLEFT", 0, 0)
         pfUI.bag.right:SetPoint("BOTTOMRIGHT", pfUI.chat.right, "BOTTOMRIGHT", 0, 0)
@@ -197,8 +196,7 @@ pfUI:RegisterModule("bags", function ()
     frame:SetFrameStrata("HIGH")
     pfUI.api:CreateBackdrop(frame, default_border)
 
-    pfUI.bag.button_size = (frame:GetWidth() + default_border - 10*default_border*3) / 10
-    --message(frame:GetWidth() .. " should be " .. pfUI.bag.button_size*10 + 10*default_border*3)
+    pfUI.bag.button_size = (frame:GetWidth() / frame:GetEffectiveScale() - 2*default_border - 9*default_border*3)/ 10
     local topspace = pfUI.bag.right.close:GetHeight() + default_border * 2
 
     for id, bag in pairs(iterate) do
@@ -442,8 +440,7 @@ pfUI:RegisterModule("bags", function ()
     if frame == pfUI.bag.right then
       -- bag close button
       if not frame.close then
-        frame.close = CreateFrame("Button", "pfBagClose", UIParent)
-        frame.close:SetParent(frame)
+        frame.close = CreateFrame("Button", "pfBagClose", frame)
         frame.close:SetPoint("TOPRIGHT", -default_border*1,-default_border )
         pfUI.api:CreateBackdrop(frame.close, default_border)
         frame.close:SetHeight(12)
@@ -469,8 +466,7 @@ pfUI:RegisterModule("bags", function ()
 
       -- bags button
       if not frame.bags then
-        frame.bags = CreateFrame("Button", "pfBagSlotShow", UIParent)
-        frame.bags:SetParent(frame)
+        frame.bags = CreateFrame("Button", "pfBagSlotShow", frame)
         frame.bags:SetPoint("TOPRIGHT", frame.close, "TOPLEFT", -default_border*3, 0)
         pfUI.api:CreateBackdrop(frame.bags, default_border)
         frame.bags:SetHeight(12)
@@ -505,8 +501,7 @@ pfUI:RegisterModule("bags", function ()
 
       -- key button
       if not frame.keys then
-        frame.keys = CreateFrame("Button", "pfBagSlotShow", UIParent)
-        frame.keys:SetParent(frame)
+        frame.keys = CreateFrame("Button", "pfBagSlotShow", frame)
         frame.keys:SetPoint("TOPRIGHT", frame.bags, "TOPLEFT", -default_border*3, 0)
         pfUI.api:CreateBackdrop(frame.keys, default_border)
         frame.keys:SetHeight(12)
@@ -542,8 +537,7 @@ pfUI:RegisterModule("bags", function ()
 
       -- bag search
       if not frame.search then
-        frame.search = CreateFrame("Frame", "pfBagSearch", UIParent)
-        frame.search:SetParent(frame)
+        frame.search = CreateFrame("Frame", "pfBagSearch", frame)
         frame.search:SetHeight(12)
         frame.search:SetPoint("TOPLEFT", frame, "TOPLEFT", default_border, -default_border)
         frame.search:SetPoint("TOPRIGHT", frame.keys, "TOPLEFT", -default_border*3, -default_border)
@@ -605,8 +599,7 @@ pfUI:RegisterModule("bags", function ()
 
       -- bag close button
       if not frame.close then
-        frame.close = CreateFrame("Button", "pfBagClose", UIParent)
-        frame.close:SetParent(frame)
+        frame.close = CreateFrame("Button", "pfBagClose", frame)
         frame.close:SetPoint("TOPRIGHT", -default_border*1,-default_border )
         pfUI.api:CreateBackdrop(frame.close, default_border)
         frame.close:SetHeight(12)
@@ -632,8 +625,7 @@ pfUI:RegisterModule("bags", function ()
 
       -- bags button
       if not frame.bags then
-        frame.bags = CreateFrame("Button", "pfBagSlotShow", UIParent)
-        frame.bags:SetParent(frame)
+        frame.bags = CreateFrame("Button", "pfBagSlotShow", frame)
         frame.bags:SetPoint("TOPRIGHT", frame.close, "TOPLEFT", -default_border*3, 0)
         pfUI.api:CreateBackdrop(frame.bags, default_border)
         frame.bags:SetHeight(12)

@@ -17,16 +17,18 @@ env\locales_zhCN.lua
 env\locales_ruRU.lua
 
 # environment
+env\tables.lua
 env\api.lua
 env\colors.lua
 env\fonts.lua
-env\selldata.lua
 
 # modules
 modules\config.lua
 modules\gui.lua
 modules\pixelperfect.lua
+modules\hoverbind.lua
 modules\actionbar.lua
+modules\hunterbar.lua
 modules\chat.lua
 modules\font.lua
 modules\addons.lua
@@ -52,6 +54,7 @@ modules\thirdparty.lua
 modules\buff.lua
 modules\nameplates.lua
 modules\loot.lua
+modules\roll.lua
 modules\infight.lua
 modules\sellvalue.lua
 modules\eqcompare.lua

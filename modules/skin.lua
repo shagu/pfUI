@@ -1,4 +1,4 @@
-﻿pfUI:RegisterModule("skin", function ()
+pfUI:RegisterModule("skin", function ()
   GameMenuFrameHeader:SetTexture(nil)
   GameMenuFrame:SetHeight(GameMenuFrame:GetHeight()-20)
   GameMenuFrame:SetWidth(GameMenuFrame:GetWidth()-30)
@@ -14,8 +14,6 @@
     "GameMenuButtonUIOptions",
     "GameMenuButtonKeybindings",
     "GameMenuButtonMacros",
---    "GameMenuButtonAddOns",
---    "GameMenuButtonCMap",
     "GameMenuButtonLogout",
     "GameMenuButtonQuit",
     "GameMenuButtonContinue",
@@ -23,8 +21,6 @@
     "StaticPopup1Button2",
     "StaticPopup2Button1",
     "StaticPopup2Button2",
-    "pfReloadYes",
-    "pfReloadNo",
   }
   local boxes = {
     "StaticPopup1",

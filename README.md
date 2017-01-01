@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 # pfUI 中文汉化
+=======
+# pfUI
+>>>>>>> origin/master
 
 An educational project for World of Warcraft (1.12) mostly known as "Vanilla" 
 which aimes to be a full replacement for the original Wow interface. The design 
@@ -10,11 +14,14 @@ or libraries. This is **not** an addon-pack like
 external Addons will be included. There will be support for external addons like 
 MobHealth3 and HealComm, but they will be never shipped within the package.
 
+<<<<<<< HEAD
 **Notice**: *pfUI is still in early stages and under heavy development. 
 Please report all bugs and errors in the 
 [Bugtracker](https://github.com/shagu/pfUI/issues). 
 Feature-Requests might not be processed right now.*
 
+=======
+>>>>>>> origin/master
 ## Commands
 
     /pfui   Open the configuration GUI

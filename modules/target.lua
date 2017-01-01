@@ -158,8 +158,11 @@ pfUI:RegisterModule("target", function ()
         end
 
         local r, g, b = .2, .2, .2
-        if pfUI_config.unitframes.dark == "1" then
-          pfUI.uf.target.hp.bar:SetStatusBarColor(r, g, b, hp / hpmax / 4 + .75)
+
+        if pfUI_config.unitframes.custom == "1" then
+          local cr, cg, cb, ca = pfUI.api.strsplit(",", pfUI_config.unitframes.customcolor)
+          cr, cg, cb = tonumber(cr), tonumber(cg), tonumber(cb)
+          pfUI.uf.target.hp.bar:SetStatusBarColor(cr, cg, cb, hp / hpmax / 4 + .75)
           if pfUI_config.unitframes.pastel == "1" then
             r, g, b = (color.r + .5) * .5, (color.g + .5) * .5, (color.b + .5) * .5
           else
@@ -229,6 +232,13 @@ pfUI:RegisterModule("target", function ()
         pfUI.uf.target.hpReal = hp
         pfUI.uf.target.powerReal = power
         pfUI.uf.target.tapped  = nil
+
+        -- bypass animation
+        if event == "PLAYER_TARGET_CHANGED" and (pfUI.uf.target.noanim == "yes" or pfUI_config.unitframes.target.animation == "0") then
+          pfUI.uf.target.hp.bar:SetValue(hp)
+          pfUI.uf.target.power.bar:SetValue(power)
+          pfUI.uf.target.noanim = "no"
+        end
       end
     end)
 
@@ -239,9 +249,7 @@ pfUI:RegisterModule("target", function ()
       local hpReal = pfUI.uf.target.hpReal
       local hpDiff = abs(hpReal - hpDisplay)
 
-      if pfUI.uf.target.noanim == "yes" then
-        pfUI.uf.target.hp.bar:SetValue(hpReal)
-      elseif hpDisplay < hpReal then
+      if hpDisplay < hpReal then
         pfUI.uf.target.hp.bar:SetValue(hpDisplay + ceil(hpDiff / pfUI_config.unitframes.animation_speed))
       elseif hpDisplay > hpReal then
         pfUI.uf.target.hp.bar:SetValue(hpDisplay - ceil(hpDiff / pfUI_config.unitframes.animation_speed))
@@ -251,15 +259,12 @@ pfUI:RegisterModule("target", function ()
       local powerReal = pfUI.uf.target.powerReal
       local powerDiff = abs(powerReal - powerDisplay)
 
-      if pfUI.uf.target.noanim == "yes" then
-        pfUI.uf.target.power.bar:SetValue(powerReal)
-      elseif powerDisplay < powerReal then
+      if powerDisplay < powerReal then
         pfUI.uf.target.power.bar:SetValue(powerDisplay + ceil(powerDiff / pfUI_config.unitframes.animation_speed))
       elseif powerDisplay > powerReal then
         pfUI.uf.target.power.bar:SetValue(powerDisplay - ceil(powerDiff / pfUI_config.unitframes.animation_speed))
       end
 
-      pfUI.uf.target.noanim = "no"
 
       if not pfUI.uf.target.tapped and UnitIsTapped("target") and not UnitIsTappedByPlayer("target") then
         pfUI.uf.target.hp.bar:SetStatusBarColor(.5,.5,.5,.5)

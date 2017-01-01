@@ -91,19 +91,16 @@ pfUI:RegisterModule("pet", function ()
       end
 
       local r, g, b = .2, .2, .2
-      if pfUI_config.unitframes.dark == "1" and color then
-        pfUI.uf.pet.hp.bar:SetStatusBarColor(r, g, b, hp / hpmax / 4 + .75)
-        if pfUI_config.unitframes.pastel == "1" then
-          r, g, b = (color.r + .5) * .5, (color.g + .5) * .5, (color.b + .5) * .5
-        else
-          r, g, b = color.r, color.g, color.b
-        end
-      elseif color then
-        if pfUI_config.unitframes.pastel == "1" then
-          r, g, b = (color.r + .5) * .5, (color.g + .5) * .5, (color.b + .5) * .5
-        else
-          r, g, b = color.r, color.g, color.b
-        end
+      if pfUI_config.unitframes.pastel == "1" then
+        r, g, b = (color.r + .5) * .5, (color.g + .5) * .5, (color.b + .5) * .5
+      else
+        r, g, b = color.r, color.g, color.b
+      end
+
+      if pfUI_config.unitframes.custom == "1" then
+        local cr, cg, cb, ca = pfUI.api.strsplit(",", pfUI_config.unitframes.customcolor)
+        pfUI.uf.pet.hp.bar:SetStatusBarColor(tonumber(cr), tonumber(cg), tonumber(cb), hp / hpmax / 4 + .75)
+      else
         pfUI.uf.pet.hp.bar:SetStatusBarColor(r, g, b, hp / hpmax / 4 + .75)
       end
       pfUI.uf.pet.hp.text:SetTextColor(r, g, b)

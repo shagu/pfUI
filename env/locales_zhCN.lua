@@ -37,12 +37,12 @@ pfLocaleShift["zhCN"] = {
 }
 
 pfLocaleSpellEvents["zhCN"] = {
-  ['SPELL_GAINS'] = "(.+)获得了(.+)的效果。",
-  ['SPELL_CAST'] = "(.+)开始施放(.+)。",
-  ['SPELL_PERFORM'] = "(.+)开始施展(.+)。",
-  ['SPELL_AFFLICTED'] = "(.+)受到了(.+)效果的影响。",
+  ['SPELL_GAINS'] = "(.+)获得了(.+)的效果",
+  ['SPELL_CAST'] = "(.+)开始施放(.+)",
+  ['SPELL_PERFORM'] = "(.+)开始施展(.+)",
+  ['SPELL_AFFLICTED'] = "(.+)受到了(.+)效果的影响",
   ['SPELL_HIT'] = "你的(.+)使(.+)受到了(.+)。",
-  ['OTHER_SPELL_HIT'] = "(.+)的(.+)击中(.+)造成(.+)。",
+  ['OTHER_SPELL_HIT'] = "(.+)的(.+)击中(.+)造成(.+)",
 }
 
 pfLocaleSpellInterrupts["zhCN"] = {
@@ -50,6 +50,11 @@ pfLocaleSpellInterrupts["zhCN"] = {
   ["拳击"] = true;
   ["脚踢"] = true;
   ["地震术"] = true;
+}
+
+pfLocaleHunterbars["zhCN"] = {
+  ["MELEE"] = "摔绊",
+  ["RANGED"] = "奥术射击",
 }
 
 pfLocaleSpells["zhCN"] = {
@@ -945,10 +950,10 @@ pfLocaleSpells["zhCN"] = {
   ['爱情的重击'] = {t=1000, icon="INV_Ammo_Arrow_02" };
   ['雪人'] = {t=1500, icon="INV_Ammo_Snowball" };
   ['指挥地鼠'] = {t=1500, icon="Spell_Shadow_LifeDrain" };
-  ['急速冲锋'] = {t=500, icon="Spell_Frost_ManaRecharge" };
-  ['急速冲锋'] = {t=500, icon="Spell_Frost_ManaRecharge" };
-  ['急速冲锋'] = {t=500, icon="Spell_Frost_ManaRecharge" };
-  ['急速冲锋'] = {t=500, icon="Spell_Frost_ManaRecharge" };
+  ['急速冲锋'] = {t=3000, icon="Spell_Frost_ManaRecharge" };
+  ['急速冲锋'] = {t=3000, icon="Spell_Frost_ManaRecharge" };
+  ['急速冲锋'] = {t=3000, icon="Spell_Frost_ManaRecharge" };
+  ['急速冲锋'] = {t=3000, icon="Spell_Frost_ManaRecharge" };
   ['实心炸弹'] = {t=1000, icon="Spell_Fire_SelfDestruct" };
   ['安抚动物'] = {t=1500, icon="Ability_Hunter_BeastSoothe" };
   ['灵魂撕咬'] = {t=2000, icon="Spell_Shadow_SiphonMana" };

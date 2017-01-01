@@ -90,6 +90,7 @@ pfUI:RegisterModule("player", function ()
   UIDropDownMenu_Initialize(pfUI.uf.player.Dropdown, pfUI.uf.player.Dropdowni, "MENU")
 
   pfUI.uf.player:RegisterEvent("UPDATE_FACTION")
+  pfUI.uf.player:RegisterEvent("UNIT_FACTION")
   pfUI.uf.player:RegisterEvent("RAID_TARGET_UPDATE")
   pfUI.uf.player:RegisterEvent("PARTY_LEADER_CHANGED")
   pfUI.uf.player:RegisterEvent("PARTY_MEMBERS_CHANGED")
@@ -108,7 +109,7 @@ pfUI:RegisterModule("player", function ()
   pfUI.uf.player:RegisterEvent("UNIT_MAXENERGY")
 
   pfUI.uf.player:SetScript("OnEvent", function()
-      if event == "UPDATE_FACTION" then
+      if event == "UPDATE_FACTION" or event == "UNIT_FACTION" then
         if pfUI_config.unitframes.player.showPVP == "1" and UnitIsPVP("player") then
           if pfUI.uf.player.pvpicon == nil then
             pfUI.uf.player.pvpicon = CreateFrame("Frame", "pfPvPIcon", UIParent)
@@ -177,8 +178,9 @@ pfUI:RegisterModule("player", function ()
         local color = RAID_CLASS_COLORS[class]
 
         local cr, cg, cb
-        if pfUI_config.unitframes.dark == "1" then
-          cr, cg, cb = .2,.2,.2
+        if pfUI_config.unitframes.custom == "1" then
+          local r, g, b, a = pfUI.api.strsplit(",", pfUI_config.unitframes.customcolor)
+          cr, cg, cb = tonumber(r), tonumber(g), tonumber(b)
         elseif pfUI_config.unitframes.pastel == "1" then
           cr, cg, cb = (color.r + .5) * .5, (color.g + .5) * .5, (color.b + .5) * .5
         else

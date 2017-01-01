@@ -23,14 +23,18 @@ pfUI:RegisterModule("gui", function ()
   end)
 
   pfUI.gui:SetScript("OnHide",function()
-    if pfQuestionDialog and pfQuestionDialog:IsShown() then
-      pfQuestionDialog:Hide()
-      pfQuestionDialog = nil
-    end
     if ColorPickerFrame and ColorPickerFrame:IsShown() then
       ColorPickerFrame:Hide()
     end
   end)
+
+  function pfUI.gui:Reload()
+    pfUI.api:CreateQuestionDialog("Some settings need to reload the UI to take effect.\nDo you want to reloadUI now?",
+      function()
+        pfUI.gui.settingChanged = nil
+        ReloadUI()
+      end)
+  end
 
   function pfUI.gui:SaveScale(frame, scale)
     frame:SetScale(scale)
@@ -53,40 +57,12 @@ pfUI:RegisterModule("gui", function ()
     end)
   end
 
-  pfUI.gui.reloadDialog = CreateFrame("Frame","pfReloadDiag",UIParent)
-  pfUI.gui.reloadDialog:SetFrameStrata("TOOLTIP")
-  pfUI.gui.reloadDialog:SetWidth(300)
-  pfUI.gui.reloadDialog:SetHeight(100)
-  pfUI.gui.reloadDialog:Hide()
-  tinsert(UISpecialFrames, "pfReloadDiag")
-
-  pfUI.api:CreateBackdrop(pfUI.gui.reloadDialog)
-  pfUI.gui.reloadDialog:SetPoint("CENTER",0,0)
-
-  pfUI.gui.reloadDialog.text = pfUI.gui.reloadDialog:CreateFontString("Status", "LOW", "GameFontNormal")
-  pfUI.gui.reloadDialog.text:SetFontObject(GameFontWhite)
-  pfUI.gui.reloadDialog.text:SetPoint("TOP", 0, -15)
-  pfUI.gui.reloadDialog.text:SetText("设置需要重新加载生效 \n\n是否重新加载？")
-
-  pfUI.gui.reloadDialog.yes = CreateFrame("Button", "pfReloadYes", pfUI.gui.reloadDialog, "UIPanelButtonTemplate")
-  pfUI.api:CreateBackdrop(pfUI.gui.reloadDialog.yes, nil, true)
-  pfUI.gui.reloadDialog.yes:SetWidth(100)
-  pfUI.gui.reloadDialog.yes:SetHeight(20)
-  pfUI.gui.reloadDialog.yes:SetPoint("BOTTOMLEFT", 20,15)
-  pfUI.gui.reloadDialog.yes:SetText("是")
-  pfUI.gui.reloadDialog.yes:SetScript("OnClick", function()
-    pfUI.gui.settingChanged = nil
-    ReloadUI()
-  end)
-
-  pfUI.gui.reloadDialog.no = CreateFrame("Button", "pfReloadNo", pfUI.gui.reloadDialog, "UIPanelButtonTemplate")
-  pfUI.gui.reloadDialog.no:SetWidth(100)
-  pfUI.gui.reloadDialog.no:SetHeight(20)
-  pfUI.gui.reloadDialog.no:SetPoint("BOTTOMRIGHT", -20,15)
-  pfUI.gui.reloadDialog.no:SetText("否")
-  pfUI.gui.reloadDialog.no:SetScript("OnClick", function()
-    pfUI.gui.reloadDialog:Hide()
-  end)
+  function pfUI.gui.HoverBind()
+    pfUI.gui:Hide()
+    if pfUI.hoverbind then
+      pfUI.hoverbind:Show()
+    end
+  end
 
   function pfUI.gui.UnlockFrames()
     if not pfUI.gitter then
@@ -176,7 +152,11 @@ pfUI:RegisterModule("gui", function ()
           frame.drag.text:SetAllPoints(frame.drag)
           frame.drag.text:SetPoint("CENTER", 0, 0)
           frame.drag.text:SetFontObject(GameFontWhite)
-          frame.drag.text:SetText(strsub(frame:GetName(),3))
+          local label = (strsub(frame:GetName(),3))
+          if frame.drag:GetHeight() > (2 * frame.drag:GetWidth()) then
+            label = pfUI.api.strvertical(label)
+          end
+          frame.drag.text:SetText(label)
           frame.drag:SetAlpha(1)
 
           frame.drag:SetScript("OnMouseWheel", function()
@@ -192,13 +172,22 @@ pfUI:RegisterModule("gui", function ()
                 local frame = getglobal("pfGroup" .. i)
                 pfUI.gui:SaveScale(frame, scale)
               end
+            elseif IsShiftKeyDown() and strsub(frame:GetName(),0,15) == "pfLootRollFrame" then
+              for i=1,4 do
+                local frame = getglobal("pfLootRollFrame" .. i)
+                pfUI.gui:SaveScale(frame, scale)
+              end
             else
               pfUI.gui:SaveScale(frame, scale)
             end
 
             -- repaint hackfix for panels
-            pfUI.panel.left:SetScale(pfUI.chat.left:GetScale())
-            pfUI.panel.right:SetScale(pfUI.chat.right:GetScale())
+            if pfUI.panel and pfUI.chat then
+              pfUI.panel.left:SetScale(pfUI.chat.left:GetScale())
+              pfUI.panel.right:SetScale(pfUI.chat.right:GetScale())
+            end
+
+            if frame.OnMove then frame:OnMove() end
           end)
         end
 
@@ -220,6 +209,14 @@ pfUI:RegisterModule("gui", function ()
                 cframe.drag.backdrop:SetBackdropBorderColor(1,1,1,1)
               end
             end
+            if strsub(frame:GetName(),0,15) == "pfLootRollFrame" then
+              for i=1,4 do
+                local cframe = getglobal("pfLootRollFrame" .. i)
+                cframe:StartMoving()
+                cframe:StopMovingOrSizing()
+                cframe.drag.backdrop:SetBackdropBorderColor(1,1,1,1)
+              end
+            end
             _, _, _, xpos, ypos = frame:GetPoint()
             frame.oldPos = { xpos, ypos }
           else
@@ -227,6 +224,7 @@ pfUI:RegisterModule("gui", function ()
           end
           frame.drag.backdrop:SetBackdropBorderColor(1,1,1,1)
           frame:StartMoving()
+          if frame.OnMove then frame:OnMove() end
         end)
 
         frame.drag:SetScript("OnMouseUp",function()
@@ -259,6 +257,24 @@ pfUI:RegisterModule("gui", function ()
               elseif strsub(frame:GetName(),0,7) == "pfGroup" then
                 for i=1,4 do
                   local cframe = getglobal("pfGroup" .. i)
+                  cframe.drag.backdrop:SetBackdropBorderColor(.2,1,.8,1)
+                  if cframe:GetName() ~= frame:GetName() then
+                    local _, _, _, xpos, ypos = cframe:GetPoint()
+                    cframe:SetPoint("TOPLEFT", xpos - diffxpos, ypos - diffypos)
+
+                    local _, _, _, xpos, ypos = cframe:GetPoint()
+
+                    if not pfUI_config.position[cframe:GetName()] then
+                      pfUI_config.position[cframe:GetName()] = {}
+                    end
+
+                    pfUI_config.position[cframe:GetName()]["xpos"] = xpos
+                    pfUI_config.position[cframe:GetName()]["ypos"] = ypos
+                  end
+                end
+              elseif strsub(frame:GetName(),0,15) == "pfLootRollFrame" then
+                for i=1,4 do
+                  local cframe = getglobal("pfLootRollFrame" .. i)
                   cframe.drag.backdrop:SetBackdropBorderColor(.2,1,.8,1)
                   if cframe:GetName() ~= frame:GetName() then
                     local _, _, _, xpos, ypos = cframe:GetPoint()
@@ -950,6 +966,7 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui:CreateConfig(pfUI.gui.thirdparty, "WIM:", pfUI_config.thirdparty.wim, "enable", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.thirdparty, "HealComm:", pfUI_config.thirdparty.healcomm, "enable", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.thirdparty, "CleanUp:", pfUI_config.thirdparty.cleanup, "enable", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.thirdparty, "KLH Threat Meter:", pfUI_config.thirdparty.ktm, "enable", "checkbox")
 
   -- [[ bottom section ]] --
 
@@ -967,31 +984,64 @@ pfUI:RegisterModule("gui", function ()
       pfUI.gui.UnlockFrames()
   end)
 
+  -- Hoverbind
+  pfUI.gui.hoverBind = pfUI.gui:CreateConfigTab("悬停热键绑定", "bottom", function()
+      pfUI.gui.HoverBind()
+  end)
+
+  -- Reset Cache
+  pfUI.gui.resetCache = pfUI.gui:CreateConfigTab("重置人物设置", "bottom", function()
+    pfUI.api:CreateQuestionDialog("Do you really want to reset the Cache?",
+      function()
+        pfUI_playerDB = {}
+        this:GetParent():Hide()
+        pfUI.gui:Reload()
+      end)
+  end)
+
   -- Reset Frames
-  pfUI.gui.resetFrames = pfUI.gui:CreateConfigTab("重置当前用户设置", "bottom", function()
-      pfUI_config["position"] = {}
-      pfUI.gui.reloadDialog:Show()
+  pfUI.gui.resetFrames = pfUI.gui:CreateConfigTab("重置位置", "bottom", function()
+    pfUI.api:CreateQuestionDialog("Do you really want to reset the Frame Positions?",
+      function()
+        pfUI_config["position"] = {}
+        this:GetParent():Hide()
+        pfUI.gui:Reload()
+      end)
   end)
 
   -- Reset Chat
-  pfUI.gui.resetChat = pfUI.gui:CreateConfigTab("重置对话框设置", "bottom", function()
-      pfUI_init["chat"] = nil
-      pfUI.gui.reloadDialog:Show()
+  pfUI.gui.resetChat = pfUI.gui:CreateConfigTab("重置聊天设置", "bottom", function()
+    pfUI.api:CreateQuestionDialog("Do you really want to reset the Firstrun Wizard Settings?",
+      function()
+        pfUI_init = {}
+        this:GetParent():Hide()
+        pfUI.gui:Reload()
+      end)
   end)
 
-  -- Reset Player Cache
-  pfUI.gui.resetCache = pfUI.gui:CreateConfigTab("重置当前用户缓存", "bottom", function()
-      pfUI_playerDB = {}
-      pfUI.gui.reloadDialog:Show()
+  -- Reset Config
+  pfUI.gui.resetConfig = pfUI.gui:CreateConfigTab("复位配置", "bottom", function()
+    pfUI.api:CreateQuestionDialog("Do you really want to reset your configuration?\nThis also includes frame positions",
+      function()
+        pfUI_config = {}
+        pfUI:LoadConfig()
+        this:GetParent():Hide()
+        pfUI.gui:Reload()
+      end)
   end)
-
 
   -- Reset All
   pfUI.gui.resetAll = pfUI.gui:CreateConfigTab("全部重置", "bottom", function()
-    pfUI_init = {}
-    pfUI_config = {}
-    pfUI:LoadConfig()
-    pfUI.gui.reloadDialog:Show()
+    pfUI.api:CreateQuestionDialog("Do you really want to reset |cffffaaaaEVERYTHING|r?\nThis includes configuration, frame positions, firstrun settings,\n player cache, profiles and just EVERYTHING!",
+      function()
+        pfUI_init = {}
+        pfUI_config = {}
+        pfUI_playerDB = {}
+        pfUI_profiles = {}
+        pfUI:LoadConfig()
+        this:GetParent():Hide()
+        pfUI.gui:Reload()
+      end)
   end)
 
   -- Switch to default View: global

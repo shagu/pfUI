@@ -34,6 +34,7 @@ pfLocaleShift = {}
 pfLocaleSpells = {}
 pfLocaleSpellEvents = {}
 pfLocaleSpellInterrupts = {}
+pfLocaleHunterbars = {}
 
 pfUI:SetScript("OnEvent", function()
   if arg1 == "pfUI" then
@@ -98,9 +99,74 @@ message = function (msg)
 end
 
 ScriptErrors:SetScript("OnShow", function(msg)
-    DEFAULT_CHAT_FRAME:AddMessage("|cffcc3333ERROR: |cffff5555"..ScriptErrors_Message:GetText())
-    ScriptErrors:Hide()
-  end)
+  DEFAULT_CHAT_FRAME:AddMessage("|cffcc3333ERROR: |cffff5555"..ScriptErrors_Message:GetText())
+  ScriptErrors:Hide()
+end)
+
+pfUI.firstrun = CreateFrame("Frame", "pfFirstRunWizard", UIParent)
+pfUI.firstrun.steps = {}
+pfUI.firstrun.next = nil
+
+pfUI.firstrun:RegisterEvent("PLAYER_ENTERING_WORLD")
+pfUI.firstrun:SetScript("OnEvent", function() pfUI.firstrun:NextStep() end)
+
+function pfUI.firstrun:AddStep(name, yfunc, nfunc, descr, cmpnt)
+  if not name then return end
+  pfUI.firstrun.steps[name] = {}
+  if yfunc then pfUI.firstrun.steps[name].yfunc = yfunc end
+  if nfunc then pfUI.firstrun.steps[name].nfunc = nfunc end
+  if descr then pfUI.firstrun.steps[name].descr = descr end
+  if cmpnt then pfUI.firstrun.steps[name].cmpnt = cmpnt end
+end
+
+function pfUI.firstrun:NextStep()
+  if next(pfUI_init) == nil then
+    local yes = function()
+      this:GetParent():Hide()
+      pfUI_init["welcome"] = true
+      pfUI.firstrun:NextStep()
+    end
+
+    local no = function()
+      this:GetParent():Hide()
+    end
+
+    pfUI.api:CreateQuestionDialog("Welcome to |cff33ffccpf|cffffffffUI|r!\n\n"..
+    "I'm the first run wizzard that will guide you through some basic configuration.\n"..
+    "You'll now be prompted for several questions. To get a default installation,\n"..
+    "you might want to click \"Okay\" everywhere. A few settings are client settings\n"..
+    "(e.g chat questions) so if you don't want to lose your chat configurations, you\n"..
+    "should be careful with your choices.\n\n"..
+    "Visit |cff33ffcchttp://shagu.org|r to check for the latest version.", yes, no)
+    return
+  end
+
+  for name, step in pairs(pfUI.firstrun.steps) do
+    if not pfUI_init[name] then
+      local function yes()
+        pfUI_init[name] = true
+        if step.yfunc then step.yfunc() end
+        this:GetParent():Hide()
+        pfUI.firstrun:NextStep()
+      end
+
+      local function no()
+        pfUI_init[name] = true
+        if step.nfunc then step.nfunc() end
+        this:GetParent():Hide()
+        pfUI.firstrun:NextStep()
+      end
+
+      if step.cmpnt and step.cmpnt == "edit" then
+        pfUI.api:CreateQuestionDialog(step.descr, yes, no, true)
+      else
+        pfUI.api:CreateQuestionDialog(step.descr, yes, no, false)
+      end
+
+      return
+    end
+  end
+end
 
 pfUI.info = CreateFrame("Button", "pfInfoBox", UIParent)
 pfUI.info:Hide()
@@ -127,6 +193,7 @@ function pfUI.info:ShowInfoBox(text, time, parent, height)
 
   pfUI.info:SetWidth(pfUI.info.text:GetStringWidth() + 50)
   pfUI.info:SetHeight(height)
+  pfUI.info:SetFrameStrata("DIALOG")
   pfUI.api:CreateBackdrop(pfUI.info)
   pfUI.info:SetPoint("TOP", 0, -25)
 

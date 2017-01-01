@@ -18,9 +18,9 @@ pfUI:RegisterModule("castbar", function ()
       -- setup player castbar
       pfUI.castbar.player = CreateFrame("Frame",nil, pfUI.uf.player)
       pfUI.api:CreateBackdrop(pfUI.castbar.player, default_border)
-      pfUI.castbar.player:SetHeight(pfUI_config.global.font_size * 2)
-      pfUI.castbar.player:SetPoint("TOPRIGHT",pfUI.uf.player,"BOTTOMRIGHT",0,-default_border*3)
-      pfUI.castbar.player:SetPoint("TOPLEFT",pfUI.uf.player,"BOTTOMLEFT",0,-default_border*3)
+      pfUI.castbar.player:SetHeight(pfUI_config.global.font_size + default_border)
+      pfUI.castbar.player:SetPoint("TOPRIGHT",pfUI.uf.player,"BOTTOMRIGHT",0,-default_border*2)
+      pfUI.castbar.player:SetPoint("TOPLEFT",pfUI.uf.player,"BOTTOMLEFT",0,-default_border*2)
       pfUI.castbar.player:Hide()
       pfUI.castbar.player.delay = 0
 
@@ -203,9 +203,9 @@ pfUI:RegisterModule("castbar", function ()
     if pfUI.uf.target then
       pfUI.castbar.target = CreateFrame("Frame",nil, pfUI.uf.target)
       pfUI.api:CreateBackdrop(pfUI.castbar.target, default_border)
-      pfUI.castbar.target:SetHeight(pfUI_config.global.font_size * 2)
-      pfUI.castbar.target:SetPoint("TOPRIGHT",pfUI.uf.target,"BOTTOMRIGHT",0,-default_border*3)
-      pfUI.castbar.target:SetPoint("TOPLEFT",pfUI.uf.target,"BOTTOMLEFT",0,-default_border*3)
+      pfUI.castbar.target:SetHeight(pfUI_config.global.font_size + default_border)
+      pfUI.castbar.target:SetPoint("TOPRIGHT",pfUI.uf.target,"BOTTOMRIGHT",0,-default_border*2)
+      pfUI.castbar.target:SetPoint("TOPLEFT",pfUI.uf.target,"BOTTOMLEFT",0,-default_border*2)
 
       -- statusbar
       pfUI.castbar.target.bar = CreateFrame("StatusBar", nil, pfUI.castbar.target)
@@ -301,11 +301,11 @@ pfUI:RegisterModule("castbar", function ()
           pfUI.castbar.target:Action(mob, spell)
           return
         end
-        for mob, spell in string.gfind(arg1, pfLocaleSpellEvents[pfUI.cache["locale"]]['SPELL_GAINS']) do
-          pfUI.castbar.target:Action(mob, spell, true)
-          return
-        end
         -- this part will be used for interruption of spells
+        --for mob, spell in string.gfind(arg1, pfLocaleSpellEvents[pfUI.cache["locale"]]['SPELL_GAINS']) do
+        --  pfUI.castbar.target:Action(mob, spell, true)
+        --  return
+        --end
         --for mob, spell in string.gfind(arg1, pfLocaleSpellEvents[pfUI.cache["locale"]]['SPELL_AFFLICTED']) do
         --  pfUI.castbar.target:Action(mob, spell, "afflicted")
         --  return

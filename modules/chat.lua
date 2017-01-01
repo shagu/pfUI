@@ -1,4 +1,12 @@
 pfUI:RegisterModule("chat", function ()
+
+  pfUI.firstrun:AddStep("chat_position", function() pfUI.chat.SetupPositions() end, nil, "Chat Layout\n\n" ..
+  "To use a recommended layout of chat windows that fits best into pfUI,\n" ..
+  "your chat layout will now be automatically aligned.")
+  pfUI.firstrun:AddStep("chat_channels", function() pfUI.chat.SetupChannels() end, nil, "Chat Channels\n\n"..
+  "To get a default pfUI experience, your chat windows are going to be set up now\n"..
+  "to display the recommended channels, such as Loot and World.")
+
   local default_border = pfUI_config.appearance.border.default
   if pfUI_config.appearance.border.chat ~= "-1" then
     default_border = pfUI_config.appearance.border.chat
@@ -205,12 +213,6 @@ pfUI:RegisterModule("chat", function ()
         ChatFrame3:ClearAllPoints()
         ChatFrame3:SetPoint("TOPLEFT", pfUI.chat.right ,"TOPLEFT", default_border, -panelheight)
         ChatFrame3:SetPoint("BOTTOMRIGHT", pfUI.chat.right ,"BOTTOMRIGHT", -default_border, panelheight)
-
-        if not pfUI_init["chat"] then
-          pfUI.chat.SetupPositions()
-          pfUI.chat.SetupChannels()
-          pfUI_init["chat"] = true
-        end
 
         for i=1, NUM_CHAT_WINDOWS do
           for j,v in ipairs({getglobal("ChatFrame" .. i .. "Tab"):GetRegions()}) do
@@ -475,15 +477,24 @@ pfUI:RegisterModule("chat", function ()
     pfUI.chat.editbox:SetHeight(pfUI_config.chat.text.input_height)
   end
 
-  pfUI.chat.editbox:ClearAllPoints()
-  local anchor
-  if pfUI.bars then
-    anchor = pfUI.bars.bottom
-  else
-    anchor = pfUI.chat.left
-  end
-  pfUI.chat.editbox:SetPoint("BOTTOM", anchor, "TOP", 0, default_border*4)
-  pfUI.api:UpdateMovable(pfUI.chat.editbox)
+  -- to make sure SHOW_MULTI_ACTIONBAR_1 is set to the real value, we need to wait.
+  local pfChatArrangeFrame = CreateFrame("Frame", "pfChatArrange", UIParent)
+  pfChatArrangeFrame:RegisterEvent("CVAR_UPDATE")
+  pfChatArrangeFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
+  pfChatArrangeFrame:SetScript("OnEvent", function()
+    pfUI.chat.editbox:ClearAllPoints()
+    local anchor = pfUI.chat.left
+    if pfUI.bars and SHOW_MULTI_ACTIONBAR_1 then
+      anchor = pfUI.bars.bottomleft
+    elseif pfUI.bars and pfUI.bars.actionmain:IsShown() then
+      anchor = pfUI.bars.actionmain
+    end
+
+    pfUI.chat.editbox:SetPoint("BOTTOMLEFT", anchor, "TOPLEFT", 0, default_border*3)
+    pfUI.chat.editbox:SetPoint("BOTTOMRIGHT", anchor, "TOPRIGHT", 0, default_border*3)
+
+    pfUI.api:UpdateMovable(pfUI.chat.editbox)
+  end)
 
   if pfUI_config.chat.text.input_width == "0" then
     pfUI.chat.editbox:SetWidth(default_border*3 + pfUI_config.bars.icon_size * 12 + default_border * 12) -- actionbar size
@@ -514,7 +525,12 @@ pfUI:RegisterModule("chat", function ()
   CHAT_BATTLEGROUND_GET = '[BG]' .. default
   CHAT_BATTLEGROUND_LEADER_GET = '[BL]' .. default
   CHAT_SAY_GET = '[S]' .. default
-  CHAT_WHISPER_GET = '|cffffaaff[W]' .. default
+
+  local cr, cg, cb, ca = pfUI.api.strsplit(",", pfUI_config.chat.global.whisper)
+  cr, cg, cb = tonumber(cr), tonumber(cg), tonumber(cb)
+  local wcol = string.format("%02x%02x%02x",cr * 255,cg * 255, cb * 255)
+  CHAT_WHISPER_GET = '|cff' .. wcol .. '[W]' .. default
+
   CHAT_WHISPER_INFORM_GET = '[W]' .. default
   CHAT_YELL_GET = '[Y]' .. default
 
@@ -538,8 +554,8 @@ pfUI:RegisterModule("chat", function ()
         text = string.gsub(text, "|Hplayer:(.-)|h%[.-%]|h(.-:-)", "[|Hplayer:%1|h" .. Name .. "|h]" .. "%2")
 
         -- make incoming whispers lighter than outgoing
-        if string.find(text, '|cffffaaff') == 1 then
-          text = string.gsub(text, "|r", "|cffffaaff")
+        if string.find(text, '|cff'..wcol) == 1 then
+          text = string.gsub(text, "|r", "|cff" .. wcol)
         end
 
         local pattern = "%]%s+(.*|Hplayer)"

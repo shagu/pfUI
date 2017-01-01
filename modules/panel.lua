@@ -13,6 +13,8 @@ pfUI:RegisterModule("panel", function ()
   pfUI.panel:RegisterEvent("PLAYER_GUILD_UPDATE")
   pfUI.panel:RegisterEvent("PLAYER_REGEN_ENABLED")
   pfUI.panel:RegisterEvent("PLAYER_DEAD")
+  pfUI.panel:RegisterEvent("PLAYER_UNGHOST")
+  pfUI.panel:RegisterEvent("UPDATE_INVENTORY_ALERTS")
   pfUI.panel:RegisterEvent("MINIMAP_ZONE_CHANGED")
 
   -- list of available panel fields
@@ -37,7 +39,8 @@ pfUI:RegisterModule("panel", function ()
       pfUI.panel:UpdateFriend()
     elseif event == "GUILD_ROSTER_UPDATE" or event == "PLAYER_GUILD_UPDATE" then
       pfUI.panel:UpdateGuild()
-    elseif event == "PLAYER_REGEN_ENABLED" or event == "PLAYER_DEAD" then
+    elseif event == "PLAYER_REGEN_ENABLED" or event == "PLAYER_DEAD"
+      or event == "PLAYER_UNGHOST" or event == "UPDATE_INVENTORY_ALERTS" then
       pfUI.panel:UpdateRepair()
     elseif event == "MINIMAP_ZONE_CHANGED" then
       pfUI.panel:UpdateZone()
@@ -73,9 +76,6 @@ pfUI:RegisterModule("panel", function ()
     if GetTime() >= pfUI.panel.clock.tick + 1 then
       -- time date
       local tooltip = function ()
-        local posX, posY = GetPlayerMapPosition("player")
-        local real = GetRealZoneText()
-        local sub = GetSubZoneText()
         GameTooltip:ClearLines()
         GameTooltip_SetDefaultAnchor(GameTooltip, this)
         GameTooltip:AddLine("|cff555555计时器")
@@ -95,11 +95,10 @@ pfUI:RegisterModule("panel", function ()
         elseif arg1 == "RightButton" then
           pfUI.panel.clock.timerFrame.Snapshot = GetTime()
         end
-
       end
 
       pfUI.panel.clock.tick = GetTime()
-      pfUI.panel:OutputPanel("时间", date("%H:%M:%S"), tooltip, click)
+      pfUI.panel:OutputPanel("time", date("%H:%M:%S"), tooltip, click)
 
       -- lag fps
       local tooltip = function ()
@@ -135,7 +134,38 @@ pfUI:RegisterModule("panel", function ()
 
       local _, _, lag = GetNetStats()
       local fps = floor(GetFramerate())
-      pfUI.panel:OutputPanel("延迟", floor(GetFramerate()) .. "帧 " .. lag .. "毫秒", tooltip, click)
+      pfUI.panel:OutputPanel("延迟", floor(GetFramerate()) .. " 帧 & " .. lag .. " 毫秒", tooltip, click)
+    end
+  end)
+
+  -- Combat Timer
+  pfUI.panel.clock.combat = CreateFrame("Frame", "pfUICombatTimer", UIParent)
+  pfUI.panel.clock.combat:RegisterEvent("PLAYER_ENTERING_WORLD")
+  pfUI.panel.clock.combat:RegisterEvent("PLAYER_REGEN_ENABLED")
+  pfUI.panel.clock.combat:RegisterEvent("PLAYER_REGEN_DISABLED")
+  pfUI.panel.clock.combat:SetScript("OnEvent", function()
+    if event == "PLAYER_REGEN_DISABLED" then
+      if UnitAffectingCombat("player") and not this.combat then
+        this.combat = GetTime()
+      end
+
+    elseif event == "PLAYER_REGEN_ENABLED" then
+      if this.combat then
+        this.lastcombat = GetTime() - this.combat
+        this.combat = nil
+        pfUI.panel:OutputPanel("combat", "|cffffffff" .. SecondsToTime(ceil(this.lastcombat)))
+      end
+
+    elseif event == "PLAYER_ENTERING_WORLD" then
+      pfUI.panel:OutputPanel("combat", "Combat: N/A")
+    end
+  end)
+
+  pfUI.panel.clock.combat:SetScript("OnUpdate", function()
+    if not this.tick then this.tick = GetTime() end
+    if GetTime() <= this.tick + 1 then return else this.tick = GetTime() end
+    if this.combat then
+      pfUI.panel:OutputPanel("combat", "|cffffaaaa" .. SecondsToTime(ceil(GetTime() - this.combat)))
     end
   end)
 
@@ -229,6 +259,7 @@ pfUI:RegisterModule("panel", function ()
       OpenAllBags()
     end
 
+
     pfUI.panel:OutputPanel("金钱", gold .. "|cffffd700金|r" .. silver .. "|cffc7c7cf银|r" .. copper .. "|cffeda55f铜|r", tooltip, click)
   end
 
@@ -242,7 +273,8 @@ pfUI:RegisterModule("panel", function ()
         online = online + 1
       end
     end
-    pfUI.panel:OutputPanel("好友", "好友:" .. online)
+    local click = function() ToggleFriendsFrame(1) end
+    pfUI.panel:OutputPanel("好友", "好友: " .. online, nil, click)
   end
 
   -- Update "guild"
@@ -250,7 +282,8 @@ pfUI:RegisterModule("panel", function ()
     GuildRoster()
     local online = GetNumGuildMembers()
     local all = GetNumGuildMembers(true)
-    pfUI.panel:OutputPanel("公会", "公会: "..online)
+    local click = function() ToggleFriendsFrame(3) end
+    pfUI.panel:OutputPanel("公会", "公会: "..online, nil, click)
   end
 
   -- Update "durability"
@@ -258,25 +291,22 @@ pfUI:RegisterModule("panel", function ()
   function pfUI.panel:UpdateRepair ()
     local slotnames = { "Head", "Shoulder", "Chest", "Wrist",
       "Hands", "Waist", "Legs", "Feet", "MainHand", "SecondaryHand", "Ranged", }
-    local id, hasItem, repairCost
-    local itemName, durability, tmpText, midpt, lval, rval
-
-    duraLowestslotName = nil
-    repPercent = 100
-    lowestPercent = 100
+    local repPercent = 100
+    local lowestPercent = 100
 
     for i,slotName in pairs(slotnames) do
-      id, _ = GetInventorySlotInfo(slotName.. "Slot")
+      local id, _ = GetInventorySlotInfo(slotName.. "Slot")
       repairToolTip:Hide()
       repairToolTip:SetOwner(this, "ANCHOR_LEFT")
-      hasItem, _, repCost = repairToolTip:SetInventoryItem("player", id)
-      if (not hasItem) then repairToolTip:ClearLines()
+      local hasItem, _, _ = repairToolTip:SetInventoryItem("player", id)
+      if (not hasItem) then
+        repairToolTip:ClearLines()
       else
         for i=1, 30, 1 do
-          tmpText = getglobal("repairToolTipTextLeft"..i)
+          local tmpText = getglobal("repairToolTipTextLeft"..i)
           if (tmpText ~= nil) and (tmpText:GetText()) then
             local searchstr = string.gsub(DURABILITY_TEMPLATE, "%%[^%s]+", "(.+)")
-            _, _, lval, rval = string.find(tmpText:GetText(), searchstr)
+            local _, _, lval, rval = string.find(tmpText:GetText(), searchstr)
             if (lval and rval) then
               repPercent = math.floor(lval / rval * 100)
               break
@@ -289,7 +319,34 @@ pfUI:RegisterModule("panel", function ()
       end
     end
     repairToolTip:Hide()
-    pfUI.panel:OutputPanel("耐久", lowestPercent .. "% 耐久")
+
+    local tooltip = function()
+      -- recalculate repair costs
+      local totalRep = 0
+        for i,slotName in pairs(slotnames) do
+          local id, _ = GetInventorySlotInfo(slotName.. "Slot")
+          repairToolTip:Hide()
+          repairToolTip:SetOwner(this, "ANCHOR_LEFT")
+          local hasItem, _, repCost = repairToolTip:SetInventoryItem("player", id)
+          totalRep = totalRep + repCost
+        end
+      repairToolTip:Hide()
+
+      -- show tooltip
+      if totalRep > 0 then
+        GameTooltip:ClearLines()
+        GameTooltip_SetDefaultAnchor(GameTooltip, this)
+        GameTooltip:SetText("|cff555555"..(string.gsub(REPAIR_COST,":","")).."|r")
+        SetTooltipMoney(GameTooltip, totalRep)
+        GameTooltip:Show()
+      end
+    end
+
+    local click = function ()
+      ToggleCharacter("PaperDollFrame")
+    end
+
+    pfUI.panel:OutputPanel("耐久", lowestPercent .. "% 耐久", tooltip, click)
   end
 
   function pfUI.panel:UpdateZone ()
@@ -506,7 +563,7 @@ pfUI:RegisterModule("panel", function ()
   -- MicroButtons
   if pfUI_config.panel.micro.enable == "1" then
     pfUI.panel.microbutton = CreateFrame("Frame", "pfPanelMicroButton", UIParent)
-    pfUI.panel.microbutton:SetPoint("TOP", 0, 0)
+    pfUI.panel.microbutton:SetPoint("TOP", pfUI.panel.minimap, "BOTTOM", 0,  -2*default_border)
     pfUI.api:UpdateMovable(pfUI.panel.microbutton)
     pfUI.panel.microbutton:SetHeight(23)
     pfUI.panel.microbutton:SetWidth(145)

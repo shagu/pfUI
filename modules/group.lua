@@ -40,7 +40,7 @@ pfUI:RegisterModule("group", function ()
 
       if event == "RAID_TARGET_UPDATE" or event == "PLAYER_ENTERING_WORLD" or event == "PARTY_MEMBERS_CHANGED" then
         local raidIcon = GetRaidTargetIndex("party" .. i)
-        if raidIcon then
+        if raidIcon and UnitExists("party" .. i) then
           SetRaidTargetIconTexture(pfUI.uf.group[i].hp.raidIcon.texture, raidIcon)
           pfUI.uf.group[i].hp.raidIcon:Show()
         else
@@ -122,7 +122,7 @@ pfUI:RegisterModule("group", function ()
     pfUI.uf.group[i].caption:SetJustifyH("LEFT")
     pfUI.uf.group[i].caption:SetFontObject(GameFontWhite)
 
-    pfUI.uf.group[i].hp.leaderIcon = CreateFrame("Frame",nil,pfUI.uf.group[i].hp)
+    pfUI.uf.group[i].hp.leaderIcon = CreateFrame("Frame",nil,pfUI.uf.group[i].hp.bar)
     pfUI.uf.group[i].hp.leaderIcon:SetWidth(10)
     pfUI.uf.group[i].hp.leaderIcon:SetHeight(10)
     pfUI.uf.group[i].hp.leaderIcon.texture = pfUI.uf.group[i].hp.leaderIcon:CreateTexture(nil,"BACKGROUND")
@@ -131,7 +131,7 @@ pfUI:RegisterModule("group", function ()
     pfUI.uf.group[i].hp.leaderIcon:SetPoint("TOPLEFT", pfUI.uf.group[i].hp, "TOPLEFT", -4, 4)
     pfUI.uf.group[i].hp.leaderIcon:Hide()
 
-    pfUI.uf.group[i].hp.lootIcon = CreateFrame("Frame",nil,pfUI.uf.group[i].hp)
+    pfUI.uf.group[i].hp.lootIcon = CreateFrame("Frame",nil,pfUI.uf.group[i].hp.bar)
     pfUI.uf.group[i].hp.lootIcon:SetWidth(10)
     pfUI.uf.group[i].hp.lootIcon:SetHeight(10)
     pfUI.uf.group[i].hp.lootIcon.texture = pfUI.uf.group[i].hp.lootIcon:CreateTexture(nil,"BACKGROUND")
@@ -140,7 +140,8 @@ pfUI:RegisterModule("group", function ()
     pfUI.uf.group[i].hp.lootIcon:SetPoint("TOPLEFT", pfUI.uf.group[i].hp, "LEFT", -4, 4)
     pfUI.uf.group[i].hp.lootIcon:Hide()
 
-    pfUI.uf.group[i].hp.raidIcon = CreateFrame("Frame",nil,pfUI.uf.group[i].hp.bar)
+    pfUI.uf.group[i].hp.raidIcon = CreateFrame("Frame",nil,pfUI.uf.group[i].hp.bar.bar)
+    pfUI.uf.group[i].hp.raidIcon:SetFrameStrata("HIGH")
     pfUI.uf.group[i].hp.raidIcon:SetWidth(24)
     pfUI.uf.group[i].hp.raidIcon:SetHeight(24)
     pfUI.uf.group[i].hp.raidIcon.texture = pfUI.uf.group[i].hp.raidIcon:CreateTexture(nil,"ARTWORK")
