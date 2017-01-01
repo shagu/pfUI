@@ -37,6 +37,12 @@ pfLocaleSpellInterrupts = {}
 pfLocaleHunterbars = {}
 
 pfUI:SetScript("OnEvent", function()
+
+  -- some addons overwrite color and font settings
+  -- need to enforce pfUI's selection every time
+  pfUI.environment:UpdateFonts()
+  pfUI.environment:UpdateColors()
+
   if arg1 == "pfUI" then
     if not pfUI_init then
       pfUI_init = {}
