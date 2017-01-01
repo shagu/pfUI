@@ -710,8 +710,8 @@ pfUI:RegisterModule("gui", function ()
 
   pfUI.gui.scroll:SetScript("OnMouseWheel", function()
     local current = pfUI.gui.scroll:GetVerticalScroll()
-    local new = current + arg1*-10
-    local max = pfUI.gui.scroll:GetVerticalScrollRange() + 10
+    local new = current + arg1*-25
+    local max = pfUI.gui.scroll:GetVerticalScrollRange() + 25
     if max > 31 then
       if new < 0 then
           pfUI.gui.scroll:SetVerticalScroll(0)
