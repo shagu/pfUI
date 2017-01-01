@@ -15,7 +15,7 @@ pfUI:RegisterModule("actionbar", function ()
   function ShowBonusActionBar()
     if pfActionBar then pfActionBar:Hide() end
     if pfBonusBar then pfBonusBar:Show() end
-    Hook_HideBonusActionBar()
+    Hook_ShowBonusActionBar()
   end
 
   if not Hook_HideBonusActionBar then
