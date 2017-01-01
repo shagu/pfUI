@@ -126,7 +126,7 @@ function pfUI.firstrun:AddStep(name, yfunc, nfunc, descr, cmpnt)
 end
 
 function pfUI.firstrun:NextStep()
-  if next(pfUI_init) == nil then
+  if pfUI_init and next(pfUI_init) == nil then
     local yes = function()
       this:GetParent():Hide()
       pfUI_init["welcome"] = true
