@@ -35,6 +35,8 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("appearance", "infight",     "screen",           "0")
   pfUI:UpdateConfig("appearance", "infight",     "common",           "1")
   pfUI:UpdateConfig("appearance", "infight",     "group",            "0")
+  pfUI:UpdateConfig("appearance", "bags",        "borderlimit",      "1")
+  pfUI:UpdateConfig("appearance", "bags",        "borderonlygear",   "0")
 
   pfUI:UpdateConfig("unitframes", nil,           "disable",          "0")
   pfUI:UpdateConfig("unitframes", nil,           "pastel",           "1")

@@ -811,6 +811,8 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.appearance = pfUI.gui:CreateConfigTab("Appearance")
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "Background Color", pfUI_config.appearance.border, "background", "color")
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "Border Color", pfUI_config.appearance.border, "color", "color")
+
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Border", nil, nil, "header")
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "Default Bordersize", pfUI_config.appearance.border, "default")
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "Actionbar Bordersize", pfUI_config.appearance.border, "actionbars")
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "UnitFrame Bordersize", pfUI_config.appearance.border, "unitframes")
@@ -819,16 +821,28 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "Panel Bordersize", pfUI_config.appearance.border, "panels")
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "Chat Bordersize", pfUI_config.appearance.border, "chat")
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "Bags Bordersize", pfUI_config.appearance.border, "bags")
+
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Cooldown", nil, nil, "header")
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "Cooldown color (Minutes)", pfUI_config.appearance.cd, "mincolor", "color")
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "Cooldown color (Hours)", pfUI_config.appearance.cd, "hourcolor", "color")
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "Cooldown color (Days)", pfUI_config.appearance.cd, "daycolor", "color")
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "Cooldown text threshold", pfUI_config.appearance.cd, "threshold")
+
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Castbar", nil, nil, "header")
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "Castbar color", pfUI_config.appearance.castbar, "castbarcolor", "color")
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "Castbar color (Channeling)", pfUI_config.appearance.castbar, "channelcolor", "color")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Auto-resize Lootframe", pfUI_config.appearance.loot, "autoresize", "checkbox")
+
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Combat", nil, nil, "header")
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "Show combat glow effect on screen edges", pfUI_config.appearance.infight, "screen", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "Show combat glow effect on common unit frames", pfUI_config.appearance.infight, "common", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "Show combat glow effect on group frames", pfUI_config.appearance.infight, "group", "checkbox")
+
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Bags & Bank", nil, nil, "header")
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Only show borders for quality above \"common\"", pfUI_config.appearance.bags, "borderlimit", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Only show borders for equipment", pfUI_config.appearance.bags, "borderonlygear", "checkbox")
+
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Loot", nil, nil, "header")
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Auto-resize Lootframe", pfUI_config.appearance.loot, "autoresize", "checkbox")
 
   -- modules
   pfUI.gui.modules = pfUI.gui:CreateConfigTab("Modules")
