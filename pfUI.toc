@@ -58,3 +58,4 @@ modules\roll.lua
 modules\infight.lua
 modules\sellvalue.lua
 modules\eqcompare.lua
+modules\map.lua
