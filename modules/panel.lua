@@ -98,7 +98,7 @@ pfUI:RegisterModule("panel", function ()
       end
 
       pfUI.panel.clock.tick = GetTime()
-      pfUI.panel:OutputPanel("time", date("%H:%M:%S"), tooltip, click)
+      pfUI.panel:OutputPanel("时间", date("%H:%M:%S"), tooltip, click)
 
       -- lag fps
       local tooltip = function ()
@@ -134,7 +134,7 @@ pfUI:RegisterModule("panel", function ()
 
       local _, _, lag = GetNetStats()
       local fps = floor(GetFramerate())
-      pfUI.panel:OutputPanel("延迟", floor(GetFramerate()) .. " 帧 & " .. lag .. " 毫秒", tooltip, click)
+      pfUI.panel:OutputPanel("延迟", floor(GetFramerate()) .. "帧 " .. lag .. "毫秒", tooltip, click)
     end
   end)
 
@@ -259,7 +259,6 @@ pfUI:RegisterModule("panel", function ()
       OpenAllBags()
     end
 
-
     pfUI.panel:OutputPanel("金钱", gold .. "|cffffd700金|r" .. silver .. "|cffc7c7cf银|r" .. copper .. "|cffeda55f铜|r", tooltip, click)
   end
 
@@ -274,7 +273,7 @@ pfUI:RegisterModule("panel", function ()
       end
     end
     local click = function() ToggleFriendsFrame(1) end
-    pfUI.panel:OutputPanel("好友", "好友: " .. online, nil, click)
+    pfUI.panel:OutputPanel("好友", "好友:" .. online)
   end
 
   -- Update "guild"
@@ -370,7 +369,7 @@ pfUI:RegisterModule("panel", function ()
       end
     end
 
-    pfUI.panel:OutputPanel("地区", GetMinimapZoneText(), tooltip, click)
+    pfUI.panel:OutputPanel("zone", GetMinimapZoneText(), tooltip, click)
   end
 
   function pfUI.panel:OutputPanel(entry, value, tooltip, func)

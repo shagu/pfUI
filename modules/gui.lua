@@ -29,7 +29,7 @@ pfUI:RegisterModule("gui", function ()
   end)
 
   function pfUI.gui:Reload()
-    pfUI.api:CreateQuestionDialog("Some settings need to reload the UI to take effect.\nDo you want to reloadUI now?",
+    pfUI.api:CreateQuestionDialog("有些设置需要重新加载UI生效。\n您要重新载入UI吗？",
       function()
         pfUI.gui.settingChanged = nil
         ReloadUI()
@@ -756,7 +756,7 @@ pfUI:RegisterModule("gui", function ()
   -- load profile
   pfUI.gui:CreateConfig(pfUI.gui.global, "加载配置文件", pfUI_config.global, "profile", "button", function()
     if pfUI_config.global.profile and pfUI_profiles[pfUI_config.global.profile] then
-      pfUI.api:CreateQuestionDialog("加载配置文件 '|cff33ffcc" .. pfUI_config.global.profile .. "|r'？", function()
+      pfUI.api:CreateQuestionDialog("加载配置文件 '|cff33ffcc" .. pfUI_config.global.profile .. "|r'?", function()
         local selp = pfUI_config.global.profile
         pfUI_config = pfUI.api.CopyTable(pfUI_profiles[pfUI_config.global.profile])
         pfUI_config.global.profile = selp
@@ -768,7 +768,7 @@ pfUI:RegisterModule("gui", function ()
   -- delete profile
   pfUI.gui:CreateConfig(pfUI.gui.global, "删除配置文件", pfUI_config.global, "profile", "button", function()
     if pfUI_config.global.profile and pfUI_profiles[pfUI_config.global.profile] then
-      pfUI.api:CreateQuestionDialog("删除配置文件 '|cff33ffcc" .. pfUI_config.global.profile .. "|r'？", function()
+      pfUI.api:CreateQuestionDialog("删除配置文件 '|cff33ffcc" .. pfUI_config.global.profile .. "|r'?", function()
         pfUI_profiles[pfUI_config.global.profile] = nil
         pfUpdateProfiles()
         this:GetParent():Hide()
@@ -779,7 +779,7 @@ pfUI:RegisterModule("gui", function ()
   -- save profile
   pfUI.gui:CreateConfig(pfUI.gui.global, "保存配置文件", pfUI_config.global, "profile", "button", function()
     if pfUI_config.global.profile and pfUI_profiles[pfUI_config.global.profile] then
-      pfUI.api:CreateQuestionDialog("把现有设置保存到 '|cff33ffcc" .. pfUI_config.global.profile .. "|r'？", function()
+      pfUI.api:CreateQuestionDialog("把现有设置保存到 '|cff33ffcc" .. pfUI_config.global.profile .. "|r'?", function()
         if pfUI_profiles[pfUI_config.global.profile] then
           pfUI_profiles[pfUI_config.global.profile] = pfUI.api.CopyTable(pfUI_config)
         end
@@ -837,7 +837,7 @@ pfUI:RegisterModule("gui", function ()
     if m ~= "gui" then
       -- create disabled entry if not existing and display
       pfUI:UpdateConfig("disabled", nil, m, "0")
-      pfUI.gui:CreateConfig(pfUI.gui.modules, "禁用 " .. m, pfUI_config.disabled, m, "checkbox")
+      pfUI.gui:CreateConfig(pfUI.gui.modules, "Disable " .. m, pfUI_config.disabled, m, "checkbox")
     end
   end
 
@@ -966,14 +966,13 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui:CreateConfig(pfUI.gui.thirdparty, "WIM:", pfUI_config.thirdparty.wim, "enable", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.thirdparty, "HealComm:", pfUI_config.thirdparty.healcomm, "enable", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.thirdparty, "CleanUp:", pfUI_config.thirdparty.cleanup, "enable", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.thirdparty, "KLH Threat Meter:", pfUI_config.thirdparty.ktm, "enable", "checkbox")
 
   -- [[ bottom section ]] --
 
   -- Hide GUI
   pfUI.gui.hideGUI = pfUI.gui:CreateConfigTab("关闭", "bottom", function()
     if pfUI.gui.settingChanged then
-      pfUI.gui.reloadDialog:Show()
+      pfUI.gui:Reload()
     end
     if pfUI.gitter and pfUI.gitter:IsShown() then pfUI.gui:UnlockFrames() end
     pfUI.gui:Hide()
@@ -990,7 +989,7 @@ pfUI:RegisterModule("gui", function ()
   end)
 
   -- Reset Cache
-  pfUI.gui.resetCache = pfUI.gui:CreateConfigTab("重置人物设置", "bottom", function()
+  pfUI.gui.resetCache = pfUI.gui:CreateConfigTab("重置缓存", "bottom", function()
     pfUI.api:CreateQuestionDialog("Do you really want to reset the Cache?",
       function()
         pfUI_playerDB = {}
@@ -1000,7 +999,7 @@ pfUI:RegisterModule("gui", function ()
   end)
 
   -- Reset Frames
-  pfUI.gui.resetFrames = pfUI.gui:CreateConfigTab("重置位置", "bottom", function()
+  pfUI.gui.resetFrames = pfUI.gui:CreateConfigTab("重置当前用户设置", "bottom", function()
     pfUI.api:CreateQuestionDialog("Do you really want to reset the Frame Positions?",
       function()
         pfUI_config["position"] = {}
@@ -1010,7 +1009,7 @@ pfUI:RegisterModule("gui", function ()
   end)
 
   -- Reset Chat
-  pfUI.gui.resetChat = pfUI.gui:CreateConfigTab("重置聊天设置", "bottom", function()
+  pfUI.gui.resetChat = pfUI.gui:CreateConfigTab("重置聊天框设置", "bottom", function()
     pfUI.api:CreateQuestionDialog("Do you really want to reset the Firstrun Wizard Settings?",
       function()
         pfUI_init = {}

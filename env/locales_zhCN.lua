@@ -37,12 +37,12 @@ pfLocaleShift["zhCN"] = {
 }
 
 pfLocaleSpellEvents["zhCN"] = {
-  ['SPELL_GAINS'] = "(.+)获得了(.+)的效果",
-  ['SPELL_CAST'] = "(.+)开始施放(.+)",
-  ['SPELL_PERFORM'] = "(.+)开始施展(.+)",
-  ['SPELL_AFFLICTED'] = "(.+)受到了(.+)效果的影响",
+  ['SPELL_GAINS'] = "(.+)获得了(.+)的效果。",
+  ['SPELL_CAST'] = "(.+)开始施放(.+)。",
+  ['SPELL_PERFORM'] = "(.+)开始施展(.+)。",
+  ['SPELL_AFFLICTED'] = "(.+)受到了(.+)效果的影响。",
   ['SPELL_HIT'] = "你的(.+)使(.+)受到了(.+)。",
-  ['OTHER_SPELL_HIT'] = "(.+)的(.+)击中(.+)造成(.+)",
+  ['OTHER_SPELL_HIT'] = "(.+)的(.+)击中(.+)造成(.+)。",
 }
 
 pfLocaleSpellInterrupts["zhCN"] = {
@@ -950,10 +950,10 @@ pfLocaleSpells["zhCN"] = {
   ['爱情的重击'] = {t=1000, icon="INV_Ammo_Arrow_02" };
   ['雪人'] = {t=1500, icon="INV_Ammo_Snowball" };
   ['指挥地鼠'] = {t=1500, icon="Spell_Shadow_LifeDrain" };
-  ['急速冲锋'] = {t=3000, icon="Spell_Frost_ManaRecharge" };
-  ['急速冲锋'] = {t=3000, icon="Spell_Frost_ManaRecharge" };
-  ['急速冲锋'] = {t=3000, icon="Spell_Frost_ManaRecharge" };
-  ['急速冲锋'] = {t=3000, icon="Spell_Frost_ManaRecharge" };
+  ['Sol H'] = {t=3000, icon="Spell_Frost_ManaRecharge" };
+  ['Sol L'] = {t=3000, icon="Spell_Frost_ManaRecharge" };
+  ['Sol M'] = {t=3000, icon="Spell_Frost_ManaRecharge" };
+  ['Sol U'] = {t=3000, icon="Spell_Frost_ManaRecharge" };
   ['实心炸弹'] = {t=1000, icon="Spell_Fire_SelfDestruct" };
   ['安抚动物'] = {t=1500, icon="Ability_Hunter_BeastSoothe" };
   ['灵魂撕咬'] = {t=2000, icon="Spell_Shadow_SiphonMana" };
@@ -979,8 +979,8 @@ pfLocaleSpells["zhCN"] = {
   ['泼洒净化过的水'] = {t=6000, icon="Temp" };
   ['星火术'] = {t=3500, icon="Spell_Arcane_StarFire" };
   ['钢质机械陆行鸟'] = {t=3000, icon="Ability_Mount_MechaStrider" };
-  ['地震术'] = {t=1500, icon="Spell_Nature_Earthquake" };
-  ['飓风'] = {t=3000, icon="Spell_Nature_Cyclone" };
+  ['Stone Dwarf Awaken Visual'] = {t=1500, icon="Spell_Nature_Earthquake" };
+  ['Stoned - Channel Cast Visual'] = {t=3000, icon="Spell_Nature_Cyclone" };
   ['石肤术'] = {t=6000, icon="Spell_Nature_EnchantArmor" };
   ['碎石穴居怪伪装'] = {t=3000, icon="Ability_Rogue_Disguise" };
   ['风暴之锤'] = {t=1000, icon="INV_Hammer_01" };

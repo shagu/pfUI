@@ -114,6 +114,7 @@ pfUI:RegisterModule("actionbar", function ()
       pfUI.api:BarLayoutSize(pfUI.bars.actionmain, NUM_ACTIONBAR_BUTTONS, pfUI_config.bars.actionmain.formfactor, pfUI_config.bars.icon_size, default_border)
       pfUI.bars.actionmain:SetWidth(pfUI.bars.actionmain._size[1])
       pfUI.bars.actionmain:SetHeight(pfUI.bars.actionmain._size[2])
+
       if (PetHasActionBar()) then
         PetActionBar_Update()
         pfUI.bars.pet:Show()
