@@ -21,8 +21,6 @@ function pfUI.api.strsplit(delimiter, subject)
   end
 end
 
-<<<<<<< HEAD
-=======
 -- [ strvertical ]
 -- Creates vertical text using linebreaks. Multibyte char friendly.
 -- 'str'        [string]        String to columnize.
@@ -36,7 +34,6 @@ function pfUI.api.strvertical(str)
     end
 end
 
->>>>>>> origin/master
 -- [ round ]
 -- Rounds a float number into specified places after comma.
 -- 'input'      [float]         the number that should be rounded.
@@ -201,22 +198,15 @@ function pfUI.api:SkinButton(button, cr, cg, cb)
   b:SetHighlightTexture(nil)
   b:SetPushedTexture(nil)
   b:SetDisabledTexture(nil)
-<<<<<<< HEAD
-  b:SetScript("OnEnter", function()
-=======
   local funce = b:GetScript("OnEnter")
   local funcl = b:GetScript("OnLeave")
   b:SetScript("OnEnter", function()
     if funce then funce() end
->>>>>>> origin/master
     pfUI.api:CreateBackdrop(b, nil, true)
     b:SetBackdropBorderColor(cr,cg,cb,1)
   end)
   b:SetScript("OnLeave", function()
-<<<<<<< HEAD
-=======
     if funcl then funcl() end
->>>>>>> origin/master
     pfUI.api:CreateBackdrop(b, nil, true)
   end)
   b:SetFont(pfUI.font_default, pfUI_config.global.font_size, "OUTLINE")
@@ -237,27 +227,6 @@ function pfUI.api:CreateQuestionDialog(text, yes, no, editbox)
     return
   end
 
-<<<<<<< HEAD
-  -- add default values
-  if not yes then
-    yes = function() message("You clicked OK") end
-  end
-
-  if not no then
-    no = function() this:GetParent():Hide() end
-  end
-
-  if not text then
-    text = "Are you sure?"
-  end
-
-  local border = tonumber(pfUI_config.appearance.border.default)
-  local padding = 15
-  -- frame
-  local question = CreateFrame("Frame", "pfQuestionDialog", UIParent)
-  question:SetWidth(300)
-  question:SetHeight(100)
-=======
   if not text then text = "Are you sure?" end
 
   local border = tonumber(pfUI_config.appearance.border.default)
@@ -266,7 +235,6 @@ function pfUI.api:CreateQuestionDialog(text, yes, no, editbox)
   -- frame
   local question = CreateFrame("Frame", "pfQuestionDialog", UIParent)
   question:ClearAllPoints()
->>>>>>> origin/master
   question:SetPoint("CENTER", 0, 0)
   question:SetFrameStrata("TOOLTIP")
   question:SetMovable(true)
@@ -283,15 +251,9 @@ function pfUI.api:CreateQuestionDialog(text, yes, no, editbox)
   -- text
   question.text = question:CreateFontString("Status", "LOW", "GameFontNormal")
   question.text:SetFontObject(GameFontWhite)
-<<<<<<< HEAD
-  question.text:SetPoint("TOP", 0, -padding)
-  question.text:SetText(text)
-  question.text:SetWidth(question:GetWidth() - border * 2)
-=======
   question.text:SetPoint("TOPLEFT", question, "TOPLEFT", padding, -padding)
   question.text:SetPoint("TOPRIGHT", question, "TOPRIGHT", -padding, -padding)
   question.text:SetText(text)
->>>>>>> origin/master
 
   -- editbox
   if editbox then
@@ -313,16 +275,11 @@ function pfUI.api:CreateQuestionDialog(text, yes, no, editbox)
   pfUI.api:SkinButton(question.yes)
   question.yes:SetWidth(100)
   question.yes:SetHeight(20)
-<<<<<<< HEAD
   question.yes:SetText("好")
-  question.yes:SetScript("OnClick", yes)
-=======
-  question.yes:SetText("Okay")
   question.yes:SetScript("OnClick", function()
     if yes then yes() end
     this:GetParent():Hide()
   end)
->>>>>>> origin/master
 
   if question.input then
     question.yes:SetPoint("TOPLEFT", question.input, "BOTTOMLEFT", -border, -padding)
@@ -334,16 +291,11 @@ function pfUI.api:CreateQuestionDialog(text, yes, no, editbox)
   pfUI.api:SkinButton(question.no)
   question.no:SetWidth(85)
   question.no:SetHeight(20)
-<<<<<<< HEAD
   question.no:SetText("取消")
-  question.no:SetScript("OnClick", no)
-=======
-  question.no:SetText("Cancel")
   question.no:SetScript("OnClick", function()
     if no then no() end
     this:GetParent():Hide()
   end)
->>>>>>> origin/master
 
   if question.input then
     question.no:SetPoint("TOPRIGHT", question.input, "BOTTOMRIGHT", border, -padding)
@@ -378,9 +330,6 @@ function pfUI.api:CreateQuestionDialog(text, yes, no, editbox)
   local inputspace = 0
   if question.input then inputspace = question.input:GetHeight() + padding end
   local buttonspace = question.no:GetHeight() + padding
-<<<<<<< HEAD
-  question:SetHeight(textspace + inputspace + buttonspace + border)
-=======
   question:SetHeight(textspace + inputspace + buttonspace + padding)
 
   local width = 200
@@ -452,5 +401,4 @@ function pfUI.api:BarButtonAnchor(button,basename,buttonindex,barsize,formfactor
     button._anchor = col==1 and {"TOP",getglobal(basename..(buttonindex-cols)),"BOTTOM",0,-(bordersize*3)} or {"LEFT",getglobal(basename..(buttonindex-1)),"RIGHT",(bordersize*3),0}
   end
   return button._anchor
->>>>>>> origin/master
 end

@@ -363,10 +363,10 @@ pfUI:RegisterModule("chat", function ()
 
     -- set position of Loot & Spam
     if not ChatFrame3:IsShown() then
-      FCF_OpenNewWindow("Loot & Spam")
+      FCF_OpenNewWindow("China chat")
     end
     FCF_SetLocked(ChatFrame3, 1)
-    FCF_SetWindowName(ChatFrame3, "Loot & Spam")
+    FCF_SetWindowName(ChatFrame3, "China chat")
     FCF_SetWindowColor(ChatFrame3, 0, 0, 0)
     FCF_SetWindowAlpha(ChatFrame3, 0)
     FCF_SetChatWindowFontSize(ChatFrame3, 12)
@@ -411,8 +411,8 @@ pfUI:RegisterModule("chat", function ()
       ChatFrame_RemoveChannel(ChatFrame1, chan)
     end
 
-    JoinChannelByName("World")
-    ChatFrame_AddChannel(ChatFrame3, "World")
+    JoinChannelByName("China")
+    ChatFrame_AddChannel(ChatFrame3, "China")
   end
 
   -- orig. function but removed flashing

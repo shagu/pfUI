@@ -1,5 +1,5 @@
 <<<<<<< HEAD
-# pfUI 中文汉化
+# pfUI
 =======
 # pfUI
 >>>>>>> origin/master
