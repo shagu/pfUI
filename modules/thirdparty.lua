@@ -408,6 +408,7 @@ pfUI:RegisterModule("thirdparty", function ()
 
     for i, button in pairs(buttons) do
       local b = getglobal(button)
+      if not b then return end
       pfUI.api:SkinButton(b)
       b:SetScale(.8)
 
@@ -449,10 +450,10 @@ pfUI:RegisterModule("thirdparty", function ()
     end
 
     -- remove seperators
-    KLHTM_RaidFrameLine:Hide()
-    KLHTM_RaidFrameBottomLine:Hide()
-    KLHTM_SelfFrameLine:Hide()
-    KLHTM_SelfFrameBottomLine:Hide()
+    if KLHTM_RaidFrameLine then KLHTM_RaidFrameLine:Hide() end
+    if KLHTM_RaidFrameBottomLine then KLHTM_RaidFrameBottomLine:Hide() end
+    if KLHTM_SelfFrameLine then KLHTM_SelfFrameLine:Hide() end
+    if KLHTM_SelfFrameBottomLine then KLHTM_SelfFrameBottomLine:Hide() end
   end
 
   if pfUI_config.thirdparty.ktm.enable == "1" then
