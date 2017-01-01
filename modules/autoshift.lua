@@ -93,8 +93,8 @@ pfUI:RegisterModule("autoshift", function ()
             currBuffTex = GetPlayerBuffTexture(i)
             if (currBuffTex) then
               for id, bufftype in pairs(pfUI.autoshift.buffs) do
-                if string.find(string.lower(currBuffTex), bufftype) then
-                  if string.find(string.lower(currBuffTex), "spell_shadow_shadowform") then
+                if string.find(string.lower(currBuffTex), bufftype, 1) then
+                  if string.find(string.lower(currBuffTex), "spell_shadow_shadowform", 1) then
                     CancelLater = i
                   else
                     CancelPlayerBuff(i)

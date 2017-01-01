@@ -305,7 +305,7 @@ pfUI:RegisterModule("panel", function ()
           local tmpText = getglobal("repairToolTipTextLeft"..i)
           if (tmpText ~= nil) and (tmpText:GetText()) then
             local searchstr = string.gsub(DURABILITY_TEMPLATE, "%%[^%s]+", "(.+)")
-            local _, _, lval, rval = string.find(tmpText:GetText(), searchstr)
+            local _, _, lval, rval = string.find(tmpText:GetText(), searchstr, 1)
             if (lval and rval) then
               repPercent = math.floor(lval / rval * 100)
               break

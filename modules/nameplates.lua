@@ -204,11 +204,11 @@ pfUI:RegisterModule("nameplates", function ()
 
         -- show indicator for elite/rare mobs
         if level:GetText() ~= nil then
-          if pfUI.nameplates.mobs[name:GetText()] and pfUI.nameplates.mobs[name:GetText()] == "elite" and not string.find(level:GetText(), "+") then
+          if pfUI.nameplates.mobs[name:GetText()] and pfUI.nameplates.mobs[name:GetText()] == "elite" and not string.find(level:GetText(), "+", 1) then
             level:SetText(level:GetText() .. "+")
-          elseif pfUI.nameplates.mobs[name:GetText()] and pfUI.nameplates.mobs[name:GetText()] == "rareelite" and not string.find(level:GetText(), "R+") then
+          elseif pfUI.nameplates.mobs[name:GetText()] and pfUI.nameplates.mobs[name:GetText()] == "rareelite" and not string.find(level:GetText(), "R+", 1) then
             level:SetText(level:GetText() .. "R+")
-          elseif pfUI.nameplates.mobs[name:GetText()] and pfUI.nameplates.mobs[name:GetText()] == "rare" and not string.find(level:GetText(), "R") then
+          elseif pfUI.nameplates.mobs[name:GetText()] and pfUI.nameplates.mobs[name:GetText()] == "rare" and not string.find(level:GetText(), "R", 1) then
             level:SetText(level:GetText() .. "R")
           end
         end
