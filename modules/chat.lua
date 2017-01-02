@@ -219,6 +219,8 @@ pfUI:RegisterModule("chat", function ()
         end
 
         for i=1, NUM_CHAT_WINDOWS do
+          getglobal("ChatFrame"..i):SetTimeVisible(tonumber(pfUI_config.chat.global.fadetime))
+
           for j,v in ipairs({getglobal("ChatFrame" .. i .. "Tab"):GetRegions()}) do
             if j==5 then v:SetTexture(0,0,0,0) end
             v:SetHeight(pfUI_config.global.font_size+default_border*2)
