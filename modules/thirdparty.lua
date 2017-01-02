@@ -157,7 +157,7 @@ pfUI:RegisterModule("thirdparty", function ()
       local AceEvent = AceLibrary("AceEvent-2.0")
 
       function pfUI.healComm.createIncHeal(unit)
-        if unit == "player" then
+        if pfUI.uf.player and unit == "player" then
           if pfUI.uf.player and not pfUI.uf.player.incHeal then
             pfUI.uf.player.incHeal = CreateFrame("StatusBar", "PlayerFrameIncHealBar", pfUI.uf.player)
             pfUI.uf.player.incHeal:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
@@ -170,7 +170,7 @@ pfUI:RegisterModule("thirdparty", function ()
           return pfUI.uf.player
         end
 
-        if unit == "target" then
+        if pfUI.uf.target and unit == "target" then
           if pfUI.uf.target and not pfUI.uf.target.incHeal then
             pfUI.uf.target.incHeal = CreateFrame("StatusBar", "PlayerFrameIncHealBar", pfUI.uf.target)
             pfUI.uf.target.incHeal:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
@@ -183,7 +183,7 @@ pfUI:RegisterModule("thirdparty", function ()
           return pfUI.uf.target
         end
 
-        if strsub(unit,0,5) == "party" then
+        if pfUI.uf.group and strsub(unit,0,5) == "party" then
           local id = tonumber(strsub(unit,6))
           if pfUI.uf.group[id] and not pfUI.uf.group[id].incHeal then
             pfUI.uf.group[id].incHeal = CreateFrame("StatusBar", "PlayerFrameIncHealBar", pfUI.uf.group[id])
@@ -197,7 +197,7 @@ pfUI:RegisterModule("thirdparty", function ()
           return pfUI.uf.group[id]
         end
 
-        if strsub(unit,0,4) == "raid" then
+        if pfUI.uf.raid and strsub(unit,0,4) == "raid" then
           local rid = tonumber(strsub(unit,5))
           local id = nil
 
