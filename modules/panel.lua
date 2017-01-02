@@ -186,9 +186,9 @@ pfUI:RegisterModule("panel", function ()
       local xprested = tonumber(GetXPExhaustion())
       if remstring == nil then remstring = "" end
       if xprested ~= nil then
-        pfUI.panel:OutputPanel("经验", "Exp:|cffaaaaff "..floor((a/b)*100).."%"..remstring)
+        pfUI.panel:OutputPanel("经验", "经验:|cffaaaaff "..floor((a/b)*100).."%"..remstring)
       else
-        pfUI.panel:OutputPanel("经验", "Exp: " .. floor((a/b)*100) .. "%" .. remstring)
+        pfUI.panel:OutputPanel("经验", "经验: " .. floor((a/b)*100) .. "%" .. remstring)
       end
     else
       pfUI.panel:OutputPanel("经验", "Exp: N/A")
@@ -227,7 +227,7 @@ pfUI:RegisterModule("panel", function ()
       OpenAllBags()
     end
 
-    pfUI.panel:OutputPanel("金钱", gold .. "|cffffd700金|r" .. silver .. "|cffc7c7cf银|r" .. copper .. "|cffeda55f铜|r", tooltip, click)
+    pfUI.panel:OutputPanel("金钱", gold .. "|cffffd700金|r " .. silver .. "|cffc7c7cf银|r " .. copper .. "|cffeda55f铜|r", tooltip, click)
   end
 
   -- Update "friends"

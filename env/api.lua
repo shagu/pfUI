@@ -59,9 +59,9 @@ function pfUI.api.CreateGoldString(money)
   local copper = floor(mod(money,100))
 
   local string = ""
-  if gold > 0 then string = string .. "|cffffffff" .. gold .. "|cffffd700g" end
-  if silver > 0 then string = string .. "|cffffffff " .. silver .. "|cffc7c7cfs" end
-  string = string .. "|cffffffff " .. copper .. "|cffeda55fc"
+  if gold > 0 then string = string .. "|cffffffff" .. gold .. "|cffffd700金" end
+  if silver > 0 then string = string .. "|cffffffff " .. silver .. "|cffc7c7cf银" end
+  string = string .. "|cffffffff " .. copper .. "|cffeda55f铜"
 
   return string
 end
