@@ -260,6 +260,17 @@ pfUI:RegisterModule("bags", function ()
     end
 
     local texture, count, locked, quality = GetContainerItemInfo(bag, slot)
+
+    -- running advanced item color scan
+    if pfUI_config.appearance.bags.borderonlygear == "0" and texture and quality and quality < 1 then
+      local link = GetContainerItemLink(bag, slot)
+      if link then
+        local _, _, linkstr = string.find(link, "(item:%d+:%d+:%d+:%d+)")
+        local n, _, q = GetItemInfo(linkstr)
+        if quality then quality = q end
+      end
+    end
+
     SetItemButtonTexture(pfUI.bags[bag].slots[slot].frame, texture)
     SetItemButtonCount(pfUI.bags[bag].slots[slot].frame, count)
     SetItemButtonDesaturated(pfUI.bags[bag].slots[slot].frame, locked, 0.5, 0.5, 0.5)
@@ -291,7 +302,7 @@ pfUI:RegisterModule("bags", function ()
     border:SetTexture("")
 
     -- detect backdrop border color
-    if quality and quality > 1 then
+    if quality and quality > tonumber(pfUI_config.appearance.bags.borderlimit) then
       pfUI.bags[bag].slots[slot].frame.backdrop:SetBackdropBorderColor(GetItemQualityColor(quality))
     else
       local bagtype

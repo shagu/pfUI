@@ -6,7 +6,7 @@ else
 end
 
 function pfUI.environment:UpdateFonts()
-  if pfUI_config and pfUI_config.global.font_default then
+  if pfUI_config and pfUI_config.global and pfUI_config.global.font_default then
     pfUI.font_default = "Interface\\AddOns\\pfUI\\fonts\\" .. pfUI_config.global.font_default .. ".ttf"
     pfUI.font_combat =  "Interface\\AddOns\\pfUI\\fonts\\" .. pfUI_config.global.font_combat .. ".ttf"
     pfUI.font_square = "Interface\\AddOns\\pfUI\\fonts\\" .. pfUI_config.global.font_square .. ".ttf"
@@ -17,7 +17,7 @@ function pfUI.environment:UpdateFonts()
   end
 
   -- force locale based fonts
-  if pfUI_config and pfUI_config.global.force_region == "1" then
+  if pfUI_config and pfUI_config.global and pfUI_config.global.force_region == "1" then
     if GetLocale() == "zhCN" then
       pfUI.font_default = "Fonts\\FZXHLJW.TTF"
       pfUI.font_combat = "Fonts\\FZXHLJW.TTF"

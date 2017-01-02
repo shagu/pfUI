@@ -710,8 +710,8 @@ pfUI:RegisterModule("gui", function ()
 
   pfUI.gui.scroll:SetScript("OnMouseWheel", function()
     local current = pfUI.gui.scroll:GetVerticalScroll()
-    local new = current + arg1*-10
-    local max = pfUI.gui.scroll:GetVerticalScrollRange() + 10
+    local new = current + arg1*-25
+    local max = pfUI.gui.scroll:GetVerticalScrollRange() + 25
     if max > 31 then
       if new < 0 then
           pfUI.gui.scroll:SetVerticalScroll(0)
@@ -808,27 +808,41 @@ pfUI:RegisterModule("gui", function ()
   end, true)
 
   -- appearance
-  pfUI.gui.appearance = pfUI.gui:CreateConfigTab("界面设置")
+  pfUI.gui.appearance = pfUI.gui:CreateConfigTab("外观设置")
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "背景颜色", pfUI_config.appearance.border, "background", "color")
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "边框颜色", pfUI_config.appearance.border, "color", "color")
+
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "边框设置", nil, nil, "header")
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "默认边框大小", pfUI_config.appearance.border, "default")
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "动作条边框大小", pfUI_config.appearance.border, "actionbars")
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "头像框架大小", pfUI_config.appearance.border, "unitframes")
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "小队框架大小", pfUI_config.appearance.border, "groupframes")
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "团队框架大小", pfUI_config.appearance.border, "raidframes")
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "面板边框大小", pfUI_config.appearance.border, "panels")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "信息框架大小", pfUI_config.appearance.border, "chat")
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "聊天框架大小", pfUI_config.appearance.border, "chat")
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "背包边框大小", pfUI_config.appearance.border, "bags")
+
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "冷却时间设置", nil, nil, "header")
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "冷却时间颜色（分）", pfUI_config.appearance.cd, "mincolor", "color")
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "冷却时间颜色（时）", pfUI_config.appearance.cd, "hourcolor", "color")
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "冷却时间颜色（天）", pfUI_config.appearance.cd, "daycolor", "color")
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "冷却时间文字大小", pfUI_config.appearance.cd, "threshold")
+
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "施法条设置", nil, nil, "header")
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "施法条颜色", pfUI_config.appearance.castbar, "castbarcolor", "color")
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "施法条空白处颜色", pfUI_config.appearance.castbar, "channelcolor", "color")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "自动调整拾取框大小", pfUI_config.appearance.loot, "autoresize", "checkbox")
+
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "战斗相关设置", nil, nil, "header")
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "全屏显示战斗报警", pfUI_config.appearance.infight, "screen", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "仅在头像上显示战斗报警", pfUI_config.appearance.infight, "common", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "在小队显示战斗报警", pfUI_config.appearance.infight, "group", "checkbox")
+
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Bags & Bank", nil, nil, "header")
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Only show borders for quality above \"common\"", pfUI_config.appearance.bags, "borderlimit", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Only show borders for equipment", pfUI_config.appearance.bags, "borderonlygear", "checkbox")
+
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Loot", nil, nil, "header")
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Auto-resize Lootframe", pfUI_config.appearance.loot, "autoresize", "checkbox")
 
   -- modules
   pfUI.gui.modules = pfUI.gui:CreateConfigTab("高级单元")

@@ -41,6 +41,10 @@ pfUI:RegisterModule("nameplates", function ()
         local healthbar = nameplate:GetChildren()
         local border, glow, name, level, levelicon , raidicon = nameplate:GetRegions()
 
+        -- hide default plates
+        border:Hide()
+        glow:Hide()
+
         if pfUI_config.nameplates.players == "1" then
           if not pfUI_playerDB[name:GetText()] or not pfUI_playerDB[name:GetText()]["class"] then
             nameplate:Hide()
@@ -156,10 +160,6 @@ pfUI:RegisterModule("nameplates", function ()
           end
         end
 
-        -- hide default plates
-        border:Hide()
-        glow:Hide()
-
         -- adjust font
         name:SetFont(STANDARD_TEXT_FONT,12,"OUTLINE")
         name:SetPoint("BOTTOM", healthbar, "CENTER", 0, 7)
@@ -204,11 +204,11 @@ pfUI:RegisterModule("nameplates", function ()
 
         -- show indicator for elite/rare mobs
         if level:GetText() ~= nil then
-          if pfUI.nameplates.mobs[name:GetText()] and pfUI.nameplates.mobs[name:GetText()] == "elite" and not string.find(level:GetText(), "+") then
+          if pfUI.nameplates.mobs[name:GetText()] and pfUI.nameplates.mobs[name:GetText()] == "elite" and not string.find(level:GetText(), "+", 1) then
             level:SetText(level:GetText() .. "+")
-          elseif pfUI.nameplates.mobs[name:GetText()] and pfUI.nameplates.mobs[name:GetText()] == "rareelite" and not string.find(level:GetText(), "R+") then
+          elseif pfUI.nameplates.mobs[name:GetText()] and pfUI.nameplates.mobs[name:GetText()] == "rareelite" and not string.find(level:GetText(), "R+", 1) then
             level:SetText(level:GetText() .. "R+")
-          elseif pfUI.nameplates.mobs[name:GetText()] and pfUI.nameplates.mobs[name:GetText()] == "rare" and not string.find(level:GetText(), "R") then
+          elseif pfUI.nameplates.mobs[name:GetText()] and pfUI.nameplates.mobs[name:GetText()] == "rare" and not string.find(level:GetText(), "R", 1) then
             level:SetText(level:GetText() .. "R")
           end
         end
@@ -219,6 +219,7 @@ pfUI:RegisterModule("nameplates", function ()
           -- create frames
           if healthbar.castbar == nil then
             healthbar.castbar = CreateFrame("StatusBar", nil, healthbar)
+            healthbar.castbar:Hide()
             healthbar.castbar:SetWidth(110)
             healthbar.castbar:SetHeight(7)
             healthbar.castbar:SetPoint("TOPLEFT", healthbar, "BOTTOMLEFT", 0, -5)

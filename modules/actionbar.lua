@@ -13,7 +13,7 @@ pfUI:RegisterModule("actionbar", function ()
   end
 
   function ShowBonusActionBar()
-    for i=1, NUM_ACTIONBAR_BUTTONS do getglobal("ActionButton" .. i):Hide() end
+    if pfActionBar then pfActionBar:Hide() end
     if pfBonusBar then pfBonusBar:Show() end
     Hook_ShowBonusActionBar()
   end
@@ -23,7 +23,7 @@ pfUI:RegisterModule("actionbar", function ()
   end
 
   function HideBonusActionBar()
-    for i=1, NUM_ACTIONBAR_BUTTONS do getglobal("ActionButton" .. i):Show() end
+    if pfActionBar then pfActionBar:Show() end
     if pfBonusBar then pfBonusBar:Hide() end
     Hook_HideBonusActionBar()
   end
@@ -135,6 +135,7 @@ pfUI:RegisterModule("actionbar", function ()
         for i=1, NUM_PET_ACTION_SLOTS do
           local b = getglobal("PetActionButton"..i)
           b:ClearAllPoints()
+          b:SetFrameLevel(pfUI.bars.pet:GetFrameLevel() + 1)
           b:SetParent(pfUI.bars.pet)
           pfUI.api:CreateBackdrop(b, default_border)
           pfUI.api:BarButtonAnchor(b, "PetActionButton", i, NUM_PET_ACTION_SLOTS, pfUI_config.bars.pet.formfactor, pfUI_config.bars.icon_size, default_border)
@@ -373,18 +374,17 @@ pfUI:RegisterModule("actionbar", function ()
   BonusActionBarFrame:SetAllPoints(pfUI.bars.actionmain)
   BonusActionBarFrame:EnableMouse(0)
 
-  do
-    local tf = getglobal("pfBonusBar") or CreateFrame("Frame","pfBonusBar", UIParent)
-    tf:SetParent(pfUI.bars.actionmain)
-    tf:SetAllPoints(pfUI.bars.actionmain)
-    for i=1, NUM_BONUS_ACTION_SLOTS do
-      local b = getglobal("BonusActionButton"..i)
-      b:ClearAllPoints()
-      b:SetParent(tf)
-      pfUI.api:CreateBackdrop(b, default_border)
-      pfUI.api:BarButtonAnchor(b, "BonusActionButton", i, NUM_BONUS_ACTION_SLOTS, pfUI_config.bars.actionmain.formfactor, pfUI_config.bars.icon_size, default_border)
-      b:SetPoint(unpack(b._anchor))
-    end
+  local tf = getglobal("pfBonusBar") or CreateFrame("Frame","pfBonusBar", UIParent)
+  tf:SetParent(pfUI.bars.actionmain)
+  tf:SetAllPoints(pfUI.bars.actionmain)
+  tf:SetFrameLevel(pfActionBar:GetFrameLevel() + 1)
+  for i=1, NUM_BONUS_ACTION_SLOTS do
+    local b = getglobal("BonusActionButton"..i)
+    b:ClearAllPoints()
+    b:SetParent(tf)
+    pfUI.api:CreateBackdrop(b, default_border)
+    pfUI.api:BarButtonAnchor(b, "BonusActionButton", i, NUM_BONUS_ACTION_SLOTS, pfUI_config.bars.actionmain.formfactor, pfUI_config.bars.icon_size, default_border)
+    b:SetPoint(unpack(b._anchor))
   end
 
   for i = 1, NUM_SHAPESHIFT_SLOTS do

@@ -203,55 +203,23 @@ pfUI:RegisterModule("panel", function ()
 
     local tooltip = function ()
       if not pfUI.panel.initMoney then pfUI.panel.initMoney = GetMoney() end
-      local dmoney = GetMoney() - pfUI.panel.initMoney
+      pfUI.panel.diffMoney = GetMoney() - pfUI.panel.initMoney
 
-      -- initial gold
-      local igold = floor(pfUI.panel.initMoney/ 100 / 100)
-      local isilver = floor(mod((pfUI.panel.initMoney/100),100))
-      local icopper = floor(mod(pfUI.panel.initMoney,100))
-
-      -- current gold
-      local gold = floor(GetMoney()/ 100 / 100)
-      local silver = floor(mod((GetMoney()/100),100))
-      local copper = floor(mod(GetMoney(),100))
-
-      -- diff gold
-      local dgold = floor(abs(dmoney/100/100))
-      local dsilver = floor(abs(mod((dmoney/100),100)))
-      local dcopper = floor(abs(mod(dmoney,100)))
-
-      local dmod, dchar = "", ""
-      if dmoney < 0 then
-        dmod = "|cffffaaaa"
-        dchar = "|cffff8888-"
-      elseif dmoney > 0 then
-        dmod = "|cffaaffaa"
-        dchar = "|cff88ff88+"
+      local dmod = ""
+      if pfUI.panel.diffMoney < 0 then
+        dmod = "|cffff8888-"
+      elseif pfUI.panel.diffMoney > 0 then
+        dmod = "|cff88ff88+"
       end
 
       GameTooltip_SetDefaultAnchor(GameTooltip, this)
       GameTooltip:ClearLines()
 
       GameTooltip:AddLine("|cff555555金钱")
-
-      GameTooltip:AddDoubleLine("上线时金钱",
-        "|cffffffff " .. igold .. "|cffffd700金" ..
-        "|cffffffff " .. isilver .. "|cffc7c7cf银" ..
-        "|cffffffff " .. icopper .. "|cffeda55f铜")
-
-      GameTooltip:AddDoubleLine("目前金钱",
-        "|cffffffff " .. gold .. "|cffffd700金" ..
-        "|cffffffff " .. silver .. "|cffc7c7cf银" ..
-        "|cffffffff " .. copper .. "|cffeda55f铜")
-
+      GameTooltip:AddDoubleLine("上线时金钱:", pfUI.api.CreateGoldString(pfUI.panel.initMoney))
+      GameTooltip:AddDoubleLine("目前金钱:", pfUI.api.CreateGoldString(GetMoney()))
       GameTooltip:AddDoubleLine("|cffffffff","")
-
-      GameTooltip:AddDoubleLine("本次登录收益",
-        dchar ..
-        "|cffffffff " .. dmod .. dgold .. "|cffffd700金" ..
-        "|cffffffff " .. dmod .. dsilver .. "|cffc7c7cf银" ..
-        "|cffffffff " .. dmod .. dcopper .. "|cffeda55f铜")
-
+      GameTooltip:AddDoubleLine("本次登录收益:", dmod .. pfUI.api.CreateGoldString(math.abs(pfUI.panel.diffMoney)))
       GameTooltip:Show()
     end
 
@@ -305,7 +273,7 @@ pfUI:RegisterModule("panel", function ()
           local tmpText = getglobal("repairToolTipTextLeft"..i)
           if (tmpText ~= nil) and (tmpText:GetText()) then
             local searchstr = string.gsub(DURABILITY_TEMPLATE, "%%[^%s]+", "(.+)")
-            local _, _, lval, rval = string.find(tmpText:GetText(), searchstr)
+            local _, _, lval, rval = string.find(tmpText:GetText(), searchstr, 1)
             if (lval and rval) then
               repPercent = math.floor(lval / rval * 100)
               break

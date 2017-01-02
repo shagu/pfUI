@@ -554,7 +554,7 @@ pfUI:RegisterModule("chat", function ()
         text = string.gsub(text, "|Hplayer:(.-)|h%[.-%]|h(.-:-)", "[|Hplayer:%1|h" .. Name .. "|h]" .. "%2")
 
         -- make incoming whispers lighter than outgoing
-        if string.find(text, '|cff'..wcol) == 1 then
+        if string.find(text, '|cff'..wcol, 1) == 1 then
           text = string.gsub(text, "|r", "|cff" .. wcol)
         end
 
