@@ -837,12 +837,12 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "仅在头像上显示战斗报警", pfUI_config.appearance.infight, "common", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "在小队显示战斗报警", pfUI_config.appearance.infight, "group", "checkbox")
 
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Bags & Bank", nil, nil, "header")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Only show borders for quality above \"common\"", pfUI_config.appearance.bags, "borderlimit", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Only show borders for equipment", pfUI_config.appearance.bags, "borderonlygear", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "背包和银行设置", nil, nil, "header")
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "只显示\"普通品质\"以上的物品", pfUI_config.appearance.bags, "borderlimit", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "只显示装备", pfUI_config.appearance.bags, "borderonlygear", "checkbox")
 
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Loot", nil, nil, "header")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Auto-resize Lootframe", pfUI_config.appearance.loot, "autoresize", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "拾取设置", nil, nil, "header")
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "自动调整拾取框大小", pfUI_config.appearance.loot, "autoresize", "checkbox")
 
   -- modules
   pfUI.gui.modules = pfUI.gui:CreateConfigTab("高级单元")
