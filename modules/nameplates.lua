@@ -43,7 +43,11 @@ pfUI:RegisterModule("nameplates", function ()
 
         -- hide default plates
         border:Hide()
+
+        -- try to avoid flickering as much as possible
         glow:Hide()
+        glow:SetAlpha(0)
+        glow.Show = function() return end
 
         if pfUI_config.nameplates.players == "1" then
           if not pfUI_playerDB[name:GetText()] or not pfUI_playerDB[name:GetText()]["class"] then
