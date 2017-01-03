@@ -402,3 +402,31 @@ function pfUI.api:BarButtonAnchor(button,basename,buttonindex,barsize,formfactor
   end
   return button._anchor
 end
+
+-- [ Create Autohide ] --
+-- 'frame'  the frame that should be hidden
+function pfUI.api:CreateAutohide(frame)
+  if not frame then return end
+  frame.hover = CreateFrame("Frame", frame:GetName() .. "Autohide", frame)
+  frame.hover:SetParent(frame)
+  frame.hover:SetAllPoints(frame)
+  frame.hover.parent = frame
+
+  frame.hover:RegisterEvent("PLAYER_LEAVING_WORLD")
+  frame.hover:SetScript("OnEvent", function()
+    this:Hide()
+  end)
+
+  frame.hover:SetScript("OnUpdate", function()
+    if MouseIsOver(this, 10, -10, -10, 10) then
+      this.activeTo = GetTime() + tonumber(pfUI_config.bars.hide_time)
+      this.parent:SetAlpha(1)
+    elseif this.activeTo then
+      if this.activeTo < GetTime() and this.parent:GetAlpha() > 0 then
+        this.parent:SetAlpha(this.parent:GetAlpha() - 0.1)
+      end
+    else
+      this.activeTo = GetTime() + tonumber(pfUI_config.bars.hide_time)
+    end
+  end)
+end

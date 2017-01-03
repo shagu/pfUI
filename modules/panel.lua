@@ -200,9 +200,9 @@ pfUI:RegisterModule("panel", function ()
     local gold = floor(GetMoney()/ 100 / 100)
     local silver = floor(mod((GetMoney()/100),100))
     local copper = floor(mod(GetMoney(),100))
+    if not pfUI.panel.initMoney then pfUI.panel.initMoney = GetMoney() end
 
     local tooltip = function ()
-      if not pfUI.panel.initMoney then pfUI.panel.initMoney = GetMoney() end
       pfUI.panel.diffMoney = GetMoney() - pfUI.panel.initMoney
 
       local dmod = ""

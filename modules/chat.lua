@@ -206,15 +206,21 @@ pfUI:RegisterModule("chat", function ()
           v:SetVertexColor(RAID_CLASS_COLORS[class].r + .3 * .5, RAID_CLASS_COLORS[class].g +.3 * .5, RAID_CLASS_COLORS[class].b +.3 * .5,1)
         end
 
-        ChatFrame1:ClearAllPoints()
-        ChatFrame1:SetPoint("TOPLEFT", pfUI.chat.left ,"TOPLEFT", default_border, -panelheight)
-        ChatFrame1:SetPoint("BOTTOMRIGHT", pfUI.chat.left ,"BOTTOMRIGHT", -default_border, panelheight)
+        if ChatFrame1:IsVisible() then
+          ChatFrame1:ClearAllPoints()
+          ChatFrame1:SetPoint("TOPLEFT", pfUI.chat.left ,"TOPLEFT", default_border, -panelheight)
+          ChatFrame1:SetPoint("BOTTOMRIGHT", pfUI.chat.left ,"BOTTOMRIGHT", -default_border, panelheight)
+        end
 
-        ChatFrame3:ClearAllPoints()
-        ChatFrame3:SetPoint("TOPLEFT", pfUI.chat.right ,"TOPLEFT", default_border, -panelheight)
-        ChatFrame3:SetPoint("BOTTOMRIGHT", pfUI.chat.right ,"BOTTOMRIGHT", -default_border, panelheight)
+        if ChatFrame3:IsVisible() then
+          ChatFrame3:ClearAllPoints()
+          ChatFrame3:SetPoint("TOPLEFT", pfUI.chat.right ,"TOPLEFT", default_border, -panelheight)
+          ChatFrame3:SetPoint("BOTTOMRIGHT", pfUI.chat.right ,"BOTTOMRIGHT", -default_border, panelheight)
+        end
 
         for i=1, NUM_CHAT_WINDOWS do
+          getglobal("ChatFrame"..i):SetTimeVisible(tonumber(pfUI_config.chat.global.fadetime))
+
           for j,v in ipairs({getglobal("ChatFrame" .. i .. "Tab"):GetRegions()}) do
             if j==5 then v:SetTexture(0,0,0,0) end
             v:SetHeight(pfUI_config.global.font_size+default_border*2)

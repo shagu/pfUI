@@ -960,8 +960,10 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui:CreateConfig(pfUI.gui.chat, "左侧对话框高度", pfUI_config.chat.left, "height")
   pfUI.gui:CreateConfig(pfUI.gui.chat, "右侧对话框宽度", pfUI_config.chat.right, "width")
   pfUI.gui:CreateConfig(pfUI.gui.chat, "右侧对话框高度", pfUI_config.chat.right, "height")
-  pfUI.gui:CreateConfig(pfUI.gui.chat, "使用习惯的背景设置", pfUI_config.chat.global, "custombg", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.chat, "自定义背景设置", pfUI_config.chat.global, "custombg", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.chat, "对话框背景颜色", pfUI_config.chat.global, "background", "color")
+  pfUI.gui:CreateConfig(pfUI.gui.chat, "密语颜色设置", pfUI_config.chat.global, "whisper", "color")
+  pfUI.gui:CreateConfig(pfUI.gui.chat, "聊天记录淡出时间", pfUI_config.chat.global, "fadetime")
 
   -- nameplates
   pfUI.gui.nameplates = pfUI.gui:CreateConfigTab("姓名板")

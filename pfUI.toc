@@ -22,6 +22,9 @@ env\api.lua
 env\colors.lua
 env\fonts.lua
 
+# fixes
+env\clientfixes.lua
+
 # modules
 modules\config.lua
 modules\gui.lua

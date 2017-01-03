@@ -59,6 +59,7 @@ pfUI:RegisterModule("addons", function ()
   -- list
   pfUI.addons.list = CreateFrame("Frame", "pfAddonList", pfUI.addons)
   pfUI.addons.list:RegisterEvent("ADDON_LOADED")
+  pfUI.addons.list:RegisterEvent("PLAYER_ENTERING_WORLD")
   pfUI.addons.list:SetHeight(GetNumAddOns() * 25)
   pfUI.addons.list:SetWidth(350)
   pfUI.addons.list:SetPoint("CENTER", 0,0)

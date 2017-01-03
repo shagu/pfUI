@@ -137,6 +137,8 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("chat",       "global",      "custombg",         "0")
   pfUI:UpdateConfig("chat",       "global",      "background",       ".2,.2,.2,.5")
   pfUI:UpdateConfig("chat",       "global",      "whisper",          "1,.6,1,1")
+  pfUI:UpdateConfig("chat",       "global",      "fadetime",         "86400")
+
   pfUI:UpdateConfig("nameplates", nil,           "showcastbar",      "1")
   pfUI:UpdateConfig("nameplates", nil,           "spellname",        "0")
   pfUI:UpdateConfig("nameplates", nil,           "showdebuffs",      "0")
