@@ -88,11 +88,7 @@ pfUI:RegisterModule("nameplates", function ()
           nameplate:EnableMouse(true)
           if pfUI_config.nameplates["rightclick"] == "1" then
             nameplate:SetScript("OnMouseDown", function()
-              if arg1 and arg1 == "RightButton" then
-                this:Click("LeftButton")
-                AttackTarget()
-                MouselookStart()
-              end
+              if arg1 and arg1 == "RightButton" then MouselookStart() end
             end)
           end
         else
