@@ -33,6 +33,32 @@ pfUI:RegisterModule("nameplates", function ()
       end
   end)
 
+  -- emulate a rightclick detection even if the mouselooking has been started
+  pfUI.nameplates.emulateRightClick = CreateFrame("Frame", nil, UIParent)
+  pfUI.nameplates.emulateRightClick.time = nil
+  pfUI.nameplates.emulateRightClick.frame = nil
+  pfUI.nameplates.emulateRightClick:SetScript("OnUpdate", function()
+    -- break here if nothing to do
+    if not pfUI.nameplates.emulateRightClick.time or not pfUI.nameplates.emulateRightClick.frame then
+      this:Hide()
+      return
+    end
+
+    -- if threshold is reached (0.5 second) no click action will follow
+    if not IsMouselooking() and pfUI.nameplates.emulateRightClick.time + tonumber(pfUI_config.nameplates["clickthreshold"]) < GetTime() then
+      pfUI.nameplates.emulateRightClick:Hide()
+      return
+    end
+
+    -- run a usual nameplate rightclick action
+    if not IsMouselooking() then
+      pfUI.nameplates.emulateRightClick.frame:Click("LeftButton")
+      if UnitCanAttack("player", "target") then AttackTarget() end
+      pfUI.nameplates.emulateRightClick:Hide()
+      return
+    end
+  end)
+
   pfUI.nameplates:SetScript("OnUpdate", function()
     local frames = { WorldFrame:GetChildren() }
     for _, nameplate in ipairs(frames) do
@@ -88,7 +114,14 @@ pfUI:RegisterModule("nameplates", function ()
           nameplate:EnableMouse(true)
           if pfUI_config.nameplates["rightclick"] == "1" then
             nameplate:SetScript("OnMouseDown", function()
-              if arg1 and arg1 == "RightButton" then MouselookStart() end
+              if arg1 and arg1 == "RightButton" then
+                MouselookStart()
+
+                -- start detection of the rightclick emulation
+                pfUI.nameplates.emulateRightClick.time = GetTime()
+                pfUI.nameplates.emulateRightClick.frame = this
+                pfUI.nameplates.emulateRightClick:Show()
+              end
             end)
           end
         else
