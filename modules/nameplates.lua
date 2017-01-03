@@ -228,18 +228,28 @@ pfUI:RegisterModule("nameplates", function ()
 
         -- adjust healthbar color
         local red, green, blue, _ = healthbar:GetStatusBarColor()
-        if pfUI_playerDB[name:GetText()] and pfUI_playerDB[name:GetText()]["class"] and RAID_CLASS_COLORS[pfUI_playerDB[name:GetText()]["class"]] then
-          healthbar:SetStatusBarColor(
-            RAID_CLASS_COLORS[pfUI_playerDB[name:GetText()]["class"]].r,
-            RAID_CLASS_COLORS[pfUI_playerDB[name:GetText()]["class"]].g,
-            RAID_CLASS_COLORS[pfUI_playerDB[name:GetText()]["class"]].b,
-            0.9)
-        elseif red > 0.9 and green < 0.2 and blue < 0.2 then
-          healthbar:SetStatusBarColor(.9,.2,.3,0.8)
+        if red > 0.9 and green < 0.2 and blue < 0.2 then
+          if pfUI_config.nameplates["enemyclassc"] == "1" and pfUI_playerDB[name:GetText()] and pfUI_playerDB[name:GetText()]["class"] and RAID_CLASS_COLORS[pfUI_playerDB[name:GetText()]["class"]] then
+            healthbar:SetStatusBarColor(
+              RAID_CLASS_COLORS[pfUI_playerDB[name:GetText()]["class"]].r,
+              RAID_CLASS_COLORS[pfUI_playerDB[name:GetText()]["class"]].g,
+              RAID_CLASS_COLORS[pfUI_playerDB[name:GetText()]["class"]].b,
+              0.9)
+          else
+            healthbar:SetStatusBarColor(.9,.2,.3,0.8)
+          end
         elseif red > 0.9 and green > 0.9 and blue < 0.2 then
           healthbar:SetStatusBarColor(1,1,.3,0.8)
         elseif blue > 0.9 and red == 0 and green == 0 then
-          healthbar:SetStatusBarColor(0.2,0.6,1,0.8)
+          if pfUI_config.nameplates["friendclassc"] == "1" and pfUI_playerDB[name:GetText()] and pfUI_playerDB[name:GetText()]["class"] and RAID_CLASS_COLORS[pfUI_playerDB[name:GetText()]["class"]] then
+            healthbar:SetStatusBarColor(
+              RAID_CLASS_COLORS[pfUI_playerDB[name:GetText()]["class"]].r,
+              RAID_CLASS_COLORS[pfUI_playerDB[name:GetText()]["class"]].g,
+              RAID_CLASS_COLORS[pfUI_playerDB[name:GetText()]["class"]].b,
+              0.9)
+          else
+            healthbar:SetStatusBarColor(0.2,0.6,1,0.8)
+          end
         elseif red == 0 and green > 0.99 and blue == 0 then
           healthbar:SetStatusBarColor(0.6,1,0,0.8)
         end
