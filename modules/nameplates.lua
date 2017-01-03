@@ -86,6 +86,15 @@ pfUI:RegisterModule("nameplates", function ()
         -- enable clickthrough
         if pfUI_config.nameplates["clickthrough"] == "0" then
           nameplate:EnableMouse(true)
+          if pfUI_config.nameplates["rightclick"] == "1" then
+            nameplate:SetScript("OnMouseDown", function()
+              if arg1 and arg1 == "RightButton" then
+                this:Click("LeftButton")
+                AttackTarget()
+                MouselookStart()
+              end
+            end)
+          end
         else
           nameplate:EnableMouse(false)
         end
