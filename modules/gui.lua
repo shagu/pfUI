@@ -971,10 +971,10 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui:CreateConfig(pfUI.gui.nameplates, "显示技能名称", pfUI_config.nameplates, "spellname", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.nameplates, "显示Debuff", pfUI_config.nameplates, "showdebuffs", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.nameplates, "取消点击姓名板选取目标", pfUI_config.nameplates, "clickthrough", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "启用鼠标右键单击", pfUI_config.nameplates, "rightclick", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "右键单击开关", pfUI_config.nameplates, "clickthreshold")
-  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "显示敌方颜色", pfUI_config.nameplates, "enemyclassc", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "显示友方颜色", pfUI_config.nameplates, "friendclassc", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "启动右键移动镜头", pfUI_config.nameplates, "rightclick", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "镜头移动速度", pfUI_config.nameplates, "clickthreshold")
+  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "显示敌人职业颜色", pfUI_config.nameplates, "enemyclassc", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "显示友军职业颜色", pfUI_config.nameplates, "friendclassc", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.nameplates, "团队图标大小", pfUI_config.nameplates, "raidiconsize")
   pfUI.gui:CreateConfig(pfUI.gui.nameplates, "仅显示玩家自己", pfUI_config.nameplates, "players", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.nameplates, "显示生命值", pfUI_config.nameplates, "showhp", "checkbox")
@@ -1010,7 +1010,7 @@ pfUI:RegisterModule("gui", function ()
 
   -- Reset Cache
   pfUI.gui.resetCache = pfUI.gui:CreateConfigTab("重置缓存", "bottom", function()
-    pfUI.api:CreateQuestionDialog("Do you really want to reset the Cache?",
+    pfUI.api:CreateQuestionDialog("你真的要重置缓存吗？",
       function()
         pfUI_playerDB = {}
         this:GetParent():Hide()
@@ -1020,7 +1020,7 @@ pfUI:RegisterModule("gui", function ()
 
   -- Reset Frames
   pfUI.gui.resetFrames = pfUI.gui:CreateConfigTab("重置当前用户设置", "bottom", function()
-    pfUI.api:CreateQuestionDialog("Do you really want to reset the Frame Positions?",
+    pfUI.api:CreateQuestionDialog("你真的要重置当前用户设置吗？",
       function()
         pfUI_config["position"] = {}
         this:GetParent():Hide()
@@ -1030,7 +1030,7 @@ pfUI:RegisterModule("gui", function ()
 
   -- Reset Chat
   pfUI.gui.resetChat = pfUI.gui:CreateConfigTab("重置聊天框设置", "bottom", function()
-    pfUI.api:CreateQuestionDialog("Do you really want to reset the Firstrun Wizard Settings?",
+    pfUI.api:CreateQuestionDialog("你真的要重置聊天框设置吗？",
       function()
         pfUI_init = {}
         this:GetParent():Hide()
@@ -1040,7 +1040,7 @@ pfUI:RegisterModule("gui", function ()
 
   -- Reset Config
   pfUI.gui.resetConfig = pfUI.gui:CreateConfigTab("复位配置", "bottom", function()
-    pfUI.api:CreateQuestionDialog("Do you really want to reset your configuration?\nThis also includes frame positions",
+    pfUI.api:CreateQuestionDialog("您确定要重置您的配置吗？\n这还包括框架位置设置",
       function()
         pfUI_config = {}
         pfUI:LoadConfig()
@@ -1051,7 +1051,7 @@ pfUI:RegisterModule("gui", function ()
 
   -- Reset All
   pfUI.gui.resetAll = pfUI.gui:CreateConfigTab("全部重置", "bottom", function()
-    pfUI.api:CreateQuestionDialog("Do you really want to reset |cffffaaaaEVERYTHING|r?\nThis includes configuration, frame positions, firstrun settings,\n player cache, profiles and just EVERYTHING!",
+    pfUI.api:CreateQuestionDialog("你真的想要重置 |cffffaaaa所有配置|r?\n这包括配置，框架位置，冷却设置，\n 缓存文件, 个人设置等一切配置！",
       function()
         pfUI_init = {}
         pfUI_config = {}

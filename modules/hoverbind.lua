@@ -35,11 +35,11 @@ pfUI:RegisterModule("hoverbind", function ()
   pfUI.hoverbind:SetScript("OnShow", function()
     pfUI.hoverbind.edit:Show()
 
-    pfUI.info:ShowInfoBox("|cff33ffccKeybind Mode|r\n" ..
-      "This mode allows you to bind keyboard shortcuts to your actionbars.\n" ..
-      "By hovering a button with your cursor and pressing a key, the key will be assigned to that button.\n" ..
-      "Hit Escape on a button to remove bindings.\n\n" ..
-      "Press Escape or click on an empty area to leave the keybind mode.\n", 30,  pfUI.hoverbind.edit)
+    pfUI.info:ShowInfoBox("|cff33ffcc热键绑定模式|r\n" ..
+      "这个模式允许你绑定键盘快捷方式到你的动作条。\n" ..
+      "通过用光标悬停一个按钮并按一个键，键将被分配给那个按钮。\n" ..
+      "在按钮上按Esc键可以删除绑定。\n\n" ..
+      "按Esc键或单击空白区域退出键盘绑定模式。\n", 30,  pfUI.hoverbind.edit)
   end)
 
   pfUI.hoverbind:SetScript("OnHide",function()
