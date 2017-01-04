@@ -162,7 +162,7 @@ pfUI:RegisterModule("targettarget", function ()
   pfUI.uf.targettarget.hp = CreateFrame("Frame",nil, pfUI.uf.targettarget)
   pfUI.uf.targettarget.hp:SetPoint("TOP", 0, 0)
   pfUI.uf.targettarget.hp:SetWidth(100)
-  pfUI.uf.targettarget.hp:SetHeight(17)
+  pfUI.uf.targettarget.hp:SetHeight(16)
   pfUI.api:CreateBackdrop(pfUI.uf.targettarget.hp, default_border)
 
   pfUI.uf.targettarget.hp.bar = CreateFrame("StatusBar", nil, pfUI.uf.targettarget.hp)
