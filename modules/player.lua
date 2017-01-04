@@ -7,6 +7,8 @@ pfUI:RegisterModule("player", function ()
     default_border = pfUI_config.appearance.border.unitframes
   end
 
+  local spacing = pfUI_config.unitframes.player.pspace
+
   PlayerFrame:Hide()
   PlayerFrame:UnregisterAllEvents()
 
@@ -15,7 +17,7 @@ pfUI:RegisterModule("player", function ()
   pfUI.uf.player.id = ""
   pfUI.uf.player:SetFrameStrata("LOW")
   pfUI.uf.player:SetWidth(pfUI_config.unitframes.player.width)
-  pfUI.uf.player:SetHeight(pfUI_config.unitframes.player.height + pfUI_config.unitframes.player.pheight + 2*default_border + pfUI_config.unitframes.player.pspace)
+  pfUI.uf.player:SetHeight(pfUI_config.unitframes.player.height + pfUI_config.unitframes.player.pheight + 2*default_border + spacing)
   pfUI.uf.player:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOM", -75, 125)
   pfUI.api:UpdateMovable(pfUI.uf.player)
   pfUI.uf.player:RegisterForClicks('LeftButtonUp', 'RightButtonUp')
@@ -282,22 +284,6 @@ pfUI:RegisterModule("player", function ()
   pfUI.uf.player.hp.raidIcon:SetPoint("TOP", pfUI.uf.player.hp, "TOP", 0, 6)
   pfUI.uf.player.hp.raidIcon:Hide()
 
-  if pfUI_config.unitframes.portrait == "1" then
-    pfUI.uf.player.hp.bar.portrait = CreateFrame("PlayerModel",nil,pfUI.uf.player.hp.bar)
-    pfUI.uf.player.hp.bar.portrait:SetAllPoints(pfUI.uf.player.hp.bar)
-    pfUI.uf.player.hp.bar.portrait:RegisterEvent("UNIT_PORTRAIT_UPDATE")
-    pfUI.uf.player.hp.bar.portrait:RegisterEvent("UNIT_MODEL_CHANGED")
-    pfUI.uf.player.hp.bar.portrait:RegisterEvent("PLAYER_ENTERING_WORLD")
-    pfUI.uf.player.hp.bar.portrait:SetScript("OnEvent", function() this:Update() end)
-    pfUI.uf.player.hp.bar.portrait:SetScript("OnShow", function() this:Update() end)
-
-    function pfUI.uf.player.hp.bar.portrait.Update()
-      pfUI.uf.player.hp.bar.portrait:SetUnit("player")
-      pfUI.uf.player.hp.bar.portrait:SetCamera(0)
-      pfUI.uf.player.hp.bar.portrait:SetAlpha(0.10)
-    end
-  end
-
   pfUI.uf.player.power = CreateFrame("Frame",nil, pfUI.uf.player)
   pfUI.uf.player.power:SetPoint("BOTTOM", 0, 0)
   pfUI.uf.player.power:SetWidth(pfUI_config.unitframes.player.width)
@@ -308,6 +294,8 @@ pfUI:RegisterModule("player", function ()
   pfUI.uf.player.power.bar:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
   pfUI.uf.player.power.bar:SetAllPoints(pfUI.uf.player.power)
   pfUI.uf.player.power.bar:SetMinMaxValues(0, 100)
+
+  pfUI.uf:CreatePortrait(pfUI.uf.player, pfUI_config.unitframes.player.portrait, spacing)
 
   if pfUI_config.unitframes.player.energy == "1" then
     pfUI.uf.player.power.tick = CreateFrame("Frame", nil, pfUI.uf.player.power.bar)

@@ -301,6 +301,101 @@ function pfUI.uf:RefreshUnit(unit)
   end
 end
 
+function pfUI.uf:CreatePortrait(frame, pos, spacing)
+  if not frame then return end
+  if pos == "off" then return end
+
+  local default_border = pfUI_config.appearance.border.default
+  if pfUI_config.appearance.border.unitframes ~= "-1" then
+    default_border = pfUI_config.appearance.border.unitframes
+  end
+
+  local unit = frame.label
+  local id = frame.id or ""
+  local unitstr = unit .. id
+
+  frame.portrait = CreateFrame("PlayerModel", "pfPortrait" .. unitstr, frame)
+  frame.portrait:RegisterEvent("UNIT_PORTRAIT_UPDATE")
+  frame.portrait:RegisterEvent("UNIT_MODEL_CHANGED")
+  frame.portrait:RegisterEvent("PLAYER_ENTERING_WORLD")
+  frame.portrait:RegisterEvent("PLAYER_TARGET_CHANGED")
+
+  frame.portrait.base = frame
+
+  frame.portrait:SetScript("OnEvent", function()
+    local unit = this.base.label
+    local id = this.base.id or ""
+    local unitstr = unit .. id
+
+    if event == "PLAYER_ENTERING_WORLD" or event == "PLAYER_TARGET_CHANGED" or ( arg1 and arg1 == unitstr ) then
+      pfUI.uf:UpdatePortrait()
+    end
+  end)
+
+  frame.portrait:SetScript("OnShow", function()
+    pfUI.uf:UpdatePortrait()
+  end)
+
+  if unitstr == "targettarget" then
+    frame.portrait:SetScript("OnUpdate", function()
+      if not this.tick or this.tick < GetTime() then this.tick = GetTime() + 1 else return end
+      pfUI.uf:UpdatePortrait()
+    end)
+  end
+
+  if pos == "bar" then
+    frame.portrait:SetParent(frame.hp.bar)
+    frame.portrait:SetAllPoints(frame.hp.bar)
+    frame.portrait:SetAlpha(pfUI_config.unitframes.portraitalpha)
+  elseif pos == "left" then
+    frame.portrait:SetWidth(frame:GetHeight())
+    frame.portrait:SetHeight(frame:GetHeight())
+    frame:SetWidth(frame:GetWidth() + default_border*2 + spacing + frame.portrait:GetWidth())
+    frame.portrait:SetPoint("LEFT", frame, "LEFT", 0, 0)
+
+    frame.hp:ClearAllPoints()
+    frame.hp:SetPoint("TOPRIGHT", frame, "TOPRIGHT", 0, 0)
+    frame.power:ClearAllPoints()
+    frame.power:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", 0, 0)
+
+    pfUI.api:CreateBackdrop(frame.portrait)
+  elseif pos == "right" then
+    frame.portrait:SetWidth(frame:GetHeight())
+    frame.portrait:SetHeight(frame:GetHeight())
+    frame:SetWidth(frame:GetWidth() + default_border*2 + spacing + frame.portrait:GetWidth())
+    frame.portrait:SetPoint("RIGHT", frame, "RIGHT", 0, 0)
+
+    frame.hp:ClearAllPoints()
+    frame.hp:SetPoint("TOPLEFT", frame, "TOPLEFT", 0, 0)
+    frame.power:ClearAllPoints()
+    frame.power:SetPoint("BOTTOMLEFT", frame, "BOTTOMLEFT", 0, 0)
+
+    pfUI.api:CreateBackdrop(frame.portrait)
+  end
+end
+
+function pfUI.uf:UpdatePortrait()
+  local unit = this.base.label
+  local id = this.base.id or ""
+  local unitstr = unit .. id
+  local name = UnitName(unitstr) or ""
+
+  if this.name then this:SetCamera(0) end
+
+  if this.name == name then return end
+
+  if not UnitIsVisible(unitstr) or not UnitIsConnected(unitstr) then
+    this:SetModelScale(4.25)
+    this:SetPosition(0, 0, -1.0)
+    this:SetModel("Interface\\Buttons\\talktomequestionmark.mdx")
+    this.name = nil
+  else
+    this:SetUnit(unitstr)
+    this:SetCamera(0)
+    this.name = name
+  end
+end
+
 function pfUI.uf:CreateUnit(unit)
   unit:RegisterEvent("UNIT_AURA")
   unit:RegisterEvent("UNIT_HEALTH")

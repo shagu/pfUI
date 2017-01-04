@@ -7,6 +7,8 @@ pfUI:RegisterModule("group", function ()
     default_border = pfUI_config.appearance.border.groupframes
   end
 
+  local spacing = pfUI_config.unitframes.group.pspace
+
   -- hide blizzard group frames
   for i=1, 4 do
     if getglobal("PartyMemberFrame" .. i) then
@@ -83,7 +85,7 @@ pfUI:RegisterModule("group", function ()
     pfUI.uf.group[i] = CreateFrame("Button","pfGroup" .. i,UIParent)
 
     pfUI.uf.group[i]:SetWidth(175)
-    pfUI.uf.group[i]:SetHeight(40 + 2*default_border + pfUI_config.unitframes.group.pspace)
+    pfUI.uf.group[i]:SetHeight(40 + 2*default_border + spacing)
     pfUI.uf.group[i]:SetPoint("TOPLEFT", 5, -5 - ((i-1)*55))
     pfUI.api:UpdateMovable(pfUI.uf.group[i])
     pfUI.uf.group[i]:Hide()
@@ -112,6 +114,8 @@ pfUI:RegisterModule("group", function ()
     pfUI.uf.group[i].power.bar:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
     pfUI.uf.group[i].power.bar:SetAllPoints(pfUI.uf.group[i].power)
     pfUI.uf.group[i].power.bar:SetMinMaxValues(0, 100)
+
+    pfUI.uf:CreatePortrait(pfUI.uf.group[i], pfUI_config.unitframes.group.portrait, spacing)
 
     pfUI.uf.group[i].caption = pfUI.uf.group[i]:CreateFontString("Status", "HIGH", "GameFontNormal")
     pfUI.uf.group[i].caption:SetFont(pfUI.font_square, pfUI_config.global.font_size, "OUTLINE")
