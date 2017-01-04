@@ -337,7 +337,7 @@ pfUI:RegisterModule("panel", function ()
       end
     end
 
-    pfUI.panel:OutputPanel("zone", GetMinimapZoneText(), tooltip, click)
+    pfUI.panel:OutputPanel("地区", GetMinimapZoneText(), tooltip, click)
   end
 
   function pfUI.panel:OutputPanel(entry, value, tooltip, func)
