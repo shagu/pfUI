@@ -144,7 +144,7 @@ pfUI:RegisterModule("pet", function ()
 
   pfUI.uf.pet.hp = CreateFrame("Frame",nil, pfUI.uf.pet)
   pfUI.uf.pet.hp:SetWidth(100)
-  pfUI.uf.pet.hp:SetHeight(17)
+  pfUI.uf.pet.hp:SetHeight(16)
   pfUI.uf.pet.hp:SetPoint("TOP", 0, 0)
   pfUI.api:CreateBackdrop(pfUI.uf.pet.hp, default_border)
 
@@ -167,7 +167,7 @@ pfUI:RegisterModule("pet", function ()
   pfUI.uf.pet.power = CreateFrame("Frame",nil, pfUI.uf.pet)
   pfUI.uf.pet.power:SetPoint("BOTTOM", 0, 0)
   pfUI.uf.pet.power:SetWidth(100)
-  pfUI.uf.pet.power:SetHeight(3)
+  pfUI.uf.pet.power:SetHeight(4)
   pfUI.api:CreateBackdrop(pfUI.uf.pet.power, default_border)
 
   pfUI.uf.pet.power.bar = CreateFrame("StatusBar", nil, pfUI.uf.pet.power)
