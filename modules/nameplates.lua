@@ -33,6 +33,32 @@ pfUI:RegisterModule("nameplates", function ()
       end
   end)
 
+  -- emulate a rightclick detection even if the mouselooking has been started
+  pfUI.nameplates.emulateRightClick = CreateFrame("Frame", nil, UIParent)
+  pfUI.nameplates.emulateRightClick.time = nil
+  pfUI.nameplates.emulateRightClick.frame = nil
+  pfUI.nameplates.emulateRightClick:SetScript("OnUpdate", function()
+    -- break here if nothing to do
+    if not pfUI.nameplates.emulateRightClick.time or not pfUI.nameplates.emulateRightClick.frame then
+      this:Hide()
+      return
+    end
+
+    -- if threshold is reached (0.5 second) no click action will follow
+    if not IsMouselooking() and pfUI.nameplates.emulateRightClick.time + tonumber(pfUI_config.nameplates["clickthreshold"]) < GetTime() then
+      pfUI.nameplates.emulateRightClick:Hide()
+      return
+    end
+
+    -- run a usual nameplate rightclick action
+    if not IsMouselooking() then
+      pfUI.nameplates.emulateRightClick.frame:Click("LeftButton")
+      if UnitCanAttack("player", "target") then AttackTarget() end
+      pfUI.nameplates.emulateRightClick:Hide()
+      return
+    end
+  end)
+
   pfUI.nameplates:SetScript("OnUpdate", function()
     local frames = { WorldFrame:GetChildren() }
     for _, nameplate in ipairs(frames) do
@@ -43,7 +69,11 @@ pfUI:RegisterModule("nameplates", function ()
 
         -- hide default plates
         border:Hide()
+
+        -- try to avoid flickering as much as possible
         glow:Hide()
+        glow:SetAlpha(0)
+        glow.Show = function() return end
 
         if pfUI_config.nameplates.players == "1" then
           if not pfUI_playerDB[name:GetText()] or not pfUI_playerDB[name:GetText()]["class"] then
@@ -82,6 +112,18 @@ pfUI:RegisterModule("nameplates", function ()
         -- enable clickthrough
         if pfUI_config.nameplates["clickthrough"] == "0" then
           nameplate:EnableMouse(true)
+          if pfUI_config.nameplates["rightclick"] == "1" then
+            nameplate:SetScript("OnMouseDown", function()
+              if arg1 and arg1 == "RightButton" then
+                MouselookStart()
+
+                -- start detection of the rightclick emulation
+                pfUI.nameplates.emulateRightClick.time = GetTime()
+                pfUI.nameplates.emulateRightClick.frame = this
+                pfUI.nameplates.emulateRightClick:Show()
+              end
+            end)
+          end
         else
           nameplate:EnableMouse(false)
         end
@@ -186,18 +228,28 @@ pfUI:RegisterModule("nameplates", function ()
 
         -- adjust healthbar color
         local red, green, blue, _ = healthbar:GetStatusBarColor()
-        if pfUI_playerDB[name:GetText()] and pfUI_playerDB[name:GetText()]["class"] and RAID_CLASS_COLORS[pfUI_playerDB[name:GetText()]["class"]] then
-          healthbar:SetStatusBarColor(
-            RAID_CLASS_COLORS[pfUI_playerDB[name:GetText()]["class"]].r,
-            RAID_CLASS_COLORS[pfUI_playerDB[name:GetText()]["class"]].g,
-            RAID_CLASS_COLORS[pfUI_playerDB[name:GetText()]["class"]].b,
-            0.9)
-        elseif red > 0.9 and green < 0.2 and blue < 0.2 then
-          healthbar:SetStatusBarColor(.9,.2,.3,0.8)
+        if red > 0.9 and green < 0.2 and blue < 0.2 then
+          if pfUI_config.nameplates["enemyclassc"] == "1" and pfUI_playerDB[name:GetText()] and pfUI_playerDB[name:GetText()]["class"] and RAID_CLASS_COLORS[pfUI_playerDB[name:GetText()]["class"]] then
+            healthbar:SetStatusBarColor(
+              RAID_CLASS_COLORS[pfUI_playerDB[name:GetText()]["class"]].r,
+              RAID_CLASS_COLORS[pfUI_playerDB[name:GetText()]["class"]].g,
+              RAID_CLASS_COLORS[pfUI_playerDB[name:GetText()]["class"]].b,
+              0.9)
+          else
+            healthbar:SetStatusBarColor(.9,.2,.3,0.8)
+          end
         elseif red > 0.9 and green > 0.9 and blue < 0.2 then
           healthbar:SetStatusBarColor(1,1,.3,0.8)
         elseif blue > 0.9 and red == 0 and green == 0 then
-          healthbar:SetStatusBarColor(0.2,0.6,1,0.8)
+          if pfUI_config.nameplates["friendclassc"] == "1" and pfUI_playerDB[name:GetText()] and pfUI_playerDB[name:GetText()]["class"] and RAID_CLASS_COLORS[pfUI_playerDB[name:GetText()]["class"]] then
+            healthbar:SetStatusBarColor(
+              RAID_CLASS_COLORS[pfUI_playerDB[name:GetText()]["class"]].r,
+              RAID_CLASS_COLORS[pfUI_playerDB[name:GetText()]["class"]].g,
+              RAID_CLASS_COLORS[pfUI_playerDB[name:GetText()]["class"]].b,
+              0.9)
+          else
+            healthbar:SetStatusBarColor(0.2,0.6,1,0.8)
+          end
         elseif red == 0 and green > 0.99 and blue == 0 then
           healthbar:SetStatusBarColor(0.6,1,0,0.8)
         end
