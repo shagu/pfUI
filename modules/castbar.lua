@@ -110,20 +110,32 @@ pfUI:RegisterModule("castbar", function ()
         elseif event == "SPELLCAST_STOP" then
           if pfUI.castbar.player.casting then
             pfUI.castbar.player.fadeout = 1
+            pfUI.castbar.player.casting = nil
             pfUI.castbar.player.bar:SetMinMaxValues(1,pfUI.castbar.player.bar:GetValue())
           end
 
         elseif event == "SPELLCAST_CHANNEL_STOP" then
           if pfUI.castbar.player.channeling then
             pfUI.castbar.player.fadeout = 1
-            pfUI.castbar.player.bar:SetMinMaxValues(1,pfUI.castbar.player.bar:GetValue())
+            pfUI.castbar.player.channeling = nil
+
+            if ( GetTime() + 0.3 < pfUI.castbar.player.endTime ) then
+              pfUI.castbar.player.bar:SetStatusBarColor(1,.5,.5,1)
+              pfUI.castbar.player.bar:SetMinMaxValues(1,100)
+              pfUI.castbar.player.bar:SetValue(100)
+              return
+            end
           end
 
         elseif event == "SPELLCAST_FAILED" or event == "SPELLCAST_INTERRUPTED" then
-            pfUI.castbar.player.fadeout = 1
-            pfUI.castbar.player.bar:SetStatusBarColor(1,.5,.5,1)
-            pfUI.castbar.player.bar:SetMinMaxValues(1,100)
-            pfUI.castbar.player.bar:SetValue(100)
+            if pfUI.castbar.player.casting then
+              pfUI.castbar.player.fadeout = 1
+              pfUI.castbar.player.casting = nil
+
+              pfUI.castbar.player.bar:SetStatusBarColor(1,.5,.5,1)
+              pfUI.castbar.player.bar:SetMinMaxValues(1,100)
+              pfUI.castbar.player.bar:SetValue(100)
+            end
 
         elseif ( event == "SPELLCAST_DELAYED" ) then
           if( pfUI.castbar.player:IsShown() ) then
@@ -147,56 +159,64 @@ pfUI:RegisterModule("castbar", function ()
       pfUI.castbar.player:SetScript("OnUpdate", function ()
         if pfUI_config.castbar.player.hide_pfui == "1" then pfUI.castbar.player:Hide() return end
 
-        -- fadeout
-        if pfUI.castbar.player.fadeout and pfUI.castbar.player:GetAlpha() > 0 then
-          pfUI.castbar.player:SetAlpha(pfUI.castbar.player:GetAlpha()-0.025)
-          if pfUI.castbar.player:GetAlpha() == 0 then
-            pfUI.castbar.player:Hide()
-            pfUI.castbar.player.fadeout = nil
-          end
-        end
-
         -- cast
-        if ( pfUI.castbar.player.casting ) then
+        if pfUI.castbar.player.casting then
           local status = GetTime()
-          local cur = pfUI.api.round(GetTime() - pfUI.castbar.player.startTime,1)
-          local max = pfUI.api.round(pfUI.castbar.player.maxValue - pfUI.castbar.player.startTime,1)
+          local cur = GetTime() - pfUI.castbar.player.startTime
+          local max = pfUI.castbar.player.maxValue - pfUI.castbar.player.startTime
           local delay = pfUI.castbar.player.delay
+
+          pfUI.castbar.player.bar:SetValue(status)
+
           if cur > max then cur = max end
           if ( status > pfUI.castbar.player.maxValue ) then
             status = pfUI.castbar.player.maxValue
           end
+
           if delay > 0 then
             delay = "|cffffaaaa+" .. pfUI.api.round(delay,1) .. " |r "
-            pfUI.castbar.player.bar.right:SetText(delay .. cur .. " / " .. max)
+            pfUI.castbar.player.bar.right:SetText(delay .. pfUI.api.round(cur,1) .. " / " .. max)
           else
-            pfUI.castbar.player.bar.right:SetText(cur .. " / " .. max)
+            pfUI.castbar.player.bar.right:SetText(pfUI.api.round(cur,1) .. " / " .. pfUI.api.round(max,1))
           end
-          pfUI.castbar.player.bar:SetValue(status)
+
+          return
 
         -- channel
-        elseif ( pfUI.castbar.player.channeling ) then
+        elseif pfUI.castbar.player.channeling then
           local time = GetTime()
           local barValue = pfUI.castbar.player.startTime + (pfUI.castbar.player.endTime - time)
-          local cur = pfUI.api.round(pfUI.castbar.player.endTime - GetTime(),1)
-          local max = pfUI.api.round(pfUI.castbar.player.endTime - pfUI.castbar.player.startTime,1)
+
+          pfUI.castbar.player.bar:SetValue( barValue )
+
+          local cur = pfUI.castbar.player.endTime - GetTime()
+          local max = pfUI.castbar.player.endTime - pfUI.castbar.player.startTime
           local delay = pfUI.castbar.player.delay
           if cur > max then cur = max end
           if ( time > pfUI.castbar.player.endTime ) then
             time = pfUI.castbar.player.endTime
           end
-          if ( time == pfUI.castbar.player.endTime ) then
+          if ( time >= pfUI.castbar.player.endTime ) then
             pfUI.castbar.player.channeling = nil
             pfUI.castbar.player.fadeout = 1
             return
           end
           if delay > 0 then
             delay = "|cffffaaaa-" .. pfUI.api.round(delay,1) .. " |r "
-            pfUI.castbar.player.bar.right:SetText(delay .. cur)
+            pfUI.castbar.player.bar.right:SetText(delay .. pfUI.api.round(cur,1))
           else
-            pfUI.castbar.player.bar.right:SetText(cur)
+            pfUI.castbar.player.bar.right:SetText(pfUI.api.round(cur,1))
           end
-          pfUI.castbar.player.bar:SetValue( barValue )
+
+          return
+
+        -- fadeout
+        elseif pfUI.castbar.player.fadeout and pfUI.castbar.player:GetAlpha() > 0 then
+          pfUI.castbar.player:SetAlpha(pfUI.castbar.player:GetAlpha()-0.025)
+          if pfUI.castbar.player:GetAlpha() == 0 then
+            pfUI.castbar.player:Hide()
+            pfUI.castbar.player.fadeout = nil
+          end
         end
       end)
     end
