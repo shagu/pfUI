@@ -7,7 +7,9 @@ pfUI:RegisterModule("target", function ()
     default_border = pfUI_config.appearance.border.unitframes
   end
 
-    -- Hide Blizzard target frame and unregister all events to prevent it from popping up again
+  local spacing = pfUI_config.unitframes.target.pspace
+
+  -- Hide Blizzard target frame and unregister all events to prevent it from popping up again
   TargetFrame:Hide()
   TargetFrame:UnregisterAllEvents()
 
@@ -21,7 +23,7 @@ pfUI:RegisterModule("target", function ()
   pfUI.uf.target:SetFrameStrata("LOW")
   pfUI.uf.target:Hide()
   pfUI.uf.target:SetWidth(pfUI_config.unitframes.target.width)
-  pfUI.uf.target:SetHeight(pfUI_config.unitframes.target.height + pfUI_config.unitframes.target.pheight + 2*default_border + pfUI_config.unitframes.target.pspace)
+  pfUI.uf.target:SetHeight(pfUI_config.unitframes.target.height + pfUI_config.unitframes.target.pheight + 2*default_border + spacing)
   pfUI.uf.target:SetPoint("BOTTOMLEFT", UIParent, "BOTTOM", 75, 125)
   pfUI.api:UpdateMovable(pfUI.uf.target)
   pfUI.uf.target:RegisterForClicks('LeftButtonUp', 'RightButtonUp')
@@ -310,25 +312,6 @@ pfUI:RegisterModule("target", function ()
   pfUI.uf.target.hp.raidIcon:SetPoint("TOP", pfUI.uf.target.hp, "TOP", 0, 6)
   pfUI.uf.target.hp.raidIcon:Hide()
 
-
-  if pfUI_config.unitframes.portrait == "1" then
-    pfUI.uf.target.hp.bar.portrait = CreateFrame("PlayerModel",nil,pfUI.uf.target.hp.bar)
-    pfUI.uf.target.hp.bar.portrait:SetAllPoints(pfUI.uf.target.hp.bar)
-    pfUI.uf.target.hp.bar.portrait:RegisterEvent("UNIT_PORTRAIT_UPDATE")
-    pfUI.uf.target.hp.bar.portrait:RegisterEvent("UNIT_MODEL_CHANGED")
-    pfUI.uf.target.hp.bar.portrait:RegisterEvent("PLAYER_ENTERING_WORLD")
-    pfUI.uf.target.hp.bar.portrait:RegisterEvent("PLAYER_TARGET_CHANGED")
-
-    pfUI.uf.target.hp.bar.portrait:SetScript("OnEvent", function() this:Update() end)
-    pfUI.uf.target.hp.bar.portrait:SetScript("OnShow", function() this:Update() end)
-
-    function pfUI.uf.target.hp.bar.portrait.Update()
-      pfUI.uf.target.hp.bar.portrait:SetUnit("target")
-      pfUI.uf.target.hp.bar.portrait:SetCamera(0)
-      pfUI.uf.target.hp.bar.portrait:SetAlpha(0.10)
-    end
-  end
-
   pfUI.uf.target.power = CreateFrame("Frame",nil, pfUI.uf.target)
   pfUI.uf.target.power:SetPoint("BOTTOM", 0, 0)
   pfUI.uf.target.power:SetWidth(pfUI_config.unitframes.target.width)
@@ -339,6 +322,8 @@ pfUI:RegisterModule("target", function ()
   pfUI.uf.target.power.bar:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
   pfUI.uf.target.power.bar:SetAllPoints(pfUI.uf.target.power)
   pfUI.uf.target.power.bar:SetMinMaxValues(0, 100)
+
+  pfUI.uf:CreatePortrait(pfUI.uf.target, pfUI_config.unitframes.target.portrait, spacing)
 
   pfUI.uf.target.hpText = pfUI.uf.target:CreateFontString("Status", "HIGH", "GameFontNormal")
   pfUI.uf.target.hpText:SetFont(pfUI.font_square, pfUI_config.global.font_size, "OUTLINE")

@@ -7,12 +7,14 @@ pfUI:RegisterModule("pet", function ()
     default_border = pfUI_config.appearance.border.unitframes
   end
 
+  local spacing = pfUI_config.unitframes.pet.pspace
+
   pfUI.uf.pet = CreateFrame("Button","pfPet",UIParent)
   pfUI.uf.pet.label = "pet"
   pfUI.uf.pet.id = ""
   pfUI.uf.pet:SetFrameStrata("LOW")
   pfUI.uf.pet:SetWidth(100)
-  pfUI.uf.pet:SetHeight(20 + 2*default_border + pfUI_config.unitframes.pet.pspace)
+  pfUI.uf.pet:SetHeight(20 + 2*default_border + spacing)
   pfUI.uf.pet:ClearAllPoints()
   pfUI.uf.pet:SetPoint("BOTTOM", UIParent , "BOTTOM", 0, 163)
   pfUI.api:UpdateMovable(pfUI.uf.pet)
@@ -142,7 +144,7 @@ pfUI:RegisterModule("pet", function ()
 
   pfUI.uf.pet.hp = CreateFrame("Frame",nil, pfUI.uf.pet)
   pfUI.uf.pet.hp:SetWidth(100)
-  pfUI.uf.pet.hp:SetHeight(17)
+  pfUI.uf.pet.hp:SetHeight(16)
   pfUI.uf.pet.hp:SetPoint("TOP", 0, 0)
   pfUI.api:CreateBackdrop(pfUI.uf.pet.hp, default_border)
 
@@ -165,13 +167,15 @@ pfUI:RegisterModule("pet", function ()
   pfUI.uf.pet.power = CreateFrame("Frame",nil, pfUI.uf.pet)
   pfUI.uf.pet.power:SetPoint("BOTTOM", 0, 0)
   pfUI.uf.pet.power:SetWidth(100)
-  pfUI.uf.pet.power:SetHeight(3)
+  pfUI.uf.pet.power:SetHeight(4)
   pfUI.api:CreateBackdrop(pfUI.uf.pet.power, default_border)
 
   pfUI.uf.pet.power.bar = CreateFrame("StatusBar", nil, pfUI.uf.pet.power)
   pfUI.uf.pet.power.bar:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
   pfUI.uf.pet.power.bar:SetAllPoints(pfUI.uf.pet.power)
   pfUI.uf.pet.power.bar:SetMinMaxValues(0, 100)
+
+  pfUI.uf:CreatePortrait(pfUI.uf.pet, pfUI_config.unitframes.pet.portrait, spacing)
 
   pfUI.uf.pet.hp.text = pfUI.uf.pet.hp.bar:CreateFontString("Status", "LOW", "GameFontNormal")
   pfUI.uf.pet.hp.text:SetFont(pfUI.font_square, pfUI_config.global.font_size - 2, "OUTLINE")
