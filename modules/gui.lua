@@ -914,10 +914,10 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui:CreateConfig(pfUI.gui.uf, "仅不显示自己的Debuff", pfUI_config.unitframes.raid, "debuffs_class", "checkbox")
 
   pfUI.gui:CreateConfig(pfUI.gui.uf, "其他设置", nil, nil, "header")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "目标的目标位置", pfUI_config.unitframes.ttarget, "portrait", "dropdown", { "bar", "left", "right", "off" })
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "目标的目标头像位置", pfUI_config.unitframes.ttarget, "portrait", "dropdown", { "bar", "left", "right", "off" })
   pfUI.gui:CreateConfig(pfUI.gui.uf, "目标的目标能量值间隔调整", pfUI_config.unitframes.ttarget, "pspace")
 
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "宠物的位置", pfUI_config.unitframes.pet, "portrait", "dropdown", { "bar", "left", "right", "off" })
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "宠物的头像位置", pfUI_config.unitframes.pet, "portrait", "dropdown", { "bar", "left", "right", "off" })
   pfUI.gui:CreateConfig(pfUI.gui.uf, "宠物能量值间隔调整", pfUI_config.unitframes.pet, "pspace")
 
   -- actionbar
