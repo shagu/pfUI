@@ -44,6 +44,7 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("unitframes", nil,           "customcolor",      ".2,.2,.2,1")
   pfUI:UpdateConfig("unitframes", nil,           "animation_speed",  "5")
   pfUI:UpdateConfig("unitframes", nil,           "portraitalpha",    "0.1")
+  pfUI:UpdateConfig("unitframes", nil,           "portraittexture",  "1")
 
   pfUI:UpdateConfig("unitframes", nil,           "buff_size",        "20")
   pfUI:UpdateConfig("unitframes", nil,           "debuff_size",      "20")

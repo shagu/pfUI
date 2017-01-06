@@ -863,6 +863,7 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui:CreateConfig(pfUI.gui.uf, "Custom healthbar color", pfUI_config.unitframes, "customcolor", "color")
   pfUI.gui:CreateConfig(pfUI.gui.uf, "Animation speed", pfUI_config.unitframes, "animation_speed")
   pfUI.gui:CreateConfig(pfUI.gui.uf, "Portrait Alpha on Bars", pfUI_config.unitframes, "portraitalpha")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "Use 2D Portraits as fallback", pfUI_config.unitframes, "portraittexture", "checkbox")
 
   pfUI.gui:CreateConfig(pfUI.gui.uf, "Buff size", pfUI_config.unitframes, "buff_size")
   pfUI.gui:CreateConfig(pfUI.gui.uf, "Debuff size", pfUI_config.unitframes, "debuff_size")
