@@ -118,11 +118,15 @@ pfUI.firstrun:SetScript("OnEvent", function() pfUI.firstrun:NextStep() end)
 
 function pfUI.firstrun:AddStep(name, yfunc, nfunc, descr, cmpnt)
   if not name then return end
-  pfUI.firstrun.steps[name] = {}
-  if yfunc then pfUI.firstrun.steps[name].yfunc = yfunc end
-  if nfunc then pfUI.firstrun.steps[name].nfunc = nfunc end
-  if descr then pfUI.firstrun.steps[name].descr = descr end
-  if cmpnt then pfUI.firstrun.steps[name].cmpnt = cmpnt end
+
+  local step = {}
+  step.name = name
+  step.yfunc = yfunc or nil
+  step.nfunc = nfunc or nil
+  step.descr = descr or nil
+  step.cmpnt = cmpnt or nil
+
+  table.insert(pfUI.firstrun.steps, step)
 end
 
 function pfUI.firstrun:NextStep()
@@ -140,14 +144,16 @@ function pfUI.firstrun:NextStep()
     pfUI.api:CreateQuestionDialog("Welcome to |cff33ffccpf|cffffffffUI|r!\n\n"..
     "I'm the first run wizzard that will guide you through some basic configuration.\n"..
     "You'll now be prompted for several questions. To get a default installation,\n"..
-    "you might want to click \"Okay\" everywhere. A few settings are client settings\n"..
+    "you might want to click \"Yes\" everywhere. A few settings are client settings\n"..
     "(e.g chat questions) so if you don't want to lose your chat configurations, you\n"..
     "should be careful with your choices.\n\n"..
     "Visit |cff33ffcchttp://shagu.org|r to check for the latest version.", yes, no)
     return
   end
 
-  for name, step in pairs(pfUI.firstrun.steps) do
+  for _, step in pairs(pfUI.firstrun.steps) do
+    local name = step.name
+
     if not pfUI_init[name] then
       local function yes()
         pfUI_init[name] = true
