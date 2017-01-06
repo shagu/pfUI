@@ -987,6 +987,7 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui:CreateConfig(pfUI.gui.chat, "Right chat height:", pfUI_config.chat.right, "height")
   pfUI.gui:CreateConfig(pfUI.gui.chat, "Use custom background:", pfUI_config.chat.global, "custombg", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.chat, "Background color:", pfUI_config.chat.global, "background", "color")
+  pfUI.gui:CreateConfig(pfUI.gui.chat, "Change layout of incoming whispers:", pfUI_config.chat.global, "whispermod", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.chat, "Color of incoming whispers:", pfUI_config.chat.global, "whisper", "color")
   pfUI.gui:CreateConfig(pfUI.gui.chat, "Time in seconds until the chat gets faded:", pfUI_config.chat.global, "fadetime")
 

@@ -535,9 +535,12 @@ pfUI:RegisterModule("chat", function ()
   local cr, cg, cb, ca = pfUI.api.strsplit(",", pfUI_config.chat.global.whisper)
   cr, cg, cb = tonumber(cr), tonumber(cg), tonumber(cb)
   local wcol = string.format("%02x%02x%02x",cr * 255,cg * 255, cb * 255)
-  CHAT_WHISPER_GET = '|cff' .. wcol .. '[W]' .. default
 
-  CHAT_WHISPER_INFORM_GET = '[W]' .. default
+  if pfUI_config.chat.global.whispermod == "1" then
+    CHAT_WHISPER_GET = '|cff' .. wcol .. '[W]' .. default
+    CHAT_WHISPER_INFORM_GET = '[W]' .. default
+  end
+
   CHAT_YELL_GET = '[Y]' .. default
 
   for i=1,NUM_CHAT_WINDOWS do
@@ -559,9 +562,11 @@ pfUI:RegisterModule("chat", function ()
         end
         text = string.gsub(text, "|Hplayer:(.-)|h%[.-%]|h(.-:-)", "[|Hplayer:%1|h" .. Name .. "|h]" .. "%2")
 
-        -- make incoming whispers lighter than outgoing
-        if string.find(text, '|cff'..wcol, 1) == 1 then
-          text = string.gsub(text, "|r", "|cff" .. wcol)
+        if pfUI_config.chat.global.whispermod == "1" then
+          -- patch incoming whisper string to match the colors
+          if string.find(text, '|cff'..wcol, 1) == 1 then
+            text = string.gsub(text, "|r", "|cff" .. wcol)
+          end
         end
 
         local pattern = "%]%s+(.*|Hplayer)"
