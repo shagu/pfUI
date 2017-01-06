@@ -976,6 +976,7 @@ pfUI:RegisterModule("gui", function ()
 
   -- chat
   pfUI.gui.chat = pfUI.gui:CreateConfigTab("Chat")
+  pfUI.gui:CreateConfig(pfUI.gui.chat, "Enable \"Loot & Spam\" Chat window:", pfUI_config.chat.right, "enable", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.chat, "Chat inputbox width:", pfUI_config.chat.text, "input_width")
   pfUI.gui:CreateConfig(pfUI.gui.chat, "Chat inputbox height:", pfUI_config.chat.text, "input_height")
   pfUI.gui:CreateConfig(pfUI.gui.chat, "Timestamp in chat:", pfUI_config.chat.text, "time", "checkbox")
