@@ -1,11 +1,11 @@
 pfUI:RegisterModule("chat", function ()
 
-  pfUI.firstrun:AddStep("chat_position", function() pfUI.chat.SetupPositions() end, nil, "Chat Layout\n\n" ..
-  "To use a recommended layout of chat windows that fits best into pfUI,\n" ..
-  "your chat layout will now be automatically aligned.")
-  pfUI.firstrun:AddStep("chat_channels", function() pfUI.chat.SetupChannels() end, nil, "Chat Channels\n\n"..
-  "To get a default pfUI experience, your chat windows are going to be set up now\n"..
-  "to display the recommended channels, such as Loot and World.")
+  pfUI.firstrun:AddStep("chat_position", function() pfUI.chat.SetupPositions() end, nil, "聊天布局\n\n" ..
+  "使用最适合pfUI的聊天窗口的推荐布局,\n" ..
+  "您的聊天布局现在将自动对齐。")
+  pfUI.firstrun:AddStep("chat_channels", function() pfUI.chat.SetupChannels() end, nil, "聊天频道\n\n"..
+  "要获得默认的pfUI体验，您的聊天窗口将立即设置\n"..
+  "以显示推荐的频道，例如Loot&World。")
 
   local default_border = pfUI_config.appearance.border.default
   if pfUI_config.appearance.border.chat ~= "-1" then

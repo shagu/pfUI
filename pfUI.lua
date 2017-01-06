@@ -137,13 +137,13 @@ function pfUI.firstrun:NextStep()
       this:GetParent():Hide()
     end
 
-    pfUI.api:CreateQuestionDialog("Welcome to |cff33ffccpf|cffffffffUI|r!\n\n"..
-    "I'm the first run wizzard that will guide you through some basic configuration.\n"..
-    "You'll now be prompted for several questions. To get a default installation,\n"..
-    "you might want to click \"Okay\" everywhere. A few settings are client settings\n"..
-    "(e.g chat questions) so if you don't want to lose your chat configurations, you\n"..
-    "should be careful with your choices.\n\n"..
-    "Visit |cff33ffcchttp://shagu.org|r to check for the latest version.", yes, no)
+    pfUI.api:CreateQuestionDialog("欢迎使用 |cff33ffccpf|cffffffffUI|r!\n\n"..
+    "我是第一个运行向导，将指导您完成一些基本配置。\n"..
+    "系统将提示你确定几个问题。\n"..
+    "获取默认安装，你可能需要单击 \"确定\" 。 有一些设置是客户端设置\n"..
+    "所以，如果你不想失去你的聊天配置，\n"..
+    "你得小心选择。\n\n"..
+    "访问|cff33ffcchttp://shagu.org|r 以获取最新版本", yes, no)
     return
   end
 
