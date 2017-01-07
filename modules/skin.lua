@@ -62,6 +62,7 @@ pfUI:RegisterModule("skin", function ()
 
 pfUI.api:CreateBackdrop(ShoppingTooltip1)
 pfUI.api:CreateBackdrop(ShoppingTooltip2)
+pfUI.api:CreateBackdrop(ItemRefTooltip)
 
 ShoppingTooltip1:SetScript("OnShow", function()
   local a, b, c, d, e = this:GetPoint()
