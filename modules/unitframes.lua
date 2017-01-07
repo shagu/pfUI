@@ -335,7 +335,7 @@ function pfUI.uf:CreatePortrait(frame, pos, spacing)
     local id = this.base.id or ""
     local unitstr = unit .. id
 
-    if event == "PLAYER_ENTERING_WORLD" or event == "PLAYER_TARGET_CHANGED" or ( arg1 and arg1 == unitstr ) then
+    if event == "PLAYER_ENTERING_WORLD" or (unitstr == "target" and event == "PLAYER_TARGET_CHANGED") or (unitstr == "targettarget" and event == "PLAYER_TARGET_CHANGED") or ( arg1 and arg1 == unitstr ) then
       pfUI.uf:UpdatePortrait()
     end
   end)
@@ -388,8 +388,6 @@ function pfUI.uf:UpdatePortrait()
   local unitstr = unit .. id
   local name = UnitName(unitstr) or ""
 
-  if this.name == name then return end
-
   if not UnitIsVisible(unitstr) or not UnitIsConnected(unitstr) then
     if this.pos == "bar" then
       this.tex:Hide()
@@ -405,13 +403,11 @@ function pfUI.uf:UpdatePortrait()
       this.model:SetPosition(0, 0, -1)
       this.model:SetModel("Interface\\Buttons\\talktomequestionmark.mdx")
     end
-    this.name = nil
   else
     this.tex:Hide()
     this.model:Show()
     this.model:SetUnit(unitstr)
     this.model:SetCamera(0)
-    this.name = name
   end
 end
 
