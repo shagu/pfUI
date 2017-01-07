@@ -213,7 +213,7 @@ pfUI:RegisterModule("nameplates", function ()
     local name = name:GetText()
 
     -- target
-    if pfUI.nameplates.targets[name] == nil and UnitName("target") == nil then
+    if not pfUI_playerDB[name] and pfUI.nameplates.targets[name] == nil and UnitName("target") == nil then
       TargetByName(name, true)
       if UnitIsPlayer("target") then
         local _, class = UnitClass("target")
@@ -228,7 +228,7 @@ pfUI:RegisterModule("nameplates", function ()
     end
 
     -- mouseover
-    if pfUI.nameplates.targets[name] == nil and UnitName("mouseover") == name then
+    if not pfUI_playerDB[name] and pfUI.nameplates.targets[name] == nil and UnitName("mouseover") == name then
       if UnitIsPlayer("mouseover") then
         local _, class = UnitClass("mouseover")
         pfUI_playerDB[name] = {}
