@@ -57,6 +57,9 @@ pfUI:RegisterModule("nameplates", function ()
       healthbar.bg:SetHeight(healthbar:GetHeight() + 3)
     end
 
+    healthbar.reaction = nil
+    healthbar.playername = nil
+
     -- raidtarget
     raidicon:ClearAllPoints()
     raidicon:SetWidth(pfUI_config.nameplates.raidiconsize)
