@@ -344,13 +344,6 @@ function pfUI.uf:CreatePortrait(frame, pos, spacing)
     pfUI.uf:UpdatePortrait()
   end)
 
-  if unitstr == "targettarget" then
-    frame.portrait:SetScript("OnUpdate", function()
-      if not this.tick or this.tick < GetTime() then this.tick = GetTime() + 1 else return end
-      pfUI.uf:UpdatePortrait()
-    end)
-  end
-
   if pos == "bar" then
     frame.portrait:SetParent(frame.hp.bar)
     frame.portrait:SetAllPoints(frame.hp.bar)

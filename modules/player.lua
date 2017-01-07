@@ -335,14 +335,14 @@ pfUI:RegisterModule("player", function ()
     end)
   end
 
-  pfUI.uf.player.hpText = pfUI.uf.player:CreateFontString("Status", "HIGH", "GameFontNormal")
+  pfUI.uf.player.hpText = pfUI.uf.player:CreateFontString("Status", "OVERLAY", "GameFontNormal")
   pfUI.uf.player.hpText:SetFont(pfUI.font_square, pfUI_config.global.font_size, "OUTLINE")
   pfUI.uf.player.hpText:ClearAllPoints()
   pfUI.uf.player.hpText:SetJustifyH("RIGHT")
   pfUI.uf.player.hpText:SetFontObject(GameFontWhite)
   pfUI.uf.player.hpText:SetText("5000")
 
-  pfUI.uf.player.powerText = pfUI.uf.player:CreateFontString("Status", "HIGH", "GameFontNormal")
+  pfUI.uf.player.powerText = pfUI.uf.player:CreateFontString("Status", "OVERLAY", "GameFontNormal")
   pfUI.uf.player.powerText:SetFont(pfUI.font_square, pfUI_config.global.font_size, "OUTLINE")
   pfUI.uf.player.powerText:ClearAllPoints()
   pfUI.uf.player.powerText:SetJustifyH("LEFT")

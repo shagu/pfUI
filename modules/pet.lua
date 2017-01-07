@@ -177,7 +177,7 @@ pfUI:RegisterModule("pet", function ()
 
   pfUI.uf:CreatePortrait(pfUI.uf.pet, pfUI_config.unitframes.pet.portrait, spacing)
 
-  pfUI.uf.pet.hp.text = pfUI.uf.pet.hp.bar:CreateFontString("Status", "LOW", "GameFontNormal")
+  pfUI.uf.pet.hp.text = pfUI.uf.pet.hp.bar:CreateFontString("Status", "OVERLAY", "GameFontNormal")
   pfUI.uf.pet.hp.text:SetFont(pfUI.font_square, pfUI_config.global.font_size - 2, "OUTLINE")
   pfUI.uf.pet.hp.text:ClearAllPoints()
   pfUI.uf.pet.hp.text:SetAllPoints(pfUI.uf.pet.hp.bar)
