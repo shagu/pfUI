@@ -77,9 +77,9 @@ pfUI:RegisterModule("castbar", function ()
           local r,g,b,a = pfUI.api.strsplit(",", pfUI_config.appearance.castbar.castbarcolor)
           pfUI.castbar.player.bar:SetStatusBarColor(r,g,b,a)
           pfUI.castbar.player.startTime = GetTime()
-          pfUI.castbar.player.maxValue = pfUI.castbar.player.startTime + (arg2 / 1000)
+          pfUI.castbar.player.maxValue = arg2 / 1000
           pfUI.castbar.player.endTime = nil
-          pfUI.castbar.player.bar:SetMinMaxValues(pfUI.castbar.player.startTime, pfUI.castbar.player.maxValue)
+          pfUI.castbar.player.bar:SetMinMaxValues(0, pfUI.castbar.player.maxValue)
           pfUI.castbar.player.bar:SetValue(pfUI.castbar.player.startTime)
           pfUI.castbar.player.holdTime = 0
           pfUI.castbar.player.casting = 1
@@ -140,9 +140,6 @@ pfUI:RegisterModule("castbar", function ()
         elseif ( event == "SPELLCAST_DELAYED" ) then
           if( pfUI.castbar.player:IsShown() ) then
             pfUI.castbar.player.delay = pfUI.castbar.player.delay + arg1/1000
-            pfUI.castbar.player.startTime = pfUI.castbar.player.startTime + (arg1 / 1000)
-            pfUI.castbar.player.maxValue = pfUI.castbar.player.maxValue + (arg1 / 1000)
-            pfUI.castbar.player.bar:SetMinMaxValues(pfUI.castbar.player.startTime, pfUI.castbar.player.maxValue)
           end
 
         elseif ( event == "SPELLCAST_CHANNEL_UPDATE" ) then
@@ -161,17 +158,13 @@ pfUI:RegisterModule("castbar", function ()
 
         -- cast
         if pfUI.castbar.player.casting then
-          local status = GetTime()
-          local cur = GetTime() - pfUI.castbar.player.startTime
-          local max = pfUI.castbar.player.maxValue - pfUI.castbar.player.startTime
+          local cur = GetTime() - pfUI.castbar.player.startTime - pfUI.castbar.player.delay
+          local max = pfUI.castbar.player.maxValue
           local delay = pfUI.castbar.player.delay
 
-          pfUI.castbar.player.bar:SetValue(status)
+          pfUI.castbar.player.bar:SetValue(cur)
 
           if cur > max then cur = max end
-          if ( status > pfUI.castbar.player.maxValue ) then
-            status = pfUI.castbar.player.maxValue
-          end
 
           if delay > 0 then
             delay = "|cffffaaaa+" .. pfUI.api.round(delay,1) .. " |r "
