@@ -390,7 +390,7 @@ pfUI:RegisterModule("panel", function ()
   end
 
   pfUI.panel.left:SetHeight(pfUI_config.global.font_size+default_border*2)
-  pfUI.api:CreateBackdrop(pfUI.panel.left, default_border, nil, true)
+  pfUI.api:CreateBackdrop(pfUI.panel.left, default_border, nil)
 
   pfUI.panel.left.hide = CreateFrame("Button", nil, pfUI.panel.left)
   pfUI.panel.left.hide:ClearAllPoints()
@@ -456,7 +456,7 @@ pfUI:RegisterModule("panel", function ()
     pfUI.panel.right:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", -5, 5)
   end
   pfUI.panel.right:SetHeight(pfUI_config.global.font_size+default_border*2)
-  pfUI.api:CreateBackdrop(pfUI.panel.right, default_border, nil, true)
+  pfUI.api:CreateBackdrop(pfUI.panel.right, default_border, nil)
 
   pfUI.panel.right.hide = CreateFrame("Button", nil, pfUI.panel.right)
   pfUI.panel.right.hide:ClearAllPoints()

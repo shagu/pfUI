@@ -118,11 +118,15 @@ pfUI.firstrun:SetScript("OnEvent", function() pfUI.firstrun:NextStep() end)
 
 function pfUI.firstrun:AddStep(name, yfunc, nfunc, descr, cmpnt)
   if not name then return end
-  pfUI.firstrun.steps[name] = {}
-  if yfunc then pfUI.firstrun.steps[name].yfunc = yfunc end
-  if nfunc then pfUI.firstrun.steps[name].nfunc = nfunc end
-  if descr then pfUI.firstrun.steps[name].descr = descr end
-  if cmpnt then pfUI.firstrun.steps[name].cmpnt = cmpnt end
+
+  local step = {}
+  step.name = name
+  step.yfunc = yfunc or nil
+  step.nfunc = nfunc or nil
+  step.descr = descr or nil
+  step.cmpnt = cmpnt or nil
+
+  table.insert(pfUI.firstrun.steps, step)
 end
 
 function pfUI.firstrun:NextStep()
@@ -147,7 +151,9 @@ function pfUI.firstrun:NextStep()
     return
   end
 
-  for name, step in pairs(pfUI.firstrun.steps) do
+  for _, step in pairs(pfUI.firstrun.steps) do
+    local name = step.name
+
     if not pfUI_init[name] then
       local function yes()
         pfUI_init[name] = true

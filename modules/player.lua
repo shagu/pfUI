@@ -330,7 +330,7 @@ pfUI:RegisterModule("player", function ()
 
       local value = pfUI.api.round((GetTime() - this.lastTick) * 100)
       local pos = pfUI_config.unitframes.player.width / 200 * value
-      if not pfUI_config.unitframes.player.pheigh then return end
+      if not pfUI_config.unitframes.player.pheight then return end
       this.spark:SetPoint("LEFT", pos-((pfUI_config.unitframes.player.pheight+5)/2), 0)
     end)
   end

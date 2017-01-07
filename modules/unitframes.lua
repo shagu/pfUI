@@ -314,20 +314,28 @@ function pfUI.uf:CreatePortrait(frame, pos, spacing)
   local id = frame.id or ""
   local unitstr = unit .. id
 
-  frame.portrait = CreateFrame("PlayerModel", "pfPortrait" .. unitstr, frame)
+  frame.portrait = CreateFrame("Frame", "pfPortrait" .. unitstr, frame)
   frame.portrait:RegisterEvent("UNIT_PORTRAIT_UPDATE")
   frame.portrait:RegisterEvent("UNIT_MODEL_CHANGED")
   frame.portrait:RegisterEvent("PLAYER_ENTERING_WORLD")
   frame.portrait:RegisterEvent("PLAYER_TARGET_CHANGED")
 
   frame.portrait.base = frame
+  frame.portrait.pos = pos
+
+  frame.portrait.tex = frame.portrait:CreateTexture("pfPortraitTexture" .. unitstr, "OVERLAY")
+  frame.portrait.tex:SetAllPoints(frame.portrait)
+  frame.portrait.tex:SetTexCoord(.1, .9, .1, .9)
+
+  frame.portrait.model = CreateFrame("PlayerModel", "pfPortraitModel" .. unitstr, frame.portrait)
+  frame.portrait.model:SetAllPoints(frame.portrait)
 
   frame.portrait:SetScript("OnEvent", function()
     local unit = this.base.label
     local id = this.base.id or ""
     local unitstr = unit .. id
 
-    if event == "PLAYER_ENTERING_WORLD" or event == "PLAYER_TARGET_CHANGED" or ( arg1 and arg1 == unitstr ) then
+    if event == "PLAYER_ENTERING_WORLD" or (unitstr == "target" and event == "PLAYER_TARGET_CHANGED") or (unitstr == "targettarget" and event == "PLAYER_TARGET_CHANGED") or ( arg1 and arg1 == unitstr ) then
       pfUI.uf:UpdatePortrait()
     end
   end)
@@ -380,19 +388,26 @@ function pfUI.uf:UpdatePortrait()
   local unitstr = unit .. id
   local name = UnitName(unitstr) or ""
 
-  if this.name then this:SetCamera(0) end
-
-  if this.name == name then return end
-
   if not UnitIsVisible(unitstr) or not UnitIsConnected(unitstr) then
-    this:SetModelScale(4.25)
-    this:SetPosition(0, 0, -1.0)
-    this:SetModel("Interface\\Buttons\\talktomequestionmark.mdx")
-    this.name = nil
+    if this.pos == "bar" then
+      this.tex:Hide()
+      this.model:Hide()
+    elseif pfUI_config.unitframes.portraittexture == "1" then
+      this.tex:Show()
+      this.model:Hide()
+      SetPortraitTexture(this.tex, unitstr)
+    else
+      this.tex:Hide()
+      this.model:Show()
+      this.model:SetModelScale(4.25)
+      this.model:SetPosition(0, 0, -1)
+      this.model:SetModel("Interface\\Buttons\\talktomequestionmark.mdx")
+    end
   else
-    this:SetUnit(unitstr)
-    this:SetCamera(0)
-    this.name = name
+    this.tex:Hide()
+    this.model:Show()
+    this.model:SetUnit(unitstr)
+    this.model:SetCamera(0)
   end
 end
 
