@@ -325,7 +325,7 @@ pfUI:RegisterModule("target", function ()
 
   pfUI.uf:CreatePortrait(pfUI.uf.target, pfUI_config.unitframes.target.portrait, spacing)
 
-  pfUI.uf.target.hpText = pfUI.uf.target:CreateFontString("Status", "HIGH", "GameFontNormal")
+  pfUI.uf.target.hpText = pfUI.uf.target:CreateFontString("Status", "OVERLAY", "GameFontNormal")
   pfUI.uf.target.hpText:SetFont(pfUI.font_square, pfUI_config.global.font_size, "OUTLINE")
   pfUI.uf.target.hpText:ClearAllPoints()
   pfUI.uf.target.hpText:SetParent(pfUI.uf.target.hp.bar)
@@ -334,7 +334,7 @@ pfUI:RegisterModule("target", function ()
   pfUI.uf.target.hpText:SetFontObject(GameFontWhite)
   pfUI.uf.target.hpText:SetText("5000")
 
-  pfUI.uf.target.powerText = pfUI.uf.target:CreateFontString("Status", "HIGH", "GameFontNormal")
+  pfUI.uf.target.powerText = pfUI.uf.target:CreateFontString("Status", "OVERLAY", "GameFontNormal")
   pfUI.uf.target.powerText:SetFont(pfUI.font_square, pfUI_config.global.font_size, "OUTLINE")
   pfUI.uf.target.powerText:ClearAllPoints()
   pfUI.uf.target.powerText:SetParent(pfUI.uf.target.hp.bar)
