@@ -37,12 +37,12 @@ pfLocaleShift["zhCN"] = {
 }
 
 pfLocaleSpellEvents["zhCN"] = {
-  ['SPELL_GAINS'] = "(.+)获得了(.+)的效果。",
-  ['SPELL_CAST'] = "(.+)开始施放(.+)。",
-  ['SPELL_PERFORM'] = "(.+)开始施展(.+)。",
-  ['SPELL_AFFLICTED'] = "(.+)受到了(.+)效果的影响。",
+  ['SPELL_GAINS'] = "(.+)获得了(.+)的效果",
+  ['SPELL_CAST'] = "(.+)开始施放(.+)",
+  ['SPELL_PERFORM'] = "(.+)开始施展(.+)",
+  ['SPELL_AFFLICTED'] = "(.+)受到了(.+)效果的影响",
   ['SPELL_HIT'] = "你的(.+)使(.+)受到了(.+)。",
-  ['OTHER_SPELL_HIT'] = "(.+)的(.+)击中(.+)造成(.+)。",
+  ['OTHER_SPELL_HIT'] = "(.+)的(.+)击中(.+)造成(.+)",
 }
 
 pfLocaleSpellInterrupts["zhCN"] = {

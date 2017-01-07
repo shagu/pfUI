@@ -30,7 +30,7 @@ pfUI:RegisterModule("addons", function ()
   pfUI.addons.caption:SetTextColor(.2, 1, .8, 1)
   pfUI.addons.caption:SetPoint("TOP", 0, -10)
   pfUI.addons.caption:SetJustifyH("LEFT")
-  pfUI.addons.caption:SetText("插件列表")
+  pfUI.addons.caption:SetText("Addon List")
 
   pfUI.addons.close = CreateFrame("Button", "pfBagClose", pfUI.addons)
   pfUI.addons.close:SetPoint("TOPRIGHT", -pfUI_config.appearance.border.default*2,-pfUI_config.appearance.border.default*2 )

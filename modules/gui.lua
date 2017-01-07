@@ -118,10 +118,10 @@ pfUI:RegisterModule("gui", function ()
       pfUI.gitter:Hide()
     end
 
-    pfUI.info:ShowInfoBox("|cff33ffccUnlock Mode|r\n" ..
-      "This mode allows you to move frames by dragging them using the mouse cursor. " ..
-      "Frames can be scaled by scrolling up and down.\nTo scale multiple frames at once (eg. raidframes), " ..
-      "hold down the shift key while scrolling. Click into an empty space to go back to the pfUI menu.", 15, pfUI.gitter)
+    pfUI.info:ShowInfoBox("|cff33ffcc解锁模式|r\n" ..
+      "此模式允许您通过使用鼠标光标拖动框架来移动框架。 " ..
+      "可以通过向上和向下滚动来移动框架。\n还可以同时移动多个框架 (如：团队框架), " ..
+      "在滚动时按住shift键。 单击空白处以返回到pfUI菜单", 15, pfUI.gitter)
 
     if pfUI.gitter:IsShown() then
       pfUI.gitter:Hide()

@@ -67,7 +67,7 @@ pfUI:RegisterModule("panel", function ()
       if pfUI.panel.clock.timerFrame.curTime ~= "" then
         pfUI.panel.clock.timerFrame.text:SetText("|c33cccccc" .. pfUI.panel.clock.timerFrame.curTime)
       else
-        pfUI.panel.clock.timerFrame.text:SetText("|cffff3333 开始计时")
+        pfUI.panel.clock.timerFrame.text:SetText("|cffff3333 --- 开始计时 ---")
       end
     end)
 
