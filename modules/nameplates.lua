@@ -405,6 +405,18 @@ pfUI:RegisterModule("nameplates", function ()
     end
   end)
 
+  -- combat tracker
+  pfUI.nameplates.combat = CreateFrame("Frame")
+  pfUI.nameplates.combat:RegisterEvent("PLAYER_ENTER_COMBAT")
+  pfUI.nameplates.combat:RegisterEvent("PLAYER_LEAVE_COMBAT")
+  pfUI.nameplates.combat:SetScript("OnEvent", function()
+    if event == "PLAYER_ENTER_COMBAT" then
+      this.inCombat = 1
+    elseif event == "PLAYER_LEAVE_COMBAT" then
+      this.inCombat = nil
+    end
+  end)
+
   -- emulate fake rightclick
   pfUI.nameplates.emulateRightClick = CreateFrame("Frame", nil, UIParent)
   pfUI.nameplates.emulateRightClick.time = nil
@@ -425,7 +437,7 @@ pfUI:RegisterModule("nameplates", function ()
     -- run a usual nameplate rightclick action
     if not IsMouselooking() then
       pfUI.nameplates.emulateRightClick.frame:Click("LeftButton")
-      if UnitCanAttack("player", "target") then AttackTarget() end
+      if UnitCanAttack("player", "target") and not pfUI.nameplates.combat.inCombat then AttackTarget() end
       pfUI.nameplates.emulateRightClick:Hide()
       return
     end
