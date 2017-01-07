@@ -85,7 +85,6 @@ pfUI:RegisterModule("nameplates", function ()
 
     pfUI.nameplates:CreateDebuffs(this)
     pfUI.nameplates:CreateCastbar(healthbar)
-    pfUI.nameplates:CreateClickHandler()
     pfUI.nameplates:CreateHP(healthbar)
 
     this.setup = true
@@ -175,27 +174,6 @@ pfUI:RegisterModule("nameplates", function ()
     end
   end
 
-  function pfUI.nameplates:CreateClickHandler()
-    -- enable clickthrough
-    if pfUI_config.nameplates["clickthrough"] == "0" then
-      this:EnableMouse(true)
-      if pfUI_config.nameplates["rightclick"] == "1" then
-        this:SetScript("OnMouseDown", function()
-          if arg1 and arg1 == "RightButton" then
-            MouselookStart()
-
-            -- start detection of the rightclick emulation
-            pfUI.nameplates.emulateRightClick.time = GetTime()
-            pfUI.nameplates.emulateRightClick.frame = this
-            pfUI.nameplates.emulateRightClick:Show()
-          end
-        end)
-      end
-    else
-      this:EnableMouse(false)
-    end
-  end
-
   function pfUI.nameplates:CreateHP(healthbar)
     if pfUI_config.nameplates.showhp == "1" and not healthbar.hptext then
       healthbar.hptext = healthbar:CreateFontString("Status", "DIALOG", "GameFontNormal")
@@ -225,6 +203,7 @@ pfUI:RegisterModule("nameplates", function ()
     pfUI.nameplates:UpdateCastbar(this, name, healthbar)
     pfUI.nameplates:UpdateDebuffs(this, healthbar)
     pfUI.nameplates:UpdateHP(healthbar)
+    pfUI.nameplates:UpdateClickHandler(this)
   end
 
   function pfUI.nameplates:UpdatePlayer(name)
@@ -385,6 +364,27 @@ pfUI:RegisterModule("nameplates", function ()
       local min, max = healthbar:GetMinMaxValues()
       local cur = healthbar:GetValue()
       healthbar.hptext:SetText(cur .. " / " .. max)
+    end
+  end
+
+  function pfUI.nameplates:UpdateClickHandler(frame)
+    -- enable clickthrough
+    if pfUI_config.nameplates["clickthrough"] == "0" then
+      frame:EnableMouse(true)
+      if pfUI_config.nameplates["rightclick"] == "1" then
+        frame:SetScript("OnMouseDown", function()
+          if arg1 and arg1 == "RightButton" then
+            MouselookStart()
+
+            -- start detection of the rightclick emulation
+            pfUI.nameplates.emulateRightClick.time = GetTime()
+            pfUI.nameplates.emulateRightClick.frame = this
+            pfUI.nameplates.emulateRightClick:Show()
+          end
+        end)
+      end
+    else
+      frame:EnableMouse(false)
     end
   end
 
