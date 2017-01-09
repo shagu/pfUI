@@ -1,6 +1,6 @@
 pfUI:RegisterModule("chat", function ()
-  pfUI.firstrun:AddStep("chat_right", function() pfUI.chat.SetupRightChat(true) end, function() pfUI.chat.SetupRightChat(false) end, "|cff33ffcc聊天窗口: \"Loot & Spam\"|r\n\n"..
-  "创建和管理一个特定的聊天框称为 \"Loot & Spam\"?\n"..
+  pfUI.firstrun:AddStep("chat_right", function() pfUI.chat.SetupRightChat(true) end, function() pfUI.chat.SetupRightChat(false) end, "|cff33ffcc聊天窗口: \"China chat\"|r\n\n"..
+  "创建和管理一个特定的聊天框称为 \"China chat\"?\n"..
   "此聊天将显示世界频道，拾取信息和杂项消息,\n" ..
   "否则会扰乱你的主要聊天框架.")
 
@@ -9,7 +9,7 @@ pfUI:RegisterModule("chat", function ()
   "您的聊天布局现在将自动对齐。")
   pfUI.firstrun:AddStep("chat_channels", function() pfUI.chat.SetupChannels() end, nil, "聊天频道\n\n"..
   "要获得默认的pfUI体验，您的聊天窗口将立即设置\n"..
-  "以显示推荐的频道，例如Loot&World。")
+  "以显示推荐的频道，例如China chat。")
 
   local default_border = pfUI_config.appearance.border.default
   if pfUI_config.appearance.border.chat ~= "-1" then
@@ -315,7 +315,7 @@ pfUI:RegisterModule("chat", function ()
     if pfUI_config.chat.right.enable == "1" then
       -- set position of Loot & Spam
       FCF_SetLocked(ChatFrame3, 1)
-      FCF_SetWindowName(ChatFrame3, "Loot & Spam")
+      FCF_SetWindowName(ChatFrame3, "China chat")
       FCF_SetWindowColor(ChatFrame3, 0, 0, 0)
       FCF_SetWindowAlpha(ChatFrame3, 0)
       FCF_SetChatWindowFontSize(ChatFrame3, 12)
@@ -361,8 +361,8 @@ pfUI:RegisterModule("chat", function ()
         ChatFrame_RemoveChannel(ChatFrame1, chan)
       end
 
-      JoinChannelByName("World")
-      ChatFrame_AddChannel(ChatFrame3, "World")
+      JoinChannelByName("China")
+      ChatFrame_AddChannel(ChatFrame3, "China")
     end
     pfUI.chat:RefreshChat()
   end
