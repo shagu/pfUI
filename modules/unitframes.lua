@@ -138,6 +138,13 @@ function pfUI.uf:SetupBuffFilter()
     -- Healing Way
     table.insert(pfUI.uf.buffs, "interface\\icons\\spell_nature_healingway")
   end
+
+
+  -- [[ WARRIOR ]]
+  if myclass == "WARRIOR" and pfUI_config.unitframes.raid.buffs_buffs == "1" then
+    -- Battle Shout
+    table.insert(pfUI.uf.buffs, "interface\\icons\\ability_warrior_battleshout")
+  end
 end
 
 function pfUI.uf:RefreshUnit(unit)
