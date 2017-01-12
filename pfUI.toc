@@ -1,8 +1,8 @@
 ## Interface: 11200
 ## Title: |cff33ffccpf|cffffffffUI
-## Author: Shagu, 2016
+## Author: Shagu
 ## Notes: A complete user interface replacement.
-## Version: 0.1
+## Version: 1.4
 ## SavedVariables: pfUI_profiles
 ## SavedVariablesPerCharacter: pfUI_config, pfUI_init, pfUI_playerDB
 
