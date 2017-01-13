@@ -255,7 +255,11 @@ pfUI:RegisterModule("panel", function ()
     local online = GetNumGuildMembers()
     local all = GetNumGuildMembers(true)
     local click = function() ToggleFriendsFrame(3) end
-    pfUI.panel:OutputPanel("公会", "公会: "..online, nil, click)
+    if not GetGuildInfo("player") then
+      pfUI.panel:OutputPanel("公会", "公会: N/A", nil, click)
+    else
+      pfUI.panel:OutputPanel("公会", "公会: "..online, nil, click)
+    end
   end
 
   -- Update "durability"
