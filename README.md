@@ -6,7 +6,7 @@ is highly inspired by TukUI and ElvUI (which I never used) as well as several
 other screenshots I found around the web during the last 10 years. 
 It is completely written from scratch without any inclusion of 3rd party addons 
 or libraries. This is **not** an addon-pack like 
-[ShaguUI](http://shaguaddons.ericmauser.de/shaguui/) which means that no 
+[ShaguUI](http://shagu.org/shaguui/) which means that no 
 external Addons will be included. There will be support for external addons like 
 MobHealth3 and HealComm, but they will be never shipped within the package.
 
