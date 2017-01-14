@@ -7,7 +7,7 @@ pfUI.api:CreateBackdrop(GameTooltip)
     end
   end
 
-  pfUI.tooltip = CreateFrame('Frame', nil, GameTooltip)
+  pfUI.tooltip = CreateFrame('Frame', "pfTooltip", GameTooltip)
   function pfUI.tooltip:GetUnit()
     pfUI.tooltip.unit = "none"
 

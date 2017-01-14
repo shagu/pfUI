@@ -256,6 +256,8 @@ pfUI:RegisterModule("thirdparty", function ()
       end
 
       function pfUI.healComm.onHeal(unit)
+        OVERHEALPERCENT = OVERHEALPERCENT or 20
+
         local frame = pfUI.healComm.createIncHeal(unit)
         if not frame then return end
 
