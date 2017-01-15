@@ -430,16 +430,22 @@ function pfUI.uf:CreateUnit(unit)
   unit:RegisterEvent("UNIT_FOCUS")
 
   unit:RegisterEvent("RAID_ROSTER_UPDATE")
+  unit:RegisterEvent("PARTY_MEMBERS_CHANGED")
+
   unit:SetScript("OnShow", function ()
     pfUI.uf:RefreshUnit(this)
   end)
 
   unit:SetScript("OnEvent", function ()
+    if this.label == "party" and event == "PARTY_MEMBERS_CHANGED" then
+      pfUI.uf:RefreshUnit(this)
+    end
+
     if this.label == "raid" and event == "RAID_ROSTER_UPDATE" then
       pfUI.uf:RefreshUnit(this)
     end
 
-    if arg1 == this.label .. this.id then
+    if arg1 and arg1 == this.label .. this.id then
       pfUI.uf:RefreshUnit(this)
     end
   end)
