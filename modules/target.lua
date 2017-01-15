@@ -37,6 +37,10 @@ pfUI:RegisterModule("target", function ()
     GameTooltip:FadeOut()
   end)
 
+  pfUI.uf.target:SetScript("OnHide", function()
+    CloseDropDownMenus()
+  end)
+
   pfUI.uf.target:SetScript("OnClick", function ()
       if arg1 == "RightButton" then
         ToggleDropDownMenu(1, nil, TargetFrameDropDown, "cursor")
