@@ -489,8 +489,8 @@ pfUI:RegisterModule("gui", function ()
         ColorPickerFrame.opacity = 1 - ca
         ColorPickerFrame.hasOpacity = 1
         ColorPickerFrame:SetColorRGB(cr,cg,cb)
-        ColorPickerFrame:Show()
         ColorPickerFrame:SetFrameStrata("DIALOG")
+        ShowUIPanel(ColorPickerFrame)
       end)
     end
 
