@@ -216,6 +216,13 @@ pfUI:RegisterModule("chat", function ()
   function pfUI.chat:RefreshChat()
     local panelheight = pfUI_config.global.font_size+default_border*5
 
+    if pfUI_config.chat.global.sticky == "1" then
+      ChatTypeInfo.WHISPER.sticky = 1
+      ChatTypeInfo.OFFICER.sticky = 1
+      ChatTypeInfo.RAID_WARNING.sticky = 1
+      ChatTypeInfo.CHANNEL.sticky = 1
+    end
+
     for i,v in ipairs({ChatFrameMenuButton:GetRegions()}) do
       v:SetAllPoints(ChatFrameMenuButton)
       local _, class = UnitClass("player")

@@ -151,6 +151,7 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("chat",       "global",      "border",           ".4,.4,.4,.5")
   pfUI:UpdateConfig("chat",       "global",      "whispermod",       "1")
   pfUI:UpdateConfig("chat",       "global",      "whisper",          "1,.6,1,1")
+  pfUI:UpdateConfig("chat",       "global",      "sticky",           "1")
   pfUI:UpdateConfig("chat",       "global",      "fadeout",          "0")
   pfUI:UpdateConfig("chat",       "global",      "fadetime",         "300")
 

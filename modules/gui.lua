@@ -994,6 +994,7 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui:CreateConfig(pfUI.gui.chat, "Chat Border color:", pfUI_config.chat.global, "border", "color")
   pfUI.gui:CreateConfig(pfUI.gui.chat, "Change layout of incoming whispers:", pfUI_config.chat.global, "whispermod", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.chat, "Color of incoming whispers:", pfUI_config.chat.global, "whisper", "color")
+  pfUI.gui:CreateConfig(pfUI.gui.chat, "Use sticky chat (remember last channel):", pfUI_config.chat.global, "sticky", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.chat, "Fade old chat messages:", pfUI_config.chat.global, "fadeout", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.chat, "Time in seconds until the chat gets faded:", pfUI_config.chat.global, "fadetime")
 
