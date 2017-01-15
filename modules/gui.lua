@@ -965,6 +965,7 @@ pfUI:RegisterModule("gui", function ()
   -- tooltip
   pfUI.gui.tooltip = pfUI.gui:CreateConfigTab("Tooltip")
   pfUI.gui:CreateConfig(pfUI.gui.tooltip, "Tooltip Position:", pfUI_config.tooltip, "position", "dropdown", { "bottom", "chat", "cursor" })
+  pfUI.gui:CreateConfig(pfUI.gui.tooltip, "Show extended guild information:", pfUI_config.tooltip, "extguild", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.tooltip, "Always show comparison:", pfUI_config.tooltip.compare, "showalways", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.tooltip, "Always show extended vendor values:", pfUI_config.tooltip.vendor, "showalways", "checkbox")
 

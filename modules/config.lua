@@ -130,6 +130,7 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("castbar",    "player",      "hide_pfui",        "0")
   pfUI:UpdateConfig("castbar",    "target",      "hide_pfui",        "0")
   pfUI:UpdateConfig("tooltip",    nil,           "position",         "bottom")
+  pfUI:UpdateConfig("tooltip",    nil,           "extguild",         "1")
   pfUI:UpdateConfig("tooltip",    "compare",     "showalways",       "0")
   pfUI:UpdateConfig("tooltip",    "vendor",      "showalways",       "0")
 
