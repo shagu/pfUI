@@ -326,6 +326,7 @@ function pfUI.uf:CreatePortrait(frame, pos, spacing)
   frame.portrait:RegisterEvent("UNIT_MODEL_CHANGED")
   frame.portrait:RegisterEvent("PLAYER_ENTERING_WORLD")
   frame.portrait:RegisterEvent("PLAYER_TARGET_CHANGED")
+  frame.portrait:RegisterEvent("PARTY_MEMBERS_CHANGED")
 
   frame.portrait.base = frame
   frame.portrait.pos = pos
@@ -342,7 +343,11 @@ function pfUI.uf:CreatePortrait(frame, pos, spacing)
     local id = this.base.id or ""
     local unitstr = unit .. id
 
-    if event == "PLAYER_ENTERING_WORLD" or (unitstr == "target" and event == "PLAYER_TARGET_CHANGED") or (unitstr == "targettarget" and event == "PLAYER_TARGET_CHANGED") or ( arg1 and arg1 == unitstr ) then
+    if event == "PLAYER_ENTERING_WORLD" or
+      ( event == "PARTY_MEMBERS_CHANGED" and this.base.label and this.base.label == "party" ) or
+      ( unitstr == "target" and event == "PLAYER_TARGET_CHANGED" ) or
+      ( unitstr == "targettarget" and event == "PLAYER_TARGET_CHANGED" ) or
+      ( arg1 and arg1 == unitstr ) then
       pfUI.uf:UpdatePortrait()
     end
   end)
