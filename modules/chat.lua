@@ -227,7 +227,13 @@ pfUI:RegisterModule("chat", function ()
       local frame = getglobal("ChatFrame"..i)
       local tab = getglobal("ChatFrame"..i.."Tab")
 
-      frame:SetTimeVisible(tonumber(pfUI_config.chat.global.fadetime))
+
+      if pfUI_config.chat.global.fadeout == "1" then
+        frame:SetFading(true)
+        frame:SetTimeVisible(tonumber(pfUI_config.chat.global.fadetime))
+      else
+        frame:SetFading(false)
+      end
 
       if i == 3 and pfUI_config.chat.right.enable == "1" then
         tab:SetParent(pfUI.chat.right.panelTop)
