@@ -31,6 +31,9 @@ pfUI:RegisterModule("chat", function ()
   if pfUI_config.chat.global.custombg == "1" then
     local r, g, b, a = pfUI.api.strsplit(",", pfUI_config.chat.global.background)
     pfUI.chat.left.backdrop:SetBackdropColor(tonumber(r), tonumber(g), tonumber(b), tonumber(a))
+
+    local r, g, b, a = pfUI.api.strsplit(",", pfUI_config.chat.global.border)
+    pfUI.chat.left.backdrop:SetBackdropBorderColor(tonumber(r), tonumber(g), tonumber(b), tonumber(a))
   end
 
   pfUI.chat.left.panelTop = CreateFrame("Frame", "leftChatPanelTop", pfUI.chat.left)
@@ -38,7 +41,9 @@ pfUI:RegisterModule("chat", function ()
   pfUI.chat.left.panelTop:SetHeight(pfUI_config.global.font_size+default_border*2)
   pfUI.chat.left.panelTop:SetPoint("TOPLEFT", pfUI.chat.left, "TOPLEFT", default_border, -default_border)
   pfUI.chat.left.panelTop:SetPoint("TOPRIGHT", pfUI.chat.left, "TOPRIGHT", -default_border, -default_border)
-  pfUI.api:CreateBackdrop(pfUI.chat.left.panelTop, default_border, nil, true)
+  if pfUI_config.chat.global.tabdock == "1" then
+    pfUI.api:CreateBackdrop(pfUI.chat.left.panelTop, default_border, nil, true)
+  end
 
   -- whisper forwarding
   pfUI.chat.left.panelTop.proxy = CreateFrame("Button", "leftChatWhisperProxy", pfUI.chat.left.panelTop)
@@ -184,6 +189,9 @@ pfUI:RegisterModule("chat", function ()
   if pfUI_config.chat.global.custombg == "1" then
     local r, g, b, a = pfUI.api.strsplit(",", pfUI_config.chat.global.background)
     pfUI.chat.right.backdrop:SetBackdropColor(tonumber(r), tonumber(g), tonumber(b), tonumber(a))
+
+    local r, g, b, a = pfUI.api.strsplit(",", pfUI_config.chat.global.border)
+    pfUI.chat.right.backdrop:SetBackdropBorderColor(tonumber(r), tonumber(g), tonumber(b), tonumber(a))
   end
 
   pfUI.chat.right.panelTop = CreateFrame("Frame", "rightChatPanelTop", pfUI.chat.right)
@@ -191,7 +199,9 @@ pfUI:RegisterModule("chat", function ()
   pfUI.chat.right.panelTop:SetHeight(pfUI_config.global.font_size+default_border*2)
   pfUI.chat.right.panelTop:SetPoint("TOPLEFT", pfUI.chat.right, "TOPLEFT", default_border, -default_border)
   pfUI.chat.right.panelTop:SetPoint("TOPRIGHT", pfUI.chat.right, "TOPRIGHT", -default_border, -default_border)
-  pfUI.api:CreateBackdrop(pfUI.chat.right.panelTop, default_border, nil, true)
+  if pfUI_config.chat.global.tabdock == "1" then
+    pfUI.api:CreateBackdrop(pfUI.chat.right.panelTop, default_border, nil, true)
+  end
 
   pfUI.chat:RegisterEvent("PLAYER_ENTERING_WORLD")
   pfUI.chat:RegisterEvent("UI_SCALE_CHANGED")
