@@ -170,6 +170,7 @@ pfUI:RegisterModule("bags", function ()
       if pfUI.chat then
         pfUI.bag.left:SetPoint("BOTTOMLEFT", pfUI.chat.left, "BOTTOMLEFT", 0, 0)
         pfUI.bag.left:SetPoint("BOTTOMRIGHT", pfUI.chat.left, "BOTTOMRIGHT", 0, 0)
+        pfUI.bag.left:SetWidth(pfUI_config.chat.left.width)
       else
         pfUI.bag.left:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", 5, 5)
         pfUI.bag.left:SetWidth(pfUI_config.chat.left.width)
@@ -182,6 +183,7 @@ pfUI:RegisterModule("bags", function ()
       if pfUI.chat then
         pfUI.bag.right:SetPoint("BOTTOMLEFT", pfUI.chat.right, "BOTTOMLEFT", 0, 0)
         pfUI.bag.right:SetPoint("BOTTOMRIGHT", pfUI.chat.right, "BOTTOMRIGHT", 0, 0)
+        pfUI.bag.right:SetWidth(pfUI_config.chat.right.width)
       else
         pfUI.bag.right:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", -5, 5)
         pfUI.bag.right:SetWidth(pfUI_config.chat.right.width)
@@ -196,7 +198,7 @@ pfUI:RegisterModule("bags", function ()
     frame:SetFrameStrata("HIGH")
     pfUI.api:CreateBackdrop(frame, default_border)
 
-    pfUI.bag.button_size = (frame:GetWidth() / frame:GetEffectiveScale() - 2*default_border - 9*default_border*3)/ 10
+    pfUI.bag.button_size = (frame:GetWidth() - 2*default_border - 9*default_border*3)/ 10
     local topspace = pfUI.bag.right.close:GetHeight() + default_border * 2
 
     for id, bag in pairs(iterate) do

@@ -85,7 +85,7 @@ pfUI.api:CreateBackdrop(GameTooltip)
       local _, targetClass = UnitClass(unit .. "target")
       local targetReaction = UnitReaction("player",unit .. "target")
       local _, class = UnitClass(unit)
-      local guild = GetGuildInfo(unit)
+      local guild, rankstr, rankid = GetGuildInfo(unit)
       local reaction = UnitReaction(unit, "player")
       local pvptitle = gsub(pvpname or name," "..name, "", 1)
       local hp = UnitHealth(unit)
@@ -110,7 +110,14 @@ pfUI.api:CreateBackdrop(GameTooltip)
       end
 
       if guild then
-        GameTooltip:AddLine("<" .. guild .. ">", 0.3, 1, 0.5)
+        local rank = ""
+        local lead = ""
+        if pfUI_config.tooltip.extguild == "1" then
+          if rankstr then rank = " |cffaaaaaa(" .. rankstr .. ")"  end
+          if rankid and rankid == 0 then lead = "|cffffcc00*|r" end
+        end
+
+        GameTooltip:AddLine("<" .. guild .. ">" .. lead .. rank, 0.3, 1, 0.5)
       end
 
       if target then

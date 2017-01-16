@@ -489,8 +489,8 @@ pfUI:RegisterModule("gui", function ()
         ColorPickerFrame.opacity = 1 - ca
         ColorPickerFrame.hasOpacity = 1
         ColorPickerFrame:SetColorRGB(cr,cg,cb)
-        ColorPickerFrame:Show()
         ColorPickerFrame:SetFrameStrata("DIALOG")
+        ShowUIPanel(ColorPickerFrame)
       end)
     end
 
@@ -951,6 +951,9 @@ pfUI:RegisterModule("gui", function ()
   -- tooltip
   pfUI.gui.tooltip = pfUI.gui:CreateConfigTab("鼠标提示框")
   pfUI.gui:CreateConfig(pfUI.gui.tooltip, "提示框位置", pfUI_config.tooltip, "position", "dropdown", { "底部", "聊天框", "跟随鼠标" })
+  pfUI.gui:CreateConfig(pfUI.gui.tooltip, "显示扩展的公会信息", pfUI_config.tooltip, "extguild", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.tooltip, "始终显示比较", pfUI_config.tooltip.compare, "showalways", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.tooltip, "总是显示扩展出售价值", pfUI_config.tooltip.vendor, "showalways", "checkbox")
 
   -- castbar
   pfUI.gui.castbar = pfUI.gui:CreateConfigTab("施法条")
@@ -960,7 +963,7 @@ pfUI:RegisterModule("gui", function ()
 
   -- chat
   pfUI.gui.chat = pfUI.gui:CreateConfigTab("对话窗口")
-  pfUI.gui:CreateConfig(pfUI.gui.chat, "启用 \"China Chat\" 聊天窗口:", pfUI_config.chat.right, "enable", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.chat, "启用 \"China Chat\" 聊天窗口", pfUI_config.chat.right, "enable", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.chat, "文字输入框宽度", pfUI_config.chat.text, "input_width")
   pfUI.gui:CreateConfig(pfUI.gui.chat, "文字输入框高度", pfUI_config.chat.text, "input_height")
   pfUI.gui:CreateConfig(pfUI.gui.chat, "对话框显示时间戳", pfUI_config.chat.text, "time", "checkbox")
@@ -971,10 +974,14 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui:CreateConfig(pfUI.gui.chat, "左侧对话框高度", pfUI_config.chat.left, "height")
   pfUI.gui:CreateConfig(pfUI.gui.chat, "右侧对话框宽度", pfUI_config.chat.right, "width")
   pfUI.gui:CreateConfig(pfUI.gui.chat, "右侧对话框高度", pfUI_config.chat.right, "height")
-  pfUI.gui:CreateConfig(pfUI.gui.chat, "自定义背景设置", pfUI_config.chat.global, "custombg", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.chat, "将聊天窗口显示为面板", pfUI_config.chat.global, "tabdock", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.chat, "Use custom colors for chats:", pfUI_config.chat.global, "custombg", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.chat, "对话框背景颜色", pfUI_config.chat.global, "background", "color")
-  pfUI.gui:CreateConfig(pfUI.gui.chat, "更改传入密语的布局:", pfUI_config.chat.global, "whispermod", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.chat, "对话框边颜色", pfUI_config.chat.global, "border", "color")
+  pfUI.gui:CreateConfig(pfUI.gui.chat, "更改传入密语的布局", pfUI_config.chat.global, "whispermod", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.chat, "密语颜色设置", pfUI_config.chat.global, "whisper", "color")
+  pfUI.gui:CreateConfig(pfUI.gui.chat, "使用粘性聊天（记住最后一个频道）:", pfUI_config.chat.global, "sticky", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.chat, "淡出旧的聊天消息", pfUI_config.chat.global, "fadeout", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.chat, "聊天记录淡出时间", pfUI_config.chat.global, "fadetime")
 
   -- nameplates
