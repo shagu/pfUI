@@ -846,6 +846,9 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "Loot", nil, nil, "header")
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "Auto-resize Lootframe", pfUI_config.appearance.loot, "autoresize", "checkbox")
 
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Minimap", nil, nil, "header")
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Show zone name on mouseover", pfUI_config.appearance.minimap, "mouseoverzone", "checkbox")
+
   -- modules
   pfUI.gui.modules = pfUI.gui:CreateConfigTab("Modules")
   for i,m in pairs(pfUI.modules) do
