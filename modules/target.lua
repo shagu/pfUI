@@ -229,7 +229,7 @@ pfUI:RegisterModule("target", function ()
         end
 
         pfUI.uf.target.powerText:SetText( "|cff" .. levelcolor .. level .. "|r " .. name)
-        pfUI.uf.target.powerText:SetWidth(pfUI.uf.target:GetWidth() -30 - pfUI.uf.target.hpText:GetStringWidth())
+        pfUI.uf.target.powerText:SetWidth(pfUI.uf.target.hp.bar:GetWidth() / pfUI.uf.target.hp.bar:GetEffectiveScale() -30 - pfUI.uf.target.hpText:GetStringWidth())
 
         PowerColor = ManaBarColor[UnitPowerType("target")]
         pfUI.uf.target.power.bar:SetStatusBarColor(PowerColor.r + .5, PowerColor.g +.5, PowerColor.b +.5, 1)
