@@ -66,24 +66,37 @@ pfUI:RegisterModule("minimap", function ()
 
   MiniMapTrackingFrame:SetFrameStrata("LOW")
 
-  -- Coordinates in minimap
-  -- Create location text frame in bottom left corner of minimap
+  -- Coordinates and zone text in minimap
+  -- Create coordinates text frame in bottom left corner of minimap
   pfUI.minimapCoordinates = CreateFrame("Frame", nil, pfUI.minimap)
-  pfUI.minimapCoordinates:SetPoint("BOTTOMLEFT", 3, 3)
+  pfUI.minimapCoordinates:SetPoint("BOTTOMLEFT", 1, 0)
   pfUI.minimapCoordinates:SetHeight(20)
   pfUI.minimapCoordinates:SetWidth(40)
   pfUI.minimapCoordinates:SetFrameStrata("BACKGROUND")
-  -- Create text
+  -- Create zone text frame in top center of minimap
+  pfUI.minimapZone = CreateFrame("Frame", nil, pfUI.minimap)
+  pfUI.minimapZone:SetPoint("TOP", 0, -1)
+  pfUI.minimapZone:SetHeight(20)
+  pfUI.minimapZone:SetWidth(40)
+  pfUI.minimapZone:SetFrameStrata("BACKGROUND")
+  -- Create text for coordinates
   pfUI.minimapCoordinates.text = pfUI.minimapCoordinates:CreateFontString("MinimapCoordinatesText", "LOW", "GameFontNormal")
   pfUI.minimapCoordinates.text:SetFont(pfUI.font_default, pfUI_config.global.font_size, "OUTLINE")
-  pfUI.minimapCoordinates.text:SetPoint("LEFT", 4, 0)
+  pfUI.minimapCoordinates.text:SetPoint("LEFT", 0, -3)
   pfUI.minimapCoordinates.text:SetFontObject(GameFontWhite)
   pfUI.minimapCoordinates.text:SetText("X, Y")
   pfUI.minimapCoordinates:Hide()
+  -- Create text for zone text
+  pfUI.minimapZone.text = pfUI.minimapZone:CreateFontString("minimapZoneText", "LOW", "GameFontNormal")
+  pfUI.minimapZone.text:SetFont(pfUI.font_default, pfUI_config.global.font_size, "OUTLINE")
+  pfUI.minimapZone.text:SetPoint("TOP", 0, 0)
+  pfUI.minimapZone.text:SetFontObject(GameFontWhite)
+  pfUI.minimapZone:Hide()
 
   -- Minimap hover event
-  -- Update and toggle showing of coordinates on mouse enter/leave
+  -- Update and toggle showing of coordinates and zone text on mouse enter/leave
   Minimap:SetScript("OnEnter", function()
+    pfUI.minimapZone.text:SetText(GetMinimapZoneText())
     SetMapToCurrentZone()
     local posX, posY = GetPlayerMapPosition("player")
     if posX ~= 0 and posY ~= 0 then
@@ -93,11 +106,13 @@ pfUI:RegisterModule("minimap", function ()
     else
       pfUI.minimapCoordinates.text:SetText("|cffffaaaaN/A")
     end
-
+        
+    pfUI.minimapZone:Show()
     pfUI.minimapCoordinates:Show()
   end)
   Minimap:SetScript("OnLeave", function()
     pfUI.minimapCoordinates:Hide()
+    pfUI.minimapZone:Hide()
   end)
 
 end)
