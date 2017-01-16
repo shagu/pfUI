@@ -161,6 +161,7 @@ pfUI:RegisterModule("thirdparty", function ()
           if pfUI.uf.player and not pfUI.uf.player.incHeal then
             pfUI.uf.player.incHeal = CreateFrame("StatusBar", "PlayerFrameIncHealBar", pfUI.uf.player)
             pfUI.uf.player.incHeal:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
+            pfUI.uf.player.incHeal:SetFrameStrata("MEDIUM")
             pfUI.uf.player.incHeal:SetMinMaxValues(0, 1)
             pfUI.uf.player.incHeal:SetValue(1)
             pfUI.uf.player.incHeal:SetStatusBarColor(0, 1, 0, 0.5)
@@ -174,6 +175,7 @@ pfUI:RegisterModule("thirdparty", function ()
           if pfUI.uf.target and not pfUI.uf.target.incHeal then
             pfUI.uf.target.incHeal = CreateFrame("StatusBar", "PlayerFrameIncHealBar", pfUI.uf.target)
             pfUI.uf.target.incHeal:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
+            pfUI.uf.target.incHeal:SetFrameStrata("MEDIUM")
             pfUI.uf.target.incHeal:SetMinMaxValues(0, 1)
             pfUI.uf.target.incHeal:SetValue(1)
             pfUI.uf.target.incHeal:SetStatusBarColor(0, 1, 0, 0.5)
@@ -188,6 +190,7 @@ pfUI:RegisterModule("thirdparty", function ()
           if pfUI.uf.group[id] and not pfUI.uf.group[id].incHeal then
             pfUI.uf.group[id].incHeal = CreateFrame("StatusBar", "PlayerFrameIncHealBar", pfUI.uf.group[id])
             pfUI.uf.group[id].incHeal:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
+            pfUI.uf.group[id].incHeal:SetFrameStrata("MEDIUM")
             pfUI.uf.group[id].incHeal:SetMinMaxValues(0, 1)
             pfUI.uf.group[id].incHeal:SetValue(1)
             pfUI.uf.group[id].incHeal:SetStatusBarColor(0, 1, 0, 0.5)
@@ -211,6 +214,7 @@ pfUI:RegisterModule("thirdparty", function ()
           if pfUI.uf.raid[id] and not pfUI.uf.raid[id].incHeal then
             pfUI.uf.raid[id].incHeal = CreateFrame("StatusBar", "PlayerFrameIncHealBar", pfUI.uf.raid[id])
             pfUI.uf.raid[id].incHeal:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
+            pfUI.uf.raid[id].incHeal:SetFrameStrata("MEDIUM")
             pfUI.uf.raid[id].incHeal:SetMinMaxValues(0, 1)
             pfUI.uf.raid[id].incHeal:SetValue(1)
             pfUI.uf.raid[id].incHeal:SetStatusBarColor(0, 1, 0, 0.5)
@@ -270,19 +274,20 @@ pfUI:RegisterModule("thirdparty", function ()
 
         if( healed > 0 and (health < maxHealth or OVERHEALPERCENT > 0 )) and frame:IsVisible() then
           frame.incHeal:Show()
-          local healthWidth = frame:GetWidth() * (health / maxHealth)
-          local incWidth = (frame:GetWidth()-6) * (healed / maxHealth)
-          if (healthWidth + incWidth) > (frame:GetWidth() * (1+(OVERHEALPERCENT/100)) ) then
-            incWidth = frame:GetWidth() * (1+(OVERHEALPERCENT/100)) - healthWidth
+          local width = frame.hp.bar:GetWidth() / frame.hp.bar:GetEffectiveScale()
+          local healthWidth = width * (health / maxHealth)
+          local incWidth = width * healed / maxHealth
+          if healthWidth + incWidth > width * (1+(OVERHEALPERCENT/100)) then
+            incWidth = width * (1+OVERHEALPERCENT/100) - healthWidth
           end
           frame.incHeal:SetWidth(incWidth)
           frame.incHeal:ClearAllPoints()
 
           if strsub(unit,0,4) == "raid" and pfUI_config.unitframes.raid.invert_healthbar == "1" then
-            frame.incHeal:SetPoint("TOPLEFT", frame, "TOPLEFT", 0, 0)
+            frame.incHeal:SetPoint("TOPLEFT", frame.hp.bar, "TOPLEFT", 0, 0)
             frame.incHeal:SetFrameStrata("HIGH")
           else
-            frame.incHeal:SetPoint("TOPLEFT", frame, "TOPLEFT", healthWidth, 0)
+            frame.incHeal:SetPoint("TOPLEFT", frame.hp.bar, "TOPLEFT", healthWidth, 0)
           end
         else
           frame.incHeal:Hide()
