@@ -336,6 +336,7 @@ function pfUI.uf:CreatePortrait(frame, pos, spacing)
   frame.portrait.tex:SetTexCoord(.1, .9, .1, .9)
 
   frame.portrait.model = CreateFrame("PlayerModel", "pfPortraitModel" .. unitstr, frame.portrait)
+  frame.portrait.model:SetFrameStrata("LOW")
   frame.portrait.model:SetAllPoints(frame.portrait)
 
   frame.portrait:SetScript("OnEvent", function()
