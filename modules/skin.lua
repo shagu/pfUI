@@ -49,7 +49,7 @@ pfUI:RegisterModule("skin", function ()
 
   for _, box in pairs(boxes) do
     local b = getglobal(box)
-    pfUI.api:CreateBackdrop(b, nil, true, true)
+    pfUI.api:CreateBackdrop(b, nil, true, .8)
   end
 
   for i,v in ipairs({GameMenuFrame:GetRegions()}) do

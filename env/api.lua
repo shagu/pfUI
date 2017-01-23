@@ -137,7 +137,7 @@ function pfUI.api:CreateBackdrop(f, inset, legacy, transp)
 
   local br, bg, bb, ba =  pfUI.cache.br, pfUI.cache.bg, pfUI.cache.bb, pfUI.cache.ba
   local er, eg, eb, ea = pfUI.cache.er, pfUI.cache.eg, pfUI.cache.eb, pfUI.cache.ea
-  if transp then ba = .8 end
+  if transp then ba = transp end
 
   -- use legacy backdrop handling
   if legacy then

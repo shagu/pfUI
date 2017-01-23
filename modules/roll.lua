@@ -7,7 +7,7 @@ pfUI:RegisterModule("roll", function ()
     local border = tonumber(pfUI_config.appearance.border.default)
     local esize = size - border*2
     local f = CreateFrame("Frame", "pfLootRollFrame" .. id, UIParent)
-    pfUI.api:CreateBackdrop(f, nil, nil, true)
+    pfUI.api:CreateBackdrop(f, nil, nil, .8)
     f.backdrop:SetFrameStrata("BACKGROUND")
     f.hasItem = 1
 
