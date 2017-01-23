@@ -58,7 +58,6 @@ pfUI:RegisterModule("nameplates", function ()
     end
 
     healthbar.reaction = nil
-    healthbar.playername = nil
 
     -- raidtarget
     raidicon:ClearAllPoints()
@@ -276,35 +275,29 @@ pfUI:RegisterModule("nameplates", function ()
     end
 
     local name = name:GetText()
-    if name ~= healthbar.playername then
-      if healthbar.reaction == 0 then
-        if pfUI_config.nameplates["enemyclassc"] == "1"
-        and pfUI_playerDB[name]
-        and pfUI_playerDB[name]["class"]
-        and RAID_CLASS_COLORS[pfUI_playerDB[name]["class"]]
-        then
-          healthbar.playername = name
-          healthbar:SetStatusBarColor(
-            RAID_CLASS_COLORS[pfUI_playerDB[name]["class"]].r,
-            RAID_CLASS_COLORS[pfUI_playerDB[name]["class"]].g,
-            RAID_CLASS_COLORS[pfUI_playerDB[name]["class"]].b,
-            0.9)
-        end
-      elseif healthbar.reaction == 2 then
-        if pfUI_config.nameplates["friendclassc"] == "1"
-        and pfUI_playerDB[name]
-        and pfUI_playerDB[name]["class"]
-        and RAID_CLASS_COLORS[pfUI_playerDB[name]["class"]]
-        then
-          healthbar.playername = name
-          healthbar:SetStatusBarColor(
-            RAID_CLASS_COLORS[pfUI_playerDB[name]["class"]].r,
-            RAID_CLASS_COLORS[pfUI_playerDB[name]["class"]].g,
-            RAID_CLASS_COLORS[pfUI_playerDB[name]["class"]].b,
-            0.9)
-        end
-      else
-        healthbar.playername = name
+    if healthbar.reaction == 0 then
+      if pfUI_config.nameplates["enemyclassc"] == "1"
+      and pfUI_playerDB[name]
+      and pfUI_playerDB[name]["class"]
+      and RAID_CLASS_COLORS[pfUI_playerDB[name]["class"]]
+      then
+        healthbar:SetStatusBarColor(
+          RAID_CLASS_COLORS[pfUI_playerDB[name]["class"]].r,
+          RAID_CLASS_COLORS[pfUI_playerDB[name]["class"]].g,
+          RAID_CLASS_COLORS[pfUI_playerDB[name]["class"]].b,
+          0.9)
+      end
+    elseif healthbar.reaction == 2 then
+      if pfUI_config.nameplates["friendclassc"] == "1"
+      and pfUI_playerDB[name]
+      and pfUI_playerDB[name]["class"]
+      and RAID_CLASS_COLORS[pfUI_playerDB[name]["class"]]
+      then
+        healthbar:SetStatusBarColor(
+          RAID_CLASS_COLORS[pfUI_playerDB[name]["class"]].r,
+          RAID_CLASS_COLORS[pfUI_playerDB[name]["class"]].g,
+          RAID_CLASS_COLORS[pfUI_playerDB[name]["class"]].b,
+          0.9)
       end
     end
   end
