@@ -54,6 +54,9 @@ pfUI:RegisterModule("buff", function ()
       for _,buff in pairs ({TempEnchant1,TempEnchant2}) do
         local icon = getglobal(buff:GetName().."Icon")
         local border = getglobal(buff:GetName().."Border")
+        local text = getglobal(buff:GetName().."Duration")
+        text:SetPoint("TOP", buff, "BOTTOM", 0 , -pfUI_config.appearance.border.default*2)
+
         local _, _, mainhand, _, _, offhand = GetWeaponEnchantInfo()
         if buff then
           pfUI.api:CreateBackdrop(buff)
