@@ -5,6 +5,7 @@ function pfUI:LoadConfig()
   --                MODULE        SUBGROUP   ENTRY               VALUE
   pfUI:UpdateConfig("global",     nil,           "profile",          "default")
   pfUI:UpdateConfig("global",     nil,           "pixelperfect",     "0")
+  pfUI:UpdateConfig("global",     nil,           "offscreen",        "0")
   pfUI:UpdateConfig("global",     nil,           "font_size",        "12")
   pfUI:UpdateConfig("global",     nil,           "font_default",     "arial")
   pfUI:UpdateConfig("global",     nil,           "font_square",      "homespun")

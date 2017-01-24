@@ -95,7 +95,10 @@ end
 -- 'frame'      [frame]        the frame that should be updated.
 function pfUI.api:UpdateMovable(frame)
   local name = frame:GetName()
-  frame:SetClampedToScreen(true)
+
+  if pfUI_config.global.offscreen == "0" then
+    frame:SetClampedToScreen(true)
+  end
 
   if not pfUI.movables[name] then
     pfUI.movables[name] = true
