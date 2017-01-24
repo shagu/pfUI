@@ -41,7 +41,7 @@ function pfUI.uf:SetupDebuffFilter()
   local _, myclass = UnitClass("player")
   pfUI.uf.debuffs = {}
   if pfUI_config.unitframes.raid.debuffs_enable == "1" then
-    if myclass == "PALADIN" or myclass == "PRIEST" or pfUI_config.unitframes.raid.debuffs_class ~= "1" then
+    if myclass == "PALADIN" or myclass == "PRIEST" or myclass == "WARLOCK" or pfUI_config.unitframes.raid.debuffs_class ~= "1" then
       table.insert(pfUI.uf.debuffs, "magic")
     end
 
