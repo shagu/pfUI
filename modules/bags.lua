@@ -170,7 +170,7 @@ pfUI:RegisterModule("bags", function ()
       if pfUI.chat then
         pfUI.bag.left:SetPoint("BOTTOMLEFT", pfUI.chat.left, "BOTTOMLEFT", 0, 0)
         pfUI.bag.left:SetPoint("BOTTOMRIGHT", pfUI.chat.left, "BOTTOMRIGHT", 0, 0)
-        pfUI.bag.left:SetWidth(pfUI_config.chat.left.width)
+        pfUI.bag.left:SetWidth(pfUI_config.chat.left.width * pfUI.chat.left:GetScale())
       else
         pfUI.bag.left:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", 5, 5)
         pfUI.bag.left:SetWidth(pfUI_config.chat.left.width)
@@ -183,7 +183,7 @@ pfUI:RegisterModule("bags", function ()
       if pfUI.chat then
         pfUI.bag.right:SetPoint("BOTTOMLEFT", pfUI.chat.right, "BOTTOMLEFT", 0, 0)
         pfUI.bag.right:SetPoint("BOTTOMRIGHT", pfUI.chat.right, "BOTTOMRIGHT", 0, 0)
-        pfUI.bag.right:SetWidth(pfUI_config.chat.right.width)
+        pfUI.bag.right:SetWidth(pfUI_config.chat.right.width * pfUI.chat.right:GetScale())
       else
         pfUI.bag.right:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", -5, 5)
         pfUI.bag.right:SetWidth(pfUI_config.chat.right.width)

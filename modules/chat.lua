@@ -25,7 +25,7 @@ pfUI:RegisterModule("chat", function ()
   pfUI.chat.left:SetPoint("BOTTOMLEFT", 5,5)
   pfUI.chat.left:SetScript("OnShow", function() pfUI.chat:RefreshChat() end)
   pfUI.api:UpdateMovable(pfUI.chat.left)
-  pfUI.api:CreateBackdrop(pfUI.chat.left, default_border, nil, true)
+  pfUI.api:CreateBackdrop(pfUI.chat.left, default_border, nil, .8)
   if pfUI_config.chat.global.custombg == "1" then
     local r, g, b, a = pfUI.api.strsplit(",", pfUI_config.chat.global.background)
     pfUI.chat.left.backdrop:SetBackdropColor(tonumber(r), tonumber(g), tonumber(b), tonumber(a))
@@ -40,7 +40,7 @@ pfUI:RegisterModule("chat", function ()
   pfUI.chat.left.panelTop:SetPoint("TOPLEFT", pfUI.chat.left, "TOPLEFT", default_border, -default_border)
   pfUI.chat.left.panelTop:SetPoint("TOPRIGHT", pfUI.chat.left, "TOPRIGHT", -default_border, -default_border)
   if pfUI_config.chat.global.tabdock == "1" then
-    pfUI.api:CreateBackdrop(pfUI.chat.left.panelTop, default_border, nil, true)
+    pfUI.api:CreateBackdrop(pfUI.chat.left.panelTop, default_border, nil, .8)
   end
 
   -- whisper forwarding
@@ -183,7 +183,7 @@ pfUI:RegisterModule("chat", function ()
   pfUI.chat.right:SetPoint("BOTTOMRIGHT", -5,5)
   pfUI.chat.right:SetScript("OnShow", function() pfUI.chat:RefreshChat() end)
   pfUI.api:UpdateMovable(pfUI.chat.right)
-  pfUI.api:CreateBackdrop(pfUI.chat.right, default_border, nil, true)
+  pfUI.api:CreateBackdrop(pfUI.chat.right, default_border, nil, .8)
   if pfUI_config.chat.global.custombg == "1" then
     local r, g, b, a = pfUI.api.strsplit(",", pfUI_config.chat.global.background)
     pfUI.chat.right.backdrop:SetBackdropColor(tonumber(r), tonumber(g), tonumber(b), tonumber(a))
@@ -198,7 +198,7 @@ pfUI:RegisterModule("chat", function ()
   pfUI.chat.right.panelTop:SetPoint("TOPLEFT", pfUI.chat.right, "TOPLEFT", default_border, -default_border)
   pfUI.chat.right.panelTop:SetPoint("TOPRIGHT", pfUI.chat.right, "TOPRIGHT", -default_border, -default_border)
   if pfUI_config.chat.global.tabdock == "1" then
-    pfUI.api:CreateBackdrop(pfUI.chat.right.panelTop, default_border, nil, true)
+    pfUI.api:CreateBackdrop(pfUI.chat.right.panelTop, default_border, nil, .8)
   end
 
   pfUI.chat:RegisterEvent("PLAYER_ENTERING_WORLD")

@@ -86,7 +86,7 @@ pfUI:RegisterModule("thirdparty", function ()
         pfUIhookWIM_PostMessage = WIM_PostMessage
         WIM_PostMessage = function(user, msg, ttype, from, raw_msg)
           pfUIhookWIM_PostMessage(user, msg, ttype, from, raw_msg)
-          pfUI.api:CreateBackdrop(getglobal("WIM_msgFrame" .. user), nil, nil, true)
+          pfUI.api:CreateBackdrop(getglobal("WIM_msgFrame" .. user), nil, nil, .8)
           getglobal("WIM_msgFrame" .. user .. "From"):ClearAllPoints()
           getglobal("WIM_msgFrame" .. user .. "From"):SetPoint("TOP", 0, -10)
 

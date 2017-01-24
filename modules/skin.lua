@@ -50,7 +50,7 @@ pfUI:RegisterModule("skin", function ()
 
   for _, box in pairs(boxes) do
     local b = getglobal(box)
-    pfUI.api:CreateBackdrop(b, nil, true, true)
+    pfUI.api:CreateBackdrop(b, nil, true, .8)
   end
 
   for i,v in ipairs({GameMenuFrame:GetRegions()}) do
@@ -61,25 +61,26 @@ pfUI:RegisterModule("skin", function ()
     end
   end
 
-pfUI.api:CreateBackdrop(ShoppingTooltip1)
-pfUI.api:CreateBackdrop(ShoppingTooltip2)
-pfUI.api:CreateBackdrop(ItemRefTooltip)
+  local alpha = tonumber(pfUI_config.tooltip.alpha)
+  pfUI.api:CreateBackdrop(ShoppingTooltip1, nil, nil, alpha)
+  pfUI.api:CreateBackdrop(ShoppingTooltip2, nil, nil, alpha)
+  pfUI.api:CreateBackdrop(ItemRefTooltip, nil, nil, alpha)
 
-ShoppingTooltip1:SetScript("OnShow", function()
-  local a, b, c, d, e = this:GetPoint()
-  local border = tonumber(pfUI_config.appearance.border.default)
-  if d and d == 0 then d = (border*2)+d+1 end
-  this:SetPoint(a, b, c, d, e)
-end)
+  ShoppingTooltip1:SetScript("OnShow", function()
+    local a, b, c, d, e = this:GetPoint()
+    local border = tonumber(pfUI_config.appearance.border.default)
+    if d and d == 0 then d = (border*2)+d+1 end
+    this:SetPoint(a, b, c, d, e)
+  end)
 
-ShoppingTooltip2:SetScript("OnShow", function()
-  local a, b, c, d, e = this:GetPoint()
-  local border = tonumber(pfUI_config.appearance.border.default)
-  if not d or d == 0 then d = (border*2)+d+1 end
-  this:SetPoint(a, b, c, d, e)
-end)
+  ShoppingTooltip2:SetScript("OnShow", function()
+    local a, b, c, d, e = this:GetPoint()
+    local border = tonumber(pfUI_config.appearance.border.default)
+    if not d or d == 0 then d = (border*2)+d+1 end
+    this:SetPoint(a, b, c, d, e)
+  end)
 
-pfUI.api:CreateBackdrop(TicketStatusFrame)
+  pfUI.api:CreateBackdrop(TicketStatusFrame)
   TicketStatusFrame:ClearAllPoints()
   TicketStatusFrame:SetPoint("TOP", 0, -5)
   function TicketStatusFrame_OnEvent()

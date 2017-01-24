@@ -1,5 +1,6 @@
 pfUI:RegisterModule("tooltip", function ()
-pfUI.api:CreateBackdrop(GameTooltip)
+local alpha = tonumber(pfUI_config.tooltip.alpha)
+pfUI.api:CreateBackdrop(GameTooltip, nil, nil, alpha)
 
   if pfUI_config.tooltip.position == "跟随鼠标" then
     function GameTooltip_SetDefaultAnchor(tooltip, parent)

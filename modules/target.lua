@@ -196,18 +196,12 @@ pfUI:RegisterModule("target", function ()
         local r, g, b = r1 + (r2 - r1)*perc, g1 + (g2 - g1)*perc, b1 + (b2 - b1)*perc
         pfUI.uf.target.hpText:SetTextColor(r, g, b,1)
 
-        local leveldiff = UnitLevel("player") - UnitLevel("target")
         local levelcolor
-        if leveldiff >= 9 then
-          levelcolor = "555555"
-        elseif leveldiff >= 3 then
-          levelcolor = "55ff55"
-        elseif leveldiff >= -2 then
-          levelcolor = "aaff55"
-        elseif leveldiff >= -4 then
-          levelcolor = "ffaa55"
-        else
+        if UnitLevel("target") < 0 then
           levelcolor = "ff5555"
+        else
+          local lcol = GetDifficultyColor(UnitLevel("target"))
+          levelcolor = string.format("%02x%02x%02x", lcol.r*255, lcol.g*255, lcol.b*255)
         end
 
         local name = string.sub(UnitName("target"),1,25)
