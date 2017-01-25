@@ -109,6 +109,37 @@ ScriptErrors:SetScript("OnShow", function(msg)
   ScriptErrors:Hide()
 end)
 
+function pfUI.SetupCVars()
+  ClearTutorials()
+  TutorialFrame_HideAllAlerts()
+
+  SetCVar("autoSelfCast", "1")
+  SetCVar("profanityFilter", "0")
+
+  MultiActionBar_ShowAllGrids()
+  ALWAYS_SHOW_MULTIBARS = "1"
+
+  SHOW_BUFF_DURATIONS = "1"
+  QUEST_FADING_DISABLE = "1"
+  NAMEPLATES_ON = "1"
+
+  SHOW_COMBAT_TEXT = "1"
+  COMBAT_TEXT_SHOW_LOW_HEALTH_MANA = "1"
+  COMBAT_TEXT_SHOW_AURAS = "1"
+  COMBAT_TEXT_SHOW_AURA_FADE = "1"
+  COMBAT_TEXT_SHOW_COMBAT_STATE = "1"
+  COMBAT_TEXT_SHOW_DODGE_PARRY_MISS = "1"
+  COMBAT_TEXT_SHOW_RESISTANCES = "1"
+  COMBAT_TEXT_SHOW_REPUTATION = "1"
+  COMBAT_TEXT_SHOW_REACTIVES = "1"
+  COMBAT_TEXT_SHOW_FRIENDLY_NAMES = "1"
+  COMBAT_TEXT_SHOW_COMBO_POINTS = "1"
+  COMBAT_TEXT_SHOW_MANA = "1"
+  COMBAT_TEXT_FLOAT_MODE = "1"
+  COMBAT_TEXT_SHOW_HONOR_GAINED = "1"
+  UIParentLoadAddOn("Blizzard_CombatText")
+end
+
 pfUI.firstrun = CreateFrame("Frame", "pfFirstRunWizard", UIParent)
 pfUI.firstrun.steps = {}
 pfUI.firstrun.next = nil
@@ -128,6 +159,11 @@ function pfUI.firstrun:AddStep(name, yfunc, nfunc, descr, cmpnt)
 
   table.insert(pfUI.firstrun.steps, step)
 end
+
+pfUI.firstrun:AddStep("cvars", function() pfUI.SetupCVars() end, nil, "|cff33ffccChat: \"Blizzard UI Configuration\"|r\n\n"..
+"Do you want me to setup the recommended blizzard UI settings?\n"..
+"This will enable settings that can be found in the Interface section of your client.\n"..
+"Options like Buff Durations, Instant Quest Text, Auto Selfcast and others will be set.\n")
 
 function pfUI.firstrun:NextStep()
   if pfUI_init and next(pfUI_init) == nil then
