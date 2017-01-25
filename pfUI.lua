@@ -160,7 +160,7 @@ function pfUI.firstrun:AddStep(name, yfunc, nfunc, descr, cmpnt)
   table.insert(pfUI.firstrun.steps, step)
 end
 
-pfUI.firstrun:AddStep("cvars", function() pfUI.SetupCVars() end, nil, "|cff33ffccChat: \"Blizzard UI Configuration\"|r\n\n"..
+pfUI.firstrun:AddStep("cvars", function() pfUI.SetupCVars() end, nil, "|cff33ffccBlizzard: \"Interface Options\"|r\n\n"..
 "Do you want me to setup the recommended blizzard UI settings?\n"..
 "This will enable settings that can be found in the Interface section of your client.\n"..
 "Options like Buff Durations, Instant Quest Text, Auto Selfcast and others will be set.\n")
