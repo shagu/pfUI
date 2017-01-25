@@ -730,6 +730,7 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.global = pfUI.gui:CreateConfigTab("全局设置")
   local values = { "arial", "homespun", "diediedie" }
   pfUI.gui:CreateConfig(pfUI.gui.global, "跟随分辨率自动缩放UI", pfUI_config.global, "pixelperfect", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.global, "切换到其他窗口时游戏帧数保持不变", pfUI_config.global, "offscreen", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.global, "字号", pfUI_config.global, "font_size")
   pfUI.gui:CreateConfig(pfUI.gui.global, "默认字体", pfUI_config.global, "font_default", "dropdown", values)
   pfUI.gui:CreateConfig(pfUI.gui.global, "框体字体", pfUI_config.global, "font_square", "dropdown", values)
@@ -740,7 +741,7 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui:CreateConfig(pfUI.gui.global, "隐藏系统Buff图标", pfUI_config.global, "hidebuff", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.global, "隐藏武器Buff图标", pfUI_config.global, "hidewbuff", "checkbox")
 
-  pfUI.gui:CreateConfig(pfUI.gui.global, "配置文件", nil, nil, "header")
+  pfUI.gui:CreateConfig(pfUI.gui.global, "Profile", nil, nil, "header")
   local values = {}
   for name, config in pairs(pfUI_profiles) do table.insert(values, name) end
 
