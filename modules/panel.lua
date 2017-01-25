@@ -79,9 +79,22 @@ pfUI:RegisterModule("panel", function ()
         GameTooltip:ClearLines()
         GameTooltip_SetDefaultAnchor(GameTooltip, this)
         local h, m = GetGameTime()
-        local servertime = string.format("%.2d:%.2d", h, m)
+        local noon = " AM"
+        local servertime
+        local time
+        if pfUI_config.global.twentyfour == "0" then
+          if h > 12 then
+            h = h - 12
+            noon = " PM"
+          end
+          time = date("%I:%M %p")
+          servertime = string.format("%.2d:%.2d", h, m) .. noon
+        else
+          time = date("%H:%M")
+          servertime = string.format("%.2d:%.2d", h, m)
+        end
         GameTooltip:AddLine("|cff555555Time")
-        GameTooltip:AddDoubleLine("Localtime",  "|cffffffff" .. date("%H:%M"))
+        GameTooltip:AddDoubleLine("Localtime",  "|cffffffff" .. time)
         GameTooltip:AddDoubleLine("Servertime", "|cffffffff".. servertime)
         GameTooltip:AddLine(" ")
         GameTooltip:AddDoubleLine("Left Click", "|cffffffffShow/Hide Timer")
@@ -103,7 +116,11 @@ pfUI:RegisterModule("panel", function ()
       end
 
       pfUI.panel.clock.tick = GetTime()
-      pfUI.panel:OutputPanel("time", date("%H:%M:%S"), tooltip, click)
+      if pfUI_config.global.twentyfour == "0" then
+        pfUI.panel:OutputPanel("time", date("%I:%M:%S %p"), tooltip, click)
+      else
+        pfUI.panel:OutputPanel("time", date("%H:%M:%S"), tooltip, click)
+      end
 
       -- lag fps
       local tooltip = function ()

@@ -740,6 +740,7 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui:CreateConfig(pfUI.gui.global, "Disable UIErrors", pfUI_config.global, "errors_hide", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.global, "Hide Buffs", pfUI_config.global, "hidebuff", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.global, "Hide Weapon Buffs", pfUI_config.global, "hidewbuff", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.global, "Use 24h Clock", pfUI_config.global, "twentyfour", "checkbox")
 
   pfUI.gui:CreateConfig(pfUI.gui.global, "Profile", nil, nil, "header")
   local values = {}
