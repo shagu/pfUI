@@ -4,9 +4,35 @@ pfUI:RegisterModule("actionbar", function ()
     default_border = pfUI_config.appearance.border.actionbars
   end
 
-  -- override defaultUI functions to always show grid
-  function ActionButton_ShowGrid(button) return end
-  function ActionButton_HideGrid(button) return end
+  -- override wow ui functions
+  function ActionButton_ShowGrid(button)
+    if not button then button = this end
+    button.showgrid = button.showgrid + 1
+    button:Show()
+  end
+
+  function ActionButton_HideGrid(button)
+    if not button then button = this end
+    button.showgrid = button.showgrid - 1
+
+    if button.showgrid == 0 and not HasAction(ActionButton_GetPagedID(button)) then
+      button:Hide()
+    end
+  end
+
+  function MultiActionBar_ShowAllGrids()
+    for _, bar in pairs({ "MultiBarBottomLeft", "MultiBarBottomRight",
+    "MultiBarRight", "MultiBarLeft", "BonusAction", "Action" }) do
+      MultiActionBar_UpdateGrid(bar, 1)
+    end
+  end
+
+  function MultiActionBar_HideAllGrids()
+    for _, bar in pairs({ "MultiBarBottomLeft", "MultiBarBottomRight",
+    "MultiBarRight", "MultiBarLeft", "BonusAction", "Action" }) do
+      MultiActionBar_UpdateGrid(bar)
+    end
+  end
 
   if not Hook_ShowBonusActionBar then
     Hook_ShowBonusActionBar = ShowBonusActionBar
@@ -416,7 +442,6 @@ pfUI:RegisterModule("actionbar", function ()
   for i = 1, NUM_SHAPESHIFT_SLOTS do
     getglobal("ShapeshiftButton"..i):SetWidth(pfUI_config.bars.icon_size)
     getglobal("ShapeshiftButton"..i):SetHeight(pfUI_config.bars.icon_size)
-    getglobal("ShapeshiftButton"..i).showgrid = 1
 
     getglobal("ShapeshiftButton"..i..'Icon'):SetParent(getglobal("ShapeshiftButton"..i))
     getglobal("ShapeshiftButton"..i..'Icon'):SetAllPoints(getglobal("ShapeshiftButton"..i))
@@ -435,7 +460,6 @@ pfUI:RegisterModule("actionbar", function ()
     getglobal("PetActionButton"..i):SetWidth(pfUI_config.bars.icon_size)
     getglobal("PetActionButton"..i):SetHeight(pfUI_config.bars.icon_size)
     getglobal("PetActionButton"..i):Show()
-    getglobal("PetActionButton"..i).showgrid = 1
 
     getglobal("PetActionButton"..i..'Icon'):SetAllPoints(getglobal("PetActionButton"..i))
     getglobal("PetActionButton"..i..'Icon'):SetParent(getglobal("PetActionButton"..i))
@@ -460,7 +484,6 @@ pfUI:RegisterModule("actionbar", function ()
       getglobal(button..i):SetWidth(pfUI_config.bars.icon_size)
       getglobal(button..i):SetHeight(pfUI_config.bars.icon_size)
       getglobal(button..i):Show()
-      getglobal(button..i).showgrid = 1
 
       getglobal(button..i..'Icon'):SetAllPoints(getglobal(button..i))
       getglobal(button..i..'Icon'):SetTexCoord(.08, .92, .08, .92)

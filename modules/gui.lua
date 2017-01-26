@@ -740,6 +740,7 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui:CreateConfig(pfUI.gui.global, "禁用错误", pfUI_config.global, "errors_hide", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.global, "隐藏系统Buff图标", pfUI_config.global, "hidebuff", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.global, "隐藏武器Buff图标", pfUI_config.global, "hidewbuff", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.global, "使用24小时制", pfUI_config.global, "twentyfour", "checkbox")
 
   pfUI.gui:CreateConfig(pfUI.gui.global, "Profile", nil, nil, "header")
   local values = {}

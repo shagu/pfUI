@@ -390,14 +390,19 @@ pfUI:RegisterModule("bags", function ()
           frame.bagslots.slots[slot].slot = slot
         end
 
+        local SlotEnter = frame.bagslots.slots[slot].frame:GetScript("OnEnter")
         frame.bagslots.slots[slot].frame:SetScript("OnEnter", function()
           for slot, f in ipairs(pfUI.bags[this.slot + 1].slots) do
             pfUI.api:CreateBackdrop(f.frame, default_border)
             f.frame.backdrop:SetBackdropBorderColor(.2,1,.8,1)
           end
+          SlotEnter()
         end)
+
+        local SlotLeave = frame.bagslots.slots[slot].frame:GetScript("OnLeave")
         frame.bagslots.slots[slot].frame:SetScript("OnLeave", function()
           pfUI.bag:UpdateBag(this.slot + 1)
+          SlotLeave()
         end)
       end
 
