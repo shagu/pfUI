@@ -89,6 +89,7 @@ pfUI:RegisterModule("castbar", function ()
       pfUI.castbar.player.bar:SetValue(pfUI.castbar.player.startTime)
       pfUI.castbar.player.holdTime = 0
       pfUI.castbar.player.casting = 1
+      pfUI.castbar.player.channeling = nil
       pfUI.castbar.player.mode = "casting"
       pfUI.castbar.player.fadeout = nil
       pfUI.castbar.player:SetAlpha(1)
@@ -125,11 +126,10 @@ pfUI:RegisterModule("castbar", function ()
         pfUI.castbar.player.fadeout = 1
         pfUI.castbar.player.channeling = nil
 
-        if ( GetTime() + 0.3 < pfUI.castbar.player.endTime ) then
+        if GetTime() + 0.3 < pfUI.castbar.player.endTime then
           pfUI.castbar.player.bar:SetStatusBarColor(1,.5,.5,1)
           pfUI.castbar.player.bar:SetMinMaxValues(1,100)
           pfUI.castbar.player.bar:SetValue(100)
-          return
         end
       end
 
