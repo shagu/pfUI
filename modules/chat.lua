@@ -395,7 +395,7 @@ pfUI:RegisterModule("chat", function ()
   pfUI.chat:SetScript("OnEvent", function()
       if event == "PLAYER_ENTERING_WORLD" or event == "UI_SCALE_CHANGED" then
         pfUI.chat:RefreshChat()
-        if pfUI_config.chat.right.enable == "0" then
+        if pfUI_config.chat.right.enable == "0" and pfUI_config.chat.right.alwaysshow == "0" then
           pfUI.chat.right:Hide()
         end
       elseif event == "FRIENDLIST_UPDATE" or event == "PLAYER_ENTERING_WORLD" then
