@@ -32,54 +32,8 @@ pfUI:RegisterModule("player", function ()
   end)
 
   pfUI.uf.player:SetScript("OnClick", function ()
-      if arg1 == "RightButton" then
-        ToggleDropDownMenu(1, nil, pfUI.uf.player.Dropdown,"cursor")
-        if UnitIsPartyLeader("player") then
-          UIDropDownMenu_AddButton({text = "Reset Instances", func = ResetInstances, notCheckable = 1}, 1)
-        end
-      else
-        TargetUnit("player")
-
-        if pfUI_config.unitframes.globalclick == "0" then return end
-
-        -- clickcast: shift modifier
-        if IsShiftKeyDown() then
-          if pfUI_config.unitframes.raid.clickcast_shift ~= "" then
-            CastSpellByName(pfUI_config.unitframes.raid.clickcast_shift)
-            pfUI.uf.target.noanim = "yes"
-            TargetLastTarget()
-            return
-          end
-        -- clickcast: alt modifier
-        elseif IsAltKeyDown() then
-          if pfUI_config.unitframes.raid.clickcast_alt ~= "" then
-            CastSpellByName(pfUI_config.unitframes.raid.clickcast_alt)
-            pfUI.uf.target.noanim = "yes"
-            TargetLastTarget()
-            return
-          end
-        -- clickcast: ctrl modifier
-        elseif IsControlKeyDown() then
-          if pfUI_config.unitframes.raid.clickcast_ctrl ~= "" then
-            CastSpellByName(pfUI_config.unitframes.raid.clickcast_ctrl)
-            pfUI.uf.target.noanim = "yes"
-            TargetLastTarget()
-            return
-          end
-        -- clickcast: default
-        else
-          if pfUI_config.unitframes.raid.clickcast ~= "" then
-            CastSpellByName(pfUI_config.unitframes.raid.clickcast)
-            pfUI.uf.target.noanim = "yes"
-            TargetLastTarget()
-            return
-          else
-            -- no clickcast: default action
-            TargetUnit("player")
-          end
-        end
-      end
-    end)
+    pfUI.uf:ClickAction(arg1)
+  end)
 
   pfUI.uf.player.Dropdown = getglobal("PlayerFrameDropDown")
   function pfUI.uf.player.Dropdowni()
