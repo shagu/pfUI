@@ -292,9 +292,9 @@ function pfUI_OnClick_Handler(...)
     unitid = arg[2] or "player"
     target_behaviour = arg[3] or "default"
 
-    DEFAULT_CHAT_FRAME:AddMessage("button: "..button)
-    DEFAULT_CHAT_FRAME:AddMessage("unitid: "..unitid)
-    DEFAULT_CHAT_FRAME:AddMessage("behaviour: "..target_behaviour)
+    -- DEFAULT_CHAT_FRAME:AddMessage("button: "..button)
+    -- DEFAULT_CHAT_FRAME:AddMessage("unitid: "..unitid)
+    -- DEFAULT_CHAT_FRAME:AddMessage("behaviour: "..target_behaviour)
 
 
     -- use the custom OnClick function if one is hooked
