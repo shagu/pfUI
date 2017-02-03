@@ -280,7 +280,22 @@ pfUI.info:SetScript("OnClick", function() this:Hide() end)
 -- to customize the behaviour if a target_behaviour is specified for special
 -- targets; player, target, etc
 -- TODO: Rewrite the awful hack below to something cleaner after I learn LUA
-function pfUI_OnClick_Handler(button, unitid, target_behaviour)
+function pfUI_OnClick_Handler(...)
+
+    -- DEFAULT_CHAT_FRAME:AddMessage("arg1: "..arg1)
+
+    -- for i, v in ipairs(arg) do
+    --     DEFAULT_CHAT_FRAME:AddMessage(i..": "..v)
+    -- end
+
+    button = arg1 or arg[1]
+    unitid = arg[2] or "player"
+    target_behaviour = arg[3] or "default"
+
+    DEFAULT_CHAT_FRAME:AddMessage("button: "..button)
+    DEFAULT_CHAT_FRAME:AddMessage("unitid: "..unitid)
+    DEFAULT_CHAT_FRAME:AddMessage("behaviour: "..target_behaviour)
+
 
     -- use the custom OnClick function if one is hooked
     if (type(pfUI_Custom_ClickFunction) == "function") then
@@ -426,7 +441,6 @@ function pfUI_OnClick_Handler(button, unitid, target_behaviour)
 
     elseif target_behaviour == "unitframes" then
 
-
         if ( SpellIsTargeting() and button == "RightButton" ) then
           SpellStopTargeting()
           return
@@ -501,6 +515,17 @@ function pfUI_OnClick_Handler(button, unitid, target_behaviour)
             FriendsDropDown.displayMode = "MENU"
             ToggleDropDownMenu(1, nil, FriendsDropDown, "cursor")
           end
+        end
+
+    elseif target_behaviour == "pet" then
+
+        local _, playerClass = UnitClass("player");
+        if button == "RightButton" then
+          ToggleDropDownMenu(1, nil, PetFrameDropDown, "cursor")
+        elseif ( CursorHasItem() and playerClass == "HUNTER" ) then
+          DropItemOnUnit("pet");
+        else
+          TargetUnit("pet")
         end
 
     else
