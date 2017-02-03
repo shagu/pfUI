@@ -272,3 +272,269 @@ pfUI.info:SetScript("OnUpdate", function()
 end)
 
 pfUI.info:SetScript("OnClick", function() this:Hide() end)
+
+
+
+-- pfUI_OnClick_Handler
+-- Attempts to trigger the button click on the specified unitid with the ability
+-- to customize the behaviour if a target_behaviour is specified for special
+-- targets; player, target, etc
+-- TODO: Rewrite the awful hack below to something cleaner after I learn LUA
+function pfUI_OnClick_Handler(...)
+
+    -- DEFAULT_CHAT_FRAME:AddMessage("arg1: "..arg1)
+
+    -- for i, v in ipairs(arg) do
+    --     DEFAULT_CHAT_FRAME:AddMessage(i..": "..v)
+    -- end
+
+    button = arg1 or arg[1]
+    unitid = arg[2] or "player"
+    target_behaviour = arg[3] or "default"
+
+    -- DEFAULT_CHAT_FRAME:AddMessage("button: "..button)
+    -- DEFAULT_CHAT_FRAME:AddMessage("unitid: "..unitid)
+    -- DEFAULT_CHAT_FRAME:AddMessage("behaviour: "..target_behaviour)
+
+
+    -- use the custom OnClick function if one is hooked
+    if (type(pfUI_Custom_ClickFunction) == "function") then
+        if (pfUI_Custom_ClickFunction(button, unitid)) then
+            -- pfUI_Custom_ClickFunction should return true if handled, then we do nothing more.
+            -- no return and we'll continue with default behaviour
+            return true
+        end
+    end
+
+    -- below is a terrible copy-paste from each of the existing unit modules
+    if target_behaviour == "player" then
+
+        if button == "RightButton" then
+            ToggleDropDownMenu(1, nil, pfUI.uf.player.Dropdown,"cursor")
+            if UnitIsPartyLeader("player") then
+                UIDropDownMenu_AddButton({text = "Reset Instances", func = ResetInstances, notCheckable = 1}, 1)
+            end
+        else
+            TargetUnit("player")
+
+            if pfUI_config.unitframes.globalclick == "0" then return end
+
+            -- clickcast: shift modifier
+            if IsShiftKeyDown() then
+              if pfUI_config.unitframes.raid.clickcast_shift ~= "" then
+                CastSpellByName(pfUI_config.unitframes.raid.clickcast_shift)
+                pfUI.uf.target.noanim = "yes"
+                TargetLastTarget()
+                return
+              end
+            -- clickcast: alt modifier
+            elseif IsAltKeyDown() then
+              if pfUI_config.unitframes.raid.clickcast_alt ~= "" then
+                CastSpellByName(pfUI_config.unitframes.raid.clickcast_alt)
+                pfUI.uf.target.noanim = "yes"
+                TargetLastTarget()
+                return
+              end
+            -- clickcast: ctrl modifier
+            elseif IsControlKeyDown() then
+              if pfUI_config.unitframes.raid.clickcast_ctrl ~= "" then
+                CastSpellByName(pfUI_config.unitframes.raid.clickcast_ctrl)
+                pfUI.uf.target.noanim = "yes"
+                TargetLastTarget()
+                return
+              end
+            -- clickcast: default
+            else
+              if pfUI_config.unitframes.raid.clickcast ~= "" then
+                CastSpellByName(pfUI_config.unitframes.raid.clickcast)
+                pfUI.uf.target.noanim = "yes"
+                TargetLastTarget()
+                return
+              else
+                -- no clickcast: default action
+                TargetUnit("player")
+              end
+            end
+        end
+
+    elseif target_behaviour == "target" then
+
+          if button == "RightButton" then
+            ToggleDropDownMenu(1, nil, TargetFrameDropDown, "cursor")
+          else
+            if pfUI_config.unitframes.globalclick == "0" then return end
+
+            -- clickcast: shift modifier
+            if IsShiftKeyDown() then
+              if pfUI_config.unitframes.raid.clickcast_shift ~= "" then
+                CastSpellByName(pfUI_config.unitframes.raid.clickcast_shift)
+                pfUI.uf.target.noanim = "yes"
+                return
+              end
+            -- clickcast: alt modifier
+            elseif IsAltKeyDown() then
+              if pfUI_config.unitframes.raid.clickcast_alt ~= "" then
+                CastSpellByName(pfUI_config.unitframes.raid.clickcast_alt)
+                pfUI.uf.target.noanim = "yes"
+                return
+              end
+            -- clickcast: ctrl modifier
+            elseif IsControlKeyDown() then
+              if pfUI_config.unitframes.raid.clickcast_ctrl ~= "" then
+                CastSpellByName(pfUI_config.unitframes.raid.clickcast_ctrl)
+                pfUI.uf.target.noanim = "yes"
+                return
+              end
+            -- clickcast: default
+            else
+              if pfUI_config.unitframes.raid.clickcast ~= "" then
+                CastSpellByName(pfUI_config.unitframes.raid.clickcast)
+                pfUI.uf.target.noanim = "yes"
+                return
+              end
+            end
+          end
+
+    elseif target_behaviour == "targettarget" then
+
+        TargetUnit("targettarget")
+
+        if pfUI_config.unitframes.globalclick == "0" then return end
+
+        -- clickcast: shift modifier
+        if IsShiftKeyDown() then
+          if pfUI_config.unitframes.raid.clickcast_shift ~= "" then
+            CastSpellByName(pfUI_config.unitframes.raid.clickcast_shift)
+            pfUI.uf.target.noanim = "yes"
+            TargetLastTarget()
+            return
+          end
+        -- clickcast: alt modifier
+        elseif IsAltKeyDown() then
+          if pfUI_config.unitframes.raid.clickcast_alt ~= "" then
+            CastSpellByName(pfUI_config.unitframes.raid.clickcast_alt)
+            pfUI.uf.target.noanim = "yes"
+            TargetLastTarget()
+            return
+          end
+        -- clickcast: ctrl modifier
+        elseif IsControlKeyDown() then
+          if pfUI_config.unitframes.raid.clickcast_ctrl ~= "" then
+            CastSpellByName(pfUI_config.unitframes.raid.clickcast_ctrl)
+            pfUI.uf.target.noanim = "yes"
+            TargetLastTarget()
+            return
+          end
+        -- clickcast: default
+        else
+          if pfUI_config.unitframes.raid.clickcast ~= "" then
+            CastSpellByName(pfUI_config.unitframes.raid.clickcast)
+            pfUI.uf.target.noanim = "yes"
+            TargetLastTarget()
+            return
+          else
+            -- no clickcast: default action
+            TargetUnit("targettarget")
+          end
+        end
+
+
+    elseif target_behaviour == "unitframes" then
+
+        if ( SpellIsTargeting() and button == "RightButton" ) then
+          SpellStopTargeting()
+          return
+        end
+
+        if ( button == "LeftButton" ) then
+          if ( SpellIsTargeting() ) then
+            SpellTargetUnit(this.label .. this.id)
+          elseif ( CursorHasItem() ) then
+            DropItemOnUnit(this.label .. this.id)
+          else
+            TargetUnit(this.label .. this.id)
+
+            -- break here if party frame and no clickcast is activated
+            if this.label == "party" and
+              pfUI_config.unitframes.group.clickcast == "0" and
+              pfUI_config.unitframes.globalclick == "0" then
+                return
+            end
+
+            -- break here for non-party and non-raid frames without clickcast
+            if this.label ~= "raid" and this.label ~= "party" and pfUI_config.unitframes.globalclick == "0" then
+              return
+            end
+
+            -- clickcast: shift modifier
+            if IsShiftKeyDown() then
+              if pfUI_config.unitframes.raid.clickcast_shift ~= "" then
+                CastSpellByName(pfUI_config.unitframes.raid.clickcast_shift)
+                pfUI.uf.target.noanim = "yes"
+                TargetLastTarget()
+                return
+              end
+
+            -- clickcast: alt modifier
+            elseif IsAltKeyDown() then
+              if pfUI_config.unitframes.raid.clickcast_alt ~= "" then
+                CastSpellByName(pfUI_config.unitframes.raid.clickcast_alt)
+                pfUI.uf.target.noanim = "yes"
+                TargetLastTarget()
+                return
+              end
+
+            -- clickcast: ctrl modifier
+            elseif IsControlKeyDown() then
+              if pfUI_config.unitframes.raid.clickcast_ctrl ~= "" then
+                CastSpellByName(pfUI_config.unitframes.raid.clickcast_ctrl)
+                pfUI.uf.target.noanim = "yes"
+                TargetLastTarget()
+                return
+              end
+
+            -- clickcast: default
+            else
+              if pfUI_config.unitframes.raid.clickcast ~= "" then
+                CastSpellByName(pfUI_config.unitframes.raid.clickcast)
+                pfUI.uf.target.noanim = "yes"
+                TargetLastTarget()
+                return
+              else
+                -- no clickcast: default action
+                TargetUnit(this.label .. this.id)
+              end
+            end
+          end
+        else
+          if this.label == "party" then
+            ToggleDropDownMenu(1, nil, getglobal("PartyMemberFrame" .. this.id .. "DropDown"), "cursor")
+          elseif this.label == "raid" then
+            ToggleDropDownMenu(1, nil, getglobal("RaidMemberFrame" .. this.id .. "DropDown"), "cursor")
+            FriendsDropDown.initialize = RaidFrameDropDown_Initialize
+            FriendsDropDown.displayMode = "MENU"
+            ToggleDropDownMenu(1, nil, FriendsDropDown, "cursor")
+          end
+        end
+
+    elseif target_behaviour == "pet" then
+
+        local _, playerClass = UnitClass("player");
+        if button == "RightButton" then
+          ToggleDropDownMenu(1, nil, PetFrameDropDown, "cursor")
+        elseif ( CursorHasItem() and playerClass == "HUNTER" ) then
+          DropItemOnUnit("pet");
+        else
+          TargetUnit("pet")
+        end
+
+    else
+
+        -- do nothing
+        return
+
+    end
+
+end
+
+

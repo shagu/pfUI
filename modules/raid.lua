@@ -106,7 +106,7 @@ pfUI:RegisterModule("raid", function ()
       pfUI.uf.raid[i].hp.raidIcon:SetPoint("TOP", pfUI.uf.raid[i].hp, "TOP", -4, 4)
       pfUI.uf.raid[i].hp.raidIcon:Hide()
 
-      pfUI.uf.raid[i]:RegisterForClicks('LeftButtonUp', 'RightButtonUp')
+      pfUI.uf.raid[i]:RegisterForClicks('LeftButtonUp', 'RightButtonUp', 'MiddleButtonUp', 'Button4Up', 'Button5Up')
 
       pfUI.uf:CreateUnit(pfUI.uf.raid[i])
     end
