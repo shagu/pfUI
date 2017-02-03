@@ -153,7 +153,7 @@ pfUI:RegisterModule("group", function ()
     pfUI.uf.group[i].hp.raidIcon:SetPoint("TOP", pfUI.uf.group[i].hp, "TOP", -4, 4)
     pfUI.uf.group[i].hp.raidIcon:Hide()
 
-    pfUI.uf.group[i]:RegisterForClicks('LeftButtonUp', 'RightButtonUp')
+    pfUI.uf.group[i]:RegisterForClicks('LeftButtonUp', 'RightButtonUp', 'MiddleButtonUp', 'Button4Up', 'Button5Up')
 
     pfUI.uf:CreateUnit(pfUI.uf.group[i])
   end

@@ -27,7 +27,7 @@ pfUI:RegisterModule("targettarget", function ()
   pfUI.uf.targettarget:SetPoint("BOTTOM", UIParent , "BOTTOM", 0, 125)
   pfUI.api:UpdateMovable(pfUI.uf.targettarget)
 
-  pfUI.uf.targettarget:RegisterForClicks('LeftButtonUp', 'RightButtonUp')
+  pfUI.uf.targettarget:RegisterForClicks('LeftButtonUp', 'RightButtonUp', 'MiddleButtonUp', 'Button4Up', 'Button5Up')
   pfUI.uf.targettarget:SetScript("OnEnter", function()
     GameTooltip_SetDefaultAnchor(GameTooltip, this)
     GameTooltip:SetUnit(this.label .. this.id)
