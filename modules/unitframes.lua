@@ -147,6 +147,106 @@ function pfUI.uf:SetupBuffFilter()
   end
 end
 
+function pfUI.uf:ClickAction(button)
+  local label = this.label or ""
+  local id = this.id or ""
+  local unitstr = label .. id
+
+  if SpellIsTargeting() and button == "RightButton" then
+    SpellStopTargeting()
+    return
+  end
+
+  if SpellIsTargeting() and button == "LeftButton" then
+    SpellTargetUnit(unitstr)
+  elseif CursorHasItem() then
+    DropItemOnUnit(unitstr)
+  end
+
+  -- dropdown menues
+  if button == "RightButton" then
+    if label == "player" then
+      ToggleDropDownMenu(1, nil, pfUI.uf.player.Dropdown,"cursor")
+      if UnitIsPartyLeader("player") then
+        UIDropDownMenu_AddButton({text = "Reset Instances", func = ResetInstances, notCheckable = 1}, 1)
+      end
+    elseif label == "target" then
+      ToggleDropDownMenu(1, nil, TargetFrameDropDown, "cursor")
+    elseif label == "pet" then
+      ToggleDropDownMenu(1, nil, PetFrameDropDown, "cursor")
+    elseif label == "party" then
+      ToggleDropDownMenu(1, nil, getglobal("PartyMemberFrame" .. this.id .. "DropDown"), "cursor")
+    elseif label == "raid" then
+      ToggleDropDownMenu(1, nil, getglobal("RaidMemberFrame" .. this.id .. "DropDown"), "cursor")
+      FriendsDropDown.initialize = RaidFrameDropDown_Initialize
+      FriendsDropDown.displayMode = "MENU"
+      ToggleDropDownMenu(1, nil, FriendsDropDown, "cursor")
+    end
+  else
+    -- drop food on petframe
+    if label == "pet" and CursorHasItem() then
+      local _, playerClass = UnitClass("player")
+      if playerClass == "HUNTER" then
+        DropItemOnUnit("pet")
+        return
+      end
+    end
+
+    -- prevent TargetLastTarget if target was target
+    local tswitch = UnitIsUnit(unitstr, "target")
+
+    -- default click
+    TargetUnit(unitstr)
+
+    -- break here if party frame and no clickcast is activated
+    if label == "party" and pfUI_config.unitframes.group.clickcast == "0" and pfUI_config.unitframes.globalclick == "0" then
+      return
+    end
+
+    -- break here for non-party and non-raid frames without clickcast
+    if label ~= "raid" and label ~= "party" and pfUI_config.unitframes.globalclick == "0" then
+      return
+    end
+
+    -- clickcast: shift modifier
+    if IsShiftKeyDown() then
+      if pfUI_config.unitframes.raid.clickcast_shift ~= "" then
+        CastSpellByName(pfUI_config.unitframes.raid.clickcast_shift)
+        pfUI.uf.target.noanim = "yes"
+        if not tswitch then TargetLastTarget() end
+        return
+      end
+
+    -- clickcast: alt modifier
+    elseif IsAltKeyDown() then
+      if pfUI_config.unitframes.raid.clickcast_alt ~= "" then
+        CastSpellByName(pfUI_config.unitframes.raid.clickcast_alt)
+        pfUI.uf.target.noanim = "yes"
+        if not tswitch then TargetLastTarget() end
+        return
+      end
+
+    -- clickcast: ctrl modifier
+    elseif IsControlKeyDown() then
+      if pfUI_config.unitframes.raid.clickcast_ctrl ~= "" then
+        CastSpellByName(pfUI_config.unitframes.raid.clickcast_ctrl)
+        pfUI.uf.target.noanim = "yes"
+        if not tswitch then TargetLastTarget() end
+        return
+      end
+
+    -- clickcast: default
+    else
+      if pfUI_config.unitframes.raid.clickcast ~= "" then
+        CastSpellByName(pfUI_config.unitframes.raid.clickcast)
+        pfUI.uf.target.noanim = "yes"
+        if not tswitch then TargetLastTarget() end
+        return
+      end
+    end
+  end
+end
+
 function pfUI.uf:RefreshUnit(unit)
   if not unit.cache then unit.cache = {} end
   if not unit.id then unit.id = "" end
@@ -452,81 +552,7 @@ function pfUI.uf:CreateUnit(unit)
   end)
 
   unit:SetScript("OnClick", function ()
-    if ( SpellIsTargeting() and arg1 == "RightButton" ) then
-      SpellStopTargeting()
-      return
-    end
-
-    if ( arg1 == "LeftButton" ) then
-      if ( SpellIsTargeting() ) then
-        SpellTargetUnit(this.label .. this.id)
-      elseif ( CursorHasItem() ) then
-        DropItemOnUnit(this.label .. this.id)
-      else
-        TargetUnit(this.label .. this.id)
-
-        -- break here if party frame and no clickcast is activated
-        if this.label == "party" and
-          pfUI_config.unitframes.group.clickcast == "0" and
-          pfUI_config.unitframes.globalclick == "0" then
-            return
-        end
-
-        -- break here for non-party and non-raid frames without clickcast
-        if this.label ~= "raid" and this.label ~= "party" and pfUI_config.unitframes.globalclick == "0" then
-          return
-        end
-
-        -- clickcast: shift modifier
-        if IsShiftKeyDown() then
-          if pfUI_config.unitframes.raid.clickcast_shift ~= "" then
-            CastSpellByName(pfUI_config.unitframes.raid.clickcast_shift)
-            pfUI.uf.target.noanim = "yes"
-            TargetLastTarget()
-            return
-          end
-
-        -- clickcast: alt modifier
-        elseif IsAltKeyDown() then
-          if pfUI_config.unitframes.raid.clickcast_alt ~= "" then
-            CastSpellByName(pfUI_config.unitframes.raid.clickcast_alt)
-            pfUI.uf.target.noanim = "yes"
-            TargetLastTarget()
-            return
-          end
-
-        -- clickcast: ctrl modifier
-        elseif IsControlKeyDown() then
-          if pfUI_config.unitframes.raid.clickcast_ctrl ~= "" then
-            CastSpellByName(pfUI_config.unitframes.raid.clickcast_ctrl)
-            pfUI.uf.target.noanim = "yes"
-            TargetLastTarget()
-            return
-          end
-
-        -- clickcast: default
-        else
-          if pfUI_config.unitframes.raid.clickcast ~= "" then
-            CastSpellByName(pfUI_config.unitframes.raid.clickcast)
-            pfUI.uf.target.noanim = "yes"
-            TargetLastTarget()
-            return
-          else
-            -- no clickcast: default action
-            TargetUnit(this.label .. this.id)
-          end
-        end
-      end
-    else
-      if this.label == "party" then
-        ToggleDropDownMenu(1, nil, getglobal("PartyMemberFrame" .. this.id .. "DropDown"), "cursor")
-      elseif this.label == "raid" then
-        ToggleDropDownMenu(1, nil, getglobal("RaidMemberFrame" .. this.id .. "DropDown"), "cursor")
-        FriendsDropDown.initialize = RaidFrameDropDown_Initialize
-        FriendsDropDown.displayMode = "MENU"
-        ToggleDropDownMenu(1, nil, FriendsDropDown, "cursor")
-      end
-    end
+    pfUI.uf:ClickAction(arg1)
   end)
 
   unit:SetScript("OnEnter", function()

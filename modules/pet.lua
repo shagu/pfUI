@@ -19,7 +19,7 @@ pfUI:RegisterModule("pet", function ()
   pfUI.uf.pet:SetPoint("BOTTOM", UIParent , "BOTTOM", 0, 163)
   pfUI.api:UpdateMovable(pfUI.uf.pet)
 
-  pfUI.uf.pet:RegisterForClicks('LeftButtonUp', 'RightButtonUp')
+  pfUI.uf.pet:RegisterForClicks('LeftButtonUp', 'RightButtonUp', 'MiddleButtonUp', 'Button4Up', 'Button5Up')
   pfUI.uf.pet:SetScript("OnEnter", function()
     GameTooltip_SetDefaultAnchor(GameTooltip, this)
     GameTooltip:SetUnit(this.label .. this.id)
@@ -31,14 +31,7 @@ pfUI:RegisterModule("pet", function ()
   end)
 
   pfUI.uf.pet:SetScript("OnClick", function ()
-    local _, playerClass = UnitClass("player");
-    if arg1 == "RightButton" then
-      ToggleDropDownMenu(1, nil, PetFrameDropDown, "cursor")
-    elseif ( CursorHasItem() and playerClass == "HUNTER" ) then
-      DropItemOnUnit("pet");
-    else
-      TargetUnit("pet")
-    end
+    pfUI.uf:ClickAction(arg1)
   end)
 
   pfUI.uf.pet:RegisterEvent("PLAYER_ENTERING_WORLD")
