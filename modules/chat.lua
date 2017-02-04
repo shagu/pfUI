@@ -393,7 +393,7 @@ pfUI:RegisterModule("chat", function ()
   pfUI.chat:SetScript("OnEvent", function()
       if event == "PLAYER_ENTERING_WORLD" or event == "UI_SCALE_CHANGED" then
         pfUI.chat:RefreshChat()
-        if pfUI_config.chat.right.enable == "0" then
+        if pfUI_config.chat.right.enable == "0" and pfUI_config.chat.right.alwaysshow == "0" then
           pfUI.chat.right:Hide()
         end
       elseif event == "FRIENDLIST_UPDATE" or event == "PLAYER_ENTERING_WORLD" then
@@ -592,18 +592,21 @@ pfUI:RegisterModule("chat", function ()
     end
     getglobal("ChatFrame"..i).AddMessage = function (frame, text, ...)
       if text then
-        local Name = string.gsub(text, ".*|Hplayer:(.-)|h.*", "%1")
-        if pfUI_playerDB[Name] and pfUI_playerDB[Name].class ~= nil then
-          local Class = pfUI_playerDB[Name].class
-          if RAID_CLASS_COLORS[Class] ~= nil then
-            local Color = string.format("%02x%02x%02x",
-              RAID_CLASS_COLORS[Class].r * 255,
-              RAID_CLASS_COLORS[Class].g * 255,
-              RAID_CLASS_COLORS[Class].b * 255)
-            Name = "|cff" .. Color .. Name .. "|r"
+
+        if pfUI_config.chat.text.classcolor == "1" then
+          local Name = string.gsub(text, ".*|Hplayer:(.-)|h.*", "%1")
+          if pfUI_playerDB[Name] and pfUI_playerDB[Name].class ~= nil then
+            local Class = pfUI_playerDB[Name].class
+            if RAID_CLASS_COLORS[Class] ~= nil then
+              local Color = string.format("%02x%02x%02x",
+                RAID_CLASS_COLORS[Class].r * 255,
+                RAID_CLASS_COLORS[Class].g * 255,
+                RAID_CLASS_COLORS[Class].b * 255)
+              Name = "|cff" .. Color .. Name .. "|r"
+            end
           end
+          text = string.gsub(text, "|Hplayer:(.-)|h%[.-%]|h(.-:-)", "[|Hplayer:%1|h" .. Name .. "|h]" .. "%2")
         end
-        text = string.gsub(text, "|Hplayer:(.-)|h%[.-%]|h(.-:-)", "[|Hplayer:%1|h" .. Name .. "|h]" .. "%2")
 
         if pfUI_config.chat.global.whispermod == "1" then
           -- patch incoming whisper string to match the colors
