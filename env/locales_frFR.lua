@@ -36,15 +36,6 @@ pfLocaleShift["frFR"] = {
   ['wantBattleBerserkStance'] = "Requiert Posture de combat, Posture berserker",
 }
 
-pfLocaleSpellEvents["frFR"] = {
-  ['SPELL_GAINS'] = "(.+) gagne (.+).",
-  ['SPELL_CAST'] = "(.+) commence \195\160 incanter (.+).",
-  ['SPELL_PERFORM'] = "(.+) commence \195\160 effectuer (.+).",
-  ['SPELL_AFFLICTED'] = "(.+) %a+ affligé par (.+).",
-  ['SPELL_HIT'] = "Votre (.+) touche (.+) pour %d+\.",
-  ['OTHER_SPELL_HIT'] = "(.+) de %a+ touche (.+) pour %d+\.",
-}
-
 pfLocaleSpellInterrupts["frFR"] = {
   ["Coup de bouclier"] = true;
   ["Volée de coups"] = true;

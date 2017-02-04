@@ -36,15 +36,6 @@ pfLocaleShift["zhCN"] = {
   ['wantBattleBerserkStance'] = "必须在战斗姿态, 狂暴姿态中",
 }
 
-pfLocaleSpellEvents["zhCN"] = {
-  ['SPELL_GAINS'] = "(.+)获得了(.+)的效果",
-  ['SPELL_CAST'] = "(.+)开始施放(.+)",
-  ['SPELL_PERFORM'] = "(.+)开始施展(.+)",
-  ['SPELL_AFFLICTED'] = "(.+)受到了(.+)效果的影响",
-  ['SPELL_HIT'] = "你的(.+)使(.+)受到了(.+)。",
-  ['OTHER_SPELL_HIT'] = "(.+)的(.+)击中(.+)造成(.+)",
-}
-
 pfLocaleSpellInterrupts["zhCN"] = {
   ["盾击"] = true;
   ["拳击"] = true;
