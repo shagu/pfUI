@@ -36,15 +36,6 @@ pfLocaleShift["deDE"] = {
   ['wantBattleBerserkStance'] = "Muss in Kampfhaltung, Berserkerhaltung sein.",
 }
 
-pfLocaleSpellEvents["deDE"] = {
-  ['SPELL_GAINS'] = "(.+) bekommt (.+).",
-  ['SPELL_CAST'] = "(.+) beginnt (.+) zu wirken.",
-  ['SPELL_PERFORM'] = "(.+) beginnt (.+) auszuf\195\188hren.",
-  ['SPELL_AFFLICTED'] = "(.+) ist von (.+) betroffen.",
-  ['SPELL_HIT'] = "(.+) von Euch trifft (.+) f\195\188r %d+\.",
-  ['OTHER_SPELL_HIT'] = "%a+'s (.+) trifft (.+) f\195\188r %d+\.",
-}
-
 pfLocaleSpellInterrupts["deDE"] = {
   ["Schildhieb"] = true;
   ["Zuschlagen"] = true;

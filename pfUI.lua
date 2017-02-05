@@ -32,7 +32,6 @@ pfLocaleBagtypes = {}
 pfLocaleInvtypes = {}
 pfLocaleShift = {}
 pfLocaleSpells = {}
-pfLocaleSpellEvents = {}
 pfLocaleSpellInterrupts = {}
 pfLocaleHunterbars = {}
 
