@@ -294,15 +294,6 @@ pfUI:RegisterModule("castbar", function ()
     end
   end)
 
-  -- Parse localized combatlog strings available in globalstrings.lua:
-  -- SPELL_CAST:          (.+) begins to cast (.+).
-  -- SPELL_PERFORM:       (.+) begins to perform (.+).
-  -- SPELL_GAINS:         (.+) gains (.+).
-  -- SPELL_AFFLICTED:     (.+) %a+ afflicted by (.+).
-  -- SPELL_HIT:           Your (.+) %a hits (.+) for %d+\.
-  -- SPELL_CRIT:          Your (.+) %a crits (.+) for %d+\.
-  -- OTHER_SPELL_HIT:     %a+'s (.+) %a hits (.+) for %d+\.
-  -- OTHER_SPELL_CRIT:    %a+'s (.+) %a crits (.+) for %d+\.
   pfUI.castbar.target.SPELL_CAST = string.gsub(string.gsub(SPELLCASTOTHERSTART,"%d%$",""), "%%s", "(.+)")
   pfUI.castbar.target.SPELL_PERFORM = string.gsub(string.gsub(SPELLPERFORMOTHERSTART,"%d%$",""), "%%s", "(.+)")
   pfUI.castbar.target.SPELL_GAINS = string.gsub(string.gsub(AURAADDEDOTHERHELPFUL,"%d%$",""), "%%s", "(.+)")
@@ -334,56 +325,67 @@ pfUI:RegisterModule("castbar", function ()
   pfUI.castbar.target.casterDB = {}
 
   pfUI.castbar.target:SetScript("OnEvent", function()
-    if (arg1 ~= nil) then
-      -- cast action
+    if event == "PLAYER_TARGET_CHANGED" then
+      if UnitExists("target") and pfUI.castbar.target.casterDB[UnitName("target")] then
+        local starttime = pfUI.castbar.target.casterDB[UnitName("target")].starttime or 0
+        local casttime = pfUI.castbar.target.casterDB[UnitName("target")].casttime or 0
+        if starttime + casttime > GetTime() then
+          if pfUI_config.castbar.target.hide_pfui == "1" then
+            pfUI.castbar.target:Hide()
+          else
+            pfUI.castbar.target:Show()
+          end
+        elseif pfUI.castbar.target.drag and not pfUI.castbar.target.drag:IsShown() then
+          pfUI.castbar.target.casterDB[UnitName("target")] = nil
+          pfUI.castbar.target:Hide()
+        end
+      end
+    elseif arg1 then
+      -- (.+) begins to cast (.+).
       for mob, spell in string.gfind(arg1, pfUI.castbar.target.SPELL_CAST) do
         pfUI.castbar.target:Action(mob, spell)
         return
       end
+      -- (.+) begins to perform (.+).
       for mob, spell in string.gfind(arg1, pfUI.castbar.target.SPELL_PERFORM) do
         pfUI.castbar.target:Action(mob, spell)
         return
       end
 
-      -- interrupt action
+      -- (.+) gains (.+).
       for mob, spell in string.gfind(arg1, pfUI.castbar.target.SPELL_GAINS) do
         pfUI.castbar.target:StopAction(mob, spell)
         return
       end
+
+      -- (.+) is afflicted by (.+).
       for mob, spell in string.gfind(arg1, pfUI.castbar.target.SPELL_AFFLICTED) do
         pfUI.castbar.target:StopAction(mob, spell)
         return
       end
+
+      -- Your (.+) hits (.+) for %d+.
       for spell, mob in string.gfind(arg1, pfUI.castbar.target.SPELL_HIT) do
         pfUI.castbar.target:StopAction(mob, spell)
         return
       end
+
+      -- Your (.+) crits (.+) for %d+.
       for spell, mob in string.gfind(arg1, pfUI.castbar.target.SPELL_CRIT) do
         pfUI.castbar.target:StopAction(mob, spell)
         return
       end
-      for spell, mob in string.gfind(arg1, pfUI.castbar.target.OTHER_SPELL_HIT) do
-        pfUI.castbar.target:StopAction(mob, spell)
-        return
-      end
-      for spell, mob in string.gfind(arg1, pfUI.castbar.target.OTHER_SPELL_CRIT) do
-        pfUI.castbar.target:StopAction(mob, spell)
-        return
-      end
-    end
 
-    if UnitExists("target") and pfUI.castbar.target.casterDB[UnitName("target")] then
-      local starttime = pfUI.castbar.target.casterDB[UnitName("target")].starttime or 0
-      local casttime = pfUI.castbar.target.casterDB[UnitName("target")].casttime or 0
-      if starttime + casttime > GetTime() then
-        if pfUI_config.castbar.target.hide_pfui == "1" then
-          pfUI.castbar.target:Hide()
-        else
-          pfUI.castbar.target:Show()
-        end
-      elseif pfUI.castbar.target.drag and not pfUI.castbar.target.drag:IsShown() then
-        pfUI.castbar.target.casterDB[UnitName("target")] = nil
-        pfUI.castbar.target:Hide()
+      -- (.+)'s (.+) %a hits (.+) for %d+.
+      for _, spell, mob in string.gfind(arg1, pfUI.castbar.target.OTHER_SPELL_HIT) do
+        pfUI.castbar.target:StopAction(mob, spell)
+        return
+      end
+
+      -- (.+)'s (.+) %a crits (.+) for %d+.
+      for _, spell, mob in string.gfind(arg1, pfUI.castbar.target.OTHER_SPELL_CRIT) do
+        pfUI.castbar.target:StopAction(mob, spell)
+        return
       end
     end
   end)
