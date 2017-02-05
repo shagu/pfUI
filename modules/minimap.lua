@@ -25,8 +25,26 @@ pfUI:RegisterModule("minimap", function ()
   Minimap:SetParent(pfUI.minimap)
   Minimap:SetPoint("CENTER", pfUI.minimap, "CENTER", 0.5, -.5)
 
-  -- Set new mail frame position to top right corner of the minimap
-  -- mostly taken from TukUI
+  -- battleground icon
+  MiniMapBattlefieldFrame:ClearAllPoints()
+  MiniMapBattlefieldFrame:SetPoint("BOTTOMRIGHT", Minimap, 4, -4)
+  MiniMapBattlefieldBorder:Hide()
+  MiniMapBattlefieldFrame:SetScript("OnClick", function()
+    GameTooltip:Hide()
+    if MiniMapBattlefieldFrame.status == "active" then
+      if arg1 == "RightButton" then
+        ToggleDropDownMenu(1, nil, MiniMapBattlefieldDropDown, "MiniMapBattlefieldFrame", -95, -5)
+      elseif IsShiftKeyDown() then
+        ToggleBattlefieldMinimap()
+      else
+        ToggleWorldStateScoreFrame()
+      end
+    elseif arg1 == "RightButton" then
+      ToggleDropDownMenu(1, nil, MiniMapBattlefieldDropDown, "MiniMapBattlefieldFrame", -95, -5)
+    end
+  end)
+
+  -- mail icon
   MiniMapMailFrame:ClearAllPoints()
   MiniMapMailFrame:SetPoint("TOPRIGHT", pfUI.minimap, "TOPRIGHT", 0, 0)
   MiniMapMailBorder:Hide()
