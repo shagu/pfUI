@@ -2,7 +2,7 @@
 if GetLocale() == "zhCN" then
   STANDARD_TEXT_FONT = "Fonts\\FZXHLJW.TTF"
 else
-  STANDARD_TEXT_FONT = "Interface\\AddOns\\pfUI\\fonts\\arial.ttf"
+  STANDARD_TEXT_FONT = "Interface\\AddOns\\pfUI\\fonts\\PT_Sans_Narrow.ttf"
 end
 
 function pfUI.environment:UpdateFonts()
@@ -11,8 +11,8 @@ function pfUI.environment:UpdateFonts()
     pfUI.font_combat =  "Interface\\AddOns\\pfUI\\fonts\\" .. pfUI_config.global.font_combat .. ".ttf"
     pfUI.font_square = "Interface\\AddOns\\pfUI\\fonts\\" .. pfUI_config.global.font_square .. ".ttf"
   else
-    pfUI.font_default = "Interface\\AddOns\\pfUI\\fonts\\arial.ttf"
-    pfUI.font_square = "Interface\\AddOns\\pfUI\\fonts\\homespun.ttf"
+    pfUI.font_default = "Interface\\AddOns\\pfUI\\fonts\\PT_Sans_Narrow.ttf"
+    pfUI.font_square = "Interface\\AddOns\\pfUI\\fonts\\Expressway.ttf"
     pfUI.font_combat = "Interface\\AddOns\\pfUI\\fonts\\diediedie.ttf"
   end
 

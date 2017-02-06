@@ -728,7 +728,7 @@ pfUI:RegisterModule("gui", function ()
 
   -- global
   pfUI.gui.global = pfUI.gui:CreateConfigTab("Global Settings")
-  local values = { "arial", "homespun", "diediedie" }
+  local values = { "PT_Sans_Narrow", "Expressway", "diediedie" }
   pfUI.gui:CreateConfig(pfUI.gui.global, "Use Pixelperfect (native resolution) scaling", pfUI_config.global, "pixelperfect", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.global, "Allow frames being placed offscreen", pfUI_config.global, "offscreen", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.global, "Fontsize", pfUI_config.global, "font_size")
