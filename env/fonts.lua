@@ -57,7 +57,7 @@ function pfUI.environment:UpdateFonts()
   InvoiceTextFontNormal:SetFont(pfUI.font_default, 12)
   InvoiceTextFontSmall:SetFont(pfUI.font_default, 12)
   ChatFontNormal:SetFont(pfUI.font_square, 12, "OUTLINE")
-  CombatTextFont:SetFont(pfUI.font_combat, 25)
+  CombatTextFont:SetFont(pfUI.font_combat, 22)
 end
 
 -- run environment update
