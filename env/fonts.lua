@@ -28,7 +28,7 @@ function pfUI.environment:UpdateFonts()
   STANDARD_TEXT_FONT = pfUI.font_default;
   UNIT_NAME_FONT = pfUI.font_default;
   DAMAGE_TEXT_FONT = pfUI.font_combat;
-  NAMEPLATE_FONT = pfUI.font_default;
+  NAMEPLATE_FONT = pfUI.font_square;
 
   SystemFont:SetFont(pfUI.font_default, 15)
   GameFontNormal:SetFont(pfUI.font_default, 12)
