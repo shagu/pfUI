@@ -56,7 +56,7 @@ function pfUI.environment:UpdateFonts()
   WorldMapTextFont:SetFont(pfUI.font_default, 102, "THICK")
   InvoiceTextFontNormal:SetFont(pfUI.font_default, 12)
   InvoiceTextFontSmall:SetFont(pfUI.font_default, 12)
-  ChatFontNormal:SetFont(pfUI.font_square, 12, "NORMAL")
+  ChatFontNormal:SetFont(pfUI.font_square, 12, "OUTLINE")
   CombatTextFont:SetFont(pfUI.font_combat, 25)
 end
 
