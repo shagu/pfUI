@@ -846,6 +846,9 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "拾取设置", nil, nil, "header")
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "自动调整拾取框大小", pfUI_config.appearance.loot, "autoresize", "checkbox")
 
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Minimap", nil, nil, "header")
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Show zone name on mouseover", pfUI_config.appearance.minimap, "mouseoverzone", "checkbox")
+
   -- modules
   pfUI.gui.modules = pfUI.gui:CreateConfigTab("高级单元")
   pfUI.gui:CreateConfig(pfUI.gui.modules, "|cffff5555注意：|cffffaaaa如果你不知道该如何禁用，请不要随便设置，有可能会造成插件错误等问题。如发现不可恢复的\n错误，请删除WOW根目录下的WTF文件夹|r", nil, nil, "warning")

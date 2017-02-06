@@ -39,6 +39,7 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("appearance", "infight",     "group",            "0")
   pfUI:UpdateConfig("appearance", "bags",        "borderlimit",      "1")
   pfUI:UpdateConfig("appearance", "bags",        "borderonlygear",   "0")
+  pfUI:UpdateConfig("appearance", "minimap",     "mouseoverzone",    "0")
 
   pfUI:UpdateConfig("unitframes", nil,           "disable",          "0")
   pfUI:UpdateConfig("unitframes", nil,           "pastel",           "1")

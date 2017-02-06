@@ -25,8 +25,26 @@ pfUI:RegisterModule("minimap", function ()
   Minimap:SetParent(pfUI.minimap)
   Minimap:SetPoint("CENTER", pfUI.minimap, "CENTER", 0.5, -.5)
 
-  -- Set new mail frame position to top right corner of the minimap
-  -- mostly taken from TukUI
+  -- battleground icon
+  MiniMapBattlefieldFrame:ClearAllPoints()
+  MiniMapBattlefieldFrame:SetPoint("BOTTOMRIGHT", Minimap, 4, -4)
+  MiniMapBattlefieldBorder:Hide()
+  MiniMapBattlefieldFrame:SetScript("OnClick", function()
+    GameTooltip:Hide()
+    if MiniMapBattlefieldFrame.status == "active" then
+      if arg1 == "RightButton" then
+        ToggleDropDownMenu(1, nil, MiniMapBattlefieldDropDown, "MiniMapBattlefieldFrame", -95, -5)
+      elseif IsShiftKeyDown() then
+        ToggleBattlefieldMinimap()
+      else
+        ToggleWorldStateScoreFrame()
+      end
+    elseif arg1 == "RightButton" then
+      ToggleDropDownMenu(1, nil, MiniMapBattlefieldDropDown, "MiniMapBattlefieldFrame", -95, -5)
+    end
+  end)
+
+  -- mail icon
   MiniMapMailFrame:ClearAllPoints()
   MiniMapMailFrame:SetPoint("TOPRIGHT", pfUI.minimap, "TOPRIGHT", 0, 0)
   MiniMapMailBorder:Hide()
@@ -66,23 +84,33 @@ pfUI:RegisterModule("minimap", function ()
 
   MiniMapTrackingFrame:SetFrameStrata("LOW")
 
-  -- Coordinates in minimap
-  -- Create location text frame in bottom left corner of minimap
-  pfUI.minimapCoordinates = CreateFrame("Frame", nil, pfUI.minimap)
+  -- Create coordinates text frame in bottom left corner of minimap
+  pfUI.minimapCoordinates = CreateFrame("Frame", "pfMinimapCoord", pfUI.minimap)
   pfUI.minimapCoordinates:SetPoint("BOTTOMLEFT", 3, 3)
-  pfUI.minimapCoordinates:SetHeight(20)
-  pfUI.minimapCoordinates:SetWidth(40)
+  pfUI.minimapCoordinates:SetHeight(pfUI_config.global.font_size)
+  pfUI.minimapCoordinates:SetWidth(Minimap:GetWidth())
   pfUI.minimapCoordinates:SetFrameStrata("BACKGROUND")
-  -- Create text
   pfUI.minimapCoordinates.text = pfUI.minimapCoordinates:CreateFontString("MinimapCoordinatesText", "LOW", "GameFontNormal")
   pfUI.minimapCoordinates.text:SetFont(pfUI.font_default, pfUI_config.global.font_size, "OUTLINE")
-  pfUI.minimapCoordinates.text:SetPoint("LEFT", 4, 0)
-  pfUI.minimapCoordinates.text:SetFontObject(GameFontWhite)
-  pfUI.minimapCoordinates.text:SetText("X, Y")
+  pfUI.minimapCoordinates.text:SetTextColor(1,1,1,1)
+  pfUI.minimapCoordinates.text:SetAllPoints(pfUI.minimapCoordinates)
+  pfUI.minimapCoordinates.text:SetJustifyH("LEFT")
   pfUI.minimapCoordinates:Hide()
 
+  -- Create zone text frame in top center of minimap
+  pfUI.minimapZone = CreateFrame("Frame", "pfMinimapZone", pfUI.minimap)
+  pfUI.minimapZone:SetPoint("TOP", 0, -3)
+  pfUI.minimapZone:SetHeight(pfUI_config.global.font_size + 2)
+  pfUI.minimapZone:SetWidth(Minimap:GetWidth())
+  pfUI.minimapZone:SetFrameStrata("BACKGROUND")
+  pfUI.minimapZone.text = pfUI.minimapZone:CreateFontString("minimapZoneText", "LOW", "GameFontNormal")
+  pfUI.minimapZone.text:SetFont(pfUI.font_default, pfUI_config.global.font_size + 2, "OUTLINE")
+  pfUI.minimapZone.text:SetAllPoints(pfUI.minimapZone)
+  pfUI.minimapZone.text:SetJustifyH("CENTER")
+  pfUI.minimapZone:Hide()
+
   -- Minimap hover event
-  -- Update and toggle showing of coordinates on mouse enter/leave
+  -- Update and toggle showing of coordinates and zone text on mouse enter/leave
   Minimap:SetScript("OnEnter", function()
     SetMapToCurrentZone()
     local posX, posY = GetPlayerMapPosition("player")
@@ -93,11 +121,28 @@ pfUI:RegisterModule("minimap", function ()
     else
       pfUI.minimapCoordinates.text:SetText("|cffffaaaaN/A")
     end
-
     pfUI.minimapCoordinates:Show()
+
+    if pfUI_config.appearance.minimap.mouseoverzone == "1" then
+      local pvp, _, arena = GetZonePVPInfo()
+      if arena then
+        pfUI.minimapZone.text:SetTextColor(1.0, 0.1, 0.1)
+      elseif pvp == "friendly" then
+        pfUI.minimapZone.text:SetTextColor(0.1, 1.0, 0.1)
+      elseif pvp == "hostile" then
+        pfUI.minimapZone.text:SetTextColor(1.0, 0.1, 0.1)
+      elseif pvp == "contested" then
+        pfUI.minimapZone.text:SetTextColor(1.0, 0.7, 0)
+      else
+        pfUI.minimapZone.text:SetTextColor(1, 1, 1, 1)
+      end
+
+      pfUI.minimapZone.text:SetText(GetMinimapZoneText())
+      pfUI.minimapZone:Show()
+    end
   end)
   Minimap:SetScript("OnLeave", function()
     pfUI.minimapCoordinates:Hide()
+    pfUI.minimapZone:Hide()
   end)
-
 end)
