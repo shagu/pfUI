@@ -549,7 +549,7 @@ pfUI:RegisterModule("panel", function ()
   end
   pfUI.panel.minimap:SetFrameStrata("BACKGROUND")
   pfUI.panel.minimap.text = pfUI.panel.minimap:CreateFontString("MinimapZoneText", "LOW", "GameFontNormal")
-  pfUI.panel.minimap.text:SetFont(pfUI.font_default, pfUI_config.global.font_size, "OUTLINE")
+  pfUI.panel.minimap.text:SetFont(pfUI.font_default,11, "OUTLINE")
   pfUI.panel.minimap.text:SetPoint("CENTER", 0, 0)
   pfUI.panel.minimap.text:SetFontObject(GameFontWhite)
 
