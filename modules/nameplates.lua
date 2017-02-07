@@ -357,8 +357,14 @@ pfUI:RegisterModule("nameplates", function ()
 
   function pfUI.nameplates:UpdateHP(healthbar)
     if pfUI_config.nameplates.showhp == "1" and healthbar.hptext then
-      local min, max = healthbar:GetMinMaxValues()
-      local cur = healthbar:GetValue()
+      local cur, min, max
+      -- Based on commit https://github.com/Ksnz/pfUI/commit/c0454fb0e8c3a53ac9bef8b0c361b81075d73c1a
+      if MobHealth3 then
+        cur, max = MobHealth3:GetUnitHealth("target")
+      else
+        min, max = healthbar:GetMinMaxValues()
+        cur = healthbar:GetValue()
+      end
       healthbar.hptext:SetText(cur .. " / " .. max)
     end
   end
