@@ -120,7 +120,7 @@ pfUI:RegisterModule("chat", function ()
   end)
 
   pfUI.chat.left.panelTop.proxyName.caption = pfUI.chat.left.panelTop.proxyName:CreateFontString("Status", "LOW", "GameFontNormal")
-  pfUI.chat.left.panelTop.proxyName.caption:SetFont(pfUI.font_default, pfUI_config.global.font_size + 2, "OUTLINE")
+  pfUI.chat.left.panelTop.proxyName.caption:SetFont(pfUI.font_square, pfUI_config.global.font_size + 2, "OUTLINE")
   pfUI.chat.left.panelTop.proxyName.caption:SetPoint("TOP", 0, -20)
   pfUI.chat.left.panelTop.proxyName.caption:SetFontObject(GameFontWhite)
   pfUI.chat.left.panelTop.proxyName.caption:SetJustifyH("CENTER")
@@ -145,7 +145,7 @@ pfUI:RegisterModule("chat", function ()
   pfUI.chat.left.panelTop.proxyName.okay:SetPoint("BOTTOMRIGHT", -10, 10)
   pfUI.api:CreateBackdrop(pfUI.chat.left.panelTop.proxyName.okay, default_border)
   pfUI.chat.left.panelTop.proxyName.okay.text = pfUI.chat.left.panelTop.proxyName.okay:CreateFontString("Status", "LOW", "GameFontNormal")
-  pfUI.chat.left.panelTop.proxyName.okay.text:SetFont(pfUI.font_default, pfUI_config.global.font_size, "OUTLINE")
+  pfUI.chat.left.panelTop.proxyName.okay.text:SetFont(pfUI.font_square, pfUI_config.global.font_size, "OUTLINE")
   pfUI.chat.left.panelTop.proxyName.okay.text:ClearAllPoints()
   pfUI.chat.left.panelTop.proxyName.okay.text:SetAllPoints(pfUI.chat.left.panelTop.proxyName.okay)
   pfUI.chat.left.panelTop.proxyName.okay.text:SetPoint("CENTER", 0, 0)
@@ -165,7 +165,7 @@ pfUI:RegisterModule("chat", function ()
   pfUI.chat.left.panelTop.proxyName.abort:SetPoint("BOTTOMLEFT", 10, 10)
   pfUI.api:CreateBackdrop(pfUI.chat.left.panelTop.proxyName.abort, default_border)
   pfUI.chat.left.panelTop.proxyName.abort.text = pfUI.chat.left.panelTop.proxyName.abort:CreateFontString("Status", "LOW", "GameFontNormal")
-  pfUI.chat.left.panelTop.proxyName.abort.text:SetFont(pfUI.font_default, pfUI_config.global.font_size, "OUTLINE")
+  pfUI.chat.left.panelTop.proxyName.abort.text:SetFont(pfUI.font_square, pfUI_config.global.font_size, "OUTLINE")
   pfUI.chat.left.panelTop.proxyName.abort.text:ClearAllPoints()
   pfUI.chat.left.panelTop.proxyName.abort.text:SetAllPoints(pfUI.chat.left.panelTop.proxyName.abort)
   pfUI.chat.left.panelTop.proxyName.abort.text:SetPoint("CENTER", 0, 0)
@@ -274,7 +274,7 @@ pfUI:RegisterModule("chat", function ()
 
       local _, class = UnitClass("player")
       getglobal("ChatFrame" .. i .. "TabText"):SetTextColor(RAID_CLASS_COLORS[class].r + .3 * .5, RAID_CLASS_COLORS[class].g + .3 * .5, RAID_CLASS_COLORS[class].b + .3 * .5, 1)
-      getglobal("ChatFrame" .. i .. "TabText"):SetFont(pfUI.font_default, pfUI_config.global.font_size, "OUTLINE")
+      getglobal("ChatFrame" .. i .. "TabText"):SetFont(pfUI.font_square, pfUI_config.global.font_size, "OUTLINE")
 
       if getglobal("ChatFrame" .. i).isDocked or getglobal("ChatFrame" .. i):IsVisible() then
         getglobal("ChatFrame" .. i .. "Tab"):Show()
@@ -560,7 +560,7 @@ pfUI:RegisterModule("chat", function ()
   for i,v in ipairs({ChatFrameEditBox:GetRegions()}) do
     if i==6 or i==7 or i==8 then v:Hide() end
     if v.SetFont then
-      v:SetFont(pfUI.font_default, pfUI_config.global.font_size + 1, "OUTLINE")
+      v:SetFont(pfUI.font_square, pfUI_config.global.font_size + 1, "OUTLINE")
     end
   end
   ChatFrameEditBox:SetAltArrowKeyMode(false)
