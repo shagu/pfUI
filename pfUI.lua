@@ -271,3 +271,10 @@ pfUI.info:SetScript("OnUpdate", function()
 end)
 
 pfUI.info:SetScript("OnClick", function() this:Hide() end)
+
+
+-- A simple dummy function that can be used to check pfUIs presence before
+-- attemoting to hook the custom OnClick support
+function pfUI.info.ping(...)
+    ping = "pong"
+end
