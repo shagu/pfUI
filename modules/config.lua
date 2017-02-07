@@ -213,29 +213,29 @@ function pfUI:MigrateConfig()
 
   -- migrating to new fonts (1.5 -> 1.6)
   if major <= 1 and minor <= 5 then
-    -- replace "arial" with "myriad-pro"
+    -- migrate font_default
     if pfUI_config.global.font_default == "arial" then
       pfUI_config.global.font_default = "Myriad-Pro"
-    elseif pfUI_config.global.font_square == "arial" then
-      pfUI_config.global.font_square = "Myriad-Pro"
-    elseif pfUI_config.global.font_combat == "arial" then
-      pfUI_config.global.font_combat = "Myriad-Pro"
+    elseif pfUI_config.global.font_default == "homespun" then
+      pfUI_config.global.font_default = "Homespun"
+    elseif pfUI_config.global.font_default == "diediedie" then
+      pfUI_config.global.font_default = "DieDieDie"
     end
 
-    -- replace "homespun" with "Homespun"
-    if pfUI_config.global.font_default == "homespun" then
-      pfUI_config.global.font_default = "Homespun"
+    -- migrate font_square
+    if pfUI_config.global.font_square == "arial" then
+      pfUI_config.global.font_square = "Myriad-Pro"
     elseif pfUI_config.global.font_square == "homespun" then
       pfUI_config.global.font_square = "Homespun"
-    elseif pfUI_config.global.font_combat == "homespun" then
-      pfUI_config.global.font_combat = "Homespun"
-    end
-
-    -- replace "diediedie" with "DieDieDie"
-    if pfUI_config.global.font_default == "diediedie" then
-      pfUI_config.global.font_default = "DieDieDie"
     elseif pfUI_config.global.font_square == "diediedie" then
       pfUI_config.global.font_square = "DieDieDie"
+    end
+
+    -- migrate font_combat
+    if pfUI_config.global.font_combat == "arial" then
+      pfUI_config.global.font_combat = "Myriad-Pro"
+    elseif pfUI_config.global.font_combat == "homespun" then
+      pfUI_config.global.font_combat = "Homespun"
     elseif pfUI_config.global.font_combat == "diediedie" then
       pfUI_config.global.font_combat = "DieDieDie"
     end
