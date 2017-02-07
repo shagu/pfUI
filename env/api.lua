@@ -213,7 +213,7 @@ function pfUI.api:SkinButton(button, cr, cg, cb)
     if funcl then funcl() end
     pfUI.api:CreateBackdrop(b, nil, true)
   end)
-  b:SetFont(pfUI.font_default, pfUI_config.global.font_size, "OUTLINE")
+  b:SetFont(pfUI.font_default, pfUI_config.global.font_size, STANDARD_TEXT_FONT_FLAGS)
 end
 
 -- [ Question Dialog ]

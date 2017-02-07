@@ -118,7 +118,7 @@ pfUI:RegisterModule("group", function ()
     pfUI.uf:CreatePortrait(pfUI.uf.group[i], pfUI_config.unitframes.group.portrait, spacing)
 
     pfUI.uf.group[i].caption = pfUI.uf.group[i]:CreateFontString("Status", "OVERLAY", "GameFontNormal")
-    pfUI.uf.group[i].caption:SetFont(pfUI.font_square, pfUI_config.global.font_size, "OUTLINE")
+    pfUI.uf.group[i].caption:SetFont(pfUI.font_square, pfUI_config.global.font_size, STANDARD_TEXT_FONT_FLAGS)
     pfUI.uf.group[i].caption:ClearAllPoints()
     pfUI.uf.group[i].caption:SetParent(pfUI.uf.group[i].hp.bar)
     pfUI.uf.group[i].caption:SetPoint("LEFT",pfUI.uf.group[i].hp.bar, "LEFT", 10, 0)

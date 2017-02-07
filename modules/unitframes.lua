@@ -152,6 +152,16 @@ function pfUI.uf:ClickAction(button)
   local id = this.id or ""
   local unitstr = label .. id
 
+  -- First check if another AddOn has enabled custom OnClick actions by checking
+  -- if the global has a value and if that value is a function.
+  if (type(pfUI_Custom_ClickFunction) == "function") then
+    if (pfUI_Custom_ClickFunction(button, unitstr)) then
+        -- pfUI_Custom_ClickFunction should return true if handled, then we do nothing more.
+        -- no return and we'll continue with default pfUI behaviour
+        return true
+    end
+  end
+
   if SpellIsTargeting() and button == "RightButton" then
     SpellStopTargeting()
     return

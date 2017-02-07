@@ -147,7 +147,7 @@ pfUI:RegisterModule("gui", function ()
           frame.drag.backdrop:SetBackdropBorderColor(.2, 1, .8)
           frame.drag:EnableMouseWheel(1)
           frame.drag.text = frame.drag:CreateFontString("Status", "LOW", "GameFontNormal")
-          frame.drag.text:SetFont(pfUI.font_default, pfUI_config.global.font_size, "OUTLINE")
+          frame.drag.text:SetFont(pfUI.font_default, pfUI_config.global.font_size, STANDARD_TEXT_FONT_FLAGS)
           frame.drag.text:ClearAllPoints()
           frame.drag.text:SetAllPoints(frame.drag)
           frame.drag.text:SetPoint("CENTER", 0, 0)
@@ -370,7 +370,7 @@ pfUI:RegisterModule("gui", function ()
     end
     pfUI.api:CreateBackdrop(frame.switch, nil, true)
     frame.switch.text = frame.switch:CreateFontString("Status", "LOW", "GameFontNormal")
-    frame.switch.text:SetFont(pfUI.font_default, pfUI_config.global.font_size, "OUTLINE")
+    frame.switch.text:SetFont(pfUI.font_default, pfUI_config.global.font_size, STANDARD_TEXT_FONT_FLAGS)
     frame.switch.text:SetAllPoints(frame.switch)
     frame.switch.text:SetPoint("CENTER", 0, 0)
     frame.switch.text:SetFontObject(GameFontWhite)
@@ -386,7 +386,7 @@ pfUI:RegisterModule("gui", function ()
     -- do not show title on bottom buttons
     if not bottom and not func then
       frame.title = frame:CreateFontString("Status", "LOW", "GameFontNormal")
-      frame.title:SetFont(pfUI.font_default, pfUI_config.global.font_size + 2, "OUTLINE")
+      frame.title:SetFont(pfUI.font_default, pfUI_config.global.font_size + 2, STANDARD_TEXT_FONT_FLAGS)
       frame.title:SetPoint("TOP", 0, -10)
       frame.title:SetTextColor(.2,1,.8)
       frame.title:SetText(text)
@@ -427,7 +427,7 @@ pfUI:RegisterModule("gui", function ()
 
       -- caption
       frame.caption = frame:CreateFontString("Status", "LOW", "GameFontNormal")
-      frame.caption:SetFont(pfUI.font_default, pfUI_config.global.font_size + 2, "OUTLINE")
+      frame.caption:SetFont(pfUI.font_default, pfUI_config.global.font_size + 2, STANDARD_TEXT_FONT_FLAGS)
       frame.caption:SetAllPoints(frame)
       frame.caption:SetFontObject(GameFontWhite)
       frame.caption:SetJustifyH("LEFT")
@@ -728,9 +728,9 @@ pfUI:RegisterModule("gui", function ()
 
   -- global
   pfUI.gui.global = pfUI.gui:CreateConfigTab("Global Settings")
-  local values = { "arial", "homespun", "diediedie" }
+  local values = { "PT_Sans_Narrow", "Expressway", "diediedie" }
   pfUI.gui:CreateConfig(pfUI.gui.global, "Use Pixelperfect (native resolution) scaling", pfUI_config.global, "pixelperfect", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.global, "Allow frames being placed offscreen", pfUI_config.global, "offscreen", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.global, "Allow frames to be placed offscreen", pfUI_config.global, "offscreen", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.global, "Fontsize", pfUI_config.global, "font_size")
   pfUI.gui:CreateConfig(pfUI.gui.global, "Default Font", pfUI_config.global, "font_default", "dropdown", values)
   pfUI.gui:CreateConfig(pfUI.gui.global, "Square Font", pfUI_config.global, "font_square", "dropdown", values)

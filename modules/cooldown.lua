@@ -5,7 +5,7 @@ pfUI:RegisterModule("cooldown", function ()
     cooldown.cd:SetFrameLevel(cooldown.cd:GetFrameLevel() + 1)
 
     cooldown.cd.text = cooldown.cd:CreateFontString("pfCooldownFrameText", "OVERLAY")
-    cooldown.cd.text:SetFont(pfUI.font_square, pfUI_config.global.font_size, "OUTLINE")
+    cooldown.cd.text:SetFont(pfUI.font_square, pfUI_config.global.font_size, STANDARD_TEXT_FONT_FLAGS)
     cooldown.cd.text:SetPoint("CENTER", cooldown.cd, "CENTER", 0, 1)
 
     cooldown.cd:SetScript("OnUpdate", function()

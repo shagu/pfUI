@@ -157,7 +157,7 @@ pfUI:RegisterModule("targettarget", function ()
   pfUI.uf:CreatePortrait(pfUI.uf.targettarget, pfUI_config.unitframes.ttarget.portrait, spacing)
 
   pfUI.uf.targettarget.hp.text = pfUI.uf.targettarget.hp.bar:CreateFontString("Status", "OVERLAY", "GameFontNormal")
-  pfUI.uf.targettarget.hp.text:SetFont(pfUI.font_square, pfUI_config.global.font_size - 2, "OUTLINE")
+  pfUI.uf.targettarget.hp.text:SetFont(pfUI.font_square, pfUI_config.global.font_size - 2, UNIT_NAME_FONT_FLAGS)
   pfUI.uf.targettarget.hp.text:ClearAllPoints()
   pfUI.uf.targettarget.hp.text:SetAllPoints(pfUI.uf.targettarget.hp.bar)
   pfUI.uf.targettarget.hp.text:SetPoint("CENTER", 0, 0)

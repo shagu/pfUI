@@ -66,9 +66,9 @@ pfUI:RegisterModule("nameplates", function ()
     raidicon:SetPoint("CENTER", healthbar, "CENTER", 0, -5)
 
     -- adjust font
-    name:SetFont(STANDARD_TEXT_FONT,12,"OUTLINE")
+    name:SetFont(STANDARD_TEXT_FONT,11,STANDARD_TEXT_FONT_FLAGS)
     name:SetPoint("BOTTOM", healthbar, "CENTER", 0, 7)
-    level:SetFont(STANDARD_TEXT_FONT,12, "OUTLINE")
+    level:SetFont(STANDARD_TEXT_FONT,11, STANDARD_TEXT_FONT_FLAGS)
     level:ClearAllPoints()
     level:SetPoint("RIGHT", healthbar, "LEFT", -1, 0)
     levelicon:ClearAllPoints()
@@ -145,7 +145,7 @@ pfUI:RegisterModule("nameplates", function ()
         healthbar.castbar.text:SetNonSpaceWrap(false)
         healthbar.castbar.text:SetFontObject(GameFontWhite)
         healthbar.castbar.text:SetTextColor(1,1,1,.5)
-        healthbar.castbar.text:SetFont(STANDARD_TEXT_FONT, 10, "OUTLINE")
+        healthbar.castbar.text:SetFont(STANDARD_TEXT_FONT, 10, STANDARD_TEXT_FONT_FLAGS)
       end
 
       if healthbar.castbar.spell == nil then
@@ -154,7 +154,7 @@ pfUI:RegisterModule("nameplates", function ()
         healthbar.castbar.spell:SetNonSpaceWrap(false)
         healthbar.castbar.spell:SetFontObject(GameFontWhite)
         healthbar.castbar.spell:SetTextColor(1,1,1,1)
-        healthbar.castbar.spell:SetFont(STANDARD_TEXT_FONT, 10, "OUTLINE")
+        healthbar.castbar.spell:SetFont(STANDARD_TEXT_FONT, 10, STANDARD_TEXT_FONT_FLAGS)
       end
 
       if healthbar.castbar.icon == nil then
@@ -357,8 +357,14 @@ pfUI:RegisterModule("nameplates", function ()
 
   function pfUI.nameplates:UpdateHP(healthbar)
     if pfUI_config.nameplates.showhp == "1" and healthbar.hptext then
-      local min, max = healthbar:GetMinMaxValues()
-      local cur = healthbar:GetValue()
+      local cur, min, max
+      -- Based on commit https://github.com/Ksnz/pfUI/commit/c0454fb0e8c3a53ac9bef8b0c361b81075d73c1a
+      if MobHealth3 then
+        cur, max = MobHealth3:GetUnitHealth("target")
+      else
+        min, max = healthbar:GetMinMaxValues()
+        cur = healthbar:GetValue()
+      end
       healthbar.hptext:SetText(cur .. " / " .. max)
     end
   end

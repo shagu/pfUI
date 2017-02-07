@@ -56,7 +56,7 @@ pfUI:RegisterModule("skin", function ()
     if v.SetTextColor then
       v:SetTextColor(1,1,1,1)
       v:SetPoint("TOP", GameMenuFrame, "TOP", 0, 16)
-      v:SetFont(pfUI.font_default, pfUI_config.global.font_size + 2, "OUTLINE")
+      v:SetFont(pfUI.font_default, pfUI_config.global.font_size + 2, STANDARD_TEXT_FONT_FLAGS)
     end
   end
 

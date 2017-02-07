@@ -2,7 +2,7 @@
 if GetLocale() == "zhCN" then
   STANDARD_TEXT_FONT = "Fonts\\FZXHLJW.TTF"
 else
-  STANDARD_TEXT_FONT = "Interface\\AddOns\\pfUI\\fonts\\arial.ttf"
+  STANDARD_TEXT_FONT = "Interface\\AddOns\\pfUI\\fonts\\PT_Sans_Narrow.ttf"
 end
 
 function pfUI.environment:UpdateFonts()
@@ -11,8 +11,8 @@ function pfUI.environment:UpdateFonts()
     pfUI.font_combat =  "Interface\\AddOns\\pfUI\\fonts\\" .. pfUI_config.global.font_combat .. ".ttf"
     pfUI.font_square = "Interface\\AddOns\\pfUI\\fonts\\" .. pfUI_config.global.font_square .. ".ttf"
   else
-    pfUI.font_default = "Interface\\AddOns\\pfUI\\fonts\\arial.ttf"
-    pfUI.font_square = "Interface\\AddOns\\pfUI\\fonts\\homespun.ttf"
+    pfUI.font_default = "Interface\\AddOns\\pfUI\\fonts\\PT_Sans_Narrow.ttf"
+    pfUI.font_square = "Interface\\AddOns\\pfUI\\fonts\\Expressway.ttf"
     pfUI.font_combat = "Interface\\AddOns\\pfUI\\fonts\\diediedie.ttf"
   end
 
@@ -25,21 +25,33 @@ function pfUI.environment:UpdateFonts()
     end
   end
 
-  STANDARD_TEXT_FONT = pfUI.font_default;
-  UNIT_NAME_FONT = pfUI.font_default;
-  DAMAGE_TEXT_FONT = pfUI.font_combat;
-  NAMEPLATE_FONT = pfUI.font_default;
+  -- Globals to hold fonts and font flags to make changes within each of the
+  -- modules easier, with the possibility to be configurable from a DropDown
+  -- in the future
+  DEFAULT_TEXT_FONT_FLAGS  = "OUTLINE"
+
+  STANDARD_TEXT_FONT       = pfUI.font_default;
+  STANDARD_TEXT_FONT_FLAGS = "OUTLINE"
+
+  UNIT_NAME_FONT           = pfUI.font_default;
+  UNIT_NAME_FONT_FLAGS     = "NORMAL"
+
+  DAMAGE_TEXT_FONT         = pfUI.font_combat;
+  DAMAGE_TEXT_FONT_FLAGS   = "OUTLINE"
+
+  NAMEPLATE_FONT           = pfUI.font_square;
+  NAMEPLATE_FONT_FLAGS     = "OUTLINE"
 
   SystemFont:SetFont(pfUI.font_default, 15)
   GameFontNormal:SetFont(pfUI.font_default, 12)
   GameFontBlack:SetFont(pfUI.font_default, 12)
-  GameFontNormalSmall:SetFont(pfUI.font_default, 12)
+  GameFontNormalSmall:SetFont(pfUI.font_default, 11)
   GameFontNormalLarge:SetFont(pfUI.font_default, 16)
   GameFontNormalHuge:SetFont(pfUI.font_default, 20)
-  NumberFontNormal:SetFont(pfUI.font_default, 14, "OUTLINE")
-  NumberFontNormalSmall:SetFont(pfUI.font_default, 14, "OUTLINE")
-  NumberFontNormalLarge:SetFont(pfUI.font_default, 16, "OUTLINE")
-  NumberFontNormalHuge:SetFont(pfUI.font_default, 30, "OUTLINE")
+  NumberFontNormal:SetFont(pfUI.font_default, 14, DEFAULT_TEXT_FONT_FLAGS)
+  NumberFontNormalSmall:SetFont(pfUI.font_default, 14, DEFAULT_TEXT_FONT_FLAGS)
+  NumberFontNormalLarge:SetFont(pfUI.font_default, 16, DEFAULT_TEXT_FONT_FLAGS)
+  NumberFontNormalHuge:SetFont(pfUI.font_default, 30, DEFAULT_TEXT_FONT_FLAGS)
   QuestTitleFont:SetFont(pfUI.font_default, 18)
   QuestFont:SetFont(pfUI.font_default, 13)
   QuestFontHighlight:SetFont(pfUI.font_default, 14)
@@ -47,17 +59,17 @@ function pfUI.environment:UpdateFonts()
   MailTextFontNormal:SetFont(pfUI.font_default, 15)
   SubSpellFont:SetFont(pfUI.font_default, 12)
   DialogButtonNormalText:SetFont(pfUI.font_default, 16)
-  ZoneTextFont:SetFont(pfUI.font_default, 48, "OUTLINE")
-  SubZoneTextFont:SetFont(pfUI.font_default, 24, "OUTLINE")
+  ZoneTextFont:SetFont(pfUI.font_square, 34, DEFAULT_TEXT_FONT_FLAGS)
+  SubZoneTextFont:SetFont(pfUI.font_square, 24, DEFAULT_TEXT_FONT_FLAGS)
   TextStatusBarTextSmall:SetFont(pfUI.font_default, 12, "NORMAL")
-  GameTooltipText:SetFont(pfUI.font_default, 12)
-  GameTooltipTextSmall:SetFont(pfUI.font_default, 12)
-  GameTooltipHeaderText:SetFont(pfUI.font_default, 14)
+  GameTooltipText:SetFont(pfUI.font_square, 12)
+  GameTooltipTextSmall:SetFont(pfUI.font_square, 12)
+  GameTooltipHeaderText:SetFont(pfUI.font_square, 13)
   WorldMapTextFont:SetFont(pfUI.font_default, 102, "THICK")
   InvoiceTextFontNormal:SetFont(pfUI.font_default, 12)
   InvoiceTextFontSmall:SetFont(pfUI.font_default, 12)
-  ChatFontNormal:SetFont(pfUI.font_default, 12, "NORMAL")
-  CombatTextFont:SetFont(pfUI.font_combat, 25)
+  ChatFontNormal:SetFont(pfUI.font_square, 12, "OUTLINE")
+  CombatTextFont:SetFont(pfUI.font_combat, 22)
 end
 
 -- run environment update

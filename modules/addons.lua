@@ -26,7 +26,7 @@ pfUI:RegisterModule("addons", function ()
 
   -- title
   pfUI.addons.caption = pfUI.addons:CreateFontString("Status", "LOW", "GameFontNormal")
-  pfUI.addons.caption:SetFont(pfUI.font_default, pfUI_config.global.font_size + 4, "OUTLINE")
+  pfUI.addons.caption:SetFont(pfUI.font_default, pfUI_config.global.font_size + 4, STANDARD_TEXT_FONT_FLAGS)
   pfUI.addons.caption:SetTextColor(.2, 1, .8, 1)
   pfUI.addons.caption:SetPoint("TOP", 0, -10)
   pfUI.addons.caption:SetJustifyH("LEFT")
@@ -80,7 +80,7 @@ pfUI:RegisterModule("addons", function ()
 
         -- caption
         frame.caption = frame:CreateFontString("Status", "LOW", "GameFontNormal")
-        frame.caption:SetFont(pfUI.font_default, pfUI_config.global.font_size + 2, "OUTLINE")
+        frame.caption:SetFont(pfUI.font_default, pfUI_config.global.font_size + 2, STANDARD_TEXT_FONT_FLAGS)
         frame.caption:SetAllPoints(frame)
         frame.caption:SetFontObject(GameFontWhite)
         frame.caption:SetJustifyH("LEFT")
