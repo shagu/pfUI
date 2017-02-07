@@ -66,9 +66,9 @@ pfUI:RegisterModule("nameplates", function ()
     raidicon:SetPoint("CENTER", healthbar, "CENTER", 0, -5)
 
     -- adjust font
-    name:SetFont(STANDARD_TEXT_FONT,12,STANDARD_TEXT_FONT_FLAGS)
+    name:SetFont(STANDARD_TEXT_FONT,11,STANDARD_TEXT_FONT_FLAGS)
     name:SetPoint("BOTTOM", healthbar, "CENTER", 0, 7)
-    level:SetFont(STANDARD_TEXT_FONT,12, STANDARD_TEXT_FONT_FLAGS)
+    level:SetFont(STANDARD_TEXT_FONT,11, STANDARD_TEXT_FONT_FLAGS)
     level:ClearAllPoints()
     level:SetPoint("RIGHT", healthbar, "LEFT", -1, 0)
     levelicon:ClearAllPoints()
