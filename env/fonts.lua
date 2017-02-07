@@ -25,10 +25,22 @@ function pfUI.environment:UpdateFonts()
     end
   end
 
-  STANDARD_TEXT_FONT = pfUI.font_default;
-  UNIT_NAME_FONT = pfUI.font_default;
-  DAMAGE_TEXT_FONT = pfUI.font_combat;
-  NAMEPLATE_FONT = pfUI.font_default;
+  -- Globals to hold fonts and font flags to make changes within each of the
+  -- modules easier, with the possibility to be configurable from a DropDown
+  -- in the future
+  DEFAULT_TEXT_FONT_FLAGS  = "OUTLINE"
+
+  STANDARD_TEXT_FONT       = pfUI.font_default;
+  STANDARD_TEXT_FONT_FLAGS = "OUTLINE"
+
+  UNIT_NAME_FONT           = pfUI.font_default;
+  UNIT_NAME_FONT_FLAGS     = "NORMAL"
+
+  DAMAGE_TEXT_FONT         = pfUI.font_combat;
+  DAMAGE_TEXT_FONT         = "OUTLINE"
+
+  NAMEPLATE_FONT           = pfUI.font_default;
+  NAMEPLATE_FONT           = "OUTLINE"
 
   SystemFont:SetFont(pfUI.font_default, 15)
   GameFontNormal:SetFont(pfUI.font_default, 12)
@@ -36,10 +48,10 @@ function pfUI.environment:UpdateFonts()
   GameFontNormalSmall:SetFont(pfUI.font_default, 12)
   GameFontNormalLarge:SetFont(pfUI.font_default, 16)
   GameFontNormalHuge:SetFont(pfUI.font_default, 20)
-  NumberFontNormal:SetFont(pfUI.font_default, 14, "OUTLINE")
-  NumberFontNormalSmall:SetFont(pfUI.font_default, 14, "OUTLINE")
-  NumberFontNormalLarge:SetFont(pfUI.font_default, 16, "OUTLINE")
-  NumberFontNormalHuge:SetFont(pfUI.font_default, 30, "OUTLINE")
+  NumberFontNormal:SetFont(pfUI.font_default, 14, DEFAULT_TEXT_FONT_FLAGS)
+  NumberFontNormalSmall:SetFont(pfUI.font_default, 14, DEFAULT_TEXT_FONT_FLAGS)
+  NumberFontNormalLarge:SetFont(pfUI.font_default, 16, DEFAULT_TEXT_FONT_FLAGS)
+  NumberFontNormalHuge:SetFont(pfUI.font_default, 30, DEFAULT_TEXT_FONT_FLAGS)
   QuestTitleFont:SetFont(pfUI.font_default, 18)
   QuestFont:SetFont(pfUI.font_default, 13)
   QuestFontHighlight:SetFont(pfUI.font_default, 14)
@@ -47,8 +59,8 @@ function pfUI.environment:UpdateFonts()
   MailTextFontNormal:SetFont(pfUI.font_default, 15)
   SubSpellFont:SetFont(pfUI.font_default, 12)
   DialogButtonNormalText:SetFont(pfUI.font_default, 16)
-  ZoneTextFont:SetFont(pfUI.font_default, 48, "OUTLINE")
-  SubZoneTextFont:SetFont(pfUI.font_default, 24, "OUTLINE")
+  ZoneTextFont:SetFont(pfUI.font_default, 48, DEFAULT_TEXT_FONT_FLAGS)
+  SubZoneTextFont:SetFont(pfUI.font_default, 24, DEFAULT_TEXT_FONT_FLAGS)
   TextStatusBarTextSmall:SetFont(pfUI.font_default, 12, "NORMAL")
   GameTooltipText:SetFont(pfUI.font_default, 12)
   GameTooltipTextSmall:SetFont(pfUI.font_default, 12)
