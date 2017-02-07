@@ -7,18 +7,10 @@ pfUI.api = { }
 -- 'subject'    [string]        String to split.
 -- return:      [list]          a list of strings.
 function pfUI.api.strsplit(delimiter, subject)
-  local ret = {}
-  local sector = subject
-  while true do
-    local pos = strfind(sector, delimiter)
-    if pos then
-      table.insert(ret, strsub(sector,1,pos-1))
-      sector = strsub(sector,pos+1)
-    else
-      table.insert(ret, sector)
-      return unpack(ret)
-    end
-  end
+  local delimiter, fields = delimiter or ":", {}
+  local pattern = string.format("([^%s]+)", delimiter)
+  string.gsub(subject, pattern, function(c) fields[table.getn(fields)+1] = c end)
+  return unpack(fields)
 end
 
 -- [ strvertical ]
