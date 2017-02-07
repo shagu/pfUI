@@ -37,10 +37,10 @@ function pfUI.environment:UpdateFonts()
   UNIT_NAME_FONT_FLAGS     = "NORMAL"
 
   DAMAGE_TEXT_FONT         = pfUI.font_combat;
-  DAMAGE_TEXT_FONT         = "OUTLINE"
+  DAMAGE_TEXT_FONT_FLAGS   = "OUTLINE"
 
   NAMEPLATE_FONT           = pfUI.font_default;
-  NAMEPLATE_FONT           = "OUTLINE"
+  NAMEPLATE_FONT_FLAGS     = "OUTLINE"
 
   SystemFont:SetFont(pfUI.font_default, 15)
   GameFontNormal:SetFont(pfUI.font_default, 12)
