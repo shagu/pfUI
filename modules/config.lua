@@ -1,15 +1,37 @@
 pfUI_playerDB = {}
 pfUI_config = {}
 
+function pfUI:UpdateConfig(group, subgroup, entry, value)
+  -- check for missing config groups
+  if not pfUI_config[group] then
+    pfUI_config[group] = {}
+  end
+
+  -- update config
+  if not subgroup and entry and value and not pfUI_config[group][entry] then
+    pfUI_config[group][entry] = value
+  end
+
+  -- check for missing config subgroups
+  if subgroup and not pfUI_config[group][subgroup] then
+    pfUI_config[group][subgroup] = {}
+  end
+
+  -- update config in subgroup
+  if subgroup and entry and value and not pfUI_config[group][subgroup][entry] then
+    pfUI_config[group][subgroup][entry] = value
+  end
+end
+
 function pfUI:LoadConfig()
-  --                MODULE        SUBGROUP   ENTRY               VALUE
+  --                MODULE        SUBGROUP       ENTRY               VALUE
   pfUI:UpdateConfig("global",     nil,           "profile",          "default")
   pfUI:UpdateConfig("global",     nil,           "pixelperfect",     "0")
   pfUI:UpdateConfig("global",     nil,           "offscreen",        "0")
   pfUI:UpdateConfig("global",     nil,           "font_size",        "12")
-  pfUI:UpdateConfig("global",     nil,           "font_default",     "arial")
-  pfUI:UpdateConfig("global",     nil,           "font_square",      "homespun")
-  pfUI:UpdateConfig("global",     nil,           "font_combat",      "diediedie")
+  pfUI:UpdateConfig("global",     nil,           "font_default",     "Myriad-Pro")
+  pfUI:UpdateConfig("global",     nil,           "font_square",      "Homespun")
+  pfUI:UpdateConfig("global",     nil,           "font_combat",      "Continuum")
   pfUI:UpdateConfig("global",     nil,           "force_region",     "1")
   pfUI:UpdateConfig("global",     nil,           "errors_limit",     "1")
   pfUI:UpdateConfig("global",     nil,           "errors_hide",      "0")
@@ -182,24 +204,42 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("disabled",   nil,           nil,                nil)
 end
 
-function pfUI:UpdateConfig(group, subgroup, entry, value)
-  -- check for missing config groups
-  if not pfUI_config[group] then
-    pfUI_config[group] = {}
+function pfUI:MigrateConfig()
+  -- config version
+  local major, minor, fix = pfUI.api.strsplit(".", tostring(pfUI_config.version))
+  local major = tonumber(major) or 0
+  local minor = tonumber(minor) or 0
+  local fix   = tonumber(fix)   or 0
+
+  -- migrating to new fonts (1.5 -> 1.6)
+  if major <= 1 and minor <= 5 then
+    -- migrate font_default
+    if pfUI_config.global.font_default == "arial" then
+      pfUI_config.global.font_default = "Myriad-Pro"
+    elseif pfUI_config.global.font_default == "homespun" then
+      pfUI_config.global.font_default = "Homespun"
+    elseif pfUI_config.global.font_default == "diediedie" then
+      pfUI_config.global.font_default = "DieDieDie"
+    end
+
+    -- migrate font_square
+    if pfUI_config.global.font_square == "arial" then
+      pfUI_config.global.font_square = "Myriad-Pro"
+    elseif pfUI_config.global.font_square == "homespun" then
+      pfUI_config.global.font_square = "Homespun"
+    elseif pfUI_config.global.font_square == "diediedie" then
+      pfUI_config.global.font_square = "DieDieDie"
+    end
+
+    -- migrate font_combat
+    if pfUI_config.global.font_combat == "arial" then
+      pfUI_config.global.font_combat = "Myriad-Pro"
+    elseif pfUI_config.global.font_combat == "homespun" then
+      pfUI_config.global.font_combat = "Homespun"
+    elseif pfUI_config.global.font_combat == "diediedie" then
+      pfUI_config.global.font_combat = "DieDieDie"
+    end
   end
 
-  -- update config
-  if not subgroup and entry and value and not pfUI_config[group][entry] then
-    pfUI_config[group][entry] = value
-  end
-
-  -- check for missing config subgroups
-  if subgroup and not pfUI_config[group][subgroup] then
-    pfUI_config[group][subgroup] = {}
-  end
-
-  -- update config in subgroup
-  if subgroup and entry and value and not pfUI_config[group][subgroup][entry] then
-    pfUI_config[group][subgroup][entry] = value
-  end
+  pfUI_config.version = pfUI.version.string
 end

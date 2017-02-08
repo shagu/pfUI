@@ -728,9 +728,9 @@ pfUI:RegisterModule("gui", function ()
 
   -- global
   pfUI.gui.global = pfUI.gui:CreateConfigTab("全局设置")
-  local values = { "arial", "homespun", "diediedie" }
+  local values = { "Continuum", "DieDieDie", "Expressway", "Homespun", "Myriad-Pro", "PT-Sans-Narrow-Bold", "PT-Sans-Narrow-Regular" }
   pfUI.gui:CreateConfig(pfUI.gui.global, "跟随分辨率自动缩放UI", pfUI_config.global, "pixelperfect", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.global, "切换到其他窗口时游戏帧数保持不变", pfUI_config.global, "offscreen", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.global, "换到其他窗口时游戏帧数保持不变", pfUI_config.global, "offscreen", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.global, "字号", pfUI_config.global, "font_size")
   pfUI.gui:CreateConfig(pfUI.gui.global, "默认字体", pfUI_config.global, "font_default", "dropdown", values)
   pfUI.gui:CreateConfig(pfUI.gui.global, "框体字体", pfUI_config.global, "font_square", "dropdown", values)
