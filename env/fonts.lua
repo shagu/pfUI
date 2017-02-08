@@ -13,7 +13,7 @@ function pfUI.environment:UpdateFonts()
   else
     pfUI.font_default = "Interface\\AddOns\\pfUI\\fonts\\Myriad-Pro.ttf"
     pfUI.font_square = "Interface\\AddOns\\pfUI\\fonts\\Homespun.ttf"
-    pfUI.font_combat = "Interface\\AddOns\\pfUI\\fonts\\DieDieDie.ttf"
+    pfUI.font_combat = "Interface\\AddOns\\pfUI\\fonts\\Continuum.ttf"
   end
 
   -- force locale based fonts
