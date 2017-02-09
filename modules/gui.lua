@@ -846,8 +846,8 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "拾取设置", nil, nil, "header")
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "自动调整拾取框大小", pfUI_config.appearance.loot, "autoresize", "checkbox")
 
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Minimap", nil, nil, "header")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Show zone name on mouseover", pfUI_config.appearance.minimap, "mouseoverzone", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "小地图设置", nil, nil, "header")
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "在鼠标悬停时显示区域名称", pfUI_config.appearance.minimap, "mouseoverzone", "checkbox")
 
   -- modules
   pfUI.gui.modules = pfUI.gui:CreateConfigTab("高级单元")
