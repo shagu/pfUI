@@ -27,7 +27,7 @@ MobHealth3 and HealComm, but they will be never shipped within the package.
 * [HealComm](https://github.com/Aviana/HealComm/releases) Visual representation of incoming heals
 * [WIM](http://addons.us.to/addon/wim), [WIM (continued)](https://github.com/shirsig/WIM) Give whispers an instant messenger feel
 * [MobHealth3](http://addons.us.to/addon/mobhealth) Estimates a mob's health
-* [Clean_Up](https://github.com/shirsig/Clean_Up-lib) Automatically stacks and sorts your items.
+* [Clean_Up](https://github.com/shirsig/Clean_Up) Automatically stacks and sorts your items.
 
 ## Commands
 
