@@ -10,6 +10,25 @@ or libraries. This is **not** an addon-pack like
 external Addons will be included. There will be support for external addons like 
 MobHealth3 and HealComm, but they will be never shipped within the package.
 
+## Installation (Release)
+1. Download **[Release](https://github.com/shagu/pfUI/releases/latest)**
+2. Unpack the Zip
+3. Copy "pfUI" to Wow-Directory\Interface\AddOns
+4. Restart Wow
+
+## Installation (Latest)
+1. Download **[Latest](https://github.com/shagu/pfUI/archive/master.zip)**
+2. Unpack the Zip, rename the folder "pfUI-master" to "pfUI".
+3. Copy "pfUI" to Wow-Directory\Interface\AddOns
+4. Restart Wow
+
+## Recommended Addons
+* [DPSMate](https://github.com/Geigerkind/DPSMate) An advanced combat analyzation tool
+* [HealComm](https://github.com/Aviana/HealComm/releases) Visual representation of incoming heals
+* [WIM](http://addons.us.to/addon/wim), [WIM (continued)](https://github.com/shirsig/WIM) Give whispers an instant messenger feel
+* [MobHealth3](http://addons.us.to/addon/mobhealth) Estimates a mob's health
+* [Clean_Up](https://github.com/shirsig/Clean_Up) Automatically stacks and sorts your items.
+
 ## Commands
 
     /pfui   Open the configuration GUI
@@ -28,22 +47,6 @@ pfUI supports and contains language specific code for the following languages.
 ![Screenshot](http://mephis.he-hosting.de/shaguaddons/pfUI/mmobase/screen.jpg)
 
 ![Moving Frames](http://mephis.he-hosting.de/shaguaddons/pfUI/mmobase/moveit.jpg)
-
-## Recommended Addons
-* [DPSMate](https://github.com/Geigerkind/DPSMate) An advanced combat analyzation tool
-* [HealComm](https://github.com/Aviana/HealComm/releases) Visual representation of incoming heals
-* [WIM](http://addons.us.to/addon/wim), [WIM (continued)](https://github.com/shirsig/WIM) Give whispers an instant messenger feel
-* [MobHealth3](http://addons.us.to/addon/mobhealth) Estimates a mob's health
-* [Clean_Up](https://github.com/shirsig/Clean_Up-lib) Automatically stacks and sorts your items.
-
-## Installation (common)
-1. Download from Github as Zip, unpack and rename the folder pfUI-master to pfUI.
-2. Copy "pfUI" to Wow-Directory\Interface\AddOns
-3. Make sure to have the file "*Wow-Directory\Interface\AddOns\pfUI\pfUI.toc*"
-4. Restart Wow
-
-## Installation (unix)
-	cd ~/Wow-Directory/Interface/AddOns && git clone http://github.com/shagu/pfUI.git
 
 ## FAQ
 **What does "pfUI" stand for?**  

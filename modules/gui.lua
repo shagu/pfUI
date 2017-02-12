@@ -726,23 +726,23 @@ pfUI:RegisterModule("gui", function ()
     pfUI.gui.scroll:UpdateScrollState()
   end)
 
-  -- global
-  pfUI.gui.global = pfUI.gui:CreateConfigTab("全局设置")
+  -- General
+  pfUI.gui.global = pfUI.gui:CreateConfigTab("一般设置")
   local values = { "Continuum", "DieDieDie", "Expressway", "Homespun", "Myriad-Pro", "PT-Sans-Narrow-Bold", "PT-Sans-Narrow-Regular" }
+  pfUI.gui:CreateConfig(pfUI.gui.global, "强制兼容中文字体", pfUI_config.global, "force_region", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.global, "普通字体", pfUI_config.global, "font_default", "dropdown", values)
+  pfUI.gui:CreateConfig(pfUI.gui.global, "框架和动作栏字体", pfUI_config.global, "font_square", "dropdown", values)
+  pfUI.gui:CreateConfig(pfUI.gui.global, "滚动战斗字体", pfUI_config.global, "font_combat", "dropdown", values)
+  pfUI.gui:CreateConfig(pfUI.gui.global, "字号", pfUI_config.global, "font_size")
   pfUI.gui:CreateConfig(pfUI.gui.global, "跟随分辨率自动缩放UI", pfUI_config.global, "pixelperfect", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.global, "换到其他窗口时游戏帧数保持不变", pfUI_config.global, "offscreen", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.global, "字号", pfUI_config.global, "font_size")
-  pfUI.gui:CreateConfig(pfUI.gui.global, "默认字体", pfUI_config.global, "font_default", "dropdown", values)
-  pfUI.gui:CreateConfig(pfUI.gui.global, "框体字体", pfUI_config.global, "font_square", "dropdown", values)
-  pfUI.gui:CreateConfig(pfUI.gui.global, "战斗字体", pfUI_config.global, "font_combat", "dropdown", values)
-  pfUI.gui:CreateConfig(pfUI.gui.global, "强制兼容中文字体", pfUI_config.global, "force_region", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.global, "仅列出一行错误", pfUI_config.global, "errors_limit", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.global, "禁用错误", pfUI_config.global, "errors_hide", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.global, "禁用所有错误", pfUI_config.global, "errors_hide", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.global, "隐藏系统Buff图标", pfUI_config.global, "hidebuff", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.global, "隐藏武器Buff图标", pfUI_config.global, "hidewbuff", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.global, "使用24小时制", pfUI_config.global, "twentyfour", "checkbox")
 
-  pfUI.gui:CreateConfig(pfUI.gui.global, "Profile", nil, nil, "header")
+  pfUI.gui:CreateConfig(pfUI.gui.global, "配置文件", nil, nil, "header")
   local values = {}
   for name, config in pairs(pfUI_profiles) do table.insert(values, name) end
 
@@ -830,10 +830,6 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "冷却时间颜色（天）", pfUI_config.appearance.cd, "daycolor", "color")
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "冷却时间文字大小", pfUI_config.appearance.cd, "threshold")
 
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "施法条设置", nil, nil, "header")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "施法条颜色", pfUI_config.appearance.castbar, "castbarcolor", "color")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "施法条空白处颜色", pfUI_config.appearance.castbar, "channelcolor", "color")
-
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "战斗相关设置", nil, nil, "header")
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "全屏显示战斗报警", pfUI_config.appearance.infight, "screen", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "仅在头像上显示战斗报警", pfUI_config.appearance.infight, "common", "checkbox")
@@ -841,7 +837,7 @@ pfUI:RegisterModule("gui", function ()
 
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "背包和银行设置", nil, nil, "header")
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "只显示\"普通品质\"以上的物品", pfUI_config.appearance.bags, "borderlimit", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "只显示装备", pfUI_config.appearance.bags, "borderonlygear", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "仅在装备上显示品质颜色", pfUI_config.appearance.bags, "borderonlygear", "checkbox")
 
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "拾取设置", nil, nil, "header")
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "自动调整拾取框大小", pfUI_config.appearance.loot, "autoresize", "checkbox")
@@ -849,20 +845,8 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "小地图设置", nil, nil, "header")
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "在鼠标悬停时显示区域名称", pfUI_config.appearance.minimap, "mouseoverzone", "checkbox")
 
-  -- modules
-  pfUI.gui.modules = pfUI.gui:CreateConfigTab("高级单元")
-  pfUI.gui:CreateConfig(pfUI.gui.modules, "|cffff5555注意：|cffffaaaa如果你不知道该如何禁用，请不要随便设置，有可能会造成插件错误等问题。如发现不可恢复的\n错误，请删除WOW根目录下的WTF文件夹|r", nil, nil, "warning")
-  for i,m in pairs(pfUI.modules) do
-    if m ~= "gui" then
-      -- create disabled entry if not existing and display
-      pfUI:UpdateConfig("disabled", nil, m, "0")
-      pfUI.gui:CreateConfig(pfUI.gui.modules, "Disable " .. m, pfUI_config.disabled, m, "checkbox")
-    end
-  end
-
-  -- unitframes
-  pfUI.gui.uf = pfUI.gui:CreateConfigTab("头像美化增强")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "基本设置", nil, nil, "header")
+  -- unit frames
+  pfUI.gui.uf = pfUI.gui:CreateConfigTab("基本设置")
   pfUI.gui:CreateConfig(pfUI.gui.uf, "禁用头像增强", pfUI_config.unitframes, "disable", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.uf, "头像颜色变柔", pfUI_config.unitframes, "pastel", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.uf, "启用自定义生命条颜色", pfUI_config.unitframes, "custom", "checkbox")
@@ -880,7 +864,7 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui:CreateConfig(pfUI.gui.uf, "玩家头像位置", pfUI_config.unitframes.player, "portrait", "dropdown", { "bar", "left", "right", "off" })
   pfUI.gui:CreateConfig(pfUI.gui.uf, "玩家头像宽度调整", pfUI_config.unitframes.player, "width")
   pfUI.gui:CreateConfig(pfUI.gui.uf, "玩家头像高度调整", pfUI_config.unitframes.player, "height")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "玩家能量值高度调整", pfUI_config.unitframes.player, "pheight")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "玩家能量值与头像间距调整", pfUI_config.unitframes.player, "pheight")
   pfUI.gui:CreateConfig(pfUI.gui.uf, "玩家能量值与头像间距调整", pfUI_config.unitframes.player, "pspace")
   pfUI.gui:CreateConfig(pfUI.gui.uf, "显示PVP图标", pfUI_config.unitframes.player, "showPVP", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.uf, "在小地图上平铺PVP图标", pfUI_config.unitframes.player, "showPVPMinimap", "checkbox")
@@ -914,7 +898,7 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui:CreateConfig(pfUI.gui.uf, "团队框架上按Ctrl施法", pfUI_config.unitframes.raid, "clickcast_ctrl")
   pfUI.gui:CreateConfig(pfUI.gui.uf, "显示自己的Buff", pfUI_config.unitframes.raid, "buffs_buffs", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.uf, "显示持续治疗", pfUI_config.unitframes.raid, "buffs_hots", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "显示自己的风怒", pfUI_config.unitframes.raid, "buffs_procs", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "显示自己的效果", pfUI_config.unitframes.raid, "buffs_procs", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.uf, "仅不显示自己的持续治疗", pfUI_config.unitframes.raid, "buffs_classonly", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.uf, "团队框架上显示Debuff", pfUI_config.unitframes.raid, "debuffs_enable", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.uf, "仅不显示自己的Debuff", pfUI_config.unitframes.raid, "debuffs_class", "checkbox")
@@ -926,24 +910,39 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui:CreateConfig(pfUI.gui.uf, "宠物的头像位置", pfUI_config.unitframes.pet, "portrait", "dropdown", { "bar", "left", "right", "off" })
   pfUI.gui:CreateConfig(pfUI.gui.uf, "宠物能量值间距调整", pfUI_config.unitframes.pet, "pspace")
 
-  -- actionbar
+  -- action bar
   pfUI.gui.bar = pfUI.gui:CreateConfigTab("动作条")
   pfUI.gui:CreateConfig(pfUI.gui.bar, "图标大小", pfUI_config.bars, "icon_size")
   pfUI.gui:CreateConfig(pfUI.gui.bar, "显示动作条背景图案", pfUI_config.bars, "background", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.bar, "使用颜色指示技能使用距离", pfUI_config.bars, "glowrange", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.bar, "技能使用距离颜色", pfUI_config.bars, "rangecolor", "color")
+  pfUI.gui:CreateConfig(pfUI.gui.bar, "启用基于范围的自动分页（猎人）", pfUI_config.bars, "hunterbar", "checkbox")
+
   pfUI.gui:CreateConfig(pfUI.gui.bar, "自动隐藏动作条延时", pfUI_config.bars, "hide_time")
-  pfUI.gui:CreateConfig(pfUI.gui.bar, "自动隐藏主动作条", pfUI_config.bars, "hide_bottom", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.bar, "自动隐藏主动作条", pfUI_config.bars, "hide_actionmain", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.bar, "自动隐藏左下方动作条", pfUI_config.bars, "hide_bottomleft", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.bar, "自动隐藏右下方动作条", pfUI_config.bars, "hide_bottomright", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.bar, "自动隐藏右边动作条", pfUI_config.bars, "hide_vertical", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.bar, "自动隐藏右方动作条", pfUI_config.bars, "hide_right", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.bar, "自动隐藏右边二动作条", pfUI_config.bars, "hide_tworight", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.bar, "自动隐藏姿态条", pfUI_config.bars, "hide_shapeshift", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.bar, "自动隐藏宠物动作条", pfUI_config.bars, "hide_pet", "checkbox")
+
+  pfUI.gui:CreateConfig(pfUI.gui.bar, "动作条布局", nil, nil, "header")
+  local values = pfUI.api:BarLayoutOptions(NUM_ACTIONBAR_BUTTONS)
+  pfUI.gui:CreateConfig(pfUI.gui.bar, "主动作条 (主要作用)", pfUI_config.bars.actionmain, "formfactor", "dropdown", values)
+  pfUI.gui:CreateConfig(pfUI.gui.bar, "第二个动作条(左下方)", pfUI_config.bars.bottomleft, "formfactor", "dropdown", values)
+  pfUI.gui:CreateConfig(pfUI.gui.bar, "左动作条 (右下方)", pfUI_config.bars.bottomright, "formfactor", "dropdown", values)
+  pfUI.gui:CreateConfig(pfUI.gui.bar, "右动作条 (右侧)", pfUI_config.bars.right, "formfactor", "dropdown", values)
+  pfUI.gui:CreateConfig(pfUI.gui.bar, "垂直动作条 (右二)", pfUI_config.bars.tworight, "formfactor", "dropdown", values)
+  local values = pfUI.api:BarLayoutOptions(NUM_SHAPESHIFT_SLOTS)
+  pfUI.gui:CreateConfig(pfUI.gui.bar, "姿态条 (姿态条)", pfUI_config.bars.shapeshift, "formfactor", "dropdown", values)
+  local values = pfUI.api:BarLayoutOptions(NUM_PET_ACTION_SLOTS)
+  pfUI.gui:CreateConfig(pfUI.gui.bar, "宠物条 (宠物条)", pfUI_config.bars.pet, "formfactor", "dropdown", values)
 
   -- panels
   pfUI.gui.panel = pfUI.gui:CreateConfigTab("聊天框架附加内容")
   local values = { "时间", "延迟", "经验", "金钱", "好友", "公会", "耐久", "地区", "无" }
-  pfUI.gui:CreateConfig(pfUI.gui.panel, "左侧面板：左侧", pfUI_config.panel.left, "left", "dropdown", values )
+  pfUI.gui:CreateConfig(pfUI.gui.panel, "左侧面板：左侧", pfUI_config.panel.left, "left", "dropdown", values)
   pfUI.gui:CreateConfig(pfUI.gui.panel, "左侧面板：中部", pfUI_config.panel.left, "center", "dropdown", values)
   pfUI.gui:CreateConfig(pfUI.gui.panel, "左侧面板：右侧", pfUI_config.panel.left, "right", "dropdown", values)
   pfUI.gui:CreateConfig(pfUI.gui.panel, "右侧面板：左侧", pfUI_config.panel.right, "left", "dropdown", values)
@@ -963,6 +962,8 @@ pfUI:RegisterModule("gui", function ()
 
   -- castbar
   pfUI.gui.castbar = pfUI.gui:CreateConfigTab("施法条")
+  pfUI.gui:CreateConfig(pfUI.gui.castbar, "施法条颜色", pfUI_config.appearance.castbar, "castbarcolor", "color")
+  pfUI.gui:CreateConfig(pfUI.gui.castbar, "施法条槽颜色", pfUI_config.appearance.castbar, "channelcolor", "color")
   pfUI.gui:CreateConfig(pfUI.gui.castbar, "隐藏系统施法条", pfUI_config.castbar.player, "hide_blizz", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.castbar, "隐藏玩家施法条", pfUI_config.castbar.player, "hide_pfui", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.castbar, "隐藏目标施法条", pfUI_config.castbar.target, "hide_pfui", "checkbox")
@@ -983,7 +984,7 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui:CreateConfig(pfUI.gui.chat, "右侧对话框高度", pfUI_config.chat.right, "height")
   pfUI.gui:CreateConfig(pfUI.gui.chat, "总是显示右聊天窗口", pfUI_config.chat.right, "alwaysshow", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.chat, "将聊天窗口显示为面板", pfUI_config.chat.global, "tabdock", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.chat, "使用自定义聊天窗口颜色:", pfUI_config.chat.global, "custombg", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.chat, "使用自定义聊天窗口颜色", pfUI_config.chat.global, "custombg", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.chat, "对话框背景颜色", pfUI_config.chat.global, "background", "color")
   pfUI.gui:CreateConfig(pfUI.gui.chat, "对话框边颜色", pfUI_config.chat.global, "border", "color")
   pfUI.gui:CreateConfig(pfUI.gui.chat, "更改传入密语的布局", pfUI_config.chat.global, "whispermod", "checkbox")
@@ -1009,10 +1010,21 @@ pfUI:RegisterModule("gui", function ()
 
   -- thirdparty
   pfUI.gui.thirdparty = pfUI.gui:CreateConfigTab("其他插件接口")
-  pfUI.gui:CreateConfig(pfUI.gui.thirdparty, "DPSMate:", pfUI_config.thirdparty.dpsmate, "enable", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.thirdparty, "WIM:", pfUI_config.thirdparty.wim, "enable", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.thirdparty, "HealComm:", pfUI_config.thirdparty.healcomm, "enable", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.thirdparty, "CleanUp:", pfUI_config.thirdparty.cleanup, "enable", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.thirdparty, "DPSMate", pfUI_config.thirdparty.dpsmate, "enable", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.thirdparty, "WIM", pfUI_config.thirdparty.wim, "enable", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.thirdparty, "HealComm", pfUI_config.thirdparty.healcomm, "enable", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.thirdparty, "CleanUp", pfUI_config.thirdparty.cleanup, "enable", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.thirdparty, "KLH Threat Meter", pfUI_config.thirdparty.ktm, "enable", "checkbox")
+
+  -- modules
+  pfUI.gui.modules = pfUI.gui:CreateConfigTab("高级单元")
+  for i,m in pairs(pfUI.modules) do
+    if m ~= "gui" then
+      -- create disabled entry if not existing and display
+      pfUI:UpdateConfig("disabled", nil, m, "0")
+      pfUI.gui:CreateConfig(pfUI.gui.modules, "Disable " .. m, pfUI_config.disabled, m, "checkbox")
+    end
+  end
 
   -- [[ bottom section ]] --
 
