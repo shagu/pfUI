@@ -93,7 +93,7 @@ pfUI:RegisterModule("nameplates", function ()
   end
 
   function pfUI.nameplates:CreateDebuffs(frame)
-    if not pfUI_config.nameplates["showdebuffs"] == "1" then return end
+    if pfUI_config.nameplates["showdebuffs"] ~= "1" then return end
 
     if frame.debuffs == nil then frame.debuffs = {} end
     for j=1, 16, 1 do
@@ -329,12 +329,14 @@ pfUI:RegisterModule("nameplates", function ()
       end
     else
       healthbar.castbar:Hide()
-      frame.debuffs[1]:SetPoint("TOPLEFT", healthbar, "BOTTOMLEFT", 0, -3)
+      if frame.debuffs then
+        frame.debuffs[1]:SetPoint("TOPLEFT", healthbar, "BOTTOMLEFT", 0, -3)
+      end
     end
   end
 
   function pfUI.nameplates:UpdateDebuffs(frame, healthbar)
-    if not frame.debuffs or not pfUI_config.nameplates["showdebuffs"] == "1" then return end
+    if not frame.debuffs or pfUI_config.nameplates["showdebuffs"] ~= "1" then return end
 
     if UnitExists("target") and healthbar:GetAlpha() == 1 then
     local j = 1
