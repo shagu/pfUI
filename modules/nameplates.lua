@@ -320,7 +320,9 @@ pfUI:RegisterModule("nameplates", function ()
           healthbar.castbar.spell:SetText("")
         end
         healthbar.castbar:Show()
-        frame.debuffs[1]:SetPoint("TOPLEFT", healthbar.castbar, "BOTTOMLEFT", 0, -3)
+        if frame.debuffs then
+          frame.debuffs[1]:SetPoint("TOPLEFT", healthbar.castbar, "BOTTOMLEFT", 0, -3)
+        end
 
         if pfUI.castbar.target.casterDB[name:GetText()]["icon"] then
           healthbar.castbar.icon:SetTexture("Interface\\Icons\\" ..  pfUI.castbar.target.casterDB[name:GetText()]["icon"])
