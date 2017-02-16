@@ -29,6 +29,9 @@ MobHealth3 and HealComm, but they will be never shipped within the package.
 * [MobHealth3](http://addons.us.to/addon/mobhealth) Estimates a mob's health
 * [Clean_Up](https://github.com/shirsig/Clean_Up) Automatically stacks and sorts your items.
 
+## Clique Support
+A pfUI compatible version of Clique can be found [Here](https://github.com/shagu/Clique). If you want to keep your current version of Clique, you'll have to apply this [Patch](https://github.com/shagu/Clique/commit/a5ee56c3f803afbdda07bae9cd330e0d4a75d75a).
+
 ## Commands
 
     /pfui   Open the configuration GUI
