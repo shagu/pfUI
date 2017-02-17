@@ -1,13 +1,13 @@
 # pfUI
 
-An educational project for World of Warcraft (1.12) mostly known as "Vanilla" 
-which aimes to be a full replacement for the original Wow interface. The design 
-is highly inspired by TukUI and ElvUI (which I never used) as well as several 
-other screenshots I found around the web during the last 10 years. 
-It is completely written from scratch without any inclusion of 3rd party addons 
-or libraries. This is **not** an addon-pack like 
-[ShaguUI](http://shagu.org/shaguui/) which means that no 
-external Addons will be included. There will be support for external addons like 
+An educational project for World of Warcraft (1.12) mostly known as "Vanilla"
+which aimes to be a full replacement for the original Wow interface in a single Addon.
+The design is highly inspired by TukUI and ElvUI (which I never used) as well as several
+other screenshots I found around the web during the last 10 years.
+It is entirely written from scratch without any inclusion of 3rd party addons
+or libraries. This is **not** an addon-pack like
+[ShaguUI](http://shagu.org/shaguui/) which means that no
+external Addons will be included. There will be support for external addons like
 MobHealth3 and HealComm, but they will be never shipped within the package.
 
 ## Installation (Release)
@@ -50,29 +50,22 @@ pfUI supports and contains language specific code for the following languages.
 
 ## FAQ
 **What does "pfUI" stand for?**  
-The term "*pfui!*" is german and simply stands for "*pooh!*", because I'm not a 
-big fan of creating configuration UI's especially not via the Wow-API 
-(you might have noticed that in ShaguUI). 
-
-**How can I enable mouseover cast?**  
-Create a macro with "/pfcast SPELLNAME". 
-
-**How can I checkout the current state?**  
-See Installation Section. But be aware that things might not work for you.
-
-**When will it be ready?**  
-I have no idea and no timeline yet. I'm working on it whenever I have motivation.
-
-**Why do I get lots of LUA Errors?**  
-Please disable all addons beside pfUI and check if you still get error messages. 
-If the messages are gone, check one addon after the other and report conflicting 
-addons in the [Bugtracker](https://github.com/shagu/pfUI/issues).
+The term "*pfui!*" is german and simply stands for "*pooh!*", because I'm not a
+big fan of creating configuration UI's especially not via the Wow-API
+(you might have noticed that in ShaguUI).
 
 **How can I donate?**  
 You can't. I'm doing that for fun. Enjoy!
 
 **How can I contribute?**  
-Report LUA-Errors and Issues in the [Bugtracker](https://github.com/shagu/pfUI/issues).
+Report Errors, Issues and Feature Requests in the [Bugtracker](https://github.com/shagu/pfUI/issues).
+Please make sure to have the latest version installed and check for conflicting addons beforehand.
+
+**Can I use Clique with pfUI?**  
+A pfUI compatible version of Clique can be found [Here](https://github.com/shagu/Clique/releases). If you want to keep your current version of Clique, you'll have to apply this [Patch](https://github.com/shagu/Clique/commit/a5ee56c3f803afbdda07bae9cd330e0d4a75d75a).
+
+**How can I enable mouseover cast?**  
+Create a macro with "/pfcast SPELLNAME". If you also want to see the cooldown, You might want to add "/run if nil then CastSpellByName("SPELLNAME") end" on top of the macro.
 
 **Everything from scratch?! Are you insane?**  
-Yes.
+Most probably, Yes.
