@@ -102,6 +102,8 @@ pfUI:RegisterModule("targettarget", function ()
         pfUI.uf.targettarget.hp.bar:SetValue(display + ceil(diff / pfUI_config.unitframes.animation_speed))
       elseif display > real then
         pfUI.uf.targettarget.hp.bar:SetValue(display - ceil(diff / pfUI_config.unitframes.animation_speed))
+      else
+        pfUI.uf.targettarget.hp.bar:SetValue(real)
       end
 
       PowerColor = ManaBarColor[UnitPowerType("targettarget")]

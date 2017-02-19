@@ -91,8 +91,15 @@ function pfUI.uf:SetupBuffFilter()
     table.insert(pfUI.uf.buffs, "interface\\icons\\spell_holy_prayeroffortitude")
 
     -- Prayer of Spirit
-    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_divinespirit")
+    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_holy_divinespirit")
     table.insert(pfUI.uf.buffs, "interface\\icons\\spell_holy_prayerofspirit")
+
+    -- Shadow Protection
+    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_shadow_antishadow")
+    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_holy_prayerofshadowprotection")
+
+    -- Fear Ward
+    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_holy_excorcism")
   end
 
   if (pfUI_config.unitframes.raid.buffs_classonly ~= "1" or myclass == "PRIEST") and pfUI_config.unitframes.raid.buffs_hots == "1" then
