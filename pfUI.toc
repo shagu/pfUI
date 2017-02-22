@@ -24,6 +24,7 @@ env\fonts.lua
 
 # modules
 modules\config.lua
+modules\firstrun.lua
 modules\gui.lua
 modules\pixelperfect.lua
 modules\hoverbind.lua
