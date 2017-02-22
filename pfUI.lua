@@ -68,9 +68,7 @@ pfUI:SetScript("OnEvent", function()
 
     -- unify module environment
     local env_pfui = {}
-    local env_global = getfenv(0)
-    setmetatable(env_pfui, {__index = env_global})
-    setfenv(1, env_pfui)
+    setmetatable(env_pfui, {__index = getfenv(0)})
     env_pfui._G = getfenv(0)
     env_pfui._C = pfUI_config
     env_pfui._A = pfUI.api
