@@ -109,6 +109,76 @@ function pfUI.api:UpdateMovable(frame)
   end
 end
 
+
+-- [ SetAutoPoint ]
+-- Automatically places the frame according to screen position of the parent.
+-- 'frame'      [frame]        the frame that should be moved.
+-- 'parent'     [frame]        the frame's anchor point
+-- 'spacing'    [number]       the padding that should be used between the
+--                             frame and its parent frame
+function pfUI.api:SetAutoPoint(frame, parent, spacing)
+  --[[
+
+          a     b       max
+    +-----------------+
+    |  1  |  2  |  3  |
+    |-----+-----+-----| c
+    |  4  |  5  |  6  |
+    |-----+-----+-----| d
+    |  7  |  8  |  9  |
+    +-----------------+
+  0
+
+  ]]--
+
+  local a = GetScreenWidth() / 3
+  local b = GetScreenWidth() / 3 * 2
+
+  local c = GetScreenHeight() / 3 * 2
+  local d = GetScreenHeight() / 3
+
+  local x, y = parent:GetCenter()
+
+  local off = spacing or 0
+
+  frame:ClearAllPoints()
+
+  if x < a and y > c then
+    -- TOPLEFT
+    frame:SetPoint("TOPLEFT", parent, "BOTTOMLEFT", 0, -off)
+  elseif x > a and x < b and y > c then
+    -- TOP
+    frame:SetPoint("TOP", parent, "BOTTOM", 0, -off)
+  elseif x > b and y > c then
+    -- TOPRIGHT
+    frame:SetPoint("TOPRIGHT", parent, "BOTTOMRIGHT", 0, -off)
+
+  elseif x < a and y > d and y < c then
+    -- LEFT
+    frame:SetPoint("LEFT", parent, "RIGHT", off, 0)
+
+  elseif x > a and x < b and y > d and y < c then
+    -- CENTER
+    frame:SetPoint("BOTTOM", parent, "TOP", 0, off)
+
+  elseif x > b and y > d and y < c then
+    -- RIGHT
+    frame:SetPoint("RIGHT", parent, "LEFT", -off, 0)
+
+  elseif x < a and y < d then
+    -- BOTTOMLEFT
+    frame:SetPoint("BOTTOMLEFT", parent, "TOPLEFT", 0, off)
+
+  elseif x > a and x < b and y < d then
+    -- BOTTOM
+    frame:SetPoint("BOTTOM", parent, "TOP", 0, off)
+
+  elseif x > b and y < d then
+    -- BOTTOMRIGHT
+    frame:SetPoint("BOTTOMRIGHT", parent, "TOPRIGHT", 0, off)
+  end
+end
+
 -- [ Create Backdrop ]
 -- Creates a pfUI compatible frame as backdrop element
 -- 'f'          [frame]         the frame which should get a backdrop.
