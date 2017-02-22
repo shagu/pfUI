@@ -66,6 +66,15 @@ pfUI:SetScript("OnEvent", function()
     pfUI.environment:UpdateFonts()
     pfUI.environment:UpdateColors()
 
+    -- unify module environment
+    local env_pfui = {}
+    local env_global = getfenv(0)
+    setmetatable(env_pfui, {__index = env_global})
+    setfenv(1, env_pfui)
+    env_pfui._G = getfenv(0)
+    env_pfui._C = pfUI_config
+    env_pfui._A = pfUI.api
+
     -- fill the cache
     pfUI.cache["locale"] = GetLocale()
     if pfUI.cache["locale"] ~= "enUS" and
@@ -81,14 +90,6 @@ pfUI:SetScript("OnEvent", function()
       if pfUI_config["disabled"] and pfUI_config["disabled"][m]  == "1" then
         -- message("DEBUG: module " .. m .. " has been disabled")
       else
-        local env_pfui = {}
-        local env_global = getfenv(0)
-        setmetatable(env_pfui, {__index = env_global})
-        setfenv(1, env_pfui)
-        env_pfui._G = getfenv(0)
-        env_pfui._C = pfUI_config
-        env_pfui._A = pfUI.api
-
         setfenv(pfUI.module[m], env_pfui)
         pfUI.module[m]()
       end
