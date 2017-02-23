@@ -34,32 +34,18 @@ pfUI:RegisterModule("actionbar", function ()
     end
   end
 
-  if not Hook_ShowBonusActionBar then
-    Hook_ShowBonusActionBar = ShowBonusActionBar
-  end
-
-  function ShowBonusActionBar()
+  pfUI.api.Hook("ShowBonusActionBar", function()
     if pfActionBar then pfActionBar:Hide() end
     if pfBonusBar then pfBonusBar:Show() end
-    Hook_ShowBonusActionBar()
-  end
+  end)
 
-  if not Hook_HideBonusActionBar then
-    Hook_HideBonusActionBar = HideBonusActionBar
-  end
-
-  function HideBonusActionBar()
+  pfUI.api.Hook("HideBonusActionBar", function()
     if pfActionBar then pfActionBar:Show() end
     if pfBonusBar then pfBonusBar:Hide() end
-    Hook_HideBonusActionBar()
-  end
+  end)
 
   if pfUI_config.bars.glowrange == "1" then
-    if not Hook_ActionButton_OnUpdate then
-      Hook_ActionButton_OnUpdate = ActionButton_OnUpdate
-    end
-
-    function ActionButton_OnUpdate(elapsed)
+    pfUI.api.Hook("ActionButton_OnUpdate", function(elapsed)
       -- Handle range indicator
       if ( this.rangeTimer ) then
         this.rangeTimer = this.rangeTimer - elapsed
@@ -75,8 +61,7 @@ pfUI:RegisterModule("actionbar", function ()
           this.rangeTimer = TOOLTIP_UPDATE_TIME
         end
       end
-      Hook_ActionButton_OnUpdate(elapsed)
-    end
+    end)
   end
 
   function ActionButton_GetPagedID(button)
