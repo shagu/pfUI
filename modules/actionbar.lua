@@ -5,13 +5,13 @@ pfUI:RegisterModule("actionbar", function ()
   end
 
   -- override wow ui functions
-  function ActionButton_ShowGrid(button)
+  function _G.ActionButton_ShowGrid(button)
     if not button then button = this end
     button.showgrid = button.showgrid + 1
     button:Show()
   end
 
-  function ActionButton_HideGrid(button)
+  function _G.ActionButton_HideGrid(button)
     if not button then button = this end
     button.showgrid = button.showgrid - 1
 
@@ -20,14 +20,14 @@ pfUI:RegisterModule("actionbar", function ()
     end
   end
 
-  function MultiActionBar_ShowAllGrids()
+  function _G.MultiActionBar_ShowAllGrids()
     for _, bar in pairs({ "MultiBarBottomLeft", "MultiBarBottomRight",
     "MultiBarRight", "MultiBarLeft", "BonusAction", "Action" }) do
       MultiActionBar_UpdateGrid(bar, 1)
     end
   end
 
-  function MultiActionBar_HideAllGrids()
+  function _G.MultiActionBar_HideAllGrids()
     for _, bar in pairs({ "MultiBarBottomLeft", "MultiBarBottomRight",
     "MultiBarRight", "MultiBarLeft", "BonusAction", "Action" }) do
       MultiActionBar_UpdateGrid(bar)
@@ -64,7 +64,7 @@ pfUI:RegisterModule("actionbar", function ()
     end)
   end
 
-  function ActionButton_GetPagedID(button)
+  function _G.ActionButton_GetPagedID(button)
     if ( button.isBonus and CURRENT_ACTIONBAR_PAGE == 1 ) then
       local offset = GetBonusBarOffset()
       if ( offset == 0 and BonusActionBarFrame and BonusActionBarFrame.lastBonusBar ) then
