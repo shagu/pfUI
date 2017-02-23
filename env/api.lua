@@ -42,6 +42,35 @@ function pfUI.api.round(input, places)
   end
 end
 
+-- [ Hook ]
+-- Hooks a global function and injects custom code
+-- 'name'       [string]           name of the function that shold be hooked
+-- 'func'       [function]         function containing the custom code
+-- 'append'     [bool]             optional variable, used to append custom
+--                                 code instead of prepending it
+function pfUI.api.Hook(name, func, append)
+  if not _G[name] then return end
+  if pfUI.hooks[name] then return end
+
+  pfUI.hooks[name] = {}
+  pfUI.hooks[name]["old"] = _G[name]
+  pfUI.hooks[name]["new"] = func
+
+  if append then
+    pfUI.hooks[name]["function"] = function(...)
+      pfUI.hooks[name]["old"](unpack(arg))
+      pfUI.hooks[name]["new"](unpack(arg))
+    end
+  else
+    pfUI.hooks[name]["function"] = function(...)
+      pfUI.hooks[name]["new"](unpack(arg))
+      pfUI.hooks[name]["old"](unpack(arg))
+    end
+  end
+
+  _G[name] = pfUI.hooks[name]["function"]
+end
+
 -- [ Create Gold String ]
 -- Transforms a amount of copper into a fully fledged gold string
 -- 'money'      [int]           the amount of coppy (GetMoney())

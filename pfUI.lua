@@ -27,6 +27,7 @@ pfUI.modules = {}
 pfUI.environment = {}
 pfUI.movables = {}
 pfUI.version = {}
+pfUI.hooks = {}
 
 pfLocaleClass = {}
 pfLocaleBagtypes = {}
