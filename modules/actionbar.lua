@@ -68,9 +68,9 @@ pfUI:RegisterModule("actionbar", function ()
             if not this.a then
               this.r,this.g,this.b,this.a = pfUI.api.strsplit(",", pfUI_config.bars.rangecolor)
             end
-            getglobal(this:GetName() .. 'Icon'):SetVertexColor(this.r, this.g, this.b, this.a)
+            _G[this:GetName() .. 'Icon']:SetVertexColor(this.r, this.g, this.b, this.a)
           elseif IsUsableAction(ActionButton_GetPagedID(this)) then
-            getglobal(this:GetName() .. 'Icon'):SetVertexColor(1, 1, 1, 1)
+            _G[this:GetName() .. 'Icon']:SetVertexColor(1, 1, 1, 1)
           end
           this.rangeTimer = TOOLTIP_UPDATE_TIME
         end
@@ -185,7 +185,7 @@ pfUI:RegisterModule("actionbar", function ()
         PetActionBarFrame:Hide()
 
         for i=1, NUM_PET_ACTION_SLOTS do
-          local b = getglobal("PetActionButton"..i)
+          local b = _G["PetActionButton"..i]
           b:ClearAllPoints()
           b:SetFrameLevel(pfUI.bars.pet:GetFrameLevel() + 1)
           b:SetParent(pfUI.bars.pet)
@@ -204,7 +204,7 @@ pfUI:RegisterModule("actionbar", function ()
         ShapeshiftBarFrame:SetAllPoints(pfUI.bars.shapeshift)
 
         for i=1, NUM_SHAPESHIFT_SLOTS do
-          local b = getglobal("ShapeshiftButton"..i)
+          local b = _G["ShapeshiftButton"..i]
           b:ClearAllPoints()
           b:SetParent(pfUI.bars.shapeshift)
           pfUI.api:CreateBackdrop(b, default_border)
@@ -250,7 +250,7 @@ pfUI:RegisterModule("actionbar", function ()
           tf:SetAllPoints(pfUI.bars.bottomleft)
 
           for i=1, NUM_ACTIONBAR_BUTTONS do
-            local b = getglobal("MultiBarBottomLeftButton"..i)
+            local b = _G["MultiBarBottomLeftButton"..i]
             b:ClearAllPoints()
             b:SetParent(tf)
             pfUI.api:CreateBackdrop(b, default_border)
@@ -288,7 +288,7 @@ pfUI:RegisterModule("actionbar", function ()
           tf:SetAllPoints(pfUI.bars.bottomright)
 
           for i=1, NUM_ACTIONBAR_BUTTONS do
-            local b = getglobal("MultiBarBottomRightButton"..i)
+            local b = _G["MultiBarBottomRightButton"..i]
             b:ClearAllPoints()
             b:SetParent(tf)
             pfUI.api:CreateBackdrop(b, default_border)
@@ -323,7 +323,7 @@ pfUI:RegisterModule("actionbar", function ()
           tf:SetAllPoints(pfUI.bars.right)
 
           for i=1, NUM_ACTIONBAR_BUTTONS do
-            local b = getglobal("MultiBarRightButton"..i)
+            local b = _G["MultiBarRightButton"..i]
             b:ClearAllPoints()
             b:SetParent(tf)
             pfUI.api:CreateBackdrop(b, default_border)
@@ -358,7 +358,7 @@ pfUI:RegisterModule("actionbar", function ()
           tf:SetAllPoints(pfUI.bars.tworight)
 
           for i=1, NUM_ACTIONBAR_BUTTONS do
-            local b = getglobal("MultiBarLeftButton"..i)
+            local b = _G["MultiBarLeftButton"..i]
             b:ClearAllPoints()
             b:SetParent(tf)
             pfUI.api:CreateBackdrop(b, default_border)
@@ -412,7 +412,7 @@ pfUI:RegisterModule("actionbar", function ()
     tf:SetAllPoints(pfUI.bars.actionmain)
 
     for i=1, NUM_ACTIONBAR_BUTTONS do
-      local b = getglobal("ActionButton"..i)
+      local b = _G["ActionButton"..i]
       b:ClearAllPoints()
       b:SetParent(tf)
       pfUI.api:CreateBackdrop(b, default_border)
@@ -426,12 +426,12 @@ pfUI:RegisterModule("actionbar", function ()
   BonusActionBarFrame:SetAllPoints(pfUI.bars.actionmain)
   BonusActionBarFrame:EnableMouse(0)
 
-  local tf = getglobal("pfBonusBar") or CreateFrame("Frame","pfBonusBar", UIParent)
+  local tf = _G["pfBonusBar"] or CreateFrame("Frame","pfBonusBar", UIParent)
   tf:SetParent(pfUI.bars.actionmain)
   tf:SetAllPoints(pfUI.bars.actionmain)
   tf:SetFrameLevel(pfActionBar:GetFrameLevel() + 1)
   for i=1, NUM_BONUS_ACTION_SLOTS do
-    local b = getglobal("BonusActionButton"..i)
+    local b = _G["BonusActionButton"..i]
     b:ClearAllPoints()
     b:SetParent(tf)
     pfUI.api:CreateBackdrop(b, default_border)
@@ -440,38 +440,53 @@ pfUI:RegisterModule("actionbar", function ()
   end
 
   for i = 1, NUM_SHAPESHIFT_SLOTS do
-    getglobal("ShapeshiftButton"..i):SetWidth(pfUI_config.bars.icon_size)
-    getglobal("ShapeshiftButton"..i):SetHeight(pfUI_config.bars.icon_size)
+    local button = _G["ShapeshiftButton"..i]
+    button:SetWidth(pfUI_config.bars.icon_size)
+    button:SetHeight(pfUI_config.bars.icon_size)
 
-    getglobal("ShapeshiftButton"..i..'Icon'):SetParent(getglobal("ShapeshiftButton"..i))
-    getglobal("ShapeshiftButton"..i..'Icon'):SetAllPoints(getglobal("ShapeshiftButton"..i))
-    getglobal("ShapeshiftButton"..i..'Icon'):SetTexCoord(.08, .92, .08, .92)
+    local icon = _G["ShapeshiftButton"..i..'Icon']
+    icon:SetParent(button)
+    icon:SetAllPoints(button)
+    icon:SetTexCoord(.08, .92, .08, .92)
 
-    getglobal("ShapeshiftButton"..i..'NormalTexture'):SetAlpha(0)
-    getglobal("ShapeshiftButton"..i..'Border'):SetAlpha(0)
+    local texture = _G["ShapeshiftButton"..i..'NormalTexture']
+    texture:SetAlpha(0)
 
-    getglobal("ShapeshiftButton"..i..'HotKey'):SetAllPoints(getglobal("ShapeshiftButton"..i))
-    getglobal("ShapeshiftButton"..i..'HotKey'):SetFont(pfUI.font_square, pfUI_config.global.font_size -2, "OUTLINE")
-    getglobal("ShapeshiftButton"..i..'HotKey'):SetJustifyH("RIGHT")
-    getglobal("ShapeshiftButton"..i..'HotKey'):SetJustifyV("TOP")
+    local border = _G["ShapeshiftButton"..i..'Border']
+    border:SetAlpha(0)
+
+    local hotkey = _G["ShapeshiftButton"..i..'HotKey']
+    hotkey:SetAllPoints(button)
+    hotkey:SetFont(pfUI.font_square, pfUI_config.global.font_size -2, "OUTLINE")
+    hotkey:SetJustifyH("RIGHT")
+    hotkey:SetJustifyV("TOP")
   end
 
   for i = 1, NUM_PET_ACTION_SLOTS do
-    getglobal("PetActionButton"..i):SetWidth(pfUI_config.bars.icon_size)
-    getglobal("PetActionButton"..i):SetHeight(pfUI_config.bars.icon_size)
-    getglobal("PetActionButton"..i):Show()
+    local button = _G["PetActionButton"..i]
+    button:SetWidth(pfUI_config.bars.icon_size)
+    button:SetHeight(pfUI_config.bars.icon_size)
+    button:Show()
 
-    getglobal("PetActionButton"..i..'Icon'):SetAllPoints(getglobal("PetActionButton"..i))
-    getglobal("PetActionButton"..i..'Icon'):SetParent(getglobal("PetActionButton"..i))
-    getglobal("PetActionButton"..i..'Icon'):SetTexCoord(.08, .92, .08, .92)
+    local icon = _G["PetActionButton"..i..'Icon']
+    icon:SetAllPoints(button)
+    icon:SetParent(button)
+    icon:SetTexCoord(.08, .92, .08, .92)
 
-    getglobal("PetActionButton"..i..'NormalTexture2'):SetAlpha(0)
-    getglobal("PetActionButton"..i..'AutoCastable'):SetAlpha(0)
-    getglobal("PetActionButton"..i..'Border'):SetAlpha(0)
-    getglobal("PetActionButton"..i..'AutoCast'):SetScale(pfUI_config.bars.icon_size / 30)
-    getglobal("PetActionButton"..i..'AutoCast'):SetPoint("TOPLEFT", getglobal("PetActionButton"..i), "TOPLEFT", 0, 0)
-    getglobal("PetActionButton"..i..'AutoCast'):SetPoint("BOTTOMRIGHT", getglobal("PetActionButton"..i), "BOTTOMRIGHT", 1, -1)
-    getglobal("PetActionButton"..i..'AutoCast'):SetAlpha(.1)
+    local texture = _G["PetActionButton"..i..'NormalTexture2']
+    texture :SetAlpha(0)
+
+    local castable = _G["PetActionButton"..i..'AutoCastable']
+    castable:SetAlpha(0)
+
+    local border = _G["PetActionButton"..i..'Border']
+    border:SetAlpha(0)
+
+    local autocast = _G["PetActionButton"..i..'AutoCast']
+    autocast:SetScale(pfUI_config.bars.icon_size / 30)
+    autocast:SetPoint("TOPLEFT", button, "TOPLEFT", 0, 0)
+    autocast:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", 1, -1)
+    autocast:SetAlpha(.1)
   end
 
   -- theme all actionbars (spacing, size, border, text position and style)
@@ -479,25 +494,35 @@ pfUI:RegisterModule("actionbar", function ()
     "MultiBarBottomLeftButton", "MultiBarBottomRightButton", "BonusActionButton", }
 
   for i = 1, NUM_ACTIONBAR_BUTTONS do
-    for _, button in pairs(actionbars) do
-      getglobal(button..i..'NormalTexture'):SetAlpha(0)
-      getglobal(button..i):SetWidth(pfUI_config.bars.icon_size)
-      getglobal(button..i):SetHeight(pfUI_config.bars.icon_size)
-      getglobal(button..i):Show()
+    for _, actionbutton in pairs(actionbars) do
+      local button = _G[actionbutton..i]
+      button:SetWidth(pfUI_config.bars.icon_size)
+      button:SetHeight(pfUI_config.bars.icon_size)
+      button:Show()
 
-      getglobal(button..i..'Icon'):SetAllPoints(getglobal(button..i))
-      getglobal(button..i..'Icon'):SetTexCoord(.08, .92, .08, .92)
-      getglobal(button..i..'NormalTexture'):SetAllPoints(getglobal(button..i))
-      getglobal(button..i..'NormalTexture'):SetTexCoord(.08, .92, .08, .92)
-      getglobal(button..i..'Border'):SetTexture(0,0,0,0)
-      getglobal(button..i..'HotKey'):SetAllPoints(getglobal(button..i))
-      getglobal(button..i..'HotKey'):SetFont(pfUI.font_square, pfUI_config.global.font_size -2, "OUTLINE")
-      getglobal(button..i..'HotKey'):SetJustifyH("RIGHT")
-      getglobal(button..i..'HotKey'):SetJustifyV("TOP")
-      getglobal(button..i..'Name'):SetAllPoints(getglobal(button..i))
-      getglobal(button..i..'Name'):SetFont(pfUI.font_square, pfUI_config.global.font_size -2, "OUTLINE")
-      getglobal(button..i..'Name'):SetJustifyH("CENTER")
-      getglobal(button..i..'Name'):SetJustifyV("BOTTOM")
+      local texture = _G[actionbutton..i..'NormalTexture']
+      texture:SetAlpha(0)
+      texture:SetAllPoints(button)
+      texture:SetTexCoord(.08, .92, .08, .92)
+
+      local icon = _G[actionbutton..i..'Icon']
+      icon:SetAllPoints(button)
+      icon:SetTexCoord(.08, .92, .08, .92)
+
+      local border = _G[actionbutton..i..'Border']
+      border:SetTexture(0,0,0,0)
+
+      local hotkey = _G[actionbutton..i..'HotKey']
+      hotkey:SetAllPoints(button)
+      hotkey:SetFont(pfUI.font_square, pfUI_config.global.font_size -2, "OUTLINE")
+      hotkey:SetJustifyH("RIGHT")
+      hotkey:SetJustifyV("TOP")
+
+      local name = _G[actionbutton..i..'Name']
+      name:SetAllPoints(button)
+      name:SetFont(pfUI.font_square, pfUI_config.global.font_size -2, "OUTLINE")
+      name:SetJustifyH("CENTER")
+      name:SetJustifyV("BOTTOM")
     end
   end
 end)
