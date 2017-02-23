@@ -1,3 +1,5 @@
+local _G = getfenv(0)
+
 pfUI.api = { }
 
 -- [ strsplit ]
