@@ -5,7 +5,7 @@ pfUI:RegisterModule("bags", function ()
   end
 
   -- overwrite some bag functions
-  function OpenAllBags()
+  function _G.OpenAllBags()
     if pfUI.bag.right:IsShown() then
       pfUI.bag.right:Hide()
     else
@@ -13,11 +13,11 @@ pfUI:RegisterModule("bags", function ()
     end
   end
 
-  function CloseAllBags()
+  function _G.CloseAllBags()
     pfUI.bag.right:Hide()
   end
 
-  function ToggleBackpack()
+  function _G.ToggleBackpack()
     if pfUI.bag.right:IsShown() then
       pfUI.bag.right:Hide()
     else
@@ -25,7 +25,7 @@ pfUI:RegisterModule("bags", function ()
     end
   end
 
-  function OpenBackpack()
+  function _G.OpenBackpack()
     if ( pfUI.bag.right:IsShown() ) then
       ContainerFrame1.backpackWasOpen = 1
       return
@@ -38,7 +38,7 @@ pfUI:RegisterModule("bags", function ()
     end
   end
 
-  function ToggleBag()
+  function _G.ToggleBag()
     return
   end
 
