@@ -1051,7 +1051,7 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.resetCache = pfUI.gui:CreateConfigTab("Reset Cache", "bottom", function()
     pfUI.api:CreateQuestionDialog("Do you really want to reset the Cache?",
       function()
-        pfUI_playerDB = {}
+        _G["pfUI_playerDB"] = {}
         this:GetParent():Hide()
         pfUI.gui:Reload()
       end)
@@ -1061,7 +1061,7 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.resetFrames = pfUI.gui:CreateConfigTab("Reset Positions", "bottom", function()
     pfUI.api:CreateQuestionDialog("Do you really want to reset the Frame Positions?",
       function()
-        pfUI_config["position"] = {}
+        _G["pfUI_config"]["position"] = {}
         this:GetParent():Hide()
         pfUI.gui:Reload()
       end)
@@ -1071,7 +1071,7 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.resetChat = pfUI.gui:CreateConfigTab("Reset Firstrun", "bottom", function()
     pfUI.api:CreateQuestionDialog("Do you really want to reset the Firstrun Wizard Settings?",
       function()
-        pfUI_init = {}
+        _G["pfUI_init"] = {}
         this:GetParent():Hide()
         pfUI.gui:Reload()
       end)
@@ -1081,7 +1081,7 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.resetConfig = pfUI.gui:CreateConfigTab("Reset Config", "bottom", function()
     pfUI.api:CreateQuestionDialog("Do you really want to reset your configuration?\nThis also includes frame positions",
       function()
-        pfUI_config = {}
+        _G["pfUI_config"] = {}
         pfUI:LoadConfig()
         this:GetParent():Hide()
         pfUI.gui:Reload()
@@ -1092,9 +1092,9 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.resetAll = pfUI.gui:CreateConfigTab("Reset All", "bottom", function()
     pfUI.api:CreateQuestionDialog("Do you really want to reset |cffffaaaaEVERYTHING|r?\nThis includes configuration, frame positions, firstrun settings,\n player cache, profiles and just EVERYTHING!",
       function()
-        pfUI_init = {}
-        pfUI_config = {}
-        pfUI_playerDB = {}
+        _G["pfUI_init"] = {}
+        _G["pfUI_config"] = {}
+        _G["pfUI_playerDB"] = {}
         pfUI_profiles = {}
         pfUI:LoadConfig()
         this:GetParent():Hide()
