@@ -55,8 +55,7 @@ pfUI:RegisterModule("cooldown", function ()
   end
 
   -- hook
-  if not pfCooldownFrame_SetTimer then pfCooldownFrame_SetTimer = CooldownFrame_SetTimer end
-  function CooldownFrame_SetTimer(this, start, duration, enable)
+  pfUI.api.Hook("CooldownFrame_SetTimer", function(this, start, duration, enable)
     -- break here if no this-reference is set
     if not this then return end
 
@@ -78,7 +77,5 @@ pfUI:RegisterModule("cooldown", function ()
     elseif(this.cd) then
       this.cd:Hide();
     end
-
-    pfCooldownFrame_SetTimer(this, start, duration, enable)
-  end
+  end)
 end)
