@@ -134,6 +134,8 @@ pfUI:RegisterModule("pet", function ()
         pfUI.uf.pet.power.bar:SetValue(powerDisplay + ceil(powerDiff / pfUI_config.unitframes.animation_speed))
       elseif powerDisplay > powerReal then
         pfUI.uf.pet.power.bar:SetValue(powerDisplay - ceil(powerDiff / pfUI_config.unitframes.animation_speed))
+      else
+        pfUI.uf.pet.power.bar:SetValue(powerReal)
       end
     end)
 
