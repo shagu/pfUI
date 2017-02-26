@@ -231,8 +231,8 @@ pfUI:RegisterModule("chat", function ()
     end
 
     for i=1, NUM_CHAT_WINDOWS do
-      local frame = getglobal("ChatFrame"..i)
-      local tab = getglobal("ChatFrame"..i.."Tab")
+      local frame = _G["ChatFrame"..i]
+      local tab = _G["ChatFrame"..i.."Tab"]
 
 
       if pfUI_config.chat.global.fadeout == "1" then
@@ -263,21 +263,21 @@ pfUI:RegisterModule("chat", function ()
         v:SetHeight(pfUI_config.global.font_size+default_border*2)
       end
 
-      getglobal("ChatFrame" .. i .. "ResizeBottom"):Hide()
-      getglobal("ChatFrame" .. i .. "TabText"):SetJustifyV("CENTER")
-      getglobal("ChatFrame" .. i .. "TabText"):SetHeight(pfUI_config.global.font_size+default_border*2)
-      getglobal("ChatFrame" .. i .. "TabText"):SetPoint("BOTTOM", 0, default_border)
-      getglobal("ChatFrame" .. i .. "TabLeft"):SetAlpha(0)
-      getglobal("ChatFrame" .. i .. "TabMiddle"):SetAlpha(0)
-      getglobal("ChatFrame" .. i .. "TabRight"):SetAlpha(0)
-      getglobal("ChatFrame" .. i .. "TabFlash"):SetAlpha(0)
+      _G["ChatFrame" .. i .. "ResizeBottom"]:Hide()
+      _G["ChatFrame" .. i .. "TabText"]:SetJustifyV("CENTER")
+      _G["ChatFrame" .. i .. "TabText"]:SetHeight(pfUI_config.global.font_size+default_border*2)
+      _G["ChatFrame" .. i .. "TabText"]:SetPoint("BOTTOM", 0, default_border)
+      _G["ChatFrame" .. i .. "TabLeft"]:SetAlpha(0)
+      _G["ChatFrame" .. i .. "TabMiddle"]:SetAlpha(0)
+      _G["ChatFrame" .. i .. "TabRight"]:SetAlpha(0)
+      _G["ChatFrame" .. i .. "TabFlash"]:SetAlpha(0)
 
       local _, class = UnitClass("player")
-      getglobal("ChatFrame" .. i .. "TabText"):SetTextColor(RAID_CLASS_COLORS[class].r + .3 * .5, RAID_CLASS_COLORS[class].g + .3 * .5, RAID_CLASS_COLORS[class].b + .3 * .5, 1)
-      getglobal("ChatFrame" .. i .. "TabText"):SetFont(pfUI.font_default, pfUI_config.global.font_size, "OUTLINE")
+      _G["ChatFrame" .. i .. "TabText"]:SetTextColor(RAID_CLASS_COLORS[class].r + .3 * .5, RAID_CLASS_COLORS[class].g + .3 * .5, RAID_CLASS_COLORS[class].b + .3 * .5, 1)
+      _G["ChatFrame" .. i .. "TabText"]:SetFont(pfUI.font_default, pfUI_config.global.font_size, "OUTLINE")
 
-      if getglobal("ChatFrame" .. i).isDocked or getglobal("ChatFrame" .. i):IsVisible() then
-        getglobal("ChatFrame" .. i .. "Tab"):Show()
+      if _G["ChatFrame" .. i].isDocked or _G["ChatFrame" .. i]:IsVisible() then
+        _G["ChatFrame" .. i .. "Tab"]:Show()
       end
 
       frame:EnableMouseWheel(true)
@@ -312,7 +312,7 @@ pfUI:RegisterModule("chat", function ()
   function pfUI.chat.SetupPositions()
     -- close all chat windows
     for i=1, NUM_CHAT_WINDOWS do
-      FCF_Close(getglobal("ChatFrame"..i))
+      FCF_Close(_G["ChatFrame"..i])
       FCF_DockUpdate()
     end
 
@@ -458,12 +458,12 @@ pfUI:RegisterModule("chat", function ()
     end)
 
   for i=1, NUM_CHAT_WINDOWS do
-    getglobal("ChatFrame" .. i .. "UpButton"):Hide()
-    getglobal("ChatFrame" .. i .. "UpButton").Show = function() return end
-    getglobal("ChatFrame" .. i .. "DownButton"):Hide()
-    getglobal("ChatFrame" .. i .. "DownButton").Show = function() return end
-    getglobal("ChatFrame" .. i .. "BottomButton"):Hide()
-    getglobal("ChatFrame" .. i .. "BottomButton").Show = function() return end
+    _G["ChatFrame" .. i .. "UpButton"]:Hide()
+    _G["ChatFrame" .. i .. "UpButton"].Show = function() return end
+    _G["ChatFrame" .. i .. "DownButton"]:Hide()
+    _G["ChatFrame" .. i .. "DownButton"].Show = function() return end
+    _G["ChatFrame" .. i .. "BottomButton"]:Hide()
+    _G["ChatFrame" .. i .. "BottomButton"].Show = function() return end
   end
 
   -- orig. function but removed flashing
@@ -471,14 +471,14 @@ pfUI:RegisterModule("chat", function ()
     -- Need to draw the dock regions for a frame to define their rects
     if ( not ChatFrame1.init ) then
       for i=1, NUM_CHAT_WINDOWS do
-        getglobal("ChatFrame"..i.."TabDockRegion"):Show()
-        FCF_UpdateButtonSide(getglobal("ChatFrame"..i))
+        _G["ChatFrame"..i.."TabDockRegion"]:Show()
+        FCF_UpdateButtonSide(_G["ChatFrame"..i])
       end
       ChatFrame1.init = 1
       return
     elseif ( ChatFrame1.init == 1 ) then
       for i=1, NUM_CHAT_WINDOWS do
-        getglobal("ChatFrame"..i.."TabDockRegion"):Hide()
+        _G["ChatFrame"..i.."TabDockRegion"]:Hide()
       end
       ChatFrame1.init = 2
     end
@@ -499,7 +499,7 @@ pfUI:RegisterModule("chat", function ()
           FCF_UpdateButtonSide(value)
         end
 
-        dockRegion = getglobal(value:GetName().."TabDockRegion")
+        dockRegion = _G[value:GetName().."TabDockRegion"]
         if ( MouseIsOver(dockRegion) and MOVING_CHATFRAME ~= DEFAULT_CHAT_FRAME ) then
           dockRegion:Show()
         else
@@ -589,10 +589,10 @@ pfUI:RegisterModule("chat", function ()
   CHAT_YELL_GET = '[Y]' .. default
 
   for i=1,NUM_CHAT_WINDOWS do
-    if not getglobal("ChatFrame"..i).HookAddMessage then
-      getglobal("ChatFrame"..i).HookAddMessage = getglobal("ChatFrame"..i).AddMessage
+    if not _G["ChatFrame"..i].HookAddMessage then
+      _G["ChatFrame"..i].HookAddMessage = _G["ChatFrame"..i].AddMessage
     end
-    getglobal("ChatFrame"..i).AddMessage = function (frame, text, ...)
+    _G["ChatFrame"..i].AddMessage = function (frame, text, ...)
       if text then
 
         if pfUI_config.chat.text.classcolor == "1" then
@@ -636,7 +636,7 @@ pfUI:RegisterModule("chat", function ()
           text = "|c" .. chex .. left .. date(pfUI_config.chat.text.timeformat) .. right .. "|r " .. text
         end
 
-        getglobal("ChatFrame"..i).HookAddMessage(frame, text, unpack(arg))
+        _G["ChatFrame"..i].HookAddMessage(frame, text, unpack(arg))
       end
     end
   end

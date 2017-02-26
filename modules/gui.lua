@@ -132,7 +132,7 @@ pfUI:RegisterModule("gui", function ()
     end
 
     for _,frame in pairs(pfUI.movables) do
-      local frame = getglobal(frame)
+      local frame = _G[frame]
 
       if frame then
         if not frame:IsShown() then
@@ -164,17 +164,17 @@ pfUI:RegisterModule("gui", function ()
 
             if IsShiftKeyDown() and strsub(frame:GetName(),0,6) == "pfRaid" then
               for i=1,40 do
-                local frame = getglobal("pfRaid" .. i)
+                local frame = _G["pfRaid" .. i]
                 pfUI.gui:SaveScale(frame, scale)
               end
             elseif IsShiftKeyDown() and strsub(frame:GetName(),0,7) == "pfGroup" then
               for i=1,4 do
-                local frame = getglobal("pfGroup" .. i)
+                local frame = _G["pfGroup" .. i]
                 pfUI.gui:SaveScale(frame, scale)
               end
             elseif IsShiftKeyDown() and strsub(frame:GetName(),0,15) == "pfLootRollFrame" then
               for i=1,4 do
-                local frame = getglobal("pfLootRollFrame" .. i)
+                local frame = _G["pfLootRollFrame" .. i]
                 pfUI.gui:SaveScale(frame, scale)
               end
             else
@@ -195,7 +195,7 @@ pfUI:RegisterModule("gui", function ()
           if IsShiftKeyDown() then
             if strsub(frame:GetName(),0,6) == "pfRaid" then
               for i=1,40 do
-                local cframe = getglobal("pfRaid" .. i)
+                local cframe = _G["pfRaid" .. i]
                 cframe:StartMoving()
                 cframe:StopMovingOrSizing()
                 cframe.drag.backdrop:SetBackdropBorderColor(1,1,1,1)
@@ -203,7 +203,7 @@ pfUI:RegisterModule("gui", function ()
             end
             if strsub(frame:GetName(),0,7) == "pfGroup" then
               for i=1,4 do
-                local cframe = getglobal("pfGroup" .. i)
+                local cframe = _G["pfGroup" .. i]
                 cframe:StartMoving()
                 cframe:StopMovingOrSizing()
                 cframe.drag.backdrop:SetBackdropBorderColor(1,1,1,1)
@@ -211,7 +211,7 @@ pfUI:RegisterModule("gui", function ()
             end
             if strsub(frame:GetName(),0,15) == "pfLootRollFrame" then
               for i=1,4 do
-                local cframe = getglobal("pfLootRollFrame" .. i)
+                local cframe = _G["pfLootRollFrame" .. i]
                 cframe:StartMoving()
                 cframe:StopMovingOrSizing()
                 cframe.drag.backdrop:SetBackdropBorderColor(1,1,1,1)
@@ -238,7 +238,7 @@ pfUI:RegisterModule("gui", function ()
 
               if strsub(frame:GetName(),0,6) == "pfRaid" then
                 for i=1,40 do
-                  local cframe = getglobal("pfRaid" .. i)
+                  local cframe = _G["pfRaid" .. i]
                   cframe.drag.backdrop:SetBackdropBorderColor(.2,1,.8,1)
                   if cframe:GetName() ~= frame:GetName() then
                     local _, _, _, xpos, ypos = cframe:GetPoint()
@@ -256,7 +256,7 @@ pfUI:RegisterModule("gui", function ()
                 end
               elseif strsub(frame:GetName(),0,7) == "pfGroup" then
                 for i=1,4 do
-                  local cframe = getglobal("pfGroup" .. i)
+                  local cframe = _G["pfGroup" .. i]
                   cframe.drag.backdrop:SetBackdropBorderColor(.2,1,.8,1)
                   if cframe:GetName() ~= frame:GetName() then
                     local _, _, _, xpos, ypos = cframe:GetPoint()
@@ -274,7 +274,7 @@ pfUI:RegisterModule("gui", function ()
                 end
               elseif strsub(frame:GetName(),0,15) == "pfLootRollFrame" then
                 for i=1,4 do
-                  local cframe = getglobal("pfLootRollFrame" .. i)
+                  local cframe = _G["pfLootRollFrame" .. i]
                   cframe.drag.backdrop:SetBackdropBorderColor(.2,1,.8,1)
                   if cframe:GetName() ~= frame:GetName() then
                     local _, _, _, xpos, ypos = cframe:GetPoint()

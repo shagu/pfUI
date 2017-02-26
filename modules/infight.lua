@@ -82,7 +82,7 @@ pfUI:RegisterModule("infight", function ()
 
   if pfUI_config.appearance.infight.group == "1" then
     for i=1,4 do
-      pfUI.infight:CreateGlow("party" .. i, getglobal("pfGroup" .. i))
+      pfUI.infight:CreateGlow("party" .. i, _G["pfGroup" .. i])
     end
   end
 end)

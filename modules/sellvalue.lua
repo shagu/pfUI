@@ -13,7 +13,7 @@ pfUI:RegisterModule("sellvalue", function ()
       local _, _, itemLink = string.find(itemLink, "(item:%d+:%d+:%d+:%d+)");
       local itemName = GetItemInfo(itemLink)
 
-      if pfSellData[tonumber(iid)] and itemName == getglobal("GameTooltipTextLeft1"):GetText() then
+      if pfSellData[tonumber(iid)] and itemName == _G["GameTooltipTextLeft1"]:GetText() then
         local _, _, sell, buy = strfind(pfSellData[tonumber(iid)], "(.*),(.*)")
         sell = tonumber(sell)
         buy = tonumber(buy)

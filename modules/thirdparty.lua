@@ -97,56 +97,56 @@ pfUI:RegisterModule("thirdparty", function ()
         pfUIhookWIM_PostMessage = _G.WIM_PostMessage
         _G.WIM_PostMessage = function(user, msg, ttype, from, raw_msg)
           pfUIhookWIM_PostMessage(user, msg, ttype, from, raw_msg)
-          pfUI.api:CreateBackdrop(getglobal("WIM_msgFrame" .. user), nil, nil, .8)
-          getglobal("WIM_msgFrame" .. user .. "From"):ClearAllPoints()
-          getglobal("WIM_msgFrame" .. user .. "From"):SetPoint("TOP", 0, -10)
+          pfUI.api:CreateBackdrop(_G["WIM_msgFrame" .. user], nil, nil, .8)
+          _G["WIM_msgFrame" .. user .. "From"]:ClearAllPoints()
+          _G["WIM_msgFrame" .. user .. "From"]:SetPoint("TOP", 0, -10)
 
-          getglobal("WIM_msgFrame" .. user).avatar = CreateFrame("Frame", nil, getglobal("WIM_msgFrame" .. user))
-          getglobal("WIM_msgFrame" .. user).avatar:SetAllPoints(getglobal("WIM_msgFrame" .. user))
-          getglobal("WIM_msgFrame" .. user .. "ClassIcon"):SetTexCoord(.3, .7, .3, .7)
-          getglobal("WIM_msgFrame" .. user .. "ClassIcon"):SetParent(getglobal("WIM_msgFrame" .. user).avatar)
-          getglobal("WIM_msgFrame" .. user .. "ClassIcon"):ClearAllPoints()
-          getglobal("WIM_msgFrame" .. user .. "ClassIcon"):SetPoint("TOPLEFT", 10 , -10)
-          getglobal("WIM_msgFrame" .. user .. "ClassIcon"):SetWidth(26)
-          getglobal("WIM_msgFrame" .. user .. "ClassIcon"):SetHeight(26)
+          _G["WIM_msgFrame" .. user].avatar = CreateFrame("Frame", nil, _G["WIM_msgFrame" .. user])
+          _G["WIM_msgFrame" .. user].avatar:SetAllPoints(_G["WIM_msgFrame" .. user])
+          _G["WIM_msgFrame" .. user .. "ClassIcon"]:SetTexCoord(.3, .7, .3, .7)
+          _G["WIM_msgFrame" .. user .. "ClassIcon"]:SetParent(_G["WIM_msgFrame" .. user].avatar)
+          _G["WIM_msgFrame" .. user .. "ClassIcon"]:ClearAllPoints()
+          _G["WIM_msgFrame" .. user .. "ClassIcon"]:SetPoint("TOPLEFT", 10 , -10)
+          _G["WIM_msgFrame" .. user .. "ClassIcon"]:SetWidth(26)
+          _G["WIM_msgFrame" .. user .. "ClassIcon"]:SetHeight(26)
 
 
-          getglobal("WIM_msgFrame" .. user .. "ScrollingMessageFrame"):SetPoint("TOPLEFT", getglobal("WIM_msgFrame" .. user), "TOPLEFT", 10, -45)
-          getglobal("WIM_msgFrame" .. user .. "ScrollingMessageFrame"):SetPoint("BOTTOMRIGHT", getglobal("WIM_msgFrame" .. user), "BOTTOMRIGHT", -32, 32)
-          getglobal("WIM_msgFrame" .. user .. "ScrollingMessageFrame"):SetFont(STANDARD_TEXT_FONT, 12)
+          _G["WIM_msgFrame" .. user .. "ScrollingMessageFrame"]:SetPoint("TOPLEFT", _G["WIM_msgFrame" .. user], "TOPLEFT", 10, -45)
+          _G["WIM_msgFrame" .. user .. "ScrollingMessageFrame"]:SetPoint("BOTTOMRIGHT", _G["WIM_msgFrame" .. user], "BOTTOMRIGHT", -32, 32)
+          _G["WIM_msgFrame" .. user .. "ScrollingMessageFrame"]:SetFont(STANDARD_TEXT_FONT, 12)
 
-          pfUI.api:CreateBackdrop(getglobal("WIM_msgFrame" .. user .. "MsgBox"))
-          getglobal("WIM_msgFrame" .. user .. "MsgBox"):ClearAllPoints()
-          getglobal("WIM_msgFrame" .. user .. "MsgBox"):SetPoint("TOPLEFT", getglobal("WIM_msgFrame" .. user .. "ScrollingMessageFrame"), "BOTTOMLEFT", 0, -5)
-          getglobal("WIM_msgFrame" .. user .. "MsgBox"):SetPoint("TOPRIGHT", getglobal("WIM_msgFrame" .. user .. "ScrollingMessageFrame"), "BOTTOMRIGHT", 0, -5)
-          getglobal("WIM_msgFrame" .. user .. "MsgBox"):SetTextInsets(5, 5, 5, 5)
-          getglobal("WIM_msgFrame" .. user .. "MsgBox"):SetHeight(20)
-          for i,v in ipairs({getglobal("WIM_msgFrame" .. user .. "MsgBox"):GetRegions()}) do
+          pfUI.api:CreateBackdrop(_G["WIM_msgFrame" .. user .. "MsgBox"])
+          _G["WIM_msgFrame" .. user .. "MsgBox"]:ClearAllPoints()
+          _G["WIM_msgFrame" .. user .. "MsgBox"]:SetPoint("TOPLEFT", _G["WIM_msgFrame" .. user .. "ScrollingMessageFrame"], "BOTTOMLEFT", 0, -5)
+          _G["WIM_msgFrame" .. user .. "MsgBox"]:SetPoint("TOPRIGHT", _G["WIM_msgFrame" .. user .. "ScrollingMessageFrame"], "BOTTOMRIGHT", 0, -5)
+          _G["WIM_msgFrame" .. user .. "MsgBox"]:SetTextInsets(5, 5, 5, 5)
+          _G["WIM_msgFrame" .. user .. "MsgBox"]:SetHeight(20)
+          for i,v in ipairs({_G["WIM_msgFrame" .. user .. "MsgBox"]:GetRegions()}) do
             if i==6  then v:SetTexture(.1,.1,.1,.5) end
           end
 
-          pfUI.api:CreateBackdrop(getglobal("WIM_msgFrame" .. user .. "ShortcutFrameButton1"))
-          for i,v in ipairs({getglobal("WIM_msgFrame" .. user .. "ShortcutFrameButton1"):GetRegions()}) do
+          pfUI.api:CreateBackdrop(_G["WIM_msgFrame" .. user .. "ShortcutFrameButton1"])
+          for i,v in ipairs({_G["WIM_msgFrame" .. user .. "ShortcutFrameButton1"]:GetRegions()}) do
             if i >= 2 and i < 7 then v:SetTexture(.1,.1,.1,0) end
           end
 
-          pfUI.api:CreateBackdrop(getglobal("WIM_msgFrame" .. user .. "ShortcutFrameButton2"))
-          for i,v in ipairs({getglobal("WIM_msgFrame" .. user .. "ShortcutFrameButton2"):GetRegions()}) do
+          pfUI.api:CreateBackdrop(_G["WIM_msgFrame" .. user .. "ShortcutFrameButton2"])
+          for i,v in ipairs({_G["WIM_msgFrame" .. user .. "ShortcutFrameButton2"]:GetRegions()}) do
             if i >= 2 and i < 7 then v:SetTexture(.1,.1,.1,0) end
           end
 
-          pfUI.api:CreateBackdrop(getglobal("WIM_msgFrame" .. user .. "ShortcutFrameButton3"))
-          for i,v in ipairs({getglobal("WIM_msgFrame" .. user .. "ShortcutFrameButton3"):GetRegions()}) do
+          pfUI.api:CreateBackdrop(_G["WIM_msgFrame" .. user .. "ShortcutFrameButton3"])
+          for i,v in ipairs({_G["WIM_msgFrame" .. user .. "ShortcutFrameButton3"]:GetRegions()}) do
             if i >= 2 and i < 7 then v:SetTexture(.1,.1,.1,0) end
           end
 
-          pfUI.api:CreateBackdrop(getglobal("WIM_msgFrame" .. user .. "ShortcutFrameButton4"))
-          for i,v in ipairs({getglobal("WIM_msgFrame" .. user .. "ShortcutFrameButton4"):GetRegions()}) do
+          pfUI.api:CreateBackdrop(_G["WIM_msgFrame" .. user .. "ShortcutFrameButton4"])
+          for i,v in ipairs({_G["WIM_msgFrame" .. user .. "ShortcutFrameButton4"]:GetRegions()}) do
             if i >= 2 and i < 7 then v:SetTexture(.1,.1,.1,0) end
           end
 
-          pfUI.api:CreateBackdrop(getglobal("WIM_msgFrame" .. user .. "ShortcutFrameButton5"))
-          for i,v in ipairs({getglobal("WIM_msgFrame" .. user .. "ShortcutFrameButton5"):GetRegions()}) do
+          pfUI.api:CreateBackdrop(_G["WIM_msgFrame" .. user .. "ShortcutFrameButton5"])
+          for i,v in ipairs({_G["WIM_msgFrame" .. user .. "ShortcutFrameButton5"]:GetRegions()}) do
             if i >= 2 and i < 7 then v:SetTexture(.1,.1,.1,0) end
           end
         end
@@ -425,7 +425,7 @@ pfUI:RegisterModule("thirdparty", function ()
     "KLHTM_TitleFrameMasterTarget", "KLHTM_SelfFrameBottomReset" }
 
     for i, button in pairs(buttons) do
-      local b = getglobal(button)
+      local b = _G[button]
       if not b then return end
       pfUI.api:SkinButton(b)
       b:SetScale(.8)

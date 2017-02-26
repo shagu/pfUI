@@ -13,8 +13,8 @@ pfUI:RegisterModule("cooldown", function ()
         this:Hide()
       end
 
-      if this:GetParent() and this:GetParent():GetName() and getglobal(this:GetParent():GetName() .. "Cooldown") then
-        if not getglobal(this:GetParent():GetName() .. "Cooldown"):IsShown() then
+      if this:GetParent() and this:GetParent():GetName() and _G[this:GetParent():GetName() .. "Cooldown"] then
+        if not _G[this:GetParent():GetName() .. "Cooldown"]:IsShown() then
           this:Hide()
         end
       end

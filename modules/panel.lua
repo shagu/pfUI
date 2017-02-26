@@ -296,7 +296,7 @@ pfUI:RegisterModule("panel", function ()
         repairToolTip:ClearLines()
       else
         for i=1, 30, 1 do
-          local tmpText = getglobal("repairToolTipTextLeft"..i)
+          local tmpText = _G["repairToolTipTextLeft"..i]
           if (tmpText ~= nil) and (tmpText:GetText()) then
             local searchstr = string.gsub(DURABILITY_TEMPLATE, "%%[^%s]+", "(.+)")
             local _, _, lval, rval = string.find(tmpText:GetText(), searchstr, 1)
@@ -569,8 +569,8 @@ pfUI:RegisterModule("panel", function ()
     }
 
     for i=1,table.getn(MICRO_BUTTONS) do
-      local anchor = getglobal(MICRO_BUTTONS[i-1]) or pfUI.panel.microbutton
-      local button = getglobal(MICRO_BUTTONS[i])
+      local anchor = _G[MICRO_BUTTONS[i-1]] or pfUI.panel.microbutton
+      local button = _G[MICRO_BUTTONS[i]]
       button:ClearAllPoints()
       button:SetParent(pfUI.panel.microbutton)
       if i == 1 then

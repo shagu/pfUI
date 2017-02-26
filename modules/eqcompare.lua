@@ -50,7 +50,7 @@ pfUI:RegisterModule("eqcompare", function ()
     local border = tonumber(pfUI_config.appearance.border.default)
 
     for i=1,GameTooltip:NumLines() do
-      local tmpText = getglobal("GameTooltipTextLeft"..i)
+      local tmpText = _G["GameTooltipTextLeft"..i]
 
       for slotType, slotName in pairs(pfUI.slotTable) do
         if tmpText:GetText() == slotType then

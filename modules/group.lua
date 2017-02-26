@@ -11,9 +11,9 @@ pfUI:RegisterModule("group", function ()
 
   -- hide blizzard group frames
   for i=1, 4 do
-    if getglobal("PartyMemberFrame" .. i) then
-      getglobal("PartyMemberFrame" .. i):Hide()
-      getglobal("PartyMemberFrame" .. i).Show = function () return end
+    if _G["PartyMemberFrame" .. i] then
+      _G["PartyMemberFrame" .. i]:Hide()
+      _G["PartyMemberFrame" .. i].Show = function () return end
     end
   end
 
