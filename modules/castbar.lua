@@ -207,7 +207,7 @@ pfUI:RegisterModule("castbar", function ()
       pfUI.castbar.player:SpellcastStart(arg1, arg2)
 
     elseif ( event == "SPELLCAST_CHANNEL_START" ) then
-      pfUI.castbar.player:SpellcastStop(arg1, arg2)
+      pfUI.castbar.player:SpellcastChannelStart(arg1, arg2)
 
     elseif event == "SPELLCAST_STOP" then
       pfUI.castbar.player:SpellcastStop()
