@@ -25,7 +25,7 @@ pfUI:RegisterModule("target", function ()
   pfUI.uf.target:SetWidth(C.unitframes.target.width)
   pfUI.uf.target:SetHeight(C.unitframes.target.height + C.unitframes.target.pheight + 2*default_border + spacing)
   pfUI.uf.target:SetPoint("BOTTOMLEFT", UIParent, "BOTTOM", 75, 125)
-  pfUI.api:UpdateMovable(pfUI.uf.target)
+  UpdateMovable(pfUI.uf.target)
   pfUI.uf.target:RegisterForClicks('LeftButtonUp', 'RightButtonUp', 'MiddleButtonUp', 'Button4Up', 'Button5Up')
   pfUI.uf.target:SetScript("OnEnter", function()
     GameTooltip_SetDefaultAnchor(GameTooltip, this)
@@ -132,7 +132,7 @@ pfUI:RegisterModule("target", function ()
         local r, g, b = .2, .2, .2
 
         if C.unitframes.custom == "1" then
-          local cr, cg, cb, ca = pfUI.api.strsplit(",", C.unitframes.customcolor)
+          local cr, cg, cb, ca = strsplit(",", C.unitframes.customcolor)
           cr, cg, cb = tonumber(cr), tonumber(cg), tonumber(cb)
           pfUI.uf.target.hp.bar:SetStatusBarColor(cr, cg, cb, hp / hpmax / 4 + .75)
           if C.unitframes.pastel == "1" then
@@ -246,7 +246,7 @@ pfUI:RegisterModule("target", function ()
   pfUI.uf.target.hp:SetWidth(C.unitframes.target.width)
   pfUI.uf.target.hp:SetHeight(C.unitframes.target.height)
   pfUI.uf.target.hp:SetPoint("TOP", 0, 0)
-  pfUI.api:CreateBackdrop(pfUI.uf.target.hp, default_border)
+  CreateBackdrop(pfUI.uf.target.hp, default_border)
 
   pfUI.uf.target.hp.bar = CreateFrame("StatusBar", nil, pfUI.uf.target.hp)
   pfUI.uf.target.hp.bar:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
@@ -284,7 +284,7 @@ pfUI:RegisterModule("target", function ()
   pfUI.uf.target.power:SetPoint("BOTTOM", 0, 0)
   pfUI.uf.target.power:SetWidth(C.unitframes.target.width)
   pfUI.uf.target.power:SetHeight(C.unitframes.target.pheight)
-  pfUI.api:CreateBackdrop(pfUI.uf.target.power, default_border)
+  CreateBackdrop(pfUI.uf.target.power, default_border)
 
   pfUI.uf.target.power.bar = CreateFrame("StatusBar", nil, pfUI.uf.target.power)
   pfUI.uf.target.power.bar:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
@@ -334,7 +334,7 @@ pfUI:RegisterModule("target", function ()
           pfUI.uf.target["combopoint" .. point]:SetFrameStrata("HIGH")
           pfUI.uf.target["combopoint" .. point]:SetWidth(5)
           pfUI.uf.target["combopoint" .. point]:SetHeight(5)
-          pfUI.api:CreateBackdrop(pfUI.uf.target["combopoint" .. point])
+          CreateBackdrop(pfUI.uf.target["combopoint" .. point])
           pfUI.uf.target["combopoint" .. point]:SetPoint("TOPLEFT", pfUI.uf.target, "TOPRIGHT", C.appearance.border.default*3, -(point - 1) * (5 + C.appearance.border.default*3))
           if point < 3 then
             local tex = pfUI.uf.target["combopoint" .. point]:CreateTexture("OVERLAY")
@@ -428,7 +428,7 @@ pfUI:RegisterModule("target", function ()
   function pfUI.uf.target.buff.RefreshBuffs()
     for i=1, 16 do
       local texture, stacks = UnitBuff("target",i)
-      pfUI.api:CreateBackdrop(pfUI.uf.target.buff.buffs[i], default_border)
+      CreateBackdrop(pfUI.uf.target.buff.buffs[i], default_border)
       pfUI.uf.target.buff.buffs[i]:SetNormalTexture(texture)
       for i,v in ipairs({pfUI.uf.target.buff.buffs[i]:GetRegions()}) do
         if v.SetTexCoord then v:SetTexCoord(.08, .92, .08, .92) end
@@ -518,7 +518,7 @@ pfUI:RegisterModule("target", function ()
       invert * (row)*((2*default_border) + C.unitframes.debuff_size + 1) + invert * (2*default_border + 1))
 
       local texture, stacks = UnitDebuff("target",i)
-      pfUI.api:CreateBackdrop(pfUI.uf.target.debuff.debuffs[i], default_border)
+      CreateBackdrop(pfUI.uf.target.debuff.debuffs[i], default_border)
       pfUI.uf.target.debuff.debuffs[i]:SetNormalTexture(texture)
       for i,v in ipairs({pfUI.uf.target.debuff.debuffs[i]:GetRegions()}) do
         if v.SetTexCoord then v:SetTexCoord(.08, .92, .08, .92) end

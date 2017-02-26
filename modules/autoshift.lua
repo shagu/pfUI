@@ -5,7 +5,7 @@ pfUI:RegisterModule("autoshift", function ()
   pfUI.autoshift.lastError = ""
   pfUI.autoshift.CastSpellByName = _G["CastSpellByName"]
 
-  pfUI.api.Hook("CastSpell", function(spellId, spellbookTabNum)
+  Hook("CastSpell", function(spellId, spellbookTabNum)
     if pfUI.autoshift.lastError == pfLocaleShift[pfUI.cache["locale"]]['wantBattleStance'] then
       pfUI.autoshift.CastSpellByName(pfLocaleShift[pfUI.cache["locale"]]['BattleStance'])
     elseif pfUI.autoshift.lastError == pfLocaleShift[pfUI.cache["locale"]]['wantBattleDefStance'] then
@@ -20,7 +20,7 @@ pfUI:RegisterModule("autoshift", function ()
     pfUI.autoshift.lastError = ""
   end)
 
-  pfUI.api.Hook("CastSpellByName", function(spellName, onSelf)
+  Hook("CastSpellByName", function(spellName, onSelf)
     if pfUI.autoshift.lastError == pfLocaleShift[pfUI.cache["locale"]]['wantBattleStance'] then
       pfUI.autoshift.CastSpellByName(pfLocaleShift[pfUI.cache["locale"]]['BattleStance'])
     elseif pfUI.autoshift.lastError == pfLocaleShift[pfUI.cache["locale"]]['wantBattleDefStance'] then
@@ -35,7 +35,7 @@ pfUI:RegisterModule("autoshift", function ()
     pfUI.autoshift.lastError = ""
   end)
 
-  pfUI.api.Hook("UseAction", function(slot, checkCursor, onSelf)
+  Hook("UseAction", function(slot, checkCursor, onSelf)
     if pfUI.autoshift.lastError == pfLocaleShift[pfUI.cache["locale"]]['wantBattleStance'] then
       pfUI.autoshift.CastSpellByName(pfLocaleShift[pfUI.cache["locale"]]['BattleStance'])
     elseif pfUI.autoshift.lastError == pfLocaleShift[pfUI.cache["locale"]]['wantBattleDefStance'] then

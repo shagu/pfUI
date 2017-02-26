@@ -10,7 +10,7 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui:SetHeight(500)
   pfUI.gui:Hide()
 
-  pfUI.api:CreateBackdrop(pfUI.gui, nil, nil, .8)
+  CreateBackdrop(pfUI.gui, nil, nil, .8)
   pfUI.gui:SetPoint("CENTER",0,0)
   pfUI.gui:SetMovable(true)
   pfUI.gui:EnableMouse(true)
@@ -29,7 +29,7 @@ pfUI:RegisterModule("gui", function ()
   end)
 
   function pfUI.gui:Reload()
-    pfUI.api:CreateQuestionDialog("Some settings need to reload the UI to take effect.\nDo you want to reloadUI now?",
+    CreateQuestionDialog("Some settings need to reload the UI to take effect.\nDo you want to reloadUI now?",
       function()
         pfUI.gui.settingChanged = nil
         ReloadUI()
@@ -143,7 +143,7 @@ pfUI:RegisterModule("gui", function ()
           frame.drag = CreateFrame("Frame", nil, frame)
           frame.drag:SetAllPoints(frame)
           frame.drag:SetFrameStrata("DIALOG")
-          pfUI.api:CreateBackdrop(frame.drag, nil, nil, .8)
+          CreateBackdrop(frame.drag, nil, nil, .8)
           frame.drag.backdrop:SetBackdropBorderColor(.2, 1, .8)
           frame.drag:EnableMouseWheel(1)
           frame.drag.text = frame.drag:CreateFontString("Status", "LOW", "GameFontNormal")
@@ -154,13 +154,13 @@ pfUI:RegisterModule("gui", function ()
           frame.drag.text:SetFontObject(GameFontWhite)
           local label = (strsub(frame:GetName(),3))
           if frame.drag:GetHeight() > (2 * frame.drag:GetWidth()) then
-            label = pfUI.api.strvertical(label)
+            label = strvertical(label)
           end
           frame.drag.text:SetText(label)
           frame.drag:SetAlpha(1)
 
           frame.drag:SetScript("OnMouseWheel", function()
-            local scale = pfUI.api.round(frame:GetScale() + arg1/10, 1)
+            local scale = round(frame:GetScale() + arg1/10, 1)
 
             if IsShiftKeyDown() and strsub(frame:GetName(),0,6) == "pfRaid" then
               for i=1,40 do
@@ -328,12 +328,12 @@ pfUI:RegisterModule("gui", function ()
 
     for _, hide in pairs(elements) do
       hide:Hide()
-      pfUI.api:CreateBackdrop(hide.switch, nil, true)
+      CreateBackdrop(hide.switch, nil, true)
     end
     pfUI.gui.scroll:SetScrollChild(frame)
     pfUI.gui.scroll:UpdateScrollState()
     pfUI.gui.scroll:SetVerticalScroll(0)
-    pfUI.api:CreateBackdrop(frame.switch, nil, true)
+    CreateBackdrop(frame.switch, nil, true)
     frame.switch:SetBackdropBorderColor(.2,1,.8)
     frame:Show()
   end
@@ -368,7 +368,7 @@ pfUI:RegisterModule("gui", function ()
     else
       frame.switch:SetPoint("TOPLEFT", default_border, -pfUI.gui.tabTop* (22 + default_border) -default_border)
     end
-    pfUI.api:CreateBackdrop(frame.switch, nil, true)
+    CreateBackdrop(frame.switch, nil, true)
     frame.switch.text = frame.switch:CreateFontString("Status", "LOW", "GameFontNormal")
     frame.switch.text:SetFont(pfUI.font_default, C.global.font_size, "OUTLINE")
     frame.switch.text:SetAllPoints(frame.switch)
@@ -445,19 +445,19 @@ pfUI:RegisterModule("gui", function ()
       frame.color = CreateFrame("Button", nil, frame)
       frame.color:SetWidth(12)
       frame.color:SetHeight(12)
-      pfUI.api:CreateBackdrop(frame.color)
+      CreateBackdrop(frame.color)
       frame.color:SetPoint("TOPRIGHT" , 0, -4)
       frame.color.prev = frame.color.backdrop:CreateTexture("OVERLAY")
       frame.color.prev:SetAllPoints(frame.color)
 
-      local cr, cg, cb, ca = pfUI.api.strsplit(",", category[config])
+      local cr, cg, cb, ca = strsplit(",", category[config])
       if not cr or not cg or not cb or not ca then
         cr, cg, cb, ca = 1, 1, 1, 1
       end
       frame.color.prev:SetTexture(cr,cg,cb,ca)
 
       frame.color:SetScript("OnClick", function()
-        local cr, cg, cb, ca = pfUI.api.strsplit(",", category[config])
+        local cr, cg, cb, ca = strsplit(",", category[config])
         if not cr or not cg or not cb or not ca then
           cr, cg, cb, ca = 1, 1, 1, 1
         end
@@ -467,10 +467,10 @@ pfUI:RegisterModule("gui", function ()
           local r,g,b = ColorPickerFrame:GetColorRGB()
           local a = 1 - OpacitySliderFrame:GetValue()
 
-          r = pfUI.api.round(r, 1)
-          g = pfUI.api.round(g, 1)
-          b = pfUI.api.round(b, 1)
-          a = pfUI.api.round(a, 1)
+          r = round(r, 1)
+          g = round(g, 1)
+          b = round(b, 1)
+          a = round(a, 1)
 
           preview:SetTexture(r,g,b,a)
 
@@ -495,7 +495,7 @@ pfUI:RegisterModule("gui", function ()
     end
 
     if widget == "warning" then
-      pfUI.api:CreateBackdrop(frame, nil, true)
+      CreateBackdrop(frame, nil, true)
       frame:SetBackdropBorderColor(1,.5,.5)
       frame:SetHeight(50)
       frame:SetPoint("TOPLEFT", 25, parent.objectCount * -35)
@@ -543,8 +543,8 @@ pfUI:RegisterModule("gui", function ()
     -- use button widget
     if widget == "button" then
       frame.button = CreateFrame("Button", "pfButton", frame, "UIPanelButtonTemplate")
-      pfUI.api:CreateBackdrop(frame.button, nil, true)
-      pfUI.api:SkinButton(frame.button)
+      CreateBackdrop(frame.button, nil, true)
+      SkinButton(frame.button)
       frame.button:SetWidth(85)
       frame.button:SetHeight(20)
       frame.button:SetPoint("TOPRIGHT", -(parent.lineCount-1) * 90, -5)
@@ -560,7 +560,7 @@ pfUI:RegisterModule("gui", function ()
       frame.input:SetNormalTexture("")
       frame.input:SetPushedTexture("")
       frame.input:SetHighlightTexture("")
-      pfUI.api:CreateBackdrop(frame.input, nil, true)
+      CreateBackdrop(frame.input, nil, true)
       frame.input:SetWidth(14)
       frame.input:SetHeight(14)
       frame.input:SetPoint("TOPRIGHT" , 0, -4)
@@ -623,7 +623,7 @@ pfUI:RegisterModule("gui", function ()
       for i,v in ipairs({frame.input:GetRegions()}) do
         if v.SetTexture then v:Hide() end
         if v.SetTextColor then v:SetTextColor(.2,1,.8) end
-        if v.SetBackdrop then pfUI.api:CreateBackdrop(v) end
+        if v.SetBackdrop then CreateBackdrop(v) end
       end
     end
 
@@ -635,7 +635,7 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.deco:ClearAllPoints()
   pfUI.gui.deco:SetPoint("TOPLEFT", pfUI.gui, "TOPLEFT", 4*default_border + 100,-2*default_border)
   pfUI.gui.deco:SetPoint("BOTTOMRIGHT", pfUI.gui, "BOTTOMRIGHT", -2*default_border,2*default_border)
-  pfUI.api:CreateBackdrop(pfUI.gui.deco, nil, nil, .8)
+  CreateBackdrop(pfUI.gui.deco, nil, nil, .8)
 
   pfUI.gui.deco.up = CreateFrame("Frame", nil, pfUI.gui.deco)
   pfUI.gui.deco.up:SetPoint("TOPLEFT", pfUI.gui.deco, "TOPLEFT", 0,0)
@@ -758,9 +758,9 @@ pfUI:RegisterModule("gui", function ()
   -- load profile
   pfUI.gui:CreateConfig(pfUI.gui.global, "Load profile", C.global, "profile", "button", function()
     if C.global.profile and pfUI_profiles[C.global.profile] then
-      pfUI.api:CreateQuestionDialog("Load profile '|cff33ffcc" .. C.global.profile .. "|r'?", function()
+      CreateQuestionDialog("Load profile '|cff33ffcc" .. C.global.profile .. "|r'?", function()
         local selp = C.global.profile
-        C = pfUI.api.CopyTable(pfUI_profiles[C.global.profile])
+        C = CopyTable(pfUI_profiles[C.global.profile])
         C.global.profile = selp
         ReloadUI()
       end)
@@ -770,7 +770,7 @@ pfUI:RegisterModule("gui", function ()
   -- delete profile
   pfUI.gui:CreateConfig(pfUI.gui.global, "Delete profile", C.global, "profile", "button", function()
     if C.global.profile and pfUI_profiles[C.global.profile] then
-      pfUI.api:CreateQuestionDialog("Delete profile '|cff33ffcc" .. C.global.profile .. "|r'?", function()
+      CreateQuestionDialog("Delete profile '|cff33ffcc" .. C.global.profile .. "|r'?", function()
         pfUI_profiles[C.global.profile] = nil
         pfUpdateProfiles()
         this:GetParent():Hide()
@@ -781,9 +781,9 @@ pfUI:RegisterModule("gui", function ()
   -- save profile
   pfUI.gui:CreateConfig(pfUI.gui.global, "Save profile", C.global, "profile", "button", function()
     if C.global.profile and pfUI_profiles[C.global.profile] then
-      pfUI.api:CreateQuestionDialog("Save current settings to profile '|cff33ffcc" .. C.global.profile .. "|r'?", function()
+      CreateQuestionDialog("Save current settings to profile '|cff33ffcc" .. C.global.profile .. "|r'?", function()
         if pfUI_profiles[C.global.profile] then
-          pfUI_profiles[C.global.profile] = pfUI.api.CopyTable(C)
+          pfUI_profiles[C.global.profile] = CopyTable(C)
         end
         this:GetParent():Hide()
       end)
@@ -792,7 +792,7 @@ pfUI:RegisterModule("gui", function ()
 
   -- create profile
   pfUI.gui:CreateConfig(pfUI.gui.global, "Create Profile", C.global, "profile", "button", function()
-    pfUI.api:CreateQuestionDialog("Please enter a name for the new profile.\nExisting profiles sharing the same name will be overwritten.",
+    CreateQuestionDialog("Please enter a name for the new profile.\nExisting profiles sharing the same name will be overwritten.",
     function()
       local profile = this:GetParent().input:GetText()
       local bad = string.gsub(profile,"([%w%s]+)","")
@@ -801,7 +801,7 @@ pfUI:RegisterModule("gui", function ()
       else
         profile = (string.gsub(profile,"^%s*(.-)%s*$", "%1"))
         if profile and profile ~= "" then
-          pfUI_profiles[profile] = pfUI.api.CopyTable(C)
+          pfUI_profiles[profile] = CopyTable(C)
           pfUpdateProfiles()
           this:GetParent():Hide()
         end
@@ -928,15 +928,15 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui:CreateConfig(pfUI.gui.bar, "Enable Autohide For BarPet", C.bars, "hide_pet", "checkbox")
 
   pfUI.gui:CreateConfig(pfUI.gui.bar, "Action Bar Layouts", nil, nil, "header")
-  local values = pfUI.api:BarLayoutOptions(NUM_ACTIONBAR_BUTTONS)
+  local values = BarLayoutOptions(NUM_ACTIONBAR_BUTTONS)
   pfUI.gui:CreateConfig(pfUI.gui.bar, "Main Actionbar (ActionMain)", C.bars.actionmain, "formfactor", "dropdown", values)
   pfUI.gui:CreateConfig(pfUI.gui.bar, "Second Actionbar (BottomLeft)", C.bars.bottomleft, "formfactor", "dropdown", values)
   pfUI.gui:CreateConfig(pfUI.gui.bar, "Left Actionbar (BottomRight)", C.bars.bottomright, "formfactor", "dropdown", values)
   pfUI.gui:CreateConfig(pfUI.gui.bar, "Right Actionbar (Right)", C.bars.right, "formfactor", "dropdown", values)
   pfUI.gui:CreateConfig(pfUI.gui.bar, "Vertical Actionbar (TwoRight)", C.bars.tworight, "formfactor", "dropdown", values)
-  local values = pfUI.api:BarLayoutOptions(NUM_SHAPESHIFT_SLOTS)
+  local values = BarLayoutOptions(NUM_SHAPESHIFT_SLOTS)
   pfUI.gui:CreateConfig(pfUI.gui.bar, "Shapeshift Bar (BarShapeShift)", C.bars.shapeshift, "formfactor", "dropdown", values)
-  local values = pfUI.api:BarLayoutOptions(NUM_PET_ACTION_SLOTS)
+  local values = BarLayoutOptions(NUM_PET_ACTION_SLOTS)
   pfUI.gui:CreateConfig(pfUI.gui.bar, "Pet Bar (BarPet)", C.bars.pet, "formfactor", "dropdown", values)
 
   -- panels
@@ -1049,7 +1049,7 @@ pfUI:RegisterModule("gui", function ()
 
   -- Reset Cache
   pfUI.gui.resetCache = pfUI.gui:CreateConfigTab("Reset Cache", "bottom", function()
-    pfUI.api:CreateQuestionDialog("Do you really want to reset the Cache?",
+    CreateQuestionDialog("Do you really want to reset the Cache?",
       function()
         _G["pfUI_playerDB"] = {}
         this:GetParent():Hide()
@@ -1059,7 +1059,7 @@ pfUI:RegisterModule("gui", function ()
 
   -- Reset Frames
   pfUI.gui.resetFrames = pfUI.gui:CreateConfigTab("Reset Positions", "bottom", function()
-    pfUI.api:CreateQuestionDialog("Do you really want to reset the Frame Positions?",
+    CreateQuestionDialog("Do you really want to reset the Frame Positions?",
       function()
         _G["C"]["position"] = {}
         this:GetParent():Hide()
@@ -1069,7 +1069,7 @@ pfUI:RegisterModule("gui", function ()
 
   -- Reset Chat
   pfUI.gui.resetChat = pfUI.gui:CreateConfigTab("Reset Firstrun", "bottom", function()
-    pfUI.api:CreateQuestionDialog("Do you really want to reset the Firstrun Wizard Settings?",
+    CreateQuestionDialog("Do you really want to reset the Firstrun Wizard Settings?",
       function()
         _G["pfUI_init"] = {}
         this:GetParent():Hide()
@@ -1079,7 +1079,7 @@ pfUI:RegisterModule("gui", function ()
 
   -- Reset Config
   pfUI.gui.resetConfig = pfUI.gui:CreateConfigTab("Reset Config", "bottom", function()
-    pfUI.api:CreateQuestionDialog("Do you really want to reset your configuration?\nThis also includes frame positions",
+    CreateQuestionDialog("Do you really want to reset your configuration?\nThis also includes frame positions",
       function()
         _G["C"] = {}
         pfUI:LoadConfig()
@@ -1090,7 +1090,7 @@ pfUI:RegisterModule("gui", function ()
 
   -- Reset All
   pfUI.gui.resetAll = pfUI.gui:CreateConfigTab("Reset All", "bottom", function()
-    pfUI.api:CreateQuestionDialog("Do you really want to reset |cffffaaaaEVERYTHING|r?\nThis includes configuration, frame positions, firstrun settings,\n player cache, profiles and just EVERYTHING!",
+    CreateQuestionDialog("Do you really want to reset |cffffaaaaEVERYTHING|r?\nThis includes configuration, frame positions, firstrun settings,\n player cache, profiles and just EVERYTHING!",
       function()
         _G["pfUI_init"] = {}
         _G["C"] = {}

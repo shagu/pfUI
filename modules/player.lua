@@ -19,7 +19,7 @@ pfUI:RegisterModule("player", function ()
   pfUI.uf.player:SetWidth(C.unitframes.player.width)
   pfUI.uf.player:SetHeight(C.unitframes.player.height + C.unitframes.player.pheight + 2*default_border + spacing)
   pfUI.uf.player:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOM", -75, 125)
-  pfUI.api:UpdateMovable(pfUI.uf.player)
+  UpdateMovable(pfUI.uf.player)
   pfUI.uf.player:RegisterForClicks('LeftButtonUp', 'RightButtonUp', 'MiddleButtonUp', 'Button4Up', 'Button5Up')
   pfUI.uf.player:SetScript("OnEnter", function()
     GameTooltip_SetDefaultAnchor(GameTooltip, this)
@@ -135,7 +135,7 @@ pfUI:RegisterModule("player", function ()
 
         local cr, cg, cb
         if C.unitframes.custom == "1" then
-          local r, g, b, a = pfUI.api.strsplit(",", C.unitframes.customcolor)
+          local r, g, b, a = strsplit(",", C.unitframes.customcolor)
           cr, cg, cb = tonumber(r), tonumber(g), tonumber(b)
         elseif C.unitframes.pastel == "1" then
           cr, cg, cb = (color.r + .5) * .5, (color.g + .5) * .5, (color.b + .5) * .5
@@ -206,7 +206,7 @@ pfUI:RegisterModule("player", function ()
   pfUI.uf.player.hp:SetPoint("TOP", 0, 0)
   pfUI.uf.player.hp:SetWidth(C.unitframes.player.width)
   pfUI.uf.player.hp:SetHeight(C.unitframes.player.height)
-  pfUI.api:CreateBackdrop(pfUI.uf.player.hp, default_border)
+  CreateBackdrop(pfUI.uf.player.hp, default_border)
 
   pfUI.uf.player.hp.bar = CreateFrame("StatusBar", nil, pfUI.uf.player.hp)
   pfUI.uf.player.hp.bar:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
@@ -244,7 +244,7 @@ pfUI:RegisterModule("player", function ()
   pfUI.uf.player.power:SetPoint("BOTTOM", 0, 0)
   pfUI.uf.player.power:SetWidth(C.unitframes.player.width)
   pfUI.uf.player.power:SetHeight(C.unitframes.player.pheight)
-  pfUI.api:CreateBackdrop(pfUI.uf.player.power, default_border)
+  CreateBackdrop(pfUI.uf.player.power, default_border)
 
   pfUI.uf.player.power.bar = CreateFrame("StatusBar", nil, pfUI.uf.player.power)
   pfUI.uf.player.power.bar:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
@@ -284,7 +284,7 @@ pfUI:RegisterModule("player", function ()
 
       this.energy = UnitMana("player")
 
-      local value = pfUI.api.round((GetTime() - this.lastTick) * 100)
+      local value = round((GetTime() - this.lastTick) * 100)
       local pos = C.unitframes.player.width / 200 * value
       if not C.unitframes.player.pheight then return end
       this.spark:SetPoint("LEFT", pos-((C.unitframes.player.pheight+5)/2), 0)
@@ -405,7 +405,7 @@ pfUI:RegisterModule("player", function ()
   function pfUI.uf.player.buff.RefreshBuffs()
     for i=1, 16 do
       local stacks = GetPlayerBuffApplications(GetPlayerBuff(i-1,"HELPFUL"))
-      pfUI.api:CreateBackdrop(pfUI.uf.player.buff.buffs[i], default_border)
+      CreateBackdrop(pfUI.uf.player.buff.buffs[i], default_border)
       pfUI.uf.player.buff.buffs[i]:SetNormalTexture(GetPlayerBuffTexture(GetPlayerBuff(i-1,"HELPFUL")))
       for i,v in ipairs({pfUI.uf.player.buff.buffs[i]:GetRegions()}) do
         if v.SetTexCoord then v:SetTexCoord(.08, .92, .08, .92) end
@@ -529,7 +529,7 @@ pfUI:RegisterModule("player", function ()
 
       local bid = GetPlayerBuff(i-1, "HARMFUL");
       local stacks = GetPlayerBuffApplications(bid)
-      pfUI.api:CreateBackdrop(pfUI.uf.player.debuff.debuffs[i], default_border)
+      CreateBackdrop(pfUI.uf.player.debuff.debuffs[i], default_border)
       pfUI.uf.player.debuff.debuffs[i]:SetNormalTexture(GetPlayerBuffTexture(bid))
       for i,v in ipairs({pfUI.uf.player.debuff.debuffs[i]:GetRegions()}) do
         if v.SetTexCoord then v:SetTexCoord(.08, .92, .08, .92) end

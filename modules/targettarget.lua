@@ -25,7 +25,7 @@ pfUI:RegisterModule("targettarget", function ()
   pfUI.uf.targettarget:SetWidth(100)
   pfUI.uf.targettarget:SetHeight(20 + 2*default_border + spacing)
   pfUI.uf.targettarget:SetPoint("BOTTOM", UIParent , "BOTTOM", 0, 125)
-  pfUI.api:UpdateMovable(pfUI.uf.targettarget)
+  UpdateMovable(pfUI.uf.targettarget)
 
   pfUI.uf.targettarget:RegisterForClicks('LeftButtonUp', 'RightButtonUp', 'MiddleButtonUp', 'Button4Up', 'Button5Up')
   pfUI.uf.targettarget:SetScript("OnEnter", function()
@@ -73,7 +73,7 @@ pfUI:RegisterModule("targettarget", function ()
       local r, g, b = .2, .2, .2
       if color then
         if C.unitframes.custom == "1" then
-          local cr, cg, cb, ca = pfUI.api.strsplit(",", C.unitframes.customcolor)
+          local cr, cg, cb, ca = strsplit(",", C.unitframes.customcolor)
           cr, cg, cb = tonumber(cr), tonumber(cg), tonumber(cb)
           pfUI.uf.targettarget.hp.bar:SetStatusBarColor(cr, cg, cb, UnitHealth("targettarget") / UnitHealthMax("targettarget") / 4 + .75)
           if C.unitframes.pastel == "1" then
@@ -127,7 +127,7 @@ pfUI:RegisterModule("targettarget", function ()
   pfUI.uf.targettarget.hp:SetPoint("TOP", 0, 0)
   pfUI.uf.targettarget.hp:SetWidth(100)
   pfUI.uf.targettarget.hp:SetHeight(16)
-  pfUI.api:CreateBackdrop(pfUI.uf.targettarget.hp, default_border)
+  CreateBackdrop(pfUI.uf.targettarget.hp, default_border)
 
   pfUI.uf.targettarget.hp.bar = CreateFrame("StatusBar", nil, pfUI.uf.targettarget.hp)
   pfUI.uf.targettarget.hp.bar:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
@@ -146,7 +146,7 @@ pfUI:RegisterModule("targettarget", function ()
   pfUI.uf.targettarget.hp.raidIcon:Hide()
 
   pfUI.uf.targettarget.power = CreateFrame("Frame",nil, pfUI.uf.targettarget)
-  pfUI.api:CreateBackdrop(pfUI.uf.targettarget.power, default_border)
+  CreateBackdrop(pfUI.uf.targettarget.power, default_border)
   pfUI.uf.targettarget.power:SetPoint("BOTTOM", 0, 0)
   pfUI.uf.targettarget.power:SetWidth(100)
   pfUI.uf.targettarget.power:SetHeight(4)

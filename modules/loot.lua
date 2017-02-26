@@ -73,9 +73,9 @@ pfUI:RegisterModule("loot", function ()
 
       local color = ITEM_QUALITY_COLORS[maxrarity]
       if maxrarity <= 1 then
-        pfUI.api:CreateBackdrop(pfUI.loot)
+        CreateBackdrop(pfUI.loot)
       else
-        pfUI.api:CreateBackdrop(pfUI.loot)
+        CreateBackdrop(pfUI.loot)
         pfUI.loot.backdrop:SetBackdropBorderColor(color.r, color.g, color.b, 1)
       end
       pfUI.loot:SetHeight(math.max((real*22)+4*C.appearance.border.default), 20)
@@ -137,7 +137,7 @@ pfUI:RegisterModule("loot", function ()
     frame.ficon:SetWidth(frame:GetHeight() - 2*C.appearance.border.default)
     frame.ficon:ClearAllPoints()
     frame.ficon:SetPoint("RIGHT", frame)
-    pfUI.api:CreateBackdrop(frame.ficon)
+    CreateBackdrop(frame.ficon)
 
     frame.icon = frame.ficon:CreateTexture(nil, "ARTWORK")
     frame.icon:SetTexCoord(.07, .93, .07, .93)

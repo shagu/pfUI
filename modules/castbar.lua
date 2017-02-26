@@ -16,7 +16,7 @@ pfUI:RegisterModule("castbar", function ()
   -- [[ pfPlayerCastbar ]] --
   pfUI.castbar.player = CreateFrame("Frame", "pfPlayerCastbar", UIParent)
   pfUI.castbar.player:SetFrameStrata("HIGH")
-  pfUI.api:CreateBackdrop(pfUI.castbar.player, default_border)
+  CreateBackdrop(pfUI.castbar.player, default_border)
   pfUI.castbar.player:SetHeight(C.global.font_size + default_border)
 
   if pfUI.uf.player then
@@ -27,7 +27,7 @@ pfUI:RegisterModule("castbar", function ()
     pfUI.castbar.player:SetWidth(200)
   end
 
-  pfUI.api:UpdateMovable(pfUI.castbar.player)
+  UpdateMovable(pfUI.castbar.player)
   pfUI.castbar.player:Hide()
   pfUI.castbar.player.delay = 0
 
@@ -38,7 +38,7 @@ pfUI:RegisterModule("castbar", function ()
   pfUI.castbar.player.bar:SetAllPoints(pfUI.castbar.player)
   pfUI.castbar.player.bar:SetMinMaxValues(0, 100)
   pfUI.castbar.player.bar:SetValue(20)
-  local r,g,b,a = pfUI.api.strsplit(",", C.appearance.castbar.castbarcolor)
+  local r,g,b,a = strsplit(",", C.appearance.castbar.castbarcolor)
   pfUI.castbar.player.bar:SetStatusBarColor(r,g,b,a)
 
   -- text left
@@ -118,20 +118,20 @@ pfUI:RegisterModule("castbar", function ()
     end
   end
 
-  pfUI.api.Hook("CastSpell", function(id, bookType)
+  Hook("CastSpell", function(id, bookType)
     local spellName = GetSpellName(id, bookType)
     if pfUI.castbar.player[spellName] then
       pfUI.castbar.player[spellName](true)
     end
   end, true)
 
-  pfUI.api.Hook("CastSpellByName", function(spellName, target)
+  Hook("CastSpellByName", function(spellName, target)
     if pfUI.castbar.player[spellName] then
       pfUI.castbar.player[spellName](true)
     end
   end, true)
 
-  pfUI.api.Hook("UseAction", function(slot, target, button)
+  Hook("UseAction", function(slot, target, button)
     if GetActionText(slot) or not IsCurrentAction(slot) then return end
     scanner:ClearLines()
     scanner:SetAction(slot)
@@ -145,7 +145,7 @@ pfUI:RegisterModule("castbar", function ()
     pfUI.castbar.player.delay = 0
     pfUI.castbar.player.spell = spell
     pfUI.castbar.player.bar.left:SetText(spell)
-    local r,g,b,a = pfUI.api.strsplit(",", C.appearance.castbar.castbarcolor)
+    local r,g,b,a = strsplit(",", C.appearance.castbar.castbarcolor)
     pfUI.castbar.player.bar:SetStatusBarColor(r,g,b,a)
     pfUI.castbar.player.startTime = GetTime()
     pfUI.castbar.player.maxValue = duration / 1000
@@ -173,7 +173,7 @@ pfUI:RegisterModule("castbar", function ()
     pfUI.castbar.player.delay = 0
     pfUI.castbar.player.spell = spell
     pfUI.castbar.player.bar.left:SetText(spell)
-    local r,g,b,a = pfUI.api.strsplit(",", C.appearance.castbar.channelcolor)
+    local r,g,b,a = strsplit(",", C.appearance.castbar.channelcolor)
     pfUI.castbar.player.bar:SetStatusBarColor(r,g,b,a)
     pfUI.castbar.player.maxValue = nil
     pfUI.castbar.player.startTime = GetTime()
@@ -255,10 +255,10 @@ pfUI:RegisterModule("castbar", function ()
       if cur > max then cur = max end
 
       if delay > 0 then
-        delay = "|cffffaaaa+" .. pfUI.api.round(delay,1) .. " |r "
-        pfUI.castbar.player.bar.right:SetText(delay .. pfUI.api.round(cur,1) .. " / " .. pfUI.api.round(max,1))
+        delay = "|cffffaaaa+" .. round(delay,1) .. " |r "
+        pfUI.castbar.player.bar.right:SetText(delay .. round(cur,1) .. " / " .. round(max,1))
       else
-        pfUI.castbar.player.bar.right:SetText(pfUI.api.round(cur,1) .. " / " .. pfUI.api.round(max,1))
+        pfUI.castbar.player.bar.right:SetText(round(cur,1) .. " / " .. round(max,1))
       end
 
       return
@@ -283,10 +283,10 @@ pfUI:RegisterModule("castbar", function ()
         return
       end
       if delay > 0 then
-        delay = "|cffffaaaa-" .. pfUI.api.round(delay,1) .. " |r "
-        pfUI.castbar.player.bar.right:SetText(delay .. pfUI.api.round(cur,1))
+        delay = "|cffffaaaa-" .. round(delay,1) .. " |r "
+        pfUI.castbar.player.bar.right:SetText(delay .. round(cur,1))
       else
-        pfUI.castbar.player.bar.right:SetText(pfUI.api.round(cur,1))
+        pfUI.castbar.player.bar.right:SetText(round(cur,1))
       end
 
       return
@@ -304,7 +304,7 @@ pfUI:RegisterModule("castbar", function ()
   -- [[ pfTargetCastbar ]] --
   pfUI.castbar.target = CreateFrame("Frame", "pfTargetCastbar", UIParent)
   pfUI.castbar.target:SetFrameStrata("HIGH")
-  pfUI.api:CreateBackdrop(pfUI.castbar.target, default_border)
+  CreateBackdrop(pfUI.castbar.target, default_border)
   pfUI.castbar.target:SetHeight(C.global.font_size + default_border)
 
   if pfUI.uf.target then
@@ -315,7 +315,7 @@ pfUI:RegisterModule("castbar", function ()
     pfUI.castbar.target:SetWidth(200)
   end
 
-  pfUI.api:UpdateMovable(pfUI.castbar.target)
+  UpdateMovable(pfUI.castbar.target)
   pfUI.castbar.target:Hide()
 
 
@@ -326,7 +326,7 @@ pfUI:RegisterModule("castbar", function ()
   pfUI.castbar.target.bar:SetAllPoints(pfUI.castbar.target)
   pfUI.castbar.target.bar:SetMinMaxValues(0, 100)
   pfUI.castbar.target.bar:SetValue(20)
-  local r,g,b,a = pfUI.api.strsplit(",", C.appearance.castbar.castbarcolor)
+  local r,g,b,a = strsplit(",", C.appearance.castbar.castbarcolor)
   pfUI.castbar.target.bar:SetStatusBarColor(r,g,b,a)
 
   -- text left
@@ -365,7 +365,7 @@ pfUI:RegisterModule("castbar", function ()
           pfUI.castbar.target.bar:SetMinMaxValues(0, casttime)
           pfUI.castbar.target.bar:SetValue(GetTime() - starttime)
           pfUI.castbar.target.bar.left:SetText(spellname)
-          pfUI.castbar.target.bar.right:SetText(pfUI.api.round(GetTime() - starttime,1) .. " / " .. casttime)
+          pfUI.castbar.target.bar.right:SetText(round(GetTime() - starttime,1) .. " / " .. casttime)
         end
       else
         pfUI.castbar.target.casterDB[UnitName("target")] = nil

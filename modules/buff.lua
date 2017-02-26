@@ -59,7 +59,7 @@ pfUI:RegisterModule("buff", function ()
 
         local _, _, mainhand, _, _, offhand = GetWeaponEnchantInfo()
         if buff then
-          pfUI.api:CreateBackdrop(buff)
+          CreateBackdrop(buff)
           icon:SetTexCoord(.08, .92, .08, .92)
           border:Hide()
         end
@@ -111,7 +111,7 @@ pfUI:RegisterModule("buff", function ()
           elseif i > 16 then
             buff:SetPoint("TOPRIGHT", _G["BuffButton" .. i-1], "TOPLEFT", -7, 0)
           end
-          pfUI.api:CreateBackdrop(buff)
+          CreateBackdrop(buff)
           text:SetPoint("TOP", buff, "BOTTOM", 0 , -C.appearance.border.default*2)
           icon:SetTexCoord(.08, .92, .08, .92)
           if border then

@@ -75,13 +75,13 @@ pfUI:SetScript("OnEvent", function()
     local env_pfui = {}
     setmetatable(env_pfui, {__index = getfenv(0)})
 
-    -- environment
-    env_pfui.A = pfUI.api
-    env_pfui.C = pfUI_config
-    -- env_pfui.L = pfUI_locale
+    -- load api into environment
+    for m, func in pairs(pfUI.api) do
+      if not env_pfui[m] then env_pfui[m] = func end
+    end
 
-    -- classic only
-    env_pfui._G = getfenv(0)
+    -- use C for configs
+    env_pfui.C = pfUI_config
 
     -- fill the cache
     pfUI.cache["locale"] = GetLocale()

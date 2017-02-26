@@ -34,19 +34,19 @@ pfUI:RegisterModule("cooldown", function ()
         if remaining > 99 then
           remaining = remaining / 60
           unit = "m"
-          r,g,b,a = pfUI.api.strsplit(",", C.appearance.cd.mincolor)
+          r,g,b,a = strsplit(",", C.appearance.cd.mincolor)
         end
         if remaining > 99 then
           remaining = remaining / 60
           unit = "h"
-          r,g,b,a = pfUI.api.strsplit(",", C.appearance.cd.hourcolor)
+          r,g,b,a = strsplit(",", C.appearance.cd.hourcolor)
         end
         if remaining > 99 then
           remaining = remaining / 24
           unit = "d"
-          r,g,b,a = pfUI.api.strsplit(",", C.appearance.cd.daycolor)
+          r,g,b,a = strsplit(",", C.appearance.cd.daycolor)
         end
-        this.text:SetText(pfUI.api.round(remaining) .. unit)
+        this.text:SetText(round(remaining) .. unit)
         this.text:SetTextColor(r,g,b,a)
       else
         this:Hide()
@@ -55,7 +55,7 @@ pfUI:RegisterModule("cooldown", function ()
   end
 
   -- hook
-  pfUI.api.Hook("CooldownFrame_SetTimer", function(this, start, duration, enable)
+  Hook("CooldownFrame_SetTimer", function(this, start, duration, enable)
     -- break here if no this-reference is set
     if not this then return end
 

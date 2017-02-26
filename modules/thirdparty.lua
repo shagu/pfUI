@@ -97,7 +97,7 @@ pfUI:RegisterModule("thirdparty", function ()
         pfUIhookWIM_PostMessage = _G.WIM_PostMessage
         _G.WIM_PostMessage = function(user, msg, ttype, from, raw_msg)
           pfUIhookWIM_PostMessage(user, msg, ttype, from, raw_msg)
-          pfUI.api:CreateBackdrop(_G["WIM_msgFrame" .. user], nil, nil, .8)
+          CreateBackdrop(_G["WIM_msgFrame" .. user], nil, nil, .8)
           _G["WIM_msgFrame" .. user .. "From"]:ClearAllPoints()
           _G["WIM_msgFrame" .. user .. "From"]:SetPoint("TOP", 0, -10)
 
@@ -115,7 +115,7 @@ pfUI:RegisterModule("thirdparty", function ()
           _G["WIM_msgFrame" .. user .. "ScrollingMessageFrame"]:SetPoint("BOTTOMRIGHT", _G["WIM_msgFrame" .. user], "BOTTOMRIGHT", -32, 32)
           _G["WIM_msgFrame" .. user .. "ScrollingMessageFrame"]:SetFont(STANDARD_TEXT_FONT, 12)
 
-          pfUI.api:CreateBackdrop(_G["WIM_msgFrame" .. user .. "MsgBox"])
+          CreateBackdrop(_G["WIM_msgFrame" .. user .. "MsgBox"])
           _G["WIM_msgFrame" .. user .. "MsgBox"]:ClearAllPoints()
           _G["WIM_msgFrame" .. user .. "MsgBox"]:SetPoint("TOPLEFT", _G["WIM_msgFrame" .. user .. "ScrollingMessageFrame"], "BOTTOMLEFT", 0, -5)
           _G["WIM_msgFrame" .. user .. "MsgBox"]:SetPoint("TOPRIGHT", _G["WIM_msgFrame" .. user .. "ScrollingMessageFrame"], "BOTTOMRIGHT", 0, -5)
@@ -125,27 +125,27 @@ pfUI:RegisterModule("thirdparty", function ()
             if i==6  then v:SetTexture(.1,.1,.1,.5) end
           end
 
-          pfUI.api:CreateBackdrop(_G["WIM_msgFrame" .. user .. "ShortcutFrameButton1"])
+          CreateBackdrop(_G["WIM_msgFrame" .. user .. "ShortcutFrameButton1"])
           for i,v in ipairs({_G["WIM_msgFrame" .. user .. "ShortcutFrameButton1"]:GetRegions()}) do
             if i >= 2 and i < 7 then v:SetTexture(.1,.1,.1,0) end
           end
 
-          pfUI.api:CreateBackdrop(_G["WIM_msgFrame" .. user .. "ShortcutFrameButton2"])
+          CreateBackdrop(_G["WIM_msgFrame" .. user .. "ShortcutFrameButton2"])
           for i,v in ipairs({_G["WIM_msgFrame" .. user .. "ShortcutFrameButton2"]:GetRegions()}) do
             if i >= 2 and i < 7 then v:SetTexture(.1,.1,.1,0) end
           end
 
-          pfUI.api:CreateBackdrop(_G["WIM_msgFrame" .. user .. "ShortcutFrameButton3"])
+          CreateBackdrop(_G["WIM_msgFrame" .. user .. "ShortcutFrameButton3"])
           for i,v in ipairs({_G["WIM_msgFrame" .. user .. "ShortcutFrameButton3"]:GetRegions()}) do
             if i >= 2 and i < 7 then v:SetTexture(.1,.1,.1,0) end
           end
 
-          pfUI.api:CreateBackdrop(_G["WIM_msgFrame" .. user .. "ShortcutFrameButton4"])
+          CreateBackdrop(_G["WIM_msgFrame" .. user .. "ShortcutFrameButton4"])
           for i,v in ipairs({_G["WIM_msgFrame" .. user .. "ShortcutFrameButton4"]:GetRegions()}) do
             if i >= 2 and i < 7 then v:SetTexture(.1,.1,.1,0) end
           end
 
-          pfUI.api:CreateBackdrop(_G["WIM_msgFrame" .. user .. "ShortcutFrameButton5"])
+          CreateBackdrop(_G["WIM_msgFrame" .. user .. "ShortcutFrameButton5"])
           for i,v in ipairs({_G["WIM_msgFrame" .. user .. "ShortcutFrameButton5"]:GetRegions()}) do
             if i >= 2 and i < 7 then v:SetTexture(.1,.1,.1,0) end
           end
@@ -329,7 +329,7 @@ pfUI:RegisterModule("thirdparty", function ()
         pfUI.bag.right.sort:SetPoint("TOPRIGHT", -C.appearance.border.default*14 - 45, -C.appearance.border.default)
         pfUI.bag.right.sort:SetPoint("TOPRIGHT", pfUI.bag.right.keys, "TOPLEFT", -C.appearance.border.default*3, 0)
 
-        pfUI.api:CreateBackdrop(pfUI.bag.right.sort)
+        CreateBackdrop(pfUI.bag.right.sort)
         pfUI.bag.right.sort:SetHeight(12)
         pfUI.bag.right.sort:SetWidth(12)
         pfUI.bag.right.sort:SetTextColor(1,1,.25,1)
@@ -347,7 +347,7 @@ pfUI:RegisterModule("thirdparty", function ()
         end)
 
         pfUI.bag.right.sort:SetScript("OnLeave", function ()
-          pfUI.api:CreateBackdrop(pfUI.bag.right.sort)
+          CreateBackdrop(pfUI.bag.right.sort)
           pfUI.bag.right.sort.texture:SetVertexColor(.25,.25,.25,1)
         end)
 
@@ -367,7 +367,7 @@ pfUI:RegisterModule("thirdparty", function ()
         pfUI.bag.left.sort:SetPoint("TOPRIGHT", -C.appearance.border.default*14 - 45, -C.appearance.border.default)
         pfUI.bag.left.sort:SetPoint("TOPRIGHT", pfUI.bag.left.bags, "TOPLEFT", -C.appearance.border.default*3, 0)
 
-        pfUI.api:CreateBackdrop(pfUI.bag.left.sort)
+        CreateBackdrop(pfUI.bag.left.sort)
         pfUI.bag.left.sort:SetHeight(12)
         pfUI.bag.left.sort:SetWidth(12)
         pfUI.bag.left.sort:SetTextColor(1,1,.25,1)
@@ -385,7 +385,7 @@ pfUI:RegisterModule("thirdparty", function ()
         end)
 
         pfUI.bag.left.sort:SetScript("OnLeave", function ()
-          pfUI.api:CreateBackdrop(pfUI.bag.left.sort)
+          CreateBackdrop(pfUI.bag.left.sort)
           pfUI.bag.left.sort.texture:SetVertexColor(.25,.25,.25,1)
         end)
 
@@ -413,7 +413,7 @@ pfUI:RegisterModule("thirdparty", function ()
 
   local function pfSetupKTM()
     -- use pfUI border for main window
-    pfUI.api:CreateBackdrop(KLHTM_Frame)
+    CreateBackdrop(KLHTM_Frame)
 
     -- remove titlebar
     KLHTM_Gui.title.back:Hide()
@@ -427,7 +427,7 @@ pfUI:RegisterModule("thirdparty", function ()
     for i, button in pairs(buttons) do
       local b = _G[button]
       if not b then return end
-      pfUI.api:SkinButton(b)
+      SkinButton(b)
       b:SetScale(.8)
 
       -- remove red background on some buttons

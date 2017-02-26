@@ -26,7 +26,7 @@ pfUI:RegisterModule("uf_tukui", function ()
     pfUI.uf.player.powerText:SetParent(pfUI.uf.player.caption)
     pfUI.uf.player.powerText:SetAllPoints(pfUI.uf.player.caption)
     pfUI.uf.player.powerText:SetFont(pfUI.font_default, C.global.font_size, "OUTLINE")
-    pfUI.api:CreateBackdrop(pfUI.uf.player.caption)
+    CreateBackdrop(pfUI.uf.player.caption)
 
     -- Target
     pfUI.uf.target.caption = CreateFrame("Frame", "pfTargetCaption", pfUI.uf.target)
@@ -43,6 +43,6 @@ pfUI:RegisterModule("uf_tukui", function ()
     pfUI.uf.target.powerText:SetParent(pfUI.uf.target.caption)
     pfUI.uf.target.powerText:SetAllPoints(pfUI.uf.target.caption)
     pfUI.uf.target.powerText:SetFont(pfUI.font_default, C.global.font_size, "OUTLINE")
-    pfUI.api:CreateBackdrop(pfUI.uf.target.caption)
+    CreateBackdrop(pfUI.uf.target.caption)
   end
 end)

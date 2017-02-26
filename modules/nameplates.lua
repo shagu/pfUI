@@ -313,7 +313,7 @@ pfUI:RegisterModule("nameplates", function ()
       else
         healthbar.castbar:SetMinMaxValues(0,  pfUI.castbar.target.casterDB[name:GetText()]["casttime"])
         healthbar.castbar:SetValue(GetTime() -  pfUI.castbar.target.casterDB[name:GetText()]["starttime"])
-        healthbar.castbar.text:SetText(pfUI.api.round( pfUI.castbar.target.casterDB[name:GetText()]["starttime"] +  pfUI.castbar.target.casterDB[name:GetText()]["casttime"] - GetTime(),1))
+        healthbar.castbar.text:SetText(round( pfUI.castbar.target.casterDB[name:GetText()]["starttime"] +  pfUI.castbar.target.casterDB[name:GetText()]["casttime"] - GetTime(),1))
         if C.nameplates.spellname == "1" and healthbar.castbar.spell then
           healthbar.castbar.spell:SetText(pfUI.castbar.target.casterDB[name:GetText()]["cast"])
         else

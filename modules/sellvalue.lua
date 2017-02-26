@@ -26,15 +26,15 @@ pfUI:RegisterModule("sellvalue", function ()
           GameTooltip:AddLine(" ")
 
           if count > 1 then
-            GameTooltip:AddDoubleLine("Sell:", pfUI.api.CreateGoldString(sell) .. "|cff555555  //  " .. pfUI.api.CreateGoldString(sell*count), 1, 1, 1);
+            GameTooltip:AddDoubleLine("Sell:", CreateGoldString(sell) .. "|cff555555  //  " .. CreateGoldString(sell*count), 1, 1, 1);
           else
-            GameTooltip:AddDoubleLine("Sell:", pfUI.api.CreateGoldString(sell * count), 1, 1, 1);
+            GameTooltip:AddDoubleLine("Sell:", CreateGoldString(sell * count), 1, 1, 1);
           end
 
           if count > 1 then
-            GameTooltip:AddDoubleLine("Buy:", pfUI.api.CreateGoldString(buy) .. "|cff555555  //  " .. pfUI.api.CreateGoldString(buy*count), 1, 1, 1);
+            GameTooltip:AddDoubleLine("Buy:", CreateGoldString(buy) .. "|cff555555  //  " .. CreateGoldString(buy*count), 1, 1, 1);
           else
-            GameTooltip:AddDoubleLine("Buy:", pfUI.api.CreateGoldString(buy), 1, 1, 1);
+            GameTooltip:AddDoubleLine("Buy:", CreateGoldString(buy), 1, 1, 1);
           end
         end
         GameTooltip:Show()

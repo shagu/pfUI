@@ -36,7 +36,7 @@ pfUI:RegisterModule("firstrun", function ()
         this:GetParent():Hide()
       end
 
-      pfUI.api:CreateQuestionDialog("Welcome to |cff33ffccpf|cffffffffUI|r!\n\n"..
+      CreateQuestionDialog("Welcome to |cff33ffccpf|cffffffffUI|r!\n\n"..
       "I'm the first run wizzard that will guide you through some basic configuration.\n"..
       "You'll now be prompted for several questions. To get a default installation,\n"..
       "you might want to click \"Yes\" everywhere. A few settings are client settings\n"..
@@ -65,9 +65,9 @@ pfUI:RegisterModule("firstrun", function ()
         end
 
         if step.cmpnt and step.cmpnt == "edit" then
-          pfUI.api:CreateQuestionDialog(step.descr, yes, no, true)
+          CreateQuestionDialog(step.descr, yes, no, true)
         else
-          pfUI.api:CreateQuestionDialog(step.descr, yes, no, false)
+          CreateQuestionDialog(step.descr, yes, no, false)
         end
 
         return
