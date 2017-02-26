@@ -3,36 +3,43 @@ pfUI:RegisterModule("thirdparty", function ()
 
   -- DPSMate Integration
   -- Move DPSMate to right chat and let the chat-hide button toggle it
-  local function pfSetupDPSMate()
-    -- set DPSMate appearance to match pfUI
-    DPSMateSettings["windows"][1]["titlebarheight"] = 18
-    DPSMateSettings["windows"][1]["titlebarfontsize"] = 12
-    DPSMateSettings["windows"][1]["titlebarfont"] = "Accidental Presidency"
-    DPSMateSettings["windows"][1]["titlebarbgcolor"][1] = 0
-    DPSMateSettings["windows"][1]["titlebarbgcolor"][2] = 0
-    DPSMateSettings["windows"][1]["titlebarbgcolor"][3] = 0
+  if pfUI_config.thirdparty.dpsmate.enable == "1" then
 
-    DPSMateSettings["windows"][1]["barheight"] = 15
-    DPSMateSettings["windows"][1]["barfontsize"] = 12
-    DPSMateSettings["windows"][1]["bartexture"] = "BantoBar"
-    DPSMateSettings["windows"][1]["barfont"] = "Accidental Presidency"
+    local function pfDPSMateConfig()
+      -- set DPSMate appearance to match pfUI
+      DPSMateSettings["windows"][1]["titlebarheight"] = 18
+      DPSMateSettings["windows"][1]["titlebarfontsize"] = 12
+      DPSMateSettings["windows"][1]["titlebarfont"] = "Accidental Presidency"
+      DPSMateSettings["windows"][1]["titlebarbgcolor"][1] = 0
+      DPSMateSettings["windows"][1]["titlebarbgcolor"][2] = 0
+      DPSMateSettings["windows"][1]["titlebarbgcolor"][3] = 0
 
-    DPSMateSettings["windows"][1]["bgopacity"] = 1
-    DPSMateSettings["windows"][1]["opacity"] = 1
-    DPSMateSettings["windows"][1]["contentbgtexture"] = "Solid Background"
-    DPSMateSettings["windows"][1]["contentbgcolor"][1] = 0
-    DPSMateSettings["windows"][1]["contentbgcolor"][2] = 0
-    DPSMateSettings["windows"][1]["contentbgcolor"][3] = 0
-    DPSMateSettings["windows"][1]["contentbgcolor"][3] = 0
+      DPSMateSettings["windows"][1]["barheight"] = 15
+      DPSMateSettings["windows"][1]["barfontsize"] = 12
+      DPSMateSettings["windows"][1]["bartexture"] = "BantoBar"
+      DPSMateSettings["windows"][1]["barfont"] = "Accidental Presidency"
 
-    DPSMate_DPSMate:Hide()
+      DPSMateSettings["windows"][1]["bgopacity"] = 1
+      DPSMateSettings["windows"][1]["borderopacity"] = 0
+      DPSMateSettings["windows"][1]["opacity"] = 1
+      DPSMateSettings["windows"][1]["contentbgtexture"] = "Solid Background"
+      DPSMateSettings["windows"][1]["contentbgcolor"][1] = 0
+      DPSMateSettings["windows"][1]["contentbgcolor"][2] = 0
+      DPSMateSettings["windows"][1]["contentbgcolor"][3] = 0
+      DPSMateSettings["windows"][1]["contentbgcolor"][3] = 0
 
-    if not pfUIhookDPSMate_Show then
-      pfUIhookDPSMate_Show = DPSMate_DPSMate.Show
+      if pfUI.panel then
+        pfUI.panel.right.hide:SetScript("OnClick", function()
+          if DPSMate_DPSMate:IsShown() then
+            DPSMate_DPSMate:Hide()
+          else
+            DPSMate_DPSMate:Show()
+          end
+        end)
+      end
     end
-    function DPSMate_DPSMate.Show ()
-      pfUIhookDPSMate_Show(DPSMate_DPSMate)
 
+    local function pfDPSMateToggle()
       if pfUI.chat and pfUI.panel then
         DPSMate_DPSMate:ClearAllPoints()
         DPSMate_DPSMate:SetAllPoints(pfUI.chat.right)
@@ -49,30 +56,35 @@ pfUI:RegisterModule("thirdparty", function ()
       end
     end
 
-    if pfUI.panel then
-      pfUI.panel.right.hide:SetScript("OnClick", function()
-        if DPSMate_DPSMate:IsShown() then
-          DPSMate_DPSMate:Hide()
-        else
-          DPSMate_DPSMate:Show()
-        end
-      end)
-    end
-  end
+    local pfHookDPSMate = CreateFrame("Frame", nil)
+    pfHookDPSMate:RegisterEvent("VARIABLES_LOADED")
+    pfHookDPSMate:SetScript("OnEvent",function()
+      if event == "VARIABLES_LOADED" then
+        if DPSMate then
+          pfHookDPSMate:UnregisterEvent("VARIABLES_LOADED")
+          pfDPSMateConfig()
 
-  if pfUI_config.thirdparty.dpsmate.enable == "1" then
-    if DPSMate_DPSMate then
-      pfSetupDPSMate()
-    else
-      local pfHookDPSMate = CreateFrame("Frame", nil)
-      pfHookDPSMate:RegisterEvent("VARIABLES_LOADED")
-      pfHookDPSMate:SetScript("OnEvent",function()
-          if DPSMate_DPSMate then
-            pfHookDPSMate:UnregisterEvent("VARIABLES_LOADED")
-            pfSetupDPSMate()
+          -- overwrite code (new)
+          local pfDPSMateOnLoad = DPSMate.OnLoad
+          function DPSMate:OnLoad()
+            pfDPSMateOnLoad()
+            pfDPSMateToggle()
+            DPSMate_DPSMate:Hide()
           end
-        end)
-    end
+
+          -- overwrite code (old)
+          if DPSMate_DPSMate then
+            DPSMate_DPSMate:Hide()
+
+            local pfDPSMateOnShow = DPSMate_DPSMate.Show
+            function DPSMate_DPSMate.Show ()
+              pfDPSMateOnShow(DPSMate_DPSMate)
+              pfDPSMateToggle()
+            end
+          end
+        end
+      end
+    end)
   end
 
   -- WIM Integration
