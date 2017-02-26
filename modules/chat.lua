@@ -467,7 +467,7 @@ pfUI:RegisterModule("chat", function ()
   end
 
   -- orig. function but removed flashing
-  function FCF_OnUpdate(elapsed)
+  function _G.FCF_OnUpdate(elapsed)
     -- Need to draw the dock regions for a frame to define their rects
     if ( not ChatFrame1.init ) then
       for i=1, NUM_CHAT_WINDOWS do
