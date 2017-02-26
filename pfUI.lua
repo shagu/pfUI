@@ -74,9 +74,14 @@ pfUI:SetScript("OnEvent", function()
     -- unify module environment
     local env_pfui = {}
     setmetatable(env_pfui, {__index = getfenv(0)})
+
+    -- environment
+    env_pfui.A = pfUI.api
+    env_pfui.C = pfUI_config
+    -- env_pfui.L = pfUI_locale
+
+    -- classic only
     env_pfui._G = getfenv(0)
-    env_pfui._C = pfUI_config
-    env_pfui._A = pfUI.api
 
     -- fill the cache
     pfUI.cache["locale"] = GetLocale()
