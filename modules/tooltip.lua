@@ -3,7 +3,7 @@ local alpha = tonumber(pfUI_config.tooltip.alpha)
 pfUI.api:CreateBackdrop(GameTooltip, nil, nil, alpha)
 
   if pfUI_config.tooltip.position == "cursor" then
-    function GameTooltip_SetDefaultAnchor(tooltip, parent)
+    function _G.GameTooltip_SetDefaultAnchor(tooltip, parent)
       tooltip:SetOwner(parent, "ANCHOR_CURSOR")
     end
   end
