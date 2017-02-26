@@ -50,25 +50,24 @@ end
 --                                 code instead of prepending it
 function pfUI.api.Hook(name, func, append)
   if not _G[name] then return end
-  if pfUI.hooks[name] then return end
 
-  pfUI.hooks[name] = {}
-  pfUI.hooks[name]["old"] = _G[name]
-  pfUI.hooks[name]["new"] = func
+  pfUI.hooks[tostring(func)] = {}
+  pfUI.hooks[tostring(func)]["old"] = _G[name]
+  pfUI.hooks[tostring(func)]["new"] = func
 
   if append then
-    pfUI.hooks[name]["function"] = function(...)
-      pfUI.hooks[name]["old"](unpack(arg))
-      pfUI.hooks[name]["new"](unpack(arg))
+    pfUI.hooks[tostring(func)]["function"] = function(...)
+      pfUI.hooks[tostring(func)]["old"](unpack(arg))
+      pfUI.hooks[tostring(func)]["new"](unpack(arg))
     end
   else
-    pfUI.hooks[name]["function"] = function(...)
-      pfUI.hooks[name]["new"](unpack(arg))
-      pfUI.hooks[name]["old"](unpack(arg))
+    pfUI.hooks[tostring(func)]["function"] = function(...)
+      pfUI.hooks[tostring(func)]["new"](unpack(arg))
+      pfUI.hooks[tostring(func)]["old"](unpack(arg))
     end
   end
 
-  _G[name] = pfUI.hooks[name]["function"]
+  _G[name] = pfUI.hooks[tostring(func)]["function"]
 end
 
 -- [ Create Gold String ]
