@@ -38,6 +38,9 @@ pfLocaleSpellInterrupts = {}
 pfLocaleHunterbars = {}
 pfCustomCastbar = {}
 
+pfUI_playerDB = {}
+pfUI_config = {}
+
 pfUI:SetScript("OnEvent", function()
 
   -- some addons overwrite color and font settings
