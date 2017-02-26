@@ -48,6 +48,11 @@ pfLocaleHunterbars["enUS"] = {
   ["RANGED"] = "Arcane Shot",
 }
 
+pfCustomCastbar["enUS"] = {
+  ["AIMEDSHOT"] = "Aimed Shot",
+  ["MULTISHOT"] = "Multi-Shot",
+}
+
 pfLocaleSpells["enUS"] = {
   ['"Plucky" Resumes Chicken Form'] = {t=1000, icon="Ability_Racial_BearForm" };
   ['Abomination Spit'] = {t=2500, icon="Spell_Nature_CorrosiveBreath" };

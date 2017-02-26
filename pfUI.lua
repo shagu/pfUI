@@ -36,6 +36,7 @@ pfLocaleShift = {}
 pfLocaleSpells = {}
 pfLocaleSpellInterrupts = {}
 pfLocaleHunterbars = {}
+pfCustomCastbar = {}
 
 pfUI:SetScript("OnEvent", function()
 

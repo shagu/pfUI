@@ -48,6 +48,11 @@ pfLocaleHunterbars["zhCN"] = {
   ["RANGED"] = "奥术射击",
 }
 
+pfCustomCastbar["zhCN"] = {
+  ["AIMEDSHOT"] = "瞄准射击",
+  ["MULTISHOT"] = "多重射击",
+}
+
 pfLocaleSpells["zhCN"] = {
   ['"Plucky" Resumes Chicken Form'] = {t=1000, icon="Ability_Racial_BearForm" };
   ['憎恶喷吐'] = {t=2500, icon="Spell_Nature_CorrosiveBreath" };

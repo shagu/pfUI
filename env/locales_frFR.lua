@@ -48,6 +48,11 @@ pfLocaleHunterbars["frFR"] = {
   ["RANGED"] = "Tir des Arcanes",
 }
 
+pfCustomCastbar["frFR"] = {
+  ["AIMEDSHOT"] = "Visée",
+  ["MULTISHOT"] = "Flèches multiples",
+}
+
 pfLocaleSpells["frFR"] = {
   ['Le Brave reprend sa forme de poulet'] = {t=1000, icon="Ability_Racial_BearForm" };
   ['Crachat d\'abomination'] = {t=2500, icon="Spell_Nature_CorrosiveBreath" };

@@ -48,6 +48,11 @@ pfLocaleHunterbars["deDE"] = {
   ["RANGED"] = "Arkaner Schuss",
 }
 
+pfCustomCastbar["deDE"] = {
+  ["AIMEDSHOT"] = "Gezielter Schuss",
+  ["MULTISHOT"] = "Mehrfachschuss",
+}
+
 pfLocaleSpells["deDE"] = {
   ['Eisenherz nimmt wieder Huhngestalt an'] = {t=1000, icon="Ability_Racial_BearForm" };
   ['Monstrositätenspucke'] = {t=2500, icon="Spell_Nature_CorrosiveBreath" };

@@ -75,63 +75,145 @@ pfUI:RegisterModule("castbar", function ()
   pfUI.castbar.player:RegisterEvent("SPELLCAST_FAILED")
   pfUI.castbar.player:RegisterEvent("SPELLCAST_INTERRUPTED")
 
-  pfUI.castbar.player:SetScript("OnEvent", function ()
-    if ( event == "SPELLCAST_START" ) then
-      pfUI.castbar.player.delay = 0
-      pfUI.castbar.player.spell = arg1
-      pfUI.castbar.player.bar.left:SetText(arg1)
-      local r,g,b,a = pfUI.api.strsplit(",", pfUI_config.appearance.castbar.castbarcolor)
-      pfUI.castbar.player.bar:SetStatusBarColor(r,g,b,a)
-      pfUI.castbar.player.startTime = GetTime()
-      pfUI.castbar.player.maxValue = arg2 / 1000
-      pfUI.castbar.player.endTime = nil
-      pfUI.castbar.player.bar:SetMinMaxValues(0, pfUI.castbar.player.maxValue)
-      pfUI.castbar.player.bar:SetValue(pfUI.castbar.player.startTime)
-      pfUI.castbar.player.holdTime = 0
-      pfUI.castbar.player.casting = 1
-      pfUI.castbar.player.channeling = nil
-      pfUI.castbar.player.mode = "casting"
-      pfUI.castbar.player.fadeout = nil
-      pfUI.castbar.player:SetAlpha(1)
-      pfUI.castbar.player:Show()
+  local scanner = CreateFrame("GameTooltip", "pfSpellScanner", nil, "GameTooltipTemplate")
+  scanner:SetOwner(WorldFrame, "ANCHOR_NONE")
 
-    elseif ( event == "SPELLCAST_CHANNEL_START" ) then
-      pfUI.castbar.player.delay = 0
-      pfUI.castbar.player.spell = arg2
-      pfUI.castbar.player.bar.left:SetText(arg2)
-      local r,g,b,a = pfUI.api.strsplit(",", pfUI_config.appearance.castbar.channelcolor)
-      pfUI.castbar.player.bar:SetStatusBarColor(r,g,b,a)
-      pfUI.castbar.player.maxValue = nil
-      pfUI.castbar.player.startTime = GetTime()
-      pfUI.castbar.player.endTime = pfUI.castbar.player.startTime + (arg1 / 1000)
-      pfUI.castbar.player.duration = arg1 / 1000
-      pfUI.castbar.player.bar:SetMinMaxValues(pfUI.castbar.player.startTime, pfUI.castbar.player.endTime)
-      pfUI.castbar.player.bar:SetValue(pfUI.castbar.player.endTime)
-      pfUI.castbar.player.holdTime = 0
-      pfUI.castbar.player.casting = nil
-      pfUI.castbar.player.channeling = 1
-      pfUI.castbar.player.fadeout = nil
-      pfUI.castbar.player:SetAlpha(1)
-      pfUI.castbar.player:Show()
+  local aimedshot = pfCustomCastbar[pfUI.cache["locale"]]["AIMEDSHOT"]
+  local multishot = pfCustomCastbar[pfUI.cache["locale"]]["MULTISHOT"]
 
-    elseif event == "SPELLCAST_STOP" then
-      if pfUI.castbar.player.casting then
-        pfUI.castbar.player.fadeout = 1
-        pfUI.castbar.player.casting = nil
-        pfUI.castbar.player.bar:SetMinMaxValues(1,pfUI.castbar.player.bar:GetValue())
-      end
+  pfUI.castbar.player[aimedshot] = function(begin)
+    if begin then
+      local duration = 3000
 
-    elseif event == "SPELLCAST_CHANNEL_STOP" then
-      if pfUI.castbar.player.channeling then
-        pfUI.castbar.player.fadeout = 1
-        pfUI.castbar.player.channeling = nil
-
-        if GetTime() + 0.3 < pfUI.castbar.player.endTime then
-          pfUI.castbar.player.bar:SetStatusBarColor(1,.5,.5,1)
-          pfUI.castbar.player.bar:SetMinMaxValues(1,100)
-          pfUI.castbar.player.bar:SetValue(100)
+      for i=1,32 do
+        if UnitBuff("player", i) == "Interface\\Icons\\Racial_Troll_Berserk" then
+          local berserk = 0.3
+          if((UnitHealth("player")/UnitHealthMax("player")) >= 0.40) then
+            berserk = (1.30 - (UnitHealth("player") / UnitHealthMax("player"))) / 3
+          end
+          duration = duration / (1 + berserk)
+        elseif UnitBuff("player", i) == "Interface\\Icons\\Ability_Hunter_RunningShot" then
+          duration = duration / 1.4
+        elseif UnitBuff("player", i) == "Interface\\Icons\\Ability_Warrior_InnerRage" then
+          duration = duration / 1.3
+        elseif UnitBuff("player", i) == "Interface\\Icons\\Inv_Trinket_Naxxramas04" then
+          duration = duration / 1.2
+        elseif UnitDebuff("player", i) == "Interface\\Icons\\Spell_Shadow_CurseOfTounges" then
+          duration = duration / 0.5
         end
       end
+
+      pfUI.castbar.player:SpellcastStart(aimedshot, duration)
+    else
+      pfUI.castbar.player:SpellcastStop()
+    end
+  end
+
+  pfUI.castbar.player[multishot] = function(begin)
+    if begin then
+      local duration = 500
+      pfUI.castbar.player:SpellcastStart(multishot, duration)
+    else
+      pfUI.castbar.player:SpellcastStop()
+    end
+  end
+
+  pfUI.api.Hook("CastSpell", function(id, bookType)
+    local spellName = GetSpellName(id, bookType)
+    if pfUI.castbar.player[spellName] then
+      pfUI.castbar.player[spellName](true)
+    end
+  end, true)
+
+  pfUI.api.Hook("CastSpellByName", function(spellName, target)
+    if pfUI.castbar.player[spellName] then
+      pfUI.castbar.player[spellName](true)
+    end
+  end, true)
+
+  pfUI.api.Hook("UseAction", function(slot, target, button)
+    if GetActionText(slot) or not IsCurrentAction(slot) then return end
+    scanner:ClearLines()
+    scanner:SetAction(slot)
+    local spellName = pfSpellScannerTextLeft1:GetText()
+    if pfUI.castbar.player[spellName] then
+      pfUI.castbar.player[spellName](true)
+    end
+  end, true)
+
+  function pfUI.castbar.player:SpellcastStart(spell, duration)
+    pfUI.castbar.player.delay = 0
+    pfUI.castbar.player.spell = spell
+    pfUI.castbar.player.bar.left:SetText(spell)
+    local r,g,b,a = pfUI.api.strsplit(",", pfUI_config.appearance.castbar.castbarcolor)
+    pfUI.castbar.player.bar:SetStatusBarColor(r,g,b,a)
+    pfUI.castbar.player.startTime = GetTime()
+    pfUI.castbar.player.maxValue = duration / 1000
+    pfUI.castbar.player.endTime = nil
+    pfUI.castbar.player.bar:SetMinMaxValues(0, pfUI.castbar.player.maxValue)
+    pfUI.castbar.player.bar:SetValue(pfUI.castbar.player.startTime)
+    pfUI.castbar.player.holdTime = 0
+    pfUI.castbar.player.casting = 1
+    pfUI.castbar.player.channeling = nil
+    pfUI.castbar.player.mode = "casting"
+    pfUI.castbar.player.fadeout = nil
+    pfUI.castbar.player:SetAlpha(1)
+    pfUI.castbar.player:Show()
+  end
+
+  function pfUI.castbar.player:SpellcastStop()
+    if pfUI.castbar.player.casting then
+      pfUI.castbar.player.fadeout = 1
+      pfUI.castbar.player.casting = nil
+      pfUI.castbar.player.bar:SetMinMaxValues(1,pfUI.castbar.player.bar:GetValue())
+    end
+  end
+
+  function pfUI.castbar.player:SpellcastChannelStart(duration, spell)
+    pfUI.castbar.player.delay = 0
+    pfUI.castbar.player.spell = spell
+    pfUI.castbar.player.bar.left:SetText(spell)
+    local r,g,b,a = pfUI.api.strsplit(",", pfUI_config.appearance.castbar.channelcolor)
+    pfUI.castbar.player.bar:SetStatusBarColor(r,g,b,a)
+    pfUI.castbar.player.maxValue = nil
+    pfUI.castbar.player.startTime = GetTime()
+    pfUI.castbar.player.endTime = pfUI.castbar.player.startTime + (arg1 / 1000)
+    pfUI.castbar.player.duration = duration / 1000
+    pfUI.castbar.player.bar:SetMinMaxValues(pfUI.castbar.player.startTime, pfUI.castbar.player.endTime)
+    pfUI.castbar.player.bar:SetValue(pfUI.castbar.player.endTime)
+    pfUI.castbar.player.holdTime = 0
+    pfUI.castbar.player.casting = nil
+    pfUI.castbar.player.channeling = 1
+    pfUI.castbar.player.fadeout = nil
+    pfUI.castbar.player:SetAlpha(1)
+    pfUI.castbar.player:Show()
+  end
+
+  function pfUI.castbar.player:SpellcastChannelStop()
+    if pfUI.castbar.player.channeling then
+      pfUI.castbar.player.fadeout = 1
+      pfUI.castbar.player.channeling = nil
+
+      if GetTime() + 0.3 < pfUI.castbar.player.endTime then
+        pfUI.castbar.player.bar:SetStatusBarColor(1,.5,.5,1)
+        pfUI.castbar.player.bar:SetMinMaxValues(1,100)
+        pfUI.castbar.player.bar:SetValue(100)
+      end
+    end
+  end
+
+  pfUI.castbar.player:SetScript("OnEvent", function ()
+    if ( event == "SPELLCAST_START" ) then
+      pfUI.castbar.player:SpellcastStart(arg1, arg2)
+
+    elseif ( event == "SPELLCAST_CHANNEL_START" ) then
+      pfUI.castbar.player:SpellcastStop(arg1, arg2)
+
+    elseif event == "SPELLCAST_STOP" then
+      pfUI.castbar.player:SpellcastStop()
+
+    elseif event == "SPELLCAST_CHANNEL_STOP" then
+      pfUI.castbar.player:SpellcastChannelStop()
 
     elseif event == "SPELLCAST_FAILED" or event == "SPELLCAST_INTERRUPTED" then
       if pfUI.castbar.player.casting then
