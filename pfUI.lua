@@ -69,7 +69,7 @@ pfUI:SetScript("OnEvent", function()
 
     -- load api into environment
     for m, func in pairs(pfUI.api) do
-      if not env_pfui[m] then env_pfui[m] = func end
+      env_pfui[m] = func
     end
 
     env_pfui.C = pfUI_config
@@ -174,7 +174,7 @@ function pfUI.info:ShowInfoBox(text, time, parent, height)
   pfUI.info:SetWidth(pfUI.info.text:GetStringWidth() + 50)
   pfUI.info:SetHeight(height)
   pfUI.info:SetFrameStrata("DIALOG")
-  pfUI.api:CreateBackdrop(pfUI.info)
+  pfUI.api.CreateBackdrop(pfUI.info)
   pfUI.info:SetPoint("TOP", 0, -25)
 
   pfUI.info.timeout:ClearAllPoints()
