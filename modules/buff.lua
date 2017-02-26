@@ -52,9 +52,9 @@ pfUI:RegisterModule("buff", function ()
     else
       -- weapon enchants
       for _,buff in pairs ({TempEnchant1,TempEnchant2}) do
-        local icon = getglobal(buff:GetName().."Icon")
-        local border = getglobal(buff:GetName().."Border")
-        local text = getglobal(buff:GetName().."Duration")
+        local icon = _G[buff:GetName().."Icon"]
+        local border = _G[buff:GetName().."Border"]
+        local text = _G[buff:GetName().."Duration"]
         text:SetPoint("TOP", buff, "BOTTOM", 0 , -pfUI_config.appearance.border.default*2)
 
         local _, _, mainhand, _, _, offhand = GetWeaponEnchantInfo()
@@ -98,18 +98,18 @@ pfUI:RegisterModule("buff", function ()
     else
       -- buffs
       for i=0,32 do
-        local buff = getglobal("BuffButton" .. i)
+        local buff = _G["BuffButton" .. i]
         if buff then
-          local icon = getglobal(buff:GetName().."Icon")
-          local border = getglobal(buff:GetName().."Border")
-          local text = getglobal(buff:GetName().."Duration")
+          local icon = _G[buff:GetName().."Icon"]
+          local border = _G[buff:GetName().."Border"]
+          local text = _G[buff:GetName().."Duration"]
 
           if i < 8 and i > 0 then
-            buff:SetPoint("TOPRIGHT", getglobal("BuffButton" .. i-1), "TOPLEFT", -7, 0)
+            buff:SetPoint("TOPRIGHT", _G["BuffButton" .. i-1], "TOPLEFT", -7, 0)
           elseif i < 16 and i > 8 then
-              buff:SetPoint("TOPRIGHT", getglobal("BuffButton" .. i-1), "TOPLEFT", -7, 0)
+              buff:SetPoint("TOPRIGHT", _G["BuffButton" .. i-1], "TOPLEFT", -7, 0)
           elseif i > 16 then
-            buff:SetPoint("TOPRIGHT", getglobal("BuffButton" .. i-1), "TOPLEFT", -7, 0)
+            buff:SetPoint("TOPRIGHT", _G["BuffButton" .. i-1], "TOPLEFT", -7, 0)
           end
           pfUI.api:CreateBackdrop(buff)
           text:SetPoint("TOP", buff, "BOTTOM", 0 , -pfUI_config.appearance.border.default*2)

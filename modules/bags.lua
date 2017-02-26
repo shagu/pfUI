@@ -288,19 +288,19 @@ pfUI:RegisterModule("bags", function ()
       ContainerFrame_UpdateCooldown(bag, pfUI.bags[bag].slots[slot].frame)
     end
 
-    local count = getglobal(pfUI.bags[bag].slots[slot].frame:GetName() .. "Count")
+    local count = _G[pfUI.bags[bag].slots[slot].frame:GetName() .. "Count"]
     count:SetFont(pfUI.font_square, pfUI_config.global.font_size, "OUTLINE")
     count:SetAllPoints()
     count:SetJustifyH("RIGHT")
     count:SetJustifyV("BOTTOM")
 
-    local icon = getglobal(pfUI.bags[bag].slots[slot].frame:GetName() .. "IconTexture")
+    local icon = _G[pfUI.bags[bag].slots[slot].frame:GetName() .. "IconTexture"]
     icon:SetTexCoord(.08, .92, .08, .92)
     icon:ClearAllPoints()
     icon:SetPoint("TOPLEFT", 1, -1)
     icon:SetPoint("BOTTOMRIGHT", -1, 1)
 
-    local border = getglobal(pfUI.bags[bag].slots[slot].frame:GetName() .. "NormalTexture")
+    local border = _G[pfUI.bags[bag].slots[slot].frame:GetName() .. "NormalTexture"]
     border:SetTexture("")
 
     -- detect backdrop border color
@@ -374,8 +374,8 @@ pfUI:RegisterModule("bags", function ()
         frame.bagslots.slots[slot] = {}
         frame.bagslots.slots[slot].frame = CreateFrame("CheckButton", name .. slot .. append, frame.bagslots, tpl)
 
-        local icon = getglobal(frame.bagslots.slots[slot].frame:GetName() .. "IconTexture")
-        local border = getglobal(frame.bagslots.slots[slot].frame:GetName() .. "NormalTexture")
+        local icon = _G[frame.bagslots.slots[slot].frame:GetName() .. "IconTexture"]
+        local border = _G[frame.bagslots.slots[slot].frame:GetName() .. "NormalTexture"]
         icon:SetTexCoord(.08, .92, .08, .92)
         icon:ClearAllPoints()
         icon:SetPoint("TOPLEFT", 1, -1)
