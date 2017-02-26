@@ -224,7 +224,7 @@ pfUI:RegisterModule("loot", function ()
   LootFrame:UnregisterAllEvents()
   table.insert(UISpecialFrames, "pfLootFrame")
 
-  function GroupLootDropDown_GiveLoot()
+  function _G.GroupLootDropDown_GiveLoot()
     if ( pfUI.loot.selectedQuality >= MASTER_LOOT_THREHOLD ) then
       local dialog = StaticPopup_Show("CONFIRM_LOOT_DISTRIBUTION", ITEM_QUALITY_COLORS[pfUI.loot.selectedQuality].hex..pfUI.loot.selectedItemName..FONT_COLOR_CODE_CLOSE, this:GetText())
       if ( dialog ) then
