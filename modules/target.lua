@@ -1,13 +1,13 @@
 pfUI:RegisterModule("target", function ()
   -- do not go further on disabled UFs
-  if pfUI_config.unitframes.disable == "1" then return end
+  if C.unitframes.disable == "1" then return end
 
-  local default_border = pfUI_config.appearance.border.default
-  if pfUI_config.appearance.border.unitframes ~= "-1" then
-    default_border = pfUI_config.appearance.border.unitframes
+  local default_border = C.appearance.border.default
+  if C.appearance.border.unitframes ~= "-1" then
+    default_border = C.appearance.border.unitframes
   end
 
-  local spacing = pfUI_config.unitframes.target.pspace
+  local spacing = C.unitframes.target.pspace
 
   -- Hide Blizzard target frame and unregister all events to prevent it from popping up again
   TargetFrame:Hide()
@@ -22,8 +22,8 @@ pfUI:RegisterModule("target", function ()
   pfUI.uf.target.id = ""
   pfUI.uf.target:SetFrameStrata("LOW")
   pfUI.uf.target:Hide()
-  pfUI.uf.target:SetWidth(pfUI_config.unitframes.target.width)
-  pfUI.uf.target:SetHeight(pfUI_config.unitframes.target.height + pfUI_config.unitframes.target.pheight + 2*default_border + spacing)
+  pfUI.uf.target:SetWidth(C.unitframes.target.width)
+  pfUI.uf.target:SetHeight(C.unitframes.target.height + C.unitframes.target.pheight + 2*default_border + spacing)
   pfUI.uf.target:SetPoint("BOTTOMLEFT", UIParent, "BOTTOM", 75, 125)
   pfUI.api:UpdateMovable(pfUI.uf.target)
   pfUI.uf.target:RegisterForClicks('LeftButtonUp', 'RightButtonUp', 'MiddleButtonUp', 'Button4Up', 'Button5Up')
@@ -131,17 +131,17 @@ pfUI:RegisterModule("target", function ()
 
         local r, g, b = .2, .2, .2
 
-        if pfUI_config.unitframes.custom == "1" then
-          local cr, cg, cb, ca = pfUI.api.strsplit(",", pfUI_config.unitframes.customcolor)
+        if C.unitframes.custom == "1" then
+          local cr, cg, cb, ca = pfUI.api.strsplit(",", C.unitframes.customcolor)
           cr, cg, cb = tonumber(cr), tonumber(cg), tonumber(cb)
           pfUI.uf.target.hp.bar:SetStatusBarColor(cr, cg, cb, hp / hpmax / 4 + .75)
-          if pfUI_config.unitframes.pastel == "1" then
+          if C.unitframes.pastel == "1" then
             r, g, b = (color.r + .5) * .5, (color.g + .5) * .5, (color.b + .5) * .5
           else
             r, g, b = color.r, color.g, color.b
           end
         else
-          if pfUI_config.unitframes.pastel == "1" then
+          if C.unitframes.pastel == "1" then
             r, g, b = (color.r + .5) * .5, (color.g + .5) * .5, (color.b + .5) * .5
           else
             r, g, b = color.r, color.g, color.b
@@ -200,7 +200,7 @@ pfUI:RegisterModule("target", function ()
         pfUI.uf.target.tapped  = nil
 
         -- bypass animation
-        if event == "PLAYER_TARGET_CHANGED" and (pfUI.uf.target.noanim == "yes" or pfUI_config.unitframes.target.animation == "0") then
+        if event == "PLAYER_TARGET_CHANGED" and (pfUI.uf.target.noanim == "yes" or C.unitframes.target.animation == "0") then
           pfUI.uf.target.hp.bar:SetValue(hp)
           pfUI.uf.target.power.bar:SetValue(power)
           pfUI.uf.target.noanim = "no"
@@ -216,9 +216,9 @@ pfUI:RegisterModule("target", function ()
       local hpDiff = abs(hpReal - hpDisplay)
 
       if hpDisplay < hpReal then
-        pfUI.uf.target.hp.bar:SetValue(hpDisplay + ceil(hpDiff / pfUI_config.unitframes.animation_speed))
+        pfUI.uf.target.hp.bar:SetValue(hpDisplay + ceil(hpDiff / C.unitframes.animation_speed))
       elseif hpDisplay > hpReal then
-        pfUI.uf.target.hp.bar:SetValue(hpDisplay - ceil(hpDiff / pfUI_config.unitframes.animation_speed))
+        pfUI.uf.target.hp.bar:SetValue(hpDisplay - ceil(hpDiff / C.unitframes.animation_speed))
       else
         pfUI.uf.target.hp.bar:SetValue(hpReal)
       end
@@ -228,9 +228,9 @@ pfUI:RegisterModule("target", function ()
       local powerDiff = abs(powerReal - powerDisplay)
 
       if powerDisplay < powerReal then
-        pfUI.uf.target.power.bar:SetValue(powerDisplay + ceil(powerDiff / pfUI_config.unitframes.animation_speed))
+        pfUI.uf.target.power.bar:SetValue(powerDisplay + ceil(powerDiff / C.unitframes.animation_speed))
       elseif powerDisplay > powerReal then
-        pfUI.uf.target.power.bar:SetValue(powerDisplay - ceil(powerDiff / pfUI_config.unitframes.animation_speed))
+        pfUI.uf.target.power.bar:SetValue(powerDisplay - ceil(powerDiff / C.unitframes.animation_speed))
       else
         pfUI.uf.target.power.bar:SetValue(powerReal)
       end
@@ -243,8 +243,8 @@ pfUI:RegisterModule("target", function ()
     end)
 
   pfUI.uf.target.hp = CreateFrame("Frame",nil, pfUI.uf.target)
-  pfUI.uf.target.hp:SetWidth(pfUI_config.unitframes.target.width)
-  pfUI.uf.target.hp:SetHeight(pfUI_config.unitframes.target.height)
+  pfUI.uf.target.hp:SetWidth(C.unitframes.target.width)
+  pfUI.uf.target.hp:SetHeight(C.unitframes.target.height)
   pfUI.uf.target.hp:SetPoint("TOP", 0, 0)
   pfUI.api:CreateBackdrop(pfUI.uf.target.hp, default_border)
 
@@ -282,8 +282,8 @@ pfUI:RegisterModule("target", function ()
 
   pfUI.uf.target.power = CreateFrame("Frame",nil, pfUI.uf.target)
   pfUI.uf.target.power:SetPoint("BOTTOM", 0, 0)
-  pfUI.uf.target.power:SetWidth(pfUI_config.unitframes.target.width)
-  pfUI.uf.target.power:SetHeight(pfUI_config.unitframes.target.pheight)
+  pfUI.uf.target.power:SetWidth(C.unitframes.target.width)
+  pfUI.uf.target.power:SetHeight(C.unitframes.target.pheight)
   pfUI.api:CreateBackdrop(pfUI.uf.target.power, default_border)
 
   pfUI.uf.target.power.bar = CreateFrame("StatusBar", nil, pfUI.uf.target.power)
@@ -291,10 +291,10 @@ pfUI:RegisterModule("target", function ()
   pfUI.uf.target.power.bar:SetAllPoints(pfUI.uf.target.power)
   pfUI.uf.target.power.bar:SetMinMaxValues(0, 100)
 
-  pfUI.uf:CreatePortrait(pfUI.uf.target, pfUI_config.unitframes.target.portrait, spacing)
+  pfUI.uf:CreatePortrait(pfUI.uf.target, C.unitframes.target.portrait, spacing)
 
   pfUI.uf.target.hpText = pfUI.uf.target:CreateFontString("Status", "OVERLAY", "GameFontNormal")
-  pfUI.uf.target.hpText:SetFont(pfUI.font_square, pfUI_config.global.font_size, "OUTLINE")
+  pfUI.uf.target.hpText:SetFont(pfUI.font_square, C.global.font_size, "OUTLINE")
   pfUI.uf.target.hpText:ClearAllPoints()
   pfUI.uf.target.hpText:SetParent(pfUI.uf.target.hp.bar)
   pfUI.uf.target.hpText:SetPoint("RIGHT",pfUI.uf.target.hp.bar, "RIGHT", -10, 0)
@@ -303,13 +303,13 @@ pfUI:RegisterModule("target", function ()
   pfUI.uf.target.hpText:SetText("5000")
 
   pfUI.uf.target.powerText = pfUI.uf.target:CreateFontString("Status", "OVERLAY", "GameFontNormal")
-  pfUI.uf.target.powerText:SetFont(pfUI.font_square, pfUI_config.global.font_size, "OUTLINE")
+  pfUI.uf.target.powerText:SetFont(pfUI.font_square, C.global.font_size, "OUTLINE")
   pfUI.uf.target.powerText:ClearAllPoints()
   pfUI.uf.target.powerText:SetParent(pfUI.uf.target.hp.bar)
   pfUI.uf.target.powerText:SetPoint("LEFT",pfUI.uf.target.hp.bar, "LEFT", 10, 0)
   pfUI.uf.target.powerText:SetJustifyH("LEFT")
   pfUI.uf.target.powerText:SetFontObject(GameFontWhite)
-  pfUI.uf.target.powerText:SetHeight(pfUI_config.global.font_size)
+  pfUI.uf.target.powerText:SetHeight(C.global.font_size)
   pfUI.uf.target.powerText:SetNonSpaceWrap(true)
   pfUI.uf.target.powerText:SetText("5000")
 
@@ -335,7 +335,7 @@ pfUI:RegisterModule("target", function ()
           pfUI.uf.target["combopoint" .. point]:SetWidth(5)
           pfUI.uf.target["combopoint" .. point]:SetHeight(5)
           pfUI.api:CreateBackdrop(pfUI.uf.target["combopoint" .. point])
-          pfUI.uf.target["combopoint" .. point]:SetPoint("TOPLEFT", pfUI.uf.target, "TOPRIGHT", pfUI_config.appearance.border.default*3, -(point - 1) * (5 + pfUI_config.appearance.border.default*3))
+          pfUI.uf.target["combopoint" .. point]:SetPoint("TOPLEFT", pfUI.uf.target, "TOPRIGHT", C.appearance.border.default*3, -(point - 1) * (5 + C.appearance.border.default*3))
           if point < 3 then
             local tex = pfUI.uf.target["combopoint" .. point]:CreateTexture("OVERLAY")
             tex:SetAllPoints(pfUI.uf.target["combopoint" .. point])
@@ -379,7 +379,7 @@ pfUI:RegisterModule("target", function ()
 
     pfUI.uf.target.buff.buffs[i] = CreateFrame("Button", "pfUITargetBuff" .. i, pfUI.uf.target)
     pfUI.uf.target.buff.buffs[i].stacks = pfUI.uf.target.buff.buffs[i]:CreateFontString(nil, "OVERLAY", pfUI.uf.target.buff.buffs[i])
-    pfUI.uf.target.buff.buffs[i].stacks:SetFont(pfUI.font_square, pfUI_config.global.font_size, "OUTLINE")
+    pfUI.uf.target.buff.buffs[i].stacks:SetFont(pfUI.font_square, C.global.font_size, "OUTLINE")
     pfUI.uf.target.buff.buffs[i].stacks:SetPoint("BOTTOMRIGHT", pfUI.uf.target.buff.buffs[i], 2, -2)
     pfUI.uf.target.buff.buffs[i].stacks:SetJustifyH("LEFT")
     pfUI.uf.target.buff.buffs[i].stacks:SetShadowColor(0, 0, 0)
@@ -390,11 +390,11 @@ pfUI:RegisterModule("target", function ()
     pfUI.uf.target.buff.buffs[i]:ClearAllPoints()
 
     local invert, af, as
-    if pfUI_config.unitframes.target.buffs == "top" then
+    if C.unitframes.target.buffs == "top" then
       invert = 1
       af = "BOTTOMLEFT"
       as = "TOPLEFT"
-    elseif pfUI_config.unitframes.target.buffs == "bottom" then
+    elseif C.unitframes.target.buffs == "bottom" then
       invert = -1
       af = "TOPLEFT"
       as = "BOTTOMLEFT"
@@ -410,10 +410,10 @@ pfUI:RegisterModule("target", function ()
     end
 
     pfUI.uf.target.buff.buffs[i]:SetPoint(af, pfUI.uf.target, as,
-    (i-1-8*row)*((2*default_border) + pfUI_config.unitframes.buff_size + 1),
-    invert * (row)*((2*default_border) + pfUI_config.unitframes.buff_size + 1) + invert*(2*default_border + 1))
-    pfUI.uf.target.buff.buffs[i]:SetWidth(pfUI_config.unitframes.buff_size)
-    pfUI.uf.target.buff.buffs[i]:SetHeight(pfUI_config.unitframes.buff_size)
+    (i-1-8*row)*((2*default_border) + C.unitframes.buff_size + 1),
+    invert * (row)*((2*default_border) + C.unitframes.buff_size + 1) + invert*(2*default_border + 1))
+    pfUI.uf.target.buff.buffs[i]:SetWidth(C.unitframes.buff_size)
+    pfUI.uf.target.buff.buffs[i]:SetHeight(C.unitframes.buff_size)
     pfUI.uf.target.buff.buffs[i]:SetNormalTexture(nil)
     pfUI.uf.target.buff.buffs[i]:SetScript("OnEnter", function()
         GameTooltip:SetOwner(this, "ANCHOR_BOTTOMRIGHT")
@@ -460,7 +460,7 @@ pfUI:RegisterModule("target", function ()
     local id = i
     pfUI.uf.target.debuff.debuffs[i] = CreateFrame("Button", "pfUITargetDebuff" .. i, pfUI.uf.target)
     pfUI.uf.target.debuff.debuffs[i].stacks = pfUI.uf.target.debuff.debuffs[i]:CreateFontString(nil, "OVERLAY", pfUI.uf.target.debuff.debuffs[i])
-    pfUI.uf.target.debuff.debuffs[i].stacks:SetFont(pfUI.font_square, pfUI_config.global.font_size, "OUTLINE")
+    pfUI.uf.target.debuff.debuffs[i].stacks:SetFont(pfUI.font_square, C.global.font_size, "OUTLINE")
     pfUI.uf.target.debuff.debuffs[i].stacks:SetPoint("BOTTOMRIGHT", pfUI.uf.target.debuff.debuffs[i], 2, -2)
     pfUI.uf.target.debuff.debuffs[i].stacks:SetJustifyH("LEFT")
     pfUI.uf.target.debuff.debuffs[i].stacks:SetShadowColor(0, 0, 0)
@@ -469,8 +469,8 @@ pfUI:RegisterModule("target", function ()
     pfUI.uf.target.debuff.debuffs[i]:RegisterForClicks("RightButtonUp")
     pfUI.uf.target.debuff.debuffs[i]:ClearAllPoints()
 
-    pfUI.uf.target.debuff.debuffs[i]:SetWidth(pfUI_config.unitframes.debuff_size)
-    pfUI.uf.target.debuff.debuffs[i]:SetHeight(pfUI_config.unitframes.debuff_size)
+    pfUI.uf.target.debuff.debuffs[i]:SetWidth(C.unitframes.debuff_size)
+    pfUI.uf.target.debuff.debuffs[i]:SetHeight(C.unitframes.debuff_size)
     pfUI.uf.target.debuff.debuffs[i]:SetNormalTexture(nil)
     pfUI.uf.target.debuff.debuffs[i]:SetScript("OnEnter", function()
         GameTooltip:SetOwner(this, "ANCHOR_BOTTOMRIGHT")
@@ -493,11 +493,11 @@ pfUI:RegisterModule("target", function ()
       if pfUI.uf.target.buff.buffs[9]:IsShown() then top = top + 1 end
 
       local invert, af, as
-      if pfUI_config.unitframes.target.buffs == "top" then
+      if C.unitframes.target.buffs == "top" then
         invert = 1
         af = "BOTTOMLEFT"
         as = "TOPLEFT"
-      elseif pfUI_config.unitframes.target.buffs == "bottom" then
+      elseif C.unitframes.target.buffs == "bottom" then
         invert = -1
         af = "TOPLEFT"
         as = "BOTTOMLEFT"
@@ -513,9 +513,9 @@ pfUI:RegisterModule("target", function ()
       end
 
       pfUI.uf.target.debuff.debuffs[i]:SetPoint(af, pfUI.uf.target, as,
-      (i-1-8*row)*((2*default_border) + pfUI_config.unitframes.debuff_size + 1),
-      invert * (top)*((2*default_border) + pfUI_config.unitframes.buff_size + 1) +
-      invert * (row)*((2*default_border) + pfUI_config.unitframes.debuff_size + 1) + invert * (2*default_border + 1))
+      (i-1-8*row)*((2*default_border) + C.unitframes.debuff_size + 1),
+      invert * (top)*((2*default_border) + C.unitframes.buff_size + 1) +
+      invert * (row)*((2*default_border) + C.unitframes.debuff_size + 1) + invert * (2*default_border + 1))
 
       local texture, stacks = UnitDebuff("target",i)
       pfUI.api:CreateBackdrop(pfUI.uf.target.debuff.debuffs[i], default_border)

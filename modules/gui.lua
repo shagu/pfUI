@@ -1,5 +1,5 @@
 pfUI:RegisterModule("gui", function ()
-  local default_border = tonumber(pfUI_config.appearance.border.default)
+  local default_border = tonumber(C.appearance.border.default)
 
   pfUI.gui = CreateFrame("Frame",nil,UIParent)
 
@@ -39,10 +39,10 @@ pfUI:RegisterModule("gui", function ()
   function pfUI.gui:SaveScale(frame, scale)
     frame:SetScale(scale)
 
-    if not pfUI_config.position[frame:GetName()] then
-      pfUI_config.position[frame:GetName()] = {}
+    if not C.position[frame:GetName()] then
+      C.position[frame:GetName()] = {}
     end
-    pfUI_config.position[frame:GetName()]["scale"] = scale
+    C.position[frame:GetName()]["scale"] = scale
 
     frame.drag.text:SetText("Scale: " .. scale)
     frame.drag.text:SetAlpha(1)
@@ -147,7 +147,7 @@ pfUI:RegisterModule("gui", function ()
           frame.drag.backdrop:SetBackdropBorderColor(.2, 1, .8)
           frame.drag:EnableMouseWheel(1)
           frame.drag.text = frame.drag:CreateFontString("Status", "LOW", "GameFontNormal")
-          frame.drag.text:SetFont(pfUI.font_default, pfUI_config.global.font_size, "OUTLINE")
+          frame.drag.text:SetFont(pfUI.font_default, C.global.font_size, "OUTLINE")
           frame.drag.text:ClearAllPoints()
           frame.drag.text:SetAllPoints(frame.drag)
           frame.drag.text:SetPoint("CENTER", 0, 0)
@@ -246,12 +246,12 @@ pfUI:RegisterModule("gui", function ()
 
                     local _, _, _, xpos, ypos = cframe:GetPoint()
 
-                    if not pfUI_config.position[cframe:GetName()] then
-                      pfUI_config.position[cframe:GetName()] = {}
+                    if not C.position[cframe:GetName()] then
+                      C.position[cframe:GetName()] = {}
                     end
 
-                    pfUI_config.position[cframe:GetName()]["xpos"] = xpos
-                    pfUI_config.position[cframe:GetName()]["ypos"] = ypos
+                    C.position[cframe:GetName()]["xpos"] = xpos
+                    C.position[cframe:GetName()]["ypos"] = ypos
                   end
                 end
               elseif strsub(frame:GetName(),0,7) == "pfGroup" then
@@ -264,12 +264,12 @@ pfUI:RegisterModule("gui", function ()
 
                     local _, _, _, xpos, ypos = cframe:GetPoint()
 
-                    if not pfUI_config.position[cframe:GetName()] then
-                      pfUI_config.position[cframe:GetName()] = {}
+                    if not C.position[cframe:GetName()] then
+                      C.position[cframe:GetName()] = {}
                     end
 
-                    pfUI_config.position[cframe:GetName()]["xpos"] = xpos
-                    pfUI_config.position[cframe:GetName()]["ypos"] = ypos
+                    C.position[cframe:GetName()]["xpos"] = xpos
+                    C.position[cframe:GetName()]["ypos"] = ypos
                   end
                 end
               elseif strsub(frame:GetName(),0,15) == "pfLootRollFrame" then
@@ -282,23 +282,23 @@ pfUI:RegisterModule("gui", function ()
 
                     local _, _, _, xpos, ypos = cframe:GetPoint()
 
-                    if not pfUI_config.position[cframe:GetName()] then
-                      pfUI_config.position[cframe:GetName()] = {}
+                    if not C.position[cframe:GetName()] then
+                      C.position[cframe:GetName()] = {}
                     end
 
-                    pfUI_config.position[cframe:GetName()]["xpos"] = xpos
-                    pfUI_config.position[cframe:GetName()]["ypos"] = ypos
+                    C.position[cframe:GetName()]["xpos"] = xpos
+                    C.position[cframe:GetName()]["ypos"] = ypos
                   end
                 end
               end
             end
 
-            if not pfUI_config.position[frame:GetName()] then
-              pfUI_config.position[frame:GetName()] = {}
+            if not C.position[frame:GetName()] then
+              C.position[frame:GetName()] = {}
             end
 
-            pfUI_config.position[frame:GetName()]["xpos"] = xpos
-            pfUI_config.position[frame:GetName()]["ypos"] = ypos
+            C.position[frame:GetName()]["xpos"] = xpos
+            C.position[frame:GetName()]["ypos"] = ypos
             pfUI.gui.settingChanged = true
         end)
 
@@ -370,7 +370,7 @@ pfUI:RegisterModule("gui", function ()
     end
     pfUI.api:CreateBackdrop(frame.switch, nil, true)
     frame.switch.text = frame.switch:CreateFontString("Status", "LOW", "GameFontNormal")
-    frame.switch.text:SetFont(pfUI.font_default, pfUI_config.global.font_size, "OUTLINE")
+    frame.switch.text:SetFont(pfUI.font_default, C.global.font_size, "OUTLINE")
     frame.switch.text:SetAllPoints(frame.switch)
     frame.switch.text:SetPoint("CENTER", 0, 0)
     frame.switch.text:SetFontObject(GameFontWhite)
@@ -386,7 +386,7 @@ pfUI:RegisterModule("gui", function ()
     -- do not show title on bottom buttons
     if not bottom and not func then
       frame.title = frame:CreateFontString("Status", "LOW", "GameFontNormal")
-      frame.title:SetFont(pfUI.font_default, pfUI_config.global.font_size + 2, "OUTLINE")
+      frame.title:SetFont(pfUI.font_default, C.global.font_size + 2, "OUTLINE")
       frame.title:SetPoint("TOP", 0, -10)
       frame.title:SetTextColor(.2,1,.8)
       frame.title:SetText(text)
@@ -427,7 +427,7 @@ pfUI:RegisterModule("gui", function ()
 
       -- caption
       frame.caption = frame:CreateFontString("Status", "LOW", "GameFontNormal")
-      frame.caption:SetFont(pfUI.font_default, pfUI_config.global.font_size + 2, "OUTLINE")
+      frame.caption:SetFont(pfUI.font_default, C.global.font_size + 2, "OUTLINE")
       frame.caption:SetAllPoints(frame)
       frame.caption:SetFontObject(GameFontWhite)
       frame.caption:SetJustifyH("LEFT")
@@ -729,18 +729,18 @@ pfUI:RegisterModule("gui", function ()
   -- General
   pfUI.gui.global = pfUI.gui:CreateConfigTab("General Settings")
   local values = { "Continuum", "DieDieDie", "Expressway", "Homespun", "Myriad-Pro", "PT-Sans-Narrow-Bold", "PT-Sans-Narrow-Regular" }
-  pfUI.gui:CreateConfig(pfUI.gui.global, "Enable Region Compatible Font", pfUI_config.global, "force_region", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.global, "General Font", pfUI_config.global, "font_default", "dropdown", values)
-  pfUI.gui:CreateConfig(pfUI.gui.global, "Unit Frame & Action Bar Font", pfUI_config.global, "font_square", "dropdown", values)
-  pfUI.gui:CreateConfig(pfUI.gui.global, "Scrolling Combat Text Font", pfUI_config.global, "font_combat", "dropdown", values)
-  pfUI.gui:CreateConfig(pfUI.gui.global, "Font Size", pfUI_config.global, "font_size")
-  pfUI.gui:CreateConfig(pfUI.gui.global, "Enable Pixel Perfect (Native Resolution)", pfUI_config.global, "pixelperfect", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.global, "Enable Offscreen Frame Positions", pfUI_config.global, "offscreen", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.global, "Enable Single Line UIErrors", pfUI_config.global, "errors_limit", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.global, "Disable All UIErrors", pfUI_config.global, "errors_hide", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.global, "Disable Minimap Buffs", pfUI_config.global, "hidebuff", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.global, "Disable Minimap Weapon Buffs", pfUI_config.global, "hidewbuff", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.global, "Enable 24h Clock", pfUI_config.global, "twentyfour", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.global, "Enable Region Compatible Font", C.global, "force_region", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.global, "General Font", C.global, "font_default", "dropdown", values)
+  pfUI.gui:CreateConfig(pfUI.gui.global, "Unit Frame & Action Bar Font", C.global, "font_square", "dropdown", values)
+  pfUI.gui:CreateConfig(pfUI.gui.global, "Scrolling Combat Text Font", C.global, "font_combat", "dropdown", values)
+  pfUI.gui:CreateConfig(pfUI.gui.global, "Font Size", C.global, "font_size")
+  pfUI.gui:CreateConfig(pfUI.gui.global, "Enable Pixel Perfect (Native Resolution)", C.global, "pixelperfect", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.global, "Enable Offscreen Frame Positions", C.global, "offscreen", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.global, "Enable Single Line UIErrors", C.global, "errors_limit", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.global, "Disable All UIErrors", C.global, "errors_hide", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.global, "Disable Minimap Buffs", C.global, "hidebuff", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.global, "Disable Minimap Weapon Buffs", C.global, "hidewbuff", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.global, "Enable 24h Clock", C.global, "twentyfour", "checkbox")
 
   pfUI.gui:CreateConfig(pfUI.gui.global, "Profile", nil, nil, "header")
   local values = {}
@@ -753,25 +753,25 @@ pfUI:RegisterModule("gui", function ()
     pfUIDropDownMenuProfile.Refresh()
   end
 
-  pfUI.gui:CreateConfig(pfUI.gui.global, "Select profile", pfUI_config.global, "profile", "dropdown", values, false, "Profile")
+  pfUI.gui:CreateConfig(pfUI.gui.global, "Select profile", C.global, "profile", "dropdown", values, false, "Profile")
 
   -- load profile
-  pfUI.gui:CreateConfig(pfUI.gui.global, "Load profile", pfUI_config.global, "profile", "button", function()
-    if pfUI_config.global.profile and pfUI_profiles[pfUI_config.global.profile] then
-      pfUI.api:CreateQuestionDialog("Load profile '|cff33ffcc" .. pfUI_config.global.profile .. "|r'?", function()
-        local selp = pfUI_config.global.profile
-        pfUI_config = pfUI.api.CopyTable(pfUI_profiles[pfUI_config.global.profile])
-        pfUI_config.global.profile = selp
+  pfUI.gui:CreateConfig(pfUI.gui.global, "Load profile", C.global, "profile", "button", function()
+    if C.global.profile and pfUI_profiles[C.global.profile] then
+      pfUI.api:CreateQuestionDialog("Load profile '|cff33ffcc" .. C.global.profile .. "|r'?", function()
+        local selp = C.global.profile
+        C = pfUI.api.CopyTable(pfUI_profiles[C.global.profile])
+        C.global.profile = selp
         ReloadUI()
       end)
     end
   end)
 
   -- delete profile
-  pfUI.gui:CreateConfig(pfUI.gui.global, "Delete profile", pfUI_config.global, "profile", "button", function()
-    if pfUI_config.global.profile and pfUI_profiles[pfUI_config.global.profile] then
-      pfUI.api:CreateQuestionDialog("Delete profile '|cff33ffcc" .. pfUI_config.global.profile .. "|r'?", function()
-        pfUI_profiles[pfUI_config.global.profile] = nil
+  pfUI.gui:CreateConfig(pfUI.gui.global, "Delete profile", C.global, "profile", "button", function()
+    if C.global.profile and pfUI_profiles[C.global.profile] then
+      pfUI.api:CreateQuestionDialog("Delete profile '|cff33ffcc" .. C.global.profile .. "|r'?", function()
+        pfUI_profiles[C.global.profile] = nil
         pfUpdateProfiles()
         this:GetParent():Hide()
       end)
@@ -779,11 +779,11 @@ pfUI:RegisterModule("gui", function ()
   end, true)
 
   -- save profile
-  pfUI.gui:CreateConfig(pfUI.gui.global, "Save profile", pfUI_config.global, "profile", "button", function()
-    if pfUI_config.global.profile and pfUI_profiles[pfUI_config.global.profile] then
-      pfUI.api:CreateQuestionDialog("Save current settings to profile '|cff33ffcc" .. pfUI_config.global.profile .. "|r'?", function()
-        if pfUI_profiles[pfUI_config.global.profile] then
-          pfUI_profiles[pfUI_config.global.profile] = pfUI.api.CopyTable(pfUI_config)
+  pfUI.gui:CreateConfig(pfUI.gui.global, "Save profile", C.global, "profile", "button", function()
+    if C.global.profile and pfUI_profiles[C.global.profile] then
+      pfUI.api:CreateQuestionDialog("Save current settings to profile '|cff33ffcc" .. C.global.profile .. "|r'?", function()
+        if pfUI_profiles[C.global.profile] then
+          pfUI_profiles[C.global.profile] = pfUI.api.CopyTable(C)
         end
         this:GetParent():Hide()
       end)
@@ -791,7 +791,7 @@ pfUI:RegisterModule("gui", function ()
   end, true)
 
   -- create profile
-  pfUI.gui:CreateConfig(pfUI.gui.global, "Create Profile", pfUI_config.global, "profile", "button", function()
+  pfUI.gui:CreateConfig(pfUI.gui.global, "Create Profile", C.global, "profile", "button", function()
     pfUI.api:CreateQuestionDialog("Please enter a name for the new profile.\nExisting profiles sharing the same name will be overwritten.",
     function()
       local profile = this:GetParent().input:GetText()
@@ -801,7 +801,7 @@ pfUI:RegisterModule("gui", function ()
       else
         profile = (string.gsub(profile,"^%s*(.-)%s*$", "%1"))
         if profile and profile ~= "" then
-          pfUI_profiles[profile] = pfUI.api.CopyTable(pfUI_config)
+          pfUI_profiles[profile] = pfUI.api.CopyTable(C)
           pfUpdateProfiles()
           this:GetParent():Hide()
         end
@@ -811,210 +811,210 @@ pfUI:RegisterModule("gui", function ()
 
   -- appearance
   pfUI.gui.appearance = pfUI.gui:CreateConfigTab("Appearance")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Background Color", pfUI_config.appearance.border, "background", "color")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Border Color", pfUI_config.appearance.border, "color", "color")
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Background Color", C.appearance.border, "background", "color")
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Border Color", C.appearance.border, "color", "color")
 
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "Border", nil, nil, "header")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Global Border Size", pfUI_config.appearance.border, "default")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Action Bar Border Size", pfUI_config.appearance.border, "actionbars")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Unit Frame Border Size", pfUI_config.appearance.border, "unitframes")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Group Frame Border Size", pfUI_config.appearance.border, "groupframes")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Raid Frame Border Size", pfUI_config.appearance.border, "raidframes")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Panel Border Size", pfUI_config.appearance.border, "panels")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Chat Border Size", pfUI_config.appearance.border, "chat")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Bags Border Size", pfUI_config.appearance.border, "bags")
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Global Border Size", C.appearance.border, "default")
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Action Bar Border Size", C.appearance.border, "actionbars")
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Unit Frame Border Size", C.appearance.border, "unitframes")
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Group Frame Border Size", C.appearance.border, "groupframes")
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Raid Frame Border Size", C.appearance.border, "raidframes")
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Panel Border Size", C.appearance.border, "panels")
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Chat Border Size", C.appearance.border, "chat")
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Bags Border Size", C.appearance.border, "bags")
 
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "Cooldown", nil, nil, "header")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Cooldown Color (Minutes)", pfUI_config.appearance.cd, "mincolor", "color")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Cooldown Color (Hours)", pfUI_config.appearance.cd, "hourcolor", "color")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Cooldown Color (Days)", pfUI_config.appearance.cd, "daycolor", "color")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Cooldown Text Threshold", pfUI_config.appearance.cd, "threshold")
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Cooldown Color (Minutes)", C.appearance.cd, "mincolor", "color")
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Cooldown Color (Hours)", C.appearance.cd, "hourcolor", "color")
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Cooldown Color (Days)", C.appearance.cd, "daycolor", "color")
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Cooldown Text Threshold", C.appearance.cd, "threshold")
 
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "Combat", nil, nil, "header")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Enable Combat Glow Effects On Screen Edges", pfUI_config.appearance.infight, "screen", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Enable Combat Glow Effects On Unit Frames", pfUI_config.appearance.infight, "common", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Enable Combat Glow Effects On Group Frames", pfUI_config.appearance.infight, "group", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Enable Combat Glow Effects On Screen Edges", C.appearance.infight, "screen", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Enable Combat Glow Effects On Unit Frames", C.appearance.infight, "common", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Enable Combat Glow Effects On Group Frames", C.appearance.infight, "group", "checkbox")
 
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "Bags & Bank", nil, nil, "header")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Disable Item Quality Color For \"Common\" Items", pfUI_config.appearance.bags, "borderlimit", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Enable Item Quality Color For Equipment Only", pfUI_config.appearance.bags, "borderonlygear", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Disable Item Quality Color For \"Common\" Items", C.appearance.bags, "borderlimit", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Enable Item Quality Color For Equipment Only", C.appearance.bags, "borderonlygear", "checkbox")
 
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "Loot", nil, nil, "header")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Enable Auto-Resize Loot Frame", pfUI_config.appearance.loot, "autoresize", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Enable Auto-Resize Loot Frame", C.appearance.loot, "autoresize", "checkbox")
 
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "Minimap", nil, nil, "header")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Enable Zone Text On Minimap Mouseover", pfUI_config.appearance.minimap, "mouseoverzone", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Enable Zone Text On Minimap Mouseover", C.appearance.minimap, "mouseoverzone", "checkbox")
 
   -- unit frames
   pfUI.gui.uf = pfUI.gui:CreateConfigTab("Unit Frames")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Disable pfUI Unit Frames", pfUI_config.unitframes, "disable", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Enable Pastel Colors", pfUI_config.unitframes, "pastel", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Enable Custom Color Health Bars", pfUI_config.unitframes, "custom", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Custom Health Bar Color", pfUI_config.unitframes, "customcolor", "color")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Animation Speed", pfUI_config.unitframes, "animation_speed")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Portrait Alpha", pfUI_config.unitframes, "portraitalpha")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Enable 2D Portraits As Fallback", pfUI_config.unitframes, "portraittexture", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "Disable pfUI Unit Frames", C.unitframes, "disable", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "Enable Pastel Colors", C.unitframes, "pastel", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "Enable Custom Color Health Bars", C.unitframes, "custom", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "Custom Health Bar Color", C.unitframes, "customcolor", "color")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "Animation Speed", C.unitframes, "animation_speed")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "Portrait Alpha", C.unitframes, "portraitalpha")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "Enable 2D Portraits As Fallback", C.unitframes, "portraittexture", "checkbox")
 
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Buff Size", pfUI_config.unitframes, "buff_size")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Debuff Size", pfUI_config.unitframes, "debuff_size")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Unit Frame Layout", pfUI_config.unitframes, "layout", "dropdown", { "default", "tukui" })
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Enable Clickcast", pfUI_config.unitframes, "globalclick", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "Buff Size", C.unitframes, "buff_size")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "Debuff Size", C.unitframes, "debuff_size")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "Unit Frame Layout", C.unitframes, "layout", "dropdown", { "default", "tukui" })
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "Enable Clickcast", C.unitframes, "globalclick", "checkbox")
 
   pfUI.gui:CreateConfig(pfUI.gui.uf, "Player", nil, nil, "header")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Portrait Position", pfUI_config.unitframes.player, "portrait", "dropdown", { "bar", "left", "right", "off" })
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Health Bar Width", pfUI_config.unitframes.player, "width")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Health Bar Height", pfUI_config.unitframes.player, "height")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Power Bar Height", pfUI_config.unitframes.player, "pheight")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Spacing", pfUI_config.unitframes.player, "pspace")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Enable PvP Icon", pfUI_config.unitframes.player, "showPVP", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Align PvP Icon to Minimap", pfUI_config.unitframes.player, "showPVPMinimap", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Buff Position", pfUI_config.unitframes.player, "buffs", "dropdown", { "top", "bottom", "hide"})
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Enable Energy Ticks", pfUI_config.unitframes.player, "energy", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "Portrait Position", C.unitframes.player, "portrait", "dropdown", { "bar", "left", "right", "off" })
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "Health Bar Width", C.unitframes.player, "width")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "Health Bar Height", C.unitframes.player, "height")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "Power Bar Height", C.unitframes.player, "pheight")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "Spacing", C.unitframes.player, "pspace")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "Enable PvP Icon", C.unitframes.player, "showPVP", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "Align PvP Icon to Minimap", C.unitframes.player, "showPVPMinimap", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "Buff Position", C.unitframes.player, "buffs", "dropdown", { "top", "bottom", "hide"})
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "Enable Energy Ticks", C.unitframes.player, "energy", "checkbox")
 
   pfUI.gui:CreateConfig(pfUI.gui.uf, "Target", nil, nil, "header")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Portrait Position", pfUI_config.unitframes.target, "portrait", "dropdown", { "bar", "left", "right", "off" })
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Enable Target Switch Animation", pfUI_config.unitframes.target, "animation", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Health Bar Width", pfUI_config.unitframes.target, "width")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Health Bar Height", pfUI_config.unitframes.target, "height")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Power Bar Height", pfUI_config.unitframes.target, "pheight")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Spacing", pfUI_config.unitframes.target, "pspace")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Buff Position", pfUI_config.unitframes.target, "buffs", "dropdown", { "top", "bottom", "hide"})
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "Portrait Position", C.unitframes.target, "portrait", "dropdown", { "bar", "left", "right", "off" })
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "Enable Target Switch Animation", C.unitframes.target, "animation", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "Health Bar Width", C.unitframes.target, "width")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "Health Bar Height", C.unitframes.target, "height")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "Power Bar Height", C.unitframes.target, "pheight")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "Spacing", C.unitframes.target, "pspace")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "Buff Position", C.unitframes.target, "buffs", "dropdown", { "top", "bottom", "hide"})
 
   pfUI.gui:CreateConfig(pfUI.gui.uf, "Group", nil, nil, "header")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Portrait Position", pfUI_config.unitframes.group, "portrait", "dropdown", { "bar", "left", "right", "off" })
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Spacing", pfUI_config.unitframes.group, "pspace")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Hide Group Frames When In A Raid", pfUI_config.unitframes.group, "hide_in_raid", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Enable Clickcast", pfUI_config.unitframes.group, "clickcast", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Enable Raid Frames Buff Behaviour For Group Frames", pfUI_config.unitframes.group, "raid_buffs", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Enable Raid Frames Debuff Behaviour For Group Frames", pfUI_config.unitframes.group, "raid_debuffs", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "Portrait Position", C.unitframes.group, "portrait", "dropdown", { "bar", "left", "right", "off" })
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "Spacing", C.unitframes.group, "pspace")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "Hide Group Frames When In A Raid", C.unitframes.group, "hide_in_raid", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "Enable Clickcast", C.unitframes.group, "clickcast", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "Enable Raid Frames Buff Behaviour For Group Frames", C.unitframes.group, "raid_buffs", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "Enable Raid Frames Debuff Behaviour For Group Frames", C.unitframes.group, "raid_debuffs", "checkbox")
 
   pfUI.gui:CreateConfig(pfUI.gui.uf, "Raid", nil, nil, "header")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Spacing", pfUI_config.unitframes.raid, "pspace")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Invert Health Bar", pfUI_config.unitframes.raid, "invert_healthbar", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Show Missing Health", pfUI_config.unitframes.raid, "show_missing", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Clickcast", pfUI_config.unitframes.raid, "clickcast")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Clickcast (Shift)", pfUI_config.unitframes.raid, "clickcast_shift")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Clickcast (Alt)", pfUI_config.unitframes.raid, "clickcast_alt")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Clickcast (Ctrl)", pfUI_config.unitframes.raid, "clickcast_ctrl")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Show My Buffs", pfUI_config.unitframes.raid, "buffs_buffs", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Show HOTs", pfUI_config.unitframes.raid, "buffs_hots", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Show My Procs", pfUI_config.unitframes.raid, "buffs_procs", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Only Display HOTs Of My Class", pfUI_config.unitframes.raid, "buffs_classonly", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Show Debuff Indicators", pfUI_config.unitframes.raid, "debuffs_enable", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Only Display Debuffs Of My Class", pfUI_config.unitframes.raid, "debuffs_class", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "Spacing", C.unitframes.raid, "pspace")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "Invert Health Bar", C.unitframes.raid, "invert_healthbar", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "Show Missing Health", C.unitframes.raid, "show_missing", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "Clickcast", C.unitframes.raid, "clickcast")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "Clickcast (Shift)", C.unitframes.raid, "clickcast_shift")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "Clickcast (Alt)", C.unitframes.raid, "clickcast_alt")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "Clickcast (Ctrl)", C.unitframes.raid, "clickcast_ctrl")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "Show My Buffs", C.unitframes.raid, "buffs_buffs", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "Show HOTs", C.unitframes.raid, "buffs_hots", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "Show My Procs", C.unitframes.raid, "buffs_procs", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "Only Display HOTs Of My Class", C.unitframes.raid, "buffs_classonly", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "Show Debuff Indicators", C.unitframes.raid, "debuffs_enable", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "Only Display Debuffs Of My Class", C.unitframes.raid, "debuffs_class", "checkbox")
 
   pfUI.gui:CreateConfig(pfUI.gui.uf, "Other", nil, nil, "header")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Target Of Target Portrait Position", pfUI_config.unitframes.ttarget, "portrait", "dropdown", { "bar", "left", "right", "off" })
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Target Of Target Spacing", pfUI_config.unitframes.ttarget, "pspace")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "Target Of Target Portrait Position", C.unitframes.ttarget, "portrait", "dropdown", { "bar", "left", "right", "off" })
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "Target Of Target Spacing", C.unitframes.ttarget, "pspace")
 
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Pet Portrait Position", pfUI_config.unitframes.pet, "portrait", "dropdown", { "bar", "left", "right", "off" })
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Pet Spacing", pfUI_config.unitframes.pet, "pspace")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "Pet Portrait Position", C.unitframes.pet, "portrait", "dropdown", { "bar", "left", "right", "off" })
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "Pet Spacing", C.unitframes.pet, "pspace")
 
   -- action bar
   pfUI.gui.bar = pfUI.gui:CreateConfigTab("Action Bar")
-  pfUI.gui:CreateConfig(pfUI.gui.bar, "Icon Size", pfUI_config.bars, "icon_size")
-  pfUI.gui:CreateConfig(pfUI.gui.bar, "Enable Action Bar Backgrounds", pfUI_config.bars, "background", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.bar, "Enable Range Display On Hotkeys", pfUI_config.bars, "glowrange", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.bar, "Range Display Color", pfUI_config.bars, "rangecolor", "color")
-  pfUI.gui:CreateConfig(pfUI.gui.bar, "Enable Range Based Auto Paging (Hunter)", pfUI_config.bars, "hunterbar", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.bar, "Icon Size", C.bars, "icon_size")
+  pfUI.gui:CreateConfig(pfUI.gui.bar, "Enable Action Bar Backgrounds", C.bars, "background", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.bar, "Enable Range Display On Hotkeys", C.bars, "glowrange", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.bar, "Range Display Color", C.bars, "rangecolor", "color")
+  pfUI.gui:CreateConfig(pfUI.gui.bar, "Enable Range Based Auto Paging (Hunter)", C.bars, "hunterbar", "checkbox")
 
-  pfUI.gui:CreateConfig(pfUI.gui.bar, "Seconds Until Action Bars Autohide", pfUI_config.bars, "hide_time")
-  pfUI.gui:CreateConfig(pfUI.gui.bar, "Enable Autohide For BarActionMain", pfUI_config.bars, "hide_actionmain", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.bar, "Enable Autohide For BarBottomLeft", pfUI_config.bars, "hide_bottomleft", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.bar, "Enable Autohide For BarBottomRight", pfUI_config.bars, "hide_bottomright", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.bar, "Enable Autohide For BarRight", pfUI_config.bars, "hide_right", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.bar, "Enable Autohide For BarTwoRight", pfUI_config.bars, "hide_tworight", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.bar, "Enable Autohide For BarShapeShift", pfUI_config.bars, "hide_shapeshift", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.bar, "Enable Autohide For BarPet", pfUI_config.bars, "hide_pet", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.bar, "Seconds Until Action Bars Autohide", C.bars, "hide_time")
+  pfUI.gui:CreateConfig(pfUI.gui.bar, "Enable Autohide For BarActionMain", C.bars, "hide_actionmain", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.bar, "Enable Autohide For BarBottomLeft", C.bars, "hide_bottomleft", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.bar, "Enable Autohide For BarBottomRight", C.bars, "hide_bottomright", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.bar, "Enable Autohide For BarRight", C.bars, "hide_right", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.bar, "Enable Autohide For BarTwoRight", C.bars, "hide_tworight", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.bar, "Enable Autohide For BarShapeShift", C.bars, "hide_shapeshift", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.bar, "Enable Autohide For BarPet", C.bars, "hide_pet", "checkbox")
 
   pfUI.gui:CreateConfig(pfUI.gui.bar, "Action Bar Layouts", nil, nil, "header")
   local values = pfUI.api:BarLayoutOptions(NUM_ACTIONBAR_BUTTONS)
-  pfUI.gui:CreateConfig(pfUI.gui.bar, "Main Actionbar (ActionMain)", pfUI_config.bars.actionmain, "formfactor", "dropdown", values)
-  pfUI.gui:CreateConfig(pfUI.gui.bar, "Second Actionbar (BottomLeft)", pfUI_config.bars.bottomleft, "formfactor", "dropdown", values)
-  pfUI.gui:CreateConfig(pfUI.gui.bar, "Left Actionbar (BottomRight)", pfUI_config.bars.bottomright, "formfactor", "dropdown", values)
-  pfUI.gui:CreateConfig(pfUI.gui.bar, "Right Actionbar (Right)", pfUI_config.bars.right, "formfactor", "dropdown", values)
-  pfUI.gui:CreateConfig(pfUI.gui.bar, "Vertical Actionbar (TwoRight)", pfUI_config.bars.tworight, "formfactor", "dropdown", values)
+  pfUI.gui:CreateConfig(pfUI.gui.bar, "Main Actionbar (ActionMain)", C.bars.actionmain, "formfactor", "dropdown", values)
+  pfUI.gui:CreateConfig(pfUI.gui.bar, "Second Actionbar (BottomLeft)", C.bars.bottomleft, "formfactor", "dropdown", values)
+  pfUI.gui:CreateConfig(pfUI.gui.bar, "Left Actionbar (BottomRight)", C.bars.bottomright, "formfactor", "dropdown", values)
+  pfUI.gui:CreateConfig(pfUI.gui.bar, "Right Actionbar (Right)", C.bars.right, "formfactor", "dropdown", values)
+  pfUI.gui:CreateConfig(pfUI.gui.bar, "Vertical Actionbar (TwoRight)", C.bars.tworight, "formfactor", "dropdown", values)
   local values = pfUI.api:BarLayoutOptions(NUM_SHAPESHIFT_SLOTS)
-  pfUI.gui:CreateConfig(pfUI.gui.bar, "Shapeshift Bar (BarShapeShift)", pfUI_config.bars.shapeshift, "formfactor", "dropdown", values)
+  pfUI.gui:CreateConfig(pfUI.gui.bar, "Shapeshift Bar (BarShapeShift)", C.bars.shapeshift, "formfactor", "dropdown", values)
   local values = pfUI.api:BarLayoutOptions(NUM_PET_ACTION_SLOTS)
-  pfUI.gui:CreateConfig(pfUI.gui.bar, "Pet Bar (BarPet)", pfUI_config.bars.pet, "formfactor", "dropdown", values)
+  pfUI.gui:CreateConfig(pfUI.gui.bar, "Pet Bar (BarPet)", C.bars.pet, "formfactor", "dropdown", values)
 
   -- panels
   pfUI.gui.panel = pfUI.gui:CreateConfigTab("Panel")
   local values = { "time", "fps", "exp", "gold", "friends", "guild", "durability", "zone", "combat", "none" }
-  pfUI.gui:CreateConfig(pfUI.gui.panel, "Left Panel: Left", pfUI_config.panel.left, "left", "dropdown", values)
-  pfUI.gui:CreateConfig(pfUI.gui.panel, "Left Panel: Center", pfUI_config.panel.left, "center", "dropdown", values)
-  pfUI.gui:CreateConfig(pfUI.gui.panel, "Left Panel: Right", pfUI_config.panel.left, "right", "dropdown", values)
-  pfUI.gui:CreateConfig(pfUI.gui.panel, "Right Panel: Left", pfUI_config.panel.right, "left", "dropdown", values)
-  pfUI.gui:CreateConfig(pfUI.gui.panel, "Right Panel: Center", pfUI_config.panel.right, "center", "dropdown", values)
-  pfUI.gui:CreateConfig(pfUI.gui.panel, "Right Panel: Right", pfUI_config.panel.right, "right", "dropdown", values)
-  pfUI.gui:CreateConfig(pfUI.gui.panel, "Other Panel: Minimap", pfUI_config.panel.other, "minimap", "dropdown", values)
-  pfUI.gui:CreateConfig(pfUI.gui.panel, "Always Show Experience And Reputation Bar", pfUI_config.panel.xp, "showalways", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.panel, "Enable Micro Bar", pfUI_config.panel.micro, "enable", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.panel, "Left Panel: Left", C.panel.left, "left", "dropdown", values)
+  pfUI.gui:CreateConfig(pfUI.gui.panel, "Left Panel: Center", C.panel.left, "center", "dropdown", values)
+  pfUI.gui:CreateConfig(pfUI.gui.panel, "Left Panel: Right", C.panel.left, "right", "dropdown", values)
+  pfUI.gui:CreateConfig(pfUI.gui.panel, "Right Panel: Left", C.panel.right, "left", "dropdown", values)
+  pfUI.gui:CreateConfig(pfUI.gui.panel, "Right Panel: Center", C.panel.right, "center", "dropdown", values)
+  pfUI.gui:CreateConfig(pfUI.gui.panel, "Right Panel: Right", C.panel.right, "right", "dropdown", values)
+  pfUI.gui:CreateConfig(pfUI.gui.panel, "Other Panel: Minimap", C.panel.other, "minimap", "dropdown", values)
+  pfUI.gui:CreateConfig(pfUI.gui.panel, "Always Show Experience And Reputation Bar", C.panel.xp, "showalways", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.panel, "Enable Micro Bar", C.panel.micro, "enable", "checkbox")
 
   -- tooltip
   pfUI.gui.tooltip = pfUI.gui:CreateConfigTab("Tooltip")
-  pfUI.gui:CreateConfig(pfUI.gui.tooltip, "Tooltip Position", pfUI_config.tooltip, "position", "dropdown", { "bottom", "chat", "cursor" })
-  pfUI.gui:CreateConfig(pfUI.gui.tooltip, "Enable Extended Guild Information", pfUI_config.tooltip, "extguild", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.tooltip, "Custom Transparency", pfUI_config.tooltip, "alpha")
-  pfUI.gui:CreateConfig(pfUI.gui.tooltip, "Always Show Item Comparison", pfUI_config.tooltip.compare, "showalways", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.tooltip, "Always Show Extended Vendor Values", pfUI_config.tooltip.vendor, "showalways", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.tooltip, "Tooltip Position", C.tooltip, "position", "dropdown", { "bottom", "chat", "cursor" })
+  pfUI.gui:CreateConfig(pfUI.gui.tooltip, "Enable Extended Guild Information", C.tooltip, "extguild", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.tooltip, "Custom Transparency", C.tooltip, "alpha")
+  pfUI.gui:CreateConfig(pfUI.gui.tooltip, "Always Show Item Comparison", C.tooltip.compare, "showalways", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.tooltip, "Always Show Extended Vendor Values", C.tooltip.vendor, "showalways", "checkbox")
 
   -- castbar
   pfUI.gui.castbar = pfUI.gui:CreateConfigTab("Castbar")
-  pfUI.gui:CreateConfig(pfUI.gui.castbar, "Casting Color", pfUI_config.appearance.castbar, "castbarcolor", "color")
-  pfUI.gui:CreateConfig(pfUI.gui.castbar, "Channeling Color", pfUI_config.appearance.castbar, "channelcolor", "color")
-  pfUI.gui:CreateConfig(pfUI.gui.castbar, "Disable Blizzard Castbar", pfUI_config.castbar.player, "hide_blizz", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.castbar, "Disable pfUI Player Castbar", pfUI_config.castbar.player, "hide_pfui", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.castbar, "Disable pfUI Target Castbar", pfUI_config.castbar.target, "hide_pfui", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.castbar, "Casting Color", C.appearance.castbar, "castbarcolor", "color")
+  pfUI.gui:CreateConfig(pfUI.gui.castbar, "Channeling Color", C.appearance.castbar, "channelcolor", "color")
+  pfUI.gui:CreateConfig(pfUI.gui.castbar, "Disable Blizzard Castbar", C.castbar.player, "hide_blizz", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.castbar, "Disable pfUI Player Castbar", C.castbar.player, "hide_pfui", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.castbar, "Disable pfUI Target Castbar", C.castbar.target, "hide_pfui", "checkbox")
 
   -- chat
   pfUI.gui.chat = pfUI.gui:CreateConfigTab("Chat")
-  pfUI.gui:CreateConfig(pfUI.gui.chat, "Enable \"Loot & Spam\" Chat Window", pfUI_config.chat.right, "enable", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.chat, "Inputbox Width", pfUI_config.chat.text, "input_width")
-  pfUI.gui:CreateConfig(pfUI.gui.chat, "Inputbox Height", pfUI_config.chat.text, "input_height")
-  pfUI.gui:CreateConfig(pfUI.gui.chat, "Enable Timestamps", pfUI_config.chat.text, "time", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.chat, "Timestamp Format", pfUI_config.chat.text, "timeformat")
-  pfUI.gui:CreateConfig(pfUI.gui.chat, "Timestamp Brackets", pfUI_config.chat.text, "timebracket")
-  pfUI.gui:CreateConfig(pfUI.gui.chat, "Timestamp Color", pfUI_config.chat.text, "timecolor", "color")
-  pfUI.gui:CreateConfig(pfUI.gui.chat, "Enable Class Colors", pfUI_config.chat.text, "classcolor", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.chat, "Left Chat Width", pfUI_config.chat.left, "width")
-  pfUI.gui:CreateConfig(pfUI.gui.chat, "Left Chat Height", pfUI_config.chat.left, "height")
-  pfUI.gui:CreateConfig(pfUI.gui.chat, "Right Chat Width", pfUI_config.chat.right, "width")
-  pfUI.gui:CreateConfig(pfUI.gui.chat, "Right Chat Height", pfUI_config.chat.right, "height")
-  pfUI.gui:CreateConfig(pfUI.gui.chat, "Enable Right Chat Window", pfUI_config.chat.right, "alwaysshow", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.chat, "Enable Chat Dock", pfUI_config.chat.global, "tabdock", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.chat, "Enable Custom Colors", pfUI_config.chat.global, "custombg", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.chat, "Chat Background Color", pfUI_config.chat.global, "background", "color")
-  pfUI.gui:CreateConfig(pfUI.gui.chat, "Chat Border Color", pfUI_config.chat.global, "border", "color")
-  pfUI.gui:CreateConfig(pfUI.gui.chat, "Enable Custom Incoming Whispers Layout", pfUI_config.chat.global, "whispermod", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.chat, "Incoming Whispers Color", pfUI_config.chat.global, "whisper", "color")
-  pfUI.gui:CreateConfig(pfUI.gui.chat, "Enable Sticky Chat", pfUI_config.chat.global, "sticky", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.chat, "Enable Chat Fade", pfUI_config.chat.global, "fadeout", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.chat, "Seconds Before Chat Fade", pfUI_config.chat.global, "fadetime")
+  pfUI.gui:CreateConfig(pfUI.gui.chat, "Enable \"Loot & Spam\" Chat Window", C.chat.right, "enable", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.chat, "Inputbox Width", C.chat.text, "input_width")
+  pfUI.gui:CreateConfig(pfUI.gui.chat, "Inputbox Height", C.chat.text, "input_height")
+  pfUI.gui:CreateConfig(pfUI.gui.chat, "Enable Timestamps", C.chat.text, "time", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.chat, "Timestamp Format", C.chat.text, "timeformat")
+  pfUI.gui:CreateConfig(pfUI.gui.chat, "Timestamp Brackets", C.chat.text, "timebracket")
+  pfUI.gui:CreateConfig(pfUI.gui.chat, "Timestamp Color", C.chat.text, "timecolor", "color")
+  pfUI.gui:CreateConfig(pfUI.gui.chat, "Enable Class Colors", C.chat.text, "classcolor", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.chat, "Left Chat Width", C.chat.left, "width")
+  pfUI.gui:CreateConfig(pfUI.gui.chat, "Left Chat Height", C.chat.left, "height")
+  pfUI.gui:CreateConfig(pfUI.gui.chat, "Right Chat Width", C.chat.right, "width")
+  pfUI.gui:CreateConfig(pfUI.gui.chat, "Right Chat Height", C.chat.right, "height")
+  pfUI.gui:CreateConfig(pfUI.gui.chat, "Enable Right Chat Window", C.chat.right, "alwaysshow", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.chat, "Enable Chat Dock", C.chat.global, "tabdock", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.chat, "Enable Custom Colors", C.chat.global, "custombg", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.chat, "Chat Background Color", C.chat.global, "background", "color")
+  pfUI.gui:CreateConfig(pfUI.gui.chat, "Chat Border Color", C.chat.global, "border", "color")
+  pfUI.gui:CreateConfig(pfUI.gui.chat, "Enable Custom Incoming Whispers Layout", C.chat.global, "whispermod", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.chat, "Incoming Whispers Color", C.chat.global, "whisper", "color")
+  pfUI.gui:CreateConfig(pfUI.gui.chat, "Enable Sticky Chat", C.chat.global, "sticky", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.chat, "Enable Chat Fade", C.chat.global, "fadeout", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.chat, "Seconds Before Chat Fade", C.chat.global, "fadetime")
 
   -- nameplates
   pfUI.gui.nameplates = pfUI.gui:CreateConfigTab("Nameplates")
-  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "Enable Castbars", pfUI_config.nameplates, "showcastbar", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "Enable Spellname", pfUI_config.nameplates, "spellname", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "Enable Debuffs", pfUI_config.nameplates, "showdebuffs", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "Enable Clickthrough", pfUI_config.nameplates, "clickthrough", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "Enable Mouselook With Right Click", pfUI_config.nameplates, "rightclick", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "Right Click Auto Attack Threshold", pfUI_config.nameplates, "clickthreshold")
-  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "Enable Class Colors On Enemies", pfUI_config.nameplates, "enemyclassc", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "Enable Class Colors On Friends", pfUI_config.nameplates, "friendclassc", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "Raid Icon Size", pfUI_config.nameplates, "raidiconsize")
-  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "Show Players Only", pfUI_config.nameplates, "players", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "Show Health Points", pfUI_config.nameplates, "showhp", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "Vertical Position", pfUI_config.nameplates, "vpos")
+  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "Enable Castbars", C.nameplates, "showcastbar", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "Enable Spellname", C.nameplates, "spellname", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "Enable Debuffs", C.nameplates, "showdebuffs", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "Enable Clickthrough", C.nameplates, "clickthrough", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "Enable Mouselook With Right Click", C.nameplates, "rightclick", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "Right Click Auto Attack Threshold", C.nameplates, "clickthreshold")
+  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "Enable Class Colors On Enemies", C.nameplates, "enemyclassc", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "Enable Class Colors On Friends", C.nameplates, "friendclassc", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "Raid Icon Size", C.nameplates, "raidiconsize")
+  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "Show Players Only", C.nameplates, "players", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "Show Health Points", C.nameplates, "showhp", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "Vertical Position", C.nameplates, "vpos")
 
   -- thirdparty
   pfUI.gui.thirdparty = pfUI.gui:CreateConfigTab("Thirdparty")
-  pfUI.gui:CreateConfig(pfUI.gui.thirdparty, "DPSMate", pfUI_config.thirdparty.dpsmate, "enable", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.thirdparty, "WIM", pfUI_config.thirdparty.wim, "enable", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.thirdparty, "HealComm", pfUI_config.thirdparty.healcomm, "enable", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.thirdparty, "CleanUp", pfUI_config.thirdparty.cleanup, "enable", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.thirdparty, "KLH Threat Meter", pfUI_config.thirdparty.ktm, "enable", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.thirdparty, "DPSMate", C.thirdparty.dpsmate, "enable", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.thirdparty, "WIM", C.thirdparty.wim, "enable", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.thirdparty, "HealComm", C.thirdparty.healcomm, "enable", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.thirdparty, "CleanUp", C.thirdparty.cleanup, "enable", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.thirdparty, "KLH Threat Meter", C.thirdparty.ktm, "enable", "checkbox")
 
   -- modules
   pfUI.gui.modules = pfUI.gui:CreateConfigTab("Modules")
@@ -1022,7 +1022,7 @@ pfUI:RegisterModule("gui", function ()
     if m ~= "gui" then
       -- create disabled entry if not existing and display
       pfUI:UpdateConfig("disabled", nil, m, "0")
-      pfUI.gui:CreateConfig(pfUI.gui.modules, "Disable " .. m, pfUI_config.disabled, m, "checkbox")
+      pfUI.gui:CreateConfig(pfUI.gui.modules, "Disable " .. m, C.disabled, m, "checkbox")
     end
   end
 
@@ -1061,7 +1061,7 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.resetFrames = pfUI.gui:CreateConfigTab("Reset Positions", "bottom", function()
     pfUI.api:CreateQuestionDialog("Do you really want to reset the Frame Positions?",
       function()
-        _G["pfUI_config"]["position"] = {}
+        _G["C"]["position"] = {}
         this:GetParent():Hide()
         pfUI.gui:Reload()
       end)
@@ -1081,7 +1081,7 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.resetConfig = pfUI.gui:CreateConfigTab("Reset Config", "bottom", function()
     pfUI.api:CreateQuestionDialog("Do you really want to reset your configuration?\nThis also includes frame positions",
       function()
-        _G["pfUI_config"] = {}
+        _G["C"] = {}
         pfUI:LoadConfig()
         this:GetParent():Hide()
         pfUI.gui:Reload()
@@ -1093,7 +1093,7 @@ pfUI:RegisterModule("gui", function ()
     pfUI.api:CreateQuestionDialog("Do you really want to reset |cffffaaaaEVERYTHING|r?\nThis includes configuration, frame positions, firstrun settings,\n player cache, profiles and just EVERYTHING!",
       function()
         _G["pfUI_init"] = {}
-        _G["pfUI_config"] = {}
+        _G["C"] = {}
         _G["pfUI_playerDB"] = {}
         pfUI_profiles = {}
         pfUI:LoadConfig()

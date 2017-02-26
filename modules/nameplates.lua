@@ -35,7 +35,7 @@ pfUI:RegisterModule("nameplates", function ()
     glow:SetAlpha(0)
     glow.Show = function() return end
 
-    if pfUI_config.nameplates.players == "1" then
+    if C.nameplates.players == "1" then
       if not pfUI_playerDB[name:GetText()] or not pfUI_playerDB[name:GetText()]["class"] then
         this:Hide()
       end
@@ -44,7 +44,7 @@ pfUI:RegisterModule("nameplates", function ()
     -- healthbar
     healthbar:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
     healthbar:ClearAllPoints()
-    healthbar:SetPoint("TOP", this, "TOP", 0, tonumber(pfUI_config.nameplates.vpos))
+    healthbar:SetPoint("TOP", this, "TOP", 0, tonumber(C.nameplates.vpos))
     healthbar:SetWidth(110)
     healthbar:SetHeight(7)
 
@@ -61,8 +61,8 @@ pfUI:RegisterModule("nameplates", function ()
 
     -- raidtarget
     raidicon:ClearAllPoints()
-    raidicon:SetWidth(pfUI_config.nameplates.raidiconsize)
-    raidicon:SetHeight(pfUI_config.nameplates.raidiconsize)
+    raidicon:SetWidth(C.nameplates.raidiconsize)
+    raidicon:SetHeight(C.nameplates.raidiconsize)
     raidicon:SetPoint("CENTER", healthbar, "CENTER", 0, -5)
 
     -- adjust font
@@ -93,7 +93,7 @@ pfUI:RegisterModule("nameplates", function ()
   end
 
   function pfUI.nameplates:CreateDebuffs(frame)
-    if pfUI_config.nameplates["showdebuffs"] ~= "1" then return end
+    if C.nameplates["showdebuffs"] ~= "1" then return end
 
     if frame.debuffs == nil then frame.debuffs = {} end
     for j=1, 16, 1 do
@@ -115,7 +115,7 @@ pfUI:RegisterModule("nameplates", function ()
   end
 
   function pfUI.nameplates:CreateCastbar(healthbar)
-    if not pfUI.castbar or not pfUI_config.nameplates["showcastbar"] == "1" then return end
+    if not pfUI.castbar or not C.nameplates["showcastbar"] == "1" then return end
 
     -- create frames
     if healthbar.castbar == nil then
@@ -177,7 +177,7 @@ pfUI:RegisterModule("nameplates", function ()
   end
 
   function pfUI.nameplates:CreateHP(healthbar)
-    if pfUI_config.nameplates.showhp == "1" and not healthbar.hptext then
+    if C.nameplates.showhp == "1" and not healthbar.hptext then
       healthbar.hptext = healthbar:CreateFontString("Status", "DIALOG", "GameFontNormal")
       healthbar.hptext:SetPoint("RIGHT", healthbar, "RIGHT")
       healthbar.hptext:SetNonSpaceWrap(false)
@@ -194,7 +194,7 @@ pfUI:RegisterModule("nameplates", function ()
     local healthbar = this:GetChildren()
     local border, glow, name, level, levelicon , raidicon = this:GetRegions()
 
-    if pfUI_config.nameplates.players == "1" then
+    if C.nameplates.players == "1" then
       if not pfUI_playerDB[name:GetText()] or not pfUI_playerDB[name:GetText()]["class"] then
         this:Hide()
       end
@@ -276,7 +276,7 @@ pfUI:RegisterModule("nameplates", function ()
 
     local name = name:GetText()
     if healthbar.reaction == 0 then
-      if pfUI_config.nameplates["enemyclassc"] == "1"
+      if C.nameplates["enemyclassc"] == "1"
       and pfUI_playerDB[name]
       and pfUI_playerDB[name]["class"]
       and RAID_CLASS_COLORS[pfUI_playerDB[name]["class"]]
@@ -288,7 +288,7 @@ pfUI:RegisterModule("nameplates", function ()
           0.9)
       end
     elseif healthbar.reaction == 2 then
-      if pfUI_config.nameplates["friendclassc"] == "1"
+      if C.nameplates["friendclassc"] == "1"
       and pfUI_playerDB[name]
       and pfUI_playerDB[name]["class"]
       and RAID_CLASS_COLORS[pfUI_playerDB[name]["class"]]
@@ -306,7 +306,7 @@ pfUI:RegisterModule("nameplates", function ()
     if not healthbar.castbar then return end
 
     -- show castbar
-    if pfUI.castbar and pfUI_config.nameplates["showcastbar"] == "1" and pfUI.castbar.target.casterDB[name:GetText()] ~= nil and pfUI.castbar.target.casterDB[name:GetText()]["cast"] ~= nil then
+    if pfUI.castbar and C.nameplates["showcastbar"] == "1" and pfUI.castbar.target.casterDB[name:GetText()] ~= nil and pfUI.castbar.target.casterDB[name:GetText()]["cast"] ~= nil then
       if pfUI.castbar.target.casterDB[name:GetText()]["starttime"] + pfUI.castbar.target.casterDB[name:GetText()]["casttime"] <= GetTime() then
         pfUI.castbar.target.casterDB[name:GetText()] = nil
         healthbar.castbar:Hide()
@@ -314,7 +314,7 @@ pfUI:RegisterModule("nameplates", function ()
         healthbar.castbar:SetMinMaxValues(0,  pfUI.castbar.target.casterDB[name:GetText()]["casttime"])
         healthbar.castbar:SetValue(GetTime() -  pfUI.castbar.target.casterDB[name:GetText()]["starttime"])
         healthbar.castbar.text:SetText(pfUI.api.round( pfUI.castbar.target.casterDB[name:GetText()]["starttime"] +  pfUI.castbar.target.casterDB[name:GetText()]["casttime"] - GetTime(),1))
-        if pfUI_config.nameplates.spellname == "1" and healthbar.castbar.spell then
+        if C.nameplates.spellname == "1" and healthbar.castbar.spell then
           healthbar.castbar.spell:SetText(pfUI.castbar.target.casterDB[name:GetText()]["cast"])
         else
           healthbar.castbar.spell:SetText("")
@@ -338,7 +338,7 @@ pfUI:RegisterModule("nameplates", function ()
   end
 
   function pfUI.nameplates:UpdateDebuffs(frame, healthbar)
-    if not frame.debuffs or pfUI_config.nameplates["showdebuffs"] ~= "1" then return end
+    if not frame.debuffs or C.nameplates["showdebuffs"] ~= "1" then return end
 
     if UnitExists("target") and healthbar:GetAlpha() == 1 then
     local j = 1
@@ -360,7 +360,7 @@ pfUI:RegisterModule("nameplates", function ()
   end
 
   function pfUI.nameplates:UpdateHP(healthbar)
-    if pfUI_config.nameplates.showhp == "1" and healthbar.hptext then
+    if C.nameplates.showhp == "1" and healthbar.hptext then
       local min, max = healthbar:GetMinMaxValues()
       local cur = healthbar:GetValue()
       healthbar.hptext:SetText(cur .. " / " .. max)
@@ -369,9 +369,9 @@ pfUI:RegisterModule("nameplates", function ()
 
   function pfUI.nameplates:UpdateClickHandler(frame)
     -- enable clickthrough
-    if pfUI_config.nameplates["clickthrough"] == "0" then
+    if C.nameplates["clickthrough"] == "0" then
       frame:EnableMouse(true)
-      if pfUI_config.nameplates["rightclick"] == "1" then
+      if C.nameplates["rightclick"] == "1" then
         frame:SetScript("OnMouseDown", function()
           if arg1 and arg1 == "RightButton" then
             MouselookStart()
@@ -426,7 +426,7 @@ pfUI:RegisterModule("nameplates", function ()
     end
 
     -- if threshold is reached (0.5 second) no click action will follow
-    if not IsMouselooking() and pfUI.nameplates.emulateRightClick.time + tonumber(pfUI_config.nameplates["clickthreshold"]) < GetTime() then
+    if not IsMouselooking() and pfUI.nameplates.emulateRightClick.time + tonumber(C.nameplates["clickthreshold"]) < GetTime() then
       pfUI.nameplates.emulateRightClick:Hide()
       return
     end

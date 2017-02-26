@@ -5,7 +5,7 @@ pfUI:RegisterModule("cooldown", function ()
     cooldown.cd:SetFrameLevel(cooldown.cd:GetFrameLevel() + 1)
 
     cooldown.cd.text = cooldown.cd:CreateFontString("pfCooldownFrameText", "OVERLAY")
-    cooldown.cd.text:SetFont(pfUI.font_square, pfUI_config.global.font_size, "OUTLINE")
+    cooldown.cd.text:SetFont(pfUI.font_square, C.global.font_size, "OUTLINE")
     cooldown.cd.text:SetPoint("CENTER", cooldown.cd, "CENTER", 0, 1)
 
     cooldown.cd:SetScript("OnUpdate", function()
@@ -34,17 +34,17 @@ pfUI:RegisterModule("cooldown", function ()
         if remaining > 99 then
           remaining = remaining / 60
           unit = "m"
-          r,g,b,a = pfUI.api.strsplit(",", pfUI_config.appearance.cd.mincolor)
+          r,g,b,a = pfUI.api.strsplit(",", C.appearance.cd.mincolor)
         end
         if remaining > 99 then
           remaining = remaining / 60
           unit = "h"
-          r,g,b,a = pfUI.api.strsplit(",", pfUI_config.appearance.cd.hourcolor)
+          r,g,b,a = pfUI.api.strsplit(",", C.appearance.cd.hourcolor)
         end
         if remaining > 99 then
           remaining = remaining / 24
           unit = "d"
-          r,g,b,a = pfUI.api.strsplit(",", pfUI_config.appearance.cd.daycolor)
+          r,g,b,a = pfUI.api.strsplit(",", C.appearance.cd.daycolor)
         end
         this.text:SetText(pfUI.api.round(remaining) .. unit)
         this.text:SetTextColor(r,g,b,a)
@@ -67,7 +67,7 @@ pfUI:RegisterModule("cooldown", function ()
     end
 
     -- print time as text on cooldown frames
-    if ( start > 0 and duration > tonumber(pfUI_config.appearance.cd.threshold) and enable > 0) then
+    if ( start > 0 and duration > tonumber(C.appearance.cd.threshold) and enable > 0) then
       if( not this.cd ) then
         pfCreateCoolDown(this, start, duration)
       end

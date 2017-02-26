@@ -2,8 +2,8 @@ pfUI:RegisterModule("xpbar", function ()
   pfUI.xp = CreateFrame("Frame",nil, UIParent)
   pfUI.xp:SetWidth(5)
   if pfUI.chat then
-    pfUI.xp:SetPoint("TOPLEFT", pfUI.chat.left, "TOPRIGHT", pfUI_config.appearance.border.default*2, 0)
-    pfUI.xp:SetPoint("BOTTOMLEFT", pfUI.chat.left, "BOTTOMRIGHT", pfUI_config.appearance.border.default*2, 0)
+    pfUI.xp:SetPoint("TOPLEFT", pfUI.chat.left, "TOPRIGHT", C.appearance.border.default*2, 0)
+    pfUI.xp:SetPoint("BOTTOMLEFT", pfUI.chat.left, "BOTTOMRIGHT", C.appearance.border.default*2, 0)
   else
     pfUI.xp:SetPoint("TOPLEFT", UIParent, "TOPLEFT", 0, 0)
     pfUI.xp:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", 0, 0)
@@ -34,7 +34,7 @@ pfUI:RegisterModule("xpbar", function ()
     end)
 
   pfUI.xp:SetScript("OnUpdate",function()
-      if pfUI_config.panel.xp.showalways == "1" then return end
+      if C.panel.xp.showalways == "1" then return end
       if pfUI.xp:GetAlpha() == 0 or pfUI.xp.mouseover == true then return end
       if not pfUI.xp.tick then
         pfUI.xp.tick = GetTime() + 0.01
@@ -102,8 +102,8 @@ pfUI:RegisterModule("xpbar", function ()
   pfUI.rep = CreateFrame("Frame",nil, UIParent)
   pfUI.rep:SetWidth(5)
   if pfUI.chat then
-    pfUI.rep:SetPoint("TOPRIGHT",pfUI.chat.right,"TOPLEFT", -pfUI_config.appearance.border.default*2, 0)
-    pfUI.rep:SetPoint("BOTTOMRIGHT",pfUI.chat.right,"BOTTOMLEFT",-pfUI_config.appearance.border.default*2, 0)
+    pfUI.rep:SetPoint("TOPRIGHT",pfUI.chat.right,"TOPLEFT", -C.appearance.border.default*2, 0)
+    pfUI.rep:SetPoint("BOTTOMRIGHT",pfUI.chat.right,"BOTTOMLEFT",-C.appearance.border.default*2, 0)
   else
     pfUI.rep:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", 0, 0)
     pfUI.rep:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", 0, 0)
@@ -142,7 +142,7 @@ pfUI:RegisterModule("xpbar", function ()
     end)
 
   pfUI.rep:SetScript("OnUpdate",function()
-      if pfUI_config.panel.xp.showalways == "1" then return end
+      if C.panel.xp.showalways == "1" then return end
       if pfUI.rep:GetAlpha() == 0 or pfUI.rep.mouseover == true then return end
       if not pfUI.rep.tick then
         pfUI.rep.tick = GetTime() + 0.01

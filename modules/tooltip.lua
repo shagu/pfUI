@@ -1,8 +1,8 @@
 pfUI:RegisterModule("tooltip", function ()
-local alpha = tonumber(pfUI_config.tooltip.alpha)
+local alpha = tonumber(C.tooltip.alpha)
 pfUI.api:CreateBackdrop(GameTooltip, nil, nil, alpha)
 
-  if pfUI_config.tooltip.position == "cursor" then
+  if C.tooltip.position == "cursor" then
     function _G.GameTooltip_SetDefaultAnchor(tooltip, parent)
       tooltip:SetOwner(parent, "ANCHOR_CURSOR")
     end
@@ -42,16 +42,16 @@ pfUI.api:CreateBackdrop(GameTooltip, nil, nil, alpha)
       pfUI.tooltip:Update()
       if GameTooltip:GetAnchorType() == "ANCHOR_NONE" then
         GameTooltip:ClearAllPoints()
-        if pfUI_config.tooltip.position == "bottom" then
+        if C.tooltip.position == "bottom" then
           if pfUI.panel then
-            GameTooltip:SetPoint("BOTTOMRIGHT", pfUI.panel.right, "TOPRIGHT", 0, pfUI_config.appearance.border.default*2)
+            GameTooltip:SetPoint("BOTTOMRIGHT", pfUI.panel.right, "TOPRIGHT", 0, C.appearance.border.default*2)
           else
-            GameTooltip:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", 0, -pfUI_config.appearance.border.default*2)
+            GameTooltip:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", 0, -C.appearance.border.default*2)
           end
-        elseif pfUI_config.tooltip.position == "chat" then
+        elseif C.tooltip.position == "chat" then
           local anchor = ChatFrame3
           if pfUI.chat then anchor = pfUI.chat.right end
-          GameTooltip:SetPoint("BOTTOMRIGHT", anchor, "TOPRIGHT", 0, pfUI_config.appearance.border.default*2)
+          GameTooltip:SetPoint("BOTTOMRIGHT", anchor, "TOPRIGHT", 0, C.appearance.border.default*2)
         end
       end
     end)
@@ -113,7 +113,7 @@ pfUI.api:CreateBackdrop(GameTooltip, nil, nil, alpha)
       if guild then
         local rank = ""
         local lead = ""
-        if pfUI_config.tooltip.extguild == "1" then
+        if C.tooltip.extguild == "1" then
           if rankstr then rank = " |cffaaaaaa(" .. rankstr .. ")"  end
           if rankid and rankid == 0 then lead = "|cffffcc00*|r" end
         end
@@ -136,7 +136,7 @@ pfUI.api:CreateBackdrop(GameTooltip, nil, nil, alpha)
         pfUI.tooltipStatusBar.HP:SetPoint("TOP", 0,8)
         pfUI.tooltipStatusBar.HP:SetNonSpaceWrap(false)
         pfUI.tooltipStatusBar.HP:SetFontObject(GameFontWhite)
-        pfUI.tooltipStatusBar.HP:SetFont(pfUI.font_default, pfUI_config.global.font_size + 2, "OUTLINE")
+        pfUI.tooltipStatusBar.HP:SetFont(pfUI.font_default, C.global.font_size + 2, "OUTLINE")
       end
 
       if hp and hpm then

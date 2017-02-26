@@ -1,10 +1,10 @@
 pfUI:RegisterModule("raid", function ()
   -- do not go further on disabled UFs
-  if pfUI_config.unitframes.disable == "1" then return end
+  if C.unitframes.disable == "1" then return end
 
-  local default_border = pfUI_config.appearance.border.default
-  if pfUI_config.appearance.border.raidframes ~= "-1" then
-    default_border = pfUI_config.appearance.border.raidframes
+  local default_border = C.appearance.border.default
+  if C.appearance.border.raidframes ~= "-1" then
+    default_border = C.appearance.border.raidframes
   end
 
   pfUI.uf.raid = CreateFrame("Button","pfRaid",UIParent)
@@ -42,8 +42,8 @@ pfUI:RegisterModule("raid", function ()
       pfUI.uf.raid[i] = CreateFrame("Button","pfRaid" .. i,UIParent)
 
       pfUI.uf.raid[i]:SetWidth(50)
-      pfUI.uf.raid[i]:SetHeight(30 + 2*default_border + pfUI_config.unitframes.raid.pspace)
-      pfUI.uf.raid[i]:SetPoint("BOTTOMLEFT", (r-1) * (54+default_border) + 5, pfUI_config.chat.left.height + 10 + ((g-1)*(37+default_border))+default_border)
+      pfUI.uf.raid[i]:SetHeight(30 + 2*default_border + C.unitframes.raid.pspace)
+      pfUI.uf.raid[i]:SetPoint("BOTTOMLEFT", (r-1) * (54+default_border) + 5, C.chat.left.height + 10 + ((g-1)*(37+default_border))+default_border)
       pfUI.api:UpdateMovable(pfUI.uf.raid[i])
       pfUI.uf.raid[i]:Hide()
       pfUI.uf.raid[i].id = 0
@@ -71,7 +71,7 @@ pfUI:RegisterModule("raid", function ()
       pfUI.uf.raid[i].power.bar:SetMinMaxValues(0, 100)
 
       pfUI.uf.raid[i].caption = pfUI.uf.raid[i]:CreateFontString("Status", "HIGH", "GameFontNormal")
-      pfUI.uf.raid[i].caption:SetFont(pfUI.font_square, pfUI_config.global.font_size, "OUTLINE")
+      pfUI.uf.raid[i].caption:SetFont(pfUI.font_square, C.global.font_size, "OUTLINE")
       pfUI.uf.raid[i].caption:SetAllPoints(pfUI.uf.raid[i].hp.bar)
       pfUI.uf.raid[i].caption:ClearAllPoints()
       pfUI.uf.raid[i].caption:SetParent(pfUI.uf.raid[i].hp.bar)

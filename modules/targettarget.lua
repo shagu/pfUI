@@ -1,13 +1,13 @@
 pfUI:RegisterModule("targettarget", function ()
   -- do not go further on disabled UFs
-  if pfUI_config.unitframes.disable == "1" then return end
+  if C.unitframes.disable == "1" then return end
 
-  local default_border = pfUI_config.appearance.border.default
-  if pfUI_config.appearance.border.unitframes ~= "-1" then
-    default_border = pfUI_config.appearance.border.unitframes
+  local default_border = C.appearance.border.default
+  if C.appearance.border.unitframes ~= "-1" then
+    default_border = C.appearance.border.unitframes
   end
 
-  local spacing = pfUI_config.unitframes.ttarget.pspace
+  local spacing = C.unitframes.ttarget.pspace
 
   pfUI.uf.targettargetNotify = CreateFrame("Button",nil,UIParent)
   pfUI.uf.targettargetNotify:SetScript("OnUpdate", function()
@@ -72,17 +72,17 @@ pfUI:RegisterModule("targettarget", function ()
       pfUI.uf.targettarget.hp.bar:SetMinMaxValues(0, UnitHealthMax("targettarget"))
       local r, g, b = .2, .2, .2
       if color then
-        if pfUI_config.unitframes.custom == "1" then
-          local cr, cg, cb, ca = pfUI.api.strsplit(",", pfUI_config.unitframes.customcolor)
+        if C.unitframes.custom == "1" then
+          local cr, cg, cb, ca = pfUI.api.strsplit(",", C.unitframes.customcolor)
           cr, cg, cb = tonumber(cr), tonumber(cg), tonumber(cb)
           pfUI.uf.targettarget.hp.bar:SetStatusBarColor(cr, cg, cb, UnitHealth("targettarget") / UnitHealthMax("targettarget") / 4 + .75)
-          if pfUI_config.unitframes.pastel == "1" then
+          if C.unitframes.pastel == "1" then
             r, g, b = (color.r + .5) * .5, (color.g + .5) * .5, (color.b + .5) * .5
           else
             r, g, b = color.r, color.g, color.b
           end
         else
-          if pfUI_config.unitframes.pastel == "1" then
+          if C.unitframes.pastel == "1" then
             r, g, b = (color.r + .5) * .5, (color.g + .5) * .5, (color.b + .5) * .5
           else
             r, g, b = color.r, color.g, color.b
@@ -99,9 +99,9 @@ pfUI:RegisterModule("targettarget", function ()
       real = UnitHealth("targettarget")
       diff = abs(real - display)
       if display < real then
-        pfUI.uf.targettarget.hp.bar:SetValue(display + ceil(diff / pfUI_config.unitframes.animation_speed))
+        pfUI.uf.targettarget.hp.bar:SetValue(display + ceil(diff / C.unitframes.animation_speed))
       elseif display > real then
-        pfUI.uf.targettarget.hp.bar:SetValue(display - ceil(diff / pfUI_config.unitframes.animation_speed))
+        pfUI.uf.targettarget.hp.bar:SetValue(display - ceil(diff / C.unitframes.animation_speed))
       else
         pfUI.uf.targettarget.hp.bar:SetValue(real)
       end
@@ -115,9 +115,9 @@ pfUI:RegisterModule("targettarget", function ()
       real = UnitMana("targettarget")
       diff = abs(real - display)
       if display < real then
-        pfUI.uf.targettarget.power.bar:SetValue(display + ceil(diff / pfUI_config.unitframes.animation_speed))
+        pfUI.uf.targettarget.power.bar:SetValue(display + ceil(diff / C.unitframes.animation_speed))
       elseif display > real then
-        pfUI.uf.targettarget.power.bar:SetValue(display - ceil(diff / pfUI_config.unitframes.animation_speed))
+        pfUI.uf.targettarget.power.bar:SetValue(display - ceil(diff / C.unitframes.animation_speed))
       else
         pfUI.uf.targettarget.power.bar:SetValue(real)
       end
@@ -156,10 +156,10 @@ pfUI:RegisterModule("targettarget", function ()
   pfUI.uf.targettarget.power.bar:SetAllPoints(pfUI.uf.targettarget.power)
   pfUI.uf.targettarget.power.bar:SetMinMaxValues(0, 100)
 
-  pfUI.uf:CreatePortrait(pfUI.uf.targettarget, pfUI_config.unitframes.ttarget.portrait, spacing)
+  pfUI.uf:CreatePortrait(pfUI.uf.targettarget, C.unitframes.ttarget.portrait, spacing)
 
   pfUI.uf.targettarget.hp.text = pfUI.uf.targettarget.hp.bar:CreateFontString("Status", "OVERLAY", "GameFontNormal")
-  pfUI.uf.targettarget.hp.text:SetFont(pfUI.font_square, pfUI_config.global.font_size - 2, "OUTLINE")
+  pfUI.uf.targettarget.hp.text:SetFont(pfUI.font_square, C.global.font_size - 2, "OUTLINE")
   pfUI.uf.targettarget.hp.text:ClearAllPoints()
   pfUI.uf.targettarget.hp.text:SetAllPoints(pfUI.uf.targettarget.hp.bar)
   pfUI.uf.targettarget.hp.text:SetPoint("CENTER", 0, 0)

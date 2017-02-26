@@ -22,7 +22,7 @@ pfUI:RegisterModule("sellvalue", function ()
           if sell > 0 then SetTooltipMoney(GameTooltip, sell * count) end
         end
 
-        if IsShiftKeyDown() or pfUI_config.tooltip.vendor.showalways == "1" then
+        if IsShiftKeyDown() or C.tooltip.vendor.showalways == "1" then
           GameTooltip:AddLine(" ")
 
           if count > 1 then

@@ -43,11 +43,11 @@ pfUI:RegisterModule("eqcompare", function ()
 
   pfUI.eqcompare = CreateFrame( "Frame" , "pfEQCompare", GameTooltip )
   pfUI.eqcompare:SetScript("OnShow", function()
-    if not IsShiftKeyDown() and pfUI_config.tooltip.compare.showalways ~= "1" then
+    if not IsShiftKeyDown() and C.tooltip.compare.showalways ~= "1" then
       return
     end
 
-    local border = tonumber(pfUI_config.appearance.border.default)
+    local border = tonumber(C.appearance.border.default)
 
     for i=1,GameTooltip:NumLines() do
       local tmpText = _G["GameTooltipTextLeft"..i]

@@ -1,6 +1,6 @@
 pfUI:RegisterModule("hunterbar", function ()
   local _,class = UnitClass("player")
-  if class ~= "HUNTER" or pfUI_config.bars.hunterbar == "0" then return end
+  if class ~= "HUNTER" or C.bars.hunterbar == "0" then return end
 
   pfUI.hunterbar = CreateFrame("Frame", "pfHunterBar", UIParent)
   pfUI.hunterbar.scanner = CreateFrame("GameTooltip", "pfHunterBarScanner", UIParent, "GameTooltipTemplate")

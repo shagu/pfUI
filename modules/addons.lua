@@ -26,14 +26,14 @@ pfUI:RegisterModule("addons", function ()
 
   -- title
   pfUI.addons.caption = pfUI.addons:CreateFontString("Status", "LOW", "GameFontNormal")
-  pfUI.addons.caption:SetFont(pfUI.font_default, pfUI_config.global.font_size + 4, "OUTLINE")
+  pfUI.addons.caption:SetFont(pfUI.font_default, C.global.font_size + 4, "OUTLINE")
   pfUI.addons.caption:SetTextColor(.2, 1, .8, 1)
   pfUI.addons.caption:SetPoint("TOP", 0, -10)
   pfUI.addons.caption:SetJustifyH("LEFT")
   pfUI.addons.caption:SetText("Addon List")
 
   pfUI.addons.close = CreateFrame("Button", "pfBagClose", pfUI.addons)
-  pfUI.addons.close:SetPoint("TOPRIGHT", -pfUI_config.appearance.border.default*2,-pfUI_config.appearance.border.default*2 )
+  pfUI.addons.close:SetPoint("TOPRIGHT", -C.appearance.border.default*2,-C.appearance.border.default*2 )
   pfUI.api:CreateBackdrop(pfUI.addons.close)
   pfUI.addons.close:SetHeight(15)
   pfUI.addons.close:SetWidth(15)
@@ -80,7 +80,7 @@ pfUI:RegisterModule("addons", function ()
 
         -- caption
         frame.caption = frame:CreateFontString("Status", "LOW", "GameFontNormal")
-        frame.caption:SetFont(pfUI.font_default, pfUI_config.global.font_size + 2, "OUTLINE")
+        frame.caption:SetFont(pfUI.font_default, C.global.font_size + 2, "OUTLINE")
         frame.caption:SetAllPoints(frame)
         frame.caption:SetFontObject(GameFontWhite)
         frame.caption:SetJustifyH("LEFT")

@@ -3,7 +3,7 @@ pfUI:RegisterModule("thirdparty", function ()
 
   -- DPSMate Integration
   -- Move DPSMate to right chat and let the chat-hide button toggle it
-  if pfUI_config.thirdparty.dpsmate.enable == "1" then
+  if C.thirdparty.dpsmate.enable == "1" then
 
     local function pfDPSMateConfig()
       -- set DPSMate appearance to match pfUI
@@ -88,7 +88,7 @@ pfUI:RegisterModule("thirdparty", function ()
 
   -- WIM Integration
   -- Change the appearance of WIM windows to match pfUI
-  if pfUI_config.thirdparty.wim.enable == "1" then
+  if C.thirdparty.wim.enable == "1" then
 
     local pfUIhookWIM = CreateFrame("Frame", nil)
     pfUIhookWIM:RegisterEvent("ADDON_LOADED")
@@ -161,7 +161,7 @@ pfUI:RegisterModule("thirdparty", function ()
 
   pfUI.healComm:SetScript("OnEvent", function ()
     -- return if already exists
-    if pfUI.healComm.createIncHeal or pfUI_config.thirdparty.healcomm.enable == "0" then return end
+    if pfUI.healComm.createIncHeal or C.thirdparty.healcomm.enable == "0" then return end
 
     if AceLibrary and AceLibrary:HasInstance("HealComm-1.0") then
       local HealComm = AceLibrary("HealComm-1.0")
@@ -279,7 +279,7 @@ pfUI:RegisterModule("thirdparty", function ()
         local healed = HealComm:getHeal(UnitName(unit))
 
         local health, maxHealth = UnitHealth(unit), UnitHealthMax(unit)
-        if strsub(unit,0,4) == "raid" and pfUI_config.unitframes.raid.invert_healthbar == "1" then
+        if strsub(unit,0,4) == "raid" and C.unitframes.raid.invert_healthbar == "1" then
           health = maxHealth - health
         end
 
@@ -294,7 +294,7 @@ pfUI:RegisterModule("thirdparty", function ()
           frame.incHeal:SetWidth(incWidth)
           frame.incHeal:ClearAllPoints()
 
-          if strsub(unit,0,4) == "raid" and pfUI_config.unitframes.raid.invert_healthbar == "1" then
+          if strsub(unit,0,4) == "raid" and C.unitframes.raid.invert_healthbar == "1" then
             frame.incHeal:SetPoint("TOPLEFT", frame.hp.bar, "TOPLEFT", 0, 0)
             frame.incHeal:SetFrameStrata("HIGH")
           else
@@ -326,14 +326,14 @@ pfUI:RegisterModule("thirdparty", function ()
       if not pfUI.bag.right.sort then
         pfUI.bag.right.sort = CreateFrame("Button", "pfBagSlotSort", UIParent)
         pfUI.bag.right.sort:SetParent(pfUI.bag.right)
-        pfUI.bag.right.sort:SetPoint("TOPRIGHT", -pfUI_config.appearance.border.default*14 - 45, -pfUI_config.appearance.border.default)
-        pfUI.bag.right.sort:SetPoint("TOPRIGHT", pfUI.bag.right.keys, "TOPLEFT", -pfUI_config.appearance.border.default*3, 0)
+        pfUI.bag.right.sort:SetPoint("TOPRIGHT", -C.appearance.border.default*14 - 45, -C.appearance.border.default)
+        pfUI.bag.right.sort:SetPoint("TOPRIGHT", pfUI.bag.right.keys, "TOPLEFT", -C.appearance.border.default*3, 0)
 
         pfUI.api:CreateBackdrop(pfUI.bag.right.sort)
         pfUI.bag.right.sort:SetHeight(12)
         pfUI.bag.right.sort:SetWidth(12)
         pfUI.bag.right.sort:SetTextColor(1,1,.25,1)
-        pfUI.bag.right.sort:SetFont(pfUI.font_default, pfUI_config.global.font_size, "OUTLINE")
+        pfUI.bag.right.sort:SetFont(pfUI.font_default, C.global.font_size, "OUTLINE")
         pfUI.bag.right.sort.texture = pfUI.bag.right.sort:CreateTexture("pfBagArrowUp")
         pfUI.bag.right.sort.texture:SetTexture("Interface\\AddOns\\pfUI\\img\\sort")
         pfUI.bag.right.sort.texture:ClearAllPoints()
@@ -356,22 +356,22 @@ pfUI:RegisterModule("thirdparty", function ()
         end)
 
         pfUI.bag.right.search:ClearAllPoints()
-        pfUI.bag.right.search:SetPoint("TOPLEFT", pfUI.bag.right, "TOPLEFT", pfUI_config.appearance.border.default, -pfUI_config.appearance.border.default)
-        pfUI.bag.right.search:SetPoint("TOPRIGHT", pfUI.bag.right.sort, "TOPLEFT", -pfUI_config.appearance.border.default*3, -pfUI_config.appearance.border.default)
+        pfUI.bag.right.search:SetPoint("TOPLEFT", pfUI.bag.right, "TOPLEFT", C.appearance.border.default, -C.appearance.border.default)
+        pfUI.bag.right.search:SetPoint("TOPRIGHT", pfUI.bag.right.sort, "TOPLEFT", -C.appearance.border.default*3, -C.appearance.border.default)
       end
 
       -- draw the button
       if not pfUI.bag.left.sort then
         pfUI.bag.left.sort = CreateFrame("Button", "pfBankSlotSort", UIParent)
         pfUI.bag.left.sort:SetParent(pfUI.bag.left)
-        pfUI.bag.left.sort:SetPoint("TOPRIGHT", -pfUI_config.appearance.border.default*14 - 45, -pfUI_config.appearance.border.default)
-        pfUI.bag.left.sort:SetPoint("TOPRIGHT", pfUI.bag.left.bags, "TOPLEFT", -pfUI_config.appearance.border.default*3, 0)
+        pfUI.bag.left.sort:SetPoint("TOPRIGHT", -C.appearance.border.default*14 - 45, -C.appearance.border.default)
+        pfUI.bag.left.sort:SetPoint("TOPRIGHT", pfUI.bag.left.bags, "TOPLEFT", -C.appearance.border.default*3, 0)
 
         pfUI.api:CreateBackdrop(pfUI.bag.left.sort)
         pfUI.bag.left.sort:SetHeight(12)
         pfUI.bag.left.sort:SetWidth(12)
         pfUI.bag.left.sort:SetTextColor(1,1,.25,1)
-        pfUI.bag.left.sort:SetFont(pfUI.font_default, pfUI_config.global.font_size, "OUTLINE")
+        pfUI.bag.left.sort:SetFont(pfUI.font_default, C.global.font_size, "OUTLINE")
         pfUI.bag.left.sort.texture = pfUI.bag.left.sort:CreateTexture("pfBagArrowUp")
         pfUI.bag.left.sort.texture:SetTexture("Interface\\AddOns\\pfUI\\img\\sort")
         pfUI.bag.left.sort.texture:ClearAllPoints()
@@ -396,7 +396,7 @@ pfUI:RegisterModule("thirdparty", function ()
     end)
   end
 
-  if pfUI_config.thirdparty.cleanup.enable == "1" then
+  if C.thirdparty.cleanup.enable == "1" then
     if Clean_Up then
       pfSetupClean_Up()
     else
@@ -474,7 +474,7 @@ pfUI:RegisterModule("thirdparty", function ()
     if KLHTM_SelfFrameBottomLine then KLHTM_SelfFrameBottomLine:Hide() end
   end
 
-  if pfUI_config.thirdparty.ktm.enable == "1" then
+  if C.thirdparty.ktm.enable == "1" then
     if KLHTM_Gui then
       pfSetupKTM()
     else

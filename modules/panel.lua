@@ -1,7 +1,7 @@
 pfUI:RegisterModule("panel", function ()
-  local default_border = pfUI_config.appearance.border.default
-  if pfUI_config.appearance.border.panels ~= "-1" then
-    default_border = pfUI_config.appearance.border.panels
+  local default_border = C.appearance.border.default
+  if C.appearance.border.panels ~= "-1" then
+    default_border = C.appearance.border.panels
   end
 
   pfUI.panel = CreateFrame("Frame",nil,UIParent)
@@ -58,7 +58,7 @@ pfUI:RegisterModule("panel", function ()
 
   pfUI.panel.clock.timerFrame.text = pfUI.panel.clock.timerFrame:CreateFontString("Status", "LOW", "GameFontNormal")
   pfUI.panel.clock.timerFrame.text:SetFontObject(GameFontWhite)
-  pfUI.panel.clock.timerFrame.text:SetFont(pfUI.font_default, pfUI_config.global.font_size, "OUTLINE")
+  pfUI.panel.clock.timerFrame.text:SetFont(pfUI.font_default, C.global.font_size, "OUTLINE")
   pfUI.panel.clock.timerFrame.text:SetAllPoints(pfUI.panel.clock.timerFrame)
 
   pfUI.panel.clock.timerFrame:SetScript("OnUpdate", function()
@@ -82,7 +82,7 @@ pfUI:RegisterModule("panel", function ()
         local noon = " AM"
         local servertime
         local time
-        if pfUI_config.global.twentyfour == "0" then
+        if C.global.twentyfour == "0" then
           if h > 12 then
             h = h - 12
             noon = " PM"
@@ -116,7 +116,7 @@ pfUI:RegisterModule("panel", function ()
       end
 
       pfUI.panel.clock.tick = GetTime()
-      if pfUI_config.global.twentyfour == "0" then
+      if C.global.twentyfour == "0" then
         pfUI.panel:OutputPanel("time", date("%I:%M:%S %p"), tooltip, click)
       else
         pfUI.panel:OutputPanel("time", date("%H:%M:%S"), tooltip, click)
@@ -371,13 +371,13 @@ pfUI:RegisterModule("panel", function ()
     if not pfUI.panel.minimap then return end
 
     local panels = {
-      { pfUI.panel.left.left,    pfUI_config.panel.left.left },
-      { pfUI.panel.left.center,  pfUI_config.panel.left.center },
-      { pfUI.panel.left.right,   pfUI_config.panel.left.right },
-      { pfUI.panel.right.left,   pfUI_config.panel.right.left },
-      { pfUI.panel.right.center, pfUI_config.panel.right.center },
-      { pfUI.panel.right.right,  pfUI_config.panel.right.right },
-      { pfUI.panel.minimap,      pfUI_config.panel.other.minimap },
+      { pfUI.panel.left.left,    C.panel.left.left },
+      { pfUI.panel.left.center,  C.panel.left.center },
+      { pfUI.panel.left.right,   C.panel.left.right },
+      { pfUI.panel.right.left,   C.panel.right.left },
+      { pfUI.panel.right.center, C.panel.right.center },
+      { pfUI.panel.right.right,  C.panel.right.right },
+      { pfUI.panel.minimap,      C.panel.other.minimap },
     }
 
     for i,p in pairs(panels) do
@@ -411,11 +411,11 @@ pfUI:RegisterModule("panel", function ()
     pfUI.panel.left:SetPoint("BOTTOMLEFT", pfUI.chat.left, "BOTTOMLEFT", 2, 2)
     pfUI.panel.left:SetPoint("BOTTOMRIGHT", pfUI.chat.left, "BOTTOMRIGHT", -2, 2)
   else
-    pfUI.panel.left:SetWidth(pfUI_config.chat.left.width)
+    pfUI.panel.left:SetWidth(C.chat.left.width)
     pfUI.panel.left:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", 5, 5)
   end
 
-  pfUI.panel.left:SetHeight(pfUI_config.global.font_size+default_border*2)
+  pfUI.panel.left:SetHeight(C.global.font_size+default_border*2)
   pfUI.api:CreateBackdrop(pfUI.panel.left, default_border, nil)
 
   pfUI.panel.left.hide = CreateFrame("Button", nil, pfUI.panel.left)
@@ -440,7 +440,7 @@ pfUI:RegisterModule("panel", function ()
   pfUI.panel.left.left:SetHeight(pfUI.panel.left:GetHeight())
   pfUI.panel.left.left:SetPoint("LEFT", 0, 0)
   pfUI.panel.left.left.text = pfUI.panel.left.left:CreateFontString("Status", "LOW", "GameFontNormal")
-  pfUI.panel.left.left.text:SetFont(pfUI.font_default, pfUI_config.global.font_size, "OUTLINE")
+  pfUI.panel.left.left.text:SetFont(pfUI.font_default, C.global.font_size, "OUTLINE")
   pfUI.panel.left.left.text:ClearAllPoints()
   pfUI.panel.left.left.text:SetAllPoints(pfUI.panel.left.left)
   pfUI.panel.left.left.text:SetPoint("CENTER", 0, 0)
@@ -452,7 +452,7 @@ pfUI:RegisterModule("panel", function ()
   pfUI.panel.left.center:SetHeight(pfUI.panel.left:GetHeight())
   pfUI.panel.left.center:SetPoint("CENTER", 0, 0)
   pfUI.panel.left.center.text = pfUI.panel.left.center:CreateFontString("Status", "LOW", "GameFontNormal")
-  pfUI.panel.left.center.text:SetFont(pfUI.font_default, pfUI_config.global.font_size, "OUTLINE")
+  pfUI.panel.left.center.text:SetFont(pfUI.font_default, C.global.font_size, "OUTLINE")
   pfUI.panel.left.center.text:ClearAllPoints()
   pfUI.panel.left.center.text:SetAllPoints(pfUI.panel.left.center)
   pfUI.panel.left.center.text:SetPoint("CENTER", 0, 0)
@@ -464,7 +464,7 @@ pfUI:RegisterModule("panel", function ()
   pfUI.panel.left.right:SetHeight(pfUI.panel.left:GetHeight())
   pfUI.panel.left.right:SetPoint("RIGHT", 0, 0)
   pfUI.panel.left.right.text = pfUI.panel.left.right:CreateFontString("Status", "LOW", "GameFontNormal")
-  pfUI.panel.left.right.text:SetFont(pfUI.font_default, pfUI_config.global.font_size, "OUTLINE")
+  pfUI.panel.left.right.text:SetFont(pfUI.font_default, C.global.font_size, "OUTLINE")
   pfUI.panel.left.right.text:ClearAllPoints()
   pfUI.panel.left.right.text:SetAllPoints(pfUI.panel.left.right)
   pfUI.panel.left.right.text:SetPoint("CENTER", 0, 0)
@@ -478,10 +478,10 @@ pfUI:RegisterModule("panel", function ()
     pfUI.panel.right:SetPoint("BOTTOMLEFT", pfUI.chat.right, "BOTTOMLEFT", 2, 2)
     pfUI.panel.right:SetPoint("BOTTOMRIGHT", pfUI.chat.right, "BOTTOMRIGHT", -2, 2)
   else
-    pfUI.panel.right:SetWidth(pfUI_config.chat.right.width)
+    pfUI.panel.right:SetWidth(C.chat.right.width)
     pfUI.panel.right:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", -5, 5)
   end
-  pfUI.panel.right:SetHeight(pfUI_config.global.font_size+default_border*2)
+  pfUI.panel.right:SetHeight(C.global.font_size+default_border*2)
   pfUI.api:CreateBackdrop(pfUI.panel.right, default_border, nil)
 
   pfUI.panel.right.hide = CreateFrame("Button", nil, pfUI.panel.right)
@@ -506,7 +506,7 @@ pfUI:RegisterModule("panel", function ()
   pfUI.panel.right.left:SetHeight(pfUI.panel.right:GetHeight())
   pfUI.panel.right.left:SetPoint("LEFT", 0, 0)
   pfUI.panel.right.left.text = pfUI.panel.right.left:CreateFontString("Status", "LOW", "GameFontNormal")
-  pfUI.panel.right.left.text:SetFont(pfUI.font_default, pfUI_config.global.font_size, "OUTLINE")
+  pfUI.panel.right.left.text:SetFont(pfUI.font_default, C.global.font_size, "OUTLINE")
   pfUI.panel.right.left.text:ClearAllPoints()
   pfUI.panel.right.left.text:SetAllPoints(pfUI.panel.right.left)
   pfUI.panel.right.left.text:SetPoint("CENTER", 0, 0)
@@ -518,7 +518,7 @@ pfUI:RegisterModule("panel", function ()
   pfUI.panel.right.center:SetHeight(pfUI.panel.right:GetHeight())
   pfUI.panel.right.center:SetPoint("CENTER", 0, 0)
   pfUI.panel.right.center.text = pfUI.panel.right.center:CreateFontString("Status", "LOW", "GameFontNormal")
-  pfUI.panel.right.center.text:SetFont(pfUI.font_default, pfUI_config.global.font_size, "OUTLINE")
+  pfUI.panel.right.center.text:SetFont(pfUI.font_default, C.global.font_size, "OUTLINE")
   pfUI.panel.right.center.text:ClearAllPoints()
   pfUI.panel.right.center.text:SetAllPoints(pfUI.panel.right.center)
   pfUI.panel.right.center.text:SetPoint("CENTER", 0, 0)
@@ -530,7 +530,7 @@ pfUI:RegisterModule("panel", function ()
   pfUI.panel.right.right:SetHeight(pfUI.panel.right:GetHeight())
   pfUI.panel.right.right:SetPoint("RIGHT", 0, 0)
   pfUI.panel.right.right.text = pfUI.panel.right.right:CreateFontString("Status", "LOW", "GameFontNormal")
-  pfUI.panel.right.right.text:SetFont(pfUI.font_default, pfUI_config.global.font_size, "OUTLINE")
+  pfUI.panel.right.right.text:SetFont(pfUI.font_default, C.global.font_size, "OUTLINE")
   pfUI.panel.right.right.text:ClearAllPoints()
   pfUI.panel.right.right.text:SetAllPoints(pfUI.panel.right.right)
   pfUI.panel.right.right.text:SetPoint("CENTER", 0, 0)
@@ -539,7 +539,7 @@ pfUI:RegisterModule("panel", function ()
   pfUI.panel.minimap = CreateFrame("Button", "pfPanelMinimap", UIParent)
   pfUI.api:CreateBackdrop(pfUI.panel.minimap, default_border)
   pfUI.api:UpdateMovable(pfUI.panel.minimap)
-  pfUI.panel.minimap:SetHeight(pfUI_config.global.font_size+default_border*2)
+  pfUI.panel.minimap:SetHeight(C.global.font_size+default_border*2)
   if pfUI.minimap then
     pfUI.panel.minimap:SetPoint("TOP", pfUI.minimap, "BOTTOM", 0 , -default_border*3)
     pfUI.panel.minimap:SetWidth(pfUI.minimap:GetWidth())
@@ -549,12 +549,12 @@ pfUI:RegisterModule("panel", function ()
   end
   pfUI.panel.minimap:SetFrameStrata("BACKGROUND")
   pfUI.panel.minimap.text = pfUI.panel.minimap:CreateFontString("MinimapZoneText", "LOW", "GameFontNormal")
-  pfUI.panel.minimap.text:SetFont(pfUI.font_default, pfUI_config.global.font_size, "OUTLINE")
+  pfUI.panel.minimap.text:SetFont(pfUI.font_default, C.global.font_size, "OUTLINE")
   pfUI.panel.minimap.text:SetPoint("CENTER", 0, 0)
   pfUI.panel.minimap.text:SetFontObject(GameFontWhite)
 
   -- MicroButtons
-  if pfUI_config.panel.micro.enable == "1" then
+  if C.panel.micro.enable == "1" then
     pfUI.panel.microbutton = CreateFrame("Frame", "pfPanelMicroButton", UIParent)
     pfUI.panel.microbutton:SetPoint("TOP", pfUI.panel.minimap, "BOTTOM", 0,  -2*default_border)
     pfUI.api:UpdateMovable(pfUI.panel.microbutton)

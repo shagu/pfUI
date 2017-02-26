@@ -46,7 +46,7 @@ pfUI:RegisterModule("buff", function ()
     TemporaryEnchantFrame:ClearAllPoints()
     TemporaryEnchantFrame:SetPoint("TOPRIGHT", pfUI.minimap or Minimap, "TOPLEFT", -25,0)
 
-    if pfUI_config.global.hidewbuff == "1" then
+    if C.global.hidewbuff == "1" then
       TemporaryEnchantFrame:Hide()
       BuffFrame:SetPoint("TOPRIGHT", pfUI.minimap or Minimap, "TOPLEFT", -25,0)
     else
@@ -55,7 +55,7 @@ pfUI:RegisterModule("buff", function ()
         local icon = _G[buff:GetName().."Icon"]
         local border = _G[buff:GetName().."Border"]
         local text = _G[buff:GetName().."Duration"]
-        text:SetPoint("TOP", buff, "BOTTOM", 0 , -pfUI_config.appearance.border.default*2)
+        text:SetPoint("TOP", buff, "BOTTOM", 0 , -C.appearance.border.default*2)
 
         local _, _, mainhand, _, _, offhand = GetWeaponEnchantInfo()
         if buff then
@@ -93,7 +93,7 @@ pfUI:RegisterModule("buff", function ()
       end
     end
 
-    if pfUI_config.global.hidebuff == "1" then
+    if C.global.hidebuff == "1" then
       BuffFrame:Hide()
     else
       -- buffs
@@ -112,7 +112,7 @@ pfUI:RegisterModule("buff", function ()
             buff:SetPoint("TOPRIGHT", _G["BuffButton" .. i-1], "TOPLEFT", -7, 0)
           end
           pfUI.api:CreateBackdrop(buff)
-          text:SetPoint("TOP", buff, "BOTTOM", 0 , -pfUI_config.appearance.border.default*2)
+          text:SetPoint("TOP", buff, "BOTTOM", 0 , -C.appearance.border.default*2)
           icon:SetTexCoord(.08, .92, .08, .92)
           if border then
             buff.backdrop:SetBackdropBorderColor(border:GetVertexColor())

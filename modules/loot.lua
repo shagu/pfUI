@@ -8,7 +8,7 @@ pfUI:RegisterModule("loot", function ()
   pfUI.loot:RegisterEvent("OPEN_MASTER_LOOT_LIST")
   pfUI.loot:RegisterEvent("UPDATE_MASTER_LOOT_LIST")
 
-  pfUI.loot:SetWidth(160+pfUI_config.appearance.border.default*2)
+  pfUI.loot:SetWidth(160+C.appearance.border.default*2)
   pfUI.loot.slots = {}
   function pfUI.loot:UpdateLootFrame()
     local maxrarity, maxwidth = 0, 0
@@ -78,17 +78,17 @@ pfUI:RegisterModule("loot", function ()
         pfUI.api:CreateBackdrop(pfUI.loot)
         pfUI.loot.backdrop:SetBackdropBorderColor(color.r, color.g, color.b, 1)
       end
-      pfUI.loot:SetHeight(math.max((real*22)+4*pfUI_config.appearance.border.default), 20)
-      pfUI.loot:SetWidth(maxwidth + 22 + 8*pfUI_config.appearance.border.default )
+      pfUI.loot:SetHeight(math.max((real*22)+4*C.appearance.border.default), 20)
+      pfUI.loot:SetWidth(maxwidth + 22 + 8*C.appearance.border.default )
     end
   end
 
   function pfUI.loot:CreateSlot(id)
     local frame = CreateFrame("LootButton", 'pfLootButton'..id, pfUI.loot)
-    frame:SetPoint("LEFT", pfUI_config.appearance.border.default*2, 0)
-    frame:SetPoint("RIGHT", -pfUI_config.appearance.border.default*2, 0)
+    frame:SetPoint("LEFT", C.appearance.border.default*2, 0)
+    frame:SetPoint("RIGHT", -C.appearance.border.default*2, 0)
     frame:SetHeight(22)
-    frame:SetPoint("TOP", pfUI.loot, "TOP", 4, (-pfUI_config.appearance.border.default*2+22)-(id*22))
+    frame:SetPoint("TOP", pfUI.loot, "TOP", 4, (-C.appearance.border.default*2+22)-(id*22))
 
     frame:SetScript("OnClick", function()
       if ( IsControlKeyDown() ) then
@@ -126,15 +126,15 @@ pfUI:RegisterModule("loot", function ()
       end
     end)
 
-    if pfUI_config.appearance.loot.autoresize == "1" then
+    if C.appearance.loot.autoresize == "1" then
       frame:SetScript("OnUpdate", function()
         pfUI.loot:UpdateLootFrame()
       end)
     end
 
     frame.ficon = CreateFrame("Frame", "pfLootButtonIcon", frame)
-    frame.ficon:SetHeight(frame:GetHeight() - 2*pfUI_config.appearance.border.default)
-    frame.ficon:SetWidth(frame:GetHeight() - 2*pfUI_config.appearance.border.default)
+    frame.ficon:SetHeight(frame:GetHeight() - 2*C.appearance.border.default)
+    frame.ficon:SetWidth(frame:GetHeight() - 2*C.appearance.border.default)
     frame.ficon:ClearAllPoints()
     frame.ficon:SetPoint("RIGHT", frame)
     pfUI.api:CreateBackdrop(frame.ficon)
@@ -147,7 +147,7 @@ pfUI:RegisterModule("loot", function ()
     frame.count:ClearAllPoints()
     frame.count:SetJustifyH"RIGHT"
     frame.count:SetPoint("BOTTOMRIGHT", frame.ficon, 2, 2)
-    frame.count:SetFont(pfUI.font_default, pfUI_config.global.font_size, "OUTLINE")
+    frame.count:SetFont(pfUI.font_default, C.global.font_size, "OUTLINE")
     frame.count:SetText(1)
 
     frame.name = frame:CreateFontString(nil, "OVERLAY")
@@ -155,7 +155,7 @@ pfUI:RegisterModule("loot", function ()
     frame.name:ClearAllPoints()
     frame.name:SetAllPoints(frame)
     frame.name:SetNonSpaceWrap(true)
-    frame.name:SetFont(pfUI.font_default, pfUI_config.global.font_size, "OUTLINE")
+    frame.name:SetFont(pfUI.font_default, C.global.font_size, "OUTLINE")
 
     frame.rarity = frame:CreateTexture(nil, "ARTWORK")
     frame.rarity:SetTexture"Interface\\AddOns\\pfUI\\img\\bar"

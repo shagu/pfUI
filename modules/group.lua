@@ -1,13 +1,13 @@
 pfUI:RegisterModule("group", function ()
   -- do not go further on disabled UFs
-  if pfUI_config.unitframes.disable == "1" then return end
+  if C.unitframes.disable == "1" then return end
 
-  local default_border = pfUI_config.appearance.border.default
-  if pfUI_config.appearance.border.groupframes ~= "-1" then
-    default_border = pfUI_config.appearance.border.groupframes
+  local default_border = C.appearance.border.default
+  if C.appearance.border.groupframes ~= "-1" then
+    default_border = C.appearance.border.groupframes
   end
 
-  local spacing = pfUI_config.unitframes.group.pspace
+  local spacing = C.unitframes.group.pspace
 
   -- hide blizzard group frames
   for i=1, 4 do
@@ -35,7 +35,7 @@ pfUI:RegisterModule("group", function ()
     PartyMemberBackground:Hide()
 
     for i=1, 4 do
-      if pfUI_config.unitframes.group.hide_in_raid == "1" and UnitInRaid("player") then
+      if C.unitframes.group.hide_in_raid == "1" and UnitInRaid("player") then
         pfUI.uf.group[i]:Hide()
       else
         if event == "RAID_TARGET_UPDATE" or event == "PLAYER_ENTERING_WORLD" or event == "PARTY_MEMBERS_CHANGED" then
@@ -115,10 +115,10 @@ pfUI:RegisterModule("group", function ()
     pfUI.uf.group[i].power.bar:SetAllPoints(pfUI.uf.group[i].power)
     pfUI.uf.group[i].power.bar:SetMinMaxValues(0, 100)
 
-    pfUI.uf:CreatePortrait(pfUI.uf.group[i], pfUI_config.unitframes.group.portrait, spacing)
+    pfUI.uf:CreatePortrait(pfUI.uf.group[i], C.unitframes.group.portrait, spacing)
 
     pfUI.uf.group[i].caption = pfUI.uf.group[i]:CreateFontString("Status", "OVERLAY", "GameFontNormal")
-    pfUI.uf.group[i].caption:SetFont(pfUI.font_square, pfUI_config.global.font_size, "OUTLINE")
+    pfUI.uf.group[i].caption:SetFont(pfUI.font_square, C.global.font_size, "OUTLINE")
     pfUI.uf.group[i].caption:ClearAllPoints()
     pfUI.uf.group[i].caption:SetParent(pfUI.uf.group[i].hp.bar)
     pfUI.uf.group[i].caption:SetPoint("LEFT",pfUI.uf.group[i].hp.bar, "LEFT", 10, 0)

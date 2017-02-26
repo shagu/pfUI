@@ -56,25 +56,25 @@ pfUI:RegisterModule("skin", function ()
     if v.SetTextColor then
       v:SetTextColor(1,1,1,1)
       v:SetPoint("TOP", GameMenuFrame, "TOP", 0, 16)
-      v:SetFont(pfUI.font_default, pfUI_config.global.font_size + 2, "OUTLINE")
+      v:SetFont(pfUI.font_default, C.global.font_size + 2, "OUTLINE")
     end
   end
 
-  local alpha = tonumber(pfUI_config.tooltip.alpha)
+  local alpha = tonumber(C.tooltip.alpha)
   pfUI.api:CreateBackdrop(ShoppingTooltip1, nil, nil, alpha)
   pfUI.api:CreateBackdrop(ShoppingTooltip2, nil, nil, alpha)
   pfUI.api:CreateBackdrop(ItemRefTooltip, nil, nil, alpha)
 
   ShoppingTooltip1:SetScript("OnShow", function()
     local a, b, c, d, e = this:GetPoint()
-    local border = tonumber(pfUI_config.appearance.border.default)
+    local border = tonumber(C.appearance.border.default)
     if d and d == 0 then d = (border*2)+d+1 end
     this:SetPoint(a, b, c, d, e)
   end)
 
   ShoppingTooltip2:SetScript("OnShow", function()
     local a, b, c, d, e = this:GetPoint()
-    local border = tonumber(pfUI_config.appearance.border.default)
+    local border = tonumber(C.appearance.border.default)
     if not d or d == 0 then d = (border*2)+d+1 end
     this:SetPoint(a, b, c, d, e)
   end)
@@ -111,11 +111,11 @@ pfUI:RegisterModule("skin", function ()
     end
   end)
 
-  if pfUI_config.global.errors_limit == "1" then
+  if C.global.errors_limit == "1" then
     UIErrorsFrame:SetHeight(25)
   end
 
-  if pfUI_config.global.errors_hide == "1" then
+  if C.global.errors_hide == "1" then
     UIErrorsFrame:Hide()
   end
 end)

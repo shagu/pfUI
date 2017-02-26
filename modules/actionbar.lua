@@ -1,7 +1,7 @@
 pfUI:RegisterModule("actionbar", function ()
-  local default_border = pfUI_config.appearance.border.default
-  if pfUI_config.appearance.border.actionbars ~= "-1" then
-    default_border = pfUI_config.appearance.border.actionbars
+  local default_border = C.appearance.border.default
+  if C.appearance.border.actionbars ~= "-1" then
+    default_border = C.appearance.border.actionbars
   end
 
   -- override wow ui functions
@@ -44,7 +44,7 @@ pfUI:RegisterModule("actionbar", function ()
     if pfBonusBar then pfBonusBar:Hide() end
   end)
 
-  if pfUI_config.bars.glowrange == "1" then
+  if C.bars.glowrange == "1" then
     pfUI.api.Hook("ActionButton_OnUpdate", function(elapsed)
       -- Handle range indicator
       if ( this.rangeTimer ) then
@@ -52,7 +52,7 @@ pfUI:RegisterModule("actionbar", function ()
         if ( this.rangeTimer <= 0.1 ) then
           if ( IsActionInRange( ActionButton_GetPagedID(this)) == 0 ) then
             if not this.a then
-              this.r,this.g,this.b,this.a = pfUI.api.strsplit(",", pfUI_config.bars.rangecolor)
+              this.r,this.g,this.b,this.a = pfUI.api.strsplit(",", C.bars.rangecolor)
             end
             _G[this:GetName() .. 'Icon']:SetVertexColor(this.r, this.g, this.b, this.a)
           elseif IsUsableAction(ActionButton_GetPagedID(this)) then
@@ -114,25 +114,25 @@ pfUI:RegisterModule("actionbar", function ()
   pfUI.bars.autohide = CreateFrame("Frame", nil, UIParent)
   pfUI.bars.autohide:RegisterEvent("PLAYER_ENTERING_WORLD")
   pfUI.bars.autohide:SetScript("OnEvent", function()
-    if pfUI_config.bars.hide_actionmain == "1" then
+    if C.bars.hide_actionmain == "1" then
       pfUI.api:CreateAutohide(pfUI.bars.actionmain)
     end
-    if pfUI_config.bars.hide_bottomleft == "1" then
+    if C.bars.hide_bottomleft == "1" then
       pfUI.api:CreateAutohide(pfUI.bars.bottomleft)
     end
-    if pfUI_config.bars.hide_bottomright == "1" then
+    if C.bars.hide_bottomright == "1" then
       pfUI.api:CreateAutohide(pfUI.bars.bottomright)
     end
-    if pfUI_config.bars.hide_right == "1" then
+    if C.bars.hide_right == "1" then
       pfUI.api:CreateAutohide(pfUI.bars.right)
     end
-    if pfUI_config.bars.hide_tworight == "1" then
+    if C.bars.hide_tworight == "1" then
       pfUI.api:CreateAutohide(pfUI.bars.tworight)
     end
-    if pfUI_config.bars.hide_shapeshift == "1" then
+    if C.bars.hide_shapeshift == "1" then
       pfUI.api:CreateAutohide(pfUI.bars.shapeshift)
     end
-    if pfUI_config.bars.hide_pet == "1" then
+    if C.bars.hide_pet == "1" then
       pfUI.api:CreateAutohide(pfUI.bars.pet)
     end
   end)
@@ -148,7 +148,7 @@ pfUI:RegisterModule("actionbar", function ()
   PetActionBarFrame:SetParent(pfUI.bars.pet)
 
   pfUI.bars:SetScript("OnEvent", function()
-      pfUI.api:BarLayoutSize(pfUI.bars.actionmain, NUM_ACTIONBAR_BUTTONS, pfUI_config.bars.actionmain.formfactor, pfUI_config.bars.icon_size, default_border)
+      pfUI.api:BarLayoutSize(pfUI.bars.actionmain, NUM_ACTIONBAR_BUTTONS, C.bars.actionmain.formfactor, C.bars.icon_size, default_border)
       pfUI.bars.actionmain:SetWidth(pfUI.bars.actionmain._size[1])
       pfUI.bars.actionmain:SetHeight(pfUI.bars.actionmain._size[2])
 
@@ -161,10 +161,10 @@ pfUI:RegisterModule("actionbar", function ()
         end
         pfUI.bars.pet:SetPoint("BOTTOM", anchor, "TOP", 0, default_border * 3)
         pfUI.api:UpdateMovable(pfUI.bars.pet)
-        pfUI.api:BarLayoutSize(pfUI.bars.pet, NUM_PET_ACTION_SLOTS, pfUI_config.bars.pet.formfactor, pfUI_config.bars.icon_size, default_border)
+        pfUI.api:BarLayoutSize(pfUI.bars.pet, NUM_PET_ACTION_SLOTS, C.bars.pet.formfactor, C.bars.icon_size, default_border)
         pfUI.bars.pet:SetWidth(pfUI.bars.pet._size[1])
         pfUI.bars.pet:SetHeight(pfUI.bars.pet._size[2])
-        if pfUI_config.bars.background == "1" then pfUI.api:CreateBackdrop(pfUI.bars.pet, default_border) end
+        if C.bars.background == "1" then pfUI.api:CreateBackdrop(pfUI.bars.pet, default_border) end
 
         PetActionBarFrame:ClearAllPoints()
         PetActionBarFrame:Hide()
@@ -175,7 +175,7 @@ pfUI:RegisterModule("actionbar", function ()
           b:SetFrameLevel(pfUI.bars.pet:GetFrameLevel() + 1)
           b:SetParent(pfUI.bars.pet)
           pfUI.api:CreateBackdrop(b, default_border)
-          pfUI.api:BarButtonAnchor(b, "PetActionButton", i, NUM_PET_ACTION_SLOTS, pfUI_config.bars.pet.formfactor, pfUI_config.bars.icon_size, default_border)
+          pfUI.api:BarButtonAnchor(b, "PetActionButton", i, NUM_PET_ACTION_SLOTS, C.bars.pet.formfactor, C.bars.icon_size, default_border)
           b:SetPoint(unpack(b._anchor))
         end
       else
@@ -193,7 +193,7 @@ pfUI:RegisterModule("actionbar", function ()
           b:ClearAllPoints()
           b:SetParent(pfUI.bars.shapeshift)
           pfUI.api:CreateBackdrop(b, default_border)
-          pfUI.api:BarButtonAnchor(b, "ShapeshiftButton", i, NUM_SHAPESHIFT_SLOTS, pfUI_config.bars.shapeshift.formfactor, pfUI_config.bars.icon_size, default_border)
+          pfUI.api:BarButtonAnchor(b, "ShapeshiftButton", i, NUM_SHAPESHIFT_SLOTS, C.bars.shapeshift.formfactor, C.bars.icon_size, default_border)
           b:SetPoint(unpack(b._anchor))
           if b:IsShown() then shapeshiftbuttons = shapeshiftbuttons + 1 end
         end
@@ -204,8 +204,8 @@ pfUI:RegisterModule("actionbar", function ()
         end
         pfUI.bars.shapeshift:SetPoint("BOTTOM", anchor, "TOP", 0, default_border * 3)
         pfUI.api:UpdateMovable(pfUI.bars.shapeshift)
-        if pfUI_config.bars.background == "1" then pfUI.api:CreateBackdrop(pfUI.bars.shapeshift, default_border) end
-        pfUI.api:BarLayoutSize(pfUI.bars.shapeshift, shapeshiftbuttons, pfUI_config.bars.shapeshift.formfactor, pfUI_config.bars.icon_size, default_border)
+        if C.bars.background == "1" then pfUI.api:CreateBackdrop(pfUI.bars.shapeshift, default_border) end
+        pfUI.api:BarLayoutSize(pfUI.bars.shapeshift, shapeshiftbuttons, C.bars.shapeshift.formfactor, C.bars.icon_size, default_border)
         pfUI.bars.shapeshift:SetWidth(pfUI.bars.shapeshift._size[1])
         pfUI.bars.shapeshift:SetHeight(pfUI.bars.shapeshift._size[2])
       else
@@ -219,7 +219,7 @@ pfUI:RegisterModule("actionbar", function ()
         pfUI.bars.bottomleft:SetPoint("BOTTOM", pfUI.bars.actionmain, "TOP", 0, default_border)
         pfUI.api:UpdateMovable(pfUI.bars.bottomleft)
 
-        pfUI.api:BarLayoutSize(pfUI.bars.bottomleft, NUM_ACTIONBAR_BUTTONS, pfUI_config.bars.bottomleft.formfactor, pfUI_config.bars.icon_size, default_border)
+        pfUI.api:BarLayoutSize(pfUI.bars.bottomleft, NUM_ACTIONBAR_BUTTONS, C.bars.bottomleft.formfactor, C.bars.icon_size, default_border)
         pfUI.bars.bottomleft:SetWidth(pfUI.bars.bottomleft._size[1])
         pfUI.bars.bottomleft:SetHeight(pfUI.bars.bottomleft._size[2])
 
@@ -239,7 +239,7 @@ pfUI:RegisterModule("actionbar", function ()
             b:ClearAllPoints()
             b:SetParent(tf)
             pfUI.api:CreateBackdrop(b, default_border)
-            pfUI.api:BarButtonAnchor(b, "MultiBarBottomLeftButton", i, NUM_ACTIONBAR_BUTTONS, pfUI_config.bars.bottomleft.formfactor, pfUI_config.bars.icon_size, default_border)
+            pfUI.api:BarButtonAnchor(b, "MultiBarBottomLeftButton", i, NUM_ACTIONBAR_BUTTONS, C.bars.bottomleft.formfactor, C.bars.icon_size, default_border)
             b:SetPoint(unpack(b._anchor))
           end
         end
@@ -255,9 +255,9 @@ pfUI:RegisterModule("actionbar", function ()
         pfUI.bars.bottomright:SetFrameStrata("LOW")
         pfUI.bars.bottomright:SetPoint("BOTTOMRIGHT", pfUI.bars.actionmain, "BOTTOMLEFT", -default_border*3, 0)
         pfUI.api:UpdateMovable(pfUI.bars.bottomright)
-        if pfUI_config.bars.background == "1" then pfUI.api:CreateBackdrop(pfUI.bars.bottomright, default_border) end
+        if C.bars.background == "1" then pfUI.api:CreateBackdrop(pfUI.bars.bottomright, default_border) end
 
-        pfUI.api:BarLayoutSize(pfUI.bars.bottomright, NUM_ACTIONBAR_BUTTONS, pfUI_config.bars.bottomright.formfactor, pfUI_config.bars.icon_size, default_border)
+        pfUI.api:BarLayoutSize(pfUI.bars.bottomright, NUM_ACTIONBAR_BUTTONS, C.bars.bottomright.formfactor, C.bars.icon_size, default_border)
         pfUI.bars.bottomright:SetWidth(pfUI.bars.bottomright._size[1])
         pfUI.bars.bottomright:SetHeight(pfUI.bars.bottomright._size[2])
 
@@ -277,7 +277,7 @@ pfUI:RegisterModule("actionbar", function ()
             b:ClearAllPoints()
             b:SetParent(tf)
             pfUI.api:CreateBackdrop(b, default_border)
-            pfUI.api:BarButtonAnchor(b, "MultiBarBottomRightButton", i, NUM_ACTIONBAR_BUTTONS, pfUI_config.bars.bottomright.formfactor, pfUI_config.bars.icon_size, default_border)
+            pfUI.api:BarButtonAnchor(b, "MultiBarBottomRightButton", i, NUM_ACTIONBAR_BUTTONS, C.bars.bottomright.formfactor, C.bars.icon_size, default_border)
             b:SetPoint(unpack(b._anchor))
           end
         end
@@ -290,9 +290,9 @@ pfUI:RegisterModule("actionbar", function ()
         pfUI.bars.right:SetFrameStrata("LOW")
         pfUI.bars.right:SetPoint("BOTTOMLEFT", pfUI.bars.actionmain, "BOTTOMRIGHT", default_border*3, 0)
         pfUI.api:UpdateMovable(pfUI.bars.right)
-        if pfUI_config.bars.background == "1" then pfUI.api:CreateBackdrop(pfUI.bars.right, default_border) end
+        if C.bars.background == "1" then pfUI.api:CreateBackdrop(pfUI.bars.right, default_border) end
 
-        pfUI.api:BarLayoutSize(pfUI.bars.right, NUM_ACTIONBAR_BUTTONS, pfUI_config.bars.right.formfactor, pfUI_config.bars.icon_size, default_border)
+        pfUI.api:BarLayoutSize(pfUI.bars.right, NUM_ACTIONBAR_BUTTONS, C.bars.right.formfactor, C.bars.icon_size, default_border)
         pfUI.bars.right:SetWidth(pfUI.bars.right._size[1])
         pfUI.bars.right:SetHeight(pfUI.bars.right._size[2])
 
@@ -312,7 +312,7 @@ pfUI:RegisterModule("actionbar", function ()
             b:ClearAllPoints()
             b:SetParent(tf)
             pfUI.api:CreateBackdrop(b, default_border)
-            pfUI.api:BarButtonAnchor(b, "MultiBarRightButton", i, NUM_ACTIONBAR_BUTTONS, pfUI_config.bars.right.formfactor, pfUI_config.bars.icon_size, default_border)
+            pfUI.api:BarButtonAnchor(b, "MultiBarRightButton", i, NUM_ACTIONBAR_BUTTONS, C.bars.right.formfactor, C.bars.icon_size, default_border)
             b:SetPoint(unpack(b._anchor))
           end
         end
@@ -326,8 +326,8 @@ pfUI:RegisterModule("actionbar", function ()
         pfUI.bars.tworight:ClearAllPoints()
         pfUI.bars.tworight:SetPoint("RIGHT", UIParent, "RIGHT", -5, 0)
         pfUI.api:UpdateMovable(pfUI.bars.tworight)
-        if pfUI_config.bars.background == "1" then pfUI.api:CreateBackdrop(pfUI.bars.tworight, default_border) end
-        pfUI.api:BarLayoutSize(pfUI.bars.tworight, NUM_ACTIONBAR_BUTTONS, pfUI_config.bars.tworight.formfactor, pfUI_config.bars.icon_size, default_border)
+        if C.bars.background == "1" then pfUI.api:CreateBackdrop(pfUI.bars.tworight, default_border) end
+        pfUI.api:BarLayoutSize(pfUI.bars.tworight, NUM_ACTIONBAR_BUTTONS, C.bars.tworight.formfactor, C.bars.icon_size, default_border)
         pfUI.bars.tworight:SetWidth(pfUI.bars.tworight._size[1])
         pfUI.bars.tworight:SetHeight(pfUI.bars.tworight._size[2])
 
@@ -347,7 +347,7 @@ pfUI:RegisterModule("actionbar", function ()
             b:ClearAllPoints()
             b:SetParent(tf)
             pfUI.api:CreateBackdrop(b, default_border)
-            pfUI.api:BarButtonAnchor(b, "MultiBarLeftButton", i, NUM_ACTIONBAR_BUTTONS, pfUI_config.bars.tworight.formfactor, pfUI_config.bars.icon_size, default_border)
+            pfUI.api:BarButtonAnchor(b, "MultiBarLeftButton", i, NUM_ACTIONBAR_BUTTONS, C.bars.tworight.formfactor, C.bars.icon_size, default_border)
             b:SetPoint(unpack(b._anchor))
           end
         end
@@ -366,13 +366,13 @@ pfUI:RegisterModule("actionbar", function ()
           pfUI.bars.actionmain.share:SetPoint("BOTTOMLEFT", pfUI.bars.actionmain, "BOTTOMLEFT", 0, 0)
           pfUI.bars.actionmain.share:SetPoint("TOPRIGHT", pfUI.bars.bottomleft, "TOPRIGHT", 0, 0)
           pfUI.bars.actionmain.share:SetPoint("BOTTOMRIGHT", pfUI.bars.actionmain, "BOTTOMRIGHT", 0, 0)
-          if pfUI_config.bars.background == "1" then pfUI.api:CreateBackdrop(pfUI.bars.actionmain.share, default_border) end
+          if C.bars.background == "1" then pfUI.api:CreateBackdrop(pfUI.bars.actionmain.share, default_border) end
         end
       else
         -- give both their own backdrop
         if pfUI.bars.actionmain.share then pfUI.bars.actionmain.share:Hide() end
-        if pfUI_config.bars.background == "1" then pfUI.api:CreateBackdrop(pfUI.bars.actionmain, default_border) end
-        if pfUI_config.bars.background == "1" then pfUI.api:CreateBackdrop(pfUI.bars.bottomleft, default_border) end
+        if C.bars.background == "1" then pfUI.api:CreateBackdrop(pfUI.bars.actionmain, default_border) end
+        if C.bars.background == "1" then pfUI.api:CreateBackdrop(pfUI.bars.bottomleft, default_border) end
       end
     end)
 
@@ -383,8 +383,8 @@ pfUI:RegisterModule("actionbar", function ()
   function pfUI.bars.bottomleft:OnMove()
     local _, a, _ = pfUI.bars.bottomleft:GetPoint()
     if a ~= pfUI.bars.actionmain or not pfUI.bars.bottomleft:IsShown() or pfUI.bars.bottomleft:GetWidth() ~= a:GetWidth() or pfUI.bars.bottomleft:GetScale() ~= a:GetScale() then
-      if pfUI_config.bars.background == "1" then pfUI.api:CreateBackdrop(pfUI.bars.actionmain, default_border) end
-      if pfUI_config.bars.background == "1" then pfUI.api:CreateBackdrop(pfUI.bars.bottomleft, default_border) end
+      if C.bars.background == "1" then pfUI.api:CreateBackdrop(pfUI.bars.actionmain, default_border) end
+      if C.bars.background == "1" then pfUI.api:CreateBackdrop(pfUI.bars.bottomleft, default_border) end
       if pfUI.bars.actionmain.share then pfUI.bars.actionmain.share:Hide() end
     end
   end
@@ -401,7 +401,7 @@ pfUI:RegisterModule("actionbar", function ()
       b:ClearAllPoints()
       b:SetParent(tf)
       pfUI.api:CreateBackdrop(b, default_border)
-      pfUI.api:BarButtonAnchor(b, "ActionButton", i, NUM_ACTIONBAR_BUTTONS, pfUI_config.bars.actionmain.formfactor, pfUI_config.bars.icon_size, default_border)
+      pfUI.api:BarButtonAnchor(b, "ActionButton", i, NUM_ACTIONBAR_BUTTONS, C.bars.actionmain.formfactor, C.bars.icon_size, default_border)
       b:SetPoint(unpack(b._anchor))
     end
   end
@@ -420,14 +420,14 @@ pfUI:RegisterModule("actionbar", function ()
     b:ClearAllPoints()
     b:SetParent(tf)
     pfUI.api:CreateBackdrop(b, default_border)
-    pfUI.api:BarButtonAnchor(b, "BonusActionButton", i, NUM_BONUS_ACTION_SLOTS, pfUI_config.bars.actionmain.formfactor, pfUI_config.bars.icon_size, default_border)
+    pfUI.api:BarButtonAnchor(b, "BonusActionButton", i, NUM_BONUS_ACTION_SLOTS, C.bars.actionmain.formfactor, C.bars.icon_size, default_border)
     b:SetPoint(unpack(b._anchor))
   end
 
   for i = 1, NUM_SHAPESHIFT_SLOTS do
     local button = _G["ShapeshiftButton"..i]
-    button:SetWidth(pfUI_config.bars.icon_size)
-    button:SetHeight(pfUI_config.bars.icon_size)
+    button:SetWidth(C.bars.icon_size)
+    button:SetHeight(C.bars.icon_size)
 
     local icon = _G["ShapeshiftButton"..i..'Icon']
     icon:SetParent(button)
@@ -442,15 +442,15 @@ pfUI:RegisterModule("actionbar", function ()
 
     local hotkey = _G["ShapeshiftButton"..i..'HotKey']
     hotkey:SetAllPoints(button)
-    hotkey:SetFont(pfUI.font_square, pfUI_config.global.font_size -2, "OUTLINE")
+    hotkey:SetFont(pfUI.font_square, C.global.font_size -2, "OUTLINE")
     hotkey:SetJustifyH("RIGHT")
     hotkey:SetJustifyV("TOP")
   end
 
   for i = 1, NUM_PET_ACTION_SLOTS do
     local button = _G["PetActionButton"..i]
-    button:SetWidth(pfUI_config.bars.icon_size)
-    button:SetHeight(pfUI_config.bars.icon_size)
+    button:SetWidth(C.bars.icon_size)
+    button:SetHeight(C.bars.icon_size)
     button:Show()
 
     local icon = _G["PetActionButton"..i..'Icon']
@@ -468,7 +468,7 @@ pfUI:RegisterModule("actionbar", function ()
     border:SetAlpha(0)
 
     local autocast = _G["PetActionButton"..i..'AutoCast']
-    autocast:SetScale(pfUI_config.bars.icon_size / 30)
+    autocast:SetScale(C.bars.icon_size / 30)
     autocast:SetPoint("TOPLEFT", button, "TOPLEFT", 0, 0)
     autocast:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", 1, -1)
     autocast:SetAlpha(.1)
@@ -481,8 +481,8 @@ pfUI:RegisterModule("actionbar", function ()
   for i = 1, NUM_ACTIONBAR_BUTTONS do
     for _, actionbutton in pairs(actionbars) do
       local button = _G[actionbutton..i]
-      button:SetWidth(pfUI_config.bars.icon_size)
-      button:SetHeight(pfUI_config.bars.icon_size)
+      button:SetWidth(C.bars.icon_size)
+      button:SetHeight(C.bars.icon_size)
       button:Show()
 
       local texture = _G[actionbutton..i..'NormalTexture']
@@ -499,13 +499,13 @@ pfUI:RegisterModule("actionbar", function ()
 
       local hotkey = _G[actionbutton..i..'HotKey']
       hotkey:SetAllPoints(button)
-      hotkey:SetFont(pfUI.font_square, pfUI_config.global.font_size -2, "OUTLINE")
+      hotkey:SetFont(pfUI.font_square, C.global.font_size -2, "OUTLINE")
       hotkey:SetJustifyH("RIGHT")
       hotkey:SetJustifyV("TOP")
 
       local name = _G[actionbutton..i..'Name']
       name:SetAllPoints(button)
-      name:SetFont(pfUI.font_square, pfUI_config.global.font_size -2, "OUTLINE")
+      name:SetFont(pfUI.font_square, C.global.font_size -2, "OUTLINE")
       name:SetJustifyH("CENTER")
       name:SetJustifyV("BOTTOM")
     end
