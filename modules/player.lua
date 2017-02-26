@@ -197,6 +197,8 @@ pfUI:RegisterModule("player", function ()
         pfUI.uf.player.power.bar:SetValue(powerDisplay + ceil(powerDiff / pfUI_config.unitframes.animation_speed))
       elseif powerDisplay > powerReal then
         pfUI.uf.player.power.bar:SetValue(powerDisplay - ceil(powerDiff / pfUI_config.unitframes.animation_speed))
+      else
+        pfUI.uf.player.power.bar:SetValue(powerReal)
       end
     end)
 
