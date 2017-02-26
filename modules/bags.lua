@@ -312,8 +312,8 @@ pfUI:RegisterModule("bags", function ()
         local _, _, id = strfind(GetInventoryItemLink("player", ContainerIDToInventoryID(bag)) or "", "item:(%d+)")
         if id then
           local _, _, _, _, itemType, subType = GetItemInfo(id)
-          bagtype = pfLocaleBagtypes[pfUI.cache["locale"]][itemType]
-          bagsubtype = pfLocaleBagtypes[pfUI.cache["locale"]][subType]
+          bagtype = L["bagtypes"][itemType]
+          bagsubtype = L["bagtypes"][subType]
 
           if bagsubtype == "SOULBAG" then
             bagtype = "SOULBAG"

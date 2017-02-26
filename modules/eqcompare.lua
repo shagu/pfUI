@@ -1,6 +1,6 @@
 pfUI:RegisterModule("eqcompare", function ()
   local loc = pfUI.cache["locale"]
-  for key, value in pairs(pfLocaleInvtypes[loc]) do setglobal(key, value) end
+  for key, value in pairs(L["itemtypes"]) do setglobal(key, value) end
   INVTYPE_WEAPON_OTHER = INVTYPE_WEAPON.."_other";
   INVTYPE_FINGER_OTHER = INVTYPE_FINGER.."_other";
   INVTYPE_TRINKET_OTHER = INVTYPE_TRINKET.."_other";

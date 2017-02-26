@@ -1,4 +1,6 @@
-pfLocaleClass["zhCN"] = {
+pfUI_locale["zhCN"] = {}
+
+pfUI_locale["zhCN"]["class"] = {
   ["术士"] = "WARLOCK",
   ["战士"] = "WARRIOR",
   ["猎人"] = "HUNTER",
@@ -10,13 +12,13 @@ pfLocaleClass["zhCN"] = {
   ["盗贼"] = "ROGUE",
 }
 
-pfLocaleBagtypes["zhCN"] = {
+pfUI_locale["zhCN"]["bagtypes"] = {
   ["箭袋"] = "QUIVER",
   ["灵魂袋"] = "SOULBAG",
   ["包裹"] = "DEFAULT"
 }
 
-pfLocaleInvtypes["zhCN"] = {
+pfUI_locale["zhCN"]["itemtypes"] = {
   ["INVTYPE_WAND"] = "魔杖",
   ["INVTYPE_GUN"] = "枪械",
   ["INVTYPE_GUNPROJECTILE"] = "弹药",
@@ -25,7 +27,7 @@ pfLocaleInvtypes["zhCN"] = {
   ["INVTYPE_THROWN"] = "投掷武器",
 }
 
-pfLocaleShift["zhCN"] = {
+pfUI_locale["zhCN"]["stances"] = {
   ['BattleStance'] = "战斗姿态",
   ['DefensiveStance'] = "防御姿态",
   ['BerserkerStance'] = "狂暴姿态",
@@ -36,24 +38,24 @@ pfLocaleShift["zhCN"] = {
   ['wantBattleBerserkStance'] = "必须在战斗姿态, 狂暴姿态中",
 }
 
-pfLocaleSpellInterrupts["zhCN"] = {
+pfUI_locale["zhCN"]["interrupts"] = {
   ["盾击"] = true;
   ["拳击"] = true;
   ["脚踢"] = true;
   ["地震术"] = true;
 }
 
-pfLocaleHunterbars["zhCN"] = {
+pfUI_locale["zhCN"]["hunterpaging"] = {
   ["MELEE"] = "摔绊",
   ["RANGED"] = "奥术射击",
 }
 
-pfCustomCastbar["zhCN"] = {
+pfUI_locale["zhCN"]["customcast"] = {
   ["AIMEDSHOT"] = "瞄准射击",
   ["MULTISHOT"] = "多重射击",
 }
 
-pfLocaleSpells["zhCN"] = {
+pfUI_locale["zhCN"]["spells"] = {
   ['"Plucky" Resumes Chicken Form'] = {t=1000, icon="Ability_Racial_BearForm" };
   ['憎恶喷吐'] = {t=2500, icon="Spell_Nature_CorrosiveBreath" };
   ['哈卡酸液'] = {t=1000, icon="Spell_Nature_Acid_01" };

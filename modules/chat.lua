@@ -402,8 +402,8 @@ pfUI:RegisterModule("chat", function ()
         local Name, Class, Level
         for i = 1, GetNumFriends() do
           Name, Level, Class = GetFriendInfo(i)
-          if pfLocaleClass[pfUI.cache["locale"]] and pfLocaleClass[pfUI.cache["locale"]][Class] then
-            Class = pfLocaleClass[pfUI.cache["locale"]][Class]
+          if L["class"] and L["class"][Class] then
+            Class = L["class"][Class]
           end
           pfUI_playerDB[Name] = { class = Class, level = Level }
         end
@@ -411,8 +411,8 @@ pfUI:RegisterModule("chat", function ()
         local Name, Class, Level
         for i = 1, GetNumGuildMembers() do
           Name, _, _, Level, Class = GetGuildRosterInfo(i)
-          if pfLocaleClass[pfUI.cache["locale"]] and pfLocaleClass[pfUI.cache["locale"]][Class] then
-            Class = pfLocaleClass[pfUI.cache["locale"]][Class]
+          if L["class"] and L["class"][Class] then
+            Class = L["class"][Class]
           end
           if Name and Level and Class and pfUI_playerDB then
             pfUI_playerDB[Name] = { class = Class, level = Level }
@@ -423,8 +423,8 @@ pfUI:RegisterModule("chat", function ()
         local Name, Class, SubGroup, Level
         for i = 1, GetNumRaidMembers() do
           Name, _, SubGroup, Level, Class = GetRaidRosterInfo(i)
-          if pfLocaleClass[pfUI.cache["locale"]] and pfLocaleClass[pfUI.cache["locale"]].Class then
-            Class = pfLocaleClass[pfUI.cache["locale"]][Class]
+          if L["class"] and L["class"].Class then
+            Class = L["class"][Class]
           end
           pfUI_playerDB[Name] = { class = Class, level = Level }
         end
@@ -449,8 +449,8 @@ pfUI:RegisterModule("chat", function ()
         local Name, Class, Level
         for i = 1, GetNumWhoResults() do
           Name, _, Level, _, Class, _ = GetWhoInfo(i)
-          if pfLocaleClass[pfUI.cache["locale"]] and pfLocaleClass[pfUI.cache["locale"]][Class] then
-            Class = pfLocaleClass[pfUI.cache["locale"]][Class]
+          if L["class"] and L["class"][Class] then
+            Class = L["class"][Class]
           end
           pfUI_playerDB[Name] = { class = Class, level = Level }
         end

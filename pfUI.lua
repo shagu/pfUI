@@ -29,17 +29,9 @@ pfUI.movables = {}
 pfUI.version = {}
 pfUI.hooks = {}
 
-pfLocaleClass = {}
-pfLocaleBagtypes = {}
-pfLocaleInvtypes = {}
-pfLocaleShift = {}
-pfLocaleSpells = {}
-pfLocaleSpellInterrupts = {}
-pfLocaleHunterbars = {}
-pfCustomCastbar = {}
-
 pfUI_playerDB = {}
 pfUI_config = {}
+pfUI_locale = {}
 
 pfUI:SetScript("OnEvent", function()
 
@@ -82,16 +74,7 @@ pfUI:SetScript("OnEvent", function()
 
     -- use C for configs
     env_pfui.C = pfUI_config
-
-    -- fill the cache
-    pfUI.cache["locale"] = GetLocale()
-    if pfUI.cache["locale"] ~= "enUS" and
-       pfUI.cache["locale"] ~= "frFR" and
-       pfUI.cache["locale"] ~= "deDE" and
-       pfUI.cache["locale"] ~= "zhCN" and
-       pfUI.cache["locale"] ~= "ruRU" then
-       pfUI.cache["locale"] = "enUS"
-    end
+    env_pfui.L = pfUI_locale[GetLocale()] or pfUI_locale["enUS"]
 
     for i,m in pairs(this.modules) do
       -- do not load disabled modules

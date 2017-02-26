@@ -23,9 +23,9 @@ pfUI:RegisterModule("hunterbar", function ()
       pfUI.hunterbar.scanner:SetAction(i)
 
       if pfHunterBarScannerTextLeft1 and pfHunterBarScannerTextLeft1:GetText() then
-        if pfHunterBarScannerTextLeft1:GetText() == pfLocaleHunterbars[pfUI.cache["locale"]]["MELEE"] then
+        if pfHunterBarScannerTextLeft1:GetText() == L["hunterpaging"]["MELEE"] then
           pfUI.hunterbar.melee = i
-        elseif pfHunterBarScannerTextLeft1:GetText() == pfLocaleHunterbars[pfUI.cache["locale"]]["RANGED"] then
+        elseif pfHunterBarScannerTextLeft1:GetText() == L["hunterpaging"]["RANGED"] then
           pfUI.hunterbar.ranged = i
         end
       end

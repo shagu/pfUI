@@ -78,8 +78,8 @@ pfUI:RegisterModule("castbar", function ()
   local scanner = CreateFrame("GameTooltip", "pfSpellScanner", nil, "GameTooltipTemplate")
   scanner:SetOwner(WorldFrame, "ANCHOR_NONE")
 
-  local aimedshot = pfCustomCastbar[pfUI.cache["locale"]]["AIMEDSHOT"]
-  local multishot = pfCustomCastbar[pfUI.cache["locale"]]["MULTISHOT"]
+  local aimedshot = L["customcast"]["AIMEDSHOT"]
+  local multishot = L["customcast"]["MULTISHOT"]
 
   pfUI.castbar.player[aimedshot] = function(begin)
     if begin then
@@ -473,9 +473,9 @@ pfUI:RegisterModule("castbar", function ()
   end)
 
   function pfUI.castbar.target:Action(mob, spell)
-    if pfLocaleSpells[pfUI.cache["locale"]][spell] ~= nil then
-      local casttime = pfLocaleSpells[pfUI.cache["locale"]][spell].t / 1000
-      local icon = pfLocaleSpells[pfUI.cache["locale"]][spell].icon
+    if L["spells"][spell] ~= nil then
+      local casttime = L["spells"][spell].t / 1000
+      local icon = L["spells"][spell].icon
       pfUI.castbar.target.casterDB[mob] = {cast = spell, starttime = GetTime(), casttime = casttime, icon = icon}
       if UnitExists("target") and pfUI.castbar.target.casterDB[UnitName("target")] then
         if C.castbar.target.hide_pfui == "1" then
@@ -490,7 +490,7 @@ pfUI:RegisterModule("castbar", function ()
   end
 
   function pfUI.castbar.target:StopAction(mob, spell)
-    if pfUI.castbar.target.casterDB[mob] and pfLocaleSpellInterrupts[pfUI.cache["locale"]][spell] ~= nil then
+    if pfUI.castbar.target.casterDB[mob] and L["interrupts"][spell] ~= nil then
       pfUI.castbar.target.casterDB[mob] = nil
     end
   end
