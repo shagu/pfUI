@@ -64,7 +64,7 @@ pfUI:RegisterModule("gui", function ()
     end
   end
 
-  function pfUI.gui.UnlockFrames()
+  function pfUI.gui:UnlockFrames()
     if not pfUI.gitter then
       pfUI.gitter = CreateFrame("Button", nil, UIParent)
       pfUI.gitter:SetAllPoints(WorldFrame)
