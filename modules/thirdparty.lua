@@ -66,7 +66,7 @@ pfUI:RegisterModule("thirdparty", function ()
 
           -- overwrite code (new)
           local pfDPSMateOnLoad = DPSMate.OnLoad
-          function DPSMate:OnLoad()
+          function _G.DPSMate:OnLoad()
             pfDPSMateOnLoad()
             pfDPSMateToggle()
             DPSMate_DPSMate:Hide()
@@ -74,13 +74,12 @@ pfUI:RegisterModule("thirdparty", function ()
 
           -- overwrite code (old)
           if DPSMate_DPSMate then
-            DPSMate_DPSMate:Hide()
-
             local pfDPSMateOnShow = DPSMate_DPSMate.Show
-            function DPSMate_DPSMate.Show ()
+            function _G.DPSMate_DPSMate.Show ()
               pfDPSMateOnShow(DPSMate_DPSMate)
               pfDPSMateToggle()
             end
+            DPSMate_DPSMate:Hide()
           end
         end
       end
@@ -95,8 +94,8 @@ pfUI:RegisterModule("thirdparty", function ()
     pfUIhookWIM:RegisterEvent("ADDON_LOADED")
     pfUIhookWIM:SetScript("OnEvent", function()
       if not pfUIhookWIM_PostMessage and WIM_PostMessage then
-        pfUIhookWIM_PostMessage = WIM_PostMessage
-        WIM_PostMessage = function(user, msg, ttype, from, raw_msg)
+        pfUIhookWIM_PostMessage = _G.WIM_PostMessage
+        _G.WIM_PostMessage = function(user, msg, ttype, from, raw_msg)
           pfUIhookWIM_PostMessage(user, msg, ttype, from, raw_msg)
           pfUI.api:CreateBackdrop(getglobal("WIM_msgFrame" .. user), nil, nil, .8)
           getglobal("WIM_msgFrame" .. user .. "From"):ClearAllPoints()
