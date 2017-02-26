@@ -72,7 +72,6 @@ pfUI:SetScript("OnEvent", function()
       if not env_pfui[m] then env_pfui[m] = func end
     end
 
-    -- use C for configs
     env_pfui.C = pfUI_config
     env_pfui.L = pfUI_locale[GetLocale()] or pfUI_locale["enUS"]
 
