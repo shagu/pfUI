@@ -46,20 +46,20 @@ pfUI:RegisterModule("buff", function ()
     TemporaryEnchantFrame:ClearAllPoints()
     TemporaryEnchantFrame:SetPoint("TOPRIGHT", pfUI.minimap or Minimap, "TOPLEFT", -25,0)
 
-    if pfUI_config.global.hidewbuff == "1" then
+    if C.global.hidewbuff == "1" then
       TemporaryEnchantFrame:Hide()
       BuffFrame:SetPoint("TOPRIGHT", pfUI.minimap or Minimap, "TOPLEFT", -25,0)
     else
       -- weapon enchants
       for _,buff in pairs ({TempEnchant1,TempEnchant2}) do
-        local icon = getglobal(buff:GetName().."Icon")
-        local border = getglobal(buff:GetName().."Border")
-        local text = getglobal(buff:GetName().."Duration")
-        text:SetPoint("TOP", buff, "BOTTOM", 0 , -pfUI_config.appearance.border.default*2)
+        local icon = _G[buff:GetName().."Icon"]
+        local border = _G[buff:GetName().."Border"]
+        local text = _G[buff:GetName().."Duration"]
+        text:SetPoint("TOP", buff, "BOTTOM", 0 , -C.appearance.border.default*2)
 
         local _, _, mainhand, _, _, offhand = GetWeaponEnchantInfo()
         if buff then
-          pfUI.api:CreateBackdrop(buff)
+          CreateBackdrop(buff)
           icon:SetTexCoord(.08, .92, .08, .92)
           border:Hide()
         end
@@ -93,26 +93,26 @@ pfUI:RegisterModule("buff", function ()
       end
     end
 
-    if pfUI_config.global.hidebuff == "1" then
+    if C.global.hidebuff == "1" then
       BuffFrame:Hide()
     else
       -- buffs
       for i=0,32 do
-        local buff = getglobal("BuffButton" .. i)
+        local buff = _G["BuffButton" .. i]
         if buff then
-          local icon = getglobal(buff:GetName().."Icon")
-          local border = getglobal(buff:GetName().."Border")
-          local text = getglobal(buff:GetName().."Duration")
+          local icon = _G[buff:GetName().."Icon"]
+          local border = _G[buff:GetName().."Border"]
+          local text = _G[buff:GetName().."Duration"]
 
           if i < 8 and i > 0 then
-            buff:SetPoint("TOPRIGHT", getglobal("BuffButton" .. i-1), "TOPLEFT", -7, 0)
+            buff:SetPoint("TOPRIGHT", _G["BuffButton" .. i-1], "TOPLEFT", -7, 0)
           elseif i < 16 and i > 8 then
-              buff:SetPoint("TOPRIGHT", getglobal("BuffButton" .. i-1), "TOPLEFT", -7, 0)
+              buff:SetPoint("TOPRIGHT", _G["BuffButton" .. i-1], "TOPLEFT", -7, 0)
           elseif i > 16 then
-            buff:SetPoint("TOPRIGHT", getglobal("BuffButton" .. i-1), "TOPLEFT", -7, 0)
+            buff:SetPoint("TOPRIGHT", _G["BuffButton" .. i-1], "TOPLEFT", -7, 0)
           end
-          pfUI.api:CreateBackdrop(buff)
-          text:SetPoint("TOP", buff, "BOTTOM", 0 , -pfUI_config.appearance.border.default*2)
+          CreateBackdrop(buff)
+          text:SetPoint("TOP", buff, "BOTTOM", 0 , -C.appearance.border.default*2)
           icon:SetTexCoord(.08, .92, .08, .92)
           if border then
             buff.backdrop:SetBackdropBorderColor(border:GetVertexColor())

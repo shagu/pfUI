@@ -1,6 +1,6 @@
 pfUI:RegisterModule("eqcompare", function ()
   local loc = pfUI.cache["locale"]
-  for key, value in pairs(pfLocaleInvtypes[loc]) do setglobal(key, value) end
+  for key, value in pairs(L["itemtypes"]) do setglobal(key, value) end
   INVTYPE_WEAPON_OTHER = INVTYPE_WEAPON.."_other";
   INVTYPE_FINGER_OTHER = INVTYPE_FINGER.."_other";
   INVTYPE_TRINKET_OTHER = INVTYPE_TRINKET.."_other";
@@ -43,14 +43,14 @@ pfUI:RegisterModule("eqcompare", function ()
 
   pfUI.eqcompare = CreateFrame( "Frame" , "pfEQCompare", GameTooltip )
   pfUI.eqcompare:SetScript("OnShow", function()
-    if not IsShiftKeyDown() and pfUI_config.tooltip.compare.showalways ~= "1" then
+    if not IsShiftKeyDown() and C.tooltip.compare.showalways ~= "1" then
       return
     end
 
-    local border = tonumber(pfUI_config.appearance.border.default)
+    local border = tonumber(C.appearance.border.default)
 
     for i=1,GameTooltip:NumLines() do
-      local tmpText = getglobal("GameTooltipTextLeft"..i)
+      local tmpText = _G["GameTooltipTextLeft"..i]
 
       for slotType, slotName in pairs(pfUI.slotTable) do
         if tmpText:GetText() == slotType then

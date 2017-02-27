@@ -2,12 +2,17 @@
 ## Title: |cff33ffccpf|cffffffffUI
 ## Author: Shagu
 ## Notes: A complete user interface replacement.
-## Version: 1.6
+## Version: 2.0.1
 ## SavedVariables: pfUI_profiles
 ## SavedVariablesPerCharacter: pfUI_config, pfUI_init, pfUI_playerDB
 
 # main
 pfUI.lua
+
+# api
+api\api.lua
+api\config.lua
+api\unitframes.lua
 
 # locales
 env\locales_enUS.lua
@@ -18,12 +23,10 @@ env\locales_ruRU.lua
 
 # environment
 env\tables.lua
-env\api.lua
 env\colors.lua
 env\fonts.lua
 
 # modules
-modules\config.lua
 modules\firstrun.lua
 modules\gui.lua
 modules\pixelperfect.lua
@@ -34,7 +37,6 @@ modules\chat.lua
 modules\addons.lua
 modules\minimap.lua
 modules\panel.lua
-modules\unitframes.lua
 modules\player.lua
 modules\target.lua
 modules\targettarget.lua

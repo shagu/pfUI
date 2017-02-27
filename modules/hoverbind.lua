@@ -1,5 +1,5 @@
 pfUI:RegisterModule("hoverbind", function ()
-  local default_border = pfUI_config.appearance.border.default
+  local default_border = C.appearance.border.default
   local keymap = {
     ["BonusActionButton"]         = "ACTIONBUTTON",
     ["MultiBarBottomLeftButton"]  = "MULTIACTIONBAR1BUTTON",

@@ -1,14 +1,14 @@
 pfUI:RegisterModule("castbar", function ()
 
-  local default_border = pfUI_config.appearance.border.default
-  if pfUI_config.appearance.border.unitframes ~= "-1" then
-    default_border = pfUI_config.appearance.border.unitframes
+  local default_border = C.appearance.border.default
+  if C.appearance.border.unitframes ~= "-1" then
+    default_border = C.appearance.border.unitframes
   end
 
   pfUI.castbar = CreateFrame("Frame", "pfCastBar", UIParent)
 
   -- hide blizzard
-  if pfUI_config.castbar.player.hide_blizz == "1" then
+  if C.castbar.player.hide_blizz == "1" then
     CastingBarFrame:UnregisterAllEvents()
     CastingBarFrame:Hide()
   end
@@ -16,8 +16,8 @@ pfUI:RegisterModule("castbar", function ()
   -- [[ pfPlayerCastbar ]] --
   pfUI.castbar.player = CreateFrame("Frame", "pfPlayerCastbar", UIParent)
   pfUI.castbar.player:SetFrameStrata("HIGH")
-  pfUI.api:CreateBackdrop(pfUI.castbar.player, default_border)
-  pfUI.castbar.player:SetHeight(pfUI_config.global.font_size + default_border)
+  CreateBackdrop(pfUI.castbar.player, default_border)
+  pfUI.castbar.player:SetHeight(C.global.font_size + default_border)
 
   if pfUI.uf.player then
     pfUI.castbar.player:SetPoint("TOPLEFT",pfUI.uf.player,"BOTTOMLEFT",0,-default_border*2)
@@ -27,7 +27,7 @@ pfUI:RegisterModule("castbar", function ()
     pfUI.castbar.player:SetWidth(200)
   end
 
-  pfUI.api:UpdateMovable(pfUI.castbar.player)
+  UpdateMovable(pfUI.castbar.player)
   pfUI.castbar.player:Hide()
   pfUI.castbar.player.delay = 0
 
@@ -38,7 +38,7 @@ pfUI:RegisterModule("castbar", function ()
   pfUI.castbar.player.bar:SetAllPoints(pfUI.castbar.player)
   pfUI.castbar.player.bar:SetMinMaxValues(0, 100)
   pfUI.castbar.player.bar:SetValue(20)
-  local r,g,b,a = pfUI.api.strsplit(",", pfUI_config.appearance.castbar.castbarcolor)
+  local r,g,b,a = strsplit(",", C.appearance.castbar.castbarcolor)
   pfUI.castbar.player.bar:SetStatusBarColor(r,g,b,a)
 
   -- text left
@@ -49,7 +49,7 @@ pfUI:RegisterModule("castbar", function ()
   pfUI.castbar.player.bar.left:SetNonSpaceWrap(false)
   pfUI.castbar.player.bar.left:SetFontObject(GameFontWhite)
   pfUI.castbar.player.bar.left:SetTextColor(1,1,1,1)
-  pfUI.castbar.player.bar.left:SetFont(pfUI.font_default, pfUI_config.global.font_size, "OUTLINE")
+  pfUI.castbar.player.bar.left:SetFont(pfUI.font_default, C.global.font_size, "OUTLINE")
   pfUI.castbar.player.bar.left:SetText("left")
   pfUI.castbar.player.bar.left:SetJustifyH("left")
 
@@ -61,7 +61,7 @@ pfUI:RegisterModule("castbar", function ()
   pfUI.castbar.player.bar.right:SetNonSpaceWrap(false)
   pfUI.castbar.player.bar.right:SetFontObject(GameFontWhite)
   pfUI.castbar.player.bar.right:SetTextColor(1,1,1,1)
-  pfUI.castbar.player.bar.right:SetFont(pfUI.font_default, pfUI_config.global.font_size, "OUTLINE")
+  pfUI.castbar.player.bar.right:SetFont(pfUI.font_default, C.global.font_size, "OUTLINE")
   pfUI.castbar.player.bar.right:SetText("right")
   pfUI.castbar.player.bar.right:SetJustifyH("right")
 
@@ -75,63 +75,145 @@ pfUI:RegisterModule("castbar", function ()
   pfUI.castbar.player:RegisterEvent("SPELLCAST_FAILED")
   pfUI.castbar.player:RegisterEvent("SPELLCAST_INTERRUPTED")
 
-  pfUI.castbar.player:SetScript("OnEvent", function ()
-    if ( event == "SPELLCAST_START" ) then
-      pfUI.castbar.player.delay = 0
-      pfUI.castbar.player.spell = arg1
-      pfUI.castbar.player.bar.left:SetText(arg1)
-      local r,g,b,a = pfUI.api.strsplit(",", pfUI_config.appearance.castbar.castbarcolor)
-      pfUI.castbar.player.bar:SetStatusBarColor(r,g,b,a)
-      pfUI.castbar.player.startTime = GetTime()
-      pfUI.castbar.player.maxValue = arg2 / 1000
-      pfUI.castbar.player.endTime = nil
-      pfUI.castbar.player.bar:SetMinMaxValues(0, pfUI.castbar.player.maxValue)
-      pfUI.castbar.player.bar:SetValue(pfUI.castbar.player.startTime)
-      pfUI.castbar.player.holdTime = 0
-      pfUI.castbar.player.casting = 1
-      pfUI.castbar.player.channeling = nil
-      pfUI.castbar.player.mode = "casting"
-      pfUI.castbar.player.fadeout = nil
-      pfUI.castbar.player:SetAlpha(1)
-      pfUI.castbar.player:Show()
+  local scanner = CreateFrame("GameTooltip", "pfSpellScanner", nil, "GameTooltipTemplate")
+  scanner:SetOwner(WorldFrame, "ANCHOR_NONE")
 
-    elseif ( event == "SPELLCAST_CHANNEL_START" ) then
-      pfUI.castbar.player.delay = 0
-      pfUI.castbar.player.spell = arg2
-      pfUI.castbar.player.bar.left:SetText(arg2)
-      local r,g,b,a = pfUI.api.strsplit(",", pfUI_config.appearance.castbar.channelcolor)
-      pfUI.castbar.player.bar:SetStatusBarColor(r,g,b,a)
-      pfUI.castbar.player.maxValue = nil
-      pfUI.castbar.player.startTime = GetTime()
-      pfUI.castbar.player.endTime = pfUI.castbar.player.startTime + (arg1 / 1000)
-      pfUI.castbar.player.duration = arg1 / 1000
-      pfUI.castbar.player.bar:SetMinMaxValues(pfUI.castbar.player.startTime, pfUI.castbar.player.endTime)
-      pfUI.castbar.player.bar:SetValue(pfUI.castbar.player.endTime)
-      pfUI.castbar.player.holdTime = 0
-      pfUI.castbar.player.casting = nil
-      pfUI.castbar.player.channeling = 1
-      pfUI.castbar.player.fadeout = nil
-      pfUI.castbar.player:SetAlpha(1)
-      pfUI.castbar.player:Show()
+  local aimedshot = L["customcast"]["AIMEDSHOT"]
+  local multishot = L["customcast"]["MULTISHOT"]
 
-    elseif event == "SPELLCAST_STOP" then
-      if pfUI.castbar.player.casting then
-        pfUI.castbar.player.fadeout = 1
-        pfUI.castbar.player.casting = nil
-        pfUI.castbar.player.bar:SetMinMaxValues(1,pfUI.castbar.player.bar:GetValue())
-      end
+  pfUI.castbar.player[aimedshot] = function(begin)
+    if begin then
+      local duration = 3000
 
-    elseif event == "SPELLCAST_CHANNEL_STOP" then
-      if pfUI.castbar.player.channeling then
-        pfUI.castbar.player.fadeout = 1
-        pfUI.castbar.player.channeling = nil
-
-        if GetTime() + 0.3 < pfUI.castbar.player.endTime then
-          pfUI.castbar.player.bar:SetStatusBarColor(1,.5,.5,1)
-          pfUI.castbar.player.bar:SetMinMaxValues(1,100)
-          pfUI.castbar.player.bar:SetValue(100)
+      for i=1,32 do
+        if UnitBuff("player", i) == "Interface\\Icons\\Racial_Troll_Berserk" then
+          local berserk = 0.3
+          if((UnitHealth("player")/UnitHealthMax("player")) >= 0.40) then
+            berserk = (1.30 - (UnitHealth("player") / UnitHealthMax("player"))) / 3
+          end
+          duration = duration / (1 + berserk)
+        elseif UnitBuff("player", i) == "Interface\\Icons\\Ability_Hunter_RunningShot" then
+          duration = duration / 1.4
+        elseif UnitBuff("player", i) == "Interface\\Icons\\Ability_Warrior_InnerRage" then
+          duration = duration / 1.3
+        elseif UnitBuff("player", i) == "Interface\\Icons\\Inv_Trinket_Naxxramas04" then
+          duration = duration / 1.2
+        elseif UnitDebuff("player", i) == "Interface\\Icons\\Spell_Shadow_CurseOfTounges" then
+          duration = duration / 0.5
         end
       end
+
+      pfUI.castbar.player:SpellcastStart(aimedshot, duration)
+    else
+      pfUI.castbar.player:SpellcastStop()
+    end
+  end
+
+  pfUI.castbar.player[multishot] = function(begin)
+    if begin then
+      local duration = 500
+      pfUI.castbar.player:SpellcastStart(multishot, duration)
+    else
+      pfUI.castbar.player:SpellcastStop()
+    end
+  end
+
+  Hook("CastSpell", function(id, bookType)
+    local spellName = GetSpellName(id, bookType)
+    if pfUI.castbar.player[spellName] then
+      pfUI.castbar.player[spellName](true)
+    end
+  end, true)
+
+  Hook("CastSpellByName", function(spellName, target)
+    if pfUI.castbar.player[spellName] then
+      pfUI.castbar.player[spellName](true)
+    end
+  end, true)
+
+  Hook("UseAction", function(slot, target, button)
+    if GetActionText(slot) or not IsCurrentAction(slot) then return end
+    scanner:ClearLines()
+    scanner:SetAction(slot)
+    local spellName = pfSpellScannerTextLeft1:GetText()
+    if pfUI.castbar.player[spellName] then
+      pfUI.castbar.player[spellName](true)
+    end
+  end, true)
+
+  function pfUI.castbar.player:SpellcastStart(spell, duration)
+    pfUI.castbar.player.delay = 0
+    pfUI.castbar.player.spell = spell
+    pfUI.castbar.player.bar.left:SetText(spell)
+    local r,g,b,a = strsplit(",", C.appearance.castbar.castbarcolor)
+    pfUI.castbar.player.bar:SetStatusBarColor(r,g,b,a)
+    pfUI.castbar.player.startTime = GetTime()
+    pfUI.castbar.player.maxValue = duration / 1000
+    pfUI.castbar.player.endTime = nil
+    pfUI.castbar.player.bar:SetMinMaxValues(0, pfUI.castbar.player.maxValue)
+    pfUI.castbar.player.bar:SetValue(pfUI.castbar.player.startTime)
+    pfUI.castbar.player.holdTime = 0
+    pfUI.castbar.player.casting = 1
+    pfUI.castbar.player.channeling = nil
+    pfUI.castbar.player.mode = "casting"
+    pfUI.castbar.player.fadeout = nil
+    pfUI.castbar.player:SetAlpha(1)
+    pfUI.castbar.player:Show()
+  end
+
+  function pfUI.castbar.player:SpellcastStop()
+    if pfUI.castbar.player.casting then
+      pfUI.castbar.player.fadeout = 1
+      pfUI.castbar.player.casting = nil
+      pfUI.castbar.player.bar:SetMinMaxValues(1,pfUI.castbar.player.bar:GetValue())
+    end
+  end
+
+  function pfUI.castbar.player:SpellcastChannelStart(duration, spell)
+    pfUI.castbar.player.delay = 0
+    pfUI.castbar.player.spell = spell
+    pfUI.castbar.player.bar.left:SetText(spell)
+    local r,g,b,a = strsplit(",", C.appearance.castbar.channelcolor)
+    pfUI.castbar.player.bar:SetStatusBarColor(r,g,b,a)
+    pfUI.castbar.player.maxValue = nil
+    pfUI.castbar.player.startTime = GetTime()
+    pfUI.castbar.player.endTime = pfUI.castbar.player.startTime + (arg1 / 1000)
+    pfUI.castbar.player.duration = duration / 1000
+    pfUI.castbar.player.bar:SetMinMaxValues(pfUI.castbar.player.startTime, pfUI.castbar.player.endTime)
+    pfUI.castbar.player.bar:SetValue(pfUI.castbar.player.endTime)
+    pfUI.castbar.player.holdTime = 0
+    pfUI.castbar.player.casting = nil
+    pfUI.castbar.player.channeling = 1
+    pfUI.castbar.player.fadeout = nil
+    pfUI.castbar.player:SetAlpha(1)
+    pfUI.castbar.player:Show()
+  end
+
+  function pfUI.castbar.player:SpellcastChannelStop()
+    if pfUI.castbar.player.channeling then
+      pfUI.castbar.player.fadeout = 1
+      pfUI.castbar.player.channeling = nil
+
+      if GetTime() + 0.3 < pfUI.castbar.player.endTime then
+        pfUI.castbar.player.bar:SetStatusBarColor(1,.5,.5,1)
+        pfUI.castbar.player.bar:SetMinMaxValues(1,100)
+        pfUI.castbar.player.bar:SetValue(100)
+      end
+    end
+  end
+
+  pfUI.castbar.player:SetScript("OnEvent", function ()
+    if ( event == "SPELLCAST_START" ) then
+      pfUI.castbar.player:SpellcastStart(arg1, arg2)
+
+    elseif ( event == "SPELLCAST_CHANNEL_START" ) then
+      pfUI.castbar.player:SpellcastChannelStart(arg1, arg2)
+
+    elseif event == "SPELLCAST_STOP" then
+      pfUI.castbar.player:SpellcastStop()
+
+    elseif event == "SPELLCAST_CHANNEL_STOP" then
+      pfUI.castbar.player:SpellcastChannelStop()
 
     elseif event == "SPELLCAST_FAILED" or event == "SPELLCAST_INTERRUPTED" then
       if pfUI.castbar.player.casting then
@@ -160,7 +242,7 @@ pfUI:RegisterModule("castbar", function ()
   end)
 
   pfUI.castbar.player:SetScript("OnUpdate", function ()
-    if pfUI_config.castbar.player.hide_pfui == "1" then pfUI.castbar.player:Hide() return end
+    if C.castbar.player.hide_pfui == "1" then pfUI.castbar.player:Hide() return end
 
     -- cast
     if pfUI.castbar.player.casting then
@@ -173,10 +255,10 @@ pfUI:RegisterModule("castbar", function ()
       if cur > max then cur = max end
 
       if delay > 0 then
-        delay = "|cffffaaaa+" .. pfUI.api.round(delay,1) .. " |r "
-        pfUI.castbar.player.bar.right:SetText(delay .. pfUI.api.round(cur,1) .. " / " .. pfUI.api.round(max,1))
+        delay = "|cffffaaaa+" .. round(delay,1) .. " |r "
+        pfUI.castbar.player.bar.right:SetText(delay .. round(cur,1) .. " / " .. round(max,1))
       else
-        pfUI.castbar.player.bar.right:SetText(pfUI.api.round(cur,1) .. " / " .. pfUI.api.round(max,1))
+        pfUI.castbar.player.bar.right:SetText(round(cur,1) .. " / " .. round(max,1))
       end
 
       return
@@ -201,10 +283,10 @@ pfUI:RegisterModule("castbar", function ()
         return
       end
       if delay > 0 then
-        delay = "|cffffaaaa-" .. pfUI.api.round(delay,1) .. " |r "
-        pfUI.castbar.player.bar.right:SetText(delay .. pfUI.api.round(cur,1))
+        delay = "|cffffaaaa-" .. round(delay,1) .. " |r "
+        pfUI.castbar.player.bar.right:SetText(delay .. round(cur,1))
       else
-        pfUI.castbar.player.bar.right:SetText(pfUI.api.round(cur,1))
+        pfUI.castbar.player.bar.right:SetText(round(cur,1))
       end
 
       return
@@ -222,8 +304,8 @@ pfUI:RegisterModule("castbar", function ()
   -- [[ pfTargetCastbar ]] --
   pfUI.castbar.target = CreateFrame("Frame", "pfTargetCastbar", UIParent)
   pfUI.castbar.target:SetFrameStrata("HIGH")
-  pfUI.api:CreateBackdrop(pfUI.castbar.target, default_border)
-  pfUI.castbar.target:SetHeight(pfUI_config.global.font_size + default_border)
+  CreateBackdrop(pfUI.castbar.target, default_border)
+  pfUI.castbar.target:SetHeight(C.global.font_size + default_border)
 
   if pfUI.uf.target then
     pfUI.castbar.target:SetPoint("TOPLEFT",pfUI.uf.target,"BOTTOMLEFT",0,-default_border*2)
@@ -233,7 +315,7 @@ pfUI:RegisterModule("castbar", function ()
     pfUI.castbar.target:SetWidth(200)
   end
 
-  pfUI.api:UpdateMovable(pfUI.castbar.target)
+  UpdateMovable(pfUI.castbar.target)
   pfUI.castbar.target:Hide()
 
 
@@ -244,7 +326,7 @@ pfUI:RegisterModule("castbar", function ()
   pfUI.castbar.target.bar:SetAllPoints(pfUI.castbar.target)
   pfUI.castbar.target.bar:SetMinMaxValues(0, 100)
   pfUI.castbar.target.bar:SetValue(20)
-  local r,g,b,a = pfUI.api.strsplit(",", pfUI_config.appearance.castbar.castbarcolor)
+  local r,g,b,a = strsplit(",", C.appearance.castbar.castbarcolor)
   pfUI.castbar.target.bar:SetStatusBarColor(r,g,b,a)
 
   -- text left
@@ -255,7 +337,7 @@ pfUI:RegisterModule("castbar", function ()
   pfUI.castbar.target.bar.left:SetNonSpaceWrap(false)
   pfUI.castbar.target.bar.left:SetFontObject(GameFontWhite)
   pfUI.castbar.target.bar.left:SetTextColor(1,1,1,1)
-  pfUI.castbar.target.bar.left:SetFont(pfUI.font_default, pfUI_config.global.font_size, "OUTLINE")
+  pfUI.castbar.target.bar.left:SetFont(pfUI.font_default, C.global.font_size, "OUTLINE")
   pfUI.castbar.target.bar.left:SetText("left")
   pfUI.castbar.target.bar.left:SetJustifyH("left")
 
@@ -267,7 +349,7 @@ pfUI:RegisterModule("castbar", function ()
   pfUI.castbar.target.bar.right:SetNonSpaceWrap(false)
   pfUI.castbar.target.bar.right:SetFontObject(GameFontWhite)
   pfUI.castbar.target.bar.right:SetTextColor(1,1,1,1)
-  pfUI.castbar.target.bar.right:SetFont(pfUI.font_default, pfUI_config.global.font_size, "OUTLINE")
+  pfUI.castbar.target.bar.right:SetFont(pfUI.font_default, C.global.font_size, "OUTLINE")
   pfUI.castbar.target.bar.right:SetText("right")
   pfUI.castbar.target.bar.right:SetJustifyH("right")
 
@@ -283,7 +365,7 @@ pfUI:RegisterModule("castbar", function ()
           pfUI.castbar.target.bar:SetMinMaxValues(0, casttime)
           pfUI.castbar.target.bar:SetValue(GetTime() - starttime)
           pfUI.castbar.target.bar.left:SetText(spellname)
-          pfUI.castbar.target.bar.right:SetText(pfUI.api.round(GetTime() - starttime,1) .. " / " .. casttime)
+          pfUI.castbar.target.bar.right:SetText(round(GetTime() - starttime,1) .. " / " .. casttime)
         end
       else
         pfUI.castbar.target.casterDB[UnitName("target")] = nil
@@ -330,7 +412,7 @@ pfUI:RegisterModule("castbar", function ()
         local starttime = pfUI.castbar.target.casterDB[UnitName("target")].starttime or 0
         local casttime = pfUI.castbar.target.casterDB[UnitName("target")].casttime or 0
         if starttime + casttime > GetTime() then
-          if pfUI_config.castbar.target.hide_pfui == "1" then
+          if C.castbar.target.hide_pfui == "1" then
             pfUI.castbar.target:Hide()
           else
             pfUI.castbar.target:Show()
@@ -391,12 +473,12 @@ pfUI:RegisterModule("castbar", function ()
   end)
 
   function pfUI.castbar.target:Action(mob, spell)
-    if pfLocaleSpells[pfUI.cache["locale"]][spell] ~= nil then
-      local casttime = pfLocaleSpells[pfUI.cache["locale"]][spell].t / 1000
-      local icon = pfLocaleSpells[pfUI.cache["locale"]][spell].icon
+    if L["spells"][spell] ~= nil then
+      local casttime = L["spells"][spell].t / 1000
+      local icon = L["spells"][spell].icon
       pfUI.castbar.target.casterDB[mob] = {cast = spell, starttime = GetTime(), casttime = casttime, icon = icon}
       if UnitExists("target") and pfUI.castbar.target.casterDB[UnitName("target")] then
-        if pfUI_config.castbar.target.hide_pfui == "1" then
+        if C.castbar.target.hide_pfui == "1" then
           pfUI.castbar.target:Hide()
         else
           pfUI.castbar.target:Show()
@@ -408,7 +490,7 @@ pfUI:RegisterModule("castbar", function ()
   end
 
   function pfUI.castbar.target:StopAction(mob, spell)
-    if pfUI.castbar.target.casterDB[mob] and pfLocaleSpellInterrupts[pfUI.cache["locale"]][spell] ~= nil then
+    if pfUI.castbar.target.casterDB[mob] and L["interrupts"][spell] ~= nil then
       pfUI.castbar.target.casterDB[mob] = nil
     end
   end

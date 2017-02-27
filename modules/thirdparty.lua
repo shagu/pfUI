@@ -3,36 +3,43 @@ pfUI:RegisterModule("thirdparty", function ()
 
   -- DPSMate Integration
   -- Move DPSMate to right chat and let the chat-hide button toggle it
-  local function pfSetupDPSMate()
-    -- set DPSMate appearance to match pfUI
-    DPSMateSettings["windows"][1]["titlebarheight"] = 18
-    DPSMateSettings["windows"][1]["titlebarfontsize"] = 12
-    DPSMateSettings["windows"][1]["titlebarfont"] = "Accidental Presidency"
-    DPSMateSettings["windows"][1]["titlebarbgcolor"][1] = 0
-    DPSMateSettings["windows"][1]["titlebarbgcolor"][2] = 0
-    DPSMateSettings["windows"][1]["titlebarbgcolor"][3] = 0
+  if C.thirdparty.dpsmate.enable == "1" then
 
-    DPSMateSettings["windows"][1]["barheight"] = 15
-    DPSMateSettings["windows"][1]["barfontsize"] = 12
-    DPSMateSettings["windows"][1]["bartexture"] = "BantoBar"
-    DPSMateSettings["windows"][1]["barfont"] = "Accidental Presidency"
+    local function pfDPSMateConfig()
+      -- set DPSMate appearance to match pfUI
+      DPSMateSettings["windows"][1]["titlebarheight"] = 18
+      DPSMateSettings["windows"][1]["titlebarfontsize"] = 12
+      DPSMateSettings["windows"][1]["titlebarfont"] = "Accidental Presidency"
+      DPSMateSettings["windows"][1]["titlebarbgcolor"][1] = 0
+      DPSMateSettings["windows"][1]["titlebarbgcolor"][2] = 0
+      DPSMateSettings["windows"][1]["titlebarbgcolor"][3] = 0
 
-    DPSMateSettings["windows"][1]["bgopacity"] = 1
-    DPSMateSettings["windows"][1]["opacity"] = 1
-    DPSMateSettings["windows"][1]["contentbgtexture"] = "Solid Background"
-    DPSMateSettings["windows"][1]["contentbgcolor"][1] = 0
-    DPSMateSettings["windows"][1]["contentbgcolor"][2] = 0
-    DPSMateSettings["windows"][1]["contentbgcolor"][3] = 0
-    DPSMateSettings["windows"][1]["contentbgcolor"][3] = 0
+      DPSMateSettings["windows"][1]["barheight"] = 15
+      DPSMateSettings["windows"][1]["barfontsize"] = 12
+      DPSMateSettings["windows"][1]["bartexture"] = "BantoBar"
+      DPSMateSettings["windows"][1]["barfont"] = "Accidental Presidency"
 
-    DPSMate_DPSMate:Hide()
+      DPSMateSettings["windows"][1]["bgopacity"] = 1
+      DPSMateSettings["windows"][1]["borderopacity"] = 0
+      DPSMateSettings["windows"][1]["opacity"] = 1
+      DPSMateSettings["windows"][1]["contentbgtexture"] = "Solid Background"
+      DPSMateSettings["windows"][1]["contentbgcolor"][1] = 0
+      DPSMateSettings["windows"][1]["contentbgcolor"][2] = 0
+      DPSMateSettings["windows"][1]["contentbgcolor"][3] = 0
+      DPSMateSettings["windows"][1]["contentbgcolor"][3] = 0
 
-    if not pfUIhookDPSMate_Show then
-      pfUIhookDPSMate_Show = DPSMate_DPSMate.Show
+      if pfUI.panel then
+        pfUI.panel.right.hide:SetScript("OnClick", function()
+          if DPSMate_DPSMate:IsShown() then
+            DPSMate_DPSMate:Hide()
+          else
+            DPSMate_DPSMate:Show()
+          end
+        end)
+      end
     end
-    function DPSMate_DPSMate.Show ()
-      pfUIhookDPSMate_Show(DPSMate_DPSMate)
 
+    local function pfDPSMateToggle()
       if pfUI.chat and pfUI.panel then
         DPSMate_DPSMate:ClearAllPoints()
         DPSMate_DPSMate:SetAllPoints(pfUI.chat.right)
@@ -49,93 +56,97 @@ pfUI:RegisterModule("thirdparty", function ()
       end
     end
 
-    if pfUI.panel then
-      pfUI.panel.right.hide:SetScript("OnClick", function()
-        if DPSMate_DPSMate:IsShown() then
-          DPSMate_DPSMate:Hide()
-        else
-          DPSMate_DPSMate:Show()
-        end
-      end)
-    end
-  end
+    local pfHookDPSMate = CreateFrame("Frame", nil)
+    pfHookDPSMate:RegisterEvent("VARIABLES_LOADED")
+    pfHookDPSMate:SetScript("OnEvent",function()
+      if event == "VARIABLES_LOADED" then
+        if DPSMate then
+          pfHookDPSMate:UnregisterEvent("VARIABLES_LOADED")
+          pfDPSMateConfig()
 
-  if pfUI_config.thirdparty.dpsmate.enable == "1" then
-    if DPSMate_DPSMate then
-      pfSetupDPSMate()
-    else
-      local pfHookDPSMate = CreateFrame("Frame", nil)
-      pfHookDPSMate:RegisterEvent("VARIABLES_LOADED")
-      pfHookDPSMate:SetScript("OnEvent",function()
-          if DPSMate_DPSMate then
-            pfHookDPSMate:UnregisterEvent("VARIABLES_LOADED")
-            pfSetupDPSMate()
+          -- overwrite code (new)
+          local pfDPSMateOnLoad = DPSMate.OnLoad
+          function _G.DPSMate:OnLoad()
+            pfDPSMateOnLoad()
+            pfDPSMateToggle()
+            DPSMate_DPSMate:Hide()
           end
-        end)
-    end
+
+          -- overwrite code (old)
+          if DPSMate_DPSMate then
+            local pfDPSMateOnShow = DPSMate_DPSMate.Show
+            function _G.DPSMate_DPSMate.Show ()
+              pfDPSMateOnShow(DPSMate_DPSMate)
+              pfDPSMateToggle()
+            end
+            DPSMate_DPSMate:Hide()
+          end
+        end
+      end
+    end)
   end
 
   -- WIM Integration
   -- Change the appearance of WIM windows to match pfUI
-  if pfUI_config.thirdparty.wim.enable == "1" then
+  if C.thirdparty.wim.enable == "1" then
 
     local pfUIhookWIM = CreateFrame("Frame", nil)
     pfUIhookWIM:RegisterEvent("ADDON_LOADED")
     pfUIhookWIM:SetScript("OnEvent", function()
       if not pfUIhookWIM_PostMessage and WIM_PostMessage then
-        pfUIhookWIM_PostMessage = WIM_PostMessage
-        WIM_PostMessage = function(user, msg, ttype, from, raw_msg)
+        pfUIhookWIM_PostMessage = _G.WIM_PostMessage
+        _G.WIM_PostMessage = function(user, msg, ttype, from, raw_msg)
           pfUIhookWIM_PostMessage(user, msg, ttype, from, raw_msg)
-          pfUI.api:CreateBackdrop(getglobal("WIM_msgFrame" .. user), nil, nil, .8)
-          getglobal("WIM_msgFrame" .. user .. "From"):ClearAllPoints()
-          getglobal("WIM_msgFrame" .. user .. "From"):SetPoint("TOP", 0, -10)
+          CreateBackdrop(_G["WIM_msgFrame" .. user], nil, nil, .8)
+          _G["WIM_msgFrame" .. user .. "From"]:ClearAllPoints()
+          _G["WIM_msgFrame" .. user .. "From"]:SetPoint("TOP", 0, -10)
 
-          getglobal("WIM_msgFrame" .. user).avatar = CreateFrame("Frame", nil, getglobal("WIM_msgFrame" .. user))
-          getglobal("WIM_msgFrame" .. user).avatar:SetAllPoints(getglobal("WIM_msgFrame" .. user))
-          getglobal("WIM_msgFrame" .. user .. "ClassIcon"):SetTexCoord(.3, .7, .3, .7)
-          getglobal("WIM_msgFrame" .. user .. "ClassIcon"):SetParent(getglobal("WIM_msgFrame" .. user).avatar)
-          getglobal("WIM_msgFrame" .. user .. "ClassIcon"):ClearAllPoints()
-          getglobal("WIM_msgFrame" .. user .. "ClassIcon"):SetPoint("TOPLEFT", 10 , -10)
-          getglobal("WIM_msgFrame" .. user .. "ClassIcon"):SetWidth(26)
-          getglobal("WIM_msgFrame" .. user .. "ClassIcon"):SetHeight(26)
+          _G["WIM_msgFrame" .. user].avatar = CreateFrame("Frame", nil, _G["WIM_msgFrame" .. user])
+          _G["WIM_msgFrame" .. user].avatar:SetAllPoints(_G["WIM_msgFrame" .. user])
+          _G["WIM_msgFrame" .. user .. "ClassIcon"]:SetTexCoord(.3, .7, .3, .7)
+          _G["WIM_msgFrame" .. user .. "ClassIcon"]:SetParent(_G["WIM_msgFrame" .. user].avatar)
+          _G["WIM_msgFrame" .. user .. "ClassIcon"]:ClearAllPoints()
+          _G["WIM_msgFrame" .. user .. "ClassIcon"]:SetPoint("TOPLEFT", 10 , -10)
+          _G["WIM_msgFrame" .. user .. "ClassIcon"]:SetWidth(26)
+          _G["WIM_msgFrame" .. user .. "ClassIcon"]:SetHeight(26)
 
 
-          getglobal("WIM_msgFrame" .. user .. "ScrollingMessageFrame"):SetPoint("TOPLEFT", getglobal("WIM_msgFrame" .. user), "TOPLEFT", 10, -45)
-          getglobal("WIM_msgFrame" .. user .. "ScrollingMessageFrame"):SetPoint("BOTTOMRIGHT", getglobal("WIM_msgFrame" .. user), "BOTTOMRIGHT", -32, 32)
-          getglobal("WIM_msgFrame" .. user .. "ScrollingMessageFrame"):SetFont(STANDARD_TEXT_FONT, 12)
+          _G["WIM_msgFrame" .. user .. "ScrollingMessageFrame"]:SetPoint("TOPLEFT", _G["WIM_msgFrame" .. user], "TOPLEFT", 10, -45)
+          _G["WIM_msgFrame" .. user .. "ScrollingMessageFrame"]:SetPoint("BOTTOMRIGHT", _G["WIM_msgFrame" .. user], "BOTTOMRIGHT", -32, 32)
+          _G["WIM_msgFrame" .. user .. "ScrollingMessageFrame"]:SetFont(STANDARD_TEXT_FONT, 12)
 
-          pfUI.api:CreateBackdrop(getglobal("WIM_msgFrame" .. user .. "MsgBox"))
-          getglobal("WIM_msgFrame" .. user .. "MsgBox"):ClearAllPoints()
-          getglobal("WIM_msgFrame" .. user .. "MsgBox"):SetPoint("TOPLEFT", getglobal("WIM_msgFrame" .. user .. "ScrollingMessageFrame"), "BOTTOMLEFT", 0, -5)
-          getglobal("WIM_msgFrame" .. user .. "MsgBox"):SetPoint("TOPRIGHT", getglobal("WIM_msgFrame" .. user .. "ScrollingMessageFrame"), "BOTTOMRIGHT", 0, -5)
-          getglobal("WIM_msgFrame" .. user .. "MsgBox"):SetTextInsets(5, 5, 5, 5)
-          getglobal("WIM_msgFrame" .. user .. "MsgBox"):SetHeight(20)
-          for i,v in ipairs({getglobal("WIM_msgFrame" .. user .. "MsgBox"):GetRegions()}) do
+          CreateBackdrop(_G["WIM_msgFrame" .. user .. "MsgBox"])
+          _G["WIM_msgFrame" .. user .. "MsgBox"]:ClearAllPoints()
+          _G["WIM_msgFrame" .. user .. "MsgBox"]:SetPoint("TOPLEFT", _G["WIM_msgFrame" .. user .. "ScrollingMessageFrame"], "BOTTOMLEFT", 0, -5)
+          _G["WIM_msgFrame" .. user .. "MsgBox"]:SetPoint("TOPRIGHT", _G["WIM_msgFrame" .. user .. "ScrollingMessageFrame"], "BOTTOMRIGHT", 0, -5)
+          _G["WIM_msgFrame" .. user .. "MsgBox"]:SetTextInsets(5, 5, 5, 5)
+          _G["WIM_msgFrame" .. user .. "MsgBox"]:SetHeight(20)
+          for i,v in ipairs({_G["WIM_msgFrame" .. user .. "MsgBox"]:GetRegions()}) do
             if i==6  then v:SetTexture(.1,.1,.1,.5) end
           end
 
-          pfUI.api:CreateBackdrop(getglobal("WIM_msgFrame" .. user .. "ShortcutFrameButton1"))
-          for i,v in ipairs({getglobal("WIM_msgFrame" .. user .. "ShortcutFrameButton1"):GetRegions()}) do
+          CreateBackdrop(_G["WIM_msgFrame" .. user .. "ShortcutFrameButton1"])
+          for i,v in ipairs({_G["WIM_msgFrame" .. user .. "ShortcutFrameButton1"]:GetRegions()}) do
             if i >= 2 and i < 7 then v:SetTexture(.1,.1,.1,0) end
           end
 
-          pfUI.api:CreateBackdrop(getglobal("WIM_msgFrame" .. user .. "ShortcutFrameButton2"))
-          for i,v in ipairs({getglobal("WIM_msgFrame" .. user .. "ShortcutFrameButton2"):GetRegions()}) do
+          CreateBackdrop(_G["WIM_msgFrame" .. user .. "ShortcutFrameButton2"])
+          for i,v in ipairs({_G["WIM_msgFrame" .. user .. "ShortcutFrameButton2"]:GetRegions()}) do
             if i >= 2 and i < 7 then v:SetTexture(.1,.1,.1,0) end
           end
 
-          pfUI.api:CreateBackdrop(getglobal("WIM_msgFrame" .. user .. "ShortcutFrameButton3"))
-          for i,v in ipairs({getglobal("WIM_msgFrame" .. user .. "ShortcutFrameButton3"):GetRegions()}) do
+          CreateBackdrop(_G["WIM_msgFrame" .. user .. "ShortcutFrameButton3"])
+          for i,v in ipairs({_G["WIM_msgFrame" .. user .. "ShortcutFrameButton3"]:GetRegions()}) do
             if i >= 2 and i < 7 then v:SetTexture(.1,.1,.1,0) end
           end
 
-          pfUI.api:CreateBackdrop(getglobal("WIM_msgFrame" .. user .. "ShortcutFrameButton4"))
-          for i,v in ipairs({getglobal("WIM_msgFrame" .. user .. "ShortcutFrameButton4"):GetRegions()}) do
+          CreateBackdrop(_G["WIM_msgFrame" .. user .. "ShortcutFrameButton4"])
+          for i,v in ipairs({_G["WIM_msgFrame" .. user .. "ShortcutFrameButton4"]:GetRegions()}) do
             if i >= 2 and i < 7 then v:SetTexture(.1,.1,.1,0) end
           end
 
-          pfUI.api:CreateBackdrop(getglobal("WIM_msgFrame" .. user .. "ShortcutFrameButton5"))
-          for i,v in ipairs({getglobal("WIM_msgFrame" .. user .. "ShortcutFrameButton5"):GetRegions()}) do
+          CreateBackdrop(_G["WIM_msgFrame" .. user .. "ShortcutFrameButton5"])
+          for i,v in ipairs({_G["WIM_msgFrame" .. user .. "ShortcutFrameButton5"]:GetRegions()}) do
             if i >= 2 and i < 7 then v:SetTexture(.1,.1,.1,0) end
           end
         end
@@ -150,7 +161,7 @@ pfUI:RegisterModule("thirdparty", function ()
 
   pfUI.healComm:SetScript("OnEvent", function ()
     -- return if already exists
-    if pfUI.healComm.createIncHeal or pfUI_config.thirdparty.healcomm.enable == "0" then return end
+    if pfUI.healComm.createIncHeal or C.thirdparty.healcomm.enable == "0" then return end
 
     if AceLibrary and AceLibrary:HasInstance("HealComm-1.0") then
       local HealComm = AceLibrary("HealComm-1.0")
@@ -268,7 +279,7 @@ pfUI:RegisterModule("thirdparty", function ()
         local healed = HealComm:getHeal(UnitName(unit))
 
         local health, maxHealth = UnitHealth(unit), UnitHealthMax(unit)
-        if strsub(unit,0,4) == "raid" and pfUI_config.unitframes.raid.invert_healthbar == "1" then
+        if strsub(unit,0,4) == "raid" and C.unitframes.raid.invert_healthbar == "1" then
           health = maxHealth - health
         end
 
@@ -283,7 +294,7 @@ pfUI:RegisterModule("thirdparty", function ()
           frame.incHeal:SetWidth(incWidth)
           frame.incHeal:ClearAllPoints()
 
-          if strsub(unit,0,4) == "raid" and pfUI_config.unitframes.raid.invert_healthbar == "1" then
+          if strsub(unit,0,4) == "raid" and C.unitframes.raid.invert_healthbar == "1" then
             frame.incHeal:SetPoint("TOPLEFT", frame.hp.bar, "TOPLEFT", 0, 0)
             frame.incHeal:SetFrameStrata("HIGH")
           else
@@ -315,14 +326,14 @@ pfUI:RegisterModule("thirdparty", function ()
       if not pfUI.bag.right.sort then
         pfUI.bag.right.sort = CreateFrame("Button", "pfBagSlotSort", UIParent)
         pfUI.bag.right.sort:SetParent(pfUI.bag.right)
-        pfUI.bag.right.sort:SetPoint("TOPRIGHT", -pfUI_config.appearance.border.default*14 - 45, -pfUI_config.appearance.border.default)
-        pfUI.bag.right.sort:SetPoint("TOPRIGHT", pfUI.bag.right.keys, "TOPLEFT", -pfUI_config.appearance.border.default*3, 0)
+        pfUI.bag.right.sort:SetPoint("TOPRIGHT", -C.appearance.border.default*14 - 45, -C.appearance.border.default)
+        pfUI.bag.right.sort:SetPoint("TOPRIGHT", pfUI.bag.right.keys, "TOPLEFT", -C.appearance.border.default*3, 0)
 
-        pfUI.api:CreateBackdrop(pfUI.bag.right.sort)
+        CreateBackdrop(pfUI.bag.right.sort)
         pfUI.bag.right.sort:SetHeight(12)
         pfUI.bag.right.sort:SetWidth(12)
         pfUI.bag.right.sort:SetTextColor(1,1,.25,1)
-        pfUI.bag.right.sort:SetFont(pfUI.font_default, pfUI_config.global.font_size, "OUTLINE")
+        pfUI.bag.right.sort:SetFont(pfUI.font_default, C.global.font_size, "OUTLINE")
         pfUI.bag.right.sort.texture = pfUI.bag.right.sort:CreateTexture("pfBagArrowUp")
         pfUI.bag.right.sort.texture:SetTexture("Interface\\AddOns\\pfUI\\img\\sort")
         pfUI.bag.right.sort.texture:ClearAllPoints()
@@ -336,7 +347,7 @@ pfUI:RegisterModule("thirdparty", function ()
         end)
 
         pfUI.bag.right.sort:SetScript("OnLeave", function ()
-          pfUI.api:CreateBackdrop(pfUI.bag.right.sort)
+          CreateBackdrop(pfUI.bag.right.sort)
           pfUI.bag.right.sort.texture:SetVertexColor(.25,.25,.25,1)
         end)
 
@@ -345,22 +356,22 @@ pfUI:RegisterModule("thirdparty", function ()
         end)
 
         pfUI.bag.right.search:ClearAllPoints()
-        pfUI.bag.right.search:SetPoint("TOPLEFT", pfUI.bag.right, "TOPLEFT", pfUI_config.appearance.border.default, -pfUI_config.appearance.border.default)
-        pfUI.bag.right.search:SetPoint("TOPRIGHT", pfUI.bag.right.sort, "TOPLEFT", -pfUI_config.appearance.border.default*3, -pfUI_config.appearance.border.default)
+        pfUI.bag.right.search:SetPoint("TOPLEFT", pfUI.bag.right, "TOPLEFT", C.appearance.border.default, -C.appearance.border.default)
+        pfUI.bag.right.search:SetPoint("TOPRIGHT", pfUI.bag.right.sort, "TOPLEFT", -C.appearance.border.default*3, -C.appearance.border.default)
       end
 
       -- draw the button
       if not pfUI.bag.left.sort then
         pfUI.bag.left.sort = CreateFrame("Button", "pfBankSlotSort", UIParent)
         pfUI.bag.left.sort:SetParent(pfUI.bag.left)
-        pfUI.bag.left.sort:SetPoint("TOPRIGHT", -pfUI_config.appearance.border.default*14 - 45, -pfUI_config.appearance.border.default)
-        pfUI.bag.left.sort:SetPoint("TOPRIGHT", pfUI.bag.left.bags, "TOPLEFT", -pfUI_config.appearance.border.default*3, 0)
+        pfUI.bag.left.sort:SetPoint("TOPRIGHT", -C.appearance.border.default*14 - 45, -C.appearance.border.default)
+        pfUI.bag.left.sort:SetPoint("TOPRIGHT", pfUI.bag.left.bags, "TOPLEFT", -C.appearance.border.default*3, 0)
 
-        pfUI.api:CreateBackdrop(pfUI.bag.left.sort)
+        CreateBackdrop(pfUI.bag.left.sort)
         pfUI.bag.left.sort:SetHeight(12)
         pfUI.bag.left.sort:SetWidth(12)
         pfUI.bag.left.sort:SetTextColor(1,1,.25,1)
-        pfUI.bag.left.sort:SetFont(pfUI.font_default, pfUI_config.global.font_size, "OUTLINE")
+        pfUI.bag.left.sort:SetFont(pfUI.font_default, C.global.font_size, "OUTLINE")
         pfUI.bag.left.sort.texture = pfUI.bag.left.sort:CreateTexture("pfBagArrowUp")
         pfUI.bag.left.sort.texture:SetTexture("Interface\\AddOns\\pfUI\\img\\sort")
         pfUI.bag.left.sort.texture:ClearAllPoints()
@@ -374,7 +385,7 @@ pfUI:RegisterModule("thirdparty", function ()
         end)
 
         pfUI.bag.left.sort:SetScript("OnLeave", function ()
-          pfUI.api:CreateBackdrop(pfUI.bag.left.sort)
+          CreateBackdrop(pfUI.bag.left.sort)
           pfUI.bag.left.sort.texture:SetVertexColor(.25,.25,.25,1)
         end)
 
@@ -385,7 +396,7 @@ pfUI:RegisterModule("thirdparty", function ()
     end)
   end
 
-  if pfUI_config.thirdparty.cleanup.enable == "1" then
+  if C.thirdparty.cleanup.enable == "1" then
     if Clean_Up then
       pfSetupClean_Up()
     else
@@ -402,7 +413,7 @@ pfUI:RegisterModule("thirdparty", function ()
 
   local function pfSetupKTM()
     -- use pfUI border for main window
-    pfUI.api:CreateBackdrop(KLHTM_Frame)
+    CreateBackdrop(KLHTM_Frame)
 
     -- remove titlebar
     KLHTM_Gui.title.back:Hide()
@@ -414,9 +425,9 @@ pfUI:RegisterModule("thirdparty", function ()
     "KLHTM_TitleFrameMasterTarget", "KLHTM_SelfFrameBottomReset" }
 
     for i, button in pairs(buttons) do
-      local b = getglobal(button)
+      local b = _G[button]
       if not b then return end
-      pfUI.api:SkinButton(b)
+      SkinButton(b)
       b:SetScale(.8)
 
       -- remove red background on some buttons
@@ -463,7 +474,7 @@ pfUI:RegisterModule("thirdparty", function ()
     if KLHTM_SelfFrameBottomLine then KLHTM_SelfFrameBottomLine:Hide() end
   end
 
-  if pfUI_config.thirdparty.ktm.enable == "1" then
+  if C.thirdparty.ktm.enable == "1" then
     if KLHTM_Gui then
       pfSetupKTM()
     else

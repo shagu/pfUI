@@ -1,5 +1,6 @@
 pfUI.api = { }
-
+pfUI.api._G = getfenv(0)
+local _G = getfenv(0)
 -- [ strsplit ]
 -- Splits a string using a delimiter.
 -- 'delimiter'  [string]        characters that will be interpreted as delimiter
@@ -38,6 +39,34 @@ function pfUI.api.round(input, places)
     for i = 1, places do pow = pow * 10 end
     return floor(input * pow + 0.5) / pow
   end
+end
+
+-- [ Hook ]
+-- Hooks a global function and injects custom code
+-- 'name'       [string]           name of the function that shold be hooked
+-- 'func'       [function]         function containing the custom code
+-- 'append'     [bool]             optional variable, used to append custom
+--                                 code instead of prepending it
+function pfUI.api.Hook(name, func, append)
+  if not _G[name] then return end
+
+  pfUI.hooks[tostring(func)] = {}
+  pfUI.hooks[tostring(func)]["old"] = _G[name]
+  pfUI.hooks[tostring(func)]["new"] = func
+
+  if append then
+    pfUI.hooks[tostring(func)]["function"] = function(...)
+      pfUI.hooks[tostring(func)]["old"](unpack(arg))
+      pfUI.hooks[tostring(func)]["new"](unpack(arg))
+    end
+  else
+    pfUI.hooks[tostring(func)]["function"] = function(...)
+      pfUI.hooks[tostring(func)]["new"](unpack(arg))
+      pfUI.hooks[tostring(func)]["old"](unpack(arg))
+    end
+  end
+
+  _G[name] = pfUI.hooks[tostring(func)]["function"]
 end
 
 -- [ Create Gold String ]
@@ -85,7 +114,7 @@ end
 -- Loads and update the configured position of the specified frame.
 -- It also creates an entry in the movables table.
 -- 'frame'      [frame]        the frame that should be updated.
-function pfUI.api:UpdateMovable(frame)
+function pfUI.api.UpdateMovable(frame)
   local name = frame:GetName()
 
   if pfUI_config.global.offscreen == "0" then
@@ -116,7 +145,7 @@ end
 -- 'parent'     [frame]        the frame's anchor point
 -- 'spacing'    [number]       the padding that should be used between the
 --                             frame and its parent frame
-function pfUI.api:SetAutoPoint(frame, parent, spacing)
+function pfUI.api.SetAutoPoint(frame, parent, spacing)
   --[[
 
           a     b       max
@@ -185,7 +214,7 @@ end
 -- 'inset'      [int]           backdrop inset, defaults to border size.
 -- 'legacy'     [bool]          use legacy backdrop instead of creating frames.
 -- 'transp'     [bool]          force default transparency of 0.8.
-function pfUI.api:CreateBackdrop(f, inset, legacy, transp)
+function pfUI.api.CreateBackdrop(f, inset, legacy, transp)
   -- use default inset if nothing is given
   local border = inset
   if not border then
@@ -251,7 +280,7 @@ end
 -- 'cr'         [int]           mouseover color (red), defaults to classcolor.
 -- 'cg'         [int]           mouseover color (green), defaults to classcolor.
 -- 'cb'         [int]           mouseover color (blue), defaults to classcolor.
-function pfUI.api:SkinButton(button, cr, cg, cb)
+function pfUI.api.SkinButton(button, cr, cg, cb)
   local b = getglobal(button)
   if not b then b = button end
   if not cr or not cg or not cb then
@@ -259,7 +288,7 @@ function pfUI.api:SkinButton(button, cr, cg, cb)
     local color = RAID_CLASS_COLORS[class]
     cr, cg, cb = color.r , color.g, color.b
   end
-  pfUI.api:CreateBackdrop(b, nil, true)
+  pfUI.api.CreateBackdrop(b, nil, true)
   b:SetNormalTexture(nil)
   b:SetHighlightTexture(nil)
   b:SetPushedTexture(nil)
@@ -268,12 +297,12 @@ function pfUI.api:SkinButton(button, cr, cg, cb)
   local funcl = b:GetScript("OnLeave")
   b:SetScript("OnEnter", function()
     if funce then funce() end
-    pfUI.api:CreateBackdrop(b, nil, true)
+    pfUI.api.CreateBackdrop(b, nil, true)
     b:SetBackdropBorderColor(cr,cg,cb,1)
   end)
   b:SetScript("OnLeave", function()
     if funcl then funcl() end
-    pfUI.api:CreateBackdrop(b, nil, true)
+    pfUI.api.CreateBackdrop(b, nil, true)
   end)
   b:SetFont(pfUI.font_default, pfUI_config.global.font_size, "OUTLINE")
 end
@@ -285,7 +314,7 @@ end
 -- 'no'         [function]      function that is triggered on 'Cancel' button.
 -- 'editbox'    [bool]          if set, a inputfield will be shown. it can be.
 --                              accessed with "GetParent().input".
-function pfUI.api:CreateQuestionDialog(text, yes, no, editbox)
+function pfUI.api.CreateQuestionDialog(text, yes, no, editbox)
   -- do not allow multiple instances of question dialogs
   if pfQuestionDialog and pfQuestionDialog:IsShown() then
     pfQuestionDialog:Hide()
@@ -312,7 +341,7 @@ function pfUI.api:CreateQuestionDialog(text, yes, no, editbox)
   question:SetScript("OnMouseUp",function()
     this:StopMovingOrSizing()
   end)
-  pfUI.api:CreateBackdrop(question)
+  pfUI.api.CreateBackdrop(question)
 
   -- text
   question.text = question:CreateFontString("Status", "LOW", "GameFontNormal")
@@ -324,7 +353,7 @@ function pfUI.api:CreateQuestionDialog(text, yes, no, editbox)
   -- editbox
   if editbox then
     question.input = CreateFrame("EditBox", "pfQuestionDialogEdit", question)
-    pfUI.api:CreateBackdrop(question.input)
+    pfUI.api.CreateBackdrop(question.input)
     question.input:SetTextColor(.2,1,.8,1)
     question.input:SetJustifyH("CENTER")
     question.input:SetAutoFocus(false)
@@ -338,7 +367,7 @@ function pfUI.api:CreateQuestionDialog(text, yes, no, editbox)
 
   -- buttons
   question.yes = CreateFrame("Button", "pfQuestionDialogYes", question, "UIPanelButtonTemplate")
-  pfUI.api:SkinButton(question.yes)
+  pfUI.api.SkinButton(question.yes)
   question.yes:SetWidth(100)
   question.yes:SetHeight(20)
   question.yes:SetText("确定")
@@ -354,7 +383,7 @@ function pfUI.api:CreateQuestionDialog(text, yes, no, editbox)
   end
 
   question.no = CreateFrame("Button", "pfQuestionDialogNo", question, "UIPanelButtonTemplate")
-  pfUI.api:SkinButton(question.no)
+  pfUI.api.SkinButton(question.no)
   question.no:SetWidth(85)
   question.no:SetHeight(20)
   question.no:SetText("取消")
@@ -371,7 +400,7 @@ function pfUI.api:CreateQuestionDialog(text, yes, no, editbox)
 
   question.close = CreateFrame("Button", "pfQuestionDialogClose", question)
   question.close:SetPoint("TOPRIGHT", -border, -border)
-  pfUI.api:CreateBackdrop(question.close)
+  pfUI.api.CreateBackdrop(question.close)
   question.close:SetHeight(10)
   question.close:SetWidth(10)
   question.close.texture = question.close:CreateTexture("pfQuestionDialogCloseTex")
@@ -384,7 +413,7 @@ function pfUI.api:CreateQuestionDialog(text, yes, no, editbox)
   end)
 
   question.close:SetScript("OnLeave", function ()
-    pfUI.api:CreateBackdrop(this)
+    pfUI.api.CreateBackdrop(this)
   end)
 
   question.close:SetScript("OnClick", function()
@@ -406,7 +435,7 @@ end
 -- [ Bar Layout Options ] --
 -- 'barsize'  size of bar in number of buttons
 -- returns:   array of options as strings for pfUI.gui.bar
-function pfUI.api:BarLayoutOptions(barsize)
+function pfUI.api.BarLayoutOptions(barsize)
   assert(barsize > 0 and barsize <= NUM_ACTIONBAR_BUTTONS,"BarLayoutOptions: barsize "..tostring(barsize).." is invalid")
   local options = {}
   for i,layout in ipairs(pfGridmath[barsize]) do
@@ -420,12 +449,12 @@ end
 -- returns:  integer formfactor
 local formfactors = {} -- we'll use memoization so we only compute once, then lookup.
 setmetatable(formfactors, {__mode = "v"}) -- weak table so values not referenced are collected on next gc
-function pfUI.api:BarLayoutFormfactor(option)
+function pfUI.api.BarLayoutFormfactor(option)
   if formfactors[option] then
     return formfactors[option]
   else
     for barsize,_ in ipairs(pfGridmath) do
-      local options = pfUI.api:BarLayoutOptions(barsize)
+      local options = pfUI.api.BarLayoutOptions(barsize)
       for i,opt in ipairs(options) do
         if opt == option then
           formfactors[option] = i
@@ -440,9 +469,9 @@ end
 -- 'bar'  frame reference,
 -- 'barsize'  integer number of buttons,
 -- 'formfactor'  string formfactor in cols x rows
-function pfUI.api:BarLayoutSize(bar,barsize,formfactor,iconsize,bordersize)
+function pfUI.api.BarLayoutSize(bar,barsize,formfactor,iconsize,bordersize)
   assert(barsize > 0 and barsize <= NUM_ACTIONBAR_BUTTONS,"BarLayoutSize: barsize "..tostring(barsize).." is invalid")
-  local formfactor = pfUI.api:BarLayoutFormfactor(formfactor)
+  local formfactor = pfUI.api.BarLayoutFormfactor(formfactor)
   local cols, rows = unpack(pfGridmath[barsize][formfactor])
   local width = (iconsize + bordersize*3) * cols - bordersize
   local height = (iconsize + bordersize*3) * rows - bordersize
@@ -455,9 +484,9 @@ end
 -- 'basename'  name of button frame without index
 -- 'buttonindex'  index number of button on bar
 -- 'formfactor'  string formfactor in cols x rows
-function pfUI.api:BarButtonAnchor(button,basename,buttonindex,barsize,formfactor,iconsize,bordersize)
+function pfUI.api.BarButtonAnchor(button,basename,buttonindex,barsize,formfactor,iconsize,bordersize)
   assert(barsize > 0 and barsize <= NUM_ACTIONBAR_BUTTONS,"BarButtonAnchor: barsize "..tostring(barsize).." is invalid")
-  local formfactor = pfUI.api:BarLayoutFormfactor(formfactor)
+  local formfactor = pfUI.api.BarLayoutFormfactor(formfactor)
   local parent = button:GetParent()
   local cols, rows = unpack(pfGridmath[barsize][formfactor])
   if buttonindex == 1 then
@@ -471,7 +500,7 @@ end
 
 -- [ Create Autohide ] --
 -- 'frame'  the frame that should be hidden
-function pfUI.api:CreateAutohide(frame)
+function pfUI.api.CreateAutohide(frame)
   if not frame then return end
   frame.hover = CreateFrame("Frame", frame:GetName() .. "Autohide", frame)
   frame.hover:SetParent(frame)

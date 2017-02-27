@@ -1,5 +1,5 @@
 pfUI:RegisterModule("pixelperfect", function ()
-  if pfUI_config.global.pixelperfect == "1" then
+  if C.global.pixelperfect == "1" then
     local resolution = GetCVar("gxResolution")
     for screenwidth, screenheight in string.gfind(resolution, "(.+)x(.+)") do
       local scale = (min(2, max(.64, 768/screenheight)))

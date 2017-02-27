@@ -27,14 +27,11 @@ pfUI.modules = {}
 pfUI.environment = {}
 pfUI.movables = {}
 pfUI.version = {}
+pfUI.hooks = {}
 
-pfLocaleClass = {}
-pfLocaleBagtypes = {}
-pfLocaleInvtypes = {}
-pfLocaleShift = {}
-pfLocaleSpells = {}
-pfLocaleSpellInterrupts = {}
-pfLocaleHunterbars = {}
+pfUI_playerDB = {}
+pfUI_config = {}
+pfUI_locale = {}
 
 pfUI:SetScript("OnEvent", function()
 
@@ -66,21 +63,24 @@ pfUI:SetScript("OnEvent", function()
     pfUI.environment:UpdateFonts()
     pfUI.environment:UpdateColors()
 
-    -- fill the cache
-    pfUI.cache["locale"] = GetLocale()
-    if pfUI.cache["locale"] ~= "enUS" and
-       pfUI.cache["locale"] ~= "frFR" and
-       pfUI.cache["locale"] ~= "deDE" and
-       pfUI.cache["locale"] ~= "zhCN" and
-       pfUI.cache["locale"] ~= "ruRU" then
-       pfUI.cache["locale"] = "enUS"
+    -- unify module environment
+    local env_pfui = {}
+    setmetatable(env_pfui, {__index = getfenv(0)})
+
+    -- load api into environment
+    for m, func in pairs(pfUI.api) do
+      env_pfui[m] = func
     end
+
+    env_pfui.C = pfUI_config
+    env_pfui.L = pfUI_locale[GetLocale()] or pfUI_locale["enUS"]
 
     for i,m in pairs(this.modules) do
       -- do not load disabled modules
       if pfUI_config["disabled"] and pfUI_config["disabled"][m]  == "1" then
         -- message("DEBUG: module " .. m .. " has been disabled")
       else
+        setfenv(pfUI.module[m], env_pfui)
         pfUI.module[m]()
       end
     end
@@ -174,7 +174,7 @@ function pfUI.info:ShowInfoBox(text, time, parent, height)
   pfUI.info:SetWidth(pfUI.info.text:GetStringWidth() + 50)
   pfUI.info:SetHeight(height)
   pfUI.info:SetFrameStrata("DIALOG")
-  pfUI.api:CreateBackdrop(pfUI.info)
+  pfUI.api.CreateBackdrop(pfUI.info)
   pfUI.info:SetPoint("TOP", 0, -25)
 
   pfUI.info.timeout:ClearAllPoints()

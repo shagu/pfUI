@@ -1,4 +1,6 @@
-pfLocaleClass["enUS"] = {
+pfUI_locale["enUS"] = {}
+
+pfUI_locale["enUS"]["class"] = {
   ["Warlock"] = "WARLOCK",
   ["Warrior"] = "WARRIOR",
   ["Hunter"] = "HUNTER",
@@ -10,13 +12,13 @@ pfLocaleClass["enUS"] = {
   ["Rogue"] = "ROGUE",
 }
 
-pfLocaleBagtypes["enUS"] = {
+pfUI_locale["enUS"]["bagtypes"] = {
   ["Quiver"] = "QUIVER",
   ["Soul Bag"] = "SOULBAG",
   ["Bag"] = "DEFAULT"
 }
 
-pfLocaleInvtypes["enUS"] = {
+pfUI_locale["enUS"]["itemtypes"] = {
   ["INVTYPE_WAND"] = "Wand",
   ["INVTYPE_GUN"] = "Gun",
   ["INVTYPE_GUNPROJECTILE"] = "Projectile",
@@ -25,7 +27,7 @@ pfLocaleInvtypes["enUS"] = {
   ["INVTYPE_THROWN"] = "Thrown",
 }
 
-pfLocaleShift["enUS"] = {
+pfUI_locale["enUS"]["stances"] = {
   ['BattleStance'] = "Battle Stance",
   ['DefensiveStance'] = "Defensive Stance",
   ['BerserkerStance'] = "Berserker Stance",
@@ -36,19 +38,24 @@ pfLocaleShift["enUS"] = {
   ['wantBattleBerserkStance'] = "Must be in Battle Stance, Berserker Stance",
 }
 
-pfLocaleSpellInterrupts["enUS"] = {
+pfUI_locale["enUS"]["interrupts"] = {
   ["Shield Bash"] = true;
   ["Pummel"] = true;
   ["Kick"] = true;
   ["Earth Shock"] = true;
 }
 
-pfLocaleHunterbars["enUS"] = {
+pfUI_locale["enUS"]["hunterpaging"] = {
   ["MELEE"] = "Wing Clip",
   ["RANGED"] = "Arcane Shot",
 }
 
-pfLocaleSpells["enUS"] = {
+pfUI_locale["enUS"]["customcast"] = {
+  ["AIMEDSHOT"] = "Aimed Shot",
+  ["MULTISHOT"] = "Multi-Shot",
+}
+
+pfUI_locale["enUS"]["spells"] = {
   ['"Plucky" Resumes Chicken Form'] = {t=1000, icon="Ability_Racial_BearForm" };
   ['Abomination Spit'] = {t=2500, icon="Spell_Nature_CorrosiveBreath" };
   ['Acid of Hakkar'] = {t=1000, icon="Spell_Nature_Acid_01" };

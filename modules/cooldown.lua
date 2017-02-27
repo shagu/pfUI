@@ -5,7 +5,7 @@ pfUI:RegisterModule("cooldown", function ()
     cooldown.cd:SetFrameLevel(cooldown.cd:GetFrameLevel() + 1)
 
     cooldown.cd.text = cooldown.cd:CreateFontString("pfCooldownFrameText", "OVERLAY")
-    cooldown.cd.text:SetFont(pfUI.font_square, pfUI_config.global.font_size, "OUTLINE")
+    cooldown.cd.text:SetFont(pfUI.font_square, C.global.font_size, "OUTLINE")
     cooldown.cd.text:SetPoint("CENTER", cooldown.cd, "CENTER", 0, 1)
 
     cooldown.cd:SetScript("OnUpdate", function()
@@ -13,8 +13,8 @@ pfUI:RegisterModule("cooldown", function ()
         this:Hide()
       end
 
-      if this:GetParent() and this:GetParent():GetName() and getglobal(this:GetParent():GetName() .. "Cooldown") then
-        if not getglobal(this:GetParent():GetName() .. "Cooldown"):IsShown() then
+      if this:GetParent() and this:GetParent():GetName() and _G[this:GetParent():GetName() .. "Cooldown"] then
+        if not _G[this:GetParent():GetName() .. "Cooldown"]:IsShown() then
           this:Hide()
         end
       end
@@ -34,19 +34,19 @@ pfUI:RegisterModule("cooldown", function ()
         if remaining > 99 then
           remaining = remaining / 60
           unit = "m"
-          r,g,b,a = pfUI.api.strsplit(",", pfUI_config.appearance.cd.mincolor)
+          r,g,b,a = strsplit(",", C.appearance.cd.mincolor)
         end
         if remaining > 99 then
           remaining = remaining / 60
           unit = "h"
-          r,g,b,a = pfUI.api.strsplit(",", pfUI_config.appearance.cd.hourcolor)
+          r,g,b,a = strsplit(",", C.appearance.cd.hourcolor)
         end
         if remaining > 99 then
           remaining = remaining / 24
           unit = "d"
-          r,g,b,a = pfUI.api.strsplit(",", pfUI_config.appearance.cd.daycolor)
+          r,g,b,a = strsplit(",", C.appearance.cd.daycolor)
         end
-        this.text:SetText(pfUI.api.round(remaining) .. unit)
+        this.text:SetText(round(remaining) .. unit)
         this.text:SetTextColor(r,g,b,a)
       else
         this:Hide()
@@ -55,8 +55,7 @@ pfUI:RegisterModule("cooldown", function ()
   end
 
   -- hook
-  if not pfCooldownFrame_SetTimer then pfCooldownFrame_SetTimer = CooldownFrame_SetTimer end
-  function CooldownFrame_SetTimer(this, start, duration, enable)
+  Hook("CooldownFrame_SetTimer", function(this, start, duration, enable)
     -- break here if no this-reference is set
     if not this then return end
 
@@ -68,7 +67,7 @@ pfUI:RegisterModule("cooldown", function ()
     end
 
     -- print time as text on cooldown frames
-    if ( start > 0 and duration > tonumber(pfUI_config.appearance.cd.threshold) and enable > 0) then
+    if ( start > 0 and duration > tonumber(C.appearance.cd.threshold) and enable > 0) then
       if( not this.cd ) then
         pfCreateCoolDown(this, start, duration)
       end
@@ -78,7 +77,5 @@ pfUI:RegisterModule("cooldown", function ()
     elseif(this.cd) then
       this.cd:Hide();
     end
-
-    pfCooldownFrame_SetTimer(this, start, duration, enable)
-  end
+  end)
 end)

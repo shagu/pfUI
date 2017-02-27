@@ -3,69 +3,52 @@ pfUI:RegisterModule("autoshift", function ()
   pfUI.autoshift:RegisterEvent("UI_ERROR_MESSAGE")
 
   pfUI.autoshift.lastError = ""
+  pfUI.autoshift.CastSpellByName = _G["CastSpellByName"]
 
-  if not pfUI.autoshift.hookCastSpell then
-    pfUI.autoshift.hookCastSpell = CastSpell
-  end
-
-  if not pfUI.autoshift.hookCastSpellByName then
-    pfUI.autoshift.hookCastSpellByName = CastSpellByName
-  end
-
-  if not pfUI.autoshift.hookUseAction then
-    pfUI.autoshift.hookUseAction = UseAction
-  end
-
-  function CastSpell(spellId, spellbookTabNum)
-    if pfUI.autoshift.lastError == pfLocaleShift[pfUI.cache["locale"]]['wantBattleStance'] then
-      pfUI.autoshift.hookCastSpellByName(pfLocaleShift[pfUI.cache["locale"]]['BattleStance'])
-    elseif pfUI.autoshift.lastError == pfLocaleShift[pfUI.cache["locale"]]['wantBattleDefStance'] then
-      pfUI.autoshift.hookCastSpellByName(pfLocaleShift[pfUI.cache["locale"]]['BattleStance'])
-    elseif pfUI.autoshift.lastError == pfLocaleShift[pfUI.cache["locale"]]['wantBattleBerserkStance'] then
-      pfUI.autoshift.hookCastSpellByName(pfLocaleShift[pfUI.cache["locale"]]['BerserkerStance'])
-    elseif pfUI.autoshift.lastError == pfLocaleShift[pfUI.cache["locale"]]['wantBerserkerStance'] then
-      pfUI.autoshift.hookCastSpellByName(pfLocaleShift[pfUI.cache["locale"]]['BerserkerStance'])
-    elseif pfUI.autoshift.lastError == pfLocaleShift[pfUI.cache["locale"]]['wantDefensiveStance'] then
-      pfUI.autoshift.hookCastSpellByName(pfLocaleShift[pfUI.cache["locale"]]['DefensiveStance'])
+  Hook("CastSpell", function(spellId, spellbookTabNum)
+    if pfUI.autoshift.lastError == L["stances"]['wantBattleStance'] then
+      pfUI.autoshift.CastSpellByName(L["stances"]['BattleStance'])
+    elseif pfUI.autoshift.lastError == L["stances"]['wantBattleDefStance'] then
+      pfUI.autoshift.CastSpellByName(L["stances"]['BattleStance'])
+    elseif pfUI.autoshift.lastError == L["stances"]['wantBattleBerserkStance'] then
+      pfUI.autoshift.CastSpellByName(L["stances"]['BerserkerStance'])
+    elseif pfUI.autoshift.lastError == L["stances"]['wantBerserkerStance'] then
+      pfUI.autoshift.CastSpellByName(L["stances"]['BerserkerStance'])
+    elseif pfUI.autoshift.lastError == L["stances"]['wantDefensiveStance'] then
+      pfUI.autoshift.CastSpellByName(L["stances"]['DefensiveStance'])
     end
     pfUI.autoshift.lastError = ""
+  end)
 
-    pfUI.autoshift.hookCastSpell(spellId, spellbookTabNum)
-  end
-
-  function CastSpellByName(spellName, onSelf)
-    if pfUI.autoshift.lastError == pfLocaleShift[pfUI.cache["locale"]]['wantBattleStance'] then
-      pfUI.autoshift.hookCastSpellByName(pfLocaleShift[pfUI.cache["locale"]]['BattleStance'])
-    elseif pfUI.autoshift.lastError == pfLocaleShift[pfUI.cache["locale"]]['wantBattleDefStance'] then
-      pfUI.autoshift.hookCastSpellByName(pfLocaleShift[pfUI.cache["locale"]]['BattleStance'])
-    elseif pfUI.autoshift.lastError == pfLocaleShift[pfUI.cache["locale"]]['wantBattleBerserkStance'] then
-      pfUI.autoshift.hookCastSpellByName(pfLocaleShift[pfUI.cache["locale"]]['BerserkerStance'])
-    elseif pfUI.autoshift.lastError == pfLocaleShift[pfUI.cache["locale"]]['wantBerserkerStance'] then
-      pfUI.autoshift.hookCastSpellByName(pfLocaleShift[pfUI.cache["locale"]]['BerserkerStance'])
-    elseif pfUI.autoshift.lastError == pfLocaleShift[pfUI.cache["locale"]]['wantDefensiveStance'] then
-      pfUI.autoshift.hookCastSpellByName(pfLocaleShift[pfUI.cache["locale"]]['DefensiveStance'])
+  Hook("CastSpellByName", function(spellName, onSelf)
+    if pfUI.autoshift.lastError == L["stances"]['wantBattleStance'] then
+      pfUI.autoshift.CastSpellByName(L["stances"]['BattleStance'])
+    elseif pfUI.autoshift.lastError == L["stances"]['wantBattleDefStance'] then
+      pfUI.autoshift.CastSpellByName(L["stances"]['BattleStance'])
+    elseif pfUI.autoshift.lastError == L["stances"]['wantBattleBerserkStance'] then
+      pfUI.autoshift.CastSpellByName(L["stances"]['BerserkerStance'])
+    elseif pfUI.autoshift.lastError == L["stances"]['wantBerserkerStance'] then
+      pfUI.autoshift.CastSpellByName(L["stances"]['BerserkerStance'])
+    elseif pfUI.autoshift.lastError == L["stances"]['wantDefensiveStance'] then
+      pfUI.autoshift.CastSpellByName(L["stances"]['DefensiveStance'])
     end
     pfUI.autoshift.lastError = ""
+  end)
 
-    pfUI.autoshift.hookCastSpellByName(spellName, onSelf)
-  end
-
-  function UseAction(slot, checkCursor, onSelf)
-    if pfUI.autoshift.lastError == pfLocaleShift[pfUI.cache["locale"]]['wantBattleStance'] then
-      pfUI.autoshift.hookCastSpellByName(pfLocaleShift[pfUI.cache["locale"]]['BattleStance'])
-    elseif pfUI.autoshift.lastError == pfLocaleShift[pfUI.cache["locale"]]['wantBattleDefStance'] then
-      pfUI.autoshift.hookCastSpellByName(pfLocaleShift[pfUI.cache["locale"]]['BattleStance'])
-    elseif pfUI.autoshift.lastError == pfLocaleShift[pfUI.cache["locale"]]['wantBattleBerserkStance'] then
-      pfUI.autoshift.hookCastSpellByName(pfLocaleShift[pfUI.cache["locale"]]['BerserkerStance'])
-    elseif pfUI.autoshift.lastError == pfLocaleShift[pfUI.cache["locale"]]['wantBerserkerStance'] then
-      pfUI.autoshift.hookCastSpellByName(pfLocaleShift[pfUI.cache["locale"]]['BerserkerStance'])
-    elseif pfUI.autoshift.lastError == pfLocaleShift[pfUI.cache["locale"]]['wantDefensiveStance'] then
-      pfUI.autoshift.hookCastSpellByName(pfLocaleShift[pfUI.cache["locale"]]['DefensiveStance'])
+  Hook("UseAction", function(slot, checkCursor, onSelf)
+    if pfUI.autoshift.lastError == L["stances"]['wantBattleStance'] then
+      pfUI.autoshift.CastSpellByName(L["stances"]['BattleStance'])
+    elseif pfUI.autoshift.lastError == L["stances"]['wantBattleDefStance'] then
+      pfUI.autoshift.CastSpellByName(L["stances"]['BattleStance'])
+    elseif pfUI.autoshift.lastError == L["stances"]['wantBattleBerserkStance'] then
+      pfUI.autoshift.CastSpellByName(L["stances"]['BerserkerStance'])
+    elseif pfUI.autoshift.lastError == L["stances"]['wantBerserkerStance'] then
+      pfUI.autoshift.CastSpellByName(L["stances"]['BerserkerStance'])
+    elseif pfUI.autoshift.lastError == L["stances"]['wantDefensiveStance'] then
+      pfUI.autoshift.CastSpellByName(L["stances"]['DefensiveStance'])
     end
     pfUI.autoshift.lastError = ""
-
-    pfUI.autoshift.hookUseAction(slot, checkCursor, onSelf)
-  end
+  end)
 
   pfUI.autoshift.buffs = { "spell_nature_swiftness", "_mount_", "_qirajicrystal_",
     "ability_racial_bearform", "ability_druid_catform", "ability_druid_travelform",

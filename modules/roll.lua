@@ -4,10 +4,10 @@ pfUI:RegisterModule("roll", function ()
 
   function pfUI.roll:CreateLootRoll(id)
     local size = 24
-    local border = tonumber(pfUI_config.appearance.border.default)
+    local border = tonumber(C.appearance.border.default)
     local esize = size - border*2
     local f = CreateFrame("Frame", "pfLootRollFrame" .. id, UIParent)
-    pfUI.api:CreateBackdrop(f, nil, nil, .8)
+    CreateBackdrop(f, nil, nil, .8)
     f.backdrop:SetFrameStrata("BACKGROUND")
     f.hasItem = 1
 
@@ -15,7 +15,7 @@ pfUI:RegisterModule("roll", function ()
     f:SetHeight(size)
 
     f.icon = CreateFrame("Button", "pfLootRollFrame" .. id .. "Icon", f)
-    pfUI.api:CreateBackdrop(f.icon, nil, true)
+    CreateBackdrop(f.icon, nil, true)
     f.icon:SetPoint("LEFT", border, 0)
     f.icon:SetWidth(esize)
     f.icon:SetHeight(esize)
@@ -101,7 +101,7 @@ pfUI:RegisterModule("roll", function ()
     f.boe.text = f.boe:CreateFontString("BOE")
     f.boe.text:SetAllPoints(f.boe)
     f.boe.text:SetJustifyH("LEFT")
-    f.boe.text:SetFont(pfUI.font_default, pfUI_config.global.font_size, "OUTLINE")
+    f.boe.text:SetFont(pfUI.font_default, C.global.font_size, "OUTLINE")
 
     f.name = CreateFrame("Frame", "pfLootRollFrame" .. id .. "Name", f)
     f.name:SetPoint("LEFT", f.icon, "RIGHT", border*11+esize*4, 0)
@@ -110,7 +110,7 @@ pfUI:RegisterModule("roll", function ()
     f.name.text = f.name:CreateFontString("NAME")
     f.name.text:SetAllPoints(f.name)
     f.name.text:SetJustifyH("LEFT")
-    f.name.text:SetFont(pfUI.font_default, pfUI_config.global.font_size, "OUTLINE")
+    f.name.text:SetFont(pfUI.font_default, C.global.font_size, "OUTLINE")
 
     f.time = CreateFrame("Frame", "pfLootRollFrame" .. id .. "Time", f)
     f.time:SetPoint("TOPLEFT", f, "TOPLEFT", 0, 0)
@@ -120,7 +120,7 @@ pfUI:RegisterModule("roll", function ()
     f.time.bar:SetAllPoints(f.time)
     f.time.bar:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
     f.time.bar:SetMinMaxValues(0, 100)
-    local r, g, b, a = pfUI.api.strsplit(",", pfUI_config.appearance.border.color)
+    local r, g, b, a = strsplit(",", C.appearance.border.color)
     f.time.bar:SetStatusBarColor(r, g, b)
     f.time.bar:SetValue(20)
     f.time.bar:SetScript("OnUpdate", function()
@@ -179,7 +179,7 @@ pfUI:RegisterModule("roll", function ()
     if not pfUI.roll.frames[i] then
       pfUI.roll.frames[i] = pfUI.roll:CreateLootRoll(i)
       pfUI.roll.frames[i]:SetPoint("CENTER", 0, -i*35)
-      pfUI.api:UpdateMovable(pfUI.roll.frames[i])
+      UpdateMovable(pfUI.roll.frames[i])
       pfUI.roll.frames[i]:Hide()
     end
   end

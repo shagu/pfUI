@@ -14,7 +14,7 @@ pfUI:RegisterModule("skin", function ()
     "GameMenuButtonUIOptions",
     "GameMenuButtonKeybindings",
     "GameMenuButtonMacros",
---   "GameMenuButtonMoveAnything",
+--    "GameMenuButtonMoveAnything",
     "GameMenuButtonLogout",
     "GameMenuButtonQuit",
     "GameMenuButtonContinue",
@@ -45,42 +45,42 @@ pfUI:RegisterModule("skin", function ()
   GameMenuButtonContinue:SetPoint("BOTTOM", 0, 10)
 
   for _, button in pairs(buttons) do
-    pfUI.api:SkinButton(button, cr, cg, cb)
+    SkinButton(button, cr, cg, cb)
   end
 
   for _, box in pairs(boxes) do
     local b = getglobal(box)
-    pfUI.api:CreateBackdrop(b, nil, true, .8)
+    CreateBackdrop(b, nil, true, .8)
   end
 
   for i,v in ipairs({GameMenuFrame:GetRegions()}) do
     if v.SetTextColor then
       v:SetTextColor(1,1,1,1)
       v:SetPoint("TOP", GameMenuFrame, "TOP", 0, 16)
-      v:SetFont(pfUI.font_default, pfUI_config.global.font_size + 2, "OUTLINE")
+      v:SetFont(pfUI.font_default, C.global.font_size + 2, "OUTLINE")
     end
   end
 
-  local alpha = tonumber(pfUI_config.tooltip.alpha)
-  pfUI.api:CreateBackdrop(ShoppingTooltip1, nil, nil, alpha)
-  pfUI.api:CreateBackdrop(ShoppingTooltip2, nil, nil, alpha)
-  pfUI.api:CreateBackdrop(ItemRefTooltip, nil, nil, alpha)
+  local alpha = tonumber(C.tooltip.alpha)
+  CreateBackdrop(ShoppingTooltip1, nil, nil, alpha)
+  CreateBackdrop(ShoppingTooltip2, nil, nil, alpha)
+  CreateBackdrop(ItemRefTooltip, nil, nil, alpha)
 
   ShoppingTooltip1:SetScript("OnShow", function()
     local a, b, c, d, e = this:GetPoint()
-    local border = tonumber(pfUI_config.appearance.border.default)
+    local border = tonumber(C.appearance.border.default)
     if d and d == 0 then d = (border*2)+d+1 end
     this:SetPoint(a, b, c, d, e)
   end)
 
   ShoppingTooltip2:SetScript("OnShow", function()
     local a, b, c, d, e = this:GetPoint()
-    local border = tonumber(pfUI_config.appearance.border.default)
+    local border = tonumber(C.appearance.border.default)
     if not d or d == 0 then d = (border*2)+d+1 end
     this:SetPoint(a, b, c, d, e)
   end)
 
-  pfUI.api:CreateBackdrop(TicketStatusFrame)
+  CreateBackdrop(TicketStatusFrame)
   TicketStatusFrame:ClearAllPoints()
   TicketStatusFrame:SetPoint("TOP", 0, -5)
   function TicketStatusFrame_OnEvent()
@@ -112,11 +112,11 @@ pfUI:RegisterModule("skin", function ()
     end
   end)
 
-  if pfUI_config.global.errors_limit == "1" then
+  if C.global.errors_limit == "1" then
     UIErrorsFrame:SetHeight(25)
   end
 
-  if pfUI_config.global.errors_hide == "1" then
+  if C.global.errors_hide == "1" then
     UIErrorsFrame:Hide()
   end
 end)

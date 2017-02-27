@@ -1,13 +1,13 @@
 pfUI:RegisterModule("player", function ()
   -- do not go further on disabled UFs
-  if pfUI_config.unitframes.disable == "1" then return end
+  if C.unitframes.disable == "1" then return end
 
-  local default_border = pfUI_config.appearance.border.default
-  if pfUI_config.appearance.border.unitframes ~= "-1" then
-    default_border = pfUI_config.appearance.border.unitframes
+  local default_border = C.appearance.border.default
+  if C.appearance.border.unitframes ~= "-1" then
+    default_border = C.appearance.border.unitframes
   end
 
-  local spacing = pfUI_config.unitframes.player.pspace
+  local spacing = C.unitframes.player.pspace
 
   PlayerFrame:Hide()
   PlayerFrame:UnregisterAllEvents()
@@ -16,10 +16,10 @@ pfUI:RegisterModule("player", function ()
   pfUI.uf.player.label = "player"
   pfUI.uf.player.id = ""
   pfUI.uf.player:SetFrameStrata("LOW")
-  pfUI.uf.player:SetWidth(pfUI_config.unitframes.player.width)
-  pfUI.uf.player:SetHeight(pfUI_config.unitframes.player.height + pfUI_config.unitframes.player.pheight + 2*default_border + spacing)
+  pfUI.uf.player:SetWidth(C.unitframes.player.width)
+  pfUI.uf.player:SetHeight(C.unitframes.player.height + C.unitframes.player.pheight + 2*default_border + spacing)
   pfUI.uf.player:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOM", -75, 125)
-  pfUI.api:UpdateMovable(pfUI.uf.player)
+  UpdateMovable(pfUI.uf.player)
   pfUI.uf.player:RegisterForClicks('LeftButtonUp', 'RightButtonUp', 'MiddleButtonUp', 'Button4Up', 'Button5Up')
   pfUI.uf.player:SetScript("OnEnter", function()
     GameTooltip_SetDefaultAnchor(GameTooltip, this)
@@ -66,7 +66,7 @@ pfUI:RegisterModule("player", function ()
 
   pfUI.uf.player:SetScript("OnEvent", function()
       if event == "UPDATE_FACTION" or event == "UNIT_FACTION" then
-        if pfUI_config.unitframes.player.showPVP == "1" and UnitIsPVP("player") then
+        if C.unitframes.player.showPVP == "1" and UnitIsPVP("player") then
           if pfUI.uf.player.pvpicon == nil then
             pfUI.uf.player.pvpicon = CreateFrame("Frame", "pfPvPIcon", UIParent)
             pfUI.uf.player.pvpicon:SetFrameStrata("HIGH")
@@ -75,7 +75,7 @@ pfUI:RegisterModule("player", function ()
             pfUI.uf.player.pvpicon.texture:SetAllPoints(pfUI.uf.player.pvpicon)
           end
 
-          if pfUI_config.unitframes.player.showPVPMinimap == "1" then
+          if C.unitframes.player.showPVPMinimap == "1" then
             pfUI.uf.player.pvpicon:SetWidth(16)
             pfUI.uf.player.pvpicon:SetHeight(16)
             pfUI.uf.player.pvpicon:SetParent(pfUI.minimap)
@@ -134,10 +134,10 @@ pfUI:RegisterModule("player", function ()
         local color = RAID_CLASS_COLORS[class]
 
         local cr, cg, cb
-        if pfUI_config.unitframes.custom == "1" then
-          local r, g, b, a = pfUI.api.strsplit(",", pfUI_config.unitframes.customcolor)
+        if C.unitframes.custom == "1" then
+          local r, g, b, a = strsplit(",", C.unitframes.customcolor)
           cr, cg, cb = tonumber(r), tonumber(g), tonumber(b)
-        elseif pfUI_config.unitframes.pastel == "1" then
+        elseif C.unitframes.pastel == "1" then
           cr, cg, cb = (color.r + .5) * .5, (color.g + .5) * .5, (color.b + .5) * .5
         else
           cr, cg, cb = color.r, color.g, color.b
@@ -182,9 +182,9 @@ pfUI:RegisterModule("player", function ()
       local hpDiff = abs(hpReal - hpDisplay)
 
       if hpDisplay < hpReal then
-        pfUI.uf.player.hp.bar:SetValue(hpDisplay + ceil(hpDiff / pfUI_config.unitframes.animation_speed))
+        pfUI.uf.player.hp.bar:SetValue(hpDisplay + ceil(hpDiff / C.unitframes.animation_speed))
       elseif hpDisplay > hpReal then
-        pfUI.uf.player.hp.bar:SetValue(hpDisplay - ceil(hpDiff / pfUI_config.unitframes.animation_speed))
+        pfUI.uf.player.hp.bar:SetValue(hpDisplay - ceil(hpDiff / C.unitframes.animation_speed))
       elseif hpDisplay ~= hpReal then
         pfUI.uf.player.hp.bar:SetValue(hpReal)
       end
@@ -194,17 +194,19 @@ pfUI:RegisterModule("player", function ()
       local powerDiff = abs(powerReal - powerDisplay)
 
       if powerDisplay < powerReal then
-        pfUI.uf.player.power.bar:SetValue(powerDisplay + ceil(powerDiff / pfUI_config.unitframes.animation_speed))
+        pfUI.uf.player.power.bar:SetValue(powerDisplay + ceil(powerDiff / C.unitframes.animation_speed))
       elseif powerDisplay > powerReal then
-        pfUI.uf.player.power.bar:SetValue(powerDisplay - ceil(powerDiff / pfUI_config.unitframes.animation_speed))
+        pfUI.uf.player.power.bar:SetValue(powerDisplay - ceil(powerDiff / C.unitframes.animation_speed))
+      else
+        pfUI.uf.player.power.bar:SetValue(powerReal)
       end
     end)
 
   pfUI.uf.player.hp = CreateFrame("Frame",nil, pfUI.uf.player)
   pfUI.uf.player.hp:SetPoint("TOP", 0, 0)
-  pfUI.uf.player.hp:SetWidth(pfUI_config.unitframes.player.width)
-  pfUI.uf.player.hp:SetHeight(pfUI_config.unitframes.player.height)
-  pfUI.api:CreateBackdrop(pfUI.uf.player.hp, default_border)
+  pfUI.uf.player.hp:SetWidth(C.unitframes.player.width)
+  pfUI.uf.player.hp:SetHeight(C.unitframes.player.height)
+  CreateBackdrop(pfUI.uf.player.hp, default_border)
 
   pfUI.uf.player.hp.bar = CreateFrame("StatusBar", nil, pfUI.uf.player.hp)
   pfUI.uf.player.hp.bar:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
@@ -240,18 +242,18 @@ pfUI:RegisterModule("player", function ()
 
   pfUI.uf.player.power = CreateFrame("Frame",nil, pfUI.uf.player)
   pfUI.uf.player.power:SetPoint("BOTTOM", 0, 0)
-  pfUI.uf.player.power:SetWidth(pfUI_config.unitframes.player.width)
-  pfUI.uf.player.power:SetHeight(pfUI_config.unitframes.player.pheight)
-  pfUI.api:CreateBackdrop(pfUI.uf.player.power, default_border)
+  pfUI.uf.player.power:SetWidth(C.unitframes.player.width)
+  pfUI.uf.player.power:SetHeight(C.unitframes.player.pheight)
+  CreateBackdrop(pfUI.uf.player.power, default_border)
 
   pfUI.uf.player.power.bar = CreateFrame("StatusBar", nil, pfUI.uf.player.power)
   pfUI.uf.player.power.bar:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
   pfUI.uf.player.power.bar:SetAllPoints(pfUI.uf.player.power)
   pfUI.uf.player.power.bar:SetMinMaxValues(0, 100)
 
-  pfUI.uf:CreatePortrait(pfUI.uf.player, pfUI_config.unitframes.player.portrait, spacing)
+  pfUI.uf:CreatePortrait(pfUI.uf.player, C.unitframes.player.portrait, spacing)
 
-  if pfUI_config.unitframes.player.energy == "1" then
+  if C.unitframes.player.energy == "1" then
     pfUI.uf.player.power.tick = CreateFrame("Frame", nil, pfUI.uf.player.power.bar)
     pfUI.uf.player.power.tick:RegisterEvent("PLAYER_ENTERING_WORLD")
     pfUI.uf.player.power.tick:RegisterEvent("UNIT_DISPLAYPOWER")
@@ -269,8 +271,8 @@ pfUI:RegisterModule("player", function ()
 
     pfUI.uf.player.power.tick.spark = pfUI.uf.player.power.bar:CreateTexture(nil, 'OVERLAY')
     pfUI.uf.player.power.tick.spark:SetTexture("Interface\\CastingBar\\UI-CastingBar-Spark")
-    pfUI.uf.player.power.tick.spark:SetHeight(pfUI_config.unitframes.player.pheight + 15)
-    pfUI.uf.player.power.tick.spark:SetWidth(pfUI_config.unitframes.player.pheight + 5)
+    pfUI.uf.player.power.tick.spark:SetHeight(C.unitframes.player.pheight + 15)
+    pfUI.uf.player.power.tick.spark:SetWidth(C.unitframes.player.pheight + 5)
     pfUI.uf.player.power.tick.spark:SetBlendMode('ADD')
 
     pfUI.uf.player.power.tick:SetScript("OnUpdate", function()
@@ -282,22 +284,22 @@ pfUI:RegisterModule("player", function ()
 
       this.energy = UnitMana("player")
 
-      local value = pfUI.api.round((GetTime() - this.lastTick) * 100)
-      local pos = pfUI_config.unitframes.player.width / 200 * value
-      if not pfUI_config.unitframes.player.pheight then return end
-      this.spark:SetPoint("LEFT", pos-((pfUI_config.unitframes.player.pheight+5)/2), 0)
+      local value = round((GetTime() - this.lastTick) * 100)
+      local pos = C.unitframes.player.width / 200 * value
+      if not C.unitframes.player.pheight then return end
+      this.spark:SetPoint("LEFT", pos-((C.unitframes.player.pheight+5)/2), 0)
     end)
   end
 
   pfUI.uf.player.hpText = pfUI.uf.player:CreateFontString("Status", "OVERLAY", "GameFontNormal")
-  pfUI.uf.player.hpText:SetFont(pfUI.font_square, pfUI_config.global.font_size, "OUTLINE")
+  pfUI.uf.player.hpText:SetFont(pfUI.font_square, C.global.font_size, "OUTLINE")
   pfUI.uf.player.hpText:ClearAllPoints()
   pfUI.uf.player.hpText:SetJustifyH("RIGHT")
   pfUI.uf.player.hpText:SetFontObject(GameFontWhite)
   pfUI.uf.player.hpText:SetText("5000")
 
   pfUI.uf.player.powerText = pfUI.uf.player:CreateFontString("Status", "OVERLAY", "GameFontNormal")
-  pfUI.uf.player.powerText:SetFont(pfUI.font_square, pfUI_config.global.font_size, "OUTLINE")
+  pfUI.uf.player.powerText:SetFont(pfUI.font_square, C.global.font_size, "OUTLINE")
   pfUI.uf.player.powerText:ClearAllPoints()
   pfUI.uf.player.powerText:SetJustifyH("LEFT")
   pfUI.uf.player.powerText:SetFontObject(GameFontWhite)
@@ -324,14 +326,14 @@ pfUI:RegisterModule("player", function ()
     pfUI.uf.player.buff.buffs[i]:SetID(i)
 
     pfUI.uf.player.buff.buffs[i].stacks = pfUI.uf.player.buff.buffs[i]:CreateFontString(nil, "OVERLAY", pfUI.uf.player.buff.buffs[i])
-    pfUI.uf.player.buff.buffs[i].stacks:SetFont(pfUI.font_square, pfUI_config.global.font_size, "OUTLINE")
+    pfUI.uf.player.buff.buffs[i].stacks:SetFont(pfUI.font_square, C.global.font_size, "OUTLINE")
     pfUI.uf.player.buff.buffs[i].stacks:SetPoint("BOTTOMRIGHT", pfUI.uf.player.buff.buffs[i], 2, -2)
     pfUI.uf.player.buff.buffs[i].stacks:SetJustifyH("LEFT")
     pfUI.uf.player.buff.buffs[i].stacks:SetShadowColor(0, 0, 0)
     pfUI.uf.player.buff.buffs[i].stacks:SetShadowOffset(0.8, -0.8)
     pfUI.uf.player.buff.buffs[i].stacks:SetTextColor(1,1,.5)
     pfUI.uf.player.buff.buffs[i].cd = pfUI.uf.player.buff.buffs[i]:CreateFontString(nil, "OVERLAY", pfUI.uf.player.buff.buffs[i])
-    pfUI.uf.player.buff.buffs[i].cd:SetFont(pfUI.font_square, pfUI_config.global.font_size, "OUTLINE")
+    pfUI.uf.player.buff.buffs[i].cd:SetFont(pfUI.font_square, C.global.font_size, "OUTLINE")
     pfUI.uf.player.buff.buffs[i].cd:SetPoint("CENTER", pfUI.uf.player.buff.buffs[i], 0, 0)
     pfUI.uf.player.buff.buffs[i].cd:SetJustifyH("LEFT")
     pfUI.uf.player.buff.buffs[i].cd:SetShadowColor(0, 0, 0)
@@ -342,11 +344,11 @@ pfUI:RegisterModule("player", function ()
     pfUI.uf.player.buff.buffs[i]:ClearAllPoints()
 
     local invert, af, as
-    if pfUI_config.unitframes.player.buffs == "top" then
+    if C.unitframes.player.buffs == "top" then
       invert = 1
       af = "BOTTOMLEFT"
       as = "TOPLEFT"
-    elseif pfUI_config.unitframes.player.buffs == "bottom" then
+    elseif C.unitframes.player.buffs == "bottom" then
       invert = -1
       af = "TOPLEFT"
       as = "BOTTOMLEFT"
@@ -362,10 +364,10 @@ pfUI:RegisterModule("player", function ()
     end
 
     pfUI.uf.player.buff.buffs[i]:SetPoint(af, pfUI.uf.player, as,
-    (i-1-8*row)*((2*default_border) + pfUI_config.unitframes.buff_size + 1),
-    invert * (row)*((2*default_border) + pfUI_config.unitframes.buff_size + 1) + invert*(2*default_border + 1))
-    pfUI.uf.player.buff.buffs[i]:SetWidth(pfUI_config.unitframes.buff_size)
-    pfUI.uf.player.buff.buffs[i]:SetHeight(pfUI_config.unitframes.buff_size)
+    (i-1-8*row)*((2*default_border) + C.unitframes.buff_size + 1),
+    invert * (row)*((2*default_border) + C.unitframes.buff_size + 1) + invert*(2*default_border + 1))
+    pfUI.uf.player.buff.buffs[i]:SetWidth(C.unitframes.buff_size)
+    pfUI.uf.player.buff.buffs[i]:SetHeight(C.unitframes.buff_size)
     pfUI.uf.player.buff.buffs[i]:SetScript("OnEnter", function()
       GameTooltip:SetOwner(this, "ANCHOR_BOTTOMRIGHT")
       GameTooltip:SetPlayerBuff(GetPlayerBuff(id-1,"HELPFUL"))
@@ -403,7 +405,7 @@ pfUI:RegisterModule("player", function ()
   function pfUI.uf.player.buff.RefreshBuffs()
     for i=1, 16 do
       local stacks = GetPlayerBuffApplications(GetPlayerBuff(i-1,"HELPFUL"))
-      pfUI.api:CreateBackdrop(pfUI.uf.player.buff.buffs[i], default_border)
+      CreateBackdrop(pfUI.uf.player.buff.buffs[i], default_border)
       pfUI.uf.player.buff.buffs[i]:SetNormalTexture(GetPlayerBuffTexture(GetPlayerBuff(i-1,"HELPFUL")))
       for i,v in ipairs({pfUI.uf.player.buff.buffs[i]:GetRegions()}) do
         if v.SetTexCoord then v:SetTexCoord(.08, .92, .08, .92) end
@@ -435,14 +437,14 @@ pfUI:RegisterModule("player", function ()
     pfUI.uf.player.debuff.debuffs[i] = CreateFrame("Button", "pfUIPlayerDebuff" .. i, pfUI.uf.player)
     pfUI.uf.player.debuff.debuffs[i]:SetID(i)
     pfUI.uf.player.debuff.debuffs[i].stacks = pfUI.uf.player.debuff.debuffs[i]:CreateFontString(nil, "OVERLAY", pfUI.uf.player.debuff.debuffs[i])
-    pfUI.uf.player.debuff.debuffs[i].stacks:SetFont(pfUI.font_square, pfUI_config.global.font_size, "OUTLINE")
+    pfUI.uf.player.debuff.debuffs[i].stacks:SetFont(pfUI.font_square, C.global.font_size, "OUTLINE")
     pfUI.uf.player.debuff.debuffs[i].stacks:SetPoint("BOTTOMRIGHT", pfUI.uf.player.debuff.debuffs[i], 2, -2)
     pfUI.uf.player.debuff.debuffs[i].stacks:SetJustifyH("LEFT")
     pfUI.uf.player.debuff.debuffs[i].stacks:SetShadowColor(0, 0, 0)
     pfUI.uf.player.debuff.debuffs[i].stacks:SetShadowOffset(0.8, -0.8)
     pfUI.uf.player.debuff.debuffs[i].stacks:SetTextColor(1,1,.5)
     pfUI.uf.player.debuff.debuffs[i].cd = pfUI.uf.player.debuff.debuffs[i]:CreateFontString(nil, "OVERLAY", pfUI.uf.player.debuff.debuffs[i])
-    pfUI.uf.player.debuff.debuffs[i].cd:SetFont(pfUI.font_square, pfUI_config.global.font_size, "OUTLINE")
+    pfUI.uf.player.debuff.debuffs[i].cd:SetFont(pfUI.font_square, C.global.font_size, "OUTLINE")
     pfUI.uf.player.debuff.debuffs[i].cd:SetPoint("CENTER", pfUI.uf.player.debuff.debuffs[i], 0, 0)
     pfUI.uf.player.debuff.debuffs[i].cd:SetJustifyH("LEFT")
     pfUI.uf.player.debuff.debuffs[i].cd:SetShadowColor(0, 0, 0)
@@ -451,8 +453,8 @@ pfUI:RegisterModule("player", function ()
 
     pfUI.uf.player.debuff.debuffs[i]:RegisterForClicks("RightButtonUp")
     pfUI.uf.player.debuff.debuffs[i]:ClearAllPoints()
-    pfUI.uf.player.debuff.debuffs[i]:SetWidth(pfUI_config.unitframes.debuff_size)
-    pfUI.uf.player.debuff.debuffs[i]:SetHeight(pfUI_config.unitframes.debuff_size)
+    pfUI.uf.player.debuff.debuffs[i]:SetWidth(C.unitframes.debuff_size)
+    pfUI.uf.player.debuff.debuffs[i]:SetHeight(C.unitframes.debuff_size)
     pfUI.uf.player.debuff.debuffs[i]:SetNormalTexture(nil)
     pfUI.uf.player.debuff.debuffs[i]:SetScript("OnEnter", function()
       GameTooltip:SetOwner(this, "ANCHOR_BOTTOMRIGHT")
@@ -501,11 +503,11 @@ pfUI:RegisterModule("player", function ()
 
 
       local invert, af, as
-      if pfUI_config.unitframes.player.buffs == "top" then
+      if C.unitframes.player.buffs == "top" then
         invert = 1
         af = "BOTTOMLEFT"
         as = "TOPLEFT"
-      elseif pfUI_config.unitframes.player.buffs == "bottom" then
+      elseif C.unitframes.player.buffs == "bottom" then
         invert = -1
         af = "TOPLEFT"
         as = "BOTTOMLEFT"
@@ -521,13 +523,13 @@ pfUI:RegisterModule("player", function ()
       end
 
       pfUI.uf.player.debuff.debuffs[i]:SetPoint(af, pfUI.uf.player, as,
-      (i-1-8*row)*((2*default_border) + pfUI_config.unitframes.debuff_size + 1),
-      invert * (top)*((2*default_border) + pfUI_config.unitframes.buff_size + 1) +
-      invert * (row)*((2*default_border) + pfUI_config.unitframes.debuff_size + 1) + invert*(2*default_border + 1))
+      (i-1-8*row)*((2*default_border) + C.unitframes.debuff_size + 1),
+      invert * (top)*((2*default_border) + C.unitframes.buff_size + 1) +
+      invert * (row)*((2*default_border) + C.unitframes.debuff_size + 1) + invert*(2*default_border + 1))
 
       local bid = GetPlayerBuff(i-1, "HARMFUL");
       local stacks = GetPlayerBuffApplications(bid)
-      pfUI.api:CreateBackdrop(pfUI.uf.player.debuff.debuffs[i], default_border)
+      CreateBackdrop(pfUI.uf.player.debuff.debuffs[i], default_border)
       pfUI.uf.player.debuff.debuffs[i]:SetNormalTexture(GetPlayerBuffTexture(bid))
       for i,v in ipairs({pfUI.uf.player.debuff.debuffs[i]:GetRegions()}) do
         if v.SetTexCoord then v:SetTexCoord(.08, .92, .08, .92) end

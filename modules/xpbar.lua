@@ -2,14 +2,14 @@ pfUI:RegisterModule("xpbar", function ()
   pfUI.xp = CreateFrame("Frame",nil, UIParent)
   pfUI.xp:SetWidth(5)
   if pfUI.chat then
-    pfUI.xp:SetPoint("TOPLEFT", pfUI.chat.left, "TOPRIGHT", pfUI_config.appearance.border.default*2, 0)
-    pfUI.xp:SetPoint("BOTTOMLEFT", pfUI.chat.left, "BOTTOMRIGHT", pfUI_config.appearance.border.default*2, 0)
+    pfUI.xp:SetPoint("TOPLEFT", pfUI.chat.left, "TOPRIGHT", C.appearance.border.default*2, 0)
+    pfUI.xp:SetPoint("BOTTOMLEFT", pfUI.chat.left, "BOTTOMRIGHT", C.appearance.border.default*2, 0)
   else
     pfUI.xp:SetPoint("TOPLEFT", UIParent, "TOPLEFT", 0, 0)
     pfUI.xp:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", 0, 0)
   end
   pfUI.xp:SetFrameStrata("BACKGROUND")
-  pfUI.api:CreateBackdrop(pfUI.xp)
+  CreateBackdrop(pfUI.xp)
   pfUI.xp:RegisterEvent("PLAYER_LEVEL_UP")
   pfUI.xp:RegisterEvent("PLAYER_XP_UPDATE")
   pfUI.xp:RegisterEvent("PLAYER_ENTERING_WORLD")
@@ -34,7 +34,7 @@ pfUI:RegisterModule("xpbar", function ()
     end)
 
   pfUI.xp:SetScript("OnUpdate",function()
-      if pfUI_config.panel.xp.showalways == "1" then return end
+      if C.panel.xp.showalways == "1" then return end
       if pfUI.xp:GetAlpha() == 0 or pfUI.xp.mouseover == true then return end
       if not pfUI.xp.tick then
         pfUI.xp.tick = GetTime() + 0.01
@@ -51,12 +51,12 @@ pfUI:RegisterModule("xpbar", function ()
       pfUI.xp.mouseover = true
       pfUI.xp:SetAlpha(1)
       local xp, xpmax, exh = UnitXP("player"), UnitXPMax("player"), GetXPExhaustion()
-      local xp_perc = pfUI.api.round(xp / xpmax * 100)
+      local xp_perc = round(xp / xpmax * 100)
       local remaining = xpmax - xp
-      local remaining_perc = pfUI.api.round(remaining / xpmax * 100)
+      local remaining_perc = round(remaining / xpmax * 100)
       local exh_perc = 0
       if GetXPExhaustion() then
-        exh_perc = pfUI.api.round(GetXPExhaustion() / xpmax * 100)
+        exh_perc = round(GetXPExhaustion() / xpmax * 100)
       end
 
       GameTooltip:ClearLines()
@@ -102,14 +102,14 @@ pfUI:RegisterModule("xpbar", function ()
   pfUI.rep = CreateFrame("Frame",nil, UIParent)
   pfUI.rep:SetWidth(5)
   if pfUI.chat then
-    pfUI.rep:SetPoint("TOPRIGHT",pfUI.chat.right,"TOPLEFT", -pfUI_config.appearance.border.default*2, 0)
-    pfUI.rep:SetPoint("BOTTOMRIGHT",pfUI.chat.right,"BOTTOMLEFT",-pfUI_config.appearance.border.default*2, 0)
+    pfUI.rep:SetPoint("TOPRIGHT",pfUI.chat.right,"TOPLEFT", -C.appearance.border.default*2, 0)
+    pfUI.rep:SetPoint("BOTTOMRIGHT",pfUI.chat.right,"BOTTOMLEFT",-C.appearance.border.default*2, 0)
   else
     pfUI.rep:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", 0, 0)
     pfUI.rep:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", 0, 0)
   end
   pfUI.rep:SetFrameStrata("BACKGROUND")
-  pfUI.api:CreateBackdrop(pfUI.rep)
+  CreateBackdrop(pfUI.rep)
 
   pfUI.rep.bar = CreateFrame("StatusBar", nil, pfUI.rep)
   pfUI.rep.bar:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
@@ -142,7 +142,7 @@ pfUI:RegisterModule("xpbar", function ()
     end)
 
   pfUI.rep:SetScript("OnUpdate",function()
-      if pfUI_config.panel.xp.showalways == "1" then return end
+      if C.panel.xp.showalways == "1" then return end
       if pfUI.rep:GetAlpha() == 0 or pfUI.rep.mouseover == true then return end
       if not pfUI.rep.tick then
         pfUI.rep.tick = GetTime() + 0.01
@@ -171,7 +171,7 @@ pfUI:RegisterModule("xpbar", function ()
           GameTooltip:SetOwner(this, "ANCHOR_CURSOR")
           GameTooltip:AddLine("|cff555555声望")
           GameTooltip:AddLine(name .. " (" .. GetText("FACTION_STANDING_LABEL"..standingID, gender) .. ")", color.r + .3, color.g + .3, color.b + .3)
-          GameTooltip:AddLine(barValue .. " / " .. barMax .. " (" .. pfUI.api.round(barValue / barMax * 100) .. "%)",1,1,1)
+          GameTooltip:AddLine(barValue .. " / " .. barMax .. " (" .. round(barValue / barMax * 100) .. "%)",1,1,1)
           GameTooltip:Show()
 
           pfUI.rep.mouseover = true

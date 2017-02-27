@@ -19,10 +19,10 @@ pfUI:RegisterModule("firstrun", function ()
     table.insert(pfUI.firstrun.steps, step)
   end
 
-  pfUI.firstrun:AddStep("cvars", function() pfUI.SetupCVars() end, nil, "|cff33ffccBlizzard: \"Interface Options\"|r\n\n"..
-  "Do you want me to setup the recommended blizzard UI settings?\n"..
-  "This will enable settings that can be found in the Interface section of your client.\n"..
-  "Options like Buff Durations, Instant Quest Text, Auto Selfcast and others will be set.\n")
+  pfUI.firstrun:AddStep("cvars", function() pfUI.SetupCVars() end, nil, "|cff33ffccBlizzard: \"接口选项\"|r\n\n"..
+  "设置推荐的暴雪UI设置吗？\n"..
+  "这将启用在客户端的“接口”部分中找到的设置。\n"..
+  "Buff Duration，Instant Quest Text，Auto Selfcast等选项将被设置。\n")
 
   function pfUI.firstrun:NextStep()
     if pfUI_init and next(pfUI_init) == nil then
@@ -36,7 +36,7 @@ pfUI:RegisterModule("firstrun", function ()
         this:GetParent():Hide()
       end
 
-      pfUI.api:CreateQuestionDialog("Welcome to |cff33ffccpf|cffffffffUI|r!\n\n"..
+      CreateQuestionDialog("Welcome to |cff33ffccpf|cffffffffUI|r!\n\n"..
       "I'm the first run wizzard that will guide you through some basic configuration.\n"..
       "You'll now be prompted for several questions. To get a default installation,\n"..
       "you might want to click \"Yes\" everywhere. A few settings are client settings\n"..
@@ -65,9 +65,9 @@ pfUI:RegisterModule("firstrun", function ()
         end
 
         if step.cmpnt and step.cmpnt == "edit" then
-          pfUI.api:CreateQuestionDialog(step.descr, yes, no, true)
+          CreateQuestionDialog(step.descr, yes, no, true)
         else
-          pfUI.api:CreateQuestionDialog(step.descr, yes, no, false)
+          CreateQuestionDialog(step.descr, yes, no, false)
         end
 
         return

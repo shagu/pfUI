@@ -45,7 +45,7 @@ pfUI:RegisterModule("map", function ()
       WorldMapFrame:SetHeight(WorldMapButton:GetHeight() + 55)
 
       WorldMapFrameCloseButton:SetPoint("TOPRIGHT", WorldMapFrame, "TOPRIGHT", 0, 0)
-      pfUI.api:CreateBackdrop(WorldMapFrame)
+      CreateBackdrop(WorldMapFrame)
 
       WorldMapFrame:SetScale(.7)
       BlackoutWorld:Hide()

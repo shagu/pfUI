@@ -1,5 +1,5 @@
 pfUI:RegisterModule("gui", function ()
-  local default_border = tonumber(pfUI_config.appearance.border.default)
+  local default_border = tonumber(C.appearance.border.default)
 
   pfUI.gui = CreateFrame("Frame",nil,UIParent)
 
@@ -10,7 +10,7 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui:SetHeight(500)
   pfUI.gui:Hide()
 
-  pfUI.api:CreateBackdrop(pfUI.gui, nil, nil, .8)
+  CreateBackdrop(pfUI.gui, nil, nil, .8)
   pfUI.gui:SetPoint("CENTER",0,0)
   pfUI.gui:SetMovable(true)
   pfUI.gui:EnableMouse(true)
@@ -29,7 +29,7 @@ pfUI:RegisterModule("gui", function ()
   end)
 
   function pfUI.gui:Reload()
-    pfUI.api:CreateQuestionDialog("有些设置需要重新加载UI生效。\n您要重新载入UI吗？",
+    CreateQuestionDialog("有些设置需要重新加载UI生效。\n您要重新载入UI吗？",
       function()
         pfUI.gui.settingChanged = nil
         ReloadUI()
@@ -39,10 +39,10 @@ pfUI:RegisterModule("gui", function ()
   function pfUI.gui:SaveScale(frame, scale)
     frame:SetScale(scale)
 
-    if not pfUI_config.position[frame:GetName()] then
-      pfUI_config.position[frame:GetName()] = {}
+    if not C.position[frame:GetName()] then
+      C.position[frame:GetName()] = {}
     end
-    pfUI_config.position[frame:GetName()]["scale"] = scale
+    C.position[frame:GetName()]["scale"] = scale
 
     frame.drag.text:SetText("Scale: " .. scale)
     frame.drag.text:SetAlpha(1)
@@ -64,7 +64,7 @@ pfUI:RegisterModule("gui", function ()
     end
   end
 
-  function pfUI.gui.UnlockFrames()
+  function pfUI.gui:UnlockFrames()
     if not pfUI.gitter then
       pfUI.gitter = CreateFrame("Button", nil, UIParent)
       pfUI.gitter:SetAllPoints(WorldFrame)
@@ -132,7 +132,7 @@ pfUI:RegisterModule("gui", function ()
     end
 
     for _,frame in pairs(pfUI.movables) do
-      local frame = getglobal(frame)
+      local frame = _G[frame]
 
       if frame then
         if not frame:IsShown() then
@@ -143,38 +143,38 @@ pfUI:RegisterModule("gui", function ()
           frame.drag = CreateFrame("Frame", nil, frame)
           frame.drag:SetAllPoints(frame)
           frame.drag:SetFrameStrata("DIALOG")
-          pfUI.api:CreateBackdrop(frame.drag, nil, nil, .8)
+          CreateBackdrop(frame.drag, nil, nil, .8)
           frame.drag.backdrop:SetBackdropBorderColor(.2, 1, .8)
           frame.drag:EnableMouseWheel(1)
           frame.drag.text = frame.drag:CreateFontString("Status", "LOW", "GameFontNormal")
-          frame.drag.text:SetFont(pfUI.font_default, pfUI_config.global.font_size, "OUTLINE")
+          frame.drag.text:SetFont(pfUI.font_default, C.global.font_size, "OUTLINE")
           frame.drag.text:ClearAllPoints()
           frame.drag.text:SetAllPoints(frame.drag)
           frame.drag.text:SetPoint("CENTER", 0, 0)
           frame.drag.text:SetFontObject(GameFontWhite)
           local label = (strsub(frame:GetName(),3))
           if frame.drag:GetHeight() > (2 * frame.drag:GetWidth()) then
-            label = pfUI.api.strvertical(label)
+            label = strvertical(label)
           end
           frame.drag.text:SetText(label)
           frame.drag:SetAlpha(1)
 
           frame.drag:SetScript("OnMouseWheel", function()
-            local scale = pfUI.api.round(frame:GetScale() + arg1/10, 1)
+            local scale = round(frame:GetScale() + arg1/10, 1)
 
             if IsShiftKeyDown() and strsub(frame:GetName(),0,6) == "pfRaid" then
               for i=1,40 do
-                local frame = getglobal("pfRaid" .. i)
+                local frame = _G["pfRaid" .. i]
                 pfUI.gui:SaveScale(frame, scale)
               end
             elseif IsShiftKeyDown() and strsub(frame:GetName(),0,7) == "pfGroup" then
               for i=1,4 do
-                local frame = getglobal("pfGroup" .. i)
+                local frame = _G["pfGroup" .. i]
                 pfUI.gui:SaveScale(frame, scale)
               end
             elseif IsShiftKeyDown() and strsub(frame:GetName(),0,15) == "pfLootRollFrame" then
               for i=1,4 do
-                local frame = getglobal("pfLootRollFrame" .. i)
+                local frame = _G["pfLootRollFrame" .. i]
                 pfUI.gui:SaveScale(frame, scale)
               end
             else
@@ -195,7 +195,7 @@ pfUI:RegisterModule("gui", function ()
           if IsShiftKeyDown() then
             if strsub(frame:GetName(),0,6) == "pfRaid" then
               for i=1,40 do
-                local cframe = getglobal("pfRaid" .. i)
+                local cframe = _G["pfRaid" .. i]
                 cframe:StartMoving()
                 cframe:StopMovingOrSizing()
                 cframe.drag.backdrop:SetBackdropBorderColor(1,1,1,1)
@@ -203,7 +203,7 @@ pfUI:RegisterModule("gui", function ()
             end
             if strsub(frame:GetName(),0,7) == "pfGroup" then
               for i=1,4 do
-                local cframe = getglobal("pfGroup" .. i)
+                local cframe = _G["pfGroup" .. i]
                 cframe:StartMoving()
                 cframe:StopMovingOrSizing()
                 cframe.drag.backdrop:SetBackdropBorderColor(1,1,1,1)
@@ -211,7 +211,7 @@ pfUI:RegisterModule("gui", function ()
             end
             if strsub(frame:GetName(),0,15) == "pfLootRollFrame" then
               for i=1,4 do
-                local cframe = getglobal("pfLootRollFrame" .. i)
+                local cframe = _G["pfLootRollFrame" .. i]
                 cframe:StartMoving()
                 cframe:StopMovingOrSizing()
                 cframe.drag.backdrop:SetBackdropBorderColor(1,1,1,1)
@@ -238,7 +238,7 @@ pfUI:RegisterModule("gui", function ()
 
               if strsub(frame:GetName(),0,6) == "pfRaid" then
                 for i=1,40 do
-                  local cframe = getglobal("pfRaid" .. i)
+                  local cframe = _G["pfRaid" .. i]
                   cframe.drag.backdrop:SetBackdropBorderColor(.2,1,.8,1)
                   if cframe:GetName() ~= frame:GetName() then
                     local _, _, _, xpos, ypos = cframe:GetPoint()
@@ -246,17 +246,17 @@ pfUI:RegisterModule("gui", function ()
 
                     local _, _, _, xpos, ypos = cframe:GetPoint()
 
-                    if not pfUI_config.position[cframe:GetName()] then
-                      pfUI_config.position[cframe:GetName()] = {}
+                    if not C.position[cframe:GetName()] then
+                      C.position[cframe:GetName()] = {}
                     end
 
-                    pfUI_config.position[cframe:GetName()]["xpos"] = xpos
-                    pfUI_config.position[cframe:GetName()]["ypos"] = ypos
+                    C.position[cframe:GetName()]["xpos"] = xpos
+                    C.position[cframe:GetName()]["ypos"] = ypos
                   end
                 end
               elseif strsub(frame:GetName(),0,7) == "pfGroup" then
                 for i=1,4 do
-                  local cframe = getglobal("pfGroup" .. i)
+                  local cframe = _G["pfGroup" .. i]
                   cframe.drag.backdrop:SetBackdropBorderColor(.2,1,.8,1)
                   if cframe:GetName() ~= frame:GetName() then
                     local _, _, _, xpos, ypos = cframe:GetPoint()
@@ -264,17 +264,17 @@ pfUI:RegisterModule("gui", function ()
 
                     local _, _, _, xpos, ypos = cframe:GetPoint()
 
-                    if not pfUI_config.position[cframe:GetName()] then
-                      pfUI_config.position[cframe:GetName()] = {}
+                    if not C.position[cframe:GetName()] then
+                      C.position[cframe:GetName()] = {}
                     end
 
-                    pfUI_config.position[cframe:GetName()]["xpos"] = xpos
-                    pfUI_config.position[cframe:GetName()]["ypos"] = ypos
+                    C.position[cframe:GetName()]["xpos"] = xpos
+                    C.position[cframe:GetName()]["ypos"] = ypos
                   end
                 end
               elseif strsub(frame:GetName(),0,15) == "pfLootRollFrame" then
                 for i=1,4 do
-                  local cframe = getglobal("pfLootRollFrame" .. i)
+                  local cframe = _G["pfLootRollFrame" .. i]
                   cframe.drag.backdrop:SetBackdropBorderColor(.2,1,.8,1)
                   if cframe:GetName() ~= frame:GetName() then
                     local _, _, _, xpos, ypos = cframe:GetPoint()
@@ -282,23 +282,23 @@ pfUI:RegisterModule("gui", function ()
 
                     local _, _, _, xpos, ypos = cframe:GetPoint()
 
-                    if not pfUI_config.position[cframe:GetName()] then
-                      pfUI_config.position[cframe:GetName()] = {}
+                    if not C.position[cframe:GetName()] then
+                      C.position[cframe:GetName()] = {}
                     end
 
-                    pfUI_config.position[cframe:GetName()]["xpos"] = xpos
-                    pfUI_config.position[cframe:GetName()]["ypos"] = ypos
+                    C.position[cframe:GetName()]["xpos"] = xpos
+                    C.position[cframe:GetName()]["ypos"] = ypos
                   end
                 end
               end
             end
 
-            if not pfUI_config.position[frame:GetName()] then
-              pfUI_config.position[frame:GetName()] = {}
+            if not C.position[frame:GetName()] then
+              C.position[frame:GetName()] = {}
             end
 
-            pfUI_config.position[frame:GetName()]["xpos"] = xpos
-            pfUI_config.position[frame:GetName()]["ypos"] = ypos
+            C.position[frame:GetName()]["xpos"] = xpos
+            C.position[frame:GetName()]["ypos"] = ypos
             pfUI.gui.settingChanged = true
         end)
 
@@ -328,12 +328,12 @@ pfUI:RegisterModule("gui", function ()
 
     for _, hide in pairs(elements) do
       hide:Hide()
-      pfUI.api:CreateBackdrop(hide.switch, nil, true)
+      CreateBackdrop(hide.switch, nil, true)
     end
     pfUI.gui.scroll:SetScrollChild(frame)
     pfUI.gui.scroll:UpdateScrollState()
     pfUI.gui.scroll:SetVerticalScroll(0)
-    pfUI.api:CreateBackdrop(frame.switch, nil, true)
+    CreateBackdrop(frame.switch, nil, true)
     frame.switch:SetBackdropBorderColor(.2,1,.8)
     frame:Show()
   end
@@ -368,9 +368,9 @@ pfUI:RegisterModule("gui", function ()
     else
       frame.switch:SetPoint("TOPLEFT", default_border, -pfUI.gui.tabTop* (22 + default_border) -default_border)
     end
-    pfUI.api:CreateBackdrop(frame.switch, nil, true)
+    CreateBackdrop(frame.switch, nil, true)
     frame.switch.text = frame.switch:CreateFontString("Status", "LOW", "GameFontNormal")
-    frame.switch.text:SetFont(pfUI.font_default, pfUI_config.global.font_size, "OUTLINE")
+    frame.switch.text:SetFont(pfUI.font_default, C.global.font_size, "OUTLINE")
     frame.switch.text:SetAllPoints(frame.switch)
     frame.switch.text:SetPoint("CENTER", 0, 0)
     frame.switch.text:SetFontObject(GameFontWhite)
@@ -386,7 +386,7 @@ pfUI:RegisterModule("gui", function ()
     -- do not show title on bottom buttons
     if not bottom and not func then
       frame.title = frame:CreateFontString("Status", "LOW", "GameFontNormal")
-      frame.title:SetFont(pfUI.font_default, pfUI_config.global.font_size + 2, "OUTLINE")
+      frame.title:SetFont(pfUI.font_default, C.global.font_size + 2, "OUTLINE")
       frame.title:SetPoint("TOP", 0, -10)
       frame.title:SetTextColor(.2,1,.8)
       frame.title:SetText(text)
@@ -427,7 +427,7 @@ pfUI:RegisterModule("gui", function ()
 
       -- caption
       frame.caption = frame:CreateFontString("Status", "LOW", "GameFontNormal")
-      frame.caption:SetFont(pfUI.font_default, pfUI_config.global.font_size + 2, "OUTLINE")
+      frame.caption:SetFont(pfUI.font_default, C.global.font_size + 2, "OUTLINE")
       frame.caption:SetAllPoints(frame)
       frame.caption:SetFontObject(GameFontWhite)
       frame.caption:SetJustifyH("LEFT")
@@ -445,19 +445,19 @@ pfUI:RegisterModule("gui", function ()
       frame.color = CreateFrame("Button", nil, frame)
       frame.color:SetWidth(12)
       frame.color:SetHeight(12)
-      pfUI.api:CreateBackdrop(frame.color)
+      CreateBackdrop(frame.color)
       frame.color:SetPoint("TOPRIGHT" , 0, -4)
       frame.color.prev = frame.color.backdrop:CreateTexture("OVERLAY")
       frame.color.prev:SetAllPoints(frame.color)
 
-      local cr, cg, cb, ca = pfUI.api.strsplit(",", category[config])
+      local cr, cg, cb, ca = strsplit(",", category[config])
       if not cr or not cg or not cb or not ca then
         cr, cg, cb, ca = 1, 1, 1, 1
       end
       frame.color.prev:SetTexture(cr,cg,cb,ca)
 
       frame.color:SetScript("OnClick", function()
-        local cr, cg, cb, ca = pfUI.api.strsplit(",", category[config])
+        local cr, cg, cb, ca = strsplit(",", category[config])
         if not cr or not cg or not cb or not ca then
           cr, cg, cb, ca = 1, 1, 1, 1
         end
@@ -467,10 +467,10 @@ pfUI:RegisterModule("gui", function ()
           local r,g,b = ColorPickerFrame:GetColorRGB()
           local a = 1 - OpacitySliderFrame:GetValue()
 
-          r = pfUI.api.round(r, 1)
-          g = pfUI.api.round(g, 1)
-          b = pfUI.api.round(b, 1)
-          a = pfUI.api.round(a, 1)
+          r = round(r, 1)
+          g = round(g, 1)
+          b = round(b, 1)
+          a = round(a, 1)
 
           preview:SetTexture(r,g,b,a)
 
@@ -495,7 +495,7 @@ pfUI:RegisterModule("gui", function ()
     end
 
     if widget == "warning" then
-      pfUI.api:CreateBackdrop(frame, nil, true)
+      CreateBackdrop(frame, nil, true)
       frame:SetBackdropBorderColor(1,.5,.5)
       frame:SetHeight(50)
       frame:SetPoint("TOPLEFT", 25, parent.objectCount * -35)
@@ -543,8 +543,8 @@ pfUI:RegisterModule("gui", function ()
     -- use button widget
     if widget == "button" then
       frame.button = CreateFrame("Button", "pfButton", frame, "UIPanelButtonTemplate")
-      pfUI.api:CreateBackdrop(frame.button, nil, true)
-      pfUI.api:SkinButton(frame.button)
+      CreateBackdrop(frame.button, nil, true)
+      SkinButton(frame.button)
       frame.button:SetWidth(85)
       frame.button:SetHeight(20)
       frame.button:SetPoint("TOPRIGHT", -(parent.lineCount-1) * 90, -5)
@@ -560,7 +560,7 @@ pfUI:RegisterModule("gui", function ()
       frame.input:SetNormalTexture("")
       frame.input:SetPushedTexture("")
       frame.input:SetHighlightTexture("")
-      pfUI.api:CreateBackdrop(frame.input, nil, true)
+      CreateBackdrop(frame.input, nil, true)
       frame.input:SetWidth(14)
       frame.input:SetHeight(14)
       frame.input:SetPoint("TOPRIGHT" , 0, -4)
@@ -623,7 +623,7 @@ pfUI:RegisterModule("gui", function ()
       for i,v in ipairs({frame.input:GetRegions()}) do
         if v.SetTexture then v:Hide() end
         if v.SetTextColor then v:SetTextColor(.2,1,.8) end
-        if v.SetBackdrop then pfUI.api:CreateBackdrop(v) end
+        if v.SetBackdrop then CreateBackdrop(v) end
       end
     end
 
@@ -635,7 +635,7 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.deco:ClearAllPoints()
   pfUI.gui.deco:SetPoint("TOPLEFT", pfUI.gui, "TOPLEFT", 4*default_border + 100,-2*default_border)
   pfUI.gui.deco:SetPoint("BOTTOMRIGHT", pfUI.gui, "BOTTOMRIGHT", -2*default_border,2*default_border)
-  pfUI.api:CreateBackdrop(pfUI.gui.deco, nil, nil, .8)
+  CreateBackdrop(pfUI.gui.deco, nil, nil, .8)
 
   pfUI.gui.deco.up = CreateFrame("Frame", nil, pfUI.gui.deco)
   pfUI.gui.deco.up:SetPoint("TOPLEFT", pfUI.gui.deco, "TOPLEFT", 0,0)
@@ -729,18 +729,18 @@ pfUI:RegisterModule("gui", function ()
   -- General
   pfUI.gui.global = pfUI.gui:CreateConfigTab("一般设置")
   local values = { "Continuum", "DieDieDie", "Expressway", "Homespun", "Myriad-Pro", "PT-Sans-Narrow-Bold", "PT-Sans-Narrow-Regular" }
-  pfUI.gui:CreateConfig(pfUI.gui.global, "强制兼容中文字体", pfUI_config.global, "force_region", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.global, "普通字体", pfUI_config.global, "font_default", "dropdown", values)
-  pfUI.gui:CreateConfig(pfUI.gui.global, "框架和动作栏字体", pfUI_config.global, "font_square", "dropdown", values)
-  pfUI.gui:CreateConfig(pfUI.gui.global, "滚动战斗字体", pfUI_config.global, "font_combat", "dropdown", values)
-  pfUI.gui:CreateConfig(pfUI.gui.global, "字号", pfUI_config.global, "font_size")
-  pfUI.gui:CreateConfig(pfUI.gui.global, "跟随分辨率自动缩放UI", pfUI_config.global, "pixelperfect", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.global, "换到其他窗口时游戏帧数保持不变", pfUI_config.global, "offscreen", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.global, "仅列出一行错误", pfUI_config.global, "errors_limit", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.global, "禁用所有错误", pfUI_config.global, "errors_hide", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.global, "隐藏系统Buff图标", pfUI_config.global, "hidebuff", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.global, "隐藏武器Buff图标", pfUI_config.global, "hidewbuff", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.global, "使用24小时制", pfUI_config.global, "twentyfour", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.global, "强制兼容中文字体", C.global, "force_region", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.global, "普通字体", C.global, "font_default", "dropdown", values)
+  pfUI.gui:CreateConfig(pfUI.gui.global, "框架和动作栏字体", C.global, "font_square", "dropdown", values)
+  pfUI.gui:CreateConfig(pfUI.gui.global, "滚动战斗字体", C.global, "font_combat", "dropdown", values)
+  pfUI.gui:CreateConfig(pfUI.gui.global, "字号", C.global, "font_size")
+  pfUI.gui:CreateConfig(pfUI.gui.global, "跟随分辨率自动缩放UI", C.global, "pixelperfect", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.global, "换到其他窗口时游戏帧数保持不变", C.global, "offscreen", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.global, "仅列出一行错误", C.global, "errors_limit", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.global, "禁用所有错误", C.global, "errors_hide", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.global, "隐藏系统Buff图标", C.global, "hidebuff", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.global, "隐藏武器Buff图标", C.global, "hidewbuff", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.global, "使用24小时制", C.global, "twentyfour", "checkbox")
 
   pfUI.gui:CreateConfig(pfUI.gui.global, "配置文件", nil, nil, "header")
   local values = {}
@@ -753,25 +753,25 @@ pfUI:RegisterModule("gui", function ()
     pfUIDropDownMenuProfile.Refresh()
   end
 
-  pfUI.gui:CreateConfig(pfUI.gui.global, "选择配置文件", pfUI_config.global, "profile", "dropdown", values, false, "Profile")
+  pfUI.gui:CreateConfig(pfUI.gui.global, "选择配置文件", C.global, "profile", "dropdown", values, false, "Profile")
 
   -- load profile
-  pfUI.gui:CreateConfig(pfUI.gui.global, "加载配置文件", pfUI_config.global, "profile", "button", function()
-    if pfUI_config.global.profile and pfUI_profiles[pfUI_config.global.profile] then
-      pfUI.api:CreateQuestionDialog("加载配置文件 '|cff33ffcc" .. pfUI_config.global.profile .. "|r'?", function()
-        local selp = pfUI_config.global.profile
-        pfUI_config = pfUI.api.CopyTable(pfUI_profiles[pfUI_config.global.profile])
-        pfUI_config.global.profile = selp
+  pfUI.gui:CreateConfig(pfUI.gui.global, "加载配置文件", C.global, "profile", "button", function()
+    if C.global.profile and pfUI_profiles[C.global.profile] then
+      CreateQuestionDialog("加载配置文件 '|cff33ffcc" .. C.global.profile .. "|r'?", function()
+        local selp = C.global.profile
+        C = CopyTable(pfUI_profiles[C.global.profile])
+        C.global.profile = selp
         ReloadUI()
       end)
     end
   end)
 
   -- delete profile
-  pfUI.gui:CreateConfig(pfUI.gui.global, "删除配置文件", pfUI_config.global, "profile", "button", function()
-    if pfUI_config.global.profile and pfUI_profiles[pfUI_config.global.profile] then
-      pfUI.api:CreateQuestionDialog("删除配置文件 '|cff33ffcc" .. pfUI_config.global.profile .. "|r'?", function()
-        pfUI_profiles[pfUI_config.global.profile] = nil
+  pfUI.gui:CreateConfig(pfUI.gui.global, "删除配置文件", C.global, "profile", "button", function()
+    if C.global.profile and pfUI_profiles[C.global.profile] then
+      CreateQuestionDialog("删除配置文件 '|cff33ffcc" .. C.global.profile .. "|r'?", function()
+        pfUI_profiles[C.global.profile] = nil
         pfUpdateProfiles()
         this:GetParent():Hide()
       end)
@@ -779,11 +779,11 @@ pfUI:RegisterModule("gui", function ()
   end, true)
 
   -- save profile
-  pfUI.gui:CreateConfig(pfUI.gui.global, "保存配置文件", pfUI_config.global, "profile", "button", function()
-    if pfUI_config.global.profile and pfUI_profiles[pfUI_config.global.profile] then
-      pfUI.api:CreateQuestionDialog("把现有设置保存到 '|cff33ffcc" .. pfUI_config.global.profile .. "|r'?", function()
-        if pfUI_profiles[pfUI_config.global.profile] then
-          pfUI_profiles[pfUI_config.global.profile] = pfUI.api.CopyTable(pfUI_config)
+  pfUI.gui:CreateConfig(pfUI.gui.global, "保存配置文件", C.global, "profile", "button", function()
+    if C.global.profile and pfUI_profiles[C.global.profile] then
+      CreateQuestionDialog("把现有设置保存到 '|cff33ffcc" .. C.global.profile .. "|r'?", function()
+        if pfUI_profiles[C.global.profile] then
+          pfUI_profiles[C.global.profile] = CopyTable(C)
         end
         this:GetParent():Hide()
       end)
@@ -791,8 +791,8 @@ pfUI:RegisterModule("gui", function ()
   end, true)
 
   -- create profile
-  pfUI.gui:CreateConfig(pfUI.gui.global, "新建配置文件", pfUI_config.global, "profile", "button", function()
-    pfUI.api:CreateQuestionDialog("请输入新建配置文件名，相同名字将会自动覆盖。",
+  pfUI.gui:CreateConfig(pfUI.gui.global, "新建配置文件", C.global, "profile", "button", function()
+    CreateQuestionDialog("请输入新建配置文件名，相同名字将会自动覆盖。",
     function()
       local profile = this:GetParent().input:GetText()
       local bad = string.gsub(profile,"([%w%s]+)","")
@@ -801,7 +801,7 @@ pfUI:RegisterModule("gui", function ()
       else
         profile = (string.gsub(profile,"^%s*(.-)%s*$", "%1"))
         if profile and profile ~= "" then
-          pfUI_profiles[profile] = pfUI.api.CopyTable(pfUI_config)
+          pfUI_profiles[profile] = CopyTable(C)
           pfUpdateProfiles()
           this:GetParent():Hide()
         end
@@ -811,218 +811,219 @@ pfUI:RegisterModule("gui", function ()
 
   -- appearance
   pfUI.gui.appearance = pfUI.gui:CreateConfigTab("外观设置")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "背景颜色", pfUI_config.appearance.border, "background", "color")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "边框颜色", pfUI_config.appearance.border, "color", "color")
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "背景颜色", C.appearance.border, "background", "color")
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "边框颜色", C.appearance.border, "color", "color")
 
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "边框设置", nil, nil, "header")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "默认边框大小", pfUI_config.appearance.border, "default")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "动作条边框大小", pfUI_config.appearance.border, "actionbars")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "头像框架大小", pfUI_config.appearance.border, "unitframes")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "小队框架大小", pfUI_config.appearance.border, "groupframes")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "团队框架大小", pfUI_config.appearance.border, "raidframes")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "面板边框大小", pfUI_config.appearance.border, "panels")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "聊天框架大小", pfUI_config.appearance.border, "chat")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "背包边框大小", pfUI_config.appearance.border, "bags")
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "默认边框大小", C.appearance.border, "default")
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "动作条边框大小", C.appearance.border, "actionbars")
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "头像框架大小", C.appearance.border, "unitframes")
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "小队框架大小", C.appearance.border, "groupframes")
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "团队框架大小", C.appearance.border, "raidframes")
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "面板边框大小", C.appearance.border, "panels")
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "聊天框架大小", C.appearance.border, "chat")
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "背包边框大小", C.appearance.border, "bags")
 
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "冷却时间设置", nil, nil, "header")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "冷却时间颜色（分）", pfUI_config.appearance.cd, "mincolor", "color")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "冷却时间颜色（时）", pfUI_config.appearance.cd, "hourcolor", "color")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "冷却时间颜色（天）", pfUI_config.appearance.cd, "daycolor", "color")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "冷却时间文字大小", pfUI_config.appearance.cd, "threshold")
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "冷却时间颜色（分）", C.appearance.cd, "mincolor", "color")
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "冷却时间颜色（时）", C.appearance.cd, "hourcolor", "color")
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "冷却时间颜色（天）", C.appearance.cd, "daycolor", "color")
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "冷却时间文字大小", C.appearance.cd, "threshold")
 
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "战斗相关设置", nil, nil, "header")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "全屏显示战斗报警", pfUI_config.appearance.infight, "screen", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "仅在头像上显示战斗报警", pfUI_config.appearance.infight, "common", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "在小队显示战斗报警", pfUI_config.appearance.infight, "group", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "全屏显示战斗报警", C.appearance.infight, "screen", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "仅在头像上显示战斗报警", C.appearance.infight, "common", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "在小队显示战斗报警", C.appearance.infight, "group", "checkbox")
 
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "背包和银行设置", nil, nil, "header")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "只显示\"普通品质\"以上的物品", pfUI_config.appearance.bags, "borderlimit", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "仅在装备上显示品质颜色", pfUI_config.appearance.bags, "borderonlygear", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "只显示\"普通品质\"以上的物品", C.appearance.bags, "borderlimit", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "仅在装备上显示品质颜色", C.appearance.bags, "borderonlygear", "checkbox")
 
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "拾取设置", nil, nil, "header")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "自动调整拾取框大小", pfUI_config.appearance.loot, "autoresize", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "自动调整拾取框大小", C.appearance.loot, "autoresize", "checkbox")
 
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "小地图设置", nil, nil, "header")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "在鼠标悬停时显示区域名称", pfUI_config.appearance.minimap, "mouseoverzone", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "在鼠标悬停时显示区域名称", C.appearance.minimap, "mouseoverzone", "checkbox")
 
   -- unit frames
   pfUI.gui.uf = pfUI.gui:CreateConfigTab("基本设置")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "禁用头像增强", pfUI_config.unitframes, "disable", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "头像颜色变柔", pfUI_config.unitframes, "pastel", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用自定义生命条颜色", pfUI_config.unitframes, "custom", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "自定义生命条颜色", pfUI_config.unitframes, "customcolor", "color")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "头像动画速度", pfUI_config.unitframes, "animation_speed")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "显示头像动画", pfUI_config.unitframes, "portraitalpha")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "2D图像作为备选", pfUI_config.unitframes, "portraittexture", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "禁用头像增强", C.unitframes, "disable", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "头像颜色变柔", C.unitframes, "pastel", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用自定义生命条颜色", C.unitframes, "custom", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "自定义生命条颜色", C.unitframes, "customcolor", "color")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "头像动画速度", C.unitframes, "animation_speed")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "显示头像动画", C.unitframes, "portraitalpha")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "2D图像作为备选", C.unitframes, "portraittexture", "checkbox")
 
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Buff调整", pfUI_config.unitframes, "buff_size")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Debuff调整", pfUI_config.unitframes, "debuff_size")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "样式", pfUI_config.unitframes, "layout", "dropdown", { "default", "tukui" })
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "所有头像都可选中", pfUI_config.unitframes, "globalclick", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "Buff调整", C.unitframes, "buff_size")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "Debuff调整", C.unitframes, "debuff_size")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "样式", C.unitframes, "layout", "dropdown", { "default", "tukui" })
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "所有头像都可选中", C.unitframes, "globalclick", "checkbox")
 
   pfUI.gui:CreateConfig(pfUI.gui.uf, "玩家设置", nil, nil, "header")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "玩家头像位置", pfUI_config.unitframes.player, "portrait", "dropdown", { "bar", "left", "right", "off" })
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "玩家头像宽度调整", pfUI_config.unitframes.player, "width")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "玩家头像高度调整", pfUI_config.unitframes.player, "height")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "玩家能量值与头像间距调整", pfUI_config.unitframes.player, "pheight")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "玩家能量值与头像间距调整", pfUI_config.unitframes.player, "pspace")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "显示PVP图标", pfUI_config.unitframes.player, "showPVP", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "在小地图上平铺PVP图标", pfUI_config.unitframes.player, "showPVPMinimap", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Buff位置", pfUI_config.unitframes.player, "buffs", "dropdown", { "top", "bottom", "hide"})
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "显示能量刻度", pfUI_config.unitframes.player, "energy", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "玩家头像位置", C.unitframes.player, "portrait", "dropdown", { "bar", "left", "right", "off" })
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "玩家头像宽度调整", C.unitframes.player, "width")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "玩家头像高度调整", C.unitframes.player, "height")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "玩家能量值高度调整", C.unitframes.player, "pheight")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "玩家能量值与头像间距调整", C.unitframes.player, "pspace")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "显示PVP图标", C.unitframes.player, "showPVP", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "在小地图上平铺PVP图标", C.unitframes.player, "showPVPMinimap", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "Buff位置", C.unitframes.player, "buffs", "dropdown", { "top", "bottom", "hide"})
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "显示能量刻度", C.unitframes.player, "energy", "checkbox")
 
   pfUI.gui:CreateConfig(pfUI.gui.uf, "目标设置", nil, nil, "header")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "目标头像位置", pfUI_config.unitframes.target, "portrait", "dropdown", { "bar", "left", "right", "off" })
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用目标切换动画", pfUI_config.unitframes.target, "animation", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "目标头像宽度调整", pfUI_config.unitframes.target, "width")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "目标头像高度调整", pfUI_config.unitframes.target, "height")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "目标能量值高度调整", pfUI_config.unitframes.target, "pheight")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "目标能量值与头像间距调整", pfUI_config.unitframes.target, "pspace")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Buff位置", pfUI_config.unitframes.target, "buffs", "dropdown", { "top", "bottom", "hide"})
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "目标头像位置", C.unitframes.target, "portrait", "dropdown", { "bar", "left", "right", "off" })
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用目标切换动画", C.unitframes.target, "animation", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "目标头像宽度调整", C.unitframes.target, "width")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "目标头像高度调整", C.unitframes.target, "height")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "目标能量值高度调整", C.unitframes.target, "pheight")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "目标能量值与头像间距调整", C.unitframes.target, "pspace")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "Buff位置", C.unitframes.target, "buffs", "dropdown", { "top", "bottom", "hide"})
 
   pfUI.gui:CreateConfig(pfUI.gui.uf, "小队设置", nil, nil, "header")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "小队头像位置", pfUI_config.unitframes.group, "portrait", "dropdown", { "bar", "left", "right", "off" })
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "小队能量值间距调整", pfUI_config.unitframes.group, "pspace")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "在团队模式下隐藏小队框架", pfUI_config.unitframes.group, "hide_in_raid", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "可以点击施法", pfUI_config.unitframes.group, "clickcast", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "通过小队加Buff", pfUI_config.unitframes.group, "raid_buffs", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "通过小队解除Debuff", pfUI_config.unitframes.group, "raid_debuffs", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "小队头像位置", C.unitframes.group, "portrait", "dropdown", { "bar", "left", "right", "off" })
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "小队能量值间距调整", C.unitframes.group, "pspace")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "在团队模式下隐藏小队框架", C.unitframes.group, "hide_in_raid", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "可以点击施法", C.unitframes.group, "clickcast", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "通过小队加Buff", C.unitframes.group, "raid_buffs", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "通过小队解除Debuff", C.unitframes.group, "raid_debuffs", "checkbox")
 
   pfUI.gui:CreateConfig(pfUI.gui.uf, "团队设置", nil, nil, "header")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "团队能量值间距调整", pfUI_config.unitframes.raid, "pspace")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "团队框架生命值反相显示", pfUI_config.unitframes.raid, "invert_healthbar", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "团队模式下显示掉的血量", pfUI_config.unitframes.raid, "show_missing", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "团队框架上点击施法", pfUI_config.unitframes.raid, "clickcast")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "团队框架上按Shift施法", pfUI_config.unitframes.raid, "clickcast_shift")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "团队框架上按Alt施法", pfUI_config.unitframes.raid, "clickcast_alt")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "团队框架上按Ctrl施法", pfUI_config.unitframes.raid, "clickcast_ctrl")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "显示自己的Buff", pfUI_config.unitframes.raid, "buffs_buffs", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "显示持续治疗", pfUI_config.unitframes.raid, "buffs_hots", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "显示自己的效果", pfUI_config.unitframes.raid, "buffs_procs", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "仅不显示自己的持续治疗", pfUI_config.unitframes.raid, "buffs_classonly", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "团队框架上显示Debuff", pfUI_config.unitframes.raid, "debuffs_enable", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "仅不显示自己的Debuff", pfUI_config.unitframes.raid, "debuffs_class", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "团队间距调整", C.unitframes.raid, "pspace")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "团队框架生命值反相显示", C.unitframes.raid, "invert_healthbar", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "团队模式下显示掉的血量", C.unitframes.raid, "show_missing", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "团队框架上点击施法", C.unitframes.raid, "clickcast")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "团队框架上按Shift施法", C.unitframes.raid, "clickcast_shift")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "团队框架上按Alt施法", C.unitframes.raid, "clickcast_alt")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "团队框架上按Ctrl施法", C.unitframes.raid, "clickcast_ctrl")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "显示自己的Buff", C.unitframes.raid, "buffs_buffs", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "显示持续治疗", C.unitframes.raid, "buffs_hots", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "显示自己的效果", C.unitframes.raid, "buffs_procs", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "仅不显示自己的持续治疗", C.unitframes.raid, "buffs_classonly", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "团队框架上显示Debuff", C.unitframes.raid, "debuffs_enable", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "仅不显示自己的Debuff", C.unitframes.raid, "debuffs_class", "checkbox")
 
   pfUI.gui:CreateConfig(pfUI.gui.uf, "其他设置", nil, nil, "header")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "目标的目标头像位置", pfUI_config.unitframes.ttarget, "portrait", "dropdown", { "bar", "left", "right", "off" })
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "目标的目标能量值间距调整", pfUI_config.unitframes.ttarget, "pspace")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "目标的目标头像位置", C.unitframes.ttarget, "portrait", "dropdown", { "bar", "left", "right", "off" })
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "目标的目标能量值间距调整", C.unitframes.ttarget, "pspace")
 
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "宠物的头像位置", pfUI_config.unitframes.pet, "portrait", "dropdown", { "bar", "left", "right", "off" })
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "宠物能量值间距调整", pfUI_config.unitframes.pet, "pspace")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "宠物的头像位置", C.unitframes.pet, "portrait", "dropdown", { "bar", "left", "right", "off" })
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "宠物能量值间距调整", C.unitframes.pet, "pspace")
 
   -- action bar
   pfUI.gui.bar = pfUI.gui:CreateConfigTab("动作条")
-  pfUI.gui:CreateConfig(pfUI.gui.bar, "图标大小", pfUI_config.bars, "icon_size")
-  pfUI.gui:CreateConfig(pfUI.gui.bar, "显示动作条背景图案", pfUI_config.bars, "background", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.bar, "使用颜色指示技能使用距离", pfUI_config.bars, "glowrange", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.bar, "技能使用距离颜色", pfUI_config.bars, "rangecolor", "color")
-  pfUI.gui:CreateConfig(pfUI.gui.bar, "启用基于范围的自动分页（猎人）", pfUI_config.bars, "hunterbar", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.bar, "图标大小", C.bars, "icon_size")
+  pfUI.gui:CreateConfig(pfUI.gui.bar, "显示动作条背景图案", C.bars, "background", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.bar, "使用颜色指示技能使用距离", C.bars, "glowrange", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.bar, "技能使用距离颜色", C.bars, "rangecolor", "color")
+  pfUI.gui:CreateConfig(pfUI.gui.bar, "启用基于范围的自动分页（猎人）", C.bars, "hunterbar", "checkbox")
 
-  pfUI.gui:CreateConfig(pfUI.gui.bar, "自动隐藏动作条延时", pfUI_config.bars, "hide_time")
-  pfUI.gui:CreateConfig(pfUI.gui.bar, "自动隐藏主动作条", pfUI_config.bars, "hide_actionmain", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.bar, "自动隐藏左下方动作条", pfUI_config.bars, "hide_bottomleft", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.bar, "自动隐藏右下方动作条", pfUI_config.bars, "hide_bottomright", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.bar, "自动隐藏右方动作条", pfUI_config.bars, "hide_right", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.bar, "自动隐藏右边二动作条", pfUI_config.bars, "hide_tworight", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.bar, "自动隐藏姿态条", pfUI_config.bars, "hide_shapeshift", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.bar, "自动隐藏宠物动作条", pfUI_config.bars, "hide_pet", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.bar, "自动隐藏动作条延时", C.bars, "hide_time")
+  pfUI.gui:CreateConfig(pfUI.gui.bar, "自动隐藏主动作条", C.bars, "hide_actionmain", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.bar, "自动隐藏左下方动作条", C.bars, "hide_bottomleft", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.bar, "自动隐藏右下方动作条", C.bars, "hide_bottomright", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.bar, "自动隐藏右方动作条", C.bars, "hide_right", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.bar, "自动隐藏右边二动作条", C.bars, "hide_tworight", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.bar, "自动隐藏姿态条", C.bars, "hide_shapeshift", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.bar, "自动隐藏宠物动作条", C.bars, "hide_pet", "checkbox")
 
   pfUI.gui:CreateConfig(pfUI.gui.bar, "动作条布局", nil, nil, "header")
-  local values = pfUI.api:BarLayoutOptions(NUM_ACTIONBAR_BUTTONS)
-  pfUI.gui:CreateConfig(pfUI.gui.bar, "主动作条 ", pfUI_config.bars.actionmain, "formfactor", "dropdown", values)
-  pfUI.gui:CreateConfig(pfUI.gui.bar, "主动作条上方动作条", pfUI_config.bars.bottomleft, "formfactor", "dropdown", values)
-  pfUI.gui:CreateConfig(pfUI.gui.bar, "左动作条 (左下方)", pfUI_config.bars.bottomright, "formfactor", "dropdown", values)
-  pfUI.gui:CreateConfig(pfUI.gui.bar, "右动作条 (右下方)", pfUI_config.bars.right, "formfactor", "dropdown", values)
-  pfUI.gui:CreateConfig(pfUI.gui.bar, "垂直动作条 (右垂直)", pfUI_config.bars.tworight, "formfactor", "dropdown", values)
-  local values = pfUI.api:BarLayoutOptions(NUM_SHAPESHIFT_SLOTS)
-  pfUI.gui:CreateConfig(pfUI.gui.bar, "姿态条 (姿态条)", pfUI_config.bars.shapeshift, "formfactor", "dropdown", values)
-  local values = pfUI.api:BarLayoutOptions(NUM_PET_ACTION_SLOTS)
-  pfUI.gui:CreateConfig(pfUI.gui.bar, "宠物条 (宠物条)", pfUI_config.bars.pet, "formfactor", "dropdown", values)
+  local values = BarLayoutOptions(NUM_ACTIONBAR_BUTTONS)
+  pfUI.gui:CreateConfig(pfUI.gui.bar, "主动作条", C.bars.actionmain, "formfactor", "dropdown", values)
+  pfUI.gui:CreateConfig(pfUI.gui.bar, "主动作条上方动作条", C.bars.bottomleft, "formfactor", "dropdown", values)
+  pfUI.gui:CreateConfig(pfUI.gui.bar, "左动作条 (左下方)", C.bars.bottomright, "formfactor", "dropdown", values)
+  pfUI.gui:CreateConfig(pfUI.gui.bar, "右动作条 (右下方)", C.bars.right, "formfactor", "dropdown", values)
+  pfUI.gui:CreateConfig(pfUI.gui.bar, "垂直动作条 (右垂直)", C.bars.tworight, "formfactor", "dropdown", values)
+  local values = BarLayoutOptions(NUM_SHAPESHIFT_SLOTS)
+  pfUI.gui:CreateConfig(pfUI.gui.bar, "姿态条 (姿态条)", C.bars.shapeshift, "formfactor", "dropdown", values)
+  local values = BarLayoutOptions(NUM_PET_ACTION_SLOTS)
+  pfUI.gui:CreateConfig(pfUI.gui.bar, "宠物条 (宠物条)", C.bars.pet, "formfactor", "dropdown", values)
 
   -- panels
   pfUI.gui.panel = pfUI.gui:CreateConfigTab("聊天框架附加内容")
   local values = { "时间", "延迟", "经验", "金钱", "好友", "公会", "耐久", "地区", "无" }
-  pfUI.gui:CreateConfig(pfUI.gui.panel, "左侧面板：左侧", pfUI_config.panel.left, "left", "dropdown", values)
-  pfUI.gui:CreateConfig(pfUI.gui.panel, "左侧面板：中部", pfUI_config.panel.left, "center", "dropdown", values)
-  pfUI.gui:CreateConfig(pfUI.gui.panel, "左侧面板：右侧", pfUI_config.panel.left, "right", "dropdown", values)
-  pfUI.gui:CreateConfig(pfUI.gui.panel, "右侧面板：左侧", pfUI_config.panel.right, "left", "dropdown", values)
-  pfUI.gui:CreateConfig(pfUI.gui.panel, "右侧面板：中部", pfUI_config.panel.right, "center", "dropdown", values)
-  pfUI.gui:CreateConfig(pfUI.gui.panel, "右侧面板：右侧", pfUI_config.panel.right, "right", "dropdown", values)
-  pfUI.gui:CreateConfig(pfUI.gui.panel, "小地图上显示", pfUI_config.panel.other, "minimap", "dropdown", values)
-  pfUI.gui:CreateConfig(pfUI.gui.panel, "总是显示经验或者声望", pfUI_config.panel.xp, "showalways", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.panel, "显示菜单", pfUI_config.panel.micro, "enable", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.panel, "左侧面板：左侧", C.panel.left, "left", "dropdown", values)
+  pfUI.gui:CreateConfig(pfUI.gui.panel, "左侧面板：中部", C.panel.left, "center", "dropdown", values)
+  pfUI.gui:CreateConfig(pfUI.gui.panel, "左侧面板：右侧", C.panel.left, "right", "dropdown", values)
+  pfUI.gui:CreateConfig(pfUI.gui.panel, "右侧面板：左侧", C.panel.right, "left", "dropdown", values)
+  pfUI.gui:CreateConfig(pfUI.gui.panel, "右侧面板：中部", C.panel.right, "center", "dropdown", values)
+  pfUI.gui:CreateConfig(pfUI.gui.panel, "右侧面板：右侧", C.panel.right, "right", "dropdown", values)
+  pfUI.gui:CreateConfig(pfUI.gui.panel, "小地图上显示", C.panel.other, "minimap", "dropdown", values)
+  pfUI.gui:CreateConfig(pfUI.gui.panel, "总是显示经验或者声望", C.panel.xp, "showalways", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.panel, "显示菜单", C.panel.micro, "enable", "checkbox")
 
   -- tooltip
   pfUI.gui.tooltip = pfUI.gui:CreateConfigTab("鼠标提示框")
-  pfUI.gui:CreateConfig(pfUI.gui.tooltip, "提示框位置", pfUI_config.tooltip, "position", "dropdown", { "底部", "聊天框", "跟随鼠标" })
-  pfUI.gui:CreateConfig(pfUI.gui.tooltip, "显示扩展的公会信息", pfUI_config.tooltip, "extguild", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.tooltip, "自定义透明度", pfUI_config.tooltip, "alpha")
-  pfUI.gui:CreateConfig(pfUI.gui.tooltip, "始终显示装备比较", pfUI_config.tooltip.compare, "showalways", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.tooltip, "总是显示扩展出售价值", pfUI_config.tooltip.vendor, "showalways", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.tooltip, "提示框位置", C.tooltip, "position", "dropdown", { "底部", "聊天框", "跟随鼠标" })
+  pfUI.gui:CreateConfig(pfUI.gui.tooltip, "显示扩展的公会信息", C.tooltip, "extguild", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.tooltip, "自定义透明度", C.tooltip, "alpha")
+  pfUI.gui:CreateConfig(pfUI.gui.tooltip, "始终显示装备比较", C.tooltip.compare, "showalways", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.tooltip, "总是显示扩展出售价值", C.tooltip.vendor, "showalways", "checkbox")
 
   -- castbar
   pfUI.gui.castbar = pfUI.gui:CreateConfigTab("施法条")
-  pfUI.gui:CreateConfig(pfUI.gui.castbar, "施法条颜色", pfUI_config.appearance.castbar, "castbarcolor", "color")
-  pfUI.gui:CreateConfig(pfUI.gui.castbar, "施法条槽颜色", pfUI_config.appearance.castbar, "channelcolor", "color")
-  pfUI.gui:CreateConfig(pfUI.gui.castbar, "隐藏系统施法条", pfUI_config.castbar.player, "hide_blizz", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.castbar, "隐藏玩家施法条", pfUI_config.castbar.player, "hide_pfui", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.castbar, "隐藏目标施法条", pfUI_config.castbar.target, "hide_pfui", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.castbar, "施法条颜色", C.appearance.castbar, "castbarcolor", "color")
+  pfUI.gui:CreateConfig(pfUI.gui.castbar, "施法条槽颜色", C.appearance.castbar, "channelcolor", "color")
+  pfUI.gui:CreateConfig(pfUI.gui.castbar, "隐藏系统施法条", C.castbar.player, "hide_blizz", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.castbar, "隐藏玩家施法条", C.castbar.player, "hide_pfui", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.castbar, "隐藏目标施法条", C.castbar.target, "hide_pfui", "checkbox")
 
   -- chat
   pfUI.gui.chat = pfUI.gui:CreateConfigTab("对话窗口")
-  pfUI.gui:CreateConfig(pfUI.gui.chat, "启用 \"China Chat\" 聊天窗口", pfUI_config.chat.right, "enable", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.chat, "文字输入框宽度", pfUI_config.chat.text, "input_width")
-  pfUI.gui:CreateConfig(pfUI.gui.chat, "文字输入框高度", pfUI_config.chat.text, "input_height")
-  pfUI.gui:CreateConfig(pfUI.gui.chat, "对话框显示时间戳", pfUI_config.chat.text, "time", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.chat, "时间戳格式", pfUI_config.chat.text, "timeformat")
-  pfUI.gui:CreateConfig(pfUI.gui.chat, "时间戳括弧", pfUI_config.chat.text, "timebracket")
-  pfUI.gui:CreateConfig(pfUI.gui.chat, "时间戳颜色", pfUI_config.chat.text, "timecolor", "color")
-  pfUI.gui:CreateConfig(pfUI.gui.chat, "用职业颜色区分已知玩家", pfUI_config.chat.text, "classcolor", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.chat, "左侧对话框宽度", pfUI_config.chat.left, "width")
-  pfUI.gui:CreateConfig(pfUI.gui.chat, "左侧对话框高度", pfUI_config.chat.left, "height")
-  pfUI.gui:CreateConfig(pfUI.gui.chat, "右侧对话框宽度", pfUI_config.chat.right, "width")
-  pfUI.gui:CreateConfig(pfUI.gui.chat, "右侧对话框高度", pfUI_config.chat.right, "height")
-  pfUI.gui:CreateConfig(pfUI.gui.chat, "总是显示右聊天窗口", pfUI_config.chat.right, "alwaysshow", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.chat, "将聊天窗口显示为面板", pfUI_config.chat.global, "tabdock", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.chat, "使用自定义聊天窗口颜色", pfUI_config.chat.global, "custombg", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.chat, "对话框背景颜色", pfUI_config.chat.global, "background", "color")
-  pfUI.gui:CreateConfig(pfUI.gui.chat, "对话框边颜色", pfUI_config.chat.global, "border", "color")
-  pfUI.gui:CreateConfig(pfUI.gui.chat, "更改传入密语的布局", pfUI_config.chat.global, "whispermod", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.chat, "密语颜色设置", pfUI_config.chat.global, "whisper", "color")
-  pfUI.gui:CreateConfig(pfUI.gui.chat, "使用粘性聊天（记住最后一个频道）", pfUI_config.chat.global, "sticky", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.chat, "淡出旧的聊天消息", pfUI_config.chat.global, "fadeout", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.chat, "聊天记录淡出时间", pfUI_config.chat.global, "fadetime")
+  pfUI.gui:CreateConfig(pfUI.gui.chat, "启用 \"China Chat\" 聊天窗口", C.chat.right, "enable", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.chat, "文字输入框宽度", C.chat.text, "input_width")
+  pfUI.gui:CreateConfig(pfUI.gui.chat, "文字输入框高度", C.chat.text, "input_height")
+  pfUI.gui:CreateConfig(pfUI.gui.chat, "对话框显示时间戳", C.chat.text, "time", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.chat, "时间戳格式", C.chat.text, "timeformat")
+  pfUI.gui:CreateConfig(pfUI.gui.chat, "时间戳括弧", C.chat.text, "timebracket")
+  pfUI.gui:CreateConfig(pfUI.gui.chat, "时间戳颜色", C.chat.text, "timecolor", "color")
+  pfUI.gui:CreateConfig(pfUI.gui.chat, "用职业颜色区分已知玩家", C.chat.text, "classcolor", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.chat, "左侧对话框宽度", C.chat.left, "width")
+  pfUI.gui:CreateConfig(pfUI.gui.chat, "左侧对话框高度", C.chat.left, "height")
+  pfUI.gui:CreateConfig(pfUI.gui.chat, "右侧对话框宽度", C.chat.right, "width")
+  pfUI.gui:CreateConfig(pfUI.gui.chat, "右侧对话框高度", C.chat.right, "height")
+  pfUI.gui:CreateConfig(pfUI.gui.chat, "总是显示右聊天窗口", C.chat.right, "alwaysshow", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.chat, "启用聊天窗口", C.chat.global, "tabdock", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.chat, "使用自定义聊天窗口颜色", C.chat.global, "custombg", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.chat, "聊天窗口背景颜色", C.chat.global, "background", "color")
+  pfUI.gui:CreateConfig(pfUI.gui.chat, "聊天窗口框边颜色", C.chat.global, "border", "color")
+  pfUI.gui:CreateConfig(pfUI.gui.chat, "启用传入密语的布局", C.chat.global, "whispermod", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.chat, "密语颜色设置", C.chat.global, "whisper", "color")
+  pfUI.gui:CreateConfig(pfUI.gui.chat, "使用粘性聊天（记住最后一个频道）", C.chat.global, "sticky", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.chat, "淡出旧的聊天消息", C.chat.global, "fadeout", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.chat, "聊天记录淡出时间", C.chat.global, "fadetime")
 
   -- nameplates
   pfUI.gui.nameplates = pfUI.gui:CreateConfigTab("姓名板")
-  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "显示施法条", pfUI_config.nameplates, "showcastbar", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "显示技能名称", pfUI_config.nameplates, "spellname", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "显示Debuff", pfUI_config.nameplates, "showdebuffs", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "取消点击姓名板选取目标", pfUI_config.nameplates, "clickthrough", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "启动右键移动镜头", pfUI_config.nameplates, "rightclick", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "镜头移动速度", pfUI_config.nameplates, "clickthreshold")
-  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "显示敌人职业颜色", pfUI_config.nameplates, "enemyclassc", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "显示友军职业颜色", pfUI_config.nameplates, "friendclassc", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "团队图标大小", pfUI_config.nameplates, "raidiconsize")
-  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "仅显示玩家自己", pfUI_config.nameplates, "players", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "显示生命值", pfUI_config.nameplates, "showhp", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "垂直偏移", pfUI_config.nameplates, "vpos")
+  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "显示施法条", C.nameplates, "showcastbar", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "显示技能名称", C.nameplates, "spellname", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "显示Debuff", C.nameplates, "showdebuffs", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "启用点击", C.nameplates, "clickthrough", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "启动右键移动镜头", C.nameplates, "rightclick", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "镜头移动速度", C.nameplates, "clickthreshold")
+  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "显示敌人职业颜色", C.nameplates, "enemyclassc", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "显示友军职业颜色", C.nameplates, "friendclassc", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "团队图标大小", C.nameplates, "raidiconsize")
+  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "仅显示玩家自己", C.nameplates, "players", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "显示生命值", C.nameplates, "showhp", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "垂直偏移", C.nameplates, "vpos")
 
   -- thirdparty
   pfUI.gui.thirdparty = pfUI.gui:CreateConfigTab("其他插件接口")
-  pfUI.gui:CreateConfig(pfUI.gui.thirdparty, "DPSMate", pfUI_config.thirdparty.dpsmate, "enable", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.thirdparty, "WIM", pfUI_config.thirdparty.wim, "enable", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.thirdparty, "HealComm", pfUI_config.thirdparty.healcomm, "enable", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.thirdparty, "CleanUp", pfUI_config.thirdparty.cleanup, "enable", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.thirdparty, "KLH Threat Meter", pfUI_config.thirdparty.ktm, "enable", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.thirdparty, "DPSMate", C.thirdparty.dpsmate, "enable", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.thirdparty, "WIM", C.thirdparty.wim, "enable", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.thirdparty, "HealComm", C.thirdparty.healcomm, "enable", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.thirdparty, "CleanUp", C.thirdparty.cleanup, "enable", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.thirdparty, "KLH Threat Meter", C.thirdparty.ktm, "enable", "checkbox")
 
   -- modules
   pfUI.gui.modules = pfUI.gui:CreateConfigTab("高级单元")
+  pfUI.gui:CreateConfig(pfUI.gui.modules, "|cffff5555注意：|cffffaaaa如果你不知道该如何禁用，请不要随便设置，有可能会造成插件错误等问题。如发现不可恢复的\n错误，请删除WOW根目录下的WTF文件夹|r", nil, nil, "warning")
   for i,m in pairs(pfUI.modules) do
     if m ~= "gui" then
       -- create disabled entry if not existing and display
       pfUI:UpdateConfig("disabled", nil, m, "0")
-      pfUI.gui:CreateConfig(pfUI.gui.modules, "Disable " .. m, pfUI_config.disabled, m, "checkbox")
+      pfUI.gui:CreateConfig(pfUI.gui.modules, "Disable " .. m, C.disabled, m, "checkbox")
     end
   end
 
@@ -1049,9 +1050,9 @@ pfUI:RegisterModule("gui", function ()
 
   -- Reset Cache
   pfUI.gui.resetCache = pfUI.gui:CreateConfigTab("重置缓存", "bottom", function()
-    pfUI.api:CreateQuestionDialog("你真的要重置缓存吗？",
+    CreateQuestionDialog("你真的要重置缓存吗？",
       function()
-        pfUI_playerDB = {}
+        _G["pfUI_playerDB"] = {}
         this:GetParent():Hide()
         pfUI.gui:Reload()
       end)
@@ -1059,9 +1060,9 @@ pfUI:RegisterModule("gui", function ()
 
   -- Reset Frames
   pfUI.gui.resetFrames = pfUI.gui:CreateConfigTab("重置当前用户设置", "bottom", function()
-    pfUI.api:CreateQuestionDialog("你真的要重置当前用户设置吗？",
+    CreateQuestionDialog("你真的要重置当前用户设置吗？",
       function()
-        pfUI_config["position"] = {}
+        _G["C"]["position"] = {}
         this:GetParent():Hide()
         pfUI.gui:Reload()
       end)
@@ -1069,9 +1070,9 @@ pfUI:RegisterModule("gui", function ()
 
   -- Reset Chat
   pfUI.gui.resetChat = pfUI.gui:CreateConfigTab("重置聊天框设置", "bottom", function()
-    pfUI.api:CreateQuestionDialog("你真的要重置聊天框设置吗？",
+    CreateQuestionDialog("你真的要重置聊天框设置吗？",
       function()
-        pfUI_init = {}
+        _G["pfUI_init"] = {}
         this:GetParent():Hide()
         pfUI.gui:Reload()
       end)
@@ -1079,9 +1080,9 @@ pfUI:RegisterModule("gui", function ()
 
   -- Reset Config
   pfUI.gui.resetConfig = pfUI.gui:CreateConfigTab("复位配置", "bottom", function()
-    pfUI.api:CreateQuestionDialog("您确定要重置您的配置吗？\n这还包括框架位置设置",
+    CreateQuestionDialog("您确定要重置您的配置吗？\n这还包括框架位置设置",
       function()
-        pfUI_config = {}
+        _G["C"] = {}
         pfUI:LoadConfig()
         this:GetParent():Hide()
         pfUI.gui:Reload()
@@ -1090,11 +1091,11 @@ pfUI:RegisterModule("gui", function ()
 
   -- Reset All
   pfUI.gui.resetAll = pfUI.gui:CreateConfigTab("全部重置", "bottom", function()
-    pfUI.api:CreateQuestionDialog("你真的想要重置 |cffffaaaa所有配置|r?\n这包括配置，框架位置，冷却设置，\n 缓存文件, 个人设置等一切配置！",
+    CreateQuestionDialog("你真的想要重置 |cffffaaaa所有配置|r?\n这包括配置，框架位置，冷却设置，\n 缓存文件, 个人设置等一切配置！",
       function()
-        pfUI_init = {}
-        pfUI_config = {}
-        pfUI_playerDB = {}
+        _G["pfUI_init"] = {}
+        _G["C"] = {}
+        _G["pfUI_playerDB"] = {}
         pfUI_profiles = {}
         pfUI:LoadConfig()
         this:GetParent():Hide()

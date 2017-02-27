@@ -1,7 +1,7 @@
 pfUI:RegisterModule("infight", function ()
-  local default_border = pfUI_config.appearance.border.default
-  if pfUI_config.appearance.border.unitframes ~= "-1" then
-    default_border = pfUI_config.appearance.border.unitframes
+  local default_border = C.appearance.border.default
+  if C.appearance.border.unitframes ~= "-1" then
+    default_border = C.appearance.border.unitframes
   end
 
   -- build the frame
@@ -54,7 +54,7 @@ pfUI:RegisterModule("infight", function ()
         end
       end
 
-      if pfUI_config.appearance.infight.screen == "1" and pfUI.infight.screen then
+      if C.appearance.infight.screen == "1" and pfUI.infight.screen then
         if UnitAffectingCombat("player") then
           pfUI.infight.screen:Show()
           pfUI.infight.screen:SetBackdropBorderColor(1,0.2+pfUI.infight.fadeValue, pfUI.infight.fadeValue, 1-pfUI.infight.fadeValue);
@@ -65,7 +65,7 @@ pfUI:RegisterModule("infight", function ()
     end
   end)
 
-  if pfUI_config.appearance.infight.screen == "1" then
+  if C.appearance.infight.screen == "1" then
     pfUI.infight.screen = CreateFrame("Frame", "pfUICombatScreen", UIParent)
     pfUI.infight.screen:SetFrameStrata("BACKGROUND")
     pfUI.infight.screen:SetBackdrop(pfUI.infight.backdrop)
@@ -73,16 +73,16 @@ pfUI:RegisterModule("infight", function ()
     pfUI.infight.screen:Hide()
   end
 
-  if pfUI_config.appearance.infight.common == "1" then
+  if C.appearance.infight.common == "1" then
     pfUI.infight:CreateGlow("player")
     pfUI.infight:CreateGlow("target")
     pfUI.infight:CreateGlow("targettarget")
     pfUI.infight:CreateGlow("pet")
   end
 
-  if pfUI_config.appearance.infight.group == "1" then
+  if C.appearance.infight.group == "1" then
     for i=1,4 do
-      pfUI.infight:CreateGlow("party" .. i, getglobal("pfGroup" .. i))
+      pfUI.infight:CreateGlow("party" .. i, _G["pfGroup" .. i])
     end
   end
 end)

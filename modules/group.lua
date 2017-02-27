@@ -1,19 +1,19 @@
 pfUI:RegisterModule("group", function ()
   -- do not go further on disabled UFs
-  if pfUI_config.unitframes.disable == "1" then return end
+  if C.unitframes.disable == "1" then return end
 
-  local default_border = pfUI_config.appearance.border.default
-  if pfUI_config.appearance.border.groupframes ~= "-1" then
-    default_border = pfUI_config.appearance.border.groupframes
+  local default_border = C.appearance.border.default
+  if C.appearance.border.groupframes ~= "-1" then
+    default_border = C.appearance.border.groupframes
   end
 
-  local spacing = pfUI_config.unitframes.group.pspace
+  local spacing = C.unitframes.group.pspace
 
   -- hide blizzard group frames
   for i=1, 4 do
-    if getglobal("PartyMemberFrame" .. i) then
-      getglobal("PartyMemberFrame" .. i):Hide()
-      getglobal("PartyMemberFrame" .. i).Show = function () return end
+    if _G["PartyMemberFrame" .. i] then
+      _G["PartyMemberFrame" .. i]:Hide()
+      _G["PartyMemberFrame" .. i].Show = function () return end
     end
   end
 
@@ -35,7 +35,7 @@ pfUI:RegisterModule("group", function ()
     PartyMemberBackground:Hide()
 
     for i=1, 4 do
-      if pfUI_config.unitframes.group.hide_in_raid == "1" and UnitInRaid("player") then
+      if C.unitframes.group.hide_in_raid == "1" and UnitInRaid("player") then
         pfUI.uf.group[i]:Hide()
       else
         if event == "RAID_TARGET_UPDATE" or event == "PLAYER_ENTERING_WORLD" or event == "PARTY_MEMBERS_CHANGED" then
@@ -87,7 +87,7 @@ pfUI:RegisterModule("group", function ()
     pfUI.uf.group[i]:SetWidth(175)
     pfUI.uf.group[i]:SetHeight(40 + 2*default_border + spacing)
     pfUI.uf.group[i]:SetPoint("TOPLEFT", 5, -5 - ((i-1)*55))
-    pfUI.api:UpdateMovable(pfUI.uf.group[i])
+    UpdateMovable(pfUI.uf.group[i])
     pfUI.uf.group[i]:Hide()
     pfUI.uf.group[i].id = i
     pfUI.uf.group[i].label = "party"
@@ -97,7 +97,7 @@ pfUI:RegisterModule("group", function ()
     pfUI.uf.group[i].hp:SetWidth(175)
     pfUI.uf.group[i].hp:SetHeight(30)
     pfUI.uf.group[i].hp:SetPoint("TOP", 0, 0)
-    pfUI.api:CreateBackdrop(pfUI.uf.group[i].hp, default_border)
+    CreateBackdrop(pfUI.uf.group[i].hp, default_border)
 
     pfUI.uf.group[i].hp.bar = CreateFrame("StatusBar", nil, pfUI.uf.group[i].hp)
     pfUI.uf.group[i].hp.bar:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
@@ -108,17 +108,17 @@ pfUI:RegisterModule("group", function ()
     pfUI.uf.group[i].power:SetWidth(175)
     pfUI.uf.group[i].power:SetHeight(10)
     pfUI.uf.group[i].power:SetPoint("BOTTOM", 0, 0)
-    pfUI.api:CreateBackdrop(pfUI.uf.group[i].power, default_border)
+    CreateBackdrop(pfUI.uf.group[i].power, default_border)
 
     pfUI.uf.group[i].power.bar = CreateFrame("StatusBar", nil, pfUI.uf.group[i].power)
     pfUI.uf.group[i].power.bar:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
     pfUI.uf.group[i].power.bar:SetAllPoints(pfUI.uf.group[i].power)
     pfUI.uf.group[i].power.bar:SetMinMaxValues(0, 100)
 
-    pfUI.uf:CreatePortrait(pfUI.uf.group[i], pfUI_config.unitframes.group.portrait, spacing)
+    pfUI.uf:CreatePortrait(pfUI.uf.group[i], C.unitframes.group.portrait, spacing)
 
     pfUI.uf.group[i].caption = pfUI.uf.group[i]:CreateFontString("Status", "OVERLAY", "GameFontNormal")
-    pfUI.uf.group[i].caption:SetFont(pfUI.font_square, pfUI_config.global.font_size, "OUTLINE")
+    pfUI.uf.group[i].caption:SetFont(pfUI.font_square, C.global.font_size, "OUTLINE")
     pfUI.uf.group[i].caption:ClearAllPoints()
     pfUI.uf.group[i].caption:SetParent(pfUI.uf.group[i].hp.bar)
     pfUI.uf.group[i].caption:SetPoint("LEFT",pfUI.uf.group[i].hp.bar, "LEFT", 10, 0)
