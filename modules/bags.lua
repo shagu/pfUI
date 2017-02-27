@@ -82,7 +82,9 @@ pfUI:RegisterModule("bags", function ()
         if bag == -2 and pfUI.bag.showKeyring == true then bagsize = GetKeyRingSize() end
         for slot=1, bagsize do
           if pfUI.bags[bag].slots[slot].frame.hasItem then
-            ContainerFrame_UpdateCooldown(bag, pfUI.bags[bag].slots[slot].frame)
+            if _G[pfUI.bags[bag].slots[slot].frame:GetName() .. "Cooldown"] then
+              ContainerFrame_UpdateCooldown(bag, pfUI.bags[bag].slots[slot].frame)
+            end
           end
         end
       end
