@@ -1,7 +1,7 @@
 pfUI:RegisterModule("mouseover", function ()
   pfUI.uf.mouseover = CreateFrame("Frame", "pfMouseOver", UIParent)
 
-  SLASH_PFCAST1, SLASH_LPFCAST2 = "/pfcast", "/pfmouse"
+  _G.SLASH_PFCAST1, _G.SLASH_LPFCAST2 = "/pfcast", "/pfmouse"
   function SlashCmdList.PFCAST(msg, editbox)
     local oldt = true
     local unit = "mouseover"

@@ -22,7 +22,7 @@ function pfUI.uf:AddIcon(frame, pos, icon)
     end
   end
   frame.icon[pos].tex:SetTexture(icon)
-  pfUI.api:CreateBackdrop(frame.icon[pos], nil, true)
+  pfUI.api.CreateBackdrop(frame.icon[pos], nil, true)
   frame.icon[pos]:Show()
 end
 
@@ -479,7 +479,7 @@ function pfUI.uf:CreatePortrait(frame, pos, spacing)
     frame.power:ClearAllPoints()
     frame.power:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", 0, 0)
 
-    pfUI.api:CreateBackdrop(frame.portrait)
+    pfUI.api.CreateBackdrop(frame.portrait)
   elseif pos == "right" then
     frame.portrait:SetWidth(frame:GetHeight())
     frame.portrait:SetHeight(frame:GetHeight())
@@ -491,7 +491,7 @@ function pfUI.uf:CreatePortrait(frame, pos, spacing)
     frame.power:ClearAllPoints()
     frame.power:SetPoint("BOTTOMLEFT", frame, "BOTTOMLEFT", 0, 0)
 
-    pfUI.api:CreateBackdrop(frame.portrait)
+    pfUI.api.CreateBackdrop(frame.portrait)
   end
 end
 
