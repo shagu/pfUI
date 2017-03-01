@@ -1064,7 +1064,7 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.resetFrames = pfUI.gui:CreateConfigTab("Reset Positions", "bottom", function()
     CreateQuestionDialog("Do you really want to reset the Frame Positions?",
       function()
-        _G["C"]["position"] = {}
+        _G["pfUI_config"]["position"] = {}
         this:GetParent():Hide()
         pfUI.gui:Reload()
       end)
@@ -1084,7 +1084,7 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.resetConfig = pfUI.gui:CreateConfigTab("Reset Config", "bottom", function()
     CreateQuestionDialog("Do you really want to reset your configuration?\nThis also includes frame positions",
       function()
-        _G["C"] = {}
+        _G["pfUI_config"] = {}
         pfUI:LoadConfig()
         this:GetParent():Hide()
         pfUI.gui:Reload()
@@ -1096,7 +1096,7 @@ pfUI:RegisterModule("gui", function ()
     CreateQuestionDialog("Do you really want to reset |cffffaaaaEVERYTHING|r?\nThis includes configuration, frame positions, firstrun settings,\n player cache, profiles and just EVERYTHING!",
       function()
         _G["pfUI_init"] = {}
-        _G["C"] = {}
+        _G["pfUI_config"] = {}
         _G["pfUI_playerDB"] = {}
         pfUI_profiles = {}
         pfUI:LoadConfig()
