@@ -499,16 +499,24 @@ pfUI:RegisterModule("actionbar", function ()
       border:SetTexture(0,1,0,.75)
 
       local hotkey = _G[actionbutton..i..'HotKey']
-      hotkey:SetAllPoints(button)
-      hotkey:SetFont(pfUI.font_square, C.global.font_size -2, "OUTLINE")
-      hotkey:SetJustifyH("RIGHT")
-      hotkey:SetJustifyV("TOP")
+      if C.bars.showkeybind == "1" then
+        hotkey:SetAllPoints(button)
+        hotkey:SetFont(pfUI.font_square, C.global.font_size -2, "OUTLINE")
+        hotkey:SetJustifyH("RIGHT")
+        hotkey:SetJustifyV("TOP")
+      else
+        hotkey:SetAlpha(0)
+      end
 
       local name = _G[actionbutton..i..'Name']
-      name:SetAllPoints(button)
-      name:SetFont(pfUI.font_square, C.global.font_size -2, "OUTLINE")
-      name:SetJustifyH("CENTER")
-      name:SetJustifyV("BOTTOM")
+      if C.bars.showmacro == "1" then
+        name:SetAllPoints(button)
+        name:SetFont(pfUI.font_square, C.global.font_size -2, "OUTLINE")
+        name:SetJustifyH("CENTER")
+        name:SetJustifyV("BOTTOM")
+      else
+        name:SetAlpha(0)
+      end
     end
   end
 end)

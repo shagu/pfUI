@@ -916,6 +916,8 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui:CreateConfig(pfUI.gui.bar, "Enable Action Bar Backgrounds", C.bars, "background", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.bar, "Enable Range Display On Hotkeys", C.bars, "glowrange", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.bar, "Range Display Color", C.bars, "rangecolor", "color")
+  pfUI.gui:CreateConfig(pfUI.gui.bar, "Show Macro Text", C.bars, "showmacro", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.bar, "Show Hotkey Text", C.bars, "showkeybind", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.bar, "Enable Range Based Auto Paging (Hunter)", C.bars, "hunterbar", "checkbox")
 
   pfUI.gui:CreateConfig(pfUI.gui.bar, "Seconds Until Action Bars Autohide", C.bars, "hide_time")
