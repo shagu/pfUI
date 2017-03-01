@@ -55,7 +55,7 @@ pfUI:RegisterModule("cooldown", function ()
   end
 
   -- hook
-  Hook("CooldownFrame_SetTimer", function(this, start, duration, enable)
+  hooksecurefunc("CooldownFrame_SetTimer", function(this, start, duration, enable)
     -- realign guessed cooldown frames
     if this:GetParent() and this:GetParent():GetWidth() / 36 > 0 then
       this:SetScale(this:GetParent():GetWidth() / 36)

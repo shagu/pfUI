@@ -5,7 +5,7 @@ pfUI:RegisterModule("autoshift", function ()
   pfUI.autoshift.lastError = ""
   pfUI.autoshift.CastSpellByName = _G["CastSpellByName"]
 
-  Hook("CastSpell", function(spellId, spellbookTabNum)
+  hooksecurefunc("CastSpell", function(spellId, spellbookTabNum)
     if pfUI.autoshift.lastError == L["stances"]['wantBattleStance'] then
       pfUI.autoshift.CastSpellByName(L["stances"]['BattleStance'])
     elseif pfUI.autoshift.lastError == L["stances"]['wantBattleDefStance'] then
@@ -20,7 +20,7 @@ pfUI:RegisterModule("autoshift", function ()
     pfUI.autoshift.lastError = ""
   end)
 
-  Hook("CastSpellByName", function(spellName, onSelf)
+  hooksecurefunc("CastSpellByName", function(spellName, onSelf)
     if pfUI.autoshift.lastError == L["stances"]['wantBattleStance'] then
       pfUI.autoshift.CastSpellByName(L["stances"]['BattleStance'])
     elseif pfUI.autoshift.lastError == L["stances"]['wantBattleDefStance'] then
@@ -35,7 +35,7 @@ pfUI:RegisterModule("autoshift", function ()
     pfUI.autoshift.lastError = ""
   end)
 
-  Hook("UseAction", function(slot, checkCursor, onSelf)
+  hooksecurefunc("UseAction", function(slot, checkCursor, onSelf)
     if pfUI.autoshift.lastError == L["stances"]['wantBattleStance'] then
       pfUI.autoshift.CastSpellByName(L["stances"]['BattleStance'])
     elseif pfUI.autoshift.lastError == L["stances"]['wantBattleDefStance'] then

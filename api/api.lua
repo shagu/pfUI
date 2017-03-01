@@ -47,7 +47,7 @@ end
 -- 'func'       [function]         function containing the custom code
 -- 'append'     [bool]             optional variable, used to append custom
 --                                 code instead of prepending it
-function pfUI.api.Hook(name, func, append)
+function pfUI.api.hooksecurefunc(name, func, append)
   if not _G[name] then return end
 
   pfUI.hooks[tostring(func)] = {}

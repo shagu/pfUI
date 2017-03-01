@@ -118,20 +118,20 @@ pfUI:RegisterModule("castbar", function ()
     end
   end
 
-  Hook("CastSpell", function(id, bookType)
+  hooksecurefunc("CastSpell", function(id, bookType)
     local spellName = GetSpellName(id, bookType)
     if pfUI.castbar.player[spellName] then
       pfUI.castbar.player[spellName](true)
     end
   end, true)
 
-  Hook("CastSpellByName", function(spellName, target)
+  hooksecurefunc("CastSpellByName", function(spellName, target)
     if pfUI.castbar.player[spellName] then
       pfUI.castbar.player[spellName](true)
     end
   end, true)
 
-  Hook("UseAction", function(slot, target, button)
+  hooksecurefunc("UseAction", function(slot, target, button)
     if GetActionText(slot) or not IsCurrentAction(slot) then return end
     scanner:ClearLines()
     scanner:SetAction(slot)

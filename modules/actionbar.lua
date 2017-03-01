@@ -34,18 +34,18 @@ pfUI:RegisterModule("actionbar", function ()
     end
   end
 
-  Hook("ShowBonusActionBar", function()
+  hooksecurefunc("ShowBonusActionBar", function()
     if pfActionBar then pfActionBar:Hide() end
     if pfBonusBar then pfBonusBar:Show() end
   end)
 
-  Hook("HideBonusActionBar", function()
+  hooksecurefunc("HideBonusActionBar", function()
     if pfActionBar then pfActionBar:Show() end
     if pfBonusBar then pfBonusBar:Hide() end
   end)
 
   if C.bars.glowrange == "1" then
-    Hook("ActionButton_OnUpdate", function(elapsed)
+    hooksecurefunc("ActionButton_OnUpdate", function(elapsed)
       -- Handle range indicator
       if ( this.rangeTimer ) then
         this.rangeTimer = this.rangeTimer - elapsed
