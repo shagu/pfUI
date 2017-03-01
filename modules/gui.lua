@@ -825,6 +825,7 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "Bags Border Size", C.appearance.border, "bags")
 
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "Cooldown", nil, nil, "header")
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Cooldown Color (3 Sec)", C.appearance.cd, "seccolor", "color")
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "Cooldown Color (Minutes)", C.appearance.cd, "mincolor", "color")
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "Cooldown Color (Hours)", C.appearance.cd, "hourcolor", "color")
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "Cooldown Color (Days)", C.appearance.cd, "daycolor", "color")

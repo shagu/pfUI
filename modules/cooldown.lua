@@ -30,7 +30,9 @@ pfUI:RegisterModule("cooldown", function ()
       if remaining >= 0 then
         local r, g, b, a = 1, 1, 1, 1
         local unit = ""
-        local color = "|cffffffff"
+        if remaining <= 3 then
+          r,g,b,a = strsplit(",", C.appearance.cd.seccolor)
+        end
         if remaining > 99 then
           remaining = remaining / 60
           unit = "m"
