@@ -143,7 +143,7 @@ pfUI:RegisterModule("roll", function ()
     end
   end)
 
-  function GroupLootFrame_OpenNewFrame(id, rollTime)
+  function _G.GroupLootFrame_OpenNewFrame(id, rollTime)
     for i=1,4 do
       if not pfUI.roll.frames[i]:IsVisible() then
         pfUI.roll.frames[i].rollID = id
