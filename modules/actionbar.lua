@@ -34,18 +34,18 @@ pfUI:RegisterModule("actionbar", function ()
     end
   end
 
-  Hook("ShowBonusActionBar", function()
+  hooksecurefunc("ShowBonusActionBar", function()
     if pfActionBar then pfActionBar:Hide() end
     if pfBonusBar then pfBonusBar:Show() end
   end)
 
-  Hook("HideBonusActionBar", function()
+  hooksecurefunc("HideBonusActionBar", function()
     if pfActionBar then pfActionBar:Show() end
     if pfBonusBar then pfBonusBar:Hide() end
   end)
 
   if C.bars.glowrange == "1" then
-    Hook("ActionButton_OnUpdate", function(elapsed)
+    hooksecurefunc("ActionButton_OnUpdate", function(elapsed)
       -- Handle range indicator
       if ( this.rangeTimer ) then
         this.rangeTimer = this.rangeTimer - elapsed
@@ -495,19 +495,28 @@ pfUI:RegisterModule("actionbar", function ()
       icon:SetTexCoord(.08, .92, .08, .92)
 
       local border = _G[actionbutton..i..'Border']
-      border:SetTexture(0,0,0,0)
+      border:SetAllPoints(button)
+      border:SetTexture(0,1,0,.75)
 
       local hotkey = _G[actionbutton..i..'HotKey']
-      hotkey:SetAllPoints(button)
-      hotkey:SetFont(pfUI.font_square, C.global.font_size -2, "OUTLINE")
-      hotkey:SetJustifyH("RIGHT")
-      hotkey:SetJustifyV("TOP")
+      if C.bars.showkeybind == "1" then
+        hotkey:SetAllPoints(button)
+        hotkey:SetFont(pfUI.font_square, C.global.font_size -2, "OUTLINE")
+        hotkey:SetJustifyH("RIGHT")
+        hotkey:SetJustifyV("TOP")
+      else
+        hotkey:SetAlpha(0)
+      end
 
       local name = _G[actionbutton..i..'Name']
-      name:SetAllPoints(button)
-      name:SetFont(pfUI.font_square, C.global.font_size -2, "OUTLINE")
-      name:SetJustifyH("CENTER")
-      name:SetJustifyV("BOTTOM")
+      if C.bars.showmacro == "1" then
+        name:SetAllPoints(button)
+        name:SetFont(pfUI.font_square, C.global.font_size -2, "OUTLINE")
+        name:SetJustifyH("CENTER")
+        name:SetJustifyV("BOTTOM")
+      else
+        name:SetAlpha(0)
+      end
     end
   end
 end)

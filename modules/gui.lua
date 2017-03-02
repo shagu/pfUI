@@ -825,6 +825,7 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "背包边框大小", C.appearance.border, "bags")
 
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "冷却时间设置", nil, nil, "header")
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "冷却时间颜色（3秒）", C.appearance.cd, "seccolor", "color")
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "冷却时间颜色（分）", C.appearance.cd, "mincolor", "color")
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "冷却时间颜色（时）", C.appearance.cd, "hourcolor", "color")
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "冷却时间颜色（天）", C.appearance.cd, "daycolor", "color")
@@ -916,6 +917,8 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui:CreateConfig(pfUI.gui.bar, "显示动作条背景图案", C.bars, "background", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.bar, "使用颜色指示技能使用距离", C.bars, "glowrange", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.bar, "技能使用距离颜色", C.bars, "rangecolor", "color")
+  pfUI.gui:CreateConfig(pfUI.gui.bar, "显示宏文本", C.bars, "showmacro", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.bar, "显示热键文本", C.bars, "showkeybind", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.bar, "启用基于范围的自动分页（猎人）", C.bars, "hunterbar", "checkbox")
 
   pfUI.gui:CreateConfig(pfUI.gui.bar, "自动隐藏动作条延时", C.bars, "hide_time")
@@ -927,7 +930,7 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui:CreateConfig(pfUI.gui.bar, "自动隐藏姿态条", C.bars, "hide_shapeshift", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.bar, "自动隐藏宠物动作条", C.bars, "hide_pet", "checkbox")
 
-  pfUI.gui:CreateConfig(pfUI.gui.bar, "动作条布局", nil, nil, "header")
+  pfUI.gui:CreateConfig(pfUI.gui.bar, "Action Bar Layouts", nil, nil, "header")
   local values = BarLayoutOptions(NUM_ACTIONBAR_BUTTONS)
   pfUI.gui:CreateConfig(pfUI.gui.bar, "主动作条", C.bars.actionmain, "formfactor", "dropdown", values)
   pfUI.gui:CreateConfig(pfUI.gui.bar, "主动作条上方动作条", C.bars.bottomleft, "formfactor", "dropdown", values)
@@ -1062,7 +1065,7 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.resetFrames = pfUI.gui:CreateConfigTab("重置当前用户设置", "bottom", function()
     CreateQuestionDialog("你真的要重置当前用户设置吗？",
       function()
-        _G["C"]["position"] = {}
+        _G["pfUI_config"]["position"] = {}
         this:GetParent():Hide()
         pfUI.gui:Reload()
       end)
@@ -1082,7 +1085,7 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.resetConfig = pfUI.gui:CreateConfigTab("复位配置", "bottom", function()
     CreateQuestionDialog("您确定要重置您的配置吗？\n这还包括框架位置设置",
       function()
-        _G["C"] = {}
+        _G["pfUI_config"] = {}
         pfUI:LoadConfig()
         this:GetParent():Hide()
         pfUI.gui:Reload()
@@ -1094,7 +1097,7 @@ pfUI:RegisterModule("gui", function ()
     CreateQuestionDialog("你真的想要重置 |cffffaaaa所有配置|r?\n这包括配置，框架位置，冷却设置，\n 缓存文件, 个人设置等一切配置！",
       function()
         _G["pfUI_init"] = {}
-        _G["C"] = {}
+        _G["pfUI_config"] = {}
         _G["pfUI_playerDB"] = {}
         pfUI_profiles = {}
         pfUI:LoadConfig()

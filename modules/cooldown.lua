@@ -30,7 +30,9 @@ pfUI:RegisterModule("cooldown", function ()
       if remaining >= 0 then
         local r, g, b, a = 1, 1, 1, 1
         local unit = ""
-        local color = "|cffffffff"
+        if remaining <= 3 then
+          r,g,b,a = strsplit(",", C.appearance.cd.seccolor)
+        end
         if remaining > 99 then
           remaining = remaining / 60
           unit = "m"
@@ -55,7 +57,7 @@ pfUI:RegisterModule("cooldown", function ()
   end
 
   -- hook
-  Hook("CooldownFrame_SetTimer", function(this, start, duration, enable)
+  hooksecurefunc("CooldownFrame_SetTimer", function(this, start, duration, enable)
     -- realign guessed cooldown frames
     if this:GetParent() and this:GetParent():GetWidth() / 36 > 0 then
       this:SetScale(this:GetParent():GetWidth() / 36)
