@@ -253,6 +253,14 @@ pfUI:RegisterModule("target", function ()
   pfUI.uf.target.hp.bar:SetAllPoints(pfUI.uf.target.hp)
   pfUI.uf.target.hp.bar:SetMinMaxValues(0, 100)
 
+  if C.unitframes.custombg == "1" then
+    local cr, cg, cb, ca = strsplit(",", C.unitframes.custombgcolor)
+    cr, cg, cb = tonumber(cr), tonumber(cg), tonumber(cb)
+    pfUI.uf.target.hp.bar.texture = pfUI.uf.target.hp.bar:CreateTexture(nil,"BACKGROUND")
+    pfUI.uf.target.hp.bar.texture:SetTexture(cr,cg,cb,ca)
+    pfUI.uf.target.hp.bar.texture:SetAllPoints(pfUI.uf.target.hp.bar)
+  end
+
   pfUI.uf.target.hp.leaderIcon = CreateFrame("Frame",nil,pfUI.uf.target.hp.bar)
   pfUI.uf.target.hp.leaderIcon:SetWidth(10)
   pfUI.uf.target.hp.leaderIcon:SetHeight(10)

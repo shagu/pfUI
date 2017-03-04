@@ -104,6 +104,14 @@ pfUI:RegisterModule("group", function ()
     pfUI.uf.group[i].hp.bar:SetAllPoints(pfUI.uf.group[i].hp)
     pfUI.uf.group[i].hp.bar:SetMinMaxValues(0, 100)
 
+    if C.unitframes.custombg == "1" then
+      local cr, cg, cb, ca = strsplit(",", C.unitframes.custombgcolor)
+      cr, cg, cb = tonumber(cr), tonumber(cg), tonumber(cb)
+      pfUI.uf.group[i].hp.bar.texture = pfUI.uf.group[i].hp.bar:CreateTexture(nil,"BACKGROUND")
+      pfUI.uf.group[i].hp.bar.texture:SetTexture(cr,cg,cb,ca)
+      pfUI.uf.group[i].hp.bar.texture:SetAllPoints(pfUI.uf.group[i].hp.bar)
+    end
+
     pfUI.uf.group[i].power = CreateFrame("Frame",nil, pfUI.uf.group[i])
     pfUI.uf.group[i].power:SetWidth(175)
     pfUI.uf.group[i].power:SetHeight(10)

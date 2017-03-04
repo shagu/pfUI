@@ -150,6 +150,14 @@ pfUI:RegisterModule("pet", function ()
   pfUI.uf.pet.hp.bar:SetAllPoints(pfUI.uf.pet.hp)
   pfUI.uf.pet.hp.bar:SetMinMaxValues(0, 100)
 
+  if C.unitframes.custombg == "1" then
+    local cr, cg, cb, ca = strsplit(",", C.unitframes.custombgcolor)
+    cr, cg, cb = tonumber(cr), tonumber(cg), tonumber(cb)
+    pfUI.uf.pet.hp.bar.texture = pfUI.uf.pet.hp.bar:CreateTexture(nil,"BACKGROUND")
+    pfUI.uf.pet.hp.bar.texture:SetTexture(cr,cg,cb,ca)
+    pfUI.uf.pet.hp.bar.texture:SetAllPoints(pfUI.uf.pet.hp.bar)
+  end
+
   pfUI.uf.pet.hp.raidIcon = CreateFrame("Frame",nil,pfUI.uf.pet.hp)
   pfUI.uf.pet.hp.raidIcon:SetFrameStrata("MEDIUM")
   pfUI.uf.pet.hp.raidIcon:SetParent(pfUI.uf.pet.hp.bar)

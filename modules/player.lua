@@ -213,6 +213,14 @@ pfUI:RegisterModule("player", function ()
   pfUI.uf.player.hp.bar:SetAllPoints(pfUI.uf.player.hp)
   pfUI.uf.player.hp.bar:SetMinMaxValues(0, 100)
 
+  if C.unitframes.custombg == "1" then
+    local cr, cg, cb, ca = strsplit(",", C.unitframes.custombgcolor)
+    cr, cg, cb = tonumber(cr), tonumber(cg), tonumber(cb)
+    pfUI.uf.player.hp.bar.texture = pfUI.uf.player.hp.bar:CreateTexture(nil,"BACKGROUND")
+    pfUI.uf.player.hp.bar.texture:SetTexture(cr,cg,cb,ca)
+    pfUI.uf.player.hp.bar.texture:SetAllPoints(pfUI.uf.player.hp.bar)
+  end
+
   pfUI.uf.player.hp.leaderIcon = CreateFrame("Frame",nil,pfUI.uf.player.hp.bar)
   pfUI.uf.player.hp.leaderIcon:SetWidth(10)
   pfUI.uf.player.hp.leaderIcon:SetHeight(10)
