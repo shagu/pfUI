@@ -134,6 +134,14 @@ pfUI:RegisterModule("targettarget", function ()
   pfUI.uf.targettarget.hp.bar:SetAllPoints(pfUI.uf.targettarget.hp)
   pfUI.uf.targettarget.hp.bar:SetMinMaxValues(0, 100)
 
+  if C.unitframes.custombg == "1" then
+    local cr, cg, cb, ca = strsplit(",", C.unitframes.custombgcolor)
+    cr, cg, cb = tonumber(cr), tonumber(cg), tonumber(cb)
+    pfUI.uf.targettarget.hp.bar.texture = pfUI.uf.targettarget.hp.bar:CreateTexture(nil,"BACKGROUND")
+    pfUI.uf.targettarget.hp.bar.texture:SetTexture(cr,cg,cb,ca)
+    pfUI.uf.targettarget.hp.bar.texture:SetAllPoints(pfUI.uf.targettarget.hp.bar)
+  end
+
   pfUI.uf.targettarget.hp.raidIcon = CreateFrame("Frame",nil,pfUI.uf.targettarget.hp)
   pfUI.uf.targettarget.hp.raidIcon:SetFrameStrata("MEDIUM")
   pfUI.uf.targettarget.hp.raidIcon:SetParent(pfUI.uf.targettarget.hp.bar)

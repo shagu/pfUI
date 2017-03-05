@@ -59,6 +59,14 @@ pfUI:RegisterModule("raid", function ()
       pfUI.uf.raid[i].hp.bar:SetAllPoints(pfUI.uf.raid[i].hp)
       pfUI.uf.raid[i].hp.bar:SetMinMaxValues(0, 100)
 
+      if C.unitframes.custombg == "1" then
+        local cr, cg, cb, ca = strsplit(",", C.unitframes.custombgcolor)
+        cr, cg, cb = tonumber(cr), tonumber(cg), tonumber(cb)
+        pfUI.uf.raid[i].hp.bar.texture = pfUI.uf.raid[i].hp.bar:CreateTexture(nil,"BACKGROUND")
+        pfUI.uf.raid[i].hp.bar.texture:SetTexture(cr,cg,cb,ca)
+        pfUI.uf.raid[i].hp.bar.texture:SetAllPoints(pfUI.uf.raid[i].hp.bar)
+      end
+
       pfUI.uf.raid[i].power = CreateFrame("Frame",nil, pfUI.uf.raid[i])
       pfUI.uf.raid[i].power:SetPoint("BOTTOM", 0, 0)
       pfUI.uf.raid[i].power:SetWidth(50)
