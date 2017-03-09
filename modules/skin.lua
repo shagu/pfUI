@@ -14,6 +14,7 @@ pfUI:RegisterModule("skin", function ()
     "GameMenuButtonUIOptions",
     "GameMenuButtonKeybindings",
     "GameMenuButtonMacros",
+--    "GameMenuButtonAddOns",
 --    "GameMenuButtonMoveAnything",
     "GameMenuButtonLogout",
     "GameMenuButtonQuit",
