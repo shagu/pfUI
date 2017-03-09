@@ -41,7 +41,7 @@ function pfUI.api.round(input, places)
   end
 end
 
--- [ Hook ]
+-- [ hooksecurefunc ]
 -- Hooks a global function and injects custom code
 -- 'name'       [string]           name of the function that shold be hooked
 -- 'func'       [function]         function containing the custom code
@@ -55,14 +55,14 @@ function pfUI.api.hooksecurefunc(name, func, append)
   pfUI.hooks[tostring(func)]["new"] = func
 
   if append then
-    pfUI.hooks[tostring(func)]["function"] = function(...)
-      pfUI.hooks[tostring(func)]["old"](unpack(arg))
-      pfUI.hooks[tostring(func)]["new"](unpack(arg))
+    pfUI.hooks[tostring(func)]["function"] = function(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10)
+      pfUI.hooks[tostring(func)]["old"](a1, a2, a3, a4, a5, a6, a7, a8, a9, a10)
+      pfUI.hooks[tostring(func)]["new"](a1, a2, a3, a4, a5, a6, a7, a8, a9, a10)
     end
   else
-    pfUI.hooks[tostring(func)]["function"] = function(...)
-      pfUI.hooks[tostring(func)]["new"](unpack(arg))
-      pfUI.hooks[tostring(func)]["old"](unpack(arg))
+    pfUI.hooks[tostring(func)]["function"] = function(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10)
+      pfUI.hooks[tostring(func)]["new"](a1, a2, a3, a4, a5, a6, a7, a8, a9, a10)
+      pfUI.hooks[tostring(func)]["old"](a1, a2, a3, a4, a5, a6, a7, a8, a9, a10)
     end
   end
 
