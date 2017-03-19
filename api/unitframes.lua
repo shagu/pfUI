@@ -152,6 +152,20 @@ function pfUI.uf:SetupBuffFilter()
     -- Battle Shout
     table.insert(pfUI.uf.buffs, "interface\\icons\\ability_warrior_battleshout")
   end
+
+
+  -- [[ MAGE ]]
+  if myclass == "MAGE" and pfUI_config.unitframes.raid.buffs_buffs == "1" then
+    -- Arcane Intellect
+    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_holy_magicalsentry")
+    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_holy_arcaneintellect")
+
+    -- Dampen Magic
+    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_nature_abolishmagic")
+
+    -- Amplify Magic
+    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_holy_flashheal")
+  end
 end
 
 function pfUI.uf:ClickAction(button)
