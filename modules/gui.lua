@@ -841,7 +841,8 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "Enable Item Quality Color For Equipment Only", C.appearance.bags, "borderonlygear", "checkbox")
 
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "Loot", nil, nil, "header")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Enable Auto-Resize Loot Frame", C.appearance.loot, "autoresize", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Enable Auto-Resize Loot Frame", C.loot, "autoresize", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Enable Auto-Loot for BoP Items Without Group", C.loot, "autopickup", "checkbox")
 
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "Minimap", nil, nil, "header")
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "Enable Zone Text On Minimap Mouseover", C.appearance.minimap, "mouseoverzone", "checkbox")
