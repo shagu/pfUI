@@ -53,13 +53,15 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("appearance", "cd",          "threshold",        "2")
   pfUI:UpdateConfig("appearance", "castbar",     "castbarcolor",     ".7,.7,.9,.8")
   pfUI:UpdateConfig("appearance", "castbar",     "channelcolor",     ".9,.9,.7,.8")
-  pfUI:UpdateConfig("appearance", "loot",        "autoresize",       "1")
   pfUI:UpdateConfig("appearance", "infight",     "screen",           "0")
   pfUI:UpdateConfig("appearance", "infight",     "common",           "1")
   pfUI:UpdateConfig("appearance", "infight",     "group",            "0")
   pfUI:UpdateConfig("appearance", "bags",        "borderlimit",      "1")
   pfUI:UpdateConfig("appearance", "bags",        "borderonlygear",   "0")
   pfUI:UpdateConfig("appearance", "minimap",     "mouseoverzone",    "0")
+
+  pfUI:UpdateConfig("loot",       nil,           "autoresize",       "1")
+  pfUI:UpdateConfig("loot",       nil,           "autopickup",       "1")
 
   pfUI:UpdateConfig("unitframes", nil,           "disable",          "0")
   pfUI:UpdateConfig("unitframes", nil,           "pastel",           "1")
@@ -240,6 +242,15 @@ function pfUI:MigrateConfig()
       pfUI_config.global.font_combat = "Homespun"
     elseif pfUI_config.global.font_combat == "diediedie" then
       pfUI_config.global.font_combat = "DieDieDie"
+    end
+  end
+
+  -- migrating to new loot config section (> 2.0.5)
+  if major <= 2 and minor <= 0 and fix <= 5 then
+    if pfUI_config.appearance.loot and pfUI_config.appearance.loot.autoresize then
+      pfUI_config.loot.autoresize = pfUI_config.appearance.loot.autoresize
+      pfUI_config.appearance.loot.autoresize = nil
+      pfUI_config.appearance.loot = nil
     end
   end
 

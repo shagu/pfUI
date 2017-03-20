@@ -841,7 +841,8 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "仅在装备上显示品质颜色", C.appearance.bags, "borderonlygear", "checkbox")
 
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "拾取设置", nil, nil, "header")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "自动调整拾取框大小", C.appearance.loot, "autoresize", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "自动调整拾取框大小", C.loot, "autoresize", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "启用在没有小队时自动拾取", C.loot, "autopickup", "checkbox")
 
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "小地图设置", nil, nil, "header")
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "在鼠标悬停时显示区域名称", C.appearance.minimap, "mouseoverzone", "checkbox")
@@ -932,7 +933,7 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui:CreateConfig(pfUI.gui.bar, "自动隐藏姿态条", C.bars, "hide_shapeshift", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.bar, "自动隐藏宠物动作条", C.bars, "hide_pet", "checkbox")
 
-  pfUI.gui:CreateConfig(pfUI.gui.bar, "Action Bar Layouts", nil, nil, "header")
+  pfUI.gui:CreateConfig(pfUI.gui.bar, "动作栏的布局", nil, nil, "header")
   local values = BarLayoutOptions(NUM_ACTIONBAR_BUTTONS)
   pfUI.gui:CreateConfig(pfUI.gui.bar, "主动作条", C.bars.actionmain, "formfactor", "dropdown", values)
   pfUI.gui:CreateConfig(pfUI.gui.bar, "主动作条上方动作条", C.bars.bottomleft, "formfactor", "dropdown", values)

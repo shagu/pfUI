@@ -7,6 +7,7 @@ pfUI:RegisterModule("loot", function ()
   pfUI.loot:RegisterEvent("LOOT_SLOT_CLEARED")
   pfUI.loot:RegisterEvent("OPEN_MASTER_LOOT_LIST")
   pfUI.loot:RegisterEvent("UPDATE_MASTER_LOOT_LIST")
+  pfUI.loot:RegisterEvent("LOOT_BIND_CONFIRM")
 
   pfUI.loot:SetWidth(160+C.appearance.border.default*2)
   pfUI.loot.slots = {}
@@ -126,7 +127,7 @@ pfUI:RegisterModule("loot", function ()
       end
     end)
 
-    if C.appearance.loot.autoresize == "1" then
+    if C.loot.autoresize == "1" then
       frame:SetScript("OnUpdate", function()
         pfUI.loot:UpdateLootFrame()
       end)
@@ -217,6 +218,16 @@ pfUI:RegisterModule("loot", function ()
       HideUIPanel(this)
       for _, v in pairs(this.slots) do
         v:Hide()
+      end
+    end
+
+    if C.loot.autopickup == "1" and event == "LOOT_BIND_CONFIRM" then
+      if GetNumPartyMembers() == 0 and GetNumRaidMembers() == 0 then
+        local dialog = StaticPopup_Show("LOOT_BIND")
+        if dialog then
+          dialog.data = arg1
+          StaticPopup1Button1:Click()
+        end
       end
     end
   end)
