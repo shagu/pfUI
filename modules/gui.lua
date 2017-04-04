@@ -760,7 +760,7 @@ pfUI:RegisterModule("gui", function ()
     if C.global.profile and pfUI_profiles[C.global.profile] then
       CreateQuestionDialog("加载配置文件 '|cff33ffcc" .. C.global.profile .. "|r'?", function()
         local selp = C.global.profile
-        C = CopyTable(pfUI_profiles[C.global.profile])
+        _G["pfUI_config"] = CopyTable(pfUI_profiles[C.global.profile])
         C.global.profile = selp
         ReloadUI()
       end)
@@ -1102,7 +1102,7 @@ pfUI:RegisterModule("gui", function ()
         _G["pfUI_init"] = {}
         _G["pfUI_config"] = {}
         _G["pfUI_playerDB"] = {}
-        pfUI_profiles = {}
+        _G["pfUI_profiles"] = {}
         pfUI:LoadConfig()
         this:GetParent():Hide()
         pfUI.gui:Reload()
