@@ -68,14 +68,14 @@ pfUI:RegisterModule("skin", function ()
   ShoppingTooltip1:SetScript("OnShow", function()
     local a, b, c, d, e = this:GetPoint()
     local border = tonumber(C.appearance.border.default)
-    if d and d == 0 then d = (border*2)+d+1 end
+    if not d or d == 0 then d = (border*2) + ( d or 0 ) + 1 end
     if a then this:SetPoint(a, b, c, d, e) end
   end)
 
   ShoppingTooltip2:SetScript("OnShow", function()
     local a, b, c, d, e = this:GetPoint()
     local border = tonumber(C.appearance.border.default)
-    if not d or d == 0 then d = (border*2)+d+1 end
+    if not d or d == 0 then d = (border*2) + ( d or 0 ) + 1 end
     if a then this:SetPoint(a, b, c, d, e) end
   end)
 
