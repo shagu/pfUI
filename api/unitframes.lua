@@ -461,7 +461,7 @@ end
 function pfUI.uf:RefreshUnit(unit, component)
   local component = component or ""
   -- break early on misconfigured UF's
-  if not this.label then return end
+  if not unit.label then return end
 
   local default_border = pfUI_config.appearance.border.default
   if pfUI_config.appearance.border.groupframes ~= "-1" then
@@ -470,181 +470,181 @@ function pfUI.uf:RefreshUnit(unit, component)
 
   local C = pfUI_config
 
-  if UnitName(this.label .. this.id) or (pfUI.gitter and pfUI.gitter:IsShown()) then
-    this:Show() else this:Hide()
+  if UnitName(unit.label .. unit.id) or (pfUI.gitter and pfUI.gitter:IsShown()) then
+    unit:Show() else unit:Hide()
   end
 
-  if not this.cache then unit.cache = {} end
+  if not unit.cache then unit.cache = {} end
   if not unit.id then unit.id = "" end
 
   -- Raid Icon
-  if this.raidIcon and ( component == "all" or component == "raidIcon" ) then
-    local raidIcon = GetRaidTargetIndex(this.label .. this.id)
-    if raidIcon and UnitName(this.label .. this.id) then
-      SetRaidTargetIconTexture(this.raidIcon.texture, raidIcon)
-      this.raidIcon:Show()
+  if unit.raidIcon and ( component == "all" or component == "raidIcon" ) then
+    local raidIcon = GetRaidTargetIndex(unit.label .. unit.id)
+    if raidIcon and UnitName(unit.label .. unit.id) then
+      SetRaidTargetIconTexture(unit.raidIcon.texture, raidIcon)
+      unit.raidIcon:Show()
     else
-      this.raidIcon:Hide()
+      unit.raidIcon:Hide()
     end
   end
 
   -- Leader Icon
-  if this.leaderIcon and ( component == "all" or component == "leaderIcon" ) then
+  if unit.leaderIcon and ( component == "all" or component == "leaderIcon" ) then
     if GetNumPartyMembers() == 0 and GetNumRaidMembers() == 0 then
-      this.leaderIcon:Hide()
-    elseif UnitIsPartyLeader(this.label .. this.id) then
-      this.leaderIcon:Show()
+      unit.leaderIcon:Hide()
+    elseif UnitIsPartyLeader(unit.label .. unit.id) then
+      unit.leaderIcon:Show()
     else
-      this.leaderIcon:Hide()
+      unit.leaderIcon:Hide()
     end
   end
 
   -- Loot Icon
-  if this.lootIcon and ( component == "all" or component == "lootIcon" ) then
+  if unit.lootIcon and ( component == "all" or component == "lootIcon" ) then
     local _, lootmaster = GetLootMethod()
     if GetNumPartyMembers() == 0 and GetNumRaidMembers() == 0 then
-      this.lootIcon:Hide()
+      unit.lootIcon:Hide()
     elseif lootmaster and (
-        ( this.label == "party" and tonumber(this.id) == lootmaster ) or
-        ( this.label == "player" and lootmaster == 0 ) )then
-      this.lootIcon:Show()
+        ( unit.label == "party" and tonumber(unit.id) == lootmaster ) or
+        ( unit.label == "player" and lootmaster == 0 ) )then
+      unit.lootIcon:Show()
     else
-      this.lootIcon:Hide()
+      unit.lootIcon:Hide()
     end
   end
 
   -- Buffs
-  if this.buffs and ( component == "all" or component == "aura" ) then
+  if unit.buffs and ( component == "all" or component == "aura" ) then
     for i=1, 16 do
       local texture, stacks
-      if this.label == "player" then
+      if unit.label == "player" then
        stacks = GetPlayerBuffApplications(GetPlayerBuff(i-1,"HELPFUL"))
        texture = GetPlayerBuffTexture(GetPlayerBuff(i-1,"HELPFUL"))
       else
-       texture, stacks = UnitBuff(this.label .. this.id ,i)
+       texture, stacks = UnitBuff(unit.label .. unit.id ,i)
       end
 
-      pfUI.api.CreateBackdrop(this.buffs[i], default_border)
-      this.buffs[i]:SetNormalTexture(texture)
-      for i,v in ipairs({this.buffs[i]:GetRegions()}) do
+      pfUI.api.CreateBackdrop(unit.buffs[i], default_border)
+      unit.buffs[i]:SetNormalTexture(texture)
+      for i,v in ipairs({unit.buffs[i]:GetRegions()}) do
         if v.SetTexCoord then v:SetTexCoord(.08, .92, .08, .92) end
       end
 
       if texture then
-        this.buffs[i]:Show()
+        unit.buffs[i]:Show()
         if stacks > 1 then
-          this.buffs[i].stacks:SetText(stacks)
+          unit.buffs[i].stacks:SetText(stacks)
         else
-          this.buffs[i].stacks:SetText("")
+          unit.buffs[i].stacks:SetText("")
         end
       else
-        this.buffs[i]:Hide()
+        unit.buffs[i]:Hide()
       end
     end
   end
 
   -- Debuffs
-  if this.debuffs and ( component == "all" or component == "aura" ) then
+  if unit.debuffs and ( component == "all" or component == "aura" ) then
     for i=1, 16 do
       local row = 0
       local top = 0
       if i > 8 then row = 1 end
 
-      if this.config.buffs == this.config.debuffs then
-        if this.buffs[1]:IsShown() then top = top + 1 end
-        if this.buffs[9]:IsShown() then top = top + 1 end
+      if unit.config.buffs == unit.config.debuffs then
+        if unit.buffs[1]:IsShown() then top = top + 1 end
+        if unit.buffs[9]:IsShown() then top = top + 1 end
       end
 
       local invert, af, as
-      if this.config.debuffs == "top" then
+      if unit.config.debuffs == "top" then
         invert = 1
         af = "BOTTOMLEFT"
         as = "TOPLEFT"
-      elseif this.config.debuffs == "bottom" then
+      elseif unit.config.debuffs == "bottom" then
         invert = -1
         af = "TOPLEFT"
         as = "BOTTOMLEFT"
       end
 
-      this.debuffs[i]:SetPoint(af, this, as,
+      unit.debuffs[i]:SetPoint(af, unit, as,
       (i-1-8*row)*((2*default_border) + C.unitframes.debuff_size + 1),
       invert * (top)*((2*default_border) + C.unitframes.buff_size + 1) +
       invert * (row)*((2*default_border) + C.unitframes.debuff_size + 1) + invert*(2*default_border + 1))
 
       local texture, stacks, dtype
-      if this.label == "player" then
+      if unit.label == "player" then
         texture = GetPlayerBuffTexture(GetPlayerBuff(i-1, "HARMFUL"))
         stacks = GetPlayerBuffApplications(GetPlayerBuff(i-1, "HARMFUL"))
         dtype = GetPlayerBuffDispelType(GetPlayerBuff(i-1, "HARMFUL"))
      else
-       texture, stacks, dtype = UnitDebuff(this.label .. this.id ,i)
+       texture, stacks, dtype = UnitDebuff(unit.label .. unit.id ,i)
      end
 
-      pfUI.api.CreateBackdrop(this.debuffs[i], default_border)
-      this.debuffs[i]:SetNormalTexture(texture)
-      for i,v in ipairs({this.debuffs[i]:GetRegions()}) do
+      pfUI.api.CreateBackdrop(unit.debuffs[i], default_border)
+      unit.debuffs[i]:SetNormalTexture(texture)
+      for i,v in ipairs({unit.debuffs[i]:GetRegions()}) do
         if v.SetTexCoord then v:SetTexCoord(.08, .92, .08, .92) end
       end
 
       if dtype == "Magic" then
-        this.debuffs[i].backdrop:SetBackdropBorderColor(0,1,1,1)
+        unit.debuffs[i].backdrop:SetBackdropBorderColor(0,1,1,1)
       elseif dtype == "Poison" then
-        this.debuffs[i].backdrop:SetBackdropBorderColor(0,1,0,1)
+        unit.debuffs[i].backdrop:SetBackdropBorderColor(0,1,0,1)
       elseif dtype == "Curse" then
-        this.debuffs[i].backdrop:SetBackdropBorderColor(1,0,1,1)
+        unit.debuffs[i].backdrop:SetBackdropBorderColor(1,0,1,1)
       elseif dtype == "Disease" then
-        this.debuffs[i].backdrop:SetBackdropBorderColor(1,1,0,1)
+        unit.debuffs[i].backdrop:SetBackdropBorderColor(1,1,0,1)
       else
-        this.debuffs[i].backdrop:SetBackdropBorderColor(1,0,0,1)
+        unit.debuffs[i].backdrop:SetBackdropBorderColor(1,0,0,1)
       end
 
       if texture then
-        this.debuffs[i]:Show()
+        unit.debuffs[i]:Show()
         if stacks > 1 then
-          this.debuffs[i].stacks:SetText(stacks)
+          unit.debuffs[i].stacks:SetText(stacks)
         else
-          this.debuffs[i].stacks:SetText("")
+          unit.debuffs[i].stacks:SetText("")
         end
       else
-        this.debuffs[i]:Hide()
+        unit.debuffs[i]:Hide()
       end
     end
   end
 
   -- portrait
-  if this.portrait and ( component == "all" or component == "portrait" ) then
-    if not UnitIsVisible(this.label .. this.id) or not UnitIsConnected(this.label .. this.id) then
-      if this.config.portrait == "bar" then
-        this.portrait.tex:Hide()
-        this.portrait.model:Hide()
+  if unit.portrait and ( component == "all" or component == "portrait" ) then
+    if not UnitIsVisible(unit.label .. unit.id) or not UnitIsConnected(unit.label .. unit.id) then
+      if unit.config.portrait == "bar" then
+        unit.portrait.tex:Hide()
+        unit.portrait.model:Hide()
       elseif pfUI_config.unitframes.portraittexture == "1" then
-        this.portrait.tex:Show()
-        this.portrait.model:Hide()
-        SetPortraitTexture(this.portrait.tex, this.label .. this.id)
+        unit.portrait.tex:Show()
+        unit.portrait.model:Hide()
+        SetPortraitTexture(unit.portrait.tex, unit.label .. unit.id)
       else
-        this.portrait.tex:Hide()
-        this.portrait.model:Show()
-        this.portrait.model:SetModelScale(4.25)
-        this.portrait.model:SetPosition(0, 0, -1)
-        this.portrait.model:SetModel("Interface\\Buttons\\talktomequestionmark.mdx")
+        unit.portrait.tex:Hide()
+        unit.portrait.model:Show()
+        unit.portrait.model:SetModelScale(4.25)
+        unit.portrait.model:SetPosition(0, 0, -1)
+        unit.portrait.model:SetModel("Interface\\Buttons\\talktomequestionmark.mdx")
       end
     else
-      if this.config.portrait == "bar" then
-        this.portrait:SetAlpha(pfUI_config.unitframes.portraitalpha)
+      if unit.config.portrait == "bar" then
+        unit.portrait:SetAlpha(pfUI_config.unitframes.portraitalpha)
       end
-      this.portrait.tex:Hide()
-      this.portrait.model:Show()
+      unit.portrait.tex:Hide()
+      unit.portrait.model:Show()
 
-      if this.tick then
-        this.portrait.model.next:SetUnit(this.label .. this.id)
-        if this.portrait.model.lastUnit ~= UnitName(this.label .. this.id) or this.portrait.model:GetModel() ~= this.portrait.model.next:GetModel() then
-          this.portrait.model:SetUnit(this.label .. this.id)
-          this.portrait.model.lastUnit = UnitName(this.label .. this.id)
-          this.portrait.model:SetCamera(0)
+      if unit.tick then
+        unit.portrait.model.next:SetUnit(unit.label .. unit.id)
+        if unit.portrait.model.lastUnit ~= UnitName(unit.label .. unit.id) or unit.portrait.model:GetModel() ~= unit.portrait.model.next:GetModel() then
+          unit.portrait.model:SetUnit(unit.label .. unit.id)
+          unit.portrait.model.lastUnit = UnitName(unit.label .. unit.id)
+          unit.portrait.model:SetCamera(0)
         end
       else
-        this.portrait.model:SetUnit(this.label .. this.id)
-        this.portrait.model:SetCamera(0)
+        unit.portrait.model:SetUnit(unit.label .. unit.id)
+        unit.portrait.model:SetCamera(0)
       end
 
     end
@@ -656,8 +656,8 @@ function pfUI.uf:RefreshUnit(unit, component)
   unit.cache.power = UnitMana(unit.label .. unit.id)
   unit.cache.powermax = UnitManaMax(unit.label .. unit.id)
 
-  if this.label == "target" and MobHealth3 then
-    unit.cache.hp, unit.cache.hpmax = MobHealth3:GetUnitHealth(this.label)
+  if unit.label == "target" and MobHealth3 then
+    unit.cache.hp, unit.cache.hpmax = MobHealth3:GetUnitHealth(unit.label)
   end
 
   unit.hp.bar:SetMinMaxValues(0, unit.cache.hpmax)
@@ -716,8 +716,8 @@ function pfUI.uf:RefreshUnit(unit, component)
 
   pfUI.uf:SetupDebuffFilter()
   if table.getn(pfUI.uf.debuffs) > 0 and
-    ((pfUI_config.unitframes.group.raid_debuffs == "1" and this.label == "party") or
-    this.label == "raid")
+    ((pfUI_config.unitframes.group.raid_debuffs == "1" and unit.label == "party") or
+    unit.label == "raid")
   then
     local infected = false
     for i=1,32 do
@@ -787,8 +787,8 @@ function pfUI.uf:RefreshUnit(unit, component)
 
   pfUI.uf:SetupBuffFilter()
   if table.getn(pfUI.uf.buffs) > 0 and
-    ((pfUI_config.unitframes.group.raid_buffs == "1" and this.label == "party") or
-    this.label == "raid")
+    ((pfUI_config.unitframes.group.raid_buffs == "1" and unit.label == "party") or
+    unit.label == "raid")
   then
     local active = {}
 
@@ -806,14 +806,14 @@ function pfUI.uf:RefreshUnit(unit, component)
 
         -- add icons for every found buff
         for pos, icon in pairs(active) do
-          pfUI.uf:AddIcon(this, pos, icon)
+          pfUI.uf:AddIcon(unit, pos, icon)
         end
       end
     end
 
     -- hide unued icon slots
     for pos=table.getn(active)+1, 6 do
-      pfUI.uf:HideIcon(this, pos)
+      pfUI.uf:HideIcon(unit, pos)
     end
   end
 end
@@ -1137,48 +1137,48 @@ function pfUI.uf:GetStatusValue(unit, pos)
     elseif elite == "rare" then
       level = level .. "R"
     end
-    level = this:GetColor("level") .. level
-    name = this:GetColor("unit") .. name
+    level = unit:GetColor("level") .. level
+    name = unit:GetColor("unit") .. name
 
     return level .. " " .. name
 
   elseif config == "name" then
-    return this:GetColor("unit") .. UnitName(unitstr)
+    return unit:GetColor("unit") .. UnitName(unitstr)
   elseif config == "level" then
-    return this:GetColor("level") .. UnitLevel(unitstr)
+    return unit:GetColor("level") .. UnitLevel(unitstr)
   elseif config == "class" then
-    return this:GetColor("class") .. UnitClass(unitstr)
+    return unit:GetColor("class") .. UnitClass(unitstr)
 
   -- health
   elseif config == "health" then
-    return this:GetColor("health") .. UnitHealth(unitstr)
+    return unit:GetColor("health") .. UnitHealth(unitstr)
   elseif config == "healthmax" then
-    return this:GetColor("health") .. UnitHealthMax(unitstr)
+    return unit:GetColor("health") .. UnitHealthMax(unitstr)
   elseif config == "healthperc" then
-    return this:GetColor("health") .. ceil(UnitHealth(unitstr) / UnitHealthMax(unitstr) * 100)
+    return unit:GetColor("health") .. ceil(UnitHealth(unitstr) / UnitHealthMax(unitstr) * 100)
   elseif config == "healthmiss" then
-    return this:GetColor("health") .. ceil(UnitHealth(unitstr) - UnitHealthMax(unitstr))
+    return unit:GetColor("health") .. ceil(UnitHealth(unitstr) - UnitHealthMax(unitstr))
   elseif config == "healthdyn" then
     if UnitHealth(unitstr) ~= UnitHealthMax(unitstr) then
-      return this:GetColor("health") .. UnitHealth(unitstr) .. " - " .. ceil(UnitHealth(unitstr) / UnitHealthMax(unitstr) * 100) .. "%"
+      return unit:GetColor("health") .. UnitHealth(unitstr) .. " - " .. ceil(UnitHealth(unitstr) / UnitHealthMax(unitstr) * 100) .. "%"
     else
-      return this:GetColor("health") .. UnitHealth(unitstr)
+      return unit:GetColor("health") .. UnitHealth(unitstr)
     end
 
   -- mana/power/focus
   elseif config == "power" then
-    return this:GetColor("power") .. UnitMana(unitstr)
+    return unit:GetColor("power") .. UnitMana(unitstr)
   elseif config == "powermax" then
-    return this:GetColor("power") .. UnitManaMax(unitstr)
+    return unit:GetColor("power") .. UnitManaMax(unitstr)
   elseif config == "powerperc" then
-    return this:GetColor("power") .. ceil(UnitMana(unitstr) / UnitManaMax(unitstr) * 100)
+    return unit:GetColor("power") .. ceil(UnitMana(unitstr) / UnitManaMax(unitstr) * 100)
   elseif config == "powermiss" then
-    return this:GetColor("power") .. ceil(UnitMana(unitstr) - UnitManaMax(unitstr))
+    return unit:GetColor("power") .. ceil(UnitMana(unitstr) - UnitManaMax(unitstr))
   elseif config == "powerdyn" then
     if UnitMana(unitstr) ~= UnitManaMax(unitstr) then
-      return this:GetColor("power") .. UnitMana(unitstr) .. " - " .. ceil(UnitMana(unitstr) / UnitManaMax(unitstr) * 100) .. "%"
+      return unit:GetColor("power") .. UnitMana(unitstr) .. " - " .. ceil(UnitMana(unitstr) / UnitManaMax(unitstr) * 100) .. "%"
     else
-      return this:GetColor("power") .. UnitMana(unitstr)
+      return unit:GetColor("power") .. UnitMana(unitstr)
     end
   else
     return ""
