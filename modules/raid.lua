@@ -14,7 +14,14 @@ pfUI:RegisterModule("raid", function ()
       i = g + 5*(r-1)
       pfUI.uf.raid[i] = pfUI.uf:CreateUnitFrame("Raid", i, C.unitframes.raid)
       pfUI.uf.raid[i]:UpdateFrameSize()
-      pfUI.uf.raid[i]:SetPoint("BOTTOMLEFT", (r-1) * (54+default_border) + 5, C.chat.left.height + 10 + ((g-1)*(37+default_border))+default_border)
+
+      local spacing = pfUI.uf.raid[i].config.pspace
+      local width = pfUI.uf.raid[i].config.width
+      local height = pfUI.uf.raid[i].config.height
+      local pheight = pfUI.uf.raid[i].config.pheight
+      local real_height = height + spacing + pheight + 2*default_border
+
+      pfUI.uf.raid[i]:SetPoint("BOTTOMLEFT", (r-1) * (width+3*default_border) + 5, C.chat.left.height + default_border + 10 + (g-1)*(real_height+3*default_border))
       UpdateMovable(pfUI.uf.raid[i])
     end
   end
@@ -37,7 +44,7 @@ pfUI:RegisterModule("raid", function ()
           if pfUI.uf.raid[ids].id == 0 then
             pfUI.uf.raid[ids].id = i
             pfUI.uf.raid[ids]:Show()
-            pfUI.uf:RefreshUnit(pfUI.uf.raid[ids])
+            pfUI.uf:RefreshUnit(pfUI.uf.raid[ids], "all")
             break
           end
         end
