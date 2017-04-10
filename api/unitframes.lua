@@ -1160,7 +1160,12 @@ function pfUI.uf:GetStatusValue(unit, pos)
   elseif config == "healthperc" then
     return unit:GetColor("health") .. ceil(UnitHealth(unitstr) / UnitHealthMax(unitstr) * 100)
   elseif config == "healthmiss" then
-    return unit:GetColor("health") .. ceil(UnitHealth(unitstr) - UnitHealthMax(unitstr))
+    local health = ceil(UnitHealth(unitstr) - UnitHealthMax(unitstr))
+    if health == 0 then
+      return ""
+    else
+      return unit:GetColor("health") .. health
+    end
   elseif config == "healthdyn" then
     if UnitHealth(unitstr) ~= UnitHealthMax(unitstr) then
       return unit:GetColor("health") .. UnitHealth(unitstr) .. " - " .. ceil(UnitHealth(unitstr) / UnitHealthMax(unitstr) * 100) .. "%"
@@ -1176,7 +1181,12 @@ function pfUI.uf:GetStatusValue(unit, pos)
   elseif config == "powerperc" then
     return unit:GetColor("power") .. ceil(UnitMana(unitstr) / UnitManaMax(unitstr) * 100)
   elseif config == "powermiss" then
-    return unit:GetColor("power") .. ceil(UnitMana(unitstr) - UnitManaMax(unitstr))
+    local power = ceil(UnitMana(unitstr) - UnitManaMax(unitstr))
+    if power == 0 then
+      return ""
+    else
+      return unit:GetColor("power") .. power
+    end
   elseif config == "powerdyn" then
     if UnitMana(unitstr) ~= UnitManaMax(unitstr) then
       return unit:GetColor("power") .. UnitMana(unitstr) .. " - " .. ceil(UnitMana(unitstr) / UnitManaMax(unitstr) * 100) .. "%"
