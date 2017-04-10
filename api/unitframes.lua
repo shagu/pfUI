@@ -634,14 +634,18 @@ function pfUI.uf:RefreshUnit(unit, component)
       end
       this.portrait.tex:Hide()
       this.portrait.model:Show()
-      this.portrait.model.next:SetUnit(this.label .. this.id)
 
-      if this.portrait.model.lastUnit ~= UnitName(this.label .. this.id)
-          or this.portrait.model:GetModel() ~= this.portrait.model.next:GetModel() then
+      if this.tick then
+        this.portrait.model.next:SetUnit(this.label .. this.id)
+        if this.portrait.model.lastUnit ~= UnitName(this.label .. this.id) or this.portrait.model:GetModel() ~= this.portrait.model.next:GetModel() then
+          this.portrait.model:SetUnit(this.label .. this.id)
+          this.portrait.model.lastUnit = UnitName(this.label .. this.id)
+          this.portrait.model:SetCamera(0)
+        end
+      else
         this.portrait.model:SetUnit(this.label .. this.id)
-        this.portrait.model.lastUnit = UnitName(this.label .. this.id)
+        this.portrait.model:SetCamera(0)
       end
-      this.portrait.model:SetCamera(0)
 
     end
   end
