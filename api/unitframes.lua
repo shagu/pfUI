@@ -1195,7 +1195,9 @@ function pfUI.uf.GetColor(self, preset)
   if preset == "unit" then
     if UnitIsPlayer(unitstr) then
       local _, class = UnitClass(unitstr)
-      r, g, b = RAID_CLASS_COLORS[class].r, RAID_CLASS_COLORS[class].g, RAID_CLASS_COLORS[class].b
+      if RAID_CLASS_COLORS[class] then
+        r, g, b = RAID_CLASS_COLORS[class].r, RAID_CLASS_COLORS[class].g, RAID_CLASS_COLORS[class].b
+      end
     else
       if UnitReactionColor[UnitReaction(unitstr, "player")] then
         r, g, b = UnitReactionColor[UnitReaction(unitstr, "player")].r, UnitReactionColor[UnitReaction(unitstr, "player")].g, UnitReactionColor[UnitReaction(unitstr, "player")].b
