@@ -889,50 +889,38 @@ function pfUI.uf:ClickAction(button)
     -- default click
     TargetUnit(unitstr)
 
-    -- break here if party frame and no clickcast is activated
-    if label == "party" and pfUI_config.unitframes.group.clickcast == "0" and pfUI_config.unitframes.globalclick == "0" then
-      return
-    end
+    if this.config.clickcast == "1" then
+      -- clickcast: shift modifier
+      if IsShiftKeyDown() then
+        if pfUI_config.unitframes.clickcast_shift ~= "" then
+          CastSpellByName(pfUI_config.unitframes.clickcast_shift)
+          if not tswitch then TargetLastTarget() end
+          return
+        end
 
-    -- break here for non-party and non-raid frames without clickcast
-    if label ~= "raid" and label ~= "party" and pfUI_config.unitframes.globalclick == "0" then
-      return
-    end
+      -- clickcast: alt modifier
+      elseif IsAltKeyDown() then
+        if pfUI_config.unitframes.clickcast_alt ~= "" then
+          CastSpellByName(pfUI_config.unitframes.clickcast_alt)
+          if not tswitch then TargetLastTarget() end
+          return
+        end
 
-    -- clickcast: shift modifier
-    if IsShiftKeyDown() then
-      if pfUI_config.unitframes.raid.clickcast_shift ~= "" then
-        CastSpellByName(pfUI_config.unitframes.raid.clickcast_shift)
-        pfUI.uf.target.noanim = "yes"
-        if not tswitch then TargetLastTarget() end
-        return
-      end
+      -- clickcast: ctrl modifier
+      elseif IsControlKeyDown() then
+        if pfUI_config.unitframes.clickcast_ctrl ~= "" then
+          CastSpellByName(pfUI_config.unitframes.clickcast_ctrl)
+          if not tswitch then TargetLastTarget() end
+          return
+        end
 
-    -- clickcast: alt modifier
-    elseif IsAltKeyDown() then
-      if pfUI_config.unitframes.raid.clickcast_alt ~= "" then
-        CastSpellByName(pfUI_config.unitframes.raid.clickcast_alt)
-        pfUI.uf.target.noanim = "yes"
-        if not tswitch then TargetLastTarget() end
-        return
-      end
-
-    -- clickcast: ctrl modifier
-    elseif IsControlKeyDown() then
-      if pfUI_config.unitframes.raid.clickcast_ctrl ~= "" then
-        CastSpellByName(pfUI_config.unitframes.raid.clickcast_ctrl)
-        pfUI.uf.target.noanim = "yes"
-        if not tswitch then TargetLastTarget() end
-        return
-      end
-
-    -- clickcast: default
-    else
-      if pfUI_config.unitframes.raid.clickcast ~= "" then
-        CastSpellByName(pfUI_config.unitframes.raid.clickcast)
-        pfUI.uf.target.noanim = "yes"
-        if not tswitch then TargetLastTarget() end
-        return
+      -- clickcast: default
+      else
+        if pfUI_config.unitframes.clickcast ~= "" then
+          CastSpellByName(pfUI_config.unitframes.clickcast)
+          if not tswitch then TargetLastTarget() end
+          return
+        end
       end
     end
   end
