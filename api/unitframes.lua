@@ -51,7 +51,7 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
   f.hp.bar:SetMinMaxValues(0, 100)
 
   if pfUI_config.unitframes.custombg == "1" then
-    local cr, cg, cb, ca = strsplit(",", pfUI_config.unitframes.custombgcolor)
+    local cr, cg, cb, ca = pfUI.api.strsplit(",", pfUI_config.unitframes.custombgcolor)
     cr, cg, cb = tonumber(cr), tonumber(cg), tonumber(cb)
     f.hp.bar.texture = f.hp.bar:CreateTexture(nil,"BACKGROUND")
     f.hp.bar.texture:SetTexture(cr,cg,cb,ca)
