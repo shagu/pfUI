@@ -58,9 +58,15 @@ pfUI:RegisterModule("group", function ()
     UpdateMovable(pfUI.uf.group[i])
 
     pfUI.uf.group[i].target = pfUI.uf:CreateUnitFrame("Party" .. i .. "Target", nil, C.unitframes.grouptarget, 0.2)
+
     pfUI.uf.group[i].target:UpdateFrameSize()
-    pfUI.uf.group[i].target:SetPoint("TOPLEFT", 180, -5 - ((i-1)*75))
+    pfUI.uf.group[i].target:SetPoint("TOPLEFT", pfUI.uf.group[i], "TOPRIGHT", 3*default_border, 0)
     UpdateMovable(pfUI.uf.group[i].target)
+
+    pfUI.uf.group[i].pet = pfUI.uf:CreateUnitFrame("PartyPet", i, C.unitframes.grouppet, 0.2)
+    pfUI.uf.group[i].pet:UpdateFrameSize()
+    pfUI.uf.group[i].pet:SetPoint("BOTTOMLEFT", pfUI.uf.group[i], "BOTTOMRIGHT", 3*default_border, -default_border)
+    UpdateMovable(pfUI.uf.group[i].pet)
   end
 
   pfUI.uf.partytargetScanner = CreateFrame("Button",nil,UIParent)
@@ -70,6 +76,12 @@ pfUI:RegisterModule("group", function ()
         pfUI.uf.group[i].target:Show()
       else
         pfUI.uf.group[i].target:Hide()
+      end
+
+      if UnitExists("partypet" .. i) or (pfUI.gitter and pfUI.gitter:IsShown()) then
+        pfUI.uf.group[i].pet:Show()
+      else
+        pfUI.uf.group[i].pet:Hide()
       end
     end
   end)

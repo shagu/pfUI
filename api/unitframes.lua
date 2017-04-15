@@ -75,8 +75,8 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
   f.leftText:SetFontObject(GameFontWhite)
   f.leftText:SetParent(f.hp.bar)
   f.leftText:ClearAllPoints()
-  f.leftText:SetPoint("TOPLEFT",f.hp.bar, "TOPLEFT", 2*default_border, -2*default_border)
-  f.leftText:SetPoint("BOTTOMRIGHT",f.hp.bar, "BOTTOMRIGHT", -2*default_border, 2*default_border)
+  f.leftText:SetPoint("TOPLEFT",f.hp.bar, "TOPLEFT", 2*default_border, 1)
+  f.leftText:SetPoint("BOTTOMRIGHT",f.hp.bar, "BOTTOMRIGHT", -2*default_border, 0)
 
   f.rightText = f:CreateFontString("Status", "OVERLAY", "GameFontNormal")
   f.rightText:SetFont(pfUI.font_square, C.global.font_size, "OUTLINE")
@@ -84,8 +84,8 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
   f.rightText:SetFontObject(GameFontWhite)
   f.rightText:SetParent(f.hp.bar)
   f.rightText:ClearAllPoints()
-  f.rightText:SetPoint("TOPLEFT",f.hp.bar, "TOPLEFT", 2*default_border, -2*default_border)
-  f.rightText:SetPoint("BOTTOMRIGHT",f.hp.bar, "BOTTOMRIGHT", -2*default_border, 2*default_border)
+  f.rightText:SetPoint("TOPLEFT",f.hp.bar, "TOPLEFT", 2*default_border, 1)
+  f.rightText:SetPoint("BOTTOMRIGHT",f.hp.bar, "BOTTOMRIGHT", -2*default_border, 0)
 
   f.centerText = f:CreateFontString("Status", "OVERLAY", "GameFontNormal")
   f.centerText:SetFont(pfUI.font_square, C.global.font_size, "OUTLINE")
@@ -93,8 +93,8 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
   f.centerText:SetFontObject(GameFontWhite)
   f.centerText:SetParent(f.hp.bar)
   f.centerText:ClearAllPoints()
-  f.centerText:SetPoint("TOPLEFT",f.hp.bar, "TOPLEFT", 2*default_border, -2*default_border)
-  f.centerText:SetPoint("BOTTOMRIGHT",f.hp.bar, "BOTTOMRIGHT", -2*default_border, 2*default_border)
+  f.centerText:SetPoint("TOPLEFT",f.hp.bar, "TOPLEFT", 2*default_border, 1)
+  f.centerText:SetPoint("BOTTOMRIGHT",f.hp.bar, "BOTTOMRIGHT", -2*default_border, 0)
 
   f:RegisterForClicks('LeftButtonUp', 'RightButtonUp',
     'MiddleButtonUp', 'Button4Up', 'Button5Up')
@@ -192,7 +192,7 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
         local hpReal = this.cache.hp
         local hpDiff = abs(hpReal - hpDisplay)
 
-        if pfUI_config.unitframes.raid.invert_healthbar == "1" then
+        if this.config.invert_healthbar == "1" then
           hpDisplay = this.hp.bar:GetValue()
           hpReal = this.cache.hpmax - this.cache.hp
           hpDiff = abs(hpReal - hpDisplay)
@@ -302,11 +302,11 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
       end
 
       f.buffs[i]:SetPoint(af, f, as,
-      (i-1-8*row)*((2*default_border) + C.unitframes.buff_size + 1),
-      invert * (row)*((2*default_border) + C.unitframes.buff_size + 1) + invert*(2*default_border + 1))
+      (i-1-8*row)*((2*default_border) + f.config.buffsize + 1),
+      invert * (row)*((2*default_border) + f.config.buffsize + 1) + invert*(2*default_border + 1))
 
-      f.buffs[i]:SetWidth(C.unitframes.buff_size)
-      f.buffs[i]:SetHeight(C.unitframes.buff_size)
+      f.buffs[i]:SetWidth(f.config.buffsize)
+      f.buffs[i]:SetHeight(f.config.buffsize)
 
       f.buffs[i]:SetScript("OnEnter", function()
         GameTooltip:SetOwner(this, "ANCHOR_BOTTOMRIGHT")
@@ -375,8 +375,8 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
 
       f.debuffs[i]:RegisterForClicks("RightButtonUp")
       f.debuffs[i]:ClearAllPoints()
-      f.debuffs[i]:SetWidth(C.unitframes.debuff_size)
-      f.debuffs[i]:SetHeight(C.unitframes.debuff_size)
+      f.debuffs[i]:SetWidth(f.config.debuffsize)
+      f.debuffs[i]:SetHeight(f.config.debuffsize)
       f.debuffs[i]:SetNormalTexture(nil)
       f.debuffs[i]:SetScript("OnEnter", function()
         GameTooltip:SetOwner(this, "ANCHOR_BOTTOMRIGHT")
@@ -570,9 +570,9 @@ function pfUI.uf:RefreshUnit(unit, component)
       end
 
       unit.debuffs[i]:SetPoint(af, unit, as,
-      (i-1-8*row)*((2*default_border) + C.unitframes.debuff_size + 1),
-      invert * (top)*((2*default_border) + C.unitframes.buff_size + 1) +
-      invert * (row)*((2*default_border) + C.unitframes.debuff_size + 1) + invert*(2*default_border + 1))
+      (i-1-8*row)*((2*default_border) + unit.config.debuffsize + 1),
+      invert * (top)*((2*default_border) + unit.config.buffsize + 1) +
+      invert * (row)*((2*default_border) + unit.config.debuffsize + 1) + invert*(2*default_border + 1))
 
       local texture, stacks, dtype
       if unit.label == "player" then
@@ -718,10 +718,7 @@ function pfUI.uf:RefreshUnit(unit, component)
   end
 
   pfUI.uf:SetupDebuffFilter()
-  if table.getn(pfUI.uf.debuffs) > 0 and
-    ((pfUI_config.unitframes.group.raid_debuffs == "1" and unit.label == "party") or
-    unit.label == "raid")
-  then
+  if table.getn(pfUI.uf.debuffs) > 0 and unit.config.debuff_indicator == "1" then
     local infected = false
     for i=1,32 do
       local _,_,dtype = UnitDebuff(unit.label .. unit.id, i)
@@ -789,10 +786,7 @@ function pfUI.uf:RefreshUnit(unit, component)
   end
 
   pfUI.uf:SetupBuffFilter()
-  if table.getn(pfUI.uf.buffs) > 0 and
-    ((pfUI_config.unitframes.group.raid_buffs == "1" and unit.label == "party") or
-    unit.label == "raid")
-  then
+  if table.getn(pfUI.uf.buffs) > 0 and unit.config.buff_indicator == "1" then
     local active = {}
 
     for i=1,32 do
@@ -984,22 +978,20 @@ function pfUI.uf:SetupDebuffFilter()
 
   local _, myclass = UnitClass("player")
   pfUI.uf.debuffs = {}
-  if pfUI_config.unitframes.raid.debuffs_enable == "1" then
-    if myclass == "PALADIN" or myclass == "PRIEST" or myclass == "WARLOCK" or pfUI_config.unitframes.raid.debuffs_class ~= "1" then
-      table.insert(pfUI.uf.debuffs, "magic")
-    end
+  if myclass == "PALADIN" or myclass == "PRIEST" or myclass == "WARLOCK" or pfUI_config.unitframes.debuffs_class == "0" then
+    table.insert(pfUI.uf.debuffs, "magic")
+  end
 
-    if myclass == "DRUID" or myclass == "PALADIN" or myclass == "SHAMAN" or pfUI_config.unitframes.raid.debuffs_class ~= "1" then
-      table.insert(pfUI.uf.debuffs, "poison")
-    end
+  if myclass == "DRUID" or myclass == "PALADIN" or myclass == "SHAMAN" or pfUI_config.unitframes.debuffs_class == "0" then
+    table.insert(pfUI.uf.debuffs, "poison")
+  end
 
-    if myclass == "PRIEST" or myclass == "PALADIN" or myclass == "SHAMAN" or pfUI_config.unitframes.raid.debuffs_class ~= "1" then
-      table.insert(pfUI.uf.debuffs, "disease")
-    end
+  if myclass == "PRIEST" or myclass == "PALADIN" or myclass == "SHAMAN" or pfUI_config.unitframes.debuffs_class == "0" then
+    table.insert(pfUI.uf.debuffs, "disease")
+  end
 
-    if myclass == "DRUID" or myclass == "MAGE" or pfUI_config.unitframes.raid.debuffs_class ~= "1" then
-      table.insert(pfUI.uf.debuffs, "curse")
-    end
+  if myclass == "DRUID" or myclass == "MAGE" or pfUI_config.unitframes.debuffs_class == "0" then
+    table.insert(pfUI.uf.debuffs, "curse")
   end
 end
 
@@ -1011,7 +1003,7 @@ function pfUI.uf:SetupBuffFilter()
   pfUI.uf.buffs = {}
 
   -- [[ DRUID ]]
-  if myclass == "DRUID" and pfUI_config.unitframes.raid.buffs_buffs == "1" then
+  if myclass == "DRUID" then
     -- Gift of the Wild
     table.insert(pfUI.uf.buffs, "interface\\icons\\spell_nature_regeneration")
 
@@ -1019,17 +1011,8 @@ function pfUI.uf:SetupBuffFilter()
     table.insert(pfUI.uf.buffs, "interface\\icons\\spell_nature_thorns")
   end
 
-  if (pfUI_config.unitframes.raid.buffs_classonly ~= "1" or myclass == "DRUID") and pfUI_config.unitframes.raid.buffs_hots == "1" then
-    -- Regrowth
-    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_nature_resistnature")
-
-    -- Rejuvenation
-    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_nature_rejuvenation")
-  end
-
-
   -- [[ PRIEST ]]
-  if myclass == "PRIEST" and pfUI_config.unitframes.raid.buffs_buffs == "1" then
+  if myclass == "PRIEST" then
     -- Prayer Of Fortitude"
     table.insert(pfUI.uf.buffs, "interface\\icons\\spell_holy_wordfortitude")
     table.insert(pfUI.uf.buffs, "interface\\icons\\spell_holy_prayeroffortitude")
@@ -1046,19 +1029,8 @@ function pfUI.uf:SetupBuffFilter()
     table.insert(pfUI.uf.buffs, "interface\\icons\\spell_holy_excorcism")
   end
 
-  if (pfUI_config.unitframes.raid.buffs_classonly ~= "1" or myclass == "PRIEST") and pfUI_config.unitframes.raid.buffs_hots == "1" then
-    -- Renew
-    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_holy_renew")
-  end
-
-  if (pfUI_config.unitframes.raid.buffs_classonly ~= "1" or myclass == "PRIEST") and pfUI_config.unitframes.raid.buffs_procs == "1" then
-    -- Inspiration
-    table.insert(pfUI.uf.buffs, "interface\\icons\\inv_shield_06")
-  end
-
-
   -- [[ PALADIN ]]
-  if myclass == "PALADIN" and pfUI_config.unitframes.raid.buffs_buffs == "1" then
+  if myclass == "PALADIN" then
     -- Blessing of Salvation
     table.insert(pfUI.uf.buffs, "interface\\icons\\spell_holy_greaterblessingofsalvation")
     table.insert(pfUI.uf.buffs, "interface\\icons\\spell_holy_sealofsalvation")
@@ -1081,25 +1053,15 @@ function pfUI.uf:SetupBuffFilter()
   end
 
 
-  -- [[ SHAMAN ]]
-  if (pfUI_config.unitframes.raid.buffs_classonly ~= "1" or myclass == "SHAMAN") and pfUI_config.unitframes.raid.buffs_procs == "1" then
-    -- Ancestral Fortitude
-    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_nature_undyingstrength")
-
-    -- Healing Way
-    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_nature_healingway")
-  end
-
-
   -- [[ WARRIOR ]]
-  if myclass == "WARRIOR" and pfUI_config.unitframes.raid.buffs_buffs == "1" then
+  if myclass == "WARRIOR" then
     -- Battle Shout
     table.insert(pfUI.uf.buffs, "interface\\icons\\ability_warrior_battleshout")
   end
 
 
   -- [[ MAGE ]]
-  if myclass == "MAGE" and pfUI_config.unitframes.raid.buffs_buffs == "1" then
+  if myclass == "MAGE" then
     -- Arcane Intellect
     table.insert(pfUI.uf.buffs, "interface\\icons\\spell_holy_magicalsentry")
     table.insert(pfUI.uf.buffs, "interface\\icons\\spell_holy_arcaneintellect")
@@ -1109,6 +1071,35 @@ function pfUI.uf:SetupBuffFilter()
 
     -- Amplify Magic
     table.insert(pfUI.uf.buffs, "interface\\icons\\spell_holy_flashheal")
+  end
+
+  -- PROCS
+  -- [[ SHAMAN ]]
+  if (pfUI_config.unitframes.all_procs == "1" or myclass == "SHAMAN") and pfUI_config.unitframes.show_procs == "1" then
+    -- Ancestral Fortitude
+    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_nature_undyingstrength")
+
+    -- Healing Way
+    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_nature_healingway")
+  end
+
+  if (pfUI_config.unitframes.all_procs == "1" or myclass == "PRIEST") and pfUI_config.unitframes.show_procs == "1" then
+    -- Inspiration
+    table.insert(pfUI.uf.buffs, "interface\\icons\\inv_shield_06")
+  end
+
+  -- HOTS
+  if (pfUI_config.unitframes.all_hots == "1" or myclass == "PRIEST") and pfUI_config.unitframes.show_hots == "1" then
+    -- Renew
+    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_holy_renew")
+  end
+
+  if (pfUI_config.unitframes.all_hots == "1" or myclass == "DRUID") and pfUI_config.unitframes.show_hots == "1" then
+    -- Regrowth
+    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_nature_resistnature")
+
+    -- Rejuvenation
+    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_nature_rejuvenation")
   end
 end
 
@@ -1206,7 +1197,9 @@ function pfUI.uf.GetColor(self, preset)
       local _, class = UnitClass(unitstr)
       r, g, b = RAID_CLASS_COLORS[class].r, RAID_CLASS_COLORS[class].g, RAID_CLASS_COLORS[class].b
     else
-      r, g, b = UnitReactionColor[UnitReaction(unitstr, "player")].r, UnitReactionColor[UnitReaction(unitstr, "player")].g, UnitReactionColor[UnitReaction(unitstr, "player")].b
+      if UnitReactionColor[UnitReaction(unitstr, "player")] then
+        r, g, b = UnitReactionColor[UnitReaction(unitstr, "player")].r, UnitReactionColor[UnitReaction(unitstr, "player")].g, UnitReactionColor[UnitReaction(unitstr, "player")].b
+      end
     end
 
   elseif preset == "class" then
