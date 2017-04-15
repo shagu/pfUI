@@ -63,7 +63,7 @@ pfUI:RegisterModule("group", function ()
     pfUI.uf.group[i].target:SetPoint("TOPLEFT", pfUI.uf.group[i], "TOPRIGHT", 3*default_border, 0)
     UpdateMovable(pfUI.uf.group[i].target)
 
-    pfUI.uf.group[i].pet = pfUI.uf:CreateUnitFrame("PartyPet", i, C.unitframes.grouppet, 0.2)
+    pfUI.uf.group[i].pet = pfUI.uf:CreateUnitFrame("PartyPet", i, C.unitframes.grouppet)
     pfUI.uf.group[i].pet:UpdateFrameSize()
     pfUI.uf.group[i].pet:SetPoint("BOTTOMLEFT", pfUI.uf.group[i], "BOTTOMRIGHT", 3*default_border, -default_border)
     UpdateMovable(pfUI.uf.group[i].pet)
