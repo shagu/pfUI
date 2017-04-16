@@ -45,6 +45,25 @@ pfUI:RegisterModule("actionbar", function ()
   end)
 
   if C.bars.glowrange == "1" then
+
+    function _G.ActionButton_UpdateUsable()
+      if pfScanActive then return end
+
+      local icon = getglobal(this:GetName().."Icon");
+      local normalTexture = getglobal(this:GetName().."NormalTexture");
+      local isUsable, notEnoughMana = IsUsableAction(ActionButton_GetPagedID(this));
+      if ( isUsable ) then
+        icon:SetVertexColor(1.0, 1.0, 1.0);
+        normalTexture:SetVertexColor(1.0, 1.0, 1.0);
+      elseif ( notEnoughMana ) then
+        icon:SetVertexColor(0.5, 0.5, 1.0);
+        normalTexture:SetVertexColor(0.5, 0.5, 1.0);
+      else
+        icon:SetVertexColor(0.4, 0.4, 0.4);
+        normalTexture:SetVertexColor(1.0, 1.0, 1.0);
+      end
+    end
+
     hooksecurefunc("ActionButton_OnUpdate", function(elapsed)
       -- Handle range indicator
       if ( this.rangeTimer ) then
