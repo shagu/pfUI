@@ -169,18 +169,20 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
         pfUI.uf:RefreshUnit(this, "all")
       end
 
-      if CheckInteractDistance(this.label .. this.id, 4) or not UnitName(this.label .. this.id) then
-        if this:GetAlpha() ~= 1 then
-          this:SetAlpha(1)
-          if this.config.portrait == "bar" then
-            this.portrait:SetAlpha(pfUI_config.unitframes.portraitalpha)
+      if this.config.faderange == "1" then
+        if CheckInteractDistance(this.label .. this.id, 4) or not UnitName(this.label .. this.id) then
+          if this:GetAlpha() ~= 1 then
+            this:SetAlpha(1)
+            if this.config.portrait == "bar" then
+              this.portrait:SetAlpha(pfUI_config.unitframes.portraitalpha)
+            end
           end
-        end
-      else
-        if this:GetAlpha() ~= .5 then
-          this:SetAlpha(.5)
-          if this.config.portrait == "bar" then
-            this.portrait:SetAlpha(pfUI_config.unitframes.portraitalpha)
+        else
+          if this:GetAlpha() ~= .5 then
+            this:SetAlpha(.5)
+            if this.config.portrait == "bar" then
+              this.portrait:SetAlpha(pfUI_config.unitframes.portraitalpha)
+            end
           end
         end
       end
