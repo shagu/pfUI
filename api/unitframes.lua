@@ -194,18 +194,19 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
         local hpReal = this.cache.hp
         local hpDiff = abs(hpReal - hpDisplay)
 
-        local powerDisplay = this.power.bar:GetValue()
-        local powerReal = this.cache.power
-        local powerDiff = abs(powerReal - powerDisplay)
-
         if this.config.invert_healthbar == "1" then
           hpDisplay = this.hp.bar:GetValue()
           hpReal = this.cache.hpmax - this.cache.hp
           hpDiff = abs(hpReal - hpDisplay)
         end
 
-        if this.label == "target" or this.label == "targettarget" then
-          -- Instant
+        local powerDisplay = this.power.bar:GetValue()
+        local powerReal = this.cache.power
+        local powerDiff = abs(powerReal - powerDisplay)
+
+        if UnitName(this.label .. this.id) ~= this.lastUnit then
+          -- No Animations for new Units
+          this.lastUnit = UnitName(this.label .. this.id)
           this.hp.bar:SetValue(hpReal)
           this.power.bar:SetValue(powerReal)
         else
@@ -223,7 +224,7 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
           elseif powerDisplay > powerReal then
             this.power.bar:SetValue(powerDisplay - ceil(powerDiff / pfUI_config.unitframes.animation_speed))
           else
-            this.power.bar:SetValue(powerReal)
+            this.power.bar:SetValue(this.cache.power)
           end
         end
       else
