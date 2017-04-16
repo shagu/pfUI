@@ -77,6 +77,8 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("unitframes", nil,           "portraitalpha",    "0.1")
   pfUI:UpdateConfig("unitframes", nil,           "portraittexture",  "1")
   pfUI:UpdateConfig("unitframes", nil,           "layout",           "default")
+  pfUI:UpdateConfig("unitframes", nil,           "rangecheck",       "0")
+  pfUI:UpdateConfig("unitframes", nil,           "rangechecki",      ".5")
 
 --  pfUI:UpdateConfig("unitframes", nil,           "buff_size",        "20")  -- TODO migrate, deprecated
 --  pfUI:UpdateConfig("unitframes", nil,           "debuff_size",      "20")  -- TODO migrate, deprecated

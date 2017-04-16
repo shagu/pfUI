@@ -27,6 +27,13 @@ pfUI_locale["zhCN"]["itemtypes"] = {
   ["INVTYPE_THROWN"] = "投掷武器",
 }
 
+pfUI_locale["zhCN"]["rangecheck"] = {
+  ['PALADIN'] = "圣光术",
+  ['PRIEST'] = "快速治疗",
+  ['DRUID'] = "治疗之触",
+  ['SHAMAN'] = "治疗波",
+}
+
 pfUI_locale["zhCN"]["interrupts"] = {
   ["盾击"] = true;
   ["拳击"] = true;

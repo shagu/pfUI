@@ -27,6 +27,13 @@ pfUI_locale["frFR"]["itemtypes"] = {
   ["INVTYPE_THROWN"] = "Arme de jet",
 }
 
+pfUI_locale["frFR"]["rangecheck"] = {
+  ['PALADIN'] = "Lumière sacrée",
+  ['PRIEST'] = "Soins rapides",
+  ['DRUID'] = "Toucher guérisseur",
+  ['SHAMAN'] = "Vague de soins",
+}
+
 pfUI_locale["frFR"]["interrupts"] = {
   ["Coup de bouclier"] = true;
   ["Volée de coups"] = true;

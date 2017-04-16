@@ -170,7 +170,7 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
       end
 
       if this.config.faderange == "1" then
-        if CheckInteractDistance(this.label .. this.id, 4) or not UnitName(this.label .. this.id) then
+        if pfUI.api.UnitInRange(this.label .. this.id, 4) or not UnitName(this.label .. this.id) then
           if this:GetAlpha() ~= 1 then
             this:SetAlpha(1)
             if this.config.portrait == "bar" then

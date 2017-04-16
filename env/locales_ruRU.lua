@@ -27,6 +27,13 @@ pfUI_locale["ruRU"]["itemtypes"] = {
   ["INVTYPE_THROWN"] = "Метательное",
 }
 
+pfUI_locale["ruRU"]["rangecheck"] = {
+  ['PALADIN'] = "Свет небес",
+  ['PRIEST'] = "Быстрое исцеление",
+  ['DRUID'] = "Целительное прикосновение",
+  ['SHAMAN'] = "Волна исцеления",
+}
+
 pfUI_locale["ruRU"]["interrupts"] = {
   ["Удар щитом"] = true;
   ["Зуботычина"] = true;

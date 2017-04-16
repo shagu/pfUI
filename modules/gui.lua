@@ -864,6 +864,8 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui:CreateConfig(pfUI.gui.uf, "Portrait Alpha", C.unitframes, "portraitalpha")
   pfUI.gui:CreateConfig(pfUI.gui.uf, "Enable 2D Portraits As Fallback", C.unitframes, "portraittexture", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.uf, "Unit Frame Layout", C.unitframes, "layout", "dropdown", { "default", "tukui" })
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "Aggressive 40y-Range Check (Will break stuff)", C.unitframes, "rangecheck", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "40y-Range Check Interval", C.unitframes, "rangechecki")
 
   pfUI.gui:CreateConfig(pfUI.gui.uf, "Buff- And Debuff Indicators", nil, nil, "header")
   pfUI.gui:CreateConfig(pfUI.gui.uf, "Show Hots as Buff Indicators", C.unitframes, "show_hots", "checkbox")

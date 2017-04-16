@@ -1,6 +1,7 @@
 pfUI.api = { }
 pfUI.api._G = getfenv(0)
 local _G = getfenv(0)
+
 -- [ strsplit ]
 -- Splits a string using a delimiter.
 -- 'delimiter'  [string]        characters that will be interpreted as delimiter
@@ -12,6 +13,48 @@ function pfUI.api.strsplit(delimiter, subject)
   local pattern = string.format("([^%s]+)", delimiter)
   string.gsub(subject, pattern, function(c) fields[table.getn(fields)+1] = c end)
   return unpack(fields)
+end
+
+-- [ UnitInRange ]
+-- Returns whether a party/raid member is nearby. It uses spells with a distance of around 40 yards.
+-- unit         [string]        A unit to query (string, unitID)
+-- return:      [bool]          "1" if in range otherwise "nil"
+local RangeCache = {}
+function pfUI.api.UnitInRange(unit)
+    if not UnitExists(unit) or not UnitIsVisible(unit) then
+      return nil
+    end
+
+    if CheckInteractDistance(unit, 4) then
+      return 1
+    else if not pfUI.rangecheck or not pfUI.rangecheck.slot then
+      return nil
+    else
+      -- Extended Range Check
+      if not RangeCache[unit] or RangeCache[unit].time + pfUI.rangecheck.interval < GetTime() then
+        RangeCache[unit] = {}
+        RangeCache[unit].time  = GetTime()
+
+        local noswitch = true
+        if not UnitIsUnit("target", unit) then
+          TargetUnit(unit)
+          noswitch = false
+        end
+
+        if IsActionInRange(pfUI.rangecheck.slot) == 1 then
+          RangeCache[unit].range = 1
+        else
+          RangeCache[unit].range = nil
+        end
+
+        if not noswitch then
+          TargetLastTarget()
+        end
+      end
+
+      return RangeCache[unit].range
+    end
+  end
 end
 
 -- [ strvertical ]
