@@ -35,10 +35,9 @@ function pfUI.api.UnitInRange(unit)
         RangeCache[unit] = {}
         RangeCache[unit].time  = GetTime()
 
-        local noswitch = true
         if not UnitIsUnit("target", unit) then
+          pfScanActive = true
           TargetUnit(unit)
-          noswitch = false
         end
 
         if IsActionInRange(pfUI.rangecheck.slot) == 1 then
@@ -47,8 +46,9 @@ function pfUI.api.UnitInRange(unit)
           RangeCache[unit].range = nil
         end
 
-        if not noswitch then
+        if pfScanActive then
           TargetLastTarget()
+          pfScanActive = false
         end
       end
 

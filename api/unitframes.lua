@@ -204,11 +204,11 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
         local powerReal = this.cache.power
         local powerDiff = abs(powerReal - powerDisplay)
 
-        if UnitName(this.label .. this.id) ~= this.lastUnit then
+        if this.instantRefresh then
           -- No Animations for new Units
-          this.lastUnit = UnitName(this.label .. this.id)
           this.hp.bar:SetValue(hpReal)
           this.power.bar:SetValue(powerReal)
+          this.instantRefresh = nil
         else
           -- Animation
           if hpDisplay < hpReal then
@@ -476,12 +476,21 @@ function pfUI.uf:RefreshUnit(unit, component)
   -- break early on misconfigured UF's
   if not unit.label then return end
 
+  if unit.label == "target" or unit.label == "targettarget" then
+    if pfScanActive == true then return end
+  end
+
   local default_border = pfUI_config.appearance.border.default
   if pfUI_config.appearance.border.groupframes ~= "-1" then
     default_border = pfUI_config.appearance.border.groupframes
   end
 
   local C = pfUI_config
+
+  if UnitName(unit.label .. unit.id) ~= unit.lastUnit then
+    unit.instantRefresh = true
+    unit.lastUnit = UnitName(unit.label .. unit.id)
+  end
 
   if UnitName(unit.label .. unit.id) or (pfUI.gitter and pfUI.gitter:IsShown()) then
     unit:Show() else unit:Hide()
