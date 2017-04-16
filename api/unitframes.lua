@@ -194,30 +194,37 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
         local hpReal = this.cache.hp
         local hpDiff = abs(hpReal - hpDisplay)
 
+        local powerDisplay = this.power.bar:GetValue()
+        local powerReal = this.cache.power
+        local powerDiff = abs(powerReal - powerDisplay)
+
         if this.config.invert_healthbar == "1" then
           hpDisplay = this.hp.bar:GetValue()
           hpReal = this.cache.hpmax - this.cache.hp
           hpDiff = abs(hpReal - hpDisplay)
         end
 
-        if hpDisplay < hpReal then
-          this.hp.bar:SetValue(hpDisplay + ceil(hpDiff / pfUI_config.unitframes.animation_speed))
-        elseif hpDisplay > hpReal then
-          this.hp.bar:SetValue(hpDisplay - ceil(hpDiff / pfUI_config.unitframes.animation_speed))
-        else
+        if this.label == "target" or this.label == "targettarget" then
+          -- Instant
           this.hp.bar:SetValue(hpReal)
-        end
-
-        local powerDisplay = this.power.bar:GetValue()
-        local powerReal = this.cache.power
-        local powerDiff = abs(powerReal - powerDisplay)
-
-        if powerDisplay < powerReal then
-          this.power.bar:SetValue(powerDisplay + ceil(powerDiff / pfUI_config.unitframes.animation_speed))
-        elseif powerDisplay > powerReal then
-          this.power.bar:SetValue(powerDisplay - ceil(powerDiff / pfUI_config.unitframes.animation_speed))
+          this.power.bar:SetValue(powerReal)
         else
-          this.power.bar:SetValue(this.cache.power)
+          -- Animation
+          if hpDisplay < hpReal then
+            this.hp.bar:SetValue(hpDisplay + ceil(hpDiff / pfUI_config.unitframes.animation_speed))
+          elseif hpDisplay > hpReal then
+            this.hp.bar:SetValue(hpDisplay - ceil(hpDiff / pfUI_config.unitframes.animation_speed))
+          else
+            this.hp.bar:SetValue(hpReal)
+          end
+
+          if powerDisplay < powerReal then
+            this.power.bar:SetValue(powerDisplay + ceil(powerDiff / pfUI_config.unitframes.animation_speed))
+          elseif powerDisplay > powerReal then
+            this.power.bar:SetValue(powerDisplay - ceil(powerDiff / pfUI_config.unitframes.animation_speed))
+          else
+            this.power.bar:SetValue(powerReal)
+          end
         end
       else
         this.hp.bar:SetMinMaxValues(0, 100)
