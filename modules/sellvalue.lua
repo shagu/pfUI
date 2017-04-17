@@ -51,6 +51,7 @@ pfUI:RegisterModule("sellvalue", function ()
   local pfHookSetQuestLogItem = GameTooltip.SetQuestLogItem
   function GameTooltip.SetQuestLogItem(self, itemType, index)
     GameTooltip.itemLink = GetQuestLogItemLink(itemType, index)
+    if not GameTooltip.itemLink then return end
     return pfHookSetQuestLogItem(self, itemType, index)
   end
 
