@@ -40,6 +40,7 @@ modules\addons.lua
 modules\minimap.lua
 modules\panel.lua
 modules\player.lua
+modules\focus.lua
 modules\target.lua
 modules\targettarget.lua
 modules\pet.lua

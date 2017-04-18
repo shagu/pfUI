@@ -12,6 +12,26 @@ local uf_defaults = {
   debuffsize = "20",
 }
 
+local pfValidUnits = {}
+pfValidUnits["player"] = true
+pfValidUnits["target"] = true
+pfValidUnits["pet"] = true
+pfValidUnits["mouseover"] = true
+
+pfValidUnits["player" .. "target"] = true
+pfValidUnits["target" .. "target"] = true
+pfValidUnits["pet" .. "target"] = true
+
+for i=1,4 do pfValidUnits["party" .. i] = true end
+for i=1,4 do pfValidUnits["partypet" .. i] = true end
+for i=1,40 do pfValidUnits["raid" .. i] = true end
+for i=1,40 do pfValidUnits["raidpet" .. i] = true end
+
+for i=1,4 do pfValidUnits["party" .. i .. "target"] = true end
+for i=1,4 do pfValidUnits["partypet" .. i .. "target"] = true end
+for i=1,40 do pfValidUnits["raid" .. i .. "target"] = true end
+for i=1,40 do pfValidUnits["raidpet" .. i .. "target"] = true end
+
 function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
   local fname
   if unit == "Party" then
@@ -30,6 +50,13 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
   end
 
   local f = CreateFrame("Button", "pf" .. fname, UIParent)
+
+  if not pfValidUnits[unit .. id] then
+    f.unitname = unit
+    f.RegisterEvent = function() return end
+    unit = "mouseover"
+    id = ""
+  end
 
   f.UpdateFrameSize = pfUI.uf.UpdateFrameSize
   f.GetColor = pfUI.uf.GetColor
@@ -163,6 +190,27 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
     end)
 
   f:SetScript("OnUpdate", function()
+      local unitname = ( this.label and UnitName(this.label) ) or ""
+
+      if this.unitname and this.unitname ~= strlower(unitname) then
+        -- invalid focus frame
+        for unit, bool in pairs(pfValidUnits) do
+          local scan = UnitName(unit) or ""
+          if this.unitname == strlower(scan) then
+            this.label = unit
+            this.portrait.model.lastUnit = nil
+            this.instantRefresh = true
+            pfUI.uf:RefreshUnit(this, "all")
+            return
+          end
+          this.label = nil
+          this.instantRefresh = true
+          this.hp.bar:SetStatusBarColor(.2,.2,.2)
+        end
+      end
+
+      if not this.label then return end
+
       if this.tick and not this.lastTick then this.lastTick = GetTime() + this.tick end
       if this.lastTick and this.lastTick < GetTime() then
         this.lastTick = GetTime() + this.tick
@@ -235,6 +283,7 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
       end
     end)
   f:SetScript("OnEnter", function()
+        if not this.label then return end
         GameTooltip_SetDefaultAnchor(GameTooltip, this)
         GameTooltip:SetUnit(this.label .. this.id)
         GameTooltip:Show()
@@ -243,6 +292,7 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
         GameTooltip:FadeOut()
       end)
   f:SetScript("OnClick", function ()
+        if not this.label then return end
         pfUI.uf:ClickAction(arg1)
       end)
 
@@ -319,6 +369,8 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
       f.buffs[i]:SetHeight(f.config.buffsize)
 
       f.buffs[i]:SetScript("OnEnter", function()
+        if not this:GetParent().label then return end
+
         GameTooltip:SetOwner(this, "ANCHOR_BOTTOMRIGHT")
         if this:GetParent().label == "player" then
           GameTooltip:SetPlayerBuff(GetPlayerBuff(id-1,"HELPFUL"))
@@ -472,6 +524,8 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
 end
 
 function pfUI.uf:RefreshUnit(unit, component)
+  if not unit.label then return end
+
   local component = component or ""
   -- break early on misconfigured UF's
   if not unit.label then return end
