@@ -1118,8 +1118,7 @@ function pfUI.uf:GetStatusValue(unit, pos)
 
   -- as a fallback, draw the name
   if pos == "center" and not config then
-    frame:SetTextColor(pfUI.uf:GetColorUnit(unitstr))
-    return UnitName(unitstr)
+    config = "unit"
   end
 
   if config == "unit" then
