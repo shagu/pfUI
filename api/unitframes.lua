@@ -292,8 +292,11 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
         GameTooltip:FadeOut()
       end)
   f:SetScript("OnClick", function ()
-        if not this.label then return end
-        pfUI.uf:ClickAction(arg1)
+        if not this.label and this.unitname then
+          TargetByName(this.unitname)
+        else
+          pfUI.uf:ClickAction(arg1)
+        end
       end)
 
   f.leaderIcon = CreateFrame("Frame", nil, f.hp.bar)
@@ -441,6 +444,7 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
       f.debuffs[i]:SetHeight(f.config.debuffsize)
       f.debuffs[i]:SetNormalTexture(nil)
       f.debuffs[i]:SetScript("OnEnter", function()
+        if not this:GetParent().label then return end
         GameTooltip:SetOwner(this, "ANCHOR_BOTTOMRIGHT")
         if this:GetParent().label == "player" then
           GameTooltip:SetPlayerBuff(GetPlayerBuff(id-1,"HARMFUL"))
