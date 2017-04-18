@@ -41,6 +41,20 @@ function pfUI.api.round(input, places)
   end
 end
 
+-- [ GetItemLinkByName ]
+-- Returns an itemLink for the given itemname
+-- 'name'       [string]         name of the item
+-- returns:     [string]         entire itemLink for the given item
+function pfUI.api.GetItemLinkByName(name)
+  for itemID = 1, 25818 do
+    local itemName, hyperLink, itemQuality = GetItemInfo(itemID)
+    if (itemName and itemName == name) then
+      local _, _, _, hex = GetItemQualityColor(tonumber(itemQuality))
+      return hex.. "|H"..hyperLink.."|h["..itemName.."]|h|r"
+    end
+  end
+end
+
 -- [ hooksecurefunc ]
 -- Hooks a global function and injects custom code
 -- 'name'       [string]           name of the function that shold be hooked
