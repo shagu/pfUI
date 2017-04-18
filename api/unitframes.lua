@@ -546,7 +546,7 @@ function pfUI.uf:RefreshUnit(unit, component)
     unit.lastUnit = UnitName(unit.label .. unit.id)
   end
 
-  if UnitName(unit.label .. unit.id) or (pfUI.gitter and pfUI.gitter:IsShown()) then
+  if UnitName(unit.label .. unit.id) or (pfUI.gitter and pfUI.gitter:IsShown()) or unit.unitname then
     unit:Show() else unit:Hide()
   end
 
