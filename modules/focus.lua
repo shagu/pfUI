@@ -4,7 +4,7 @@ pfUI:RegisterModule("focus", function ()
 
   pfUI.uf.focus = pfUI.uf:CreateUnitFrame("Focus", nil, C.unitframes.focus, .2)
   pfUI.uf.focus:UpdateFrameSize()
-  pfUI.uf.focus:SetPoint("CENTER", UIParent, "CENTER", 0,0)
+  pfUI.uf.focus:SetPoint("BOTTOMLEFT", UIParent, "BOTTOM", 220, 220)
   UpdateMovable(pfUI.uf.focus)
   pfUI.uf.focus:Hide()
 end)
