@@ -1,23 +1,5 @@
 pfUI.uf = CreateFrame("Frame",nil,UIParent)
 
-local uf_defaults = {
-  visible = "1",
-  portrait = "bar",
-  width = "200",
-  height = "50",
-  pheight = "10",
-  pspace = "-3",
-  buffs = "top",
-  buffsize = "20",
-  debuffs = "top",
-  debuffsize = "20",
-  invert_healthbar = "0",
-  buff_indicator = "0",
-  debuff_indicator = "0",
-  clickcast = "0",
-  faderange = "0",
-}
-
 local pfValidUnits = {}
 pfValidUnits["player"] = true
 pfValidUnits["target"] = true
@@ -68,7 +50,7 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
 
   f.label = unit
   f.id = id
-  f.config = config or uf_defaults
+  f.config = config or pfUI_config.unitframes.fallback
   f.tick = tick
 
   if f.config.visible ~= "1" then
