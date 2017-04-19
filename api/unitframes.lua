@@ -1,6 +1,7 @@
 pfUI.uf = CreateFrame("Frame",nil,UIParent)
 
 local uf_defaults = {
+  visible = "1",
   portrait = "bar",
   width = "200",
   height = "50",
@@ -10,6 +11,11 @@ local uf_defaults = {
   buffsize = "20",
   debuffs = "top",
   debuffsize = "20",
+  invert_healthbar = "0",
+  buff_indicator = "0",
+  debuff_indicator = "0",
+  clickcast = "0",
+  faderange = "0",
 }
 
 local pfValidUnits = {}
@@ -65,6 +71,11 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
   f.id = id
   f.config = config or uf_defaults
   f.tick = tick
+
+  if f.config.visible ~= "1" then
+    f:Hide()
+    return
+  end
 
   f.hp = CreateFrame("Frame",nil, f)
   f.hp:SetPoint("TOP", 0, 0)
