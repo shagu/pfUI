@@ -49,7 +49,6 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
   local unit = strlower(unit or "")
   local id = strlower(id or "")
   local C = pfUI_config
-  local spacing = pfUI_config.unitframes.player.pspace
   local default_border = pfUI_config.appearance.border.default
   if pfUI_config.appearance.border.unitframes ~= "-1" then
     default_border = pfUI_config.appearance.border.unitframes
