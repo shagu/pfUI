@@ -336,6 +336,19 @@ function pfUI.api.CreateQuestionDialog(text, yes, no, editbox)
     return
   end
 
+  local yes, no = yes, no
+  local yescap, nocap = "Yes", "No"
+
+  if yes and type(yes) == "table" then
+    yescap = yes[1]
+    yes = yes[2]
+  end
+
+  if no and type(no) == "table" then
+    nocap = no[1]
+    no = no[2]
+  end
+
   if not text then text = "Are you sure?" end
 
   local border = tonumber(pfUI_config.appearance.border.default)
@@ -355,7 +368,7 @@ function pfUI.api.CreateQuestionDialog(text, yes, no, editbox)
   question:SetScript("OnMouseUp",function()
     this:StopMovingOrSizing()
   end)
-  pfUI.api.CreateBackdrop(question)
+  pfUI.api.CreateBackdrop(question, nil, nil, .85)
 
   -- text
   question.text = question:CreateFontString("Status", "LOW", "GameFontNormal")
@@ -383,33 +396,33 @@ function pfUI.api.CreateQuestionDialog(text, yes, no, editbox)
   question.yes = CreateFrame("Button", "pfQuestionDialogYes", question, "UIPanelButtonTemplate")
   pfUI.api.SkinButton(question.yes)
   question.yes:SetWidth(100)
-  question.yes:SetHeight(20)
-  question.yes:SetText("Yes")
+  question.yes:SetHeight(22)
+  question.yes:SetText(yescap)
   question.yes:SetScript("OnClick", function()
     if yes then yes() end
     this:GetParent():Hide()
   end)
 
   if question.input then
-    question.yes:SetPoint("TOPLEFT", question.input, "BOTTOMLEFT", -border, -padding)
+    question.yes:SetPoint("TOPRIGHT", question.input, "BOTTOM", -3*border, -padding)
   else
-    question.yes:SetPoint("TOPLEFT", question.text, "BOTTOMLEFT", 0, -padding)
+    question.yes:SetPoint("TOPRIGHT", question.text, "BOTTOM", -3*border, -padding)
   end
 
   question.no = CreateFrame("Button", "pfQuestionDialogNo", question, "UIPanelButtonTemplate")
   pfUI.api.SkinButton(question.no)
-  question.no:SetWidth(85)
-  question.no:SetHeight(20)
-  question.no:SetText("No")
+  question.no:SetWidth(100)
+  question.no:SetHeight(22)
+  question.no:SetText(nocap)
   question.no:SetScript("OnClick", function()
     if no then no() end
     this:GetParent():Hide()
   end)
 
   if question.input then
-    question.no:SetPoint("TOPRIGHT", question.input, "BOTTOMRIGHT", border, -padding)
+    question.no:SetPoint("TOPLEFT", question.input, "BOTTOM", 3*border, -padding)
   else
-    question.no:SetPoint("TOPRIGHT", question.text, "BOTTOMRIGHT", 0, -padding)
+    question.no:SetPoint("TOPLEFT", question.text, "BOTTOM", 3*border, -padding)
   end
 
   question.close = CreateFrame("Button", "pfQuestionDialogClose", question)
