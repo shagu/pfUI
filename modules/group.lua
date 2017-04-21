@@ -17,39 +17,7 @@ pfUI:RegisterModule("group", function ()
     end
   end
 
-  pfUI.uf.group = CreateFrame("Button","pfGroup",UIParent)
-  pfUI.uf.group:Hide()
-
-  pfUI.uf.group:RegisterEvent("PLAYER_ENTERING_WORLD")
-  pfUI.uf.group:RegisterEvent("PARTY_MEMBERS_CHANGED")
-  pfUI.uf.group:RegisterEvent("PARTY_MEMBER_ENABLE")
-  pfUI.uf.group:RegisterEvent("PARTY_MEMBER_DISABLE")
-  pfUI.uf.group:RegisterEvent("RAID_ROSTER_UPDATE")
-  pfUI.uf.group:RegisterEvent("GROUP_ROSTER_UPDATE")
-
-  pfUI.uf.group:SetScript("OnEvent", function()
-    PartyMemberBackground:Hide()
-
-    for i=1, 4 do
-      if C.unitframes.group.hide_in_raid == "1" and UnitInRaid("player") then
-        pfUI.uf.group[i]:Hide()
-      else
-        if GetNumPartyMembers() >= i then
-          pfUI.uf.group[i]:Show()
-          if UnitIsConnected("party"..i) or not UnitName("party"..i) then
-            pfUI.uf.group[i]:SetAlpha(1)
-          else
-            pfUI.uf.group[i]:SetAlpha(.25)
-          end
-        else
-          if pfUI.uf.group[i] then
-            pfUI.uf.group[i]:Hide()
-          end
-        end
-      end
-    end
-  end)
-
+  pfUI.uf.group = {}
 
   for i=1, 4 do
     pfUI.uf.group[i] = pfUI.uf:CreateUnitFrame("Party", i, C.unitframes.group)

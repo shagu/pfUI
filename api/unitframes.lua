@@ -154,7 +154,13 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
         pfUI.uf:RefreshUnit(this, "all")
       elseif ( this.label == "party" or this.label == "player" ) and event == "PARTY_MEMBERS_CHANGED" then
         pfUI.uf:RefreshUnit(this, "all")
-      elseif this.label == "raid" and event == "RAID_ROSTER_UPDATE" then
+      elseif this.label == "party" and event == "PARTY_MEMBER_ENABLE" then
+        pfUI.uf:RefreshUnit(this, "all")
+      elseif this.label == "party" and event == "PARTY_MEMBER_DISABLE" then
+        pfUI.uf:RefreshUnit(this, "all")
+      elseif this.label == "party" and event == "GROUP_ROSTER_UPDATE" then
+        pfUI.uf:RefreshUnit(this, "all")
+      elseif ( this.label == "raid" or this.label == "party" ) and event == "RAID_ROSTER_UPDATE" then
         pfUI.uf:RefreshUnit(this, "all")
       elseif this.label == "player" and event == "PLAYER_AURAS_CHANGED" then
         pfUI.uf:RefreshUnit(this, "aura")
@@ -209,26 +215,26 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
         pfUI.uf:RefreshUnit(this, "all")
       end
 
-      if this.config.faderange == "1" then
-        if pfUI.api.UnitInRange(this.label .. this.id, 4) or not UnitName(this.label .. this.id) then
-          if this:GetAlpha() ~= 1 then
-            this:SetAlpha(1)
-            if this.config.portrait == "bar" then
-              this.portrait:SetAlpha(pfUI_config.unitframes.portraitalpha)
+      if UnitIsConnected(this.label .. this.id) or ( pfUI.gitter and pfUI.gitter:IsShown()) then
+        if not this.cache then return end
+
+        if this.config.faderange == "1" then
+          if pfUI.api.UnitInRange(this.label .. this.id, 4) or (pfUI.gitter and pfUI.gitter:IsShown()) then
+            if this:GetAlpha() ~= 1 then
+              this:SetAlpha(1)
+              if this.config.portrait == "bar" then
+                this.portrait:SetAlpha(pfUI_config.unitframes.portraitalpha)
+              end
             end
-          end
-        else
-          if this:GetAlpha() ~= .5 then
-            this:SetAlpha(.5)
-            if this.config.portrait == "bar" then
-              this.portrait:SetAlpha(pfUI_config.unitframes.portraitalpha)
+          else
+            if this:GetAlpha() ~= .5 then
+              this:SetAlpha(.5)
+              if this.config.portrait == "bar" then
+                this.portrait:SetAlpha(pfUI_config.unitframes.portraitalpha)
+              end
             end
           end
         end
-      end
-
-      if UnitIsConnected(this.label .. this.id) then
-        if not this.cache then return end
 
         local hpDisplay = this.hp.bar:GetValue()
         local hpReal = this.cache.hp
@@ -272,6 +278,13 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
         this.power.bar:SetMinMaxValues(0, 100)
         this.hp.bar:SetValue(0)
         this.power.bar:SetValue(0)
+
+        if ( this.label == "party" or this.label == "raid" ) and this:GetAlpha() ~= .25 then
+          this:SetAlpha(.25)
+          if this.config.portrait == "bar" then
+            this.portrait:SetAlpha(pfUI_config.unitframes.portraitalpha)
+          end
+        end
       end
     end)
   f:SetScript("OnEnter", function()
@@ -543,7 +556,15 @@ function pfUI.uf:RefreshUnit(unit, component)
   end
 
   if UnitName(unit.label .. unit.id) or (pfUI.gitter and pfUI.gitter:IsShown()) or unit.unitname then
-    unit:Show() else unit:Hide()
+    if pfUI_config["unitframes"]["group"]["hide_in_raid"] == "1" and strsub(unit.label,0,5) == "party" and UnitInRaid("player") then
+      unit:Hide()
+    elseif strsub(unit.label,0,8) == "partypet" and not UnitIsVisible(unit.label .. unit.id) then
+      unit:Hide()
+    else
+      unit:Show()
+    end
+  else
+    unit:Hide()
   end
 
   if not unit.cache then unit.cache = {} end
