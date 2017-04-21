@@ -880,8 +880,8 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "Enable Zone Text On Minimap Mouseover", C.appearance.minimap, "mouseoverzone", "checkbox")
 
   -- unit frames
-  local txtValues = { "unit", "name", "level", "class", "health", "healthmax", "healthperc", "healthmiss",
-  "power", "powermax", "powerperc", "powermiss" }
+  local txtValues = { "none", "unit", "name", "level", "class",  "health", "healthmax", "healthperc",
+  "healthmiss", "healthdyn", "power", "powermax", "powerperc", "powermiss", "powerdyn" }
 
   pfUI.gui.uf = pfUI.gui:CreateConfigTab("Unit Frames")
   pfUI.gui:CreateConfig(pfUI.gui.uf, "Disable pfUI Unit Frames", C.unitframes, "disable", "checkbox")
