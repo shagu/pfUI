@@ -56,7 +56,6 @@ modules\autovendor.lua
 modules\bags.lua
 modules\cooldown.lua
 modules\tooltip.lua
-modules\uf_tukui.lua
 modules\thirdparty.lua
 modules\buff.lua
 modules\nameplates.lua
@@ -66,3 +65,4 @@ modules\infight.lua
 modules\sellvalue.lua
 modules\eqcompare.lua
 modules\map.lua
+modules\uf_tukui.lua

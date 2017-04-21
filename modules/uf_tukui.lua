@@ -13,36 +13,62 @@ pfUI:RegisterModule("uf_tukui", function ()
   if C.unitframes.layout == "tukui" then
     -- Player
     pfUI.uf.player.caption = CreateFrame("Frame", "pfPlayerCaption", pfUI.uf.player)
-    pfUI.uf.player.caption:SetHeight(C.global.font_size + default_border)
+    pfUI.uf.player.caption:SetHeight(C.global.font_size + 2*default_border)
     pfUI.uf.player.caption:SetPoint("TOPRIGHT",pfUI.uf.player,"BOTTOMRIGHT",0, -default_border*2 - pspacing)
     pfUI.uf.player.caption:SetPoint("TOPLEFT",pfUI.uf.player,"BOTTOMLEFT",0, -default_border*2 - pspacing)
 
-    pfUI.uf.player.hpText:SetParent(pfUI.uf.player.caption)
-    pfUI.uf.player.hpText:SetAllPoints(pfUI.uf.player.caption)
-    pfUI.uf.player.hpText:SetFont(pfUI.font_default, C.global.font_size, "OUTLINE")
+    pfUI.uf.player.leftText:SetParent(pfUI.uf.player.caption)
+    pfUI.uf.player.leftText:ClearAllPoints()
+    pfUI.uf.player.leftText:SetPoint("TOPLEFT",pfUI.uf.player.caption, "TOPLEFT", default_border, 1)
+    pfUI.uf.player.leftText:SetPoint("BOTTOMRIGHT",pfUI.uf.player.caption, "BOTTOMRIGHT", -default_border, 0)
+
+    pfUI.uf.player.centerText:SetParent(pfUI.uf.player.caption)
+    pfUI.uf.player.centerText:ClearAllPoints()
+    pfUI.uf.player.centerText:SetPoint("TOPLEFT",pfUI.uf.player.caption, "TOPLEFT", default_border, 1)
+    pfUI.uf.player.centerText:SetPoint("BOTTOMRIGHT",pfUI.uf.player.caption, "BOTTOMRIGHT", -default_border, 0)
+
+    pfUI.uf.player.rightText:SetParent(pfUI.uf.player.caption)
+    pfUI.uf.player.rightText:ClearAllPoints()
+    pfUI.uf.player.rightText:SetPoint("TOPLEFT",pfUI.uf.player.caption, "TOPLEFT", default_border, 1)
+    pfUI.uf.player.rightText:SetPoint("BOTTOMRIGHT",pfUI.uf.player.caption, "BOTTOMRIGHT", -default_border, 0)
 
     pfUI.castbar.player:SetAllPoints(pfUI.uf.player.caption)
 
-    pfUI.uf.player.powerText:SetParent(pfUI.uf.player.caption)
-    pfUI.uf.player.powerText:SetAllPoints(pfUI.uf.player.caption)
-    pfUI.uf.player.powerText:SetFont(pfUI.font_default, C.global.font_size, "OUTLINE")
+    if pfUI.infight then
+      pfUI.infight["player"]:SetPoint("TOPLEFT", pfUI.uf.player, "TOPLEFT", -7 - default_border,7 + default_border)
+      pfUI.infight["player"]:SetPoint("BOTTOMRIGHT", pfUI.uf.player.caption, "BOTTOMRIGHT", 7 + default_border,-7 - default_border)
+    end
+
     CreateBackdrop(pfUI.uf.player.caption)
 
     -- Target
     pfUI.uf.target.caption = CreateFrame("Frame", "pfTargetCaption", pfUI.uf.target)
-    pfUI.uf.target.caption:SetHeight(C.global.font_size + default_border)
+    pfUI.uf.target.caption:SetHeight(C.global.font_size + 3*default_border)
     pfUI.uf.target.caption:SetPoint("TOPRIGHT",pfUI.uf.target,"BOTTOMRIGHT", 0, -default_border*2 - pspacing)
     pfUI.uf.target.caption:SetPoint("TOPLEFT",pfUI.uf.target,"BOTTOMLEFT", 0, -default_border*2 - pspacing)
 
-    pfUI.uf.target.hpText:SetParent(pfUI.uf.target.caption)
-    pfUI.uf.target.hpText:SetAllPoints(pfUI.uf.target.caption)
-    pfUI.uf.target.hpText:SetFont(pfUI.font_default, C.global.font_size, "OUTLINE")
+    pfUI.uf.target.leftText:SetParent(pfUI.uf.target.caption)
+    pfUI.uf.target.leftText:ClearAllPoints()
+    pfUI.uf.target.leftText:SetPoint("TOPLEFT",pfUI.uf.target.caption, "TOPLEFT", default_border, 1)
+    pfUI.uf.target.leftText:SetPoint("BOTTOMRIGHT",pfUI.uf.target.caption, "BOTTOMRIGHT", -default_border, 0)
+
+    pfUI.uf.target.centerText:SetParent(pfUI.uf.target.caption)
+    pfUI.uf.target.centerText:ClearAllPoints()
+    pfUI.uf.target.centerText:SetPoint("TOPLEFT",pfUI.uf.target.caption, "TOPLEFT", default_border, 1)
+    pfUI.uf.target.centerText:SetPoint("BOTTOMRIGHT",pfUI.uf.target.caption, "BOTTOMRIGHT", -default_border, 0)
+
+    pfUI.uf.target.rightText:SetParent(pfUI.uf.target.caption)
+    pfUI.uf.target.rightText:ClearAllPoints()
+    pfUI.uf.target.rightText:SetPoint("TOPLEFT",pfUI.uf.target.caption, "TOPLEFT", default_border, 1)
+    pfUI.uf.target.rightText:SetPoint("BOTTOMRIGHT",pfUI.uf.target.caption, "BOTTOMRIGHT", -default_border, 0)
 
     pfUI.castbar.target:SetAllPoints(pfUI.uf.target.caption)
 
-    pfUI.uf.target.powerText:SetParent(pfUI.uf.target.caption)
-    pfUI.uf.target.powerText:SetAllPoints(pfUI.uf.target.caption)
-    pfUI.uf.target.powerText:SetFont(pfUI.font_default, C.global.font_size, "OUTLINE")
+    if pfUI.infight then
+      pfUI.infight["target"]:SetPoint("TOPLEFT", pfUI.uf.target, "TOPLEFT", -7 - default_border,7 + default_border)
+      pfUI.infight["target"]:SetPoint("BOTTOMRIGHT", pfUI.uf.target.caption, "BOTTOMRIGHT", 7 + default_border,-7 - default_border)
+    end
+
     CreateBackdrop(pfUI.uf.target.caption)
   end
 end)
