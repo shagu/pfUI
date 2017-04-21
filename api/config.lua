@@ -79,6 +79,7 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("unitframes", nil,           "layout",           "default")
   pfUI:UpdateConfig("unitframes", nil,           "rangecheck",       "0")
   pfUI:UpdateConfig("unitframes", nil,           "rangechecki",      ".5")
+  pfUI:UpdateConfig("unitframes", nil,           "combosize",        "6")
 
 --  pfUI:UpdateConfig("unitframes", nil,           "buff_size",        "20")  -- TODO migrate, deprecated
 --  pfUI:UpdateConfig("unitframes", nil,           "debuff_size",      "20")  -- TODO migrate, deprecated

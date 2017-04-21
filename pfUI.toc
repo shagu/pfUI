@@ -42,6 +42,7 @@ modules\panel.lua
 modules\player.lua
 modules\focus.lua
 modules\target.lua
+modules\combopoints.lua
 modules\targettarget.lua
 modules\pet.lua
 modules\group.lua

@@ -13,10 +13,6 @@ pfUI:RegisterModule("target", function ()
   TargetFrame:Hide()
   TargetFrame:UnregisterAllEvents()
 
-  -- Hide Blizzard combo point frame and unregister all events to prevent it from popping up again
-  ComboFrame:Hide()
-  ComboFrame:UnregisterAllEvents()
-
   pfUI.uf.target = pfUI.uf:CreateUnitFrame("Target", nil, C.unitframes.target)
   pfUI.uf.target:UpdateFrameSize()
   pfUI.uf.target:SetPoint("BOTTOMLEFT", UIParent, "BOTTOM", 75, 125)

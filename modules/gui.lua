@@ -162,7 +162,12 @@ pfUI:RegisterModule("gui", function ()
           frame.drag:SetScript("OnMouseWheel", function()
             local scale = round(frame:GetScale() + arg1/10, 1)
 
-            if IsShiftKeyDown() and strsub(frame:GetName(),0,6) == "pfRaid" then
+            if IsShiftKeyDown() and strsub(frame:GetName(),0,7) == "pfCombo" then
+              for i=1,5 do
+                local frame = _G["pfCombo" .. i]
+                pfUI.gui:SaveScale(frame, scale)
+              end
+            elseif IsShiftKeyDown() and strsub(frame:GetName(),0,6) == "pfRaid" then
               for i=1,40 do
                 local frame = _G["pfRaid" .. i]
                 pfUI.gui:SaveScale(frame, scale)
@@ -193,6 +198,14 @@ pfUI:RegisterModule("gui", function ()
 
         frame.drag:SetScript("OnMouseDown",function()
           if IsShiftKeyDown() then
+            if strsub(frame:GetName(),0,7) == "pfCombo" then
+              for i=1,5 do
+                local cframe = _G["pfCombo" .. i]
+                cframe:StartMoving()
+                cframe:StopMovingOrSizing()
+                cframe.drag.backdrop:SetBackdropBorderColor(1,1,1,1)
+              end
+            end
             if strsub(frame:GetName(),0,6) == "pfRaid" then
               for i=1,40 do
                 local cframe = _G["pfRaid" .. i]
@@ -235,8 +248,25 @@ pfUI:RegisterModule("gui", function ()
             if frame.oldPos then
               local diffxpos = frame.oldPos[1] - xpos
               local diffypos = frame.oldPos[2] - ypos
+              if strsub(frame:GetName(),0,7) == "pfCombo" then
+                for i=1,5 do
+                  local cframe = _G["pfCombo" .. i]
+                  cframe.drag.backdrop:SetBackdropBorderColor(.2,1,.8,1)
+                  if cframe:GetName() ~= frame:GetName() then
+                    local _, _, _, xpos, ypos = cframe:GetPoint()
+                    cframe:SetPoint("TOPLEFT", xpos - diffxpos, ypos - diffypos)
 
-              if strsub(frame:GetName(),0,6) == "pfRaid" then
+                    local _, _, _, xpos, ypos = cframe:GetPoint()
+
+                    if not C.position[cframe:GetName()] then
+                      C.position[cframe:GetName()] = {}
+                    end
+
+                    C.position[cframe:GetName()]["xpos"] = xpos
+                    C.position[cframe:GetName()]["ypos"] = ypos
+                  end
+                end
+              elseif strsub(frame:GetName(),0,6) == "pfRaid" then
                 for i=1,40 do
                   local cframe = _G["pfRaid" .. i]
                   cframe.drag.backdrop:SetBackdropBorderColor(.2,1,.8,1)
@@ -866,6 +896,7 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui:CreateConfig(pfUI.gui.uf, "Unit Frame Layout", C.unitframes, "layout", "dropdown", { "default", "tukui" })
   pfUI.gui:CreateConfig(pfUI.gui.uf, "Aggressive 40y-Range Check (Will break stuff)", C.unitframes, "rangecheck", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.uf, "40y-Range Check Interval", C.unitframes, "rangechecki")
+  pfUI.gui:CreateConfig(pfUI.gui.uf, "Combopoint Size", C.unitframes, "combosize")
 
   pfUI.gui:CreateConfig(pfUI.gui.uf, "Buff- And Debuff Indicators", nil, nil, "header")
   pfUI.gui:CreateConfig(pfUI.gui.uf, "Show Hots as Buff Indicators", C.unitframes, "show_hots", "checkbox")
