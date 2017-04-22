@@ -555,16 +555,18 @@ function pfUI.uf:RefreshUnit(unit, component)
     unit.lastUnit = UnitName(unit.label .. unit.id)
   end
 
-  if UnitName(unit.label .. unit.id) or (pfUI.gitter and pfUI.gitter:IsShown()) or unit.unitname then
-    if pfUI_config["unitframes"]["group"]["hide_in_raid"] == "1" and strsub(unit.label,0,5) == "party" and UnitInRaid("player") then
-      unit:Hide()
-    elseif strsub(unit.label,0,8) == "partypet" and not UnitIsVisible(unit.label .. unit.id) then
-      unit:Hide()
+  if not ( pfUI.gitter and pfUI.gitter:IsShown() ) then
+    if UnitName(unit.label .. unit.id) or unit.unitname then
+      if pfUI_config["unitframes"]["group"]["hide_in_raid"] == "1" and strsub(unit.label,0,5) == "party" and UnitInRaid("player") then
+        unit:Hide()
+      elseif strsub(unit.label,0,8) == "partypet" and not UnitIsVisible(unit.label .. unit.id) then
+        unit:Hide()
+      else
+        unit:Show()
+      end
     else
-      unit:Show()
+      unit:Hide()
     end
-  else
-    unit:Hide()
   end
 
   if not unit.cache then unit.cache = {} end
