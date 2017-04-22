@@ -42,6 +42,7 @@ pfUI supports and contains language specific code for the following languages.
 * German (deDE)
 * Chinese (zhCN)
 * Russian (ruRU)
+* Korean (koKR)
 
 ## Screenshots
 ![Screenshot](http://mephis.he-hosting.de/shaguaddons/pfUI/mmobase/screen.jpg)
