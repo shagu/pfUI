@@ -634,24 +634,24 @@ pfUI:RegisterModule("chat", function ()
   ChatFrameEditBox:SetAltArrowKeyMode(false)
 
   local default = " " .. "%s" .. "|r:" .. "\32"
-  CHAT_CHANNEL_GET = "%s" .. "|r:" .. "\32"
-  CHAT_GUILD_GET = '[G]' .. default
-  CHAT_OFFICER_GET = '[O]'.. default
-  CHAT_PARTY_GET = '[P]' .. default
-  CHAT_RAID_GET = '[R]' .. default
-  CHAT_RAID_LEADER_GET = '[RL]' .. default
-  CHAT_RAID_WARNING_GET = '[RW]' .. default
-  CHAT_BATTLEGROUND_GET = '[BG]' .. default
-  CHAT_BATTLEGROUND_LEADER_GET = '[BL]' .. default
-  CHAT_SAY_GET = '[S]' .. default
+  _G.CHAT_CHANNEL_GET = "%s" .. "|r:" .. "\32"
+  _G.CHAT_GUILD_GET = '[G]' .. default
+  _G.CHAT_OFFICER_GET = '[O]'.. default
+  _G.CHAT_PARTY_GET = '[P]' .. default
+  _G.CHAT_RAID_GET = '[R]' .. default
+  _G.CHAT_RAID_LEADER_GET = '[RL]' .. default
+  _G.CHAT_RAID_WARNING_GET = '[RW]' .. default
+  _G.CHAT_BATTLEGROUND_GET = '[BG]' .. default
+  _G.CHAT_BATTLEGROUND_LEADER_GET = '[BL]' .. default
+  _G.CHAT_SAY_GET = '[S]' .. default
 
   local cr, cg, cb, ca = strsplit(",", C.chat.global.whisper)
   cr, cg, cb = tonumber(cr), tonumber(cg), tonumber(cb)
   local wcol = string.format("%02x%02x%02x",cr * 255,cg * 255, cb * 255)
 
   if C.chat.global.whispermod == "1" then
-    CHAT_WHISPER_GET = '|cff' .. wcol .. '[W]' .. default
-    CHAT_WHISPER_INFORM_GET = '[W]' .. default
+    _G.CHAT_WHISPER_GET = '|cff' .. wcol .. '[W]' .. default
+    _G.CHAT_WHISPER_INFORM_GET = '[W]' .. default
   end
 
   CHAT_YELL_GET = '[Y]' .. default
@@ -688,13 +688,6 @@ pfUI:RegisterModule("chat", function ()
           text = string.gsub(text, "|Hplayer:(.-)|h%[.-%]|h(.-:-)", "[|Hplayer:%1|h" .. Name .. "|h]" .. "%2")
         end
 
-        if C.chat.global.whispermod == "1" then
-          -- patch incoming whisper string to match the colors
-          if string.find(text, '|cff'..wcol, 1) == 1 then
-            text = string.gsub(text, "|r", "|cff" .. wcol)
-          end
-        end
-
         local pattern = "%]%s+(.*|Hplayer)"
         local channel = string.gsub(text, ".*%[(.-)" .. pattern ..".+", "%1")
         if string.find(channel, "%d+%. ") then
@@ -712,6 +705,13 @@ pfUI:RegisterModule("chat", function ()
           local r,g,b,a = strsplit(",", C.chat.text.timecolor)
           local chex = string.format("%02x%02x%02x%02x", a*255, r*255, g*255, b*255)
           text = "|c" .. chex .. left .. date(C.chat.text.timeformat) .. right .. "|r " .. text
+        end
+
+        if C.chat.global.whispermod == "1" then
+          -- patch incoming whisper string to match the colors
+          if string.find(text, '|cff'..wcol, 1) == 1 then
+            text = string.gsub(text, "|r", "|cff" .. wcol)
+          end
         end
 
         _G["ChatFrame"..i].HookAddMessage(frame, text, unpack(arg))
