@@ -27,17 +27,6 @@ pfUI_locale["zhCN"]["itemtypes"] = {
   ["INVTYPE_THROWN"] = "投掷武器",
 }
 
-pfUI_locale["zhCN"]["stances"] = {
-  ['BattleStance'] = "战斗姿态",
-  ['DefensiveStance'] = "防御姿态",
-  ['BerserkerStance'] = "狂暴姿态",
-  ['wantBattleStance'] = "必须在战斗姿态中",
-  ['wantDefensiveStance'] = "必须在防御姿态中",
-  ['wantBerserkerStance'] = "必须在狂暴姿态中",
-  ['wantBattleDefStance'] = "必须在战斗姿态, 防御姿态中",
-  ['wantBattleBerserkStance'] = "必须在战斗姿态, 狂暴姿态中",
-}
-
 pfUI_locale["zhCN"]["interrupts"] = {
   ["盾击"] = true;
   ["拳击"] = true;

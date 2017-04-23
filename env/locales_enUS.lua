@@ -27,17 +27,6 @@ pfUI_locale["enUS"]["itemtypes"] = {
   ["INVTYPE_THROWN"] = "Thrown",
 }
 
-pfUI_locale["enUS"]["stances"] = {
-  ['BattleStance'] = "Battle Stance",
-  ['DefensiveStance'] = "Defensive Stance",
-  ['BerserkerStance'] = "Berserker Stance",
-  ['wantBattleStance'] = "Must be in Battle Stance",
-  ['wantDefensiveStance'] = "Must be in Defensive Stance",
-  ['wantBerserkerStance'] = "Must be in Berserker Stance",
-  ['wantBattleDefStance'] = "Must be in Battle Stance, Defensive Stance",
-  ['wantBattleBerserkStance'] = "Must be in Battle Stance, Berserker Stance",
-}
-
 pfUI_locale["enUS"]["interrupts"] = {
   ["Shield Bash"] = true;
   ["Pummel"] = true;

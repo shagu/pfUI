@@ -4,50 +4,27 @@ pfUI:RegisterModule("autoshift", function ()
 
   pfUI.autoshift.lastError = ""
   pfUI.autoshift.CastSpellByName = _G["CastSpellByName"]
+  pfUI.autoshift.scanString = string.gsub(SPELL_FAILED_ONLY_SHAPESHIFT, "%%s", "(.+)")
 
-  hooksecurefunc("CastSpell", function(spellId, spellbookTabNum)
-    if pfUI.autoshift.lastError == L["stances"]['wantBattleStance'] then
-      pfUI.autoshift.CastSpellByName(L["stances"]['BattleStance'])
-    elseif pfUI.autoshift.lastError == L["stances"]['wantBattleDefStance'] then
-      pfUI.autoshift.CastSpellByName(L["stances"]['BattleStance'])
-    elseif pfUI.autoshift.lastError == L["stances"]['wantBattleBerserkStance'] then
-      pfUI.autoshift.CastSpellByName(L["stances"]['BerserkerStance'])
-    elseif pfUI.autoshift.lastError == L["stances"]['wantBerserkerStance'] then
-      pfUI.autoshift.CastSpellByName(L["stances"]['BerserkerStance'])
-    elseif pfUI.autoshift.lastError == L["stances"]['wantDefensiveStance'] then
-      pfUI.autoshift.CastSpellByName(L["stances"]['DefensiveStance'])
+  function pfUI.autoshift:SwitchStance()
+    for stance in string.gfind(pfUI.autoshift.lastError, pfUI.autoshift.scanString) do
+      for _, stance in pairs({ strsplit(",", stance)}) do
+        pfUI.autoshift.CastSpellByName(string.gsub(stance,"^%s*(.-)%s*$", "%1"))
+      end
     end
     pfUI.autoshift.lastError = ""
+  end
+
+  hooksecurefunc("CastSpell", function(spellId, spellbookTabNum)
+    pfUI.autoshift:SwitchStance()
   end)
 
   hooksecurefunc("CastSpellByName", function(spellName, onSelf)
-    if pfUI.autoshift.lastError == L["stances"]['wantBattleStance'] then
-      pfUI.autoshift.CastSpellByName(L["stances"]['BattleStance'])
-    elseif pfUI.autoshift.lastError == L["stances"]['wantBattleDefStance'] then
-      pfUI.autoshift.CastSpellByName(L["stances"]['BattleStance'])
-    elseif pfUI.autoshift.lastError == L["stances"]['wantBattleBerserkStance'] then
-      pfUI.autoshift.CastSpellByName(L["stances"]['BerserkerStance'])
-    elseif pfUI.autoshift.lastError == L["stances"]['wantBerserkerStance'] then
-      pfUI.autoshift.CastSpellByName(L["stances"]['BerserkerStance'])
-    elseif pfUI.autoshift.lastError == L["stances"]['wantDefensiveStance'] then
-      pfUI.autoshift.CastSpellByName(L["stances"]['DefensiveStance'])
-    end
-    pfUI.autoshift.lastError = ""
+    pfUI.autoshift:SwitchStance()
   end)
 
   hooksecurefunc("UseAction", function(slot, checkCursor, onSelf)
-    if pfUI.autoshift.lastError == L["stances"]['wantBattleStance'] then
-      pfUI.autoshift.CastSpellByName(L["stances"]['BattleStance'])
-    elseif pfUI.autoshift.lastError == L["stances"]['wantBattleDefStance'] then
-      pfUI.autoshift.CastSpellByName(L["stances"]['BattleStance'])
-    elseif pfUI.autoshift.lastError == L["stances"]['wantBattleBerserkStance'] then
-      pfUI.autoshift.CastSpellByName(L["stances"]['BerserkerStance'])
-    elseif pfUI.autoshift.lastError == L["stances"]['wantBerserkerStance'] then
-      pfUI.autoshift.CastSpellByName(L["stances"]['BerserkerStance'])
-    elseif pfUI.autoshift.lastError == L["stances"]['wantDefensiveStance'] then
-      pfUI.autoshift.CastSpellByName(L["stances"]['DefensiveStance'])
-    end
-    pfUI.autoshift.lastError = ""
+    pfUI.autoshift:SwitchStance()
   end)
 
   pfUI.autoshift.buffs = { "spell_nature_swiftness", "_mount_", "_qirajicrystal_",
