@@ -45,6 +45,73 @@ pfUI:RegisterModule("chat", function ()
     CreateBackdrop(pfUI.chat.left.panelTop, default_border, nil, .8)
   end
 
+  -- url copy dialog
+  function pfUI.chat:FormatLink(link)
+    return " |cffccccff|Hurl:" .. link .. "|h[" .. link .. "]|h|r "
+  end
+
+  pfUI.chat.urlcopy = CreateFrame("Frame", "pfURLCopy", UIParent)
+  pfUI.chat.urlcopy:Hide()
+  pfUI.chat.urlcopy:SetWidth(270)
+  pfUI.chat.urlcopy:SetHeight(65)
+  pfUI.chat.urlcopy:SetPoint("CENTER", 0, 0)
+  CreateBackdrop(pfUI.chat.urlcopy, nil, nil, 0.8)
+
+  pfUI.chat.urlcopy:SetMovable(true)
+  pfUI.chat.urlcopy:EnableMouse(true)
+  pfUI.chat.urlcopy:SetScript("OnMouseDown",function()
+    this:StartMoving()
+  end)
+
+  pfUI.chat.urlcopy:SetScript("OnMouseUp",function()
+    this:StopMovingOrSizing()
+  end)
+
+  pfUI.chat.urlcopy:SetScript("OnShow", function()
+    this.text:HighlightText()
+  end)
+
+  pfUI.chat.urlcopy.text = CreateFrame("EditBox", "pfURLCopyEditBox", pfUI.chat.urlcopy)
+  pfUI.chat.urlcopy.text:SetTextColor(.2,1,.8,1)
+  pfUI.chat.urlcopy.text:SetJustifyH("CENTER")
+
+  pfUI.chat.urlcopy.text:SetWidth(250)
+  pfUI.chat.urlcopy.text:SetHeight(20)
+  pfUI.chat.urlcopy.text:SetPoint("TOP", pfUI.chat.urlcopy, "TOP", 0, -10)
+  pfUI.chat.urlcopy.text:SetFontObject(GameFontNormal)
+  CreateBackdrop(pfUI.chat.urlcopy.text)
+
+  pfUI.chat.urlcopy.text:SetScript("OnEscapePressed", function(self)
+    pfUI.chat.urlcopy:Hide()
+  end)
+
+  pfUI.chat.urlcopy.text:SetScript("OnEditFocusLost", function(self)
+    pfUI.chat.urlcopy:Hide()
+  end)
+
+  pfUI.chat.urlcopy.close = CreateFrame("Button", "pfURLCopyClose", pfUI.chat.urlcopy, "UIPanelButtonTemplate")
+  pfUI.api.SkinButton(pfUI.chat.urlcopy.close)
+  pfUI.chat.urlcopy.close:SetWidth(70)
+  pfUI.chat.urlcopy.close:SetHeight(18)
+  pfUI.chat.urlcopy.close:SetPoint("BOTTOMRIGHT", pfUI.chat.urlcopy, "BOTTOMRIGHT", -10, 10)
+
+  pfUI.chat.urlcopy.close:SetText("Close")
+  pfUI.chat.urlcopy.close:SetScript("OnClick", function()
+    pfUI.chat.urlcopy:Hide()
+  end)
+
+  pfUI.chat.urlcopy.SetItemRef = SetItemRef
+
+  function _G.SetItemRef (link, text, button)
+    if (strsub(link, 1, 3) == "url") then
+      if string.len(link) > 4 and string.sub(link,1,4) == "url:" then
+        pfUI.chat.urlcopy.text:SetText(string.sub(link,5, string.len(link)))
+        pfUI.chat.urlcopy:Show()
+      end
+      return
+    end
+  end
+
   -- whisper forwarding
   pfUI.chat.left.panelTop.proxy = CreateFrame("Button", "leftChatWhisperProxy", pfUI.chat.left.panelTop)
   pfUI.chat.left.panelTop.proxy:RegisterEvent("CHAT_MSG_WHISPER")
@@ -594,6 +661,16 @@ pfUI:RegisterModule("chat", function ()
     end
     _G["ChatFrame"..i].AddMessage = function (frame, text, ...)
       if text then
+
+        if C.chat.text.detecturl == "1" then
+          text = string.gsub (text, " www%.([_A-Za-z0-9-]+)%.(%S+)%s?", pfUI.chat:FormatLink("www.%1.%2"))
+          text = string.gsub (text, " (%a+)://(%S+)%s?", pfUI.chat:FormatLink("%1://%2"))
+          text = string.gsub (text, " ([_A-Za-z0-9-%.]+)@([_A-Za-z0-9-]+)(%.+)([_A-Za-z0-9-%.]+)%s?", pfUI.chat:FormatLink("%1@%2%3%4"))
+          text = string.gsub (text, " (%d%d?%d?)%.(%d%d?%d?)%.(%d%d?%d?)%.(%d%d?%d?):(%d%d?%d?%d?%d?)%s?", pfUI.chat:FormatLink("%1.%2.%3.%4:%5"))
+          text = string.gsub (text, " (%d%d?%d?)%.(%d%d?%d?)%.(%d%d?%d?)%.(%d%d?%d?)%s?", pfUI.chat:FormatLink("%1.%2.%3.%4"))
+          text = string.gsub (text, " ([_A-Za-z0-9-]+)%.([_A-Za-z0-9-]+)%.(%S+)%s?", pfUI.chat:FormatLink("%1.%2.%3"))
+          text = string.gsub (text, " ([_A-Za-z0-9-]+)%.([_A-Za-z0-9-]+)%.(%S+)%:([_0-9-]+)%s?", pfUI.chat:FormatLink("%1.%2.%3:%4"))
+        end
 
         if C.chat.text.classcolor == "1" then
           local Name = string.gsub(text, ".*|Hplayer:(.-)|h.*", "%1")
