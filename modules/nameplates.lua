@@ -5,7 +5,6 @@ pfUI:RegisterModule("nameplates", function ()
 
   -- catch all nameplates
   pfUI.nameplates.scanner = CreateFrame("Frame", "pfNameplateScanner", UIParent)
-  pfUI.nameplates.scanner.objects = {}
   pfUI.nameplates.scanner:SetScript("OnUpdate", function()
     for _, nameplate in ipairs({WorldFrame:GetChildren()}) do
       if not nameplate.done and nameplate:GetObjectType() == "Button" then
@@ -15,7 +14,6 @@ pfUI:RegisterModule("nameplates", function ()
           nameplate:SetScript("OnShow", function() pfUI.nameplates:CreateNameplate() end)
           nameplate:SetScript("OnUpdate", function() pfUI.nameplates:UpdateNameplate() end)
           nameplate:Show()
-          table.insert(this.objects, nameplate)
           nameplate.done = true
         end
       end
@@ -73,17 +71,6 @@ pfUI:RegisterModule("nameplates", function ()
     level:SetPoint("RIGHT", healthbar, "LEFT", -1, 0)
     levelicon:ClearAllPoints()
     levelicon:SetPoint("RIGHT", healthbar, "LEFT", -1, 0)
-
-    -- show indicator for elite/rare mobs
-    if level:GetText() ~= nil then
-      if pfUI.nameplates.mobs[name:GetText()] and pfUI.nameplates.mobs[name:GetText()] == "elite" and not string.find(level:GetText(), "+", 1) then
-        level:SetText(level:GetText() .. "+")
-      elseif pfUI.nameplates.mobs[name:GetText()] and pfUI.nameplates.mobs[name:GetText()] == "rareelite" and not string.find(level:GetText(), "R+", 1) then
-        level:SetText(level:GetText() .. "R+")
-      elseif pfUI.nameplates.mobs[name:GetText()] and pfUI.nameplates.mobs[name:GetText()] == "rare" and not string.find(level:GetText(), "R", 1) then
-        level:SetText(level:GetText() .. "R")
-      end
-    end
 
     pfUI.nameplates:CreateDebuffs(this)
     pfUI.nameplates:CreateCastbar(healthbar)
@@ -193,6 +180,17 @@ pfUI:RegisterModule("nameplates", function ()
 
     local healthbar = this:GetChildren()
     local border, glow, name, level, levelicon , raidicon = this:GetRegions()
+
+    -- show indicator for elite/rare mobs
+    if level:GetText() ~= nil then
+      if pfUI.nameplates.mobs[name:GetText()] and pfUI.nameplates.mobs[name:GetText()] == "elite" and not string.find(level:GetText(), "+", 1) then
+        level:SetText(level:GetText() .. "+")
+      elseif pfUI.nameplates.mobs[name:GetText()] and pfUI.nameplates.mobs[name:GetText()] == "rareelite" and not string.find(level:GetText(), "R+", 1) then
+        level:SetText(level:GetText() .. "R+")
+      elseif pfUI.nameplates.mobs[name:GetText()] and pfUI.nameplates.mobs[name:GetText()] == "rare" and not string.find(level:GetText(), "R", 1) then
+        level:SetText(level:GetText() .. "R")
+      end
+    end
 
     if C.nameplates.players == "1" then
       if not pfUI_playerDB[name:GetText()] or not pfUI_playerDB[name:GetText()]["class"] then
