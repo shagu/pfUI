@@ -2,7 +2,7 @@
 ## Title: |cff33ffccpf|cffffffffUI
 ## Author: Shagu
 ## Notes: A complete user interface replacement.
-## Version: 2.0.5
+## Version: 2.1
 ## SavedVariables: pfUI_profiles
 ## SavedVariablesPerCharacter: pfUI_config, pfUI_init, pfUI_playerDB
 
@@ -20,6 +20,7 @@ env\locales_frFR.lua
 env\locales_deDE.lua
 env\locales_zhCN.lua
 env\locales_ruRU.lua
+env\locales_koKR.lua
 
 # environment
 env\tables.lua

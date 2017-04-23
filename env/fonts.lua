@@ -1,6 +1,8 @@
 -- this must be set during the initial execution
 if GetLocale() == "zhCN" then
   STANDARD_TEXT_FONT = "Fonts\\FZXHLJW.TTF"
+elseif GetLocale() == "koKR" then
+  STANDARD_TEXT_FONT = "Fonts\\2002.TTF"
 else
   STANDARD_TEXT_FONT = "Interface\\AddOns\\pfUI\\fonts\\Myriad-Pro.ttf"
 end
@@ -22,6 +24,10 @@ function pfUI.environment:UpdateFonts()
       pfUI.font_default = "Fonts\\FZXHLJW.TTF"
       pfUI.font_combat = "Fonts\\FZXHLJW.TTF"
       pfUI.font_square = "Fonts\\FZXHLJW.TTF"
+    elseif GetLocale() == "koKR" then
+      pfUI.font_default = "Fonts\\2002.TTF"
+      pfUI.font_combat = "Fonts\\2002.TTF"
+      pfUI.font_square = "Fonts\\2002.TTF"
     end
   end
 
