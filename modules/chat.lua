@@ -102,7 +102,7 @@ pfUI:RegisterModule("chat", function ()
 
   pfUI.chat.urlcopy.SetItemRef = SetItemRef
 
-  function _G.SetItemRef (link, text, button)
+  function _G.SetItemRef(link, text, button)
     if (strsub(link, 1, 3) == "url") then
       if string.len(link) > 4 and string.sub(link,1,4) == "url:" then
         pfUI.chat.urlcopy.text:SetText(string.sub(link,5, string.len(link)))
@@ -110,6 +110,7 @@ pfUI:RegisterModule("chat", function ()
       end
       return
     end
+    pfUI.chat.urlcopy.SetItemRef(link, text, button)
   end
 
   -- whisper forwarding
