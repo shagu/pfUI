@@ -35,6 +35,8 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("global",     nil,           "hidebuff",         "0")
   pfUI:UpdateConfig("global",     nil,           "hidewbuff",        "0")
   pfUI:UpdateConfig("global",     nil,           "twentyfour",       "1")
+  pfUI:UpdateConfig("global",     nil,           "autosell",         "0")
+  pfUI:UpdateConfig("global",     nil,           "autorepair",       "0")
 
   pfUI:UpdateConfig("appearance", "border",      "background",       "0,0,0,1")
   pfUI:UpdateConfig("appearance", "border",      "color",            "0.3,0.3,0.3,1")
