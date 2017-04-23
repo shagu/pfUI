@@ -33,6 +33,7 @@ pfUI:RegisterModule("uf_tukui", function ()
     pfUI.uf.player.rightText:SetPoint("BOTTOMRIGHT",pfUI.uf.player.caption, "BOTTOMRIGHT", -default_border, 0)
 
     pfUI.castbar.player:SetAllPoints(pfUI.uf.player.caption)
+    UpdateMovable(pfUI.castbar.player)
 
     if pfUI.infight then
       pfUI.infight["player"]:SetPoint("TOPLEFT", pfUI.uf.player, "TOPLEFT", -7 - default_border,7 + default_border)
@@ -63,6 +64,7 @@ pfUI:RegisterModule("uf_tukui", function ()
     pfUI.uf.target.rightText:SetPoint("BOTTOMRIGHT",pfUI.uf.target.caption, "BOTTOMRIGHT", -default_border, 0)
 
     pfUI.castbar.target:SetAllPoints(pfUI.uf.target.caption)
+    UpdateMovable(pfUI.castbar.target)
 
     if pfUI.infight then
       pfUI.infight["target"]:SetPoint("TOPLEFT", pfUI.uf.target, "TOPLEFT", -7 - default_border,7 + default_border)
