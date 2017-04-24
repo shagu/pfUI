@@ -27,17 +27,6 @@ pfUI_locale["ruRU"]["itemtypes"] = {
   ["INVTYPE_THROWN"] = "Метательное",
 }
 
-pfUI_locale["ruRU"]["stances"] = {
-  ['BattleStance'] = "Боевая стойка",
-  ['DefensiveStance'] = "Оборонительная стойка",
-  ['BerserkerStance'] = "Стойка берсерка",
-  ['wantBattleStance'] = "Необходимо находиться в Боевая стойка.",
-  ['wantDefensiveStance'] = "Необходимо находиться в Оборонительная стойка.",
-  ['wantBerserkerStance'] = "Необходимо находиться в Стойка берсерка.",
-  ['wantBattleDefStance'] = "Необходимо находиться в Боевая стойка, Оборонительная стойка.",
-  ['wantBattleBerserkStance'] = "Необходимо находиться в Боевая стойка, Стойка берсерка.",
-}
-
 pfUI_locale["ruRU"]["interrupts"] = {
   ["Удар щитом"] = true;
   ["Зуботычина"] = true;

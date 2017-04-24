@@ -45,6 +45,74 @@ pfUI:RegisterModule("chat", function ()
     CreateBackdrop(pfUI.chat.left.panelTop, default_border, nil, .8)
   end
 
+  -- url copy dialog
+  function pfUI.chat:FormatLink(link)
+    return " |cffccccff|Hurl:" .. link .. "|h[" .. link .. "]|h|r "
+  end
+
+  pfUI.chat.urlcopy = CreateFrame("Frame", "pfURLCopy", UIParent)
+  pfUI.chat.urlcopy:Hide()
+  pfUI.chat.urlcopy:SetWidth(270)
+  pfUI.chat.urlcopy:SetHeight(65)
+  pfUI.chat.urlcopy:SetPoint("CENTER", 0, 0)
+  CreateBackdrop(pfUI.chat.urlcopy, nil, nil, 0.8)
+
+  pfUI.chat.urlcopy:SetMovable(true)
+  pfUI.chat.urlcopy:EnableMouse(true)
+  pfUI.chat.urlcopy:SetScript("OnMouseDown",function()
+    this:StartMoving()
+  end)
+
+  pfUI.chat.urlcopy:SetScript("OnMouseUp",function()
+    this:StopMovingOrSizing()
+  end)
+
+  pfUI.chat.urlcopy:SetScript("OnShow", function()
+    this.text:HighlightText()
+  end)
+
+  pfUI.chat.urlcopy.text = CreateFrame("EditBox", "pfURLCopyEditBox", pfUI.chat.urlcopy)
+  pfUI.chat.urlcopy.text:SetTextColor(.2,1,.8,1)
+  pfUI.chat.urlcopy.text:SetJustifyH("CENTER")
+
+  pfUI.chat.urlcopy.text:SetWidth(250)
+  pfUI.chat.urlcopy.text:SetHeight(20)
+  pfUI.chat.urlcopy.text:SetPoint("TOP", pfUI.chat.urlcopy, "TOP", 0, -10)
+  pfUI.chat.urlcopy.text:SetFontObject(GameFontNormal)
+  CreateBackdrop(pfUI.chat.urlcopy.text)
+
+  pfUI.chat.urlcopy.text:SetScript("OnEscapePressed", function(self)
+    pfUI.chat.urlcopy:Hide()
+  end)
+
+  pfUI.chat.urlcopy.text:SetScript("OnEditFocusLost", function(self)
+    pfUI.chat.urlcopy:Hide()
+  end)
+
+  pfUI.chat.urlcopy.close = CreateFrame("Button", "pfURLCopyClose", pfUI.chat.urlcopy, "UIPanelButtonTemplate")
+  pfUI.api.SkinButton(pfUI.chat.urlcopy.close)
+  pfUI.chat.urlcopy.close:SetWidth(70)
+  pfUI.chat.urlcopy.close:SetHeight(18)
+  pfUI.chat.urlcopy.close:SetPoint("BOTTOMRIGHT", pfUI.chat.urlcopy, "BOTTOMRIGHT", -10, 10)
+
+  pfUI.chat.urlcopy.close:SetText("Close")
+  pfUI.chat.urlcopy.close:SetScript("OnClick", function()
+    pfUI.chat.urlcopy:Hide()
+  end)
+
+  pfUI.chat.urlcopy.SetItemRef = SetItemRef
+
+  function _G.SetItemRef(link, text, button)
+    if (strsub(link, 1, 3) == "url") then
+      if string.len(link) > 4 and string.sub(link,1,4) == "url:" then
+        pfUI.chat.urlcopy.text:SetText(string.sub(link,5, string.len(link)))
+        pfUI.chat.urlcopy:Show()
+      end
+      return
+    end
+    pfUI.chat.urlcopy.SetItemRef(link, text, button)
+  end
+
   -- whisper forwarding
   pfUI.chat.left.panelTop.proxy = CreateFrame("Button", "leftChatWhisperProxy", pfUI.chat.left.panelTop)
   pfUI.chat.left.panelTop.proxy:RegisterEvent("CHAT_MSG_WHISPER")
@@ -566,24 +634,24 @@ pfUI:RegisterModule("chat", function ()
   ChatFrameEditBox:SetAltArrowKeyMode(false)
 
   local default = " " .. "%s" .. "|r:" .. "\32"
-  CHAT_CHANNEL_GET = "%s" .. "|r:" .. "\32"
-  CHAT_GUILD_GET = '[G]' .. default
-  CHAT_OFFICER_GET = '[O]'.. default
-  CHAT_PARTY_GET = '[P]' .. default
-  CHAT_RAID_GET = '[R]' .. default
-  CHAT_RAID_LEADER_GET = '[RL]' .. default
-  CHAT_RAID_WARNING_GET = '[RW]' .. default
-  CHAT_BATTLEGROUND_GET = '[BG]' .. default
-  CHAT_BATTLEGROUND_LEADER_GET = '[BL]' .. default
-  CHAT_SAY_GET = '[S]' .. default
+  _G.CHAT_CHANNEL_GET = "%s" .. "|r:" .. "\32"
+  _G.CHAT_GUILD_GET = '[G]' .. default
+  _G.CHAT_OFFICER_GET = '[O]'.. default
+  _G.CHAT_PARTY_GET = '[P]' .. default
+  _G.CHAT_RAID_GET = '[R]' .. default
+  _G.CHAT_RAID_LEADER_GET = '[RL]' .. default
+  _G.CHAT_RAID_WARNING_GET = '[RW]' .. default
+  _G.CHAT_BATTLEGROUND_GET = '[BG]' .. default
+  _G.CHAT_BATTLEGROUND_LEADER_GET = '[BL]' .. default
+  _G.CHAT_SAY_GET = '[S]' .. default
 
   local cr, cg, cb, ca = strsplit(",", C.chat.global.whisper)
   cr, cg, cb = tonumber(cr), tonumber(cg), tonumber(cb)
   local wcol = string.format("%02x%02x%02x",cr * 255,cg * 255, cb * 255)
 
   if C.chat.global.whispermod == "1" then
-    CHAT_WHISPER_GET = '|cff' .. wcol .. '[W]' .. default
-    CHAT_WHISPER_INFORM_GET = '[W]' .. default
+    _G.CHAT_WHISPER_GET = '|cff' .. wcol .. '[W]' .. default
+    _G.CHAT_WHISPER_INFORM_GET = '[W]' .. default
   end
 
   CHAT_YELL_GET = '[Y]' .. default
@@ -594,6 +662,16 @@ pfUI:RegisterModule("chat", function ()
     end
     _G["ChatFrame"..i].AddMessage = function (frame, text, ...)
       if text then
+
+        if C.chat.text.detecturl == "1" then
+          text = string.gsub (text, " www%.([_A-Za-z0-9-]+)%.(%S+)%s?", pfUI.chat:FormatLink("www.%1.%2"))
+          text = string.gsub (text, " (%a+)://(%S+)%s?", pfUI.chat:FormatLink("%1://%2"))
+          text = string.gsub (text, " ([_A-Za-z0-9-%.]+)@([_A-Za-z0-9-]+)(%.+)([_A-Za-z0-9-%.]+)%s?", pfUI.chat:FormatLink("%1@%2%3%4"))
+          text = string.gsub (text, " (%d%d?%d?)%.(%d%d?%d?)%.(%d%d?%d?)%.(%d%d?%d?):(%d%d?%d?%d?%d?)%s?", pfUI.chat:FormatLink("%1.%2.%3.%4:%5"))
+          text = string.gsub (text, " (%d%d?%d?)%.(%d%d?%d?)%.(%d%d?%d?)%.(%d%d?%d?)%s?", pfUI.chat:FormatLink("%1.%2.%3.%4"))
+          text = string.gsub (text, " ([_A-Za-z0-9-]+)%.([_A-Za-z0-9-]+)%.(%S+)%s?", pfUI.chat:FormatLink("%1.%2.%3"))
+          text = string.gsub (text, " ([_A-Za-z0-9-]+)%.([_A-Za-z0-9-]+)%.(%S+)%:([_0-9-]+)%s?", pfUI.chat:FormatLink("%1.%2.%3:%4"))
+        end
 
         if C.chat.text.classcolor == "1" then
           local Name = string.gsub(text, ".*|Hplayer:(.-)|h.*", "%1")
@@ -608,13 +686,6 @@ pfUI:RegisterModule("chat", function ()
             end
           end
           text = string.gsub(text, "|Hplayer:(.-)|h%[.-%]|h(.-:-)", "[|Hplayer:%1|h" .. Name .. "|h]" .. "%2")
-        end
-
-        if C.chat.global.whispermod == "1" then
-          -- patch incoming whisper string to match the colors
-          if string.find(text, '|cff'..wcol, 1) == 1 then
-            text = string.gsub(text, "|r", "|cff" .. wcol)
-          end
         end
 
         local pattern = "%]%s+(.*|Hplayer)"
@@ -634,6 +705,13 @@ pfUI:RegisterModule("chat", function ()
           local r,g,b,a = strsplit(",", C.chat.text.timecolor)
           local chex = string.format("%02x%02x%02x%02x", a*255, r*255, g*255, b*255)
           text = "|c" .. chex .. left .. date(C.chat.text.timeformat) .. right .. "|r " .. text
+        end
+
+        if C.chat.global.whispermod == "1" then
+          -- patch incoming whisper string to match the colors
+          if string.find(text, '|cff'..wcol, 1) == 1 then
+            text = string.gsub(text, "|r", "|cff" .. wcol)
+          end
         end
 
         _G["ChatFrame"..i].HookAddMessage(frame, text, unpack(arg))

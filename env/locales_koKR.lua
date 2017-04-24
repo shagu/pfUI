@@ -27,17 +27,6 @@ pfUI_locale["koKR"]["itemtypes"] = {
   ["INVTYPE_THROWN"] = "투척류",
 }
 
-pfUI_locale["koKR"]["stances"] = {
-  ['BattleStance'] = "전투 태세",
-  ['DefensiveStance'] = "방어 태세",
-  ['BerserkerStance'] = "광폭 태세",
-  ['wantBattleStance'] = "전투 태세 필요",
-  ['wantDefensiveStance'] = "방어 태세 필요",
-  ['wantBerserkerStance'] = "광폭 태세 필요",
-  ['wantBattleDefStance'] = "전투 태세 필요, 방어 태세 필요",
-  ['wantBattleBerserkStance'] = "전투 태세 필요, 공폭 태세 필요",
-}
-
 pfUI_locale["koKR"]["interrupts"] = {
   ["방패 가격"] = true;
   ["자루 공격"] = true;

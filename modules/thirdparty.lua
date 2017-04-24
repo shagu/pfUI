@@ -94,6 +94,7 @@ pfUI:RegisterModule("thirdparty", function ()
     pfUIhookWIM:RegisterEvent("ADDON_LOADED")
     pfUIhookWIM:SetScript("OnEvent", function()
       if not pfUIhookWIM_PostMessage and WIM_PostMessage then
+        _G.WIM_isLinkURL = function() return false end
         pfUIhookWIM_PostMessage = _G.WIM_PostMessage
         _G.WIM_PostMessage = function(user, msg, ttype, from, raw_msg)
           pfUIhookWIM_PostMessage(user, msg, ttype, from, raw_msg)

@@ -27,17 +27,6 @@ pfUI_locale["deDE"]["itemtypes"] = {
   ["INVTYPE_THROWN"] = "Wurfwaffe",
 }
 
-pfUI_locale["deDE"]["stances"] = {
-  ['BattleStance'] = "Kampfhaltung",
-  ['DefensiveStance'] = "Verteidigungshaltung",
-  ['BerserkerStance'] = "Berserkerhaltung",
-  ['wantBattleStance'] = "Muss in Kampfhaltung sein.",
-  ['wantDefensiveStance'] = "Muss in Verteidigungshaltung sein.",
-  ['wantBerserkerStance'] = "Muss in Berserkerhaltung sein.",
-  ['wantBattleDefStance'] = "Muss in Kampfhaltung, Verteidigungshaltung sein.",
-  ['wantBattleBerserkStance'] = "Muss in Kampfhaltung, Berserkerhaltung sein.",
-}
-
 pfUI_locale["deDE"]["interrupts"] = {
   ["Schildhieb"] = true;
   ["Zuschlagen"] = true;

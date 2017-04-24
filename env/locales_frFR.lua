@@ -27,17 +27,6 @@ pfUI_locale["frFR"]["itemtypes"] = {
   ["INVTYPE_THROWN"] = "Arme de jet",
 }
 
-pfUI_locale["frFR"]["stances"] = {
-  ['BattleStance'] = "Posture de combat",
-  ['DefensiveStance'] = "Posture défensive",
-  ['BerserkerStance'] = "Posture berserker",
-  ['wantBattleStance'] = "Requiert Posture de combat",
-  ['wantDefensiveStance'] = "Requiert Posture défensive",
-  ['wantBerserkerStance'] = "Requiert Posture berserker",
-  ['wantBattleDefStance'] = "Requiert Posture de combat, Posture défensive",
-  ['wantBattleBerserkStance'] = "Requiert Posture de combat, Posture berserker",
-}
-
 pfUI_locale["frFR"]["interrupts"] = {
   ["Coup de bouclier"] = true;
   ["Volée de coups"] = true;
