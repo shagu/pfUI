@@ -95,7 +95,7 @@ pfUI:RegisterModule("chat", function ()
   pfUI.chat.urlcopy.close:SetHeight(18)
   pfUI.chat.urlcopy.close:SetPoint("BOTTOMRIGHT", pfUI.chat.urlcopy, "BOTTOMRIGHT", -10, 10)
 
-  pfUI.chat.urlcopy.close:SetText("Close")
+  pfUI.chat.urlcopy.close:SetText("关闭")
   pfUI.chat.urlcopy.close:SetScript("OnClick", function()
     pfUI.chat.urlcopy:Hide()
   end)
