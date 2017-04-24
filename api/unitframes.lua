@@ -334,7 +334,8 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
 
     for i=1, f.config.bufflimit do
       local id = i
-      local row = floor((i-1) / 8)
+      local perrow = f.config.buffperrow
+      local row = floor((i-1) / perrow)
 
       f.buffs[i] = CreateFrame("Button", "pfUIPlayerBuff" .. i, f)
       f.buffs[i]:SetID(i)
@@ -369,7 +370,7 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
       end
 
       f.buffs[i]:SetPoint(af, f, as,
-      (i-1-row*8)*((2*default_border) + f.config.buffsize + 1),
+      (i-1-row*perrow)*((2*default_border) + f.config.buffsize + 1),
       invert * (row)*((2*default_border) + f.config.buffsize + 1) + invert*(2*default_border + 1))
 
       f.buffs[i]:SetWidth(f.config.buffsize)
@@ -640,14 +641,17 @@ function pfUI.uf:RefreshUnit(unit, component)
   -- Debuffs
   if unit.debuffs and ( component == "all" or component == "aura" ) then
     for i=1, unit.config.debufflimit do
-      local row = floor((i-1) / 8)
+      local perrow = unit.config.debuffperrow
+      local bperrow = unit.config.buffperrow
+
+      local row = floor((i-1) / unit.config.debuffperrow)
       local buffrow = 0
 
       if unit.config.buffs == unit.config.debuffs then
-        if unit.buffs[1]  and unit.buffs[1]:IsShown()  then buffrow = buffrow + 1 end
-        if unit.buffs[9]  and unit.buffs[9]:IsShown()  then buffrow = buffrow + 1 end
-        if unit.buffs[17] and unit.buffs[17]:IsShown() then buffrow = buffrow + 1 end
-        if unit.buffs[25] and unit.buffs[25]:IsShown() then buffrow = buffrow + 1 end
+        if unit.buffs[0*bperrow+1] and unit.buffs[0*bperrow+1]:IsShown() then buffrow = buffrow + 1 end
+        if unit.buffs[1*bperrow+1] and unit.buffs[1*bperrow+1]:IsShown() then buffrow = buffrow + 1 end
+        if unit.buffs[2*bperrow+1] and unit.buffs[2*bperrow+1]:IsShown() then buffrow = buffrow + 1 end
+        if unit.buffs[3*bperrow+1] and unit.buffs[3*bperrow+1]:IsShown() then buffrow = buffrow + 1 end
       end
 
       local invert, af, as
@@ -662,7 +666,7 @@ function pfUI.uf:RefreshUnit(unit, component)
       end
 
       unit.debuffs[i]:SetPoint(af, unit, as,
-      (i-1-(row)*8)*((2*default_border) + unit.config.debuffsize + 1),
+      (i-1-(row)*perrow)*((2*default_border) + unit.config.debuffsize + 1),
       invert * (row+buffrow)*((2*default_border) + unit.config.debuffsize + 1) + invert*(2*default_border + 1))
 
       local texture, stacks, dtype
