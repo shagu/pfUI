@@ -93,63 +93,65 @@ pfUI:RegisterModule("thirdparty", function ()
     local pfUIhookWIM = CreateFrame("Frame", nil)
     pfUIhookWIM:RegisterEvent("ADDON_LOADED")
     pfUIhookWIM:SetScript("OnEvent", function()
-      if not pfUIhookWIM_PostMessage and WIM_PostMessage then
+      if not pfWIM_WindowOnShow and WIM_WindowOnShow then
         _G.WIM_isLinkURL = function() return false end
-        pfUIhookWIM_PostMessage = _G.WIM_PostMessage
-        _G.WIM_PostMessage = function(user, msg, ttype, from, raw_msg)
-          pfUIhookWIM_PostMessage(user, msg, ttype, from, raw_msg)
-          CreateBackdrop(_G["WIM_msgFrame" .. user], nil, nil, .8)
-          _G["WIM_msgFrame" .. user .. "From"]:ClearAllPoints()
-          _G["WIM_msgFrame" .. user .. "From"]:SetPoint("TOP", 0, -10)
 
-          _G["WIM_msgFrame" .. user].avatar = CreateFrame("Frame", nil, _G["WIM_msgFrame" .. user])
-          _G["WIM_msgFrame" .. user].avatar:SetAllPoints(_G["WIM_msgFrame" .. user])
-          _G["WIM_msgFrame" .. user .. "ClassIcon"]:SetTexCoord(.3, .7, .3, .7)
-          _G["WIM_msgFrame" .. user .. "ClassIcon"]:SetParent(_G["WIM_msgFrame" .. user].avatar)
-          _G["WIM_msgFrame" .. user .. "ClassIcon"]:ClearAllPoints()
-          _G["WIM_msgFrame" .. user .. "ClassIcon"]:SetPoint("TOPLEFT", 10 , -10)
-          _G["WIM_msgFrame" .. user .. "ClassIcon"]:SetWidth(26)
-          _G["WIM_msgFrame" .. user .. "ClassIcon"]:SetHeight(26)
+        pfWIM_WindowOnShow = _G.WIM_WindowOnShow
+        _G.WIM_WindowOnShow = function()
+          local windowname = this:GetName()
 
+          CreateBackdrop(_G[windowname], nil, nil, .8)
+          _G[windowname .. "From"]:ClearAllPoints()
+          _G[windowname .. "From"]:SetPoint("TOP", 0, -10)
 
-          _G["WIM_msgFrame" .. user .. "ScrollingMessageFrame"]:SetPoint("TOPLEFT", _G["WIM_msgFrame" .. user], "TOPLEFT", 10, -45)
-          _G["WIM_msgFrame" .. user .. "ScrollingMessageFrame"]:SetPoint("BOTTOMRIGHT", _G["WIM_msgFrame" .. user], "BOTTOMRIGHT", -32, 32)
-          _G["WIM_msgFrame" .. user .. "ScrollingMessageFrame"]:SetFont(STANDARD_TEXT_FONT, 12)
+          _G[windowname].avatar = CreateFrame("Frame", nil, _G[windowname])
+          _G[windowname].avatar:SetAllPoints(_G[windowname])
+          _G[windowname .. "ClassIcon"]:SetTexCoord(.3, .7, .3, .7)
+          _G[windowname .. "ClassIcon"]:SetParent(_G[windowname].avatar)
+          _G[windowname .. "ClassIcon"]:ClearAllPoints()
+          _G[windowname .. "ClassIcon"]:SetPoint("TOPLEFT", 10 , -10)
+          _G[windowname .. "ClassIcon"]:SetWidth(26)
+          _G[windowname .. "ClassIcon"]:SetHeight(26)
 
-          CreateBackdrop(_G["WIM_msgFrame" .. user .. "MsgBox"])
-          _G["WIM_msgFrame" .. user .. "MsgBox"]:ClearAllPoints()
-          _G["WIM_msgFrame" .. user .. "MsgBox"]:SetPoint("TOPLEFT", _G["WIM_msgFrame" .. user .. "ScrollingMessageFrame"], "BOTTOMLEFT", 0, -5)
-          _G["WIM_msgFrame" .. user .. "MsgBox"]:SetPoint("TOPRIGHT", _G["WIM_msgFrame" .. user .. "ScrollingMessageFrame"], "BOTTOMRIGHT", 0, -5)
-          _G["WIM_msgFrame" .. user .. "MsgBox"]:SetTextInsets(5, 5, 5, 5)
-          _G["WIM_msgFrame" .. user .. "MsgBox"]:SetHeight(20)
-          for i,v in ipairs({_G["WIM_msgFrame" .. user .. "MsgBox"]:GetRegions()}) do
+          _G[windowname .. "ScrollingMessageFrame"]:SetPoint("TOPLEFT", _G[windowname], "TOPLEFT", 10, -45)
+          _G[windowname .. "ScrollingMessageFrame"]:SetPoint("BOTTOMRIGHT", _G[windowname], "BOTTOMRIGHT", -32, 32)
+          _G[windowname .. "ScrollingMessageFrame"]:SetFont(STANDARD_TEXT_FONT, 12)
+
+          CreateBackdrop(_G[windowname .. "MsgBox"])
+          _G[windowname .. "MsgBox"]:ClearAllPoints()
+          _G[windowname .. "MsgBox"]:SetPoint("TOPLEFT", _G[windowname .. "ScrollingMessageFrame"], "BOTTOMLEFT", 0, -5)
+          _G[windowname .. "MsgBox"]:SetPoint("TOPRIGHT", _G[windowname .. "ScrollingMessageFrame"], "BOTTOMRIGHT", 0, -5)
+          _G[windowname .. "MsgBox"]:SetTextInsets(5, 5, 5, 5)
+          _G[windowname .. "MsgBox"]:SetHeight(20)
+          for i,v in ipairs({_G[windowname .. "MsgBox"]:GetRegions()}) do
             if i==6  then v:SetTexture(.1,.1,.1,.5) end
           end
 
-          CreateBackdrop(_G["WIM_msgFrame" .. user .. "ShortcutFrameButton1"])
-          for i,v in ipairs({_G["WIM_msgFrame" .. user .. "ShortcutFrameButton1"]:GetRegions()}) do
+          CreateBackdrop(_G[windowname .. "ShortcutFrameButton1"])
+          for i,v in ipairs({_G[windowname .. "ShortcutFrameButton1"]:GetRegions()}) do
             if i >= 2 and i < 7 then v:SetTexture(.1,.1,.1,0) end
           end
 
-          CreateBackdrop(_G["WIM_msgFrame" .. user .. "ShortcutFrameButton2"])
-          for i,v in ipairs({_G["WIM_msgFrame" .. user .. "ShortcutFrameButton2"]:GetRegions()}) do
+          CreateBackdrop(_G[windowname .. "ShortcutFrameButton2"])
+          for i,v in ipairs({_G[windowname .. "ShortcutFrameButton2"]:GetRegions()}) do
             if i >= 2 and i < 7 then v:SetTexture(.1,.1,.1,0) end
           end
 
-          CreateBackdrop(_G["WIM_msgFrame" .. user .. "ShortcutFrameButton3"])
-          for i,v in ipairs({_G["WIM_msgFrame" .. user .. "ShortcutFrameButton3"]:GetRegions()}) do
+          CreateBackdrop(_G[windowname .. "ShortcutFrameButton3"])
+          for i,v in ipairs({_G[windowname .. "ShortcutFrameButton3"]:GetRegions()}) do
             if i >= 2 and i < 7 then v:SetTexture(.1,.1,.1,0) end
           end
 
-          CreateBackdrop(_G["WIM_msgFrame" .. user .. "ShortcutFrameButton4"])
-          for i,v in ipairs({_G["WIM_msgFrame" .. user .. "ShortcutFrameButton4"]:GetRegions()}) do
+          CreateBackdrop(_G[windowname .. "ShortcutFrameButton4"])
+          for i,v in ipairs({_G[windowname .. "ShortcutFrameButton4"]:GetRegions()}) do
             if i >= 2 and i < 7 then v:SetTexture(.1,.1,.1,0) end
           end
 
-          CreateBackdrop(_G["WIM_msgFrame" .. user .. "ShortcutFrameButton5"])
-          for i,v in ipairs({_G["WIM_msgFrame" .. user .. "ShortcutFrameButton5"]:GetRegions()}) do
+          CreateBackdrop(_G[windowname .. "ShortcutFrameButton5"])
+          for i,v in ipairs({_G[windowname .. "ShortcutFrameButton5"]:GetRegions()}) do
             if i >= 2 and i < 7 then v:SetTexture(.1,.1,.1,0) end
           end
+          pfWIM_WindowOnShow()
         end
       end
     end)
