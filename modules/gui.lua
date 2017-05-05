@@ -949,7 +949,7 @@ pfUI:RegisterModule("gui", function ()
 
   -- panels
   pfUI.gui.panel = pfUI.gui:CreateConfigTab("聊天框架附加内容")
-  local values = { "时间", "延迟", "经验", "金钱", "好友", "公会", "耐久", "地区", "无" }
+  local values = { "时间", "延迟", "经验", "金钱", "好友", "公会", "耐久", "地区", "战斗", "弹药", "无" }
   pfUI.gui:CreateConfig(pfUI.gui.panel, "左侧面板：左侧", C.panel.left, "left", "dropdown", values)
   pfUI.gui:CreateConfig(pfUI.gui.panel, "左侧面板：中部", C.panel.left, "center", "dropdown", values)
   pfUI.gui:CreateConfig(pfUI.gui.panel, "左侧面板：右侧", C.panel.left, "right", "dropdown", values)

@@ -7,6 +7,7 @@ pfUI:RegisterModule("panel", function ()
   pfUI.panel = CreateFrame("Frame",nil,UIParent)
   pfUI.panel:RegisterEvent("PLAYER_ENTERING_WORLD")
   pfUI.panel:RegisterEvent("PLAYER_MONEY")
+  pfUI.panel:RegisterEvent("UNIT_INVENTORY_CHANGED")
   pfUI.panel:RegisterEvent("PLAYER_XP_UPDATE")
   pfUI.panel:RegisterEvent("FRIENDLIST_UPDATE")
   pfUI.panel:RegisterEvent("GUILD_ROSTER_UPDATE")
@@ -19,7 +20,7 @@ pfUI:RegisterModule("panel", function ()
 
   -- list of available panel fields
   pfUI.panel.options = { "时间", "延迟", "经验", "金钱", "好友",
-                         "公会", "耐久", "地区" }
+                         "公会", "耐久", "地区","弹药" }
 
   pfUI.panel:SetScript("OnEvent", function()
     if event == "PLAYER_ENTERING_WORLD" then
@@ -30,9 +31,12 @@ pfUI:RegisterModule("panel", function ()
       pfUI.panel:UpdateGuild()
       pfUI.panel:UpdateRepair()
       pfUI.panel:UpdateZone()
+      pfUI.panel:UpdateAmmo()
     elseif event == "PLAYER_MONEY" then
       pfUI.panel:UpdateGold()
       pfUI.panel:UpdateRepair()
+    elseif event == "UNIT_INVENTORY_CHANGED" then
+      pfUI.panel:UpdateAmmo()
     elseif event == "PLAYER_XP_UPDATE" then
       pfUI.panel:UpdateExp()
     elseif event == "FRIENDLIST_UPDATE" then
@@ -364,6 +368,25 @@ pfUI:RegisterModule("panel", function ()
     end
 
     pfUI.panel:OutputPanel("地区", GetMinimapZoneText(), tooltip, click)
+  end
+
+  function pfUI.panel:UpdateAmmo ()
+    if not GetInventoryItemQuality("player", 0) then
+      pfUI.panel:OutputPanel("弹药", AMMOSLOT .. ": -")
+    else
+      local tooltip = function ()
+        if GetInventoryItemQuality("player", 0) then
+          local ammo = GetInventoryItemCount("player", 0)
+          GameTooltip:ClearLines()
+          GameTooltip_SetDefaultAnchor(GameTooltip, this)
+          GameTooltip:SetInventoryItem("player", 0)
+          GameTooltip:AddLine("Count: " .. ammo, .3,1,.8)
+          GameTooltip:Show()
+        end
+      end
+
+      pfUI.panel:OutputPanel("弹药", AMMOSLOT .. ": " .. GetInventoryItemCount("player", 0), tooltip)
+    end
   end
 
   function pfUI.panel:OutputPanel(entry, value, tooltip, func)
