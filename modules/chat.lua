@@ -473,7 +473,9 @@ pfUI:RegisterModule("chat", function ()
           if L["class"] and L["class"][Class] then
             Class = L["class"][Class]
           end
-          pfUI_playerDB[Name] = { class = Class, level = Level }
+          if Name and Level and Class and pfUI_playerDB then
+            pfUI_playerDB[Name] = { class = Class, level = Level }
+          end
         end
       elseif event == "GUILD_ROSTER_UPDATE" or event == "PLAYER_ENTERING_WORLD" then
         local Name, Class, Level
@@ -494,24 +496,34 @@ pfUI:RegisterModule("chat", function ()
           if L["class"] and L["class"].Class then
             Class = L["class"][Class]
           end
-          pfUI_playerDB[Name] = { class = Class, level = Level }
+          if Name and Level and Class and pfUI_playerDB then
+            pfUI_playerDB[Name] = { class = Class, level = Level }
+          end
         end
 
       elseif event == "PARTY_MEMBERS_CHANGED" or event == "PLAYER_ENTERING_WORLD" then
-        local Class, Unit
+        local Name, Class, Level, Unit
         for i = 1, GetNumPartyMembers() do
           Unit = "party" .. i
           _, Class = UnitClass(Unit)
-          pfUI_playerDB[UnitName(Unit)] = { class = Class, level = UnitLevel(Unit) }
+          Name = UnitName(Unit)
+          Level = UnitLevel(Unit)
+          if Name and Level and Class and pfUI_playerDB then
+            pfUI_playerDB[Name] = { class = Class, level = Level }
+          end
         end
 
       elseif event == "PLAYER_TARGET_CHANGED" then
-        local Class
+        local Name, Class, Level
         if not UnitIsPlayer("target") or not UnitIsFriend("player", "target") then
           return
         end
         _, Class = UnitClass("target")
-        pfUI_playerDB[UnitName("target")] = { class = Class, level = UnitLevel("target") }
+        Level = UnitLevel("target")
+        Name = UnitName("target")
+        if Name and Level and Class and pfUI_playerDB then
+          pfUI_playerDB[Name] = { class = Class, level = Level }
+        end
 
       elseif event == "WHO_LIST_UPDATE" or event == "CHAT_MSG_SYSTEM" then
         local Name, Class, Level
@@ -520,7 +532,9 @@ pfUI:RegisterModule("chat", function ()
           if L["class"] and L["class"][Class] then
             Class = L["class"][Class]
           end
-          pfUI_playerDB[Name] = { class = Class, level = Level }
+          if Name and Level and Class and pfUI_playerDB then
+            pfUI_playerDB[Name] = { class = Class, level = Level }
+          end
         end
       end
     end)
