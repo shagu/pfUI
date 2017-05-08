@@ -323,6 +323,9 @@ end
 -- 'legacy'     [bool]          use legacy backdrop instead of creating frames.
 -- 'transp'     [bool]          force default transparency of 0.8.
 function pfUI.api.CreateBackdrop(f, inset, legacy, transp)
+  -- exit if now frame was given
+  if not f then return end
+
   -- use default inset if nothing is given
   local border = inset
   if not border then
