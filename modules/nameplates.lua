@@ -186,11 +186,10 @@ pfUI:RegisterModule("nameplates", function ()
       if not this.debuffs then this.debuffs = {} end
       for j=1, 16, 1 do
         if this.debuffs[j] == nil then
-          this.debuffs[j] = this:CreateTexture(nil, "BORDER")
-          this.debuffs[j]:SetTexture(0,0,0,0)
+          this.debuffs[j] = CreateFrame("Frame", nil, this.nameplate)
           this.debuffs[j]:ClearAllPoints()
-          this.debuffs[j]:SetWidth(12)
-          this.debuffs[j]:SetHeight(12)
+          this.debuffs[j]:SetWidth(18)
+          this.debuffs[j]:SetHeight(18)
           if j == 1 then
             this.debuffs[j]:SetPoint("TOPLEFT", this.healthbar, "BOTTOMLEFT", 0, -3)
           elseif j <= 8 then
@@ -198,6 +197,10 @@ pfUI:RegisterModule("nameplates", function ()
           elseif j > 8 then
             this.debuffs[j]:SetPoint("TOPLEFT", this.debuffs[1], "BOTTOMLEFT", (j-9) * 13, -1)
           end
+
+          this.debuffs[j].icon = this.debuffs[j]:CreateTexture(nil, "BORDER")
+          this.debuffs[j].icon:SetTexture(0,0,0,0)
+          this.debuffs[j].icon:SetAllPoints(this.debuffs[j])
         end
       end
     end
@@ -454,17 +457,26 @@ pfUI:RegisterModule("nameplates", function ()
         local j = 1
         local k = 1
         for j, e in ipairs(pfUI.nameplates.debuffs) do
-          this.debuffs[j]:SetTexture(pfUI.nameplates.debuffs[j])
-          this.debuffs[j]:SetTexCoord(.078, .92, .079, .937)
-          this.debuffs[j]:SetAlpha(0.9)
+          local icon, name = unpack(pfUI.nameplates.debuffs[j])
+          this.debuffs[j]:Show()
+          this.debuffs[j].icon:SetTexture(icon)
+          this.debuffs[j].icon:SetTexCoord(.078, .92, .079, .937)
+
+          if pfUI.debuffs and name then
+            this.debuffs[j].cd = this.debuffs[j].cd or CreateFrame("Model", nil, this.debuffs[j], "CooldownFrameTemplate")
+            local start, duration, timeleft = pfUI.debuffs:GetDebuffInfo("target", name)
+            CooldownFrame_SetTimer(this
+            .debuffs[j].cd, start, duration, 1)
+          end
+
           k = k + 1
         end
         for j = k, 16, 1 do
-          this.debuffs[j]:SetTexture(nil)
+          this.debuffs[j]:Hide()
         end
       elseif this.debuffs then
         for j = 1, 16, 1 do
-          this.debuffs[j]:SetTexture(nil)
+          this.debuffs[j]:Hide()
         end
       end
     end
@@ -478,16 +490,25 @@ pfUI:RegisterModule("nameplates", function ()
   end
 
   -- debuff detection
+  local pfNameplateDebuffNameScan = CreateFrame('GameTooltip', "pfNameplateDebuffNameScan", UIParent, "GameTooltipTemplate")
+  local function GetDebuffName(unit, index)
+    pfNameplateDebuffNameScan:SetOwner(UIParent, "ANCHOR_NONE")
+    pfNameplateDebuffNameScan:SetUnitDebuff(unit, index)
+    local text = getglobal("pfNameplateDebuffNameScanTextLeft1")
+    return ( text ) and text:GetText() or ""
+  end
+
   pfUI.nameplates:RegisterEvent("PLAYER_TARGET_CHANGED")
   pfUI.nameplates:RegisterEvent("UNIT_AURA")
   pfUI.nameplates:SetScript("OnEvent", function()
-    pfUI.nameplates.debuffs = {}
-    local i = 1
-    local debuff = UnitDebuff("target", i)
-    while debuff do
-      pfUI.nameplates.debuffs[i] = debuff
-      i = i + 1
-      debuff = UnitDebuff("target", i)
+    if not arg1 or arg1 == "target" then
+      pfUI.nameplates.debuffs = {}
+      for i = 1, 16 do
+        if not UnitDebuff("target", i) then return end
+        local debuff = UnitDebuff("target", i)
+        local effect = (pfUI.debuffs and pfUI.debuffs:GetDebuffName("target", i)) or ""
+        pfUI.nameplates.debuffs[i] = { debuff, effect }
+      end
     end
   end)
 
