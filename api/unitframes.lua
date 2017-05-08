@@ -217,6 +217,7 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
 
       if UnitIsConnected(this.label .. this.id) or ( pfUI.gitter and pfUI.gitter:IsShown()) then
         if not this.cache then return end
+        if not this.cache.hp or not this.cache.power then return end
 
         if this.config.faderange == "1" then
           if pfUI.api.UnitInRange(this.label .. this.id, 4) or (pfUI.gitter and pfUI.gitter:IsShown()) then
