@@ -545,8 +545,8 @@ function pfUI.uf:RefreshUnit(unit, component)
   end
 
   local default_border = pfUI_config.appearance.border.default
-  if pfUI_config.appearance.border.groupframes ~= "-1" then
-    default_border = pfUI_config.appearance.border.groupframes
+  if pfUI_config.appearance.border.unitframes ~= "-1" then
+    default_border = pfUI_config.appearance.border.unitframes
   end
 
   local C = pfUI_config
@@ -914,8 +914,8 @@ end
 function pfUI.uf.UpdateFrameSize(self)
   local unit = self.label .. self.id
   local default_border = pfUI_config.appearance.border.default
-  if pfUI_config.appearance.border.groupframes ~= "-1" then
-    default_border = pfUI_config.appearance.border.groupframes
+  if pfUI_config.appearance.border.unitframes ~= "-1" then
+    default_border = pfUI_config.appearance.border.unitframes
   end
 
   local spacing = self.config.pspace

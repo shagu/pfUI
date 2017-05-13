@@ -3,8 +3,8 @@ pfUI:RegisterModule("group", function ()
   if C.unitframes.disable == "1" then return end
 
   local default_border = C.appearance.border.default
-  if C.appearance.border.groupframes ~= "-1" then
-    default_border = C.appearance.border.groupframes
+  if C.appearance.border.unitframes ~= "-1" then
+    default_border = C.appearance.border.unitframes
   end
 
   local spacing = C.unitframes.group.pspace

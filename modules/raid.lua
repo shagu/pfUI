@@ -3,8 +3,8 @@ pfUI:RegisterModule("raid", function ()
   if C.unitframes.disable == "1" then return end
 
   local default_border = C.appearance.border.default
-  if C.appearance.border.raidframes ~= "-1" then
-    default_border = C.appearance.border.raidframes
+  if C.appearance.border.unitframes ~= "-1" then
+    default_border = C.appearance.border.unitframes
   end
 
   pfUI.uf.raid = CreateFrame("Button","pfRaid",UIParent)
