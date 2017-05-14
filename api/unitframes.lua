@@ -312,6 +312,7 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
   f.leaderIcon.texture = f.leaderIcon:CreateTexture(nil,"BACKGROUND")
   f.leaderIcon.texture:SetTexture("Interface\\GROUPFRAME\\UI-Group-LeaderIcon")
   f.leaderIcon.texture:SetAllPoints(f.leaderIcon)
+  f.leaderIcon:Hide()
 
   f.lootIcon = CreateFrame("Frame",nil, f.hp.bar)
   f.lootIcon:SetWidth(10)
@@ -320,6 +321,7 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
   f.lootIcon.texture = f.lootIcon:CreateTexture(nil,"BACKGROUND")
   f.lootIcon.texture:SetTexture("Interface\\GROUPFRAME\\UI-Group-MasterLooter")
   f.lootIcon.texture:SetAllPoints(f.lootIcon)
+  f.lootIcon:Hide()
 
   f.raidIcon = CreateFrame("Frame", nil, f.hp.bar)
   f.raidIcon:SetWidth(24)
@@ -328,6 +330,7 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
   f.raidIcon.texture = f.raidIcon:CreateTexture(nil,"ARTWORK")
   f.raidIcon.texture:SetTexture("Interface\\AddOns\\pfUI\\img\\raidicons")
   f.raidIcon.texture:SetAllPoints(f.raidIcon)
+  f.raidIcon:Hide()
 
 
   if f.config.buffs ~= "off" then
