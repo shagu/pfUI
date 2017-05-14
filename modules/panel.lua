@@ -6,6 +6,7 @@ pfUI:RegisterModule("panel", function ()
 
   pfUI.panel = CreateFrame("Frame",nil,UIParent)
   pfUI.panel:RegisterEvent("PLAYER_ENTERING_WORLD")
+  pfUI.panel:RegisterEvent("BAG_UPDATE")
   pfUI.panel:RegisterEvent("PLAYER_MONEY")
   pfUI.panel:RegisterEvent("UNIT_INVENTORY_CHANGED")
   pfUI.panel:RegisterEvent("PLAYER_XP_UPDATE")
@@ -32,9 +33,12 @@ pfUI:RegisterModule("panel", function ()
       pfUI.panel:UpdateRepair()
       pfUI.panel:UpdateZone()
       pfUI.panel:UpdateAmmo()
+      pfUI.panel:UpdateSoulshard()
     elseif event == "PLAYER_MONEY" then
       pfUI.panel:UpdateGold()
       pfUI.panel:UpdateRepair()
+    elseif event == "BAG_UPDATE" then
+      pfUI.panel:UpdateSoulshard()
     elseif event == "UNIT_INVENTORY_CHANGED" then
       pfUI.panel:UpdateAmmo()
     elseif event == "PLAYER_XP_UPDATE" then
@@ -387,6 +391,27 @@ pfUI:RegisterModule("panel", function ()
 
       pfUI.panel:OutputPanel("弹药", AMMOSLOT .. ": " .. GetInventoryItemCount("player", 0), tooltip)
     end
+  end
+
+  function pfUI.panel:UpdateSoulshard()
+    local count = 0
+    local _, class = UnitClass("player")
+
+    if class == "WARLOCK" then
+      for bag=0,4 do
+        for slot=1,GetContainerNumSlots(bag) do
+          local link = GetContainerItemLink(bag,slot)
+          if link then
+            local _, _, id = string.find(link, "item:(%d+):%d+:%d+:%d+")
+            if id == "6265" then
+              count = count + 1
+            end
+          end
+        end
+      end
+    end
+
+    pfUI.panel:OutputPanel("soulshard", "Soulshards: " .. count, tooltip)
   end
 
   function pfUI.panel:OutputPanel(entry, value, tooltip, func)
