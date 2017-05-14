@@ -55,7 +55,7 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
 
   if f.config.visible ~= "1" then
     f:Hide()
-    return
+    return f
   end
 
   f.hp = CreateFrame("Frame",nil, f)
