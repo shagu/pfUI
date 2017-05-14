@@ -45,13 +45,6 @@ pfUI:RegisterModule("group", function ()
       else
         pfUI.uf.group[i].target:Hide()
       end
-
-      if UnitExists("partypet" .. i) or (pfUI.gitter and pfUI.gitter:IsShown()) then
-        pfUI.uf.group[i].pet:Show()
-      else
-        pfUI.uf.group[i].pet:Hide()
-      end
     end
   end)
-
 end)
