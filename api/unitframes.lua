@@ -573,6 +573,8 @@ function pfUI.uf:RefreshUnit(unit, component)
   if not unit.cache then unit.cache = {} end
   if not unit.id then unit.id = "" end
 
+  if not unit:IsShown() then return end
+
   -- Raid Icon
   if unit.raidIcon and ( component == "all" or component == "raidIcon" ) then
     local raidIcon = GetRaidTargetIndex(unit.label .. unit.id)
