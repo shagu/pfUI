@@ -115,9 +115,7 @@ pfUI:RegisterModule("minimap", function ()
     SetMapToCurrentZone()
     local posX, posY = GetPlayerMapPosition("player")
     if posX ~= 0 and posY ~= 0 then
-      local roundedX = ceil(posX * 1000)/10
-      local roundedY = ceil(posY * 1000)/10
-      pfUI.minimapCoordinates.text:SetText(roundedX..", "..roundedY)
+      pfUI.minimapCoordinates.text:SetText(round(posX * 100, 1) .. ", " .. round(posY * 100, 1))
     else
       pfUI.minimapCoordinates.text:SetText("|cffffaaaaN/A")
     end
