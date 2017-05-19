@@ -352,14 +352,18 @@ pfUI:RegisterModule("panel", function ()
 
   function pfUI.panel:UpdateZone ()
     local tooltip = function ()
-      local posX, posY = GetPlayerMapPosition("player")
       local real = GetRealZoneText()
       local sub = GetSubZoneText()
       GameTooltip:ClearLines()
       GameTooltip_SetDefaultAnchor(GameTooltip, this)
       GameTooltip:AddLine("|cffffffff" .. real)
       GameTooltip:AddLine(sub)
-      GameTooltip:AddLine("|cffaaaaaa" .. round(posX*100,1) .. " / " .. round(posY*100,1))
+
+      local posX, posY = GetPlayerMapPosition("player")
+      if posX ~= 0 and posY ~= 0 then
+        GameTooltip:AddLine("|cffaaaaaa" .. round(posX * 100, 1) .. ", " .. round(posY * 100, 1))
+      end
+
       GameTooltip:Show()
     end
 
