@@ -44,9 +44,9 @@ pfUI:RegisterModule("uf_tukui", function ()
 
     -- Target
     pfUI.uf.target.caption = CreateFrame("Frame", "pfTargetCaption", pfUI.uf.target)
-    pfUI.uf.target.caption:SetHeight(C.global.font_size + 3*default_border)
-    pfUI.uf.target.caption:SetPoint("TOPRIGHT",pfUI.uf.target,"BOTTOMRIGHT", 0, -default_border*2 - pspacing)
-    pfUI.uf.target.caption:SetPoint("TOPLEFT",pfUI.uf.target,"BOTTOMLEFT", 0, -default_border*2 - pspacing)
+    pfUI.uf.target.caption:SetHeight(C.global.font_size + 2*default_border)
+    pfUI.uf.target.caption:SetPoint("TOPRIGHT",pfUI.uf.target,"BOTTOMRIGHT", 0, -default_border*2 - tspacing)
+    pfUI.uf.target.caption:SetPoint("TOPLEFT",pfUI.uf.target,"BOTTOMLEFT", 0, -default_border*2 - tspacing)
 
     pfUI.uf.target.leftText:SetParent(pfUI.uf.target.caption)
     pfUI.uf.target.leftText:ClearAllPoints()
