@@ -49,6 +49,7 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
   f.GetColor = pfUI.uf.GetColor
 
   f.label = unit
+  f.fname = fname
   f.id = id
   f.config = config or pfUI_config.unitframes.fallback
   f.tick = tick
@@ -341,7 +342,7 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
       local perrow = f.config.buffperrow
       local row = floor((i-1) / perrow)
 
-      f.buffs[i] = CreateFrame("Button", "pfUIPlayerBuff" .. i, f)
+      f.buffs[i] = CreateFrame("Button", "pfUI" .. f.fname .. "Buff" .. i, f)
       f.buffs[i]:SetID(i)
 
       f.buffs[i].stacks = f.buffs[i]:CreateFontString(nil, "OVERLAY", f.buffs[i])
@@ -430,7 +431,7 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
 
     for i=1, f.config.debufflimit do
       local id = i
-      f.debuffs[i] = CreateFrame("Button", "pfUIPlayerDebuff" .. i, f)
+      f.debuffs[i] = CreateFrame("Button", "pfUI" .. f.fname .. "Debuff" .. i, f)
       f.debuffs[i]:SetID(i)
       f.debuffs[i].stacks = f.debuffs[i]:CreateFontString(nil, "OVERLAY", f.debuffs[i])
       f.debuffs[i].stacks:SetFont(pfUI.font_square, C.global.font_size, "OUTLINE")
