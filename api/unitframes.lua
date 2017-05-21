@@ -79,7 +79,7 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
   end
 
   f.power = CreateFrame("Frame",nil, f)
-  f.power:SetPoint("BOTTOM", 0, 0)
+  f.power:SetPoint("TOP", f.hp, "BOTTOM", 0, -2*default_border - f.config.pspace)
   f.power:SetWidth(f.config.width)
   f.power:SetHeight(f.config.pheight)
   pfUI.api.CreateBackdrop(f.power, default_border)
@@ -517,19 +517,18 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
       f.portrait:SetAlpha(pfUI_config.unitframes.portraitalpha)
 
     elseif f.config.portrait == "left" then
-      f.portrait:SetPoint("LEFT", f, "LEFT", 0, 0)
+      f.portrait:SetPoint("TOPLEFT", f, "TOPLEFT", 0, 0)
       f.hp:ClearAllPoints()
       f.hp:SetPoint("TOPRIGHT", f, "TOPRIGHT", 0, 0)
       f.power:ClearAllPoints()
-      f.power:SetPoint("BOTTOMRIGHT", f, "BOTTOMRIGHT", 0, 0)
+      f.power:SetPoint("TOPRIGHT", f.hp, "BOTTOMRIGHT", 0, -2*default_border - f.config.pspace)
       pfUI.api.CreateBackdrop(f.portrait)
-
     elseif f.config.portrait == "right" then
-      f.portrait:SetPoint("RIGHT", f, "RIGHT", 0, 0)
+      f.portrait:SetPoint("TOPRIGHT", f, "TOPRIGHT", 0, 0)
       f.hp:ClearAllPoints()
       f.hp:SetPoint("TOPLEFT", f, "TOPLEFT", 0, 0)
       f.power:ClearAllPoints()
-      f.power:SetPoint("BOTTOMLEFT", f, "BOTTOMLEFT", 0, 0)
+      f.power:SetPoint("TOPLEFT", f.hp, "BOTTOMLEFT", 0, -2*default_border - f.config.pspace)
       pfUI.api.CreateBackdrop(f.portrait)
     end
   end
