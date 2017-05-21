@@ -12,10 +12,13 @@ pfUI:RegisterModule("uf_tukui", function ()
 
   if C.unitframes.layout == "tukui" then
     -- Player
+    pfUI.uf.player:UpdateFrameSize()
+    pfUI.uf.player:SetHeight(pfUI.uf.player:GetHeight() + 2*default_border + C.global.font_size + 2*default_border + pspacing)
+
     pfUI.uf.player.caption = CreateFrame("Frame", "pfPlayerCaption", pfUI.uf.player)
     pfUI.uf.player.caption:SetHeight(C.global.font_size + 2*default_border)
-    pfUI.uf.player.caption:SetPoint("TOPRIGHT",pfUI.uf.player,"BOTTOMRIGHT",0, -default_border*2 - pspacing)
-    pfUI.uf.player.caption:SetPoint("TOPLEFT",pfUI.uf.player,"BOTTOMLEFT",0, -default_border*2 - pspacing)
+    pfUI.uf.player.caption:SetPoint("BOTTOMRIGHT",pfUI.uf.player, "BOTTOMRIGHT",0, 0)
+    pfUI.uf.player.caption:SetPoint("BOTTOMLEFT",pfUI.uf.player, "BOTTOMLEFT",0, 0)
 
     pfUI.uf.player.leftText:SetParent(pfUI.uf.player.caption)
     pfUI.uf.player.leftText:ClearAllPoints()
@@ -34,19 +37,16 @@ pfUI:RegisterModule("uf_tukui", function ()
 
     pfUI.castbar.player:SetAllPoints(pfUI.uf.player.caption)
     UpdateMovable(pfUI.castbar.player)
-
-    if pfUI.infight then
-      pfUI.infight["player"]:SetPoint("TOPLEFT", pfUI.uf.player, "TOPLEFT", -7 - default_border,7 + default_border)
-      pfUI.infight["player"]:SetPoint("BOTTOMRIGHT", pfUI.uf.player.caption, "BOTTOMRIGHT", 7 + default_border,-7 - default_border)
-    end
-
     CreateBackdrop(pfUI.uf.player.caption)
 
     -- Target
+    pfUI.uf.target:UpdateFrameSize()
+    pfUI.uf.target:SetHeight(pfUI.uf.target:GetHeight() + 2*default_border + C.global.font_size + 2*default_border + tspacing)
+
     pfUI.uf.target.caption = CreateFrame("Frame", "pfTargetCaption", pfUI.uf.target)
     pfUI.uf.target.caption:SetHeight(C.global.font_size + 2*default_border)
-    pfUI.uf.target.caption:SetPoint("TOPRIGHT",pfUI.uf.target,"BOTTOMRIGHT", 0, -default_border*2 - tspacing)
-    pfUI.uf.target.caption:SetPoint("TOPLEFT",pfUI.uf.target,"BOTTOMLEFT", 0, -default_border*2 - tspacing)
+    pfUI.uf.target.caption:SetPoint("BOTTOMRIGHT",pfUI.uf.target,"BOTTOMRIGHT", 0, 0)
+    pfUI.uf.target.caption:SetPoint("BOTTOMLEFT",pfUI.uf.target,"BOTTOMLEFT", 0, 0)
 
     pfUI.uf.target.leftText:SetParent(pfUI.uf.target.caption)
     pfUI.uf.target.leftText:ClearAllPoints()
@@ -65,12 +65,6 @@ pfUI:RegisterModule("uf_tukui", function ()
 
     pfUI.castbar.target:SetAllPoints(pfUI.uf.target.caption)
     UpdateMovable(pfUI.castbar.target)
-
-    if pfUI.infight then
-      pfUI.infight["target"]:SetPoint("TOPLEFT", pfUI.uf.target, "TOPLEFT", -7 - default_border,7 + default_border)
-      pfUI.infight["target"]:SetPoint("BOTTOMRIGHT", pfUI.uf.target.caption, "BOTTOMRIGHT", 7 + default_border,-7 - default_border)
-    end
-
     CreateBackdrop(pfUI.uf.target.caption)
   end
 end)
