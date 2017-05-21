@@ -761,10 +761,6 @@ function pfUI.uf:RefreshUnit(unit, component)
   unit.cache.power = UnitMana(unit.label .. unit.id)
   unit.cache.powermax = UnitManaMax(unit.label .. unit.id)
 
-  if unit.label == "target" and MobHealth3 then
-    unit.cache.hp, unit.cache.hpmax = MobHealth3:GetUnitHealth(unit.label)
-  end
-
   unit.hp.bar:SetMinMaxValues(0, unit.cache.hpmax)
   unit.power.bar:SetMinMaxValues(0, unit.cache.powermax)
 
@@ -1234,8 +1230,16 @@ function pfUI.uf:GetStatusValue(unit, pos)
 
   -- health
   elseif config == "health" then
+    if unit.label == "target" and MobHealth3 then
+      local hp, hpmax = MobHealth3:GetUnitHealth(unit.label)
+      return unit:GetColor("health") .. hp
+    end
     return unit:GetColor("health") .. UnitHealth(unitstr)
   elseif config == "healthmax" then
+    if unit.label == "target" and MobHealth3 then
+      local hp, hpmax = MobHealth3:GetUnitHealth(unit.label)
+      return unit:GetColor("health") .. hpmax
+    end
     return unit:GetColor("health") .. UnitHealthMax(unitstr)
   elseif config == "healthperc" then
     return unit:GetColor("health") .. ceil(UnitHealth(unitstr) / UnitHealthMax(unitstr) * 100)
@@ -1248,6 +1252,10 @@ function pfUI.uf:GetStatusValue(unit, pos)
     end
   elseif config == "healthdyn" then
     if UnitHealth(unitstr) ~= UnitHealthMax(unitstr) then
+      if unit.label == "target" and MobHealth3 then
+        local hp, hpmax = MobHealth3:GetUnitHealth(unit.label)
+        return unit:GetColor("health") .. hp .. " - " .. ceil(hp / hpmax * 100) .. "%"
+      end
       return unit:GetColor("health") .. UnitHealth(unitstr) .. " - " .. ceil(UnitHealth(unitstr) / UnitHealthMax(unitstr) * 100) .. "%"
     else
       return unit:GetColor("health") .. UnitHealth(unitstr)
