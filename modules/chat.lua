@@ -702,13 +702,15 @@ pfUI:RegisterModule("chat", function ()
           text = string.gsub(text, "|Hplayer:(.-)|h%[.-%]|h(.-:-)", "[|Hplayer:%1|h" .. Name .. "|h]" .. "%2")
         end
 
-        local pattern = "%]%s+(.*|Hplayer)"
-        local channel = string.gsub(text, ".*%[(.-)" .. pattern ..".+", "%1")
-        if string.find(channel, "%d+%. ") then
-          channel = string.gsub(channel, "(%d+)%..*", "channel%1")
-          channel = string.gsub(channel, "channel", "")
-          pattern = "%[%d+%..-" .. pattern
-          text = string.gsub(text, pattern, "["..channel.."] ".."%1")
+        if C.chat.text.channelnumonly == "1" then
+          local pattern = "%]%s+(.*|Hplayer)"
+          local channel = string.gsub(text, ".*%[(.-)" .. pattern ..".+", "%1")
+          if string.find(channel, "%d+%. ") then
+            channel = string.gsub(channel, "(%d+)%..*", "channel%1")
+            channel = string.gsub(channel, "channel", "")
+            pattern = "%[%d+%..-" .. pattern
+            text = string.gsub(text, pattern, "["..channel.."] ".."%1")
+          end
         end
 
         -- show timestamp in chat
