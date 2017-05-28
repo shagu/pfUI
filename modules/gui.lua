@@ -1017,6 +1017,9 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui:CreateConfig(pfUI.gui.nameplates, "Show Players Only", C.nameplates, "players", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.nameplates, "Show Health Points", C.nameplates, "showhp", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.nameplates, "Vertical Position", C.nameplates, "vpos")
+  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "Nameplate Width", C.nameplates, "width")
+  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "Healthbar Height", C.nameplates, "heighthealth")
+  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "Castbar Height", C.nameplates, "heightcast")
 
   -- thirdparty
   pfUI.gui.thirdparty = pfUI.gui:CreateConfigTab("Thirdparty")

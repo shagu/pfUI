@@ -46,12 +46,15 @@ pfUI:RegisterModule("nameplates", function ()
       end
     end
 
+    -- set width
+    this:SetWidth(C.nameplates.width)
+
     -- healthbar
     healthbar:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
     healthbar:ClearAllPoints()
     healthbar:SetPoint("TOP", this, "TOP", 0, tonumber(C.nameplates.vpos))
-    healthbar:SetWidth(110)
-    healthbar:SetHeight(7)
+    healthbar:SetWidth(this:GetWidth())
+    healthbar:SetHeight(C.nameplates.heighthealth)
 
     if healthbar.bg == nil then
       healthbar.bg = healthbar:CreateTexture(nil, "BORDER")
@@ -115,8 +118,8 @@ pfUI:RegisterModule("nameplates", function ()
     if healthbar.castbar == nil then
       healthbar.castbar = CreateFrame("StatusBar", nil, healthbar)
       healthbar.castbar:Hide()
-      healthbar.castbar:SetWidth(110)
-      healthbar.castbar:SetHeight(7)
+      healthbar.castbar:SetWidth(healthbar:GetWidth())
+      healthbar.castbar:SetHeight(C.nameplates.heightcast)
       healthbar.castbar:SetPoint("TOPLEFT", healthbar, "BOTTOMLEFT", 0, -5)
       healthbar.castbar:SetBackdrop({  bgFile = [[Interface\Tooltips\UI-Tooltip-Background]],
                                        insets = {left = -1, right = -1, top = -1, bottom = -1} })
@@ -155,8 +158,8 @@ pfUI:RegisterModule("nameplates", function ()
         healthbar.castbar.icon = healthbar.castbar:CreateTexture(nil, "BORDER")
         healthbar.castbar.icon:ClearAllPoints()
         healthbar.castbar.icon:SetPoint("BOTTOMLEFT", healthbar.castbar, "BOTTOMRIGHT", 5, 0)
-        healthbar.castbar.icon:SetWidth(18)
-        healthbar.castbar.icon:SetHeight(18)
+        healthbar.castbar.icon:SetWidth(C.nameplates.heightcast + 5 + C.nameplates.heighthealth)
+        healthbar.castbar.icon:SetHeight(C.nameplates.heightcast + 5 + C.nameplates.heighthealth)
       end
 
       if healthbar.castbar.icon.bg == nil then
