@@ -5,16 +5,23 @@ pfUI:RegisterModule("nameplates", function ()
 
   -- catch all nameplates
   pfUI.nameplates.scanner = CreateFrame("Frame", "pfNameplateScanner", UIParent)
+  pfUI.nameplates.scanner.parentCount = 0
   pfUI.nameplates.scanner:SetScript("OnUpdate", function()
-    for _, nameplate in ipairs({WorldFrame:GetChildren()}) do
-      if not nameplate.done and nameplate:GetObjectType() == "Button" then
-        local regions = nameplate:GetRegions()
-        if regions and regions:GetObjectType() == "Texture" and regions:GetTexture() == "Interface\\Tooltips\\Nameplate-Border" then
-          nameplate:Hide()
-          nameplate:SetScript("OnShow", function() pfUI.nameplates:CreateNameplate() end)
-          nameplate:SetScript("OnUpdate", function() pfUI.nameplates:UpdateNameplate() end)
-          nameplate:Show()
-          nameplate.done = true
+    local parentCount = WorldFrame:GetNumChildren()
+
+    if pfUI.nameplates.scanner.parentCount < parentCount then
+      pfUI.nameplates.scanner.parentCount = parentCount
+
+      for _, nameplate in ipairs({WorldFrame:GetChildren()}) do
+        if not nameplate.done and nameplate:GetObjectType() == "Button" then
+          local regions = nameplate:GetRegions()
+          if regions and regions:GetObjectType() == "Texture" and regions:GetTexture() == "Interface\\Tooltips\\Nameplate-Border" then
+            nameplate:Hide()
+            nameplate:SetScript("OnShow", pfUI.nameplates.CreateNameplate)
+            nameplate:SetScript("OnUpdate", pfUI.nameplates.UpdateNameplate)
+            nameplate:Show()
+            nameplate.done = true
+          end
         end
       end
     end
