@@ -15,7 +15,7 @@ pfUI:RegisterModule("castbar", function ()
 
   -- [[ pfPlayerCastbar ]] --
   pfUI.castbar.player = CreateFrame("Frame", "pfPlayerCastbar", UIParent)
-  pfUI.castbar.player:SetFrameStrata("HIGH")
+  pfUI.castbar.player:SetFrameStrata("MEDIUM")
   CreateBackdrop(pfUI.castbar.player, default_border)
   pfUI.castbar.player:SetHeight(C.global.font_size + default_border)
 
@@ -330,7 +330,7 @@ pfUI:RegisterModule("castbar", function ()
 
   -- [[ pfTargetCastbar ]] --
   pfUI.castbar.target = CreateFrame("Frame", "pfTargetCastbar", UIParent)
-  pfUI.castbar.target:SetFrameStrata("HIGH")
+  pfUI.castbar.target:SetFrameStrata("MEDIUM")
   CreateBackdrop(pfUI.castbar.target, default_border)
   pfUI.castbar.target:SetHeight(C.global.font_size + default_border)
 
