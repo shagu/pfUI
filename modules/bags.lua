@@ -197,7 +197,7 @@ pfUI:RegisterModule("bags", function ()
 
     pfUI.bag:CreateAdditions(frame)
 
-    frame:SetFrameStrata("MEDIUM")
+    frame:SetFrameStrata("HIGH")
     CreateBackdrop(frame, default_border)
 
     pfUI.bag.button_size = (frame:GetWidth() - 2*default_border - 9*default_border*3)/ 10
