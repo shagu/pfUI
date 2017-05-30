@@ -101,6 +101,57 @@ function pfUI.api.CreateGoldString(money)
   return string
 end
 
+-- [ Enable Movable ]
+-- Set all necessary functions to make a already existing frame movable.
+-- 'name'       [string]        Name of the Frame that should be movable
+-- 'addon'      [string]        Addon that must be loaded before being able to access the frame
+-- 'blacklist'  [table]         A list of frames that should be deactivated for mouse usage
+function pfUI.api.EnableMovable(name, addon, blacklist)
+  if addon then
+    local scan = CreateFrame("Frame")
+    scan:RegisterEvent("ADDON_LOADED")
+    scan:SetScript("OnEvent", function()
+      if arg1 == addon then
+        local frame = _G[name]
+
+        if blacklist then
+          for _, disable in pairs(blacklist) do
+            _G[disable]:EnableMouse(false)
+          end
+        end
+
+        frame:SetMovable(true)
+        frame:EnableMouse(true)
+        frame:SetScript("OnMouseDown",function()
+          this:StartMoving()
+        end)
+
+        frame:SetScript("OnMouseUp",function()
+          this:StopMovingOrSizing()
+        end)
+        this:UnregisterAllEvents()
+      end
+    end)
+  else
+    if blacklist then
+      for _, disable in pairs(blacklist) do
+        _G[disable]:EnableMouse(false)
+      end
+    end
+
+    local frame = _G[name]
+    frame:SetMovable(true)
+    frame:EnableMouse(true)
+    frame:SetScript("OnMouseDown",function()
+      this:StartMoving()
+    end)
+
+    frame:SetScript("OnMouseUp",function()
+      this:StopMovingOrSizing()
+    end)
+  end
+end
+
 -- [ Copy Table ]
 -- By default a table assignment only will be a reference instead of a copy.
 -- This is used to create a replicate of the actual table.

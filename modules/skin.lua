@@ -3,6 +3,23 @@ pfUI:RegisterModule("skin", function ()
   GameMenuFrame:SetHeight(GameMenuFrame:GetHeight()-20)
   GameMenuFrame:SetWidth(GameMenuFrame:GetWidth()-30)
 
+  -- movable default frames
+  EnableMovable("CharacterFrame", nil, { "PaperDollFrame",
+      "PetPaperDollFrame", "ReputationFrame", "SkillFrame", "HonorFrame" } )
+
+  EnableMovable("QuestLogFrame")
+  EnableMovable("FriendsFrame")
+  EnableMovable("SpellBookFrame")
+  EnableMovable("GossipFrame")
+  EnableMovable("TradeFrame")
+  EnableMovable("MerchantFrame")
+  EnableMovable("DressUpFrame")
+
+  EnableMovable("TalentFrame", "Blizzard_TalentUI")
+  EnableMovable("TradeSkillFrame", "Blizzard_TradeSkillUI")
+  EnableMovable("ClassTrainerFrame", "Blizzard_TrainerUI")
+  EnableMovable("InspectFrame", "Blizzard_InspectUI", { "InspectHonorFrame" })
+
   _, class = UnitClass("player")
   local color = RAID_CLASS_COLORS[class]
   local cr, cg, cb = color.r , color.g, color.b

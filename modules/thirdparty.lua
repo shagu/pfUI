@@ -44,13 +44,13 @@ pfUI:RegisterModule("thirdparty", function ()
         DPSMate_DPSMate:ClearAllPoints()
         DPSMate_DPSMate:SetAllPoints(pfUI.chat.right)
 
-        if DPSMate_DPSMate_ScrollFrame then
-          DPSMate_DPSMate_ScrollFrame:ClearAllPoints()
-          DPSMate_DPSMate_ScrollFrame:SetAllPoints(pfUI.chat.right)
-          DPSMate_DPSMate_ScrollFrame:SetWidth(pfUI.chat.right:GetWidth())
-
-          DPSMate_DPSMate_ScrollFrame:SetPoint("TOPLEFT", DPSMate_DPSMate_Head, "BOTTOMLEFT", 0, 0)
-          DPSMate_DPSMate_ScrollFrame:SetPoint("BOTTOMRIGHT", pfUI.chat.right, "BOTTOMRIGHT", 0, pfUI.panel.right:GetHeight())
+        local DPSMate_Window = DPSMate_DPSMate_ScrollFrame or DPSMate_Statusframe
+        if DPSMate_Window then
+          DPSMate_Window:ClearAllPoints()
+          DPSMate_Window:SetAllPoints(pfUI.chat.right)
+          DPSMate_Window:SetWidth(pfUI.chat.right:GetWidth())
+          DPSMate_Window:SetPoint("TOPLEFT", DPSMate_DPSMate_Head, "BOTTOMLEFT", 0, 0)
+          DPSMate_Window:SetPoint("BOTTOMRIGHT", pfUI.chat.right, "BOTTOMRIGHT", 0, pfUI.panel.right:GetHeight())
           DPSMate_DPSMate_Resize:Hide()
         end
       end

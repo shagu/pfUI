@@ -16,10 +16,11 @@ pfUI:RegisterModule("nameplates", function ()
         if not nameplate.done and nameplate:GetObjectType() == "Button" then
           local regions = nameplate:GetRegions()
           if regions and regions:GetObjectType() == "Texture" and regions:GetTexture() == "Interface\\Tooltips\\Nameplate-Border" then
+            local visible = nameplate:IsVisible()
             nameplate:Hide()
             nameplate:SetScript("OnShow", pfUI.nameplates.CreateNameplate)
             nameplate:SetScript("OnUpdate", pfUI.nameplates.UpdateNameplate)
-            nameplate:Show()
+            if visible then nameplate:Show() end
             nameplate.done = true
           end
         end
