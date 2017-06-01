@@ -1,17 +1,19 @@
 pfUI:RegisterModule("chat", function ()
-  pfUI.firstrun:AddStep("chat_right", function() pfUI.chat.SetupRightChat(true) end, function() pfUI.chat.SetupRightChat(false) end, "|cff33ffccChat: \"Loot & Spam\"|r\n\n"..
-  "Do you want me to create and manage a specific Chatframe called \"Loot & Spam\"?\n"..
-  "This chat will display world channels, loot information and miscellaneous messages,\n" ..
-  "that would otherwise clutter your main chatframe.")
+  if pfUI.firstrun then
+    pfUI.firstrun:AddStep("chat_right", function() pfUI.chat.SetupRightChat(true) end, function() pfUI.chat.SetupRightChat(false) end, "|cff33ffccChat: \"Loot & Spam\"|r\n\n"..
+    "Do you want me to create and manage a specific Chatframe called \"Loot & Spam\"?\n"..
+    "This chat will display world channels, loot information and miscellaneous messages,\n" ..
+    "that would otherwise clutter your main chatframe.")
 
-  pfUI.firstrun:AddStep("chat_position", function() pfUI.chat.SetupPositions() end, nil, "|cff33ffccChat: \"Layout\"|r\n\n" ..
-  "Do you want me to adjust the layout of your chatframes?\n" ..
-  "This would make sure, that every window is placed on its dedicated position.")
+    pfUI.firstrun:AddStep("chat_position", function() pfUI.chat.SetupPositions() end, nil, "|cff33ffccChat: \"Layout\"|r\n\n" ..
+    "Do you want me to adjust the layout of your chatframes?\n" ..
+    "This would make sure, that every window is placed on its dedicated position.")
 
-  pfUI.firstrun:AddStep("chat_channels", function() pfUI.chat.SetupChannels() end, nil, "|cff33ffccChat: \"Channels\"|r\n\n"..
-  "Do you want me to setup the chat channels of your chatframes?\n"..
-  "This would set important or personal messages to the left chat\n" ..
-  "and world channels and lootinformation to the right chat.")
+    pfUI.firstrun:AddStep("chat_channels", function() pfUI.chat.SetupChannels() end, nil, "|cff33ffccChat: \"Channels\"|r\n\n"..
+    "Do you want me to setup the chat channels of your chatframes?\n"..
+    "This would set important or personal messages to the left chat\n" ..
+    "and world channels and lootinformation to the right chat.")
+  end
 
   local default_border = C.appearance.border.default
   if C.appearance.border.chat ~= "-1" then
