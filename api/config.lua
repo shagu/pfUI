@@ -79,16 +79,13 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("unitframes", nil,           "rangechecki",      ".5")
   pfUI:UpdateConfig("unitframes", nil,           "combosize",        "6")
 
---  pfUI:UpdateConfig("unitframes", nil,           "buff_size",        "20")  -- TODO migrate, deprecated
---  pfUI:UpdateConfig("unitframes", nil,           "debuff_size",      "20")  -- TODO migrate, deprecated
-
   pfUI:UpdateConfig("unitframes", nil,           "show_hots",        "0")
   pfUI:UpdateConfig("unitframes", nil,           "all_hots",         "0")
   pfUI:UpdateConfig("unitframes", nil,           "show_procs",       "0")
   pfUI:UpdateConfig("unitframes", nil,           "all_procs",        "0")
   pfUI:UpdateConfig("unitframes", nil,           "debuffs_class",    "0")
 
-  pfUI:UpdateConfig("unitframes", nil,           "clickcast",        "")  -- TODO raid.clickcast -> nil.clickcast
+  pfUI:UpdateConfig("unitframes", nil,           "clickcast",        "")
   pfUI:UpdateConfig("unitframes", nil,           "clickcast_shift",  "")
   pfUI:UpdateConfig("unitframes", nil,           "clickcast_alt",    "")
   pfUI:UpdateConfig("unitframes", nil,           "clickcast_ctrl",   "")
@@ -100,11 +97,11 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("unitframes", "player",      "pheight",          "10")
   pfUI:UpdateConfig("unitframes", "player",      "pspace",           "-3")
   pfUI:UpdateConfig("unitframes", "player",      "buffs",            "top")
-  pfUI:UpdateConfig("unitframes", "player",      "buffsize",         "20") -- TODO migrate uf.buffsize
+  pfUI:UpdateConfig("unitframes", "player",      "buffsize",         "20")
   pfUI:UpdateConfig("unitframes", "player",      "bufflimit",        "32")
   pfUI:UpdateConfig("unitframes", "player",      "buffperrow",       "8")
   pfUI:UpdateConfig("unitframes", "player",      "debuffs",          "top")
-  pfUI:UpdateConfig("unitframes", "player",      "debuffsize",       "20") -- TODO migrate uf.debuffsize
+  pfUI:UpdateConfig("unitframes", "player",      "debuffsize",       "20")
   pfUI:UpdateConfig("unitframes", "player",      "debufflimit",      "32")
   pfUI:UpdateConfig("unitframes", "player",      "debuffperrow",     "8")
   pfUI:UpdateConfig("unitframes", "player",      "invert_healthbar", "0")
@@ -127,11 +124,11 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("unitframes", "target",      "pheight",          "10")
   pfUI:UpdateConfig("unitframes", "target",      "pspace",           "-3")
   pfUI:UpdateConfig("unitframes", "target",      "buffs",            "top")
-  pfUI:UpdateConfig("unitframes", "target",      "buffsize",         "20") -- TODO migrate uf.buffsize
+  pfUI:UpdateConfig("unitframes", "target",      "buffsize",         "20")
   pfUI:UpdateConfig("unitframes", "target",      "bufflimit",        "32")
   pfUI:UpdateConfig("unitframes", "target",      "buffperrow",       "8")
   pfUI:UpdateConfig("unitframes", "target",      "debuffs",          "top")
-  pfUI:UpdateConfig("unitframes", "target",      "debuffsize",       "20") -- TODO migrate uf.debuffsize
+  pfUI:UpdateConfig("unitframes", "target",      "debuffsize",       "20")
   pfUI:UpdateConfig("unitframes", "target",      "debufflimit",      "32")
   pfUI:UpdateConfig("unitframes", "target",      "debuffperrow",     "8")
   pfUI:UpdateConfig("unitframes", "target",      "invert_healthbar", "0")
@@ -462,6 +459,36 @@ function pfUI:MigrateConfig()
       pfUI_config.loot.autoresize = pfUI_config.appearance.loot.autoresize
       pfUI_config.appearance.loot.autoresize = nil
       pfUI_config.appearance.loot = nil
+    end
+  end
+
+  -- migrating to new unitframes (> 2.5)
+  if major <= 2 and minor <= 5 then
+    -- migrate clickcast settings
+    if pfUI_config.unitframes.raid.clickcast_ctrl then
+      pfUI_config.unitframes.clickcast = pfUI_config.unitframes.raid.clickcast
+      pfUI_config.unitframes.clickcast_shift = pfUI_config.unitframes.raid.clickcast_shift
+      pfUI_config.unitframes.clickcast_alt = pfUI_config.unitframes.raid.clickcast_alt
+      pfUI_config.unitframes.clickcast_ctrl = pfUI_config.unitframes.raid.clickcast_ctrl
+
+      pfUI_config.unitframes.raid.clickcast = "0"
+      pfUI_config.unitframes.raid.clickcast_shift = nil
+      pfUI_config.unitframes.raid.clickcast_alt = nil
+      pfUI_config.unitframes.raid.clickcast_ctrl = nil
+    end
+
+    -- migrate buffsizes
+    if pfUI_config.unitframes.buff_size then
+      pfUI_config.unitframes.player.buffsize = pfUI_config.unitframes.buff_size
+      pfUI_config.unitframes.target.buffsize = pfUI_config.unitframes.buff_size
+      pfUI_config.unitframes.buff_size = nil
+    end
+
+    -- migrate debuffsizes
+    if pfUI_config.unitframes.debuff_size then
+      pfUI_config.unitframes.player.debuffsize = pfUI_config.unitframes.debuff_size
+      pfUI_config.unitframes.target.debuffsize = pfUI_config.unitframes.debuff_size
+      pfUI_config.unitframes.debuff_size = nil
     end
   end
 
