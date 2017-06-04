@@ -75,9 +75,9 @@ pfUI:RegisterModule("nameplates", function ()
     raidicon:SetPoint("CENTER", healthbar, "CENTER", 0, -5)
 
     -- adjust font
-    name:SetFont(STANDARD_TEXT_FONT,12,"OUTLINE")
+    name:SetFont(pfUI.font_default,12,"OUTLINE")
     name:SetPoint("BOTTOM", healthbar, "CENTER", 0, 7)
-    level:SetFont(STANDARD_TEXT_FONT,12, "OUTLINE")
+    level:SetFont(pfUI.font_default,12, "OUTLINE")
     level:ClearAllPoints()
     level:SetPoint("RIGHT", healthbar, "LEFT", -1, 0)
     levelicon:ClearAllPoints()
@@ -143,7 +143,7 @@ pfUI:RegisterModule("nameplates", function ()
         healthbar.castbar.text:SetNonSpaceWrap(false)
         healthbar.castbar.text:SetFontObject(GameFontWhite)
         healthbar.castbar.text:SetTextColor(1,1,1,.5)
-        healthbar.castbar.text:SetFont(STANDARD_TEXT_FONT, 10, "OUTLINE")
+        healthbar.castbar.text:SetFont(pfUI.font_default, 10, "OUTLINE")
       end
 
       if healthbar.castbar.spell == nil then
@@ -152,7 +152,7 @@ pfUI:RegisterModule("nameplates", function ()
         healthbar.castbar.spell:SetNonSpaceWrap(false)
         healthbar.castbar.spell:SetFontObject(GameFontWhite)
         healthbar.castbar.spell:SetTextColor(1,1,1,1)
-        healthbar.castbar.spell:SetFont(STANDARD_TEXT_FONT, 10, "OUTLINE")
+        healthbar.castbar.spell:SetFont(pfUI.font_default, 10, "OUTLINE")
       end
 
       if healthbar.castbar.icon == nil then
@@ -181,7 +181,7 @@ pfUI:RegisterModule("nameplates", function ()
       healthbar.hptext:SetNonSpaceWrap(false)
       healthbar.hptext:SetFontObject(GameFontWhite)
       healthbar.hptext:SetTextColor(1,1,1,1)
-      healthbar.hptext:SetFont(STANDARD_TEXT_FONT, 10)
+      healthbar.hptext:SetFont(pfUI.font_default, 10)
     end
   end
 

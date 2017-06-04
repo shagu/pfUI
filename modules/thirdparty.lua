@@ -115,7 +115,7 @@ pfUI:RegisterModule("thirdparty", function ()
 
           _G[windowname .. "ScrollingMessageFrame"]:SetPoint("TOPLEFT", _G[windowname], "TOPLEFT", 10, -45)
           _G[windowname .. "ScrollingMessageFrame"]:SetPoint("BOTTOMRIGHT", _G[windowname], "BOTTOMRIGHT", -32, 32)
-          _G[windowname .. "ScrollingMessageFrame"]:SetFont(STANDARD_TEXT_FONT, 12)
+          _G[windowname .. "ScrollingMessageFrame"]:SetFont(pfUI.font_default, 12)
 
           CreateBackdrop(_G[windowname .. "MsgBox"])
           _G[windowname .. "MsgBox"]:ClearAllPoints()
