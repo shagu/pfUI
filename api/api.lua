@@ -98,6 +98,22 @@ function pfUI.api.GetItemLinkByName(name)
   end
 end
 
+-- [ Abbreviate ]
+-- Abbreviates a number from 1234 to 1.23k
+-- 'number'     [number]           the number that should be abbreviated
+-- 'returns:    [string]           the abbreviated value
+function pfUI.api.Abbreviate(number)
+  if pfUI_config.unitframes.abbrevnum == "1" then
+    if number > 1000000 then
+      return pfUI.api.round(number/1000000,2) .. "m"
+    elseif number > 1000 then
+      return pfUI.api.round(number/1000,2) .. "k"
+    end
+  end
+
+  return number
+end
+
 -- [ hooksecurefunc ]
 -- Hooks a global function and injects custom code
 -- 'name'       [string]           name of the function that shold be hooked

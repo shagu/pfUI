@@ -1231,15 +1231,15 @@ function pfUI.uf:GetStatusValue(unit, pos)
   elseif config == "health" then
     if unit.label == "target" and MobHealth3 then
       local hp, hpmax = MobHealth3:GetUnitHealth(unit.label)
-      return unit:GetColor("health") .. hp
+      return unit:GetColor("health") .. pfUI.api.Abbreviate(hp)
     end
-    return unit:GetColor("health") .. UnitHealth(unitstr)
+    return unit:GetColor("health") .. pfUI.api.Abbreviate(UnitHealth(unitstr))
   elseif config == "healthmax" then
     if unit.label == "target" and MobHealth3 then
       local hp, hpmax = MobHealth3:GetUnitHealth(unit.label)
-      return unit:GetColor("health") .. hpmax
+      return unit:GetColor("health") .. pfUI.api.Abbreviate(hpmax)
     end
-    return unit:GetColor("health") .. UnitHealthMax(unitstr)
+    return unit:GetColor("health") .. pfUI.api.Abbreviate(UnitHealthMax(unitstr))
   elseif config == "healthperc" then
     return unit:GetColor("health") .. ceil(UnitHealth(unitstr) / UnitHealthMax(unitstr) * 100)
   elseif config == "healthmiss" then
@@ -1247,38 +1247,39 @@ function pfUI.uf:GetStatusValue(unit, pos)
     if health == 0 then
       return ""
     else
-      return unit:GetColor("health") .. health
+      return unit:GetColor("health") .. pfUI.api.Abbreviate(health)
     end
   elseif config == "healthdyn" then
     if UnitHealth(unitstr) ~= UnitHealthMax(unitstr) then
       if unit.label == "target" and MobHealth3 then
         local hp, hpmax = MobHealth3:GetUnitHealth(unit.label)
-        return unit:GetColor("health") .. hp .. " - " .. ceil(hp / hpmax * 100) .. "%"
+        return unit:GetColor("health") .. pfUI.api.Abbreviate(hp) .. " - " .. ceil(hp / hpmax * 100) .. "%"
       end
-      return unit:GetColor("health") .. UnitHealth(unitstr) .. " - " .. ceil(UnitHealth(unitstr) / UnitHealthMax(unitstr) * 100) .. "%"
+      return unit:GetColor("health") .. pfUI.api.Abbreviate(UnitHealth(unitstr)) .. " - " .. ceil(UnitHealth(unitstr) / UnitHealthMax(unitstr) * 100) .. "%"
     else
-      return unit:GetColor("health") .. UnitHealth(unitstr)
+      return unit:GetColor("health") .. pfUI.api.Abbreviate(UnitHealth(unitstr))
     end
 
   -- mana/power/focus
   elseif config == "power" then
-    return unit:GetColor("power") .. UnitMana(unitstr)
+    return unit:GetColor("power") .. pfUI.api.Abbreviate(UnitMana(unitstr))
   elseif config == "powermax" then
-    return unit:GetColor("power") .. UnitManaMax(unitstr)
+    return unit:GetColor("power") .. pfUI.api.Abbreviate(UnitManaMax(unitstr))
   elseif config == "powerperc" then
-    return unit:GetColor("power") .. ceil(UnitMana(unitstr) / UnitManaMax(unitstr) * 100)
+    local perc = UnitManaMax(unitstr) > 0 and ceil(UnitMana(unitstr) / UnitManaMax(unitstr) * 100) or 0
+    return unit:GetColor("power") .. perc
   elseif config == "powermiss" then
     local power = ceil(UnitMana(unitstr) - UnitManaMax(unitstr))
     if power == 0 then
       return ""
     else
-      return unit:GetColor("power") .. power
+      return unit:GetColor("power") .. pfUI.api.Abbreviate(power)
     end
   elseif config == "powerdyn" then
     if UnitMana(unitstr) ~= UnitManaMax(unitstr) then
-      return unit:GetColor("power") .. UnitMana(unitstr) .. " - " .. ceil(UnitMana(unitstr) / UnitManaMax(unitstr) * 100) .. "%"
+      return unit:GetColor("power") .. pfUI.api.Abbreviate(UnitMana(unitstr)) .. " - " .. ceil(UnitMana(unitstr) / UnitManaMax(unitstr) * 100) .. "%"
     else
-      return unit:GetColor("power") .. UnitMana(unitstr)
+      return unit:GetColor("power") .. pfUI.api.Abbreviate(UnitMana(unitstr))
     end
   else
     return ""
