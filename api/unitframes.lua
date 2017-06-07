@@ -1218,7 +1218,7 @@ function pfUI.uf:GetStatusValue(unit, pos)
     level = unit:GetColor("level") .. level
     name = unit:GetColor("unit") .. name
 
-    return level .. " " .. name
+    return level .. "  " .. name
 
   elseif config == "name" then
     return unit:GetColor("unit") .. UnitName(unitstr)
