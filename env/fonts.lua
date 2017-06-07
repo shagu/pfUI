@@ -14,7 +14,7 @@ function pfUI.environment:UpdateFonts()
     pfUI.font_square = "Interface\\AddOns\\pfUI\\fonts\\" .. pfUI_config.global.font_square .. ".ttf"
   else
     pfUI.font_default = "Interface\\AddOns\\pfUI\\fonts\\Myriad-Pro.ttf"
-    pfUI.font_square = "Interface\\AddOns\\pfUI\\fonts\\Homespun.ttf"
+    pfUI.font_square = "Interface\\AddOns\\pfUI\\fonts\\BigNoodleTitling.ttf"
     pfUI.font_combat = "Interface\\AddOns\\pfUI\\fonts\\Continuum.ttf"
   end
 
