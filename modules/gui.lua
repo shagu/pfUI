@@ -1232,6 +1232,7 @@ pfUI:RegisterModule("gui", function ()
   -- panels
   pfUI.gui.panel = pfUI.gui:CreateConfigTab("Panel")
   local values = { "time", "fps", "exp", "gold", "friends", "guild", "durability", "zone", "combat", "ammo", "soulshard", "none" }
+  pfUI.gui:CreateConfig(pfUI.gui.panel, "Use Unit Fonts", C.panel, "use_unitfonts", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.panel, "Left Panel: Left", C.panel.left, "left", "dropdown", values)
   pfUI.gui:CreateConfig(pfUI.gui.panel, "Left Panel: Center", C.panel.left, "center", "dropdown", values)
   pfUI.gui:CreateConfig(pfUI.gui.panel, "Left Panel: Right", C.panel.left, "right", "dropdown", values)

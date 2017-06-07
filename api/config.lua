@@ -393,6 +393,7 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("bars",       "shapeshift",  "formfactor",       "10 x 1")
   pfUI:UpdateConfig("bars",       "pet",         "formfactor",       "10 x 1")
 
+  pfUI:UpdateConfig("panel",      nil,           "use_unitfonts",    "1")
   pfUI:UpdateConfig("panel",      "left",        "left",             "guild")
   pfUI:UpdateConfig("panel",      "left",        "center",           "durability")
   pfUI:UpdateConfig("panel",      "left",        "right",            "friends")

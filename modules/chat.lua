@@ -15,6 +15,9 @@ pfUI:RegisterModule("chat", function ()
     "and world channels and lootinformation to the right chat.")
   end
 
+  local panelfont = C.panel.use_unitfonts == "1" and pfUI.font_square or pfUI.font_default
+  local panelfont_size = C.panel.use_unitfonts == "1" and C.global.font_square_size or C.global.font_size
+
   local default_border = C.appearance.border.default
   if C.appearance.border.chat ~= "-1" then
     default_border = C.appearance.border.chat
@@ -346,7 +349,7 @@ pfUI:RegisterModule("chat", function ()
 
       local _, class = UnitClass("player")
       _G["ChatFrame" .. i .. "TabText"]:SetTextColor(RAID_CLASS_COLORS[class].r + .3 * .5, RAID_CLASS_COLORS[class].g + .3 * .5, RAID_CLASS_COLORS[class].b + .3 * .5, 1)
-      _G["ChatFrame" .. i .. "TabText"]:SetFont(pfUI.font_default, C.global.font_size, "OUTLINE")
+      _G["ChatFrame" .. i .. "TabText"]:SetFont(panelfont,panelfont_size, "OUTLINE")
 
       if _G["ChatFrame" .. i].isDocked or _G["ChatFrame" .. i]:IsVisible() then
         _G["ChatFrame" .. i .. "Tab"]:Show()
