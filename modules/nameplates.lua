@@ -1,4 +1,7 @@
 pfUI:RegisterModule("nameplates", function ()
+  local font = C.nameplates.use_unitfonts == "1" and pfUI.font_square or pfUI.font_default
+  local font_size = C.nameplates.use_unitfonts == "1" and C.global.font_square_size or C.global.font_size
+
   pfUI.nameplates = CreateFrame("Frame", nil, UIParent)
   pfUI.nameplates.mobs = {}
   pfUI.nameplates.targets = {}
@@ -75,9 +78,9 @@ pfUI:RegisterModule("nameplates", function ()
     raidicon:SetPoint("CENTER", healthbar, "CENTER", 0, -5)
 
     -- adjust font
-    name:SetFont(pfUI.font_default,12,"OUTLINE")
+    name:SetFont(font, font_size, "OUTLINE")
     name:SetPoint("BOTTOM", healthbar, "CENTER", 0, 7)
-    level:SetFont(pfUI.font_default,12, "OUTLINE")
+    level:SetFont(font, font_size, "OUTLINE")
     level:ClearAllPoints()
     level:SetPoint("RIGHT", healthbar, "LEFT", -1, 0)
     levelicon:ClearAllPoints()
@@ -143,7 +146,7 @@ pfUI:RegisterModule("nameplates", function ()
         healthbar.castbar.text:SetNonSpaceWrap(false)
         healthbar.castbar.text:SetFontObject(GameFontWhite)
         healthbar.castbar.text:SetTextColor(1,1,1,.5)
-        healthbar.castbar.text:SetFont(pfUI.font_default, 10, "OUTLINE")
+        healthbar.castbar.text:SetFont(font, font_size - 2, "OUTLINE")
       end
 
       if healthbar.castbar.spell == nil then
@@ -152,7 +155,7 @@ pfUI:RegisterModule("nameplates", function ()
         healthbar.castbar.spell:SetNonSpaceWrap(false)
         healthbar.castbar.spell:SetFontObject(GameFontWhite)
         healthbar.castbar.spell:SetTextColor(1,1,1,1)
-        healthbar.castbar.spell:SetFont(pfUI.font_default, 10, "OUTLINE")
+        healthbar.castbar.spell:SetFont(font, font_size - 2, "OUTLINE")
       end
 
       if healthbar.castbar.icon == nil then
@@ -181,7 +184,7 @@ pfUI:RegisterModule("nameplates", function ()
       healthbar.hptext:SetNonSpaceWrap(false)
       healthbar.hptext:SetFontObject(GameFontWhite)
       healthbar.hptext:SetTextColor(1,1,1,1)
-      healthbar.hptext:SetFont(pfUI.font_default, 10)
+      healthbar.hptext:SetFont(font, font_size - 2)
     end
   end
 

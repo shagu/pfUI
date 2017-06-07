@@ -398,6 +398,7 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("chat",       "global",      "fadeout",          "0")
   pfUI:UpdateConfig("chat",       "global",      "fadetime",         "300")
 
+  pfUI:UpdateConfig("nameplates", nil,           "use_unitfonts",    "1")
   pfUI:UpdateConfig("nameplates", nil,           "showcastbar",      "1")
   pfUI:UpdateConfig("nameplates", nil,           "spellname",        "0")
   pfUI:UpdateConfig("nameplates", nil,           "showdebuffs",      "0")

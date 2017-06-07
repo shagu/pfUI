@@ -1248,6 +1248,7 @@ pfUI:RegisterModule("gui", function ()
 
   -- nameplates
   pfUI.gui.nameplates = pfUI.gui:CreateConfigTab("Nameplates")
+  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "Use Unit Fonts", C.nameplates, "use_unitfonts", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.nameplates, "Enable Castbars", C.nameplates, "showcastbar", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.nameplates, "Enable Spellname", C.nameplates, "spellname", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.nameplates, "Enable Debuffs", C.nameplates, "showdebuffs", "checkbox")
