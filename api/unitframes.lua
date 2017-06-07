@@ -1287,9 +1287,12 @@ function pfUI.uf:GetStatusValue(unit, pos)
 end
 
 function pfUI.uf.GetColor(self, preset)
+  local config = self.config
+
   local unitstr = self.label .. self.id
   local r, g, b = 1, 1, 1
-  if preset == "unit" then
+
+  if preset == "unit" and config["classcolor"] == "1" then
     if UnitIsPlayer(unitstr) then
       local _, class = UnitClass(unitstr)
       if RAID_CLASS_COLORS[class] then
@@ -1301,18 +1304,18 @@ function pfUI.uf.GetColor(self, preset)
       end
     end
 
-  elseif preset == "class" then
+  elseif preset == "class" and config["classcolor"] == "1" then
     local _, class = UnitClass(unitstr)
     r = RAID_CLASS_COLORS[class].r
     g = RAID_CLASS_COLORS[class].g
     b = RAID_CLASS_COLORS[class].b
 
-  elseif preset == "reaction" then
+  elseif preset == "reaction" and config["classcolor"] == "1" then
     r = UnitReactionColor[UnitReaction(unitstr, "player")].r
     g = UnitReactionColor[UnitReaction(unitstr, "player")].g
     b = UnitReactionColor[UnitReaction(unitstr, "player")].b
 
-  elseif preset == "health" then
+  elseif preset == "health" and config["healthcolor"] == "1" then
     local perc = UnitHealth(unitstr) / UnitHealthMax(unitstr)
     local r1, g1, b1, r2, g2, b2
     if perc <= 0.5 then
@@ -1328,12 +1331,12 @@ function pfUI.uf.GetColor(self, preset)
     g = g1 + (g2 - g1)*perc
     b = b1 + (b2 - b1)*perc
 
-  elseif preset == "power" then
+  elseif preset == "power" and config["powercolor"] == "1" then
     r = ManaBarColor[UnitPowerType(unitstr)].r
     g = ManaBarColor[UnitPowerType(unitstr)].g
     b = ManaBarColor[UnitPowerType(unitstr)].b
 
-  elseif preset == "level" then
+  elseif preset == "level" and config["levelcolor"] == "1" then
     r = GetDifficultyColor(UnitLevel(unitstr)).r
     g = GetDifficultyColor(UnitLevel(unitstr)).g
     b = GetDifficultyColor(UnitLevel(unitstr)).b
