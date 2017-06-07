@@ -1212,6 +1212,7 @@ pfUI:RegisterModule("gui", function ()
 
   -- castbar
   pfUI.gui.castbar = pfUI.gui:CreateConfigTab("Castbar")
+  pfUI.gui:CreateConfig(pfUI.gui.castbar, "Use Unit Fonts", C.castbar, "use_unitfonts", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.castbar, "Casting Color", C.appearance.castbar, "castbarcolor", "color")
   pfUI.gui:CreateConfig(pfUI.gui.castbar, "Channeling Color", C.appearance.castbar, "channelcolor", "color")
   pfUI.gui:CreateConfig(pfUI.gui.castbar, "Disable Blizzard Castbar", C.castbar.player, "hide_blizz", "checkbox")
