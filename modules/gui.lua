@@ -772,8 +772,6 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui:CreateConfig(pfUI.gui.global, "Disable Minimap Buffs", C.global, "hidebuff", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.global, "Disable Minimap Weapon Buffs", C.global, "hidewbuff", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.global, "Enable 24h Clock", C.global, "twentyfour", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.global, "Auto Sell Grey Items", C.global, "autosell", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.global, "Auto Repair Items", C.global, "autorepair", "checkbox")
 
   pfUI.gui:CreateConfig(pfUI.gui.global, "Profile", nil, nil, "header")
   local values = {}
@@ -871,6 +869,8 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "Bags & Bank", nil, nil, "header")
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "Disable Item Quality Color For \"Common\" Items", C.appearance.bags, "borderlimit", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "Enable Item Quality Color For Equipment Only", C.appearance.bags, "borderonlygear", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Auto Sell Grey Items", C.global, "autosell", "checkbox")
+  pfUI.gui:CreateConfig(pfUI.gui.appearance, "Auto Repair Items", C.global, "autorepair", "checkbox")
 
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "Loot", nil, nil, "header")
   pfUI.gui:CreateConfig(pfUI.gui.appearance, "Enable Auto-Resize Loot Frame", C.loot, "autoresize", "checkbox")
