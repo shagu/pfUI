@@ -291,7 +291,7 @@ pfUI:RegisterModule("bags", function ()
     end
 
     local count = _G[pfUI.bags[bag].slots[slot].frame:GetName() .. "Count"]
-    count:SetFont(pfUI.font_square, C.global.font_square_size, "OUTLINE")
+    count:SetFont(pfUI.font_unit, C.global.font_unit_size, "OUTLINE")
     count:SetAllPoints()
     count:SetJustifyH("RIGHT")
     count:SetJustifyV("BOTTOM")

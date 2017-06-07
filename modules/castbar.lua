@@ -1,7 +1,7 @@
 pfUI:RegisterModule("castbar", function ()
 
-  local font = C.castbar.use_unitfonts == "1" and pfUI.font_square or pfUI.font_default
-  local font_size = C.castbar.use_unitfonts == "1" and C.global.font_square_size or C.global.font_size
+  local font = C.castbar.use_unitfonts == "1" and pfUI.font_unit or pfUI.font_default
+  local font_size = C.castbar.use_unitfonts == "1" and C.global.font_unit_size or C.global.font_size
 
   local default_border = C.appearance.border.default
   if C.appearance.border.unitframes ~= "-1" then

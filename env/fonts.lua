@@ -9,12 +9,12 @@ end
 
 function pfUI.environment:UpdateFonts()
   if pfUI_config and pfUI_config.global and pfUI_config.global.font_default then
-    pfUI.font_default = "Interface\\AddOns\\pfUI\\fonts\\" .. pfUI_config.global.font_default .. ".ttf"
-    pfUI.font_combat =  "Interface\\AddOns\\pfUI\\fonts\\" .. pfUI_config.global.font_combat .. ".ttf"
-    pfUI.font_square = "Interface\\AddOns\\pfUI\\fonts\\" .. pfUI_config.global.font_square .. ".ttf"
+    pfUI.font_default = "Interface\\AddOns\\pfUI\\fonts\\" .. (pfUI_config.global.font_default or "Myriad-Pro") .. ".ttf"
+    pfUI.font_unit = "Interface\\AddOns\\pfUI\\fonts\\" .. (pfUI_config.global.font_unit or "BigNoodleTitling") .. ".ttf"
+    pfUI.font_combat = "Interface\\AddOns\\pfUI\\fonts\\" .. (pfUI_config.global.font_combat or "Continuum") .. ".ttf"
   else
     pfUI.font_default = "Interface\\AddOns\\pfUI\\fonts\\Myriad-Pro.ttf"
-    pfUI.font_square = "Interface\\AddOns\\pfUI\\fonts\\BigNoodleTitling.ttf"
+    pfUI.font_unit = "Interface\\AddOns\\pfUI\\fonts\\BigNoodleTitling.ttf"
     pfUI.font_combat = "Interface\\AddOns\\pfUI\\fonts\\Continuum.ttf"
   end
 
@@ -23,11 +23,11 @@ function pfUI.environment:UpdateFonts()
     if GetLocale() == "zhCN" then
       pfUI.font_default = "Fonts\\FZXHLJW.TTF"
       pfUI.font_combat = "Fonts\\FZXHLJW.TTF"
-      pfUI.font_square = "Fonts\\FZXHLJW.TTF"
+      pfUI.font_unit = "Fonts\\FZXHLJW.TTF"
     elseif GetLocale() == "koKR" then
       pfUI.font_default = "Fonts\\2002.TTF"
       pfUI.font_combat = "Fonts\\2002.TTF"
-      pfUI.font_square = "Fonts\\2002.TTF"
+      pfUI.font_unit = "Fonts\\2002.TTF"
     end
   end
 

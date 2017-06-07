@@ -1,6 +1,6 @@
 pfUI:RegisterModule("nameplates", function ()
-  local font = C.nameplates.use_unitfonts == "1" and pfUI.font_square or pfUI.font_default
-  local font_size = C.nameplates.use_unitfonts == "1" and C.global.font_square_size or C.global.font_size
+  local font = C.nameplates.use_unitfonts == "1" and pfUI.font_unit or pfUI.font_default
+  local font_size = C.nameplates.use_unitfonts == "1" and C.global.font_unit_size or C.global.font_size
 
   pfUI.nameplates = CreateFrame("Frame", nil, UIParent)
   pfUI.nameplates.mobs = {}

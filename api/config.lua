@@ -29,8 +29,8 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("global",     nil,           "offscreen",        "0")
   pfUI:UpdateConfig("global",     nil,           "font_default",     "Myriad-Pro")
   pfUI:UpdateConfig("global",     nil,           "font_size",        "12")
-  pfUI:UpdateConfig("global",     nil,           "font_square",      "BigNoodleTitling")
-  pfUI:UpdateConfig("global",     nil,           "font_square_size", "12")
+  pfUI:UpdateConfig("global",     nil,           "font_unit",        "BigNoodleTitling")
+  pfUI:UpdateConfig("global",     nil,           "font_unit_size",   "12")
 
   pfUI:UpdateConfig("global",     nil,           "font_combat",      "Continuum")
   pfUI:UpdateConfig("global",     nil,           "force_region",     "1")
@@ -393,7 +393,7 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("bars",       "shapeshift",  "formfactor",       "10 x 1")
   pfUI:UpdateConfig("bars",       "pet",         "formfactor",       "10 x 1")
 
-  pfUI:UpdateConfig("panel",      nil,           "use_unitfonts",    "1")
+  pfUI:UpdateConfig("panel",      nil,           "use_unitfonts",    "0")
   pfUI:UpdateConfig("panel",      "left",        "left",             "guild")
   pfUI:UpdateConfig("panel",      "left",        "center",           "durability")
   pfUI:UpdateConfig("panel",      "left",        "right",            "friends")
@@ -406,7 +406,7 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("castbar",    "player",      "hide_blizz",       "1")
   pfUI:UpdateConfig("castbar",    "player",      "hide_pfui",        "0")
   pfUI:UpdateConfig("castbar",    "target",      "hide_pfui",        "0")
-  pfUI:UpdateConfig("castbar",    nil,           "use_unitfonts",    "1")
+  pfUI:UpdateConfig("castbar",    nil,           "use_unitfonts",    "0")
 
   pfUI:UpdateConfig("tooltip",    nil,           "position",         "bottom")
   pfUI:UpdateConfig("tooltip",    nil,           "extguild",         "1")
@@ -439,7 +439,7 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("chat",       "global",      "fadeout",          "0")
   pfUI:UpdateConfig("chat",       "global",      "fadetime",         "300")
 
-  pfUI:UpdateConfig("nameplates", nil,           "use_unitfonts",    "1")
+  pfUI:UpdateConfig("nameplates", nil,           "use_unitfonts",    "0")
   pfUI:UpdateConfig("nameplates", nil,           "showcastbar",      "1")
   pfUI:UpdateConfig("nameplates", nil,           "spellname",        "0")
   pfUI:UpdateConfig("nameplates", nil,           "showdebuffs",      "0")
@@ -537,6 +537,15 @@ function pfUI:MigrateConfig()
       pfUI_config.unitframes.player.debuffsize = pfUI_config.unitframes.debuff_size
       pfUI_config.unitframes.target.debuffsize = pfUI_config.unitframes.debuff_size
       pfUI_config.unitframes.debuff_size = nil
+    end
+  end
+
+  -- migrating to new fontnames (> 2.6)
+  if major <= 2 and minor <= 6 then
+    -- migrate font_combat
+    if pfUI_config.global.font_square then
+      pfUI_config.global.font_unit = pfUI_config.global.font_square
+      pfUI_config.global.font_square = nil
     end
   end
 
