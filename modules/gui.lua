@@ -758,7 +758,7 @@ pfUI:RegisterModule("gui", function ()
 
   -- General
   pfUI.gui.global = pfUI.gui:CreateConfigTab("General Settings")
-  local values = { "Continuum", "DieDieDie", "Expressway", "Homespun", "Myriad-Pro", "PT-Sans-Narrow-Bold", "PT-Sans-Narrow-Regular" }
+  local values = { "BigNoodleTitling", "Continuum", "DieDieDie", "Expressway", "Homespun", "Myriad-Pro", "PT-Sans-Narrow-Bold", "PT-Sans-Narrow-Regular" }
   pfUI.gui:CreateConfig(pfUI.gui.global, "Enable Region Compatible Font", C.global, "force_region", "checkbox")
   pfUI.gui:CreateConfig(pfUI.gui.global, "General Font", C.global, "font_default", "dropdown", values)
   pfUI.gui:CreateConfig(pfUI.gui.global, "Unit Frame & Action Bar Font", C.global, "font_square", "dropdown", values)
