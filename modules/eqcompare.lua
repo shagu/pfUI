@@ -74,6 +74,9 @@ pfUI:RegisterModule("eqcompare", function ()
 
           ShoppingTooltip1:SetInventoryItem("player", slotID)
           ShoppingTooltip1:Show();
+          ShoppingTooltip1:SetScript("OnUpdate", function()
+          	if not IsShiftKeyDown() then this:Hide() end
+          end)
 
           -- second tooltip
           if pfUI.slotTable[slotType .. "_other"] then
@@ -90,6 +93,9 @@ pfUI:RegisterModule("eqcompare", function ()
 
             ShoppingTooltip2:SetInventoryItem("player", slotID_other)
             ShoppingTooltip2:Show();
+            ShoppingTooltip2:SetScript("OnUpdate", function()
+          		if not IsShiftKeyDown() then this:Hide() end
+          	end)
           end
 
         end
