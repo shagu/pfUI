@@ -1,17 +1,19 @@
 pfUI:RegisterModule("chat", function ()
-  pfUI.firstrun:AddStep("chat_right", function() pfUI.chat.SetupRightChat(true) end, function() pfUI.chat.SetupRightChat(false) end, "|cff33ffcc聊天窗口: \"China chat\"|r\n\n"..
+  if pfUI.firstrun then
+    pfUI.firstrun:AddStep("chat_right", function() pfUI.chat.SetupRightChat(true) end, function() pfUI.chat.SetupRightChat(false) end, "|cff33ffcc聊天窗口: \"China chat\"|r\n\n"..
   "创建和管理一个特定的聊天框称为 \"China chat\"?\n"..
   "此聊天将显示世界频道，拾取信息和杂项消息,\n" ..
   "否则会扰乱你的主要聊天框架.")
 
-  pfUI.firstrun:AddStep("chat_position", function() pfUI.chat.SetupPositions() end, nil, "|cff33ffcc聊天布局\n\n" ..
+    pfUI.firstrun:AddStep("chat_position", function() pfUI.chat.SetupPositions() end, nil, "|cff33ffccChat: \"聊天布局\"|r\n\n" ..
   "使用最适合pfUI的聊天窗口的推荐布局,\n" ..
   "您的聊天布局现在将自动对齐。")
 
-  pfUI.firstrun:AddStep("chat_channels", function() pfUI.chat.SetupChannels() end, nil, "|cff33ffcc聊天频道\n\n"..
+    pfUI.firstrun:AddStep("chat_channels", function() pfUI.chat.SetupChannels() end, nil, "|cff33ffccChat: \"聊天频道\"|r\n\n"..
   "要获得默认的pfUI体验，您的聊天窗口将立即设置\n"..
   "以显示推荐的频道，例如China chat。\n" ..
   "以及世界频道和信息正确的聊天")
+  end
 
   local default_border = C.appearance.border.default
   if C.appearance.border.chat ~= "-1" then
