@@ -286,9 +286,9 @@ pfUI:RegisterModule("castbar", function ()
 
       if delay > 0 then
         delay = "|cffffaaaa+" .. round(delay,1) .. " |r "
-        pfUI.castbar.player.bar.right:SetText(delay .. round(cur,1) .. " / " .. round(max,1))
+        pfUI.castbar.player.bar.right:SetText(delay .. string.format("%.1f",cur) .. " / " .. round(max,1))
       else
-        pfUI.castbar.player.bar.right:SetText(round(cur,1) .. " / " .. round(max,1))
+        pfUI.castbar.player.bar.right:SetText(string.format("%.1f",cur) .. " / " .. round(max,1))
       end
 
       return
