@@ -34,12 +34,15 @@ modules\pixelperfect.lua
 modules\hoverbind.lua
 modules\actionbar.lua
 modules\hunterbar.lua
+modules\rangecheck.lua
 modules\chat.lua
 modules\addons.lua
 modules\minimap.lua
 modules\panel.lua
 modules\player.lua
+modules\focus.lua
 modules\target.lua
+modules\combopoints.lua
 modules\targettarget.lua
 modules\pet.lua
 modules\group.lua
@@ -53,7 +56,6 @@ modules\autovendor.lua
 modules\bags.lua
 modules\cooldown.lua
 modules\tooltip.lua
-modules\uf_tukui.lua
 modules\thirdparty.lua
 modules\buff.lua
 modules\nameplates.lua
@@ -63,3 +65,4 @@ modules\infight.lua
 modules\sellvalue.lua
 modules\eqcompare.lua
 modules\map.lua
+modules\uf_tukui.lua

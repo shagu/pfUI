@@ -1,5 +1,8 @@
 pfUI:RegisterModule("castbar", function ()
 
+  local font = C.castbar.use_unitfonts == "1" and pfUI.font_unit or pfUI.font_default
+  local font_size = C.castbar.use_unitfonts == "1" and C.global.font_unit_size or C.global.font_size
+
   local default_border = C.appearance.border.default
   if C.appearance.border.unitframes ~= "-1" then
     default_border = C.appearance.border.unitframes
@@ -49,7 +52,7 @@ pfUI:RegisterModule("castbar", function ()
   pfUI.castbar.player.bar.left:SetNonSpaceWrap(false)
   pfUI.castbar.player.bar.left:SetFontObject(GameFontWhite)
   pfUI.castbar.player.bar.left:SetTextColor(1,1,1,1)
-  pfUI.castbar.player.bar.left:SetFont(pfUI.font_default, C.global.font_size, "OUTLINE")
+  pfUI.castbar.player.bar.left:SetFont(font, font_size, "OUTLINE")
   pfUI.castbar.player.bar.left:SetText("left")
   pfUI.castbar.player.bar.left:SetJustifyH("left")
 
@@ -61,7 +64,7 @@ pfUI:RegisterModule("castbar", function ()
   pfUI.castbar.player.bar.right:SetNonSpaceWrap(false)
   pfUI.castbar.player.bar.right:SetFontObject(GameFontWhite)
   pfUI.castbar.player.bar.right:SetTextColor(1,1,1,1)
-  pfUI.castbar.player.bar.right:SetFont(pfUI.font_default, C.global.font_size, "OUTLINE")
+  pfUI.castbar.player.bar.right:SetFont(font, font_size, "OUTLINE")
   pfUI.castbar.player.bar.right:SetText("right")
   pfUI.castbar.player.bar.right:SetJustifyH("right")
 
@@ -364,7 +367,7 @@ pfUI:RegisterModule("castbar", function ()
   pfUI.castbar.target.bar.left:SetNonSpaceWrap(false)
   pfUI.castbar.target.bar.left:SetFontObject(GameFontWhite)
   pfUI.castbar.target.bar.left:SetTextColor(1,1,1,1)
-  pfUI.castbar.target.bar.left:SetFont(pfUI.font_default, C.global.font_size, "OUTLINE")
+  pfUI.castbar.target.bar.left:SetFont(font, font_size, "OUTLINE")
   pfUI.castbar.target.bar.left:SetText("left")
   pfUI.castbar.target.bar.left:SetJustifyH("left")
 
@@ -376,7 +379,7 @@ pfUI:RegisterModule("castbar", function ()
   pfUI.castbar.target.bar.right:SetNonSpaceWrap(false)
   pfUI.castbar.target.bar.right:SetFontObject(GameFontWhite)
   pfUI.castbar.target.bar.right:SetTextColor(1,1,1,1)
-  pfUI.castbar.target.bar.right:SetFont(pfUI.font_default, C.global.font_size, "OUTLINE")
+  pfUI.castbar.target.bar.right:SetFont(font, font_size, "OUTLINE")
   pfUI.castbar.target.bar.right:SetText("right")
   pfUI.castbar.target.bar.right:SetJustifyH("right")
 

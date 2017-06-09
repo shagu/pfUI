@@ -45,6 +45,25 @@ pfUI:RegisterModule("actionbar", function ()
   end)
 
   if C.bars.glowrange == "1" then
+
+    function _G.ActionButton_UpdateUsable()
+      if pfScanActive then return end
+
+      local icon = getglobal(this:GetName().."Icon");
+      local normalTexture = getglobal(this:GetName().."NormalTexture");
+      local isUsable, notEnoughMana = IsUsableAction(ActionButton_GetPagedID(this));
+      if ( isUsable ) then
+        icon:SetVertexColor(1.0, 1.0, 1.0);
+        normalTexture:SetVertexColor(1.0, 1.0, 1.0);
+      elseif ( notEnoughMana ) then
+        icon:SetVertexColor(0.5, 0.5, 1.0);
+        normalTexture:SetVertexColor(0.5, 0.5, 1.0);
+      else
+        icon:SetVertexColor(0.4, 0.4, 0.4);
+        normalTexture:SetVertexColor(1.0, 1.0, 1.0);
+      end
+    end
+
     hooksecurefunc("ActionButton_OnUpdate", function(elapsed)
       -- Handle range indicator
       if ( this.rangeTimer ) then
@@ -442,7 +461,7 @@ pfUI:RegisterModule("actionbar", function ()
 
     local hotkey = _G["ShapeshiftButton"..i..'HotKey']
     hotkey:SetAllPoints(button)
-    hotkey:SetFont(pfUI.font_square, C.global.font_size -2, "OUTLINE")
+    hotkey:SetFont(pfUI.font_unit, C.global.font_unit_size -2, "OUTLINE")
     hotkey:SetJustifyH("RIGHT")
     hotkey:SetJustifyV("TOP")
   end
@@ -501,7 +520,7 @@ pfUI:RegisterModule("actionbar", function ()
       local hotkey = _G[actionbutton..i..'HotKey']
       if C.bars.showkeybind == "1" then
         hotkey:SetAllPoints(button)
-        hotkey:SetFont(pfUI.font_square, C.global.font_size -2, "OUTLINE")
+        hotkey:SetFont(pfUI.font_unit, C.global.font_unit_size -2, "OUTLINE")
         hotkey:SetJustifyH("RIGHT")
         hotkey:SetJustifyV("TOP")
       else
@@ -511,7 +530,7 @@ pfUI:RegisterModule("actionbar", function ()
       local name = _G[actionbutton..i..'Name']
       if C.bars.showmacro == "1" then
         name:SetAllPoints(button)
-        name:SetFont(pfUI.font_square, C.global.font_size -2, "OUTLINE")
+        name:SetFont(pfUI.font_unit, C.global.font_unit_size -2, "OUTLINE")
         name:SetJustifyH("CENTER")
         name:SetJustifyV("BOTTOM")
       else

@@ -27,6 +27,13 @@ pfUI_locale["enUS"]["itemtypes"] = {
   ["INVTYPE_THROWN"] = "Thrown",
 }
 
+pfUI_locale["enUS"]["rangecheck"] = {
+  ['PALADIN'] = "Holy Light",
+  ['PRIEST'] = "Flash Heal",
+  ['DRUID'] = "Healing Touch",
+  ['SHAMAN'] = "Healing Wave",
+}
+
 pfUI_locale["enUS"]["interrupts"] = {
   ["Shield Bash"] = true;
   ["Pummel"] = true;

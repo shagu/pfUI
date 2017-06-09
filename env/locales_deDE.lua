@@ -27,6 +27,13 @@ pfUI_locale["deDE"]["itemtypes"] = {
   ["INVTYPE_THROWN"] = "Wurfwaffe",
 }
 
+pfUI_locale["deDE"]["rangecheck"] = {
+  ['PALADIN'] = "Heiliges Licht",
+  ['PRIEST'] = "Blitzheilung",
+  ['DRUID'] = "Heilende Berührung",
+  ['SHAMAN'] = "Welle der Heilung",
+}
+
 pfUI_locale["deDE"]["interrupts"] = {
   ["Schildhieb"] = true;
   ["Zuschlagen"] = true;

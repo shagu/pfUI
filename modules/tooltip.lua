@@ -64,7 +64,10 @@ CreateBackdrop(GameTooltip, nil, nil, alpha)
       if hp and hpm then
         if hp >= 1000 then hp = round(hp / 1000, 1) .. "k" end
         if hpm >= 1000 then hpm = round(hpm / 1000, 1) .. "k" end
-        pfUI.tooltipStatusBar.HP:SetText(hp .. " / " .. hpm)
+
+        if pfUI.tooltipStatusBar and pfUI.tooltipStatusBar.HP then
+          pfUI.tooltipStatusBar.HP:SetText(hp .. " / " .. hpm)
+        end
       end
   end)
 

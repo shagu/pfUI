@@ -1,11 +1,19 @@
 pfUI:RegisterModule("cooldown", function ()
+
+  -- cache values
+  local lowcolor    = {strsplit(",", C.appearance.cd.lowcolor)}
+  local normalcolor = {strsplit(",", C.appearance.cd.normalcolor)}
+  local minutecolor = {strsplit(",", C.appearance.cd.minutecolor)}
+  local hourcolor   = {strsplit(",", C.appearance.cd.hourcolor)}
+  local daycolor    = {strsplit(",", C.appearance.cd.daycolor)}
+
   local function pfCreateCoolDown(cooldown, start, duration)
     cooldown.cd = CreateFrame("Frame", "pfCooldownFrame", cooldown:GetParent())
     cooldown.cd:SetAllPoints(cooldown:GetParent())
     cooldown.cd:SetFrameLevel(cooldown.cd:GetFrameLevel() + 1)
 
     cooldown.cd.text = cooldown.cd:CreateFontString("pfCooldownFrameText", "OVERLAY")
-    cooldown.cd.text:SetFont(pfUI.font_square, C.global.font_size, "OUTLINE")
+    cooldown.cd.text:SetFont(pfUI.font_unit, C.global.font_unit_size, "OUTLINE")
     cooldown.cd.text:SetPoint("CENTER", cooldown.cd, "CENTER", 0, 1)
 
     cooldown.cd:SetScript("OnUpdate", function()
@@ -28,25 +36,25 @@ pfUI:RegisterModule("cooldown", function ()
 
       local remaining = this.duration - (GetTime() - this.start)
       if remaining >= 0 then
-        local r, g, b, a = 1, 1, 1, 1
+        local r, g, b, a = unpack(normalcolor)
         local unit = ""
         if remaining <= 3 then
-          r,g,b,a = strsplit(",", C.appearance.cd.seccolor)
+          r,g,b,a = unpack(lowcolor)
         end
         if remaining > 99 then
           remaining = remaining / 60
           unit = "m"
-          r,g,b,a = strsplit(",", C.appearance.cd.mincolor)
+          r,g,b,a = unpack(minutecolor)
         end
         if remaining > 99 then
           remaining = remaining / 60
           unit = "h"
-          r,g,b,a = strsplit(",", C.appearance.cd.hourcolor)
+          r,g,b,a = unpack(hourcolor)
         end
         if remaining > 99 then
           remaining = remaining / 24
           unit = "d"
-          r,g,b,a = strsplit(",", C.appearance.cd.daycolor)
+          r,g,b,a = unpack(daycolor)
         end
         this.text:SetText(round(remaining) .. unit)
         this.text:SetTextColor(r,g,b,a)
