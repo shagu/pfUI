@@ -137,6 +137,7 @@ pfUI_translation["zhTW"] = {
   ["Enable Micro Bar"] = "顯示功能表列",
   ["Enable Mouselook With Right Click"] = "啟動右鍵移動鏡頭",
   ["Enable Offscreen Frame Positions"] = "啟用螢幕框架固定",
+  ["Enable Overlap"] = nil,
   ["Enable Pastel Colors"] = "使用輕淡柔和的色彩頭像",
   ["Enable Pixel Perfect (Native Resolution)"] = "啟用UI縮放",
   ["Enable Power Color in Text"] = "啟用能量值文字顏色樣式",
