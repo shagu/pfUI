@@ -1,7 +1,7 @@
 pfUI:RegisterModule("autovendor", function ()
   local scanlist = {}
 
-  local function RepairAllItems()
+  local function RepairItems()
     local cost, possible = GetRepairAllCost()
     if cost > 0 and possible then
       DEFAULT_CHAT_FRAME:AddMessage("Your items have been repaired for " .. CreateGoldString(cost))
@@ -78,7 +78,7 @@ pfUI:RegisterModule("autovendor", function ()
 
     if event == "MERCHANT_SHOW" then
       if C["global"]["autorepair"] == "1" then
-        RepairAllItems()
+        RepairItems()
       end
 
       if C["global"]["autosell"] == "1" then
