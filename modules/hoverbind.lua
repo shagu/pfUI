@@ -16,6 +16,7 @@ pfUI:RegisterModule("hoverbind", function ()
   }
 
   pfUI.hoverbind = CreateFrame("Frame","pfKeyBindingFrame",UIParent)
+  pfUI.hoverbind:Hide()
   pfUI.hoverbind:RegisterEvent("PLAYER_REGEN_DISABLED")
   pfUI.hoverbind:EnableMouse(true)
   pfUI.hoverbind.edit = CreateFrame("Button", "pfKeyBindingFrameEdit", pfUI.hoverbind)
@@ -33,6 +34,7 @@ pfUI:RegisterModule("hoverbind", function ()
   end)
 
   pfUI.hoverbind:SetScript("OnShow", function()
+    pfUI.gui:Hide()
     pfUI.hoverbind.edit:Show()
 
     pfUI.info:ShowInfoBox("|cff33ffccKeybind Mode|r\n" ..
@@ -44,6 +46,7 @@ pfUI:RegisterModule("hoverbind", function ()
 
   pfUI.hoverbind:SetScript("OnHide",function()
     pfUI.hoverbind.edit:Hide()
+    pfUI.gui:Show()
   end)
 
   pfUI.hoverbind:EnableKeyboard(true)
@@ -73,7 +76,6 @@ pfUI:RegisterModule("hoverbind", function ()
       SaveBindings(GetCurrentBindingSet())
     end
   end)
-  pfUI.hoverbind:Hide()
 
   function pfUI.hoverbind:GetBinding(button_name)
     local found,_,buttontype,buttonindex = string.find(button_name,"^(%a+)(%d+)$")

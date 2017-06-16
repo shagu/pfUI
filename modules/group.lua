@@ -40,7 +40,7 @@ pfUI:RegisterModule("group", function ()
   pfUI.uf.partytargetScanner = CreateFrame("Button",nil,UIParent)
   pfUI.uf.partytargetScanner:SetScript("OnUpdate", function()
     for i=1, 4 do
-      if UnitExists("party" .. i .. "target") or (pfUI.gitter and pfUI.gitter:IsShown()) then
+      if UnitExists("party" .. i .. "target") or (pfUI.unlock and pfUI.unlock:IsShown()) then
         pfUI.uf.group[i].target:Show()
       else
         pfUI.uf.group[i].target:Hide()

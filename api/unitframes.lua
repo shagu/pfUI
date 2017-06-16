@@ -216,12 +216,12 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
         pfUI.uf:RefreshUnit(this, "all")
       end
 
-      if UnitIsConnected(this.label .. this.id) or ( pfUI.gitter and pfUI.gitter:IsShown()) then
+      if UnitIsConnected(this.label .. this.id) or ( pfUI.unlock and pfUI.unlock:IsShown()) then
         if not this.cache then return end
         if not this.cache.hp or not this.cache.power then return end
 
         if this.config.faderange == "1" then
-          if pfUI.api.UnitInRange(this.label .. this.id, 4) or (pfUI.gitter and pfUI.gitter:IsShown()) then
+          if pfUI.api.UnitInRange(this.label .. this.id, 4) or (pfUI.unlock and pfUI.unlock:IsShown()) then
             if this:GetAlpha() ~= 1 then
               this:SetAlpha(1)
               if this.config.portrait == "bar" then
@@ -559,7 +559,7 @@ function pfUI.uf:RefreshUnit(unit, component)
     unit.lastUnit = UnitName(unit.label .. unit.id)
   end
 
-  if not ( pfUI.gitter and pfUI.gitter:IsShown() ) then
+  if not ( pfUI.unlock and pfUI.unlock:IsShown() ) then
     if UnitName(unit.label .. unit.id) or unit.unitname then
       if pfUI_config["unitframes"]["group"]["hide_in_raid"] == "1" and strsub(unit.label,0,5) == "party" and UnitInRaid("player") then
         unit:Hide()

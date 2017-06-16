@@ -4,7 +4,7 @@ pfUI:RegisterModule("targettarget", function ()
 
   pfUI.uf.targettargetScanner = CreateFrame("Button",nil,UIParent)
   pfUI.uf.targettargetScanner:SetScript("OnUpdate", function()
-      if UnitExists("targettarget") or (pfUI.gitter and pfUI.gitter:IsShown()) then
+      if UnitExists("targettarget") or (pfUI.unlock and pfUI.unlock:IsShown()) then
         pfUI.uf.targettarget:Show()
       else
         pfUI.uf.targettarget:Hide()
