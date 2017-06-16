@@ -771,8 +771,7 @@ pfUI:RegisterModule("gui", function ()
       CreateConfig(this, "40y-Range Check Interval", C.unitframes, "rangechecki")
       CreateConfig(this, "Combopoint Size", C.unitframes, "combosize")
       CreateConfig(this, "Abbreviate Numbers (4200 -> 4.2k)", C.unitframes, "abbrevnum", "checkbox")
-      CreateConfig(this, "Enable PvP Icon", C.unitframes.player, "showPVP", "checkbox")
-      CreateConfig(this, "Align PvP Icon to Minimap", C.unitframes.player, "showPVPMinimap", "checkbox")
+      CreateConfig(this, "Show PvP Icon", C.unitframes.player, "showPVP", "checkbox")
       CreateConfig(this, "Enable Energy Ticks", C.unitframes.player, "energy", "checkbox")
       this.setup = true
     end
@@ -1168,6 +1167,7 @@ pfUI:RegisterModule("gui", function ()
       CreateConfig(this, "Enable Zone Text On Minimap Mouseover", C.appearance.minimap, "mouseoverzone", "checkbox")
       CreateConfig(this, "Disable Minimap Buffs", C.global, "hidebuff", "checkbox")
       CreateConfig(this, "Disable Minimap Weapon Buffs", C.global, "hidewbuff", "checkbox")
+      CreateConfig(this, "Show PvP Icon", C.unitframes.player, "showPVPMinimap", "checkbox")
       this.setup = true
     end
   end)

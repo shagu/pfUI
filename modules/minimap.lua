@@ -143,4 +143,27 @@ pfUI:RegisterModule("minimap", function ()
     pfUI.minimapCoordinates:Hide()
     pfUI.minimapZone:Hide()
   end)
+
+  pfUI.minimap.pvpicon = CreateFrame("Frame", nil, pfUI.minimap)
+  pfUI.minimap.pvpicon:Hide()
+  pfUI.minimap.pvpicon:RegisterEvent("UPDATE_FACTION")
+  pfUI.minimap.pvpicon:RegisterEvent("UNIT_FACTION")
+  pfUI.minimap.pvpicon:SetFrameStrata("HIGH")
+  pfUI.minimap.pvpicon:SetWidth(16)
+  pfUI.minimap.pvpicon:SetHeight(16)
+  pfUI.minimap.pvpicon:SetAlpha(.5)
+  pfUI.minimap.pvpicon:SetParent(pfUI.minimap)
+  pfUI.minimap.pvpicon:SetPoint("BOTTOMRIGHT", pfUI.minimap, "BOTTOMRIGHT", -5, 5)
+  pfUI.minimap.pvpicon.texture = pfUI.minimap.pvpicon:CreateTexture(nil,"DIALOG")
+  pfUI.minimap.pvpicon.texture:SetTexture("Interface\\AddOns\\pfUI\\img\\pvp")
+  pfUI.minimap.pvpicon.texture:SetAllPoints(pfUI.minimap.pvpicon)
+
+  pfUI.minimap.pvpicon:SetScript("OnEvent", function()
+    if C.unitframes.player.showPVPMinimap == "1" and UnitIsPVP("player") then
+      pfUI.minimap.pvpicon:Show()
+    else
+      pfUI.minimap.pvpicon:Hide()
+    end
+  end)
+
 end)
