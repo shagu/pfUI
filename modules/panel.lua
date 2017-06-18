@@ -456,7 +456,7 @@ pfUI:RegisterModule("panel", function ()
   end
 
 
-  pfUI.panel.left = CreateFrame("Frame", "pfPanelLeft", pfUI.panel)
+  pfUI.panel.left = CreateFrame("Frame", "pfPanelLeft", UIParent)
 
 
   pfUI.panel.left:SetFrameStrata("HIGH")
@@ -528,7 +528,7 @@ pfUI:RegisterModule("panel", function ()
   pfUI.panel.left.right.text:SetPoint("CENTER", 0, 0)
   pfUI.panel.left.right.text:SetFontObject(GameFontWhite)
 
-  pfUI.panel.right = CreateFrame("Frame", "pfPanelRight", pfUI.panel)
+  pfUI.panel.right = CreateFrame("Frame", "pfPanelRight", UIParent)
   pfUI.panel.right:SetFrameStrata("HIGH")
   pfUI.panel.right:ClearAllPoints()
   if pfUI.chat then
