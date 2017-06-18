@@ -744,6 +744,7 @@ pfUI:RegisterModule("gui", function ()
       CreateConfig(this, "Cooldown Color (Hours)", C.appearance.cd, "hourcolor", "color")
       CreateConfig(this, "Cooldown Color (Days)", C.appearance.cd, "daycolor", "color")
       CreateConfig(this, "Cooldown Text Threshold", C.appearance.cd, "threshold")
+      CreateConfig(this, "Cooldown Text Font Size", C.appearance.cd, "font_size")
       this.setup = true
     end
   end)
