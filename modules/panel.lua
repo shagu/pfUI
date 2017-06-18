@@ -8,7 +8,7 @@ pfUI:RegisterModule("panel", function ()
     default_border = C.appearance.border.panels
   end
 
-  pfUI.panel = CreateFrame("Frame",nil,UIParent)
+  pfUI.panel = CreateFrame("Frame", "pfPanel", UIParent)
   pfUI.panel:RegisterEvent("PLAYER_ENTERING_WORLD")
   pfUI.panel:RegisterEvent("BAG_UPDATE")
   pfUI.panel:RegisterEvent("PLAYER_MONEY")
@@ -471,6 +471,8 @@ pfUI:RegisterModule("panel", function ()
     pfUI.panel.left:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", 5, 5)
   end
 
+  UpdateMovable(pfUI.panel.left)
+
   pfUI.panel.left:SetHeight(C.global.font_size+default_border*2)
   CreateBackdrop(pfUI.panel.left, default_border, nil)
 
@@ -537,6 +539,9 @@ pfUI:RegisterModule("panel", function ()
     pfUI.panel.right:SetWidth(C.chat.right.width)
     pfUI.panel.right:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", -5, 5)
   end
+
+  UpdateMovable(pfUI.panel.right)
+
   pfUI.panel.right:SetHeight(C.global.font_size+default_border*2)
   CreateBackdrop(pfUI.panel.right, default_border, nil)
 
