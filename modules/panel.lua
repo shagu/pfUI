@@ -8,7 +8,7 @@ pfUI:RegisterModule("panel", function ()
     default_border = C.appearance.border.panels
   end
 
-  pfUI.panel = CreateFrame("Frame",nil,UIParent)
+  pfUI.panel = CreateFrame("Frame", "pfPanel", UIParent)
   pfUI.panel:RegisterEvent("PLAYER_ENTERING_WORLD")
   pfUI.panel:RegisterEvent("BAG_UPDATE")
   pfUI.panel:RegisterEvent("PLAYER_MONEY")
@@ -456,7 +456,7 @@ pfUI:RegisterModule("panel", function ()
   end
 
 
-  pfUI.panel.left = CreateFrame("Frame", "pfPanelLeft", pfUI.panel)
+  pfUI.panel.left = CreateFrame("Frame", "pfPanelLeft", UIParent)
 
 
   pfUI.panel.left:SetFrameStrata("HIGH")
@@ -470,6 +470,8 @@ pfUI:RegisterModule("panel", function ()
     pfUI.panel.left:SetWidth(C.chat.left.width)
     pfUI.panel.left:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", 5, 5)
   end
+
+  UpdateMovable(pfUI.panel.left)
 
   pfUI.panel.left:SetHeight(C.global.font_size+default_border*2)
   CreateBackdrop(pfUI.panel.left, default_border, nil)
@@ -526,7 +528,7 @@ pfUI:RegisterModule("panel", function ()
   pfUI.panel.left.right.text:SetPoint("CENTER", 0, 0)
   pfUI.panel.left.right.text:SetFontObject(GameFontWhite)
 
-  pfUI.panel.right = CreateFrame("Frame", "pfPanelRight", pfUI.panel)
+  pfUI.panel.right = CreateFrame("Frame", "pfPanelRight", UIParent)
   pfUI.panel.right:SetFrameStrata("HIGH")
   pfUI.panel.right:ClearAllPoints()
   if pfUI.chat then
@@ -537,6 +539,9 @@ pfUI:RegisterModule("panel", function ()
     pfUI.panel.right:SetWidth(C.chat.right.width)
     pfUI.panel.right:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", -5, 5)
   end
+
+  UpdateMovable(pfUI.panel.right)
+
   pfUI.panel.right:SetHeight(C.global.font_size+default_border*2)
   CreateBackdrop(pfUI.panel.right, default_border, nil)
 

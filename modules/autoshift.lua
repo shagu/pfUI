@@ -29,8 +29,27 @@ pfUI:RegisterModule("autoshift", function ()
 
   pfUI.autoshift.buffs = { "spell_nature_swiftness", "_mount_", "_qirajicrystal_",
     "ability_racial_bearform", "ability_druid_catform", "ability_druid_travelform",
-    "spell_nature_forceofnature", "ability_druid_aquaticform", "spell_shadow_shadowform",
-    "spell_nature_spiritwolf" }
+    "ability_druid_aquaticform", "spell_shadow_shadowform", "spell_nature_spiritwolf" }
+
+  -- an agility buff exists which has the same icon as the moonkin form
+  -- therefore only add the moonkin icon to the removable buffs if
+  -- moonkin is skilled and player is druid. Frame is required as talentpoints
+  -- are only accessible after certain events.
+  local moonkin_scan = CreateFrame("Frame")
+  moonkin_scan:RegisterEvent("PLAYER_ENTERING_WORLD")
+  moonkin_scan:RegisterEvent("UNIT_NAME_UPDATE")
+  moonkin_scan:SetScript("OnEvent", function()
+    local _, class = UnitClass("player")
+    if class == "DRUID" then
+      local _,_,_,_,moonkin = GetTalentInfo(1,16)
+      if moonkin == 1 then
+        table.insert(pfUI.autoshift.buffs, "spell_nature_forceofnature")
+        moonkin_scan:UnregisterAllEvents()
+      end
+    else
+      moonkin_scan:UnregisterAllEvents()
+    end
+  end)
 
   pfUI.autoshift.errors = { SPELL_FAILED_NOT_MOUNTED, ERR_ATTACK_MOUNTED, ERR_TAXIPLAYERALREADYMOUNTED,
     SPELL_FAILED_NOT_SHAPESHIFT, SPELL_FAILED_NO_ITEMS_WHILE_SHAPESHIFTED, SPELL_NOT_SHAPESHIFTED,
