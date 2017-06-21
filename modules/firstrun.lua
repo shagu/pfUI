@@ -19,10 +19,10 @@ pfUI:RegisterModule("firstrun", function ()
     table.insert(pfUI.firstrun.steps, step)
   end
 
-  pfUI.firstrun:AddStep("cvars", function() pfUI.SetupCVars() end, nil, "|cff33ffccBlizzard: \"接口选项\"|r\n\n"..
-  "设置推荐的暴雪UI设置吗？\n"..
-  "这将启用在客户端的“接口”部分中找到的设置。\n"..
-  "Buff Duration，Instant Quest Text，Auto Selfcast等选项将被设置。\n")
+  pfUI.firstrun:AddStep("cvars", function() pfUI.SetupCVars() end, nil, "|cff33ffccBlizzard: \"Interface Options\"|r\n\n"..
+  "Do you want me to setup the recommended blizzard UI settings?\n"..
+  "This will enable settings that can be found in the Interface section of your client.\n"..
+  "Options like Buff Durations, Instant Quest Text, Auto Selfcast and others will be set.\n")
 
   local all_yes = false
   function pfUI.firstrun:NextStep()

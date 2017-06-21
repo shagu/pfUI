@@ -153,9 +153,9 @@ function pfUI.api.CreateGoldString(money)
   local copper = floor(mod(money,100))
 
   local string = ""
-  if gold > 0 then string = string .. "|cffffffff" .. gold .. "|cffffd700金" end
-  if silver > 0 then string = string .. "|cffffffff " .. silver .. "|cffc7c7cf银" end
-  string = string .. "|cffffffff " .. copper .. "|cffeda55f铜"
+  if gold > 0 then string = string .. "|cffffffff" .. gold .. "|cffffd700g" end
+  if silver > 0 then string = string .. "|cffffffff " .. silver .. "|cffc7c7cfs" end
+  string = string .. "|cffffffff " .. copper .. "|cffeda55fc"
 
   return string
 end
@@ -450,7 +450,7 @@ function pfUI.api.CreateQuestionDialog(text, yes, no, editbox)
   end
 
   local yes, no = yes, no
-  local yescap, nocap = "确定", "取消"
+  local yescap, nocap = "Yes", "No"
 
   if yes and type(yes) == "table" then
     yescap = yes[1]

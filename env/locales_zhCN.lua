@@ -1,4 +1,4 @@
-pfUI_locale["zhCN"] = {}
+﻿pfUI_locale["zhCN"] = {}
 
 pfUI_locale["zhCN"]["class"] = {
   ["术士"] = "WARLOCK",

@@ -109,7 +109,7 @@ pfUI:RegisterModule("autovendor", function ()
   autovendor.button:SetHighlightTexture("Interface\\Buttons\\ButtonHilight-Square")
   autovendor.button:SetScript("OnEnter", function()
     GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
-    GameTooltip:SetText("出售灰色物品");
+    GameTooltip:SetText("Sell Grey Items");
     GameTooltip:Show();
   end)
 

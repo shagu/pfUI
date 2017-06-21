@@ -1,18 +1,18 @@
 pfUI:RegisterModule("chat", function ()
   if pfUI.firstrun then
-    pfUI.firstrun:AddStep("chat_right", function() pfUI.chat.SetupRightChat(true) end, function() pfUI.chat.SetupRightChat(false) end, "|cff33ffcc聊天窗口: \"China chat\"|r\n\n"..
-  "创建和管理一个特定的聊天框称为 \"China chat\"?\n"..
-  "此聊天将显示世界频道，拾取信息和杂项消息,\n" ..
-  "否则会扰乱你的主要聊天框架.")
+    pfUI.firstrun:AddStep("chat_right", function() pfUI.chat.SetupRightChat(true) end, function() pfUI.chat.SetupRightChat(false) end, "|cff33ffccChat: \"Loot & Spam\"|r\n\n"..
+    "Do you want me to create and manage a specific Chatframe called \"Loot & Spam\"?\n"..
+    "This chat will display world channels, loot information and miscellaneous messages,\n" ..
+    "that would otherwise clutter your main chatframe.")
 
-    pfUI.firstrun:AddStep("chat_position", function() pfUI.chat.SetupPositions() end, nil, "|cff33ffccChat: \"聊天布局\"|r\n\n" ..
-  "使用最适合pfUI的聊天窗口的推荐布局,\n" ..
-  "您的聊天布局现在将自动对齐。")
+    pfUI.firstrun:AddStep("chat_position", function() pfUI.chat.SetupPositions() end, nil, "|cff33ffccChat: \"Layout\"|r\n\n" ..
+    "Do you want me to adjust the layout of your chatframes?\n" ..
+    "This would make sure, that every window is placed on its dedicated position.")
 
-    pfUI.firstrun:AddStep("chat_channels", function() pfUI.chat.SetupChannels() end, nil, "|cff33ffccChat: \"聊天频道\"|r\n\n"..
-  "要获得默认的pfUI体验，您的聊天窗口将立即设置\n"..
-  "以显示推荐的频道，例如China chat。\n" ..
-  "以及世界频道和信息正确的聊天")
+    pfUI.firstrun:AddStep("chat_channels", function() pfUI.chat.SetupChannels() end, nil, "|cff33ffccChat: \"Channels\"|r\n\n"..
+    "Do you want me to setup the chat channels of your chatframes?\n"..
+    "This would set important or personal messages to the left chat\n" ..
+    "and world channels and lootinformation to the right chat.")
   end
 
   local panelfont = C.panel.use_unitfonts == "1" and pfUI.font_unit or pfUI.font_default
@@ -102,7 +102,7 @@ pfUI:RegisterModule("chat", function ()
   pfUI.chat.urlcopy.close:SetHeight(18)
   pfUI.chat.urlcopy.close:SetPoint("BOTTOMRIGHT", pfUI.chat.urlcopy, "BOTTOMRIGHT", -10, 10)
 
-  pfUI.chat.urlcopy.close:SetText("关闭")
+  pfUI.chat.urlcopy.close:SetText("Close")
   pfUI.chat.urlcopy.close:SetScript("OnClick", function()
     pfUI.chat.urlcopy:Hide()
   end)
@@ -199,7 +199,7 @@ pfUI:RegisterModule("chat", function ()
   pfUI.chat.left.panelTop.proxyName.caption:SetPoint("TOP", 0, -20)
   pfUI.chat.left.panelTop.proxyName.caption:SetFontObject(GameFontWhite)
   pfUI.chat.left.panelTop.proxyName.caption:SetJustifyH("CENTER")
-  pfUI.chat.left.panelTop.proxyName.caption:SetText("转移所有密语到：")
+  pfUI.chat.left.panelTop.proxyName.caption:SetText("Forward all whispers to:")
 
   pfUI.chat.left.panelTop.proxyName.input = CreateFrame("EditBox", nil, pfUI.chat.left.panelTop.proxyName)
   pfUI.chat.left.panelTop.proxyName.input:SetTextColor(.2,1.1,1)
@@ -225,7 +225,7 @@ pfUI:RegisterModule("chat", function ()
   pfUI.chat.left.panelTop.proxyName.okay.text:SetAllPoints(pfUI.chat.left.panelTop.proxyName.okay)
   pfUI.chat.left.panelTop.proxyName.okay.text:SetPoint("CENTER", 0, 0)
   pfUI.chat.left.panelTop.proxyName.okay.text:SetFontObject(GameFontWhite)
-  pfUI.chat.left.panelTop.proxyName.okay.text:SetText("保存")
+  pfUI.chat.left.panelTop.proxyName.okay.text:SetText("Save")
   pfUI.chat.left.panelTop.proxyName.okay:SetScript("OnClick", function()
     pfUI.chat.left.panelTop.proxy.forwardto = pfUI.chat.left.panelTop.proxyName.input:GetText()
     if pfUI.chat.left.panelTop.proxy.enabled == true then
@@ -245,7 +245,7 @@ pfUI:RegisterModule("chat", function ()
   pfUI.chat.left.panelTop.proxyName.abort.text:SetAllPoints(pfUI.chat.left.panelTop.proxyName.abort)
   pfUI.chat.left.panelTop.proxyName.abort.text:SetPoint("CENTER", 0, 0)
   pfUI.chat.left.panelTop.proxyName.abort.text:SetFontObject(GameFontWhite)
-  pfUI.chat.left.panelTop.proxyName.abort.text:SetText("中止")
+  pfUI.chat.left.panelTop.proxyName.abort.text:SetText("Abort")
   pfUI.chat.left.panelTop.proxyName.abort:SetScript("OnClick", function()
     pfUI.chat.left.panelTop.proxyName:Hide()
   end)
@@ -415,7 +415,7 @@ pfUI:RegisterModule("chat", function ()
     if C.chat.right.enable == "1" then
       -- set position of Loot & Spam
       FCF_SetLocked(ChatFrame3, 1)
-      FCF_SetWindowName(ChatFrame3, "Loot & Spam")
+      FCF_SetWindowName(ChatFrame3, pf_LOOT_SPAM)
       FCF_SetWindowColor(ChatFrame3, 0, 0, 0)
       FCF_SetWindowAlpha(ChatFrame3, 0)
       FCF_SetChatWindowFontSize(ChatFrame3, 12)

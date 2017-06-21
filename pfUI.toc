@@ -2,9 +2,13 @@
 ## Title: |cff33ffccpf|cffffffffUI
 ## Author: Shagu
 ## Notes: A complete user interface replacement.
-## Version: 2.5
+## Version: 3.0.0
 ## SavedVariables: pfUI_profiles
 ## SavedVariablesPerCharacter: pfUI_config, pfUI_init, pfUI_playerDB
+
+# localization
+localization\localization_en.lua
+localization\localization_zh.lua
 
 # main
 pfUI.lua
@@ -30,6 +34,7 @@ env\fonts.lua
 # modules
 modules\firstrun.lua
 modules\gui.lua
+modules\unlock.lua
 modules\pixelperfect.lua
 modules\hoverbind.lua
 modules\actionbar.lua

@@ -1,431 +1,220 @@
 pfUI:RegisterModule("gui", function ()
-  local default_border = tonumber(C.appearance.border.default)
+  -- innner padding
+  local spacing = 25
 
-  pfUI.gui = CreateFrame("Frame",nil,UIParent)
+  local function Createtabs(parent, align, outside)
+    local f = CreateFrame("Frame", nil, parent)
 
-  pfUI.gui:RegisterEvent("PLAYER_ENTERING_WORLD")
+    f:SetPoint("TOPLEFT", parent, "TOPLEFT", -5, 5)
+    f:SetPoint("BOTTOMRIGHT", parent, "BOTTOMRIGHT", 5, -5)
 
-  pfUI.gui:SetFrameStrata("DIALOG")
-  pfUI.gui:SetWidth(500)
-  pfUI.gui:SetHeight(500)
-  pfUI.gui:Hide()
+    -- setup env
+    f.childs = { }
+    f.buttons = { }
+    f.align = align
+    f.outside = outside
+    f.bottomcount = 1
 
-  CreateBackdrop(pfUI.gui, nil, nil, .8)
-  pfUI.gui:SetPoint("CENTER",0,0)
-  pfUI.gui:SetMovable(true)
-  pfUI.gui:EnableMouse(true)
-  pfUI.gui:SetScript("OnMouseDown",function()
-    pfUI.gui:StartMoving()
-  end)
+    -- Create Child Frame
+    f.CreateChildFrame = function(self, title, bwidth, bheight, bottom, static)
+      -- setup env
+      local childcount = table.getn(self.childs) + 1
+      local button_width = bwidth or 150
+      local button_height = bheight or 20
+      local border = 4
 
-  pfUI.gui:SetScript("OnMouseUp",function()
-    pfUI.gui:StopMovingOrSizing()
-  end)
+      -- create tab button
+      local b = CreateFrame("Button", "pfConfig" .. title .. "Button", self, "UIPanelButtonTemplate")
+      b:SetHeight(button_height)
+      b:SetWidth(button_width)
+      b:SetID(childcount)
 
-  pfUI.gui:SetScript("OnHide",function()
-    if ColorPickerFrame and ColorPickerFrame:IsShown() then
-      ColorPickerFrame:Hide()
-    end
-  end)
-
-  function pfUI.gui:Reload()
-    CreateQuestionDialog("有些设置需要重新加载UI生效。\n您要重新载入UI吗？",
-      function()
-        pfUI.gui.settingChanged = nil
-        ReloadUI()
-      end)
-  end
-
-  function pfUI.gui:SaveScale(frame, scale)
-    frame:SetScale(scale)
-
-    if not C.position[frame:GetName()] then
-      C.position[frame:GetName()] = {}
-    end
-    C.position[frame:GetName()]["scale"] = scale
-
-    frame.drag.text:SetText("Scale: " .. scale)
-    frame.drag.text:SetAlpha(1)
-
-    frame.drag:SetScript("OnUpdate", function()
-      this.text:SetAlpha(this.text:GetAlpha() -0.05)
-      if this.text:GetAlpha() < 0.1 then
-        this.text:SetText(strsub(this:GetParent():GetName(),3))
-        this.text:SetAlpha(1)
-        this:SetScript("OnUpdate", function() return end)
-      end
-    end)
-  end
-
-  function pfUI.gui.HoverBind()
-    pfUI.gui:Hide()
-    if pfUI.hoverbind then
-      pfUI.hoverbind:Show()
-    end
-  end
-
-  function pfUI.gui:UnlockFrames()
-    if not pfUI.gitter then
-      pfUI.gitter = CreateFrame("Button", nil, UIParent)
-      pfUI.gitter:SetAllPoints(WorldFrame)
-      pfUI.gitter:SetFrameStrata("BACKGROUND")
-      pfUI.gitter:SetScript("OnClick", function()
-        pfUI.gui.UnlockFrames()
-      end)
-
-      local size = 1
-      local width = GetScreenWidth()
-      local ratio = width / GetScreenHeight()
-      local height = GetScreenHeight() * ratio
-
-      local wStep = width / 128
-      local hStep = height / 128
-
-      for i = 0, 128 do
-        local tx = pfUI.gitter:CreateTexture(nil, 'BACKGROUND')
-        if i == 128 / 2 then
-          tx:SetTexture(.1, .5, .4)
+      if not self.align or self.align == "LEFT" then
+        local outside = self.outside and -2 * border - button_width or 0
+        if bottom then
+          b:SetPoint("BOTTOMLEFT", self, "BOTTOMLEFT", border + outside, (self.bottomcount-1) * (button_height) + (self.bottomcount * border) )
         else
-          tx:SetTexture(0, 0, 0)
+          b:SetPoint("TOPLEFT", self, "TOPLEFT", border + outside, -(childcount-1) * (button_height) - (childcount * border) )
         end
-        tx:SetPoint("TOPLEFT", pfUI.gitter, "TOPLEFT", i*wStep - (size/2), 0)
-        tx:SetPoint('BOTTOMRIGHT', pfUI.gitter, 'BOTTOMLEFT', i*wStep + (size/2), 0)
+      elseif self.align == "TOP" then
+        local outside = self.outside and 2 * border + button_height or 0
+        b:SetPoint("TOPLEFT", self, "TOPLEFT", (childcount-1) * (button_width) + (childcount * border) + (self.outside and -border), -border + outside )
       end
 
-      local height = GetScreenHeight()
+      SkinButton(b,.2,1,.8)
+      b:SetText(title)
 
-      for i = 0, 128 do
-        local tx = pfUI.gitter:CreateTexture(nil, 'BACKGROUND')
-        tx:SetTexture(.1, .5, .4)
-        tx:SetPoint("TOPLEFT", pfUI.gitter, "TOPLEFT", 0, -(height/2) + (size/2))
-        tx:SetPoint('BOTTOMRIGHT', pfUI.gitter, 'TOPRIGHT', 0, -(height/2 + size/2))
+      if childcount ~= 1 then
+        b:SetTextColor(.5,.5,.5)
+      else
+        b:SetTextColor(.2,1,.8)
       end
 
-      for i = 1, floor((height/2)/hStep) do
-        local tx = pfUI.gitter:CreateTexture(nil, 'BACKGROUND')
-        tx:SetTexture(0, 0, 0)
-
-        tx:SetPoint("TOPLEFT", pfUI.gitter, "TOPLEFT", 0, -(height/2+i*hStep) + (size/2))
-        tx:SetPoint('BOTTOMRIGHT', pfUI.gitter, 'TOPRIGHT', 0, -(height/2+i*hStep + size/2))
-
-        tx = pfUI.gitter:CreateTexture(nil, 'BACKGROUND')
-        tx:SetTexture(0, 0, 0)
-
-        tx:SetPoint("TOPLEFT", pfUI.gitter, "TOPLEFT", 0, -(height/2-i*hStep) + (size/2))
-        tx:SetPoint('BOTTOMRIGHT', pfUI.gitter, 'TOPRIGHT', 0, -(height/2-i*hStep + size/2))
-      end
-
-      pfUI.gitter:Hide()
-    end
-
-    pfUI.info:ShowInfoBox("|cff33ffcc解锁模式|r\n" ..
-      "此模式允许您通过使用鼠标光标拖动框架来移动框架。 " ..
-      "可以通过向上和向下滚动来移动框架。\n还可以同时移动多个框架 (如：团队框架), " ..
-      "在滚动时按住shift键。 单击空白处以返回到pfUI菜单", 15, pfUI.gitter)
-
-    if pfUI.gitter:IsShown() then
-      pfUI.gitter:Hide()
-      pfUI.gui:Show()
-    else
-      pfUI.gitter:Show()
-      pfUI.gui:Hide()
-    end
-
-    for _,frame in pairs(pfUI.movables) do
-      local frame = _G[frame]
-
-      if frame then
-        if not frame:IsShown() then
-          frame.hideLater = true
+      b:SetScript("OnClick", function()
+        for k,v in pairs(self.childs) do
+          v:Hide()
         end
+        self.childs[this:GetID()]:Show()
 
-        if not frame.drag then
-          frame.drag = CreateFrame("Frame", nil, frame)
-          frame.drag:SetAllPoints(frame)
-          frame.drag:SetFrameStrata("DIALOG")
-          CreateBackdrop(frame.drag, nil, nil, .8)
-          frame.drag.backdrop:SetBackdropBorderColor(.2, 1, .8)
-          frame.drag:EnableMouseWheel(1)
-          frame.drag.text = frame.drag:CreateFontString("Status", "LOW", "GameFontNormal")
-          frame.drag.text:SetFont(pfUI.font_default, C.global.font_size, "OUTLINE")
-          frame.drag.text:ClearAllPoints()
-          frame.drag.text:SetAllPoints(frame.drag)
-          frame.drag.text:SetPoint("CENTER", 0, 0)
-          frame.drag.text:SetFontObject(GameFontWhite)
-          local label = (strsub(frame:GetName(),3))
-          if frame.drag:GetHeight() > (2 * frame.drag:GetWidth()) then
-            label = strvertical(label)
+        for k,v in pairs(self.buttons) do
+          v.active = false
+          v:SetTextColor(.5,.5,.5)
+        end
+        self.buttons[this:GetID()]:SetTextColor(.2,1,.8)
+      end)
+
+      self.buttons[childcount] = b
+      self.bottomcount = bottom and self.bottomcount + 1 or self.bottomcount
+
+      -- create child frame
+      local child = CreateFrame("ScrollFrame", "pfConfig" .. title .. "Frame", self)
+      if childcount ~= 1 then child:Hide() end
+
+      if not self.align or self.align == "LEFT" then
+        child:SetPoint("TOPLEFT", self, "TOPLEFT", button_width + 2*border + 5, -border -5)
+        child:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", -border -5 , border + 5)
+      elseif self.align == "TOP" then
+        if self.outside then
+          child:SetPoint("TOPLEFT", self, "TOPLEFT", 5, -5)
+          child:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", -5, 5)
+        end
+      end
+
+      local backdrop = CreateFrame("Frame", nil, child)
+      backdrop:SetFrameLevel(1)
+      backdrop:SetPoint("TOPLEFT", child, "TOPLEFT", -5, 5)
+      backdrop:SetPoint("BOTTOMRIGHT", child, "BOTTOMRIGHT", 5, -5)
+      CreateBackdrop(backdrop, nil, true)
+
+      if not static then
+        child:EnableMouseWheel(1)
+
+        child.deco_up = CreateFrame("Frame", nil, child)
+        child.deco_up:SetPoint("TOPLEFT", child, "TOPLEFT", -4, 4)
+        child.deco_up:SetPoint("BOTTOMRIGHT", child, "TOPRIGHT", 4, -spacing)
+        child.deco_up.fader = child.deco_up:CreateTexture("OVERLAY")
+        child.deco_up.fader:SetTexture(1,1,1,1)
+        child.deco_up.fader:SetGradientAlpha("VERTICAL", 0, 0, 0, 0, 0, 0, 0, 1)
+        child.deco_up.fader:SetAllPoints(child.deco_up)
+
+        child.deco_up_indicator = CreateFrame("Frame", nil, child.deco_up)
+        child.deco_up_indicator:Hide()
+        child.deco_up_indicator:SetPoint("TOP", child.deco_up, "TOP", 0, -6)
+        child.deco_up_indicator:SetHeight(12)
+        child.deco_up_indicator:SetWidth(12)
+        child.deco_up_indicator.modifier = 0.03
+        child.deco_up_indicator:SetScript("OnUpdate", function()
+          local alpha = this:GetAlpha()
+          if alpha >= .75 then
+            this.modifier = -0.03
+          elseif alpha <= .25 then
+            this.modifier = 0.03
           end
-          frame.drag.text:SetText(label)
-          frame.drag:SetAlpha(1)
 
-          frame.drag:SetScript("OnMouseWheel", function()
-            local scale = round(frame:GetScale() + arg1/10, 1)
+          this:SetAlpha(alpha + this.modifier)
+        end)
 
-            if IsShiftKeyDown() and strsub(frame:GetName(),0,7) == "pfCombo" then
-              for i=1,5 do
-                local frame = _G["pfCombo" .. i]
-                pfUI.gui:SaveScale(frame, scale)
-              end
-            elseif IsShiftKeyDown() and strsub(frame:GetName(),0,6) == "pfRaid" then
-              for i=1,40 do
-                local frame = _G["pfRaid" .. i]
-                pfUI.gui:SaveScale(frame, scale)
-              end
-            elseif IsShiftKeyDown() and strsub(frame:GetName(),0,7) == "pfGroup" then
-              for i=1,4 do
-                local frame = _G["pfGroup" .. i]
-                pfUI.gui:SaveScale(frame, scale)
-              end
-            elseif IsShiftKeyDown() and strsub(frame:GetName(),0,15) == "pfLootRollFrame" then
-              for i=1,4 do
-                local frame = _G["pfLootRollFrame" .. i]
-                pfUI.gui:SaveScale(frame, scale)
-              end
-            else
-              pfUI.gui:SaveScale(frame, scale)
-            end
+        child.deco_up_indicator.tex = child.deco_up_indicator:CreateTexture("OVERLAY")
+        child.deco_up_indicator.tex:SetTexture("Interface\\AddOns\\pfUI\\img\\up")
+        child.deco_up_indicator.tex:SetAllPoints(child.deco_up_indicator)
 
-            -- repaint hackfix for panels
-            if pfUI.panel and pfUI.chat then
-              pfUI.panel.left:SetScale(pfUI.chat.left:GetScale())
-              pfUI.panel.right:SetScale(pfUI.chat.right:GetScale())
-            end
+        child.deco_down = CreateFrame("Frame", nil, child)
+        child.deco_down:SetPoint("BOTTOMLEFT", child, "BOTTOMLEFT", -4, -4)
+        child.deco_down:SetPoint("TOPRIGHT", child, "BOTTOMRIGHT", 4, spacing)
+        child.deco_down.fader = child.deco_down:CreateTexture("OVERLAY")
+        child.deco_down.fader:SetTexture(1,1,1,1)
+        child.deco_down.fader:SetGradientAlpha("VERTICAL", 0, 0, 0, 1, 0, 0, 0, 0)
+        child.deco_down.fader:SetAllPoints(child.deco_down)
 
-            if frame.OnMove then frame:OnMove() end
-          end)
-        end
+        child.deco_down_indicator = CreateFrame("Frame", nil, child.deco_down)
+        child.deco_down_indicator:Hide()
+        child.deco_down_indicator:SetPoint("BOTTOM", child.deco_down, "BOTTOM", 0, 6)
+        child.deco_down_indicator:SetHeight(12)
+        child.deco_down_indicator:SetWidth(12)
+        child.deco_down_indicator.modifier = 0.03
 
-        frame.drag:SetScript("OnMouseDown",function()
-          if IsShiftKeyDown() then
-            if strsub(frame:GetName(),0,7) == "pfCombo" then
-              for i=1,5 do
-                local cframe = _G["pfCombo" .. i]
-                cframe:StartMoving()
-                cframe:StopMovingOrSizing()
-                cframe.drag.backdrop:SetBackdropBorderColor(1,1,1,1)
-              end
-            end
-            if strsub(frame:GetName(),0,6) == "pfRaid" then
-              for i=1,40 do
-                local cframe = _G["pfRaid" .. i]
-                cframe:StartMoving()
-                cframe:StopMovingOrSizing()
-                cframe.drag.backdrop:SetBackdropBorderColor(1,1,1,1)
-              end
-            end
-            if strsub(frame:GetName(),0,7) == "pfGroup" then
-              for i=1,4 do
-                local cframe = _G["pfGroup" .. i]
-                cframe:StartMoving()
-                cframe:StopMovingOrSizing()
-                cframe.drag.backdrop:SetBackdropBorderColor(1,1,1,1)
-              end
-            end
-            if strsub(frame:GetName(),0,15) == "pfLootRollFrame" then
-              for i=1,4 do
-                local cframe = _G["pfLootRollFrame" .. i]
-                cframe:StartMoving()
-                cframe:StopMovingOrSizing()
-                cframe.drag.backdrop:SetBackdropBorderColor(1,1,1,1)
-              end
-            end
-            _, _, _, xpos, ypos = frame:GetPoint()
-            frame.oldPos = { xpos, ypos }
+        child.deco_down_indicator:SetScript("OnUpdate", function()
+          local alpha = this:GetAlpha()
+          if alpha >= .75 then
+            this.modifier = -0.03
+          elseif alpha <= .25 then
+            this.modifier = 0.03
+          end
+
+          this:SetAlpha(alpha + this.modifier)
+        end)
+
+        child.deco_down_indicator.tex = child.deco_down_indicator:CreateTexture("OVERLAY")
+        child.deco_down_indicator.tex:SetTexture("Interface\\AddOns\\pfUI\\img\\down")
+        child.deco_down_indicator.tex:SetAllPoints(child.deco_down_indicator)
+
+        child.UpdateScrollState = function(self)
+          -- Update Scroll Indicators: Hide/Show if required.
+          local current = floor(self:GetVerticalScroll())
+          local max = floor(self:GetVerticalScrollRange() + spacing)
+
+          if current > 0 then
+            self.deco_up_indicator:Show()
           else
-            frame.oldPos = nil
+            self.deco_up_indicator:Hide()
           end
-          frame.drag.backdrop:SetBackdropBorderColor(1,1,1,1)
-          frame:StartMoving()
-          if frame.OnMove then frame:OnMove() end
-        end)
 
-        frame.drag:SetScript("OnMouseUp",function()
-            frame:StopMovingOrSizing()
-            _, _, _, xpos, ypos = frame:GetPoint()
-            frame.drag.backdrop:SetBackdropBorderColor(.2,1,.8,1)
-
-            if frame.oldPos then
-              local diffxpos = frame.oldPos[1] - xpos
-              local diffypos = frame.oldPos[2] - ypos
-              if strsub(frame:GetName(),0,7) == "pfCombo" then
-                for i=1,5 do
-                  local cframe = _G["pfCombo" .. i]
-                  cframe.drag.backdrop:SetBackdropBorderColor(.2,1,.8,1)
-                  if cframe:GetName() ~= frame:GetName() then
-                    local _, _, _, xpos, ypos = cframe:GetPoint()
-                    cframe:SetPoint("TOPLEFT", xpos - diffxpos, ypos - diffypos)
-
-                    local _, _, _, xpos, ypos = cframe:GetPoint()
-
-                    if not C.position[cframe:GetName()] then
-                      C.position[cframe:GetName()] = {}
-                    end
-
-                    C.position[cframe:GetName()]["xpos"] = xpos
-                    C.position[cframe:GetName()]["ypos"] = ypos
-                  end
-                end
-              elseif strsub(frame:GetName(),0,6) == "pfRaid" then
-                for i=1,40 do
-                  local cframe = _G["pfRaid" .. i]
-                  cframe.drag.backdrop:SetBackdropBorderColor(.2,1,.8,1)
-                  if cframe:GetName() ~= frame:GetName() then
-                    local _, _, _, xpos, ypos = cframe:GetPoint()
-                    cframe:SetPoint("TOPLEFT", xpos - diffxpos, ypos - diffypos)
-
-                    local _, _, _, xpos, ypos = cframe:GetPoint()
-
-                    if not C.position[cframe:GetName()] then
-                      C.position[cframe:GetName()] = {}
-                    end
-
-                    C.position[cframe:GetName()]["xpos"] = xpos
-                    C.position[cframe:GetName()]["ypos"] = ypos
-                  end
-                end
-              elseif strsub(frame:GetName(),0,7) == "pfGroup" then
-                for i=1,4 do
-                  local cframe = _G["pfGroup" .. i]
-                  cframe.drag.backdrop:SetBackdropBorderColor(.2,1,.8,1)
-                  if cframe:GetName() ~= frame:GetName() then
-                    local _, _, _, xpos, ypos = cframe:GetPoint()
-                    cframe:SetPoint("TOPLEFT", xpos - diffxpos, ypos - diffypos)
-
-                    local _, _, _, xpos, ypos = cframe:GetPoint()
-
-                    if not C.position[cframe:GetName()] then
-                      C.position[cframe:GetName()] = {}
-                    end
-
-                    C.position[cframe:GetName()]["xpos"] = xpos
-                    C.position[cframe:GetName()]["ypos"] = ypos
-                  end
-                end
-              elseif strsub(frame:GetName(),0,15) == "pfLootRollFrame" then
-                for i=1,4 do
-                  local cframe = _G["pfLootRollFrame" .. i]
-                  cframe.drag.backdrop:SetBackdropBorderColor(.2,1,.8,1)
-                  if cframe:GetName() ~= frame:GetName() then
-                    local _, _, _, xpos, ypos = cframe:GetPoint()
-                    cframe:SetPoint("TOPLEFT", xpos - diffxpos, ypos - diffypos)
-
-                    local _, _, _, xpos, ypos = cframe:GetPoint()
-
-                    if not C.position[cframe:GetName()] then
-                      C.position[cframe:GetName()] = {}
-                    end
-
-                    C.position[cframe:GetName()]["xpos"] = xpos
-                    C.position[cframe:GetName()]["ypos"] = ypos
-                  end
-                end
-              end
-            end
-
-            if not C.position[frame:GetName()] then
-              C.position[frame:GetName()] = {}
-            end
-
-            C.position[frame:GetName()]["xpos"] = xpos
-            C.position[frame:GetName()]["ypos"] = ypos
-            pfUI.gui.settingChanged = true
-        end)
-
-        if pfUI.gitter:IsShown() then
-          frame:SetMovable(true)
-          frame.drag:EnableMouse(true)
-          frame.drag:Show()
-          frame:Show()
-        else
-          frame:SetMovable(false)
-          frame.drag:EnableMouse(false)
-          frame.drag:Hide()
-          if frame.hideLater == true then
-            frame:Hide()
+          if max > spacing and current < max then
+            self.deco_down_indicator:Show()
+          else
+            self.deco_down_indicator:Hide()
           end
         end
-      end
-    end
-  end
 
-  function pfUI.gui:SwitchTab(frame)
-    local elements = {
-      pfUI.gui.global, pfUI.gui.appearance, pfUI.gui.modules, pfUI.gui.uf,
-      pfUI.gui.bar, pfUI.gui.panel, pfUI.gui.tooltip, pfUI.gui.castbar,
-      pfUI.gui.thirdparty, pfUI.gui.chat, pfUI.gui.nameplates,
-    }
 
-    for _, hide in pairs(elements) do
-      hide:Hide()
-      CreateBackdrop(hide.switch, nil, true)
-    end
-    pfUI.gui.scroll:SetScrollChild(frame)
-    pfUI.gui.scroll:UpdateScrollState()
-    pfUI.gui.scroll:SetVerticalScroll(0)
-    CreateBackdrop(frame.switch, nil, true)
-    frame.switch:SetBackdropBorderColor(.2,1,.8)
-    frame:Show()
-  end
+        child:SetScript("OnMouseWheel", function()
+          local current = this:GetVerticalScroll()
+          local new = current + arg1*-25
+          local max = this:GetVerticalScrollRange() + spacing
 
-  function pfUI.gui:CreateConfigTab(text, bottom, func)
-    -- automatically place buttons
-    if not bottom then
-      if not pfUI.gui.tabTop then
-        pfUI.gui.tabTop = 0
+          if max > spacing then
+
+            if new < 0 then
+              this:SetVerticalScroll(0)
+            elseif new > max then
+              this:SetVerticalScroll(max)
+            else
+              this:SetVerticalScroll(new)
+            end
+          end
+
+          this:UpdateScrollState()
+        end)
+
+        local scrollchild = CreateFrame("Frame", "pfConfig" .. title .. "ScrollChild", child)
+
+        -- dummy values required
+        scrollchild:SetWidth(1)
+        scrollchild:SetHeight(1)
+        scrollchild:SetAllPoints(child)
+
+        child:SetScrollChild(scrollchild)
+
+        -- OnShow is fired too early, postpone to the first frame draw
+        scrollchild:SetScript("OnUpdate", function()
+          child:UpdateScrollState()
+          this:SetScript("OnUpdate", nil)
+        end)
+
+        scrollchild.button = b
+        table.insert(self.childs, child)
+        return scrollchild
       else
-        pfUI.gui.tabTop = pfUI.gui.tabTop + 1
-      end
-    else
-      if not pfUI.gui.tabBottom then
-        pfUI.gui.tabBottom = 0
-      else
-        pfUI.gui.tabBottom = pfUI.gui.tabBottom + 1
+        child.button = b
+        table.insert(self.childs, child)
+        return child
       end
     end
 
-    local frame = CreateFrame("Frame", nil, pfUI.gui)
-    frame:SetWidth(pfUI.gui:GetWidth() - 3*default_border - 100)
-    frame:SetHeight(100)
-
-    frame.switch = CreateFrame("Button", nil, pfUI.gui)
-    frame.switch:ClearAllPoints()
-    frame.switch:SetWidth(100)
-    frame.switch:SetHeight(22)
-
-    if bottom then
-      frame.switch:SetPoint("BOTTOMLEFT", default_border, pfUI.gui.tabBottom * (22 + default_border) + default_border)
-    else
-      frame.switch:SetPoint("TOPLEFT", default_border, -pfUI.gui.tabTop* (22 + default_border) -default_border)
-    end
-    CreateBackdrop(frame.switch, nil, true)
-    frame.switch.text = frame.switch:CreateFontString("Status", "LOW", "GameFontNormal")
-    frame.switch.text:SetFont(pfUI.font_default, C.global.font_size, "OUTLINE")
-    frame.switch.text:SetAllPoints(frame.switch)
-    frame.switch.text:SetPoint("CENTER", 0, 0)
-    frame.switch.text:SetFontObject(GameFontWhite)
-    frame.switch.text:SetText(text)
-
-    -- replace by user defined function
-    if not func then
-      frame.switch:SetScript("OnClick", function() pfUI.gui:SwitchTab(frame) end)
-    else
-      frame.switch:SetScript("OnClick", func)
-    end
-
-    -- do not show title on bottom buttons
-    if not bottom and not func then
-      frame.title = frame:CreateFontString("Status", "LOW", "GameFontNormal")
-      frame.title:SetFont(pfUI.font_default, C.global.font_size + 2, "OUTLINE")
-      frame.title:SetPoint("TOP", 0, -10)
-      frame.title:SetTextColor(.2,1,.8)
-      frame.title:SetText(text)
-    end
-
-    return frame
+    return f
   end
 
-  function pfUI.gui:CreateConfig(parent, caption, category, config, widget, values, skip, named)
+  local function CreateConfig(parent, caption, category, config, widget, values, skip, named, type)
     -- parent object placement
     if parent.objectCount == nil then
       parent.objectCount = 1
@@ -444,16 +233,26 @@ pfUI:RegisterModule("gui", function ()
       end
     end
 
+    if not caption then return end
+
     -- basic frame
     local frame = CreateFrame("Frame", nil, parent)
-    frame:SetWidth(350)
+    frame:SetWidth(420)
     frame:SetHeight(25)
     frame:SetPoint("TOPLEFT", 25, parent.objectCount * -25)
+    frame:EnableMouse(true)
+    frame:SetScript("OnEnter", function()
+      this:SetBackdropBorderColor(1,1,1,.3)
+    end)
+
+    frame:SetScript("OnLeave", function()
+      this:SetBackdropBorderColor(1,1,1,.15)
+    end)
 
     if not widget or (widget and widget ~= "button") then
 
       frame:SetBackdrop(pfUI.backdrop_underline)
-      frame:SetBackdropBorderColor(1,1,1,.25)
+      frame:SetBackdropBorderColor(1,1,1,.15)
 
       -- caption
       frame.caption = frame:CreateFontString("Status", "LOW", "GameFontNormal")
@@ -473,7 +272,7 @@ pfUI:RegisterModule("gui", function ()
     if widget == "color" then
       -- color picker
       frame.color = CreateFrame("Button", nil, frame)
-      frame.color:SetWidth(12)
+      frame.color:SetWidth(24)
       frame.color:SetHeight(12)
       CreateBackdrop(frame.color)
       frame.color:SetPoint("TOPRIGHT" , 0, -4)
@@ -552,8 +351,8 @@ pfUI:RegisterModule("gui", function ()
       frame.input:SetJustifyH("RIGHT")
 
       frame.input:SetWidth(100)
-      frame.input:SetHeight(20)
-      frame.input:SetPoint("TOPRIGHT" , 0, 0)
+      frame.input:SetHeight(16)
+      frame.input:SetPoint("TOPRIGHT" , 0, -2)
       frame.input:SetFontObject(GameFontNormal)
       frame.input:SetAutoFocus(false)
       frame.input:SetText(category[config])
@@ -562,11 +361,13 @@ pfUI:RegisterModule("gui", function ()
       end)
 
       frame.input:SetScript("OnTextChanged", function(self)
-        this:GetParent().category[this:GetParent().config] = this:GetText()
-      end)
-
-      frame.input:SetScript("OnEditFocusGained", function(self)
-        pfUI.gui.settingChanged = true
+        if ( type and type ~= "number" ) or tonumber(this:GetText()) then
+          if this:GetText() ~= this:GetParent().category[this:GetParent().config] then pfUI.gui.settingChanged = true end
+          this:SetTextColor(.2,1,.8,1)
+          this:GetParent().category[this:GetParent().config] = this:GetText()
+        else
+          this:SetTextColor(1,.3,.3,1)
+        end
       end)
     end
 
@@ -575,9 +376,9 @@ pfUI:RegisterModule("gui", function ()
       frame.button = CreateFrame("Button", "pfButton", frame, "UIPanelButtonTemplate")
       CreateBackdrop(frame.button, nil, true)
       SkinButton(frame.button)
-      frame.button:SetWidth(85)
+      frame.button:SetWidth(100)
       frame.button:SetHeight(20)
-      frame.button:SetPoint("TOPRIGHT", -(parent.lineCount-1) * 90, -5)
+      frame.button:SetPoint("TOPRIGHT", -(parent.lineCount-1) * 105, -5)
       frame.button:SetText(caption)
       frame.button:SetTextColor(1,1,1,1)
       frame.button:SetScript("OnClick", values)
@@ -645,6 +446,7 @@ pfUI:RegisterModule("gui", function ()
       end
 
       frame.input:Refresh()
+
       UIDropDownMenu_SetWidth(120, frame.input)
       UIDropDownMenu_SetButtonWidth(125, frame.input)
       UIDropDownMenu_JustifyText("RIGHT", frame.input)
@@ -660,755 +462,953 @@ pfUI:RegisterModule("gui", function ()
     return frame
   end
 
-  -- [[ config section ]] --
-  pfUI.gui.deco = CreateFrame("Frame", nil, pfUI.gui)
-  pfUI.gui.deco:ClearAllPoints()
-  pfUI.gui.deco:SetPoint("TOPLEFT", pfUI.gui, "TOPLEFT", 4*default_border + 100,-2*default_border)
-  pfUI.gui.deco:SetPoint("BOTTOMRIGHT", pfUI.gui, "BOTTOMRIGHT", -2*default_border,2*default_border)
-  CreateBackdrop(pfUI.gui.deco, nil, nil, .8)
-
-  pfUI.gui.deco.up = CreateFrame("Frame", nil, pfUI.gui.deco)
-  pfUI.gui.deco.up:SetPoint("TOPLEFT", pfUI.gui.deco, "TOPLEFT", 0,0)
-  pfUI.gui.deco.up:SetPoint("TOPRIGHT", pfUI.gui.deco, "TOPRIGHT", 0,0)
-  pfUI.gui.deco.up:SetHeight(16)
-  pfUI.gui.deco.up:SetAlpha(0)
-  pfUI.gui.deco.up.visible = 0
-  pfUI.gui.deco.up.texture = pfUI.gui.deco.up:CreateTexture()
-  pfUI.gui.deco.up.texture:SetAllPoints()
-  pfUI.gui.deco.up.texture:SetTexture("Interface\\AddOns\\pfUI\\img\\gradient_up")
-  pfUI.gui.deco.up.texture:SetVertexColor(.2,1,.8)
-  pfUI.gui.deco.up:SetScript("OnUpdate", function()
-    pfUI.gui.scroll:UpdateScrollState()
-    if pfUI.gui.deco.up.visible == 0 and pfUI.gui.deco.up:GetAlpha() > 0 then
-      pfUI.gui.deco.up:SetAlpha(pfUI.gui.deco.up:GetAlpha() - 0.01)
-    elseif pfUI.gui.deco.up.visible == 0 and pfUI.gui.deco.up:GetAlpha() <= 0 then
-      pfUI.gui.deco.up:Hide()
+  local function DelayChangedSettings()
+    if pfUI.gui.settingChanged then
+      pfUI.gui.settingChangedDelayed = true
     end
-  end)
-
-  pfUI.gui.deco.down = CreateFrame("Frame", nil, pfUI.gui.deco)
-  pfUI.gui.deco.down:SetPoint("BOTTOMLEFT", pfUI.gui.deco, "BOTTOMLEFT", 0,0)
-  pfUI.gui.deco.down:SetPoint("BOTTOMRIGHT", pfUI.gui.deco, "BOTTOMRIGHT", 0,0)
-  pfUI.gui.deco.down:SetHeight(16)
-  pfUI.gui.deco.down:SetAlpha(0)
-  pfUI.gui.deco.down.visible = 0
-  pfUI.gui.deco.down.texture = pfUI.gui.deco.down:CreateTexture()
-  pfUI.gui.deco.down.texture:SetAllPoints()
-  pfUI.gui.deco.down.texture:SetTexture("Interface\\AddOns\\pfUI\\img\\gradient_down")
-  pfUI.gui.deco.down.texture:SetVertexColor(.2,1,.8)
-  pfUI.gui.deco.down:SetScript("OnUpdate", function()
-    pfUI.gui.scroll:UpdateScrollState()
-    if pfUI.gui.deco.down.visible == 0 and pfUI.gui.deco.down:GetAlpha() > 0 then
-      pfUI.gui.deco.down:SetAlpha(pfUI.gui.deco.down:GetAlpha() - 0.01)
-    elseif pfUI.gui.deco.down.visible == 0 and pfUI.gui.deco.down:GetAlpha() <= 0 then
-      pfUI.gui.deco.down:Hide()
-    end
-  end)
-
-  pfUI.gui.scroll = CreateFrame("ScrollFrame", nil, pfUI.gui)
-  pfUI.gui.scroll:ClearAllPoints()
-  pfUI.gui.scroll:SetPoint("TOPLEFT", pfUI.gui, "TOPLEFT", 2*default_border + 100,-10)
-  pfUI.gui.scroll:SetPoint("BOTTOMRIGHT", pfUI.gui, "BOTTOMRIGHT", -default_border,10)
-  pfUI.gui.scroll:EnableMouseWheel(1)
-  function pfUI.gui.scroll:UpdateScrollState()
-    local current = ceil(pfUI.gui.scroll:GetVerticalScroll())
-    local max = ceil(pfUI.gui.scroll:GetVerticalScrollRange() + 10)
-    pfUI.gui.deco.up:Show()
-    pfUI.gui.deco.down:Show()
-    if max > 20 then
-      if current < max then
-        pfUI.gui.deco.down.visible = 1
-        pfUI.gui.deco.down:Show()
-        pfUI.gui.deco.down:SetAlpha(.2)
-      end
-      if current > 5 then
-          pfUI.gui.deco.up.visible = 1
-          pfUI.gui.deco.up:Show()
-          pfUI.gui.deco.up:SetAlpha(.2)
-      end
-      if current > max - 5 then
-        pfUI.gui.deco.down.visible = 0
-      end
-      if current < 5 then
-        pfUI.gui.deco.up.visible = 0
-      end
-    else
-      pfUI.gui.deco.up.visible = 0
-      pfUI.gui.deco.down.visible = 0
-    end
+    pfUI.gui.settingChanged = nil
   end
 
-  pfUI.gui.scroll:SetScript("OnMouseWheel", function()
-    local current = pfUI.gui.scroll:GetVerticalScroll()
-    local new = current + arg1*-25
-    local max = pfUI.gui.scroll:GetVerticalScrollRange() + 25
-    if max > 31 then
-      if new < 0 then
-          pfUI.gui.scroll:SetVerticalScroll(0)
-          pfUI.gui.deco.up:SetAlpha(.3)
-      elseif new > max then
-        pfUI.gui.scroll:SetVerticalScroll(max)
-        pfUI.gui.deco.down:SetAlpha(.3)
-      else
-        pfUI.gui.scroll:SetVerticalScroll(new)
-      end
-    end
-    pfUI.gui.scroll:UpdateScrollState()
-  end)
+  pfUI.gui = CreateFrame("Frame", "pfConfigGUI", UIParent)
+  pfUI.gui:Hide()
+  pfUI.gui:SetWidth(640)
+  pfUI.gui:SetHeight(480)
+  pfUI.gui:SetFrameStrata("DIALOG")
+  pfUI.gui:SetPoint("CENTER", 0, 0)
+  table.insert(UISpecialFrames, "pfConfigGUI")
 
-  -- General
-  pfUI.gui.global = pfUI.gui:CreateConfigTab("一般设置")
-  local values = { "BigNoodleTitling", "Continuum", "DieDieDie", "Expressway", "Homespun", "Myriad-Pro", "PT-Sans-Narrow-Bold", "PT-Sans-Narrow-Regular" }
-  pfUI.gui:CreateConfig(pfUI.gui.global, "强制兼容中文字体", C.global, "force_region", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.global, "普通字体", C.global, "font_default", "dropdown", values)
-  pfUI.gui:CreateConfig(pfUI.gui.global, "标准文字字体大小", C.global, "font_size")
-  pfUI.gui:CreateConfig(pfUI.gui.global, "框架和动作栏字体", C.global, "font_unit", "dropdown", values)
-  pfUI.gui:CreateConfig(pfUI.gui.global, "框架和动作栏字号", C.global, "font_unit_size")
-  pfUI.gui:CreateConfig(pfUI.gui.global, "滚动战斗字体", C.global, "font_combat", "dropdown", values)
-  pfUI.gui:CreateConfig(pfUI.gui.global, "跟随分辨率自动缩放UI", C.global, "pixelperfect", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.global, "换到其他窗口时游戏帧数保持不变", C.global, "offscreen", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.global, "仅列出一行错误", C.global, "errors_limit", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.global, "禁用所有错误", C.global, "errors_hide", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.global, "隐藏系统Buff图标", C.global, "hidebuff", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.global, "隐藏武器Buff图标", C.global, "hidewbuff", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.global, "使用24小时制", C.global, "twentyfour", "checkbox")
-
-  pfUI.gui:CreateConfig(pfUI.gui.global, "配置文件", nil, nil, "header")
-  local values = {}
-  for name, config in pairs(pfUI_profiles) do table.insert(values, name) end
-
-  local function pfUpdateProfiles()
-    local values = {}
-    for name, config in pairs(pfUI_profiles) do table.insert(values, name) end
-    pfUIDropDownMenuProfile.values = values
-    pfUIDropDownMenuProfile.Refresh()
-  end
-
-  pfUI.gui:CreateConfig(pfUI.gui.global, "选择配置文件", C.global, "profile", "dropdown", values, false, "Profile")
-
-  -- load profile
-  pfUI.gui:CreateConfig(pfUI.gui.global, "加载配置文件", C.global, "profile", "button", function()
-    if C.global.profile and pfUI_profiles[C.global.profile] then
-      CreateQuestionDialog("加载配置文件 '|cff33ffcc" .. C.global.profile .. "|r'?", function()
-        local selp = C.global.profile
-        _G["pfUI_config"] = CopyTable(pfUI_profiles[C.global.profile])
-        C.global.profile = selp
+  function pfUI.gui:Reload()
+    CreateQuestionDialog("Some settings need to reload the UI to take effect.\nDo you want to reloadUI now?",
+      function()
+        pfUI.gui.settingChanged = nil
         ReloadUI()
       end)
+  end
+
+  pfUI.gui:SetScript("OnShow",function()
+    if pfUI.gui.settingChangedDelayed then
+      pfUI.gui.settingChanged = true
+      pfUI.gui.settingChangedDelayed = nil
+    end
+
+    -- exit unlock mode
+    if pfUI.unlock and pfUI.unlock:IsShown() then
+      pfUI.unlock:Hide()
+    end
+
+    -- exit hoverbind mode
+    if pfUI.hoverbind and pfUI.hoverbind:IsShown() then
+      pfUI.hoverbind:Hide()
     end
   end)
 
-  -- delete profile
-  pfUI.gui:CreateConfig(pfUI.gui.global, "删除配置文件", C.global, "profile", "button", function()
-    if C.global.profile and pfUI_profiles[C.global.profile] then
-      CreateQuestionDialog("删除配置文件 '|cff33ffcc" .. C.global.profile .. "|r'?", function()
-        pfUI_profiles[C.global.profile] = nil
-        pfUpdateProfiles()
-        this:GetParent():Hide()
-      end)
+  pfUI.gui:SetScript("OnHide",function()
+    if ColorPickerFrame and ColorPickerFrame:IsShown() then
+      ColorPickerFrame:Hide()
     end
-  end, true)
 
-  -- save profile
-  pfUI.gui:CreateConfig(pfUI.gui.global, "保存配置文件", C.global, "profile", "button", function()
-    if C.global.profile and pfUI_profiles[C.global.profile] then
-      CreateQuestionDialog("把现有设置保存到 '|cff33ffcc" .. C.global.profile .. "|r'?", function()
-        if pfUI_profiles[C.global.profile] then
-          pfUI_profiles[C.global.profile] = CopyTable(C)
-        end
-        this:GetParent():Hide()
-      end)
-    end
-  end, true)
-
-  -- create profile
-  pfUI.gui:CreateConfig(pfUI.gui.global, "新建配置文件", C.global, "profile", "button", function()
-    CreateQuestionDialog("请输入新建配置文件名，相同名字将会自动覆盖。",
-    function()
-      local profile = this:GetParent().input:GetText()
-      local bad = string.gsub(profile,"([%w%s]+)","")
-      if bad~="" then
-        message('Cannot create profile: \"'..bad..'\"' .. " is not allowed in profile name")
-      else
-        profile = (string.gsub(profile,"^%s*(.-)%s*$", "%1"))
-        if profile and profile ~= "" then
-          pfUI_profiles[profile] = CopyTable(C)
-          pfUpdateProfiles()
-          this:GetParent():Hide()
-        end
-      end
-    end, false, true)
-  end, true)
-
-  -- appearance
-  pfUI.gui.appearance = pfUI.gui:CreateConfigTab("外观设置")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "背景颜色", C.appearance.border, "background", "color")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "边框颜色", C.appearance.border, "color", "color")
-
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "边框设置", nil, nil, "header")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "默认边框大小", C.appearance.border, "default")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "动作条边框大小", C.appearance.border, "actionbars")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "头像框架大小", C.appearance.border, "unitframes")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "面板边框大小", C.appearance.border, "panels")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "聊天框大小", C.appearance.border, "chat")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "背包边框大小", C.appearance.border, "bags")
-
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "冷却时间设置", nil, nil, "header")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "冷却时间颜色（3秒）", C.appearance.cd, "lowcolor", "color")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "冷却时间颜色（秒）", C.appearance.cd, "normalcolor", "color")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "冷却时间颜色（分）", C.appearance.cd, "minutecolor", "color")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "冷却时间颜色（时）", C.appearance.cd, "hourcolor", "color")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "冷却时间颜色（天）", C.appearance.cd, "daycolor", "color")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "冷却时间文字大小", C.appearance.cd, "threshold")
-
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "战斗相关设置", nil, nil, "header")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "全屏显示战斗报警", C.appearance.infight, "screen", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "仅在头像上显示战斗报警", C.appearance.infight, "common", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "在小队显示战斗报警", C.appearance.infight, "group", "checkbox")
-
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "背包和银行设置", nil, nil, "header")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "只显示\"普通品质\"以上的物品", C.appearance.bags, "borderlimit", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "仅在装备上显示品质颜色", C.appearance.bags, "borderonlygear", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "自动出售灰色物品", C.global, "autosell", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "自动修理装备", C.global, "autorepair", "checkbox")
-
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "拾取设置", nil, nil, "header")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "自动调整拾取框大小", C.loot, "autoresize", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "禁用拾取确认对话框（无组队）", C.loot, "autopickup", "checkbox")
-
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "小地图设置", nil, nil, "header")
-  pfUI.gui:CreateConfig(pfUI.gui.appearance, "在鼠标悬停时显示区域名称", C.appearance.minimap, "mouseoverzone", "checkbox")
-
-  -- unit frames
-  local txtValues = { "none", "unit", "name", "level", "class",  "health", "healthmax", "healthperc",
-  "healthmiss", "healthdyn", "power", "powermax", "powerperc", "powermiss", "powerdyn" }
-
-  pfUI.gui.uf = pfUI.gui:CreateConfigTab("单位框架设置")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "禁用pfUI头像框架", C.unitframes, "disable", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "头像颜色变柔", C.unitframes, "pastel", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用自定义生命条颜色", C.unitframes, "custom", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "自定义生命条颜色", C.unitframes, "customcolor", "color")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用自定义健康栏背景颜色", C.unitframes, "custombg", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "自定义健康栏背景颜色", C.unitframes, "custombgcolor", "color")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "头像动画速度", C.unitframes, "animation_speed")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "显示头像动画", C.unitframes, "portraitalpha")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "2D图像作为备选", C.unitframes, "portraittexture", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "单位框架布局", C.unitframes, "layout", "dropdown", { "default", "tukui" })
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "主动40码距离检测 (Will break stuff)", C.unitframes, "rangecheck", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "40码范围检查间隔", C.unitframes, "rangechecki")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "连击点数的大小", C.unitframes, "combosize")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "缩写数字（4200 - > 4.2k）", C.unitframes, "abbrevnum", "checkbox")
-
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Buff 与 Debuff 指示", nil, nil, "header")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "在框架的Buff指示器显示Hot", C.unitframes, "show_hots", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "显示所有职业的Hot", C.unitframes, "all_hots", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "在框架的Buff指示器显示触发效果", C.unitframes, "show_procs", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "显示所有职业的触发效果", C.unitframes, "all_procs", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "只显示可驱散的Debuff", C.unitframes, "debuffs_class", "checkbox")
-
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "点击施法", nil, nil, "header")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "点击操作", C.unitframes, "clickcast")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Shift-点击", C.unitframes, "clickcast_shift")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Alt-点击", C.unitframes, "clickcast_alt")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Ctrl-点击", C.unitframes, "clickcast_ctrl")
-
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "玩家设置", nil, nil, "header")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用玩家框架", C.unitframes.player, "visible", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "头像位置", C.unitframes.player, "portrait", "dropdown", { "bar", "left", "right", "off" })
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "玩家头像宽度调整", C.unitframes.player, "width")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "玩家头像高度调整", C.unitframes.player, "height")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "玩家能量值高度调整", C.unitframes.player, "pheight")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "玩家能量值与头像间距调整", C.unitframes.player, "pspace")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Buff 位置", C.unitframes.player, "buffs", "dropdown", { "top", "bottom", "off"})
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Buff 大小", C.unitframes.player, "buffsize")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Buff 数量限量", C.unitframes.player, "bufflimit")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "每行显示Buffs数量", C.unitframes.player, "buffperrow")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Debuff 位置", C.unitframes.player, "debuffs", "dropdown", { "top", "bottom", "off"})
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Debuff 大小", C.unitframes.player, "debuffsize")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Debuff 数量限量", C.unitframes.player, "debufflimit")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "每行显示Debuffs 数量", C.unitframes.player, "debuffperrow")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "反转血条显示效果", C.unitframes.player, "invert_healthbar", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用BUFFS指示", C.unitframes.player, "buff_indicator", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用DBUFFS指示", C.unitframes.player, "debuff_indicator", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用点击施法", C.unitframes.player, "clickcast", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用范围递减", C.unitframes.player, "faderange", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "左边文本", C.unitframes.player, "txtleft", "dropdown", txtValues)
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "中间文本", C.unitframes.player, "txtcenter", "dropdown", txtValues)
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "右边文本", C.unitframes.player, "txtright", "dropdown", txtValues)
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用文本中的生命值颜色", C.unitframes.player, "healthcolor", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用文本中的能量颜色", C.unitframes.player, "powercolor", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用文本中的等级颜色", C.unitframes.player, "levelcolor", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用文本中职业颜色", C.unitframes.player, "classcolor", "checkbox")
-
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "显示PVP图标", C.unitframes.player, "showPVP", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "在小地图上平铺PVP图标", C.unitframes.player, "showPVPMinimap", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用能量刻度", C.unitframes.player, "energy", "checkbox")
-
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "目标设置", nil, nil, "header")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用目标框架", C.unitframes.target, "visible", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用目标切换动画", C.unitframes.target, "animation", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "头像位置", C.unitframes.target, "portrait", "dropdown", { "bar", "left", "right", "off" })
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "目标头像宽度调整", C.unitframes.target, "width")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "目标头像高度调整", C.unitframes.target, "height")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "目标能量值高度调整", C.unitframes.target, "pheight")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "目标能量值与头像间距调整", C.unitframes.target, "pspace")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Buff位置", C.unitframes.target, "buffs", "dropdown", { "top", "bottom", "off"})
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Buff 大小", C.unitframes.target, "buffsize")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Buff 数量限量", C.unitframes.target, "bufflimit")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "每行显示Buffs数量", C.unitframes.target, "buffperrow")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Debuff 位置", C.unitframes.target, "debuffs", "dropdown", { "top", "bottom", "off"})
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Debuff 大小", C.unitframes.target, "debuffsize")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Debuff 数量限量", C.unitframes.target, "debufflimit")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "每行显示Debuffs 数量", C.unitframes.target, "debuffperrow")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "反转血条显示效果", C.unitframes.target, "invert_healthbar", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用BUFFS指示", C.unitframes.target, "buff_indicator", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用DBUFFS指示", C.unitframes.target, "debuff_indicator", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用点击施法", C.unitframes.target, "clickcast", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用范围递减", C.unitframes.target, "faderange", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "左边文本", C.unitframes.target, "txtleft", "dropdown", txtValues)
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "中间文本", C.unitframes.target, "txtcenter", "dropdown", txtValues)
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "右边文本", C.unitframes.target, "txtright", "dropdown", txtValues)
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用文本中的生命值颜色", C.unitframes.target, "healthcolor", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用文本中的能量颜色", C.unitframes.target, "powercolor", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用文本中的等级颜色", C.unitframes.target, "levelcolor", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用文本中职业颜色", C.unitframes.target, "classcolor", "checkbox")
-
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "焦点目标设置", nil, nil, "header")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用焦点目标框架", C.unitframes.focus, "visible", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "头像位置", C.unitframes.focus, "portrait", "dropdown", { "bar", "left", "right", "off" })
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "焦点目标头像宽度调整", C.unitframes.focus, "width")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "焦点目标头像高度调整", C.unitframes.focus, "height")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "焦点目标能量值高度调整", C.unitframes.focus, "pheight")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "焦点目标能量值与头像间距调整", C.unitframes.focus, "pspace")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Buff 位置", C.unitframes.focus, "buffs", "dropdown", { "top", "bottom", "off"})
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Buff 大小", C.unitframes.focus, "buffsize")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Buff 数量限量", C.unitframes.focus, "bufflimit")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "每行显示Buffs数量", C.unitframes.focus, "buffperrow")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Debuff 位置", C.unitframes.focus, "debuffs", "dropdown", { "top", "bottom", "off"})
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Debuff 大小", C.unitframes.focus, "debuffsize")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Debuff 数量限量", C.unitframes.focus, "debufflimit")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "每行显示Debuffs 数量", C.unitframes.focus, "debuffperrow")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "反转血条显示效果", C.unitframes.focus, "invert_healthbar", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用BUFFS指示", C.unitframes.focus, "buff_indicator", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用DBUFFS指示", C.unitframes.focus, "debuff_indicator", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用点击施法", C.unitframes.focus, "clickcast", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用范围递减", C.unitframes.focus, "faderange", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "左边文本", C.unitframes.focus, "txtleft", "dropdown", txtValues)
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "中间文本", C.unitframes.focus, "txtcenter", "dropdown", txtValues)
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "右边文本", C.unitframes.focus, "txtright", "dropdown", txtValues)
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用文本中的生命值颜色", C.unitframes.focus, "healthcolor", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用文本中的能量颜色", C.unitframes.focus, "powercolor", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用文本中的等级颜色", C.unitframes.focus, "levelcolor", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用文本中职业颜色", C.unitframes.focus, "classcolor", "checkbox")
-
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "小队设置", nil, nil, "header")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用小队框架", C.unitframes.group, "visible", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "头像位置", C.unitframes.group, "portrait", "dropdown", { "bar", "left", "right", "off" })
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "小队头像宽度调整", C.unitframes.group, "width")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "小队头像高度调整", C.unitframes.group, "height")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "小队能量值高度调整", C.unitframes.group, "pheight")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "小队能量值与头像间距调整", C.unitframes.group, "pspace")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Buff 位置", C.unitframes.group, "buffs", "dropdown", { "top", "bottom", "off"})
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Buff 大小", C.unitframes.group, "buffsize")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Buff 数量限量", C.unitframes.group, "bufflimit")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "每行显示Buffs数量", C.unitframes.group, "buffperrow")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Debuff 位置", C.unitframes.group, "debuffs", "dropdown", { "top", "bottom", "off"})
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Debuff 大小", C.unitframes.group, "debuffsize")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Debuff 数量限量", C.unitframes.group, "debufflimit")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "每行显示Debuffs 数量", C.unitframes.group, "debuffperrow")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "反转血条显示效果", C.unitframes.group, "invert_healthbar", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用BUFFS指示", C.unitframes.group, "buff_indicator", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用DBUFFS指示", C.unitframes.group, "debuff_indicator", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用点击施法", C.unitframes.group, "clickcast", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用范围递减", C.unitframes.group, "faderange", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "左边文本", C.unitframes.group, "txtleft", "dropdown", txtValues)
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "中间文本", C.unitframes.group, "txtcenter", "dropdown", txtValues)
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "右边文本", C.unitframes.group, "txtright", "dropdown", txtValues)
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "在团队模式下隐藏小队框架", C.unitframes.group, "hide_in_raid", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用文本中的生命值颜色", C.unitframes.group, "healthcolor", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用文本中的能量颜色", C.unitframes.group, "powercolor", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用文本中的等级颜色", C.unitframes.group, "levelcolor", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用文本中职业颜色", C.unitframes.group, "classcolor", "checkbox")
-
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "小队目标设置", nil, nil, "header")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用小队目标框架", C.unitframes.grouptarget, "visible", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "头像位置", C.unitframes.grouptarget, "portrait", "dropdown", { "bar", "left", "right", "off" })
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "小队目标头像宽度调整", C.unitframes.grouptarget, "width")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "小队目标头像高度调整", C.unitframes.grouptarget, "height")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "小队目标能量值高度调整", C.unitframes.grouptarget, "pheight")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "小队目标能量值与头像间距调整", C.unitframes.grouptarget, "pspace")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Buff 位置", C.unitframes.grouptarget, "buffs", "dropdown", { "top", "bottom", "off"})
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Buff 大小", C.unitframes.grouptarget, "buffsize")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Buff 数量限量", C.unitframes.grouptarget, "bufflimit")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "每行显示Buffs数量", C.unitframes.grouptarget, "buffperrow")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Debuff 位置", C.unitframes.grouptarget, "debuffs", "dropdown", { "top", "bottom", "off"})
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Debuff 大小", C.unitframes.grouptarget, "debuffsize")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Debuff 数量限量", C.unitframes.grouptarget, "debufflimit")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "每行显示Debuffs 数量", C.unitframes.grouptarget, "debuffperrow")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "反转血条显示效果", C.unitframes.grouptarget, "invert_healthbar", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用BUFFS指示", C.unitframes.grouptarget, "buff_indicator", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用DBUFFS指示", C.unitframes.grouptarget, "debuff_indicator", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用点击施法", C.unitframes.grouptarget, "clickcast", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用范围递减", C.unitframes.grouptarget, "faderange", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "左边文本", C.unitframes.grouptarget, "txtleft", "dropdown", txtValues)
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "中间文本", C.unitframes.grouptarget, "txtcenter", "dropdown", txtValues)
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "右边文本", C.unitframes.grouptarget, "txtright", "dropdown", txtValues)
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用文本中的生命值颜色", C.unitframes.grouptarget, "healthcolor", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用文本中的能量颜色", C.unitframes.grouptarget, "powercolor", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用文本中的等级颜色", C.unitframes.grouptarget, "levelcolor", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用文本中职业颜色", C.unitframes.grouptarget, "classcolor", "checkbox")
-
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "小队宠物设置", nil, nil, "header")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用小队宠物框架", C.unitframes.grouppet, "visible", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "头像位置", C.unitframes.grouppet, "portrait", "dropdown", { "bar", "left", "right", "off" })
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "小队宠物头像宽度调整", C.unitframes.grouppet, "width")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "小队宠物头像高度调整", C.unitframes.grouppet, "height")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "小队宠物能量值高度调整", C.unitframes.grouppet, "pheight")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "小队宠物能量值与头像间距调整", C.unitframes.grouppet, "pspace")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Buff 位置", C.unitframes.grouppet, "buffs", "dropdown", { "top", "bottom", "off"})
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Buff 大小", C.unitframes.grouppet, "buffsize")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Buff 数量限量", C.unitframes.grouppet, "bufflimit")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "每行显示Buffs数量", C.unitframes.grouppet, "buffperrow")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Debuff 位置", C.unitframes.grouppet, "debuffs", "dropdown", { "top", "bottom", "off"})
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Debuff 大小", C.unitframes.grouppet, "debuffsize")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Debuff 数量限量", C.unitframes.grouppet, "debufflimit")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "每行显示Debuffs 数量", C.unitframes.grouppet, "debuffperrow")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "反转血条显示效果", C.unitframes.grouppet, "invert_healthbar", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用BUFFS指示", C.unitframes.grouppet, "buff_indicator", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用DBUFFS指示", C.unitframes.grouppet, "debuff_indicator", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用点击施法", C.unitframes.grouppet, "clickcast", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用范围递减", C.unitframes.grouppet, "faderange", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "左边文本", C.unitframes.grouppet, "txtleft", "dropdown", txtValues)
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "中间文本", C.unitframes.grouppet, "txtcenter", "dropdown", txtValues)
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "右边文本", C.unitframes.grouppet, "txtright", "dropdown", txtValues)
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用文本中的生命值颜色", C.unitframes.grouppet, "healthcolor", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用文本中的能量颜色", C.unitframes.grouppet, "powercolor", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用文本中的等级颜色", C.unitframes.grouppet, "levelcolor", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用文本中职业颜色", C.unitframes.grouppet, "classcolor", "checkbox")
-
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "显示PVP图标", C.unitframes.grouppet, "showPVP", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "在小地图上平铺PVP图标", C.unitframes.grouppet, "showPVPMinimap", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用能量刻度", C.unitframes.grouppet, "energy", "checkbox")
-
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "团队框架设置", nil, nil, "header")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用团队框架", C.unitframes.raid, "visible", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "头像位置", C.unitframes.raid, "portrait", "dropdown", { "bar", "left", "right", "off" })
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "团队框架头像宽度调整", C.unitframes.raid, "width")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "团队框架头像高度调整", C.unitframes.raid, "height")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "团队框架能量值高度调整", C.unitframes.raid, "pheight")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "团队框架能量值与头像间距调整", C.unitframes.raid, "pspace")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Buff 位置", C.unitframes.raid, "buffs", "dropdown", { "top", "bottom", "off"})
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Buff 大小", C.unitframes.raid, "buffsize")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Buff 数量限量", C.unitframes.raid, "bufflimit")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "每行显示Buffs数量", C.unitframes.raid, "buffperrow")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Debuff 位置", C.unitframes.raid, "debuffs", "dropdown", { "top", "bottom", "off"})
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Debuff 大小", C.unitframes.raid, "debuffsize")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Debuff 数量限量", C.unitframes.raid, "debufflimit")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "每行显示Debuffs 数量", C.unitframes.raid, "debuffperrow")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "反转血条显示效果", C.unitframes.raid, "invert_healthbar", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用BUFFS指示", C.unitframes.raid, "buff_indicator", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用DBUFFS指示", C.unitframes.raid, "debuff_indicator", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用点击施法", C.unitframes.raid, "clickcast", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用范围递减", C.unitframes.raid, "faderange", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "左边文本", C.unitframes.raid, "txtleft", "dropdown", txtValues)
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "中间文本", C.unitframes.raid, "txtcenter", "dropdown", txtValues)
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "右边文本", C.unitframes.raid, "txtright", "dropdown", txtValues)
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用文本中的生命值颜色", C.unitframes.raid, "healthcolor", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用文本中的能量颜色", C.unitframes.raid, "powercolor", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用文本中的等级颜色", C.unitframes.raid, "levelcolor", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用文本中职业颜色", C.unitframes.raid, "classcolor", "checkbox")
-
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "目标的目标", nil, nil, "header")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用目标的目标框架", C.unitframes.ttarget, "visible", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "在文本中启用职业颜色", C.unitframes.ttarget, "classcolor", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "头像位置", C.unitframes.ttarget, "portrait", "dropdown", { "bar", "left", "right", "off" })
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "目标的目标头像宽度调整", C.unitframes.ttarget, "width")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "目标的目标头像高度调整", C.unitframes.ttarget, "height")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "目标的目标能量值高度调整", C.unitframes.ttarget, "pheight")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "目标的目标能量值与头像间距调整", C.unitframes.ttarget, "pspace")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Buff 位置", C.unitframes.ttarget, "buffs", "dropdown", { "top", "bottom", "off"})
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Buff 大小", C.unitframes.ttarget, "buffsize")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Buff 数量限量", C.unitframes.ttarget, "bufflimit")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "每行显示Buffs数量", C.unitframes.ttarget, "buffperrow")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Debuff 位置", C.unitframes.ttarget, "debuffs", "dropdown", { "top", "bottom", "off"})
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Debuff 大小", C.unitframes.ttarget, "debuffsize")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Debuff 数量限量", C.unitframes.ttarget, "debufflimit")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "每行显示Debuffs 数量", C.unitframes.ttarget, "debuffperrow")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "反转血条显示效果", C.unitframes.ttarget, "invert_healthbar", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用BUFFS指示", C.unitframes.ttarget, "buff_indicator", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用DBUFFS指示", C.unitframes.ttarget, "debuff_indicator", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用点击施法", C.unitframes.ttarget, "clickcast", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用范围递减", C.unitframes.ttarget, "faderange", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "左边文本", C.unitframes.ttarget, "txtleft", "dropdown", txtValues)
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "中间文本", C.unitframes.ttarget, "txtcenter", "dropdown", txtValues)
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "右边文本", C.unitframes.ttarget, "txtright", "dropdown", txtValues)
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用文本中的生命值颜色", C.unitframes.ttarget, "healthcolor", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用文本中的能量颜色", C.unitframes.ttarget, "powercolor", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用文本中的等级颜色", C.unitframes.ttarget, "levelcolor", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用文本中职业颜色", C.unitframes.ttarget, "classcolor", "checkbox")
-
-
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "宠物框架设置", nil, nil, "header")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用宠物框架", C.unitframes.player, "visible", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "头像位置", C.unitframes.pet, "portrait", "dropdown", { "bar", "left", "right", "off" })
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "宠物头像宽度调整", C.unitframes.pet, "width")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "宠物头像高度调整", C.unitframes.pet, "height")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "宠物能量值高度调整", C.unitframes.pet, "pheight")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "宠物能量值与头像间距调整", C.unitframes.pet, "pspace")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Buff 位置", C.unitframes.pet, "buffs", "dropdown", { "top", "bottom", "off"})
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Buff 大小", C.unitframes.pet, "buffsize")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Buff 数量限量", C.unitframes.pet, "bufflimit")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "每行显示Buffs数量", C.unitframes.pet, "buffperrow")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Debuff 位置", C.unitframes.pet, "debuffs", "dropdown", { "top", "bottom", "off"})
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Debuff 大小", C.unitframes.pet, "debuffsize")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Debuff 数量限量", C.unitframes.pet, "debufflimit")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "每行显示Debuffs 数量", C.unitframes.pet, "debuffperrow")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "反转血条显示效果", C.unitframes.pet, "invert_healthbar", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用BUFFS指示", C.unitframes.pet, "buff_indicator", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用DBUFFS指示", C.unitframes.pet, "debuff_indicator", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用点击施法", C.unitframes.pet, "clickcast", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用范围递减", C.unitframes.pet, "faderange", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "左边文本", C.unitframes.pet, "txtleft", "dropdown", txtValues)
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "中间文本", C.unitframes.pet, "txtcenter", "dropdown", txtValues)
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "右边文本", C.unitframes.pet, "txtright", "dropdown", txtValues)
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用文本中的生命值颜色", C.unitframes.pet, "healthcolor", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用文本中的能量颜色", C.unitframes.pet, "powercolor", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用文本中的等级颜色", C.unitframes.pet, "levelcolor", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用文本中职业颜色", C.unitframes.pet, "classcolor", "checkbox")
-
-
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "自定义单位设置", nil, nil, "header")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用自定义单位框架", C.unitframes.fallback, "visible", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "头像位置", C.unitframes.fallback, "portrait", "dropdown", { "bar", "left", "right", "off" })
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "自定义头像宽度调整", C.unitframes.fallback, "width")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "自定义头像高度调整", C.unitframes.fallback, "height")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "自定义能量值高度调整", C.unitframes.fallback, "pheight")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "自定义能量值与头像间距调整", C.unitframes.fallback, "pspace")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Buff 位置", C.unitframes.fallback, "buffs", "dropdown", { "top", "bottom", "off"})
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Buff 大小", C.unitframes.fallback, "buffsize")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Buff 数量限量", C.unitframes.fallback, "bufflimit")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "每行显示Buffs数量", C.unitframes.fallback, "buffperrow")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Debuff 位置", C.unitframes.fallback, "debuffs", "dropdown", { "top", "bottom", "off"})
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Debuff 大小", C.unitframes.fallback, "debuffsize")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "Debuff 数量限量", C.unitframes.fallback, "debufflimit")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "每行显示Debuffs 数量", C.unitframes.fallback, "debuffperrow")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "反转血条显示效果", C.unitframes.fallback, "invert_healthbar", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用BUFFS指示", C.unitframes.fallback, "buff_indicator", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用DBUFFS指示", C.unitframes.fallback, "debuff_indicator", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用点击施法", C.unitframes.fallback, "clickcast", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用范围递减", C.unitframes.fallback, "faderange", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "左边文本", C.unitframes.fallback, "txtleft", "dropdown", txtValues)
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "中间文本", C.unitframes.fallback, "txtcenter", "dropdown", txtValues)
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "右边文本", C.unitframes.fallback, "txtright", "dropdown", txtValues)
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用文本中的生命值颜色", C.unitframes.fallback, "healthcolor", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用文本中的能量颜色", C.unitframes.fallback, "powercolor", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用文本中的等级颜色", C.unitframes.fallback, "levelcolor", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.uf, "启用文本中职业颜色", C.unitframes.fallback, "classcolor", "checkbox")
-
-
-  -- action bar
-  pfUI.gui.bar = pfUI.gui:CreateConfigTab("动作条")
-  pfUI.gui:CreateConfig(pfUI.gui.bar, "图标大小", C.bars, "icon_size")
-  pfUI.gui:CreateConfig(pfUI.gui.bar, "显示动作条背景图案", C.bars, "background", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.bar, "使用颜色指示技能使用距离", C.bars, "glowrange", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.bar, "技能使用距离颜色", C.bars, "rangecolor", "color")
-  pfUI.gui:CreateConfig(pfUI.gui.bar, "显示宏文本", C.bars, "showmacro", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.bar, "显示热键文本", C.bars, "showkeybind", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.bar, "启用基于范围的自动分页（猎人）", C.bars, "hunterbar", "checkbox")
-
-  pfUI.gui:CreateConfig(pfUI.gui.bar, "自动隐藏动作条延时", C.bars, "hide_time")
-  pfUI.gui:CreateConfig(pfUI.gui.bar, "自动隐藏主动作条", C.bars, "hide_actionmain", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.bar, "自动隐藏左下方动作条", C.bars, "hide_bottomleft", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.bar, "自动隐藏右下方动作条", C.bars, "hide_bottomright", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.bar, "自动隐藏右方动作条", C.bars, "hide_right", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.bar, "自动隐藏右边二动作条", C.bars, "hide_tworight", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.bar, "自动隐藏姿态条", C.bars, "hide_shapeshift", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.bar, "自动隐藏宠物动作条", C.bars, "hide_pet", "checkbox")
-
-  pfUI.gui:CreateConfig(pfUI.gui.bar, "动作栏的布局", nil, nil, "header")
-  local values = BarLayoutOptions(NUM_ACTIONBAR_BUTTONS)
-  pfUI.gui:CreateConfig(pfUI.gui.bar, "主动作条", C.bars.actionmain, "formfactor", "dropdown", values)
-  pfUI.gui:CreateConfig(pfUI.gui.bar, "主动作条上方动作条", C.bars.bottomleft, "formfactor", "dropdown", values)
-  pfUI.gui:CreateConfig(pfUI.gui.bar, "左动作条 (左下方)", C.bars.bottomright, "formfactor", "dropdown", values)
-  pfUI.gui:CreateConfig(pfUI.gui.bar, "右动作条 (右下方)", C.bars.right, "formfactor", "dropdown", values)
-  pfUI.gui:CreateConfig(pfUI.gui.bar, "垂直动作条 (右垂直)", C.bars.tworight, "formfactor", "dropdown", values)
-  local values = BarLayoutOptions(NUM_SHAPESHIFT_SLOTS)
-  pfUI.gui:CreateConfig(pfUI.gui.bar, "姿态条 (姿态条)", C.bars.shapeshift, "formfactor", "dropdown", values)
-  local values = BarLayoutOptions(NUM_PET_ACTION_SLOTS)
-  pfUI.gui:CreateConfig(pfUI.gui.bar, "宠物条 (宠物条)", C.bars.pet, "formfactor", "dropdown", values)
-
-  -- panels
-  pfUI.gui.panel = pfUI.gui:CreateConfigTab("聊天框架附加内容")
-  local values = { "时间", "延迟", "经验", "金钱", "好友", "公会", "耐久", "地区", "战斗", "弹药", "碎片", "无" }
-  pfUI.gui:CreateConfig(pfUI.gui.panel, "使用单位字体", C.panel, "use_unitfonts", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.panel, "左侧面板：左侧", C.panel.left, "left", "dropdown", values)
-  pfUI.gui:CreateConfig(pfUI.gui.panel, "左侧面板：中部", C.panel.left, "center", "dropdown", values)
-  pfUI.gui:CreateConfig(pfUI.gui.panel, "左侧面板：右侧", C.panel.left, "right", "dropdown", values)
-  pfUI.gui:CreateConfig(pfUI.gui.panel, "右侧面板：左侧", C.panel.right, "left", "dropdown", values)
-  pfUI.gui:CreateConfig(pfUI.gui.panel, "右侧面板：中部", C.panel.right, "center", "dropdown", values)
-  pfUI.gui:CreateConfig(pfUI.gui.panel, "右侧面板：右侧", C.panel.right, "right", "dropdown", values)
-  pfUI.gui:CreateConfig(pfUI.gui.panel, "小地图上显示", C.panel.other, "minimap", "dropdown", values)
-  pfUI.gui:CreateConfig(pfUI.gui.panel, "总是显示经验或者声望", C.panel.xp, "showalways", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.panel, "显示菜单", C.panel.micro, "enable", "checkbox")
-
-  -- tooltip
-  pfUI.gui.tooltip = pfUI.gui:CreateConfigTab("鼠标提示框")
-  pfUI.gui:CreateConfig(pfUI.gui.tooltip, "提示框位置", C.tooltip, "position", "dropdown", { "底部", "聊天框", "跟随鼠标" })
-  pfUI.gui:CreateConfig(pfUI.gui.tooltip, "显示扩展的公会信息", C.tooltip, "extguild", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.tooltip, "自定义透明度", C.tooltip, "alpha")
-  pfUI.gui:CreateConfig(pfUI.gui.tooltip, "始终显示装备比较", C.tooltip.compare, "showalways", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.tooltip, "总是显示扩展出售价值", C.tooltip.vendor, "showalways", "checkbox")
-
-  -- castbar
-  pfUI.gui.castbar = pfUI.gui:CreateConfigTab("施法条")
-  pfUI.gui:CreateConfig(pfUI.gui.castbar, "使用单位字体", C.castbar, "use_unitfonts", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.castbar, "施法条颜色", C.appearance.castbar, "castbarcolor", "color")
-  pfUI.gui:CreateConfig(pfUI.gui.castbar, "施法条槽颜色", C.appearance.castbar, "channelcolor", "color")
-  pfUI.gui:CreateConfig(pfUI.gui.castbar, "隐藏系统施法条", C.castbar.player, "hide_blizz", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.castbar, "隐藏玩家施法条", C.castbar.player, "hide_pfui", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.castbar, "隐藏目标施法条", C.castbar.target, "hide_pfui", "checkbox")
-
-  -- chat
-  pfUI.gui.chat = pfUI.gui:CreateConfigTab("对话窗口")
-  pfUI.gui:CreateConfig(pfUI.gui.chat, "启用 \"China Chat\" 聊天窗口", C.chat.right, "enable", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.chat, "文字输入框宽度", C.chat.text, "input_width")
-  pfUI.gui:CreateConfig(pfUI.gui.chat, "文字输入框高度", C.chat.text, "input_height")
-  pfUI.gui:CreateConfig(pfUI.gui.chat, "对话框显示时间戳", C.chat.text, "time", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.chat, "时间戳格式", C.chat.text, "timeformat")
-  pfUI.gui:CreateConfig(pfUI.gui.chat, "时间戳括弧", C.chat.text, "timebracket")
-  pfUI.gui:CreateConfig(pfUI.gui.chat, "时间戳颜色", C.chat.text, "timecolor", "color")
-  pfUI.gui:CreateConfig(pfUI.gui.chat, "隐藏频道名称", C.chat.text, "channelnumonly", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.chat, "启用URL检测", C.chat.text, "detecturl", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.chat, "用职业颜色区分已知玩家", C.chat.text, "classcolor", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.chat, "左侧对话框宽度", C.chat.left, "width")
-  pfUI.gui:CreateConfig(pfUI.gui.chat, "左侧对话框高度", C.chat.left, "height")
-  pfUI.gui:CreateConfig(pfUI.gui.chat, "右侧对话框宽度", C.chat.right, "width")
-  pfUI.gui:CreateConfig(pfUI.gui.chat, "右侧对话框高度", C.chat.right, "height")
-  pfUI.gui:CreateConfig(pfUI.gui.chat, "总是显示右聊天窗口", C.chat.right, "alwaysshow", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.chat, "启用聊天窗口", C.chat.global, "tabdock", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.chat, "使用自定义聊天窗口颜色", C.chat.global, "custombg", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.chat, "聊天窗口背景颜色", C.chat.global, "background", "color")
-  pfUI.gui:CreateConfig(pfUI.gui.chat, "聊天窗口框边颜色", C.chat.global, "border", "color")
-  pfUI.gui:CreateConfig(pfUI.gui.chat, "启用传入密语的布局", C.chat.global, "whispermod", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.chat, "密语颜色设置", C.chat.global, "whisper", "color")
-  pfUI.gui:CreateConfig(pfUI.gui.chat, "使用粘性聊天（记住最后一个频道）", C.chat.global, "sticky", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.chat, "淡出旧的聊天消息", C.chat.global, "fadeout", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.chat, "聊天记录淡出时间", C.chat.global, "fadetime")
-
-  -- nameplates
-  pfUI.gui.nameplates = pfUI.gui:CreateConfigTab("姓名板")
-  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "使用单位字体", C.nameplates, "use_unitfonts", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "显示施法条", C.nameplates, "showcastbar", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "显示技能名称", C.nameplates, "spellname", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "显示Debuff", C.nameplates, "showdebuffs", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "启用点击", C.nameplates, "clickthrough", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "启动右键移动镜头", C.nameplates, "rightclick", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "镜头移动速度", C.nameplates, "clickthreshold")
-  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "显示敌人职业颜色", C.nameplates, "enemyclassc", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "显示友军职业颜色", C.nameplates, "friendclassc", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "团队图标大小", C.nameplates, "raidiconsize")
-  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "仅显示玩家自己", C.nameplates, "players", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "显示生命值", C.nameplates, "showhp", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "垂直偏移", C.nameplates, "vpos")
-  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "血条宽度", C.nameplates, "width")
-  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "血条健康色高度", C.nameplates, "heighthealth")
-  pfUI.gui:CreateConfig(pfUI.gui.nameplates, "施法条高度", C.nameplates, "heightcast")
-
-  -- thirdparty
-  pfUI.gui.thirdparty = pfUI.gui:CreateConfigTab("其他插件接口")
-  pfUI.gui:CreateConfig(pfUI.gui.thirdparty, "DPSMate", C.thirdparty.dpsmate, "enable", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.thirdparty, "WIM", C.thirdparty.wim, "enable", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.thirdparty, "HealComm", C.thirdparty.healcomm, "enable", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.thirdparty, "CleanUp", C.thirdparty.cleanup, "enable", "checkbox")
-  pfUI.gui:CreateConfig(pfUI.gui.thirdparty, "KLH Threat Meter", C.thirdparty.ktm, "enable", "checkbox")
-
-  -- modules
-  pfUI.gui.modules = pfUI.gui:CreateConfigTab("高级单元")
-  pfUI.gui:CreateConfig(pfUI.gui.modules, "|cffff5555注意：|cffffaaaa如果你不知道该如何禁用，请不要随便设置，有可能会造成插件错误等问题。如发现不可恢复的\n错误，请删除WOW根目录下的WTF文件夹|r", nil, nil, "warning")
-  for i,m in pairs(pfUI.modules) do
-    if m ~= "gui" then
-      -- create disabled entry if not existing and display
-      pfUI:UpdateConfig("disabled", nil, m, "0")
-      pfUI.gui:CreateConfig(pfUI.gui.modules, "Disable " .. m, C.disabled, m, "checkbox")
-    end
-  end
-
-  -- [[ bottom section ]] --
-
-  -- Hide GUI
-  pfUI.gui.hideGUI = pfUI.gui:CreateConfigTab("关闭", "bottom", function()
     if pfUI.gui.settingChanged then
       pfUI.gui:Reload()
     end
-    if pfUI.gitter and pfUI.gitter:IsShown() then pfUI.gui:UnlockFrames() end
     pfUI.gui:Hide()
   end)
 
-  -- Unlock Frames
-  pfUI.gui.unlockFrames = pfUI.gui:CreateConfigTab("解锁重排", "bottom", function()
-      pfUI.gui.UnlockFrames()
+
+  CreateBackdrop(pfUI.gui, nil, true, 0.75)
+
+  pfUI.gui:SetMovable(true)
+  pfUI.gui:EnableMouse(true)
+  pfUI.gui:SetScript("OnMouseDown",function()
+    this:StartMoving()
   end)
 
-  -- Hoverbind
-  pfUI.gui.hoverBind = pfUI.gui:CreateConfigTab("悬停热键绑定", "bottom", function()
-      pfUI.gui.HoverBind()
+  pfUI.gui:SetScript("OnMouseUp",function()
+    this:StopMovingOrSizing()
   end)
 
-  -- Reset Cache
-  pfUI.gui.resetCache = pfUI.gui:CreateConfigTab("重置缓存", "bottom", function()
-    CreateQuestionDialog("你真的要重置缓存吗？",
-      function()
-        _G["pfUI_playerDB"] = {}
-        this:GetParent():Hide()
-        pfUI.gui:Reload()
+  -- gui decorations
+  pfUI.gui.title = pfUI.gui:CreateFontString("Status", "LOW", "GameFontNormal")
+  pfUI.gui.title:SetFontObject(GameFontWhite)
+  pfUI.gui.title:SetPoint("TOPLEFT", pfUI.gui, "TOPLEFT", 5, -8)
+  pfUI.gui.title:SetWidth(73)
+  pfUI.gui.title:SetJustifyH("RIGHT")
+  pfUI.gui.title:SetFont("Interface\\AddOns\\pfUI\\fonts\\DieDieDie.ttf", 16)
+  pfUI.gui.title:SetText("|cff33ffccpf|rUI")
+
+  pfUI.gui.version = pfUI.gui:CreateFontString("Status", "LOW", "GameFontNormal")
+  pfUI.gui.version:SetFontObject(GameFontWhite)
+  pfUI.gui.version:SetPoint("TOPLEFT", pfUI.gui, "TOPLEFT", 82, -8)
+  pfUI.gui.version:SetWidth(75)
+  pfUI.gui.version:SetJustifyH("LEFT")
+  pfUI.gui.version:SetFont("Interface\\AddOns\\pfUI\\fonts\\Myriad-Pro.ttf", 12)
+  pfUI.gui.version:SetText("|caaaaaaaav" .. pfUI.version.string)
+
+  pfUI.gui.close = CreateFrame("Button", "pfQuestionDialogClose", pfUI.gui)
+  pfUI.gui.close:SetPoint("TOPRIGHT", -5, -5)
+  pfUI.api.CreateBackdrop(pfUI.gui.close)
+  pfUI.gui.close:SetHeight(12)
+  pfUI.gui.close:SetWidth(12)
+  pfUI.gui.close.texture = pfUI.gui.close:CreateTexture("pfQuestionDialogCloseTex")
+  pfUI.gui.close.texture:SetTexture("Interface\\AddOns\\pfUI\\img\\close")
+  pfUI.gui.close.texture:ClearAllPoints()
+  pfUI.gui.close.texture:SetAllPoints(pfUI.gui.close)
+  pfUI.gui.close.texture:SetVertexColor(1,.25,.25,1)
+  pfUI.gui.close:SetScript("OnEnter", function ()
+    this.backdrop:SetBackdropBorderColor(1,.25,.25,1)
+  end)
+
+  pfUI.gui.close:SetScript("OnLeave", function ()
+    pfUI.api.CreateBackdrop(this)
+  end)
+
+  pfUI.gui.close:SetScript("OnClick", function()
+   this:GetParent():Hide()
+  end)
+
+  -- dropdown menu items
+  local txtValues = { "none", "unit", "name", "level", "class",  "health", "healthmax", "healthperc",
+  "healthmiss", "healthdyn", "power", "powermax", "powerperc", "powermiss", "powerdyn" }
+
+  local dropdown_selection_fonts = { "BigNoodleTitling", "Continuum", "DieDieDie", "Expressway", "Homespun", "Myriad-Pro", "PT-Sans-Narrow-Bold", "PT-Sans-Narrow-Regular" }
+  local dropdown_num_actionbar_buttons = BarLayoutOptions(NUM_ACTIONBAR_BUTTONS)
+  local dropdown_num_shapeshift_slots = BarLayoutOptions(NUM_SHAPESHIFT_SLOTS)
+  local dropdown_num_pet_action_slots = BarLayoutOptions(NUM_PET_ACTION_SLOTS)
+  local dropdown_panel_values = { "time", "fps", "exp", "gold", "friends", "guild", "durability", "zone", "combat", "ammo", "soulshard", "none" }
+
+  -- main tab frame
+  pfUI.gui.tabs = Createtabs(pfUI.gui, "LEFT")
+  pfUI.gui.tabs:SetPoint("TOPLEFT", pfUI.gui, "TOPLEFT", 0, -25)
+  pfUI.gui.tabs:SetPoint("BOTTOMRIGHT", pfUI.gui, "BOTTOMRIGHT", 0, 0)
+
+
+  -- [[ Settings ]]
+  pfUI.gui.tabs.settings = pfUI.gui.tabs:CreateChildFrame(pf_St, nil, nil, nil, true)
+  pfUI.gui.tabs.settings.tabs = Createtabs(pfUI.gui.tabs.settings, "TOP", true)
+
+  -- >> Global
+  pfUI.gui.tabs.settings.tabs.general = pfUI.gui.tabs.settings.tabs:CreateChildFrame(pf_General, 70)
+  pfUI.gui.tabs.settings.tabs.general:SetScript("OnShow", function()
+    if not this.setup then
+      CreateConfig(this, pf_ERC, C.global, "force_region", "checkbox")
+      CreateConfig(this, pf_STF, C.global, "font_default", "dropdown", dropdown_selection_fonts)
+      CreateConfig(this, pf_STFS, C.global, "font_size")
+      CreateConfig(this, pf_UFTF, C.global, "font_unit", "dropdown", dropdown_selection_fonts)
+      CreateConfig(this, pf_UFTS, C.global, "font_unit_size")
+      CreateConfig(this, pf_SCTF, C.global, "font_combat", "dropdown", dropdown_selection_fonts)
+      CreateConfig(this, pf_EPP, C.global, "pixelperfect", "checkbox")
+      CreateConfig(this, pf_EOFP, C.global, "offscreen", "checkbox")
+      CreateConfig(this, pf_ESLU, C.global, "errors_limit", "checkbox")
+      CreateConfig(this, pf_DAU, C.global, "errors_hide", "checkbox")
+
+      -- Delete / Reset
+      CreateConfig(this, pf_DR, nil, nil, "header")
+
+      CreateConfig(this, pf_EVERYTHING, C.global, "profile", "button", function()
+        CreateQuestionDialog(pf_EVERYTHINGMSG,
+          function()
+            _G["pfUI_init"] = {}
+            _G["pfUI_config"] = {}
+            _G["pfUI_playerDB"] = {}
+            _G["pfUI_profiles"] = {}
+            pfUI:LoadConfig()
+            this:GetParent():Hide()
+            pfUI.gui:Reload()
+          end)
       end)
-  end)
 
-  -- Reset Frames
-  pfUI.gui.resetFrames = pfUI.gui:CreateConfigTab("重置当前用户设置", "bottom", function()
-    CreateQuestionDialog("你真的要重置当前用户设置吗？",
-      function()
-        _G["pfUI_config"]["position"] = {}
-        this:GetParent():Hide()
-        pfUI.gui:Reload()
+      CreateConfig(this, pf_CACHE, C.global, "profile", "button", function()
+        CreateQuestionDialog(pf_CACHEMSG,
+          function()
+            _G["pfUI_playerDB"] = {}
+            this:GetParent():Hide()
+            pfUI.gui:Reload()
+          end)
+      end, true)
+
+      CreateConfig(this, pf_Firstrun, C.global, "profile", "button", function()
+        CreateQuestionDialog(pf_FirstrunMSG,
+          function()
+            _G["pfUI_init"] = {}
+            this:GetParent():Hide()
+            pfUI.gui:Reload()
+          end)
+      end, true)
+
+      CreateConfig(this, pf_Configuration, C.global, "profile", "button", function()
+        CreateQuestionDialog(pf_ConfigurationMSG,
+          function()
+            _G["pfUI_config"] = {}
+            pfUI:LoadConfig()
+            this:GetParent():Hide()
+            pfUI.gui:Reload()
+          end)
+      end, true)
+
+
+      -- Profiles
+      CreateConfig(this, pf_Profile, nil, nil, "header")
+      local values = {}
+      for name, config in pairs(pfUI_profiles) do table.insert(values, name) end
+
+      local function pfUpdateProfiles()
+        local values = {}
+        for name, config in pairs(pfUI_profiles) do table.insert(values, name) end
+        pfUIDropDownMenuProfile.values = values
+        pfUIDropDownMenuProfile.Refresh()
+      end
+
+      CreateConfig(this, pf_SProfile, C.global, "profile", "dropdown", values, false, "Profile")
+
+      -- load profile
+      CreateConfig(this, pf_LProfile, C.global, "profile", "button", function()
+        if C.global.profile and pfUI_profiles[C.global.profile] then
+          CreateQuestionDialog("Load profile '|cff33ffcc" .. C.global.profile .. "|r'?", function()
+            local selp = C.global.profile
+            _G["pfUI_config"] = CopyTable(pfUI_profiles[C.global.profile])
+            C.global.profile = selp
+            ReloadUI()
+          end)
+        end
       end)
+
+      -- delete profile
+      CreateConfig(this, pf_DProfile, C.global, "profile", "button", function()
+        if C.global.profile and pfUI_profiles[C.global.profile] then
+          CreateQuestionDialog("Delete profile '|cff33ffcc" .. C.global.profile .. "|r'?", function()
+            pfUI_profiles[C.global.profile] = nil
+            pfUpdateProfiles()
+            this:GetParent():Hide()
+          end)
+        end
+      end, true)
+
+      -- save profile
+      CreateConfig(this, pf_SSProfile, C.global, "profile", "button", function()
+        if C.global.profile and pfUI_profiles[C.global.profile] then
+          CreateQuestionDialog("Save current settings to profile '|cff33ffcc" .. C.global.profile .. "|r'?", function()
+            if pfUI_profiles[C.global.profile] then
+              pfUI_profiles[C.global.profile] = CopyTable(C)
+            end
+            this:GetParent():Hide()
+          end)
+        end
+      end, true)
+
+      -- create profile
+      CreateConfig(this, pf_CProfile, C.global, "profile", "button", function()
+        CreateQuestionDialog("Please enter a name for the new profile.\nExisting profiles sharing the same name will be overwritten.",
+        function()
+          local profile = this:GetParent().input:GetText()
+          local bad = string.gsub(profile,"([%w%s]+)","")
+          if bad~="" then
+            message('Cannot create profile: \"'..bad..'\"' .. " is not allowed in profile name")
+          else
+            profile = (string.gsub(profile,"^%s*(.-)%s*$", "%1"))
+            if profile and profile ~= "" then
+              pfUI_profiles[profile] = CopyTable(C)
+              pfUpdateProfiles()
+              this:GetParent():Hide()
+            end
+          end
+        end, false, true)
+      end, true)
+
+      this.setup = true
+    end
   end)
 
-  -- Reset Chat
-  pfUI.gui.resetChat = pfUI.gui:CreateConfigTab("重置聊天框设置", "bottom", function()
-    CreateQuestionDialog("你真的要重置聊天框设置吗？",
-      function()
-        _G["pfUI_init"] = {}
-        this:GetParent():Hide()
-        pfUI.gui:Reload()
-      end)
+  -- >> Appearance
+  pfUI.gui.tabs.settings.tabs.appearance = pfUI.gui.tabs.settings.tabs:CreateChildFrame(pf_Appearance, 70)
+  pfUI.gui.tabs.settings.tabs.appearance:SetScript("OnShow", function()
+    if not this.setup then
+      CreateConfig(this, pf_Background_Color, C.appearance.border, "background", "color")
+      CreateConfig(this, pf_Border_Color, C.appearance.border, "color", "color")
+      CreateConfig(this) -- spacer
+      CreateConfig(this, pf_Global_Border_Size, C.appearance.border, "default")
+      CreateConfig(this, pf_Action_Bar_Border_Size, C.appearance.border, "actionbars")
+      CreateConfig(this, pf_Unit_Frame_Border_Size, C.appearance.border, "unitframes")
+      CreateConfig(this, pf_Panel_Border_Size, C.appearance.border, "panels")
+      CreateConfig(this, pf_Chat_Border_Size, C.appearance.border, "chat")
+      CreateConfig(this, pf_Bags_Border_Size, C.appearance.border, "bags")
+      this.setup = true
+    end
   end)
 
-  -- Reset Config
-  pfUI.gui.resetConfig = pfUI.gui:CreateConfigTab("复位配置", "bottom", function()
-    CreateQuestionDialog("您确定要重置您的配置吗？\n这还包括框架位置设置",
-      function()
-        _G["pfUI_config"] = {}
-        pfUI:LoadConfig()
-        this:GetParent():Hide()
-        pfUI.gui:Reload()
-      end)
+  -- >> Cooldown
+  pfUI.gui.tabs.settings.tabs.cooldown = pfUI.gui.tabs.settings.tabs:CreateChildFrame(pf_CD, 70)
+  pfUI.gui.tabs.settings.tabs.cooldown:SetScript("OnShow", function()
+    if not this.setup then
+      CreateConfig(this, pf_CDCL, C.appearance.cd, "lowcolor", "color")
+      CreateConfig(this, pf_CDCS, C.appearance.cd, "normalcolor", "color")
+      CreateConfig(this, pf_CDCM, C.appearance.cd, "minutecolor", "color")
+      CreateConfig(this, pf_CDCH, C.appearance.cd, "hourcolor", "color")
+      CreateConfig(this, pf_CDCD, C.appearance.cd, "daycolor", "color")
+      CreateConfig(this, pf_CDTT, C.appearance.cd, "threshold")
+      this.setup = true
+    end
   end)
 
-  -- Reset All
-  pfUI.gui.resetAll = pfUI.gui:CreateConfigTab("全部重置", "bottom", function()
-    CreateQuestionDialog("你真的想要重置 |cffffaaaa所有配置|r?\n这包括配置，框架位置，冷却设置，\n 缓存文件, 个人设置等一切配置！",
-      function()
-        _G["pfUI_init"] = {}
-        _G["pfUI_config"] = {}
-        _G["pfUI_playerDB"] = {}
-        _G["pfUI_profiles"] = {}
-        pfUI:LoadConfig()
-        this:GetParent():Hide()
-        pfUI.gui:Reload()
-      end)
+
+  -- [[ UnitFrames ]]
+  pfUI.gui.tabs.uf = pfUI.gui.tabs:CreateChildFrame(pf_Unit_Frames, nil, nil, nil, true)
+  pfUI.gui.tabs.uf.tabs = Createtabs(pfUI.gui.tabs.uf, "TOP", true)
+
+  -- >> General
+  pfUI.gui.tabs.uf.tabs.general = pfUI.gui.tabs.uf.tabs:CreateChildFrame(pf_General, 70)
+  pfUI.gui.tabs.uf.tabs.general:SetScript("OnShow", function()
+    if not this.setup then
+      CreateConfig(this, pf_DPUF, C.unitframes, "disable", "checkbox")
+      CreateConfig(this, pf_EPC, C.unitframes, "pastel", "checkbox")
+      CreateConfig(this, pf_ECCHB, C.unitframes, "custom", "checkbox")
+      CreateConfig(this, pf_CHBC, C.unitframes, "customcolor", "color")
+      CreateConfig(this, pf_ECCHBB, C.unitframes, "custombg", "checkbox")
+      CreateConfig(this, pf_CHBBC, C.unitframes, "custombgcolor", "color")
+      CreateConfig(this, pf_HAS, C.unitframes, "animation_speed")
+      CreateConfig(this, pf_P_A, C.unitframes, "portraitalpha")
+      CreateConfig(this, pf_E2PAF, C.unitframes, "portraittexture", "checkbox")
+      CreateConfig(this, pf_UF_L, C.unitframes, "layout", "dropdown", { "default", "tukui" })
+      CreateConfig(this, pf_A4RC, C.unitframes, "rangecheck", "checkbox")
+      CreateConfig(this, pf_4CI, C.unitframes, "rangechecki")
+      CreateConfig(this, pf_C_Z, C.unitframes, "combosize")
+      CreateConfig(this, pf_A_N, C.unitframes, "abbrevnum", "checkbox")
+      CreateConfig(this, pf_S_PVP, C.unitframes.player, "showPVP", "checkbox")
+      CreateConfig(this, pf_EET, C.unitframes.player, "energy", "checkbox")
+      this.setup = true
+    end
   end)
 
-  -- Switch to default View: global
-  pfUI.gui:SwitchTab(pfUI.gui.global)
+  -- >> Player
+  pfUI.gui.tabs.uf.tabs.player = pfUI.gui.tabs.uf.tabs:CreateChildFrame(pf_PLAYER, 70)
+  pfUI.gui.tabs.uf.tabs.player:SetScript("OnShow", function()
+    if not this.setup then
+      CreateConfig(this, pf_Dis_PF, C.unitframes.player, "visible", "checkbox")
+      CreateConfig(this, pf_P_P, C.unitframes.player, "portrait", "dropdown", { "bar", "left", "right", "off" })
+      CreateConfig(this, pf_HP_WIDTH, C.unitframes.player, "width")
+      CreateConfig(this, pf_HP_HEIGHT, C.unitframes.player, "height")
+      CreateConfig(this, pf_MP_HEIGHT, C.unitframes.player, "pheight")
+      CreateConfig(this, pf_Spacing, C.unitframes.player, "pspace")
+      CreateConfig(this, pf_BUFF_P, C.unitframes.player, "buffs", "dropdown", { "top", "bottom", "off"})
+      CreateConfig(this, pf_BUFF_S, C.unitframes.player, "buffsize")
+      CreateConfig(this, pf_BUFF_L, C.unitframes.player, "bufflimit")
+      CreateConfig(this, pf_BUFF_P_R, C.unitframes.player, "buffperrow")
+      CreateConfig(this, pf_DEBUFF_P, C.unitframes.player, "debuffs", "dropdown", { "top", "bottom", "off"})
+      CreateConfig(this, pf_DEBUFF_S, C.unitframes.player, "debuffsize")
+      CreateConfig(this, pf_DEBUFF_L, C.unitframes.player, "debufflimit")
+      CreateConfig(this, pf_DEBUFF_P_R, C.unitframes.player, "debuffperrow")
+      CreateConfig(this, pf_I_H_B, C.unitframes.player, "invert_healthbar", "checkbox")
+      CreateConfig(this, pf_E_BUFF_I, C.unitframes.player, "buff_indicator", "checkbox")
+      CreateConfig(this, pf_E_DEBUFF_I, C.unitframes.player, "debuff_indicator", "checkbox")
+      CreateConfig(this, pf_E_CC, C.unitframes.player, "clickcast", "checkbox")
+      CreateConfig(this, pf_ERF, C.unitframes.player, "faderange", "checkbox")
+      CreateConfig(this, pf_L_T, C.unitframes.player, "txtleft", "dropdown", txtValues)
+      CreateConfig(this, pf_C_T, C.unitframes.player, "txtcenter", "dropdown", txtValues)
+      CreateConfig(this, pf_R_T, C.unitframes.player, "txtright", "dropdown", txtValues)
+      CreateConfig(this, pf_E_HCIT, C.unitframes.player, "healthcolor", "checkbox")
+      CreateConfig(this, pf_E_PCIT, C.unitframes.player, "powercolor", "checkbox")
+      CreateConfig(this, pf_E_LCIT, C.unitframes.player, "levelcolor", "checkbox")
+      CreateConfig(this, pf_E_CCIT, C.unitframes.player, "classcolor", "checkbox")
+      this.setup = true
+    end
+  end)
+
+  -- >> Target
+  pfUI.gui.tabs.uf.tabs.target = pfUI.gui.tabs.uf.tabs:CreateChildFrame(pf_TARGET, 70)
+  pfUI.gui.tabs.uf.tabs.target:SetScript("OnShow", function()
+    if not this.setup then
+      CreateConfig(this, pf_DIS_TF, C.unitframes.target, "visible", "checkbox")
+      CreateConfig(this, pf_E_TSA, C.unitframes.target, "animation", "checkbox")
+      CreateConfig(this, pf_P_P, C.unitframes.target, "portrait", "dropdown", { "bar", "left", "right", "off" })
+      CreateConfig(this, pf_HP_WIDTH, C.unitframes.target, "width")
+      CreateConfig(this, pf_HP_HEIGHT, C.unitframes.target, "height")
+      CreateConfig(this, pf_MP_HEIGHT, C.unitframes.target, "pheight")
+      CreateConfig(this, pf_Spacing, C.unitframes.target, "pspace")
+      CreateConfig(this, pf_BUFF_P, C.unitframes.target, "buffs", "dropdown", { "top", "bottom", "off"})
+      CreateConfig(this, pf_BUFF_S, C.unitframes.target, "buffsize")
+      CreateConfig(this, pf_BUFF_L, C.unitframes.target, "bufflimit")
+      CreateConfig(this, pf_BUFF_P_R, C.unitframes.target, "buffperrow")
+      CreateConfig(this, pf_DEBUFF_P, C.unitframes.target, "debuffs", "dropdown", { "top", "bottom", "off"})
+      CreateConfig(this, pf_DEBUFF_S, C.unitframes.target, "debuffsize")
+      CreateConfig(this, pf_DEBUFF_L, C.unitframes.target, "debufflimit")
+      CreateConfig(this, pf_DEBUFF_P_R, C.unitframes.target, "debuffperrow")
+      CreateConfig(this, pf_I_H_B, C.unitframes.target, "invert_healthbar", "checkbox")
+      CreateConfig(this, pf_E_BUFF_I, C.unitframes.target, "buff_indicator", "checkbox")
+      CreateConfig(this, pf_E_DEBUFF_I, C.unitframes.target, "debuff_indicator", "checkbox")
+      CreateConfig(this, pf_E_CC, C.unitframes.target, "clickcast", "checkbox")
+      CreateConfig(this, pf_ERF, C.unitframes.target, "faderange", "checkbox")
+      CreateConfig(this, pf_L_T, C.unitframes.target, "txtleft", "dropdown", txtValues)
+      CreateConfig(this, pf_C_T, C.unitframes.target, "txtcenter", "dropdown", txtValues)
+      CreateConfig(this, pf_R_T, C.unitframes.target, "txtright", "dropdown", txtValues)
+      CreateConfig(this, pf_E_HCIT, C.unitframes.target, "healthcolor", "checkbox")
+      CreateConfig(this, pf_E_PCIT, C.unitframes.target, "powercolor", "checkbox")
+      CreateConfig(this, pf_E_LCIT, C.unitframes.target, "levelcolor", "checkbox")
+      CreateConfig(this, pf_E_CCIT, C.unitframes.target, "classcolor", "checkbox")
+      this.setup = true
+    end
+  end)
+
+  -- >> Target-Target
+  pfUI.gui.tabs.uf.tabs.targettarget = pfUI.gui.tabs.uf.tabs:CreateChildFrame(pf_TARGET_TARGET, 70)
+  pfUI.gui.tabs.uf.tabs.targettarget:SetScript("OnShow", function()
+    if not this.setup then
+      CreateConfig(this, pf_DIS_TOTF, C.unitframes.ttarget, "visible", "checkbox")
+      CreateConfig(this, pf_P_P, C.unitframes.ttarget, "portrait", "dropdown", { "bar", "left", "right", "off" })
+      CreateConfig(this, pf_HP_WIDTH, C.unitframes.ttarget, "width")
+      CreateConfig(this, pf_HP_HEIGHT, C.unitframes.ttarget, "height")
+      CreateConfig(this, pf_MP_HEIGHT, C.unitframes.ttarget, "pheight")
+      CreateConfig(this, pf_Spacing, C.unitframes.ttarget, "pspace")
+      CreateConfig(this, pf_BUFF_P, C.unitframes.ttarget, "buffs", "dropdown", { "top", "bottom", "off"})
+      CreateConfig(this, pf_BUFF_S, C.unitframes.ttarget, "buffsize")
+      CreateConfig(this, pf_BUFF_L, C.unitframes.ttarget, "bufflimit")
+      CreateConfig(this, pf_BUFF_P_R, C.unitframes.ttarget, "buffperrow")
+      CreateConfig(this, pf_DEBUFF_P, C.unitframes.ttarget, "debuffs", "dropdown", { "top", "bottom", "off"})
+      CreateConfig(this, pf_DEBUFF_S, C.unitframes.ttarget, "debuffsize")
+      CreateConfig(this, pf_DEBUFF_L, C.unitframes.ttarget, "debufflimit")
+      CreateConfig(this, pf_DEBUFF_P_R, C.unitframes.ttarget, "debuffperrow")
+      CreateConfig(this, pf_I_H_B, C.unitframes.ttarget, "invert_healthbar", "checkbox")
+      CreateConfig(this, pf_E_BUFF_I, C.unitframes.ttarget, "buff_indicator", "checkbox")
+      CreateConfig(this, pf_E_DEBUFF_I, C.unitframes.ttarget, "debuff_indicator", "checkbox")
+      CreateConfig(this, pf_E_CC, C.unitframes.ttarget, "clickcast", "checkbox")
+      CreateConfig(this, pf_ERF, C.unitframes.ttarget, "faderange", "checkbox")
+      CreateConfig(this, pf_L_T, C.unitframes.ttarget, "txtleft", "dropdown", txtValues)
+      CreateConfig(this, pf_C_T, C.unitframes.ttarget, "txtcenter", "dropdown", txtValues)
+      CreateConfig(this, pf_R_T, C.unitframes.ttarget, "txtright", "dropdown", txtValues)
+      CreateConfig(this, pf_E_HCIT, C.unitframes.ttarget, "healthcolor", "checkbox")
+      CreateConfig(this, pf_E_PCIT, C.unitframes.ttarget, "powercolor", "checkbox")
+      CreateConfig(this, pf_E_LCIT, C.unitframes.ttarget, "levelcolor", "checkbox")
+      CreateConfig(this, pf_E_CCIT, C.unitframes.ttarget, "classcolor", "checkbox")
+      this.setup = true
+    end
+  end)
+
+  -- >> Pet
+  pfUI.gui.tabs.uf.tabs.pet = pfUI.gui.tabs.uf.tabs:CreateChildFrame(pf_PET, 70)
+  pfUI.gui.tabs.uf.tabs.pet:SetScript("OnShow", function()
+    if not this.setup then
+      CreateConfig(this, pf_DIS_PF, C.unitframes.player, "visible", "checkbox")
+      CreateConfig(this, pf_P_P, C.unitframes.pet, "portrait", "dropdown", { "bar", "left", "right", "off" })
+      CreateConfig(this, pf_HP_WIDTH, C.unitframes.pet, "width")
+      CreateConfig(this, pf_HP_HEIGHT, C.unitframes.pet, "height")
+      CreateConfig(this, pf_MP_HEIGHT, C.unitframes.pet, "pheight")
+      CreateConfig(this, pf_Spacing, C.unitframes.pet, "pspace")
+      CreateConfig(this, pf_BUFF_P, C.unitframes.pet, "buffs", "dropdown", { "top", "bottom", "off"})
+      CreateConfig(this, pf_BUFF_S, C.unitframes.pet, "buffsize")
+      CreateConfig(this, pf_BUFF_L, C.unitframes.pet, "bufflimit")
+      CreateConfig(this, pf_BUFF_P_R, C.unitframes.pet, "buffperrow")
+      CreateConfig(this, pf_DEBUFF_P, C.unitframes.pet, "debuffs", "dropdown", { "top", "bottom", "off"})
+      CreateConfig(this, pf_DEBUFF_S, C.unitframes.pet, "debuffsize")
+      CreateConfig(this, pf_DEBUFF_L, C.unitframes.pet, "debufflimit")
+      CreateConfig(this, pf_DEBUFF_P_R, C.unitframes.pet, "debuffperrow")
+      CreateConfig(this, pf_I_H_B, C.unitframes.pet, "invert_healthbar", "checkbox")
+      CreateConfig(this, pf_E_BUFF_I, C.unitframes.pet, "buff_indicator", "checkbox")
+      CreateConfig(this, pf_E_DEBUFF_I, C.unitframes.pet, "debuff_indicator", "checkbox")
+      CreateConfig(this, pf_E_CC, C.unitframes.pet, "clickcast", "checkbox")
+      CreateConfig(this, pf_ERF, C.unitframes.pet, "faderange", "checkbox")
+      CreateConfig(this, pf_L_T, C.unitframes.pet, "txtleft", "dropdown", txtValues)
+      CreateConfig(this, pf_C_T, C.unitframes.pet, "txtcenter", "dropdown", txtValues)
+      CreateConfig(this, pf_R_T, C.unitframes.pet, "txtright", "dropdown", txtValues)
+      CreateConfig(this, pf_E_HCIT, C.unitframes.pet, "healthcolor", "checkbox")
+      CreateConfig(this, pf_E_PCIT, C.unitframes.pet, "powercolor", "checkbox")
+      CreateConfig(this, pf_E_LCIT, C.unitframes.pet, "levelcolor", "checkbox")
+      CreateConfig(this, pf_E_CCIT, C.unitframes.pet, "classcolor", "checkbox")
+      this.setup = true
+    end
+  end)
+
+  -- >> Focus
+  pfUI.gui.tabs.uf.tabs.focus = pfUI.gui.tabs.uf.tabs:CreateChildFrame(pf_FOCUS, 70)
+  pfUI.gui.tabs.uf.tabs.focus:SetScript("OnShow", function()
+    if not this.setup then
+      CreateConfig(this, pf_DIS_FF, C.unitframes.focus, "visible", "checkbox")
+      CreateConfig(this, pf_P_P, C.unitframes.focus, "portrait", "dropdown", { "bar", "left", "right", "off" })
+      CreateConfig(this, pf_HP_WIDTH, C.unitframes.focus, "width")
+      CreateConfig(this, pf_HP_HEIGHT, C.unitframes.focus, "height")
+      CreateConfig(this, pf_MP_HEIGHT, C.unitframes.focus, "pheight")
+      CreateConfig(this, pf_Spacing, C.unitframes.focus, "pspace")
+      CreateConfig(this, pf_BUFF_P, C.unitframes.focus, "buffs", "dropdown", { "top", "bottom", "off"})
+      CreateConfig(this, pf_BUFF_S, C.unitframes.focus, "buffsize")
+      CreateConfig(this, pf_BUFF_L, C.unitframes.focus, "bufflimit")
+      CreateConfig(this, pf_BUFF_P_R, C.unitframes.focus, "buffperrow")
+      CreateConfig(this, pf_DEBUFF_P, C.unitframes.focus, "debuffs", "dropdown", { "top", "bottom", "off"})
+      CreateConfig(this, pf_DEBUFF_S, C.unitframes.focus, "debuffsize")
+      CreateConfig(this, pf_DEBUFF_L, C.unitframes.focus, "debufflimit")
+      CreateConfig(this, pf_DEBUFF_P_R, C.unitframes.focus, "debuffperrow")
+      CreateConfig(this, pf_I_H_B, C.unitframes.focus, "invert_healthbar", "checkbox")
+      CreateConfig(this, pf_E_BUFF_I, C.unitframes.focus, "buff_indicator", "checkbox")
+      CreateConfig(this, pf_E_DEBUFF_I, C.unitframes.focus, "debuff_indicator", "checkbox")
+      CreateConfig(this, pf_E_CC, C.unitframes.focus, "clickcast", "checkbox")
+      CreateConfig(this, pf_ERF, C.unitframes.focus, "faderange", "checkbox")
+      CreateConfig(this, pf_L_T, C.unitframes.focus, "txtleft", "dropdown", txtValues)
+      CreateConfig(this, pf_C_T, C.unitframes.focus, "txtcenter", "dropdown", txtValues)
+      CreateConfig(this, pf_R_T, C.unitframes.focus, "txtright", "dropdown", txtValues)
+      CreateConfig(this, pf_E_HCIT, C.unitframes.focus, "healthcolor", "checkbox")
+      CreateConfig(this, pf_E_PCIT, C.unitframes.focus, "powercolor", "checkbox")
+      CreateConfig(this, pf_E_LCIT, C.unitframes.focus, "levelcolor", "checkbox")
+      CreateConfig(this, pf_E_CCIT, C.unitframes.focus, "classcolor", "checkbox")
+      this.setup = true
+    end
+  end)
+
+  -- [[ GroupFrames ]]
+  pfUI.gui.tabs.gf = pfUI.gui.tabs:CreateChildFrame(pf_GROUP_FRAME, nil, nil, nil, true)
+  pfUI.gui.tabs.gf.tabs = Createtabs(pfUI.gui.tabs.gf, "TOP", true)
+
+  -- >> General
+  pfUI.gui.tabs.gf.tabs.general = pfUI.gui.tabs.gf.tabs:CreateChildFrame(pf_General, 70)
+  pfUI.gui.tabs.gf.tabs.general:SetScript("OnShow", function()
+    if not this.setup then
+      CreateConfig(this, pf_SHABI, C.unitframes, "show_hots", "checkbox")
+      CreateConfig(this, pf_SHOAC, C.unitframes, "all_hots", "checkbox")
+      CreateConfig(this, pf_SPABI, C.unitframes, "show_procs", "checkbox")
+      CreateConfig(this, pf_SPOAC, C.unitframes, "all_procs", "checkbox")
+      CreateConfig(this, pf_OSIFDD, C.unitframes, "debuffs_class", "checkbox")
+      CreateConfig(this, pf_CC_S, nil, nil, "header")
+      CreateConfig(this, pf_CLICK_ACTION, C.unitframes, "clickcast", nil, nil, nil, nil, "STRING")
+      CreateConfig(this, pf_SHIFT_CA, C.unitframes, "clickcast_shift", nil, nil, nil, nil, "STRING")
+      CreateConfig(this, pf_ALT_CA, C.unitframes, "clickcast_alt", nil, nil, nil, nil, "STRING")
+      CreateConfig(this, pf_CTRL_CA, C.unitframes, "clickcast_ctrl", nil, nil, nil, nil, "STRING")
+      this.setup = true
+    end
+  end)
+
+  -- >> Raid
+  pfUI.gui.tabs.gf.tabs.raid = pfUI.gui.tabs.gf.tabs:CreateChildFrame(pf_RAID, 70)
+  pfUI.gui.tabs.gf.tabs.raid:SetScript("OnShow", function()
+    if not this.setup then
+      CreateConfig(this, pf_DIS_RF, C.unitframes.raid, "visible", "checkbox")
+      CreateConfig(this, pf_P_P, C.unitframes.raid, "portrait", "dropdown", { "bar", "left", "right", "off" })
+      CreateConfig(this, pf_HP_WIDTH, C.unitframes.raid, "width")
+      CreateConfig(this, pf_HP_HEIGHT, C.unitframes.raid, "height")
+      CreateConfig(this, pf_MP_HEIGHT, C.unitframes.raid, "pheight")
+      CreateConfig(this, pf_Spacing, C.unitframes.raid, "pspace")
+      CreateConfig(this, pf_BUFF_P, C.unitframes.raid, "buffs", "dropdown", { "top", "bottom", "off"})
+      CreateConfig(this, pf_BUFF_S, C.unitframes.raid, "buffsize")
+      CreateConfig(this, pf_BUFF_L, C.unitframes.raid, "bufflimit")
+      CreateConfig(this, pf_BUFF_P_R, C.unitframes.raid, "buffperrow")
+      CreateConfig(this, pf_DEBUFF_P, C.unitframes.raid, "debuffs", "dropdown", { "top", "bottom", "off"})
+      CreateConfig(this, pf_DEBUFF_S, C.unitframes.raid, "debuffsize")
+      CreateConfig(this, pf_DEBUFF_L, C.unitframes.raid, "debufflimit")
+      CreateConfig(this, pf_DEBUFF_P_R, C.unitframes.raid, "debuffperrow")
+      CreateConfig(this, pf_I_H_B, C.unitframes.raid, "invert_healthbar", "checkbox")
+      CreateConfig(this, pf_E_BUFF_I, C.unitframes.raid, "buff_indicator", "checkbox")
+      CreateConfig(this, pf_E_DEBUFF_I, C.unitframes.raid, "debuff_indicator", "checkbox")
+      CreateConfig(this, pf_E_CC, C.unitframes.raid, "clickcast", "checkbox")
+      CreateConfig(this, pf_ERF, C.unitframes.raid, "faderange", "checkbox")
+      CreateConfig(this, pf_L_T, C.unitframes.raid, "txtleft", "dropdown", txtValues)
+      CreateConfig(this, pf_C_T, C.unitframes.raid, "txtcenter", "dropdown", txtValues)
+      CreateConfig(this, pf_R_T, C.unitframes.raid, "txtright", "dropdown", txtValues)
+      CreateConfig(this, pf_E_HCIT, C.unitframes.raid, "healthcolor", "checkbox")
+      CreateConfig(this, pf_E_PCIT, C.unitframes.raid, "powercolor", "checkbox")
+      CreateConfig(this, pf_E_LCIT, C.unitframes.raid, "levelcolor", "checkbox")
+      CreateConfig(this, pf_E_CCIT, C.unitframes.raid, "classcolor", "checkbox")
+      this.setup = true
+    end
+  end)
+
+  -- >> Group
+  pfUI.gui.tabs.gf.tabs.group = pfUI.gui.tabs.gf.tabs:CreateChildFrame(pf_GROUP, 70)
+  pfUI.gui.tabs.gf.tabs.group:SetScript("OnShow", function()
+    if not this.setup then
+      CreateConfig(this, pf_DIS_GF, C.unitframes.group, "visible", "checkbox")
+      CreateConfig(this, pf_P_P, C.unitframes.group, "portrait", "dropdown", { "bar", "left", "right", "off" })
+      CreateConfig(this, pf_HP_WIDTH, C.unitframes.group, "width")
+      CreateConfig(this, pf_HP_HEIGHT, C.unitframes.group, "height")
+      CreateConfig(this, pf_MP_HEIGHT, C.unitframes.group, "pheight")
+      CreateConfig(this, pf_Spacing, C.unitframes.group, "pspace")
+      CreateConfig(this, pf_BUFF_P, C.unitframes.group, "buffs", "dropdown", { "top", "bottom", "off"})
+      CreateConfig(this, pf_BUFF_S, C.unitframes.group, "buffsize")
+      CreateConfig(this, pf_BUFF_L, C.unitframes.group, "bufflimit")
+      CreateConfig(this, pf_BUFF_P_R, C.unitframes.group, "buffperrow")
+      CreateConfig(this, pf_DEBUFF_P, C.unitframes.group, "debuffs", "dropdown", { "top", "bottom", "off"})
+      CreateConfig(this, pf_DEBUFF_S, C.unitframes.group, "debuffsize")
+      CreateConfig(this, pf_DEBUFF_L, C.unitframes.group, "debufflimit")
+      CreateConfig(this, pf_DEBUFF_P_R, C.unitframes.group, "debuffperrow")
+      CreateConfig(this, pf_I_H_B, C.unitframes.group, "invert_healthbar", "checkbox")
+      CreateConfig(this, pf_E_BUFF_I, C.unitframes.group, "buff_indicator", "checkbox")
+      CreateConfig(this, pf_E_DEBUFF_I, C.unitframes.group, "debuff_indicator", "checkbox")
+      CreateConfig(this, pf_E_CC, C.unitframes.group, "clickcast", "checkbox")
+      CreateConfig(this, pf_ERF, C.unitframes.group, "faderange", "checkbox")
+      CreateConfig(this, pf_L_T, C.unitframes.group, "txtleft", "dropdown", txtValues)
+      CreateConfig(this, pf_C_T, C.unitframes.group, "txtcenter", "dropdown", txtValues)
+      CreateConfig(this, pf_R_T, C.unitframes.group, "txtright", "dropdown", txtValues)
+      CreateConfig(this, pf_HIDE_IN_RAID, C.unitframes.group, "hide_in_raid", "checkbox")
+      CreateConfig(this, pf_E_HCIT, C.unitframes.group, "healthcolor", "checkbox")
+      CreateConfig(this, pf_E_PCIT, C.unitframes.group, "powercolor", "checkbox")
+      CreateConfig(this, pf_E_LCIT, C.unitframes.group, "levelcolor", "checkbox")
+      CreateConfig(this, pf_E_CCIT, C.unitframes.group, "classcolor", "checkbox")
+      this.setup = true
+    end
+  end)
+
+  -- >> Group-Target
+  pfUI.gui.tabs.gf.tabs.grouptarget = pfUI.gui.tabs.gf.tabs:CreateChildFrame(pf_GROUP_TARGET, 70)
+  pfUI.gui.tabs.gf.tabs.grouptarget:SetScript("OnShow", function()
+    if not this.setup then
+      CreateConfig(this, pf_DIS_GTF, C.unitframes.grouptarget, "visible", "checkbox")
+      CreateConfig(this, pf_P_P, C.unitframes.grouptarget, "portrait", "dropdown", { "bar", "left", "right", "off" })
+      CreateConfig(this, pf_HP_WIDTH, C.unitframes.grouptarget, "width")
+      CreateConfig(this, pf_HP_HEIGHT, C.unitframes.grouptarget, "height")
+      CreateConfig(this, pf_MP_HEIGHT, C.unitframes.grouptarget, "pheight")
+      CreateConfig(this, pf_Spacing, C.unitframes.grouptarget, "pspace")
+      CreateConfig(this, pf_BUFF_P, C.unitframes.grouptarget, "buffs", "dropdown", { "top", "bottom", "off"})
+      CreateConfig(this, pf_BUFF_S, C.unitframes.grouptarget, "buffsize")
+      CreateConfig(this, pf_BUFF_L, C.unitframes.grouptarget, "bufflimit")
+      CreateConfig(this, pf_BUFF_P_R, C.unitframes.grouptarget, "buffperrow")
+      CreateConfig(this, pf_DEBUFF_P, C.unitframes.grouptarget, "debuffs", "dropdown", { "top", "bottom", "off"})
+      CreateConfig(this, pf_DEBUFF_S, C.unitframes.grouptarget, "debuffsize")
+      CreateConfig(this, pf_DEBUFF_L, C.unitframes.grouptarget, "debufflimit")
+      CreateConfig(this, pf_DEBUFF_P_R, C.unitframes.grouptarget, "debuffperrow")
+      CreateConfig(this, pf_I_H_B, C.unitframes.grouptarget, "invert_healthbar", "checkbox")
+      CreateConfig(this, pf_E_BUFF_I, C.unitframes.grouptarget, "buff_indicator", "checkbox")
+      CreateConfig(this, pf_E_DEBUFF_I, C.unitframes.grouptarget, "debuff_indicator", "checkbox")
+      CreateConfig(this, pf_E_CC, C.unitframes.grouptarget, "clickcast", "checkbox")
+      CreateConfig(this, pf_ERF, C.unitframes.grouptarget, "faderange", "checkbox")
+      CreateConfig(this, pf_L_T, C.unitframes.grouptarget, "txtleft", "dropdown", txtValues)
+      CreateConfig(this, pf_C_T, C.unitframes.grouptarget, "txtcenter", "dropdown", txtValues)
+      CreateConfig(this, pf_R_T, C.unitframes.grouptarget, "txtright", "dropdown", txtValues)
+      CreateConfig(this, pf_E_HCIT, C.unitframes.grouptarget, "healthcolor", "checkbox")
+      CreateConfig(this, pf_E_PCIT, C.unitframes.grouptarget, "powercolor", "checkbox")
+      CreateConfig(this, pf_E_LCIT, C.unitframes.grouptarget, "levelcolor", "checkbox")
+      CreateConfig(this, pf_E_CCIT, C.unitframes.grouptarget, "classcolor", "checkbox")
+      this.setup = true
+    end
+  end)
+
+  -- >> Group-Pet
+  pfUI.gui.tabs.gf.tabs.grouppet = pfUI.gui.tabs.gf.tabs:CreateChildFrame(pf_GROUP_PET, 70)
+  pfUI.gui.tabs.gf.tabs.grouppet:SetScript("OnShow", function()
+    if not this.setup then
+      CreateConfig(this, pf_DIS_GPT, C.unitframes.grouppet, "visible", "checkbox")
+      CreateConfig(this, pf_P_P, C.unitframes.grouppet, "portrait", "dropdown", { "bar", "left", "right", "off" })
+      CreateConfig(this, pf_HP_WIDTH, C.unitframes.grouppet, "width")
+      CreateConfig(this, pf_HP_HEIGHT, C.unitframes.grouppet, "height")
+      CreateConfig(this, pf_MP_HEIGHT, C.unitframes.grouppet, "pheight")
+      CreateConfig(this, pf_Spacing, C.unitframes.grouppet, "pspace")
+      CreateConfig(this, pf_BUFF_P, C.unitframes.grouppet, "buffs", "dropdown", { "top", "bottom", "off"})
+      CreateConfig(this, pf_BUFF_S, C.unitframes.grouppet, "buffsize")
+      CreateConfig(this, pf_BUFF_L, C.unitframes.grouppet, "bufflimit")
+      CreateConfig(this, pf_BUFF_P_R, C.unitframes.grouppet, "buffperrow")
+      CreateConfig(this, pf_DEBUFF_P, C.unitframes.grouppet, "debuffs", "dropdown", { "top", "bottom", "off"})
+      CreateConfig(this, pf_DEBUFF_S, C.unitframes.grouppet, "debuffsize")
+      CreateConfig(this, pf_DEBUFF_L, C.unitframes.grouppet, "debufflimit")
+      CreateConfig(this, pf_DEBUFF_P_R, C.unitframes.grouppet, "debuffperrow")
+      CreateConfig(this, pf_I_H_B, C.unitframes.grouppet, "invert_healthbar", "checkbox")
+      CreateConfig(this, pf_E_BUFF_I, C.unitframes.grouppet, "buff_indicator", "checkbox")
+      CreateConfig(this, pf_E_DEBUFF_I, C.unitframes.grouppet, "debuff_indicator", "checkbox")
+      CreateConfig(this, pf_E_CC, C.unitframes.grouppet, "clickcast", "checkbox")
+      CreateConfig(this, pf_ERF, C.unitframes.grouppet, "faderange", "checkbox")
+      CreateConfig(this, pf_L_T, C.unitframes.grouppet, "txtleft", "dropdown", txtValues)
+      CreateConfig(this, pf_C_T, C.unitframes.grouppet, "txtcenter", "dropdown", txtValues)
+      CreateConfig(this, pf_R_T, C.unitframes.grouppet, "txtright", "dropdown", txtValues)
+      CreateConfig(this, pf_E_HCIT, C.unitframes.grouppet, "healthcolor", "checkbox")
+      CreateConfig(this, pf_E_PCIT, C.unitframes.grouppet, "powercolor", "checkbox")
+      CreateConfig(this, pf_E_LCIT, C.unitframes.grouppet, "levelcolor", "checkbox")
+      CreateConfig(this, pf_E_CCIT, C.unitframes.grouppet, "classcolor", "checkbox")
+      this.setup = true
+    end
+  end)
+
+
+  -- [[ Combat ]]
+  pfUI.gui.tabs.combat = pfUI.gui.tabs:CreateChildFrame(pf_COMBAT, nil, nil, nil, true)
+  pfUI.gui.tabs.combat.tabs = Createtabs(pfUI.gui.tabs.combat, "TOP", true)
+
+  -- >> General
+  pfUI.gui.tabs.combat.tabs.general = pfUI.gui.tabs.combat.tabs:CreateChildFrame(pf_COMBAT, 70)
+  pfUI.gui.tabs.combat.tabs.general:SetScript("OnShow", function()
+    if not this.setup then
+      CreateConfig(this, pf_COMBAT_FULL, C.appearance.infight, "screen", "checkbox")
+      CreateConfig(this, pf_COMBAT_UF, C.appearance.infight, "common", "checkbox")
+      CreateConfig(this, pf_COMBAT_GROUP, C.appearance.infight, "group", "checkbox")
+      this.setup = true
+    end
+  end)
+
+
+  -- [[ Bags & Bank ]]
+  pfUI.gui.tabs.bags = pfUI.gui.tabs:CreateChildFrame(pf_BAG_BANK, nil, nil, nil, true)
+  pfUI.gui.tabs.bags.tabs = Createtabs(pfUI.gui.tabs.bags, "TOP", true)
+
+  -- >> General
+  pfUI.gui.tabs.bags.tabs.general = pfUI.gui.tabs.bags.tabs:CreateChildFrame(pf_BAG_BANK, 70)
+  pfUI.gui.tabs.bags.tabs.general:SetScript("OnShow", function()
+    if not this.setup then
+      CreateConfig(this, pf_DIS_IQC, C.appearance.bags, "borderlimit", "checkbox")
+      CreateConfig(this, pf_ENABLE_IQC, C.appearance.bags, "borderonlygear", "checkbox")
+      CreateConfig(this, pf_AUTO_SELL, C.global, "autosell", "checkbox")
+      CreateConfig(this, pf_AUTO_REPAIR, C.global, "autorepair", "checkbox")
+      this.setup = true
+    end
+  end)
+
+
+  -- [[ Loot ]]
+  pfUI.gui.tabs.loot = pfUI.gui.tabs:CreateChildFrame(pf_LOOT, nil, nil, nil, true)
+  pfUI.gui.tabs.loot.tabs = Createtabs(pfUI.gui.tabs.loot, "TOP", true)
+
+  -- >> General
+  pfUI.gui.tabs.loot.tabs.general = pfUI.gui.tabs.loot.tabs:CreateChildFrame(pf_LOOT, 70)
+  pfUI.gui.tabs.loot.tabs.general:SetScript("OnShow", function()
+    if not this.setup then
+      CreateConfig(this, pf_ENABLE_ALF, C.loot, "autoresize", "checkbox")
+      CreateConfig(this, pf_DIS_LOOT, C.loot, "autopickup", "checkbox")
+      this.setup = true
+    end
+  end)
+
+
+  -- [[ Minimap ]]
+  pfUI.gui.tabs.minimap = pfUI.gui.tabs:CreateChildFrame(pf_MINIMAP, nil, nil, nil, true)
+  pfUI.gui.tabs.minimap.tabs = Createtabs(pfUI.gui.tabs.minimap, "TOP", true)
+
+  -- >> General
+  pfUI.gui.tabs.minimap.tabs.general = pfUI.gui.tabs.minimap.tabs:CreateChildFrame(pf_MINIMAP, 70)
+  pfUI.gui.tabs.minimap.tabs.general:SetScript("OnShow", function()
+    if not this.setup then
+      CreateConfig(this, pf_ENABLE_ZONE, C.appearance.minimap, "mouseoverzone", "checkbox")
+      CreateConfig(this, pf_DIS_MINI_BUFF, C.global, "hidebuff", "checkbox")
+      CreateConfig(this, pf_DIS_MINI_W_BUFF, C.global, "hidewbuff", "checkbox")
+      CreateConfig(this, pf_SHOW_PVP, C.unitframes.player, "showPVPMinimap", "checkbox")
+      this.setup = true
+    end
+  end)
+
+
+  -- [[ Actionbar ]]
+  pfUI.gui.tabs.actionbar = pfUI.gui.tabs:CreateChildFrame(pf_ACTIONBAR, nil, nil, nil, true)
+  pfUI.gui.tabs.actionbar.tabs = Createtabs(pfUI.gui.tabs.actionbar, "TOP", true)
+
+  -- >> General
+  pfUI.gui.tabs.actionbar.tabs.general = pfUI.gui.tabs.actionbar.tabs:CreateChildFrame(pf_General, 70)
+  pfUI.gui.tabs.actionbar.tabs.general:SetScript("OnShow", function()
+    if not this.setup then
+      CreateConfig(this, pf_ICON_S, C.bars, "icon_size")
+      CreateConfig(this, pf_ENABLE_ABB, C.bars, "background", "checkbox")
+      CreateConfig(this, pf_ENABLE_RDOH, C.bars, "glowrange", "checkbox")
+      CreateConfig(this, pf_RDC, C.bars, "rangecolor", "color")
+      CreateConfig(this, pf_SHOW_MACRO_T, C.bars, "showmacro", "checkbox")
+      CreateConfig(this, pf_SHOW_HOTKEY_T, C.bars, "showkeybind", "checkbox")
+      CreateConfig(this, pf_ENABLE_RBAP, C.bars, "hunterbar", "checkbox")
+      this.setup = true
+    end
+  end)
+
+  -- >> Autohide
+  pfUI.gui.tabs.actionbar.tabs.autohide = pfUI.gui.tabs.actionbar.tabs:CreateChildFrame(pf_AUTOHIDE, 70)
+  pfUI.gui.tabs.actionbar.tabs.autohide:SetScript("OnShow", function()
+    if not this.setup then
+      CreateConfig(this, pf_AUTOHIDE_TIME, C.bars, "hide_time")
+      CreateConfig(this, pf_AUTOHIDE_MAIN, C.bars, "hide_actionmain", "checkbox")
+      CreateConfig(this, pf_AUTOHIDE_B_LEFT, C.bars, "hide_bottomleft", "checkbox")
+      CreateConfig(this, pf_AUTOHIDE_B_RIGHT, C.bars, "hide_bottomright", "checkbox")
+      CreateConfig(this, pf_AUTOHIDE_RIGHT, C.bars, "hide_right", "checkbox")
+      CreateConfig(this, pf_AUTOHIDE_RIGHT2, C.bars, "hide_tworight", "checkbox")
+      CreateConfig(this, pf_AUTOHIDE_SHAPESHIFT, C.bars, "hide_shapeshift", "checkbox")
+      CreateConfig(this, pf_AUTOHIDE_PET, C.bars, "hide_pet", "checkbox")
+      this.setup = true
+    end
+  end)
+
+  -- >> Layout
+  pfUI.gui.tabs.actionbar.tabs.layout = pfUI.gui.tabs.actionbar.tabs:CreateChildFrame(pf_LAYOUT, 70)
+  pfUI.gui.tabs.actionbar.tabs.layout:SetScript("OnShow", function()
+    if not this.setup then
+      CreateConfig(this, pf_M_AB, C.bars.actionmain, "formfactor", "dropdown", dropdown_num_actionbar_buttons)
+      CreateConfig(this, pf_BL_AB, C.bars.bottomleft, "formfactor", "dropdown", dropdown_num_actionbar_buttons)
+      CreateConfig(this, pf_BR_AB, C.bars.bottomright, "formfactor", "dropdown", dropdown_num_actionbar_buttons)
+      CreateConfig(this, pf_R_AB, C.bars.right, "formfactor", "dropdown", dropdown_num_actionbar_buttons)
+      CreateConfig(this, pf_R2_AB, C.bars.tworight, "formfactor", "dropdown", dropdown_num_actionbar_buttons)
+      CreateConfig(this, pf_SS_AB, C.bars.shapeshift, "formfactor", "dropdown", dropdown_num_shapeshift_slots)
+      CreateConfig(this, pf_PET_AB, C.bars.pet, "formfactor", "dropdown", dropdown_num_pet_action_slots)
+      this.setup = true
+    end
+  end)
+
+
+  -- [[ Panel ]]
+  pfUI.gui.tabs.panel = pfUI.gui.tabs:CreateChildFrame(pf_PANEL, nil, nil, nil, true)
+  pfUI.gui.tabs.panel.tabs = Createtabs(pfUI.gui.tabs.panel, "TOP", true)
+
+  -- >> General
+  pfUI.gui.tabs.panel.tabs.general = pfUI.gui.tabs.panel.tabs:CreateChildFrame(pf_PANEL, 70)
+  pfUI.gui.tabs.panel.tabs.general:SetScript("OnShow", function()
+    if not this.setup then
+      CreateConfig(this, pf_U_N_F, C.panel, "use_unitfonts", "checkbox")
+      CreateConfig(this, pf_LP_L, C.panel.left, "left", "dropdown", dropdown_panel_values)
+      CreateConfig(this, pf_LP_C, C.panel.left, "center", "dropdown", dropdown_panel_values)
+      CreateConfig(this, pf_LP_R, C.panel.left, "right", "dropdown", dropdown_panel_values)
+      CreateConfig(this, pf_RP_L, C.panel.right, "left", "dropdown", dropdown_panel_values)
+      CreateConfig(this, pf_RP_C, C.panel.right, "center", "dropdown", dropdown_panel_values)
+      CreateConfig(this, pf_RP_R, C.panel.right, "right", "dropdown", dropdown_panel_values)
+      CreateConfig(this, pf_OP_MAP, C.panel.other, "minimap", "dropdown", dropdown_panel_values)
+      CreateConfig(this, pf_ALWAYS_SHOW, C.panel.xp, "showalways", "checkbox")
+      CreateConfig(this, pf_ENABLE_MICRO, C.panel.micro, "enable", "checkbox")
+      CreateConfig(this, pf_TIME24, C.global, "twentyfour", "checkbox")
+      this.setup = true
+    end
+  end)
+
+
+  -- [[ Tooltip ]]
+  pfUI.gui.tabs.tooltip = pfUI.gui.tabs:CreateChildFrame(pf_TOOTIP, nil, nil, nil, true)
+  pfUI.gui.tabs.tooltip.tabs = Createtabs(pfUI.gui.tabs.tooltip, "TOP", true)
+
+  -- >> General
+  pfUI.gui.tabs.tooltip.tabs.general = pfUI.gui.tabs.tooltip.tabs:CreateChildFrame(pf_TOOTIP, 70)
+  pfUI.gui.tabs.tooltip.tabs.general:SetScript("OnShow", function()
+    if not this.setup then
+      CreateConfig(this, pf_TOOTIP_P, C.tooltip, "position", "dropdown", { "bottom", "chat", "cursor" })
+      CreateConfig(this, pf_ENABLE_GUILD, C.tooltip, "extguild", "checkbox")
+      CreateConfig(this, pf_CUSTOM_T, C.tooltip, "alpha")
+      CreateConfig(this, pf_ALWAYS_SHOW_ITEM, C.tooltip.compare, "showalways", "checkbox")
+      CreateConfig(this, pf_SHOW_SELL_VALUES, C.tooltip.vendor, "showalways", "checkbox")
+      this.setup = true
+    end
+  end)
+
+
+  -- [[ Castbar ]]
+  pfUI.gui.tabs.castbar = pfUI.gui.tabs:CreateChildFrame(pf_CASTBAR, nil, nil, nil, true)
+  pfUI.gui.tabs.castbar.tabs = Createtabs(pfUI.gui.tabs.castbar, "TOP", true)
+
+  -- >> General
+  pfUI.gui.tabs.castbar.tabs.general = pfUI.gui.tabs.castbar.tabs:CreateChildFrame(pf_CASTBAR, 70)
+  pfUI.gui.tabs.castbar.tabs.general:SetScript("OnShow", function()
+    if not this.setup then
+      CreateConfig(this, pf_U_N_F, C.castbar, "use_unitfonts", "checkbox")
+      CreateConfig(this, pf_CASTING_COLOR, C.appearance.castbar, "castbarcolor", "color")
+      CreateConfig(this, pf_BACK_COLOR, C.appearance.castbar, "channelcolor", "color")
+      CreateConfig(this, pf_DIS_BZ_C, C.castbar.player, "hide_blizz", "checkbox")
+      CreateConfig(this, pf_DIS_P_C, C.castbar.player, "hide_pfui", "checkbox")
+      CreateConfig(this, pf_DIS_T_C, C.castbar.target, "hide_pfui", "checkbox")
+      this.setup = true
+    end
+  end)
+
+
+  -- [[ Chat ]]
+  pfUI.gui.tabs.chat = pfUI.gui.tabs:CreateChildFrame(pf_CHAT, nil, nil, nil, true)
+  pfUI.gui.tabs.chat.tabs = Createtabs(pfUI.gui.tabs.chat, "TOP", true)
+
+  -- >> General
+  pfUI.gui.tabs.chat.tabs.general = pfUI.gui.tabs.chat.tabs:CreateChildFrame(pf_General, 70)
+  pfUI.gui.tabs.chat.tabs.general:SetScript("OnShow", function()
+    if not this.setup then
+      CreateConfig(this, pf_ENABLE_L_C, C.chat.right, "enable", "checkbox")
+      CreateConfig(this, pf_INPUT_W, C.chat.text, "input_width")
+      CreateConfig(this, pf_INPUT_H, C.chat.text, "input_height")
+      CreateConfig(this, pf_ENABLE_TIME, C.chat.text, "time", "checkbox")
+      CreateConfig(this, pf_TIME_FORMAT, C.chat.text, "timeformat", nil, nil, nil, nil, "STRING")
+      CreateConfig(this, pf_TIME_BRACKETS, C.chat.text, "timebracket", nil, nil, nil, nil, "STRING")
+      CreateConfig(this, pf_TIME_COLOR, C.chat.text, "timecolor", "color")
+      CreateConfig(this, pf_HIDE_CHANNEL, C.chat.text, "channelnumonly", "checkbox")
+      CreateConfig(this, pf_URL, C.chat.text, "detecturl", "checkbox")
+      CreateConfig(this, pf_CLASS_COLOR, C.chat.text, "classcolor", "checkbox")
+      CreateConfig(this, pf_CHAT_L_W, C.chat.left, "width")
+      CreateConfig(this, pf_CHAT_L_H, C.chat.left, "height")
+      CreateConfig(this, pf_CHAT_R_W, C.chat.right, "width")
+      CreateConfig(this, pf_CHAT_R_H, C.chat.right, "height")
+      CreateConfig(this, pf_ENABLE_R_CHAT, C.chat.right, "alwaysshow", "checkbox")
+      CreateConfig(this, pf_CHAT_DOCK, C.chat.global, "tabdock", "checkbox")
+      CreateConfig(this, pf_ENABLE_CUSTOM_COLOR, C.chat.global, "custombg", "checkbox")
+      CreateConfig(this, pf_CHAT_BACKGROUND, C.chat.global, "background", "color")
+      CreateConfig(this, pf_CHAT_BORDER_COLOR, C.chat.global, "border", "color")
+      CreateConfig(this, pf_ENABLE_WHISPERS, C.chat.global, "whispermod", "checkbox")
+      CreateConfig(this, pf_I_WHISPERS_COLOR, C.chat.global, "whisper", "color")
+      CreateConfig(this, pf_ENABLE_S_CHAT, C.chat.global, "sticky", "checkbox")
+      CreateConfig(this, pf_ENABLE_CHAT_FADE, C.chat.global, "fadeout", "checkbox")
+      CreateConfig(this, pf_CHAT_FADE_TIME, C.chat.global, "fadetime")
+      this.setup = true
+    end
+  end)
+
+
+  -- [[ Nameplates ]]
+  pfUI.gui.tabs.nameplates = pfUI.gui.tabs:CreateChildFrame(pf_NAMEPLATES, nil, nil, nil, true)
+  pfUI.gui.tabs.nameplates.tabs = Createtabs(pfUI.gui.tabs.nameplates, "TOP", true)
+
+  -- General
+  pfUI.gui.tabs.nameplates.tabs.general = pfUI.gui.tabs.nameplates.tabs:CreateChildFrame(pf_NAMEPLATES, 70)
+  pfUI.gui.tabs.nameplates.tabs.general:SetScript("OnShow", function()
+    if not this.setup then
+      CreateConfig(this, pf_U_N_F, C.nameplates, "use_unitfonts", "checkbox")
+      CreateConfig(this, pf_ENABLE_CASTBARS, C.nameplates, "showcastbar", "checkbox")
+      CreateConfig(this, pf_SPELLNAME, C.nameplates, "spellname", "checkbox")
+      CreateConfig(this, pf_N_DEBUFFS, C.nameplates, "showdebuffs", "checkbox")
+      CreateConfig(this, pf_ENABLE_CLICK, C.nameplates, "clickthrough", "checkbox")
+      CreateConfig(this, pf_MOUSELOOK, C.nameplates, "rightclick", "checkbox")
+      CreateConfig(this, pf_RIGHT_AUTO_AT, C.nameplates, "clickthreshold")
+      CreateConfig(this, pf_CLASS_COL_O_E, C.nameplates, "enemyclassc", "checkbox")
+      CreateConfig(this, pf_CLASS_COL_O_F, C.nameplates, "friendclassc", "checkbox")
+      CreateConfig(this, pf_RAID_I_S, C.nameplates, "raidiconsize")
+      CreateConfig(this, pf_SHOW_PLAYERS_O, C.nameplates, "players", "checkbox")
+      CreateConfig(this, pf_SHOW_HP, C.nameplates, "showhp", "checkbox")
+      CreateConfig(this, pf_VERICAL_POS, C.nameplates, "vpos")
+      CreateConfig(this, pf_NAMEPLATE_W, C.nameplates, "width")
+      CreateConfig(this, pf_HP_H, C.nameplates, "heighthealth")
+      CreateConfig(this, pf_CASTBAR_H, C.nameplates, "heightcast")
+      this.setup = true
+    end
+  end)
+
+
+  -- [[ Thirdparty ]]
+  pfUI.gui.tabs.thirdparty = pfUI.gui.tabs:CreateChildFrame(pf_THIRDPARTY, nil, nil, nil, true)
+  pfUI.gui.tabs.thirdparty.tabs = Createtabs(pfUI.gui.tabs.thirdparty, "TOP", true)
+
+  -- >> General
+  pfUI.gui.tabs.thirdparty.tabs.general = pfUI.gui.tabs.thirdparty.tabs:CreateChildFrame(pf_THIRDPARTY, 70)
+  pfUI.gui.tabs.thirdparty.tabs.general:SetScript("OnShow", function()
+    if not this.setup then
+      CreateConfig(this, "DPSMate", C.thirdparty.dpsmate, "enable", "checkbox")
+      CreateConfig(this, "WIM", C.thirdparty.wim, "enable", "checkbox")
+      CreateConfig(this, "HealComm", C.thirdparty.healcomm, "enable", "checkbox")
+      CreateConfig(this, "CleanUp", C.thirdparty.cleanup, "enable", "checkbox")
+      CreateConfig(this, "KLH Threat Meter", C.thirdparty.ktm, "enable", "checkbox")
+      this.setup = true
+    end
+  end)
+
+
+  -- [[ Modules ]]
+  pfUI.gui.tabs.modules = pfUI.gui.tabs:CreateChildFrame(pf_MODULES, nil, nil, nil, true)
+  pfUI.gui.tabs.modules.tabs = Createtabs(pfUI.gui.tabs.modules, "TOP", true)
+
+  -- General
+  pfUI.gui.tabs.modules.tabs.general = pfUI.gui.tabs.modules.tabs:CreateChildFrame(pf_MODULES, 70)
+  pfUI.gui.tabs.modules.tabs.general:SetScript("OnShow", function()
+    if not this.setup then
+      for i,m in pairs(pfUI.modules) do
+        if m ~= "gui" then
+          -- create disabled entry if not existing and display
+          pfUI:UpdateConfig("disabled", nil, m, "0")
+          CreateConfig(this, pf_DISABLE .. m, C.disabled, m, "checkbox")
+        end
+      end
+      this.setup = true
+    end
+  end)
+
+  -- [[ Close ]]
+  pfUI.gui.tabs.close = pfUI.gui.tabs:CreateChildFrame(pf_CLOSE, nil, nil, "BOTTOM")
+  pfUI.gui.tabs.close.button:SetScript("OnClick", function()
+    pfUI.gui:Hide()
+  end)
+
+  -- [[ Unlock ]]
+  pfUI.gui.tabs.unlock = pfUI.gui.tabs:CreateChildFrame(pf_UNLOCK, nil, nil, "BOTTOM")
+  pfUI.gui.tabs.unlock.button:SetScript("OnClick", function()
+    DelayChangedSettings()
+    pfUI.unlock:UnlockFrames()
+  end)
+
+  -- [[ Hoverbind ]]
+  pfUI.gui.tabs.hoverbind = pfUI.gui.tabs:CreateChildFrame(pf_HOVERBIND, nil, nil, "BOTTOM")
+  pfUI.gui.tabs.hoverbind.button:SetScript("OnClick", function()
+    if pfUI.hoverbind then
+      DelayChangedSettings()
+      pfUI.hoverbind:Show()
+    end
+  end)
+
+
 end)
