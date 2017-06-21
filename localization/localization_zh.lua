@@ -267,4 +267,10 @@ pf_HOVERBIND = "悬停设置"
 --chat.lua
 pf_LOOT_SPAM = "拾取、综合"
 --panel.lua
+--hoverbind.lua
+pf_KEYBINDMODE = "|cff33ffcc热键绑定模式|r\n"
+pf_KEYBINDMODE_TMA = "这个模式允许你绑定键盘快捷方式到你的动作条。\n"
+pf_KEYBINDMODE_BHB = "通过用鼠标悬停一个按钮并按下一个键，快捷键将被分配到该按钮。\n"
+pf_KEYBINDMODE_HEB = "点击一个按钮来删除绑定。\n\n"
+pf_KEYBINDMODE_PEM = "按Esc键或单击空白区域离开热键绑定模式。\n"
 end
