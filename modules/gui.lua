@@ -478,7 +478,7 @@ pfUI:RegisterModule("gui", function ()
   table.insert(UISpecialFrames, "pfConfigGUI")
 
   function pfUI.gui:Reload()
-    CreateQuestionDialog("Some settings need to reload the UI to take effect.\nDo you want to reloadUI now?",
+    CreateQuestionDialog(pf_SSN,
       function()
         pfUI.gui.settingChanged = nil
         ReloadUI()

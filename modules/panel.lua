@@ -105,12 +105,12 @@ pfUI:RegisterModule("panel", function ()
           time = date("%H:%M")
           servertime = string.format("%.2d:%.2d", h, m)
         end
-        GameTooltip:AddLine("|cff555555Time")
-        GameTooltip:AddDoubleLine("Localtime",  "|cffffffff" .. time)
-        GameTooltip:AddDoubleLine("Servertime", "|cffffffff".. servertime)
+        GameTooltip:AddLine(pf_PANEL_TIME)
+        GameTooltip:AddDoubleLine(pf_PANEL_LOCALTIME,  "|cffffffff" .. time)
+        GameTooltip:AddDoubleLine(pf_PANEL_SERVERTIME, "|cffffffff".. servertime)
         GameTooltip:AddLine(" ")
-        GameTooltip:AddDoubleLine("Left Click", "|cffffffffShow/Hide Timer")
-        GameTooltip:AddDoubleLine("Right Click", "|cffffffffReset Timer")
+        GameTooltip:AddDoubleLine(pf_PANEL_LEFT_CLICK, pf_PANEL_RIGHT_SHTMIE)
+        GameTooltip:AddDoubleLine(pf_PANEL_RIGHT_CLICK, pf_PANEL_RIGHT_RTIME)
         GameTooltip:Show()
       end
 
@@ -139,22 +139,22 @@ pfUI:RegisterModule("panel", function ()
         local active = 0
         GameTooltip:ClearLines()
         GameTooltip_SetDefaultAnchor(GameTooltip, this)
-        GameTooltip:AddLine("|cff555555Systeminfo")
+        GameTooltip:AddLine(pf_PANEL_RIGHT_SYSTEMINFO)
         for i=1, GetNumAddOns() do
           if IsAddOnLoaded(i) then
             active = active + 1
           end
         end
-        GameTooltip:AddDoubleLine("Active Addons", "|cffffffff" .. active .. "|cff555555 / |cffffffff" .. GetNumAddOns())
+        GameTooltip:AddDoubleLine(pf_PANEL_RIGHT_ACTIVEADDONS, "|cffffffff" .. active .. "|cff555555 / |cffffffff" .. GetNumAddOns())
         GameTooltip:AddLine(" ")
         local nin, nout, nping = GetNetStats()
-        GameTooltip:AddDoubleLine("Network Down", "|cffffffff" .. round(nin,1) .. "KB/s")
-        GameTooltip:AddDoubleLine("Network Up", "|cffffffff" .. round(nout,1) .. "KB/s")
-        GameTooltip:AddDoubleLine("Network Latency", "|cffffffff" .. nping .. "ms")
+        GameTooltip:AddDoubleLine(pf_PANEL_RIGHT_NETWORKDOWN, "|cffffffff" .. round(nin,1) .. "KB/s")
+        GameTooltip:AddDoubleLine(pf_PANEL_RIGHT_NETWORKUP, "|cffffffff" .. round(nout,1) .. "KB/s")
+        GameTooltip:AddDoubleLine(pf_PANEL_RIGHT_NETWORKLATENCY, "|cffffffff" .. nping .. "ms")
         GameTooltip:AddLine(" ")
-        GameTooltip:AddDoubleLine("Graphic Renderer", "|cffffffff" .. GetCVar("gxApi"))
-        GameTooltip:AddDoubleLine("Screen Resolution", "|cffffffff" .. GetCVar("gxResolution"))
-        GameTooltip:AddDoubleLine("UI-Scale", "|cffffffff" .. round(UIParent:GetEffectiveScale(),2))
+        GameTooltip:AddDoubleLine(pf_PANEL_RIGHT_GRAPHICRENDERER, "|cffffffff" .. GetCVar("gxApi"))
+        GameTooltip:AddDoubleLine(pf_PANEL_RIGHT_SCREENRESOLUTION, "|cffffffff" .. GetCVar("gxResolution"))
+        GameTooltip:AddDoubleLine(pf_PANEL_RIGHT_UISCALE, "|cffffffff" .. round(UIParent:GetEffectiveScale(),2))
         GameTooltip:Show()
       end
 
@@ -168,7 +168,7 @@ pfUI:RegisterModule("panel", function ()
 
       local _, _, lag = GetNetStats()
       local fps = floor(GetFramerate())
-      pfUI.panel:OutputPanel("fps", floor(GetFramerate()) .. " fps & " .. lag .. " ms", tooltip, click)
+      pfUI.panel:OutputPanel("fps", floor(GetFramerate()) .. pf_PANEL_RIGHT_FPS .. lag .. pf_PANEL_RIGHT_MS, tooltip, click)
     end
   end)
 
@@ -191,7 +191,7 @@ pfUI:RegisterModule("panel", function ()
       end
 
     elseif event == "PLAYER_ENTERING_WORLD" then
-      pfUI.panel:OutputPanel("combat", "Combat: N/A")
+      pfUI.panel:OutputPanel("combat", pf_PANEL_COMBAT)
     end
   end)
 
@@ -220,12 +220,12 @@ pfUI:RegisterModule("panel", function ()
       local xprested = tonumber(GetXPExhaustion())
       if remstring == nil then remstring = "" end
       if xprested ~= nil then
-        pfUI.panel:OutputPanel("exp", "Exp:|cffaaaaff "..floor((a/b)*100).."%"..remstring)
+        pfUI.panel:OutputPanel("exp", pf_PANEL_EXP_E..floor((a/b)*100).."%"..remstring)
       else
-        pfUI.panel:OutputPanel("exp", "Exp: " .. floor((a/b)*100) .. "%" .. remstring)
+        pfUI.panel:OutputPanel("exp", pf_PANEL_EXP .. floor((a/b)*100) .. "%" .. remstring)
       end
     else
-      pfUI.panel:OutputPanel("exp", "Exp: N/A")
+      pfUI.panel:OutputPanel("exp", pf_PANEL_EXP_N)
     end
   end
 
@@ -249,11 +249,11 @@ pfUI:RegisterModule("panel", function ()
       GameTooltip_SetDefaultAnchor(GameTooltip, this)
       GameTooltip:ClearLines()
 
-      GameTooltip:AddLine("|cff555555Money")
-      GameTooltip:AddDoubleLine("Login:", CreateGoldString(pfUI.panel.initMoney))
-      GameTooltip:AddDoubleLine("Now:", CreateGoldString(GetMoney()))
+      GameTooltip:AddLine(pf_PANEL_RIGHT_MONEY)
+      GameTooltip:AddDoubleLine(pf_PANEL_RIGHT_LOGIN, CreateGoldString(pfUI.panel.initMoney))
+      GameTooltip:AddDoubleLine(pf_PANEL_RIGHT_NOW, CreateGoldString(GetMoney()))
       GameTooltip:AddDoubleLine("|cffffffff","")
-      GameTooltip:AddDoubleLine("This Session:", dmod .. CreateGoldString(math.abs(pfUI.panel.diffMoney)))
+      GameTooltip:AddDoubleLine(pf_PANEL_RIGHT_THISSESSION, dmod .. CreateGoldString(math.abs(pfUI.panel.diffMoney)))
       GameTooltip:Show()
     end
 
@@ -261,7 +261,7 @@ pfUI:RegisterModule("panel", function ()
       OpenAllBags()
     end
 
-    pfUI.panel:OutputPanel("gold", gold .. "|cffffd700g|r " .. silver .. "|cffc7c7cfs|r " .. copper .. "|cffeda55fc|r", tooltip, click)
+    pfUI.panel:OutputPanel("gold", gold .. pf_PANEL_RIGHT_G .. silver .. pf_PANEL_RIGHT_S .. copper .. pf_PANEL_RIGHT_C, tooltip, click)
   end
 
   -- Update "friends"
@@ -275,7 +275,7 @@ pfUI:RegisterModule("panel", function ()
       end
     end
     local click = function() ToggleFriendsFrame(1) end
-    pfUI.panel:OutputPanel("friends", "Friends: " .. online, nil, click)
+    pfUI.panel:OutputPanel("friends", pf_PANEL_FRIENDS .. online, nil, click)
   end
 
   -- Update "guild"
@@ -285,9 +285,9 @@ pfUI:RegisterModule("panel", function ()
     local all = GetNumGuildMembers(true)
     local click = function() ToggleFriendsFrame(3) end
     if not GetGuildInfo("player") then
-      pfUI.panel:OutputPanel("guild", "Guild: N/A", nil, click)
+      pfUI.panel:OutputPanel("guild", pf_PANEL_GUILD_N, nil, click)
     else
-      pfUI.panel:OutputPanel("guild", "Guild: "..online, nil, click)
+      pfUI.panel:OutputPanel("guild", pf_PANEL_GUILD..online, nil, click)
     end
   end
 
@@ -351,7 +351,7 @@ pfUI:RegisterModule("panel", function ()
       ToggleCharacter("PaperDollFrame")
     end
 
-    pfUI.panel:OutputPanel("durability", lowestPercent .. "% Armor", tooltip, click)
+    pfUI.panel:OutputPanel("durability", lowestPercent .. pf_PANEL_ARMOR, tooltip, click)
   end
 
   function pfUI.panel:UpdateZone ()
@@ -419,7 +419,7 @@ pfUI:RegisterModule("panel", function ()
       end
     end
 
-    pfUI.panel:OutputPanel("soulshard", "Soulshards: " .. count, tooltip)
+    pfUI.panel:OutputPanel("soulshard", pf_PANEL_SOULSHARDS .. count, tooltip)
   end
 
   function pfUI.panel:OutputPanel(entry, value, tooltip, func)
