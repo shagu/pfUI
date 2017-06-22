@@ -566,14 +566,14 @@ pfUI:RegisterModule("gui", function ()
   end)
 
   -- dropdown menu items
-  local txtValues = { "none", "unit", "name", "level", "class",  "health", "healthmax", "healthperc",
-  "healthmiss", "healthdyn", "power", "powermax", "powerperc", "powermiss", "powerdyn" }
+  local txtValues = { pf_LIST_NONE, pf_LIST_UNIT, pf_LIST_NAME, pf_LIST_LEVEL, pf_LIST_CLASS,  pf_LIST_HEALTH, pf_LIST_HEALTHMAX, pf_LIST_HEALTHPERC,
+  pf_LIST_HEALTHMISS, pf_LIST_HEALTHDYN, pf_LIST_POWER, pf_LIST_POWERMAX, pf_LIST_POWERPERC, pf_LIST_POWERMISS, pf_LIST_POWERDYN }
 
   local dropdown_selection_fonts = { "BigNoodleTitling", "Continuum", "DieDieDie", "Expressway", "Homespun", "Myriad-Pro", "PT-Sans-Narrow-Bold", "PT-Sans-Narrow-Regular" }
   local dropdown_num_actionbar_buttons = BarLayoutOptions(NUM_ACTIONBAR_BUTTONS)
   local dropdown_num_shapeshift_slots = BarLayoutOptions(NUM_SHAPESHIFT_SLOTS)
   local dropdown_num_pet_action_slots = BarLayoutOptions(NUM_PET_ACTION_SLOTS)
-  local dropdown_panel_values = { "time", "fps", "exp", "gold", "friends", "guild", "durability", "zone", "combat", "ammo", "soulshard", "none" }
+  local dropdown_panel_values = { pf_LIST_TIME, pf_LIST_FPS, pf_LIST_EXP, pf_LIST_GOLD, pf_LIST_FRIENDS, pf_LIST_GUILD, pf_LIST_DURABILITY, pf_LIST_ZONE, pf_LIST_COMBAT, pf_LIST_AMMO, pf_LIST_SOULSHARD, pf_LIST_NONE }
 
   -- main tab frame
   pfUI.gui.tabs = Createtabs(pfUI.gui, "LEFT")
@@ -1258,7 +1258,7 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.tabs.tooltip.tabs.general = pfUI.gui.tabs.tooltip.tabs:CreateChildFrame(pf_TOOTIP, 70)
   pfUI.gui.tabs.tooltip.tabs.general:SetScript("OnShow", function()
     if not this.setup then
-      CreateConfig(this, pf_TOOTIP_P, C.tooltip, "position", "dropdown", { "bottom", "chat", "cursor" })
+      CreateConfig(this, pf_TOOTIP_P, C.tooltip, "position", "dropdown", { pf_LIST_BOOTOM, pf_LIST_CHAT, pf_LIST_CURSOR })
       CreateConfig(this, pf_ENABLE_GUILD, C.tooltip, "extguild", "checkbox")
       CreateConfig(this, pf_CUSTOM_T, C.tooltip, "alpha")
       CreateConfig(this, pf_ALWAYS_SHOW_ITEM, C.tooltip.compare, "showalways", "checkbox")

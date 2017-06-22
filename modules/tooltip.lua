@@ -2,7 +2,7 @@ pfUI:RegisterModule("tooltip", function ()
 local alpha = tonumber(C.tooltip.alpha)
 CreateBackdrop(GameTooltip, nil, nil, alpha)
 
-  if C.tooltip.position == "cursor" then
+  if C.tooltip.position == pf_LIST_CURSOR then
     function _G.GameTooltip_SetDefaultAnchor(tooltip, parent)
       tooltip:SetOwner(parent, "ANCHOR_CURSOR")
     end
@@ -42,13 +42,13 @@ CreateBackdrop(GameTooltip, nil, nil, alpha)
       pfUI.tooltip:Update()
       if GameTooltip:GetAnchorType() == "ANCHOR_NONE" then
         GameTooltip:ClearAllPoints()
-        if C.tooltip.position == "bottom" then
+        if C.tooltip.position == pf_LIST_BOOTOM then
           if pfUI.panel then
             GameTooltip:SetPoint("BOTTOMRIGHT", pfUI.panel.right, "TOPRIGHT", 0, C.appearance.border.default*2)
           else
             GameTooltip:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", 0, -C.appearance.border.default*2)
           end
-        elseif C.tooltip.position == "chat" then
+        elseif C.tooltip.position == pf_LIST_CHAT then
           local anchor = ChatFrame3
           if pfUI.chat then anchor = pfUI.chat.right end
           GameTooltip:SetPoint("BOTTOMRIGHT", anchor, "TOPRIGHT", 0, C.appearance.border.default*2)
