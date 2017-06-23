@@ -318,6 +318,9 @@ pf_KEYBINDMODE_TMA = "这个模式允许你绑定键盘快捷方式到你的动�
 pf_KEYBINDMODE_BHB = "通过用鼠标悬停一个按钮并按下一个键，快捷键将被分配到该按钮。\n"
 pf_KEYBINDMODE_HEB = "在按钮上按Esc键可以删除绑定。\n\n"
 pf_KEYBINDMODE_PEM = "按Esc键或单击空白区域离开热键绑定模式。\n"
+--sellvalue.lua
+pf_SELL = "卖价:"
+pf_BUY = "购买价:"
 --list
 pf_LIST_TIME = "时间"
 pf_LIST_FPS = "延迟"

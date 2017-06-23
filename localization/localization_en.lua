@@ -318,6 +318,9 @@ pf_KEYBINDMODE_TMA = "This mode allows you to bind keyboard shortcuts to your ac
 pf_KEYBINDMODE_BHB = "By hovering a button with your cursor and pressing a key, the key will be assigned to that button.\n"
 pf_KEYBINDMODE_HEB = "Hit Escape on a button to remove bindings.\n\n"
 pf_KEYBINDMODE_PEM = "Press Escape or click on an empty area to leave the keybind mode.\n"
+--sellvalue.lua
+pf_SELL = "Sell:"
+pf_BUY = "Buy:"
 --list
 pf_LIST_TIME = "time"
 pf_LIST_FPS = "fps"
