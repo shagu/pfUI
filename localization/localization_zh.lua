@@ -71,7 +71,7 @@ pf_S_PVP = "显示PVP图标"
 pf_EET = "显示能量刻度"
 --player
 pf_PLAYER = "玩家"
-pf_Dis_PF = "禁用玩家头像模块"
+pf_Dis_PF = "启用玩家头像模块"
 pf_P_P = "人偶头像位置"
 pf_HP_WIDTH = "血条宽度"
 pf_HP_HEIGHT = "血条高度"
@@ -99,17 +99,17 @@ pf_E_LCIT = "启用等级文字颜色样式"
 pf_E_CCIT = "启用职业文字颜色样式"
 --target
 pf_TARGET = "目标"
-pf_DIS_TF = "禁用目标头像模块"
+pf_DIS_TF = "启用目标头像模块"
 pf_E_TSA = "启用目标切换动画"
 --TARGET-TARGET
 pf_TARGET_TARGET = "目标的目标"
-pf_DIS_TOTF = "禁用目标的目标头像模块"
+pf_DIS_TOTF = "启用目标的目标头像模块"
 --pet
 pf_PET = "宠物"
-pf_DIS_PF = "禁用宠物头像模块"
+pf_DIS_PF = "启用宠物头像模块"
 --focus
 pf_FOCUS = "焦点目标"
-pf_DIS_FF = "禁用焦点目标模块"
+pf_DIS_FF = "启用焦点目标模块"
 --group frame
 pf_GROUP_FRAME = "队伍框架"
 pf_SHABI = "在框架的Buff指示器显示Hot"
@@ -124,17 +124,17 @@ pf_ALT_CA = "ALT点击操作"
 pf_CTRL_CA = "CTRL点击操作"
 --raid
 pf_RAID = "团队"
-pf_DIS_RF = "禁用团队模块"
+pf_DIS_RF = "启用团队模块"
 --group
 pf_GROUP = "小队"
-pf_DIS_GF = "禁用小队模块"
+pf_DIS_GF = "启用小队模块"
 pf_HIDE_IN_RAID = "在团队框架下隐藏小队框架"
 --group-target
 pf_GROUP_TARGET = "小队目标"
-pf_DIS_GTF = "禁用小队目标模块"
+pf_DIS_GTF = "启用小队目标模块"
 --group-pet
 pf_GROUP_PET = "小队宠物"
-pf_DIS_GPT = "禁用小队宠物模块"
+pf_DIS_GPT = "启用小队宠物模块"
 --Combat
 pf_COMBAT = "战斗报警"
 pf_COMBAT_FULL = "全屏显示战斗报警"
