@@ -22,6 +22,13 @@ env\locales_zhCN.lua
 env\locales_ruRU.lua
 env\locales_koKR.lua
 
+env\translations_enUS.lua
+env\translations_frFR.lua
+env\translations_deDE.lua
+env\translations_zhCN.lua
+env\translations_ruRU.lua
+env\translations_koKR.lua
+
 # environment
 env\tables.lua
 env\colors.lua

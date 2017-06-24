@@ -45,6 +45,7 @@ pfUI.hooks = {}
 pfUI_playerDB = {}
 pfUI_config = {}
 pfUI_locale = {}
+pfUI_translation = {}
 
 pfUI:SetScript("OnEvent", function()
 
@@ -87,6 +88,11 @@ pfUI:SetScript("OnEvent", function()
 
     env_pfui.C = pfUI_config
     env_pfui.L = pfUI_locale[GetLocale()] or pfUI_locale["enUS"]
+    env_pfui.T = setmetatable(pfUI_translation[GetLocale()] or {}, { __index = function(tab,key)
+      local value = tostring(key)
+      rawset(tab,key,value)
+      return value
+    end})
 
     for i,m in pairs(this.modules) do
       -- do not load disabled modules
