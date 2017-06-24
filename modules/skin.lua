@@ -31,6 +31,8 @@ pfUI:RegisterModule("skin", function ()
     "GameMenuButtonUIOptions",
     "GameMenuButtonKeybindings",
     "GameMenuButtonMacros",
+--    "GameMenuButtonAddOns",
+--    "GameMenuButtonMoveAnything",
     "GameMenuButtonLogout",
     "GameMenuButtonQuit",
     "GameMenuButtonContinue",
@@ -51,7 +53,7 @@ pfUI:RegisterModule("skin", function ()
 
   local pfUIButton = CreateFrame("Button", "GameMenuButtonPFUI", GameMenuFrame, "GameMenuButtonTemplate")
   pfUIButton:SetPoint("TOP", 0, -10)
-  pfUIButton:SetText("\"pfUI\" Settings")
+  pfUIButton:SetText(pf_settings)
   pfUIButton:SetScript("OnClick", function()
     pfUI.gui:Show()
     HideUIPanel(GameMenuFrame)

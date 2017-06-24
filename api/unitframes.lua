@@ -961,7 +961,7 @@ function pfUI.uf:ClickAction(button)
     if label == "player" then
       ToggleDropDownMenu(1, nil, pfUI.uf.player.Dropdown,"cursor")
       if UnitIsPartyLeader("player") then
-        UIDropDownMenu_AddButton({text = "Reset Instances", func = ResetInstances, notCheckable = 1}, 1)
+        UIDropDownMenu_AddButton({text = pf_RESETINSTANCES, func = ResetInstances, notCheckable = 1}, 1)
       end
     elseif label == "target" then
       ToggleDropDownMenu(1, nil, TargetFrameDropDown, "cursor")
@@ -1201,10 +1201,10 @@ function pfUI.uf:GetStatusValue(unit, pos)
 
   -- as a fallback, draw the name
   if pos == "center" and not config then
-    config = "unit"
+    config = pf_LIST_UNIT
   end
 
-  if config == "unit" then
+  if config == pf_LIST_UNIT then
     local level = UnitLevel(unitstr)
     if level == -1 then level = "??" end
 
@@ -1220,71 +1220,71 @@ function pfUI.uf:GetStatusValue(unit, pos)
     elseif elite == "rare" then
       level = level .. "R"
     end
-    level = unit:GetColor("level") .. level
-    name = unit:GetColor("unit") .. name
+    level = unit:GetColor(pf_LIST_LEVEL) .. level
+    name = unit:GetColor(pf_LIST_UNIT) .. name
 
     return level .. "  " .. name
 
-  elseif config == "name" then
-    return unit:GetColor("unit") .. UnitName(unitstr)
-  elseif config == "level" then
-    return unit:GetColor("level") .. UnitLevel(unitstr)
-  elseif config == "class" then
-    return unit:GetColor("class") .. UnitClass(unitstr)
+  elseif config == pf_LIST_NAME then
+    return unit:GetColor(pf_LIST_UNIT) .. UnitName(unitstr)
+  elseif config == pf_LIST_LEVEL then
+    return unit:GetColor(pf_LIST_LEVEL) .. UnitLevel(unitstr)
+  elseif config == pf_LIST_CLASS then
+    return unit:GetColor(pf_LIST_CLASS) .. UnitClass(unitstr)
 
   -- health
-  elseif config == "health" then
+  elseif config == pf_LIST_HEALTH then
     if unit.label == "target" and MobHealth3 then
       local hp, hpmax = MobHealth3:GetUnitHealth(unit.label)
-      return unit:GetColor("health") .. pfUI.api.Abbreviate(hp)
+      return unit:GetColor(pf_LIST_HEALTH) .. pfUI.api.Abbreviate(hp)
     end
-    return unit:GetColor("health") .. pfUI.api.Abbreviate(UnitHealth(unitstr))
-  elseif config == "healthmax" then
+    return unit:GetColor(pf_LIST_HEALTH) .. pfUI.api.Abbreviate(UnitHealth(unitstr))
+  elseif config == pf_LIST_HEALTHMAX then
     if unit.label == "target" and MobHealth3 then
       local hp, hpmax = MobHealth3:GetUnitHealth(unit.label)
-      return unit:GetColor("health") .. pfUI.api.Abbreviate(hpmax)
+      return unit:GetColor(pf_LIST_HEALTH) .. pfUI.api.Abbreviate(hpmax)
     end
-    return unit:GetColor("health") .. pfUI.api.Abbreviate(UnitHealthMax(unitstr))
-  elseif config == "healthperc" then
-    return unit:GetColor("health") .. ceil(UnitHealth(unitstr) / UnitHealthMax(unitstr) * 100)
-  elseif config == "healthmiss" then
+    return unit:GetColor(pf_LIST_HEALTH) .. pfUI.api.Abbreviate(UnitHealthMax(unitstr))
+  elseif config == pf_LIST_HEALTHPERC then
+    return unit:GetColor(pf_LIST_HEALTH) .. ceil(UnitHealth(unitstr) / UnitHealthMax(unitstr) * 100)
+  elseif config == pf_LIST_HEALTHMISS then
     local health = ceil(UnitHealth(unitstr) - UnitHealthMax(unitstr))
     if health == 0 then
       return ""
     else
-      return unit:GetColor("health") .. pfUI.api.Abbreviate(health)
+      return unit:GetColor(pf_LIST_HEALTH) .. pfUI.api.Abbreviate(health)
     end
-  elseif config == "healthdyn" then
+  elseif config == pf_LIST_HEALTHDYN then
     if UnitHealth(unitstr) ~= UnitHealthMax(unitstr) then
       if unit.label == "target" and MobHealth3 then
         local hp, hpmax = MobHealth3:GetUnitHealth(unit.label)
-        return unit:GetColor("health") .. pfUI.api.Abbreviate(hp) .. " - " .. ceil(hp / hpmax * 100) .. "%"
+        return unit:GetColor(pf_LIST_HEALTH) .. pfUI.api.Abbreviate(hp) .. " - " .. ceil(hp / hpmax * 100) .. "%"
       end
-      return unit:GetColor("health") .. pfUI.api.Abbreviate(UnitHealth(unitstr)) .. " - " .. ceil(UnitHealth(unitstr) / UnitHealthMax(unitstr) * 100) .. "%"
+      return unit:GetColor(pf_LIST_HEALTH) .. pfUI.api.Abbreviate(UnitHealth(unitstr)) .. " - " .. ceil(UnitHealth(unitstr) / UnitHealthMax(unitstr) * 100) .. "%"
     else
-      return unit:GetColor("health") .. pfUI.api.Abbreviate(UnitHealth(unitstr))
+      return unit:GetColor(pf_LIST_HEALTH) .. pfUI.api.Abbreviate(UnitHealth(unitstr))
     end
 
   -- mana/power/focus
-  elseif config == "power" then
-    return unit:GetColor("power") .. pfUI.api.Abbreviate(UnitMana(unitstr))
-  elseif config == "powermax" then
-    return unit:GetColor("power") .. pfUI.api.Abbreviate(UnitManaMax(unitstr))
-  elseif config == "powerperc" then
+  elseif config == pf_LIST_POWER then
+    return unit:GetColor(pf_LIST_POWER) .. pfUI.api.Abbreviate(UnitMana(unitstr))
+  elseif config == pf_LIST_POWERMAX then
+    return unit:GetColor(pf_LIST_POWER) .. pfUI.api.Abbreviate(UnitManaMax(unitstr))
+  elseif config == pf_LIST_POWERPERC then
     local perc = UnitManaMax(unitstr) > 0 and ceil(UnitMana(unitstr) / UnitManaMax(unitstr) * 100) or 0
-    return unit:GetColor("power") .. perc
-  elseif config == "powermiss" then
+    return unit:GetColor(pf_LIST_POWER) .. perc
+  elseif config == pf_LIST_POWERMISS then
     local power = ceil(UnitMana(unitstr) - UnitManaMax(unitstr))
     if power == 0 then
       return ""
     else
-      return unit:GetColor("power") .. pfUI.api.Abbreviate(power)
+      return unit:GetColor(pf_LIST_POWER) .. pfUI.api.Abbreviate(power)
     end
-  elseif config == "powerdyn" then
+  elseif config == pf_LIST_POWERDYN then
     if UnitMana(unitstr) ~= UnitManaMax(unitstr) then
-      return unit:GetColor("power") .. pfUI.api.Abbreviate(UnitMana(unitstr)) .. " - " .. ceil(UnitMana(unitstr) / UnitManaMax(unitstr) * 100) .. "%"
+      return unit:GetColor(pf_LIST_POWER) .. pfUI.api.Abbreviate(UnitMana(unitstr)) .. " - " .. ceil(UnitMana(unitstr) / UnitManaMax(unitstr) * 100) .. "%"
     else
-      return unit:GetColor("power") .. pfUI.api.Abbreviate(UnitMana(unitstr))
+      return unit:GetColor(pf_LIST_POWER) .. pfUI.api.Abbreviate(UnitMana(unitstr))
     end
   else
     return ""
@@ -1297,7 +1297,7 @@ function pfUI.uf.GetColor(self, preset)
   local unitstr = self.label .. self.id
   local r, g, b = 1, 1, 1
 
-  if preset == "unit" and config["classcolor"] == "1" then
+  if preset == pf_LIST_UNIT and config["classcolor"] == "1" then
     if UnitIsPlayer(unitstr) then
       local _, class = UnitClass(unitstr)
       if RAID_CLASS_COLORS[class] then
@@ -1309,7 +1309,7 @@ function pfUI.uf.GetColor(self, preset)
       end
     end
 
-  elseif preset == "class" and config["classcolor"] == "1" then
+  elseif preset == pf_LIST_CLASS and config["classcolor"] == "1" then
     local _, class = UnitClass(unitstr)
     r = RAID_CLASS_COLORS[class].r
     g = RAID_CLASS_COLORS[class].g
@@ -1320,7 +1320,7 @@ function pfUI.uf.GetColor(self, preset)
     g = UnitReactionColor[UnitReaction(unitstr, "player")].g
     b = UnitReactionColor[UnitReaction(unitstr, "player")].b
 
-  elseif preset == "health" and config["healthcolor"] == "1" then
+  elseif preset == pf_LIST_HEALTH and config["healthcolor"] == "1" then
     local perc = UnitHealth(unitstr) / UnitHealthMax(unitstr)
     local r1, g1, b1, r2, g2, b2
     if perc <= 0.5 then
@@ -1336,12 +1336,12 @@ function pfUI.uf.GetColor(self, preset)
     g = g1 + (g2 - g1)*perc
     b = b1 + (b2 - b1)*perc
 
-  elseif preset == "power" and config["powercolor"] == "1" then
+  elseif preset == pf_LIST_POWER and config["powercolor"] == "1" then
     r = ManaBarColor[UnitPowerType(unitstr)].r
     g = ManaBarColor[UnitPowerType(unitstr)].g
     b = ManaBarColor[UnitPowerType(unitstr)].b
 
-  elseif preset == "level" and config["levelcolor"] == "1" then
+  elseif preset == pf_LIST_LEVEL and config["levelcolor"] == "1" then
     r = GetDifficultyColor(UnitLevel(unitstr)).r
     g = GetDifficultyColor(UnitLevel(unitstr)).g
     b = GetDifficultyColor(UnitLevel(unitstr)).b

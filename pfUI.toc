@@ -6,6 +6,10 @@
 ## SavedVariables: pfUI_profiles
 ## SavedVariablesPerCharacter: pfUI_config, pfUI_init, pfUI_playerDB
 
+#localization
+localization\localization_en.lua
+localization\localization_zh.lua
+
 # main
 pfUI.lua
 
