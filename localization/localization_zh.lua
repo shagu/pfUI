@@ -321,6 +321,8 @@ pf_KEYBINDMODE_PEM = "按Esc键或单击空白区域离开热键绑定模式。\
 --sellvalue.lua
 pf_SELL = "卖价:"
 pf_BUY = "购买价:"
+--player.lua  unitframes.lua
+pf_RESETINSTANCES = "重置副本"
 --list
 pf_LIST_TIME = "时间"
 pf_LIST_FPS = "延迟"

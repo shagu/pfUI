@@ -321,6 +321,8 @@ pf_KEYBINDMODE_PEM = "Press Escape or click on an empty area to leave the keybin
 --sellvalue.lua
 pf_SELL = "Sell:"
 pf_BUY = "Buy:"
+--player.lua  unitframes.lua
+pf_RESETINSTANCES = "Reset Instances"
 --list
 pf_LIST_TIME = "time"
 pf_LIST_FPS = "fps"
