@@ -9,9 +9,9 @@ end
 
 function pfUI.environment:UpdateFonts()
   if pfUI_config and pfUI_config.global and pfUI_config.global.font_default then
-    pfUI.font_default = "Interface\\AddOns\\pfUI\\fonts\\" .. (pfUI_config.global.font_default or "Myriad-Pro") .. ".ttf"
-    pfUI.font_unit = "Interface\\AddOns\\pfUI\\fonts\\" .. (pfUI_config.global.font_unit or "BigNoodleTitling") .. ".ttf"
-    pfUI.font_combat = "Interface\\AddOns\\pfUI\\fonts\\" .. (pfUI_config.global.font_combat or "Continuum") .. ".ttf"
+    pfUI.font_default = pfUI_config.global.font_default or "Interface\\AddOns\\pfUI\\fonts\\Myriad-Pro.ttf"
+    pfUI.font_unit = pfUI_config.global.font_unit or "Interface\\AddOns\\pfUI\\fonts\\BigNoodleTitling.ttf"
+    pfUI.font_combat = pfUI_config.global.font_combat or "Interface\\AddOns\\pfUI\\fonts\\Continuum.ttf"
   else
     pfUI.font_default = "Interface\\AddOns\\pfUI\\fonts\\Myriad-Pro.ttf"
     pfUI.font_unit = "Interface\\AddOns\\pfUI\\fonts\\BigNoodleTitling.ttf"

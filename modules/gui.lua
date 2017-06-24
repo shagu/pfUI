@@ -571,14 +571,14 @@ pfUI:RegisterModule("gui", function ()
 
   -- dropdown menu items
   local dropdown_selection_fonts = {
-    "BigNoodleTitling",
-    "Continuum",
-    "DieDieDie",
-    "Expressway",
-    "Homespun",
-    "Myriad-Pro",
-    "PT-Sans-Narrow-Bold",
-    "PT-Sans-Narrow-Regular"
+    "Interface\\AddOns\\pfUI\\fonts\\BigNoodleTitling.ttf:BigNoodleTitling",
+    "Interface\\AddOns\\pfUI\\fonts\\Continuum.ttf:Continuum",
+    "Interface\\AddOns\\pfUI\\fonts\\DieDieDie.ttf:DieDieDie",
+    "Interface\\AddOns\\pfUI\\fonts\\Expressway.ttf:Expressway",
+    "Interface\\AddOns\\pfUI\\fonts\\Homespun.ttf:Homespun",
+    "Interface\\AddOns\\pfUI\\fonts\\Myriad-Pro.ttf:Myriad-Pro",
+    "Interface\\AddOns\\pfUI\\fonts\\PT-Sans-Narrow-Bold.ttf:PT-Sans-Narrow-Bold",
+    "Interface\\AddOns\\pfUI\\fonts\\PT-Sans-Narrow-Regular.ttf:PT-Sans-Narrow-Regular"
   }
 
   local dropdown_unitframes_text = {

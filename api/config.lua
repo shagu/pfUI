@@ -27,12 +27,13 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("global",     nil,           "profile",          "default")
   pfUI:UpdateConfig("global",     nil,           "pixelperfect",     "0")
   pfUI:UpdateConfig("global",     nil,           "offscreen",        "0")
-  pfUI:UpdateConfig("global",     nil,           "font_default",     "Myriad-Pro")
-  pfUI:UpdateConfig("global",     nil,           "font_size",        "12")
-  pfUI:UpdateConfig("global",     nil,           "font_unit",        "BigNoodleTitling")
-  pfUI:UpdateConfig("global",     nil,           "font_unit_size",   "12")
 
-  pfUI:UpdateConfig("global",     nil,           "font_combat",      "Continuum")
+  pfUI:UpdateConfig("global",     nil,           "font_default",     "Interface\\AddOns\\pfUI\\fonts\\Myriad-Pro.ttf")
+  pfUI:UpdateConfig("global",     nil,           "font_size",        "12")
+  pfUI:UpdateConfig("global",     nil,           "font_unit",        "Interface\\AddOns\\pfUI\\fonts\\BigNoodleTitling.ttf")
+  pfUI:UpdateConfig("global",     nil,           "font_unit_size",   "12")
+  pfUI:UpdateConfig("global",     nil,           "font_combat",      "Interface\\AddOns\\pfUI\\fonts\\Continuum.ttf")
+
   pfUI:UpdateConfig("global",     nil,           "force_region",     "1")
   pfUI:UpdateConfig("global",     nil,           "errors_limit",     "1")
   pfUI:UpdateConfig("global",     nil,           "errors_hide",      "0")
@@ -548,6 +549,25 @@ function pfUI:MigrateConfig()
     if pfUI_config.global.font_square then
       pfUI_config.global.font_unit = pfUI_config.global.font_square
       pfUI_config.global.font_square = nil
+    end
+  end
+
+
+  -- migrating old to new font layout (> 3.0.0)
+  if major <= 3 and minor <= 0 then
+    -- migrate font_default
+    if not strfind(pfUI_config.global.font_default, "\\") then
+      pfUI_config.global.font_default = "Interface\\AddOns\\pfUI\\fonts\\" .. pfUI_config.global.font_default .. ".ttf"
+    end
+
+    -- migrate font_unit
+    if not strfind(pfUI_config.global.font_unit, "\\") then
+      pfUI_config.global.font_unit = "Interface\\AddOns\\pfUI\\fonts\\" .. pfUI_config.global.font_unit .. ".ttf"
+    end
+
+    -- migrate font_combat
+    if not strfind(pfUI_config.global.font_combat, "\\") then
+      pfUI_config.global.font_combat = "Interface\\AddOns\\pfUI\\fonts\\" .. pfUI_config.global.font_combat .. ".ttf"
     end
   end
 
