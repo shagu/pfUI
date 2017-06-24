@@ -13,6 +13,7 @@ pfUI:RegisterModule("uf_tukui", function ()
   if C.unitframes.layout == "tukui" then
     -- Player
     pfUI.uf.player:UpdateFrameSize()
+    pfUI.uf.player:SetFrameStrata("LOW")
     pfUI.uf.player:SetHeight(pfUI.uf.player:GetHeight() + 2*default_border + C.global.font_size + 2*default_border + pspacing)
 
     pfUI.uf.player.caption = CreateFrame("Frame", "pfPlayerCaption", pfUI.uf.player)
@@ -41,6 +42,7 @@ pfUI:RegisterModule("uf_tukui", function ()
 
     -- Target
     pfUI.uf.target:UpdateFrameSize()
+    pfUI.uf.target:SetFrameStrata("LOW")
     pfUI.uf.target:SetHeight(pfUI.uf.target:GetHeight() + 2*default_border + C.global.font_size + 2*default_border + tspacing)
 
     pfUI.uf.target.caption = CreateFrame("Frame", "pfTargetCaption", pfUI.uf.target)
