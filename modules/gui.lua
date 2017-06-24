@@ -425,18 +425,22 @@ pfUI:RegisterModule("gui", function ()
         local function CreateValues()
           local info = {}
           for i, k in pairs(frame.input.values) do
-            info.text = k
+            -- get human readable
+            local value, text = strsplit(":", k)
+            text = text or value
+
+            info.text = text
             info.checked = false
             info.func = function()
               UIDropDownMenu_SetSelectedID(frame.input, this:GetID(), 0)
-              if category[config] ~= this:GetText() then
+              if category[config] ~= value then
                 pfUI.gui.settingChanged = true
-                category[config] = this:GetText()
+                category[config] = value
               end
             end
 
             UIDropDownMenu_AddButton(info)
-            if category[config] == k then
+            if category[config] == value then
               frame.input.current = i
             end
           end
@@ -566,14 +570,77 @@ pfUI:RegisterModule("gui", function ()
   end)
 
   -- dropdown menu items
-  local txtValues = { "none", "unit", "name", "level", "class",  "health", "healthmax", "healthperc",
-  "healthmiss", "healthdyn", "power", "powermax", "powerperc", "powermiss", "powerdyn" }
+  local dropdown_selection_fonts = {
+    "BigNoodleTitling",
+    "Continuum",
+    "DieDieDie",
+    "Expressway",
+    "Homespun",
+    "Myriad-Pro",
+    "PT-Sans-Narrow-Bold",
+    "PT-Sans-Narrow-Regular"
+  }
 
-  local dropdown_selection_fonts = { "BigNoodleTitling", "Continuum", "DieDieDie", "Expressway", "Homespun", "Myriad-Pro", "PT-Sans-Narrow-Bold", "PT-Sans-Narrow-Regular" }
+  local dropdown_unitframes_text = {
+    "none:" .. T["Disable"],
+    "unit:" .. T["Unit String"],
+    "name:" .. T["Name"],
+    "level:" .. T["Level"],
+    "class:" .. T["Class"],
+    "healthdyn:" .. T["Health - Auto"],
+    "health:" .. T["Health - Current"],
+    "healthmax:" .. T["Health - Max"],
+    "healthperc:" .. T["Health - Percentage"],
+    "healthmiss:" .. T["Health - Missing"],
+    "powerdyn:" .. T["Mana - Auto"],
+    "power:" .. T["Mana - Current"],
+    "powermax:" .. T["Mana - Max"],
+    "powerperc:" .. T["Mana - Percentage"],
+    "powermiss:" .. T["Mana - Missing"]
+  }
+
+  local dropdown_panel_values = {
+    "none:" .. T["Disable"],
+    "time:" .. T["Clock"],
+    "fps:" .. T["FPS & Ping"],
+    "exp:" .. T["XP Percentage"],
+    "gold:" .. T["Gold"],
+    "friends:" .. T["Friends Online"],
+    "guild:" .. T["Guild Online"],
+    "durability:" .. T["Item Durability"],
+    "zone:" .. T["Zone Name"],
+    "combat:" .. T["Combat Timer"],
+    "ammo:" .. T["Ammo Counter"],
+    "soulshard:" .. T["Soulshard Counter"]
+  }
+
+  local dropdown_unitframes_portrait_position = {
+    "bar:" .. T["Healthbar Embedded"],
+    "left:" .. T["Left"],
+    "right:" .. T["Right"],
+    "off:" .. T["Disabled"]
+  }
+
+  local dropdown_unitframes_buff_position = {
+    "top:" .. T["Top"],
+    "bottom:" .. T["Bottom"],
+    "off:" .. T["Disabled"]
+  }
+
+  local dropdown_tooltip_position = {
+    "bottom:" .. T["Bottom"],
+    "chat:" .. T["Chat"],
+    "cursor:" .. T["Cursor"]
+  }
+
+  local dropdown_unitframes_layout = {
+    "default:" .. T["Default"],
+    "tukui:TukUI"
+  }
+
   local dropdown_num_actionbar_buttons = BarLayoutOptions(NUM_ACTIONBAR_BUTTONS)
   local dropdown_num_shapeshift_slots = BarLayoutOptions(NUM_SHAPESHIFT_SLOTS)
   local dropdown_num_pet_action_slots = BarLayoutOptions(NUM_PET_ACTION_SLOTS)
-  local dropdown_panel_values = { "time", "fps", "exp", "gold", "friends", "guild", "durability", "zone", "combat", "ammo", "soulshard", "none" }
 
   -- main tab frame
   pfUI.gui.tabs = Createtabs(pfUI.gui, "LEFT")
@@ -768,7 +835,7 @@ pfUI:RegisterModule("gui", function ()
       CreateConfig(this, T["Portrait Alpha"], C.unitframes, "portraitalpha")
       CreateConfig(this, T["Always Use 2D Portraits"], C.unitframes, "always2dportrait", "checkbox")
       CreateConfig(this, T["Enable 2D Portraits As Fallback"], C.unitframes, "portraittexture", "checkbox")
-      CreateConfig(this, T["Unit Frame Layout"], C.unitframes, "layout", "dropdown", { "default", "tukui" })
+      CreateConfig(this, T["Unit Frame Layout"], C.unitframes, "layout", "dropdown", dropdown_unitframes_layout)
       CreateConfig(this, T["Aggressive 40y-Range Check (Will break stuff)"], C.unitframes, "rangecheck", "checkbox")
       CreateConfig(this, T["40y-Range Check Interval"], C.unitframes, "rangechecki")
       CreateConfig(this, T["Combopoint Size"], C.unitframes, "combosize")
@@ -784,16 +851,16 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.tabs.uf.tabs.player:SetScript("OnShow", function()
     if not this.setup then
       CreateConfig(this, T["Display Player Frame"], C.unitframes.player, "visible", "checkbox")
-      CreateConfig(this, T["Portrait Position"], C.unitframes.player, "portrait", "dropdown", { "bar", "left", "right", "off" })
+      CreateConfig(this, T["Portrait Position"], C.unitframes.player, "portrait", "dropdown", dropdown_unitframes_portrait_position)
       CreateConfig(this, T["Health Bar Width"], C.unitframes.player, "width")
       CreateConfig(this, T["Health Bar Height"], C.unitframes.player, "height")
       CreateConfig(this, T["Power Bar Height"], C.unitframes.player, "pheight")
       CreateConfig(this, T["Spacing"], C.unitframes.player, "pspace")
-      CreateConfig(this, T["Buff Position"], C.unitframes.player, "buffs", "dropdown", { "top", "bottom", "off"})
+      CreateConfig(this, T["Buff Position"], C.unitframes.player, "buffs", "dropdown", dropdown_unitframes_buff_position)
       CreateConfig(this, T["Buff Size"], C.unitframes.player, "buffsize")
       CreateConfig(this, T["Buff Limit"], C.unitframes.player, "bufflimit")
       CreateConfig(this, T["Buffs Per Row"], C.unitframes.player, "buffperrow")
-      CreateConfig(this, T["Debuff Position"], C.unitframes.player, "debuffs", "dropdown", { "top", "bottom", "off"})
+      CreateConfig(this, T["Debuff Position"], C.unitframes.player, "debuffs", "dropdown", dropdown_unitframes_buff_position)
       CreateConfig(this, T["Debuff Size"], C.unitframes.player, "debuffsize")
       CreateConfig(this, T["Debuff Limit"], C.unitframes.player, "debufflimit")
       CreateConfig(this, T["Debuffs Per Row"], C.unitframes.player, "debuffperrow")
@@ -802,9 +869,9 @@ pfUI:RegisterModule("gui", function ()
       CreateConfig(this, T["Enable Debuff Indicators"], C.unitframes.player, "debuff_indicator", "checkbox")
       CreateConfig(this, T["Enable Clickcast"], C.unitframes.player, "clickcast", "checkbox")
       CreateConfig(this, T["Enable Range Fading"], C.unitframes.player, "faderange", "checkbox")
-      CreateConfig(this, T["Left Text"], C.unitframes.player, "txtleft", "dropdown", txtValues)
-      CreateConfig(this, T["Center Text"], C.unitframes.player, "txtcenter", "dropdown", txtValues)
-      CreateConfig(this, T["Right Text"], C.unitframes.player, "txtright", "dropdown", txtValues)
+      CreateConfig(this, T["Left Text"], C.unitframes.player, "txtleft", "dropdown", dropdown_unitframes_text)
+      CreateConfig(this, T["Center Text"], C.unitframes.player, "txtcenter", "dropdown", dropdown_unitframes_text)
+      CreateConfig(this, T["Right Text"], C.unitframes.player, "txtright", "dropdown", dropdown_unitframes_text)
       CreateConfig(this, T["Enable Health Color in Text"], C.unitframes.player, "healthcolor", "checkbox")
       CreateConfig(this, T["Enable Power Color in Text"], C.unitframes.player, "powercolor", "checkbox")
       CreateConfig(this, T["Enable Level Color in Text"], C.unitframes.player, "levelcolor", "checkbox")
@@ -819,16 +886,16 @@ pfUI:RegisterModule("gui", function ()
     if not this.setup then
       CreateConfig(this, T["Display Target Frame"], C.unitframes.target, "visible", "checkbox")
       CreateConfig(this, T["Enable Target Switch Animation"], C.unitframes.target, "animation", "checkbox")
-      CreateConfig(this, T["Portrait Position"], C.unitframes.target, "portrait", "dropdown", { "bar", "left", "right", "off" })
+      CreateConfig(this, T["Portrait Position"], C.unitframes.target, "portrait", "dropdown", dropdown_unitframes_portrait_position)
       CreateConfig(this, T["Health Bar Width"], C.unitframes.target, "width")
       CreateConfig(this, T["Health Bar Height"], C.unitframes.target, "height")
       CreateConfig(this, T["Power Bar Height"], C.unitframes.target, "pheight")
       CreateConfig(this, T["Spacing"], C.unitframes.target, "pspace")
-      CreateConfig(this, T["Buff Position"], C.unitframes.target, "buffs", "dropdown", { "top", "bottom", "off"})
+      CreateConfig(this, T["Buff Position"], C.unitframes.target, "buffs", "dropdown", dropdown_unitframes_buff_position)
       CreateConfig(this, T["Buff Size"], C.unitframes.target, "buffsize")
       CreateConfig(this, T["Buff Limit"], C.unitframes.target, "bufflimit")
       CreateConfig(this, T["Buffs Per Row"], C.unitframes.target, "buffperrow")
-      CreateConfig(this, T["Debuff Position"], C.unitframes.target, "debuffs", "dropdown", { "top", "bottom", "off"})
+      CreateConfig(this, T["Debuff Position"], C.unitframes.target, "debuffs", "dropdown", dropdown_unitframes_buff_position)
       CreateConfig(this, T["Debuff Size"], C.unitframes.target, "debuffsize")
       CreateConfig(this, T["Debuff Limit"], C.unitframes.target, "debufflimit")
       CreateConfig(this, T["Debuffs Per Row"], C.unitframes.target, "debuffperrow")
@@ -837,9 +904,9 @@ pfUI:RegisterModule("gui", function ()
       CreateConfig(this, T["Enable Debuff Indicators"], C.unitframes.target, "debuff_indicator", "checkbox")
       CreateConfig(this, T["Enable Clickcast"], C.unitframes.target, "clickcast", "checkbox")
       CreateConfig(this, T["Enable Range Fading"], C.unitframes.target, "faderange", "checkbox")
-      CreateConfig(this, T["Left Text"], C.unitframes.target, "txtleft", "dropdown", txtValues)
-      CreateConfig(this, T["Center Text"], C.unitframes.target, "txtcenter", "dropdown", txtValues)
-      CreateConfig(this, T["Right Text"], C.unitframes.target, "txtright", "dropdown", txtValues)
+      CreateConfig(this, T["Left Text"], C.unitframes.target, "txtleft", "dropdown", dropdown_unitframes_text)
+      CreateConfig(this, T["Center Text"], C.unitframes.target, "txtcenter", "dropdown", dropdown_unitframes_text)
+      CreateConfig(this, T["Right Text"], C.unitframes.target, "txtright", "dropdown", dropdown_unitframes_text)
       CreateConfig(this, T["Enable Health Color in Text"], C.unitframes.target, "healthcolor", "checkbox")
       CreateConfig(this, T["Enable Power Color in Text"], C.unitframes.target, "powercolor", "checkbox")
       CreateConfig(this, T["Enable Level Color in Text"], C.unitframes.target, "levelcolor", "checkbox")
@@ -853,16 +920,16 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.tabs.uf.tabs.targettarget:SetScript("OnShow", function()
     if not this.setup then
       CreateConfig(this, T["Display Target of Target Frame"], C.unitframes.ttarget, "visible", "checkbox")
-      CreateConfig(this, T["Portrait Position"], C.unitframes.ttarget, "portrait", "dropdown", { "bar", "left", "right", "off" })
+      CreateConfig(this, T["Portrait Position"], C.unitframes.ttarget, "portrait", "dropdown", dropdown_unitframes_portrait_position)
       CreateConfig(this, T["Health Bar Width"], C.unitframes.ttarget, "width")
       CreateConfig(this, T["Health Bar Height"], C.unitframes.ttarget, "height")
       CreateConfig(this, T["Power Bar Height"], C.unitframes.ttarget, "pheight")
       CreateConfig(this, T["Spacing"], C.unitframes.ttarget, "pspace")
-      CreateConfig(this, T["Buff Position"], C.unitframes.ttarget, "buffs", "dropdown", { "top", "bottom", "off"})
+      CreateConfig(this, T["Buff Position"], C.unitframes.ttarget, "buffs", "dropdown", dropdown_unitframes_buff_position)
       CreateConfig(this, T["Buff Size"], C.unitframes.ttarget, "buffsize")
       CreateConfig(this, T["Buff Limit"], C.unitframes.ttarget, "bufflimit")
       CreateConfig(this, T["Buffs Per Row"], C.unitframes.ttarget, "buffperrow")
-      CreateConfig(this, T["Debuff Position"], C.unitframes.ttarget, "debuffs", "dropdown", { "top", "bottom", "off"})
+      CreateConfig(this, T["Debuff Position"], C.unitframes.ttarget, "debuffs", "dropdown", dropdown_unitframes_buff_position)
       CreateConfig(this, T["Debuff Size"], C.unitframes.ttarget, "debuffsize")
       CreateConfig(this, T["Debuff Limit"], C.unitframes.ttarget, "debufflimit")
       CreateConfig(this, T["Debuffs Per Row"], C.unitframes.ttarget, "debuffperrow")
@@ -871,9 +938,9 @@ pfUI:RegisterModule("gui", function ()
       CreateConfig(this, T["Enable Debuff Indicators"], C.unitframes.ttarget, "debuff_indicator", "checkbox")
       CreateConfig(this, T["Enable Clickcast"], C.unitframes.ttarget, "clickcast", "checkbox")
       CreateConfig(this, T["Enable Range Fading"], C.unitframes.ttarget, "faderange", "checkbox")
-      CreateConfig(this, T["Left Text"], C.unitframes.ttarget, "txtleft", "dropdown", txtValues)
-      CreateConfig(this, T["Center Text"], C.unitframes.ttarget, "txtcenter", "dropdown", txtValues)
-      CreateConfig(this, T["Right Text"], C.unitframes.ttarget, "txtright", "dropdown", txtValues)
+      CreateConfig(this, T["Left Text"], C.unitframes.ttarget, "txtleft", "dropdown", dropdown_unitframes_text)
+      CreateConfig(this, T["Center Text"], C.unitframes.ttarget, "txtcenter", "dropdown", dropdown_unitframes_text)
+      CreateConfig(this, T["Right Text"], C.unitframes.ttarget, "txtright", "dropdown", dropdown_unitframes_text)
       CreateConfig(this, T["Enable Health Color in Text"], C.unitframes.ttarget, "healthcolor", "checkbox")
       CreateConfig(this, T["Enable Power Color in Text"], C.unitframes.ttarget, "powercolor", "checkbox")
       CreateConfig(this, T["Enable Level Color in Text"], C.unitframes.ttarget, "levelcolor", "checkbox")
@@ -887,16 +954,16 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.tabs.uf.tabs.pet:SetScript("OnShow", function()
     if not this.setup then
       CreateConfig(this, T["Display Pet Frame"], C.unitframes.player, "visible", "checkbox")
-      CreateConfig(this, T["Portrait Position"], C.unitframes.pet, "portrait", "dropdown", { "bar", "left", "right", "off" })
+      CreateConfig(this, T["Portrait Position"], C.unitframes.pet, "portrait", "dropdown", dropdown_unitframes_portrait_position)
       CreateConfig(this, T["Health Bar Width"], C.unitframes.pet, "width")
       CreateConfig(this, T["Health Bar Height"], C.unitframes.pet, "height")
       CreateConfig(this, T["Power Bar Height"], C.unitframes.pet, "pheight")
       CreateConfig(this, T["Spacing"], C.unitframes.pet, "pspace")
-      CreateConfig(this, T["Buff Position"], C.unitframes.pet, "buffs", "dropdown", { "top", "bottom", "off"})
+      CreateConfig(this, T["Buff Position"], C.unitframes.pet, "buffs", "dropdown", dropdown_unitframes_buff_position)
       CreateConfig(this, T["Buff Size"], C.unitframes.pet, "buffsize")
       CreateConfig(this, T["Buff Limit"], C.unitframes.pet, "bufflimit")
       CreateConfig(this, T["Buffs Per Row"], C.unitframes.pet, "buffperrow")
-      CreateConfig(this, T["Debuff Position"], C.unitframes.pet, "debuffs", "dropdown", { "top", "bottom", "off"})
+      CreateConfig(this, T["Debuff Position"], C.unitframes.pet, "debuffs", "dropdown", dropdown_unitframes_buff_position)
       CreateConfig(this, T["Debuff Size"], C.unitframes.pet, "debuffsize")
       CreateConfig(this, T["Debuff Limit"], C.unitframes.pet, "debufflimit")
       CreateConfig(this, T["Debuffs Per Row"], C.unitframes.pet, "debuffperrow")
@@ -905,9 +972,9 @@ pfUI:RegisterModule("gui", function ()
       CreateConfig(this, T["Enable Debuff Indicators"], C.unitframes.pet, "debuff_indicator", "checkbox")
       CreateConfig(this, T["Enable Clickcast"], C.unitframes.pet, "clickcast", "checkbox")
       CreateConfig(this, T["Enable Range Fading"], C.unitframes.pet, "faderange", "checkbox")
-      CreateConfig(this, T["Left Text"], C.unitframes.pet, "txtleft", "dropdown", txtValues)
-      CreateConfig(this, T["Center Text"], C.unitframes.pet, "txtcenter", "dropdown", txtValues)
-      CreateConfig(this, T["Right Text"], C.unitframes.pet, "txtright", "dropdown", txtValues)
+      CreateConfig(this, T["Left Text"], C.unitframes.pet, "txtleft", "dropdown", dropdown_unitframes_text)
+      CreateConfig(this, T["Center Text"], C.unitframes.pet, "txtcenter", "dropdown", dropdown_unitframes_text)
+      CreateConfig(this, T["Right Text"], C.unitframes.pet, "txtright", "dropdown", dropdown_unitframes_text)
       CreateConfig(this, T["Enable Health Color in Text"], C.unitframes.pet, "healthcolor", "checkbox")
       CreateConfig(this, T["Enable Power Color in Text"], C.unitframes.pet, "powercolor", "checkbox")
       CreateConfig(this, T["Enable Level Color in Text"], C.unitframes.pet, "levelcolor", "checkbox")
@@ -921,16 +988,16 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.tabs.uf.tabs.focus:SetScript("OnShow", function()
     if not this.setup then
       CreateConfig(this, T["Display Focus Frame"], C.unitframes.focus, "visible", "checkbox")
-      CreateConfig(this, T["Portrait Position"], C.unitframes.focus, "portrait", "dropdown", { "bar", "left", "right", "off" })
+      CreateConfig(this, T["Portrait Position"], C.unitframes.focus, "portrait", "dropdown", dropdown_unitframes_portrait_position)
       CreateConfig(this, T["Health Bar Width"], C.unitframes.focus, "width")
       CreateConfig(this, T["Health Bar Height"], C.unitframes.focus, "height")
       CreateConfig(this, T["Power Bar Height"], C.unitframes.focus, "pheight")
       CreateConfig(this, T["Spacing"], C.unitframes.focus, "pspace")
-      CreateConfig(this, T["Buff Position"], C.unitframes.focus, "buffs", "dropdown", { "top", "bottom", "off"})
+      CreateConfig(this, T["Buff Position"], C.unitframes.focus, "buffs", "dropdown", dropdown_unitframes_buff_position)
       CreateConfig(this, T["Buff Size"], C.unitframes.focus, "buffsize")
       CreateConfig(this, T["Buff Limit"], C.unitframes.focus, "bufflimit")
       CreateConfig(this, T["Buffs Per Row"], C.unitframes.focus, "buffperrow")
-      CreateConfig(this, T["Debuff Position"], C.unitframes.focus, "debuffs", "dropdown", { "top", "bottom", "off"})
+      CreateConfig(this, T["Debuff Position"], C.unitframes.focus, "debuffs", "dropdown", dropdown_unitframes_buff_position)
       CreateConfig(this, T["Debuff Size"], C.unitframes.focus, "debuffsize")
       CreateConfig(this, T["Debuff Limit"], C.unitframes.focus, "debufflimit")
       CreateConfig(this, T["Debuffs Per Row"], C.unitframes.focus, "debuffperrow")
@@ -939,9 +1006,9 @@ pfUI:RegisterModule("gui", function ()
       CreateConfig(this, T["Enable Debuff Indicators"], C.unitframes.focus, "debuff_indicator", "checkbox")
       CreateConfig(this, T["Enable Clickcast"], C.unitframes.focus, "clickcast", "checkbox")
       CreateConfig(this, T["Enable Range Fading"], C.unitframes.focus, "faderange", "checkbox")
-      CreateConfig(this, T["Left Text"], C.unitframes.focus, "txtleft", "dropdown", txtValues)
-      CreateConfig(this, T["Center Text"], C.unitframes.focus, "txtcenter", "dropdown", txtValues)
-      CreateConfig(this, T["Right Text"], C.unitframes.focus, "txtright", "dropdown", txtValues)
+      CreateConfig(this, T["Left Text"], C.unitframes.focus, "txtleft", "dropdown", dropdown_unitframes_text)
+      CreateConfig(this, T["Center Text"], C.unitframes.focus, "txtcenter", "dropdown", dropdown_unitframes_text)
+      CreateConfig(this, T["Right Text"], C.unitframes.focus, "txtright", "dropdown", dropdown_unitframes_text)
       CreateConfig(this, T["Enable Health Color in Text"], C.unitframes.focus, "healthcolor", "checkbox")
       CreateConfig(this, T["Enable Power Color in Text"], C.unitframes.focus, "powercolor", "checkbox")
       CreateConfig(this, T["Enable Level Color in Text"], C.unitframes.focus, "levelcolor", "checkbox")
@@ -977,16 +1044,16 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.tabs.gf.tabs.raid:SetScript("OnShow", function()
     if not this.setup then
       CreateConfig(this, T["Display Raid Frames"], C.unitframes.raid, "visible", "checkbox")
-      CreateConfig(this, T["Portrait Position"], C.unitframes.raid, "portrait", "dropdown", { "bar", "left", "right", "off" })
+      CreateConfig(this, T["Portrait Position"], C.unitframes.raid, "portrait", "dropdown", dropdown_unitframes_portrait_position)
       CreateConfig(this, T["Health Bar Width"], C.unitframes.raid, "width")
       CreateConfig(this, T["Health Bar Height"], C.unitframes.raid, "height")
       CreateConfig(this, T["Power Bar Height"], C.unitframes.raid, "pheight")
       CreateConfig(this, T["Spacing"], C.unitframes.raid, "pspace")
-      CreateConfig(this, T["Buff Position"], C.unitframes.raid, "buffs", "dropdown", { "top", "bottom", "off"})
+      CreateConfig(this, T["Buff Position"], C.unitframes.raid, "buffs", "dropdown", dropdown_unitframes_buff_position)
       CreateConfig(this, T["Buff Size"], C.unitframes.raid, "buffsize")
       CreateConfig(this, T["Buff Limit"], C.unitframes.raid, "bufflimit")
       CreateConfig(this, T["Buffs Per Row"], C.unitframes.raid, "buffperrow")
-      CreateConfig(this, T["Debuff Position"], C.unitframes.raid, "debuffs", "dropdown", { "top", "bottom", "off"})
+      CreateConfig(this, T["Debuff Position"], C.unitframes.raid, "debuffs", "dropdown", dropdown_unitframes_buff_position)
       CreateConfig(this, T["Debuff Size"], C.unitframes.raid, "debuffsize")
       CreateConfig(this, T["Debuff Limit"], C.unitframes.raid, "debufflimit")
       CreateConfig(this, T["Debuffs Per Row"], C.unitframes.raid, "debuffperrow")
@@ -995,9 +1062,9 @@ pfUI:RegisterModule("gui", function ()
       CreateConfig(this, T["Enable Debuff Indicators"], C.unitframes.raid, "debuff_indicator", "checkbox")
       CreateConfig(this, T["Enable Clickcast"], C.unitframes.raid, "clickcast", "checkbox")
       CreateConfig(this, T["Enable Range Fading"], C.unitframes.raid, "faderange", "checkbox")
-      CreateConfig(this, T["Left Text"], C.unitframes.raid, "txtleft", "dropdown", txtValues)
-      CreateConfig(this, T["Center Text"], C.unitframes.raid, "txtcenter", "dropdown", txtValues)
-      CreateConfig(this, T["Right Text"], C.unitframes.raid, "txtright", "dropdown", txtValues)
+      CreateConfig(this, T["Left Text"], C.unitframes.raid, "txtleft", "dropdown", dropdown_unitframes_text)
+      CreateConfig(this, T["Center Text"], C.unitframes.raid, "txtcenter", "dropdown", dropdown_unitframes_text)
+      CreateConfig(this, T["Right Text"], C.unitframes.raid, "txtright", "dropdown", dropdown_unitframes_text)
       CreateConfig(this, T["Enable Health Color in Text"], C.unitframes.raid, "healthcolor", "checkbox")
       CreateConfig(this, T["Enable Power Color in Text"], C.unitframes.raid, "powercolor", "checkbox")
       CreateConfig(this, T["Enable Level Color in Text"], C.unitframes.raid, "levelcolor", "checkbox")
@@ -1011,16 +1078,16 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.tabs.gf.tabs.group:SetScript("OnShow", function()
     if not this.setup then
       CreateConfig(this, T["Display Group Frames"], C.unitframes.group, "visible", "checkbox")
-      CreateConfig(this, T["Portrait Position"], C.unitframes.group, "portrait", "dropdown", { "bar", "left", "right", "off" })
+      CreateConfig(this, T["Portrait Position"], C.unitframes.group, "portrait", "dropdown", dropdown_unitframes_portrait_position)
       CreateConfig(this, T["Health Bar Width"], C.unitframes.group, "width")
       CreateConfig(this, T["Health Bar Height"], C.unitframes.group, "height")
       CreateConfig(this, T["Power Bar Height"], C.unitframes.group, "pheight")
       CreateConfig(this, T["Spacing"], C.unitframes.group, "pspace")
-      CreateConfig(this, T["Buff Position"], C.unitframes.group, "buffs", "dropdown", { "top", "bottom", "off"})
+      CreateConfig(this, T["Buff Position"], C.unitframes.group, "buffs", "dropdown", dropdown_unitframes_buff_position)
       CreateConfig(this, T["Buff Size"], C.unitframes.group, "buffsize")
       CreateConfig(this, T["Buff Limit"], C.unitframes.group, "bufflimit")
       CreateConfig(this, T["Buffs Per Row"], C.unitframes.group, "buffperrow")
-      CreateConfig(this, T["Debuff Position"], C.unitframes.group, "debuffs", "dropdown", { "top", "bottom", "off"})
+      CreateConfig(this, T["Debuff Position"], C.unitframes.group, "debuffs", "dropdown", dropdown_unitframes_buff_position)
       CreateConfig(this, T["Debuff Size"], C.unitframes.group, "debuffsize")
       CreateConfig(this, T["Debuff Limit"], C.unitframes.group, "debufflimit")
       CreateConfig(this, T["Debuffs Per Row"], C.unitframes.group, "debuffperrow")
@@ -1029,9 +1096,9 @@ pfUI:RegisterModule("gui", function ()
       CreateConfig(this, T["Enable Debuff Indicators"], C.unitframes.group, "debuff_indicator", "checkbox")
       CreateConfig(this, T["Enable Clickcast"], C.unitframes.group, "clickcast", "checkbox")
       CreateConfig(this, T["Enable Range Fading"], C.unitframes.group, "faderange", "checkbox")
-      CreateConfig(this, T["Left Text"], C.unitframes.group, "txtleft", "dropdown", txtValues)
-      CreateConfig(this, T["Center Text"], C.unitframes.group, "txtcenter", "dropdown", txtValues)
-      CreateConfig(this, T["Right Text"], C.unitframes.group, "txtright", "dropdown", txtValues)
+      CreateConfig(this, T["Left Text"], C.unitframes.group, "txtleft", "dropdown", dropdown_unitframes_text)
+      CreateConfig(this, T["Center Text"], C.unitframes.group, "txtcenter", "dropdown", dropdown_unitframes_text)
+      CreateConfig(this, T["Right Text"], C.unitframes.group, "txtright", "dropdown", dropdown_unitframes_text)
       CreateConfig(this, T["Hide Group Frames When In A Raid"], C.unitframes.group, "hide_in_raid", "checkbox")
       CreateConfig(this, T["Enable Health Color in Text"], C.unitframes.group, "healthcolor", "checkbox")
       CreateConfig(this, T["Enable Power Color in Text"], C.unitframes.group, "powercolor", "checkbox")
@@ -1046,16 +1113,16 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.tabs.gf.tabs.grouptarget:SetScript("OnShow", function()
     if not this.setup then
       CreateConfig(this, T["Display Group Target Frames"], C.unitframes.grouptarget, "visible", "checkbox")
-      CreateConfig(this, T["Portrait Position"], C.unitframes.grouptarget, "portrait", "dropdown", { "bar", "left", "right", "off" })
+      CreateConfig(this, T["Portrait Position"], C.unitframes.grouptarget, "portrait", "dropdown", dropdown_unitframes_portrait_position)
       CreateConfig(this, T["Health Bar Width"], C.unitframes.grouptarget, "width")
       CreateConfig(this, T["Health Bar Height"], C.unitframes.grouptarget, "height")
       CreateConfig(this, T["Power Bar Height"], C.unitframes.grouptarget, "pheight")
       CreateConfig(this, T["Spacing"], C.unitframes.grouptarget, "pspace")
-      CreateConfig(this, T["Buff Position"], C.unitframes.grouptarget, "buffs", "dropdown", { "top", "bottom", "off"})
+      CreateConfig(this, T["Buff Position"], C.unitframes.grouptarget, "buffs", "dropdown", dropdown_unitframes_buff_position)
       CreateConfig(this, T["Buff Size"], C.unitframes.grouptarget, "buffsize")
       CreateConfig(this, T["Buff Limit"], C.unitframes.grouptarget, "bufflimit")
       CreateConfig(this, T["Buffs Per Row"], C.unitframes.grouptarget, "buffperrow")
-      CreateConfig(this, T["Debuff Position"], C.unitframes.grouptarget, "debuffs", "dropdown", { "top", "bottom", "off"})
+      CreateConfig(this, T["Debuff Position"], C.unitframes.grouptarget, "debuffs", "dropdown", dropdown_unitframes_buff_position)
       CreateConfig(this, T["Debuff Size"], C.unitframes.grouptarget, "debuffsize")
       CreateConfig(this, T["Debuff Limit"], C.unitframes.grouptarget, "debufflimit")
       CreateConfig(this, T["Debuffs Per Row"], C.unitframes.grouptarget, "debuffperrow")
@@ -1064,9 +1131,9 @@ pfUI:RegisterModule("gui", function ()
       CreateConfig(this, T["Enable Debuff Indicators"], C.unitframes.grouptarget, "debuff_indicator", "checkbox")
       CreateConfig(this, T["Enable Clickcast"], C.unitframes.grouptarget, "clickcast", "checkbox")
       CreateConfig(this, T["Enable Range Fading"], C.unitframes.grouptarget, "faderange", "checkbox")
-      CreateConfig(this, T["Left Text"], C.unitframes.grouptarget, "txtleft", "dropdown", txtValues)
-      CreateConfig(this, T["Center Text"], C.unitframes.grouptarget, "txtcenter", "dropdown", txtValues)
-      CreateConfig(this, T["Right Text"], C.unitframes.grouptarget, "txtright", "dropdown", txtValues)
+      CreateConfig(this, T["Left Text"], C.unitframes.grouptarget, "txtleft", "dropdown", dropdown_unitframes_text)
+      CreateConfig(this, T["Center Text"], C.unitframes.grouptarget, "txtcenter", "dropdown", dropdown_unitframes_text)
+      CreateConfig(this, T["Right Text"], C.unitframes.grouptarget, "txtright", "dropdown", dropdown_unitframes_text)
       CreateConfig(this, T["Enable Health Color in Text"], C.unitframes.grouptarget, "healthcolor", "checkbox")
       CreateConfig(this, T["Enable Power Color in Text"], C.unitframes.grouptarget, "powercolor", "checkbox")
       CreateConfig(this, T["Enable Level Color in Text"], C.unitframes.grouptarget, "levelcolor", "checkbox")
@@ -1080,16 +1147,16 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.tabs.gf.tabs.grouppet:SetScript("OnShow", function()
     if not this.setup then
       CreateConfig(this, T["Display Group Pet Frames"], C.unitframes.grouppet, "visible", "checkbox")
-      CreateConfig(this, T["Portrait Position"], C.unitframes.grouppet, "portrait", "dropdown", { "bar", "left", "right", "off" })
+      CreateConfig(this, T["Portrait Position"], C.unitframes.grouppet, "portrait", "dropdown", dropdown_unitframes_portrait_position)
       CreateConfig(this, T["Health Bar Width"], C.unitframes.grouppet, "width")
       CreateConfig(this, T["Health Bar Height"], C.unitframes.grouppet, "height")
       CreateConfig(this, T["Power Bar Height"], C.unitframes.grouppet, "pheight")
       CreateConfig(this, T["Spacing"], C.unitframes.grouppet, "pspace")
-      CreateConfig(this, T["Buff Position"], C.unitframes.grouppet, "buffs", "dropdown", { "top", "bottom", "off"})
+      CreateConfig(this, T["Buff Position"], C.unitframes.grouppet, "buffs", "dropdown", dropdown_unitframes_buff_position)
       CreateConfig(this, T["Buff Size"], C.unitframes.grouppet, "buffsize")
       CreateConfig(this, T["Buff Limit"], C.unitframes.grouppet, "bufflimit")
       CreateConfig(this, T["Buffs Per Row"], C.unitframes.grouppet, "buffperrow")
-      CreateConfig(this, T["Debuff Position"], C.unitframes.grouppet, "debuffs", "dropdown", { "top", "bottom", "off"})
+      CreateConfig(this, T["Debuff Position"], C.unitframes.grouppet, "debuffs", "dropdown", dropdown_unitframes_buff_position)
       CreateConfig(this, T["Debuff Size"], C.unitframes.grouppet, "debuffsize")
       CreateConfig(this, T["Debuff Limit"], C.unitframes.grouppet, "debufflimit")
       CreateConfig(this, T["Debuffs Per Row"], C.unitframes.grouppet, "debuffperrow")
@@ -1098,9 +1165,9 @@ pfUI:RegisterModule("gui", function ()
       CreateConfig(this, T["Enable Debuff Indicators"], C.unitframes.grouppet, "debuff_indicator", "checkbox")
       CreateConfig(this, T["Enable Clickcast"], C.unitframes.grouppet, "clickcast", "checkbox")
       CreateConfig(this, T["Enable Range Fading"], C.unitframes.grouppet, "faderange", "checkbox")
-      CreateConfig(this, T["Left Text"], C.unitframes.grouppet, "txtleft", "dropdown", txtValues)
-      CreateConfig(this, T["Center Text"], C.unitframes.grouppet, "txtcenter", "dropdown", txtValues)
-      CreateConfig(this, T["Right Text"], C.unitframes.grouppet, "txtright", "dropdown", txtValues)
+      CreateConfig(this, T["Left Text"], C.unitframes.grouppet, "txtleft", "dropdown", dropdown_unitframes_text)
+      CreateConfig(this, T["Center Text"], C.unitframes.grouppet, "txtcenter", "dropdown", dropdown_unitframes_text)
+      CreateConfig(this, T["Right Text"], C.unitframes.grouppet, "txtright", "dropdown", dropdown_unitframes_text)
       CreateConfig(this, T["Enable Health Color in Text"], C.unitframes.grouppet, "healthcolor", "checkbox")
       CreateConfig(this, T["Enable Power Color in Text"], C.unitframes.grouppet, "powercolor", "checkbox")
       CreateConfig(this, T["Enable Level Color in Text"], C.unitframes.grouppet, "levelcolor", "checkbox")
@@ -1258,7 +1325,7 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.tabs.tooltip.tabs.general = pfUI.gui.tabs.tooltip.tabs:CreateChildFrame(T["Tooltip"], 70)
   pfUI.gui.tabs.tooltip.tabs.general:SetScript("OnShow", function()
     if not this.setup then
-      CreateConfig(this, T["Tooltip Position"], C.tooltip, "position", "dropdown", { "bottom", "chat", "cursor" })
+      CreateConfig(this, T["Tooltip Position"], C.tooltip, "position", "dropdown", dropdown_tooltip_position)
       CreateConfig(this, T["Enable Extended Guild Information"], C.tooltip, "extguild", "checkbox")
       CreateConfig(this, T["Custom Transparency"], C.tooltip, "alpha")
       CreateConfig(this, T["Always Show Item Comparison"], C.tooltip.compare, "showalways", "checkbox")
