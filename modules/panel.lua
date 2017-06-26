@@ -168,7 +168,7 @@ pfUI:RegisterModule("panel", function ()
 
       local _, _, lag = GetNetStats()
       local fps = floor(GetFramerate())
-      pfUI.panel:OutputPanel("fps", floor(GetFramerate()) .. " fps & " .. lag .. " ms", tooltip, click)
+      pfUI.panel:OutputPanel("fps", fps .. " fps & " .. lag .. " ms", tooltip, click)
     end
   end)
 
