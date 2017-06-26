@@ -602,7 +602,7 @@ pfUI:RegisterModule("gui", function ()
     table.insert(dropdown_selection_fonts, "Fonts\\FZLBJW.TTF:FZLBJW")
     table.insert(dropdown_selection_fonts, "Fonts\\FZXHJW.TTF:FZXHJW")
     table.insert(dropdown_selection_fonts, "Fonts\\FZXHLJW.TTF:FZXHLJW")
-end
+  end
 
   local dropdown_unitframes_text = {
     "none:" .. T["Disable"],
