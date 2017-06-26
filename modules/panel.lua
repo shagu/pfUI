@@ -25,7 +25,7 @@ pfUI:RegisterModule("panel", function ()
 
   -- list of available panel fields
   pfUI.panel.options = { "time", "fps", "exp", "gold", "friends",
-                         "guild", "durability", "zone", "ammo" }
+                         "guild", "durability", "zone", "ammo", "bagspace" }
 
   pfUI.panel:SetScript("OnEvent", function()
     if event == "PLAYER_ENTERING_WORLD" then
@@ -38,11 +38,13 @@ pfUI:RegisterModule("panel", function ()
       pfUI.panel:UpdateZone()
       pfUI.panel:UpdateAmmo()
       pfUI.panel:UpdateSoulshard()
+      pfUI.panel:UpdateBagspace()
     elseif event == "PLAYER_MONEY" then
       pfUI.panel:UpdateGold()
       pfUI.panel:UpdateRepair()
     elseif event == "BAG_UPDATE" then
       pfUI.panel:UpdateSoulshard()
+      pfUI.panel:UpdateBagspace()
     elseif event == "UNIT_INVENTORY_CHANGED" then
       pfUI.panel:UpdateAmmo()
     elseif event == "PLAYER_XP_UPDATE" then
@@ -228,6 +230,24 @@ pfUI:RegisterModule("panel", function ()
       pfUI.panel:OutputPanel("exp", "Exp: N/A")
     end
   end
+
+  -- Update "bagspace"
+	function pfUI.panel:UpdateBagspace ()
+		local maxslots = 0
+		local usedslots = 0
+		for bag = 0,4 do
+			local bagsize = GetContainerNumSlots(bag)
+			maxslots = maxslots + bagsize
+			for j = 1,bagsize do
+				link = GetContainerItemLink(bag,j)
+				if ( link ) then
+					usedslots = usedslots + 1
+				end
+			end
+		end
+		local freeslots = maxslots - usedslots
+		pfUI.panel:OutputPanel("bagspace", freeslots.." - "..usedslots.."/"..maxslots)
+	end
 
   -- Update "gold"
   function pfUI.panel:UpdateGold ()
