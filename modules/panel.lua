@@ -147,9 +147,18 @@ pfUI:RegisterModule("panel", function ()
             active = active + 1
           end
         end
+
+        local memkb, gckb = gcinfo()
+        local memmb = round(memkb/1000, 2)
+        local gcmb = round(gckb/1000, 2)
+
+        local nin, nout, nping = GetNetStats()
+
         GameTooltip:AddDoubleLine("Active Addons", "|cffffffff" .. active .. "|cff555555 / |cffffffff" .. GetNumAddOns())
         GameTooltip:AddLine(" ")
-        local nin, nout, nping = GetNetStats()
+        GameTooltip:AddDoubleLine("Memory Usage", "|cffffffff" .. memmb .. " MB")
+        GameTooltip:AddDoubleLine("Next Memory Cleanup", "|cffffffff" .. gcmb .. " MB")
+        GameTooltip:AddLine(" ")
         GameTooltip:AddDoubleLine("Network Down", "|cffffffff" .. round(nin,1) .. "KB/s")
         GameTooltip:AddDoubleLine("Network Up", "|cffffffff" .. round(nout,1) .. "KB/s")
         GameTooltip:AddDoubleLine("Network Latency", "|cffffffff" .. nping .. "ms")
@@ -169,7 +178,6 @@ pfUI:RegisterModule("panel", function ()
       end
 
       local _, _, lag = GetNetStats()
-      local fps = floor(GetFramerate())
       pfUI.panel:OutputPanel("fps", floor(GetFramerate()) .. " fps & " .. lag .. " ms", tooltip, click)
     end
   end)
