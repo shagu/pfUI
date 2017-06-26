@@ -588,6 +588,13 @@ pfUI:RegisterModule("gui", function ()
     table.insert(dropdown_selection_fonts, "Fonts\\MORPHEUS.TTF:MORPHEUS")
     table.insert(dropdown_selection_fonts, "Fonts\\SKURRI.TTF:SKURRI")
   elseif GetLocale() == "koKR" then
+    table.insert(dropdown_selection_fonts, "Fonts\\2002.TTF:2002")
+    table.insert(dropdown_selection_fonts, "Fonts\\2002B.TTF:2002B")
+    table.insert(dropdown_selection_fonts, "Fonts\\ARIALN.TTF:ARIALN")
+    table.insert(dropdown_selection_fonts, "Fonts\\FRIZQT__.TTF:FRIZQT")
+    table.insert(dropdown_selection_fonts, "Fonts\\K_Damage.TTF:K_Damage")
+    table.insert(dropdown_selection_fonts, "Fonts\\K_Pagetext.TTF:K_Pagetext")
+  elseif GetLocale() == "zhCN" then
     table.insert(dropdown_selection_fonts, "Fonts\\ARIALN.TTF:ARIALN")
     table.insert(dropdown_selection_fonts, "Fonts\\FRIZQT__.TTF:FRIZQT")
     table.insert(dropdown_selection_fonts, "Fonts\\FZBWJW.TTF:FZBWJW")
@@ -595,14 +602,7 @@ pfUI:RegisterModule("gui", function ()
     table.insert(dropdown_selection_fonts, "Fonts\\FZLBJW.TTF:FZLBJW")
     table.insert(dropdown_selection_fonts, "Fonts\\FZXHJW.TTF:FZXHJW")
     table.insert(dropdown_selection_fonts, "Fonts\\FZXHLJW.TTF:FZXHLJW")
-  elseif GetLocale() == "zhCN" then
-    table.insert(dropdown_selection_fonts, "Fonts\\2002.TTF:2002")
-    table.insert(dropdown_selection_fonts, "Fonts\\2002B.TTF:2002B")
-    table.insert(dropdown_selection_fonts, "Fonts\\ARIALN.TTF:ARIALN")
-    table.insert(dropdown_selection_fonts, "Fonts\\FRIZQT__.TTF:FRIZQT")
-    table.insert(dropdown_selection_fonts, "Fonts\\K_Damage.TTF:K_Damage")
-    table.insert(dropdown_selection_fonts, "Fonts\\K_Pagetext.TTF:K_Pagetext")
-  end
+end
 
   local dropdown_unitframes_text = {
     "none:" .. T["Disable"],
