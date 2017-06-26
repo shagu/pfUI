@@ -17,6 +17,7 @@ pfUI_translation["frFR"] = {
   ["Background Color"] = "Couleur de l'arrière-plan",
   ["Bags & Bank"] = "Sacs et Banque",
   ["Bags Border Size"] = "Taille de la bordure des Sacs",
+  ["Bagspace"] = nil,
   ["Border Color"] = "Couleur de la bordure",
   ["Bottom"] = "Bas",
   ["Buff Limit"] = "Limite des améliorations",

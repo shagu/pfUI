@@ -17,6 +17,7 @@ pfUI_translation["koKR"] = {
   ["Background Color"] = "백그라운드 색상",
   ["Bags & Bank"] = "가방&은행",
   ["Bags Border Size"] = "가방 테두리 크기",
+  ["Bagspace"] = nil,
   ["Border Color"] = "테두리 색상",
   ["Bottom"] = "아래",
   ["Buff Limit"] = "버프 한도",

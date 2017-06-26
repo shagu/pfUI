@@ -634,7 +634,8 @@ pfUI:RegisterModule("gui", function ()
     "zone:" .. T["Zone Name"],
     "combat:" .. T["Combat Timer"],
     "ammo:" .. T["Ammo Counter"],
-    "soulshard:" .. T["Soulshard Counter"]
+    "soulshard:" .. T["Soulshard Counter"],
+    "bagspace:" .. T["Bagspace"]
   }
 
   local dropdown_unitframes_portrait_position = {
