@@ -17,6 +17,7 @@ pfUI_translation["ruRU"] = {
   ["Background Color"] = nil,
   ["Bags & Bank"] = nil,
   ["Bags Border Size"] = nil,
+  ["Bagspace"] = nil,
   ["Border Color"] = nil,
   ["Bottom"] = nil,
   ["Buff Limit"] = nil,
