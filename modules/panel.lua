@@ -25,7 +25,7 @@ pfUI:RegisterModule("panel", function ()
 
   -- list of available panel fields
   pfUI.panel.options = { "time", "fps", "exp", "gold", "friends",
-                         "guild", "durability", "zone", "ammo" }
+                         "guild", "durability", "zone", "ammo", "bagspace" }
 
   pfUI.panel:SetScript("OnEvent", function()
     if event == "PLAYER_ENTERING_WORLD" then
@@ -38,11 +38,13 @@ pfUI:RegisterModule("panel", function ()
       pfUI.panel:UpdateZone()
       pfUI.panel:UpdateAmmo()
       pfUI.panel:UpdateSoulshard()
+      pfUI.panel:UpdateBagspace()
     elseif event == "PLAYER_MONEY" then
       pfUI.panel:UpdateGold()
       pfUI.panel:UpdateRepair()
     elseif event == "BAG_UPDATE" then
       pfUI.panel:UpdateSoulshard()
+      pfUI.panel:UpdateBagspace()
     elseif event == "UNIT_INVENTORY_CHANGED" then
       pfUI.panel:UpdateAmmo()
     elseif event == "PLAYER_XP_UPDATE" then
@@ -145,9 +147,18 @@ pfUI:RegisterModule("panel", function ()
             active = active + 1
           end
         end
+
+        local memkb, gckb = gcinfo()
+        local memmb = round(memkb/1000, 2)
+        local gcmb = round(gckb/1000, 2)
+
+        local nin, nout, nping = GetNetStats()
+
         GameTooltip:AddDoubleLine("Active Addons", "|cffffffff" .. active .. "|cff555555 / |cffffffff" .. GetNumAddOns())
         GameTooltip:AddLine(" ")
-        local nin, nout, nping = GetNetStats()
+        GameTooltip:AddDoubleLine("Memory Usage", "|cffffffff" .. memmb .. " MB")
+        GameTooltip:AddDoubleLine("Next Memory Cleanup", "|cffffffff" .. gcmb .. " MB")
+        GameTooltip:AddLine(" ")
         GameTooltip:AddDoubleLine("Network Down", "|cffffffff" .. round(nin,1) .. "KB/s")
         GameTooltip:AddDoubleLine("Network Up", "|cffffffff" .. round(nout,1) .. "KB/s")
         GameTooltip:AddDoubleLine("Network Latency", "|cffffffff" .. nping .. "ms")
@@ -167,7 +178,6 @@ pfUI:RegisterModule("panel", function ()
       end
 
       local _, _, lag = GetNetStats()
-      local fps = floor(GetFramerate())
       pfUI.panel:OutputPanel("fps", floor(GetFramerate()) .. " fps & " .. lag .. " ms", tooltip, click)
     end
   end)
@@ -227,6 +237,25 @@ pfUI:RegisterModule("panel", function ()
     else
       pfUI.panel:OutputPanel("exp", "Exp: N/A")
     end
+  end
+
+  -- Update "bagspace"
+  function pfUI.panel:UpdateBagspace ()
+    local maxslots = 0
+    local usedslots = 0
+
+    for bag = 0,4 do
+      local bagsize = GetContainerNumSlots(bag)
+      maxslots = maxslots + bagsize
+      for j = 1,bagsize do
+        link = GetContainerItemLink(bag,j)
+        if link then
+          usedslots = usedslots + 1
+        end
+      end
+    end
+    local freeslots = maxslots - usedslots
+    pfUI.panel:OutputPanel("bagspace", freeslots .. " (" .. usedslots .. "/" .. maxslots .. ")")
   end
 
   -- Update "gold"

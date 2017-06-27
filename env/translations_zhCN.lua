@@ -17,6 +17,7 @@ pfUI_translation["zhCN"] = {
   ["Background Color"] = "聊天窗口背景颜色",
   ["Bags & Bank"] = "背包和银行",
   ["Bags Border Size"] = "背包边框大小",
+  ["Bagspace"] = "背包空间",
   ["Border Color"] = "边框颜色",
   ["Bottom"] = "底部",
   ["Buff Limit"] = "Buff总数量",
