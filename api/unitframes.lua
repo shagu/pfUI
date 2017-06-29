@@ -538,6 +538,7 @@ end
 
 function pfUI.uf:RefreshUnit(unit, component)
   if not unit.label then return end
+  if not unit.hp then return end
 
   local component = component or ""
   -- break early on misconfigured UF's
