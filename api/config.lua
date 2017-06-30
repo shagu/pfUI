@@ -1,5 +1,3 @@
-pfUI.gui = CreateFrame("Frame",nil,UIParent)
-
 function pfUI:UpdateConfig(group, subgroup, entry, value)
   -- check for missing config groups
   if not pfUI_config[group] then

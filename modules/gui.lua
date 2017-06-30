@@ -1474,7 +1474,7 @@ pfUI:RegisterModule("gui", function ()
         if m ~= "gui" then
           -- create disabled entry if not existing and display
           pfUI:UpdateConfig("disabled", nil, m, "0")
-          CreateConfig(this, T["Disable Module"] .. m, C.disabled, m, "checkbox")
+          CreateConfig(this, T["Disable Module"] .. " " .. m, C.disabled, m, "checkbox")
         end
       end
       this.setup = true
