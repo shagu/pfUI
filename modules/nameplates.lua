@@ -181,7 +181,7 @@ pfUI:RegisterModule("nameplates", function ()
 
     -- add debuff frames
     if C.nameplates["showdebuffs"] == "1" then
-      if this.debuffs == nil then this.debuffs = {} end
+      if not this.debuffs then this.debuffs = {} end
       for j=1, 16, 1 do
         if this.debuffs[j] == nil then
           this.debuffs[j] = this:CreateTexture(nil, "BORDER")
@@ -446,9 +446,9 @@ pfUI:RegisterModule("nameplates", function ()
     end
 
     -- update debuffs
-    if this.debuffs and C.nameplates["showdebuffs"] ~= "1" then
+    if this.debuffs and C.nameplates["showdebuffs"] == "1" then
       if UnitExists("target") and healthbar:GetAlpha() == 1 then
-      local j = 1
+        local j = 1
         local k = 1
         for j, e in ipairs(pfUI.nameplates.debuffs) do
           this.debuffs[j]:SetTexture(pfUI.nameplates.debuffs[j])
