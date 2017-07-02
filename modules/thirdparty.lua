@@ -190,7 +190,7 @@ pfUI:RegisterModule("thirdparty", function ()
         if pfUI.uf.target and unit == "target" then
           if not pfUI.uf.target.hp then return end
 
-          if pfUI.uf.target and not pfUI.uf.target.incHeal then
+          if not pfUI.uf.target.incHeal then
             pfUI.uf.target.incHeal = CreateFrame("StatusBar", "PlayerFrameIncHealBar", pfUI.uf.target)
             pfUI.uf.target.incHeal:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
             pfUI.uf.target.incHeal:SetFrameStrata("MEDIUM")
@@ -205,19 +205,21 @@ pfUI:RegisterModule("thirdparty", function ()
 
         if pfUI.uf.group and strsub(unit,0,5) == "party" then
           local id = tonumber(strsub(unit,6))
-          if not pfUI.uf.group[id].hp then return end
+          if pfUI.uf.group[id] then
+            if not pfUI.uf.group[id].hp then return end
 
-          if pfUI.uf.group[id] and not pfUI.uf.group[id].incHeal then
-            pfUI.uf.group[id].incHeal = CreateFrame("StatusBar", "PlayerFrameIncHealBar", pfUI.uf.group[id])
-            pfUI.uf.group[id].incHeal:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
-            pfUI.uf.group[id].incHeal:SetFrameStrata("MEDIUM")
-            pfUI.uf.group[id].incHeal:SetMinMaxValues(0, 1)
-            pfUI.uf.group[id].incHeal:SetValue(1)
-            pfUI.uf.group[id].incHeal:SetStatusBarColor(0, 1, 0, 0.5)
-            pfUI.uf.group[id].incHeal:SetHeight(pfUI.uf.group[id].hp:GetHeight())
-            pfUI.uf.group[id].incHeal:Hide()
+            if not pfUI.uf.group[id].incHeal then
+              pfUI.uf.group[id].incHeal = CreateFrame("StatusBar", "PlayerFrameIncHealBar", pfUI.uf.group[id])
+              pfUI.uf.group[id].incHeal:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
+              pfUI.uf.group[id].incHeal:SetFrameStrata("MEDIUM")
+              pfUI.uf.group[id].incHeal:SetMinMaxValues(0, 1)
+              pfUI.uf.group[id].incHeal:SetValue(1)
+              pfUI.uf.group[id].incHeal:SetStatusBarColor(0, 1, 0, 0.5)
+              pfUI.uf.group[id].incHeal:SetHeight(pfUI.uf.group[id].hp:GetHeight())
+              pfUI.uf.group[id].incHeal:Hide()
+            end
+            return pfUI.uf.group[id]
           end
-          return pfUI.uf.group[id]
         end
 
         if pfUI.uf.raid and strsub(unit,0,4) == "raid" then
@@ -230,19 +232,21 @@ pfUI:RegisterModule("thirdparty", function ()
           end
 
           if id == nil then return end
-          if not pfUI.uf.raid[id].hp then return end
+          if pfUI.uf.raid[id] then
+            if not pfUI.uf.raid[id].hp then return end
 
-          if pfUI.uf.raid[id] and not pfUI.uf.raid[id].incHeal then
-            pfUI.uf.raid[id].incHeal = CreateFrame("StatusBar", "PlayerFrameIncHealBar", pfUI.uf.raid[id])
-            pfUI.uf.raid[id].incHeal:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
-            pfUI.uf.raid[id].incHeal:SetFrameStrata("MEDIUM")
-            pfUI.uf.raid[id].incHeal:SetMinMaxValues(0, 1)
-            pfUI.uf.raid[id].incHeal:SetValue(1)
-            pfUI.uf.raid[id].incHeal:SetStatusBarColor(0, 1, 0, 0.5)
-            pfUI.uf.raid[id].incHeal:SetHeight(pfUI.uf.raid[id].hp:GetHeight())
-            pfUI.uf.raid[id].incHeal:Hide()
+            if not pfUI.uf.raid[id].incHeal then
+              pfUI.uf.raid[id].incHeal = CreateFrame("StatusBar", "PlayerFrameIncHealBar", pfUI.uf.raid[id])
+              pfUI.uf.raid[id].incHeal:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
+              pfUI.uf.raid[id].incHeal:SetFrameStrata("MEDIUM")
+              pfUI.uf.raid[id].incHeal:SetMinMaxValues(0, 1)
+              pfUI.uf.raid[id].incHeal:SetValue(1)
+              pfUI.uf.raid[id].incHeal:SetStatusBarColor(0, 1, 0, 0.5)
+              pfUI.uf.raid[id].incHeal:SetHeight(pfUI.uf.raid[id].hp:GetHeight())
+              pfUI.uf.raid[id].incHeal:Hide()
+            end
+            return pfUI.uf.raid[id]
           end
-          return pfUI.uf.raid[id]
         end
 
         return nil
