@@ -369,6 +369,19 @@ pfUI:RegisterModule("chat", function ()
     end
   end
 
+  if C.chat.global.tabmouse == "1" then
+    pfUI.chat.mouseovertab = CreateFrame("Frame")
+    pfUI.chat.mouseovertab:SetScript("OnUpdate", function()
+      if MouseIsOver(pfUI.chat.left) or MouseIsOver(pfUI.chat.right) then
+        pfUI.chat.left.panelTop:Show()
+        pfUI.chat.right.panelTop:Show()
+      else
+        pfUI.chat.left.panelTop:Hide()
+        pfUI.chat.right.panelTop:Hide()
+      end
+    end)
+  end
+
   function pfUI.chat.SetupRightChat(state)
     if state then
       C.chat.right.enable = "1"
