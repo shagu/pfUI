@@ -1,6 +1,6 @@
 pfUI.api = { }
-pfUI.api._G = getfenv(0)
 local _G = getfenv(0)
+local T, C, L = pfUI.env.T, pfUI.env.C, pfUI.env.L
 
 -- [ strsplit ]
 -- Splits a string using a delimiter.
