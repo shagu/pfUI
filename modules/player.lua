@@ -44,7 +44,7 @@ pfUI:RegisterModule("player", function ()
   function pfUI.uf.player.Dropdowni()
     -- add reset button when alone
     if not (UnitInRaid("player") or GetNumPartyMembers() > 0) then
-      UIDropDownMenu_AddButton({text = "Reset Instances", func = ResetInstances, notCheckable = 1}, 1)
+      UIDropDownMenu_AddButton({text = RESET_INSTANCES, func = ResetInstances, notCheckable = 1}, 1)
     end
     UnitPopup_ShowMenu(pfUI.uf.player.Dropdown, "SELF", "player")
   end
