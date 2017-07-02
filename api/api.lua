@@ -450,7 +450,7 @@ function pfUI.api.CreateQuestionDialog(text, yes, no, editbox)
   end
 
   local yes, no = yes, no
-  local yescap, nocap = "Yes", "No"
+  local yescap, nocap = YES, NO
 
   if yes and type(yes) == "table" then
     yescap = yes[1]
