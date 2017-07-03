@@ -1,6 +1,6 @@
 pfUI.api = { }
-pfUI.api._G = getfenv(0)
 local _G = getfenv(0)
+local T, C, L = pfUI.env.T, pfUI.env.C, pfUI.env.L
 
 -- [ strsplit ]
 -- Splits a string using a delimiter.
@@ -450,7 +450,7 @@ function pfUI.api.CreateQuestionDialog(text, yes, no, editbox)
   end
 
   local yes, no = yes, no
-  local yescap, nocap = "Yes", "No"
+  local yescap, nocap = YES, NO
 
   if yes and type(yes) == "table" then
     yescap = yes[1]

@@ -180,9 +180,9 @@ pfUI:RegisterModule("chat", function ()
     end
   end)
 
-  pfUI.chat.left.panelTop.proxyName = CreateFrame("Frame", "leftChatWhisperProxyName")
+  pfUI.chat.left.panelTop.proxyName = CreateFrame("Frame", "leftChatWhisperProxyName", UIParent)
   pfUI.chat.left.panelTop.proxyName:SetPoint("CENTER", 0, 0)
-  pfUI.chat.left.panelTop.proxyName:SetHeight(100)
+  pfUI.chat.left.panelTop.proxyName:SetHeight(90)
   pfUI.chat.left.panelTop.proxyName:SetWidth(200)
   CreateBackdrop(pfUI.chat.left.panelTop.proxyName, default_border)
   pfUI.chat.left.panelTop.proxyName:SetScript("OnShow", function()
@@ -190,8 +190,8 @@ pfUI:RegisterModule("chat", function ()
   end)
 
   pfUI.chat.left.panelTop.proxyName.caption = pfUI.chat.left.panelTop.proxyName:CreateFontString("Status", "LOW", "GameFontNormal")
-  pfUI.chat.left.panelTop.proxyName.caption:SetFont(pfUI.font_default, C.global.font_size + 2, "OUTLINE")
-  pfUI.chat.left.panelTop.proxyName.caption:SetPoint("TOP", 0, -20)
+  pfUI.chat.left.panelTop.proxyName.caption:SetFont(pfUI.font_default, C.global.font_size, "OUTLINE")
+  pfUI.chat.left.panelTop.proxyName.caption:SetPoint("TOP", 0, -10)
   pfUI.chat.left.panelTop.proxyName.caption:SetFontObject(GameFontWhite)
   pfUI.chat.left.panelTop.proxyName.caption:SetJustifyH("CENTER")
   pfUI.chat.left.panelTop.proxyName.caption:SetText("Forward all whispers to:")
@@ -200,8 +200,8 @@ pfUI:RegisterModule("chat", function ()
   pfUI.chat.left.panelTop.proxyName.input:SetTextColor(.2,1.1,1)
   pfUI.chat.left.panelTop.proxyName.input:SetJustifyH("CENTER")
   CreateBackdrop(pfUI.chat.left.panelTop.proxyName.input, default_border)
-  pfUI.chat.left.panelTop.proxyName.input:SetPoint("TOPLEFT" , pfUI.chat.left.panelTop.proxyName, "TOPLEFT", 20, -40)
-  pfUI.chat.left.panelTop.proxyName.input:SetPoint("BOTTOMRIGHT" , pfUI.chat.left.panelTop.proxyName, "BOTTOMRIGHT", -20, 40)
+  pfUI.chat.left.panelTop.proxyName.input:SetPoint("TOPLEFT" , pfUI.chat.left.panelTop.proxyName, "TOPLEFT", 10, -30)
+  pfUI.chat.left.panelTop.proxyName.input:SetPoint("BOTTOMRIGHT" , pfUI.chat.left.panelTop.proxyName, "BOTTOMRIGHT", -10, 40)
   pfUI.chat.left.panelTop.proxyName.input:SetFontObject(GameFontWhite)
   pfUI.chat.left.panelTop.proxyName.input:SetAutoFocus(false)
   pfUI.chat.left.panelTop.proxyName.input:SetText(pfUI.chat.left.panelTop.proxy.forwardto)
@@ -367,6 +367,19 @@ pfUI:RegisterModule("chat", function ()
         end
       end)
     end
+  end
+
+  if C.chat.global.tabmouse == "1" then
+    pfUI.chat.mouseovertab = CreateFrame("Frame")
+    pfUI.chat.mouseovertab:SetScript("OnUpdate", function()
+      if MouseIsOver(pfUI.chat.left) or MouseIsOver(pfUI.chat.right) then
+        pfUI.chat.left.panelTop:Show()
+        pfUI.chat.right.panelTop:Show()
+      else
+        pfUI.chat.left.panelTop:Hide()
+        pfUI.chat.right.panelTop:Hide()
+      end
+    end)
   end
 
   function pfUI.chat.SetupRightChat(state)

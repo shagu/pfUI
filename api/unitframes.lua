@@ -961,9 +961,6 @@ function pfUI.uf:ClickAction(button)
   if button == "RightButton" then
     if label == "player" then
       ToggleDropDownMenu(1, nil, pfUI.uf.player.Dropdown,"cursor")
-      if UnitIsPartyLeader("player") then
-        UIDropDownMenu_AddButton({text = "Reset Instances", func = ResetInstances, notCheckable = 1}, 1)
-      end
     elseif label == "target" then
       ToggleDropDownMenu(1, nil, TargetFrameDropDown, "cursor")
     elseif label == "pet" then
