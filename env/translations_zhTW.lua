@@ -1,4 +1,4 @@
-pfUI_translation["zhTW"] = {
+pfUI_translation["zhCN"] = {
   ["40y-Range Check Interval"] = "40碼距離檢查間隔",
   ["Abbreviate Numbers (4200 -> 4.2k)"] = "縮寫數位格式[4200為4.2K]",
   ["Action Bar Border Size"] = "動作條邊框大小",
