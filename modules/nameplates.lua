@@ -371,6 +371,7 @@ pfUI:RegisterModule("nameplates", function ()
       end
 
       healthbar.wantR, healthbar.wantG, healthbar.wantB  = healthbar:GetStatusBarColor()
+      this.needClassColorUpdate = true
     end
 
     -- add class colors
