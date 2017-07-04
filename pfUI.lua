@@ -17,19 +17,6 @@ function SlashCmdList.GM(msg, editbox)
   ToggleHelpFrame(1)
 end
 
-SLASH_PFFOCUS1 = '/focus'
-function SlashCmdList.PFFOCUS(msg)
-  if msg ~= "" then
-    pfUI.uf.focus:Show()
-    pfUI.uf.focus.unitname = strlower(msg)
-  elseif UnitName("target") then
-    pfUI.uf.focus:Show()
-    pfUI.uf.focus.unitname = strlower(UnitName("target"))
-  else
-    pfUI.uf.focus:Hide()
-  end
-end
-
 pfUI = CreateFrame("Frame",nil,UIParent)
 pfUI:RegisterEvent("ADDON_LOADED")
 
