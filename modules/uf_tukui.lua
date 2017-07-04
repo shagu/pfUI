@@ -36,21 +36,6 @@ pfUI:RegisterModule("uf_tukui", function ()
     pfUI.uf.player.hpRightText:SetPoint("TOPLEFT",pfUI.uf.player.caption, "TOPLEFT", default_border, 1)
     pfUI.uf.player.hpRightText:SetPoint("BOTTOMRIGHT",pfUI.uf.player.caption, "BOTTOMRIGHT", -default_border, 0)
 
-    pfUI.uf.player.powerLeftText:SetParent(pfUI.uf.player.caption)
-    pfUI.uf.player.powerLeftText:ClearAllPoints()
-    pfUI.uf.player.powerLeftText:SetPoint("TOPLEFT",pfUI.uf.player.caption, "TOPLEFT", default_border, 1)
-    pfUI.uf.player.powerLeftText:SetPoint("BOTTOMRIGHT",pfUI.uf.player.caption, "BOTTOMRIGHT", -default_border, 0)
-
-    pfUI.uf.player.powerCenterText:SetParent(pfUI.uf.player.caption)
-    pfUI.uf.player.powerCenterText:ClearAllPoints()
-    pfUI.uf.player.powerCenterText:SetPoint("TOPLEFT",pfUI.uf.player.caption, "TOPLEFT", default_border, 1)
-    pfUI.uf.player.powerCenterText:SetPoint("BOTTOMRIGHT",pfUI.uf.player.caption, "BOTTOMRIGHT", -default_border, 0)
-
-    pfUI.uf.player.powerRightText:SetParent(pfUI.uf.player.caption)
-    pfUI.uf.player.powerRightText:ClearAllPoints()
-    pfUI.uf.player.powerRightText:SetPoint("TOPLEFT",pfUI.uf.player.caption, "TOPLEFT", default_border, 1)
-    pfUI.uf.player.powerRightText:SetPoint("BOTTOMRIGHT",pfUI.uf.player.caption, "BOTTOMRIGHT", -default_border, 0)
-
     pfUI.castbar.player:SetAllPoints(pfUI.uf.player.caption)
     UpdateMovable(pfUI.castbar.player)
     CreateBackdrop(pfUI.uf.player.caption)
@@ -79,21 +64,6 @@ pfUI:RegisterModule("uf_tukui", function ()
     pfUI.uf.target.hpRightText:ClearAllPoints()
     pfUI.uf.target.hpRightText:SetPoint("TOPLEFT",pfUI.uf.target.caption, "TOPLEFT", default_border, 1)
     pfUI.uf.target.hpRightText:SetPoint("BOTTOMRIGHT",pfUI.uf.target.caption, "BOTTOMRIGHT", -default_border, 0)
-
-    pfUI.uf.target.powerLeftText:SetParent(pfUI.uf.target.caption)
-    pfUI.uf.target.powerLeftText:ClearAllPoints()
-    pfUI.uf.target.powerLeftText:SetPoint("TOPLEFT",pfUI.uf.target.caption, "TOPLEFT", default_border, 1)
-    pfUI.uf.target.powerLeftText:SetPoint("BOTTOMRIGHT",pfUI.uf.target.caption, "BOTTOMRIGHT", -default_border, 0)
-
-    pfUI.uf.target.powerCenterText:SetParent(pfUI.uf.target.caption)
-    pfUI.uf.target.powerCenterText:ClearAllPoints()
-    pfUI.uf.target.powerCenterText:SetPoint("TOPLEFT",pfUI.uf.target.caption, "TOPLEFT", default_border, 1)
-    pfUI.uf.target.powerCenterText:SetPoint("BOTTOMRIGHT",pfUI.uf.target.caption, "BOTTOMRIGHT", -default_border, 0)
-
-    pfUI.uf.target.powerRightText:SetParent(pfUI.uf.target.caption)
-    pfUI.uf.target.powerRightText:ClearAllPoints()
-    pfUI.uf.target.powerRightText:SetPoint("TOPLEFT",pfUI.uf.target.caption, "TOPLEFT", default_border, 1)
-    pfUI.uf.target.powerRightText:SetPoint("BOTTOMRIGHT",pfUI.uf.target.caption, "BOTTOMRIGHT", -default_border, 0)
 
     pfUI.castbar.target:SetAllPoints(pfUI.uf.target.caption)
     UpdateMovable(pfUI.castbar.target)
