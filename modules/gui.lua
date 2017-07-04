@@ -615,11 +615,13 @@ pfUI:RegisterModule("gui", function ()
     "healthmax:" .. T["Health - Max"],
     "healthperc:" .. T["Health - Percentage"],
     "healthmiss:" .. T["Health - Missing"],
+    "healthminmax:" .. T["Health - Min/Max"],
     "powerdyn:" .. T["Mana - Auto"],
     "power:" .. T["Mana - Current"],
     "powermax:" .. T["Mana - Max"],
     "powerperc:" .. T["Mana - Percentage"],
-    "powermiss:" .. T["Mana - Missing"]
+    "powermiss:" .. T["Mana - Missing"],
+    "powerminmax:" .. T["Mana - Min/Max"],
   }
 
   local dropdown_panel_values = {

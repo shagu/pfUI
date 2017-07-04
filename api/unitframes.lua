@@ -1293,6 +1293,12 @@ function pfUI.uf:GetStatusValue(unit, pos)
     else
       return unit:GetColor("health") .. pfUI.api.Abbreviate(UnitHealth(unitstr))
     end
+  elseif config == "healthminmax" then
+    local hp, hpmax = UnitHealth(unitstr), UnitHealthMax(unitstr)
+    if unit.label == "target" and MobHealth3 then
+      hp, hpmax = MobHealth3:GetUnitHealth(unit.label)
+    end
+    return unit:GetColor("health") .. pfUI.api.Abbreviate(hp) .. "/" .. pfUI.api.Abbreviate(hpmax)
 
   -- mana/power/focus
   elseif config == "power" then
@@ -1315,6 +1321,8 @@ function pfUI.uf:GetStatusValue(unit, pos)
     else
       return unit:GetColor("power") .. pfUI.api.Abbreviate(UnitMana(unitstr))
     end
+  elseif config == "powerminmax" then
+    return unit:GetColor("power") .. pfUI.api.Abbreviate(UnitMana(unitstr)) .. "/" .. pfUI.api.Abbreviate(UnitManaMax(unitstr))
   else
     return ""
   end
