@@ -90,7 +90,7 @@ pfUI:RegisterModule("nameplates", function ()
       this.name:SetParent(this.nameplate)
       this.level:SetParent(this.nameplate)
       this.levelicon:SetParent(this.nameplate)
-      this.raidicon:SetParent(this.nameplate)
+      this.raidicon:SetParent(this.healthbar)
     end
 
     -- init
@@ -178,6 +178,8 @@ pfUI:RegisterModule("nameplates", function ()
     this.raidicon:SetWidth(C.nameplates.raidiconsize)
     this.raidicon:SetHeight(C.nameplates.raidiconsize)
     this.raidicon:SetPoint("CENTER", this.healthbar, "CENTER", 0, -5)
+    this.raidicon:SetDrawLayer("OVERLAY")
+    this.raidicon:SetTexture("Interface\\AddOns\\pfUI\\img\\raidicons")
 
     -- add debuff frames
     if C.nameplates["showdebuffs"] == "1" then
