@@ -123,7 +123,7 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("unitframes", "player",      "txthpright",       "healthdyn")
   pfUI:UpdateConfig("unitframes", "player",      "txtpowerleft",     "none")
   pfUI:UpdateConfig("unitframes", "player",      "txtpowercenter",   "none")
-  pfUI:UpdateConfig("unitframes", "player",      "txtpowerright",    "powerdyn")
+  pfUI:UpdateConfig("unitframes", "player",      "txtpowerright",    "none")
 
   pfUI:UpdateConfig("unitframes", "player",      "showPVPMinimap",   "0")
   pfUI:UpdateConfig("unitframes", "player",      "showPVP",          "0")
@@ -158,7 +158,7 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("unitframes", "target",      "txthpright",       "healthdyn")
   pfUI:UpdateConfig("unitframes", "target",      "txtpowerleft",     "none")
   pfUI:UpdateConfig("unitframes", "target",      "txtpowercenter",   "none")
-  pfUI:UpdateConfig("unitframes", "target",      "txtpowerright",    "powerdyn")
+  pfUI:UpdateConfig("unitframes", "target",      "txtpowerright",    "none")
 
   pfUI:UpdateConfig("unitframes", "focus",       "visible",           "1")
   pfUI:UpdateConfig("unitframes", "focus",       "portrait",         "bar")
@@ -188,7 +188,7 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("unitframes", "focus",       "txthpright",       "healthdyn")
   pfUI:UpdateConfig("unitframes", "focus",       "txtpowerleft",     "none")
   pfUI:UpdateConfig("unitframes", "focus",       "txtpowercenter",   "none")
-  pfUI:UpdateConfig("unitframes", "focus",       "txtpowerright",    "powerdyn")
+  pfUI:UpdateConfig("unitframes", "focus",       "txtpowerright",    "none")
 
   pfUI:UpdateConfig("unitframes", "group",       "visible",           "1")
   pfUI:UpdateConfig("unitframes", "group",       "portrait",         "off")
@@ -219,7 +219,7 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("unitframes", "group",       "txthpright",       "healthmiss")
   pfUI:UpdateConfig("unitframes", "group",       "txtpowerleft",     "none")
   pfUI:UpdateConfig("unitframes", "group",       "txtpowercenter",   "none")
-  pfUI:UpdateConfig("unitframes", "group",       "txtpowerright",    "powerdyn")
+  pfUI:UpdateConfig("unitframes", "group",       "txtpowerright",    "none")
 
   pfUI:UpdateConfig("unitframes", "grouptarget", "visible",           "1")
   pfUI:UpdateConfig("unitframes", "grouptarget", "portrait",         "off")
@@ -309,7 +309,7 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("unitframes", "raid",        "txthpright",       "healthmiss")
   pfUI:UpdateConfig("unitframes", "raid",        "txtpowerleft",     "none")
   pfUI:UpdateConfig("unitframes", "raid",        "txtpowercenter",   "none")
-  pfUI:UpdateConfig("unitframes", "raid",        "txtpowerright",    "powerdyn")
+  pfUI:UpdateConfig("unitframes", "raid",        "txtpowerright",    "none")
 
   pfUI:UpdateConfig("unitframes", "ttarget",     "visible",           "1")
   pfUI:UpdateConfig("unitframes", "ttarget",     "portrait",         "bar")
@@ -339,7 +339,7 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("unitframes", "ttarget",     "txthpright",       "none")
   pfUI:UpdateConfig("unitframes", "ttarget",     "txtpowerleft",     "none")
   pfUI:UpdateConfig("unitframes", "ttarget",     "txtpowercenter",   "none")
-  pfUI:UpdateConfig("unitframes", "ttarget",     "txtpowerright",    "powerdyn")
+  pfUI:UpdateConfig("unitframes", "ttarget",     "txtpowerright",    "none")
 
   pfUI:UpdateConfig("unitframes", "pet",         "visible",           "1")
   pfUI:UpdateConfig("unitframes", "pet",         "portrait",         "bar")
@@ -369,7 +369,7 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("unitframes", "pet",         "txthpright",       "none")
   pfUI:UpdateConfig("unitframes", "pet",         "txtpowerleft",     "none")
   pfUI:UpdateConfig("unitframes", "pet",         "txtpowercenter",   "none")
-  pfUI:UpdateConfig("unitframes", "pet",         "txtpowerright",    "powerdyn")
+  pfUI:UpdateConfig("unitframes", "pet",         "txtpowerright",    "none")
 
   pfUI:UpdateConfig("unitframes", "fallback",    "visible",           "1")
   pfUI:UpdateConfig("unitframes", "fallback",    "portrait",         "bar")
@@ -397,9 +397,9 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("unitframes", "fallback",    "txthpleft",        "unit")
   pfUI:UpdateConfig("unitframes", "fallback",    "txthpcenter",      "none")
   pfUI:UpdateConfig("unitframes", "fallback",    "txthpright",       "healthdyn")
-  pfUI:UpdateConfig("unitframes", "fallback",    "txtpowerleft",     "unit")
+  pfUI:UpdateConfig("unitframes", "fallback",    "txtpowerleft",     "none")
   pfUI:UpdateConfig("unitframes", "fallback",    "txtpowercenter",   "none")
-  pfUI:UpdateConfig("unitframes", "fallback",    "txtpowerright",    "healthdyn")
+  pfUI:UpdateConfig("unitframes", "fallback",    "txtpowerright",    "none")
 
   pfUI:UpdateConfig("bars",       nil,           "icon_size",        "20")
   pfUI:UpdateConfig("bars",       nil,           "background",       "1")
@@ -599,6 +599,24 @@ function pfUI:MigrateConfig()
     -- migrate font_combat
     if not strfind(pfUI_config.global.font_combat, "\\") then
       pfUI_config.global.font_combat = "Interface\\AddOns\\pfUI\\fonts\\" .. pfUI_config.global.font_combat .. ".ttf"
+    end
+
+    -- migrate unitframe texts
+    local unitframes = { "player", "target", "focus", "group", "grouptarget", "grouppet", "raid", "ttarget", "pet", "fallback" }
+
+    for _, unitframe in pairs(unitframes) do
+      if pfUI_config.unitframes[unitframe].txtleft then
+        pfUI_config.unitframes[unitframe].txthpleft = pfUI_config.unitframes[unitframe].txtleft
+        pfUI_config.unitframes[unitframe].txtleft = nil
+      end
+      if pfUI_config.unitframes[unitframe].txtcenter then
+        pfUI_config.unitframes[unitframe].txthpcenter = pfUI_config.unitframes[unitframe].txtcenter
+        pfUI_config.unitframes[unitframe].txtcenter = nil
+      end
+      if pfUI_config.unitframes[unitframe].txtright then
+        pfUI_config.unitframes[unitframe].txthpright = pfUI_config.unitframes[unitframe].txtright
+        pfUI_config.unitframes[unitframe].txtright = nil
+      end
     end
   end
 
