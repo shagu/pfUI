@@ -379,26 +379,26 @@ pfUI:RegisterModule("nameplates", function ()
       -- show class names?
       if healthbar.reaction == 0 then
         if C.nameplates["enemyclassc"] == "1"
-        and pfUI_playerDB[name:GetText()]
-        and pfUI_playerDB[name:GetText()]["class"]
-        and RAID_CLASS_COLORS[pfUI_playerDB[name:GetText()]["class"]]
+        and pfUI.nameplates.players[name:GetText()]
+        and pfUI.nameplates.players[name:GetText()]["class"]
+        and RAID_CLASS_COLORS[pfUI.nameplates.players[name:GetText()]["class"]]
         then
           healthbar:SetStatusBarColor(
-            RAID_CLASS_COLORS[pfUI_playerDB[name:GetText()]["class"]].r,
-            RAID_CLASS_COLORS[pfUI_playerDB[name:GetText()]["class"]].g,
-            RAID_CLASS_COLORS[pfUI_playerDB[name:GetText()]["class"]].b,
+            RAID_CLASS_COLORS[pfUI.nameplates.players[name:GetText()]["class"]].r,
+            RAID_CLASS_COLORS[pfUI.nameplates.players[name:GetText()]["class"]].g,
+            RAID_CLASS_COLORS[pfUI.nameplates.players[name:GetText()]["class"]].b,
             0.9)
         end
       elseif healthbar.reaction == 2 then
         if C.nameplates["friendclassc"] == "1"
-        and pfUI_playerDB[name:GetText()]
-        and pfUI_playerDB[name:GetText()]["class"]
-        and RAID_CLASS_COLORS[pfUI_playerDB[name:GetText()]["class"]]
+        and pfUI.nameplates.players[name:GetText()]
+        and pfUI.nameplates.players[name:GetText()]["class"]
+        and RAID_CLASS_COLORS[pfUI.nameplates.players[name:GetText()]["class"]]
         then
           healthbar:SetStatusBarColor(
-            RAID_CLASS_COLORS[pfUI_playerDB[name:GetText()]["class"]].r,
-            RAID_CLASS_COLORS[pfUI_playerDB[name:GetText()]["class"]].g,
-            RAID_CLASS_COLORS[pfUI_playerDB[name:GetText()]["class"]].b,
+            RAID_CLASS_COLORS[pfUI.nameplates.players[name:GetText()]["class"]].r,
+            RAID_CLASS_COLORS[pfUI.nameplates.players[name:GetText()]["class"]].g,
+            RAID_CLASS_COLORS[pfUI.nameplates.players[name:GetText()]["class"]].b,
             0.9)
         end
       end
