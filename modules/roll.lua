@@ -2,11 +2,69 @@ pfUI:RegisterModule("roll", function ()
   pfUI.roll = CreateFrame("Frame", "pfLootRoll", UIParent)
   pfUI.roll.frames = {}
 
+  pfUI.roll.LOOT_ROLL_GREED = string.gsub(string.gsub(LOOT_ROLL_GREED, "%%s|Hitem:%%d:%%d:%%d:%%d|h%[%%s%]|h%%s", "(.+)"), "%%s", "(.+)")
+  pfUI.roll.LOOT_ROLL_NEED = string.gsub(string.gsub(LOOT_ROLL_NEED, "%%s|Hitem:%%d:%%d:%%d:%%d|h%[%%s%]|h%%s", "(.+)"), "%%s", "(.+)")
+  pfUI.roll.LOOT_ROLL_PASSED = string.gsub(string.gsub(LOOT_ROLL_PASSED, "%%s|Hitem:%%d:%%d:%%d:%%d|h%[%%s%]|h%%s", "(.+)"), "%%s", "(.+)")
+
+  pfUI.roll.cache = {}
+
+  pfUI.roll.scan = CreateFrame("Frame", "pfLootRollMonitor", UIParent)
+  pfUI.roll.scan:RegisterEvent("CHAT_MSG_LOOT")
+  pfUI.roll.scan:SetScript("OnEvent", function()
+    local _, _, player, item = strfind(arg1, pfUI.roll.LOOT_ROLL_GREED);
+    if player and item then
+      pfUI.roll:AddCache(item, player, "GREED")
+      return
+    end
+
+    local _, _, player, item = strfind(arg1, pfUI.roll.LOOT_ROLL_NEED);
+    if player and item then
+      pfUI.roll:AddCache(item, player, "NEED")
+      return
+    end
+
+    local _, _, player, item = strfind(arg1, pfUI.roll.LOOT_ROLL_PASSED);
+    if player and item then
+      pfUI.roll:AddCache(item, player, "PASS")
+      return
+    end
+  end)
+
+  function pfUI.roll:AddCache(hyperlink, name, roll)
+    local _, _, itemLink = string.find(hyperlink, "(item:%d+:%d+:%d+:%d+)");
+    local itemName = GetItemInfo(itemLink)
+
+    -- delete obsolete tables
+    if pfUI.roll.cache[itemName] and pfUI.roll.cache[itemName]["TIMESTAMP"] < GetTime() - 60 then
+      pfUI.roll.cache[itemName] = nil
+    end
+
+    -- initialize itemtable
+    if not pfUI.roll.cache[itemName] then
+      pfUI.roll.cache[itemName] = { ["GREED"] = {}, ["NEED"] = {}, ["PASS"] = {}, ["TIMESTAMP"] = GetTime() }
+    end
+
+    table.insert(pfUI.roll.cache[itemName][roll], name)
+
+    for id=1,4 do
+      if pfUI.roll.frames[id]:IsVisible() and pfUI.roll.frames[id].itemname == itemName then
+        local count_greed = pfUI.roll.cache[itemName] and table.getn(pfUI.roll.cache[itemName]["GREED"]) or 0
+        local count_need  = pfUI.roll.cache[itemName] and table.getn(pfUI.roll.cache[itemName]["NEED"]) or 0
+        local count_pass  = pfUI.roll.cache[itemName] and table.getn(pfUI.roll.cache[itemName]["PASS"]) or 0
+
+        pfUI.roll.frames[id].greed.count:SetText(count_greed > 0 and count_greed or "")
+        pfUI.roll.frames[id].need.count:SetText(count_need > 0 and count_need or "")
+        pfUI.roll.frames[id].pass.count:SetText(count_pass > 0 and count_pass or "")
+      end
+    end
+  end
+
   function pfUI.roll:CreateLootRoll(id)
     local size = 24
     local border = tonumber(C.appearance.border.default)
     local esize = size - border*2
     local f = CreateFrame("Frame", "pfLootRollFrame" .. id, UIParent)
+
     CreateBackdrop(f, nil, nil, .8)
     f.backdrop:SetFrameStrata("BACKGROUND")
     f.hasItem = 1
@@ -44,15 +102,26 @@ pfUI:RegisterModule("roll", function ()
     f.need:SetPoint("LEFT", f.icon, "RIGHT", border*3, -1)
     f.need:SetWidth(esize)
     f.need:SetHeight(esize)
-    f.need.tex = f.need:CreateTexture("OVERLAY")
-    f.need.tex:SetAllPoints(f.need)
-    f.need.tex:SetTexture("Interface\\Buttons\\UI-GroupLoot-Dice-Up")
+    f.need:SetNormalTexture("Interface\\Buttons\\UI-GroupLoot-Dice-Up")
+    f.need:SetHighlightTexture("Interface\\Buttons\\UI-GroupLoot-Dice-Highlight")
+
+    f.need.count = f.need:CreateFontString("NEED")
+    f.need.count:SetPoint("CENTER", f.need, "CENTER", 0, 0)
+    f.need.count:SetJustifyH("CENTER")
+    f.need.count:SetFont(pfUI.font_default, C.global.font_size, "OUTLINE")
+
     f.need:SetScript("OnClick", function()
       RollOnLoot(this:GetParent().rollID, 1)
     end)
     f.need:SetScript("OnEnter", function()
       GameTooltip:SetOwner(this, "ANCHOR_RIGHT")
-      GameTooltip:SetText(NEED)
+      GameTooltip:SetText("|cff33ffcc" .. NEED)
+      if f.itemname and pfUI.roll.cache[f.itemname] then
+        for _, player in pairs(pfUI.roll.cache[f.itemname]["NEED"]) do
+          GameTooltip:AddLine(player)
+        end
+      end
+      GameTooltip:Show()
     end)
     f.need:SetScript("OnLeave", function()
       GameTooltip:Hide()
@@ -62,15 +131,26 @@ pfUI:RegisterModule("roll", function ()
     f.greed:SetPoint("LEFT", f.icon, "RIGHT", border*5+esize, -2)
     f.greed:SetWidth(esize)
     f.greed:SetHeight(esize)
-    f.greed.tex = f.greed:CreateTexture("OVERLAY")
-    f.greed.tex:SetAllPoints(f.greed)
-    f.greed.tex:SetTexture("Interface\\Buttons\\UI-GroupLoot-Coin-Up")
+    f.greed:SetNormalTexture("Interface\\Buttons\\UI-GroupLoot-Coin-Up")
+    f.greed:SetHighlightTexture("Interface\\Buttons\\UI-GroupLoot-Coin-Highlight")
+
+    f.greed.count = f.greed:CreateFontString("GREED")
+    f.greed.count:SetPoint("CENTER", f.greed, "CENTER", 0, 1)
+    f.greed.count:SetJustifyH("CENTER")
+    f.greed.count:SetFont(pfUI.font_default, C.global.font_size, "OUTLINE")
+
     f.greed:SetScript("OnClick", function()
       RollOnLoot(this:GetParent().rollID, 2)
     end)
     f.greed:SetScript("OnEnter", function()
       GameTooltip:SetOwner(this, "ANCHOR_RIGHT")
-      GameTooltip:SetText(GREED)
+      GameTooltip:SetText("|cff33ffcc" .. GREED)
+      if f.itemname and pfUI.roll.cache[f.itemname] then
+        for _, player in pairs(pfUI.roll.cache[f.itemname]["GREED"]) do
+          GameTooltip:AddLine(player)
+        end
+      end
+      GameTooltip:Show()
     end)
     f.greed:SetScript("OnLeave", function()
       GameTooltip:Hide()
@@ -80,15 +160,26 @@ pfUI:RegisterModule("roll", function ()
     f.pass:SetPoint("LEFT", f.icon, "RIGHT", border*7+esize*2, 0)
     f.pass:SetWidth(esize)
     f.pass:SetHeight(esize)
-    f.pass.tex = f.pass:CreateTexture("OVERLAY")
-    f.pass.tex:SetAllPoints(f.pass)
-    f.pass.tex:SetTexture("Interface\\Buttons\\UI-GroupLoot-Pass-Up")
+    f.pass:SetNormalTexture("Interface\\Buttons\\UI-GroupLoot-Pass-Up")
+    f.pass:SetHighlightTexture("Interface\\Buttons\\UI-GroupLoot-Coin-Highlight")
+
+    f.pass.count = f.pass:CreateFontString("PASS")
+    f.pass.count:SetPoint("CENTER", f.pass, "CENTER", 0, -1)
+    f.pass.count:SetJustifyH("CENTER")
+    f.pass.count:SetFont(pfUI.font_default, C.global.font_size, "OUTLINE")
+
     f.pass:SetScript("OnClick", function()
       RollOnLoot(this:GetParent().rollID, 0)
     end)
     f.pass:SetScript("OnEnter", function()
       GameTooltip:SetOwner(this, "ANCHOR_RIGHT")
-			GameTooltip:SetText(PASS)
+      GameTooltip:SetText("|cff33ffcc" .. PASS)
+      if f.itemname and pfUI.roll.cache[f.itemname] then
+        for _, player in pairs(pfUI.roll.cache[f.itemname]["PASS"]) do
+          GameTooltip:AddLine(player)
+        end
+      end
+      GameTooltip:Show()
     end)
     f.pass:SetScript("OnLeave", function()
       GameTooltip:Hide()
@@ -157,6 +248,16 @@ pfUI:RegisterModule("roll", function ()
   function pfUI.roll:UpdateLootRoll(id)
     local texture, name, count, quality, bop = GetLootRollItemInfo(pfUI.roll.frames[id].rollID);
     local color = ITEM_QUALITY_COLORS[quality]
+
+    pfUI.roll.frames[id].itemname = name
+
+    local count_greed = pfUI.roll.cache[name] and table.getn(pfUI.roll.cache[name]["GREED"]) or 0
+    local count_need  = pfUI.roll.cache[name] and table.getn(pfUI.roll.cache[name]["NEED"]) or 0
+    local count_pass  = pfUI.roll.cache[name] and table.getn(pfUI.roll.cache[name]["PASS"]) or 0
+
+    pfUI.roll.frames[id].greed.count:SetText(count_greed > 0 and count_greed or "")
+    pfUI.roll.frames[id].need.count:SetText(count_need > 0 and count_need or "")
+    pfUI.roll.frames[id].pass.count:SetText(count_pass > 0 and count_pass or "")
 
     pfUI.roll.frames[id].name.text:SetText(name)
     pfUI.roll.frames[id].name.text:SetTextColor(color.r, color.g, color.b, 1)
