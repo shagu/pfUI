@@ -89,32 +89,59 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
   f.power.bar:SetAllPoints(f.power)
   f.power.bar:SetMinMaxValues(0, 100)
 
-  f.leftText = f:CreateFontString("Status", "OVERLAY", "GameFontNormalSmall")
-  f.leftText:SetFont(pfUI.font_unit, C.global.font_unit_size, "OUTLINE")
-  f.leftText:SetJustifyH("LEFT")
-  f.leftText:SetFontObject(GameFontWhite)
-  f.leftText:SetParent(f.hp.bar)
-  f.leftText:ClearAllPoints()
-  f.leftText:SetPoint("TOPLEFT",f.hp.bar, "TOPLEFT", 2*default_border, 1)
-  f.leftText:SetPoint("BOTTOMRIGHT",f.hp.bar, "BOTTOMRIGHT", -2*default_border, 0)
+  f.hpLeftText = f:CreateFontString("Status", "OVERLAY", "GameFontNormalSmall")
+  f.hpLeftText:SetFont(pfUI.font_unit, C.global.font_unit_size, "OUTLINE")
+  f.hpLeftText:SetJustifyH("LEFT")
+  f.hpLeftText:SetFontObject(GameFontWhite)
+  f.hpLeftText:SetParent(f.hp.bar)
+  f.hpLeftText:ClearAllPoints()
+  f.hpLeftText:SetPoint("TOPLEFT",f.hp.bar, "TOPLEFT", 2*default_border, 1)
+  f.hpLeftText:SetPoint("BOTTOMRIGHT",f.hp.bar, "BOTTOMRIGHT", -2*default_border, 0)
 
-  f.rightText = f:CreateFontString("Status", "OVERLAY", "GameFontNormalSmall")
-  f.rightText:SetFont(pfUI.font_unit, C.global.font_unit_size, "OUTLINE")
-  f.rightText:SetJustifyH("RIGHT")
-  f.rightText:SetFontObject(GameFontWhite)
-  f.rightText:SetParent(f.hp.bar)
-  f.rightText:ClearAllPoints()
-  f.rightText:SetPoint("TOPLEFT",f.hp.bar, "TOPLEFT", 2*default_border, 1)
-  f.rightText:SetPoint("BOTTOMRIGHT",f.hp.bar, "BOTTOMRIGHT", -2*default_border, 0)
+  f.hpRightText = f:CreateFontString("Status", "OVERLAY", "GameFontNormalSmall")
+  f.hpRightText:SetFont(pfUI.font_unit, C.global.font_unit_size, "OUTLINE")
+  f.hpRightText:SetJustifyH("RIGHT")
+  f.hpRightText:SetFontObject(GameFontWhite)
+  f.hpRightText:SetParent(f.hp.bar)
+  f.hpRightText:ClearAllPoints()
+  f.hpRightText:SetPoint("TOPLEFT",f.hp.bar, "TOPLEFT", 2*default_border, 1)
+  f.hpRightText:SetPoint("BOTTOMRIGHT",f.hp.bar, "BOTTOMRIGHT", -2*default_border, 0)
 
-  f.centerText = f:CreateFontString("Status", "OVERLAY", "GameFontNormalSmall")
-  f.centerText:SetFont(pfUI.font_unit, C.global.font_unit_size, "OUTLINE")
-  f.centerText:SetJustifyH("CENTER")
-  f.centerText:SetFontObject(GameFontWhite)
-  f.centerText:SetParent(f.hp.bar)
-  f.centerText:ClearAllPoints()
-  f.centerText:SetPoint("TOPLEFT",f.hp.bar, "TOPLEFT", 2*default_border, 1)
-  f.centerText:SetPoint("BOTTOMRIGHT",f.hp.bar, "BOTTOMRIGHT", -2*default_border, 0)
+  f.hpCenterText = f:CreateFontString("Status", "OVERLAY", "GameFontNormalSmall")
+  f.hpCenterText:SetFont(pfUI.font_unit, C.global.font_unit_size, "OUTLINE")
+  f.hpCenterText:SetJustifyH("CENTER")
+  f.hpCenterText:SetFontObject(GameFontWhite)
+  f.hpCenterText:SetParent(f.hp.bar)
+  f.hpCenterText:ClearAllPoints()
+  f.hpCenterText:SetPoint("TOPLEFT",f.hp.bar, "TOPLEFT", 2*default_border, 1)
+  f.hpCenterText:SetPoint("BOTTOMRIGHT",f.hp.bar, "BOTTOMRIGHT", -2*default_border, 0)
+
+  f.powerLeftText = f:CreateFontString("Status", "OVERLAY", "GameFontNormalSmall")
+  f.powerLeftText:SetFont(pfUI.font_unit, C.global.font_unit_size, "OUTLINE")
+  f.powerLeftText:SetJustifyH("LEFT")
+  f.powerLeftText:SetFontObject(GameFontWhite)
+  f.powerLeftText:SetParent(f.power.bar)
+  f.powerLeftText:ClearAllPoints()
+  f.powerLeftText:SetPoint("TOPLEFT",f.power.bar, "TOPLEFT", 2*default_border, 1)
+  f.powerLeftText:SetPoint("BOTTOMRIGHT",f.power.bar, "BOTTOMRIGHT", -2*default_border, 0)
+
+  f.powerRightText = f:CreateFontString("Status", "OVERLAY", "GameFontNormalSmall")
+  f.powerRightText:SetFont(pfUI.font_unit, C.global.font_unit_size, "OUTLINE")
+  f.powerRightText:SetJustifyH("RIGHT")
+  f.powerRightText:SetFontObject(GameFontWhite)
+  f.powerRightText:SetParent(f.power.bar)
+  f.powerRightText:ClearAllPoints()
+  f.powerRightText:SetPoint("TOPLEFT",f.power.bar, "TOPLEFT", 2*default_border, 1)
+  f.powerRightText:SetPoint("BOTTOMRIGHT",f.power.bar, "BOTTOMRIGHT", -2*default_border, 0)
+
+  f.powerCenterText = f:CreateFontString("Status", "OVERLAY", "GameFontNormalSmall")
+  f.powerCenterText:SetFont(pfUI.font_unit, C.global.font_unit_size, "OUTLINE")
+  f.powerCenterText:SetJustifyH("CENTER")
+  f.powerCenterText:SetFontObject(GameFontWhite)
+  f.powerCenterText:SetParent(f.power.bar)
+  f.powerCenterText:ClearAllPoints()
+  f.powerCenterText:SetPoint("TOPLEFT",f.power.bar, "TOPLEFT", 2*default_border, 1)
+  f.powerCenterText:SetPoint("BOTTOMRIGHT",f.power.bar, "BOTTOMRIGHT", -2*default_border, 0)
 
   f:RegisterForClicks('LeftButtonUp', 'RightButtonUp',
     'MiddleButtonUp', 'Button4Up', 'Button5Up')
@@ -811,9 +838,13 @@ function pfUI.uf:RefreshUnit(unit, component)
   unit.power.bar:SetStatusBarColor(pr, pg, pb)
 
   if UnitName(unit.label..unit.id) then
-    unit.leftText:SetText(pfUI.uf:GetStatusValue(unit, "left"))
-    unit.centerText:SetText(pfUI.uf:GetStatusValue(unit, "center"))
-    unit.rightText:SetText(pfUI.uf:GetStatusValue(unit, "right"))
+    unit.hpLeftText:SetText(pfUI.uf:GetStatusValue(unit, "hpleft"))
+    unit.hpCenterText:SetText(pfUI.uf:GetStatusValue(unit, "hpcenter"))
+    unit.hpRightText:SetText(pfUI.uf:GetStatusValue(unit, "hpright"))
+
+    unit.powerLeftText:SetText(pfUI.uf:GetStatusValue(unit, "powerleft"))
+    unit.powerCenterText:SetText(pfUI.uf:GetStatusValue(unit, "powercenter"))
+    unit.powerRightText:SetText(pfUI.uf:GetStatusValue(unit, "powerright"))
 
     if UnitIsTapped(unit.label .. unit.id) and not UnitIsTappedByPlayer(unit.label .. unit.id) then
       unit.hp.bar:SetStatusBarColor(.5,.5,.5,.5)
@@ -1262,6 +1293,12 @@ function pfUI.uf:GetStatusValue(unit, pos)
     else
       return unit:GetColor("health") .. pfUI.api.Abbreviate(UnitHealth(unitstr))
     end
+  elseif config == "healthminmax" then
+    local hp, hpmax = UnitHealth(unitstr), UnitHealthMax(unitstr)
+    if unit.label == "target" and MobHealth3 then
+      hp, hpmax = MobHealth3:GetUnitHealth(unit.label)
+    end
+    return unit:GetColor("health") .. pfUI.api.Abbreviate(hp) .. "/" .. pfUI.api.Abbreviate(hpmax)
 
   -- mana/power/focus
   elseif config == "power" then
@@ -1284,6 +1321,8 @@ function pfUI.uf:GetStatusValue(unit, pos)
     else
       return unit:GetColor("power") .. pfUI.api.Abbreviate(UnitMana(unitstr))
     end
+  elseif config == "powerminmax" then
+    return unit:GetColor("power") .. pfUI.api.Abbreviate(UnitMana(unitstr)) .. "/" .. pfUI.api.Abbreviate(UnitManaMax(unitstr))
   else
     return ""
   end

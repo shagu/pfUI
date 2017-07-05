@@ -90,7 +90,7 @@ pfUI:RegisterModule("nameplates", function ()
       this.name:SetParent(this.nameplate)
       this.level:SetParent(this.nameplate)
       this.levelicon:SetParent(this.nameplate)
-      this.raidicon:SetParent(this.nameplate)
+      this.raidicon:SetParent(this.healthbar)
     end
 
     -- init
@@ -178,6 +178,8 @@ pfUI:RegisterModule("nameplates", function ()
     this.raidicon:SetWidth(C.nameplates.raidiconsize)
     this.raidicon:SetHeight(C.nameplates.raidiconsize)
     this.raidicon:SetPoint("CENTER", this.healthbar, "CENTER", 0, -5)
+    this.raidicon:SetDrawLayer("OVERLAY")
+    this.raidicon:SetTexture("Interface\\AddOns\\pfUI\\img\\raidicons")
 
     -- add debuff frames
     if C.nameplates["showdebuffs"] == "1" then
@@ -371,6 +373,7 @@ pfUI:RegisterModule("nameplates", function ()
       end
 
       healthbar.wantR, healthbar.wantG, healthbar.wantB  = healthbar:GetStatusBarColor()
+      this.needClassColorUpdate = true
     end
 
     -- add class colors
@@ -378,26 +381,26 @@ pfUI:RegisterModule("nameplates", function ()
       -- show class names?
       if healthbar.reaction == 0 then
         if C.nameplates["enemyclassc"] == "1"
-        and pfUI_playerDB[name:GetText()]
-        and pfUI_playerDB[name:GetText()]["class"]
-        and RAID_CLASS_COLORS[pfUI_playerDB[name:GetText()]["class"]]
+        and pfUI.nameplates.players[name:GetText()]
+        and pfUI.nameplates.players[name:GetText()]["class"]
+        and RAID_CLASS_COLORS[pfUI.nameplates.players[name:GetText()]["class"]]
         then
           healthbar:SetStatusBarColor(
-            RAID_CLASS_COLORS[pfUI_playerDB[name:GetText()]["class"]].r,
-            RAID_CLASS_COLORS[pfUI_playerDB[name:GetText()]["class"]].g,
-            RAID_CLASS_COLORS[pfUI_playerDB[name:GetText()]["class"]].b,
+            RAID_CLASS_COLORS[pfUI.nameplates.players[name:GetText()]["class"]].r,
+            RAID_CLASS_COLORS[pfUI.nameplates.players[name:GetText()]["class"]].g,
+            RAID_CLASS_COLORS[pfUI.nameplates.players[name:GetText()]["class"]].b,
             0.9)
         end
       elseif healthbar.reaction == 2 then
         if C.nameplates["friendclassc"] == "1"
-        and pfUI_playerDB[name:GetText()]
-        and pfUI_playerDB[name:GetText()]["class"]
-        and RAID_CLASS_COLORS[pfUI_playerDB[name:GetText()]["class"]]
+        and pfUI.nameplates.players[name:GetText()]
+        and pfUI.nameplates.players[name:GetText()]["class"]
+        and RAID_CLASS_COLORS[pfUI.nameplates.players[name:GetText()]["class"]]
         then
           healthbar:SetStatusBarColor(
-            RAID_CLASS_COLORS[pfUI_playerDB[name:GetText()]["class"]].r,
-            RAID_CLASS_COLORS[pfUI_playerDB[name:GetText()]["class"]].g,
-            RAID_CLASS_COLORS[pfUI_playerDB[name:GetText()]["class"]].b,
+            RAID_CLASS_COLORS[pfUI.nameplates.players[name:GetText()]["class"]].r,
+            RAID_CLASS_COLORS[pfUI.nameplates.players[name:GetText()]["class"]].g,
+            RAID_CLASS_COLORS[pfUI.nameplates.players[name:GetText()]["class"]].b,
             0.9)
         end
       end
