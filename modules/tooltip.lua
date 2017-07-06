@@ -15,20 +15,20 @@ CreateBackdrop(GameTooltip, nil, nil, alpha)
     for i, unit in pairs({"mouseover", "player", "pet", "target", "party", "partypet", "raid", "raidpet"}) do
       if unit == "party" or unit == "partypet" then
         for i=1,4 do
-          if UnitName(unit .. i) == GameTooltipTextLeft1:GetText() or UnitPVPName(unit .. i) == GameTooltipTextLeft1:GetText() then
+          if UnitExists(unit .. i) and ( UnitName(unit .. i) == GameTooltipTextLeft1:GetText() or UnitPVPName(unit .. i) == GameTooltipTextLeft1:GetText() ) then
             pfUI.tooltip.unit = unit .. i
             return pfUI.tooltip.unit
           end
         end
       elseif unit == "raid" or unit == "raidpet" then
         for i=1,40 do
-          if UnitName(unit .. i) == GameTooltipTextLeft1:GetText() or UnitPVPName(unit .. i) == GameTooltipTextLeft1:GetText() then
+          if UnitExists(unit .. i) and ( UnitName(unit .. i) == GameTooltipTextLeft1:GetText() or UnitPVPName(unit .. i) == GameTooltipTextLeft1:GetText() ) then
             pfUI.tooltip.unit = unit .. i
             return pfUI.tooltip.unit
           end
         end
       else
-        if UnitName(unit) == GameTooltipTextLeft1:GetText() or UnitPVPName(unit) == GameTooltipTextLeft1:GetText() then
+        if UnitExists(unit) and ( UnitName(unit) == GameTooltipTextLeft1:GetText() or UnitPVPName(unit) == GameTooltipTextLeft1:GetText() ) then
           pfUI.tooltip.unit = unit
           return pfUI.tooltip.unit
         end
