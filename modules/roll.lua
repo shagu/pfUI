@@ -6,6 +6,9 @@ pfUI:RegisterModule("roll", function ()
   pfUI.roll.LOOT_ROLL_NEED = string.gsub(string.gsub(LOOT_ROLL_NEED, "%%s|Hitem:%%d:%%d:%%d:%%d|h%[%%s%]|h%%s", "(.+)"), "%%s", "(.+)")
   pfUI.roll.LOOT_ROLL_PASSED = string.gsub(string.gsub(LOOT_ROLL_PASSED, "%%s|Hitem:%%d:%%d:%%d:%%d|h%[%%s%]|h%%s", "(.+)"), "%%s", "(.+)")
 
+  local _, _, everyone, _ = strfind(LOOT_ROLL_ALL_PASSED, pfUI.roll.LOOT_ROLL_PASSED);
+  pfUI.roll.blacklist = { YOU, everyone }
+
   pfUI.roll.cache = {}
 
   pfUI.roll.scan = CreateFrame("Frame", "pfLootRollMonitor", UIParent)
@@ -31,6 +34,11 @@ pfUI:RegisterModule("roll", function ()
   end)
 
   function pfUI.roll:AddCache(hyperlink, name, roll)
+    -- skip invalid names
+    for _, invalid in pairs(pfUI.roll.blacklist) do
+      if name == invalid then return end
+    end
+
     local _, _, itemLink = string.find(hyperlink, "(item:%d+:%d+:%d+:%d+)");
     local itemName = GetItemInfo(itemLink)
 
@@ -42,6 +50,11 @@ pfUI:RegisterModule("roll", function ()
     -- initialize itemtable
     if not pfUI.roll.cache[itemName] then
       pfUI.roll.cache[itemName] = { ["GREED"] = {}, ["NEED"] = {}, ["PASS"] = {}, ["TIMESTAMP"] = GetTime() }
+    end
+
+    -- ignore already listed names
+    for _, existing in pairs(pfUI.roll.cache[itemName][roll]) do
+      if name == existing then return end
     end
 
     table.insert(pfUI.roll.cache[itemName][roll], name)
@@ -235,6 +248,14 @@ pfUI:RegisterModule("roll", function ()
   end)
 
   function _G.GroupLootFrame_OpenNewFrame(id, rollTime)
+    -- clear cache if possible
+    local nothing = nil
+    for i=1,4 do
+      visible = visible or pfUI.roll.frames[i]:IsVisible()
+    end
+    if not visible then pfUI.roll.cache = {} end
+
+    -- setup roll frames
     for i=1,4 do
       if not pfUI.roll.frames[i]:IsVisible() then
         pfUI.roll.frames[i].rollID = id
