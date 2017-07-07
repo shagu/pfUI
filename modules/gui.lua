@@ -1502,11 +1502,15 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.tabs.thirdparty.tabs.general = pfUI.gui.tabs.thirdparty.tabs:CreateChildFrame(T["Thirdparty"], 70)
   pfUI.gui.tabs.thirdparty.tabs.general:SetScript("OnShow", function()
     if not this.setup then
-      CreateConfig(this, T["DPSMate"], C.thirdparty.dpsmate, "enable", "checkbox")
+      CreateConfig(this, T["DPSMate (Skin)"], C.thirdparty.dpsmate, "skin", "checkbox")
+      CreateConfig(this, T["DPSMate (Dock)"], C.thirdparty.dpsmate, "dock", "checkbox")
+      CreateConfig(this, T["SWStats (Skin)"], C.thirdparty.swstats, "skin", "checkbox")
+      CreateConfig(this, T["SWStats (Dock)"], C.thirdparty.swstats, "dock", "checkbox")
+      CreateConfig(this, T["KLH Threat Meter (Skin)"], C.thirdparty.ktm, "skin", "checkbox")
+      CreateConfig(this, T["KLH Threat Meter (Dock)"], C.thirdparty.ktm, "dock", "checkbox")
       CreateConfig(this, T["WIM"], C.thirdparty.wim, "enable", "checkbox")
       CreateConfig(this, T["HealComm"], C.thirdparty.healcomm, "enable", "checkbox")
       CreateConfig(this, T["CleanUp"], C.thirdparty.cleanup, "enable", "checkbox")
-      CreateConfig(this, T["KLH Threat Meter"], C.thirdparty.ktm, "enable", "checkbox")
       this.setup = true
     end
   end)
