@@ -40,15 +40,14 @@ pfUI:RegisterModule("player", function ()
   pfUI.uf.player:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOM", -75, 125)
   UpdateMovable(pfUI.uf.player)
 
-  pfUI.uf.player.Dropdown = getglobal("PlayerFrameDropDown")
-  function pfUI.uf.player.Dropdowni()
-    -- add reset button when alone
-    if not (UnitInRaid("player") or GetNumPartyMembers() > 0) then
+  pfUI.uf.player.dropdown = {}
+  function pfUI.uf.player.dropdown:Init()
+    UnitPopup_ShowMenu(PlayerFrameDropDown, "SELF", "player")
+    if pfUI.uf.player.dropdown.rebuild and not CanShowResetInstances() then
       UIDropDownMenu_AddButton({text = RESET_INSTANCES, func = ResetInstances, notCheckable = 1}, 1)
+      pfUI.uf.player.dropdown.rebuild = nil
     end
-    UnitPopup_ShowMenu(pfUI.uf.player.Dropdown, "SELF", "player")
   end
-  UIDropDownMenu_Initialize(pfUI.uf.player.Dropdown, pfUI.uf.player.Dropdowni, "MENU")
 
   pfUI.uf.player:RegisterEvent("UPDATE_FACTION") -- pvp icon
   pfUI.uf.player:RegisterEvent("UNIT_FACTION") -- pvp icon

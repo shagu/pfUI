@@ -42,6 +42,9 @@ pfUI:RegisterModule("autovendor", function ()
   end)
 
   autovendor:SetScript("OnUpdate", function()
+    -- throttle to to one item per .1 second
+    if ( this.tick or 1) > GetTime() then return else this.tick = GetTime() + .1 end
+
     local bag, slot = GetNextGreyItem()
 
     if not bag or not slot then
