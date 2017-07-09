@@ -67,6 +67,7 @@ function pfUI:LoadConfig()
 
   pfUI:UpdateConfig("loot",       nil,           "autoresize",       "1")
   pfUI:UpdateConfig("loot",       nil,           "autopickup",       "1")
+  pfUI:UpdateConfig("loot",       nil,           "mousecursor",      "1")
 
   pfUI:UpdateConfig("unitframes", nil,           "disable",          "0")
   pfUI:UpdateConfig("unitframes", nil,           "pastel",           "1")

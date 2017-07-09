@@ -10,6 +10,13 @@ pfUI:RegisterModule("loot", function ()
   pfUI.loot:RegisterEvent("LOOT_BIND_CONFIRM")
 
   pfUI.loot:SetWidth(160+C.appearance.border.default*2)
+
+  if C.loot.mousecursor == "0" then
+    pfUI.loot:SetHeight(160+C.appearance.border.default*2)
+    pfUI.loot:SetPoint("TOP", UIParent, "CENTER", 0, 0)
+    UpdateMovable(pfUI.loot)
+  end
+
   pfUI.loot.slots = {}
   function pfUI.loot:UpdateLootFrame()
     local maxrarity, maxwidth = 0, 0
@@ -198,12 +205,14 @@ pfUI:RegisterModule("loot", function ()
         CloseLoot(not autoLoot)
       end
 
-      local x, y = GetCursorPosition()
-      x = x / this:GetEffectiveScale()
-      y = y / this:GetEffectiveScale()
+      if C.loot.mousecursor == "1" then
+        local x, y = GetCursorPosition()
+        x = x / this:GetEffectiveScale()
+        y = y / this:GetEffectiveScale()
 
-      this:ClearAllPoints()
-      this:SetPoint("TOPLEFT", nil, "BOTTOMLEFT", x-40, y+20)
+        this:ClearAllPoints()
+        this:SetPoint("TOPLEFT", nil, "BOTTOMLEFT", x-40, y+20)
+      end
 
       pfUI.loot:UpdateLootFrame()
     end
