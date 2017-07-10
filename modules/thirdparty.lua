@@ -1,87 +1,403 @@
 pfUI:RegisterModule("thirdparty", function ()
   pfUI.thirdparty = {}
+  pfUI.thirdparty.meters = {}
+  pfUI.thirdparty.meters.damage = false
+  pfUI.thirdparty.meters.threat = false
+  pfUI.thirdparty.meters.state = false
 
-  -- DPSMate Integration
-  -- Move DPSMate to right chat and let the chat-hide button toggle it
-  if C.thirdparty.dpsmate.enable == "1" then
+  function pfUI.thirdparty.meters:Resize()
+    if pfUI.chat and pfUI.panel then
 
-    local function pfDPSMateConfig()
-      -- set DPSMate appearance to match pfUI
-      DPSMateSettings["windows"][1]["titlebarheight"] = 18
-      DPSMateSettings["windows"][1]["titlebarfontsize"] = 12
-      DPSMateSettings["windows"][1]["titlebarfont"] = "Accidental Presidency"
-      DPSMateSettings["windows"][1]["titlebarbgcolor"][1] = 0
-      DPSMateSettings["windows"][1]["titlebarbgcolor"][2] = 0
-      DPSMateSettings["windows"][1]["titlebarbgcolor"][3] = 0
+      if DPSMate_DPSMate and C.thirdparty.dpsmate.dock == "1" then
+        -- DPSMate Single View
+        if pfUI.thirdparty.meters.damage and not pfUI.thirdparty.meters.threat then
+          DPSMate_DPSMate:ClearAllPoints()
+          DPSMate_DPSMate:SetAllPoints(pfUI.chat.right)
+          DPSMate_DPSMate:SetWidth(pfUI.chat.right:GetWidth())
+          DPSMate_DPSMate_ScrollFrame:ClearAllPoints()
+          DPSMate_DPSMate_ScrollFrame:SetWidth(pfUI.chat.right:GetWidth())
+          DPSMate_DPSMate_ScrollFrame:SetPoint("TOPLEFT", DPSMate_DPSMate_Head, "BOTTOMLEFT", 0, 0)
+          DPSMate_DPSMate_ScrollFrame:SetPoint("BOTTOMRIGHT", pfUI.chat.right, "BOTTOMRIGHT", 0, pfUI.panel.right:GetHeight())
+          DPSMate_DPSMate_ScrollFrame_Child:SetWidth(pfUI.chat.right:GetWidth())
+          DPSMate_DPSMate_Resize:Hide()
+        end
 
-      DPSMateSettings["windows"][1]["barheight"] = 15
-      DPSMateSettings["windows"][1]["barfontsize"] = 12
-      DPSMateSettings["windows"][1]["bartexture"] = "BantoBar"
-      DPSMateSettings["windows"][1]["barfont"] = "Accidental Presidency"
-
-      DPSMateSettings["windows"][1]["bgopacity"] = 1
-      DPSMateSettings["windows"][1]["borderopacity"] = 0
-      DPSMateSettings["windows"][1]["opacity"] = 1
-      DPSMateSettings["windows"][1]["contentbgtexture"] = "Solid Background"
-      DPSMateSettings["windows"][1]["contentbgcolor"][1] = 0
-      DPSMateSettings["windows"][1]["contentbgcolor"][2] = 0
-      DPSMateSettings["windows"][1]["contentbgcolor"][3] = 0
-      DPSMateSettings["windows"][1]["contentbgcolor"][3] = 0
-
-      if pfUI.panel then
-        pfUI.panel.right.hide:SetScript("OnClick", function()
-          if DPSMate_DPSMate:IsShown() then
-            DPSMate_DPSMate:Hide()
-          else
-            DPSMate_DPSMate:Show()
-          end
-        end)
-      end
-    end
-
-    local function pfDPSMateToggle()
-      if pfUI.chat and pfUI.panel then
-        DPSMate_DPSMate:ClearAllPoints()
-        DPSMate_DPSMate:SetAllPoints(pfUI.chat.right)
-
-        local DPSMate_Window = DPSMate_DPSMate_ScrollFrame or DPSMate_Statusframe
-        if DPSMate_Window then
-          DPSMate_Window:ClearAllPoints()
-          DPSMate_Window:SetAllPoints(pfUI.chat.right)
-          DPSMate_Window:SetWidth(pfUI.chat.right:GetWidth())
-          DPSMate_Window:SetPoint("TOPLEFT", DPSMate_DPSMate_Head, "BOTTOMLEFT", 0, 0)
-          DPSMate_Window:SetPoint("BOTTOMRIGHT", pfUI.chat.right, "BOTTOMRIGHT", 0, pfUI.panel.right:GetHeight())
+        -- DPSMate Dual View
+        if pfUI.thirdparty.meters.damage and pfUI.thirdparty.meters.threat then
+          DPSMate_DPSMate:ClearAllPoints()
+          DPSMate_DPSMate:SetPoint("TOPLEFT", pfUI.chat.right, "TOP", 0 ,0)
+          DPSMate_DPSMate:SetPoint("BOTTOMRIGHT", pfUI.chat.right, "BOTTOMRIGHT", 0 ,0)
+          DPSMate_DPSMate:SetWidth(pfUI.chat.right:GetWidth() / 2)
+          DPSMate_DPSMate_ScrollFrame:ClearAllPoints()
+          DPSMate_DPSMate_ScrollFrame:SetWidth(pfUI.chat.right:GetWidth() / 2)
+          DPSMate_DPSMate_ScrollFrame:SetPoint("TOPLEFT", DPSMate_DPSMate_Head, "BOTTOMLEFT", 0, 0)
+          DPSMate_DPSMate_ScrollFrame:SetPoint("BOTTOMRIGHT", pfUI.chat.right, "BOTTOMRIGHT", 0, pfUI.panel.right:GetHeight())
+          DPSMate_DPSMate_ScrollFrame_Child:SetWidth(pfUI.chat.right:GetWidth())
           DPSMate_DPSMate_Resize:Hide()
         end
       end
-    end
 
+      if SW_BarFrame1 and C.thirdparty.swstats.dock == "1" then
+        -- SWStats Single View
+        if pfUI.thirdparty.meters.damage and not pfUI.thirdparty.meters.threat then
+          SW_BarFrame1:SetWidth(pfUI.chat.right:GetWidth())
+          SW_BarFrame1:ClearAllPoints()
+          SW_BarFrame1:SetAllPoints(pfUI.chat.right)
+          SW_BarFrame1_Resizer:Hide()
+          SW_BarsLayout("SW_BarFrame1", true)
+        end
+
+        -- SWStats Dual View
+        if pfUI.thirdparty.meters.damage and pfUI.thirdparty.meters.threat then
+          SW_BarFrame1:SetWidth(pfUI.chat.right:GetWidth() / 2)
+          SW_BarFrame1:ClearAllPoints()
+          SW_BarFrame1:SetPoint("TOPLEFT", pfUI.chat.right, "TOP", 0 ,0)
+          SW_BarFrame1:SetPoint("BOTTOMRIGHT", pfUI.chat.right, "BOTTOMRIGHT", 0 ,0)
+          SW_BarFrame1_Resizer:Hide()
+          SW_BarsLayout("SW_BarFrame1", true)
+        end
+      end
+
+      if KLHTM_Frame and C.thirdparty.ktm.dock == "1" then
+        -- KLHTM Single View
+        if not pfUI.thirdparty.meters.damage and pfUI.thirdparty.meters.threat then
+          KLHTM_Frame:SetWidth(pfUI.chat.right:GetWidth())
+          KLHTM_Frame:ClearAllPoints()
+          KLHTM_Frame:SetAllPoints(pfUI.chat.right)
+        end
+
+        -- KLHTM Dual View
+        if pfUI.thirdparty.meters.damage and pfUI.thirdparty.meters.threat then
+          KLHTM_Frame:SetWidth(pfUI.chat.right:GetWidth() / 2)
+          KLHTM_Frame:ClearAllPoints()
+          KLHTM_Frame:SetPoint("TOPLEFT", pfUI.chat.right, "TOPLEFT", 0 ,0)
+          KLHTM_Frame:SetPoint("BOTTOMRIGHT", pfUI.chat.right, "BOTTOM", -1 ,0)
+        end
+      end
+    end
+  end
+
+  function pfUI.thirdparty.meters:Toggle()
+    pfUI.thirdparty.meters:Resize()
+
+    -- show meters
+    if pfUI.thirdparty.meters.state == false then
+      pfUI.thirdparty.meters.state = true
+
+      -- ktm
+      if C.thirdparty.ktm.dock == "1" and KLHTM_Frame then
+        KLHTM_SetVisible(true)
+        KLHTM_Frame:Show()
+      end
+
+      -- dpsmate
+      if C.thirdparty.dpsmate.dock == "1" and DPSMate_DPSMate then
+        DPSMate_DPSMate:Show()
+      end
+
+      -- swstats
+      if C.thirdparty.swstats.dock == "1" and SW_BarFrame1 then
+        SW_BarFrame1:Show()
+        SW_OptKey(1)
+      end
+
+    -- hide meters
+    else
+      pfUI.thirdparty.meters.state = false
+
+      -- ktm
+      if C.thirdparty.ktm.dock == "1" and KLHTM_Frame then
+        KLHTM_SetVisible(false)
+        KLHTM_Frame:Hide()
+      end
+
+      -- dpsmate
+      if C.thirdparty.dpsmate.dock == "1" and DPSMate_DPSMate then
+        DPSMate_DPSMate:Hide()
+      end
+
+      -- swstats
+      if C.thirdparty.swstats.dock == "1" and SW_BarFrame1 then
+        SW_BarFrame1:Hide()
+      end
+    end
+  end
+
+
+  -- KLHTM Integration
+  local function pfSkinKTM()
+    if C.thirdparty.ktm.skin == "1" then
+      -- remove titlebar
+      KLHTM_Gui.title.back:Hide()
+      KLHTM_SetGuiScale(.9)
+
+      if C.thirdparty.ktm.dock == "1" then
+        KLHTM_Frame:SetBackdrop({
+          bgFile = "Interface\\AddOns\\pfUI\\img\\col", tile = true, tileSize = 8,
+          insets = {left = -1, right = -1, top = -1, bottom = -1},
+        })
+
+        KLHTM_Frame:SetBackdropColor(0,0,0)
+      else
+        CreateBackdrop(KLHTM_Frame)
+      end
+
+      -- theme buttons
+      local buttons = { "KLHTM_TitleFrameClose", "KLHTM_TitleFrameMinimise",
+        "KLHTM_TitleFrameMaximise", "KLHTM_TitleFrameOptions", "KLHTM_TitleFramePin",
+        "KLHTM_TitleFrameUnpin", "KLHTM_TitleFrameSelfView", "KLHTM_TitleFrameRaidView",
+        "KLHTM_TitleFrameMasterTarget", "KLHTM_SelfFrameBottomReset" }
+
+      for i, button in pairs(buttons) do
+        local b = _G[button]
+        if not b then return end
+        SkinButton(b)
+        b:SetScale(.8)
+
+        -- remove red background on some buttons
+        for i,v in ipairs({b:GetRegions()}) do
+          if v.SetTexture and i == 1 then
+            v:SetTexture(0,0,0,0)
+          end
+        end
+
+        local p,rt,rp,xo,yo = b:GetPoint()
+        if not b.pfSet and i > 1 then
+          b:SetPoint(p,rt,rp,xo - 3,yo)
+          b.pfSet = true
+        end
+      end
+
+      -- name buttons
+      KLHTM_TitleFrameClose:SetText("x")
+      KLHTM_TitleFrameMinimise:SetText("_")
+      KLHTM_TitleFrameMaximise:SetText("_")
+      KLHTM_TitleFrameOptions:SetText("O")
+      KLHTM_TitleFramePin:SetText("P")
+      KLHTM_TitleFrameUnpin:SetText("U")
+      KLHTM_TitleFrameSelfView:SetText("S")
+      KLHTM_TitleFrameRaidView:SetText("R")
+      KLHTM_TitleFrameMasterTarget:SetText("T")
+
+      -- skin rows (raid)
+      for i in pairs(KLHTM_Gui.raid.rows) do
+        KLHTM_Gui.raid.rows[i].bar:SetTexture("Interface\\AddOns\\pfUI\\img\\bar")
+        KLHTM_Gui.raid.rows[i].bar:SetAlpha(.75)
+
+        if _G["KLHTM_RaidFrameRow" .. i .. "NameText"] then
+          _G["KLHTM_RaidFrameRow" .. i .. "NameText"]:SetFont(pfUI.font_default, 13, "OUTLINE")
+          _G["KLHTM_RaidFrameRow" .. i .. "ThreatText"]:SetFont(pfUI.font_default, 13, "OUTLINE")
+          _G["KLHTM_RaidFrameRow" .. i .. "PercentThreatText"]:SetFont(pfUI.font_default, 13, "OUTLINE")
+        end
+      end
+
+      KLHTM_RaidFrameHeaderNameText:SetFont(pfUI.font_default, 12, "OUTLINE")
+      KLHTM_RaidFrameHeaderThreatText:SetFont(pfUI.font_default, 12, "OUTLINE")
+      KLHTM_RaidFrameHeaderPercentThreatText:SetFont(pfUI.font_default, 12, "OUTLINE")
+      KLHTM_RaidFrameBottomThreatDefecitText:SetFont(pfUI.font_default, 12, "OUTLINE")
+      KLHTM_RaidFrameBottomMasterTargetText:SetFont(pfUI.font_default, 12, "OUTLINE")
+      KLHTM_RaidFrameHeaderName:SetHeight(12)
+
+      -- skin rows (self)
+      for i in pairs(KLHTM_Gui.self.rows) do
+        KLHTM_Gui.self.rows[i].bar:SetTexture("Interface\\AddOns\\pfUI\\img\\bar")
+        KLHTM_Gui.self.rows[i].bar:SetAlpha(.75)
+      end
+
+      -- remove seperators
+      if KLHTM_RaidFrameLine then KLHTM_RaidFrameLine:Hide() end
+      if KLHTM_RaidFrameBottomLine then KLHTM_RaidFrameBottomLine:Hide() end
+      if KLHTM_SelfFrameLine then KLHTM_SelfFrameLine:Hide() end
+      if KLHTM_SelfFrameBottomLine then KLHTM_SelfFrameBottomLine:Hide() end
+    end
+  end
+
+  local function pfDockKTM()
+    if C.thirdparty.ktm.dock == "1" then
+      pfUI.thirdparty.meters.threat = true
+
+      KLHTM_Frame:Hide()
+
+      if pfUI.panel then
+        pfUI.panel.right.hide:SetScript("OnClick", function()
+          pfUI.thirdparty.meters:Toggle()
+        end)
+      end
+    end
+  end
+
+  if KLHTM_Gui then
+    pfSkinKTM()
+    pfDockKTM()
+  else
+    local pfHookKTM = CreateFrame("Frame", nil)
+    pfHookKTM:RegisterEvent("VARIABLES_LOADED")
+    pfHookKTM:SetScript("OnEvent",function()
+      if KLHTM_Gui then
+        pfHookKTM:UnregisterEvent("VARIABLES_LOADED")
+        pfSkinKTM()
+        pfDockKTM()
+      end
+    end)
+  end
+
+  -- DPSMate Integration
+  local function pfSkinDPSMate()
+    if C.thirdparty.dpsmate.skin == "1" then
+      local pfHookDPSMateInitializeFrames = _G.DPSMate.InitializeFrames
+      _G.DPSMate.InitializeFrames = function(self)
+        if DPSMateSettings then
+          -- set DPSMate appearance to match pfUI
+          DPSMateSettings["windows"][1]["titlebarheight"] = 20
+          DPSMateSettings["windows"][1]["titlebarfontsize"] = 12
+          DPSMateSettings["windows"][1]["titlebarfont"] = "Accidental Presidency"
+          DPSMateSettings["windows"][1]["titlebarbgcolor"][1] = 0
+          DPSMateSettings["windows"][1]["titlebarbgcolor"][2] = 0
+          DPSMateSettings["windows"][1]["titlebarbgcolor"][3] = 0
+
+          DPSMateSettings["windows"][1]["titlebarfontcolor"][1] = 1
+          DPSMateSettings["windows"][1]["titlebarfontcolor"][2] = 1
+          DPSMateSettings["windows"][1]["titlebarfontcolor"][3] = 1
+
+          DPSMateSettings["windows"][1]["barheight"] = 11
+          DPSMateSettings["windows"][1]["barfontsize"] = 13
+          DPSMateSettings["windows"][1]["bartexture"] = "normTex"
+          DPSMateSettings["windows"][1]["barfont"] = "Accidental Presidency"
+
+          DPSMateSettings["windows"][1]["bgopacity"] = 1
+          DPSMateSettings["windows"][1]["borderopacity"] = 0
+          DPSMateSettings["windows"][1]["opacity"] = 1
+          DPSMateSettings["windows"][1]["contentbgtexture"] = "Solid Background"
+          DPSMateSettings["windows"][1]["contentbgcolor"][1] = 0
+          DPSMateSettings["windows"][1]["contentbgcolor"][2] = 0
+          DPSMateSettings["windows"][1]["contentbgcolor"][3] = 0
+          DPSMateSettings["windows"][1]["contentbgcolor"][3] = 0
+        end
+
+        pfHookDPSMateInitializeFrames(self)
+      end
+    end
+  end
+
+  local function pfDockDPSMate()
+    if C.thirdparty.dpsmate.dock == "1" then
+      pfUI.thirdparty.meters.damage = true
+
+      local pfDPSMateOnLoad = DPSMate.OnLoad
+      function _G.DPSMate:OnLoad()
+        pfDPSMateOnLoad()
+        DPSMate_DPSMate:Hide()
+      end
+
+      if DPSMate_DPSMate then
+        DPSMate_DPSMate:Hide()
+      end
+
+      if pfUI.panel then
+        pfUI.panel.right.hide:SetScript("OnClick", function()
+          pfUI.thirdparty.meters:Toggle()
+        end)
+      end
+    end
+  end
+
+  if DPSMate then
+    pfSkinDPSMate()
+    pfDockDPSMate()
+  else
     local pfHookDPSMate = CreateFrame("Frame", nil)
     pfHookDPSMate:RegisterEvent("VARIABLES_LOADED")
     pfHookDPSMate:SetScript("OnEvent",function()
-      if event == "VARIABLES_LOADED" then
-        if DPSMate then
-          pfHookDPSMate:UnregisterEvent("VARIABLES_LOADED")
-          pfDPSMateConfig()
+      if DPSMate then
+        pfHookKTM:UnregisterEvent("VARIABLES_LOADED")
+        pfSkinDPSMate()
+        pfDockDPSMate()
+      end
+    end)
+  end
 
-          -- overwrite code (new)
-          local pfDPSMateOnLoad = DPSMate.OnLoad
-          function _G.DPSMate:OnLoad()
-            pfDPSMateOnLoad()
-            pfDPSMateToggle()
-            DPSMate_DPSMate:Hide()
-          end
 
-          -- overwrite code (old)
-          if DPSMate_DPSMate then
-            local pfDPSMateOnShow = DPSMate_DPSMate.Show
-            function _G.DPSMate_DPSMate.Show ()
-              pfDPSMateOnShow(DPSMate_DPSMate)
-              pfDPSMateToggle()
-            end
-            DPSMate_DPSMate:Hide()
-          end
-        end
+  -- SWStats Integration
+  local function pfSkinSWStats()
+    if C.thirdparty.swstats.skin == "1" then
+
+      SW_Settings["OPT_ShowMainWinDPS"] = 1
+
+      SW_Settings["Colors"] = SW_Settings["Colors"] or {}
+      SW_Settings["Colors"]["MainWinBack"] = { [1] = 0, [2] = 0, [3] = 0,	[4] = 1, }
+      SW_Settings["Colors"]["Backdrops"] = { [1] = 0, [2] = 0, [3] = 0,	[4] = 0, }
+      SW_Settings["Colors"]["TitleBarsFont"] = { [1] = 1, [2] = 1, [3] = 1,	[4] = 1, }
+      SW_Settings["Colors"]["TitleBars"] = { [1] = 0, [2] = 0, [3] = 0,	[4] = 1, }
+
+      SW_Settings["InfoSettings"] = SW_Settings["InfoSettings"] or {}
+      SW_Settings["InfoSettings"][1] = SW_Settings["InfoSettings"][1] or {}
+      SW_Settings["InfoSettings"][1]["SF"] = "SW_Filter_EverGroup"
+      SW_Settings["InfoSettings"][1]["ShowPercent"] = 1
+      SW_Settings["InfoSettings"][1]["ShowRank"] = 1
+      SW_Settings["InfoSettings"][1]["ShowNumber"] = 1
+      SW_Settings["InfoSettings"][1]["BT"] = 13
+      SW_Settings["InfoSettings"][1]["BH"] = 10
+      SW_Settings["InfoSettings"][1]["BFS"] = 11
+      SW_Settings["InfoSettings"][1]["BFC"] = { [1] = 1, [2] = 1, [3] = 1, [4] = 1, }
+      SW_Settings["InfoSettings"][1]["BC"] = { [1] = 0, [2] = 0, [3] = 0, [4] = 1, }
+      SW_Settings["InfoSettings"][1]["OTF"] = ( SW_Settings["InfoSettings"][1]["OTF"] == "1" and "SWStats" ) or SW_Settings["InfoSettings"][1]["OTF"]
+      SW_Settings["InfoSettings"][1]["UCC"] = 1
+
+      SW_BarFrame1_Title:SetPoint("TOPLEFT", 3, 0)
+      SW_BarFrame1_Title_Sync:SetScale(.84)
+      SW_BarFrame1_Title_Report:SetScale(.84)
+      SW_BarFrame1_Title_Settings:SetScale(.84)
+      SW_BarFrame1_Title_Close:SetScale(.84)
+      SW_BarFrame1_Title_Console:SetScale(.84)
+      SW_BarFrame1_Title_TimeLine:SetScale(.84)
+      SW_BarFrame1_Title_TimeLine:SetScale(.84)
+
+      -- bar padding
+			SW_BarFrame1.swoBarY = -22
+      _G.SW_BARSEPY = 1
+
+      if C.thirdparty.swstats.dock == "1" then
+        SW_BarFrame1:SetBackdrop({
+          bgFile = "Interface\\AddOns\\pfUI\\img\\col", tile = true, tileSize = 8,
+          insets = {left = -1, right = -1, top = -1, bottom = -1},
+        })
+        SW_BarFrame1:SetBackdropColor(0,0,0)
+      else
+        CreateBackdrop(SW_BarFrame1)
+      end
+    end
+  end
+
+  local function pfDockSWStats()
+    if C.thirdparty.swstats.dock == "1" then
+      pfUI.thirdparty.meters.damage = true
+
+      SW_Settings["SHOWMAIN"] = nil
+      SW_BarFrame1:Hide()
+
+      -- hide bottom panels
+      SW_OptChk_Running:Hide()
+      SW_BarFrame1_Selector:Hide()
+
+      if pfUI.panel then
+        pfUI.panel.right.hide:SetScript("OnClick", function()
+          pfUI.thirdparty.meters:Toggle()
+        end)
+      end
+    end
+  end
+
+  if SW_BarFrame1 then
+    pfSkinSWStats()
+    pfDockSWStats()
+  else
+    local pfHookSWStats = CreateFrame("Frame", nil)
+    pfHookSWStats:RegisterEvent("VARIABLES_LOADED")
+    pfHookSWStats:SetScript("OnEvent",function()
+      if SW_BarFrame1 then
+        pfHookSWStats:UnregisterEvent("VARIABLES_LOADED")
+        pfSkinSWStats()
+        pfDockSWStats()
       end
     end)
   end
@@ -420,84 +736,6 @@ pfUI:RegisterModule("thirdparty", function ()
           if Clean_Up then
             pfHookClean_Up:UnregisterEvent("VARIABLES_LOADED")
             pfSetupClean_Up()
-          end
-        end)
-    end
-  end
-
-  local function pfSetupKTM()
-    -- use pfUI border for main window
-    CreateBackdrop(KLHTM_Frame)
-
-    -- remove titlebar
-    KLHTM_Gui.title.back:Hide()
-
-    -- theme buttons
-    local buttons = { "KLHTM_TitleFrameClose", "KLHTM_TitleFrameMinimise",
-    "KLHTM_TitleFrameMaximise", "KLHTM_TitleFrameOptions", "KLHTM_TitleFramePin",
-    "KLHTM_TitleFrameUnpin", "KLHTM_TitleFrameSelfView", "KLHTM_TitleFrameRaidView",
-    "KLHTM_TitleFrameMasterTarget", "KLHTM_SelfFrameBottomReset" }
-
-    for i, button in pairs(buttons) do
-      local b = _G[button]
-      if not b then return end
-      SkinButton(b)
-      b:SetScale(.8)
-
-      -- remove red background on some buttons
-      for i,v in ipairs({b:GetRegions()}) do
-        if v.SetTexture and i == 1 then
-          v:SetTexture(0,0,0,0)
-        end
-      end
-
-      local p,rt,rp,xo,yo = b:GetPoint()
-      if not b.pfSet and i > 1 then
-        b:SetPoint(p,rt,rp,xo - 3,yo)
-        b.pfSet = true
-      end
-    end
-
-    -- name buttons
-    KLHTM_TitleFrameClose:SetText("x")
-    KLHTM_TitleFrameMinimise:SetText("_")
-    KLHTM_TitleFrameMaximise:SetText("_")
-    KLHTM_TitleFrameOptions:SetText("O")
-    KLHTM_TitleFramePin:SetText("P")
-    KLHTM_TitleFrameUnpin:SetText("U")
-    KLHTM_TitleFrameSelfView:SetText("S")
-    KLHTM_TitleFrameRaidView:SetText("R")
-    KLHTM_TitleFrameMasterTarget:SetText("T")
-
-    -- skin rows (raid)
-    for i in pairs(KLHTM_Gui.raid.rows) do
-      KLHTM_Gui.raid.rows[i].bar:SetTexture("Interface\\AddOns\\pfUI\\img\\bar")
-      KLHTM_Gui.raid.rows[i].bar:SetAlpha(.75)
-    end
-
-    -- skin rows (self)
-    for i in pairs(KLHTM_Gui.self.rows) do
-      KLHTM_Gui.self.rows[i].bar:SetTexture("Interface\\AddOns\\pfUI\\img\\bar")
-      KLHTM_Gui.self.rows[i].bar:SetAlpha(.75)
-    end
-
-    -- remove seperators
-    if KLHTM_RaidFrameLine then KLHTM_RaidFrameLine:Hide() end
-    if KLHTM_RaidFrameBottomLine then KLHTM_RaidFrameBottomLine:Hide() end
-    if KLHTM_SelfFrameLine then KLHTM_SelfFrameLine:Hide() end
-    if KLHTM_SelfFrameBottomLine then KLHTM_SelfFrameBottomLine:Hide() end
-  end
-
-  if C.thirdparty.ktm.enable == "1" then
-    if KLHTM_Gui then
-      pfSetupKTM()
-    else
-      local pfHookKTM = CreateFrame("Frame", nil)
-      pfHookKTM:RegisterEvent("VARIABLES_LOADED")
-      pfHookKTM:SetScript("OnEvent",function()
-          if KLHTM_Gui then
-            pfHookKTM:UnregisterEvent("VARIABLES_LOADED")
-            pfSetupKTM()
           end
         end)
     end
