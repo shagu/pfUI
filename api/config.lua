@@ -510,8 +510,14 @@ function pfUI:MigrateConfig()
   local minor = tonumber(minor) or 0
   local fix   = tonumber(fix)   or 0
 
+  local function checkversion(chkmajor, chkminor, chkfix)
+    local chkversion = chkmajor + chkminor/100 + chkfix/10000
+    local curversion = major + minor/100 + fix/10000
+    return curversion <= chkversion and true or nil
+  end
+
   -- migrating to new fonts (1.5 -> 1.6)
-  if major <= 1 and minor <= 5 then
+  if checkversion(1, 6, 0) then
     -- migrate font_default
     if pfUI_config.global.font_default == "arial" then
       pfUI_config.global.font_default = "Myriad-Pro"
@@ -541,7 +547,7 @@ function pfUI:MigrateConfig()
   end
 
   -- migrating to new loot config section (> 2.0.5)
-  if major <= 2 and minor <= 0 and fix <= 5 then
+  if checkversion(2, 0, 5) then
     if pfUI_config.appearance.loot and pfUI_config.appearance.loot.autoresize then
       pfUI_config.loot.autoresize = pfUI_config.appearance.loot.autoresize
       pfUI_config.appearance.loot.autoresize = nil
@@ -550,7 +556,7 @@ function pfUI:MigrateConfig()
   end
 
   -- migrating to new unitframes (> 2.5)
-  if major <= 2 and minor <= 5 then
+  if checkversion(2, 5, 0) then
     -- migrate clickcast settings
     if pfUI_config.unitframes.raid.clickcast_ctrl then
       pfUI_config.unitframes.clickcast = pfUI_config.unitframes.raid.clickcast
@@ -580,7 +586,7 @@ function pfUI:MigrateConfig()
   end
 
   -- migrating to new fontnames (> 2.6)
-  if major <= 2 and minor <= 6 then
+  if checkversion(2, 6, 0) then
     -- migrate font_combat
     if pfUI_config.global.font_square then
       pfUI_config.global.font_unit = pfUI_config.global.font_square
@@ -590,7 +596,7 @@ function pfUI:MigrateConfig()
 
 
   -- migrating old to new font layout (> 3.0.0)
-  if major <= 3 and minor <= 0 then
+  if checkversion(3, 0, 0) then
     -- migrate font_default
     if not strfind(pfUI_config.global.font_default, "\\") then
       pfUI_config.global.font_default = "Interface\\AddOns\\pfUI\\fonts\\" .. pfUI_config.global.font_default .. ".ttf"
@@ -605,8 +611,10 @@ function pfUI:MigrateConfig()
     if not strfind(pfUI_config.global.font_combat, "\\") then
       pfUI_config.global.font_combat = "Interface\\AddOns\\pfUI\\fonts\\" .. pfUI_config.global.font_combat .. ".ttf"
     end
+  end
 
-    -- migrate unitframe texts
+  -- migrating old to new unitframe texts (> 3.0.0)
+  if checkversion(3, 0, 0) then
     local unitframes = { "player", "target", "focus", "group", "grouptarget", "grouppet", "raid", "ttarget", "pet", "fallback" }
 
     for _, unitframe in pairs(unitframes) do
