@@ -1,4 +1,6 @@
 pfUI:RegisterModule("debuffs", function ()
+  if C.appearance.cd.debuffs ~= "1" then return end
+
   pfUI.debuffs = CreateFrame("Frame", "pfdebuffsScanner", UIParent)
   pfUI.debuffs.pfDebuffNameScan = CreateFrame('GameTooltip', "pfDebuffNameScan", UIParent, "GameTooltipTemplate")
 
