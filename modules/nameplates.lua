@@ -465,8 +465,8 @@ pfUI:RegisterModule("nameplates", function ()
           if pfUI.debuffs and pfUI.debuffs.active and name then
             this.debuffs[j].cd = this.debuffs[j].cd or CreateFrame("Model", nil, this.debuffs[j], "CooldownFrameTemplate")
             local start, duration, timeleft = pfUI.debuffs:GetDebuffInfo("target", name)
-            CooldownFrame_SetTimer(this
-            .debuffs[j].cd, start, duration, 1)
+            this.debuffs[j].cd:SetAlpha(0)
+            CooldownFrame_SetTimer(this.debuffs[j].cd, start, duration, 1)
           end
 
           k = k + 1
