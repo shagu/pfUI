@@ -221,6 +221,9 @@ pfUI:RegisterModule("actionbar", function ()
         if pfUI.bars.bottomleft:IsShown() then
           anchor = pfUI.bars.bottomleft
         end
+        if pfUI.bars.pet:IsShown() then
+          anchor = pfUI.bars.pet
+        end
         pfUI.bars.shapeshift:SetPoint("BOTTOM", anchor, "TOP", 0, default_border * 3)
         UpdateMovable(pfUI.bars.shapeshift)
         if C.bars.background == "1" then CreateBackdrop(pfUI.bars.shapeshift, default_border) end

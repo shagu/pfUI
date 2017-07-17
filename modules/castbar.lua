@@ -414,6 +414,8 @@ pfUI:RegisterModule("castbar", function ()
   pfUI.castbar.target.SPELL_CRIT = string.gsub(string.gsub(string.gsub(SPELLLOGCRITSELFOTHER,"%d%$",""),"%%d","%%d+"),"%%s","(.+)")
   pfUI.castbar.target.OTHER_SPELL_HIT = string.gsub(string.gsub(string.gsub(SPELLLOGOTHEROTHER,"%d%$",""), "%%s", "(.+)"), "%%d", "%%d+")
   pfUI.castbar.target.OTHER_SPELL_CRIT = string.gsub(string.gsub(string.gsub(SPELLLOGOTHEROTHER,"%d%$",""), "%%s", "(.+)"), "%%d", "%%d+")
+  pfUI.castbar.target.SPELL_INTERRUPT = string.gsub(string.gsub(SPELLINTERRUPTSELFOTHER, "%d%$",""),"%%s","(.+)")
+  pfUI.castbar.target.OTHER_SPELL_INTERRUPT = string.gsub(string.gsub(SPELLINTERRUPTOTHEROTHER,"%d%$",""),"%%s", "(.+)")
 
   pfUI.castbar.target:RegisterEvent("CHAT_MSG_SPELL_SELF_DAMAGE")
   pfUI.castbar.target:RegisterEvent("CHAT_MSG_SPELL_HOSTILEPLAYER_DAMAGE")
@@ -499,6 +501,18 @@ pfUI:RegisterModule("castbar", function ()
         pfUI.castbar.target:StopAction(mob, spell)
         return
       end
+
+      -- You interrupt (.+)'s (.+).";
+      for mob, spell in string.gfind(arg1, pfUI.castbar.target.SPELL_INTERRUPT) do
+        pfUI.castbar.target:StopAction(mob, "INTERRUPT")
+        return
+      end
+
+      -- (.+) interrupts (.+)'s (.+).
+      for _, mob, spell in string.gfind(arg1, pfUI.castbar.target.OTHER_SPELL_INTERRUPT) do
+        pfUI.castbar.target:StopAction(mob, "INTERRUPT")
+        return
+      end
     end
   end)
 
@@ -520,7 +534,7 @@ pfUI:RegisterModule("castbar", function ()
   end
 
   function pfUI.castbar.target:StopAction(mob, spell)
-    if pfUI.castbar.target.casterDB[mob] and L["interrupts"][spell] ~= nil then
+    if pfUI.castbar.target.casterDB[mob] and ( L["interrupts"][spell] ~= nil or spell == "INTERRUPT" ) then
       pfUI.castbar.target.casterDB[mob] = nil
     end
   end
