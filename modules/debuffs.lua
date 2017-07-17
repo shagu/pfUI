@@ -11,6 +11,8 @@ pfUI:RegisterModule("debuffs", function ()
   pfUI.debuffs:RegisterEvent("PLAYER_TARGET_CHANGED")
   pfUI.debuffs:RegisterEvent("UNIT_AURA")
 
+  pfUI.debuffs.active = true
+
   -- CHAT_MSG_SPELL_PERIODIC_HOSTILEPLAYER_DAMAGE // CHAT_MSG_SPELL_PERIODIC_CREATURE_DAMAGE
   pfUI.debuffs.AURAADDEDOTHERHARMFUL = gsub(gsub(gsub(gsub(gsub(AURAADDEDOTHERHARMFUL, "%(", "%%("), "%)", "%%)"), "%d%$",""), "%%s", "(.+)"), "%%d", "(%%d+)")
 

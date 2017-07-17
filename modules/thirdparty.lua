@@ -744,4 +744,23 @@ pfUI:RegisterModule("thirdparty", function ()
       end
     end
   end
+
+  do -- DebuffTimers Integration
+    if AUF_Tooltip then
+      if pfUI.debuffs then
+        pfUI.debuffs.active = nil
+      end
+    else
+      local pfHookDebuffTimers = CreateFrame("Frame", nil)
+      pfHookDebuffTimers:RegisterEvent("VARIABLES_LOADED")
+      pfHookDebuffTimers:SetScript("OnEvent",function()
+        if AUF_Tooltip then
+          pfHookDebuffTimers:UnregisterEvent("VARIABLES_LOADED")
+          if pfUI.debuffs then
+            pfUI.debuffs.active = nil
+          end
+        end
+      end)
+    end
+  end
 end)

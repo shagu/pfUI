@@ -462,7 +462,7 @@ pfUI:RegisterModule("nameplates", function ()
           this.debuffs[j].icon:SetTexture(icon)
           this.debuffs[j].icon:SetTexCoord(.078, .92, .079, .937)
 
-          if pfUI.debuffs and name then
+          if pfUI.debuffs and pfUI.debuffs.active and name then
             this.debuffs[j].cd = this.debuffs[j].cd or CreateFrame("Model", nil, this.debuffs[j], "CooldownFrameTemplate")
             local start, duration, timeleft = pfUI.debuffs:GetDebuffInfo("target", name)
             CooldownFrame_SetTimer(this

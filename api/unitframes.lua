@@ -686,7 +686,7 @@ function pfUI.uf:RefreshUnit(unit, component)
         if unit.label == "player" then
             local timeleft = GetPlayerBuffTimeLeft(GetPlayerBuff(unit.debuffs[i]:GetID() - 1, "HARMFUL"),"HARMFUL")
             CooldownFrame_SetTimer(unit.debuffs[i].cd, GetTime(), timeleft, 1)
-        elseif pfUI.debuffs then
+        elseif pfUI.debuffs and pfUI.debuffs.active then
             local effect = pfUI.debuffs:GetDebuffName(unit.label .. unit.id, unit.debuffs[i]:GetID())
             local start, duration, timeleft = pfUI.debuffs:GetDebuffInfo(unit.label .. unit.id, effect)
             CooldownFrame_SetTimer(unit.debuffs[i].cd, start, duration, 1)
