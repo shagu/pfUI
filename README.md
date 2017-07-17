@@ -1,13 +1,8 @@
 # pfUI
 
-An Addon for World of Warcraft (1.12) mostly known as "Vanilla" which
-aimes to be a full replacement for the original Wow interface in a single Addon.
-The design is highly inspired by TukUI and ElvUI. It is entirely written from
-scratch without any inclusion of 3rd party addons or libraries.
+An AddOn for World of Warcraft (1.12.1), mostly known as "Vanilla", which aims to be a full replacement for the original interface. The design is highly inspired by TukUI and ElvUI, bringing modern features and a minimalistic style that's easy to use right from the start. It is entirely written from scratch without any inclusion of third-party addons or libraries.
 
-This is **not** an addon-pack like [ShaguUI](http://shagu.org/shaguui/) which means that no
-external Addons will be included. There will be support for external addons like
-MobHealth3 and HealComm, but they will be never shipped within the package.
+This is **not** an addon-pack like [ShaguUI](http://shagu.org/shaguui/), however, there will be support for external addons like MobHealth3 and HealComm, but they will never be shipped within the package.
 
 ## Screenshots
 
@@ -59,11 +54,11 @@ pfUI supports and contains language specific code for the following languages.
 ## FAQ
 **What does "pfUI" stand for?**  
 The term "*pfui!*" is german and simply stands for "*pooh!*", because I'm not a
-big fan of creating configuration UI's especially not via the Wow-API
+big fan of creating configuration UI's, especially not via the Wow-API
 (you might have noticed that in ShaguUI).
 
 **How can I donate?**  
-You can't. I'm doing that for fun. Enjoy!
+You can't. I'm doing this for fun. Enjoy!
 
 **How do I report a Bug?**  
 Please provide as much information as possible in the [Bugtracker](https://github.com/shagu/pfUI/issues).
@@ -80,10 +75,10 @@ Please make sure to have the latest version installed and check for conflicting 
 A pfUI compatible version of Clique can be found [Here](https://github.com/shagu/Clique/releases). If you want to keep your current version of Clique, you'll have to apply this [Patch](https://github.com/shagu/Clique/commit/a5ee56c3f803afbdda07bae9cd330e0d4a75d75a).
 
 **How do I show the Damage- and Threatmeter Dock?**  
-If you enabled the "dock"-feature for your external (thirdparty) meters such as DPSMate or KTM, then you'll be able to toggle between them and the Right Chat by clicking on the ">" symbol on the bottom-right panel.
+If you enabled the "dock"-feature for your external (third-party) meters such as DPSMate or KTM, then you'll be able to toggle between them and the Right Chat by clicking on the ">" symbol on the bottom-right panel.
 
 **How can I enable mouseover cast?**  
 Create a macro with "/pfcast SPELLNAME". If you also want to see the cooldown, You might want to add "/run if nil then CastSpellByName("SPELLNAME") end" on top of the macro.
 
 **Everything from scratch?! Are you insane?**  
-Most probably, Yes.
+Most probably, yes.
