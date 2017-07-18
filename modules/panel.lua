@@ -241,6 +241,13 @@ pfUI:RegisterModule("panel", function ()
 
   -- Update "bagspace"
   function pfUI.panel:UpdateBagspace ()
+    local tooltip = function ()
+    end
+
+    local click = function ()
+      OpenAllBags()
+    end
+	
     local maxslots = 0
     local usedslots = 0
 
@@ -255,7 +262,7 @@ pfUI:RegisterModule("panel", function ()
       end
     end
     local freeslots = maxslots - usedslots
-    pfUI.panel:OutputPanel("bagspace", freeslots .. " (" .. usedslots .. "/" .. maxslots .. ")")
+    pfUI.panel:OutputPanel("bagspace", freeslots .. " (" .. usedslots .. "/" .. maxslots .. ")", tooltip, click)
   end
 
   -- Update "gold"
