@@ -14,6 +14,7 @@ pfUI:RegisterModule("target", function ()
   TargetFrame:UnregisterAllEvents()
 
   pfUI.uf.target = pfUI.uf:CreateUnitFrame("Target", nil, C.unitframes.target)
+  pfUI.uf.target:SetFrameStrata("BACKGROUND")
   pfUI.uf.target:UpdateFrameSize()
   pfUI.uf.target:SetPoint("BOTTOMLEFT", UIParent, "BOTTOM", 75, 125)
   UpdateMovable(pfUI.uf.target)

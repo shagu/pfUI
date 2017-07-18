@@ -13,6 +13,7 @@ pfUI:RegisterModule("player", function ()
   PlayerFrame:UnregisterAllEvents()
 
   pfUI.uf.player = pfUI.uf:CreateUnitFrame("Player", nil, C.unitframes.player)
+  pfUI.uf.player:SetFrameStrata("BACKGROUND")
 
   pfUI.uf.player.pvpicon = CreateFrame("Frame", nil, pfUI.uf.player)
   pfUI.uf.player.pvpicon:Hide()
