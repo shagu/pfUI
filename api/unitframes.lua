@@ -379,13 +379,8 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
       f.buffs[i].stacks:SetShadowColor(0, 0, 0)
       f.buffs[i].stacks:SetShadowOffset(0.8, -0.8)
       f.buffs[i].stacks:SetTextColor(1,1,.5)
-      f.buffs[i].cd = f.buffs[i]:CreateFontString(nil, "OVERLAY", f.buffs[i])
-      f.buffs[i].cd:SetFont(pfUI.font_unit, C.global.font_unit_size, "OUTLINE")
-      f.buffs[i].cd:SetPoint("CENTER", f.buffs[i], 0, 0)
-      f.buffs[i].cd:SetJustifyH("LEFT")
-      f.buffs[i].cd:SetShadowColor(0, 0, 0)
-      f.buffs[i].cd:SetShadowOffset(0.8, -0.8)
-      f.buffs[i].cd:SetTextColor(1,1,1)
+      f.buffs[i].cd = CreateFrame("Model", nil, f.buffs[i], "CooldownFrameTemplate")
+      f.buffs[i].cd:SetAlpha(0)
 
       f.buffs[i]:RegisterForClicks("RightButtonUp")
       f.buffs[i]:ClearAllPoints()
@@ -428,28 +423,6 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
           CancelPlayerBuff(GetPlayerBuff(id-1,"HELPFUL"))
         end
       end)
-
-      if f.label == "player" then
-        f.buffs[i]:SetScript("OnUpdate", function()
-          local timeleft = GetPlayerBuffTimeLeft(GetPlayerBuff(this:GetID()-1,"HELPFUL"))
-          if timeleft ~= nil and timeleft ~= 0 then
-            -- if there are more than 0 seconds left
-            if timeleft < 60 then
-              -- show seconds if less than 60 seconds
-              this.cd:SetText(ceil(timeleft))
-            elseif timeleft < 3600 then
-              -- show minutes if less than 3600 seconds (1 hour)
-              this.cd:SetText(ceil(timeleft/60) .. 'm')
-            else
-              -- otherwise show hours
-              this.cd:SetText(ceil(timeleft/3600) .. 'h')
-            end
-          else
-            -- if there's no time left or not set, empty buff text
-            this.cd:SetText("")
-          end
-        end)
-      end
     end
   end
 
@@ -467,13 +440,8 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
       f.debuffs[i].stacks:SetShadowColor(0, 0, 0)
       f.debuffs[i].stacks:SetShadowOffset(0.8, -0.8)
       f.debuffs[i].stacks:SetTextColor(1,1,.5)
-      f.debuffs[i].cd = f.debuffs[i]:CreateFontString(nil, "OVERLAY", f.debuffs[i])
-      f.debuffs[i].cd:SetFont(pfUI.font_unit, C.global.font_unit_size, "OUTLINE")
-      f.debuffs[i].cd:SetPoint("CENTER", f.debuffs[i], 0, 0)
-      f.debuffs[i].cd:SetJustifyH("LEFT")
-      f.debuffs[i].cd:SetShadowColor(0, 0, 0)
-      f.debuffs[i].cd:SetShadowOffset(0.8, -0.8)
-      f.debuffs[i].cd:SetTextColor(1,1,1)
+      f.debuffs[i].cd = CreateFrame("Model", nil, f.debuffs[i], "CooldownFrameTemplate")
+      f.debuffs[i].cd:SetAlpha(0)
 
       f.debuffs[i]:RegisterForClicks("RightButtonUp")
       f.debuffs[i]:ClearAllPoints()
@@ -499,30 +467,6 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
           CancelPlayerBuff(GetPlayerBuff(id-1,"HARMFUL"))
         end
       end)
-
-      if f.label == "player" then
-        f.debuffs[i]:SetScript("OnUpdate", function()
-          local bid = GetPlayerBuff(this:GetID() - 1, "HARMFUL");
-          local timeleft = GetPlayerBuffTimeLeft(bid,"HARMFUL")
-
-          if timeleft ~= nil and timeleft ~= 0 then
-            -- if there are more than 0 seconds left
-            if timeleft < 60 then
-              -- show seconds if less than 60 seconds
-              f.debuffs[this:GetID()].cd:SetText(ceil(timeleft))
-            elseif timeleft < 3600 then
-              -- show minutes if less than 3600 seconds (1 hour)
-              f.debuffs[this:GetID()].cd:SetText(ceil(timeleft/60)..'m')
-            else
-              -- otherwise show hours
-              f.debuffs[this:GetID()].cd:SetText(ceil(timeleft/3600) .. 'h')
-            end
-          else
-            -- if there's no time left or not set, empty buff text
-            f.debuffs[this:GetID()].cd:SetText("")
-          end
-        end)
-      end
     end
   end
 
@@ -661,6 +605,12 @@ function pfUI.uf:RefreshUnit(unit, component)
 
       if texture then
         unit.buffs[i]:Show()
+
+        if unit.label == "player" then
+          local timeleft = GetPlayerBuffTimeLeft(GetPlayerBuff(unit.buffs[i]:GetID()-1,"HELPFUL"))
+          CooldownFrame_SetTimer(unit.buffs[i].cd, GetTime(), timeleft, 1)
+        end
+
         if stacks > 1 then
           unit.buffs[i].stacks:SetText(stacks)
         else
@@ -732,6 +682,16 @@ function pfUI.uf:RefreshUnit(unit, component)
 
       if texture then
         unit.debuffs[i]:Show()
+
+        if unit.label == "player" then
+            local timeleft = GetPlayerBuffTimeLeft(GetPlayerBuff(unit.debuffs[i]:GetID() - 1, "HARMFUL"),"HARMFUL")
+            CooldownFrame_SetTimer(unit.debuffs[i].cd, GetTime(), timeleft, 1)
+        elseif pfUI.debuffs and pfUI.debuffs.active then
+            local effect = pfUI.debuffs:GetDebuffName(unit.label .. unit.id, unit.debuffs[i]:GetID())
+            local start, duration, timeleft = pfUI.debuffs:GetDebuffInfo(unit.label .. unit.id, effect)
+            CooldownFrame_SetTimer(unit.debuffs[i].cd, start, duration, 1)
+        end
+
         if stacks > 1 then
           unit.debuffs[i].stacks:SetText(stacks)
         else

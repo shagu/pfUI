@@ -73,4 +73,5 @@ modules\infight.lua
 modules\sellvalue.lua
 modules\eqcompare.lua
 modules\map.lua
+modules\debuffs.lua
 modules\uf_tukui.lua

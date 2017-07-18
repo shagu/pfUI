@@ -838,6 +838,7 @@ pfUI:RegisterModule("gui", function ()
       CreateConfig(this, T["Cooldown Color (Days)"], C.appearance.cd, "daycolor", "color")
       CreateConfig(this, T["Cooldown Text Threshold"], C.appearance.cd, "threshold")
       CreateConfig(this, T["Cooldown Text Font Size"], C.appearance.cd, "font_size")
+      CreateConfig(this, T["Display Debuff Durations"], C.appearance.cd, "debuffs", "checkbox")
       this.setup = true
     end
   end)
