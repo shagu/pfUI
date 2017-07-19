@@ -75,3 +75,4 @@ modules\eqcompare.lua
 modules\map.lua
 modules\debuffs.lua
 modules\uf_tukui.lua
+modules\custom.lua

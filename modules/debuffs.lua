@@ -154,8 +154,10 @@ pfUI:RegisterModule("debuffs", function ()
         pfUI.debuffs.objects[unit][unitlevel][effect].start = pfUI.debuffs.objects[unit][unitlevel][effect].old.start
         pfUI.debuffs.objects[unit][unitlevel][effect].duration = pfUI.debuffs.objects[unit][unitlevel][effect].old.duration
         pfUI.debuffs.objects[unit][unitlevel][effect].old = {}
-        --message("reverted old effect:  " .. effect .. " on " .. unit .. " (".. unitlevel .. ") from " .. new .. " to " .. saved)
-        pfUI.uf:RefreshUnit(pfUI.uf.target, "aura")
+
+        if pfUI.uf.target then
+          pfUI.uf:RefreshUnit(pfUI.uf.target, "aura")
+        end
       end
     end
   end
@@ -188,7 +190,9 @@ pfUI:RegisterModule("debuffs", function ()
     pfUI.debuffs.lastUnit = unit
     pfUI.debuffs.lastLevel = unitlevel
 
-    pfUI.uf:RefreshUnit(pfUI.uf.target, "aura")
+    if pfUI.uf.target then
+      pfUI.uf:RefreshUnit(pfUI.uf.target, "aura")
+    end
   end
 
   function pfUI.debuffs:AddEffect(unit, unitlevel, effect)
@@ -203,7 +207,9 @@ pfUI:RegisterModule("debuffs", function ()
     pfUI.debuffs.objects[unit][unitlevel][effect].start = GetTime()
     pfUI.debuffs.objects[unit][unitlevel][effect].duration = L["debuffs"][effect] or 0
 
-    pfUI.uf:RefreshUnit(pfUI.uf.target, "aura")
+    if pfUI.uf.target then
+      pfUI.uf:RefreshUnit(pfUI.uf.target, "aura")
+    end
   end
 
 
