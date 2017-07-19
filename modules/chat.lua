@@ -448,10 +448,7 @@ pfUI:RegisterModule("chat", function ()
     ChatFrame_RemoveAllChannels(ChatFrame2)
     ChatFrame_RemoveAllChannels(ChatFrame3)
 
-    local normalg = {"SAY", "EMOTE", "YELL", "GUILD", "OFFICER", "GUILD_ACHIEVEMENT", "WHISPER",
-      "MONSTER_SAY", "MONSTER_EMOTE", "MONSTER_YELL", "MONSTER_WHISPER", "MONSTER_BOSS_EMOTE", "MONSTER_BOSS_WHISPER",
-      "PARTY", "PARTY_LEADER", "RAID", "RAID_LEADER", "RAID_WARNING", "BATTLEGROUND", "BATTLEGROUND_LEADER",
-      "BG_HORDE", "BG_ALLIANCE", "BG_NEUTRAL", "SYSTEM", "ERRORS", "AFK", "DND", "IGNORED", "BN_WHISPER", "BN_CONVERSATION"}
+    local normalg = {"SYSTEM", "SAY", "YELL", "WHISPER", "PARTY", "GUILD", "CREATURE", "CHANNEL"}
     for _,group in pairs(normalg) do
       ChatFrame_AddMessageGroup(ChatFrame1, group)
     end
@@ -459,7 +456,7 @@ pfUI:RegisterModule("chat", function ()
     ChatFrame_ActivateCombatMessages(ChatFrame2)
 
     if C.chat.right.enable == "1" then
-      local spamg = { "COMBAT_XP_GAIN", "COMBAT_HONOR_GAIN", "COMBAT_FACTION_CHANGE", "SKILL", "LOOT", "MONEY" }
+      local spamg = { "COMBAT_XP_GAIN", "COMBAT_HONOR_GAIN", "COMBAT_FACTION_CHANGE", "SKILL", "LOOT" }
       for _,group in pairs(spamg) do
         ChatFrame_AddMessageGroup(ChatFrame3, group)
       end

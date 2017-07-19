@@ -255,7 +255,7 @@ pfUI:RegisterModule("panel", function ()
       end
     end
     local freeslots = maxslots - usedslots
-    pfUI.panel:OutputPanel("bagspace", freeslots .. " (" .. usedslots .. "/" .. maxslots .. ")")
+    pfUI.panel:OutputPanel("bagspace", freeslots .. " (" .. usedslots .. "/" .. maxslots .. ")", nil, OpenAllBags)
   end
 
   -- Update "gold"
@@ -286,11 +286,7 @@ pfUI:RegisterModule("panel", function ()
       GameTooltip:Show()
     end
 
-    local click = function ()
-      OpenAllBags()
-    end
-
-    pfUI.panel:OutputPanel("gold", gold .. "|cffffd700g|r " .. silver .. "|cffc7c7cfs|r " .. copper .. "|cffeda55fc|r", tooltip, click)
+    pfUI.panel:OutputPanel("gold", gold .. "|cffffd700g|r " .. silver .. "|cffc7c7cfs|r " .. copper .. "|cffeda55fc|r", tooltip, OpenAllBags)
   end
 
   -- Update "friends"

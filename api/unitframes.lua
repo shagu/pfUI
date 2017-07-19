@@ -59,6 +59,8 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
     return f
   end
 
+  f:SetFrameStrata("BACKGROUND")
+
   f.hp = CreateFrame("Frame",nil, f)
   f.hp:SetPoint("TOP", 0, 0)
   f.hp:SetWidth(f.config.width)
