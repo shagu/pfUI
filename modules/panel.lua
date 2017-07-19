@@ -482,7 +482,7 @@ pfUI:RegisterModule("panel", function ()
 
 
   pfUI.panel.left = CreateFrame("Frame", "pfPanelLeft", UIParent)
-  pfUI.panel.left:SetFrameStrata("LOW")
+  pfUI.panel.left:SetFrameStrata("MEDIUM")
   pfUI.panel.left:ClearAllPoints()
 
   if pfUI.chat then
@@ -552,7 +552,7 @@ pfUI:RegisterModule("panel", function ()
   pfUI.panel.left.right.text:SetFontObject(GameFontWhite)
 
   pfUI.panel.right = CreateFrame("Frame", "pfPanelRight", UIParent)
-  pfUI.panel.right:SetFrameStrata("LOW")
+  pfUI.panel.right:SetFrameStrata("MEDIUM")
   pfUI.panel.right:ClearAllPoints()
   if pfUI.chat then
     pfUI.panel.right:SetScale(pfUI.chat.left:GetScale())
@@ -631,7 +631,7 @@ pfUI:RegisterModule("panel", function ()
     pfUI.panel.minimap:SetWidth(200)
     pfUI.panel.minimap:SetPoint("TOP", UIParent, "TOP", 0, -5)
   end
-  pfUI.panel.minimap:SetFrameStrata("LOW")
+  pfUI.panel.minimap:SetFrameStrata("MEDIUM")
   pfUI.panel.minimap.text = pfUI.panel.minimap:CreateFontString("MinimapZoneText", "LOW", "GameFontNormal")
   pfUI.panel.minimap.text:SetFont(font, font_size, "OUTLINE")
   pfUI.panel.minimap.text:SetPoint("CENTER", 0, 0)
@@ -644,7 +644,7 @@ pfUI:RegisterModule("panel", function ()
     UpdateMovable(pfUI.panel.microbutton)
     pfUI.panel.microbutton:SetHeight(23)
     pfUI.panel.microbutton:SetWidth(145)
-    pfUI.panel.microbutton:SetFrameStrata("LOW")
+    pfUI.panel.microbutton:SetFrameStrata("MEDIUM")
 
     local MICRO_BUTTONS = {
       'CharacterMicroButton', 'SpellbookMicroButton', 'TalentMicroButton',
