@@ -655,7 +655,7 @@ pfUI:RegisterModule("gui", function ()
 
   local dropdown_tooltip_position = {
     "bottom:" .. T["Bottom"],
-    "chat:" .. T["Chat"],
+    "chat:" .. T["Dodge"],
     "cursor:" .. T["Cursor"]
   }
 
