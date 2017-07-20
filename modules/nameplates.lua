@@ -45,7 +45,7 @@ pfUI:RegisterModule("nameplates", function ()
           if UnitIsPlayer("mouseover") then
             local _, class = UnitClass("mouseover")
             pfUI.nameplates.players[name] = {}
-            pfUI.nameplates.players[name]["mouseover"] = class
+            pfUI.nameplates.players[name]["class"] = class
           elseif UnitClassification("mouseover") then
             local elite = UnitClassification("mouseover")
             pfUI.nameplates.mobs[name] = elite
