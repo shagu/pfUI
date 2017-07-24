@@ -40,14 +40,16 @@ pfUI:RegisterModule("player", function ()
   pfUI.uf.player:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOM", -75, 125)
   UpdateMovable(pfUI.uf.player)
 
-  pfUI.uf.player.dropdown = {}
-  function pfUI.uf.player.dropdown:Init()
-    UnitPopup_ShowMenu(PlayerFrameDropDown, "SELF", "player")
-    if pfUI.uf.player.dropdown.rebuild and not CanShowResetInstances() then
-      UIDropDownMenu_AddButton({text = RESET_INSTANCES, func = ResetInstances, notCheckable = 1}, 1)
-      pfUI.uf.player.dropdown.rebuild = nil
+  -- Replace default's RESET_INSTANCES button with an always working one
+  UnitPopupButtons["RESET_INSTANCES_FIX"] = { text = RESET_INSTANCES, dist = 0 };
+  UnitPopupMenus["SELF"] = { "LOOT_METHOD", "LOOT_THRESHOLD", "LOOT_PROMOTE", "LEAVE", "RESET_INSTANCES_FIX", "RAID_TARGET_ICON", "CANCEL" };
+
+  hooksecurefunc("UnitPopup_OnClick", function()
+    local button = this.value
+    if button == "RESET_INSTANCES_FIX" then
+      StaticPopup_Show("CONFIRM_RESET_INSTANCES")
     end
-  end
+  end)
 
   pfUI.uf.player:RegisterEvent("UPDATE_FACTION") -- pvp icon
   pfUI.uf.player:RegisterEvent("UNIT_FACTION") -- pvp icon
