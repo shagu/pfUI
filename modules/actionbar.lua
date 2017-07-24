@@ -129,6 +129,7 @@ pfUI:RegisterModule("actionbar", function ()
   pfUI.bars:RegisterEvent("PLAYER_FARSIGHT_FOCUS_CHANGED")
   pfUI.bars:RegisterEvent("PET_BAR_SHOWGRID")
   pfUI.bars:RegisterEvent("PET_BAR_HIDEGRID")
+  pfUI.bars:RegisterEvent("UPDATE_SHAPESHIFT_FORMS")
 
   pfUI.bars.autohide = CreateFrame("Frame", nil, UIParent)
   pfUI.bars.autohide:RegisterEvent("PLAYER_ENTERING_WORLD")
@@ -203,7 +204,6 @@ pfUI:RegisterModule("actionbar", function ()
 
       local shapeshiftbuttons = 0
       if ShapeshiftButton1:IsShown() then
-        pfUI.bars.shapeshift:Show()
         ShapeshiftBarFrame:ClearAllPoints()
         ShapeshiftBarFrame:SetAllPoints(pfUI.bars.shapeshift)
 
@@ -230,6 +230,7 @@ pfUI:RegisterModule("actionbar", function ()
         BarLayoutSize(pfUI.bars.shapeshift, shapeshiftbuttons, C.bars.shapeshift.formfactor, C.bars.icon_size, default_border)
         pfUI.bars.shapeshift:SetWidth(pfUI.bars.shapeshift._size[1])
         pfUI.bars.shapeshift:SetHeight(pfUI.bars.shapeshift._size[2])
+        pfUI.bars.shapeshift:Show()
       else
         pfUI.bars.shapeshift:Hide()
       end
