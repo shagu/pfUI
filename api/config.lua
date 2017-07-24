@@ -502,6 +502,9 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("thirdparty", "cleanup",     "enable",           "1")
   pfUI:UpdateConfig("position",   nil,           nil,                nil)
   pfUI:UpdateConfig("disabled",   nil,           nil,                nil)
+
+  pfUI:UpdateConfig("gm",         nil,           "disable",          "1")
+  pfUI:UpdateConfig("gm",         nil,           "server",           "elysium")
 end
 
 function pfUI:MigrateConfig()
