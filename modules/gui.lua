@@ -664,6 +664,10 @@ pfUI:RegisterModule("gui", function ()
     "tukui:TukUI"
   }
 
+  local dropdown_gmserver_text = {
+    "elysium:" .. T["Elysium Based Core"],
+  }
+
   local dropdown_num_actionbar_buttons = BarLayoutOptions(NUM_ACTIONBAR_BUTTONS)
   local dropdown_num_shapeshift_slots = BarLayoutOptions(NUM_SHAPESHIFT_SLOTS)
   local dropdown_num_pet_action_slots = BarLayoutOptions(NUM_PET_ACTION_SLOTS)
@@ -839,6 +843,17 @@ pfUI:RegisterModule("gui", function ()
       CreateConfig(this, T["Cooldown Text Threshold"], C.appearance.cd, "threshold")
       CreateConfig(this, T["Cooldown Text Font Size"], C.appearance.cd, "font_size")
       CreateConfig(this, T["Display Debuff Durations"], C.appearance.cd, "debuffs", "checkbox")
+      this.setup = true
+    end
+  end)
+
+  -- >> GM-Mode
+  pfUI.gui.tabs.settings.tabs.gm = pfUI.gui.tabs.settings.tabs:CreateChildFrame(T["GM-Mode"], 70)
+  pfUI.gui.tabs.settings.tabs.gm:SetScript("OnShow", function()
+    if not this.setup then
+      CreateConfig(this, T["Disable GM-Mode"], C.gm, "disable", "checkbox")
+      CreateConfig(this, T["Selected Core"], C.gm, "server", "dropdown", dropdown_gmserver_text)
+
       this.setup = true
     end
   end)

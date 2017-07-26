@@ -953,8 +953,6 @@ function pfUI.uf:ClickAction(button)
   -- dropdown menues
   if button == "RightButton" then
     if label == "player" then
-      UIDropDownMenu_Initialize(PlayerFrameDropDown, pfUI.uf.player.dropdown.Init, "MENU")
-      pfUI.uf.player.dropdown.rebuild = true
       ToggleDropDownMenu(1, nil, PlayerFrameDropDown, "cursor")
     elseif label == "target" then
       ToggleDropDownMenu(1, nil, TargetFrameDropDown, "cursor")
