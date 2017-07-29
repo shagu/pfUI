@@ -220,6 +220,7 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
   f:SetScript("OnUpdate", function()
       local unitname = ( this.label and UnitName(this.label) ) or ""
 
+      -- focus unit detection
       if this.unitname and this.unitname ~= strlower(unitname) then
         -- invalid focus frame
         for unit, bool in pairs(pfValidUnits) do
@@ -239,6 +240,7 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
 
       if not this.label then return end
 
+      -- ticker for non event frames
       if this.tick and not this.lastTick then this.lastTick = GetTime() + this.tick end
       if this.lastTick and this.lastTick < GetTime() then
         this.lastTick = GetTime() + this.tick
