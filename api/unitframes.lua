@@ -65,6 +65,8 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
   f.hp:SetPoint("TOP", 0, 0)
   f.hp:SetWidth(f.config.width)
   f.hp:SetHeight(f.config.height)
+  if tonumber(f.config.height) < 0 then f.hp:Hide() end
+
   pfUI.api.CreateBackdrop(f.hp, default_border)
 
   f.hp.bar = CreateFrame("StatusBar", nil, f.hp)
@@ -84,6 +86,8 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
   f.power:SetPoint("TOP", f.hp, "BOTTOM", 0, -2*default_border - f.config.pspace)
   f.power:SetWidth(f.config.width)
   f.power:SetHeight(f.config.pheight)
+  if tonumber(f.config.pheight) < 0 then f.power:Hide() end
+
   pfUI.api.CreateBackdrop(f.power, default_border)
 
   f.power.bar = CreateFrame("StatusBar", nil, f.power)
