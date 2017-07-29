@@ -44,6 +44,43 @@ pfUI:RegisterModule("actionbar", function ()
     if pfBonusBar then pfBonusBar:Hide() end
   end)
 
+  -- reagent counter
+  local reagentslots = { }
+  local reagentscan = CreateFrame("GameTooltip", "pfReagentScanner", UIParent, "GameTooltipTemplate")
+  reagentscan:SetOwner(UIParent, "ANCHOR_NONE")
+
+  local oldIsConsumableAction = IsConsumableAction
+  _G.IsConsumableAction = function(slot)
+    if oldIsConsumableAction(slot) then return true end
+
+    reagentslots[slot] = nil
+    reagentscan:SetAction(slot)
+    if (reagentscan:NumLines() ~=0) then
+      for i=1,reagentscan:NumLines() do
+        local line = getglobal("pfReagentScannerTextLeft" .. i)
+        if line then
+          line = line:GetText()
+          local _, start = strfind(line,SPELL_REAGENTS,1)
+          if start then
+            reagentslots[slot] = strsub(line,start+1)
+            return true
+          end
+        end
+      end
+    end
+
+    return nil
+  end
+
+  local oldGetActionCount = GetActionCount
+  _G.GetActionCount = function(slot)
+    if reagentslots[slot] then
+      return GetItemCount(reagentslots[slot])
+    end
+
+    if oldGetActionCount(slot) then return oldGetActionCount(slot) end
+  end
+
   if C.bars.glowrange == "1" then
 
     function _G.ActionButton_UpdateUsable()
@@ -530,6 +567,12 @@ pfUI:RegisterModule("actionbar", function ()
       else
         hotkey:SetAlpha(0)
       end
+
+      local count = _G[actionbutton..i..'Count']
+      count:SetAllPoints(button)
+      count:SetFont(pfUI.font_unit, C.global.font_unit_size, "OUTLINE")
+      count:SetJustifyH("RIGHT")
+      count:SetJustifyV("BOTTOM")
 
       local name = _G[actionbutton..i..'Name']
       if C.bars.showmacro == "1" then
