@@ -453,7 +453,7 @@ pfUI:RegisterModule("nameplates", function ()
     end
 
     -- update debuffs
-    if this.debuffs and C.nameplates["showdebuffs"] == "1" then
+    if this.debuffs and pfUI.nameplates.debuffs and C.nameplates["showdebuffs"] == "1" then
       if UnitExists("target") and healthbar:GetAlpha() == 1 then
         local j = 1
         local k = 1
