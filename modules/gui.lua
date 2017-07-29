@@ -604,6 +604,15 @@ pfUI:RegisterModule("gui", function ()
     table.insert(dropdown_selection_fonts, "Fonts\\FZXHLJW.TTF:FZXHLJW")
   end
 
+  local dropdown_unitframes_animationspeed = {
+    "1:" .. T["Instant"],
+    "2:" .. T["Very Fast"],
+    "3:" .. T["Fast"],
+    "5:" .. T["Medium"],
+    "8:" .. T["Slow"],
+    "13:" .. T["Very Slow"],
+  }
+
   local dropdown_unitframes_text = {
     "none:" .. T["Disable"],
     "unit:" .. T["Unit String"],
@@ -873,7 +882,7 @@ pfUI:RegisterModule("gui", function ()
       CreateConfig(this, T["Custom Health Bar Color"], C.unitframes, "customcolor", "color")
       CreateConfig(this, T["Enable Custom Color Health Bar Background"], C.unitframes, "custombg", "checkbox")
       CreateConfig(this, T["Custom Health Bar Background Color"], C.unitframes, "custombgcolor", "color")
-      CreateConfig(this, T["Healthbar Animation Speed"], C.unitframes, "animation_speed")
+      CreateConfig(this, T["Healthbar Animation Speed"], C.unitframes, "animation_speed", "dropdown", dropdown_unitframes_animationspeed)
       CreateConfig(this, T["Portrait Alpha"], C.unitframes, "portraitalpha")
       CreateConfig(this, T["Always Use 2D Portraits"], C.unitframes, "always2dportrait", "checkbox")
       CreateConfig(this, T["Enable 2D Portraits As Fallback"], C.unitframes, "portraittexture", "checkbox")

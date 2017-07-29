@@ -637,5 +637,24 @@ function pfUI:MigrateConfig()
     end
   end
 
+  -- migrating animation_speed (> 3.1.2)
+  if checkversion(3, 1, 2) then
+    if tonumber(pfUI_config.unitframes.animation_speed) >= 13 then
+      pfUI_config.unitframes.animation_speed = "13"
+    elseif tonumber(pfUI_config.unitframes.animation_speed) >= 8 then
+      pfUI_config.unitframes.animation_speed = "8"
+    elseif tonumber(pfUI_config.unitframes.animation_speed) >= 5 then
+      pfUI_config.unitframes.animation_speed = "5"
+    elseif tonumber(pfUI_config.unitframes.animation_speed) >= 3 then
+      pfUI_config.unitframes.animation_speed = "3"
+    elseif tonumber(pfUI_config.unitframes.animation_speed) >= 2 then
+      pfUI_config.unitframes.animation_speed = "2"
+    elseif tonumber(pfUI_config.unitframes.animation_speed) >= 1 then
+      pfUI_config.unitframes.animation_speed = "1"
+    else
+      pfUI_config.unitframes.animation_speed = "5"
+    end
+  end
+
   pfUI_config.version = pfUI.version.string
 end
