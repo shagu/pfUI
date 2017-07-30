@@ -207,6 +207,7 @@ pfUI_translation["frFR"] = {
   ["Item Durability"] = "Durabilité des objets",
   ["KLH Threat Meter (Dock)"] = "KLH Threat Meter (Accroche)",
   ["KLH Threat Meter (Skin)"] = "KLH Threat Meter (Apparence)",
+  ["Language"] = nil,
   ["Layout"] = "Disposition",
   ["Left Actionbar (BottomRight)"] = "Barre d'action gauche (bas droite)",
   ["Left Chat Height"] = "Hauteur du chat de gauche",

@@ -207,6 +207,7 @@ pfUI_translation["koKR"] = {
   ["Item Durability"] = "아이템 내구도",
   ["KLH Threat Meter (Dock)"] = "KLH 어그로 미터기 (독)",
   ["KLH Threat Meter (Skin)"] = "KLH 어그로 미터기 (스킨)",
+  ["Language"] = nil,
   ["Layout"] = "레이아웃",
   ["Left"] = "왼쪽",
   ["Left Actionbar (BottomRight)"] = "왼쪽 액션바(오른쪽 하단)",

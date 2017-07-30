@@ -207,6 +207,7 @@ pfUI_translation["zhTW"] = {
   ["Item Durability"] = "裝備耐久",
   ["KLH Threat Meter (Dock)"] = "KLH Threat Meter (停靠)",
   ["KLH Threat Meter (Skin)"] = "KLH Threat Meter (皮膚)",
+  ["Language"] = nil,
   ["Layout"] = "佈局",
   ["Left Actionbar (BottomRight)"] = "右下方動作條",
   ["Left Chat Height"] = "左側聊天窗口高度",

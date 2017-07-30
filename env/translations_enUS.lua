@@ -207,6 +207,7 @@ pfUI_translation["enUS"] = {
   ["Item Durability"] = nil,
   ["KLH Threat Meter (Dock)"] = nil,
   ["KLH Threat Meter (Skin)"] = nil,
+  ["Language"] = nil,
   ["Layout"] = nil,
   ["Left Actionbar (BottomRight)"] = nil,
   ["Left Chat Height"] = nil,
