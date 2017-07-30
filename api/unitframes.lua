@@ -65,6 +65,8 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
   f.hp:SetPoint("TOP", 0, 0)
   f.hp:SetWidth(f.config.width)
   f.hp:SetHeight(f.config.height)
+  if tonumber(f.config.height) < 0 then f.hp:Hide() end
+
   pfUI.api.CreateBackdrop(f.hp, default_border)
 
   f.hp.bar = CreateFrame("StatusBar", nil, f.hp)
@@ -84,6 +86,8 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
   f.power:SetPoint("TOP", f.hp, "BOTTOM", 0, -2*default_border - f.config.pspace)
   f.power:SetWidth(f.config.width)
   f.power:SetHeight(f.config.pheight)
+  if tonumber(f.config.pheight) < 0 then f.power:Hide() end
+
   pfUI.api.CreateBackdrop(f.power, default_border)
 
   f.power.bar = CreateFrame("StatusBar", nil, f.power)
@@ -218,8 +222,11 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
     end)
 
   f:SetScript("OnUpdate", function()
+      if ( this.fpscontrol or 1) > GetTime() then return else this.fpscontrol = GetTime() + .02 end
+
       local unitname = ( this.label and UnitName(this.label) ) or ""
 
+      -- focus unit detection
       if this.unitname and this.unitname ~= strlower(unitname) then
         -- invalid focus frame
         for unit, bool in pairs(pfValidUnits) do
@@ -239,6 +246,7 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
 
       if not this.label then return end
 
+      -- ticker for non event frames
       if this.tick and not this.lastTick then this.lastTick = GetTime() + this.tick end
       if this.lastTick and this.lastTick < GetTime() then
         this.lastTick = GetTime() + this.tick

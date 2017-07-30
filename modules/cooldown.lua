@@ -14,7 +14,7 @@ pfUI:RegisterModule("cooldown", function ()
 
     cooldown.cd.text = cooldown.cd:CreateFontString("pfCooldownFrameText", "OVERLAY")
     cooldown.cd.text:SetFont(pfUI.font_unit, C.appearance.cd.font_size, "OUTLINE")
-    cooldown.cd.text:SetPoint("CENTER", cooldown.cd, "CENTER", 0, 1)
+    cooldown.cd.text:SetPoint("CENTER", cooldown.cd, "CENTER", 0, 0)
 
     cooldown.cd:SetScript("OnUpdate", function()
       if not this:GetParent() then
@@ -69,7 +69,7 @@ pfUI:RegisterModule("cooldown", function ()
     -- realign guessed cooldown frames
     if this:GetParent() and this:GetParent():GetWidth() / 36 > 0 then
       this:SetScale(this:GetParent():GetWidth() / 36)
-      this:SetPoint("TOPLEFT", this:GetParent(), "TOPLEFT", 0, 0)
+      this:SetPoint("TOPLEFT", this:GetParent(), "TOPLEFT", -1, 1)
       this:SetPoint("BOTTOMRIGHT", this:GetParent(), "BOTTOMRIGHT", 1, -1)
     end
 

@@ -569,8 +569,11 @@ pfUI:RegisterModule("gui", function ()
    this:GetParent():Hide()
   end)
 
+  -- initialize dropdown menus
+  pfUI.gui.dropdowns = { }
+
   -- dropdown menu items
-  local dropdown_selection_fonts = {
+  pfUI.gui.dropdowns.fonts = {
     "Interface\\AddOns\\pfUI\\fonts\\BigNoodleTitling.ttf:BigNoodleTitling",
     "Interface\\AddOns\\pfUI\\fonts\\Continuum.ttf:Continuum",
     "Interface\\AddOns\\pfUI\\fonts\\DieDieDie.ttf:DieDieDie",
@@ -583,28 +586,55 @@ pfUI:RegisterModule("gui", function ()
 
   -- add locale dependent client fonts to the list
   if GetLocale() == "enUS" or GetLocale() == "frFR" or GetLocale() == "deDE" or GetLocale() == "ruRU" then
-    table.insert(dropdown_selection_fonts, "Fonts\\ARIALN.TTF:ARIALN")
-    table.insert(dropdown_selection_fonts, "Fonts\\FRIZQT__.TTF:FRIZQT")
-    table.insert(dropdown_selection_fonts, "Fonts\\MORPHEUS.TTF:MORPHEUS")
-    table.insert(dropdown_selection_fonts, "Fonts\\SKURRI.TTF:SKURRI")
+    table.insert(pfUI.gui.dropdowns.fonts, "Fonts\\ARIALN.TTF:ARIALN")
+    table.insert(pfUI.gui.dropdowns.fonts, "Fonts\\FRIZQT__.TTF:FRIZQT")
+    table.insert(pfUI.gui.dropdowns.fonts, "Fonts\\MORPHEUS.TTF:MORPHEUS")
+    table.insert(pfUI.gui.dropdowns.fonts, "Fonts\\SKURRI.TTF:SKURRI")
   elseif GetLocale() == "koKR" then
-    table.insert(dropdown_selection_fonts, "Fonts\\2002.TTF:2002")
-    table.insert(dropdown_selection_fonts, "Fonts\\2002B.TTF:2002B")
-    table.insert(dropdown_selection_fonts, "Fonts\\ARIALN.TTF:ARIALN")
-    table.insert(dropdown_selection_fonts, "Fonts\\FRIZQT__.TTF:FRIZQT")
-    table.insert(dropdown_selection_fonts, "Fonts\\K_Damage.TTF:K_Damage")
-    table.insert(dropdown_selection_fonts, "Fonts\\K_Pagetext.TTF:K_Pagetext")
+    table.insert(pfUI.gui.dropdowns.fonts, "Fonts\\2002.TTF:2002")
+    table.insert(pfUI.gui.dropdowns.fonts, "Fonts\\2002B.TTF:2002B")
+    table.insert(pfUI.gui.dropdowns.fonts, "Fonts\\ARIALN.TTF:ARIALN")
+    table.insert(pfUI.gui.dropdowns.fonts, "Fonts\\FRIZQT__.TTF:FRIZQT")
+    table.insert(pfUI.gui.dropdowns.fonts, "Fonts\\K_Damage.TTF:K_Damage")
+    table.insert(pfUI.gui.dropdowns.fonts, "Fonts\\K_Pagetext.TTF:K_Pagetext")
   elseif GetLocale() == "zhCN" then
-    table.insert(dropdown_selection_fonts, "Fonts\\ARIALN.TTF:ARIALN")
-    table.insert(dropdown_selection_fonts, "Fonts\\FRIZQT__.TTF:FRIZQT")
-    table.insert(dropdown_selection_fonts, "Fonts\\FZBWJW.TTF:FZBWJW")
-    table.insert(dropdown_selection_fonts, "Fonts\\FZJZJW.TTF:FZJZJW")
-    table.insert(dropdown_selection_fonts, "Fonts\\FZLBJW.TTF:FZLBJW")
-    table.insert(dropdown_selection_fonts, "Fonts\\FZXHJW.TTF:FZXHJW")
-    table.insert(dropdown_selection_fonts, "Fonts\\FZXHLJW.TTF:FZXHLJW")
+    table.insert(pfUI.gui.dropdowns.fonts, "Fonts\\ARIALN.TTF:ARIALN")
+    table.insert(pfUI.gui.dropdowns.fonts, "Fonts\\FRIZQT__.TTF:FRIZQT")
+    table.insert(pfUI.gui.dropdowns.fonts, "Fonts\\FZBWJW.TTF:FZBWJW")
+    table.insert(pfUI.gui.dropdowns.fonts, "Fonts\\FZJZJW.TTF:FZJZJW")
+    table.insert(pfUI.gui.dropdowns.fonts, "Fonts\\FZLBJW.TTF:FZLBJW")
+    table.insert(pfUI.gui.dropdowns.fonts, "Fonts\\FZXHJW.TTF:FZXHJW")
+    table.insert(pfUI.gui.dropdowns.fonts, "Fonts\\FZXHLJW.TTF:FZXHLJW")
   end
 
-  local dropdown_unitframes_text = {
+  pfUI.gui.dropdowns.uf_animationspeed = {
+    "1:" .. T["Instant"],
+    "2:" .. T["Very Fast"],
+    "3:" .. T["Fast"],
+    "5:" .. T["Medium"],
+    "8:" .. T["Slow"],
+    "13:" .. T["Very Slow"],
+  }
+
+  pfUI.gui.dropdowns.uf_portrait_position = {
+    "bar:" .. T["Healthbar Embedded"],
+    "left:" .. T["Left"],
+    "right:" .. T["Right"],
+    "off:" .. T["Disabled"]
+  }
+
+  pfUI.gui.dropdowns.uf_buff_position = {
+    "top:" .. T["Top"],
+    "bottom:" .. T["Bottom"],
+    "off:" .. T["Disabled"]
+  }
+
+  pfUI.gui.dropdowns.uf_layout = {
+    "default:" .. T["Default"],
+    "tukui:TukUI"
+  }
+
+  pfUI.gui.dropdowns.uf_texts = {
     "none:" .. T["Disable"],
     "unit:" .. T["Unit String"],
     "name:" .. T["Name"],
@@ -624,7 +654,7 @@ pfUI:RegisterModule("gui", function ()
     "powerminmax:" .. T["Mana - Min/Max"],
   }
 
-  local dropdown_panel_values = {
+  pfUI.gui.dropdowns.panel_values = {
     "none:" .. T["Disable"],
     "time:" .. T["Clock"],
     "fps:" .. T["FPS & Ping"],
@@ -640,37 +670,19 @@ pfUI:RegisterModule("gui", function ()
     "bagspace:" .. T["Bagspace"]
   }
 
-  local dropdown_unitframes_portrait_position = {
-    "bar:" .. T["Healthbar Embedded"],
-    "left:" .. T["Left"],
-    "right:" .. T["Right"],
-    "off:" .. T["Disabled"]
-  }
-
-  local dropdown_unitframes_buff_position = {
-    "top:" .. T["Top"],
-    "bottom:" .. T["Bottom"],
-    "off:" .. T["Disabled"]
-  }
-
-  local dropdown_tooltip_position = {
+  pfUI.gui.dropdowns.tooltip_position = {
     "bottom:" .. T["Bottom"],
     "chat:" .. T["Dodge"],
     "cursor:" .. T["Cursor"]
   }
 
-  local dropdown_unitframes_layout = {
-    "default:" .. T["Default"],
-    "tukui:TukUI"
-  }
-
-  local dropdown_gmserver_text = {
+  pfUI.gui.dropdowns.gmserver_text = {
     "elysium:" .. T["Elysium Based Core"],
   }
 
-  local dropdown_num_actionbar_buttons = BarLayoutOptions(NUM_ACTIONBAR_BUTTONS)
-  local dropdown_num_shapeshift_slots = BarLayoutOptions(NUM_SHAPESHIFT_SLOTS)
-  local dropdown_num_pet_action_slots = BarLayoutOptions(NUM_PET_ACTION_SLOTS)
+  pfUI.gui.dropdowns.num_actionbar_buttons = BarLayoutOptions(NUM_ACTIONBAR_BUTTONS)
+  pfUI.gui.dropdowns.num_shapeshift_slots = BarLayoutOptions(NUM_SHAPESHIFT_SLOTS)
+  pfUI.gui.dropdowns.num_pet_action_slots = BarLayoutOptions(NUM_PET_ACTION_SLOTS)
 
   -- main tab frame
   pfUI.gui.tabs = Createtabs(pfUI.gui, "LEFT")
@@ -687,11 +699,11 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.tabs.settings.tabs.general:SetScript("OnShow", function()
     if not this.setup then
       CreateConfig(this, T["Enable Region Compatible Font"], C.global, "force_region", "checkbox")
-      CreateConfig(this, T["Standard Text Font"], C.global, "font_default", "dropdown", dropdown_selection_fonts)
+      CreateConfig(this, T["Standard Text Font"], C.global, "font_default", "dropdown", pfUI.gui.dropdowns.fonts)
       CreateConfig(this, T["Standard Text Font Size"], C.global, "font_size")
-      CreateConfig(this, T["Unit Frame Text Font"], C.global, "font_unit", "dropdown", dropdown_selection_fonts)
+      CreateConfig(this, T["Unit Frame Text Font"], C.global, "font_unit", "dropdown", pfUI.gui.dropdowns.fonts)
       CreateConfig(this, T["Unit Frame Text Size"], C.global, "font_unit_size")
-      CreateConfig(this, T["Scrolling Combat Text Font"], C.global, "font_combat", "dropdown", dropdown_selection_fonts)
+      CreateConfig(this, T["Scrolling Combat Text Font"], C.global, "font_combat", "dropdown", pfUI.gui.dropdowns.fonts)
       CreateConfig(this, T["Enable Pixel Perfect (Native Resolution)"], C.global, "pixelperfect", "checkbox")
       CreateConfig(this, T["Enable Offscreen Frame Positions"], C.global, "offscreen", "checkbox")
       CreateConfig(this, T["Enable Single Line UIErrors"], C.global, "errors_limit", "checkbox")
@@ -852,7 +864,7 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.tabs.settings.tabs.gm:SetScript("OnShow", function()
     if not this.setup then
       CreateConfig(this, T["Disable GM-Mode"], C.gm, "disable", "checkbox")
-      CreateConfig(this, T["Selected Core"], C.gm, "server", "dropdown", dropdown_gmserver_text)
+      CreateConfig(this, T["Selected Core"], C.gm, "server", "dropdown", pfUI.gui.dropdowns.gmserver_text)
 
       this.setup = true
     end
@@ -873,11 +885,11 @@ pfUI:RegisterModule("gui", function ()
       CreateConfig(this, T["Custom Health Bar Color"], C.unitframes, "customcolor", "color")
       CreateConfig(this, T["Enable Custom Color Health Bar Background"], C.unitframes, "custombg", "checkbox")
       CreateConfig(this, T["Custom Health Bar Background Color"], C.unitframes, "custombgcolor", "color")
-      CreateConfig(this, T["Healthbar Animation Speed"], C.unitframes, "animation_speed")
+      CreateConfig(this, T["Healthbar Animation Speed"], C.unitframes, "animation_speed", "dropdown", pfUI.gui.dropdowns.uf_animationspeed)
       CreateConfig(this, T["Portrait Alpha"], C.unitframes, "portraitalpha")
       CreateConfig(this, T["Always Use 2D Portraits"], C.unitframes, "always2dportrait", "checkbox")
       CreateConfig(this, T["Enable 2D Portraits As Fallback"], C.unitframes, "portraittexture", "checkbox")
-      CreateConfig(this, T["Unit Frame Layout"], C.unitframes, "layout", "dropdown", dropdown_unitframes_layout)
+      CreateConfig(this, T["Unit Frame Layout"], C.unitframes, "layout", "dropdown", pfUI.gui.dropdowns.uf_layout)
       CreateConfig(this, T["Aggressive 40y-Range Check (Will break stuff)"], C.unitframes, "rangecheck", "checkbox")
       CreateConfig(this, T["40y-Range Check Interval"], C.unitframes, "rangechecki")
       CreateConfig(this, T["Combopoint Size"], C.unitframes, "combosize")
@@ -893,16 +905,16 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.tabs.uf.tabs.player:SetScript("OnShow", function()
     if not this.setup then
       CreateConfig(this, T["Display Player Frame"], C.unitframes.player, "visible", "checkbox")
-      CreateConfig(this, T["Portrait Position"], C.unitframes.player, "portrait", "dropdown", dropdown_unitframes_portrait_position)
+      CreateConfig(this, T["Portrait Position"], C.unitframes.player, "portrait", "dropdown", pfUI.gui.dropdowns.uf_portrait_position)
       CreateConfig(this, T["Health Bar Width"], C.unitframes.player, "width")
       CreateConfig(this, T["Health Bar Height"], C.unitframes.player, "height")
       CreateConfig(this, T["Power Bar Height"], C.unitframes.player, "pheight")
       CreateConfig(this, T["Spacing"], C.unitframes.player, "pspace")
-      CreateConfig(this, T["Buff Position"], C.unitframes.player, "buffs", "dropdown", dropdown_unitframes_buff_position)
+      CreateConfig(this, T["Buff Position"], C.unitframes.player, "buffs", "dropdown", pfUI.gui.dropdowns.uf_buff_position)
       CreateConfig(this, T["Buff Size"], C.unitframes.player, "buffsize")
       CreateConfig(this, T["Buff Limit"], C.unitframes.player, "bufflimit")
       CreateConfig(this, T["Buffs Per Row"], C.unitframes.player, "buffperrow")
-      CreateConfig(this, T["Debuff Position"], C.unitframes.player, "debuffs", "dropdown", dropdown_unitframes_buff_position)
+      CreateConfig(this, T["Debuff Position"], C.unitframes.player, "debuffs", "dropdown", pfUI.gui.dropdowns.uf_buff_position)
       CreateConfig(this, T["Debuff Size"], C.unitframes.player, "debuffsize")
       CreateConfig(this, T["Debuff Limit"], C.unitframes.player, "debufflimit")
       CreateConfig(this, T["Debuffs Per Row"], C.unitframes.player, "debuffperrow")
@@ -916,13 +928,13 @@ pfUI:RegisterModule("gui", function ()
       CreateConfig(this, T["Enable Level Color in Text"], C.unitframes.player, "levelcolor", "checkbox")
       CreateConfig(this, T["Enable Class Color in Text"], C.unitframes.player, "classcolor", "checkbox")
       CreateConfig(this, T["Health Bar Texts"], nil, nil, "header")
-      CreateConfig(this, T["Left Text"], C.unitframes.player, "txthpleft", "dropdown", dropdown_unitframes_text)
-      CreateConfig(this, T["Center Text"], C.unitframes.player, "txthpcenter", "dropdown", dropdown_unitframes_text)
-      CreateConfig(this, T["Right Text"], C.unitframes.player, "txthpright", "dropdown", dropdown_unitframes_text)
+      CreateConfig(this, T["Left Text"], C.unitframes.player, "txthpleft", "dropdown", pfUI.gui.dropdowns.uf_texts)
+      CreateConfig(this, T["Center Text"], C.unitframes.player, "txthpcenter", "dropdown", pfUI.gui.dropdowns.uf_texts)
+      CreateConfig(this, T["Right Text"], C.unitframes.player, "txthpright", "dropdown", pfUI.gui.dropdowns.uf_texts)
       CreateConfig(this, T["Power Bar Texts"], nil, nil, "header")
-      CreateConfig(this, T["Left Text"], C.unitframes.player, "txtpowerleft", "dropdown", dropdown_unitframes_text)
-      CreateConfig(this, T["Center Text"], C.unitframes.player, "txtpowercenter", "dropdown", dropdown_unitframes_text)
-      CreateConfig(this, T["Right Text"], C.unitframes.player, "txtpowerright", "dropdown", dropdown_unitframes_text)
+      CreateConfig(this, T["Left Text"], C.unitframes.player, "txtpowerleft", "dropdown", pfUI.gui.dropdowns.uf_texts)
+      CreateConfig(this, T["Center Text"], C.unitframes.player, "txtpowercenter", "dropdown", pfUI.gui.dropdowns.uf_texts)
+      CreateConfig(this, T["Right Text"], C.unitframes.player, "txtpowerright", "dropdown", pfUI.gui.dropdowns.uf_texts)
       this.setup = true
     end
   end)
@@ -933,16 +945,16 @@ pfUI:RegisterModule("gui", function ()
     if not this.setup then
       CreateConfig(this, T["Display Target Frame"], C.unitframes.target, "visible", "checkbox")
       CreateConfig(this, T["Enable Target Switch Animation"], C.unitframes.target, "animation", "checkbox")
-      CreateConfig(this, T["Portrait Position"], C.unitframes.target, "portrait", "dropdown", dropdown_unitframes_portrait_position)
+      CreateConfig(this, T["Portrait Position"], C.unitframes.target, "portrait", "dropdown", pfUI.gui.dropdowns.uf_portrait_position)
       CreateConfig(this, T["Health Bar Width"], C.unitframes.target, "width")
       CreateConfig(this, T["Health Bar Height"], C.unitframes.target, "height")
       CreateConfig(this, T["Power Bar Height"], C.unitframes.target, "pheight")
       CreateConfig(this, T["Spacing"], C.unitframes.target, "pspace")
-      CreateConfig(this, T["Buff Position"], C.unitframes.target, "buffs", "dropdown", dropdown_unitframes_buff_position)
+      CreateConfig(this, T["Buff Position"], C.unitframes.target, "buffs", "dropdown", pfUI.gui.dropdowns.uf_buff_position)
       CreateConfig(this, T["Buff Size"], C.unitframes.target, "buffsize")
       CreateConfig(this, T["Buff Limit"], C.unitframes.target, "bufflimit")
       CreateConfig(this, T["Buffs Per Row"], C.unitframes.target, "buffperrow")
-      CreateConfig(this, T["Debuff Position"], C.unitframes.target, "debuffs", "dropdown", dropdown_unitframes_buff_position)
+      CreateConfig(this, T["Debuff Position"], C.unitframes.target, "debuffs", "dropdown", pfUI.gui.dropdowns.uf_buff_position)
       CreateConfig(this, T["Debuff Size"], C.unitframes.target, "debuffsize")
       CreateConfig(this, T["Debuff Limit"], C.unitframes.target, "debufflimit")
       CreateConfig(this, T["Debuffs Per Row"], C.unitframes.target, "debuffperrow")
@@ -956,13 +968,13 @@ pfUI:RegisterModule("gui", function ()
       CreateConfig(this, T["Enable Level Color in Text"], C.unitframes.target, "levelcolor", "checkbox")
       CreateConfig(this, T["Enable Class Color in Text"], C.unitframes.target, "classcolor", "checkbox")
       CreateConfig(this, T["Health Bar Texts"], nil, nil, "header")
-      CreateConfig(this, T["Left Text"], C.unitframes.target, "txthpleft", "dropdown", dropdown_unitframes_text)
-      CreateConfig(this, T["Center Text"], C.unitframes.target, "txthpcenter", "dropdown", dropdown_unitframes_text)
-      CreateConfig(this, T["Right Text"], C.unitframes.target, "txthpright", "dropdown", dropdown_unitframes_text)
+      CreateConfig(this, T["Left Text"], C.unitframes.target, "txthpleft", "dropdown", pfUI.gui.dropdowns.uf_texts)
+      CreateConfig(this, T["Center Text"], C.unitframes.target, "txthpcenter", "dropdown", pfUI.gui.dropdowns.uf_texts)
+      CreateConfig(this, T["Right Text"], C.unitframes.target, "txthpright", "dropdown", pfUI.gui.dropdowns.uf_texts)
       CreateConfig(this, T["Power Bar Texts"], nil, nil, "header")
-      CreateConfig(this, T["Left Text"], C.unitframes.target, "txtpowerleft", "dropdown", dropdown_unitframes_text)
-      CreateConfig(this, T["Center Text"], C.unitframes.target, "txtpowercenter", "dropdown", dropdown_unitframes_text)
-      CreateConfig(this, T["Right Text"], C.unitframes.target, "txtpowerright", "dropdown", dropdown_unitframes_text)
+      CreateConfig(this, T["Left Text"], C.unitframes.target, "txtpowerleft", "dropdown", pfUI.gui.dropdowns.uf_texts)
+      CreateConfig(this, T["Center Text"], C.unitframes.target, "txtpowercenter", "dropdown", pfUI.gui.dropdowns.uf_texts)
+      CreateConfig(this, T["Right Text"], C.unitframes.target, "txtpowerright", "dropdown", pfUI.gui.dropdowns.uf_texts)
       this.setup = true
     end
   end)
@@ -972,16 +984,16 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.tabs.uf.tabs.targettarget:SetScript("OnShow", function()
     if not this.setup then
       CreateConfig(this, T["Display Target of Target Frame"], C.unitframes.ttarget, "visible", "checkbox")
-      CreateConfig(this, T["Portrait Position"], C.unitframes.ttarget, "portrait", "dropdown", dropdown_unitframes_portrait_position)
+      CreateConfig(this, T["Portrait Position"], C.unitframes.ttarget, "portrait", "dropdown", pfUI.gui.dropdowns.uf_portrait_position)
       CreateConfig(this, T["Health Bar Width"], C.unitframes.ttarget, "width")
       CreateConfig(this, T["Health Bar Height"], C.unitframes.ttarget, "height")
       CreateConfig(this, T["Power Bar Height"], C.unitframes.ttarget, "pheight")
       CreateConfig(this, T["Spacing"], C.unitframes.ttarget, "pspace")
-      CreateConfig(this, T["Buff Position"], C.unitframes.ttarget, "buffs", "dropdown", dropdown_unitframes_buff_position)
+      CreateConfig(this, T["Buff Position"], C.unitframes.ttarget, "buffs", "dropdown", pfUI.gui.dropdowns.uf_buff_position)
       CreateConfig(this, T["Buff Size"], C.unitframes.ttarget, "buffsize")
       CreateConfig(this, T["Buff Limit"], C.unitframes.ttarget, "bufflimit")
       CreateConfig(this, T["Buffs Per Row"], C.unitframes.ttarget, "buffperrow")
-      CreateConfig(this, T["Debuff Position"], C.unitframes.ttarget, "debuffs", "dropdown", dropdown_unitframes_buff_position)
+      CreateConfig(this, T["Debuff Position"], C.unitframes.ttarget, "debuffs", "dropdown", pfUI.gui.dropdowns.uf_buff_position)
       CreateConfig(this, T["Debuff Size"], C.unitframes.ttarget, "debuffsize")
       CreateConfig(this, T["Debuff Limit"], C.unitframes.ttarget, "debufflimit")
       CreateConfig(this, T["Debuffs Per Row"], C.unitframes.ttarget, "debuffperrow")
@@ -995,13 +1007,13 @@ pfUI:RegisterModule("gui", function ()
       CreateConfig(this, T["Enable Level Color in Text"], C.unitframes.ttarget, "levelcolor", "checkbox")
       CreateConfig(this, T["Enable Class Color in Text"], C.unitframes.ttarget, "classcolor", "checkbox")
       CreateConfig(this, T["Health Bar Texts"], nil, nil, "header")
-      CreateConfig(this, T["Left Text"], C.unitframes.ttarget, "txthpleft", "dropdown", dropdown_unitframes_text)
-      CreateConfig(this, T["Center Text"], C.unitframes.ttarget, "txthpcenter", "dropdown", dropdown_unitframes_text)
-      CreateConfig(this, T["Right Text"], C.unitframes.ttarget, "txthpright", "dropdown", dropdown_unitframes_text)
+      CreateConfig(this, T["Left Text"], C.unitframes.ttarget, "txthpleft", "dropdown", pfUI.gui.dropdowns.uf_texts)
+      CreateConfig(this, T["Center Text"], C.unitframes.ttarget, "txthpcenter", "dropdown", pfUI.gui.dropdowns.uf_texts)
+      CreateConfig(this, T["Right Text"], C.unitframes.ttarget, "txthpright", "dropdown", pfUI.gui.dropdowns.uf_texts)
       CreateConfig(this, T["Power Bar Texts"], nil, nil, "header")
-      CreateConfig(this, T["Left Text"], C.unitframes.ttarget, "txtpowerleft", "dropdown", dropdown_unitframes_text)
-      CreateConfig(this, T["Center Text"], C.unitframes.ttarget, "txtpowercenter", "dropdown", dropdown_unitframes_text)
-      CreateConfig(this, T["Right Text"], C.unitframes.ttarget, "txtpowerright", "dropdown", dropdown_unitframes_text)
+      CreateConfig(this, T["Left Text"], C.unitframes.ttarget, "txtpowerleft", "dropdown", pfUI.gui.dropdowns.uf_texts)
+      CreateConfig(this, T["Center Text"], C.unitframes.ttarget, "txtpowercenter", "dropdown", pfUI.gui.dropdowns.uf_texts)
+      CreateConfig(this, T["Right Text"], C.unitframes.ttarget, "txtpowerright", "dropdown", pfUI.gui.dropdowns.uf_texts)
       this.setup = true
     end
   end)
@@ -1011,16 +1023,16 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.tabs.uf.tabs.pet:SetScript("OnShow", function()
     if not this.setup then
       CreateConfig(this, T["Display Pet Frame"], C.unitframes.player, "visible", "checkbox")
-      CreateConfig(this, T["Portrait Position"], C.unitframes.pet, "portrait", "dropdown", dropdown_unitframes_portrait_position)
+      CreateConfig(this, T["Portrait Position"], C.unitframes.pet, "portrait", "dropdown", pfUI.gui.dropdowns.uf_portrait_position)
       CreateConfig(this, T["Health Bar Width"], C.unitframes.pet, "width")
       CreateConfig(this, T["Health Bar Height"], C.unitframes.pet, "height")
       CreateConfig(this, T["Power Bar Height"], C.unitframes.pet, "pheight")
       CreateConfig(this, T["Spacing"], C.unitframes.pet, "pspace")
-      CreateConfig(this, T["Buff Position"], C.unitframes.pet, "buffs", "dropdown", dropdown_unitframes_buff_position)
+      CreateConfig(this, T["Buff Position"], C.unitframes.pet, "buffs", "dropdown", pfUI.gui.dropdowns.uf_buff_position)
       CreateConfig(this, T["Buff Size"], C.unitframes.pet, "buffsize")
       CreateConfig(this, T["Buff Limit"], C.unitframes.pet, "bufflimit")
       CreateConfig(this, T["Buffs Per Row"], C.unitframes.pet, "buffperrow")
-      CreateConfig(this, T["Debuff Position"], C.unitframes.pet, "debuffs", "dropdown", dropdown_unitframes_buff_position)
+      CreateConfig(this, T["Debuff Position"], C.unitframes.pet, "debuffs", "dropdown", pfUI.gui.dropdowns.uf_buff_position)
       CreateConfig(this, T["Debuff Size"], C.unitframes.pet, "debuffsize")
       CreateConfig(this, T["Debuff Limit"], C.unitframes.pet, "debufflimit")
       CreateConfig(this, T["Debuffs Per Row"], C.unitframes.pet, "debuffperrow")
@@ -1034,13 +1046,13 @@ pfUI:RegisterModule("gui", function ()
       CreateConfig(this, T["Enable Level Color in Text"], C.unitframes.pet, "levelcolor", "checkbox")
       CreateConfig(this, T["Enable Class Color in Text"], C.unitframes.pet, "classcolor", "checkbox")
       CreateConfig(this, T["Health Bar Texts"], nil, nil, "header")
-      CreateConfig(this, T["Left Text"], C.unitframes.pet, "txthpleft", "dropdown", dropdown_unitframes_text)
-      CreateConfig(this, T["Center Text"], C.unitframes.pet, "txthpcenter", "dropdown", dropdown_unitframes_text)
-      CreateConfig(this, T["Right Text"], C.unitframes.pet, "txthpright", "dropdown", dropdown_unitframes_text)
+      CreateConfig(this, T["Left Text"], C.unitframes.pet, "txthpleft", "dropdown", pfUI.gui.dropdowns.uf_texts)
+      CreateConfig(this, T["Center Text"], C.unitframes.pet, "txthpcenter", "dropdown", pfUI.gui.dropdowns.uf_texts)
+      CreateConfig(this, T["Right Text"], C.unitframes.pet, "txthpright", "dropdown", pfUI.gui.dropdowns.uf_texts)
       CreateConfig(this, T["Power Bar Texts"], nil, nil, "header")
-      CreateConfig(this, T["Left Text"], C.unitframes.pet, "txtpowerleft", "dropdown", dropdown_unitframes_text)
-      CreateConfig(this, T["Center Text"], C.unitframes.pet, "txtpowercenter", "dropdown", dropdown_unitframes_text)
-      CreateConfig(this, T["Right Text"], C.unitframes.pet, "txtpowerright", "dropdown", dropdown_unitframes_text)
+      CreateConfig(this, T["Left Text"], C.unitframes.pet, "txtpowerleft", "dropdown", pfUI.gui.dropdowns.uf_texts)
+      CreateConfig(this, T["Center Text"], C.unitframes.pet, "txtpowercenter", "dropdown", pfUI.gui.dropdowns.uf_texts)
+      CreateConfig(this, T["Right Text"], C.unitframes.pet, "txtpowerright", "dropdown", pfUI.gui.dropdowns.uf_texts)
       this.setup = true
     end
   end)
@@ -1050,16 +1062,16 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.tabs.uf.tabs.focus:SetScript("OnShow", function()
     if not this.setup then
       CreateConfig(this, T["Display Focus Frame"], C.unitframes.focus, "visible", "checkbox")
-      CreateConfig(this, T["Portrait Position"], C.unitframes.focus, "portrait", "dropdown", dropdown_unitframes_portrait_position)
+      CreateConfig(this, T["Portrait Position"], C.unitframes.focus, "portrait", "dropdown", pfUI.gui.dropdowns.uf_portrait_position)
       CreateConfig(this, T["Health Bar Width"], C.unitframes.focus, "width")
       CreateConfig(this, T["Health Bar Height"], C.unitframes.focus, "height")
       CreateConfig(this, T["Power Bar Height"], C.unitframes.focus, "pheight")
       CreateConfig(this, T["Spacing"], C.unitframes.focus, "pspace")
-      CreateConfig(this, T["Buff Position"], C.unitframes.focus, "buffs", "dropdown", dropdown_unitframes_buff_position)
+      CreateConfig(this, T["Buff Position"], C.unitframes.focus, "buffs", "dropdown", pfUI.gui.dropdowns.uf_buff_position)
       CreateConfig(this, T["Buff Size"], C.unitframes.focus, "buffsize")
       CreateConfig(this, T["Buff Limit"], C.unitframes.focus, "bufflimit")
       CreateConfig(this, T["Buffs Per Row"], C.unitframes.focus, "buffperrow")
-      CreateConfig(this, T["Debuff Position"], C.unitframes.focus, "debuffs", "dropdown", dropdown_unitframes_buff_position)
+      CreateConfig(this, T["Debuff Position"], C.unitframes.focus, "debuffs", "dropdown", pfUI.gui.dropdowns.uf_buff_position)
       CreateConfig(this, T["Debuff Size"], C.unitframes.focus, "debuffsize")
       CreateConfig(this, T["Debuff Limit"], C.unitframes.focus, "debufflimit")
       CreateConfig(this, T["Debuffs Per Row"], C.unitframes.focus, "debuffperrow")
@@ -1073,13 +1085,13 @@ pfUI:RegisterModule("gui", function ()
       CreateConfig(this, T["Enable Level Color in Text"], C.unitframes.focus, "levelcolor", "checkbox")
       CreateConfig(this, T["Enable Class Color in Text"], C.unitframes.focus, "classcolor", "checkbox")
       CreateConfig(this, T["Health Bar Texts"], nil, nil, "header")
-      CreateConfig(this, T["Left Text"], C.unitframes.focus, "txthpleft", "dropdown", dropdown_unitframes_text)
-      CreateConfig(this, T["Center Text"], C.unitframes.focus, "txthpcenter", "dropdown", dropdown_unitframes_text)
-      CreateConfig(this, T["Right Text"], C.unitframes.focus, "txthpright", "dropdown", dropdown_unitframes_text)
+      CreateConfig(this, T["Left Text"], C.unitframes.focus, "txthpleft", "dropdown", pfUI.gui.dropdowns.uf_texts)
+      CreateConfig(this, T["Center Text"], C.unitframes.focus, "txthpcenter", "dropdown", pfUI.gui.dropdowns.uf_texts)
+      CreateConfig(this, T["Right Text"], C.unitframes.focus, "txthpright", "dropdown", pfUI.gui.dropdowns.uf_texts)
       CreateConfig(this, T["Power Bar Texts"], nil, nil, "header")
-      CreateConfig(this, T["Left Text"], C.unitframes.focus, "txtpowerleft", "dropdown", dropdown_unitframes_text)
-      CreateConfig(this, T["Center Text"], C.unitframes.focus, "txtpowercenter", "dropdown", dropdown_unitframes_text)
-      CreateConfig(this, T["Right Text"], C.unitframes.focus, "txtpowerright", "dropdown", dropdown_unitframes_text)
+      CreateConfig(this, T["Left Text"], C.unitframes.focus, "txtpowerleft", "dropdown", pfUI.gui.dropdowns.uf_texts)
+      CreateConfig(this, T["Center Text"], C.unitframes.focus, "txtpowercenter", "dropdown", pfUI.gui.dropdowns.uf_texts)
+      CreateConfig(this, T["Right Text"], C.unitframes.focus, "txtpowerright", "dropdown", pfUI.gui.dropdowns.uf_texts)
       this.setup = true
     end
   end)
@@ -1111,16 +1123,16 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.tabs.gf.tabs.raid:SetScript("OnShow", function()
     if not this.setup then
       CreateConfig(this, T["Display Raid Frames"], C.unitframes.raid, "visible", "checkbox")
-      CreateConfig(this, T["Portrait Position"], C.unitframes.raid, "portrait", "dropdown", dropdown_unitframes_portrait_position)
+      CreateConfig(this, T["Portrait Position"], C.unitframes.raid, "portrait", "dropdown", pfUI.gui.dropdowns.uf_portrait_position)
       CreateConfig(this, T["Health Bar Width"], C.unitframes.raid, "width")
       CreateConfig(this, T["Health Bar Height"], C.unitframes.raid, "height")
       CreateConfig(this, T["Power Bar Height"], C.unitframes.raid, "pheight")
       CreateConfig(this, T["Spacing"], C.unitframes.raid, "pspace")
-      CreateConfig(this, T["Buff Position"], C.unitframes.raid, "buffs", "dropdown", dropdown_unitframes_buff_position)
+      CreateConfig(this, T["Buff Position"], C.unitframes.raid, "buffs", "dropdown", pfUI.gui.dropdowns.uf_buff_position)
       CreateConfig(this, T["Buff Size"], C.unitframes.raid, "buffsize")
       CreateConfig(this, T["Buff Limit"], C.unitframes.raid, "bufflimit")
       CreateConfig(this, T["Buffs Per Row"], C.unitframes.raid, "buffperrow")
-      CreateConfig(this, T["Debuff Position"], C.unitframes.raid, "debuffs", "dropdown", dropdown_unitframes_buff_position)
+      CreateConfig(this, T["Debuff Position"], C.unitframes.raid, "debuffs", "dropdown", pfUI.gui.dropdowns.uf_buff_position)
       CreateConfig(this, T["Debuff Size"], C.unitframes.raid, "debuffsize")
       CreateConfig(this, T["Debuff Limit"], C.unitframes.raid, "debufflimit")
       CreateConfig(this, T["Debuffs Per Row"], C.unitframes.raid, "debuffperrow")
@@ -1134,13 +1146,13 @@ pfUI:RegisterModule("gui", function ()
       CreateConfig(this, T["Enable Level Color in Text"], C.unitframes.raid, "levelcolor", "checkbox")
       CreateConfig(this, T["Enable Class Color in Text"], C.unitframes.raid, "classcolor", "checkbox")
       CreateConfig(this, T["Health Bar Texts"], nil, nil, "header")
-      CreateConfig(this, T["Left Text"], C.unitframes.raid, "txthpleft", "dropdown", dropdown_unitframes_text)
-      CreateConfig(this, T["Center Text"], C.unitframes.raid, "txthpcenter", "dropdown", dropdown_unitframes_text)
-      CreateConfig(this, T["Right Text"], C.unitframes.raid, "txthpright", "dropdown", dropdown_unitframes_text)
+      CreateConfig(this, T["Left Text"], C.unitframes.raid, "txthpleft", "dropdown", pfUI.gui.dropdowns.uf_texts)
+      CreateConfig(this, T["Center Text"], C.unitframes.raid, "txthpcenter", "dropdown", pfUI.gui.dropdowns.uf_texts)
+      CreateConfig(this, T["Right Text"], C.unitframes.raid, "txthpright", "dropdown", pfUI.gui.dropdowns.uf_texts)
       CreateConfig(this, T["Power Bar Texts"], nil, nil, "header")
-      CreateConfig(this, T["Left Text"], C.unitframes.raid, "txtpowerleft", "dropdown", dropdown_unitframes_text)
-      CreateConfig(this, T["Center Text"], C.unitframes.raid, "txtpowercenter", "dropdown", dropdown_unitframes_text)
-      CreateConfig(this, T["Right Text"], C.unitframes.raid, "txtpowerright", "dropdown", dropdown_unitframes_text)
+      CreateConfig(this, T["Left Text"], C.unitframes.raid, "txtpowerleft", "dropdown", pfUI.gui.dropdowns.uf_texts)
+      CreateConfig(this, T["Center Text"], C.unitframes.raid, "txtpowercenter", "dropdown", pfUI.gui.dropdowns.uf_texts)
+      CreateConfig(this, T["Right Text"], C.unitframes.raid, "txtpowerright", "dropdown", pfUI.gui.dropdowns.uf_texts)
       this.setup = true
     end
   end)
@@ -1150,16 +1162,16 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.tabs.gf.tabs.group:SetScript("OnShow", function()
     if not this.setup then
       CreateConfig(this, T["Display Group Frames"], C.unitframes.group, "visible", "checkbox")
-      CreateConfig(this, T["Portrait Position"], C.unitframes.group, "portrait", "dropdown", dropdown_unitframes_portrait_position)
+      CreateConfig(this, T["Portrait Position"], C.unitframes.group, "portrait", "dropdown", pfUI.gui.dropdowns.uf_portrait_position)
       CreateConfig(this, T["Health Bar Width"], C.unitframes.group, "width")
       CreateConfig(this, T["Health Bar Height"], C.unitframes.group, "height")
       CreateConfig(this, T["Power Bar Height"], C.unitframes.group, "pheight")
       CreateConfig(this, T["Spacing"], C.unitframes.group, "pspace")
-      CreateConfig(this, T["Buff Position"], C.unitframes.group, "buffs", "dropdown", dropdown_unitframes_buff_position)
+      CreateConfig(this, T["Buff Position"], C.unitframes.group, "buffs", "dropdown", pfUI.gui.dropdowns.uf_buff_position)
       CreateConfig(this, T["Buff Size"], C.unitframes.group, "buffsize")
       CreateConfig(this, T["Buff Limit"], C.unitframes.group, "bufflimit")
       CreateConfig(this, T["Buffs Per Row"], C.unitframes.group, "buffperrow")
-      CreateConfig(this, T["Debuff Position"], C.unitframes.group, "debuffs", "dropdown", dropdown_unitframes_buff_position)
+      CreateConfig(this, T["Debuff Position"], C.unitframes.group, "debuffs", "dropdown", pfUI.gui.dropdowns.uf_buff_position)
       CreateConfig(this, T["Debuff Size"], C.unitframes.group, "debuffsize")
       CreateConfig(this, T["Debuff Limit"], C.unitframes.group, "debufflimit")
       CreateConfig(this, T["Debuffs Per Row"], C.unitframes.group, "debuffperrow")
@@ -1174,13 +1186,13 @@ pfUI:RegisterModule("gui", function ()
       CreateConfig(this, T["Enable Level Color in Text"], C.unitframes.group, "levelcolor", "checkbox")
       CreateConfig(this, T["Enable Class Color in Text"], C.unitframes.group, "classcolor", "checkbox")
       CreateConfig(this, T["Health Bar Texts"], nil, nil, "header")
-      CreateConfig(this, T["Left Text"], C.unitframes.group, "txthpleft", "dropdown", dropdown_unitframes_text)
-      CreateConfig(this, T["Center Text"], C.unitframes.group, "txthpcenter", "dropdown", dropdown_unitframes_text)
-      CreateConfig(this, T["Right Text"], C.unitframes.group, "txthpright", "dropdown", dropdown_unitframes_text)
+      CreateConfig(this, T["Left Text"], C.unitframes.group, "txthpleft", "dropdown", pfUI.gui.dropdowns.uf_texts)
+      CreateConfig(this, T["Center Text"], C.unitframes.group, "txthpcenter", "dropdown", pfUI.gui.dropdowns.uf_texts)
+      CreateConfig(this, T["Right Text"], C.unitframes.group, "txthpright", "dropdown", pfUI.gui.dropdowns.uf_texts)
       CreateConfig(this, T["Power Bar Texts"], nil, nil, "header")
-      CreateConfig(this, T["Left Text"], C.unitframes.group, "txtpowerleft", "dropdown", dropdown_unitframes_text)
-      CreateConfig(this, T["Center Text"], C.unitframes.group, "txtpowercenter", "dropdown", dropdown_unitframes_text)
-      CreateConfig(this, T["Right Text"], C.unitframes.group, "txtpowerright", "dropdown", dropdown_unitframes_text)
+      CreateConfig(this, T["Left Text"], C.unitframes.group, "txtpowerleft", "dropdown", pfUI.gui.dropdowns.uf_texts)
+      CreateConfig(this, T["Center Text"], C.unitframes.group, "txtpowercenter", "dropdown", pfUI.gui.dropdowns.uf_texts)
+      CreateConfig(this, T["Right Text"], C.unitframes.group, "txtpowerright", "dropdown", pfUI.gui.dropdowns.uf_texts)
       this.setup = true
     end
   end)
@@ -1190,16 +1202,16 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.tabs.gf.tabs.grouptarget:SetScript("OnShow", function()
     if not this.setup then
       CreateConfig(this, T["Display Group Target Frames"], C.unitframes.grouptarget, "visible", "checkbox")
-      CreateConfig(this, T["Portrait Position"], C.unitframes.grouptarget, "portrait", "dropdown", dropdown_unitframes_portrait_position)
+      CreateConfig(this, T["Portrait Position"], C.unitframes.grouptarget, "portrait", "dropdown", pfUI.gui.dropdowns.uf_portrait_position)
       CreateConfig(this, T["Health Bar Width"], C.unitframes.grouptarget, "width")
       CreateConfig(this, T["Health Bar Height"], C.unitframes.grouptarget, "height")
       CreateConfig(this, T["Power Bar Height"], C.unitframes.grouptarget, "pheight")
       CreateConfig(this, T["Spacing"], C.unitframes.grouptarget, "pspace")
-      CreateConfig(this, T["Buff Position"], C.unitframes.grouptarget, "buffs", "dropdown", dropdown_unitframes_buff_position)
+      CreateConfig(this, T["Buff Position"], C.unitframes.grouptarget, "buffs", "dropdown", pfUI.gui.dropdowns.uf_buff_position)
       CreateConfig(this, T["Buff Size"], C.unitframes.grouptarget, "buffsize")
       CreateConfig(this, T["Buff Limit"], C.unitframes.grouptarget, "bufflimit")
       CreateConfig(this, T["Buffs Per Row"], C.unitframes.grouptarget, "buffperrow")
-      CreateConfig(this, T["Debuff Position"], C.unitframes.grouptarget, "debuffs", "dropdown", dropdown_unitframes_buff_position)
+      CreateConfig(this, T["Debuff Position"], C.unitframes.grouptarget, "debuffs", "dropdown", pfUI.gui.dropdowns.uf_buff_position)
       CreateConfig(this, T["Debuff Size"], C.unitframes.grouptarget, "debuffsize")
       CreateConfig(this, T["Debuff Limit"], C.unitframes.grouptarget, "debufflimit")
       CreateConfig(this, T["Debuffs Per Row"], C.unitframes.grouptarget, "debuffperrow")
@@ -1213,13 +1225,13 @@ pfUI:RegisterModule("gui", function ()
       CreateConfig(this, T["Enable Level Color in Text"], C.unitframes.grouptarget, "levelcolor", "checkbox")
       CreateConfig(this, T["Enable Class Color in Text"], C.unitframes.grouptarget, "classcolor", "checkbox")
       CreateConfig(this, T["Health Bar Texts"], nil, nil, "header")
-      CreateConfig(this, T["Left Text"], C.unitframes.grouptarget, "txthpleft", "dropdown", dropdown_unitframes_text)
-      CreateConfig(this, T["Center Text"], C.unitframes.grouptarget, "txthpcenter", "dropdown", dropdown_unitframes_text)
-      CreateConfig(this, T["Right Text"], C.unitframes.grouptarget, "txthpright", "dropdown", dropdown_unitframes_text)
+      CreateConfig(this, T["Left Text"], C.unitframes.grouptarget, "txthpleft", "dropdown", pfUI.gui.dropdowns.uf_texts)
+      CreateConfig(this, T["Center Text"], C.unitframes.grouptarget, "txthpcenter", "dropdown", pfUI.gui.dropdowns.uf_texts)
+      CreateConfig(this, T["Right Text"], C.unitframes.grouptarget, "txthpright", "dropdown", pfUI.gui.dropdowns.uf_texts)
       CreateConfig(this, T["Power Bar Texts"], nil, nil, "header")
-      CreateConfig(this, T["Left Text"], C.unitframes.grouptarget, "txtpowerleft", "dropdown", dropdown_unitframes_text)
-      CreateConfig(this, T["Center Text"], C.unitframes.grouptarget, "txtpowercenter", "dropdown", dropdown_unitframes_text)
-      CreateConfig(this, T["Right Text"], C.unitframes.grouptarget, "txtpowerright", "dropdown", dropdown_unitframes_text)
+      CreateConfig(this, T["Left Text"], C.unitframes.grouptarget, "txtpowerleft", "dropdown", pfUI.gui.dropdowns.uf_texts)
+      CreateConfig(this, T["Center Text"], C.unitframes.grouptarget, "txtpowercenter", "dropdown", pfUI.gui.dropdowns.uf_texts)
+      CreateConfig(this, T["Right Text"], C.unitframes.grouptarget, "txtpowerright", "dropdown", pfUI.gui.dropdowns.uf_texts)
       this.setup = true
     end
   end)
@@ -1229,16 +1241,16 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.tabs.gf.tabs.grouppet:SetScript("OnShow", function()
     if not this.setup then
       CreateConfig(this, T["Display Group Pet Frames"], C.unitframes.grouppet, "visible", "checkbox")
-      CreateConfig(this, T["Portrait Position"], C.unitframes.grouppet, "portrait", "dropdown", dropdown_unitframes_portrait_position)
+      CreateConfig(this, T["Portrait Position"], C.unitframes.grouppet, "portrait", "dropdown", pfUI.gui.dropdowns.uf_portrait_position)
       CreateConfig(this, T["Health Bar Width"], C.unitframes.grouppet, "width")
       CreateConfig(this, T["Health Bar Height"], C.unitframes.grouppet, "height")
       CreateConfig(this, T["Power Bar Height"], C.unitframes.grouppet, "pheight")
       CreateConfig(this, T["Spacing"], C.unitframes.grouppet, "pspace")
-      CreateConfig(this, T["Buff Position"], C.unitframes.grouppet, "buffs", "dropdown", dropdown_unitframes_buff_position)
+      CreateConfig(this, T["Buff Position"], C.unitframes.grouppet, "buffs", "dropdown", pfUI.gui.dropdowns.uf_buff_position)
       CreateConfig(this, T["Buff Size"], C.unitframes.grouppet, "buffsize")
       CreateConfig(this, T["Buff Limit"], C.unitframes.grouppet, "bufflimit")
       CreateConfig(this, T["Buffs Per Row"], C.unitframes.grouppet, "buffperrow")
-      CreateConfig(this, T["Debuff Position"], C.unitframes.grouppet, "debuffs", "dropdown", dropdown_unitframes_buff_position)
+      CreateConfig(this, T["Debuff Position"], C.unitframes.grouppet, "debuffs", "dropdown", pfUI.gui.dropdowns.uf_buff_position)
       CreateConfig(this, T["Debuff Size"], C.unitframes.grouppet, "debuffsize")
       CreateConfig(this, T["Debuff Limit"], C.unitframes.grouppet, "debufflimit")
       CreateConfig(this, T["Debuffs Per Row"], C.unitframes.grouppet, "debuffperrow")
@@ -1252,13 +1264,13 @@ pfUI:RegisterModule("gui", function ()
       CreateConfig(this, T["Enable Level Color in Text"], C.unitframes.grouppet, "levelcolor", "checkbox")
       CreateConfig(this, T["Enable Class Color in Text"], C.unitframes.grouppet, "classcolor", "checkbox")
       CreateConfig(this, T["Health Bar Texts"], nil, nil, "header")
-      CreateConfig(this, T["Left Text"], C.unitframes.grouppet, "txthpleft", "dropdown", dropdown_unitframes_text)
-      CreateConfig(this, T["Center Text"], C.unitframes.grouppet, "txthpcenter", "dropdown", dropdown_unitframes_text)
-      CreateConfig(this, T["Right Text"], C.unitframes.grouppet, "txthpright", "dropdown", dropdown_unitframes_text)
+      CreateConfig(this, T["Left Text"], C.unitframes.grouppet, "txthpleft", "dropdown", pfUI.gui.dropdowns.uf_texts)
+      CreateConfig(this, T["Center Text"], C.unitframes.grouppet, "txthpcenter", "dropdown", pfUI.gui.dropdowns.uf_texts)
+      CreateConfig(this, T["Right Text"], C.unitframes.grouppet, "txthpright", "dropdown", pfUI.gui.dropdowns.uf_texts)
       CreateConfig(this, T["Power Bar Texts"], nil, nil, "header")
-      CreateConfig(this, T["Left Text"], C.unitframes.grouppet, "txtpowerleft", "dropdown", dropdown_unitframes_text)
-      CreateConfig(this, T["Center Text"], C.unitframes.grouppet, "txtpowercenter", "dropdown", dropdown_unitframes_text)
-      CreateConfig(this, T["Right Text"], C.unitframes.grouppet, "txtpowerright", "dropdown", dropdown_unitframes_text)
+      CreateConfig(this, T["Left Text"], C.unitframes.grouppet, "txtpowerleft", "dropdown", pfUI.gui.dropdowns.uf_texts)
+      CreateConfig(this, T["Center Text"], C.unitframes.grouppet, "txtpowercenter", "dropdown", pfUI.gui.dropdowns.uf_texts)
+      CreateConfig(this, T["Right Text"], C.unitframes.grouppet, "txtpowerright", "dropdown", pfUI.gui.dropdowns.uf_texts)
       this.setup = true
     end
   end)
@@ -1369,13 +1381,13 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.tabs.actionbar.tabs.layout = pfUI.gui.tabs.actionbar.tabs:CreateChildFrame(T["Layout"], 70)
   pfUI.gui.tabs.actionbar.tabs.layout:SetScript("OnShow", function()
     if not this.setup then
-      CreateConfig(this, T["Main Actionbar (ActionMain)"], C.bars.actionmain, "formfactor", "dropdown", dropdown_num_actionbar_buttons)
-      CreateConfig(this, T["Second Actionbar (BottomLeft)"], C.bars.bottomleft, "formfactor", "dropdown", dropdown_num_actionbar_buttons)
-      CreateConfig(this, T["Left Actionbar (BottomRight)"], C.bars.bottomright, "formfactor", "dropdown", dropdown_num_actionbar_buttons)
-      CreateConfig(this, T["Right Actionbar (Right)"], C.bars.right, "formfactor", "dropdown", dropdown_num_actionbar_buttons)
-      CreateConfig(this, T["Vertical Actionbar (TwoRight)"], C.bars.tworight, "formfactor", "dropdown", dropdown_num_actionbar_buttons)
-      CreateConfig(this, T["Shapeshift Bar (BarShapeShift)"], C.bars.shapeshift, "formfactor", "dropdown", dropdown_num_shapeshift_slots)
-      CreateConfig(this, T["Pet Bar (BarPet)"], C.bars.pet, "formfactor", "dropdown", dropdown_num_pet_action_slots)
+      CreateConfig(this, T["Main Actionbar (ActionMain)"], C.bars.actionmain, "formfactor", "dropdown", pfUI.gui.dropdowns.num_actionbar_buttons)
+      CreateConfig(this, T["Second Actionbar (BottomLeft)"], C.bars.bottomleft, "formfactor", "dropdown", pfUI.gui.dropdowns.num_actionbar_buttons)
+      CreateConfig(this, T["Left Actionbar (BottomRight)"], C.bars.bottomright, "formfactor", "dropdown", pfUI.gui.dropdowns.num_actionbar_buttons)
+      CreateConfig(this, T["Right Actionbar (Right)"], C.bars.right, "formfactor", "dropdown", pfUI.gui.dropdowns.num_actionbar_buttons)
+      CreateConfig(this, T["Vertical Actionbar (TwoRight)"], C.bars.tworight, "formfactor", "dropdown", pfUI.gui.dropdowns.num_actionbar_buttons)
+      CreateConfig(this, T["Shapeshift Bar (BarShapeShift)"], C.bars.shapeshift, "formfactor", "dropdown", pfUI.gui.dropdowns.num_shapeshift_slots)
+      CreateConfig(this, T["Pet Bar (BarPet)"], C.bars.pet, "formfactor", "dropdown", pfUI.gui.dropdowns.num_pet_action_slots)
       this.setup = true
     end
   end)
@@ -1390,13 +1402,13 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.tabs.panel.tabs.general:SetScript("OnShow", function()
     if not this.setup then
       CreateConfig(this, T["Use Unit Fonts"], C.panel, "use_unitfonts", "checkbox")
-      CreateConfig(this, T["Left Panel: Left"], C.panel.left, "left", "dropdown", dropdown_panel_values)
-      CreateConfig(this, T["Left Panel: Center"], C.panel.left, "center", "dropdown", dropdown_panel_values)
-      CreateConfig(this, T["Left Panel: Right"], C.panel.left, "right", "dropdown", dropdown_panel_values)
-      CreateConfig(this, T["Right Panel: Left"], C.panel.right, "left", "dropdown", dropdown_panel_values)
-      CreateConfig(this, T["Right Panel: Center"], C.panel.right, "center", "dropdown", dropdown_panel_values)
-      CreateConfig(this, T["Right Panel: Right"], C.panel.right, "right", "dropdown", dropdown_panel_values)
-      CreateConfig(this, T["Other Panel: Minimap"], C.panel.other, "minimap", "dropdown", dropdown_panel_values)
+      CreateConfig(this, T["Left Panel: Left"], C.panel.left, "left", "dropdown", pfUI.gui.dropdowns.panel_values)
+      CreateConfig(this, T["Left Panel: Center"], C.panel.left, "center", "dropdown", pfUI.gui.dropdowns.panel_values)
+      CreateConfig(this, T["Left Panel: Right"], C.panel.left, "right", "dropdown", pfUI.gui.dropdowns.panel_values)
+      CreateConfig(this, T["Right Panel: Left"], C.panel.right, "left", "dropdown", pfUI.gui.dropdowns.panel_values)
+      CreateConfig(this, T["Right Panel: Center"], C.panel.right, "center", "dropdown", pfUI.gui.dropdowns.panel_values)
+      CreateConfig(this, T["Right Panel: Right"], C.panel.right, "right", "dropdown", pfUI.gui.dropdowns.panel_values)
+      CreateConfig(this, T["Other Panel: Minimap"], C.panel.other, "minimap", "dropdown", pfUI.gui.dropdowns.panel_values)
       CreateConfig(this, T["Always Show Experience And Reputation Bar"], C.panel.xp, "showalways", "checkbox")
       CreateConfig(this, T["Enable Micro Bar"], C.panel.micro, "enable", "checkbox")
       CreateConfig(this, T["Enable 24h Clock"], C.global, "twentyfour", "checkbox")
@@ -1413,7 +1425,7 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.tabs.tooltip.tabs.general = pfUI.gui.tabs.tooltip.tabs:CreateChildFrame(T["Tooltip"], 70)
   pfUI.gui.tabs.tooltip.tabs.general:SetScript("OnShow", function()
     if not this.setup then
-      CreateConfig(this, T["Tooltip Position"], C.tooltip, "position", "dropdown", dropdown_tooltip_position)
+      CreateConfig(this, T["Tooltip Position"], C.tooltip, "position", "dropdown", pfUI.gui.dropdowns.tooltip_position)
       CreateConfig(this, T["Enable Extended Guild Information"], C.tooltip, "extguild", "checkbox")
       CreateConfig(this, T["Custom Transparency"], C.tooltip, "alpha")
       CreateConfig(this, T["Always Show Item Comparison"], C.tooltip.compare, "showalways", "checkbox")
