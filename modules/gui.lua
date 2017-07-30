@@ -572,6 +572,20 @@ pfUI:RegisterModule("gui", function ()
   -- initialize dropdown menus
   pfUI.gui.dropdowns = { }
 
+  pfUI.gui.dropdowns.languages = {
+    -- "deDE:German",
+    -- "enGB:British English",
+    "enUS:English",
+    --"esES:Spanish (European)",
+    --"esMX:Spanish (Latin American)",
+    "frFR:French",
+    "koKR:Korean",
+    -- "ruRU:Russian",
+    "zhCN:Chinese (simplified; China)",
+    "zhTW:Chinese (traditional; Taiwan)",
+    -- http://wowprogramming.com/docs/api/GetLocale
+  }
+
   -- dropdown menu items
   pfUI.gui.dropdowns.fonts = {
     "Interface\\AddOns\\pfUI\\fonts\\BigNoodleTitling.ttf:BigNoodleTitling",
@@ -698,6 +712,7 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.tabs.settings.tabs.general = pfUI.gui.tabs.settings.tabs:CreateChildFrame(T["General"], 70)
   pfUI.gui.tabs.settings.tabs.general:SetScript("OnShow", function()
     if not this.setup then
+      CreateConfig(this, T["Language"], C.global, "language", "dropdown", pfUI.gui.dropdowns.languages)
       CreateConfig(this, T["Enable Region Compatible Font"], C.global, "force_region", "checkbox")
       CreateConfig(this, T["Standard Text Font"], C.global, "font_default", "dropdown", pfUI.gui.dropdowns.fonts)
       CreateConfig(this, T["Standard Text Font Size"], C.global, "font_size")

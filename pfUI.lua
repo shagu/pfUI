@@ -76,7 +76,13 @@ pfUI:SetScript("OnEvent", function()
     pfUI.env._G = getfenv(0)
     pfUI.env.C = pfUI_config
     pfUI.env.L = pfUI_locale[GetLocale()] or pfUI_locale["enUS"]
-    pfUI.env.T = setmetatable(pfUI_translation[GetLocale()] or {}, { __index = function(tab,key)
+
+    local language = GetLocale()
+    if pfUI_config.global.language and pfUI_translation[pfUI_config.global.language] then
+      language = pfUI_config.global.language
+    end
+
+    pfUI.env.T = setmetatable(pfUI_translation[language] or {}, { __index = function(tab,key)
       local value = tostring(key)
       rawset(tab,key,value)
       return value
