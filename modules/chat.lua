@@ -319,7 +319,7 @@ pfUI:RegisterModule("chat", function ()
         frame:SetPoint("TOPLEFT", pfUI.chat.right ,"TOPLEFT", default_border, -panelheight)
         frame:SetPoint("BOTTOMRIGHT", pfUI.chat.right ,"BOTTOMRIGHT", -default_border, panelheight)
         frame:Show()
-      else
+      elseif i <= 1 then
         tab:SetParent(pfUI.chat.left.panelTop)
         frame:SetParent(pfUI.chat.left)
         frame:ClearAllPoints()
