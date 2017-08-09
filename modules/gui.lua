@@ -1478,6 +1478,7 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.tabs.chat.tabs.general:SetScript("OnShow", function()
     if not this.setup then
       CreateConfig(this, T["Enable \"Loot & Spam\" Chat Window"], C.chat.right, "enable", "checkbox")
+      CreateConfig(this, T["Hide Combat Log"], C.chat.combatlog, "hide", "checkbox")
       CreateConfig(this, T["Inputbox Width"], C.chat.text, "input_width")
       CreateConfig(this, T["Inputbox Height"], C.chat.text, "input_height")
       CreateConfig(this, T["Enable Timestamps"], C.chat.text, "time", "checkbox")
