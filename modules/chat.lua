@@ -433,7 +433,7 @@ pfUI:RegisterModule("chat", function ()
     if C.chat.right.enable == "1" then
       -- set position of Loot & Spam
       FCF_SetLocked(ChatFrame3, 1)
-      FCF_SetWindowName(ChatFrame3, "Loot & Spam")
+      FCF_SetWindowName(ChatFrame3, T["Loot & Spam"])
       FCF_SetWindowColor(ChatFrame3, 0, 0, 0)
       FCF_SetWindowAlpha(ChatFrame3, 0)
       FCF_SetChatWindowFontSize(ChatFrame3, 12)

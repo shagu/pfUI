@@ -40,7 +40,7 @@ pfUI:RegisterModule("firstrun", function ()
 
       local txt = T["Welcome to |cff33ffccpf|cffffffffUI|r!\n\nI'm the first run wizzard that will guide you through some basic configuration.\nIf you're lazy, feel free to hit the \"Use Defaults\" button. If you whish to run this\ndialog again, go to the settings and hit the \"Reset Firstrun\" button.\n\nVisit |cff33ffcchttp://shagu.org|r to check for the latest version."]
 
-      CreateQuestionDialog(txt, { "Customize", yes } , { "Use Defaults", no })
+      CreateQuestionDialog(txt, { T["Customize"], yes } , { T["Use Defaults"], no })
       return
     end
 
