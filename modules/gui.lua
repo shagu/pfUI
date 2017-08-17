@@ -580,7 +580,7 @@ pfUI:RegisterModule("gui", function ()
     --"esMX:Spanish (Latin American)",
     "frFR:French",
     "koKR:Korean",
-    -- "ruRU:Russian",
+    "ruRU:Russian",
     "zhCN:Chinese (simplified; China)",
     "zhTW:Chinese (traditional; Taiwan)",
     -- http://wowprogramming.com/docs/api/GetLocale
