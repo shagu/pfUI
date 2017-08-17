@@ -312,19 +312,19 @@ pfUI:RegisterModule("chat", function ()
         frame:SetFading(false)
       end
 
-      if i == 3 and C.chat.right.enable == "1" then
+      if i == 1 then
+        tab:SetParent(pfUI.chat.left.panelTop)
+        frame:SetParent(pfUI.chat.left)
+        frame.isDocked = true
+        frame:SetPoint("TOPLEFT", pfUI.chat.left ,"TOPLEFT", default_border, -panelheight)
+        frame:SetPoint("BOTTOMRIGHT", pfUI.chat.left ,"BOTTOMRIGHT", -default_border, panelheight)
+      elseif i == 3 and C.chat.right.enable == "1" then
         tab:SetParent(pfUI.chat.right.panelTop)
         frame:SetParent(pfUI.chat.right)
         frame:ClearAllPoints()
         frame:SetPoint("TOPLEFT", pfUI.chat.right ,"TOPLEFT", default_border, -panelheight)
         frame:SetPoint("BOTTOMRIGHT", pfUI.chat.right ,"BOTTOMRIGHT", -default_border, panelheight)
         frame:Show()
-      else
-        tab:SetParent(pfUI.chat.left.panelTop)
-        frame:SetParent(pfUI.chat.left)
-        frame:ClearAllPoints()
-        frame:SetPoint("TOPLEFT", pfUI.chat.left ,"TOPLEFT", default_border, -panelheight)
-        frame:SetPoint("BOTTOMRIGHT", pfUI.chat.left ,"BOTTOMRIGHT", -default_border, panelheight)
       end
 
       -- hide textures
