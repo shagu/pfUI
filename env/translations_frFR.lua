@@ -272,6 +272,7 @@ pfUI_translation["frFR"] = {
   ["Reputation"] = nil,
   ["Reset Timer"] = "Redémarrage du Timer",
   ["Rested"] = nil,
+  ["Resting"] = nil,
   ["Right Actionbar (Right)"] = "Barre d'action droite",
   ["Right Chat Height"] = "Hauteur du chat de droite",
   ["Right Chat Width"] = "Largeur du chat de droite",

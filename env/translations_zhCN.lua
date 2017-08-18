@@ -272,6 +272,7 @@ pfUI_translation["zhCN"] = {
   ["Reputation"] = nil,
   ["Reset Timer"] = "重置定时器",
   ["Rested"] = nil,
+  ["Resting"] = nil,
   ["Right Actionbar (Right)"] = "右侧动作条",
   ["Right Chat Height"] = "右侧聊天窗口高度",
   ["Right Chat Width"] = "右侧聊天窗口宽度",

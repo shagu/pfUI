@@ -272,6 +272,7 @@ pfUI_translation["ruRU"] = {
   ["Reputation"] = nil,
   ["Reset Timer"] = "Сбросить таймер",
   ["Rested"] = nil,
+  ["Resting"] = nil,
   ["Right Actionbar (Right)"] = "Панель действий справа (BarRight)",
   ["Right Chat Height"] = "Высота правого чата",
   ["Right Chat Width"] = "Ширина правого чата",

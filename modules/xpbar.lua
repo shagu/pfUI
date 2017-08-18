@@ -66,7 +66,7 @@ pfUI:RegisterModule("xpbar", function ()
       GameTooltip:AddDoubleLine(T["XP"], "|cffffffff" .. xp .. " / " .. xpmax .. " (" .. xp_perc .. "%)")
       GameTooltip:AddDoubleLine(T["Remaining"], "|cffffffff" .. remaining .. " (" .. remaining_perc .. "%)")
       if IsResting() then
-        GameTooltip:AddDoubleLine(T["Status"], "|cffffffffResting")
+        GameTooltip:AddDoubleLine(T["Status"], "|cffffffff" .. T["Resting"])
       end
       if GetXPExhaustion() then
         GameTooltip:AddDoubleLine(T["Rested"], "|cff5555ff+" .. exh .. " (" .. exh_perc .. "%)")

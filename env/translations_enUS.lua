@@ -272,6 +272,7 @@ pfUI_translation["enUS"] = {
   ["Reputation"] = nil,
   ["Reset Timer"] = nil,
   ["Rested"] = nil,
+  ["Resting"] = nil,
   ["Right Actionbar (Right)"] = nil,
   ["Right Chat Height"] = nil,
   ["Right Chat Width"] = nil,

@@ -272,6 +272,7 @@ pfUI_translation["koKR"] = {
   ["Reputation"] = nil,
   ["Reset Timer"] = "타이머 재설정",
   ["Rested"] = nil,
+  ["Resting"] = nil,
   ["Right"] = "오른쪽",
   ["Right Actionbar (Right)"] = "오른쪽 액션바(오른쪽)",
   ["Right Chat Height"] = "오른쪽 채팅창 높이",
