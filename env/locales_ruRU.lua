@@ -21,8 +21,8 @@ pfUI_locale["ruRU"]["bagtypes"] = {
 pfUI_locale["ruRU"]["itemtypes"] = {
   ["INVTYPE_WAND"] = "Жезл",
   ["INVTYPE_GUN"] = "Огнестрельное",
-  ["INVTYPE_GUNPROJECTILE"] = "Пуля",
-  ["INVTYPE_BOWPROJECTILE"] = "Стрела",
+  ["INVTYPE_GUNPROJECTILE"] = "Пули",
+  ["INVTYPE_BOWPROJECTILE"] = "Стрелы",
   ["INVTYPE_CROSSBOW"] = "Арбалет",
   ["INVTYPE_THROWN"] = "Метательное",
 }
