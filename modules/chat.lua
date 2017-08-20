@@ -314,9 +314,9 @@ pfUI:RegisterModule("chat", function ()
 
       if i == 1 then
         -- General
+        FCF_DockFrame(frame)
         tab:SetParent(pfUI.chat.left.panelTop)
         frame:SetParent(pfUI.chat.left)
-        frame.isDocked = true
         frame:SetPoint("TOPLEFT", pfUI.chat.left ,"TOPLEFT", default_border, -panelheight)
         frame:SetPoint("BOTTOMRIGHT", pfUI.chat.left ,"BOTTOMRIGHT", -default_border, panelheight)
       elseif i == 2 then
@@ -324,8 +324,12 @@ pfUI:RegisterModule("chat", function ()
         if C.chat.global.combathide == "1" then
           FCF_UnDockFrame(frame)
           FCF_Close(frame)
-        elseif not frame.isDocked and not frame:IsVisible() then
+        elseif frame.isDocked then
           FCF_DockFrame(frame)
+          tab:SetParent(pfUI.chat.left.panelTop)
+          frame:SetParent(pfUI.chat.left)
+          frame:SetPoint("TOPLEFT", pfUI.chat.left ,"TOPLEFT", default_border, -panelheight)
+          frame:SetPoint("BOTTOMRIGHT", pfUI.chat.left ,"BOTTOMRIGHT", -default_border, panelheight)
         end
       elseif i == 3 and C.chat.right.enable == "1" then
         -- Loot & Spam
@@ -336,6 +340,8 @@ pfUI:RegisterModule("chat", function ()
         frame:SetPoint("BOTTOMRIGHT", pfUI.chat.right ,"BOTTOMRIGHT", -default_border, panelheight)
         frame:Show()
       end
+
+      FCF_DockUpdate()
 
       -- hide textures
       for j,v in ipairs({tab:GetRegions()}) do
