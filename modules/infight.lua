@@ -74,10 +74,21 @@ pfUI:RegisterModule("infight", function ()
   end
 
   if C.appearance.infight.common == "1" then
-    pfUI.infight:CreateGlow("player")
-    pfUI.infight:CreateGlow("target")
-    pfUI.infight:CreateGlow("targettarget")
-    pfUI.infight:CreateGlow("pet")
+    if pfUI.uf.player and pfUI.uf.player:IsShown() then
+      pfUI.infight:CreateGlow("player")
+    end
+
+    if pfUI.uf.target and pfUI.uf.target:IsShown() then
+      pfUI.infight:CreateGlow("target")
+    end
+
+    if pfUI.uf.targettarget and pfUI.uf.targettarget:IsShown() then
+      pfUI.infight:CreateGlow("targettarget")
+    end
+
+    if pfUI.uf.pet and pfUI.uf.pet:IsShown() then
+      pfUI.infight:CreateGlow("pet")
+    end
   end
 
   if C.appearance.infight.group == "1" then
