@@ -76,7 +76,7 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
 
   if pfUI_config.unitframes.custombg == "1" then
     local cr, cg, cb, ca = pfUI.api.strsplit(",", pfUI_config.unitframes.custombgcolor)
-    cr, cg, cb = tonumber(cr), tonumber(cg), tonumber(cb)
+    cr, cg, cb, ca = tonumber(cr), tonumber(cg), tonumber(cb), tonumber(ca)
     f.hp.bar.texture = f.hp.bar:CreateTexture(nil,"BACKGROUND")
     f.hp.bar.texture:SetTexture(cr,cg,cb,ca)
     f.hp.bar.texture:SetAllPoints(f.hp.bar)
@@ -786,8 +786,8 @@ function pfUI.uf:RefreshUnit(unit, component)
   local r, g, b = .2, .2, .2
   if pfUI_config.unitframes.custom == "1" then
     local cr, cg, cb, ca = pfUI.api.strsplit(",", pfUI_config.unitframes.customcolor)
-    cr, cg, cb = tonumber(cr), tonumber(cg), tonumber(cb)
-    unit.hp.bar:SetStatusBarColor(cr, cg, cb)
+    cr, cg, cb, ca = tonumber(cr), tonumber(cg), tonumber(cb), tonumber(ca)
+    unit.hp.bar:SetStatusBarColor(cr, cg, cb, ca)
     if pfUI_config.unitframes.pastel == "1" then
       r, g, b = (color.r + .5) * .5, (color.g + .5) * .5, (color.b + .5) * .5
     else
