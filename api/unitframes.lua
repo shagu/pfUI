@@ -38,6 +38,22 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
 
   local f = CreateFrame("Button", "pf" .. fname, UIParent)
 
+  -- show self in group
+  if unit == "party" and id == "0" then
+    unit = "player"
+    id = ""
+  end
+
+  if unit == "partypet" and id == "0" then
+    unit = "pet"
+    id = ""
+  end
+
+  if unit == "party0target" then
+    unit = "target"
+    id = ""
+  end
+
   if not pfValidUnits[unit .. id] then
     f.unitname = unit
     f.RegisterEvent = function() return end
@@ -524,6 +540,14 @@ function pfUI.uf:RefreshUnit(unit, component)
   local component = component or ""
   -- break early on misconfigured UF's
   if not unit.label then return end
+
+  -- hide self in group
+  if unit.fname == "Group0" or unit.fname == "PartyPet0" or unit.fname == "Party0Target" then
+    if GetNumPartyMembers() <= 0 then
+      unit:Hide()
+      return
+    end
+  end
 
   if unit.label == "target" or unit.label == "targettarget" then
     if pfScanActive == true then return end

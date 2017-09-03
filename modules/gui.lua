@@ -1119,6 +1119,7 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.tabs.gf.tabs.general = pfUI.gui.tabs.gf.tabs:CreateChildFrame(T["General"], 70)
   pfUI.gui.tabs.gf.tabs.general:SetScript("OnShow", function()
     if not this.setup then
+      CreateConfig(this, T["Show Self as Group Member"], C.unitframes, "selfingroup", "checkbox")
       CreateConfig(this, T["Show Hots as Buff Indicators"], C.unitframes, "show_hots", "checkbox")
       CreateConfig(this, T["Show Hots of all Classes"], C.unitframes, "all_hots", "checkbox")
       CreateConfig(this, T["Show Procs as Buff Indicators"], C.unitframes, "show_procs", "checkbox")

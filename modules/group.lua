@@ -19,10 +19,12 @@ pfUI:RegisterModule("group", function ()
 
   pfUI.uf.group = {}
 
-  for i=1, 4 do
+  local startid = C.unitframes.selfingroup == "1" and 0 or 1
+
+  for i=startid, 4 do
     pfUI.uf.group[i] = pfUI.uf:CreateUnitFrame("Party", i, C.unitframes.group)
     pfUI.uf.group[i]:UpdateFrameSize()
-    pfUI.uf.group[i]:SetPoint("TOPLEFT", 5, -5 - ((i-1)*75))
+    pfUI.uf.group[i]:SetPoint("TOPLEFT", 5, -5 - ((i-startid)*75))
     UpdateMovable(pfUI.uf.group[i])
 
     pfUI.uf.group[i].target = pfUI.uf:CreateUnitFrame("Party" .. i .. "Target", nil, C.unitframes.grouptarget, 0.2)
@@ -37,8 +39,9 @@ pfUI:RegisterModule("group", function ()
     UpdateMovable(pfUI.uf.group[i].pet)
   end
 
-  pfUI.uf.partytargetScanner = CreateFrame("Button",nil,UIParent)
-  pfUI.uf.partytargetScanner:SetScript("OnUpdate", function()
+  pfUI.uf.groupscanner = CreateFrame("Frame", nil, UIParent)
+  pfUI.uf.groupscanner:SetScript("OnUpdate", function()
+    if ( this.limit or 1) > GetTime() then return else this.limit = GetTime() + .2 end
     for i=1, 4 do
       if UnitExists("party" .. i .. "target") or (pfUI.unlock and pfUI.unlock:IsShown()) then
         pfUI.uf.group[i].target:Show()
