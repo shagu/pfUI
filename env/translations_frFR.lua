@@ -307,6 +307,7 @@ pfUI_translation["frFR"] = {
   ["Show Procs as Buff Indicators"] = "Afficher les procs en tant qu'indicateur d'amélioration",
   ["Show Procs of all Classes"] = "Afficher les procs de chaque classe",
   ["Show PvP Icon"] = "Afficher l'icône JcJ",
+  ["Show Self as Group Member"] = nil,
   ["Slow"] = nil,
   ["Some settings need to reload the UI to take effect.\nDo you want to reloadUI now?"] = "Quelques options nécessitent le relancement de l'interface pour prendre effet\nSouhaitez-vous relancer votre interface maintenant?",
   ["Soulshard Counter"] = "Compteur des éclats d'âme",

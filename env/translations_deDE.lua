@@ -307,6 +307,7 @@ pfUI_translation["deDE"] = {
   ["Show Procs as Buff Indicators"] = nil,
   ["Show Procs of all Classes"] = nil,
   ["Show PvP Icon"] = nil,
+  ["Show Self as Group Member"] = nil,
   ["Slow"] = nil,
   ["Some settings need to reload the UI to take effect.\nDo you want to reloadUI now?"] = nil,
   ["Soulshard Counter"] = nil,

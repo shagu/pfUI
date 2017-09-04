@@ -307,6 +307,7 @@ pfUI_translation["zhTW"] = {
   ["Show Procs as Buff Indicators"] = "在框架的Buff指示器顯示觸發效果",
   ["Show Procs of all Classes"] = "顯示所有職業的觸發效果",
   ["Show PvP Icon"] = "顯示PVP圖示",
+  ["Show Self as Group Member"] = nil,
   ["Slow"] = "慢速",
   ["Some settings need to reload the UI to take effect.\nDo you want to reloadUI now?"] = "有些設置需要重新載入UI生效。\n您要重新載入UI嗎？",
   ["Soulshard Counter"] = "靈魂碎片",

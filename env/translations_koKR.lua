@@ -307,6 +307,7 @@ pfUI_translation["koKR"] = {
   ["Show Procs as Buff Indicators"] = "무기활성화버프 버프표시기에 보기",
   ["Show Procs of all Classes"] = "모든 클래스 무기활성화 버프 보기",
   ["Show PvP Icon"] = "PvP아이콘 표시",
+  ["Show Self as Group Member"] = nil,
   ["Slow"] = "느린",
   ["Some settings need to reload the UI to take effect.\nDo you want to reloadUI now?"] = "일부 설정을 적용하려면 UI를 리로드 해야합니다.\n지금 리로드 하시겠습니까?",
   ["Soulshard Counter"] = "영혼조각 갯수",

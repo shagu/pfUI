@@ -307,6 +307,7 @@ pfUI_translation["ruRU"] = {
   ["Show Procs as Buff Indicators"] = "Показать проки (Procs) как индикаторы баффов",
   ["Show Procs of all Classes"] = "Показать проки (Procs) всех классов",
   ["Show PvP Icon"] = "Показать PvP иконку",
+  ["Show Self as Group Member"] = nil,
   ["Slow"] = "Медленно",
   ["Some settings need to reload the UI to take effect.\nDo you want to reloadUI now?"] = "Некоторым настройкам необходимо перезагрузить пользовательский интерфейс, чтобы вступить в силу.\nВы хотите перезагрузить UI сейчас?",
   ["Soulshard Counter"] = "Счетчик камней душ",
@@ -345,7 +346,7 @@ pfUI_translation["ruRU"] = {
   ["Very Slow"] = "Очень медленно",
   ["Welcome to |cff33ffccpf|cffffffffUI|r!\n\nI'm the first run wizzard that will guide you through some basic configuration.\nIf you're lazy, feel free to hit the \"Use Defaults\" button. If you whish to run this\ndialog again, go to the settings and hit the \"Reset Firstrun\" button.\n\nVisit |cff33ffcchttp://shagu.org|r to check for the latest version."] = "Добро пожаловать в |cff33ffccpf|cffffffffUI|r!\n\nЯ мастер первого запуска, который проведет вас через некоторую базовую конфигурацию.\nЕсли вы ленитесь, не стесняйтесь нажать кнопку \"По умолчанию\".\nЕсли вы хотите снова запустить этот диалог, перейдите к настройкам и нажмите кнопку \"Первый запуск\".\n\nПосетите |cff33ffcchttp://shagu.org|r, чтобы проверить последнюю версию.",
   ["WIM"] = nil,
-  ["XP"] = "Опыт",
   ["XP Percentage"] = "Процент опыта",
+  ["XP"] = "Опыт",
   ["Zone Name"] = "Название зоны",
 }
