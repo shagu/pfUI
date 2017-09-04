@@ -249,7 +249,7 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
           local scan = UnitName(unit) or ""
           if this.unitname == strlower(scan) then
             this.label = unit
-            this.portrait.model.lastUnit = nil
+            if this.portrait then this.portrait.model.lastUnit = nil end
             this.instantRefresh = true
             pfUI.uf:RefreshUnit(this, "all")
             return
