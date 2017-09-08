@@ -539,8 +539,6 @@ function pfUI.uf:RefreshUnit(unit, component)
 
   local component = component or ""
   -- break early on misconfigured UF's
-  if not unit.label then return end
-
   if unit.label == "target" or unit.label == "targettarget" then
     if pfScanActive == true then return end
   end
