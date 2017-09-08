@@ -88,6 +88,7 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("unitframes", nil,           "abbrevnum",        "1")
 
   pfUI:UpdateConfig("unitframes", nil,           "selfingroup",      "0")
+  pfUI:UpdateConfig("unitframes", nil,           "raidforgroup",     "0")
   pfUI:UpdateConfig("unitframes", nil,           "show_hots",        "0")
   pfUI:UpdateConfig("unitframes", nil,           "all_hots",         "0")
   pfUI:UpdateConfig("unitframes", nil,           "show_procs",       "0")

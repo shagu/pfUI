@@ -543,6 +543,26 @@ function pfUI.uf:RefreshUnit(unit, component)
     if pfScanActive == true then return end
   end
 
+  -- show groupframes as raid
+  if pfUI_config["unitframes"]["raidforgroup"] == "1" then
+    if GetNumPartyMembers() > 0 and strsub(unit:GetName(),0,6) == "pfRaid" then
+      local id = tonumber(strsub(unit:GetName(),7,8))
+
+      if not UnitInRaid("player") then
+        if id == 1 then
+          unit.id = ""
+          unit.label = "player"
+        elseif id < 5 then
+          unit.id = id - 1
+          unit.label = "party"
+        end
+      elseif unit.label == "party" or unit.label == "player" then
+        unit.id = id
+        unit.label = "raid"
+      end
+    end
+  end
+
   local default_border = pfUI_config.appearance.border.default
   if pfUI_config.appearance.border.unitframes ~= "-1" then
     default_border = pfUI_config.appearance.border.unitframes
