@@ -286,6 +286,13 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
               end
             end
           end
+        else
+          if this:GetAlpha() ~= 1 then
+            this:SetAlpha(1)
+            if this.config.portrait == "bar" then
+              this.portrait:SetAlpha(pfUI_config.unitframes.portraitalpha)
+            end
+          end
         end
 
         if not this.cache then return end
