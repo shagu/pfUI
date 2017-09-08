@@ -668,7 +668,7 @@ function pfUI.uf:RefreshUnit(unit, component)
       if texture then
         unit.buffs[i]:Show()
 
-        if unit.label == "player" then
+        if unit:GetName() == "pfPlayer" then
           local timeleft = GetPlayerBuffTimeLeft(GetPlayerBuff(unit.buffs[i]:GetID()-1,"HELPFUL"))
           CooldownFrame_SetTimer(unit.buffs[i].cd, GetTime(), timeleft, 1)
         end
@@ -745,7 +745,7 @@ function pfUI.uf:RefreshUnit(unit, component)
       if texture then
         unit.debuffs[i]:Show()
 
-        if unit.label == "player" then
+        if unit:GetName() == "pfPlayer" then
             local timeleft = GetPlayerBuffTimeLeft(GetPlayerBuff(unit.debuffs[i]:GetID() - 1, "HARMFUL"),"HARMFUL")
             CooldownFrame_SetTimer(unit.debuffs[i].cd, GetTime(), timeleft, 1)
         elseif pfUI.debuffs and pfUI.debuffs.active then
