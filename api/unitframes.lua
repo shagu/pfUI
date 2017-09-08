@@ -270,9 +270,6 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
       end
 
       if UnitIsConnected(this.label .. this.id) or ( pfUI.unlock and pfUI.unlock:IsShown()) then
-        if not this.cache then return end
-        if not this.cache.hp or not this.cache.power then return end
-
         if this.config.faderange == "1" then
           if pfUI.api.UnitInRange(this.label .. this.id, 4) or (pfUI.unlock and pfUI.unlock:IsShown()) then
             if this:GetAlpha() ~= 1 then
@@ -290,6 +287,9 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
             end
           end
         end
+
+        if not this.cache then return end
+        if not this.cache.hp or not this.cache.power then return end
 
         local hpDisplay = this.hp.bar:GetValue()
         local hpReal = this.cache.hp
