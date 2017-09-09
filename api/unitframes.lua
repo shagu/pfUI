@@ -559,7 +559,7 @@ function pfUI.uf:RefreshUnit(unit, component)
         if id == 1 then
           unit.id = ""
           unit.label = "player"
-        elseif id < 5 then
+        elseif id <= 5 then
           unit.id = id - 1
           unit.label = "party"
         end
