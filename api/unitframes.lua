@@ -270,9 +270,6 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
       end
 
       if UnitIsConnected(this.label .. this.id) or ( pfUI.unlock and pfUI.unlock:IsShown()) then
-        if not this.cache then return end
-        if not this.cache.hp or not this.cache.power then return end
-
         if this.config.faderange == "1" then
           if pfUI.api.UnitInRange(this.label .. this.id, 4) or (pfUI.unlock and pfUI.unlock:IsShown()) then
             if this:GetAlpha() ~= 1 then
@@ -289,7 +286,17 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
               end
             end
           end
+        else
+          if this:GetAlpha() ~= 1 then
+            this:SetAlpha(1)
+            if this.config.portrait == "bar" then
+              this.portrait:SetAlpha(pfUI_config.unitframes.portraitalpha)
+            end
+          end
         end
+
+        if not this.cache then return end
+        if not this.cache.hp or not this.cache.power then return end
 
         local hpDisplay = this.hp.bar:GetValue()
         local hpReal = this.cache.hp
@@ -539,10 +546,28 @@ function pfUI.uf:RefreshUnit(unit, component)
 
   local component = component or ""
   -- break early on misconfigured UF's
-  if not unit.label then return end
-
   if unit.label == "target" or unit.label == "targettarget" then
     if pfScanActive == true then return end
+  end
+
+  -- show groupframes as raid
+  if pfUI_config["unitframes"]["raidforgroup"] == "1" then
+    if GetNumPartyMembers() > 0 and strsub(unit:GetName(),0,6) == "pfRaid" then
+      local id = tonumber(strsub(unit:GetName(),7,8))
+
+      if not UnitInRaid("player") then
+        if id == 1 then
+          unit.id = ""
+          unit.label = "player"
+        elseif id <= 5 then
+          unit.id = id - 1
+          unit.label = "party"
+        end
+      elseif unit.label == "party" or unit.label == "player" then
+        unit.id = id
+        unit.label = "raid"
+      end
+    end
   end
 
   local default_border = pfUI_config.appearance.border.default
@@ -650,7 +675,7 @@ function pfUI.uf:RefreshUnit(unit, component)
       if texture then
         unit.buffs[i]:Show()
 
-        if unit.label == "player" then
+        if unit:GetName() == "pfPlayer" then
           local timeleft = GetPlayerBuffTimeLeft(GetPlayerBuff(unit.buffs[i]:GetID()-1,"HELPFUL"))
           CooldownFrame_SetTimer(unit.buffs[i].cd, GetTime(), timeleft, 1)
         end
@@ -727,7 +752,7 @@ function pfUI.uf:RefreshUnit(unit, component)
       if texture then
         unit.debuffs[i]:Show()
 
-        if unit.label == "player" then
+        if unit:GetName() == "pfPlayer" then
             local timeleft = GetPlayerBuffTimeLeft(GetPlayerBuff(unit.debuffs[i]:GetID() - 1, "HARMFUL"),"HARMFUL")
             CooldownFrame_SetTimer(unit.debuffs[i].cd, GetTime(), timeleft, 1)
         elseif pfUI.debuffs and pfUI.debuffs.active then

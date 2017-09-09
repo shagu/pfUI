@@ -96,6 +96,14 @@ pfUI:RegisterModule("unlock", function ()
                 local frame = _G["pfRaid" .. i]
                 pfUI.unlock:SaveScale(frame, scale)
               end
+            elseif IsControlKeyDown() and strsub(frame:GetName(),0,6) == "pfRaid" then
+              local id = tonumber(strsub(frame:GetName(),7,8))
+              local b = 1
+              for i=6,40,5 do b = ( id >= i ) and i or b end
+              for i=b,b+4 do
+                local frame = _G["pfRaid" .. i]
+                pfUI.unlock:SaveScale(frame, scale)
+              end
             elseif IsShiftKeyDown() and strsub(frame:GetName(),0,7) == "pfGroup" then
               for i=1,4 do
                 local frame = _G["pfGroup" .. i]
@@ -156,6 +164,21 @@ pfUI:RegisterModule("unlock", function ()
               end
               _, _, _, xpos, ypos = frame:GetPoint()
               frame.oldPos = { xpos, ypos }
+            elseif IsControlKeyDown() then
+              if strsub(frame:GetName(),0,6) == "pfRaid" then
+                local id = tonumber(strsub(frame:GetName(),7,8))
+                local b = 1
+                for i=6,40,5 do b = ( id >= i ) and i or b end
+                for i=b,b+4 do
+                  local cframe = _G["pfRaid" .. i]
+                  cframe:StartMoving()
+                  cframe:StopMovingOrSizing()
+                  cframe.drag.backdrop:SetBackdropBorderColor(1,1,1,1)
+                end
+                frame.moveSubgroup = { b, b+4 }
+              end
+              _, _, _, xpos, ypos = frame:GetPoint()
+              frame.oldPos = { xpos, ypos }
             else
               frame.oldPos = nil
             end
@@ -191,7 +214,11 @@ pfUI:RegisterModule("unlock", function ()
                     end
                   end
                 elseif strsub(frame:GetName(),0,6) == "pfRaid" then
-                  for i=1,40 do
+                  local b = frame.moveSubgroup and frame.moveSubgroup[1] or 1
+                  local e = frame.moveSubgroup and frame.moveSubgroup[2] or 40
+                  frame.moveSubgroup = nil
+
+                  for i=b,e do
                     local cframe = _G["pfRaid" .. i]
                     cframe.drag.backdrop:SetBackdropBorderColor(.2,1,.8,1)
                     if cframe:GetName() ~= frame:GetName() then
