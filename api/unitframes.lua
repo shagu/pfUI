@@ -559,10 +559,10 @@ function pfUI.uf:RefreshUnit(unit, component)
 
   -- show groupframes as raid
   if pfUI_config["unitframes"]["raidforgroup"] == "1" then
-    if GetNumPartyMembers() > 0 and strsub(unit:GetName(),0,6) == "pfRaid" then
+    if strsub(unit:GetName(),0,6) == "pfRaid" then
       local id = tonumber(strsub(unit:GetName(),7,8))
 
-      if not UnitInRaid("player") then
+      if not UnitInRaid("player") and GetNumPartyMembers() > 0 then
         if id == 1 then
           unit.id = ""
           unit.label = "player"
