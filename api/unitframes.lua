@@ -436,6 +436,13 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
       f.buffs[i]:SetWidth(f.config.buffsize)
       f.buffs[i]:SetHeight(f.config.buffsize)
 
+      if f:GetName() == "pfPlayer" then
+        f.buffs[i]:SetScript("OnUpdate", function()
+          local timeleft = GetPlayerBuffTimeLeft(GetPlayerBuff(this:GetID()-1,"HELPFUL"))
+          CooldownFrame_SetTimer(this.cd, GetTime(), timeleft, 1)
+        end)
+      end
+
       f.buffs[i]:SetScript("OnEnter", function()
         if not this:GetParent().label then return end
 
@@ -674,11 +681,6 @@ function pfUI.uf:RefreshUnit(unit, component)
 
       if texture then
         unit.buffs[i]:Show()
-
-        if unit:GetName() == "pfPlayer" then
-          local timeleft = GetPlayerBuffTimeLeft(GetPlayerBuff(unit.buffs[i]:GetID()-1,"HELPFUL"))
-          CooldownFrame_SetTimer(unit.buffs[i].cd, GetTime(), timeleft, 1)
-        end
 
         if stacks > 1 then
           unit.buffs[i].stacks:SetText(stacks)
