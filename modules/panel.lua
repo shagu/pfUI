@@ -166,6 +166,8 @@ pfUI:RegisterModule("panel", function ()
         GameTooltip:AddDoubleLine(T["Graphic Renderer"], "|cffffffff" .. GetCVar("gxApi"))
         GameTooltip:AddDoubleLine(T["Screen Resolution"], "|cffffffff" .. GetCVar("gxResolution"))
         GameTooltip:AddDoubleLine(T["UI-Scale"], "|cffffffff" .. round(UIParent:GetEffectiveScale(),2))
+        GameTooltip:AddLine(" ")
+        GameTooltip:AddDoubleLine("Memory Used", "|cffffffff" .. string.format("%.1f", gcinfo()/1024) .. "MB")
         GameTooltip:Show()
       end
 
