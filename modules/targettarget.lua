@@ -8,6 +8,7 @@ pfUI:RegisterModule("targettarget", function ()
         pfUI.uf.targettarget:Show()
       else
         pfUI.uf.targettarget:Hide()
+        pfUI.uf.targettarget.lastUnit = nil
       end
     end)
 

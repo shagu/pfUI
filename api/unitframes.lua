@@ -296,41 +296,52 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
         if not this.cache then return end
         if not this.cache.hp or not this.cache.power then return end
 
-        local hpDisplay = this.hp.bar:GetValue()
-        local hpReal = this.cache.hp
-        local hpDiff = abs(hpReal - hpDisplay)
+        local hpDiff = abs(this.cache.hp - this.cache.hpdisplay)
+        local powerDiff = abs(this.cache.power - this.cache.powerdisplay)
 
-        if this.config.invert_healthbar == "1" then
-          hpDisplay = this.hp.bar:GetValue()
-          hpReal = this.cache.hpmax - this.cache.hp
-          hpDiff = abs(hpReal - hpDisplay)
-        end
+        if UnitName(this.label .. this.id) ~= ( this.lastUnit or "" ) then
+          -- instant refresh on unit change (e.g. target)
+          this.cache.hp = UnitHealth(this.label .. this.id)
+          this.cache.hpmax = UnitHealthMax(this.label .. this.id)
+          this.cache.hpdisplay = this.cache.hp
+          this.hp.bar:SetMinMaxValues(0, this.cache.hpmax)
+          this.hp.bar:SetValue(this.cache.hp)
 
-        local powerDisplay = this.power.bar:GetValue()
-        local powerReal = this.cache.power
-        local powerDiff = abs(powerReal - powerDisplay)
+          this.cache.powermax = UnitManaMax(this.label .. this.id)
+          this.cache.powerdisplay = this.cache.power
+          this.power.bar:SetMinMaxValues(0, this.cache.powermax)
+          this.power.bar:SetValue(this.cache.power)
 
-        if this.instantRefresh then
-          -- No Animations for new Units
-          this.hp.bar:SetValue(hpReal)
-          this.power.bar:SetValue(powerReal)
-          this.instantRefresh = nil
+          this.lastUnit = UnitName(this.label .. this.id)
         else
-          -- Animation
-          if hpDisplay < hpReal then
-            this.hp.bar:SetValue(hpDisplay + ceil(hpDiff / pfUI_config.unitframes.animation_speed))
-          elseif hpDisplay > hpReal then
-            this.hp.bar:SetValue(hpDisplay - ceil(hpDiff / pfUI_config.unitframes.animation_speed))
-          else
-            this.hp.bar:SetValue(hpReal)
+          -- health animation active
+          if this.cache.hpanimation then
+            if this.cache.hpdisplay < this.cache.hp then
+              this.cache.hpdisplay = this.cache.hpdisplay + ceil(hpDiff / pfUI_config.unitframes.animation_speed)
+            elseif this.cache.hpdisplay > this.cache.hp then
+              this.cache.hpdisplay = this.cache.hpdisplay - ceil(hpDiff / pfUI_config.unitframes.animation_speed)
+            else
+              this.cache.hpdisplay = this.cache.hp
+              this.cache.hpanimation = nil
+            end
+
+            -- set statusbar
+            this.hp.bar:SetValue(this.cache.hpdisplay)
           end
 
-          if powerDisplay < powerReal then
-            this.power.bar:SetValue(powerDisplay + ceil(powerDiff / pfUI_config.unitframes.animation_speed))
-          elseif powerDisplay > powerReal then
-            this.power.bar:SetValue(powerDisplay - ceil(powerDiff / pfUI_config.unitframes.animation_speed))
-          else
-            this.power.bar:SetValue(this.cache.power)
+          -- power animation active
+          if this.cache.poweranimation then
+            if this.cache.powerdisplay < this.cache.power then
+              this.cache.powerdisplay = this.cache.powerdisplay + ceil(powerDiff / pfUI_config.unitframes.animation_speed)
+            elseif this.cache.powerdisplay > this.cache.power then
+              this.cache.powerdisplay = this.cache.powerdisplay - ceil(powerDiff / pfUI_config.unitframes.animation_speed)
+            else
+              this.cache.powerdisplay = this.cache.power
+              this.cache.poweranimation = nil
+            end
+
+            -- set statusbar
+            this.power.bar:SetValue(this.cache.powerdisplay)
           end
         end
       else
@@ -548,6 +559,7 @@ end
 function pfUI.uf:RefreshUnit(unit, component)
   if not unit.label then return end
   if not unit.hp then return end
+  if not unit.power then return end
 
   local component = component or ""
   -- break early on misconfigured UF's
@@ -581,11 +593,6 @@ function pfUI.uf:RefreshUnit(unit, component)
   end
 
   local C = pfUI_config
-
-  if UnitName(unit.label .. unit.id) ~= unit.lastUnit then
-    unit.instantRefresh = true
-    unit.lastUnit = UnitName(unit.label .. unit.id)
-  end
 
   -- hide and return early on unused frames
   if not ( pfUI.unlock and pfUI.unlock:IsShown() ) then
@@ -819,11 +826,34 @@ function pfUI.uf:RefreshUnit(unit, component)
   -- Unit HP/MP
   unit.cache.hp = UnitHealth(unit.label..unit.id)
   unit.cache.hpmax = UnitHealthMax(unit.label..unit.id)
+  unit.cache.hpdisplay = unit.hp.bar:GetValue()
+
   unit.cache.power = UnitMana(unit.label .. unit.id)
   unit.cache.powermax = UnitManaMax(unit.label .. unit.id)
+  unit.cache.powerdisplay = unit.power.bar:GetValue()
 
   unit.hp.bar:SetMinMaxValues(0, unit.cache.hpmax)
   unit.power.bar:SetMinMaxValues(0, unit.cache.powermax)
+
+  if unit.config.invert_healthbar == "1" then
+    unit.cache.hp = unit.cache.hpmax - unit.cache.hp
+  end
+
+  if unit.cache.hpdisplay ~= unit.cache.hp then
+    if pfUI_config.unitframes.animation_speed == "1" then
+      unit.hp.bar:SetValue(unit.cache.hp)
+    else
+      unit.cache.hpanimation = true
+    end
+  end
+
+  if unit.cache.powerdisplay ~= unit.cache.power then
+    if pfUI_config.unitframes.animation_speed == "1" then
+      unit.power.bar:SetValue(unit.cache.power)
+    else
+      unit.cache.poweranimation = true
+    end
+  end
 
   local color = { r = .2, g = .2, b = .2 }
   if UnitIsPlayer(unit.label..unit.id) then
