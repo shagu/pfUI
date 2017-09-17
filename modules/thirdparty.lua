@@ -415,6 +415,10 @@ pfUI:RegisterModule("thirdparty", function ()
 
           pfWIM_WindowOnShow = _G.WIM_WindowOnShow
           _G.WIM_WindowOnShow = function()
+
+            -- blue shaman
+            _G.WIM_ClassColors[WIM_LOCALIZED_SHAMAN]	= "0070de"
+
             local windowname = this:GetName()
 
             CreateBackdrop(_G[windowname], nil, nil, .8)
