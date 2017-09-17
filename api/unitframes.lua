@@ -238,8 +238,6 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
     end)
 
   f:SetScript("OnUpdate", function()
-      if ( this.fpscontrol or 1) > GetTime() then return else this.fpscontrol = GetTime() + .02 end
-
       local unitname = ( this.label and UnitName(this.label) ) or ""
 
       -- focus unit detection
