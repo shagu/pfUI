@@ -641,7 +641,44 @@ pfUI:RegisterModule("thirdparty", function ()
           end
         end
 
+        function pfUI.healComm.onEventRes(unitname)
+          for _, f in pairs(pfUI.uf.frames) do
+            if UnitName(f.label .. f.id) == unitname then
+
+              if not f.ressIcon then
+                f.ressIcon = CreateFrame("Frame", nil, f.hp.bar)
+                f.ressIcon:SetFrameLevel(1)
+                f.ressIcon.base = f
+                f.ressIcon:RegisterEvent("PLAYER_TARGET_CHANGED")
+                f.ressIcon:SetScript("OnEvent", function()
+                  if HealComm:UnitisResurrecting(UnitName(this.base.label .. this.base.id)) then
+                    this:Show()
+                  else
+                    this:Hide()
+                  end
+                end)
+
+                f.ressIcon:SetWidth(32)
+                f.ressIcon:SetHeight(32)
+                f.ressIcon:SetPoint("CENTER", f, "CENTER", 0, 4)
+                f.ressIcon.texture = f.ressIcon:CreateTexture(nil,"BACKGROUND")
+                f.ressIcon.texture:SetTexture("Interface\\AddOns\\pfUI\\img\\ress")
+                f.ressIcon.texture:SetAllPoints(f.ressIcon)
+              end
+
+              if HealComm:UnitisResurrecting(unitname) then
+                f.ressIcon:Show()
+              else
+                f.ressIcon:Hide()
+              end
+
+            end
+          end
+
+        end
+
         AceEvent:RegisterEvent("HealComm_Healupdate", pfUI.healComm.onEvent)
+        AceEvent:RegisterEvent("HealComm_Ressupdate", pfUI.healComm.onEventRes)
         AceEvent:RegisterEvent("UNIT_HEALTH", pfUI.healComm.onEventHealthChange)
         AceEvent:RegisterEvent("PLAYER_TARGET_CHANGED", pfUI.healComm.TargetChanged)
       end
