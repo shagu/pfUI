@@ -1,4 +1,5 @@
 pfUI.uf = CreateFrame("Frame",nil,UIParent)
+pfUI.uf.frames = {}
 
 local pfValidUnits = {}
 pfValidUnits["player"] = true
@@ -553,6 +554,7 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
     end
   end
 
+  table.insert(pfUI.uf.frames, f)
   return f
 end
 
