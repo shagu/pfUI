@@ -315,12 +315,15 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
 
           this.lastUnit = UnitName(this.label .. this.id)
         else
+          -- smoothen animation based on framerate
+          local fpsmod = GetFramerate() / 30
+
           -- health animation active
           if this.cache.hpanimation then
             if this.cache.hpdisplay < this.cache.hp then
-              this.cache.hpdisplay = this.cache.hpdisplay + ceil(hpDiff / pfUI_config.unitframes.animation_speed)
+              this.cache.hpdisplay = this.cache.hpdisplay + ceil(hpDiff / (pfUI_config.unitframes.animation_speed * fpsmod))
             elseif this.cache.hpdisplay > this.cache.hp then
-              this.cache.hpdisplay = this.cache.hpdisplay - ceil(hpDiff / pfUI_config.unitframes.animation_speed)
+              this.cache.hpdisplay = this.cache.hpdisplay - ceil(hpDiff / (pfUI_config.unitframes.animation_speed * fpsmod))
             else
               this.cache.hpdisplay = this.cache.hp
               this.cache.hpanimation = nil
@@ -333,9 +336,9 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
           -- power animation active
           if this.cache.poweranimation then
             if this.cache.powerdisplay < this.cache.power then
-              this.cache.powerdisplay = this.cache.powerdisplay + ceil(powerDiff / pfUI_config.unitframes.animation_speed)
+              this.cache.powerdisplay = this.cache.powerdisplay + ceil(powerDiff / (pfUI_config.unitframes.animation_speed * fpsmod))
             elseif this.cache.powerdisplay > this.cache.power then
-              this.cache.powerdisplay = this.cache.powerdisplay - ceil(powerDiff / pfUI_config.unitframes.animation_speed)
+              this.cache.powerdisplay = this.cache.powerdisplay - ceil(powerDiff / (pfUI_config.unitframes.animation_speed * fpsmod))
             else
               this.cache.powerdisplay = this.cache.power
               this.cache.poweranimation = nil
