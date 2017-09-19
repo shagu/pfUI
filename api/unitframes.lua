@@ -304,6 +304,11 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
           -- instant refresh on unit change (e.g. target)
           this.cache.hp = UnitHealth(this.label .. this.id)
           this.cache.hpmax = UnitHealthMax(this.label .. this.id)
+
+          if this.config.invert_healthbar == "1" then
+            this.cache.hp = this.cache.hpmax - this.cache.hp
+          end
+
           this.cache.hpdisplay = this.cache.hp
           this.hp.bar:SetMinMaxValues(0, this.cache.hpmax)
           this.hp.bar:SetValue(this.cache.hp)
