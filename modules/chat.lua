@@ -328,26 +328,7 @@ pfUI:RegisterModule("chat", function ()
         frame:SetFading(false)
       end
 
-      if i == 1 then
-        -- General
-        FCF_DockFrame(frame)
-        tab:SetParent(pfUI.chat.left.panelTop)
-        frame:SetParent(pfUI.chat.left)
-        frame:SetPoint("TOPLEFT", pfUI.chat.left ,"TOPLEFT", default_border, -panelheight)
-        frame:SetPoint("BOTTOMRIGHT", pfUI.chat.left ,"BOTTOMRIGHT", -default_border, panelheight)
-      elseif i == 2 then
-        -- Combat Log
-        if C.chat.global.combathide == "1" then
-          FCF_UnDockFrame(frame)
-          FCF_Close(frame)
-        elseif frame.isDocked then
-          FCF_DockFrame(frame)
-          tab:SetParent(pfUI.chat.left.panelTop)
-          frame:SetParent(pfUI.chat.left)
-          frame:SetPoint("TOPLEFT", pfUI.chat.left ,"TOPLEFT", default_border, -panelheight)
-          frame:SetPoint("BOTTOMRIGHT", pfUI.chat.left ,"BOTTOMRIGHT", -default_border, panelheight)
-        end
-      elseif i == 3 and C.chat.right.enable == "1" then
+      if i == 3 and C.chat.right.enable == "1" then
         -- Loot & Spam
         tab:SetParent(pfUI.chat.right.panelTop)
         frame:SetParent(pfUI.chat.right)
@@ -355,9 +336,22 @@ pfUI:RegisterModule("chat", function ()
         frame:SetPoint("TOPLEFT", pfUI.chat.right ,"TOPLEFT", default_border, -panelheight)
         frame:SetPoint("BOTTOMRIGHT", pfUI.chat.right ,"BOTTOMRIGHT", -default_border, panelheight)
         frame:Show()
+      elseif i == 2 and C.chat.global.combathide == "1" then
+        -- Combat Log
+        FCF_UnDockFrame(frame)
+        FCF_Close(frame)
+      elseif i == 1 or frame.isDocked then
+        -- Left Chat
+        FCF_DockFrame(frame)
+        tab:SetParent(pfUI.chat.left.panelTop)
+        frame:SetParent(pfUI.chat.left)
+        frame:SetPoint("TOPLEFT", pfUI.chat.left ,"TOPLEFT", default_border, -panelheight)
+        frame:SetPoint("BOTTOMRIGHT", pfUI.chat.left ,"BOTTOMRIGHT", -default_border, panelheight)
+      else
+        FCF_UnDockFrame(frame)
+        frame:SetParent(UIParent)
+        tab:SetParent(UIParent)
       end
-
-      FCF_DockUpdate()
 
       -- hide textures
       for j,v in ipairs({tab:GetRegions()}) do
@@ -372,7 +366,6 @@ pfUI:RegisterModule("chat", function ()
       _G["ChatFrame" .. i .. "TabLeft"]:SetAlpha(0)
       _G["ChatFrame" .. i .. "TabMiddle"]:SetAlpha(0)
       _G["ChatFrame" .. i .. "TabRight"]:SetAlpha(0)
-      _G["ChatFrame" .. i .. "TabFlash"]:SetAlpha(0)
       _G["ChatFrame" .. i .. "TabFlash"]:SetAllPoints(_G["ChatFrame" .. i .. "TabText"])
 
       local _, class = UnitClass("player")
