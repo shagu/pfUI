@@ -71,11 +71,6 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
   f.config = config or pfUI_config.unitframes.fallback
   f.tick = tick
 
-  if f.config.visible ~= "1" then
-    f:Hide()
-    return f
-  end
-
   f:SetFrameStrata("BACKGROUND")
 
   f.hp = CreateFrame("Frame",nil, f)
@@ -165,6 +160,11 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
   f.powerCenterText:ClearAllPoints()
   f.powerCenterText:SetPoint("TOPLEFT",f.power.bar, "TOPLEFT", 2*default_border, 1)
   f.powerCenterText:SetPoint("BOTTOMRIGHT",f.power.bar, "BOTTOMRIGHT", -2*default_border, 0)
+
+  if f.config.visible ~= "1" then
+    f:Hide()
+    return f
+  end
 
   f:RegisterForClicks('LeftButtonUp', 'RightButtonUp',
     'MiddleButtonUp', 'Button4Up', 'Button5Up')
