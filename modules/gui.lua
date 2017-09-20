@@ -1037,7 +1037,7 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.tabs.uf.tabs.pet = pfUI.gui.tabs.uf.tabs:CreateChildFrame(T["Pet"], 70)
   pfUI.gui.tabs.uf.tabs.pet:SetScript("OnShow", function()
     if not this.setup then
-      CreateConfig(this, T["Display Pet Frame"], C.unitframes.player, "visible", "checkbox")
+      CreateConfig(this, T["Display Pet Frame"], C.unitframes.pet, "visible", "checkbox")
       CreateConfig(this, T["Portrait Position"], C.unitframes.pet, "portrait", "dropdown", pfUI.gui.dropdowns.uf_portrait_position)
       CreateConfig(this, T["Health Bar Width"], C.unitframes.pet, "width")
       CreateConfig(this, T["Health Bar Height"], C.unitframes.pet, "height")
