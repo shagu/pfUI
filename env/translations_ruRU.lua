@@ -123,6 +123,7 @@ pfUI_translation["ruRU"] = {
   ["Enable Castbars"] = "Включить панели применения",
   ["Enable Chat Dock Background"] = "Включить фон панели чата",
   ["Enable Chat Fade"] = "Включить затухание чата",
+  ["Enable Chat Tab Flashing"] = nil,
   ["Enable Class Color in Text"] = "Включить цвета классов в тексте",
   ["Enable Class Colors On Enemies"] = "Включить цвета классов на врагах",
   ["Enable Class Colors On Friends"] = "Включить цвета классов на друзьях",

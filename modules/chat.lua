@@ -366,7 +366,12 @@ pfUI:RegisterModule("chat", function ()
       _G["ChatFrame" .. i .. "TabLeft"]:SetAlpha(0)
       _G["ChatFrame" .. i .. "TabMiddle"]:SetAlpha(0)
       _G["ChatFrame" .. i .. "TabRight"]:SetAlpha(0)
-      _G["ChatFrame" .. i .. "TabFlash"]:SetAllPoints(_G["ChatFrame" .. i .. "TabText"])
+
+      if C.chat.global.chatflash == "1" then
+        _G["ChatFrame" .. i .. "TabFlash"]:SetAllPoints(_G["ChatFrame" .. i .. "TabText"])
+      else
+        _G["ChatFrame" .. i .. "TabFlash"].Show = function() return end
+      end
 
       local _, class = UnitClass("player")
       _G["ChatFrame" .. i .. "TabText"]:SetTextColor(RAID_CLASS_COLORS[class].r + .3 * .5, RAID_CLASS_COLORS[class].g + .3 * .5, RAID_CLASS_COLORS[class].b + .3 * .5, 1)

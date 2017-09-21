@@ -123,6 +123,7 @@ pfUI_translation["enUS"] = {
   ["Enable Castbars"] = nil,
   ["Enable Chat Dock Background"] = nil,
   ["Enable Chat Fade"] = nil,
+  ["Enable Chat Tab Flashing"] = nil,
   ["Enable Class Color in Text"] = nil,
   ["Enable Class Colors"] = nil,
   ["Enable Class Colors On Enemies"] = nil,

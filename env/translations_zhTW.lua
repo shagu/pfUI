@@ -123,6 +123,7 @@ pfUI_translation["zhTW"] = {
   ["Enable Castbars"] = "顯示敵對施法條",
   ["Enable Chat Dock Background"] = "顯示聊天視窗停靠欄",
   ["Enable Chat Fade"] = "聊天記錄淡出",
+  ["Enable Chat Tab Flashing"] = nil,
   ["Enable Class Color in Text"] = "啟用職業文字顏色樣式",
   ["Enable Class Colors On Enemies"] = "顯示敵軍職業顏色",
   ["Enable Class Colors On Friends"] = "顯示友軍職業顏色",

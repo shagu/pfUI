@@ -123,6 +123,7 @@ pfUI_translation["koKR"] = {
   ["Enable Castbars"] = "캐스트바 활성화",
   ["Enable Chat Dock Background"] = "채팅 덕 활성화",
   ["Enable Chat Fade"] = "채팅 사라짐 활성화",
+  ["Enable Chat Tab Flashing"] = nil,
   ["Enable Class Color in Text"] = "텍스트에 클래스(직업)색상 활성화",
   ["Enable Class Colors"] = "클래스(직업) 색상 활성화",
   ["Enable Class Colors On Enemies"] = "적대적 클래스(직업)색상 활성화",

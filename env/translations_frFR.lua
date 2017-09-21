@@ -123,6 +123,7 @@ pfUI_translation["frFR"] = {
   ["Enable Castbars"] = "Activer les barres d'incantation",
   ["Enable Chat Dock Background"] = "Activer les onglets de la fenêtre du chat",
   ["Enable Chat Fade"] = "Activer le masquage automatique de la fenêtre du chat",
+  ["Enable Chat Tab Flashing"] = nil,
   ["Enable Class Color in Text"] = "Activer le texte basé sur la couleur la classe",
   ["Enable Class Colors"] = "Activer la couleur en fonction de la classe",
   ["Enable Class Colors On Enemies"] = "Activer la couleur de la classe sur les cibles ennemies",
