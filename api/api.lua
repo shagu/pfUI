@@ -1,6 +1,7 @@
 pfUI.api = { }
+
 local _G = getfenv(0)
-local T, C, L = pfUI.env.T, pfUI.env.C, pfUI.env.L
+local T, C, L = pfUI:LoadEnvironment()
 
 -- [ strsplit ]
 -- Splits a string using a delimiter.

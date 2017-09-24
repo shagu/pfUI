@@ -17,7 +17,7 @@ function SlashCmdList.GM(msg, editbox)
   ToggleHelpFrame(1)
 end
 
-pfUI = CreateFrame("Frame",nil,UIParent)
+pfUI = CreateFrame("Frame", nil, UIParent)
 pfUI:RegisterEvent("ADDON_LOADED")
 
 -- initialize default variables
@@ -35,8 +35,18 @@ pfUI_config = {}
 pfUI_locale = {}
 pfUI_translation = {}
 
-pfUI:SetScript("OnEvent", function()
+function pfUI:LoadEnvironment()
+  local lang = pfUI_config.global and pfUI_translation[pfUI_config.global.language] and pfUI_config.global.language or GetLocale()
+  local T = setmetatable(pfUI_translation[lang] or {}, { __index = function(tab,key)
+    local value = tostring(key)
+    rawset(tab,key,value)
+    return value
+  end})
 
+  return T, pfUI_config, (pfUI_locale[GetLocale()] or pfUI_locale["enUS"])
+end
+
+pfUI:SetScript("OnEvent", function()
   -- some addons overwrite color and font settings
   -- need to enforce pfUI's selection every time
   pfUI.environment:UpdateFonts()
@@ -74,19 +84,7 @@ pfUI:SetScript("OnEvent", function()
     end
 
     pfUI.env._G = getfenv(0)
-    pfUI.env.C = pfUI_config
-    pfUI.env.L = pfUI_locale[GetLocale()] or pfUI_locale["enUS"]
-
-    local language = GetLocale()
-    if pfUI_config.global.language and pfUI_translation[pfUI_config.global.language] then
-      language = pfUI_config.global.language
-    end
-
-    pfUI.env.T = setmetatable(pfUI_translation[language] or {}, { __index = function(tab,key)
-      local value = tostring(key)
-      rawset(tab,key,value)
-      return value
-    end})
+    pfUI.env.T, pfUI.env.C, pfUI.env.L = pfUI:LoadEnvironment()
 
     for i,m in pairs(this.modules) do
       -- do not load disabled modules
