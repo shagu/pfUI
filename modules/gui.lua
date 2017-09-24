@@ -1427,6 +1427,7 @@ pfUI:RegisterModule("gui", function ()
       CreateConfig(this, T["Right Panel: Right"], C.panel.right, "right", "dropdown", pfUI.gui.dropdowns.panel_values)
       CreateConfig(this, T["Other Panel: Minimap"], C.panel.other, "minimap", "dropdown", pfUI.gui.dropdowns.panel_values)
       CreateConfig(this, T["Always Show Experience And Reputation Bar"], C.panel.xp, "showalways", "checkbox")
+      CreateConfig(this, T["Only Count Bagspace On Regular Bags"], C.panel.bag, "ignorespecial", "checkbox")
       CreateConfig(this, T["Enable Micro Bar"], C.panel.micro, "enable", "checkbox")
       CreateConfig(this, T["Enable 24h Clock"], C.global, "twentyfour", "checkbox")
       this.setup = true
