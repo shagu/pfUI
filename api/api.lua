@@ -124,6 +124,28 @@ function pfUI.api.GetItemCount(itemName)
   return count
 end
 
+-- [ GetBagFamily ]
+-- Returns information about the type of a bag such as Soul Bags or Quivers.
+-- Available bagtypes are "BAG", "KEYRING", "SOULBAG", "QUIVER" and "SPECIAL"
+-- 'bag'        [int]        the bag id
+-- returns:     [string]     the type of the bag, e.g "QUIVER"
+function pfUI.api.GetBagFamily(bag)
+  if bag == -2 then return "KEYRING" end
+
+  local _, _, id = strfind(GetInventoryItemLink("player", ContainerIDToInventoryID(bag)) or "", "item:(%d+)")
+  if id then
+    local _, _, _, _, itemType, subType = GetItemInfo(id)
+    local bagtype = L["bagtypes"][itemType]
+    local bagsubtype = L["bagtypes"][subType]
+
+    if bagsubtype == "SOULBAG" then return "SOULBAG" end
+    if bagsubtype == "QUIVER" then return "QUIVER" end
+    if not bagtype and not bagsubtype then return "SPECIAL" end
+  end
+
+  return "BAG"
+end
+
 -- [ Abbreviate ]
 -- Abbreviates a number from 1234 to 1.23k
 -- 'number'     [number]           the number that should be abbreviated
