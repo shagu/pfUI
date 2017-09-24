@@ -131,19 +131,20 @@ end
 -- returns:     [string]     the type of the bag, e.g "QUIVER"
 function pfUI.api.GetBagFamily(bag)
   if bag == -2 then return "KEYRING" end
+  if bag == 0 then return "BAG" end
 
   local _, _, id = strfind(GetInventoryItemLink("player", ContainerIDToInventoryID(bag)) or "", "item:(%d+)")
   if id then
     local _, _, _, _, itemType, subType = GetItemInfo(id)
-    local bagtype = L["bagtypes"][itemType]
     local bagsubtype = L["bagtypes"][subType]
 
+    if bagsubtype == "DEFAULT" then return "BAG" end
     if bagsubtype == "SOULBAG" then return "SOULBAG" end
     if bagsubtype == "QUIVER" then return "QUIVER" end
-    if not bagtype and not bagsubtype then return "SPECIAL" end
+    if bagsubtype == nil then return "SPECIAL" end
   end
 
-  return "BAG"
+  return nil
 end
 
 -- [ Abbreviate ]
