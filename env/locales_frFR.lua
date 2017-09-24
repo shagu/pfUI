@@ -23,8 +23,7 @@ pfUI_locale["frFR"]["itemtypes"] = {
   ["INVTYPE_THROWN"] = "Armes de jet",
   ["INVTYPE_GUN"] = "Arme à feu",
   ["INVTYPE_CROSSBOW"] = "Arbalète",
-  ["INVTYPE_GUNPROJECTILE"] = "Balle",
-  ["INVTYPE_BOWPROJECTILE"] = "Flèche",
+  ["INVTYPE_PROJECTILE"] = "Projectile",
 }
 
 pfUI_locale["frFR"]["rangecheck"] = {

@@ -23,8 +23,7 @@ pfUI_locale["zhCN"]["itemtypes"] = {
   ["INVTYPE_THROWN"] = "投掷武器",
   ["INVTYPE_GUN"] = "枪械",
   ["INVTYPE_CROSSBOW"] = "弩",
-  ["INVTYPE_GUNPROJECTILE"] = "子弹",
-  ["INVTYPE_BOWPROJECTILE"] = "箭",
+  ["INVTYPE_PROJECTILE"] = "弹药",
 }
 
 pfUI_locale["zhCN"]["rangecheck"] = {

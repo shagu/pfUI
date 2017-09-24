@@ -35,8 +35,7 @@ pfUI:RegisterModule("eqcompare", function ()
 
     [INVTYPE_WAND] = "RangedSlot",
     [INVTYPE_GUN] = "RangedSlot",
-    [INVTYPE_GUNPROJECTILE] = "AmmoSlot",
-    [INVTYPE_BOWPROJECTILE] = "AmmoSlot",
+    [INVTYPE_PROJECTILE] = "AmmoSlot",
     [INVTYPE_CROSSBOW] = "RangedSlot",
     [INVTYPE_THROWN] = "RangedSlot",
   }

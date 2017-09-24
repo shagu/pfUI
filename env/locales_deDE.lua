@@ -23,8 +23,7 @@ pfUI_locale["deDE"]["itemtypes"] = {
   ["INVTYPE_THROWN"] = "Wurfwaffe",
   ["INVTYPE_GUN"] = "Schusswaffe",
   ["INVTYPE_CROSSBOW"] = "Armbrust",
-  ["INVTYPE_GUNPROJECTILE"] = "Kugel",
-  ["INVTYPE_BOWPROJECTILE"] = "Pfeil",
+  ["INVTYPE_PROJECTILE"] = "Projektil",
 }
 
 pfUI_locale["deDE"]["rangecheck"] = {

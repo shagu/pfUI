@@ -23,8 +23,7 @@ pfUI_locale["koKR"]["itemtypes"] = {
   ["INVTYPE_THROWN"] = "투척 무기",
   ["INVTYPE_GUN"] = "총",
   ["INVTYPE_CROSSBOW"] = "석궁",
-  ["INVTYPE_GUNPROJECTILE"] = "탄환",
-  ["INVTYPE_BOWPROJECTILE"] = "화살",
+  ["INVTYPE_PROJECTILE"] = "투사체",
 }
 
 pfUI_locale["koKR"]["rangecheck"] = {

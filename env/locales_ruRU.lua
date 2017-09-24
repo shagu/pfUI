@@ -23,8 +23,7 @@ pfUI_locale["ruRU"]["itemtypes"] = {
   ["INVTYPE_THROWN"] = "Метательное",
   ["INVTYPE_GUN"] = "Огнестрельное",
   ["INVTYPE_CROSSBOW"] = "Арбалет",
-  ["INVTYPE_GUNPROJECTILE"] = "Пули",
-  ["INVTYPE_BOWPROJECTILE"] = "Стрелы",
+  ["INVTYPE_PROJECTILE"] = "Боеприпасы",
 }
 
 pfUI_locale["ruRU"]["rangecheck"] = {
