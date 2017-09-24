@@ -21,6 +21,7 @@ env\locales_deDE.lua
 env\locales_zhCN.lua
 env\locales_ruRU.lua
 env\locales_koKR.lua
+env\locales_esES.lua
 
 # translations
 env\translations_enUS.lua

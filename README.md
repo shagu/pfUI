@@ -32,13 +32,14 @@ This is **not** an addon-pack like [ShaguUI](http://shagu.org/shaguui/), however
     /clearfocus   Clears the Focus-Frame
 
 ## Languages
-pfUI supports and contains language specific code for the following languages.
+pfUI supports and contains language specific code for the following gameclients.
 * English (enUS)
+* Korean (koKR)
 * French (frFR)
 * German (deDE)
 * Chinese (zhCN)
+* Spanish (esES)
 * Russian (ruRU)
-* Korean (koKR)
 
 ## Recommended Addons
 * [HealComm](https://github.com/Aviana/HealComm/releases) Visual representation of incoming heals
