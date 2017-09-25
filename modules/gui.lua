@@ -111,6 +111,7 @@ pfUI:RegisterModule("gui", function ()
         child.deco_up = CreateFrame("Frame", nil, child)
         child.deco_up:SetPoint("TOPLEFT", child, "TOPLEFT", -4, 4)
         child.deco_up:SetPoint("BOTTOMRIGHT", child, "TOPRIGHT", 4, -spacing)
+
         child.deco_up.fader = child.deco_up:CreateTexture("OVERLAY")
         child.deco_up.fader:SetTexture(1,1,1,1)
         child.deco_up.fader:SetGradientAlpha("VERTICAL", 0, 0, 0, 0, 0, 0, 0, 1)
@@ -130,10 +131,12 @@ pfUI:RegisterModule("gui", function ()
 
         child.deco_up_indicator:SetScript("OnUpdate", function()
           local alpha = this:GetAlpha()
+          local fpsmod = GetFramerate() / 30
+
           if alpha >= .75 then
-            this.modifier = -0.03
+            this.modifier = -0.03 / fpsmod
           elseif alpha <= .25 then
-            this.modifier = 0.03
+            this.modifier = 0.03  / fpsmod
           end
 
           this:SetAlpha(alpha + this.modifier)
@@ -166,10 +169,12 @@ pfUI:RegisterModule("gui", function ()
 
         child.deco_down_indicator:SetScript("OnUpdate", function()
           local alpha = this:GetAlpha()
+          local fpsmod = GetFramerate() / 30
+
           if alpha >= .75 then
-            this.modifier = -0.03
+            this.modifier = -0.03 / fpsmod
           elseif alpha <= .25 then
-            this.modifier = 0.03
+            this.modifier = 0.03 / fpsmod
           end
 
           this:SetAlpha(alpha + this.modifier)
@@ -186,12 +191,14 @@ pfUI:RegisterModule("gui", function ()
 
           if current > 0 then
             self.deco_up_indicator:Show()
+            self.deco_up_indicator:SetAlpha(.75)
           else
             self.deco_up_indicator:Hide()
           end
 
           if max > spacing and current < max then
             self.deco_down_indicator:Show()
+            self.deco_down_indicator:SetAlpha(.75)
           else
             self.deco_down_indicator:Hide()
           end
