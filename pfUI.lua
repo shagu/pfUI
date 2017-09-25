@@ -20,6 +20,16 @@ end
 pfUI = CreateFrame("Frame", nil, UIParent)
 pfUI:RegisterEvent("ADDON_LOADED")
 
+-- initialize saved variables
+pfUI_playerDB = {}
+pfUI_config = {}
+pfUI_init = {}
+pfUI_profiles = {}
+
+-- localization
+pfUI_locale = {}
+pfUI_translation = {}
+
 -- initialize default variables
 pfUI.cache = {}
 pfUI.module = {}
@@ -30,12 +40,15 @@ pfUI.version = {}
 pfUI.hooks = {}
 pfUI.env = {}
 
-pfUI_playerDB = {}
-pfUI_config = {}
-pfUI_locale = {}
-pfUI_translation = {}
+-- setup pfUI namespace
+setmetatable(pfUI.env, {__index = getfenv(0)})
 
-function pfUI:LoadEnvironment()
+function pfUI:GetEnvironment()
+  -- load api into environment
+  for m, func in pairs(pfUI.api or {}) do
+    pfUI.env[m] = func
+  end
+
   local lang = pfUI_config.global and pfUI_translation[pfUI_config.global.language] and pfUI_config.global.language or GetLocale()
   local T = setmetatable(pfUI_translation[lang] or {}, { __index = function(tab,key)
     local value = tostring(key)
@@ -43,7 +56,12 @@ function pfUI:LoadEnvironment()
     return value
   end})
 
-  return T, pfUI_config, (pfUI_locale[GetLocale()] or pfUI_locale["enUS"])
+  pfUI.env._G = getfenv(0)
+  pfUI.env.T = T
+  pfUI.env.C = pfUI_config
+  pfUI.env.L = (pfUI_locale[GetLocale()] or pfUI_locale["enUS"])
+
+  return pfUI.env
 end
 
 pfUI:SetScript("OnEvent", function()
@@ -53,14 +71,6 @@ pfUI:SetScript("OnEvent", function()
   pfUI.environment:UpdateColors()
 
   if arg1 == "pfUI" then
-    if not pfUI_init then
-      pfUI_init = {}
-    end
-
-    if not pfUI_profiles then
-      pfUI_profiles = {}
-    end
-
     -- read pfUI version from .toc file
     local major, minor, fix = pfUI.api.strsplit(".", tostring(GetAddOnMetadata("pfUI", "Version")))
     pfUI.version.major = tonumber(major) or 1
@@ -71,27 +81,10 @@ pfUI:SetScript("OnEvent", function()
     pfUI:LoadConfig()
     pfUI:MigrateConfig()
 
-    -- reload environment
-    pfUI.environment:UpdateFonts()
-    pfUI.environment:UpdateColors()
-
-    -- unify module environment
-    setmetatable(pfUI.env, {__index = getfenv(0)})
-
-    -- load api into environment
-    for m, func in pairs(pfUI.api) do
-      pfUI.env[m] = func
-    end
-
-    pfUI.env._G = getfenv(0)
-    pfUI.env.T, pfUI.env.C, pfUI.env.L = pfUI:LoadEnvironment()
-
+    -- load modules
     for i,m in pairs(this.modules) do
-      -- do not load disabled modules
-      if pfUI_config["disabled"] and pfUI_config["disabled"][m]  == "1" then
-        -- message("DEBUG: module " .. m .. " has been disabled")
-      else
-        setfenv(pfUI.module[m], pfUI.env)
+      if not ( pfUI_config["disabled"] and pfUI_config["disabled"][m]  == "1" ) then
+        setfenv(pfUI.module[m], pfUI:GetEnvironment())
         pfUI.module[m]()
       end
     end

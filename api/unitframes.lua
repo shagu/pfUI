@@ -1,6 +1,9 @@
 pfUI.uf = CreateFrame("Frame",nil,UIParent)
 pfUI.uf.frames = {}
 
+-- load pfUI environment
+setfenv(1, pfUI:GetEnvironment())
+
 local pfValidUnits = {}
 pfValidUnits["player"] = true
 pfValidUnits["target"] = true
