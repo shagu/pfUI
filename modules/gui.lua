@@ -68,6 +68,25 @@ pfUI:RegisterModule("gui", function ()
 
       -- create child frame
       local child = CreateFrame("ScrollFrame", "pfConfig" .. title .. "Frame", self)
+      child.Scroll = function(self, step)
+        local current = self:GetVerticalScroll()
+        local new = current + step*-25
+        local max = self:GetVerticalScrollRange() + spacing
+
+        if max > spacing then
+
+          if new < 0 then
+            self:SetVerticalScroll(0)
+          elseif new > max then
+            self:SetVerticalScroll(max)
+          else
+            self:SetVerticalScroll(new)
+          end
+        end
+
+        self:UpdateScrollState()
+      end
+
       if childcount ~= 1 then child:Hide() end
 
       if not self.align or self.align == "LEFT" then
@@ -97,12 +116,18 @@ pfUI:RegisterModule("gui", function ()
         child.deco_up.fader:SetGradientAlpha("VERTICAL", 0, 0, 0, 0, 0, 0, 0, 1)
         child.deco_up.fader:SetAllPoints(child.deco_up)
 
-        child.deco_up_indicator = CreateFrame("Frame", nil, child.deco_up)
+        child.deco_up_indicator = CreateFrame("Button", nil, child.deco_up)
+        child.deco_up_indicator:SetFrameLevel(128)
         child.deco_up_indicator:Hide()
         child.deco_up_indicator:SetPoint("TOP", child.deco_up, "TOP", 0, -6)
         child.deco_up_indicator:SetHeight(12)
         child.deco_up_indicator:SetWidth(12)
         child.deco_up_indicator.modifier = 0.03
+        child.deco_up_indicator:SetScript("OnClick", function()
+          local child = this:GetParent():GetParent()
+          child:Scroll(3)
+        end)
+
         child.deco_up_indicator:SetScript("OnUpdate", function()
           local alpha = this:GetAlpha()
           if alpha >= .75 then
@@ -121,17 +146,23 @@ pfUI:RegisterModule("gui", function ()
         child.deco_down = CreateFrame("Frame", nil, child)
         child.deco_down:SetPoint("BOTTOMLEFT", child, "BOTTOMLEFT", -4, -4)
         child.deco_down:SetPoint("TOPRIGHT", child, "BOTTOMRIGHT", 4, spacing)
+
         child.deco_down.fader = child.deco_down:CreateTexture("OVERLAY")
         child.deco_down.fader:SetTexture(1,1,1,1)
         child.deco_down.fader:SetGradientAlpha("VERTICAL", 0, 0, 0, 1, 0, 0, 0, 0)
         child.deco_down.fader:SetAllPoints(child.deco_down)
 
-        child.deco_down_indicator = CreateFrame("Frame", nil, child.deco_down)
+        child.deco_down_indicator = CreateFrame("Button", nil, child.deco_down)
+        child.deco_down_indicator:SetFrameLevel(128)
         child.deco_down_indicator:Hide()
         child.deco_down_indicator:SetPoint("BOTTOM", child.deco_down, "BOTTOM", 0, 6)
         child.deco_down_indicator:SetHeight(12)
         child.deco_down_indicator:SetWidth(12)
         child.deco_down_indicator.modifier = 0.03
+        child.deco_down_indicator:SetScript("OnClick", function()
+          local child = this:GetParent():GetParent()
+          child:Scroll(-3)
+        end)
 
         child.deco_down_indicator:SetScript("OnUpdate", function()
           local alpha = this:GetAlpha()
@@ -166,24 +197,8 @@ pfUI:RegisterModule("gui", function ()
           end
         end
 
-
         child:SetScript("OnMouseWheel", function()
-          local current = this:GetVerticalScroll()
-          local new = current + arg1*-25
-          local max = this:GetVerticalScrollRange() + spacing
-
-          if max > spacing then
-
-            if new < 0 then
-              this:SetVerticalScroll(0)
-            elseif new > max then
-              this:SetVerticalScroll(max)
-            else
-              this:SetVerticalScroll(new)
-            end
-          end
-
-          this:UpdateScrollState()
+          this:Scroll(arg1)
         end)
 
         local scrollchild = CreateFrame("Frame", "pfConfig" .. title .. "ScrollChild", child)
