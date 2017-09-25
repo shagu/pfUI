@@ -459,6 +459,7 @@ end
 function pfUI.api.SkinButton(button, cr, cg, cb)
   local b = getglobal(button)
   if not b then b = button end
+  if not b then return end
   if not cr or not cg or not cb then
     _, class = UnitClass("player")
     local color = RAID_CLASS_COLORS[class]
