@@ -1,30 +1,26 @@
 pfUI:RegisterModule("addons", function ()
-  -- dialog
   pfUI.addons = CreateFrame("Frame", "pfAddons", UIParent)
-  pfUI.addons:SetHeight(400)
-  pfUI.addons:SetWidth(400)
+  pfUI.addons:SetHeight(450)
+  pfUI.addons:SetWidth(420)
   pfUI.addons:SetPoint("CENTER", 0,0)
   pfUI.addons:EnableMouseWheel(1)
-  CreateBackdrop(pfUI.addons, nil, nil, .8)
   pfUI.addons:SetMovable(true)
   pfUI.addons:EnableMouse(true)
-  pfUI.addons:SetScript("OnMouseDown",function()
-    pfUI.addons:StartMoving()
-  end)
-
-  pfUI.addons:SetScript("OnMouseUp",function()
-    pfUI.addons:StopMovingOrSizing()
-  end)
+  pfUI.addons:SetScript("OnMouseDown", function() pfUI.addons:StartMoving() end)
+  pfUI.addons:SetScript("OnMouseUp", function() pfUI.addons:StopMovingOrSizing() end)
   pfUI.addons:Hide()
+
+  CreateBackdrop(pfUI.addons)
+
   pfUI.addons:SetScript("OnHide", function()
     if pfUI.addons.hasChanged then
       pfUI.gui:Reload()
       pfUI.addons.hasChanged = nil
     end
   end)
+
   tinsert(UISpecialFrames,"pfAddons")
 
-  -- title
   pfUI.addons.caption = pfUI.addons:CreateFontString("Status", "LOW", "GameFontNormal")
   pfUI.addons.caption:SetFont(pfUI.font_default, C.global.font_size + 4, "OUTLINE")
   pfUI.addons.caption:SetTextColor(.2, 1, .8, 1)
@@ -56,13 +52,22 @@ pfUI:RegisterModule("addons", function ()
     pfUI.addons:Hide()
   end)
 
-  -- list
-  pfUI.addons.list = CreateFrame("Frame", "pfAddonList", pfUI.addons)
+  pfUI.addons.scroll = ui:CreateScrollFrame("pfAddonListScroll", pfUI.addons)
+  pfUI.addons.scroll:SetHeight(400)
+  pfUI.addons.scroll:SetWidth(400)
+  pfUI.addons.scroll:SetPoint("BOTTOM", 0, 10)
+
+  pfUI.addons.scroll.backdrop = CreateFrame("Frame", nil, pfUI.addons.scroll)
+  pfUI.addons.scroll.backdrop:SetFrameLevel(1)
+  pfUI.addons.scroll.backdrop:SetPoint("TOPLEFT", pfUI.addons.scroll, "TOPLEFT", -5, 5)
+  pfUI.addons.scroll.backdrop:SetPoint("BOTTOMRIGHT", pfUI.addons.scroll, "BOTTOMRIGHT", 5, -5)
+  CreateBackdrop(pfUI.addons.scroll.backdrop, nil, true)
+
+  pfUI.addons.list = ui:CreateScrollChild("pfAddonList", pfUI.addons.scroll)
   pfUI.addons.list:RegisterEvent("ADDON_LOADED")
   pfUI.addons.list:RegisterEvent("PLAYER_ENTERING_WORLD")
   pfUI.addons.list:SetHeight(GetNumAddOns() * 25)
-  pfUI.addons.list:SetWidth(350)
-  pfUI.addons.list:SetPoint("CENTER", 0,0)
+
   pfUI.addons.list:SetScript("OnEvent", function()
     for i=1, GetNumAddOns() do
       local aname, atitle, anote = GetAddOnInfo(i)
@@ -76,7 +81,7 @@ pfUI:RegisterModule("addons", function ()
         frame:SetHeight(25)
         frame:SetBackdrop(pfUI.backdrop_underline)
         frame:SetBackdropBorderColor(.1,.1,.1,1)
-        frame:SetPoint("TOPLEFT", 12.5, i * -25 + 25)
+        frame:SetPoint("TOPLEFT", 25, i * -25)
 
         -- caption
         frame.caption = frame:CreateFontString("Status", "LOW", "GameFontNormal")
@@ -115,111 +120,6 @@ pfUI:RegisterModule("addons", function ()
       else
         pfUI.addons.list[i].caption:SetAlpha(.5)
       end
-    end
-  end)
-
-  pfUI.addons.scroll = CreateFrame("ScrollFrame", "pfAddonListScroll", pfUI.addons)
-  pfUI.addons.scroll:SetHeight(350)
-  pfUI.addons.scroll:SetWidth(375)
-  pfUI.addons.scroll:SetPoint("BOTTOM", 0, 10)
-  pfUI.addons.scroll:EnableMouseWheel(1)
-
-  pfUI.addons.scroll:SetScript("OnMouseWheel", function()
-    local current = pfUI.addons.scroll:GetVerticalScroll()
-    local new = current + arg1*-20
-    local max = pfUI.addons.scroll:GetVerticalScrollRange()
-    if new > -20 and new < max + 20 then
-      pfUI.addons.scroll:SetVerticalScroll(new)
-    end
-
-    if new < 0 then pfUI.addons.scroll:SetVerticalScroll(0) end
-    if new > max then pfUI.addons.scroll:SetVerticalScroll(max) end
-  end)
-
-  pfUI.addons.scroll:SetScrollChild(pfUI.addons.list)
-  pfUI.addons.scroll:SetVerticalScroll(0)
-
-  function pfUI.addons.scroll:UpdateScrollState()
-    local current = ceil(pfUI.addons.scroll:GetVerticalScroll())
-    local max = ceil(pfUI.addons.scroll:GetVerticalScrollRange())
-    pfUI.addons.deco.up:Show()
-    pfUI.addons.deco.down:Show()
-
-    if max > 20 then
-      if current < max then
-        pfUI.addons.deco.down.visible = 1
-        pfUI.addons.deco.down:Show()
-        pfUI.addons.deco.down:SetAlpha(.2)
-      end
-      if current > 5 then
-          pfUI.addons.deco.up.visible = 1
-          pfUI.addons.deco.up:Show()
-          pfUI.addons.deco.up:SetAlpha(.2)
-      end
-      if current > max - 5 then
-        pfUI.addons.deco.down.visible = 0
-      end
-      if current < 5 then
-        pfUI.addons.deco.up.visible = 0
-      end
-    else
-      pfUI.addons.deco.up.visible = 0
-      pfUI.addons.deco.down.visible = 0
-    end
-  end
-
-  -- [[ config section ]] --
-  pfUI.addons.deco = CreateFrame("Frame", nil, pfUI.addons)
-  pfUI.addons.deco:ClearAllPoints()
-  pfUI.addons.deco:SetPoint("TOPLEFT", pfUI.addons.scroll, "TOPLEFT", -5, 5)
-  pfUI.addons.deco:SetPoint("BOTTOMRIGHT", pfUI.addons.scroll, "BOTTOMRIGHT", 5, -5)
-  CreateBackdrop(pfUI.addons.deco, nil, nil, .8)
-
-  pfUI.addons.deco.up = CreateFrame("Frame", nil, pfUI.addons.deco)
-  pfUI.addons.deco.up:SetPoint("TOPLEFT", pfUI.addons.scroll, "TOPLEFT", -5, 5)
-  pfUI.addons.deco.up:SetPoint("TOPRIGHT", pfUI.addons.scroll, "TOPRIGHT", 5, -5)
-  pfUI.addons.deco.up:SetHeight(16)
-  pfUI.addons.deco.up:SetAlpha(0)
-  pfUI.addons.deco.up.visible = 0
-  pfUI.addons.deco.up.texture = pfUI.addons.deco.up:CreateTexture()
-  pfUI.addons.deco.up.texture:SetAllPoints()
-  pfUI.addons.deco.up.texture:SetTexture("Interface\\AddOns\\pfUI\\img\\gradient_up")
-  pfUI.addons.deco.up.texture:SetVertexColor(.2,1,.8)
-  pfUI.addons.deco.up:SetScript("OnUpdate", function()
-    pfUI.addons.scroll:UpdateScrollState()
-    if pfUI.addons.deco.up.visible == 0 and pfUI.addons.deco.up:GetAlpha() > 0 then
-      pfUI.addons.deco.up:SetAlpha(pfUI.addons.deco.up:GetAlpha() - 0.01)
-    elseif pfUI.addons.deco.up.visible == 0 and pfUI.addons.deco.up:GetAlpha() <= 0 then
-      pfUI.addons.deco.up:Hide()
-    end
-
-    if pfUI.addons.deco.up.visible == 1 and pfUI.addons.deco.up:GetAlpha() > .15 then
-      pfUI.addons.deco.up:SetAlpha(pfUI.addons.deco.up:GetAlpha() - 0.01)
-    end
-  end)
-
-  pfUI.addons.deco.down = CreateFrame("Frame", nil, pfUI.addons.deco)
-  pfUI.addons.deco.down:SetPoint("BOTTOMLEFT", pfUI.addons.scroll, "BOTTOMLEFT", -5, -5)
-  pfUI.addons.deco.down:SetPoint("BOTTOMRIGHT", pfUI.addons.scroll, "BOTTOMRIGHT", 5, 5)
-  pfUI.addons.deco.down:SetHeight(16)
-  pfUI.addons.deco.down:SetHeight(16)
-  pfUI.addons.deco.down:SetWidth(pfUI.addons.deco:GetWidth())
-  pfUI.addons.deco.down:SetAlpha(0)
-  pfUI.addons.deco.down.visible = 0
-  pfUI.addons.deco.down.texture = pfUI.addons.deco.down:CreateTexture()
-  pfUI.addons.deco.down.texture:SetAllPoints()
-  pfUI.addons.deco.down.texture:SetTexture("Interface\\AddOns\\pfUI\\img\\gradient_down")
-  pfUI.addons.deco.down.texture:SetVertexColor(.2,1,.8)
-  pfUI.addons.deco.down:SetScript("OnUpdate", function()
-    pfUI.addons.scroll:UpdateScrollState()
-    if pfUI.addons.deco.down.visible == 0 and pfUI.addons.deco.down:GetAlpha() > 0 then
-      pfUI.addons.deco.down:SetAlpha(pfUI.addons.deco.down:GetAlpha() - 0.01)
-    elseif pfUI.addons.deco.down.visible == 0 and pfUI.addons.deco.down:GetAlpha() <= 0 then
-      pfUI.addons.deco.down:Hide()
-    end
-
-    if pfUI.addons.deco.down.visible == 1 and pfUI.addons.deco.down:GetAlpha() > .15 then
-      pfUI.addons.deco.down:SetAlpha(pfUI.addons.deco.down:GetAlpha() - 0.01)
     end
   end)
 end)
