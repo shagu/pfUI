@@ -1,5 +1,6 @@
 pfUI:RegisterModule("addons", function ()
   pfUI.addons = CreateFrame("Frame", "pfAddons", UIParent)
+  pfUI.addons:SetFrameStrata("DIALOG")
   pfUI.addons:SetHeight(450)
   pfUI.addons:SetWidth(420)
   pfUI.addons:SetPoint("CENTER", 0,0)
@@ -10,7 +11,7 @@ pfUI:RegisterModule("addons", function ()
   pfUI.addons:SetScript("OnMouseUp", function() pfUI.addons:StopMovingOrSizing() end)
   pfUI.addons:Hide()
 
-  CreateBackdrop(pfUI.addons)
+  CreateBackdrop(pfUI.addons, nil, true, .75)
 
   pfUI.addons:SetScript("OnHide", function()
     if pfUI.addons.hasChanged then
@@ -122,4 +123,19 @@ pfUI:RegisterModule("addons", function ()
       end
     end
   end)
+
+  -- add main menu button
+  local pfUIAddonButton = CreateFrame("Button", "GameMenuButtonPFUIAddOns", GameMenuFrame, "GameMenuButtonTemplate")
+  pfUIAddonButton:SetPoint("TOP", 0, -32)
+  pfUIAddonButton:SetText(T["AddOns"])
+  pfUIAddonButton:SetScript("OnClick", function()
+    pfUI.addons:Show()
+    HideUIPanel(GameMenuFrame)
+  end)
+  SkinButton(pfUIAddonButton)
+
+  local point, relativeTo, relativePoint, xOffset, yOffset = GameMenuButtonOptions:GetPoint()
+  GameMenuButtonOptions:SetPoint(point, relativeTo, relativePoint, xOffset, yOffset - 22)
+  GameMenuFrame:SetHeight(GameMenuFrame:GetHeight()+22)
+
 end)
