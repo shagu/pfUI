@@ -1,8 +1,4 @@
 pfUI:RegisterModule("skin", function ()
-  GameMenuFrameHeader:SetTexture(nil)
-  GameMenuFrame:SetHeight(GameMenuFrame:GetHeight()-20)
-  GameMenuFrame:SetWidth(GameMenuFrame:GetWidth()-30)
-
   -- movable default frames
   EnableMovable("CharacterFrame", nil, { "PaperDollFrame",
       "PetPaperDollFrame", "ReputationFrame", "SkillFrame", "HonorFrame" } )
@@ -25,7 +21,6 @@ pfUI:RegisterModule("skin", function ()
   local cr, cg, cb = color.r , color.g, color.b
 
   local buttons = {
-    "GameMenuButtonPFUI",
     "GameMenuButtonOptions",
     "GameMenuButtonSoundOptions",
     "GameMenuButtonUIOptions",
@@ -49,6 +44,10 @@ pfUI:RegisterModule("skin", function ()
     "DropDownList2Backdrop",
   }
 
+  GameMenuFrameHeader:SetTexture(nil)
+  GameMenuFrame:SetHeight(GameMenuFrame:GetHeight()+2)
+  GameMenuFrame:SetWidth(GameMenuFrame:GetWidth()-30)
+
   local pfUIButton = CreateFrame("Button", "GameMenuButtonPFUI", GameMenuFrame, "GameMenuButtonTemplate")
   pfUIButton:SetPoint("TOP", 0, -10)
   pfUIButton:SetText(T["pfUI Settings"])
@@ -56,12 +55,13 @@ pfUI:RegisterModule("skin", function ()
     pfUI.gui:Show()
     HideUIPanel(GameMenuFrame)
   end)
-  GameMenuButtonOptions:SetPoint("TOP", 0, -35)
-  GameMenuButtonContinue:ClearAllPoints()
-  GameMenuButtonContinue:SetPoint("BOTTOM", 0, 10)
+  SkinButton(pfUIButton)
+
+  local point, relativeTo, relativePoint, xOffset, yOffset = GameMenuButtonOptions:GetPoint()
+  GameMenuButtonOptions:SetPoint(point, relativeTo, relativePoint, xOffset, yOffset - 22)
 
   for _, button in pairs(buttons) do
-    SkinButton(button, cr, cg, cb)
+    SkinButton(button)
   end
 
   for _, box in pairs(boxes) do
