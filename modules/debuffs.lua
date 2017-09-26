@@ -14,23 +14,23 @@ pfUI:RegisterModule("debuffs", function ()
   pfUI.debuffs.active = true
 
   -- CHAT_MSG_SPELL_PERIODIC_HOSTILEPLAYER_DAMAGE // CHAT_MSG_SPELL_PERIODIC_CREATURE_DAMAGE
-  pfUI.debuffs.AURAADDEDOTHERHARMFUL = gsub(gsub(gsub(gsub(gsub(AURAADDEDOTHERHARMFUL, "%(", "%%("), "%)", "%%)"), "%d%$",""), "%%s", "(.+)"), "%%d", "(%%d+)")
+  pfUI.debuffs.AURAADDEDOTHERHARMFUL = SanitizePattern(AURAADDEDOTHERHARMFUL)
 
   -- CHAT_MSG_SPELL_FAILED_LOCALPLAYER
-  pfUI.debuffs.SPELLFAILCASTSELF = gsub(gsub(gsub(gsub(gsub(SPELLFAILCASTSELF, "%(", "%%("), "%)", "%%)"), "%d%$",""), "%%s", "(.+)"), "%%d", "(%%d+)")
-  pfUI.debuffs.SPELLFAILPERFORMSELF = gsub(gsub(gsub(gsub(gsub(SPELLFAILPERFORMSELF, "%(", "%%("), "%)", "%%)"), "%d%$",""), "%%s", "(.+)"), "%%d", "(%%d+)")
-  pfUI.debuffs.SPELLIMMUNESELFOTHER = gsub(gsub(gsub(gsub(gsub(SPELLIMMUNESELFOTHER, "%(", "%%("), "%)", "%%)"), "%d%$",""), "%%s", "(.+)"), "%%d", "(%%d+)")
+  pfUI.debuffs.SPELLFAILCASTSELF = SanitizePattern(SPELLFAILCASTSELF)
+  pfUI.debuffs.SPELLFAILPERFORMSELF = SanitizePattern(SPELLFAILPERFORMSELF)
+  pfUI.debuffs.SPELLIMMUNESELFOTHER = SanitizePattern(SPELLIMMUNESELFOTHER)
 
   -- CHAT_MSG_SPELL_SELF_DAMAGE
-  pfUI.debuffs.IMMUNEDAMAGECLASSSELFOTHER = gsub(gsub(gsub(gsub(gsub(IMMUNEDAMAGECLASSSELFOTHER, "%(", "%%("), "%)", "%%)"), "%d%$",""), "%%s", "(.+)"), "%%d", "(%%d+)")
-  pfUI.debuffs.SPELLMISSSELFOTHER = gsub(gsub(gsub(gsub(gsub(SPELLMISSSELFOTHER, "%(", "%%("), "%)", "%%)"), "%d%$",""), "%%s", "(.+)"), "%%d", "(%%d+)")
-  pfUI.debuffs.SPELLRESISTSELFOTHER = gsub(gsub(gsub(gsub(gsub(SPELLRESISTSELFOTHER, "%(", "%%("), "%)", "%%)"), "%d%$",""), "%%s", "(.+)"), "%%d", "(%%d+)")
-  pfUI.debuffs.SPELLEVADEDSELFOTHER = gsub(gsub(gsub(gsub(gsub(SPELLEVADEDSELFOTHER, "%(", "%%("), "%)", "%%)"), "%d%$",""), "%%s", "(.+)"), "%%d", "(%%d+)")
-  pfUI.debuffs.SPELLDODGEDSELFOTHER = gsub(gsub(gsub(gsub(gsub(SPELLDODGEDSELFOTHER, "%(", "%%("), "%)", "%%)"), "%d%$",""), "%%s", "(.+)"), "%%d", "(%%d+)")
-  pfUI.debuffs.SPELLDEFLECTEDSELFOTHER = gsub(gsub(gsub(gsub(gsub(SPELLDEFLECTEDSELFOTHER, "%(", "%%("), "%)", "%%)"), "%d%$",""), "%%s", "(.+)"), "%%d", "(%%d+)")
-  pfUI.debuffs.SPELLREFLECTSELFOTHER = gsub(gsub(gsub(gsub(gsub(SPELLREFLECTSELFOTHER, "%(", "%%("), "%)", "%%)"), "%d%$",""), "%%s", "(.+)"), "%%d", "(%%d+)")
-  pfUI.debuffs.SPELLPARRIEDSELFOTHER = gsub(gsub(gsub(gsub(gsub(SPELLPARRIEDSELFOTHER, "%(", "%%("), "%)", "%%)"), "%d%$",""), "%%s", "(.+)"), "%%d", "(%%d+)")
-  pfUI.debuffs.SPELLLOGABSORBSELFOTHER = gsub(gsub(gsub(gsub(gsub(SPELLLOGABSORBSELFOTHER, "%(", "%%("), "%)", "%%)"), "%d%$",""), "%%s", "(.+)"), "%%d", "(%%d+)")
+  pfUI.debuffs.IMMUNEDAMAGECLASSSELFOTHER = SanitizePattern(IMMUNEDAMAGECLASSSELFOTHER)
+  pfUI.debuffs.SPELLMISSSELFOTHER = SanitizePattern(SPELLMISSSELFOTHER)
+  pfUI.debuffs.SPELLRESISTSELFOTHER = SanitizePattern(SPELLRESISTSELFOTHER)
+  pfUI.debuffs.SPELLEVADEDSELFOTHER = SanitizePattern(SPELLEVADEDSELFOTHER)
+  pfUI.debuffs.SPELLDODGEDSELFOTHER = SanitizePattern(SPELLDODGEDSELFOTHER)
+  pfUI.debuffs.SPELLDEFLECTEDSELFOTHER = SanitizePattern(SPELLDEFLECTEDSELFOTHER)
+  pfUI.debuffs.SPELLREFLECTSELFOTHER = SanitizePattern(SPELLREFLECTSELFOTHER)
+  pfUI.debuffs.SPELLPARRIEDSELFOTHER = SanitizePattern(SPELLPARRIEDSELFOTHER)
+  pfUI.debuffs.SPELLLOGABSORBSELFOTHER = SanitizePattern(SPELLLOGABSORBSELFOTHER)
 
   pfUI.debuffs.objects = {}
 
@@ -198,7 +198,6 @@ pfUI:RegisterModule("debuffs", function ()
   function pfUI.debuffs:AddEffect(unit, unitlevel, effect)
     if not unit or not effect then return end
     unitlevel = unitlevel or 0
-    --message("add effect " .. unit .. "("  .. unitlevel .. ") - " .. effect)
     if not pfUI.debuffs.objects[unit] then pfUI.debuffs.objects[unit] = {} end
     if not pfUI.debuffs.objects[unit][unitlevel] then pfUI.debuffs.objects[unit][unitlevel] = {} end
     if not pfUI.debuffs.objects[unit][unitlevel][effect] then pfUI.debuffs.objects[unit][unitlevel][effect] = {} end
