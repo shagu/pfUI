@@ -83,7 +83,7 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("unitframes", nil,           "portraittexture",  "1")
   pfUI:UpdateConfig("unitframes", nil,           "layout",           "default")
   pfUI:UpdateConfig("unitframes", nil,           "rangecheck",       "0")
-  pfUI:UpdateConfig("unitframes", nil,           "rangechecki",      ".5")
+  pfUI:UpdateConfig("unitframes", nil,           "rangechecki",      "1")
   pfUI:UpdateConfig("unitframes", nil,           "combosize",        "6")
   pfUI:UpdateConfig("unitframes", nil,           "abbrevnum",        "1")
 
