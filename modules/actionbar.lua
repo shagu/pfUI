@@ -58,26 +58,27 @@ pfUI:RegisterModule("actionbar", function ()
   local oldIsConsumableAction = IsConsumableAction
   _G.IsConsumableAction = function(slot)
     if oldIsConsumableAction(slot) then return true end
-
-    reagentslots[slot] = nil
-    reagentscan:SetAction(slot)
-    if (reagentscan:NumLines() ~=0) then
-      for i=1,reagentscan:NumLines() do
-        local line = getglobal("pfReagentScannerTextLeft" .. i)
-        if line then
-          line = line:GetText()
-          local _, start = strfind(line,SPELL_REAGENTS,1)
-          if start then
-            reagentslots[slot] = strsub(line,start+1)
-            this:RegisterEvent("BAG_UPDATE")
-            return true
+    if this and this.GetParent and ActionButton_GetPagedID(this) == slot then
+      reagentslots[slot] = nil
+      reagentscan:SetAction(slot)
+      if (reagentscan:NumLines() ~=0) then
+        for i=1,reagentscan:NumLines() do
+          local line = getglobal("pfReagentScannerTextLeft" .. i)
+          if line then
+            line = line:GetText()
+            local _, start = strfind(line,SPELL_REAGENTS,1)
+            if start then
+              reagentslots[slot] = strsub(line,start+1)
+              this:RegisterEvent("BAG_UPDATE")
+              return true
+            end
           end
         end
       end
-    end
 
-    this:UnregisterEvent("BAG_UPDATE")
-    return nil
+      this:UnregisterEvent("BAG_UPDATE")
+      return nil
+    end
   end
 
   local oldGetActionCount = GetActionCount
