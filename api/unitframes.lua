@@ -1294,6 +1294,24 @@ function pfUI.uf:SetupBuffFilter()
   end
 end
 
+function pfUI.uf:GetLevelString(unitstr)
+  local level = UnitLevel(unitstr)
+  if level == -1 then level = "??" end
+
+  local elite = UnitClassification(unitstr)
+  if elite == "worldboss" then
+    level = level .. "B"
+  elseif elite == "rareelite" then
+    level = level .. "R+"
+  elseif elite == "elite" then
+    level = level .. "+"
+  elseif elite == "rare" then
+    level = level .. "R"
+  end
+
+  return level
+end
+
 function pfUI.uf:GetStatusValue(unit, pos)
   if not pos or not unit then return end
   local config = unit.config["txt"..pos]
@@ -1306,30 +1324,13 @@ function pfUI.uf:GetStatusValue(unit, pos)
   end
 
   if config == "unit" then
-    local level = UnitLevel(unitstr)
-    if level == -1 then level = "??" end
-
-    local name = UnitName(unitstr)
-
-    local elite = UnitClassification(unitstr)
-    if elite == "worldboss" then
-      level = level .. "B"
-    elseif elite == "rareelite" then
-      level = level .. "R+"
-    elseif elite == "elite" then
-      level = level .. "+"
-    elseif elite == "rare" then
-      level = level .. "R"
-    end
-    level = unit:GetColor("level") .. level
-    name = unit:GetColor("unit") .. name
-
+    local name = unit:GetColor("unit") .. UnitName(unitstr)
+    local level = unit:GetColor("level") .. pfUI.uf:GetLevelString(unitstr)
     return level .. "  " .. name
-
   elseif config == "name" then
     return unit:GetColor("unit") .. UnitName(unitstr)
   elseif config == "level" then
-    return unit:GetColor("level") .. UnitLevel(unitstr)
+    return unit:GetColor("level") .. pfUI.uf:GetLevelString(unitstr)
   elseif config == "class" then
     return unit:GetColor("class") .. (UnitClass(unitstr) or UNKNOWN)
 
