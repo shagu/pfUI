@@ -470,6 +470,14 @@ pfUI:RegisterModule("gui", function ()
     "elysium:" .. T["Elysium Based Core"],
   }
 
+  pfUI.gui.dropdowns.minimap_cords_position = {
+    "topleft:" .. T["Top Left"],
+    "topright:" .. T["Top Right"],
+    "bottomleft:" .. T["Bottom Left"],
+    "bottomright:" .. T["Bottom Right"],
+    "off:" .. T["Disabled"]
+  }
+
   pfUI.gui.dropdowns.num_actionbar_buttons = BarLayoutOptions(NUM_ACTIONBAR_BUTTONS)
   pfUI.gui.dropdowns.num_shapeshift_slots = BarLayoutOptions(NUM_SHAPESHIFT_SLOTS)
   pfUI.gui.dropdowns.num_pet_action_slots = BarLayoutOptions(NUM_PET_ACTION_SLOTS)
@@ -1127,6 +1135,7 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.tabs.minimap.tabs.general:SetScript("OnShow", function()
     if not this.setup then
       CreateConfig(this, T["Enable Zone Text On Minimap Mouseover"], C.appearance.minimap, "mouseoverzone", "checkbox")
+      CreateConfig(this, T["Coordinates Location"], C.appearance.minimap, "coordsloc", "dropdown", pfUI.gui.dropdowns.minimap_cords_position)
       CreateConfig(this, T["Disable Minimap Buffs"], C.global, "hidebuff", "checkbox")
       CreateConfig(this, T["Disable Minimap Weapon Buffs"], C.global, "hidewbuff", "checkbox")
       CreateConfig(this, T["Show PvP Icon"], C.unitframes.player, "showPVPMinimap", "checkbox")

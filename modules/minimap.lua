@@ -84,9 +84,19 @@ pfUI:RegisterModule("minimap", function ()
 
   MiniMapTrackingFrame:SetFrameStrata("LOW")
 
-  -- Create coordinates text frame in bottom left corner of minimap
+  -- Create coordinates text frame with location configurable
   pfUI.minimapCoordinates = CreateFrame("Frame", "pfMinimapCoord", pfUI.minimap)
-  pfUI.minimapCoordinates:SetPoint("BOTTOMLEFT", 3, 3)
+
+  if C.appearance.minimap.coordsloc == "topleft" then
+    pfUI.minimapCoordinates:SetPoint("TOPLEFT", 3, -3)
+  elseif C.appearance.minimap.coordsloc == "topright" then
+    pfUI.minimapCoordinates:SetPoint("TOPRIGHT", -3, -3)
+  elseif C.appearance.minimap.coordsloc == "bottomright" then
+    pfUI.minimapCoordinates:SetPoint("BOTTOMRIGHT", -3, 3)
+  else
+    pfUI.minimapCoordinates:SetPoint("BOTTOMLEFT", 3, 3)
+  end
+
   pfUI.minimapCoordinates:SetHeight(C.global.font_size)
   pfUI.minimapCoordinates:SetWidth(Minimap:GetWidth())
   pfUI.minimapCoordinates:SetFrameStrata("BACKGROUND")
@@ -94,7 +104,13 @@ pfUI:RegisterModule("minimap", function ()
   pfUI.minimapCoordinates.text:SetFont(pfUI.font_default, C.global.font_size, "OUTLINE")
   pfUI.minimapCoordinates.text:SetTextColor(1,1,1,1)
   pfUI.minimapCoordinates.text:SetAllPoints(pfUI.minimapCoordinates)
-  pfUI.minimapCoordinates.text:SetJustifyH("LEFT")
+
+  if C.appearance.minimap.coordsloc == "topright" or C.appearance.minimap.coordsloc == "bottomright" then
+    pfUI.minimapCoordinates.text:SetJustifyH("RIGHT")
+  else
+    pfUI.minimapCoordinates.text:SetJustifyH("LEFT")
+  end
+
   pfUI.minimapCoordinates:Hide()
 
   -- Create zone text frame in top center of minimap
@@ -113,13 +129,15 @@ pfUI:RegisterModule("minimap", function ()
   -- Update and toggle showing of coordinates and zone text on mouse enter/leave
   Minimap:SetScript("OnEnter", function()
     SetMapToCurrentZone()
-    local posX, posY = GetPlayerMapPosition("player")
-    if posX ~= 0 and posY ~= 0 then
-      pfUI.minimapCoordinates.text:SetText(round(posX * 100, 1) .. ", " .. round(posY * 100, 1))
-    else
-      pfUI.minimapCoordinates.text:SetText("|cffffaaaaN/A")
+    if C.appearance.minimap.coordsloc ~= "off" then
+      local posX, posY = GetPlayerMapPosition("player")
+      if posX ~= 0 and posY ~= 0 then
+        pfUI.minimapCoordinates.text:SetText(round(posX * 100, 1) .. ", " .. round(posY * 100, 1))
+      else
+        pfUI.minimapCoordinates.text:SetText("|cffffaaaaN/A")
+      end
+      pfUI.minimapCoordinates:Show()
     end
-    pfUI.minimapCoordinates:Show()
 
     if C.appearance.minimap.mouseoverzone == "1" then
       local pvp, _, arena = GetZonePVPInfo()
