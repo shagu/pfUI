@@ -805,7 +805,7 @@ pfUI:RegisterModule("thirdparty", function ()
 
   do -- FlightMap Integration
     if C.thirdparty.flightmap.enable == "0" then return end
-    if not FlightMapTimesFrame and not FlightMapTimesFrame and not FlightMapTimesText then return end
+    if not FlightMapTimesBorder and not FlightMapTimesFrame and not FlightMapTimesText then return end
 
     FlightMapTimesBorder:Hide()
 
