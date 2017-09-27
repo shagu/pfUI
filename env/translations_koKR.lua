@@ -173,6 +173,7 @@ pfUI_translation["koKR"] = {
   ["Experience"] = "경험치",
   ["Fast"] = "빠르게",
   ["Firstrun"] = "첫번째 단계",
+  ["FlightMap"] = nil,
   ["Focus"] = "주시대상",
   ["Forward all whispers to:"] = "모든 귓속말을 다음으로 전달:",
   ["fps"] = "프레임",

@@ -1345,6 +1345,7 @@ pfUI:RegisterModule("gui", function ()
       CreateConfig(this, T["WIM"], C.thirdparty.wim, "enable", "checkbox")
       CreateConfig(this, T["HealComm"], C.thirdparty.healcomm, "enable", "checkbox")
       CreateConfig(this, T["CleanUp"], C.thirdparty.cleanup, "enable", "checkbox")
+      CreateConfig(this, T["FlightMap"], C.thirdparty.flightmap, "enable", "checkbox")
       this.setup = true
     end
   end)

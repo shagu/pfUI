@@ -802,4 +802,19 @@ pfUI:RegisterModule("thirdparty", function ()
       end)
     end
   end
+
+  do -- FlightMap Integration
+    if C.thirdparty.flightmap.enable == "0" then return end
+    if not FlightMapTimesFrame and not FlightMapTimesFrame and not FlightMapTimesText then return end
+
+    FlightMapTimesBorder:Hide()
+
+    FlightMapTimesFrame:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
+    FlightMapTimesFrame:SetHeight(18)
+    CreateBackdrop(FlightMapTimesFrame)
+
+    FlightMapTimesText:ClearAllPoints()
+    FlightMapTimesText:SetPoint("CENTER", FlightMapTimesFrame, "CENTER", 0, 0)
+    FlightMapTimesText:SetFont(pfUI.font_default, 12, "OUTLINE")
+  end
 end)

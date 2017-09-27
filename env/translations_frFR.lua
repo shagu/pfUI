@@ -173,6 +173,7 @@ pfUI_translation["frFR"] = {
   ["Exp"] = nil,
   ["Fast"] = "Rapide",
   ["Firstrun"] = "Premier lancement",
+  ["FlightMap"] = nil,
   ["Focus"] = "Focalisation",
   ["Forward all whispers to:"] = "Transférer tout les whisp à:",
   ["fps"] = nil,

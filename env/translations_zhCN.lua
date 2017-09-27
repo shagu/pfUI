@@ -173,6 +173,7 @@ pfUI_translation["zhCN"] = {
   ["Exp"] = "经验",
   ["Fast"] = "快速",
   ["Firstrun"] = "首次安装",
+  ["FlightMap"] = nil,
   ["Focus"] = "焦点目标",
   ["Forward all whispers to:"] = "转发密语至：",
   ["FPS & Ping"] = "帧数和延时",
