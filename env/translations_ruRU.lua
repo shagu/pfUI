@@ -173,6 +173,7 @@ pfUI_translation["ruRU"] = {
   ["Exp"] = "Опыт",
   ["Fast"] = "Быстро",
   ["Firstrun"] = "Первый запуск",
+  ["FlightMap"] = nil,
   ["Focus"] = "Фокус",
   ["Forward all whispers to:"] = "Направить все шепоты на:",
   ["fps"] = nil,

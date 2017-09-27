@@ -173,6 +173,7 @@ pfUI_translation["zhTW"] = {
   ["Exp"] = "經驗",
   ["Fast"] = "快速",
   ["Firstrun"] = "首次安裝",
+  ["FlightMap"] = nil,
   ["Focus"] = "焦點目標",
   ["Forward all whispers to:"] = "轉發密語至：",
   ["FPS & Ping"] = "幀數和延時",
