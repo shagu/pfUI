@@ -17,6 +17,378 @@ pfUI:RegisterModule("loot", function ()
     UpdateMovable(pfUI.loot)
   end
 
+  pfUI.loot.unitbuttons = {
+    ["PF_BANKLOOTER"] = {T["Set Banker"],"bankLooter"},
+    ["PF_DISENCHANTLOOTER"] = {T["Set Disenchanter"],"disenchantLooter"},
+  }
+  pfUI.loot.rollCapture = SanitizePattern(RANDOM_ROLL_RESULT)
+  pfUI.loot.me = (UnitName("player"))
+  pfUI.loot.index_to_name = {}
+  pfUI.loot.name_to_index = {}
+  pfUI.loot.classes_in_raid = {}
+  pfUI.loot.players_in_class = {}
+  pfUI.loot.randoms = {}
+  pfUI.loot.rollers = {}
+  pfUI.loot.rollers_sorted = {}
+  pfUI.loot.info = {}
+  local info = pfUI.loot.info
+
+  function pfUI.loot.RaidRoll(candidates)
+    if type(candidates) ~= "table" then return end
+    local slot = pfUI.loot.selectedSlot or 0
+    local to = table.getn(candidates)
+    if to >= 1 then
+      SendChatMessageWide(T["Random Rolling "]..GetLootSlotLink(slot))
+      local k,names = 1, ""
+      for i=1,to do
+        names = (k==1) and (i..":"..pfUI.loot.index_to_name[candidates[i]]) or (names..", "..i..":"..pfUI.loot.index_to_name[candidates[i]])
+        -- fit the maximum names in a single 255 char message (15)
+        if i == to or k == 15 then
+          QueueFunction(SendChatMessageWide,names)
+          names = ""
+        end
+        k = k<15 and k+1 or 1
+      end
+      pfUI.loot:RegisterEvent("CHAT_MSG_SYSTEM")
+      pfUI.loot.randomRolling = true
+      QueueFunction(RandomRoll,"1",tostring(to))
+    end
+  end
+
+  function pfUI.loot.RequestRolls()
+    local slot = pfUI.loot.selectedSlot or 0
+    local rollers = wipe(pfUI.loot.rollers)
+    local rollers_sorted = wipe(pfUI.loot.rollers_sorted)
+    SendChatMessageWide(T["Roll for"].. " " .. GetLootSlotLink(slot))
+    pfUI.loot:RegisterEvent("CHAT_MSG_SYSTEM")
+    pfUI.loot.monitorRolling = true
+    UIDropDownMenu_Refresh(GroupLootDropDown)
+  end
+
+  function pfUI.loot:BuildSpecialRecipientsMenu(level)
+    local slot = pfUI.loot.selectedSlot or 0
+    if level == 1 then
+      if pfUI.loot.my_index or pfUI.loot.disenchanter_index or pfUI.loot.banker_index then
+        info = wipe(info)
+        info.text = T["Special Recipient"]
+        info.textR = NORMAL_FONT_COLOR.r
+        info.textG = NORMAL_FONT_COLOR.g
+        info.textB = NORMAL_FONT_COLOR.b
+        info.textHeight = 12
+        info.hasArrow = 1
+        info.notCheckable = 1
+        info.value = "PFRECIPIENTS"
+        info.func = nil
+        UIDropDownMenu_AddButton(info)
+      end
+    elseif level == 2 then
+      if UIDROPDOWNMENU_MENU_VALUE == "PFRECIPIENTS" then
+        if (pfUI.loot.my_index) then
+          info = wipe(info)
+          info.text = T["Self"]
+          info.textHeight = 12
+          info.value = pfUI.loot.my_index
+          info.func = GroupLootDropDown_GiveLoot
+          UIDropDownMenu_AddButton(info,UIDROPDOWNMENU_MENU_LEVEL)
+        end
+        if (pfUI.loot.disenchanter_index) then
+          info = wipe(info)
+          info.text = T["Disenchanter"]
+          info.textHeight = 12
+          info.value = pfUI.loot.disenchanter_index
+          info.func = GroupLootDropDown_GiveLoot
+          UIDropDownMenu_AddButton(info,UIDROPDOWNMENU_MENU_LEVEL)
+        end
+        if (pfUI.loot.banker_index) then
+          info = wipe(info)
+          info.text = T["Banker"]
+          info.textHeight = 12
+          info.value = pfUI.loot.banker_index
+          info.func = GroupLootDropDown_GiveLoot
+          UIDropDownMenu_AddButton(info,UIDROPDOWNMENU_MENU_LEVEL)
+        end
+      end
+    end
+  end
+
+  function pfUI.loot.ClearRolls()
+    wipe(pfUI.loot.rollers)
+    wipe(pfUI.loot.rollers_sorted)
+    pfUI.loot.monitorRolling = nil
+    UIDropDownMenu_Refresh(GroupLootDropDown)
+  end
+
+  function pfUI.loot.CallTieRoll(rollers)
+    if type(rollers) ~= "table" then return end
+    local highroll
+    local ties = {}
+    local num_rollers = table.getn(rollers)
+    for i=1,num_rollers do
+      if rollers[i].value ~= "disabled" then
+        if highroll == nil then
+          highroll = rollers[i].roll
+          table.insert(ties,rollers[i])
+        elseif rollers[i].roll == highroll then
+          table.insert(ties,rollers[i])
+        end
+      end
+    end
+    local num_ties = table.getn(ties)
+    if num_ties > 1 then
+      local names = ""
+      for i=1, num_ties do
+        names = i==1 and (names..ties[i].who) or (names..", "..ties[i].who)
+      end
+      pfUI.loot:ClearRolls()
+      SendChatMessageWide(names.." "..T["Reroll"])
+      pfUI.loot:RegisterEvent("CHAT_MSG_SYSTEM")
+      pfUI.loot.monitorRolling = true
+    end
+    UIDropDownMenu_Refresh(GroupLootDropDown)
+  end
+
+  function pfUI.loot:BuildSpecialRollsMenu(level)
+    local slot = pfUI.loot.selectedSlot or 0
+    if level == 1 then
+      info = wipe(info)
+      info.text = T["Random"]
+      info.textR = NORMAL_FONT_COLOR.r
+      info.textG = NORMAL_FONT_COLOR.g
+      info.textB = NORMAL_FONT_COLOR.b
+      info.value = "PFRANDOM"
+      info.textHeight = 12
+      info.notCheckable = 1
+      info.arg1 = pfUI.loot.randoms
+      info.func = pfUI.loot.RaidRoll
+      UIDropDownMenu_AddButton(info)
+
+      info = wipe(info)
+      info.text = T["Request Rolls"]
+      info.textR = NORMAL_FONT_COLOR.r
+      info.textG = NORMAL_FONT_COLOR.g
+      info.textB = NORMAL_FONT_COLOR.b
+      info.value = "PFROLLS"
+      info.textHeight = 12
+      info.hasArrow = 1
+      info.notCheckable = 1
+      info.func = pfUI.loot.RequestRolls
+      UIDropDownMenu_AddButton(info)
+    elseif level == 2 then
+      if UIDROPDOWNMENU_MENU_VALUE == "PFROLLS" then
+        info = wipe(info)
+        info.text = T["Clear Rolls"]
+        info.textR = NORMAL_FONT_COLOR.r
+        info.textG = NORMAL_FONT_COLOR.g
+        info.textB = NORMAL_FONT_COLOR.b
+        info.value = "PFCLEARROLLS"
+        info.notCheckable = 1
+        info.func = pfUI.loot.ClearRolls
+        UIDropDownMenu_AddButton(info,UIDROPDOWNMENU_MENU_LEVEL)
+
+        info = wipe(info)
+        info.text = T["Reroll Ties"]
+        info.textR = NORMAL_FONT_COLOR.r
+        info.textG = NORMAL_FONT_COLOR.g
+        info.textB = NORMAL_FONT_COLOR.b
+        info.value = "PFTIEROLL"
+        info.notCheckable = 1
+        info.arg1 = pfUI.loot.rollers_sorted
+        info.func = pfUI.loot.CallTieRoll
+        UIDropDownMenu_AddButton(info,UIDROPDOWNMENU_MENU_LEVEL)
+        for _,roller in ipairs(pfUI.loot.rollers_sorted) do
+          info = wipe(info)
+          info.text = string.format("%02d - %s",roller.roll,roller.who)
+          info.textHeight = 12
+          if roller.value == "disabled" then
+            info.disabled = 1
+            info.value = "disabled"
+          else
+            info.value = roller.value
+            info.func = GroupLootDropDown_GiveLoot
+          end
+          info.notCheckable = 1
+          UIDropDownMenu_AddButton(info,UIDROPDOWNMENU_MENU_LEVEL)
+        end
+      end
+    end
+  end
+
+  function pfUI.loot:BuildRaidMenu(level)
+    local slot = pfUI.loot.selectedSlot or 0
+    local index_to_name = wipe(pfUI.loot.index_to_name)
+    local name_to_index = wipe(pfUI.loot.name_to_index)
+    local classes_in_raid = wipe(pfUI.loot.classes_in_raid) -- [global class]=localized class for display
+    local players_in_class = wipe(pfUI.loot.players_in_class)
+    local randoms = wipe(pfUI.loot.randoms)
+    pfUI.loot.my_index = false
+    pfUI.loot.disenchanter_index = false
+    pfUI.loot.banker_index = false
+    local disenchantLooter = pfUI.loot.disenchantLooter or ""
+    local bankLooter = pfUI.loot.bankLooter or ""
+    for i = 1, MAX_RAID_MEMBERS do -- masterlootcandidate index does not correspond with unit id index
+      local candidate = GetMasterLootCandidate(i)
+      if (candidate) then
+        index_to_name[i] = candidate
+        name_to_index[candidate] = i
+        randoms[table.getn(randoms)+1]=i
+        if candidate == pfUI.loot.me then
+          pfUI.loot.my_index = i
+        end
+        if candidate == disenchantLooter then
+          pfUI.loot.disenchanter_index = i
+        end
+        if candidate == bankLooter then
+          pfUI.loot.banker_index = i
+        end
+        local unit = GroupInfoByName(candidate,"raid")
+        classes_in_raid[unit.class] = unit.lclass
+        if players_in_class[unit.class] == nil then players_in_class[unit.class] = {} end
+        table.insert(players_in_class[unit.class],candidate)
+      end
+    end
+    if level == 1 then -- classes
+      info = wipe(info)
+      info.text = GIVE_LOOT
+      info.textHeight = 12
+      info.notCheckable = 1
+      info.isTitle = 1
+      UIDropDownMenu_AddButton(info)
+      for order, class in ipairs(CLASS_SORT_ORDER) do
+        local lclass = classes_in_raid[class]
+        if (lclass) then
+          info = wipe(info)
+          info.text = lclass
+          info.textR = RAID_CLASS_COLORS[class].r
+          info.textG = RAID_CLASS_COLORS[class].g
+          info.textB = RAID_CLASS_COLORS[class].b
+          info.textHeight = 12
+          info.hasArrow = 1
+          info.notCheckable = 1
+          info.value = class
+          info.func = nil
+          UIDropDownMenu_AddButton(info)
+        end
+      end
+      pfUI.loot:BuildSpecialRecipientsMenu(UIDROPDOWNMENU_MENU_LEVEL)
+      pfUI.loot:BuildSpecialRollsMenu(UIDROPDOWNMENU_MENU_LEVEL)
+    elseif level == 2 then -- players
+      local players = players_in_class[UIDROPDOWNMENU_MENU_VALUE]
+      if (players) and next(players) then
+        table.sort(players)
+        for _, candidate in ipairs(players) do
+          info = wipe(info)
+          info.text = candidate
+          info.textR = RAID_CLASS_COLORS[UIDROPDOWNMENU_MENU_VALUE].r
+          info.textG = RAID_CLASS_COLORS[UIDROPDOWNMENU_MENU_VALUE].g
+          info.textB = RAID_CLASS_COLORS[UIDROPDOWNMENU_MENU_VALUE].b
+          info.textHeight = 12
+          info.value = name_to_index[candidate]
+          info.func = GroupLootDropDown_GiveLoot
+          UIDropDownMenu_AddButton(info,UIDROPDOWNMENU_MENU_LEVEL)
+        end
+      end
+      pfUI.loot:BuildSpecialRecipientsMenu(UIDROPDOWNMENU_MENU_LEVEL)
+      pfUI.loot:BuildSpecialRollsMenu(UIDROPDOWNMENU_MENU_LEVEL)
+    end
+  end
+
+  function pfUI.loot:BuildPartyMenu(level)
+    local slot = pfUI.loot.selectedSlot or 0
+    if level == 1 then
+      for i=1, MAX_PARTY_MEMBERS+1, 1 do
+        local candidate = GetMasterLootCandidate(i)
+        if (candidate) then
+          info = wipe(info)
+          local unit = GroupInfoByName(candidate,"party")
+          info.text = candidate
+          info.textR = RAID_CLASS_COLORS[unit.class].r
+          info.textG = RAID_CLASS_COLORS[unit.class].g
+          info.textB = RAID_CLASS_COLORS[unit.class].b
+          info.textHeight = 12
+          info.value = i
+          info.func = GroupLootDropDown_GiveLoot
+          UIDropDownMenu_AddButton(info)
+        end
+      end
+    end
+  end
+
+  function pfUI.loot:InitGroupDropDown()
+    local inRaid = UnitInRaid("player")
+    if UIDROPDOWNMENU_MENU_LEVEL == 1 then
+      if ( inRaid ) then
+        pfUI.loot:BuildRaidMenu(UIDROPDOWNMENU_MENU_LEVEL)
+      else
+        pfUI.loot:BuildPartyMenu(UIDROPDOWNMENU_MENU_LEVEL)
+      end
+    elseif UIDROPDOWNMENU_MENU_LEVEL == 2 and (inRaid) then
+      pfUI.loot:BuildRaidMenu(UIDROPDOWNMENU_MENU_LEVEL)
+    end
+  end
+
+  function pfUI.loot:AddMasterLootMenus()
+    for index,value in ipairs(UnitPopupMenus["SELF"]) do
+      if value == "LOOT_PROMOTE" then
+        table.insert(UnitPopupMenus["SELF"],index+1,"PF_BANKLOOTER")
+        table.insert(UnitPopupMenus["SELF"],index+1,"PF_DISENCHANTLOOTER")
+      end
+    end
+    for index,value in ipairs(UnitPopupMenus["PARTY"]) do
+      if value == "LOOT_PROMOTE" then
+        table.insert(UnitPopupMenus["PARTY"],index+1,"PF_BANKLOOTER")
+        table.insert(UnitPopupMenus["PARTY"],index+1,"PF_DISENCHANTLOOTER")
+      end
+    end
+  end
+
+  function pfUI.loot:RemoveMasterlootMenus()
+    for index = table.getn(UnitPopupMenus["SELF"]),1,-1 do
+      if UnitPopupMenus["SELF"][index] == "PF_BANKLOOTER" or UnitPopupMenus["SELF"][index] == "PF_DISENCHANTLOOTER" then
+        table.remove(UnitPopupMenus["SELF"],index,value)
+      end
+    end
+    for index = table.getn(UnitPopupMenus["PARTY"]),1,-1 do
+      if UnitPopupMenus["PARTY"][index] == "PF_BANKLOOTER" or UnitPopupMenus["PARTY"][index] == "PF_DISENCHANTLOOTER" then
+        table.remove(UnitPopupMenus["PARTY"],index,value)
+      end
+    end
+  end
+
+  if C.loot.advancedloot == "1" then
+    UIDropDownMenu_Initialize(GroupLootDropDown, pfUI.loot.InitGroupDropDown, "MENU")
+    for button, data in pairs(pfUI.loot.unitbuttons) do
+      UnitPopupButtons[button] = { text = data[1], dist = 0}
+    end
+    pfUI.loot:RemoveMasterlootMenus() -- remove then add to ensure no duplicate menus
+    pfUI.loot:AddMasterLootMenus()
+    hooksecurefunc("UnitPopup_OnClick",function()
+      local dropdownFrame = getglobal(UIDROPDOWNMENU_INIT_MENU)
+      local button = this.value
+      local unit = dropdownFrame.unit
+      local name = dropdownFrame.name
+      if button and pfUI.loot.unitbuttons[button] then
+        if name then
+          -- resolves to pfUI.loot.bankLooter|disenchantLooter = name
+          pfUI.loot[pfUI.loot.unitbuttons[button][2]] = name
+        end
+      end
+    end)
+    hooksecurefunc("UnitPopup_HideButtons",function()
+      local dropdownFrame = getglobal(UIDROPDOWNMENU_INIT_MENU)
+      for index,value in pairs(UnitPopupMenus[dropdownFrame.which]) do
+        if pfUI.loot.unitbuttons[value] then
+          local method, lootmasterID = GetLootMethod()
+          if not (method == "master" and lootmasterID == 0) then
+            UnitPopupShown[index] = 0
+          end
+        end
+      end
+    end)
+  else
+    pfUI.loot:RemoveMasterlootMenus()
+    UIDropDownMenu_Initialize(GroupLootDropDown, GroupLootDropDown_Initialize, "MENU")
+  end
+
   pfUI.loot.slots = {}
   function pfUI.loot:UpdateLootFrame()
     local maxrarity, maxwidth = 0, 0
@@ -113,6 +485,9 @@ pfUI:RegisterModule("loot", function ()
       pfUI.loot.selectedSlot = this:GetID()
       pfUI.loot.selectedQuality = this.quality
       pfUI.loot.selectedItemName = this.name:GetText()
+      LootFrame.selectedSlot = pfUI.loot.selectedSlot
+      LootFrame.selectedQuality = pfUI.loot.selectedQuality
+      LootFrame.selectedItemName = pfUI.loot.selectedItemName
     end)
 
     frame:SetScript("OnEnter", function()
@@ -227,6 +602,36 @@ pfUI:RegisterModule("loot", function ()
       HideUIPanel(this)
       for _, v in pairs(this.slots) do
         v:Hide()
+      end
+    end
+
+    if event == "CHAT_MSG_SYSTEM" then
+      -- random rolling, check for our own roll
+      if pfUI.loot.randomRolling ~= nil then
+        local _, _, who, roll, from, to = string.find(arg1, pfUI.loot.rollCapture)
+        if (who) and  who == pfUI.loot.me then
+          local winner = tonumber(roll)
+          GiveMasterLoot(pfUI.loot.selectedSlot, pfUI.loot.randoms[winner])
+        end
+        pfUI.loot.randomRolling = nil
+      end
+      -- collecting rolls from raid, discard duplicates and 'cheating'
+      if pfUI.loot.monitorRolling ~= nil then
+        local _, _, who, roll, from, to = string.find(arg1, pfUI.loot.rollCapture)
+        if (who) and not pfUI.loot.rollers[who] then
+          if tonumber(from)==1 and tonumber(to)==100 then
+            if pfUI.loot.name_to_index[who] ~= nil then
+              pfUI.loot.rollers[who] = {roll=tonumber(roll),value=pfUI.loot.name_to_index[who]}
+            else -- not an eligible candidate for that item
+              pfUI.loot.rollers[who] = {roll=tonumber(roll),value="disabled"}
+            end
+            pfUI.loot.rollers_sorted[table.getn(pfUI.loot.rollers_sorted)+1]={who=who,roll=tonumber(roll),value=pfUI.loot.rollers[who].value}
+          end
+        end
+        table.sort(pfUI.loot.rollers_sorted,function(a,b)
+          return a.roll > b.roll
+        end)
+        QueueFunction(UIDropDownMenu_Refresh,GroupLootDropDown)
       end
     end
 
