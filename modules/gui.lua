@@ -1121,6 +1121,7 @@ pfUI:RegisterModule("gui", function ()
       CreateConfig(this, T["Enable Auto-Resize Loot Frame"], C.loot, "autoresize", "checkbox")
       CreateConfig(this, T["Disable Loot Confirmation Dialog (Without Group)"], C.loot, "autopickup", "checkbox")
       CreateConfig(this, T["Enable Loot Window On MouseCursor"], C.loot, "mousecursor", "checkbox")
+      CreateConfig(this, T["Enable \'by Class\' MasterLoot Menu (and extras)"], C.loot, "classmasterloot", "checkbox")
       this.setup = true
     end
   end)
