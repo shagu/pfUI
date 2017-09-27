@@ -1,3 +1,22 @@
+-- yeh yeh bunch of those don't exist in vanilla but
+-- when pfUI gets ported to an expansion that has this global table
+-- it'll use the global one anyway, future-proofing :)
+CLASS_SORT_ORDER = CLASS_SORT_ORDER or {
+  "WARRIOR",
+  "DEATHKNIGHT",
+  "PALADIN",
+  "MONK",
+  "PRIEST",
+  "SHAMAN",
+  "DRUID",
+  "ROGUE",
+  "MAGE",
+  "WARLOCK",
+  "HUNTER",
+  "DEMONHUNTER",
+  "UNKNOWN",
+}
+
 -- barlength = {[formfactor]={cols, rows}}
 pfGridmath = {
   [1] = {{1,1}},
