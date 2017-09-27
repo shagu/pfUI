@@ -66,6 +66,7 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("appearance", "bags",        "borderlimit",      "1")
   pfUI:UpdateConfig("appearance", "bags",        "borderonlygear",   "0")
   pfUI:UpdateConfig("appearance", "minimap",     "mouseoverzone",    "0")
+  pfUI:UpdateConfig("appearance", "minimap",     "coordsloc",        "bottomleft")
 
   pfUI:UpdateConfig("loot",       nil,           "autoresize",       "1")
   pfUI:UpdateConfig("loot",       nil,           "autopickup",       "1")
