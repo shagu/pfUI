@@ -76,7 +76,10 @@ pfUI:RegisterModule("unlock", function ()
           frame.drag.text:SetAllPoints(frame.drag)
           frame.drag.text:SetPoint("CENTER", 0, 0)
           frame.drag.text:SetFontObject(GameFontWhite)
-          local label = (strsub(frame:GetName(),3))
+          local label = frame:GetName()
+          -- Check if the frame name starts with pf if so remove it
+          local startsWithPf = string.sub(label, 1, string.len("pf")) == "pf"
+          if startsWithPf then label = (strsub(frame:GetName(),3)) end
           if frame.drag:GetHeight() > (2 * frame.drag:GetWidth()) then
             label = strvertical(label)
           end
