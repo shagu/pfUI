@@ -805,9 +805,10 @@ pfUI:RegisterModule("thirdparty", function ()
 
   do -- FlightMap Integration
     if C.thirdparty.flightmap.enable == "0" then return end
-    if not FlightMapTimesBorder and not FlightMapTimesFrame and not FlightMapTimesText then return end
+    if not FlightMapTimesBorder and not FlightMapTimesFlash and not FlightMapTimesFrame and not FlightMapTimesText then return end
 
     FlightMapTimesBorder:Hide()
+    FlightMapTimesFlash:Hide()
 
     FlightMapTimesFrame:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
     FlightMapTimesFrame:SetHeight(18)
