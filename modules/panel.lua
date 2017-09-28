@@ -647,6 +647,8 @@ pfUI:RegisterModule("panel", function ()
   pfUI.panel.minimap.text:SetPoint("CENTER", 0, 0)
   pfUI.panel.minimap.text:SetFontObject(GameFontWhite)
 
+  if C.panel.other.minimap == "none" then pfUI.panel.minimap:Hide() end
+
   -- MicroButtons
   if C.panel.micro.enable == "1" then
     pfUI.panel.microbutton = CreateFrame("Frame", "pfPanelMicroButton", UIParent)
