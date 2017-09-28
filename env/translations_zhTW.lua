@@ -168,7 +168,6 @@ pfUI_translation["zhTW"] = {
   ["Enable Target Switch Animation"] = "啟用目標切換動畫",
   ["Enable Timestamps"] = "啟用時間戳記",
   ["Enable URL Detection"] = "啟用超連結檢測",
-  ["Enable Zone Text On Minimap Mouseover"] = "滑鼠懸停時顯示區域名稱",
   ["Experience"] = "經驗值",
   ["Exp"] = "經驗",
   ["Fast"] = "快速",

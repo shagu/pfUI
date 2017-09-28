@@ -168,7 +168,6 @@ pfUI_translation["frFR"] = {
   ["Enable Target Switch Animation"] = "Activer l'animation au changement de cible",
   ["Enable Timestamps"] = "Activer les horaires de discussion",
   ["Enable URL Detection"] = "Activer la détection des adresses URL",
-  ["Enable Zone Text On Minimap Mouseover"] = "Activer l'affichage du nom de zone au survol de la minicarte",
   ["Experience"] = "Expérience",
   ["Exp"] = nil,
   ["Fast"] = "Rapide",

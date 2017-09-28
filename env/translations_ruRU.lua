@@ -168,7 +168,6 @@ pfUI_translation["ruRU"] = {
   ["Enable Target Switch Animation"] = "Включить анимацию переключения цели",
   ["Enable Timestamps"] = "Включить отметки времени",
   ["Enable URL Detection"] = "Включить обнаружение URL",
-  ["Enable Zone Text On Minimap Mouseover"] = "Включить текст зоны на миникарте при наведении мыши",
   ["Experience"] = "Опыт",
   ["Exp"] = "Опыт",
   ["Fast"] = "Быстро",

@@ -168,7 +168,6 @@ pfUI_translation["enUS"] = {
   ["Enable Target Switch Animation"] = nil,
   ["Enable Timestamps"] = nil,
   ["Enable URL Detection"] = nil,
-  ["Enable Zone Text On Minimap Mouseover"] = nil,
   ["Experience"] = nil,
   ["Exp"] = nil,
   ["Fast"] = nil,
