@@ -184,9 +184,68 @@ function pfUI.api.Abbreviate(number)
   return number
 end
 
+-- [ SendChatMessageWide ]
+-- Sends a message to widest audience the player can broadcast to
+-- 'msg'        [string]          the message to send
+function pfUI.api.SendChatMessageWide(msg)
+  local channel = "SAY"
+  if UnitInRaid("player") then 
+    channel = "RAID"
+  elseif UnitExists("party1") then
+    channel = "PARTY"
+  end
+  SendChatMessage(msg,channel)
+end
+
+-- [ GroupInfoByName ]
+-- Gets the unit id by name
+-- 'name'       [string]          party or raid member
+-- 'group'      [string]          "raid" or "party"
+-- returns:     [table]           {name='name',unitId='unitId',Id=Id,lclass='lclass',class='class'}
+do -- create a scope so we don't have to worry about upvalue collisions
+  local party, raid, unitinfo = {}, {}, {}
+  party[0] = "player" -- fake unit
+  for i=1, MAX_PARTY_MEMBERS do
+    party[i] = "party"..i
+  end
+  for i=1, MAX_RAID_MEMBERS do
+    raid[i] = "raid"..i
+  end
+  function pfUI.api.GroupInfoByName(name,group)
+    unitinfo = pfUI.api.wipe(unitinfo)
+    if group == "party" then
+      for i=0, MAX_PARTY_MEMBERS do
+        local unitName = UnitName(party[i])
+        if unitName == name then
+          local lclass,class = UnitClass(party[i])
+          if not (lclass and class) then
+            lclass,class = _G.UNKNOWN, "UNKNOWN"
+          end
+          unitinfo.name,unitinfo.unitId,unitinfo.Id,unitinfo.lclass,unitinfo.class = 
+            unitName,party[i],i,lclass,class
+          return unitinfo
+        end
+      end
+    elseif group == "raid" then
+      for i=1, MAX_RAID_MEMBERS do
+        local unitName = UnitName(raid[i])
+        if unitName == name then
+          local lclass,class = UnitClass(raid[i])
+          if not (lclass and class) then
+            lclass,class = _G.UNKNOWN, "UNKNOWN"
+          end
+          unitinfo.name,unitinfo.unitId,unitinfo.Id,unitinfo.lclass,unitinfo.class = 
+            unitName,raid[i],i,lclass,class
+          return unitinfo        
+        end
+      end
+    end
+  end  
+end
+
 -- [ hooksecurefunc ]
 -- Hooks a global function and injects custom code
--- 'name'       [string]           name of the function that shold be hooked
+-- 'name'       [string]           name of the function that should be hooked
 -- 'func'       [function]         function containing the custom code
 -- 'append'     [bool]             optional variable, used to append custom
 --                                 code instead of prepending it
@@ -210,6 +269,43 @@ function pfUI.api.hooksecurefunc(name, func, append)
   end
 
   _G[name] = pfUI.hooks[tostring(func)]["function"]
+end
+
+-- [ QueueFunction ]
+-- Add functions to a FIFO queue for execution after a short delay.
+-- '...'        [vararg]        function, [arguments]
+local timer
+function pfUI.api.QueueFunction(...)
+  if not (timer) then
+    timer = CreateFrame("frame")
+    timer.queue = {}
+    timer.interval = TOOLTIP_UPDATE_TIME
+    timer.DeQueue = function()
+      local item = table.remove(timer.queue,1)
+      if (item) then
+        item[1](unpack(item[2]))
+      end
+      if table.getn(timer.queue) == 0 then
+        timer:Hide() -- no need to run the OnUpdate when the queue is empty
+      end
+    end    
+    timer:SetScript("OnUpdate",function()
+      this.sinceLast = (this.sinceLast or 0) + arg1
+      while (this.sinceLast > this.interval) do
+        this.DeQueue()
+        this.sinceLast = this.sinceLast - this.interval
+      end
+    end)
+  end
+  assert(type(arg[1])=="function","QueueFunction: arg1 is not a function")
+  local func = arg[1]
+  local args
+  for i=2,arg.n do
+    args = args or {}
+    table.insert(args,arg[i])
+  end
+  table.insert(timer.queue,{func,args})
+  timer:Show() -- start the OnUpdate
 end
 
 -- [ Create Gold String ]
@@ -302,6 +398,27 @@ function pfUI.api.CopyTable(src)
     return setmetatable(new_table, getmetatable(src))
   end
   return _copy(src)
+end
+
+-- [ Wipe Table ]
+-- Empties a table and returns it
+-- 'src'      [table]         the table that should be emptied.
+-- return:    [table]         the emptied table.
+function pfUI.api.wipe(src)
+  -- notes: table.insert, table.remove will have undefined behavior
+  -- when used on tables emptied this way because Lua removes nil
+  -- entries from tables after an indeterminate time.
+  -- Instead of table.insert(t,v) use t[table.getn(t)+1]=v as table.getn collapses nil entries.
+  -- There are no issues with hash tables, t[k]=v where k is not a number behaves as expected.
+  local mt = getmetatable(src) or {}
+  if mt.__mode == nil or mt.__mode ~= "kv" then
+    mt.__mode = "kv"
+    src=setmetatable(src,mt)
+  end
+  for k in pairs(src) do
+    src[k] = nil
+  end
+  return src
 end
 
 -- [ Update Movable ]
