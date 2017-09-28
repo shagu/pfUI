@@ -17,7 +17,11 @@ pfUI:RegisterModule("loot", function ()
     UpdateMovable(pfUI.loot)
   end
 
-  pfUI.loot.rollCapture = string.gsub(string.gsub(string.gsub(RANDOM_ROLL_RESULT, "[()]", "."), "%%s", "([^ ]+)") , "%%d", "(%%d+)")
+  pfUI.loot.unitbuttons = {
+    ["PF_BANKLOOTER"] = {T["Set Banker"],"bankLooter"},
+    ["PF_DISENCHANTLOOTER"] = {T["Set Disenchanter"],"disenchantLooter"},
+  }
+  pfUI.loot.rollCapture = SanitizePattern(RANDOM_ROLL_RESULT)
   pfUI.loot.me = (UnitName("player"))
   pfUI.loot.index_to_name = {}
   pfUI.loot.name_to_index = {}
@@ -27,40 +31,40 @@ pfUI:RegisterModule("loot", function ()
   pfUI.loot.rollers = {}
   pfUI.loot.rollers_sorted = {}
   pfUI.loot.info = {}
-  local info = pfUI.loot.info
+  local info = pfUI.loot.info  
 
   function pfUI.loot.RaidRoll(candidates)
     if type(candidates)~="table" then return end
     local slot = pfUI.loot.selectedSlot or 0
     local to = table.getn(candidates)
     if to >= 1 then
-      widestAudience(T["Random Rolling "]..GetLootSlotLink(slot))
+      SendChatMessageWide(T["Random Rolling "]..GetLootSlotLink(slot))
       local k,names = 1, ""
       for i=1,to do
         names = (k==1) and (i..":"..pfUI.loot.index_to_name[candidates[i]]) or (names..", "..i..":"..pfUI.loot.index_to_name[candidates[i]])
-        -- maximum names that can fit in a single message is 15
-        -- 255 is max msg len, 17 = max name len (12 the actual name + 5 for 'id:' and ', ' decorations)
-        -- 255/17 = 15
-        -- try to fit as many names as possible to each line to avoid getting muted for spam.
+        -- fit the maximum names in a single 255 char message (15)
         if i == to or k == 15 then 
-          EnQueue(widestAudience,names)
+          QueueFunction(SendChatMessageWide,names)
+          names=""
         end
         k = k<15 and k+1 or 1
       end
       pfUI.loot:RegisterEvent("CHAT_MSG_SYSTEM")
       pfUI.loot.randomRolling = true
-      EnQueue(RandomRoll,"1",tostring(to))
+      QueueFunction(RandomRoll,"1",tostring(to))
     end
   end
+
   function pfUI.loot.RequestRolls()
     local slot = pfUI.loot.selectedSlot or 0
     local rollers = wipe(pfUI.loot.rollers)
     local rollers_sorted = wipe(pfUI.loot.rollers_sorted)
-    widestAudience(T["Roll for "]..GetLootSlotLink(slot))
+    SendChatMessageWide(T["Roll for "]..GetLootSlotLink(slot))
     pfUI.loot:RegisterEvent("CHAT_MSG_SYSTEM")
     pfUI.loot.monitorRolling = true
     UIDropDownMenu_Refresh(GroupLootDropDown)
   end
+
   function pfUI.loot:BuildSpecialRecipientsMenu(level)
     local slot = pfUI.loot.selectedSlot or 0
     if level == 1 then
@@ -106,12 +110,14 @@ pfUI:RegisterModule("loot", function ()
       end
     end
   end
+
   function pfUI.loot.ClearRolls()
     wipe(pfUI.loot.rollers)
     wipe(pfUI.loot.rollers_sorted)
     pfUI.loot.monitorRolling = nil
     UIDropDownMenu_Refresh(GroupLootDropDown)
   end
+
   function pfUI.loot.CallTieRoll(rollers)
     if type(rollers)~="table" then return end
     local highroll
@@ -134,12 +140,13 @@ pfUI:RegisterModule("loot", function ()
         names = i==1 and (names..ties[i].who) or (names..", "..ties[i].who)
       end
       pfUI.loot:ClearRolls()
-      widestAudience(names.." "..T["Reroll"])
+      SendChatMessageWide(names.." "..T["Reroll"])
       pfUI.loot:RegisterEvent("CHAT_MSG_SYSTEM")
       pfUI.loot.monitorRolling = true
     end
     UIDropDownMenu_Refresh(GroupLootDropDown)
   end
+
   function pfUI.loot:BuildSpecialRollsMenu(level)
     local slot = pfUI.loot.selectedSlot or 0
     if level == 1 then
@@ -205,11 +212,12 @@ pfUI:RegisterModule("loot", function ()
       end
     end
   end
+
   function pfUI.loot:BuildRaidMenu(level)
     local slot = pfUI.loot.selectedSlot or 0
     local index_to_name = wipe(pfUI.loot.index_to_name)
     local name_to_index = wipe(pfUI.loot.name_to_index)
-    local classes_in_raid = wipe(pfUI.loot.classes_in_raid) -- key global class, value localized class for display
+    local classes_in_raid = wipe(pfUI.loot.classes_in_raid) -- [global class]=localized class for display
     local players_in_class = wipe(pfUI.loot.players_in_class)
     local randoms = wipe(pfUI.loot.randoms)
     pfUI.loot.my_index = false
@@ -261,11 +269,8 @@ pfUI:RegisterModule("loot", function ()
           UIDropDownMenu_AddButton(info)
         end
       end
-      -- self, disenchanter, banker
       pfUI.loot:BuildSpecialRecipientsMenu(UIDROPDOWNMENU_MENU_LEVEL)
-      -- raid rolling, roll capture
       pfUI.loot:BuildSpecialRollsMenu(UIDROPDOWNMENU_MENU_LEVEL)
-
     elseif level == 2 then -- players
       local players = players_in_class[UIDROPDOWNMENU_MENU_VALUE]
       if (players) and next(players) then
@@ -286,6 +291,7 @@ pfUI:RegisterModule("loot", function ()
       pfUI.loot:BuildSpecialRollsMenu(UIDROPDOWNMENU_MENU_LEVEL)
     end
   end
+
   function pfUI.loot:BuildPartyMenu(level)
     local slot = pfUI.loot.selectedSlot or 0
     if level == 1 then
@@ -306,20 +312,20 @@ pfUI:RegisterModule("loot", function ()
       end
     end
   end
+
   function pfUI.loot:InitGroupDropDown()
     local inRaid = UnitInRaid("player")
     if UIDROPDOWNMENU_MENU_LEVEL == 1 then
       if ( inRaid ) then
-        -- by class masterloot menu
         pfUI.loot:BuildRaidMenu(UIDROPDOWNMENU_MENU_LEVEL)
       else
         pfUI.loot:BuildPartyMenu(UIDROPDOWNMENU_MENU_LEVEL)
       end
-      
     elseif UIDROPDOWNMENU_MENU_LEVEL == 2 and (inRaid) then
       pfUI.loot:BuildRaidMenu(UIDROPDOWNMENU_MENU_LEVEL)
     end    
   end
+
   function pfUI.loot:AddMasterLootMenus()
     for index,value in ipairs(UnitPopupMenus["SELF"]) do
       if value == "LOOT_PROMOTE" then
@@ -334,6 +340,7 @@ pfUI:RegisterModule("loot", function ()
       end
     end
   end
+
   function pfUI.loot:RemoveMasterlootMenus()
     for index = table.getn(UnitPopupMenus["SELF"]),1,-1 do
       if UnitPopupMenus["SELF"][index] == "PF_BANKLOOTER" or UnitPopupMenus["SELF"][index] == "PF_DISENCHANTLOOTER" then
@@ -346,17 +353,14 @@ pfUI:RegisterModule("loot", function ()
       end
     end    
   end
-  pfUI.loot.unitbuttons = {
-    ["PF_BANKLOOTER"] = {T["Set Banker"],"bankLooter"},
-    ["PF_DISENCHANTLOOTER"] = {T["Set Disenchanter"],"disenchantLooter"},
-  }
-  if C.loot.classmasterloot == "1" then
+
+  if C.loot.advancedmasterloot == "1" then
     UIDropDownMenu_Initialize(GroupLootDropDown, pfUI.loot.InitGroupDropDown, "MENU")
     for button, data in pairs(pfUI.loot.unitbuttons) do
       UnitPopupButtons[button] = { text = data[1], dist = 0}
     end
-    pfUI.loot:RemoveMasterlootMenus() -- removing then adding ensures
-    pfUI.loot:AddMasterLootMenus() -- we only have 1 entry for each
+    pfUI.loot:RemoveMasterlootMenus() -- remove then add to ensure no duplicate menus
+    pfUI.loot:AddMasterLootMenus()
     hooksecurefunc("UnitPopup_OnClick",function()
       local dropdownFrame = getglobal(UIDROPDOWNMENU_INIT_MENU)
       local button = this.value
@@ -364,7 +368,7 @@ pfUI:RegisterModule("loot", function ()
       local name = dropdownFrame.name
       if button and pfUI.loot.unitbuttons[button] then
         if name then 
-          -- pfUI.loot.bankLooter|disenchantLooter = name
+          -- resolves to pfUI.loot.bankLooter|disenchantLooter = name
           pfUI.loot[pfUI.loot.unitbuttons[button][2]] = name
         end
       end
@@ -380,8 +384,7 @@ pfUI:RegisterModule("loot", function ()
         end
       end
     end)
-  else -- we can't unhook functions gracefully without a significant rewrite of the hooking api
-    -- so just remove the unit menus
+  else
     pfUI.loot:RemoveMasterlootMenus()
     UIDropDownMenu_Initialize(GroupLootDropDown, GroupLootDropDown_Initialize, "MENU")
   end
@@ -603,7 +606,7 @@ pfUI:RegisterModule("loot", function ()
     end
 
     if event == "CHAT_MSG_SYSTEM" then
-      -- we're random rolling, check for our own roll
+      -- random rolling, check for our own roll
       if pfUI.loot.randomRolling ~= nil then 
         local _, _, who, roll, from, to = string.find(arg1, pfUI.loot.rollCapture)
         if (who) and  who == pfUI.loot.me then
@@ -612,7 +615,7 @@ pfUI:RegisterModule("loot", function ()
         end
         pfUI.loot.randomRolling = nil
       end
-      -- we're listening for rolls from raid, collect all rolls, discard duplicates and 'cheating'
+      -- collecting rolls from raid, discard duplicates and 'cheating'
       if pfUI.loot.monitorRolling ~= nil then
         local _, _, who, roll, from, to = string.find(arg1, pfUI.loot.rollCapture)
         if (who) and not pfUI.loot.rollers[who] then
@@ -628,7 +631,7 @@ pfUI:RegisterModule("loot", function ()
         table.sort(pfUI.loot.rollers_sorted,function(a,b)
           return a.roll > b.roll
         end)
-        EnQueue(UIDropDownMenu_Refresh,GroupLootDropDown)
+        QueueFunction(UIDropDownMenu_Refresh,GroupLootDropDown)
       end
     end
 

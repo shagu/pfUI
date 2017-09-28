@@ -184,19 +184,14 @@ function pfUI.api.Abbreviate(number)
   return number
 end
 
--- [ Widest Audience ]
--- Sends a message to highest channel the player can broadcast to
+-- [ SendChatMessageWide ]
+-- Sends a message to widest audience the player can broadcast to
 -- 'msg'        [string]          the message to send
-function pfUI.api.widestAudience(msg)
+function pfUI.api.SendChatMessageWide(msg)
   local channel = "SAY"
   if UnitInRaid("player") then 
-  -- Roadblock: maybe RW too spammy, try with just RAID
-    --[[if (IsPartyLeader() or IsRaidOfficer()) then
-      channel = "RAID_WARNING"
-    else]]
-      channel = "RAID"
-    --end
-  elseif UnitInParty("player") then
+    channel = "RAID"
+  elseif UnitExists("party1") then
     channel = "PARTY"
   end
   SendChatMessage(msg,channel)
@@ -276,11 +271,11 @@ function pfUI.api.hooksecurefunc(name, func, append)
   _G[name] = pfUI.hooks[tostring(func)]["function"]
 end
 
--- [ EnQueue ]
+-- [ QueueFunction ]
 -- Add functions to a FIFO queue for execution after a short delay.
 -- '...'        [vararg]        function, [arguments]
 local timer
-function pfUI.api.EnQueue(...)
+function pfUI.api.QueueFunction(...)
   if not (timer) then
     timer = CreateFrame("frame")
     timer.queue = {}
@@ -302,7 +297,7 @@ function pfUI.api.EnQueue(...)
       end
     end)
   end
-  assert(type(arg[1])=="function","EnQueue: arg1 not a function")
+  assert(type(arg[1])=="function","QueueFunction: arg1 is not a function")
   local func = arg[1]
   local args
   for i=2,arg.n do
@@ -410,6 +405,11 @@ end
 -- 'src'      [table]         the table that should be emptied.
 -- return:    [table]         the emptied table.
 function pfUI.api.wipe(src)
+  -- notes: table.insert, table.remove will have undefined behavior
+  -- when used on tables emptied this way because Lua removes nil
+  -- entries from tables after an indeterminate time.
+  -- Instead of table.insert(t,v) use t[table.getn(t)+1]=v as table.getn collapses nil entries.
+  -- There are no issues with hash tables, t[k]=v where k is not a number behaves as expected.
   local mt = getmetatable(src) or {}
   if mt.__mode == nil or mt.__mode ~= "kv" then
     mt.__mode = "kv"

@@ -150,6 +150,7 @@ pfUI_translation["esES"] = {
   ["Enable Level Color in Text"] = nil,
   ["Enable \"Loot & Spam\" Chat Window"] = nil,
   ["Enable Loot Window On MouseCursor"] = nil,
+  ["Enable Advanced Master Loot Menu"] = nil,
   ["Enable Micro Bar"] = nil,
   ["Enable Mouselook With Right Click"] = nil,
   ["Enable Offscreen Frame Positions"] = nil,
