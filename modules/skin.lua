@@ -112,6 +112,29 @@ pfUI:RegisterModule("skin", function ()
     end
   end
 
+  UIOptionsFrame:SetScript("OnShow", function()
+    -- default events
+    UIOptionsFrame_Load();
+    MultiActionBar_Update();
+    MultiActionBar_ShowAllGrids();
+    Disable_BagButtons();
+    UpdateMicroButtons();
+
+    -- customize
+    UIOptionsBlackground:Hide()
+
+    UIOptionsFrame:SetMovable(true)
+    UIOptionsFrame:EnableMouse(true)
+    UIOptionsFrame:SetScale(.8)
+    UIOptionsFrame:SetScript("OnMouseDown",function()
+      UIOptionsFrame:StartMoving()
+    end)
+
+    UIOptionsFrame:SetScript("OnMouseUp",function()
+      UIOptionsFrame:StopMovingOrSizing()
+    end)
+  end)
+
   -- due to the fontsize, the auctionhouse dropdown menu is misplaced.
   -- This hackfix rearranges it, by setting the width of it, as soon as
   -- the auctionhouse window is ready to get hooked.
