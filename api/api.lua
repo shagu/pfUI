@@ -89,13 +89,14 @@ end
 -- Sanitizes and convert patterns into gfind compatible ones.
 -- 'pattern'    [string]         unformatted pattern
 -- returns:     [string]         simplified gfind compatible pattern
-function SanitizePattern(pattern)
+function pfUI.api.SanitizePattern(pattern)
   -- escape brackets
   pattern = gsub(pattern, "%(", "%%(")
   pattern = gsub(pattern, "%)", "%%)")
 
   -- remove bad capture indexes
   pattern = gsub(pattern, "%d%$s","s") -- %1$s to %s
+  pattern = gsub(pattern, "%d%$d","d") -- %1$d to %d
   pattern = gsub(pattern, "%ds","s") -- %2s to %s
 
   -- add capture to all findings
