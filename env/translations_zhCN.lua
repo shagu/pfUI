@@ -168,7 +168,6 @@ pfUI_translation["zhCN"] = {
   ["Enable Target Switch Animation"] = "启用目标切换动画",
   ["Enable Timestamps"] = "启用时间戳",
   ["Enable URL Detection"] = "启用超链接检测",
-  ["Enable Zone Text On Minimap Mouseover"] = "鼠标悬停时显示区域名称",
   ["Experience"] = "经验值",
   ["Exp"] = "经验",
   ["Fast"] = "快速",

@@ -168,7 +168,6 @@ pfUI_translation["koKR"] = {
   ["Enable Target Switch Animation"] = "대상 전환 애니메이션 사용",
   ["Enable Timestamps"] = "시간표시 사용",
   ["Enable URL Detection"] = "URL 감시 사용",
-  ["Enable Zone Text On Minimap Mouseover"] = "미니맵 마우스 오버시 지역보기 사용",
   ["Exp"] = "경험치",
   ["Experience"] = "경험치",
   ["Fast"] = "빠르게",

@@ -139,7 +139,7 @@ pfUI:RegisterModule("minimap", function ()
       pfUI.minimapCoordinates:Show()
     end
 
-    if C.appearance.minimap.mouseoverzone == "1" then
+    if C.appearance.minimap.zoneloc == "highlighttext" or C.appearance.minimap.zoneloc == "both" then
       local pvp, _, arena = GetZonePVPInfo()
       if arena then
         pfUI.minimapZone.text:SetTextColor(1.0, 0.1, 0.1)
