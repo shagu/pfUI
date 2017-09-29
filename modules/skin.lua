@@ -125,7 +125,19 @@ pfUI:RegisterModule("skin", function ()
 
     UIOptionsFrame:SetMovable(true)
     UIOptionsFrame:EnableMouse(true)
+
+    UIOptionsFrame:ClearAllPoints()
+    UIOptionsFrame:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
+    UIOptionsFrame:SetWidth(BasicOptions:GetWidth())
+    UIOptionsFrame:SetHeight(BasicOptions:GetHeight())
     UIOptionsFrame:SetScale(.8)
+
+    CreateBackdrop(UIOptionsFrame, nil, false, .9)
+
+    for i,v in ipairs({UIOptionsFrame:GetRegions()}) do
+      if v.SetTexture then v:SetTexture("") end
+    end
+
     UIOptionsFrame:SetScript("OnMouseDown",function()
       UIOptionsFrame:StartMoving()
     end)
