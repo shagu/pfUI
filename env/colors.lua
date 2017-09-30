@@ -17,8 +17,11 @@ function pfUI.environment:UpdateColors()
     ["PRIEST"]  = { r = 1,    g = 1,    b = 1,    colorStr = "ffffffff" },
     ["WARLOCK"] = { r = 0.58, g = 0.51, b = 0.79, colorStr = "ff9482c9" },
     ["PALADIN"] = { r = 0.96, g = 0.55, b = 0.73, colorStr = "fff58cba" },
-    ["UNKNOWN"] = { r = 0.6,  g = 0.6,  b = 0.6,  colorStr = "ff999999" }
   }
+
+  RAID_CLASS_COLORS = setmetatable(RAID_CLASS_COLORS, { __index = function(tab,key)
+    return { r = 0.6,  g = 0.6,  b = 0.6,  colorStr = "ff999999" }
+  end})
 end
 
 -- run environment update
