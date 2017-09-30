@@ -480,6 +480,7 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("chat",       "global",      "sticky",           "1")
   pfUI:UpdateConfig("chat",       "global",      "fadeout",          "0")
   pfUI:UpdateConfig("chat",       "global",      "fadetime",         "300")
+  pfUI:UpdateConfig("chat",       "global",      "scrollspeed",      "1")
 
   pfUI:UpdateConfig("nameplates", nil,           "use_unitfonts",    "0")
   pfUI:UpdateConfig("nameplates", nil,           "overlap",          "0")

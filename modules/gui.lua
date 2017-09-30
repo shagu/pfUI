@@ -1293,6 +1293,7 @@ pfUI:RegisterModule("gui", function ()
       CreateConfig(this, T["Enable Sticky Chat"], C.chat.global, "sticky", "checkbox")
       CreateConfig(this, T["Enable Chat Fade"], C.chat.global, "fadeout", "checkbox")
       CreateConfig(this, T["Seconds Before Chat Fade"], C.chat.global, "fadetime")
+      CreateConfig(this, T["Mousewheel Scroll Speed"], C.chat.global, "scrollspeed")
       this.setup = true
     end
   end)

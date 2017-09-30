@@ -387,13 +387,17 @@ pfUI:RegisterModule("chat", function ()
           if IsShiftKeyDown() then
             frame:ScrollToTop()
           else
-            frame:ScrollUp()
+            for i=1, C.chat.global.scrollspeed do
+              frame:ScrollUp()
+            end
           end
         elseif (arg1 < 0) then
           if IsShiftKeyDown() then
             frame:ScrollToBottom()
           else
-            frame:ScrollDown()
+            for i=1, C.chat.global.scrollspeed do
+              frame:ScrollDown()
+            end
           end
         end
       end)
