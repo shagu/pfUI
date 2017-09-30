@@ -483,14 +483,14 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.dropdowns.num_pet_action_slots = BarLayoutOptions(NUM_PET_ACTION_SLOTS)
 
   -- main tab frame
-  pfUI.gui.tabs = ui:CreateTabFrame(pfUI.gui, "LEFT")
+  pfUI.gui.tabs = CreateTabFrame(pfUI.gui, "LEFT")
   pfUI.gui.tabs:SetPoint("TOPLEFT", pfUI.gui, "TOPLEFT", 0, -25)
   pfUI.gui.tabs:SetPoint("BOTTOMRIGHT", pfUI.gui, "BOTTOMRIGHT", 0, 0)
 
 
   -- [[ Settings ]]
   pfUI.gui.tabs.settings = pfUI.gui.tabs:CreateTabChild(T["Settings"], nil, nil, nil, true)
-  pfUI.gui.tabs.settings.tabs = ui:CreateTabFrame(pfUI.gui.tabs.settings, "TOP", true)
+  pfUI.gui.tabs.settings.tabs = CreateTabFrame(pfUI.gui.tabs.settings, "TOP", true)
 
   -- >> Global
   pfUI.gui.tabs.settings.tabs.general = pfUI.gui.tabs.settings.tabs:CreateTabChild(T["General"], 70)
@@ -672,7 +672,7 @@ pfUI:RegisterModule("gui", function ()
 
   -- [[ UnitFrames ]]
   pfUI.gui.tabs.uf = pfUI.gui.tabs:CreateTabChild(T["Unit Frames"], nil, nil, nil, true)
-  pfUI.gui.tabs.uf.tabs = ui:CreateTabFrame(pfUI.gui.tabs.uf, "TOP", true)
+  pfUI.gui.tabs.uf.tabs = CreateTabFrame(pfUI.gui.tabs.uf, "TOP", true)
 
   -- >> General
   pfUI.gui.tabs.uf.tabs.general = pfUI.gui.tabs.uf.tabs:CreateTabChild(T["General"], 70)
@@ -897,7 +897,7 @@ pfUI:RegisterModule("gui", function ()
 
   -- [[ GroupFrames ]]
   pfUI.gui.tabs.gf = pfUI.gui.tabs:CreateTabChild(T["Group Frames"], nil, nil, nil, true)
-  pfUI.gui.tabs.gf.tabs = ui:CreateTabFrame(pfUI.gui.tabs.gf, "TOP", true)
+  pfUI.gui.tabs.gf.tabs = CreateTabFrame(pfUI.gui.tabs.gf, "TOP", true)
 
   -- >> General
   pfUI.gui.tabs.gf.tabs.general = pfUI.gui.tabs.gf.tabs:CreateTabChild(T["General"], 70)
@@ -1079,7 +1079,7 @@ pfUI:RegisterModule("gui", function ()
 
   -- [[ Combat ]]
   pfUI.gui.tabs.combat = pfUI.gui.tabs:CreateTabChild(T["Combat"], nil, nil, nil, true)
-  pfUI.gui.tabs.combat.tabs = ui:CreateTabFrame(pfUI.gui.tabs.combat, "TOP", true)
+  pfUI.gui.tabs.combat.tabs = CreateTabFrame(pfUI.gui.tabs.combat, "TOP", true)
 
   -- >> General
   pfUI.gui.tabs.combat.tabs.general = pfUI.gui.tabs.combat.tabs:CreateTabChild(T["Combat"], 70)
@@ -1095,7 +1095,7 @@ pfUI:RegisterModule("gui", function ()
 
   -- [[ Bags & Bank ]]
   pfUI.gui.tabs.bags = pfUI.gui.tabs:CreateTabChild(T["Bags & Bank"], nil, nil, nil, true)
-  pfUI.gui.tabs.bags.tabs = ui:CreateTabFrame(pfUI.gui.tabs.bags, "TOP", true)
+  pfUI.gui.tabs.bags.tabs = CreateTabFrame(pfUI.gui.tabs.bags, "TOP", true)
 
   -- >> General
   pfUI.gui.tabs.bags.tabs.general = pfUI.gui.tabs.bags.tabs:CreateTabChild(T["Bags & Bank"], 70)
@@ -1112,7 +1112,7 @@ pfUI:RegisterModule("gui", function ()
 
   -- [[ Loot ]]
   pfUI.gui.tabs.loot = pfUI.gui.tabs:CreateTabChild(T["Loot"], nil, nil, nil, true)
-  pfUI.gui.tabs.loot.tabs = ui:CreateTabFrame(pfUI.gui.tabs.loot, "TOP", true)
+  pfUI.gui.tabs.loot.tabs = CreateTabFrame(pfUI.gui.tabs.loot, "TOP", true)
 
   -- >> General
   pfUI.gui.tabs.loot.tabs.general = pfUI.gui.tabs.loot.tabs:CreateTabChild(T["Loot"], 70)
@@ -1129,7 +1129,7 @@ pfUI:RegisterModule("gui", function ()
 
   -- [[ Minimap ]]
   pfUI.gui.tabs.minimap = pfUI.gui.tabs:CreateTabChild(T["Minimap"], nil, nil, nil, true)
-  pfUI.gui.tabs.minimap.tabs = ui:CreateTabFrame(pfUI.gui.tabs.minimap, "TOP", true)
+  pfUI.gui.tabs.minimap.tabs = CreateTabFrame(pfUI.gui.tabs.minimap, "TOP", true)
 
   -- >> General
   pfUI.gui.tabs.minimap.tabs.general = pfUI.gui.tabs.minimap.tabs:CreateTabChild(T["Minimap"], 70)
@@ -1147,7 +1147,7 @@ pfUI:RegisterModule("gui", function ()
 
   -- [[ Actionbar ]]
   pfUI.gui.tabs.actionbar = pfUI.gui.tabs:CreateTabChild(T["Actionbar"], nil, nil, nil, true)
-  pfUI.gui.tabs.actionbar.tabs = ui:CreateTabFrame(pfUI.gui.tabs.actionbar, "TOP", true)
+  pfUI.gui.tabs.actionbar.tabs = CreateTabFrame(pfUI.gui.tabs.actionbar, "TOP", true)
 
   -- >> General
   pfUI.gui.tabs.actionbar.tabs.general = pfUI.gui.tabs.actionbar.tabs:CreateTabChild(T["General"], 70)
@@ -1198,7 +1198,7 @@ pfUI:RegisterModule("gui", function ()
 
   -- [[ Panel ]]
   pfUI.gui.tabs.panel = pfUI.gui.tabs:CreateTabChild(T["Panel"], nil, nil, nil, true)
-  pfUI.gui.tabs.panel.tabs = ui:CreateTabFrame(pfUI.gui.tabs.panel, "TOP", true)
+  pfUI.gui.tabs.panel.tabs = CreateTabFrame(pfUI.gui.tabs.panel, "TOP", true)
 
   -- >> General
   pfUI.gui.tabs.panel.tabs.general = pfUI.gui.tabs.panel.tabs:CreateTabChild(T["Panel"], 70)
@@ -1223,7 +1223,7 @@ pfUI:RegisterModule("gui", function ()
 
   -- [[ Tooltip ]]
   pfUI.gui.tabs.tooltip = pfUI.gui.tabs:CreateTabChild(T["Tooltip"], nil, nil, nil, true)
-  pfUI.gui.tabs.tooltip.tabs = ui:CreateTabFrame(pfUI.gui.tabs.tooltip, "TOP", true)
+  pfUI.gui.tabs.tooltip.tabs = CreateTabFrame(pfUI.gui.tabs.tooltip, "TOP", true)
 
   -- >> General
   pfUI.gui.tabs.tooltip.tabs.general = pfUI.gui.tabs.tooltip.tabs:CreateTabChild(T["Tooltip"], 70)
@@ -1241,7 +1241,7 @@ pfUI:RegisterModule("gui", function ()
 
   -- [[ Castbar ]]
   pfUI.gui.tabs.castbar = pfUI.gui.tabs:CreateTabChild(T["Castbar"], nil, nil, nil, true)
-  pfUI.gui.tabs.castbar.tabs = ui:CreateTabFrame(pfUI.gui.tabs.castbar, "TOP", true)
+  pfUI.gui.tabs.castbar.tabs = CreateTabFrame(pfUI.gui.tabs.castbar, "TOP", true)
 
   -- >> General
   pfUI.gui.tabs.castbar.tabs.general = pfUI.gui.tabs.castbar.tabs:CreateTabChild(T["Castbar"], 70)
@@ -1260,7 +1260,7 @@ pfUI:RegisterModule("gui", function ()
 
   -- [[ Chat ]]
   pfUI.gui.tabs.chat = pfUI.gui.tabs:CreateTabChild(T["Chat"], nil, nil, nil, true)
-  pfUI.gui.tabs.chat.tabs = ui:CreateTabFrame(pfUI.gui.tabs.chat, "TOP", true)
+  pfUI.gui.tabs.chat.tabs = CreateTabFrame(pfUI.gui.tabs.chat, "TOP", true)
 
   -- >> General
   pfUI.gui.tabs.chat.tabs.general = pfUI.gui.tabs.chat.tabs:CreateTabChild(T["General"], 70)
@@ -1300,7 +1300,7 @@ pfUI:RegisterModule("gui", function ()
 
   -- [[ Nameplates ]]
   pfUI.gui.tabs.nameplates = pfUI.gui.tabs:CreateTabChild(T["Nameplates"], nil, nil, nil, true)
-  pfUI.gui.tabs.nameplates.tabs = ui:CreateTabFrame(pfUI.gui.tabs.nameplates, "TOP", true)
+  pfUI.gui.tabs.nameplates.tabs = CreateTabFrame(pfUI.gui.tabs.nameplates, "TOP", true)
 
   -- General
   pfUI.gui.tabs.nameplates.tabs.general = pfUI.gui.tabs.nameplates.tabs:CreateTabChild(T["Nameplates"], 70)
@@ -1331,7 +1331,7 @@ pfUI:RegisterModule("gui", function ()
 
   -- [[ Thirdparty ]]
   pfUI.gui.tabs.thirdparty = pfUI.gui.tabs:CreateTabChild(T["Thirdparty"], nil, nil, nil, true)
-  pfUI.gui.tabs.thirdparty.tabs = ui:CreateTabFrame(pfUI.gui.tabs.thirdparty, "TOP", true)
+  pfUI.gui.tabs.thirdparty.tabs = CreateTabFrame(pfUI.gui.tabs.thirdparty, "TOP", true)
 
   -- >> General
   pfUI.gui.tabs.thirdparty.tabs.general = pfUI.gui.tabs.thirdparty.tabs:CreateTabChild(T["Thirdparty"], 70)
@@ -1354,7 +1354,7 @@ pfUI:RegisterModule("gui", function ()
 
   -- [[ Modules ]]
   pfUI.gui.tabs.modules = pfUI.gui.tabs:CreateTabChild(T["Modules"], nil, nil, nil, true)
-  pfUI.gui.tabs.modules.tabs = ui:CreateTabFrame(pfUI.gui.tabs.modules, "TOP", true)
+  pfUI.gui.tabs.modules.tabs = CreateTabFrame(pfUI.gui.tabs.modules, "TOP", true)
 
   -- General
   pfUI.gui.tabs.modules.tabs.general = pfUI.gui.tabs.modules.tabs:CreateTabChild(T["Modules"], 70)

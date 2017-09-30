@@ -1,9 +1,7 @@
-pfUI.api.ui = {}
-
 -- load pfUI environment
 setfenv(1, pfUI:GetEnvironment())
 
-function pfUI.api.ui:CreateTabChild(title, bwidth, bheight, bottom, static)
+function pfUI.api.CreateTabChild(self, title, bwidth, bheight, bottom, static)
   -- setup env
   local childcount = table.getn(self.childs) + 1
   local button_width = bwidth or 150
@@ -56,8 +54,8 @@ function pfUI.api.ui:CreateTabChild(title, bwidth, bheight, bottom, static)
   -- create child frame
   local child, scrollchild = nil, nil
   if not static then
-    child = ui:CreateScrollFrame("pfConfig" .. title .. "Frame", self)
-    scrollchild = ui:CreateScrollChild("pfConfig" .. title .. "ScrollChild", child)
+    child = CreateScrollFrame("pfConfig" .. title .. "Frame", self)
+    scrollchild = CreateScrollChild("pfConfig" .. title .. "ScrollChild", child)
   else
     child = CreateFrame("Frame", "pfConfig" .. title .. "Frame", self)
   end
@@ -86,7 +84,7 @@ function pfUI.api.ui:CreateTabChild(title, bwidth, bheight, bottom, static)
   return ret
 end
 
-function pfUI.api.ui:CreateTabFrame(parent, align, outside)
+function pfUI.api.CreateTabFrame(parent, align, outside)
   local f = CreateFrame("Frame", nil, parent)
 
   f:SetPoint("TOPLEFT", parent, "TOPLEFT", -5, 5)
@@ -100,12 +98,12 @@ function pfUI.api.ui:CreateTabFrame(parent, align, outside)
   f.bottomcount = 1
 
   -- Create Child Frame
-  f.CreateTabChild = pfUI.api.ui.CreateTabChild
+  f.CreateTabChild = pfUI.api.CreateTabChild
 
   return f
 end
 
-function pfUI.api.ui:CreateScrollFrame(name, parent)
+function pfUI.api.CreateScrollFrame(name, parent)
   local f = CreateFrame("ScrollFrame", name, parent)
 
   f.Scroll = function(self, step)
@@ -230,7 +228,7 @@ function pfUI.api.ui:CreateScrollFrame(name, parent)
   return f
 end
 
-function pfUI.api.ui:CreateScrollChild(name, parent)
+function pfUI.api.CreateScrollChild(name, parent)
   local f = CreateFrame("Frame", name, parent)
 
   -- dummy values required
