@@ -27,7 +27,7 @@ function pfUI.api.CreateTabChild(self, title, bwidth, bheight, bottom, static)
   end
 
   SkinButton(b,.2,1,.8)
-  b:SetText(title)
+  b:SetText(T[title])
 
   if childcount ~= 1 then
     b:SetTextColor(.5,.5,.5)
