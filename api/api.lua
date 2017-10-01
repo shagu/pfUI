@@ -240,6 +240,9 @@ do -- create a scope so we don't have to worry about upvalue collisions
         end
       end
     end
+    -- fallback for GetMasterLootCandidate not updating immediately for leavers
+    unitinfo.lclass,unitinfo.class = _G.UNKNOWN, "UNKNOWN" 
+    return unitinfo
   end
 end
 
