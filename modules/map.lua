@@ -1,4 +1,14 @@
 pfUI:RegisterModule("map", function ()
+
+  function _G.ToggleWorldMap()
+    if WorldMapFrame:IsShown() then
+      WorldMapFrame:Hide()
+    else
+      WorldMapFrame:Show()
+      table.insert(UISpecialFrames, "WorldMapFrame")
+    end
+  end
+
   local pfMapLoader = CreateFrame("Frame", nil, UIParent)
   pfMapLoader:RegisterEvent("PLAYER_ENTERING_WORLD")
   pfMapLoader:SetScript("OnEvent", function()
