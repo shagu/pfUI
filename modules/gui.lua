@@ -1324,6 +1324,7 @@ pfUI:RegisterModule("gui", function ()
       CreateConfig(this, T["Nameplate Width"], C.nameplates, "width")
       CreateConfig(this, T["Healthbar Height"], C.nameplates, "heighthealth")
       CreateConfig(this, T["Castbar Height"], C.nameplates, "heightcast")
+      CreateConfig(this, T["Enable Combo Point Display"], C.nameplates, "cpdisplay", "checkbox")
       this.setup = true
     end
   end)

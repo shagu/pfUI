@@ -78,6 +78,8 @@ pfUI:RegisterModule("nameplates", function ()
   -- Create Nameplate
   function pfUI.nameplates:OnShow()
     -- initialize nameplate frames
+    
+    local combo_size = 5
     if not this.nameplate then
       this.nameplate = CreateFrame("Button", nil, this)
       this.nameplate.parent = this
@@ -91,6 +93,10 @@ pfUI:RegisterModule("nameplates", function ()
       this.level:SetParent(this.nameplate)
       this.levelicon:SetParent(this.nameplate)
       this.raidicon:SetParent(this.healthbar)
+      if C.nameplates.cpdisplay == "1" then
+        this.combopoints = CreateFrame("Frame", nil, this.nameplate)
+      end
+      
     end
 
     -- init
@@ -144,6 +150,36 @@ pfUI:RegisterModule("nameplates", function ()
     this.name:ClearAllPoints()
     this.name:SetPoint("TOP", this.nameplate, "TOP", 0, 0)
 
+    -- combopoints
+    if C.nameplates.cpdisplay == "1" then
+      for point=1, 5 do
+        if not this.combopoints["combopoint" .. point] then
+          this.combopoints["combopoint" .. point] = CreateFrame("Frame", "pfNameplateCombo" .. point, this.nameplate)
+          this.combopoints["combopoint" .. point]:SetFrameStrata("HIGH")
+          this.combopoints["combopoint" .. point]:SetWidth(combo_size)
+          this.combopoints["combopoint" .. point]:SetHeight(combo_size)
+
+          CreateBackdrop(this.combopoints["combopoint" .. point])
+          this.combopoints["combopoint" .. point]:SetPoint("BOTTOM", this.nameplate, "BOTTOM",(point - 1) * (combo_size + C.appearance.border.default*3), -C.appearance.border.default*3)
+        end
+
+        if point < 3 then
+          local tex = this.combopoints["combopoint" .. point]:CreateTexture("OVERLAY")
+          tex:SetAllPoints(this.combopoints["combopoint" .. point])
+          tex:SetTexture(1, .3, .3, .75)
+        elseif point < 4 then
+          local tex = this.combopoints["combopoint" .. point]:CreateTexture("OVERLAY")
+          tex:SetAllPoints(this.combopoints["combopoint" .. point])
+          tex:SetTexture(1, 1, .3, .75)
+        else
+          local tex = this.combopoints["combopoint" .. point]:CreateTexture("OVERLAY")
+          tex:SetAllPoints(this.combopoints["combopoint" .. point])
+          tex:SetTexture(.3, 1, .3, .75)
+        end
+        this.combopoints["combopoint" .. point]:Hide()
+      end
+    end
+
     -- healthbar
     this.healthbar:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
     this.healthbar:ClearAllPoints()
@@ -180,6 +216,7 @@ pfUI:RegisterModule("nameplates", function ()
     this.raidicon:SetPoint("CENTER", this.healthbar, "CENTER", 0, -5)
     this.raidicon:SetDrawLayer("OVERLAY")
     this.raidicon:SetTexture("Interface\\AddOns\\pfUI\\img\\raidicons")
+
 
     -- add debuff frames
     if C.nameplates["showdebuffs"] == "1" then
@@ -303,8 +340,9 @@ pfUI:RegisterModule("nameplates", function ()
     if not this.setup then pfUI.nameplates:OnShow() return end
 
     local healthbar = this.healthbar
-    local border, glow, name, level, levelicon , raidicon = this.border, this.glow, this.name, this.level, this.levelicon , this.raidicon
+    local border, glow, name, level, levelicon , raidicon, combopoints = this.border, this.glow, this.name, this.level, this.levelicon , this.raidicon, this.combopoints
     local unitname = name:GetText()
+    local target = GetUnitName("target")
 
     -- add scan entry if not existing
     if this.needNameUpdate and unitname ~= UNKNOWN then
@@ -312,6 +350,20 @@ pfUI:RegisterModule("nameplates", function ()
         table.insert(pfUI.nameplates.scanqueue, unitname)
       end
       this.needNameUpdate = nil
+    end
+
+     -- update combopoints
+    if C.nameplates.cpdisplay == "1" then
+      for point=1, 5 do
+        combopoints["combopoint" .. point]:Hide()
+      end
+
+      local cp = GetComboPoints("target")
+      if target == unitname and healthbar:GetAlpha() == 1 and cp > 0 then
+        for point=1, cp do
+          combopoints["combopoint" .. point]:Show()
+        end
+      end
     end
 
     -- hide non-player frames
@@ -553,4 +605,5 @@ pfUI:RegisterModule("nameplates", function ()
       return
     end
   end)
+
 end)
