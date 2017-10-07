@@ -83,7 +83,6 @@ pfUI:RegisterModule("nameplates", function ()
       this.nameplate.parent = this
       this.healthbar = this:GetChildren()
       this.border, this.glow, this.name, this.level, this.levelicon , this.raidicon = this:GetRegions()
-
       this.healthbar:SetParent(this.nameplate)
       this.border:SetParent(this.nameplate)
       this.glow:SetParent(this.nameplate)
@@ -205,6 +204,42 @@ pfUI:RegisterModule("nameplates", function ()
       end
     end
 
+    -- combopoints
+    if C.nameplates.cpdisplay == "1" then
+      local combo_size = 5
+      local offset = 5 + C.nameplates.heightcast + C.nameplates.heighthealth + C.appearance.border.default*2
+
+      if not this.combopoints then
+        this.combopoints = CreateFrame("Frame", nil, this.nameplate)
+        for point=1, 5 do
+          if not this.combopoints["combopoint" .. point] then
+            this.combopoints["combopoint" .. point] = CreateFrame("Frame", "pfNameplateCombo" .. point, this.nameplate)
+            this.combopoints["combopoint" .. point]:SetFrameStrata("HIGH")
+            this.combopoints["combopoint" .. point]:SetWidth(combo_size)
+            this.combopoints["combopoint" .. point]:SetHeight(combo_size)
+          end
+
+          CreateBackdrop(this.combopoints["combopoint" .. point])
+          this.combopoints["combopoint" .. point]:SetPoint("BOTTOMRIGHT", this.nameplate, "BOTTOMRIGHT", -(point - 1) * (combo_size + C.appearance.border.default*3) - offset, -C.appearance.border.default*3)
+
+          if point < 3 then
+            local tex = this.combopoints["combopoint" .. point]:CreateTexture("OVERLAY")
+            tex:SetAllPoints(this.combopoints["combopoint" .. point])
+            tex:SetTexture(1, .3, .3, .75)
+          elseif point < 4 then
+            local tex = this.combopoints["combopoint" .. point]:CreateTexture("OVERLAY")
+            tex:SetAllPoints(this.combopoints["combopoint" .. point])
+            tex:SetTexture(1, 1, .3, .75)
+          else
+            local tex = this.combopoints["combopoint" .. point]:CreateTexture("OVERLAY")
+            tex:SetAllPoints(this.combopoints["combopoint" .. point])
+            tex:SetTexture(.3, 1, .3, .75)
+          end
+          this.combopoints["combopoint" .. point]:Hide()
+        end
+      end
+    end
+
     -- add castbar
     if pfUI.castbar and C.nameplates["showcastbar"] == "1" then
       local plate = this
@@ -303,7 +338,7 @@ pfUI:RegisterModule("nameplates", function ()
     if not this.setup then pfUI.nameplates:OnShow() return end
 
     local healthbar = this.healthbar
-    local border, glow, name, level, levelicon , raidicon = this.border, this.glow, this.name, this.level, this.levelicon , this.raidicon
+    local border, glow, name, level, levelicon , raidicon, combopoints = this.border, this.glow, this.name, this.level, this.levelicon , this.raidicon, this.combopoints
     local unitname = name:GetText()
 
     -- add scan entry if not existing
@@ -419,6 +454,20 @@ pfUI:RegisterModule("nameplates", function ()
       name:SetTextColor(1,0.4,0.2,0.85)
     elseif red > 0.99 and green > 0.81 and green < 0.82 and blue == 0 then
       name:SetTextColor(1,1,1,0.85)
+    end
+
+    -- update combopoints
+    if combopoints and C.nameplates.cpdisplay == "1" then
+      for point=1, 5 do
+        combopoints["combopoint" .. point]:Hide()
+      end
+
+      local cp = GetComboPoints("target")
+      if GetUnitName("target") == unitname and healthbar:GetAlpha() == 1 and cp > 0 then
+        for point=1, cp do
+          combopoints["combopoint" .. point]:Show()
+        end
+      end
     end
 
     -- show castbar
