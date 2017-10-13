@@ -34,6 +34,80 @@ pfUI:RegisterModule("actionbar", function ()
     end
   end
 
+  function _G.ActionButtonDown(id)
+    if ( BonusActionBarFrame:IsShown() ) then
+      local button = getglobal("BonusActionButton"..id);
+      if ( button:GetButtonState() == "NORMAL" ) then
+        button:SetButtonState("PUSHED");
+        if C.bars.keydown == "1" then
+          if ( MacroFrame_SaveMacro ) then
+            MacroFrame_SaveMacro();
+          end
+          UseAction(ActionButton_GetPagedID(button), 0)
+          if ( IsCurrentAction(ActionButton_GetPagedID(button)) ) then
+            button:SetChecked(1);
+          else
+            button:SetChecked(0);
+          end
+        end
+      end
+      return;
+    end
+ 
+    local button = getglobal("ActionButton"..id);
+    if ( button:GetButtonState() == "NORMAL" ) then
+      button:SetButtonState("PUSHED");
+      if ( MacroFrame_SaveMacro ) then
+        MacroFrame_SaveMacro();
+      end
+      if C.bars.keydown == "1" then
+          UseAction(ActionButton_GetPagedID(button), 0, onSelf)
+          if ( IsCurrentAction(ActionButton_GetPagedID(button)) ) then
+            button:SetChecked(1);
+          else
+            button:SetChecked(0);
+          end
+        end
+    end
+  end
+
+  function _G.ActionButtonUp(id, onSelf)
+    if ( BonusActionBarFrame:IsShown() ) then
+      local button = getglobal("BonusActionButton"..id);
+      if ( button:GetButtonState() == "PUSHED" ) then
+        button:SetButtonState("NORMAL");
+        if C.bars.keydown == "0" then
+          if ( MacroFrame_SaveMacro ) then
+            MacroFrame_SaveMacro();
+          end
+          UseAction(ActionButton_GetPagedID(button), 0);
+          if ( IsCurrentAction(ActionButton_GetPagedID(button)) ) then
+            button:SetChecked(1);
+          else
+            button:SetChecked(0);
+          end
+        end
+      end
+      return;
+    end
+  
+    local button = getglobal("ActionButton"..id);
+    if ( button:GetButtonState() == "PUSHED" ) then
+      button:SetButtonState("NORMAL");
+      if C.bars.keydown == "0" then
+        if ( MacroFrame_SaveMacro ) then
+          MacroFrame_SaveMacro();
+        end
+        UseAction(ActionButton_GetPagedID(button), 0, onSelf);
+        if ( IsCurrentAction(ActionButton_GetPagedID(button)) ) then
+          button:SetChecked(1);
+        else
+          button:SetChecked(0);
+        end
+      end
+    end
+  end
+
   hooksecurefunc("ShowBonusActionBar", function()
     if pfActionBar then pfActionBar:Hide() end
     if pfBonusBar then pfBonusBar:Show() end

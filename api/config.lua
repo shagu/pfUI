@@ -430,6 +430,7 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("bars",       "tworight",    "formfactor",       "1 x 12")
   pfUI:UpdateConfig("bars",       "shapeshift",  "formfactor",       "10 x 1")
   pfUI:UpdateConfig("bars",       "pet",         "formfactor",       "10 x 1")
+  pfUI.UpdateConfig("bars",       nil,           "keydown",          "0")
 
   pfUI:UpdateConfig("panel",      nil,           "use_unitfonts",    "0")
   pfUI:UpdateConfig("panel",      "left",        "left",             "guild")
