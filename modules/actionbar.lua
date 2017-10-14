@@ -61,13 +61,13 @@ pfUI:RegisterModule("actionbar", function ()
         MacroFrame_SaveMacro();
       end
       if C.bars.keydown == "1" then
-          UseAction(ActionButton_GetPagedID(button), 0, onSelf)
-          if ( IsCurrentAction(ActionButton_GetPagedID(button)) ) then
-            button:SetChecked(1);
-          else
-            button:SetChecked(0);
-          end
+        UseAction(ActionButton_GetPagedID(button), 0, onSelf)
+        if ( IsCurrentAction(ActionButton_GetPagedID(button)) ) then
+          button:SetChecked(1);
+        else
+          button:SetChecked(0);
         end
+      end
     end
   end
 
