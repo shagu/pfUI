@@ -94,7 +94,6 @@ pfUI:RegisterModule("actionbar", function ()
     local button = getglobal("ActionButton"..id);
     if ( button:GetButtonState() == "PUSHED" ) then
       button:SetButtonState("NORMAL");
-      if C.bars.keydown == "0" then
         if ( MacroFrame_SaveMacro ) then
           MacroFrame_SaveMacro();
         end
@@ -104,7 +103,6 @@ pfUI:RegisterModule("actionbar", function ()
         else
           button:SetChecked(0);
         end
-      end
     end
   end
 
