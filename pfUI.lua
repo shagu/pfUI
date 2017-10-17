@@ -25,6 +25,9 @@ pfUI_playerDB = {}
 pfUI_config = {}
 pfUI_init = {}
 pfUI_profiles = {}
+if not pfUI_gold then
+  pfUI_gold = {}
+end
 
 -- localization
 pfUI_locale = {}
