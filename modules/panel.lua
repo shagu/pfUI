@@ -260,6 +260,15 @@ pfUI:RegisterModule("panel", function ()
     pfUI.panel:OutputPanel("bagspace", freeslots .. " (" .. usedslots .. "/" .. maxslots .. ")", nil, OpenAllBags)
   end
 
+  function pfUI.panel:WriteGold(group, subgroup, value)
+    if not pfUI_gold[group] then
+      pfUI_gold[group] = {}
+    end
+    if subgroup then
+      pfUI_gold[group][subgroup] = value
+    end
+  end
+
   -- Update "gold"
   function pfUI.panel:UpdateGold ()
     local gold = floor(GetMoney()/ 100 / 100)
@@ -284,10 +293,17 @@ pfUI:RegisterModule("panel", function ()
       GameTooltip:AddDoubleLine(T["Login"] .. ":", CreateGoldString(pfUI.panel.initMoney))
       GameTooltip:AddDoubleLine(T["Now"] .. ":", CreateGoldString(GetMoney()))
       GameTooltip:AddDoubleLine("|cffffffff","")
+      for key in pfUI_gold[GetRealmName()] do
+        if key ~= UnitName("player") then
+          GameTooltip:AddDoubleLine(T[key] .. ":", CreateGoldString(pfUI_gold[GetRealmName()][key]))
+        end
+      end
+      GameTooltip:AddDoubleLine("|cffffffff","")
       GameTooltip:AddDoubleLine(T["This Session"] .. ":", dmod .. CreateGoldString(math.abs(pfUI.panel.diffMoney)))
       GameTooltip:Show()
     end
 
+    pfUI.panel:WriteGold(GetRealmName(), UnitName("player"), "money", GetMoney())
     pfUI.panel:OutputPanel("gold", gold .. "|cffffd700g|r " .. silver .. "|cffc7c7cfs|r " .. copper .. "|cffeda55fc|r", tooltip, OpenAllBags)
   end
 
