@@ -303,7 +303,7 @@ pfUI:RegisterModule("panel", function ()
       GameTooltip:Show()
     end
 
-    pfUI.panel:WriteGold(GetRealmName(), UnitName("player"), "money", GetMoney())
+    pfUI.panel:WriteGold(GetRealmName(), UnitName("player"), GetMoney())
     pfUI.panel:OutputPanel("gold", gold .. "|cffffd700g|r " .. silver .. "|cffc7c7cfs|r " .. copper .. "|cffeda55fc|r", tooltip, OpenAllBags)
   end
 
