@@ -559,7 +559,7 @@ pfUI:RegisterModule("bags", function ()
 
         frame.search.edit:SetFont(pfUI.font_default, C.global.font_size, "OUTLINE")
         frame.search.edit:SetAutoFocus(false)
-        frame.search.edit:SetText("Search")
+        frame.search.edit:SetText(T["Search"])
         frame.search.edit:SetTextColor(.5,.5,.5,1)
 
         frame.search.edit:SetScript("OnEditFocusGained", function()
@@ -567,7 +567,7 @@ pfUI:RegisterModule("bags", function ()
         end)
 
         frame.search.edit:SetScript("OnEditFocusLost", function()
-          this:SetText("Search")
+          this:SetText(T["Search"])
           for bag=-2, 11 do
             local bagsize = GetContainerNumSlots(bag)
             if bag == -2 and pfUI.bag.showKeyring == true then bagsize = GetKeyRingSize() end
@@ -581,7 +581,7 @@ pfUI:RegisterModule("bags", function ()
         end)
 
         frame.search.edit:SetScript("OnTextChanged", function()
-          if this:GetText() == "Search" then return end
+          if this:GetText() == T["Search"] then return end
           for bag=-2, 11 do
             local bagsize = GetContainerNumSlots(bag)
             if bag == -2 and pfUI.bag.showKeyring == true then bagsize = GetKeyRingSize() end

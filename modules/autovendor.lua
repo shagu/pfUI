@@ -4,7 +4,7 @@ pfUI:RegisterModule("autovendor", function ()
   local function RepairItems()
     local cost, possible = GetRepairAllCost()
     if cost > 0 and possible then
-      DEFAULT_CHAT_FRAME:AddMessage("Your items have been repaired for " .. CreateGoldString(cost))
+      DEFAULT_CHAT_FRAME:AddMessage(T["Your items have been repaired for"] .. " " .. CreateGoldString(cost))
       RepairAllItems()
     end
   end
@@ -70,7 +70,7 @@ pfUI:RegisterModule("autovendor", function ()
 
   autovendor:SetScript("OnHide", function()
     if this.count > 0 then
-      DEFAULT_CHAT_FRAME:AddMessage("Your vendor trash has been sold and you earned " .. CreateGoldString(this.price))
+      DEFAULT_CHAT_FRAME:AddMessage(T["Your vendor trash has been sold and you earned"] .. " " .. CreateGoldString(this.price))
     end
   end)
 
@@ -112,7 +112,7 @@ pfUI:RegisterModule("autovendor", function ()
   autovendor.button:SetHighlightTexture("Interface\\Buttons\\ButtonHilight-Square")
   autovendor.button:SetScript("OnEnter", function()
     GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
-    GameTooltip:SetText("Sell Grey Items");
+    GameTooltip:SetText(T["Sell Grey Items"]);
     GameTooltip:Show();
   end)
 
