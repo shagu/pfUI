@@ -372,6 +372,7 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
     end)
   f:SetScript("OnEnter", function()
         if not this.label then return end
+        if this.config.showtooltip == "0" then return end
         GameTooltip_SetDefaultAnchor(GameTooltip, this)
         GameTooltip:SetUnit(this.label .. this.id)
         GameTooltip:Show()
