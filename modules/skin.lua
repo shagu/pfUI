@@ -78,6 +78,7 @@ pfUI:RegisterModule("skin", function ()
   end
 
   local alpha = tonumber(C.tooltip.alpha)
+  CreateBackdrop(WorldMapTooltip, nil, nil, alpha)
   CreateBackdrop(ShoppingTooltip1, nil, nil, alpha)
   CreateBackdrop(ShoppingTooltip2, nil, nil, alpha)
   CreateBackdrop(ItemRefTooltip, nil, nil, alpha)
