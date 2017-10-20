@@ -78,7 +78,13 @@ pfUI:RegisterModule("skin", function ()
   end
 
   local alpha = tonumber(C.tooltip.alpha)
-  CreateBackdrop(WorldMapTooltip, nil, nil, alpha)
+
+  -- skin worldmap tooltips
+  WorldMapTooltip:SetScript("OnShow", function()
+    CreateBackdrop(WorldMapTooltip, nil, nil, alpha)
+  end)
+
+  -- skin item tooltips
   CreateBackdrop(ShoppingTooltip1, nil, nil, alpha)
   CreateBackdrop(ShoppingTooltip2, nil, nil, alpha)
   CreateBackdrop(ItemRefTooltip, nil, nil, alpha)
