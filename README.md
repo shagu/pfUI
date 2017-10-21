@@ -11,17 +11,12 @@ This is **not** an addon-pack like [ShaguUI](http://shagu.org/shaguui/), however
 <img src="http://i.imgur.com/xo060dZ.jpg" align="right" width="48.87%">
 <img src="http://i.imgur.com/gGnVtP6.jpg" width="48.87%">
 
-## Installation (Latest)
-1. Download **[Latest](https://github.com/shagu/pfUI/archive/master.zip)**
-2. Unpack the Zip, rename the folder "pfUI-master" to "pfUI".
-3. Copy "pfUI" to Wow-Directory\Interface\AddOns
-4. Restart Wow
-
-## Installation (Release)
-1. Download **[Release](https://github.com/shagu/pfUI/releases/latest)**
-2. Unpack the Zip
-3. Copy "pfUI" to Wow-Directory\Interface\AddOns
-4. Restart Wow
+## Installation
+1. Download **[Latest Version](https://github.com/shagu/pfUI/archive/master.zip)**
+2. Unpack the Zip file
+3. Rename the folder "pfUI-master" to "pfUI"
+4. Copy "pfUI" into Wow-Directory\Interface\AddOns
+5. Restart Wow
 
 ## Commands
 
