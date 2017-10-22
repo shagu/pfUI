@@ -1245,6 +1245,19 @@ function pfUI.uf:SetupBuffFilter()
   end
 
 
+  -- [[ WARLOCK ]]
+  if myclass == "WARLOCK" then
+    -- Fire Shield
+    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_fire_firearmor")
+
+    -- Blood Pact
+    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_shadow_bloodboil")
+
+    -- Soulstone
+    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_shadow_soulgem")
+  end
+
+
   -- [[ WARRIOR ]]
   if myclass == "WARRIOR" then
     -- Battle Shout
