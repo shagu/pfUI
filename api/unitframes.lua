@@ -1259,6 +1259,18 @@ function pfUI.uf:SetupBuffFilter()
 
     -- Soulstone
     table.insert(pfUI.uf.buffs, "interface\\icons\\spell_shadow_soulgem")
+
+    -- Unending Breath
+    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_shadow_demonbreath")
+
+    -- Detect Greater Invisibility or Detect Invisibility
+    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_shadow_detectinvisibility")
+
+    -- Detect Lesser Invisibility
+    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_shadow_detectlesserinvisibility")
+
+    -- Paranoia
+    table.insert(pfUI.uf.buffs, "interface\\icons\\Spell_Shadow_AuraOfDarkness")
   end
 
 
