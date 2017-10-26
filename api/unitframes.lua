@@ -556,6 +556,8 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
       f.power:ClearAllPoints()
       f.power:SetPoint("TOPRIGHT", f.hp, "BOTTOMRIGHT", 0, -2*default_border - f.config.pspace)
       pfUI.api.CreateBackdrop(f.portrait)
+      f.portrait:SetFrameStrata("BACKGROUND")
+      f.portrait.model:SetFrameLevel(1)
     elseif f.config.portrait == "right" then
       f.portrait:SetPoint("TOPRIGHT", f, "TOPRIGHT", 0, 0)
       f.hp:ClearAllPoints()
@@ -563,6 +565,8 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
       f.power:ClearAllPoints()
       f.power:SetPoint("TOPLEFT", f.hp, "BOTTOMLEFT", 0, -2*default_border - f.config.pspace)
       pfUI.api.CreateBackdrop(f.portrait)
+      f.portrait:SetFrameStrata("BACKGROUND")
+      f.portrait.model:SetFrameLevel(1)
     end
   end
 
