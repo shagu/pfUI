@@ -32,12 +32,10 @@ pfUI:RegisterModule("unlock", function ()
 
       local height = GetScreenHeight()
 
-      for i = 0, 128 do
-        local tx = pfUI.unlock:CreateTexture(nil, 'BACKGROUND')
-        tx:SetTexture(.1, .5, .4)
-        tx:SetPoint("TOPLEFT", pfUI.unlock, "TOPLEFT", 0, -(height/2) + (size/2))
-        tx:SetPoint('BOTTOMRIGHT', pfUI.unlock, 'TOPRIGHT', 0, -(height/2 + size/2))
-      end
+      local tx = pfUI.unlock:CreateTexture(nil, 'BACKGROUND')
+      tx:SetTexture(.1, .5, .4)
+      tx:SetPoint("TOPLEFT", pfUI.unlock, "TOPLEFT", 0, -(height/2) + (size/2))
+      tx:SetPoint('BOTTOMRIGHT', pfUI.unlock, 'TOPRIGHT', 0, -(height/2 + size/2))
 
       for i = 1, floor((height/2)/hStep) do
         local tx = pfUI.unlock:CreateTexture(nil, 'BACKGROUND')
@@ -128,6 +126,7 @@ pfUI:RegisterModule("unlock", function ()
             end
 
             if frame.OnMove then frame:OnMove() end
+            pfUI.unlock.snapping.recache()
           end)
 
 
@@ -185,6 +184,12 @@ pfUI:RegisterModule("unlock", function ()
             else
               frame.oldPos = nil
             end
+
+            if IsAltKeyDown() then
+              frame.drag.snap = true
+              pfUI.unlock.snapping.show()
+            end
+
             frame.drag.backdrop:SetBackdropBorderColor(1,1,1,1)
             frame:StartMoving()
             if frame.OnMove then frame:OnMove() end
@@ -192,6 +197,14 @@ pfUI:RegisterModule("unlock", function ()
 
           frame.drag:SetScript("OnMouseUp",function()
               frame:StopMovingOrSizing()
+
+              if frame.drag.snap then
+                frame.drag.snap = false
+                local xpos, ypos = pfUI.unlock.snapping.position(frame)
+                frame:SetPoint("TOPLEFT", xpos, ypos)
+                pfUI.unlock.snapping.hide()
+              end
+
               _, _, _, xpos, ypos = frame:GetPoint()
               frame.drag.backdrop:SetBackdropBorderColor(.2,1,.8,1)
 
@@ -283,7 +296,14 @@ pfUI:RegisterModule("unlock", function ()
 
               C.position[frame:GetName()]["xpos"] = xpos
               C.position[frame:GetName()]["ypos"] = ypos
-              pfUI.unlock.settingChanged = true
+              pfUI.gui.settingChanged = true
+              pfUI.unlock.snapping.recache()
+          end)
+
+          frame:SetScript("OnUpdate", function()
+            if frame.drag.snap then
+              pfUI.unlock.snapping.point(frame)
+            end
           end)
         end
 
@@ -292,6 +312,10 @@ pfUI:RegisterModule("unlock", function ()
         frame.drag:Show()
         frame:Show()
       end
+    end
+
+    if not this.snapping then
+      this.snapping = pfUI.unlock:GetSnapping()
     end
   end)
 
@@ -340,5 +364,175 @@ pfUI:RegisterModule("unlock", function ()
 
     pfUI.unlock:Show()
     pfUI.gui:Hide()
+  end
+
+  function pfUI.unlock:GetSnapping()
+    local w = GetScreenWidth()
+    local h = GetScreenHeight()
+    local t = { 'proj', 'left', 'right', 'top', 'bottom' }
+    local s = {}
+
+    for _, v in pairs(t) do
+      s[v] = pfUI.unlock:CreateTexture(nil, 'OVERLAY')
+      s[v]:SetTexture(1, 1, 0)
+    end
+
+    s.left:SetWidth(1)
+    s.left:SetHeight(h)
+
+    s.right:SetWidth(1)
+    s.right:SetHeight(h)
+
+    s.top:SetWidth(w)
+    s.top:SetHeight(1)
+
+    s.bottom:SetWidth(w)
+    s.bottom:SetHeight(1)
+
+    s.cache = {}
+    s.threshold = 5
+
+    s.show = function()
+      for _, v in pairs(t) do
+        s[v]:Show()
+      end
+    end
+
+    s.hide = function()
+      for _, v in pairs(t) do
+        s[v]:Hide()
+      end
+    end
+
+    s.project = function(f)
+      local z = f:GetScale()
+      local _,_,_, x, y = f:GetPoint()
+      return x * z, y * z, (x + f:GetWidth()) * z, (y - f:GetHeight()) * z
+    end
+
+    s.position = function(f)
+      local z = f:GetScale()
+      local _,_,_, x, y = s.proj:GetPoint()
+      return x / z, y / z
+    end
+
+    s.recache = function()
+      for k in pairs(s.cache) do
+        s.cache[k] = nil
+      end
+
+      for _, f in pairs(pfUI.movables) do
+        local f = _G[f]
+        if f then
+          local n = f:GetName()
+          local x1, y1, x2, y2 = s.project(f)
+          s.cache[n] = { x1 = x1, y1 = y1, x2 = x2, y2 = y2 }
+        end
+      end
+    end
+
+    s.find = function(f)
+      local fx1, fy1, fx2, fy2 = s.project(f)
+      local fw = fx2 - fx1
+      local fh = fy1 - fy2
+      local fName = f:GetName()
+
+      local vicinity = {
+        { distance = 9999, near = 0, type = "left" },
+        { distance = 9999, near = 0, type = "right" },
+        { distance = 9999, near = 0, type = "top" },
+        { distance = 9999, near = 0, type = "bottom" }
+      }
+
+      for name, rect in pairs(s.cache) do
+        if name ~= fName then
+          local lNear = math.abs(fx1 - rect.x1)
+          local lFar = math.abs(fx1 - rect.x2)
+          local lDistance = math.min(lNear, lFar)
+          if vicinity[1].distance > lDistance then
+            vicinity[1].distance = lDistance
+            vicinity[1].near = lNear < lFar and rect.x1 or rect.x2
+          end
+
+          local rNear = math.abs(fx2 - rect.x1)
+          local rFar = math.abs(fx2 - rect.x2)
+          local rDistance = math.min(rNear, rFar)
+          if vicinity[2].distance > rDistance then
+            vicinity[2].distance = rDistance
+            vicinity[2].near = rNear < rFar and rect.x1 or rect.x2
+          end
+
+          local tNear = math.abs(fy1 - rect.y1)
+          local tFar = math.abs(fy1 - rect.y2)
+          local tDistance = math.min(tNear, tFar)
+          if vicinity[3].distance > tDistance then
+            vicinity[3].distance = tDistance
+            vicinity[3].near = tNear < tFar and rect.y1 or rect.y2
+          end
+
+          local bNear = math.abs(fy2 - rect.y1)
+          local bFar = math.abs(fy2 - rect.y2)
+          local bDistance = math.min(bNear, bFar)
+          if vicinity[4].distance > bDistance then
+            vicinity[4].distance = bDistance
+            vicinity[4].near = bNear < bFar and rect.y1 or rect.y2
+          end
+        end
+      end
+
+      table.sort(vicinity, function(a, b) return a.distance < b.distance end)
+
+      local result = { fx1, fy1, fx2, fy2 }
+      local snapped = { horizontally = false, vertically = false }
+
+      for i = 1, 4 do
+        if vicinity[i].distance > s.threshold then
+          break
+        end
+
+        if vicinity[i].type == "left" and not snapped.horizontally then
+          result[1] = vicinity[i].near
+          result[3] = vicinity[i].near + fw
+          snapped.horizontally = true
+        end
+
+        if vicinity[i].type == "right" and not snapped.horizontally then
+          result[1] = vicinity[i].near - fw
+          result[3] = vicinity[i].near
+          snapped.horizontally = true
+        end
+
+        if vicinity[i].type == "top" and not snapped.vertically then
+          result[2] = vicinity[i].near
+          result[4] = vicinity[i].near - fh
+          snapped.vertically = true
+        end
+
+        if vicinity[i].type == "bottom" and not snapped.vertically then
+          result[2] = vicinity[i].near + fh
+          result[4] = vicinity[i].near
+          snapped.vertically = true
+        end
+      end
+
+      return result[1], result[2], result[3], result[4]
+    end
+
+    s.point = function(f)
+      local x1, y1, x2, y2 = s.find(f)
+
+      s.proj:SetPoint("TOPLEFT", x1, y1)
+      s.proj:SetWidth(x2 - x1)
+      s.proj:SetHeight(y1 - y2)
+
+      s.left:SetPoint("TOPLEFT", x1, 0)
+      s.right:SetPoint("TOPLEFT", x2, 0)
+      s.top:SetPoint("TOPLEFT", 0, y1)
+      s.bottom:SetPoint("TOPLEFT", 0, y2)
+    end
+
+    s.recache()
+    s.hide()
+    return s
   end
 end)
