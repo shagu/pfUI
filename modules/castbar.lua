@@ -413,7 +413,7 @@ pfUI:RegisterModule("castbar", function ()
   pfUI.castbar.target.SPELL_HIT = SanitizePattern(SPELLLOGSELFOTHER)
   pfUI.castbar.target.SPELL_CRIT = SanitizePattern(SPELLLOGCRITSELFOTHER)
   pfUI.castbar.target.OTHER_SPELL_HIT = SanitizePattern(SPELLLOGOTHEROTHER)
-  pfUI.castbar.target.OTHER_SPELL_CRIT = SanitizePattern(SPELLLOGOTHEROTHER)
+  pfUI.castbar.target.OTHER_SPELL_CRIT = SanitizePattern(SPELLLOGCRITOTHEROTHER)
   pfUI.castbar.target.SPELL_INTERRUPT = SanitizePattern(SPELLINTERRUPTSELFOTHER)
   pfUI.castbar.target.OTHER_SPELL_INTERRUPT = SanitizePattern(SPELLINTERRUPTOTHEROTHER)
 
