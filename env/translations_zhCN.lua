@@ -382,4 +382,5 @@ pfUI_translation["zhCN"] = {
   ["Your items have been repaired for"] = "装备自动修理花费：",
   ["Your vendor trash has been sold and you earned"] = "自动出售垃圾赚取：",
   ["Zone Name"] = "区域名称",
+  ["Sort Bags & Bank By Reverse"] = "整理背包启用倒序",
 }

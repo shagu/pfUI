@@ -382,4 +382,5 @@ pfUI_translation["esES"] = {
   ["Your items have been repaired for"] = nil,
   ["Your vendor trash has been sold and you earned"] = nil,
   ["Zone Name"] = "Nombre de la Zona",
+  ["Sort Bags & Bank By Reverse"] = nil,
 }
