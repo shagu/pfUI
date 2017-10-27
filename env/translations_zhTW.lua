@@ -379,7 +379,7 @@ pfUI_translation["zhTW"] = {
   ["WIM"] = "WIM",
   ["XP Percentage"] = "經驗百分比",
   ["XP"] = "當前經驗",
-  ["Your items have been repaired for"] = nil,
-  ["Your vendor trash has been sold and you earned"] = nil,
+  ["Your items have been repaired for"] = "裝備自動修理花費：",
+  ["Your vendor trash has been sold and you earned"] = "自動出售垃圾賺取：",
   ["Zone Name"] = "區域名稱",
 }
