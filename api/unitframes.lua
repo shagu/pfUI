@@ -1135,7 +1135,7 @@ function pfUI.uf:ClickAction(button)
 end
 
 function pfUI.uf:AddIcon(frame, pos, icon)
-  local iconsize = 10
+  local iconsize = C.unitframes.buffdebuff_size
   if not frame.hp then return end
   local frame = frame.hp.bar
   if pos > floor(frame:GetWidth() / iconsize) then return end
