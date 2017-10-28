@@ -96,6 +96,7 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("unitframes", nil,           "show_procs",       "0")
   pfUI:UpdateConfig("unitframes", nil,           "all_procs",        "0")
   pfUI:UpdateConfig("unitframes", nil,           "debuffs_class",    "0")
+  pfUI:UpdateConfig("unitframes", nil,           "indicator_size",   "10")
 
   pfUI:UpdateConfig("unitframes", nil,           "clickcast",        "")
   pfUI:UpdateConfig("unitframes", nil,           "clickcast_shift",  "")
