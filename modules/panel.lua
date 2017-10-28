@@ -500,7 +500,7 @@ pfUI:RegisterModule("panel", function ()
 
 
   pfUI.panel.left = CreateFrame("Frame", "pfPanelLeft", UIParent)
-  pfUI.panel.left:SetFrameStrata("FULLSCREEN")
+  pfUI.panel.left:SetFrameStrata("MEDIUM")
   pfUI.panel.left:ClearAllPoints()
 
   if pfUI.chat then
@@ -574,7 +574,7 @@ pfUI:RegisterModule("panel", function ()
   pfUI.panel.left.right.text:SetFontObject(GameFontWhite)
 
   pfUI.panel.right = CreateFrame("Frame", "pfPanelRight", UIParent)
-  pfUI.panel.right:SetFrameStrata("FULLSCREEN")
+  pfUI.panel.right:SetFrameStrata("MEDIUM")
   pfUI.panel.right:ClearAllPoints()
   if pfUI.chat then
     pfUI.panel.right:SetScale(pfUI.chat.left:GetScale())
