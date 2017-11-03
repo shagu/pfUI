@@ -641,7 +641,7 @@ pfUI:RegisterModule("thirdparty", function ()
 
         function pfUI.healComm.onEventRes(unitname)
           for _, f in pairs(pfUI.uf.frames) do
-            if UnitName(f.label .. f.id) == unitname then
+            if f.label and f.id and UnitName(f.label .. f.id) == unitname then
 
               if not f.ressIcon then
                 f.ressIcon = CreateFrame("Frame", nil, f.hp.bar)
