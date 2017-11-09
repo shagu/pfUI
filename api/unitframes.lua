@@ -882,12 +882,12 @@ function pfUI.uf:RefreshUnit(unit, component)
               break
             end
           end
-
-          -- add icons for every found buff
-          for pos, icon in pairs(active) do
-            pfUI.uf:AddIcon(unit, pos, icon)
-          end
         end
+      end
+
+      -- add icons for every found buff
+      for pos, icon in pairs(active) do
+        pfUI.uf:AddIcon(unit, pos, icon)
       end
 
       -- hide unued icon slots
