@@ -797,6 +797,106 @@ function pfUI.uf:RefreshUnit(unit, component)
     end
   end
 
+  -- indicators
+  if component == "all" or component == "aura" then
+    pfUI.uf:SetupDebuffFilter()
+    if table.getn(pfUI.uf.debuffs) > 0 and unit.config.debuff_indicator == "1" then
+      local infected = false
+      for i=1,32 do
+        local _,_,dtype = UnitDebuff(unit.label .. unit.id, i)
+        if dtype then
+          for _, filter in pairs(pfUI.uf.debuffs) do
+            if filter == string.lower(dtype) then
+              if dtype == "Magic" then
+                if not unit.hp.bar.magic then
+                  unit.hp.bar.magic = CreateFrame("Frame", unit.hp.bar)
+                  unit.hp.bar.magic:SetAllPoints(unit)
+                  unit.hp.bar.magic:SetParent(unit.hp.bar)
+                  unit.hp.bar.magic.tex = unit.hp.bar.magic:CreateTexture("OVERLAY")
+                  unit.hp.bar.magic.tex:SetAllPoints(unit.hp.bar.magic)
+                  unit.hp.bar.magic.tex:SetTexture(.2,.8,.8,.4)
+                end
+                unit.hp.bar.magic:Show()
+                infected = true
+
+              elseif dtype == "Poison" then
+                if not unit.hp.bar.poison then
+                  unit.hp.bar.poison = CreateFrame("Frame", unit.hp.bar)
+                  unit.hp.bar.poison:SetAllPoints(unit)
+                  unit.hp.bar.poison:SetParent(unit.hp.bar)
+                  unit.hp.bar.poison.tex = unit.hp.bar.poison:CreateTexture("OVERLAY")
+                  unit.hp.bar.poison.tex:SetAllPoints(unit.hp.bar.poison)
+                  unit.hp.bar.poison.tex:SetTexture(.2,.8,.2,.4)
+                end
+                unit.hp.bar.poison:Show()
+                infected = true
+
+              elseif dtype == "Curse" then
+                if not unit.hp.bar.curse then
+                  unit.hp.bar.curse = CreateFrame("Frame", unit.hp.bar)
+                  unit.hp.bar.curse:SetAllPoints(unit)
+                  unit.hp.bar.curse:SetParent(unit.hp.bar)
+                  unit.hp.bar.curse.tex = unit.hp.bar.curse:CreateTexture("OVERLAY")
+                  unit.hp.bar.curse.tex:SetAllPoints(unit.hp.bar.curse)
+                  unit.hp.bar.curse.tex:SetTexture(.8,.2,.8,.4)
+                end
+                unit.hp.bar.curse:Show()
+                infected = true
+
+              elseif dtype == "Disease" then
+                if not unit.hp.bar.disease then
+                  unit.hp.bar.disease = CreateFrame("Frame", unit.hp.bar)
+                  unit.hp.bar.disease:SetAllPoints(unit)
+                  unit.hp.bar.disease:SetParent(unit.hp.bar)
+                  unit.hp.bar.disease.tex = unit.hp.bar.disease:CreateTexture("OVERLAY")
+                  unit.hp.bar.disease.tex:SetAllPoints(unit.hp.bar.disease)
+                  unit.hp.bar.disease.tex:SetTexture(.8,.8,.2,.4)
+                end
+                unit.hp.bar.disease:Show()
+                infected = true
+              end
+            end
+          end
+        end
+      end
+      if infected == false then
+        if unit.hp.bar.magic then unit.hp.bar.magic:Hide() end
+        if unit.hp.bar.poison then unit.hp.bar.poison:Hide() end
+        if unit.hp.bar.curse then unit.hp.bar.curse:Hide() end
+        if unit.hp.bar.disease then unit.hp.bar.disease:Hide() end
+      end
+    end
+
+    pfUI.uf:SetupBuffFilter()
+    if table.getn(pfUI.uf.buffs) > 0 and unit.config.buff_indicator == "1" then
+      local active = {}
+
+      for i=1,32 do
+        local texture = UnitBuff(unit.label .. unit.id,i)
+
+        if texture then
+          -- match filter
+          for _, filter in pairs(pfUI.uf.buffs) do
+            if filter == string.lower(texture) then
+              table.insert(active, texture)
+              break
+            end
+          end
+
+          -- add icons for every found buff
+          for pos, icon in pairs(active) do
+            pfUI.uf:AddIcon(unit, pos, icon)
+          end
+        end
+      end
+
+      -- hide unued icon slots
+      for pos=table.getn(active)+1, 6 do
+        pfUI.uf:HideIcon(unit, pos)
+      end
+    end
+  end
+
   -- portrait
   if unit.portrait and ( component == "all" or component == "portrait" ) then
     if pfUI_config.unitframes.always2dportrait == "1" then
@@ -925,103 +1025,6 @@ function pfUI.uf:RefreshUnit(unit, component)
 
     if UnitIsTapped(unit.label .. unit.id) and not UnitIsTappedByPlayer(unit.label .. unit.id) then
       unit.hp.bar:SetStatusBarColor(.5,.5,.5,.5)
-    end
-  end
-
-  pfUI.uf:SetupDebuffFilter()
-  if table.getn(pfUI.uf.debuffs) > 0 and unit.config.debuff_indicator == "1" then
-    local infected = false
-    for i=1,32 do
-      local _,_,dtype = UnitDebuff(unit.label .. unit.id, i)
-      if dtype then
-        for _, filter in pairs(pfUI.uf.debuffs) do
-          if filter == string.lower(dtype) then
-            if dtype == "Magic" then
-              if not unit.hp.bar.magic then
-                unit.hp.bar.magic = CreateFrame("Frame", unit.hp.bar)
-                unit.hp.bar.magic:SetAllPoints(unit)
-                unit.hp.bar.magic:SetParent(unit.hp.bar)
-                unit.hp.bar.magic.tex = unit.hp.bar.magic:CreateTexture("OVERLAY")
-                unit.hp.bar.magic.tex:SetAllPoints(unit.hp.bar.magic)
-                unit.hp.bar.magic.tex:SetTexture(.2,.8,.8,.4)
-              end
-              unit.hp.bar.magic:Show()
-              infected = true
-
-            elseif dtype == "Poison" then
-              if not unit.hp.bar.poison then
-                unit.hp.bar.poison = CreateFrame("Frame", unit.hp.bar)
-                unit.hp.bar.poison:SetAllPoints(unit)
-                unit.hp.bar.poison:SetParent(unit.hp.bar)
-                unit.hp.bar.poison.tex = unit.hp.bar.poison:CreateTexture("OVERLAY")
-                unit.hp.bar.poison.tex:SetAllPoints(unit.hp.bar.poison)
-                unit.hp.bar.poison.tex:SetTexture(.2,.8,.2,.4)
-              end
-              unit.hp.bar.poison:Show()
-              infected = true
-
-            elseif dtype == "Curse" then
-              if not unit.hp.bar.curse then
-                unit.hp.bar.curse = CreateFrame("Frame", unit.hp.bar)
-                unit.hp.bar.curse:SetAllPoints(unit)
-                unit.hp.bar.curse:SetParent(unit.hp.bar)
-                unit.hp.bar.curse.tex = unit.hp.bar.curse:CreateTexture("OVERLAY")
-                unit.hp.bar.curse.tex:SetAllPoints(unit.hp.bar.curse)
-                unit.hp.bar.curse.tex:SetTexture(.8,.2,.8,.4)
-              end
-              unit.hp.bar.curse:Show()
-              infected = true
-
-            elseif dtype == "Disease" then
-              if not unit.hp.bar.disease then
-                unit.hp.bar.disease = CreateFrame("Frame", unit.hp.bar)
-                unit.hp.bar.disease:SetAllPoints(unit)
-                unit.hp.bar.disease:SetParent(unit.hp.bar)
-                unit.hp.bar.disease.tex = unit.hp.bar.disease:CreateTexture("OVERLAY")
-                unit.hp.bar.disease.tex:SetAllPoints(unit.hp.bar.disease)
-                unit.hp.bar.disease.tex:SetTexture(.8,.8,.2,.4)
-              end
-              unit.hp.bar.disease:Show()
-              infected = true
-            end
-          end
-        end
-      end
-    end
-    if infected == false then
-      if unit.hp.bar.magic then unit.hp.bar.magic:Hide() end
-      if unit.hp.bar.poison then unit.hp.bar.poison:Hide() end
-      if unit.hp.bar.curse then unit.hp.bar.curse:Hide() end
-      if unit.hp.bar.disease then unit.hp.bar.disease:Hide() end
-    end
-  end
-
-  pfUI.uf:SetupBuffFilter()
-  if table.getn(pfUI.uf.buffs) > 0 and unit.config.buff_indicator == "1" then
-    local active = {}
-
-    for i=1,32 do
-      local texture = UnitBuff(unit.label .. unit.id,i)
-
-      if texture then
-        -- match filter
-        for _, filter in pairs(pfUI.uf.buffs) do
-          if filter == string.lower(texture) then
-            table.insert(active, texture)
-            break
-          end
-        end
-
-        -- add icons for every found buff
-        for pos, icon in pairs(active) do
-          pfUI.uf:AddIcon(unit, pos, icon)
-        end
-      end
-    end
-
-    -- hide unued icon slots
-    for pos=table.getn(active)+1, 6 do
-      pfUI.uf:HideIcon(unit, pos)
     end
   end
 end
