@@ -241,7 +241,7 @@ do -- create a scope so we don't have to worry about upvalue collisions
       end
     end
     -- fallback for GetMasterLootCandidate not updating immediately for leavers
-    unitinfo.lclass,unitinfo.class = _G.UNKNOWN, "UNKNOWN" 
+    unitinfo.lclass,unitinfo.class = _G.UNKNOWN, "UNKNOWN"
     return unitinfo
   end
 end
@@ -421,6 +421,7 @@ function pfUI.api.wipe(src)
   for k in pairs(src) do
     src[k] = nil
   end
+  table.setn(src,0)
   return src
 end
 
