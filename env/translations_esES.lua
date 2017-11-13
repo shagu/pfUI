@@ -383,4 +383,5 @@ pfUI_translation["esES"] = {
   ["Your items have been repaired for"] = "Tus Objetos Equipados se han reparado por",
   ["Your vendor trash has been sold and you earned"] = "Los Objetos de Porquería se han vendido y ganas",
   ["Zone Name"] = "Nombre de la Zona",
+  ["Sort Bags & Bank By Reverse"] = nil,
 }

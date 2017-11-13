@@ -1115,6 +1115,7 @@ pfUI:RegisterModule("gui", function ()
       CreateConfig(this, T["Enable Item Quality Color For Equipment Only"], C.appearance.bags, "borderonlygear", "checkbox")
       CreateConfig(this, T["Auto Sell Grey Items"], C.global, "autosell", "checkbox")
       CreateConfig(this, T["Auto Repair Items"], C.global, "autorepair", "checkbox")
+      CreateConfig(this, T["Sort Bags & Bank By Reverse"], C.appearance.bags, "sortreverse", "checkbox")
       this.setup = true
     end
   end)

@@ -724,7 +724,7 @@ pfUI:RegisterModule("thirdparty", function ()
           end)
 
           pfUI.bag.right.sort:SetScript("OnClick", function()
-            Clean_Up("bags")
+            Clean_Up("bags" , C.appearance.bags.sortreverse == "1" )
           end)
 
           pfUI.bag.right.search:ClearAllPoints()
@@ -762,7 +762,7 @@ pfUI:RegisterModule("thirdparty", function ()
           end)
 
           pfUI.bag.left.sort:SetScript("OnClick", function()
-            Clean_Up("bank")
+            Clean_Up("bank", C.appearance.bags.sortreverse == "1")
           end)
         end
       end)
