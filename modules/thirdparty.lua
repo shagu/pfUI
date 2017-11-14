@@ -309,7 +309,7 @@ pfUI:RegisterModule("thirdparty", function ()
       pfHookDPSMate:RegisterEvent("VARIABLES_LOADED")
       pfHookDPSMate:SetScript("OnEvent",function()
         if DPSMate then
-          pfHookKTM:UnregisterEvent("VARIABLES_LOADED")
+          pfHookDPSMate:UnregisterEvent("VARIABLES_LOADED")
           pfSkinDPSMate()
           pfDockDPSMate()
         end
