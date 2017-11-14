@@ -1397,6 +1397,10 @@ function pfUI.uf:GetStatusValue(unit, pos)
       end
       return unit:GetColor("health") .. pfUI.api.Abbreviate(UnitHealth(unitstr)) .. " - " .. ceil(UnitHealth(unitstr) / UnitHealthMax(unitstr) * 100) .. "%"
     else
+      if unit.label == "target" and MobHealth3 then
+        local hp, hpmax = MobHealth3:GetUnitHealth(unit.label)
+        return unit:GetColor("health") .. pfUI.api.Abbreviate(hp)
+      end
       return unit:GetColor("health") .. pfUI.api.Abbreviate(UnitHealth(unitstr))
     end
   elseif config == "healthminmax" then
