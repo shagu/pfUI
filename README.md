@@ -45,7 +45,7 @@ pfUI supports and contains language specific code for the following gameclients.
 * [DPSMate](https://github.com/Geigerkind/DPSMate) An advanced combat analyzation tool
 * [DebuffTimers](https://github.com/shagu/DebuffTimers) Timer Overlays for enemy debuffs
 * [Clique](https://github.com/shagu/Clique) Simply powerful click-casting interface
-* [Clean_Up](https://github.com/shirsig/Clean_Up) Automatically stacks and sorts your items.
+* [SortBags](https://github.com/shirsig/SortBags) Automatically stacks and sorts your items.
 
 ## FAQ
 **What does "pfUI" stand for?**  

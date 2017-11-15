@@ -309,7 +309,7 @@ pfUI:RegisterModule("thirdparty", function ()
       pfHookDPSMate:RegisterEvent("VARIABLES_LOADED")
       pfHookDPSMate:SetScript("OnEvent",function()
         if DPSMate then
-          pfHookKTM:UnregisterEvent("VARIABLES_LOADED")
+          pfHookDPSMate:UnregisterEvent("VARIABLES_LOADED")
           pfSkinDPSMate()
           pfDockDPSMate()
         end
@@ -641,7 +641,7 @@ pfUI:RegisterModule("thirdparty", function ()
 
         function pfUI.healComm.onEventRes(unitname)
           for _, f in pairs(pfUI.uf.frames) do
-            if UnitName(f.label .. f.id) == unitname then
+            if f.label and f.id and UnitName(f.label .. f.id) == unitname then
 
               if not f.ressIcon then
                 f.ressIcon = CreateFrame("Frame", nil, f.hp.bar)
@@ -683,16 +683,16 @@ pfUI:RegisterModule("thirdparty", function ()
     end)
   end
 
-  do -- CleanUp Integration
-    -- Integrate CleanUp bag sorting into pfUI
-    local function pfSetupClean_Up()
-      pfUI.thirdparty.cleanup = CreateFrame("Frame", nil)
-      pfUI.thirdparty.cleanup:RegisterEvent("BAG_UPDATE")
-      pfUI.thirdparty.cleanup:RegisterEvent("PLAYER_ENTERING_WORLD")
-      pfUI.thirdparty.cleanup:SetScript("OnEvent", function()
+  do -- SortBags Integration
+    -- Integrate SortBags bag sorting into pfUI
+    local function pfSetupSortBags()
+      pfUI.thirdparty.sortbags = CreateFrame("Frame", nil)
+      pfUI.thirdparty.sortbags:RegisterEvent("BAG_UPDATE")
+      pfUI.thirdparty.sortbags:RegisterEvent("PLAYER_ENTERING_WORLD")
+      pfUI.thirdparty.sortbags:SetScript("OnEvent", function()
         -- make sure bagframe was already created
         if not pfUI.bag or not pfUI.bag.right then return end
-        pfUI.thirdparty.cleanup:UnregisterAllEvents()
+        pfUI.thirdparty.sortbags:UnregisterAllEvents()
 
         -- draw the button
         if not pfUI.bag.right.sort then
@@ -724,7 +724,7 @@ pfUI:RegisterModule("thirdparty", function ()
           end)
 
           pfUI.bag.right.sort:SetScript("OnClick", function()
-            Clean_Up("bags")
+            SortBags()
           end)
 
           pfUI.bag.right.search:ClearAllPoints()
@@ -762,22 +762,22 @@ pfUI:RegisterModule("thirdparty", function ()
           end)
 
           pfUI.bag.left.sort:SetScript("OnClick", function()
-            Clean_Up("bank")
+            SortBankBags()
           end)
         end
       end)
     end
 
-    if C.thirdparty.cleanup.enable == "1" then
-      if Clean_Up then
-        pfSetupClean_Up()
+    if C.thirdparty.sortbags.enable == "1" then
+      if IsAddOnLoaded("SortBags") then
+        pfSetupSortBags()
       else
-        local pfHookClean_Up = CreateFrame("Frame", nil)
-        pfHookClean_Up:RegisterEvent("VARIABLES_LOADED")
-        pfHookClean_Up:SetScript("OnEvent",function()
-            if Clean_Up then
-              pfHookClean_Up:UnregisterEvent("VARIABLES_LOADED")
-              pfSetupClean_Up()
+        local pfHookSortBags = CreateFrame("Frame", nil)
+        pfHookSortBags:RegisterEvent("VARIABLES_LOADED")
+        pfHookSortBags:SetScript("OnEvent",function()
+            if IsAddOnLoaded("SortBags") then
+              pfHookSortBags:UnregisterEvent("VARIABLES_LOADED")
+              pfSetupSortBags()
             end
           end)
       end

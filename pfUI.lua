@@ -128,6 +128,8 @@ function pfUI.SetupCVars()
   ClearTutorials()
   TutorialFrame_HideAllAlerts()
 
+  ConsoleExec("CameraDistanceMaxFactor 5")
+
   SetCVar("autoSelfCast", "1")
   SetCVar("profanityFilter", "0")
 

@@ -7,12 +7,6 @@ pfUI:RegisterModule("minimap", function ()
   GameTimeFrame:Hide()
 
   MinimapBorder:SetTexture(nil)
-  Minimap:SetMaskTexture("Interface\\AddOns\\pfUI\\img\\minimap")
-
-  Minimap:EnableMouseWheel(true)
-  Minimap:SetScript("OnMouseWheel", function()
-      if(arg1 > 0) then Minimap_ZoomIn() else Minimap_ZoomOut() end
-    end)
 
   pfUI.minimap = CreateFrame("Frame","pfMinimap",UIParent)
   CreateBackdrop(pfUI.minimap)
@@ -24,6 +18,12 @@ pfUI:RegisterModule("minimap", function ()
 
   Minimap:SetParent(pfUI.minimap)
   Minimap:SetPoint("CENTER", pfUI.minimap, "CENTER", 0.5, -.5)
+  Minimap:SetFrameLevel(1)
+  Minimap:SetMaskTexture("Interface\\AddOns\\pfUI\\img\\minimap")
+  Minimap:EnableMouseWheel(true)
+  Minimap:SetScript("OnMouseWheel", function()
+      if(arg1 > 0) then Minimap_ZoomIn() else Minimap_ZoomOut() end
+    end)
 
   -- battleground icon
   MiniMapBattlefieldFrame:ClearAllPoints()

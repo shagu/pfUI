@@ -774,7 +774,7 @@ pfUI:RegisterModule("chat", function ()
         if C.chat.global.whispermod == "1" then
           -- patch incoming whisper string to match the colors
           if string.find(text, '|cff'..wcol, 1) == 1 then
-            text = string.gsub(text, "|r", "|cff" .. wcol)
+            text = string.gsub(text, "|r", "|r|cff" .. wcol)
           end
         end
 

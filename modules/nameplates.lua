@@ -572,8 +572,10 @@ pfUI:RegisterModule("nameplates", function ()
   pfUI.nameplates.combat:SetScript("OnEvent", function()
     if event == "PLAYER_ENTER_COMBAT" then
       this.inCombat = 1
+      if PlayerFrame then PlayerFrame.inCombat = 1 end
     elseif event == "PLAYER_LEAVE_COMBAT" then
       this.inCombat = nil
+      if PlayerFrame then PlayerFrame.inCombat = nil end
     end
   end)
 
