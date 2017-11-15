@@ -8,15 +8,15 @@ function pfUI.api.CreateTabChild(self, title, bwidth, bheight, bottom, static)
   local button_height = bheight or 20
   local border = 4
 
+  --check width with blizzard *SUPER HACK* (check QuestLogFrame.lua)
+  --easiest way, shouldn't create new object or trying get from button
+  QuestLogDummyText:SetText(title)
+  if not bwidth then
+    button_width = QuestLogDummyText:GetWidth() + 10
+  end
+
   -- create tab button
   local b = CreateFrame("Button", "pfConfig" .. title .. "Button", self, "UIPanelButtonTemplate")
-  b.text = b:CreateFontString("Title", "LOW", "GameFontNormal")
-  b.text:SetText(title)
-
-  --check width
-  if not bwidth then
-	button_width = b.text:GetStringWidth() + 10
-  end
 
   b:SetHeight(button_height)
   b:SetWidth(button_width)
