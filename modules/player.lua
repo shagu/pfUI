@@ -12,18 +12,7 @@ pfUI:RegisterModule("player", function ()
   PlayerFrame:Hide()
   PlayerFrame:UnregisterAllEvents()
 
---[[  if C.unitframes.player.panchor == "TOP" then
-    relative_point = "BOTTOM"
-  elseif C.unitframes.player.panchor == "LEFT" then
-    relative_point = "BOTTOMLEFT"
-  elseif C.unitframes.player.panchor == "RIGHT" then
-    relative_point = "BOTTOMRIGHT"
-  end --]]
-
-
   pfUI.uf.player = pfUI.uf:CreateUnitFrame("Player", nil, C.unitframes.player)
-  --[[pfUI.uf.player.power:SetWidth(C.unitframes.player.pwidth)
-  pfUI.uf.player.power:SetPoint(C.unitframes.player.panchor, pfUI.uf.player.hp.bar, relative_point, 0, -2*default_border - spacing)--]]
 
   pfUI.uf.player.pvpicon = CreateFrame("Frame", nil, pfUI.uf.player)
   pfUI.uf.player.pvpicon:Hide()
