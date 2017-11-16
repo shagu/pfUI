@@ -20,7 +20,6 @@ pfUI:RegisterModule("player", function ()
     relative_point = "BOTTOMRIGHT"
   end
 
-
   pfUI.uf.player = pfUI.uf:CreateUnitFrame("Player", nil, C.unitframes.player)
   pfUI.uf.player.power:SetWidth(C.unitframes.player.pwidth)
   pfUI.uf.player.power:SetPoint(C.unitframes.player.panchor, pfUI.uf.player.hp.bar, relative_point, 0, -2*default_border - spacing)
