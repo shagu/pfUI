@@ -406,6 +406,12 @@ pfUI:RegisterModule("gui", function ()
     "13:" .. T["Very Slow"],
   }
 
+  pfUI.gui.dropdowns.uf_powerbar_position = {
+    "LEFT:" .. T["Left"],
+    "TOP:" .. T["Center"],
+    "RIGHT:" .. T["Right"]
+  }
+
   pfUI.gui.dropdowns.uf_portrait_position = {
     "bar:" .. T["Healthbar Embedded"],
     "left:" .. T["Left"],
@@ -708,6 +714,8 @@ pfUI:RegisterModule("gui", function ()
       CreateConfig(this, T["Health Bar Width"], C.unitframes.player, "width")
       CreateConfig(this, T["Health Bar Height"], C.unitframes.player, "height")
       CreateConfig(this, T["Power Bar Height"], C.unitframes.player, "pheight")
+      CreateConfig(this, T["Power Bar Width"], C.unitframes.player, "pwidth")
+      CreateConfig(this, T["Power Bar Anchor"], C.unitframes.player, "panchor", "dropdown", pfUI.gui.dropdowns.uf_powerbar_position)
       CreateConfig(this, T["Spacing"], C.unitframes.player, "pspace")
       CreateConfig(this, T["Buff Position"], C.unitframes.player, "buffs", "dropdown", pfUI.gui.dropdowns.uf_buff_position)
       CreateConfig(this, T["Buff Size"], C.unitframes.player, "buffsize")
@@ -749,6 +757,8 @@ pfUI:RegisterModule("gui", function ()
       CreateConfig(this, T["Health Bar Width"], C.unitframes.target, "width")
       CreateConfig(this, T["Health Bar Height"], C.unitframes.target, "height")
       CreateConfig(this, T["Power Bar Height"], C.unitframes.target, "pheight")
+      CreateConfig(this, T["Power Bar Width"], C.unitframes.target, "pwidth")
+      CreateConfig(this, T["Power Bar Anchor"], C.unitframes.target, "panchor", "dropdown", pfUI.gui.dropdowns.uf_powerbar_position)
       CreateConfig(this, T["Spacing"], C.unitframes.target, "pspace")
       CreateConfig(this, T["Buff Position"], C.unitframes.target, "buffs", "dropdown", pfUI.gui.dropdowns.uf_buff_position)
       CreateConfig(this, T["Buff Size"], C.unitframes.target, "buffsize")
@@ -789,6 +799,8 @@ pfUI:RegisterModule("gui", function ()
       CreateConfig(this, T["Health Bar Width"], C.unitframes.ttarget, "width")
       CreateConfig(this, T["Health Bar Height"], C.unitframes.ttarget, "height")
       CreateConfig(this, T["Power Bar Height"], C.unitframes.ttarget, "pheight")
+      CreateConfig(this, T["Power Bar Width"], C.unitframes.ttarget, "pwidth")
+      CreateConfig(this, T["Power Bar Anchor"], C.unitframes.ttarget, "panchor", "dropdown", pfUI.gui.dropdowns.uf_powerbar_position)
       CreateConfig(this, T["Spacing"], C.unitframes.ttarget, "pspace")
       CreateConfig(this, T["Buff Position"], C.unitframes.ttarget, "buffs", "dropdown", pfUI.gui.dropdowns.uf_buff_position)
       CreateConfig(this, T["Buff Size"], C.unitframes.ttarget, "buffsize")
@@ -869,6 +881,8 @@ pfUI:RegisterModule("gui", function ()
       CreateConfig(this, T["Health Bar Width"], C.unitframes.focus, "width")
       CreateConfig(this, T["Health Bar Height"], C.unitframes.focus, "height")
       CreateConfig(this, T["Power Bar Height"], C.unitframes.focus, "pheight")
+      CreateConfig(this, T["Power Bar Width"], C.unitframes.focus, "pwidth")
+      CreateConfig(this, T["Power Bar Anchor"], C.unitframes.focus, "panchor", "dropdown", pfUI.gui.dropdowns.uf_powerbar_position)
       CreateConfig(this, T["Spacing"], C.unitframes.focus, "pspace")
       CreateConfig(this, T["Buff Position"], C.unitframes.focus, "buffs", "dropdown", pfUI.gui.dropdowns.uf_buff_position)
       CreateConfig(this, T["Buff Size"], C.unitframes.focus, "buffsize")
