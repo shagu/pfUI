@@ -74,12 +74,11 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
   f.config = config or pfUI_config.unitframes.fallback
   f.tick = tick
 
-  if f.config.panchor == "TOP" then
-    relative_point = "BOTTOM"
-  elseif f.config.panchor == "LEFT" then
-    relative_point = "BOTTOMLEFT"
-  elseif f.config.panchor == "RIGHT" then
-    relative_point = "BOTTOMRIGHT"
+  local relative_point = "BOTTOM"
+  if f.config.panchor == "TOPLEFT" then
+     relative_point = "BOTTOMLEFT"
+  elseif f.config.panchor == "TOPRIGHT" then
+     relative_point = "BOTTOMRIGHT"
   end
 
   f:SetFrameStrata("BACKGROUND")
@@ -107,7 +106,7 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
 
   f.power = CreateFrame("Frame",nil, f)
   f.power:SetPoint(f.config.panchor, f.hp, relative_point, 0, -2*default_border - f.config.pspace)
-  f.power:SetWidth(f.config.pwidth)
+  f.power:SetWidth((f.config.pwidth ~= "-1" and f.config.pwidth or f.config.width))
   f.power:SetHeight(f.config.pheight)
   if tonumber(f.config.pheight) < 0 then f.power:Hide() end
 

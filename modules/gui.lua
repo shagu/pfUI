@@ -407,9 +407,9 @@ pfUI:RegisterModule("gui", function ()
   }
 
   pfUI.gui.dropdowns.uf_powerbar_position = {
-    "LEFT:" .. T["Left"],
+    "TOPLEFT:" .. T["Left"],
     "TOP:" .. T["Center"],
-    "RIGHT:" .. T["Right"]
+    "TOPRIGHT:" .. T["Right"]
   }
 
   pfUI.gui.dropdowns.uf_portrait_position = {
