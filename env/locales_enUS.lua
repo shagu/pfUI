@@ -12,6 +12,8 @@ pfUI_locale["enUS"]["class"] = {
   ["Rogue"] = "ROGUE",
 }
 
+pfUI_locale["enUS"]["totems"] = " Totem"
+
 pfUI_locale["enUS"]["bagtypes"] = {
   ["Quiver"] = "QUIVER",
   ["Soul Bag"] = "SOULBAG",

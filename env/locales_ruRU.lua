@@ -12,6 +12,8 @@ pfUI_locale["ruRU"]["class"] = {
   ["Разбойник"] = "ROGUE",
 }
 
+pfUI_locale["ruRU"]["totems"] = "Тотем "
+
 pfUI_locale["ruRU"]["bagtypes"] = {
   ["Колчан"] = "QUIVER",
   ["Сумка душ"] = "SOULBAG",

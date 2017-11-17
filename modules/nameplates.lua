@@ -367,6 +367,14 @@ pfUI:RegisterModule("nameplates", function ()
       end
     end
 
+    -- Hide Totems
+    --message(unitname..": "..this.needNameUpdate)
+    if C.nameplates.totems == "1" and not this.needNameUpdate then
+      if string.find(unitname, L["totems"]) then
+        this:Hide()
+      end
+    end
+
     -- level elite indicator
     if this.needEliteUpdate and pfUI.nameplates.mobs[unitname] then
       if level:GetText() ~= nil then
