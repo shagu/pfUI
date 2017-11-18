@@ -367,11 +367,12 @@ pfUI:RegisterModule("nameplates", function ()
       end
     end
 
-    -- Hide Totems
-    --message(unitname..": "..this.needNameUpdate)
+    -- hide totems
     if C.nameplates.totems == "1" and not this.needNameUpdate then
-      if string.find(unitname, L["totems"]) then
-        this:Hide()
+      for totem in pairs(L["totems"]) do
+        if string.find(unitname, totem) then
+          this:Hide()
+        end
       end
     end
 

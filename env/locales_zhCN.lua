@@ -12,8 +12,6 @@ pfUI_locale["zhCN"]["class"] = {
   ["盗贼"] = "ROGUE",
 }
 
-pfUI_locale["zhCN"]["totems"] = "图腾"
-
 pfUI_locale["zhCN"]["bagtypes"] = {
   ["箭袋"] = "QUIVER",
   ["灵魂袋"] = "SOULBAG",

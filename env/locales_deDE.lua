@@ -12,8 +12,6 @@ pfUI_locale["deDE"]["class"] = {
   ["Schurke"] = "ROGUE",
 }
 
-pfUI_locale["deDE"]["totems"] = "Totem "
-
 pfUI_locale["deDE"]["bagtypes"] = {
   ["Köcher"] = "QUIVER",
   ["Seelentasche"] = "SOULBAG",

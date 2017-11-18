@@ -12,8 +12,6 @@ pfUI_locale["koKR"]["class"] = {
   ["도적"] = "ROGUE",
 }
 
-pfUI_locale["koKR"]["totems"] = "토템"
-
 pfUI_locale["koKR"]["bagtypes"] = {
   ["화살통"] = "QUIVER",
   ["영혼의 가방"] = "SOULBAG",
