@@ -2251,3 +2251,25 @@ pfUI_locale["esES"]["spells"] = {
   ['[PH] Teletransporte a Theramore'] = {t=2000, icon="Temp" },
   ['[PH] Teletransporte a Entrañas'] = {t=2000, icon="Temp" },
 }
+
+pfUI_locale["esES"]["totems"] = {
+  ["Tótem purgador de enfermedades"] = true,
+  ["Tótem nexo terrestre"] = true,
+  ["Tótem Nova de Fuego"] = true,
+  ["Tótem de Resistencia al Fuego"] = true,
+  ["Tótem lengua de Fuego"] = true,
+  ["Tótem de resistencia a la Escarcha"] = true,
+  ["Tótem derribador"] = true,
+  ["Tótem de corriente curativa"] = true,
+  ["Tótem de magma"] = true,
+  ["Tótem de fuente de maná"] = true,
+  ["Tótem de marea de maná"] = true,
+  ["Tótem de resistencia a la Naturaleza"] = true,
+  ["Tótem abrasador"] = true,
+  ["Tótem centinela"] = true,
+  ["Tótem Garra de piedra"] = true,
+  ["Tótem piel de piedra"] = true,
+  ["Fuerza de tótem de la Tierra"] = true,
+  ["Tótem de tremor"] = true,
+  ["Tótem Viento Furioso"] = true,
+}

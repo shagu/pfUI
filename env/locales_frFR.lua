@@ -2246,3 +2246,25 @@ pfUI_locale["frFR"]["spells"] = {
   ['[PH] Téléportation à Theramore'] = {t=2000, icon="Temp" },
   ['[PH] Téléportation à Undercity'] = {t=2000, icon="Temp" },
 }
+
+pfUI_locale["frFR"]["totems"] = {
+  ["Totem de Purification des maladies"] = true,
+  ["Totem de lien terrestre"] = true,
+  ["Totem Nova de feu"] = true,
+  ["Totem de résistance au Feu"] = true,
+  ["Totem Langue de feu"] = true,
+  ["Totem de résistance au Givre"] = true,
+  ["Totem de Glèbe"] = true,
+  ["Totem guérisseur"] = true,
+  ["Totem de Magma"] = true,
+  ["Totem Fontaine de mana"] = true,
+  ["Totem de Vague de mana"] = true,
+  ["Totem de résistance à la Nature"] = true,
+  ["Totem incendiaire"] = true,
+  ["Totem Sentinelle"] = true,
+  ["Totem de Griffes de pierre"] = true,
+  ["Totem de Peau de pierre"] = true,
+  ["Totem de Force de la Terre"] = true,
+  ["Totem de Séisme"] = true,
+  ["Totem Furie-des-vents"] = true,
+}

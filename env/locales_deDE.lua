@@ -2251,3 +2251,25 @@ pfUI_locale["deDE"]["spells"] = {
   ['[PH] Nach Theramore teleportieren'] = {t=2000, icon="Temp" },
   ['[PH] Nach Undercity teleportieren'] = {t=2000, icon="Temp" },
 }
+
+pfUI_locale["deDE"]["totems"] = {
+  ["Totem der Krankheitsreinigung"] = true,
+  ["Totem der Erdbindung"] = true,
+  ["Totem der Feuernova"] = true,
+  ["Totem des Feuerwiderstands"] = true,
+  ["Totem der Flammenzunge"] = true,
+  ["Totem des Frostwiderstands"] = true,
+  ["Totem der Erdung"] = true,
+  ["Totem des heilenden Flusses"] = true,
+  ["Totem der glühenden Magma"] = true,
+  ["Totem der Manaquelle"] = true,
+  ["Totem der Manaflut"] = true,
+  ["Totem des Naturwiderstands"] = true,
+  ["Totem der Verbrennung"] = true,
+  ["Totem des Wachens"] = true,
+  ["Totem der Steinklaue"] = true,
+  ["Totem der Steinhaut"] = true,
+  ["Totem der Erdstärke"] = true,
+  ["Totem des Erdstoßes"] = true,
+  ["Totem des Windzorns"] = true,
+}

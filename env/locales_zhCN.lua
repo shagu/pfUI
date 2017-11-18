@@ -2246,3 +2246,25 @@ pfUI_locale["zhCN"]["spells"] = {
   ['[PH] Teleport to Theramore'] = {t=2000, icon="Temp" },
   ['[PH] Teleport to Undercity'] = {t=2000, icon="Temp" },
 }
+
+pfUI_locale["zhCN"]["totems"] = {
+  ["祛病图腾"] = true,
+  ["地缚图腾"] = true,
+  ["火焰新星图腾"] = true,
+  ["抗火图腾"] = true,
+  ["火舌图腾"] = true,
+  ["抗寒图腾"] = true,
+  ["根基图腾"] = true,
+  ["治疗之泉图腾"] = true,
+  ["熔岩图腾"] = true,
+  ["法力之泉图腾"] = true,
+  ["法力之潮图腾"] = true,
+  ["自然抗性图腾"] = true,
+  ["灼热图腾"] = true,
+  ["岗哨图腾"] = true,
+  ["石爪图腾"] = true,
+  ["石肤图腾"] = true,
+  ["大地之力图腾"] = true,
+  ["战栗图腾"] = true,
+  ["风怒图腾"] = true,
+}
