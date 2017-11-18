@@ -2251,3 +2251,25 @@ pfUI_locale["enUS"]["spells"] = {
   ['[PH] Teleport to Theramore'] = {t=2000, icon="Temp" },
   ['[PH] Teleport to Undercity'] = {t=2000, icon="Temp" },
 }
+
+pfUI_locale["enUS"]["totems"] = {
+  ["Disease Cleansing Totem"] = true,
+  ["Earthbind Totem"] = true,
+  ["Fire Nova Totem"] = true,
+  ["Fire Resistance Totem"] = true,
+  ["Flametongue Totem"] = true,
+  ["Frost Resistance Totem"] = true,
+  ["Grounding Totem"] = true,
+  ["Healing Stream Totem"] = true,
+  ["Magma Totem"] = true,
+  ["Mana Spring Totem"] = true,
+  ["Mana Tide Totem"] = true,
+  ["Nature Resistance Totem"] = true,
+  ["Searing Totem"] = true,
+  ["Sentry Totem"] = true,
+  ["Stoneclaw Totem"] = true,
+  ["Stoneskin Totem"] = true,
+  ["Strength of Earth Totem"] = true,
+  ["Tremor Totem"] = true,
+  ["Windfury Totem"] = true,
+}

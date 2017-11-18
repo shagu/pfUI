@@ -38,7 +38,7 @@ pfUI:RegisterModule("uf_tukui", function ()
 
     pfUI.castbar.player:SetAllPoints(pfUI.uf.player.caption)
     UpdateMovable(pfUI.castbar.player)
-    CreateBackdrop(pfUI.uf.player.caption)
+    CreateBackdrop(pfUI.uf.player.caption, default_border)
 
     -- Target
     pfUI.uf.target:UpdateFrameSize()
@@ -67,6 +67,6 @@ pfUI:RegisterModule("uf_tukui", function ()
 
     pfUI.castbar.target:SetAllPoints(pfUI.uf.target.caption)
     UpdateMovable(pfUI.castbar.target)
-    CreateBackdrop(pfUI.uf.target.caption)
+    CreateBackdrop(pfUI.uf.target.caption, default_border)
   end
 end)
