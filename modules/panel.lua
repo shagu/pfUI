@@ -220,8 +220,12 @@ pfUI:RegisterModule("panel", function ()
       if oldexp ~= nil then
         difexp = curexp - oldexp
         maxexp = UnitXPMax("player")
-        remexp = floor((maxexp - curexp)/difexp)
-        remstring = "|cff555555 [" .. remexp .. "]|r"
+        if difexp > 0 then
+          remexp = floor((maxexp - curexp)/difexp)
+          remstring = "|cff555555 [" .. remexp .. "]|r"
+        else
+          remstring = nil
+        end
       end
       oldexp = curexp
 
