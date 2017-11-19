@@ -328,7 +328,7 @@ function pfUI.api.SkinCloseButton(button, parentFrame, offsetX, offsetY)
 end
 
 -- [ CenterFrame ]
--- Clears points and centers a frame 
+-- Clears points and centers a frame
 -- 'frame'           [frame] the frame that should be centered.
 -- 'relativeFrame'   [frame] frame that should be used for centering if not use ui parent.
 function pfUI.api.CenterFrame(frame, relativeFrame)
@@ -353,7 +353,7 @@ function pfUI.api.SkinBackdropOffset(frame, offset)
   StripTextures(frame)
   CreateBackdrop(frame, nil, nil, .0)
   local offsetBorder = -3
-  if offset then offsetBorder = offset end 
+  if offset then offsetBorder = offset end
   frame.backdrop:SetPoint("TOPLEFT", frame, "TOPLEFT", -offsetBorder, offsetBorder)
   frame.backdrop:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", offsetBorder, -offsetBorder)
 end
@@ -364,7 +364,7 @@ function pfUI.api.SkinCheckbox(frame, offset)
   frame:SetHighlightTexture("")
   CreateBackdrop(frame, nil, nil, .0)
   local offsetBorder = -5
-  if offset then offsetBorder = offset end 
+  if offset then offsetBorder = offset end
   frame.backdrop:SetPoint("TOPLEFT", frame, "TOPLEFT", -offsetBorder, offsetBorder)
   frame.backdrop:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", offsetBorder, -offsetBorder)
   frame:SetHitRectInsets(-offsetBorder,-offsetBorder,-offsetBorder,-offsetBorder)
@@ -374,9 +374,9 @@ function pfUI.api.SkinDropDown(frame, offsetX, offsetY)
   StripTextures(frame)
   CreateBackdrop(frame, nil, nil, .0)
   local offsetXBorder = -16
-  if offsetX then offsetXBorder = offsetX end 
+  if offsetX then offsetXBorder = offsetX end
   local offsetYBorder = -4
-  if offsetY then offsetYBorder = offsetY end 
+  if offsetY then offsetYBorder = offsetY end
   frame.backdrop:SetPoint("TOPLEFT", frame, "TOPLEFT", -offsetXBorder, offsetYBorder)
   frame.backdrop:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", offsetXBorder, -offsetYBorder)
   frame:SetHitRectInsets(-offsetXBorder, -offsetXBorder, -offsetYBorder, -offsetYBorder)
