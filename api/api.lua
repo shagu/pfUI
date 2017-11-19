@@ -130,9 +130,9 @@ function pfUI.api.GetItemCount(itemName)
     for slot = 1, GetContainerNumSlots(bag) do
       local _, itemCount = GetContainerItemInfo(bag, slot);
       if itemCount then
-			  local itemLink = GetContainerItemLink(bag,slot)
+        local itemLink = GetContainerItemLink(bag,slot)
         local _, _, itemParse = strfind(itemLink, "(%d+):")
-				local queryName, _, _, _, _, _ = GetItemInfo(itemParse)
+        local queryName, _, _, _, _, _ = GetItemInfo(itemParse)
         if queryName and queryName ~= "" then
           if queryName == itemName then
             count = count + itemCount;
@@ -568,16 +568,22 @@ function pfUI.api.CreateBackdrop(f, inset, legacy, transp)
   if not f.backdrop then
     f:SetBackdrop(nil)
 
-    local border = tonumber(border) - 1
     local backdrop = pfUI.backdrop
-    if border < 1 then backdrop = pfUI.backdrop_small end
-  	local b = CreateFrame("Frame", nil, f)
-  	b:SetPoint("TOPLEFT", f, "TOPLEFT", -border, border)
-  	b:SetPoint("BOTTOMRIGHT", f, "BOTTOMRIGHT", border, -border)
+    local b = CreateFrame("Frame", nil, f)
+    if tonumber(border) > 1 then
+      local border = tonumber(border) - 1
+      backdrop.insets = {left = -1, right = -1, top = -1, bottom = -1}
+      b:SetPoint("TOPLEFT", f, "TOPLEFT", -border, border)
+      b:SetPoint("BOTTOMRIGHT", f, "BOTTOMRIGHT", border, -border)
+    else
+      local border = tonumber(border)
+      backdrop.insets = {left = 0, right = 0, top = 0, bottom = 0}
+      b:SetPoint("TOPLEFT", f, "TOPLEFT", -border, border)
+      b:SetPoint("BOTTOMRIGHT", f, "BOTTOMRIGHT", border, -border)
+    end
 
     local level = f:GetFrameLevel()
     if level < 1 then
-  	  --f:SetFrameLevel(level + 1)
       b:SetFrameLevel(level)
     else
       b:SetFrameLevel(level - 1)
