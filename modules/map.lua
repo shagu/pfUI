@@ -9,6 +9,11 @@ pfUI:RegisterModule("map", function ()
     end
   end
 
+  if not C.position[WorldMapFrame:GetName()] then
+    C.position[WorldMapFrame:GetName()] = { alpha = 1.0, scale = 0.7 }
+  end
+  local c_position = C.position[WorldMapFrame:GetName()]
+
   local pfMapLoader = CreateFrame("Frame", nil, UIParent)
   pfMapLoader:RegisterEvent("PLAYER_ENTERING_WORLD")
   pfMapLoader:SetScript("OnEvent", function()
@@ -33,11 +38,13 @@ pfUI:RegisterModule("map", function ()
       WorldMapFrame:EnableMouseWheel(1)
       WorldMapFrame:SetScript("OnMouseWheel", function()
         if IsShiftKeyDown() then
-          WorldMapFrame:SetAlpha(WorldMapFrame:GetAlpha() + arg1/10)
+          c_position.alpha = pfUI.api.clamp(WorldMapFrame:GetAlpha() + arg1/10, 0.1, 1.0)
+          WorldMapFrame:SetAlpha(c_position.alpha)
         end
 
         if IsControlKeyDown() then
-          WorldMapFrame:SetScale(WorldMapFrame:GetScale() + arg1/10)
+          c_position.scale = pfUI.api.clamp(WorldMapFrame:GetScale() + arg1/10, 0.1, 2.0)
+          WorldMapFrame:SetScale(c_position.scale)
         end
       end)
 
@@ -56,8 +63,10 @@ pfUI:RegisterModule("map", function ()
 
       WorldMapFrameCloseButton:SetPoint("TOPRIGHT", WorldMapFrame, "TOPRIGHT", 0, 0)
       CreateBackdrop(WorldMapFrame)
-
-      WorldMapFrame:SetScale(.7)
+      
+      WorldMapFrame:SetAlpha(c_position.alpha)
+      WorldMapFrame:SetScale(c_position.scale)
+      
       BlackoutWorld:Hide()
 
       for i,v in ipairs({WorldMapFrame:GetRegions()}) do
