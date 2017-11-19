@@ -1389,13 +1389,13 @@ pfUI:RegisterModule("gui", function ()
   end)
 
 
-  -- [[ Modules ]]
-  pfUI.gui.tabs.modules = pfUI.gui.tabs:CreateTabChild(T["Modules"], nil, nil, nil, true)
-  pfUI.gui.tabs.modules.tabs = CreateTabFrame(pfUI.gui.tabs.modules, "TOP", true)
+  -- [[ Core ]]
+  pfUI.gui.tabs.components = pfUI.gui.tabs:CreateTabChild(T["Components"], nil, nil, nil, true)
+  pfUI.gui.tabs.components.tabs = CreateTabFrame(pfUI.gui.tabs.components, "TOP", true)
 
-  -- General
-  pfUI.gui.tabs.modules.tabs.general = pfUI.gui.tabs.modules.tabs:CreateTabChild(T["Modules"], 70)
-  pfUI.gui.tabs.modules.tabs.general:SetScript("OnShow", function()
+  -- Modules
+  pfUI.gui.tabs.components.tabs.modules = pfUI.gui.tabs.components.tabs:CreateTabChild(T["Modules"], 70)
+  pfUI.gui.tabs.components.tabs.modules:SetScript("OnShow", function()
     if not this.setup then
       for i,m in pairs(pfUI.modules) do
         if m ~= "gui" then
@@ -1403,6 +1403,19 @@ pfUI:RegisterModule("gui", function ()
           pfUI:UpdateConfig("disabled", nil, m, "0")
           CreateConfig(this, T["Disable Module"] .. " " .. m, C.disabled, m, "checkbox")
         end
+      end
+      this.setup = true
+    end
+  end)
+
+  -- Skins
+  pfUI.gui.tabs.components.tabs.skins = pfUI.gui.tabs.components.tabs:CreateTabChild(T["Skins"], 70)
+  pfUI.gui.tabs.components.tabs.skins:SetScript("OnShow", function()
+    if not this.setup then
+      for i,m in pairs(pfUI.skins) do
+        -- create disabled entry if not existing and display
+        pfUI:UpdateConfig("disabled", nil, "skin_" .. m, "0")
+        CreateConfig(this, T["Disable Skin"] .. " " .. m, C.disabled, "skin_" .. m, "checkbox")
       end
       this.setup = true
     end

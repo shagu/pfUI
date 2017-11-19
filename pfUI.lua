@@ -37,6 +37,8 @@ pfUI_translation = {}
 pfUI.cache = {}
 pfUI.module = {}
 pfUI.modules = {}
+pfUI.skin = {}
+pfUI.skins = {}
 pfUI.environment = {}
 pfUI.movables = {}
 pfUI.version = {}
@@ -91,6 +93,14 @@ pfUI:SetScript("OnEvent", function()
         pfUI.module[m]()
       end
     end
+
+    -- load skins
+    for i,s in pairs(this.skins) do
+      if not ( pfUI_config["disabled"] and pfUI_config["disabled"]["skin_" .. s]  == "1" ) then
+        setfenv(pfUI.skin[s], pfUI:GetEnvironment())
+        pfUI.skin[s]()
+      end
+    end
   end
 end)
 
@@ -99,9 +109,20 @@ function pfUI:RegisterModule(n, f)
   table.insert(pfUI.modules, n)
 end
 
+function pfUI:RegisterSkin(n, f)
+  pfUI.skin[n] = f
+  table.insert(pfUI.skins, n)
+end
+
 pfUI.backdrop = {
   bgFile = "Interface\\AddOns\\pfUI\\img\\col", tile = true, tileSize = 8,
   edgeFile = "Interface\\AddOns\\pfUI\\img\\border", edgeSize = 8,
+  insets = {left = -1, right = -1, top = -1, bottom = -1},
+}
+
+pfUI.backdrop_no_top = {
+  bgFile = "Interface\\AddOns\\pfUI\\img\\col", tile = true, tileSize = 8,
+  edgeFile = "Interface\\AddOns\\pfUI\\img\\border_no_top", edgeSize = 8,
   insets = {left = -1, right = -1, top = -1, bottom = -1},
 }
 
