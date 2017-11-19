@@ -2,14 +2,23 @@
 setfenv(1, pfUI:GetEnvironment())
 
 function pfUI.api.CreateTabChild(self, title, bwidth, bheight, bottom, static)
+  -- create tab button
+  local b = CreateFrame("Button", "pfConfig" .. title .. "Button", self, "UIPanelButtonTemplate")
+  b:SetText(title)
+
   -- setup env
   local childcount = table.getn(self.childs) + 1
-  local button_width = bwidth or 150
+  local button_width = bwidth
   local button_height = bheight or 20
   local border = 4
 
-  -- create tab button
-  local b = CreateFrame("Button", "pfConfig" .. title .. "Button", self, "UIPanelButtonTemplate")
+  if not button_width then
+    button_width = 150
+  elseif button_width == true then
+    button_width = _G["pfConfig" .. title .. "ButtonText"]:GetStringWidth() + 4 * border
+  end
+
+  -- set dimensions
   b:SetHeight(button_height)
   b:SetWidth(button_width)
   b:SetID(childcount)
@@ -23,11 +32,15 @@ function pfUI.api.CreateTabChild(self, title, bwidth, bheight, bottom, static)
     end
   elseif self.align == "TOP" then
     local outside = self.outside and 2 * border + button_height or 0
-    b:SetPoint("TOPLEFT", self, "TOPLEFT", (childcount-1) * (button_width) + (childcount * border) + (self.outside and -border), -border + outside )
+    local prev_button = self.buttons[getn(self.buttons)]
+    if prev_button then
+      b:SetPoint("TOPLEFT", prev_button, "TOPRIGHT", border, 0)
+    else
+      b:SetPoint("TOPLEFT", self, "TOPLEFT", border + (self.outside and -border), -border + outside )
+    end
   end
 
   SkinButton(b,.2,1,.8)
-  b:SetText(title)
 
   if childcount ~= 1 then
     b:SetTextColor(.5,.5,.5)
