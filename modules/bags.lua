@@ -308,19 +308,21 @@ pfUI:RegisterModule("bags", function ()
     -- detect backdrop border color
     if quality and quality > tonumber(C.appearance.bags.borderlimit) then
       pfUI.bags[bag].slots[slot].frame.backdrop:SetBackdropBorderColor(GetItemQualityColor(quality))
+    elseif texture then
+      pfUI.bags[bag].slots[slot].frame.backdrop:SetBackdropBorderColor(.5,.5,.5,1)
     else
       local bagtype = GetBagFamily(bag)
 
       if bagtype == "QUIVER" then
-        pfUI.bags[bag].slots[slot].frame.backdrop:SetBackdropBorderColor(.8,.8,.2,1)
+        pfUI.bags[bag].slots[slot].frame.backdrop:SetBackdropBorderColor(1,1,.5,.5)
       elseif bagtype == "SOULBAG" then
-        pfUI.bags[bag].slots[slot].frame.backdrop:SetBackdropBorderColor(.5,.2,.2,1)
+        pfUI.bags[bag].slots[slot].frame.backdrop:SetBackdropBorderColor(1,.5,.5,.5)
       elseif bagtype == "SPECIAL" then
-        pfUI.bags[bag].slots[slot].frame.backdrop:SetBackdropBorderColor(.2,.2,.8,1)
+        pfUI.bags[bag].slots[slot].frame.backdrop:SetBackdropBorderColor(.5,.5,1,.5)
       elseif bagtype == "KEYRING" then
-        pfUI.bags[bag].slots[slot].frame.backdrop:SetBackdropBorderColor(.2,.8,.8,1)
+        pfUI.bags[bag].slots[slot].frame.backdrop:SetBackdropBorderColor(.5,1,1,.5)
       elseif bagtype == "BAG" then
-        pfUI.bags[bag].slots[slot].frame.backdrop:SetBackdropBorderColor(.3,.3,.3,1)
+        pfUI.bags[bag].slots[slot].frame.backdrop:SetBackdropBorderColor(1,1,1,.2)
       end
     end
 
