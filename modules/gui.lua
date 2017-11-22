@@ -644,6 +644,7 @@ pfUI:RegisterModule("gui", function ()
       CreateConfig(this, T["Panel Border Size"], C.appearance.border, "panels")
       CreateConfig(this, T["Chat Border Size"], C.appearance.border, "chat")
       CreateConfig(this, T["Bags Border Size"], C.appearance.border, "bags")
+      CreateConfig(this, T["Tracking Icon Border Size"], C.appearance.border, "tracking")
       this.setup = true
     end
   end)
@@ -1174,6 +1175,8 @@ pfUI:RegisterModule("gui", function ()
       CreateConfig(this, T["Disable Minimap Buffs"], C.global, "hidebuff", "checkbox")
       CreateConfig(this, T["Disable Minimap Weapon Buffs"], C.global, "hidewbuff", "checkbox")
       CreateConfig(this, T["Show PvP Icon"], C.unitframes.player, "showPVPMinimap", "checkbox")
+      CreateConfig(this, T["Tracking Icon Size"], C.appearance.minimap, "tracking_size")
+      CreateConfig(this, T["Indicate No Active Tracking"], C.appearance.minimap, "tracking_pulse", "checkbox")
       this.setup = true
     end
   end)
