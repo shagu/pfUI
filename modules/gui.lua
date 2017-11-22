@@ -1192,6 +1192,8 @@ pfUI:RegisterModule("gui", function ()
       CreateConfig(this, T["Disable Minimap Buffs"], C.global, "hidebuff", "checkbox")
       CreateConfig(this, T["Disable Minimap Weapon Buffs"], C.global, "hidewbuff", "checkbox")
       CreateConfig(this, T["Show PvP Icon"], C.unitframes.player, "showPVPMinimap", "checkbox")
+      CreateConfig(this, T["Show Inactive Tracking"], C.appearance.minimap, "tracking_pulse", "checkbox")
+      CreateConfig(this, T["Tracking Icon Size"], C.appearance.minimap, "tracking_size")
       this.setup = true
     end
   end)
