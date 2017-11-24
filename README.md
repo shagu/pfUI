@@ -37,6 +37,7 @@ pfUI supports and contains language specific code for the following gameclients.
 * Russian (ruRU)
 
 ## Recommended Addons
+* [pfQuest](https://github.com/Shagu/pfQuest) A simple database and quest helper
 * [HealComm](https://github.com/Aviana/HealComm/releases) Visual representation of incoming heals
 * [WIM](http://addons.us.to/addon/wim), [WIM (continued)](https://github.com/shirsig/WIM) Give whispers an instant messenger feel
 * [MobHealth3](http://addons.us.to/addon/mobhealth) Estimates a mob's health
