@@ -1,5 +1,6 @@
 pfUI:RegisterModule("tooltip", function ()
 local alpha = tonumber(C.tooltip.alpha)
+GameTooltip:SetClampedToScreen(true)
 CreateBackdrop(GameTooltip, nil, nil, alpha)
 
   if C.tooltip.position == "cursor" then
@@ -111,6 +112,7 @@ CreateBackdrop(GameTooltip, nil, nil, alpha)
       end
   end)
 
+  GameTooltipStatusBar:SetClampedToScreen(true)
   GameTooltipStatusBar:SetHeight(6)
   GameTooltipStatusBar:ClearAllPoints()
   GameTooltipStatusBar:SetPoint("BOTTOMLEFT", GameTooltip, "TOPLEFT", 0, 0)
