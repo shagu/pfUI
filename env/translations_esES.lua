@@ -223,6 +223,7 @@ pfUI_translation["esES"] = {
   ["Inputbox Width"] = "Ancho de Inputbox",
   ["Instant"] = "Instantáneo",
   ["Invert Health Bar"] = "Invertir la Barra de Salud",
+  ["Horizontal/Vertical Health Bar"] = nil,
   ["is not allowed in profile name"] = "no se permite en el nombe de perfil",
   ["Item Durability"] = "Durabilidad del Objeto",
   ["KLH Threat Meter (Dock)"] = "KLH Threat Meter (Dársena)",

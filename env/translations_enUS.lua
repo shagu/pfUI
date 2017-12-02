@@ -223,6 +223,7 @@ pfUI_translation["enUS"] = {
   ["Inputbox Width"] = nil,
   ["Instant"] = nil,
   ["Invert Health Bar"] = nil,
+  ["Horizontal/Vertical Health Bar"] = nil,
   ["is not allowed in profile name"] = nil,
   ["Item Durability"] = nil,
   ["KLH Threat Meter (Dock)"] = nil,

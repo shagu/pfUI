@@ -624,14 +624,32 @@ pfUI:RegisterModule("thirdparty", function ()
             if healthWidth + incWidth > width * (1+(OVERHEALPERCENT/100)) then
               incWidth = width * (1+OVERHEALPERCENT/100) - healthWidth
             end
-            frame.incHeal:ClearAllPoints()
-            frame.incHeal:SetPoint("TOPLEFT", frame.hp.bar, "TOPLEFT", 0, 0)
 
-            if frame.config.invert_healthbar == "1" then
-              frame.incHeal:SetWidth(incWidth)
-              frame.incHeal:SetFrameStrata("HIGH")
-            else
+            local height = frame.hp.bar:GetHeight() / frame.hp.bar:GetEffectiveScale()
+            local healthHeight = height * (health / maxHealth)
+            local incHeight = height * healed / maxHealth
+            if healthHeight + incHeight > height * (1+(OVERHEALPERCENT/100)) then
+              incHeight = height * (1+OVERHEALPERCENT/100) - healthHeight
+            end
+
+            frame.incHeal:ClearAllPoints()
+            if frame.config.healthbar_dir == "Horizontal" then
+              frame.incHeal:SetPoint("TOPLEFT", frame.hp.bar, "TOPLEFT", 0, 0)
               frame.incHeal:SetWidth(incWidth + healthWidth)
+            else
+              frame.incHeal:SetPoint("BOTTOM", frame.hp.bar, "BOTTOM", 0, 0)
+              frame.incHeal:SetWidth(width)
+              frame.incHeal:SetHeight(incHeight + healthHeight)
+            end
+            if frame.config.invert_healthbar == "1" then
+              if frame.config.healthbar_dir == "Horizontal" then
+                frame.incHeal:SetWidth(incWidth)
+                frame.incHeal:SetFrameStrata("HIGH")                
+              else
+                frame.incHeal:SetHeight(incHeight)
+                frame.incHeal:SetFrameStrata("HIGH")
+              end
+            else
               frame.incHeal:SetFrameStrata("BACKGROUND")
             end
           else
