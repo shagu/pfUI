@@ -15,23 +15,28 @@ pfUI:RegisterModule("xpbar", function ()
   pfUI.xp:RegisterEvent("PLAYER_ENTERING_WORLD")
 
   pfUI.xp:SetScript("OnEvent", function()
-      if UnitXPMax("player") ~= 0 then
-        pfUI.xp.bar:SetMinMaxValues(0, UnitXPMax("player"))
-        pfUI.xp.bar:SetValue(UnitXP("player"))
-        if GetXPExhaustion() then
-          pfUI.xp.restedbar:Show()
-          pfUI.xp.restedbar:SetMinMaxValues(0, UnitXPMax("player"))
-          pfUI.xp.restedbar:SetValue(UnitXP("player") + GetXPExhaustion())
-        else
-          pfUI.xp.restedbar:Hide()
-        end
-        pfUI.xp:SetAlpha(1)
-        pfUI.xp.tick = GetTime() + 3.00
+    if event == "PLAYER_ENTERING_WORLD" or event == "PLAYER_LEVEL_UP" then
+      pfUI.xp.starttime = GetTime()
+      pfUI.xp.startxp = UnitXP("player")
+    end
 
+    if UnitXPMax("player") ~= 0 then
+      pfUI.xp.bar:SetMinMaxValues(0, UnitXPMax("player"))
+      pfUI.xp.bar:SetValue(UnitXP("player"))
+      if GetXPExhaustion() then
+        pfUI.xp.restedbar:Show()
+        pfUI.xp.restedbar:SetMinMaxValues(0, UnitXPMax("player"))
+        pfUI.xp.restedbar:SetValue(UnitXP("player") + GetXPExhaustion())
       else
-        pfUI.xp:Hide(0)
+        pfUI.xp.restedbar:Hide()
       end
-    end)
+      pfUI.xp:SetAlpha(1)
+      pfUI.xp.tick = GetTime() + 3.00
+
+    else
+      pfUI.xp:Hide(0)
+    end
+  end)
 
   pfUI.xp:SetScript("OnUpdate",function()
       if C.panel.xp.showalways == "1" then return end
@@ -71,6 +76,10 @@ pfUI:RegisterModule("xpbar", function ()
       if GetXPExhaustion() then
         GameTooltip:AddDoubleLine(T["Rested"], "|cff5555ff+" .. exh .. " (" .. exh_perc .. "%)")
       end
+
+      GameTooltip:AddLine(" ")
+      GameTooltip:AddDoubleLine(T["This Session"], "|cffffffff" .. UnitXP("player") - pfUI.xp.startxp)
+      GameTooltip:AddDoubleLine(T["Average Per Hour"], "|cffffffff" .. floor(((UnitXP("player") - pfUI.xp.startxp) / (GetTime() - pfUI.xp.starttime)) * 60 * 60))
       GameTooltip:Show()
     end)
 
