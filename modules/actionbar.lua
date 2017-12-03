@@ -44,6 +44,16 @@ pfUI:RegisterModule("actionbar", function ()
     if pfBonusBar then pfBonusBar:Hide() end
   end)
 
+  if C.bars.keydown == "1" then
+    hooksecurefunc("ActionButtonDown", function(id)
+      ActionButtonUp(id)
+    end, true)
+
+    hooksecurefunc("MultiActionButtonDown", function(bar, id)
+      MultiActionButtonUp(bar, id)
+    end, true)
+  end
+
   -- reagent counter
   local reagentslots = { }
   local reagentscan = CreateFrame("GameTooltip", "pfReagentScanner", UIParent, "GameTooltipTemplate")
