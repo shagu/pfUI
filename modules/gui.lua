@@ -1262,6 +1262,18 @@ pfUI:RegisterModule("gui", function ()
     end
   end)
 
+  -- >> Autohide
+  pfUI.gui.tabs.panel.tabs.autohide = pfUI.gui.tabs.panel.tabs:CreateTabChild(T["Autohide"], true)
+  pfUI.gui.tabs.panel.tabs.autohide:SetScript("OnShow", function()
+    if not this.setup then
+      CreateConfig(this, T["Enable Autohide For Left Chat Panel"], C.panel, "hide_leftchat", "checkbox")
+      CreateConfig(this, T["Enable Autohide For Right Chat Panel"], C.panel, "hide_rightchat", "checkbox")
+      CreateConfig(this, T["Enable Autohide For Minimap Panel"], C.panel, "hide_minimap", "checkbox")
+      CreateConfig(this, T["Enable Autohide For Microbar Panel"], C.panel, "hide_microbar", "checkbox")
+      this.setup = true
+    end
+  end)
+
 
   -- [[ Tooltip ]]
   pfUI.gui.tabs.tooltip = pfUI.gui.tabs:CreateTabChild(T["Tooltip"], nil, nil, nil, true)
