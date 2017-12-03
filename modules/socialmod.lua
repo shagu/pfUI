@@ -46,6 +46,8 @@ pfUI:RegisterModule("socialmod", function ()
 
     for i=1, FRIENDS_TO_DISPLAY do
       local name, level, class, zone, connected = GetFriendInfo(off + i)
+      if not name then break end
+
       if connected then
         local ccolor = RAID_CLASS_COLORS[L["class"][class]] or { 1, 1, 1 }
         local lcolor = GetDifficultyColor(tonumber(level)) or { 1, 1, 1 }
