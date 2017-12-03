@@ -472,6 +472,13 @@ pfUI:RegisterModule("gui", function ()
     "cursor:" .. T["Cursor"]
   }
 
+  pfUI.gui.dropdowns.tooltip_align = {
+    "native:" .. T["Native"],
+    "top:" .. T["Top"],
+    "left:" .. T["Left"],
+    "right:" .. T["Right"]
+  }
+
   pfUI.gui.dropdowns.gmserver_text = {
     "elysium:" .. T["Elysium Based Core"],
   }
@@ -1265,6 +1272,8 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.tabs.tooltip.tabs.general:SetScript("OnShow", function()
     if not this.setup then
       CreateConfig(this, T["Tooltip Position"], C.tooltip, "position", "dropdown", pfUI.gui.dropdowns.tooltip_position)
+      CreateConfig(this, T["Cursor Tooltip Align"], C.tooltip, "cursoralign", "dropdown", pfUI.gui.dropdowns.tooltip_align)
+      CreateConfig(this, T["Cursor Tooltip Offset"], C.tooltip, "cursoroffset")
       CreateConfig(this, T["Enable Extended Guild Information"], C.tooltip, "extguild", "checkbox")
       CreateConfig(this, T["Custom Transparency"], C.tooltip, "alpha")
       CreateConfig(this, T["Always Show Item Comparison"], C.tooltip.compare, "showalways", "checkbox")
