@@ -83,3 +83,4 @@ modules\uf_tukui.lua
 modules\custom.lua
 modules\gm.lua
 modules\mirrortimers.lua
+modules\socialmod.lua
