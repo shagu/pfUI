@@ -737,6 +737,7 @@ pfUI:RegisterModule("chat", function ()
   ChatFrameEditBox:SetAltArrowKeyMode(false)
 
   local default = " " .. "%s" .. "|r:" .. "\32"
+     if C.chat.text.channelnumonly == "1" then
   _G.CHAT_CHANNEL_GET = "%s" .. "|r:" .. "\32"
   _G.CHAT_GUILD_GET = '[G]' .. default
   _G.CHAT_OFFICER_GET = '[O]'.. default
@@ -747,7 +748,7 @@ pfUI:RegisterModule("chat", function ()
   _G.CHAT_BATTLEGROUND_GET = '[BG]' .. default
   _G.CHAT_BATTLEGROUND_LEADER_GET = '[BL]' .. default
   _G.CHAT_SAY_GET = '[S]' .. default
-
+end
   local cr, cg, cb, ca = strsplit(",", C.chat.global.whisper)
   cr, cg, cb = tonumber(cr), tonumber(cg), tonumber(cb)
   local wcol = string.format("%02x%02x%02x",cr * 255,cg * 255, cb * 255)
