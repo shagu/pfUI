@@ -54,6 +54,8 @@ pfUI:RegisterModule("tracking", function ()
   pfUI.tracking.icon:SetTexCoord(.08, .92, .08, .92)
   pfUI.tracking.icon:SetAllPoints(pfUI.tracking)
 
+  pfUI.tracking.menu = CreateFrame("Frame", "pfUIDropDownMenuTracking", nil, "UIDropDownMenuTemplate")
+
   pfUI.tracking:RegisterEvent("PLAYER_ENTERING_WORLD")
   pfUI.tracking:RegisterEvent("PLAYER_AURAS_CHANGED")
   pfUI.tracking:RegisterEvent("SPELLS_CHANGED")
@@ -100,8 +102,12 @@ pfUI:RegisterModule("tracking", function ()
     end
   end)
 
-  pfUI.tracking:RegisterForClicks("RightButtonUp")
+  pfUI.tracking:RegisterForClicks("LeftButtonUp", "RightButtonUp")
   pfUI.tracking:SetScript("OnClick", function()
+    if arg1 == "LeftButton" then
+      pfUI.tracking:InitMenu()
+      ToggleDropDownMenu(1, nil, pfUI.tracking.menu, "cursor", 0, 0)
+    end
     if arg1 == "RightButton" and state.texture then
       CancelTrackingBuff()
     end
@@ -131,7 +137,7 @@ pfUI:RegisterModule("tracking", function ()
       for spellIndex = offset + 1, offset + numSpells do
         local spellTexture = GetSpellTexture(spellIndex, BOOKTYPE_SPELL)
         for _, c in pairs({"any", playerClass}) do
-          for _, t in pairs(knownTrackingSpellTextures[c]) do
+          for _, t in pairs(knownTrackingSpellTextures[c] or {}) do
             if c == "DRUID" and not isCatForm then
               break
             end
@@ -160,6 +166,24 @@ pfUI:RegisterModule("tracking", function ()
       end
     end
     return false
+  end
+
+  function pfUI.tracking:InitMenu()
+    UIDropDownMenu_Initialize(pfUI.tracking.menu, function ()
+      UIDropDownMenu_AddButton({text = "Tracking", isTitle = 1})
+      for _, spell in pairs(state.spells) do
+        UIDropDownMenu_AddButton({
+          text = spell.name,
+          icon = spell.texture,
+          checked = spell.texture == state.texture,
+          arg1 = spell,
+          func = function (arg1)
+            CastSpell(arg1.index, BOOKTYPE_SPELL)
+            CloseDropDownMenus()
+          end
+        })
+      end
+    end, "MENU");
   end
 
 end)
