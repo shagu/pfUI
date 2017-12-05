@@ -633,7 +633,7 @@ pfUI:RegisterModule("thirdparty", function ()
             end
 
             frame.incHeal:ClearAllPoints()
-            if frame.config.healthbar_dir == "Horizontal" then
+            if frame.config.verticalbar == "0" then
               frame.incHeal:SetPoint("TOPLEFT", frame.hp.bar, "TOPLEFT", 0, 0)
               frame.incHeal:SetWidth(incWidth + healthWidth)
             else
@@ -642,7 +642,7 @@ pfUI:RegisterModule("thirdparty", function ()
               frame.incHeal:SetHeight(incHeight + healthHeight)
             end
             if frame.config.invert_healthbar == "1" then
-              if frame.config.healthbar_dir == "Horizontal" then
+              if frame.config.verticalbar == "0" then
                 frame.incHeal:SetWidth(incWidth)
                 frame.incHeal:SetFrameStrata("HIGH")                
               else

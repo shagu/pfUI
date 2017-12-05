@@ -94,7 +94,7 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
   f.hp.bar = CreateFrame("StatusBar", nil, f.hp)
   f.hp.bar:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
   f.hp.bar:SetAllPoints(f.hp)
-  f.hp.bar:SetOrientation(f.config.healthbar_dir)
+  f.hp.bar:SetOrientation(f.config.verticalbar)
   f.hp.bar:SetMinMaxValues(0, 100)
 
   if pfUI_config.unitframes.custombg == "1" then
