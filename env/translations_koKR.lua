@@ -231,6 +231,7 @@ pfUI_translation["koKR"] = {
   ["Inputbox Width"] = "챗팅 입력창 넓이",
   ["Instant"] = "즉시",
   ["Invert Health Bar"] = "체력바 반전",
+  ["Enable Vertical Health Bar"] = nil,
   ["is not allowed in profile name"] = "프로필 이름에 허용되지 않습니다.",
   ["Item Durability"] = "아이템 내구도",
   ["KLH Threat Meter (Dock)"] = "KLH 어그로 미터기 (독)",

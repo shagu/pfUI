@@ -231,6 +231,7 @@ pfUI_translation["ruRU"] = {
   ["Inputbox Width"] = "Ширина поля ввода",
   ["Instant"] = "Мгновенно",
   ["Invert Health Bar"] = "Инвертировать панель здоровья",
+  ["Enable Vertical Health Bar"] = nil,
   ["is not allowed in profile name"] = "не разрешено в имени профиля",
   ["Item Durability"] = "Прочность предметов",
   ["KLH Threat Meter (Dock)"] = "KLH Threat Meter (панель)",

@@ -231,6 +231,7 @@ pfUI_translation["zhTW"] = {
   ["Inputbox Width"] = "輸入框寬度",
   ["Instant"] = "極快",
   ["Invert Health Bar"] = "血量反色顯示",
+  ["Enable Vertical Health Bar"] = nil,
   ["is not allowed in profile name"] = "在設定檔名中不允許",
   ["Item Durability"] = "裝備耐久",
   ["KLH Threat Meter (Dock)"] = "KLH Threat Meter (停靠)",
