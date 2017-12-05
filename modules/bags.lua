@@ -255,6 +255,15 @@ pfUI:RegisterModule("bags", function ()
       if bag == -1 then tpl = "BankItemButtonGenericTemplate" end
       pfUI.bags[bag].slots[slot] = {}
       pfUI.bags[bag].slots[slot].frame = CreateFrame("Button", "pfBag" .. bag .. "item" .. slot,  pfUI.bags[bag], tpl)
+
+      -- add cooldown frame to bankslots
+      if tpl == "BankItemButtonGenericTemplate" then
+        local bankslot = pfUI.bags[bag].slots[slot].frame
+        local name = "pfBag" .. bag .. "item" .. slot .. "Cooldown"
+        bankslot.cooldown = CreateFrame("Model", name, bankslot, "CooldownFrameTemplate")
+        bankslot.cooldown:SetAllPoints(bankslot)
+      end
+
       CreateBackdrop(pfUI.bags[bag].slots[slot].frame, default_border)
       pfUI.bags[bag].slots[slot].frame:SetNormalTexture("")
 
@@ -285,10 +294,7 @@ pfUI:RegisterModule("bags", function ()
       pfUI.bags[bag].slots[slot].frame.hasItem = nil
     end
 
-    -- bankframe does not support cooldowns
-    if bag ~= -1 then
-      ContainerFrame_UpdateCooldown(bag, pfUI.bags[bag].slots[slot].frame)
-    end
+    ContainerFrame_UpdateCooldown(bag, pfUI.bags[bag].slots[slot].frame)
 
     local count = _G[pfUI.bags[bag].slots[slot].frame:GetName() .. "Count"]
     count:SetFont(pfUI.font_unit, C.global.font_unit_size, "OUTLINE")
