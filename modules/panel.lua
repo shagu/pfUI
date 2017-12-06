@@ -704,4 +704,22 @@ pfUI:RegisterModule("panel", function ()
       button:Show()
     end
   end
+
+
+  pfUI.panel.autohide = CreateFrame("Frame", nil, UIParent)
+  pfUI.panel.autohide:RegisterEvent("PLAYER_ENTERING_WORLD")
+  pfUI.panel.autohide:SetScript("OnEvent", function()
+    if C.panel.hide_leftchat == "1" then
+      CreateAutohide(pfUI.panel.left)
+    end
+    if C.panel.hide_rightchat == "1" then
+      CreateAutohide(pfUI.panel.right)
+    end
+    if C.panel.hide_minimap == "1" then
+      CreateAutohide(pfUI.panel.minimap)
+    end
+    if C.panel.hide_microbar == "1" then
+      CreateAutohide(pfUI.panel.microbutton)
+    end
+  end)
 end)

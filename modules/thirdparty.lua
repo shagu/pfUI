@@ -503,7 +503,6 @@ pfUI:RegisterModule("thirdparty", function ()
               pfUI.uf.player.incHeal:SetMinMaxValues(0, 1)
               pfUI.uf.player.incHeal:SetValue(1)
               pfUI.uf.player.incHeal:SetStatusBarColor(0, 1, 0, 0.5)
-              pfUI.uf.player.incHeal:SetHeight(pfUI.uf.player.hp:GetHeight())
               pfUI.uf.player.incHeal:Hide()
             end
             return pfUI.uf.player
@@ -519,7 +518,6 @@ pfUI:RegisterModule("thirdparty", function ()
               pfUI.uf.target.incHeal:SetMinMaxValues(0, 1)
               pfUI.uf.target.incHeal:SetValue(1)
               pfUI.uf.target.incHeal:SetStatusBarColor(0, 1, 0, 0.5)
-              pfUI.uf.target.incHeal:SetHeight(pfUI.uf.target.hp:GetHeight())
               pfUI.uf.target.incHeal:Hide()
             end
             return pfUI.uf.target
@@ -537,7 +535,6 @@ pfUI:RegisterModule("thirdparty", function ()
                 pfUI.uf.group[id].incHeal:SetMinMaxValues(0, 1)
                 pfUI.uf.group[id].incHeal:SetValue(1)
                 pfUI.uf.group[id].incHeal:SetStatusBarColor(0, 1, 0, 0.5)
-                pfUI.uf.group[id].incHeal:SetHeight(pfUI.uf.group[id].hp:GetHeight())
                 pfUI.uf.group[id].incHeal:Hide()
               end
               return pfUI.uf.group[id]
@@ -564,7 +561,6 @@ pfUI:RegisterModule("thirdparty", function ()
                 pfUI.uf.raid[id].incHeal:SetMinMaxValues(0, 1)
                 pfUI.uf.raid[id].incHeal:SetValue(1)
                 pfUI.uf.raid[id].incHeal:SetStatusBarColor(0, 1, 0, 0.5)
-                pfUI.uf.raid[id].incHeal:SetHeight(pfUI.uf.raid[id].hp:GetHeight())
                 pfUI.uf.raid[id].incHeal:Hide()
               end
               return pfUI.uf.raid[id]
@@ -618,21 +614,42 @@ pfUI:RegisterModule("thirdparty", function ()
 
           if( healed > 0 and (health < maxHealth or OVERHEALPERCENT > 0 )) and frame:IsVisible() then
             frame.incHeal:Show()
-            local width = frame.hp.bar:GetWidth() / frame.hp.bar:GetEffectiveScale()
-            local healthWidth = width * (health / maxHealth)
-            local incWidth = width * healed / maxHealth
-            if healthWidth + incWidth > width * (1+(OVERHEALPERCENT/100)) then
-              incWidth = width * (1+OVERHEALPERCENT/100) - healthWidth
-            end
+            frame.incHeal:SetFrameStrata("BACKGROUND")
             frame.incHeal:ClearAllPoints()
-            frame.incHeal:SetPoint("TOPLEFT", frame.hp.bar, "TOPLEFT", 0, 0)
 
-            if frame.config.invert_healthbar == "1" then
-              frame.incHeal:SetWidth(incWidth)
-              frame.incHeal:SetFrameStrata("HIGH")
-            else
+            local width = frame.hp.bar:GetWidth() / frame.hp.bar:GetEffectiveScale()
+            local height = frame.hp.bar:GetHeight() / frame.hp.bar:GetEffectiveScale()
+
+            if frame.config.verticalbar == "0" then
+              local healthWidth = width * (health / maxHealth)
+              local incWidth = width * healed / maxHealth
+              if healthWidth + incWidth > width * (1+(OVERHEALPERCENT/100)) then
+                incWidth = width * (1+OVERHEALPERCENT/100) - healthWidth
+              end
+
+              frame.incHeal:SetPoint("TOPLEFT", frame.hp.bar, "TOPLEFT", 0, 0)
+              frame.incHeal:SetHeight(height)
               frame.incHeal:SetWidth(incWidth + healthWidth)
-              frame.incHeal:SetFrameStrata("BACKGROUND")
+
+              if frame.config.invert_healthbar == "1" then
+                frame.incHeal:SetWidth(incWidth)
+                frame.incHeal:SetFrameStrata("HIGH")
+              end
+            else
+              local healthHeight = height * (health / maxHealth)
+              local incHeight = height * healed / maxHealth
+              if healthHeight + incHeight > height * (1+(OVERHEALPERCENT/100)) then
+                incHeight = height * (1+OVERHEALPERCENT/100) - healthHeight
+              end
+
+              frame.incHeal:SetPoint("BOTTOM", frame.hp.bar, "BOTTOM", 0, 0)
+              frame.incHeal:SetWidth(width)
+              frame.incHeal:SetHeight(incHeight + healthHeight)
+
+              if frame.config.invert_healthbar == "1" then
+                frame.incHeal:SetHeight(incHeight)
+                frame.incHeal:SetFrameStrata("HIGH")
+              end
             end
           else
             frame.incHeal:Hide()

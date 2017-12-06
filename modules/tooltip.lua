@@ -5,6 +5,30 @@ CreateBackdrop(GameTooltip, nil, nil, alpha)
   if C.tooltip.position == "cursor" then
     function _G.GameTooltip_SetDefaultAnchor(tooltip, parent)
       tooltip:SetOwner(parent, "ANCHOR_CURSOR")
+      if C.tooltip.cursoralign ~= "native" then
+        -- create mouse follow frame
+        if not tooltip.cursor then
+          tooltip.cursor = CreateFrame("Frame")
+          tooltip.cursor:SetWidth(tonumber(C.tooltip.cursoroffset) * 2)
+          tooltip.cursor:SetHeight(tonumber(C.tooltip.cursoroffset) * 2)
+          tooltip.cursor:SetScript("OnUpdate", function()
+            local x, y = GetCursorPosition()
+            this:SetPoint("CENTER", UIParent, "BOTTOMLEFT", x, y)
+            if C.tooltip.cursoralign == "top" then
+              tooltip.cursor:SetWidth(tooltip:GetWidth())
+            end
+          end)
+        end
+
+        -- adjust tooltip to mouse frame
+        if C.tooltip.cursoralign == "top" then
+          tooltip:SetPoint("BOTTOMLEFT", tooltip.cursor, "TOPLEFT", 0, 0)
+        elseif C.tooltip.cursoralign == "left" then
+          tooltip:SetPoint("BOTTOMRIGHT", tooltip.cursor, "TOPLEFT", 0, 0)
+        elseif C.tooltip.cursoralign == "right" then
+          tooltip:SetPoint("BOTTOMLEFT", tooltip.cursor, "TOPRIGHT", 0, 0)
+        end
+      end
     end
   end
 

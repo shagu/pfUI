@@ -85,6 +85,20 @@ function pfUI.api.round(input, places)
   end
 end
 
+-- [ clamp ]
+-- Clamps a number between given range.
+-- 'x'          [number]        the number that should be clamped.
+-- 'min'        [number]        minimum value.
+-- 'max'        [number]        maximum value.
+-- returns:     [number]        clamped value: 'x', 'min' or 'max' value itself.
+function pfUI.api.clamp(x, min, max)
+  if type(x) == "number" and type(min) == "number" and type(max) == "number" then
+    return x < min and min or x > max and max or x
+  else
+    return x
+  end
+end
+
 -- [ SanitizePattern ]
 -- Sanitizes and convert patterns into gfind compatible ones.
 -- 'pattern'    [string]         unformatted pattern

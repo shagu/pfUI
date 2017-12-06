@@ -425,6 +425,7 @@ pfUI:RegisterModule("gui", function ()
     "off:" .. T["Disabled"]
   }
 
+
   pfUI.gui.dropdowns.uf_layout = {
     "default:" .. T["Default"],
     "tukui:TukUI"
@@ -470,6 +471,13 @@ pfUI:RegisterModule("gui", function ()
     "bottom:" .. T["Bottom"],
     "chat:" .. T["Dodge"],
     "cursor:" .. T["Cursor"]
+  }
+
+  pfUI.gui.dropdowns.tooltip_align = {
+    "native:" .. T["Native"],
+    "top:" .. T["Top"],
+    "left:" .. T["Left"],
+    "right:" .. T["Right"]
   }
 
   pfUI.gui.dropdowns.gmserver_text = {
@@ -727,6 +735,7 @@ pfUI:RegisterModule("gui", function ()
       CreateConfig(this, T["Debuff Limit"], C.unitframes.player, "debufflimit")
       CreateConfig(this, T["Debuffs Per Row"], C.unitframes.player, "debuffperrow")
       CreateConfig(this, T["Invert Health Bar"], C.unitframes.player, "invert_healthbar", "checkbox")
+      CreateConfig(this, T["Enable Vertical Health Bar"], C.unitframes.player, "verticalbar", "checkbox")
       CreateConfig(this, T["Enable Buff Indicators"], C.unitframes.player, "buff_indicator", "checkbox")
       CreateConfig(this, T["Enable Debuff Indicators"], C.unitframes.player, "debuff_indicator", "checkbox")
       CreateConfig(this, T["Enable Clickcast"], C.unitframes.player, "clickcast", "checkbox")
@@ -770,6 +779,7 @@ pfUI:RegisterModule("gui", function ()
       CreateConfig(this, T["Debuff Limit"], C.unitframes.target, "debufflimit")
       CreateConfig(this, T["Debuffs Per Row"], C.unitframes.target, "debuffperrow")
       CreateConfig(this, T["Invert Health Bar"], C.unitframes.target, "invert_healthbar", "checkbox")
+      CreateConfig(this, T["Enable Vertical Health Bar"], C.unitframes.target, "verticalbar", "checkbox")
       CreateConfig(this, T["Enable Buff Indicators"], C.unitframes.target, "buff_indicator", "checkbox")
       CreateConfig(this, T["Enable Debuff Indicators"], C.unitframes.target, "debuff_indicator", "checkbox")
       CreateConfig(this, T["Enable Clickcast"], C.unitframes.target, "clickcast", "checkbox")
@@ -812,6 +822,7 @@ pfUI:RegisterModule("gui", function ()
       CreateConfig(this, T["Debuff Limit"], C.unitframes.ttarget, "debufflimit")
       CreateConfig(this, T["Debuffs Per Row"], C.unitframes.ttarget, "debuffperrow")
       CreateConfig(this, T["Invert Health Bar"], C.unitframes.ttarget, "invert_healthbar", "checkbox")
+      CreateConfig(this, T["Enable Vertical Health Bar"], C.unitframes.ttarget, "verticalbar", "checkbox")
       CreateConfig(this, T["Enable Buff Indicators"], C.unitframes.ttarget, "buff_indicator", "checkbox")
       CreateConfig(this, T["Enable Debuff Indicators"], C.unitframes.ttarget, "debuff_indicator", "checkbox")
       CreateConfig(this, T["Enable Clickcast"], C.unitframes.ttarget, "clickcast", "checkbox")
@@ -854,6 +865,7 @@ pfUI:RegisterModule("gui", function ()
       CreateConfig(this, T["Debuff Limit"], C.unitframes.pet, "debufflimit")
       CreateConfig(this, T["Debuffs Per Row"], C.unitframes.pet, "debuffperrow")
       CreateConfig(this, T["Invert Health Bar"], C.unitframes.pet, "invert_healthbar", "checkbox")
+      CreateConfig(this, T["Enable Vertical Health Bar"], C.unitframes.pet, "verticalbar", "checkbox")
       CreateConfig(this, T["Enable Buff Indicators"], C.unitframes.pet, "buff_indicator", "checkbox")
       CreateConfig(this, T["Enable Debuff Indicators"], C.unitframes.pet, "debuff_indicator", "checkbox")
       CreateConfig(this, T["Enable Clickcast"], C.unitframes.pet, "clickcast", "checkbox")
@@ -896,6 +908,7 @@ pfUI:RegisterModule("gui", function ()
       CreateConfig(this, T["Debuff Limit"], C.unitframes.focus, "debufflimit")
       CreateConfig(this, T["Debuffs Per Row"], C.unitframes.focus, "debuffperrow")
       CreateConfig(this, T["Invert Health Bar"], C.unitframes.focus, "invert_healthbar", "checkbox")
+      CreateConfig(this, T["Enable Vertical Health Bar"], C.unitframes.focus, "verticalbar", "checkbox")
       CreateConfig(this, T["Enable Buff Indicators"], C.unitframes.focus, "buff_indicator", "checkbox")
       CreateConfig(this, T["Enable Debuff Indicators"], C.unitframes.focus, "debuff_indicator", "checkbox")
       CreateConfig(this, T["Enable Clickcast"], C.unitframes.focus, "clickcast", "checkbox")
@@ -964,6 +977,7 @@ pfUI:RegisterModule("gui", function ()
       CreateConfig(this, T["Debuff Limit"], C.unitframes.raid, "debufflimit")
       CreateConfig(this, T["Debuffs Per Row"], C.unitframes.raid, "debuffperrow")
       CreateConfig(this, T["Invert Health Bar"], C.unitframes.raid, "invert_healthbar", "checkbox")
+      CreateConfig(this, T["Enable Vertical Health Bar"], C.unitframes.raid, "verticalbar", "checkbox")
       CreateConfig(this, T["Enable Buff Indicators"], C.unitframes.raid, "buff_indicator", "checkbox")
       CreateConfig(this, T["Enable Debuff Indicators"], C.unitframes.raid, "debuff_indicator", "checkbox")
       CreateConfig(this, T["Enable Clickcast"], C.unitframes.raid, "clickcast", "checkbox")
@@ -1006,6 +1020,7 @@ pfUI:RegisterModule("gui", function ()
       CreateConfig(this, T["Debuff Limit"], C.unitframes.group, "debufflimit")
       CreateConfig(this, T["Debuffs Per Row"], C.unitframes.group, "debuffperrow")
       CreateConfig(this, T["Invert Health Bar"], C.unitframes.group, "invert_healthbar", "checkbox")
+      CreateConfig(this, T["Enable Vertical Health Bar"], C.unitframes.group, "verticalbar", "checkbox")
       CreateConfig(this, T["Enable Buff Indicators"], C.unitframes.group, "buff_indicator", "checkbox")
       CreateConfig(this, T["Enable Debuff Indicators"], C.unitframes.group, "debuff_indicator", "checkbox")
       CreateConfig(this, T["Enable Clickcast"], C.unitframes.group, "clickcast", "checkbox")
@@ -1048,6 +1063,7 @@ pfUI:RegisterModule("gui", function ()
       CreateConfig(this, T["Debuff Limit"], C.unitframes.grouptarget, "debufflimit")
       CreateConfig(this, T["Debuffs Per Row"], C.unitframes.grouptarget, "debuffperrow")
       CreateConfig(this, T["Invert Health Bar"], C.unitframes.grouptarget, "invert_healthbar", "checkbox")
+      CreateConfig(this, T["Enable Vertical Health Bar"], C.unitframes.grouptarget, "verticalbar", "checkbox")
       CreateConfig(this, T["Enable Buff Indicators"], C.unitframes.grouptarget, "buff_indicator", "checkbox")
       CreateConfig(this, T["Enable Debuff Indicators"], C.unitframes.grouptarget, "debuff_indicator", "checkbox")
       CreateConfig(this, T["Enable Clickcast"], C.unitframes.grouptarget, "clickcast", "checkbox")
@@ -1090,6 +1106,7 @@ pfUI:RegisterModule("gui", function ()
       CreateConfig(this, T["Debuff Limit"], C.unitframes.grouppet, "debufflimit")
       CreateConfig(this, T["Debuffs Per Row"], C.unitframes.grouppet, "debuffperrow")
       CreateConfig(this, T["Invert Health Bar"], C.unitframes.grouppet, "invert_healthbar", "checkbox")
+      CreateConfig(this, T["Enable Vertical Health Bar"], C.unitframes.grouppet, "verticalbar", "checkbox")
       CreateConfig(this, T["Enable Buff Indicators"], C.unitframes.grouppet, "buff_indicator", "checkbox")
       CreateConfig(this, T["Enable Debuff Indicators"], C.unitframes.grouppet, "debuff_indicator", "checkbox")
       CreateConfig(this, T["Enable Clickcast"], C.unitframes.grouppet, "clickcast", "checkbox")
@@ -1197,6 +1214,7 @@ pfUI:RegisterModule("gui", function ()
       CreateConfig(this, T["Show Macro Text"], C.bars, "showmacro", "checkbox")
       CreateConfig(this, T["Show Hotkey Text"], C.bars, "showkeybind", "checkbox")
       CreateConfig(this, T["Enable Range Based Auto Paging (Hunter)"], C.bars, "hunterbar", "checkbox")
+      CreateConfig(this, T["Enable Action On Key Down"], C.bars, "keydown", "checkbox")
       this.setup = true
     end
   end)
@@ -1257,6 +1275,18 @@ pfUI:RegisterModule("gui", function ()
     end
   end)
 
+  -- >> Autohide
+  pfUI.gui.tabs.panel.tabs.autohide = pfUI.gui.tabs.panel.tabs:CreateTabChild(T["Autohide"], true)
+  pfUI.gui.tabs.panel.tabs.autohide:SetScript("OnShow", function()
+    if not this.setup then
+      CreateConfig(this, T["Enable Autohide For Left Chat Panel"], C.panel, "hide_leftchat", "checkbox")
+      CreateConfig(this, T["Enable Autohide For Right Chat Panel"], C.panel, "hide_rightchat", "checkbox")
+      CreateConfig(this, T["Enable Autohide For Minimap Panel"], C.panel, "hide_minimap", "checkbox")
+      CreateConfig(this, T["Enable Autohide For Microbar Panel"], C.panel, "hide_microbar", "checkbox")
+      this.setup = true
+    end
+  end)
+
 
   -- [[ Tooltip ]]
   pfUI.gui.tabs.tooltip = pfUI.gui.tabs:CreateTabChild(T["Tooltip"], nil, nil, nil, true)
@@ -1267,6 +1297,8 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.tabs.tooltip.tabs.general:SetScript("OnShow", function()
     if not this.setup then
       CreateConfig(this, T["Tooltip Position"], C.tooltip, "position", "dropdown", pfUI.gui.dropdowns.tooltip_position)
+      CreateConfig(this, T["Cursor Tooltip Align"], C.tooltip, "cursoralign", "dropdown", pfUI.gui.dropdowns.tooltip_align)
+      CreateConfig(this, T["Cursor Tooltip Offset"], C.tooltip, "cursoroffset")
       CreateConfig(this, T["Enable Extended Guild Information"], C.tooltip, "extguild", "checkbox")
       CreateConfig(this, T["Custom Transparency"], C.tooltip, "alpha")
       CreateConfig(this, T["Always Show Item Comparison"], C.tooltip.compare, "showalways", "checkbox")
