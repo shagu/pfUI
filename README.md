@@ -71,6 +71,9 @@ Please make sure to have the latest version installed and check for conflicting 
 **Can I use Clique with pfUI?**  
 A pfUI compatible version of Clique can be found [Here](https://github.com/shagu/Clique/releases). If you want to keep your current version of Clique, you'll have to apply this [Patch](https://github.com/shagu/Clique/commit/a5ee56c3f803afbdda07bae9cd330e0d4a75d75a).
 
+**Why do I see player names instead of linked items?**  
+That's a conflict with prat. You'll have to either disable Prat's class colors by typing `/prat playernames toggle` or disable pfUI's class colors within the settings dialog. The entry can found in the chat section: `Enable Class Colors`.
+
 **How do I show the Damage- and Threatmeter Dock?**  
 If you enabled the "dock"-feature for your external (third-party) meters such as DPSMate or KTM, then you'll be able to toggle between them and the Right Chat by clicking on the ">" symbol on the bottom-right panel.
 
