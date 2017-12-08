@@ -743,4 +743,23 @@ pfUI:RegisterModule("thirdparty", function ()
     FlightMapTimesText:SetPoint("CENTER", FlightMapTimesFrame, "CENTER", 0, 0)
     FlightMapTimesText:SetFont(pfUI.font_default, 12, "OUTLINE")
   end)
+
+  AddIntegration("AtlasLoot", function()
+    if C.thirdparty.atlasloot.enable == "0" then return end
+
+    CreateBackdrop(AtlasLootTooltip)
+    if pfUI.eqcompare then
+      local AtlasCompare = CreateFrame( "Frame" , "pfEQCompareAtlas", AtlasLootTooltip )
+
+      AtlasCompare:SetScript("OnShow", function()
+        if this.itemLink then message(this.itemLink) end
+        pfUI.eqcompare.ShowCompare(AtlasLootTooltip)
+      end)
+
+      AtlasCompare:SetScript("OnHide", function()
+        ShoppingTooltip1:Hide()
+        ShoppingTooltip2:Hide()
+      end)
+    end
+  end)
 end)

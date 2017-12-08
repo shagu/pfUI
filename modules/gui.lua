@@ -1416,6 +1416,7 @@ pfUI:RegisterModule("gui", function ()
       CreateConfig(this, T["HealComm"], C.thirdparty.healcomm, "enable", "checkbox")
       CreateConfig(this, T["SortBags"], C.thirdparty.sortbags, "enable", "checkbox")
       CreateConfig(this, T["FlightMap"], C.thirdparty.flightmap, "enable", "checkbox")
+      CreateConfig(this, T["AtlasLoot"], C.thirdparty.atlasloot, "enable", "checkbox")
       this.setup = true
     end
   end)
