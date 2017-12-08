@@ -41,15 +41,18 @@ pfUI:RegisterModule("eqcompare", function ()
   }
 
   pfUI.eqcompare = CreateFrame( "Frame" , "pfEQCompare", GameTooltip )
-  pfUI.eqcompare:SetScript("OnShow", function()
+  pfUI.eqcompare.ShowCompare = function(tooltip)
+    -- use GameTooltip as default
+    if not tooltip then tooltip = GameTooltip end
+
     if not IsShiftKeyDown() and C.tooltip.compare.showalways ~= "1" then
       return
     end
 
     local border = tonumber(C.appearance.border.default)
 
-    for i=1,GameTooltip:NumLines() do
-      local tmpText = _G["GameTooltipTextLeft"..i]
+    for i=1,tooltip:NumLines() do
+      local tmpText = _G[tooltip:GetName() .. "TextLeft"..i]
 
       for slotType, slotName in pairs(pfUI.slotTable) do
         if tmpText:GetText() == slotType then
@@ -62,13 +65,13 @@ pfUI:RegisterModule("eqcompare", function ()
           if x > ltrigger then ltrigger = nil end
 
           -- first tooltip
-          ShoppingTooltip1:SetOwner(GameTooltip, "ANCHOR_NONE");
+          ShoppingTooltip1:SetOwner(tooltip, "ANCHOR_NONE");
           ShoppingTooltip1:ClearAllPoints();
 
           if ltrigger then
-            ShoppingTooltip1:SetPoint("BOTTOMLEFT", GameTooltip, "BOTTOMRIGHT", 0, 0);
+            ShoppingTooltip1:SetPoint("BOTTOMLEFT", tooltip, "BOTTOMRIGHT", 0, 0);
           else
-            ShoppingTooltip1:SetPoint("BOTTOMRIGHT", GameTooltip, "BOTTOMLEFT", -border*2-1, 0);
+            ShoppingTooltip1:SetPoint("BOTTOMRIGHT", tooltip, "BOTTOMLEFT", -border*2-1, 0);
           end
 
           ShoppingTooltip1:SetInventoryItem("player", slotID)
@@ -78,7 +81,7 @@ pfUI:RegisterModule("eqcompare", function ()
           if pfUI.slotTable[slotType .. "_other"] then
             local slotID_other = GetInventorySlotInfo(pfUI.slotTable[slotType .. "_other"])
 
-            ShoppingTooltip2:SetOwner(GameTooltip, "ANCHOR_NONE");
+            ShoppingTooltip2:SetOwner(tooltip, "ANCHOR_NONE");
             ShoppingTooltip2:ClearAllPoints();
 
             if ltrigger then
@@ -94,5 +97,6 @@ pfUI:RegisterModule("eqcompare", function ()
         end
       end
     end
-  end)
+  end
+  pfUI.eqcompare:SetScript("OnShow", pfUI.eqcompare.ShowCompare)
 end)
