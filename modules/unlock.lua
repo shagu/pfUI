@@ -12,46 +12,44 @@ pfUI:RegisterModule("unlock", function ()
   pfUI.unlock:SetScript("OnShow", function()
     if not this.setup then
       local size = 1
+      local line = {}
+
       local width = GetScreenWidth()
-      local ratio = width / GetScreenHeight()
-      local height = GetScreenHeight() * ratio
-
-      local wStep = width / 128
-      local hStep = height / 128
-
-      for i = 0, 128 do
-        local tx = pfUI.unlock:CreateTexture(nil, 'BACKGROUND')
-        if i == 128 / 2 then
-          tx:SetTexture(.1, .5, .4)
-        else
-          tx:SetTexture(0, 0, 0)
-        end
-        tx:SetPoint("TOPLEFT", pfUI.unlock, "TOPLEFT", i*wStep - (size/2), 0)
-        tx:SetPoint('BOTTOMRIGHT', pfUI.unlock, 'BOTTOMLEFT', i*wStep + (size/2), 0)
-      end
-
       local height = GetScreenHeight()
 
+      local ratio = width / GetScreenHeight()
+      local rheight = GetScreenHeight() * ratio
+
+      local wStep = width / 128
+      local hStep = rheight / 128
+
+      -- vertical lines
       for i = 0, 128 do
-        local tx = pfUI.unlock:CreateTexture(nil, 'BACKGROUND')
-        tx:SetTexture(.1, .5, .4)
-        tx:SetPoint("TOPLEFT", pfUI.unlock, "TOPLEFT", 0, -(height/2) + (size/2))
-        tx:SetPoint('BOTTOMRIGHT', pfUI.unlock, 'TOPRIGHT', 0, -(height/2 + size/2))
+        if i == 128 / 2 then
+          line = pfUI.unlock:CreateTexture(nil, 'BORDER')
+          line:SetTexture(.1, .5, .4)
+        else
+          line = pfUI.unlock:CreateTexture(nil, 'BACKGROUND')
+          line:SetTexture(0, 0, 0, .5)
+        end
+        line:SetPoint("TOPLEFT", pfUI.unlock, "TOPLEFT", i*wStep - (size/2), 0)
+        line:SetPoint('BOTTOMRIGHT', pfUI.unlock, 'BOTTOMLEFT', i*wStep + (size/2), 0)
       end
 
-      for i = 1, floor((height/2)/hStep) do
-        local tx = pfUI.unlock:CreateTexture(nil, 'BACKGROUND')
-        tx:SetTexture(0, 0, 0)
+      -- horizontal lines
+      for i = 1, floor(height/hStep) do
+        if i == floor(height/hStep / 2) then
+          line = pfUI.unlock:CreateTexture(nil, 'BORDER')
+          line:SetTexture(.1, .5, .4)
+        else
+          line = pfUI.unlock:CreateTexture(nil, 'BACKGROUND')
+          line:SetTexture(0, 0, 0)
+        end
 
-        tx:SetPoint("TOPLEFT", pfUI.unlock, "TOPLEFT", 0, -(height/2+i*hStep) + (size/2))
-        tx:SetPoint('BOTTOMRIGHT', pfUI.unlock, 'TOPRIGHT', 0, -(height/2+i*hStep + size/2))
-
-        tx = pfUI.unlock:CreateTexture(nil, 'BACKGROUND')
-        tx:SetTexture(0, 0, 0)
-
-        tx:SetPoint("TOPLEFT", pfUI.unlock, "TOPLEFT", 0, -(height/2-i*hStep) + (size/2))
-        tx:SetPoint('BOTTOMRIGHT', pfUI.unlock, 'TOPRIGHT', 0, -(height/2-i*hStep + size/2))
+        line:SetPoint("TOPLEFT", pfUI.unlock, "TOPLEFT", 0, -(i*hStep) + (size/2))
+        line:SetPoint('BOTTOMRIGHT', pfUI.unlock, 'TOPRIGHT', 0, -(i*hStep + size/2))
       end
+
       this.setup = true
     end
 
