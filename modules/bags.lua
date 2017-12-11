@@ -4,6 +4,9 @@ pfUI:RegisterModule("bags", function ()
     default_border = C.appearance.border.bags
   end
 
+  -- prevent from being placed offscreen
+  _G.StackSplitFrame:SetClampedToScreen(true)
+
   -- overwrite some bag functions
   function _G.OpenAllBags()
     if pfUI.bag.right:IsShown() then
