@@ -3,6 +3,7 @@ pfUI:RegisterModule("bags", function ()
   if C.appearance.border.bags ~= "-1" then
     default_border = C.appearance.border.bags
   end
+  StackSplitFrame:SetClampedToScreen(true)
 
   -- overwrite some bag functions
   function _G.OpenAllBags()
