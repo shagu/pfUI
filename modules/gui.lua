@@ -352,7 +352,7 @@ pfUI:RegisterModule("gui", function ()
     -- "deDE:German",
     -- "enGB:British English",
     "enUS:English",
-    --"esES:Spanish (European)",
+    "esES:Spanish",
     --"esMX:Spanish (Latin American)",
     "frFR:French",
     "koKR:Korean",
