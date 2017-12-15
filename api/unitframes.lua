@@ -245,6 +245,8 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
           pfUI.uf:RefreshUnit(this, "portrait")
         elseif event == "UNIT_AURA" then
           pfUI.uf:RefreshUnit(this, "aura")
+        elseif event == "UNIT_COMBAT" then
+          CombatFeedback_OnCombatEvent(arg2, arg3, arg4, arg5)
         else
           pfUI.uf:RefreshUnit(this)
         end
@@ -252,6 +254,7 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
     end)
 
   f:SetScript("OnUpdate", function()
+      if this.feedbackText then CombatFeedback_OnUpdate(arg1) end
       local unitname = ( this.label and UnitName(this.label) ) or ""
 
       -- focus unit detection
@@ -574,6 +577,23 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
       f.portrait:SetFrameStrata("BACKGROUND")
       f.portrait.model:SetFrameLevel(1)
     end
+  end
+
+  if f.config.hitindicator == "1" then
+    f.feedbackText = f:CreateFontString("pfHitIndicator" .. f.label .. f.id, "OVERLAY", "NumberFontNormalHuge")
+    f.feedbackText:SetFont(f.config.hitindicatorfont, f.config.hitindicatorsize, "OUTLINE")
+    f.feedbackFontHeight = f.config.hitindicatorsize
+    f.feedbackStartTime = GetTime()
+    if f.config.portrait == "bar" or f.config.portrait == "off" then
+      f.feedbackText:SetParent(f.hp.bar)
+      f.feedbackText:ClearAllPoints()
+      f.feedbackText:SetPoint("CENTER", f.hp.bar, "CENTER")
+    else
+      f.feedbackText:SetParent(f.portrait)
+      f.feedbackText:ClearAllPoints()
+      f.feedbackText:SetPoint("CENTER", f.portrait, "CENTER")
+    end
+    f:RegisterEvent("UNIT_COMBAT")
   end
 
   table.insert(pfUI.uf.frames, f)
