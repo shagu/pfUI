@@ -404,4 +404,6 @@ pfUI_translation["frFR"] = {
   ["Enable Hit Indicator"] = nil,
   ["Hit Indicator Text Font"] = nil,
   ["Hit Indicator Text Size"] = nil,
+  ["Show Player Spell Icon"] = nil,
+  ["Show Target Spell Icon"] = nil,
 }
