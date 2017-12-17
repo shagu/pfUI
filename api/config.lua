@@ -25,6 +25,7 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("global",     nil,           "language",         GetLocale())
   pfUI:UpdateConfig("global",     nil,           "profile",          "default")
   pfUI:UpdateConfig("global",     nil,           "pixelperfect",     "0")
+  pfUI:UpdateConfig("global",     nil,           "hdgraphic",        "0")
   pfUI:UpdateConfig("global",     nil,           "offscreen",        "0")
 
   pfUI:UpdateConfig("global",     nil,           "font_default",     "Interface\\AddOns\\pfUI\\fonts\\Myriad-Pro.ttf")
