@@ -1,5 +1,25 @@
 pfUI:RegisterModule("hdgraphic", function ()
-  local function HDGraphicSettings()
+
+  -- pixelperfect: native UIScale
+  if C.global.pixelperfect == "1" then
+    local f = CreateFrame("Frame")
+    f:RegisterEvent("PLAYER_ENTERING_WORLD")
+    f:SetScript("OnEvent", function()
+      local resolution = GetCVar("gxResolution")
+
+      for screenwidth, screenheight in string.gfind(resolution, "(.+)x(.+)") do
+        local screenheight = tonumber(screenheight) < 2160 and tonumber(screenheight) or tonumber(screenheight) / 2
+        local scale = 768/screenheight
+        UIParent:SetScale(scale)
+        UIParent:SetWidth(screenwidth)
+        UIParent:SetHeight(screenheight)
+        UIParent:SetPoint("CENTER",0,0)
+      end
+    end)
+  end
+
+  -- hdgraphic: use maximum graphic details
+  if C.global.hdgraphic == "1" then
     ConsoleExec("anisotropic 16")
     ConsoleExec("detailDoodadAlpha 100")
     ConsoleExec("farclip 777")
@@ -61,14 +81,11 @@ pfUI:RegisterModule("hdgraphic", function ()
     ConsoleExec("M2UseShaders 1")
     ConsoleExec("M2BatchDoodads 1")
     ConsoleExec("bspcache 1")
-
-    ConsoleExec("gxrestart")
     local cur, max = GetCurrentResolution(), table.getn({GetScreenResolutions()})
     if cur ~= max then
       SetScreenResolution(max)
+      ConsoleExec("gxrestart")
       ReloadUI()
     end
   end
-  local txt = T["|cff33ffccBlizzard: \"Graphic Settings\"|r\n\nDo you want me to setup your game to the maximum graphic details?"]
-  pfUI.firstrun:AddStep("hdgraphic", HDGraphicSettings, nil, txt)
 end)

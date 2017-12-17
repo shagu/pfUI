@@ -43,7 +43,6 @@ env\fonts.lua
 modules\firstrun.lua
 modules\gui.lua
 modules\unlock.lua
-modules\pixelperfect.lua
 modules\hoverbind.lua
 modules\actionbar.lua
 modules\hunterbar.lua
@@ -86,3 +85,5 @@ modules\mirrortimers.lua
 modules\socialmod.lua
 modules\feigndeath.lua
 modules\hdgraphic.lua
+modules\share.lua
+modules\tracking.lua
