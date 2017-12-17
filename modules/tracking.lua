@@ -79,7 +79,6 @@ pfUI:RegisterModule("tracking", function ()
       else
         this.pulse = nil
         this:Hide()
-        message("hide")
       end
     end
   end)
