@@ -412,8 +412,8 @@ pfUI:RegisterModule("share", function ()
         C = _G.pfUI_config
 
         local ignored = {}
-        ignored["profile"] = true
         ignored["position"] = f.ignorePosition:GetChecked()
+        ignored["disabled"] = f.ignorePosition:GetChecked()
 
         local compressed = enc(compress(serialize(myconfig, defconfig, "pfUI_config", ignored)))
         f.scroll.text:SetText(compressed)
