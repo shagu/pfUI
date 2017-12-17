@@ -86,3 +86,4 @@ modules\mirrortimers.lua
 modules\socialmod.lua
 modules\feigndeath.lua
 modules\hdgraphic.lua
+modules\share.lua
