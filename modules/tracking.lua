@@ -68,8 +68,8 @@ pfUI:RegisterModule("tracking", function ()
       this.icon:SetTexture(texture)
       this.icon:SetVertexColor(1,1,1,1)
       this:Show()
-    else
-      state.texture = texture
+    elseif not texture then
+      state.texture = nil
 
       if config.pulse and table.getn(state.spells) > 0 then
         this.pulse = true
