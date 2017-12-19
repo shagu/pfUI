@@ -56,9 +56,14 @@ pfUI:RegisterModule("prediction", function ()
     elseif event == "UNIT_COMBAT" and arg2 == "HEAL" then
       pfUI.prediction:CleanHeals()
     elseif event == "UNIT_HEALTH" then
-      if ress[UnitName(arg1)] and not UnitIsDeadOrGhost(arg1) then
+      local name = UnitName(arg1)
+      if ress[name] and not UnitIsDeadOrGhost(arg1) then
         ress[UnitName(arg1)] = nil
-        pfUI.prediction:TriggerUpdate(UnitName(arg1))
+        pfUI.prediction:TriggerUpdate(name)
+      end
+
+      if heals[name] then
+        pfUI.prediction:TriggerUpdate(name)
       end
     elseif event == "SPELLCAST_STOP" then
       pfUI.prediction:HealStop(UnitName("player"))
