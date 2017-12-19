@@ -51,6 +51,7 @@ modules\chat.lua
 modules\addons.lua
 modules\minimap.lua
 modules\panel.lua
+modules\prediction.lua
 modules\player.lua
 modules\focus.lua
 modules\target.lua
