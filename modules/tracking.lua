@@ -123,7 +123,7 @@ pfUI:RegisterModule("tracking", function ()
   end)
 
   function pfUI.tracking:RefreshSpells()
-    local _, playerClass = UnitClass(PLAYER)
+    local _, playerClass = UnitClass("player")
     local isCatForm = pfUI.tracking:PlayerIsDruidInCatForm(playerClass)
 
     state.spells = {}
