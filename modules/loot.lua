@@ -339,6 +339,18 @@ pfUI:RegisterModule("loot", function ()
         table.insert(UnitPopupMenus["PARTY"],index+1,"PF_DISENCHANTLOOTER")
       end
     end
+    for index,value in ipairs(UnitPopupMenus["PLAYER"]) do
+      if value == "RAID_TARGET_ICON" then
+        table.insert(UnitPopupMenus["PLAYER"],index+1,"PF_BANKLOOTER")
+        table.insert(UnitPopupMenus["PLAYER"],index+1,"PF_DISENCHANTLOOTER")
+      end
+    end
+    for index,value in ipairs(UnitPopupMenus["RAID"]) do
+      if value == "RAID_REMOVE" then
+        table.insert(UnitPopupMenus["RAID"],index+1,"PF_BANKLOOTER")
+        table.insert(UnitPopupMenus["RAID"],index+1,"PF_DISENCHANTLOOTER")        
+      end
+    end
   end
 
   function pfUI.loot:RemoveMasterlootMenus()
@@ -351,6 +363,16 @@ pfUI:RegisterModule("loot", function ()
       if UnitPopupMenus["PARTY"][index] == "PF_BANKLOOTER" or UnitPopupMenus["PARTY"][index] == "PF_DISENCHANTLOOTER" then
         table.remove(UnitPopupMenus["PARTY"],index,value)
       end
+    end
+    for index = table.getn(UnitPopupMenus["PLAYER"]),1,-1 do
+      if UnitPopupMenus["PLAYER"][index] == "PF_BANKLOOTER" or UnitPopupMenus["PLAYER"][index] == "PF_DISENCHANTLOOTER" then
+        table.remove(UnitPopupMenus["PLAYER"],index,value)
+      end
+    end    
+    for index = table.getn(UnitPopupMenus["RAID"]),1,-1 do
+      if UnitPopupMenus["RAID"][index] == "PF_BANKLOOTER" or UnitPopupMenus["RAID"][index] == "PF_DISENCHANTLOOTER" then
+        table.remove(UnitPopupMenus["RAID"],index,value)
+      end      
     end
   end
 
@@ -375,15 +397,20 @@ pfUI:RegisterModule("loot", function ()
     end)
     hooksecurefunc("UnitPopup_HideButtons",function()
       local dropdownFrame = getglobal(UIDROPDOWNMENU_INIT_MENU)
+      local unit = dropdownFrame.unit
+      local name = dropdownFrame.name
       for index,value in pairs(UnitPopupMenus[dropdownFrame.which]) do
         if pfUI.loot.unitbuttons[value] then
           local method, lootmasterID = GetLootMethod()
-          if not (method == "master" and lootmasterID == 0) then
+          if not ((method == "master" and lootmasterID == 0) or IsRaidLeader()) then
+            UnitPopupShown[index] = 0
+          end
+          if (unit) and UnitIsPlayer(unit) and not (UnitInRaid(unit) or UnitInParty(unit)) then
             UnitPopupShown[index] = 0
           end
         end
       end
-    end)
+    end,true)
   else
     pfUI.loot:RemoveMasterlootMenus()
     UIDropDownMenu_Initialize(GroupLootDropDown, GroupLootDropDown_Initialize, "MENU")
