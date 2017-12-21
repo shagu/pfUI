@@ -117,9 +117,6 @@ pfUI:RegisterModule("prediction", function ()
       for sender, amount in pairs(heals[target]) do
         if amount[2] <= GetTime() then
           heals[target][sender] = nil
-          if table.getn(heals[target]) == 0 then
-            heals[target] = nil
-          end
         else
           sumheal = sumheal + amount[1]
         end
