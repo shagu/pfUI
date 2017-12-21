@@ -1213,6 +1213,7 @@ pfUI:RegisterModule("gui", function ()
       CreateConfig(this, T["Range Display Color"], C.bars, "rangecolor", "color")
       CreateConfig(this, T["Show Macro Text"], C.bars, "showmacro", "checkbox")
       CreateConfig(this, T["Show Hotkey Text"], C.bars, "showkeybind", "checkbox")
+      CreateConfig(this, T["Show Equipped Items"], C.bars, "showequipped", "checkbox")
       CreateConfig(this, T["Enable Range Based Auto Paging (Hunter)"], C.bars, "hunterbar", "checkbox")
       CreateConfig(this, T["Enable Action On Key Down"], C.bars, "keydown", "checkbox")
       this.setup = true
