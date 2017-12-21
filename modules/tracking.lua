@@ -21,7 +21,7 @@ pfUI:RegisterModule("tracking", function ()
       "Spell_Shadow_DarkSummoning", -- Track Undead, 18+
       "Ability_Stealth", -- Track Hidden, 24+
       "Spell_Frost_SummonWaterElemental", -- Track Elementals, 26+
-      "Spell_Shadow_SummonFelhunter", -- Track Deamons, 32+
+      "Spell_Shadow_SummonFelHunter", -- Track Deamons, 32+
       "Ability_Racial_Avatar", -- Track Giants, 40+
       "INV_Misc_Head_Dragon_01" -- Track Dragonkin, 50+
     },
