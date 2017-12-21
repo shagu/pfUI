@@ -1,45 +1,57 @@
 pfUI:RegisterModule("prediction", function ()
   local heals = {}
   local ress = {}
+  local events = {}
 
   pfUI.prediction = CreateFrame("Frame")
-  pfUI.prediction:RegisterEvent("COMBAT_TEXT_UPDATE")
-  pfUI.prediction:RegisterEvent("UNIT_COMBAT")
   pfUI.prediction:RegisterEvent("UNIT_HEALTH")
   pfUI.prediction:RegisterEvent("CHAT_MSG_ADDON")
   pfUI.prediction:RegisterEvent("PLAYER_TARGET_CHANGED")
-  pfUI.prediction:RegisterEvent("SPELLCAST_STOP")
-
   pfUI.prediction:SetScript("OnEvent", function()
     if event == "CHAT_MSG_ADDON" and arg1 == "HealComm" then
       local channel = arg3
       local sender = arg4
 
-      if arg2 == "Healstop" then
-        pfUI.prediction:HealStop(sender)
-        return
-      elseif arg2 == "GrpHealstop" then
-        pfUI.prediction:HealStop(sender)
+      if arg2 == "Healstop" or arg2 == "GrpHealstop" then
+        for ttarget, t in pairs(heals) do
+          for tsender in pairs(heals[ttarget]) do
+            if sender == tsender then
+              heals[ttarget][tsender] = nil
+              pfUI.prediction:TriggerUpdate(ttarget)
+            end
+          end
+        end
         return
       elseif arg2 == "Resurrection/stop/" then
-        pfUI.prediction:RessStop(sender)
+        for ttarget, t in pairs(ress) do
+          for tsender in pairs(ress[ttarget]) do
+            if sender == tsender then
+              ress[ttarget][tsender] = nil
+              pfUI.prediction:TriggerUpdate(ttarget)
+            end
+          end
+        end
         return
       end
 
       local _, _, evtype, target, amount, duration  = string.find(arg2, '(Heal)/(%a+)/(%d+)/(%d+)/')
       if evtype then
+        local timeout = duration/1000 + GetTime()
         heals[target] = heals[target] or {}
-        heals[target][sender] = { amount, duration + GetTime() }
+        heals[target][sender] = { amount, timeout }
         pfUI.prediction:TriggerUpdate(target)
+        pfUI.prediction:AddEvent(timeout, target)
         return
       end
 
       local _, _, evtype, amount, duration, targets = string.find(arg2, '(GrpHeal)/(%d+)/(%d+)/(.+)/')
       if evtype then
         for _, target in pairs({strsplit("/", targets)}) do
+          local timeout = duration/1000 + GetTime()
           heals[target] = heals[target] or {}
-          heals[target][sender] = { amount, duration + GetTime() }
+          heals[target][sender] = { amount, timeout }
           pfUI.prediction:TriggerUpdate(target)
+          pfUI.prediction:AddEvent(timeout, target)
         end
         return
       end
@@ -51,10 +63,6 @@ pfUI:RegisterModule("prediction", function ()
         pfUI.prediction:TriggerUpdate(target)
         return
       end
-    elseif event == "COMBAT_TEXT_UPDATE" and arg1 == "HEAL" then
-      pfUI.prediction:HealStop(arg2)
-    elseif event == "UNIT_COMBAT" and arg2 == "HEAL" then
-      pfUI.prediction:CleanHeals()
     elseif event == "UNIT_HEALTH" then
       local name = UnitName(arg1)
       if ress[name] and not UnitIsDeadOrGhost(arg1) then
@@ -65,38 +73,25 @@ pfUI:RegisterModule("prediction", function ()
       if heals[name] then
         pfUI.prediction:TriggerUpdate(name)
       end
-    elseif event == "SPELLCAST_STOP" then
-      pfUI.prediction:HealStop(UnitName("player"))
     elseif event == "PLAYER_TARGET_CHANGED" then
-      if pfUI.uf and pfUI.uf.target then
-        pfUI.prediction:DrawPrediction("target", pfUI.uf.target)
+      pfUI.prediction:TriggerUpdate(UnitName("target"))
+    end
+  end)
+
+  pfUI.prediction:SetScript("OnUpdate", function()
+    for timestamp, targets in pairs(events) do
+      if GetTime() >= timestamp then
+        for id, target in pairs(targets) do
+          pfUI.prediction:TriggerUpdate(target)
+        end
+        events[timestamp] = nil
       end
     end
   end)
 
-  pfUI.prediction.scanner = CreateFrame('GameTooltip', "pfPredictionScanner", UIParent, "GameTooltipTemplate")
-  pfUI.prediction.scanner:SetOwner(WorldFrame, "ANCHOR_NONE")
-
-  function pfUI.prediction:CleanHeals()
-    for ttarget, t in pairs(heals) do
-      for tsender in pairs(heals[ttarget]) do
-        if heals[ttarget][tsender][2] >= GetTime() then
-          heals[ttarget][tsender] = nil
-          pfUI.prediction:TriggerUpdate(ttarget)
-        end
-      end
-    end
-  end
-
-  function pfUI.prediction:HealStop(sender)
-    for ttarget, t in pairs(heals) do
-      for tsender in pairs(heals[ttarget]) do
-        if sender == tsender then
-          heals[ttarget][tsender] = nil
-          pfUI.prediction:TriggerUpdate(ttarget)
-        end
-      end
-    end
+  function pfUI.prediction:AddEvent(time, target)
+    events[time] = events[time] or {}
+    table.insert(events[time], target)
   end
 
   function pfUI.prediction:GetHeal(target)
@@ -105,21 +100,17 @@ pfUI:RegisterModule("prediction", function ()
       return sumheal
     else
       for sender, amount in pairs(heals[target]) do
-        sumheal = sumheal + amount[1]
-      end
-    end
-    return sumheal
-  end
-
-  function pfUI.prediction:RessStop(sender)
-    for ttarget, t in pairs(ress) do
-      for tsender in pairs(ress[ttarget]) do
-        if sender == tsender then
-          ress[ttarget][tsender] = nil
-          pfUI.prediction:TriggerUpdate(ttarget)
+        if amount[2] <= GetTime() then
+          heals[target][sender] = nil
+          if table.getn(heals[target]) == 0 then
+            heals[target] = nil
+          end
+        else
+          sumheal = sumheal + amount[1]
         end
       end
     end
+    return sumheal
   end
 
   function pfUI.prediction:GetRess(target)
@@ -136,68 +127,63 @@ pfUI:RegisterModule("prediction", function ()
   end
 
   function pfUI.prediction:TriggerUpdate(target)
-    for id, frame in _G.pfUI.uf.frames do
-      if frame:IsVisible() and UnitName(frame.label .. frame.id) == target then
-        pfUI.prediction:DrawPrediction(frame.label .. frame.id, frame)
-      end
+    if not target or not heals[target] then return end
+    local heal = pfUI.prediction:GetHeal(target)
+    local ress = pfUI.prediction:GetRess(target)
+
+    if pfUI.uf then
+      pfUI.prediction:UpdateUnitFrames(target, heal, ress)
     end
   end
 
-  function pfUI.prediction:DrawPrediction(unit, frame)
+  function pfUI.prediction:UpdateUnitFrames(name, heal, ress)
     OVERHEALPERCENT = OVERHEALPERCENT or 20
-    if not frame then return end
-    local healed = pfUI.prediction:GetHeal(UnitName(unit))
-    local ressed = pfUI.prediction:GetRess(UnitName(unit))
 
-    if ressed and UnitIsDeadOrGhost(unit) then
-      frame.ressIcon:Show()
-      return
-    else
-      frame.ressIcon:Hide()
-    end
+    for id, frame in _G.pfUI.uf.frames do
+      if frame:IsVisible() then
+        local unit = frame.label .. frame.id
+        local health, maxHealth = UnitHealth(unit), UnitHealthMax(unit)
 
-    local health, maxHealth = UnitHealth(unit), UnitHealthMax(unit)
-    if( healed > 0 and (health < maxHealth or OVERHEALPERCENT > 0 )) then
-      frame.incHeal:Show()
-      frame.incHeal:SetFrameStrata("BACKGROUND")
-      frame.incHeal:ClearAllPoints()
+        if UnitName(unit) == name then
+          if ress and UnitIsDeadOrGhost(unit) then
+            frame.ressIcon:Show()
+          elseif heal and heal > 0 and (health < maxHealth or OVERHEALPERCENT > 0 ) then
+            local width = frame.config.width
+            local height = frame.config.height
 
-      local width = frame.hp.bar:GetWidth() / frame.hp.bar:GetEffectiveScale()
-      local height = frame.hp.bar:GetHeight() / frame.hp.bar:GetEffectiveScale()
+            if frame.config.verticalbar == "0" then
+              local healthWidth = width * (health / maxHealth)
+              local incWidth = width * heal / maxHealth
+              if healthWidth + incWidth > width * (1+(OVERHEALPERCENT/100)) then
+                incWidth = width * (1+OVERHEALPERCENT/100) - healthWidth
+              end
 
-      if frame.config.verticalbar == "0" then
-        local healthWidth = width * (health / maxHealth)
-        local incWidth = width * healed / maxHealth
-        if healthWidth + incWidth > width * (1+(OVERHEALPERCENT/100)) then
-          incWidth = width * (1+OVERHEALPERCENT/100) - healthWidth
-        end
+              if frame.config.invert_healthbar == "1" then
+                frame.incHeal:SetWidth(incWidth)
+              else
+                frame.incHeal:SetWidth(incWidth + healthWidth)
+              end
+            else
+              local healthHeight = height * (health / maxHealth)
+              local incHeight = height * heal / maxHealth
+              if healthHeight + incHeight > height * (1+(OVERHEALPERCENT/100)) then
+                incHeight = height * (1+OVERHEALPERCENT/100) - healthHeight
+              end
 
-        frame.incHeal:SetPoint("TOPLEFT", frame.hp.bar, "TOPLEFT", 0, 0)
-        frame.incHeal:SetHeight(height)
-        frame.incHeal:SetWidth(incWidth + healthWidth)
+              if frame.config.invert_healthbar == "1" then
+                frame.incHeal:SetHeight(incHeight)
+              else
+                frame.incHeal:SetHeight(incHeight + healthHeight)
+              end
+            end
 
-        if frame.config.invert_healthbar == "1" then
-          frame.incHeal:SetWidth(incWidth)
-          frame.incHeal:SetFrameStrata("HIGH")
-        end
-      else
-        local healthHeight = height * (health / maxHealth)
-        local incHeight = height * healed / maxHealth
-        if healthHeight + incHeight > height * (1+(OVERHEALPERCENT/100)) then
-          incHeight = height * (1+OVERHEALPERCENT/100) - healthHeight
-        end
-
-        frame.incHeal:SetPoint("BOTTOM", frame.hp.bar, "BOTTOM", 0, 0)
-        frame.incHeal:SetWidth(width)
-        frame.incHeal:SetHeight(incHeight + healthHeight)
-
-        if frame.config.invert_healthbar == "1" then
-          frame.incHeal:SetHeight(incHeight)
-          frame.incHeal:SetFrameStrata("HIGH")
+            frame.incHeal:Show()
+          else
+            frame.incHeal:Hide()
+            frame.ressIcon:Hide()
+          end
         end
       end
-    else
-      frame.incHeal:Hide()
     end
   end
 end)

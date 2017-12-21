@@ -107,13 +107,26 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
     f.hp.bar.texture:SetAllPoints(f.hp.bar)
   end
 
-  f.incHeal = CreateFrame("StatusBar", nil, f)
+  f.incHeal = CreateFrame("StatusBar", nil, f.hp.bar)
+  f.incHeal:SetHeight(f.config.height)
+  f.incHeal:SetWidth(f.config.width)
   f.incHeal:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
-  f.incHeal:SetFrameStrata("MEDIUM")
   f.incHeal:SetMinMaxValues(0, 1)
   f.incHeal:SetValue(1)
   f.incHeal:SetStatusBarColor(0, 1, 0, 0.5)
   f.incHeal:Hide()
+
+  if pfUI_config.unitframes.custombg == "0" then
+    f.incHeal:SetFrameLevel(2)
+  else
+    f.incHeal:SetFrameLevel(3)
+  end
+
+  if f.config.verticalbar == "0" then
+    f.incHeal:SetPoint("TOPLEFT", f.hp.bar, "TOPLEFT", 0, 0)
+  else
+    f.incHeal:SetPoint("BOTTOM", f.hp.bar, "BOTTOM", 0, 0)
+  end
 
   f.ressIcon = CreateFrame("Frame", nil, f.hp.bar)
   f.ressIcon:SetFrameLevel(16)
