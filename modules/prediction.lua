@@ -34,6 +34,21 @@ pfUI:RegisterModule("prediction", function ()
         return
       end
 
+      local _, _, evtype, delay = string.find(arg2, '(%a+)/(%d+)/')
+      if evtype and evtype == "GrpHealdelay" or evtype == "Healdelay" then
+        local delay = delay/1000
+        for target, t in pairs(heals) do
+          for tsender, amount in pairs(heals[target]) do
+            if sender == tsender then
+              amount[2] = amount[2] + delay
+              pfUI.prediction:TriggerUpdate(target)
+              pfUI.prediction:AddEvent(amount[2], target)
+            end
+          end
+        end
+        return
+      end
+
       local _, _, evtype, target, amount, duration  = string.find(arg2, '(Heal)/(%a+)/(%d+)/(%d+)/')
       if evtype then
         local timeout = duration/1000 + GetTime()
