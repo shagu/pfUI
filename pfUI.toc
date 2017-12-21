@@ -44,6 +44,7 @@ modules\firstrun.lua
 modules\gui.lua
 modules\unlock.lua
 modules\hoverbind.lua
+modules\updatenotify.lua
 modules\actionbar.lua
 modules\hunterbar.lua
 modules\rangecheck.lua
