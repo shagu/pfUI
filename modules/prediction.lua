@@ -142,7 +142,7 @@ pfUI:RegisterModule("prediction", function ()
   end
 
   function pfUI.prediction:TriggerUpdate(target)
-    if not target or not heals[target] then return end
+    if not target then return end
     local heal = pfUI.prediction:GetHeal(target)
     local ress = pfUI.prediction:GetRess(target)
 
