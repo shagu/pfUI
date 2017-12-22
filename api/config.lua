@@ -508,6 +508,7 @@ function pfUI:LoadConfig()
 
   pfUI:UpdateConfig("chat",       "text",        "input_width",      "0")
   pfUI:UpdateConfig("chat",       "text",        "input_height",     "0")
+  pfUI:UpdateConfig("chat",       "text",        "outline",          "1")
   pfUI:UpdateConfig("chat",       "text",        "time",             "0")
   pfUI:UpdateConfig("chat",       "text",        "timeformat",       "%H:%M:%S")
   pfUI:UpdateConfig("chat",       "text",        "timebracket",      "[]")
