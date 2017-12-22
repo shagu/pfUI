@@ -64,7 +64,7 @@ function pfUI.environment:UpdateFonts()
   InvoiceTextFontSmall:SetFont(pfUI.font_default, 12)
   CombatTextFont:SetFont(pfUI.font_combat, 25)
 
-  if pfUI_config.chat.text.outline == "1" then
+  if pfUI_config and pfUI_config.chat and pfUI_config.chat.text.outline == "1" then
     ChatFontNormal:SetFont(pfUI.font_default, 13, "OUTLINE")
   else
     ChatFontNormal:SetFont(pfUI.font_default, 13)
