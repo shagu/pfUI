@@ -90,3 +90,4 @@ modules\feigndeath.lua
 modules\hdgraphic.lua
 modules\share.lua
 modules\tracking.lua
+modules\easteregg.lua
