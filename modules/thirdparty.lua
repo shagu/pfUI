@@ -547,4 +547,18 @@ pfUI:RegisterModule("thirdparty", function ()
       end)
     end
   end)
+
+  AddIntegration("HealComm", function()
+    -- hook healcomm's addon message to parse single-player events
+    if AceLibrary and AceLibrary:HasInstance("HealComm-1.0") and pfUI.prediction then
+      local HealComm = AceLibrary("HealComm-1.0")
+      local pfHookHealCommSendAddonMessage = HealComm.SendAddonMessage
+      function HealComm.SendAddonMessage(this, msg)
+        if not UnitInRaid("player") and GetNumPartyMembers() < 1 then
+          pfUI.prediction:ParseChatMessage(UnitName("player"), msg)
+        end
+        pfHookHealCommSendAddonMessage(this, msg)
+      end
+    end
+  end)
 end)
