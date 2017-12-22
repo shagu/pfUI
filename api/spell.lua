@@ -62,7 +62,7 @@ function pfUI.api.GetSpellIndex(name, rank)
   return nil
 end
 
--- [ GetSpellIndex ]
+-- [ GetSpellInfo ]
 -- Returns several information about a spell.
 -- 'index'      [string/number]     Spellname or Index of a spell in the spellbook
 -- 'bookType'   [string]            Type of spellbook (optional)
