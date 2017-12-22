@@ -9,87 +9,19 @@ pfUI:RegisterModule("prediction", function ()
   pfUI.prediction:RegisterEvent("PLAYER_TARGET_CHANGED")
   pfUI.prediction:SetScript("OnEvent", function()
     if event == "CHAT_MSG_ADDON" and arg1 == "HealComm" then
-      local channel = arg3
-      local sender = arg4
-
-      if arg2 == "Healstop" or arg2 == "GrpHealstop" then
-        for ttarget, t in pairs(heals) do
-          for tsender in pairs(heals[ttarget]) do
-            if sender == tsender then
-              heals[ttarget][tsender] = nil
-              pfUI.prediction:TriggerUpdate(ttarget)
-            end
-          end
-        end
-        return
-      elseif arg2 == "Resurrection/stop/" then
-        for ttarget, t in pairs(ress) do
-          for tsender in pairs(ress[ttarget]) do
-            if sender == tsender then
-              ress[ttarget][tsender] = nil
-              pfUI.prediction:TriggerUpdate(ttarget)
-            end
-          end
-        end
-        return
-      end
-
-      local _, _, evtype, delay = string.find(arg2, '(%a+)/(%d+)/')
-      if evtype and evtype == "GrpHealdelay" or evtype == "Healdelay" then
-        local delay = delay/1000
-        for target, t in pairs(heals) do
-          for tsender, amount in pairs(heals[target]) do
-            if sender == tsender then
-              amount[2] = amount[2] + delay
-              pfUI.prediction:TriggerUpdate(target)
-              pfUI.prediction:AddEvent(amount[2], target)
-            end
-          end
-        end
-        return
-      end
-
-      local _, _, evtype, target, amount, duration  = string.find(arg2, '(Heal)/(%a+)/(%d+)/(%d+)/')
-      if evtype then
-        local timeout = duration/1000 + GetTime()
-        heals[target] = heals[target] or {}
-        heals[target][sender] = { amount, timeout }
-        pfUI.prediction:TriggerUpdate(target)
-        pfUI.prediction:AddEvent(timeout, target)
-        return
-      end
-
-      local _, _, evtype, amount, duration, targets = string.find(arg2, '(GrpHeal)/(%d+)/(%d+)/(.+)/')
-      if evtype then
-        for _, target in pairs({strsplit("/", targets)}) do
-          local timeout = duration/1000 + GetTime()
-          heals[target] = heals[target] or {}
-          heals[target][sender] = { amount, timeout }
-          pfUI.prediction:TriggerUpdate(target)
-          pfUI.prediction:AddEvent(timeout, target)
-        end
-        return
-      end
-
-      local _, _, evtype, target  = string.find(arg2, '(Resurrection)/(%a+)/(start)/')
-      if evtype then
-        ress[target] = ress[target] or {}
-        ress[target][sender] = true
-        pfUI.prediction:TriggerUpdate(target)
-        return
-      end
+      this:ParseChatMessage(arg4, arg2)
     elseif event == "UNIT_HEALTH" then
       local name = UnitName(arg1)
       if ress[name] and not UnitIsDeadOrGhost(arg1) then
         ress[UnitName(arg1)] = nil
-        pfUI.prediction:TriggerUpdate(name)
+        this:TriggerUpdate(name)
       end
 
       if heals[name] then
-        pfUI.prediction:TriggerUpdate(name)
+        this:TriggerUpdate(name)
       end
     elseif event == "PLAYER_TARGET_CHANGED" then
-      pfUI.prediction:TriggerUpdate(UnitName("target"))
+      this:TriggerUpdate(UnitName("target"))
     end
   end)
 
@@ -104,9 +36,77 @@ pfUI:RegisterModule("prediction", function ()
     end
   end)
 
+  function pfUI.prediction:ParseChatMessage(sender, msg)
+    if msg == "Healstop" or msg == "GrpHealstop" then
+      pfUI.prediction:HealStop(sender)
+      return
+    elseif msg == "Resurrection/stop/" then
+      pfUI.prediction:RessStop(sender)
+      return
+    end
+
+    local _, _, evtype, delay = string.find(msg, '(%a+)/(%d+)/')
+    if evtype and evtype == "GrpHealdelay" or evtype == "Healdelay" then
+      pfUI.prediction:HealDelay(sender, delay)
+      return
+    end
+
+    local _, _, evtype, target, amount, duration  = string.find(msg, '(Heal)/(%a+)/(%d+)/(%d+)/')
+    if evtype and target then
+      pfUI.prediction:Heal(sender, target, amount, duration)
+      return
+    end
+
+    local _, _, evtype, amount, duration, targets = string.find(msg, '(GrpHeal)/(%d+)/(%d+)/(.+)/')
+    if evtype and target then
+      for _, target in pairs({strsplit("/", targets)}) do
+        pfUI.prediction:Heal(sender, target, amount, duration)
+      end
+      return
+    end
+
+    local _, _, evtype, target  = string.find(msg, '(Resurrection)/(%a+)/(start)/')
+    if evtype and target then
+      pfUI.prediction:Ress(target)
+      return
+    end
+  end
+
   function pfUI.prediction:AddEvent(time, target)
     events[time] = events[time] or {}
     table.insert(events[time], target)
+  end
+
+  function pfUI.prediction:Heal(sender, target, amount, duration)
+    local timeout = duration/1000 + GetTime()
+    heals[target] = heals[target] or {}
+    heals[target][sender] = { amount, timeout }
+    pfUI.prediction:TriggerUpdate(target)
+    pfUI.prediction:AddEvent(timeout, target)
+  end
+
+  function pfUI.prediction:HealStop(sender)
+    for ttarget, t in pairs(heals) do
+      for tsender in pairs(heals[ttarget]) do
+        if sender == tsender then
+          heals[ttarget][tsender] = nil
+          pfUI.prediction:TriggerUpdate(ttarget)
+        end
+      end
+    end
+  end
+
+  function pfUI.prediction:HealDelay(sender, delay)
+    local delay = delay/1000
+    for target, t in pairs(heals) do
+      for tsender, amount in pairs(heals[target]) do
+        if sender == tsender then
+          amount[2] = amount[2] + delay
+          pfUI.prediction:TriggerUpdate(target)
+          pfUI.prediction:AddEvent(amount[2], target)
+        end
+      end
+    end
   end
 
   function pfUI.prediction:GetHeal(target)
@@ -123,6 +123,23 @@ pfUI:RegisterModule("prediction", function ()
       end
     end
     return sumheal
+  end
+
+  function pfUI.prediction:Ress(target)
+    ress[target] = ress[target] or {}
+    ress[target][sender] = true
+    pfUI.prediction:TriggerUpdate(target)
+  end
+
+  function pfUI.prediction:RessStop(sender)
+    for ttarget, t in pairs(ress) do
+      for tsender in pairs(ress[ttarget]) do
+        if sender == tsender then
+          ress[ttarget][tsender] = nil
+          pfUI.prediction:TriggerUpdate(ttarget)
+        end
+      end
+    end
   end
 
   function pfUI.prediction:GetRess(target)
