@@ -116,6 +116,12 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
   f.incHeal:SetStatusBarColor(0, 1, 0, 0.5)
   f.incHeal:Hide()
 
+  f.incHeal:SetScript("OnShow", function()
+    if pfUI.prediction and f.label and f.id then
+      pfUI.prediction:TriggerUpdate(UnitName(f.label .. f.id))
+    end
+  end)
+
   if pfUI_config.unitframes.custombg == "0" then
     f.incHeal:SetFrameLevel(2)
   else
