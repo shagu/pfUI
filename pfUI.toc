@@ -30,6 +30,7 @@ env\translations_ruRU.lua
 
 # api
 api\api.lua
+api\spell.lua
 api\config.lua
 api\ui-widgets.lua
 api\unitframes.lua
