@@ -23,7 +23,8 @@ pfUI:RegisterModule("castbar", function ()
   pfUI.castbar.player:SetHeight(C.global.font_size + default_border)
 
   if pfUI.uf.player then
-    pfUI.castbar.player:SetPoint("TOPLEFT",pfUI.uf.player,"BOTTOMLEFT",0,-default_border*2)
+    local pspace = tonumber(C.unitframes.player.pspace)
+    pfUI.castbar.player:SetPoint("TOPLEFT", pfUI.uf.player, "BOTTOMLEFT", 0, -default_border * 2 - pspace)
     pfUI.castbar.player:SetWidth(pfUI.uf.player:GetWidth())
   else
     pfUI.castbar.player:SetPoint("CENTER", 0, -200)
@@ -338,7 +339,8 @@ pfUI:RegisterModule("castbar", function ()
   pfUI.castbar.target:SetHeight(C.global.font_size + default_border)
 
   if pfUI.uf.target then
-    pfUI.castbar.target:SetPoint("TOPLEFT",pfUI.uf.target,"BOTTOMLEFT",0,-default_border*2)
+    local pspace = tonumber(C.unitframes.target.pspace)
+    pfUI.castbar.target:SetPoint("TOPLEFT", pfUI.uf.target, "BOTTOMLEFT", 0, -default_border * 2 - pspace)
     pfUI.castbar.target:SetWidth(pfUI.uf.target:GetWidth())
   else
     pfUI.castbar.target:SetPoint("CENTER", 0, -225)
