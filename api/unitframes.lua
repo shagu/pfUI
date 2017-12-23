@@ -1493,10 +1493,18 @@ function pfUI.uf.GetColor(self, preset)
       if RAID_CLASS_COLORS[class] then
         r, g, b = RAID_CLASS_COLORS[class].r, RAID_CLASS_COLORS[class].g, RAID_CLASS_COLORS[class].b
       end
-    else
-      if UnitReactionColor[UnitReaction(unitstr, "player")] then
-        r, g, b = UnitReactionColor[UnitReaction(unitstr, "player")].r, UnitReactionColor[UnitReaction(unitstr, "player")].g, UnitReactionColor[UnitReaction(unitstr, "player")].b
+    elseif self.label == "pet" then
+      local happiness = GetPetHappiness()
+      if happiness == 1 then
+        r, g, b = 1, 0, 0
+      elseif happiness == 2 then
+        r, g, b = 1, 1, 0
+      else
+        r, g, b = 0, 1, 0
       end
+    else
+      local color = UnitReactionColor[UnitReaction(unitstr, "player")]
+      r, g, b = color.r, color.g, color.b
     end
 
   elseif preset == "class" and config["classcolor"] == "1" then
