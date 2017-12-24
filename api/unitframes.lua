@@ -1504,7 +1504,7 @@ function pfUI.uf.GetColor(self, preset)
       end
     else
       local color = UnitReactionColor[UnitReaction(unitstr, "player")]
-      r, g, b = color.r, color.g, color.b
+      if color then r, g, b = color.r, color.g, color.b end
     end
 
   elseif preset == "class" and config["classcolor"] == "1" then
