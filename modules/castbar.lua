@@ -20,7 +20,7 @@ pfUI:RegisterModule("castbar", function ()
   pfUI.castbar.player = CreateFrame("Frame", "pfPlayerCastbar", UIParent)
   pfUI.castbar.player:SetFrameStrata("MEDIUM")
   CreateBackdrop(pfUI.castbar.player, default_border)
-  pfUI.castbar.player:SetHeight(C.global.font_size + default_border)
+  pfUI.castbar.player:SetHeight(C.global.font_size * 1.5)
 
   if pfUI.uf.player then
     local pspace = tonumber(C.unitframes.player.pspace)
@@ -336,7 +336,7 @@ pfUI:RegisterModule("castbar", function ()
   pfUI.castbar.target = CreateFrame("Frame", "pfTargetCastbar", UIParent)
   pfUI.castbar.target:SetFrameStrata("MEDIUM")
   CreateBackdrop(pfUI.castbar.target, default_border)
-  pfUI.castbar.target:SetHeight(C.global.font_size + default_border)
+  pfUI.castbar.target:SetHeight(C.global.font_size * 1.5)
 
   if pfUI.uf.target then
     local pspace = tonumber(C.unitframes.target.pspace)
