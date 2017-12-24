@@ -67,7 +67,7 @@ pfUI:RegisterModule("prediction", function ()
 
     local _, _, evtype, target  = string.find(msg, '(Resurrection)/(%a+)/(start)/')
     if evtype and target then
-      pfUI.prediction:Ress(target)
+      pfUI.prediction:Ress(sender, target)
       return
     end
   end
@@ -125,7 +125,7 @@ pfUI:RegisterModule("prediction", function ()
     return sumheal
   end
 
-  function pfUI.prediction:Ress(target)
+  function pfUI.prediction:Ress(sender, target)
     ress[target] = ress[target] or {}
     ress[target][sender] = true
     pfUI.prediction:TriggerUpdate(target)
