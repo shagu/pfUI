@@ -188,6 +188,7 @@ pfUI_translation["zhTW"] = {
   ["Enable Spellname"] = "顯示技能名稱",
   ["Enable Sticky Chat"] = "粘滯性聊天[保存上一次的頻道]",
   ["Enable Target Switch Animation"] = "啟用目標切換動畫",
+  ["Enable Text Shadow"] = nil,
   ["Enable Timestamps"] = "啟用時間戳記",
   ["Enable URL Detection"] = "啟用超連結檢測",
   ["Enable Vertical Health Bar"] = nil,

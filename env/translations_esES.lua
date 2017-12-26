@@ -188,6 +188,7 @@ pfUI_translation["esES"] = {
   ["Enable Spellname"] = "Activar Nombre de Hechizo",
   ["Enable Sticky Chat"] = "Activar Chat Pegajoso",
   ["Enable Target Switch Animation"] = "Activar Animación de Cambiar Objetivo",
+  ["Enable Text Shadow"] = nil,
   ["Enable Timestamps"] = "Activar Sello de Tiempo",
   ["Enable URL Detection"] = "Activar Detección de URL",
   ["Enable Vertical Health Bar"] = nil,

@@ -188,6 +188,7 @@ pfUI_translation["ruRU"] = {
   ["Enable Spellname"] = "Включить название заклинания",
   ["Enable Sticky Chat"] = "Включить липкий чат",
   ["Enable Target Switch Animation"] = "Включить анимацию переключения цели",
+  ["Enable Text Shadow"] = nil,
   ["Enable Timestamps"] = "Включить отметки времени",
   ["Enable URL Detection"] = "Включить обнаружение URL",
   ["Enable Vertical Health Bar"] = "Включить вертикальную панель здоровья",

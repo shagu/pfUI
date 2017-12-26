@@ -188,6 +188,7 @@ pfUI_translation["frFR"] = {
   ["Enable Spellname"] = "Activer l'affichage du nom des sorts",
   ["Enable Sticky Chat"] = "Activer le chat collant",
   ["Enable Target Switch Animation"] = "Activer l'animation au changement de cible",
+  ["Enable Text Shadow"] = nil,
   ["Enable Timestamps"] = "Activer les horaires de discussion",
   ["Enable URL Detection"] = "Activer la détection des adresses URL",
   ["Enable Vertical Health Bar"] = nil,

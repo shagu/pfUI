@@ -188,6 +188,7 @@ pfUI_translation["deDE"] = {
   ["Enable Spellname"] = nil,
   ["Enable Sticky Chat"] = nil,
   ["Enable Target Switch Animation"] = nil,
+  ["Enable Text Shadow"] = nil,
   ["Enable Timestamps"] = nil,
   ["Enable URL Detection"] = nil,
   ["Enable Vertical Health Bar"] = nil,

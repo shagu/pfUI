@@ -188,6 +188,7 @@ pfUI_translation["koKR"] = {
   ["Enable Spellname"] = "스펠네임 표시",
   ["Enable Sticky Chat"] = "Sticky Chat 활성화",
   ["Enable Target Switch Animation"] = "대상 전환 애니메이션 사용",
+  ["Enable Text Shadow"] = nil,
   ["Enable Timestamps"] = "시간표시 사용",
   ["Enable URL Detection"] = "URL 감시 사용",
   ["Enable Vertical Health Bar"] = nil,
