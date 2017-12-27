@@ -1427,11 +1427,17 @@ function pfUI.uf:GetStatusValue(unit, pos)
     if unit.label == "target" and MobHealth3 then
       local hp, hpmax = MobHealth3:GetUnitHealth(unit.label)
       return unit:GetColor("health") .. pfUI.api.Abbreviate(hp)
+    elseif unit.label == "target" and MobHealthFrame and MobHealth_GetTargetCurHP() then
+      local hp = MobHealth_GetTargetCurHP()
+      return unit:GetColor("health") .. pfUI.api.Abbreviate(hp)
     end
     return unit:GetColor("health") .. pfUI.api.Abbreviate(UnitHealth(unitstr))
   elseif config == "healthmax" then
     if unit.label == "target" and MobHealth3 then
       local hp, hpmax = MobHealth3:GetUnitHealth(unit.label)
+      return unit:GetColor("health") .. pfUI.api.Abbreviate(hpmax)
+    elseif unit.label == "target" and MobHealthFrame and MobHealth_GetTargetMaxHP() then
+      local hpmax = MobHealth_GetTargetMaxHP()
       return unit:GetColor("health") .. pfUI.api.Abbreviate(hpmax)
     end
     return unit:GetColor("health") .. pfUI.api.Abbreviate(UnitHealthMax(unitstr))
@@ -1449,11 +1455,17 @@ function pfUI.uf:GetStatusValue(unit, pos)
       if unit.label == "target" and MobHealth3 then
         local hp, hpmax = MobHealth3:GetUnitHealth(unit.label)
         return unit:GetColor("health") .. pfUI.api.Abbreviate(hp) .. " - " .. ceil(hp / hpmax * 100) .. "%"
+      elseif unit.label == "target" and MobHealthFrame and MobHealth_GetTargetCurHP() then
+        local hp, hpmax = MobHealth_GetTargetCurHP(),MobHealth_GetTargetMaxHP()
+        return unit:GetColor("health") .. pfUI.api.Abbreviate(hp) .. " - " .. ceil(hp / hpmax * 100) .. "%"
       end
       return unit:GetColor("health") .. pfUI.api.Abbreviate(UnitHealth(unitstr)) .. " - " .. ceil(UnitHealth(unitstr) / UnitHealthMax(unitstr) * 100) .. "%"
     else
       if unit.label == "target" and MobHealth3 then
         local hp, hpmax = MobHealth3:GetUnitHealth(unit.label)
+        return unit:GetColor("health") .. pfUI.api.Abbreviate(hp)
+      elseif unit.label == "target" and MobHealthFrame and MobHealth_GetTargetCurHP() then
+        local hp = MobHealth_GetTargetCurHP()
         return unit:GetColor("health") .. pfUI.api.Abbreviate(hp)
       end
       return unit:GetColor("health") .. pfUI.api.Abbreviate(UnitHealth(unitstr))
@@ -1462,6 +1474,8 @@ function pfUI.uf:GetStatusValue(unit, pos)
     local hp, hpmax = UnitHealth(unitstr), UnitHealthMax(unitstr)
     if unit.label == "target" and MobHealth3 then
       hp, hpmax = MobHealth3:GetUnitHealth(unit.label)
+    elseif unit.label == "target" and MobHealthFrame and MobHealth_GetTargetCurHP() then
+      local hp, hpmax = MobHealth_GetTargetCurHP(), MobHealth_GetTargetMaxHP()
     end
     return unit:GetColor("health") .. pfUI.api.Abbreviate(hp) .. "/" .. pfUI.api.Abbreviate(hpmax)
 
