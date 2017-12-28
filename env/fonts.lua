@@ -39,7 +39,7 @@ function pfUI.environment:UpdateFonts()
   SystemFont:SetFont(pfUI.font_default, 15)
   GameFontNormal:SetFont(pfUI.font_default, 12)
   GameFontBlack:SetFont(pfUI.font_default, 12)
-  GameFontNormalSmall:SetFont(pfUI.font_default, 12)
+  GameFontNormalSmall:SetFont(pfUI.font_default, 11)
   GameFontNormalLarge:SetFont(pfUI.font_default, 16)
   GameFontNormalHuge:SetFont(pfUI.font_default, 20)
   NumberFontNormal:SetFont(pfUI.font_default, 14, "OUTLINE")
@@ -53,17 +53,22 @@ function pfUI.environment:UpdateFonts()
   MailTextFontNormal:SetFont(pfUI.font_default, 15)
   SubSpellFont:SetFont(pfUI.font_default, 12)
   DialogButtonNormalText:SetFont(pfUI.font_default, 16)
-  ZoneTextFont:SetFont(pfUI.font_default, 48, "OUTLINE")
+  ZoneTextFont:SetFont(pfUI.font_default, 34, "OUTLINE")
   SubZoneTextFont:SetFont(pfUI.font_default, 24, "OUTLINE")
   TextStatusBarTextSmall:SetFont(pfUI.font_default, 12, "NORMAL")
   GameTooltipText:SetFont(pfUI.font_default, 12)
   GameTooltipTextSmall:SetFont(pfUI.font_default, 12)
-  GameTooltipHeaderText:SetFont(pfUI.font_default, 14)
+  GameTooltipHeaderText:SetFont(pfUI.font_default, 13)
   WorldMapTextFont:SetFont(pfUI.font_default, 102, "THICK")
   InvoiceTextFontNormal:SetFont(pfUI.font_default, 12)
   InvoiceTextFontSmall:SetFont(pfUI.font_default, 12)
-  ChatFontNormal:SetFont(pfUI.font_default, 12, "NORMAL")
   CombatTextFont:SetFont(pfUI.font_combat, 25)
+
+  if pfUI_config and pfUI_config.chat and pfUI_config.chat.text.outline == "1" then
+    ChatFontNormal:SetFont(pfUI.font_default, 13, "OUTLINE")
+  else
+    ChatFontNormal:SetFont(pfUI.font_default, 13)
+  end
 end
 
 -- run environment update

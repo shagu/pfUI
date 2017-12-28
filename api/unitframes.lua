@@ -107,6 +107,43 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
     f.hp.bar.texture:SetAllPoints(f.hp.bar)
   end
 
+  f.incHeal = CreateFrame("StatusBar", nil, f.hp.bar)
+  f.incHeal:SetHeight(f.config.height)
+  f.incHeal:SetWidth(f.config.width)
+  f.incHeal:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
+  f.incHeal:SetMinMaxValues(0, 1)
+  f.incHeal:SetValue(1)
+  f.incHeal:SetStatusBarColor(0, 1, 0, 0.5)
+  f.incHeal:Hide()
+
+  f.incHeal:SetScript("OnShow", function()
+    if pfUI.prediction and f.label and f.id then
+      pfUI.prediction:TriggerUpdate(UnitName(f.label .. f.id))
+    end
+  end)
+
+  if pfUI_config.unitframes.custombg == "0" then
+    f.incHeal:SetFrameLevel(2)
+  else
+    f.incHeal:SetFrameLevel(3)
+  end
+
+  if f.config.verticalbar == "0" then
+    f.incHeal:SetPoint("TOPLEFT", f.hp.bar, "TOPLEFT", 0, 0)
+  else
+    f.incHeal:SetPoint("BOTTOM", f.hp.bar, "BOTTOM", 0, 0)
+  end
+
+  f.ressIcon = CreateFrame("Frame", nil, f.hp.bar)
+  f.ressIcon:SetFrameLevel(16)
+  f.ressIcon:SetWidth(32)
+  f.ressIcon:SetHeight(32)
+  f.ressIcon:SetPoint("CENTER", f, "CENTER", 0, 4)
+  f.ressIcon.texture = f.ressIcon:CreateTexture(nil,"BACKGROUND")
+  f.ressIcon.texture:SetTexture("Interface\\AddOns\\pfUI\\img\\ress")
+  f.ressIcon.texture:SetAllPoints(f.ressIcon)
+  f.ressIcon:Hide()
+
   f.power = CreateFrame("Frame",nil, f)
   f.power:SetPoint(f.config.panchor, f.hp, relative_point, 0, -2*default_border - f.config.pspace)
   f.power:SetWidth((f.config.pwidth ~= "-1" and f.config.pwidth or f.config.width))
@@ -1476,10 +1513,18 @@ function pfUI.uf.GetColor(self, preset)
       if RAID_CLASS_COLORS[class] then
         r, g, b = RAID_CLASS_COLORS[class].r, RAID_CLASS_COLORS[class].g, RAID_CLASS_COLORS[class].b
       end
-    else
-      if UnitReactionColor[UnitReaction(unitstr, "player")] then
-        r, g, b = UnitReactionColor[UnitReaction(unitstr, "player")].r, UnitReactionColor[UnitReaction(unitstr, "player")].g, UnitReactionColor[UnitReaction(unitstr, "player")].b
+    elseif self.label == "pet" then
+      local happiness = GetPetHappiness()
+      if happiness == 1 then
+        r, g, b = 1, 0, 0
+      elseif happiness == 2 then
+        r, g, b = 1, 1, 0
+      else
+        r, g, b = 0, 1, 0
       end
+    else
+      local color = UnitReactionColor[UnitReaction(unitstr, "player")]
+      if color then r, g, b = color.r, color.g, color.b end
     end
 
   elseif preset == "class" and config["classcolor"] == "1" then

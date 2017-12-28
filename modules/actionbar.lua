@@ -574,8 +574,12 @@ pfUI:RegisterModule("actionbar", function ()
       icon:SetTexCoord(.08, .92, .08, .92)
 
       local border = _G[actionbutton..i..'Border']
-      border:SetAllPoints(button)
-      border:SetTexture(0,1,0,.75)
+      if C.bars.showequipped == "1" then
+        border:SetAllPoints(button)
+        border:SetTexture(0,1,0,.75)
+      else
+        border:SetTexture(0,0,0,0)
+      end
 
       local hotkey = _G[actionbutton..i..'HotKey']
       if C.bars.showkeybind == "1" then

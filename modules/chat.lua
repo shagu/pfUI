@@ -52,32 +52,32 @@ pfUI:RegisterModule("chat", function ()
       ["rx"]=" (www%d-)%.([_A-Za-z0-9-]+)%.(%S+)%s?",
       ["fm"]="%s.%s.%s"},
     PROTOCOL = {
-      ["rx"]=" (%a+)://(%S+)%s?", 
+      ["rx"]=" (%a+)://(%S+)%s?",
       ["fm"]="%s://%s"},
     EMAIL = {
-      ["rx"]=" ([_A-Za-z0-9-%.:]+)@([_A-Za-z0-9-]+)(%.)([_A-Za-z0-9-]+%.?[_A-Za-z0-9-]*)%s?", 
+      ["rx"]=" ([_A-Za-z0-9-%.:]+)@([_A-Za-z0-9-]+)(%.)([_A-Za-z0-9-]+%.?[_A-Za-z0-9-]*)%s?",
       ["fm"]="%s@%s%s%s"},
     PORTIP = {
-      ["rx"]=" (%d%d?%d?)%.(%d%d?%d?)%.(%d%d?%d?)%.(%d%d?%d?):(%d%d?%d?%d?%d?)%s?", 
+      ["rx"]=" (%d%d?%d?)%.(%d%d?%d?)%.(%d%d?%d?)%.(%d%d?%d?):(%d%d?%d?%d?%d?)%s?",
       ["fm"]="%s.%s.%s.%s:%s"},
-    IP = { 
-      ["rx"]=" (%d%d?%d?)%.(%d%d?%d?)%.(%d%d?%d?)%.(%d%d?%d?)%s?", 
+    IP = {
+      ["rx"]=" (%d%d?%d?)%.(%d%d?%d?)%.(%d%d?%d?)%.(%d%d?%d?)%s?",
       ["fm"]="%s.%s.%s.%s"},
     SHORTURL = {
-      ["rx"]=" (%a+)%.(%a+)/(%S+)%s?", 
+      ["rx"]=" (%a+)%.(%a+)/(%S+)%s?",
       ["fm"]="%s.%s/%s"},
     URLIP = {
-      ["rx"]=" ([_A-Za-z0-9-]+)%.([_A-Za-z0-9-]+)%.(%S+)%:([_0-9-]+)%s?", 
+      ["rx"]=" ([_A-Za-z0-9-]+)%.([_A-Za-z0-9-]+)%.(%S+)%:([_0-9-]+)%s?",
       ["fm"]="%s.%s.%s:%s"},
     URL = {
-      ["rx"]=" ([_A-Za-z0-9-]+)%.([_A-Za-z0-9-]+)%.(%S+)%s?", 
+      ["rx"]=" ([_A-Za-z0-9-]+)%.([_A-Za-z0-9-]+)%.(%S+)%s?",
       ["fm"]="%s.%s.%s"},
   }
   -- url copy dialog
   function pfUI.chat:FormatLink(formatter,...)
     if not (formatter and arg[1]) then return end
-    local a1,a2,a3,a4,a5,a6,a7,a8,a9,a10 = arg[1],arg[2],arg[3],arg[4],arg[5],arg[6],arg[7],arg[8],arg[9],arg[10] 
-    local newtext = string.format(formatter,a1,a2,a3,a4,a5,a6,a7,a8,a9,a10)    
+    local a1,a2,a3,a4,a5,a6,a7,a8,a9,a10 = arg[1],arg[2],arg[3],arg[4],arg[5],arg[6],arg[7],arg[8],arg[9],arg[10]
+    local newtext = string.format(formatter,a1,a2,a3,a4,a5,a6,a7,a8,a9,a10)
     -- check the last capture index for consecutive trailing dots (invalid top level domain)
     local invalidtld = string.find(arg[arg.n], "(%.%.)$")
     if (invalidtld) then return newtext end
@@ -772,9 +772,9 @@ pfUI:RegisterModule("chat", function ()
           text = string.gsub (text, URLPattern.PROTOCOL.rx, function(a1,a2) return pfUI.chat:FormatLink(URLPattern.PROTOCOL.fm,a1,a2) end)
           text = string.gsub (text, URLPattern.EMAIL.rx, function(a1,a2,a3,a4) return pfUI.chat:FormatLink(URLPattern.EMAIL.fm,a1,a2,a3,a4) end)
           text = string.gsub (text, URLPattern.PORTIP.rx, function(a1,a2,a3,a4,a5) return pfUI.chat:FormatLink(URLPattern.PORTIP.fm,a1,a2,a3,a4,a5) end)
-          text = string.gsub (text, URLPattern.IP.rx, function(a1,a2,a3,a4) return pfUI.chat:FormatLink(URLPattern.IP.fm,a1,a2,a3,a4,nil) end)
+          text = string.gsub (text, URLPattern.IP.rx, function(a1,a2,a3,a4) return pfUI.chat:FormatLink(URLPattern.IP.fm,a1,a2,a3,a4) end)
           text = string.gsub (text, URLPattern.SHORTURL.rx, function(a1,a2,a3) return pfUI.chat:FormatLink(URLPattern.SHORTURL.fm,a1,a2,a3) end)
-          text = string.gsub (text, URLPattern.URLIP.rx, function(a1,a2,a3,a4) return pfUI.chat:FormatLink(URLPattern.URLIP.fm,a1,a2,a3,a4) end)          
+          text = string.gsub (text, URLPattern.URLIP.rx, function(a1,a2,a3,a4) return pfUI.chat:FormatLink(URLPattern.URLIP.fm,a1,a2,a3,a4) end)
           text = string.gsub (text, URLPattern.URL.rx, function(a1,a2,a3) return pfUI.chat:FormatLink(URLPattern.URL.fm,a1,a2,a3) end)
         end
 

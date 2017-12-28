@@ -2,7 +2,7 @@
 ## Title: |cff33ffccpf|cffffffffUI
 ## Author: Shagu
 ## Notes: A complete user interface replacement.
-## Version: 3.1.2
+## Version: 3.2.2
 ## SavedVariables: pfUI_profiles, pfUI_gold
 ## SavedVariablesPerCharacter: pfUI_config, pfUI_init, pfUI_playerDB
 
@@ -28,8 +28,12 @@ env\translations_zhTW.lua
 env\translations_esES.lua
 env\translations_ruRU.lua
 
+# profiles
+env\profiles.lua
+
 # api
 api\api.lua
+api\spell.lua
 api\config.lua
 api\ui-widgets.lua
 api\unitframes.lua
@@ -44,6 +48,7 @@ modules\firstrun.lua
 modules\gui.lua
 modules\unlock.lua
 modules\hoverbind.lua
+modules\updatenotify.lua
 modules\actionbar.lua
 modules\hunterbar.lua
 modules\rangecheck.lua
@@ -51,6 +56,7 @@ modules\chat.lua
 modules\addons.lua
 modules\minimap.lua
 modules\panel.lua
+modules\prediction.lua
 modules\player.lua
 modules\focus.lua
 modules\target.lua
@@ -87,3 +93,4 @@ modules\feigndeath.lua
 modules\hdgraphic.lua
 modules\share.lua
 modules\tracking.lua
+modules\easteregg.lua
