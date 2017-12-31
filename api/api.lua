@@ -23,17 +23,14 @@ end
 -- return:      [bool]          "1" if in range otherwise "nil"
 local RangeCache = {}
 function pfUI.api.UnitInRange(unit)
-    if not UnitExists(unit) or not UnitIsVisible(unit) then
-      return nil
-    end
-
-    if CheckInteractDistance(unit, 4) then
-      return 1
-    else if pfUI.rangecheck then
-      return pfUI.rangecheck:UnitInSpellRange(unit)
-    else
-      return nil
-    end
+  if not UnitExists(unit) or not UnitIsVisible(unit) then
+    return nil
+  elseif CheckInteractDistance(unit, 4) then
+    return 1
+  elseif pfUI.rangecheck then
+    return pfUI.rangecheck:UnitInSpellRange(unit)
+  else
+    return nil
   end
 end
 
@@ -42,12 +39,12 @@ end
 -- 'str'        [string]        String to columnize.
 -- return:      [string]        the string tranformed to a column.
 function pfUI.api.strvertical(str)
-    local _, len = string.gsub(str,"[^\128-\193]", "")
-    if (len == string.len(str)) then
-      return string.gsub(str, "(.)", "%1\n")
-    else
-      return string.gsub(str,"([%z\1-\127\194-\244][\128-\191]*)", "%1\n")
-    end
+  local _, len = string.gsub(str,"[^\128-\193]", "")
+  if (len == string.len(str)) then
+    return string.gsub(str, "(.)", "%1\n")
+  else
+    return string.gsub(str,"([%z\1-\127\194-\244][\128-\191]*)", "%1\n")
+  end
 end
 
 -- [ round ]
