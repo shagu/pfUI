@@ -14,6 +14,7 @@ pfUI_translation["zhCN"] = {
   ["Always Show Item Comparison"] = "始终显示装备比较(或按SHIFT键)",
   ["Always Use 2D Portraits"] = "始终使用2D头像",
   ["Ammo Counter"] = "弹药数量",
+  ["Announce Ressurection in chat"] = nil,
   ["Appearance"] = "外观设置",
   ["AtlasLoot"] = nil,
   ["Autohide"] = "自动隐藏",

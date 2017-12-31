@@ -128,6 +128,13 @@ pfUI:RegisterModule("prediction", function ()
   function pfUI.prediction:Ress(sender, target)
     ress[target] = ress[target] or {}
     ress[target][sender] = true
+    if C.unitframes.ressannounce ~= "disabled" and sender ==  UnitName("player") then
+        if C.unitframes.ressannounce == "dynamic" then
+          SendChatMessage("Resurrecting " .. target, UnitInRaid("player") and "Raid" or "Party")
+        else
+          SendChatMessage("Resurrecting " .. target,C.unitframes.ressannounce)
+        end
+    end
     pfUI.prediction:TriggerUpdate(target)
   end
 

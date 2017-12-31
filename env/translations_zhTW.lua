@@ -14,6 +14,7 @@ pfUI_translation["zhTW"] = {
   ["Always Show Item Comparison"] = "始終顯示裝備比較",
   ["Always Use 2D Portraits"] = "始終使用2D頭像",
   ["Ammo Counter"] = "彈藥數量",
+  ["Announce Ressurection in chat"] = nil,
   ["Appearance"] = "外觀設置",
   ["AtlasLoot"] = nil,
   ["Autohide"] = "自動隱藏",

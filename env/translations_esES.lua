@@ -15,6 +15,7 @@ pfUI_translation["esES"] = {
   ["Always Use 2D Portraits"] = "Siempre Usar Retrato 2D",
   ["Ammo Counter"] = "Contador de Munición",
   ["Appearance"] = "Apariencia",
+  ["Announce Ressurection in chat"] = nil,
   ["AtlasLoot"] = nil,
   ["Autohide"] = "Ocultar Automáticamente",
   ["Auto Repair Items"] = "Reparar Equipo Automáticamente",
