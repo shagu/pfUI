@@ -139,6 +139,8 @@ pfUI:RegisterModule("rangecheck", function ()
 
     if unitdata[unit] and unitdata[unit] == 1 then
       return 1
+    elseif not unitdata[unit] then
+      return 1
     else
       return nil
     end
