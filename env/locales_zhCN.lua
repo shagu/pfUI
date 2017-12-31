@@ -26,13 +26,6 @@ pfUI_locale["zhCN"]["itemtypes"] = {
   ["INVTYPE_PROJECTILE"] = "弹药",
 }
 
-pfUI_locale["zhCN"]["rangecheck"] = {
-  ["PALADIN"] = "圣光术",
-  ["PRIEST"] = "快速治疗",
-  ["DRUID"] = "治疗之触",
-  ["SHAMAN"] = "治疗波",
-}
-
 pfUI_locale["zhCN"]["hunterpaging"] = {
   ["MELEE"] = "摔绊",
   ["RANGED"] = "奥术射击",

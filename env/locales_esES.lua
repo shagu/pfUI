@@ -26,13 +26,6 @@ pfUI_locale["esES"]["itemtypes"] = {
   ["INVTYPE_PROJECTILE"] = "Proyectil",
 }
 
-pfUI_locale["esES"]["rangecheck"] = {
-  ["PALADIN"] = "Luz Sagrada",
-  ["PRIEST"] = "Destello curativo",
-  ["DRUID"] = "Toque curativo",
-  ["SHAMAN"] = "Ola de curación",
-}
-
 pfUI_locale["esES"]["hunterpaging"] = {
   ["MELEE"] = "Cortar alas",
   ["RANGED"] = "Disparo Arcano",

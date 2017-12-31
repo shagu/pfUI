@@ -26,13 +26,6 @@ pfUI_locale["frFR"]["itemtypes"] = {
   ["INVTYPE_PROJECTILE"] = "Projectile",
 }
 
-pfUI_locale["frFR"]["rangecheck"] = {
-  ["PALADIN"] = "Lumière sacrée",
-  ["PRIEST"] = "Soins rapides",
-  ["DRUID"] = "Toucher guérisseur",
-  ["SHAMAN"] = "Vague de soins",
-}
-
 pfUI_locale["frFR"]["hunterpaging"] = {
   ["MELEE"] = "Coupure d'ailes",
   ["RANGED"] = "Tir des arcanes",

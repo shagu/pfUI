@@ -406,6 +406,14 @@ pfUI:RegisterModule("gui", function ()
     "13:" .. T["Very Slow"],
   }
 
+  pfUI.gui.dropdowns.uf_rangecheckinterval = {
+    "1:" .. T["Very Fast"],
+    "2:" .. T["Fast"],
+    "4:" .. T["Medium"],
+    "8:" .. T["Slow"],
+    "16:" .. T["Very Slow"],
+  }
+
   pfUI.gui.dropdowns.uf_powerbar_position = {
     "TOPLEFT:" .. T["Left"],
     "TOP:" .. T["Center"],
@@ -704,8 +712,8 @@ pfUI:RegisterModule("gui", function ()
       CreateConfig(this, T["Always Use 2D Portraits"], C.unitframes, "always2dportrait", "checkbox")
       CreateConfig(this, T["Enable 2D Portraits As Fallback"], C.unitframes, "portraittexture", "checkbox")
       CreateConfig(this, T["Unit Frame Layout"], C.unitframes, "layout", "dropdown", pfUI.gui.dropdowns.uf_layout)
-      CreateConfig(this, T["Aggressive 40y-Range Check (Will break stuff)"], C.unitframes, "rangecheck", "checkbox")
-      CreateConfig(this, T["40y-Range Check Interval"], C.unitframes, "rangechecki")
+      CreateConfig(this, T["Enable 40y-Range Check"], C.unitframes, "rangecheck", "checkbox")
+      CreateConfig(this, T["Range Check Interval"], C.unitframes, "rangechecki", "dropdown", pfUI.gui.dropdowns.uf_rangecheckinterval)
       CreateConfig(this, T["Combopoint Size"], C.unitframes, "combosize")
       CreateConfig(this, T["Abbreviate Numbers (4200 -> 4.2k)"], C.unitframes, "abbrevnum", "checkbox")
       CreateConfig(this, T["Show PvP Icon"], C.unitframes.player, "showPVP", "checkbox")

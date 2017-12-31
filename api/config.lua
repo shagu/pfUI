@@ -87,8 +87,8 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("unitframes", nil,           "always2dportrait", "0")
   pfUI:UpdateConfig("unitframes", nil,           "portraittexture",  "1")
   pfUI:UpdateConfig("unitframes", nil,           "layout",           "default")
-  pfUI:UpdateConfig("unitframes", nil,           "rangecheck",       "0")
-  pfUI:UpdateConfig("unitframes", nil,           "rangechecki",      "1")
+  pfUI:UpdateConfig("unitframes", nil,           "rangecheck",       "1")
+  pfUI:UpdateConfig("unitframes", nil,           "rangechecki",      "2")
   pfUI:UpdateConfig("unitframes", nil,           "combosize",        "6")
   pfUI:UpdateConfig("unitframes", nil,           "abbrevnum",        "1")
 
@@ -720,6 +720,13 @@ function pfUI:MigrateConfig()
       pfUI_config.unitframes.animation_speed = "1"
     else
       pfUI_config.unitframes.animation_speed = "5"
+    end
+  end
+
+  -- migrating rangecheck interval (> 3.2.2)
+  if checkversion(3, 2, 2) then
+    if tonumber(pfUI_config.unitframes.rangechecki) <= 1 then
+      pfUI_config.unitframes.rangechecki = "2"
     end
   end
 
