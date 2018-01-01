@@ -17,44 +17,20 @@ function pfUI.api.strsplit(delimiter, subject)
 end
 
 -- [ UnitInRange ]
--- Returns whether a party/raid member is nearby. It uses spells with a distance of around 40 yards.
+-- Returns whether a party/raid member is nearby.
+-- It takes care of the rangecheck module if existing.
 -- unit         [string]        A unit to query (string, unitID)
 -- return:      [bool]          "1" if in range otherwise "nil"
 local RangeCache = {}
 function pfUI.api.UnitInRange(unit)
-    if not UnitExists(unit) or not UnitIsVisible(unit) then
-      return nil
-    end
-
-    if CheckInteractDistance(unit, 4) then
-      return 1
-    else if not pfUI.rangecheck or not pfUI.rangecheck.slot then
-      return nil
-    else
-      -- Extended Range Check
-      if not RangeCache[unit] or RangeCache[unit].time + pfUI.rangecheck.interval < GetTime() then
-        RangeCache[unit] = {}
-        RangeCache[unit].time  = GetTime()
-
-        if not UnitIsUnit("target", unit) then
-          pfScanActive = true
-          TargetUnit(unit)
-        end
-
-        if IsActionInRange(pfUI.rangecheck.slot) == 1 then
-          RangeCache[unit].range = 1
-        else
-          RangeCache[unit].range = nil
-        end
-
-        if pfScanActive then
-          TargetLastTarget()
-          pfScanActive = false
-        end
-      end
-
-      return RangeCache[unit].range
-    end
+  if not UnitExists(unit) or not UnitIsVisible(unit) then
+    return nil
+  elseif CheckInteractDistance(unit, 4) then
+    return 1
+  elseif pfUI.rangecheck then
+    return pfUI.rangecheck:UnitInSpellRange(unit)
+  else
+    return nil
   end
 end
 
@@ -63,12 +39,12 @@ end
 -- 'str'        [string]        String to columnize.
 -- return:      [string]        the string tranformed to a column.
 function pfUI.api.strvertical(str)
-    local _, len = string.gsub(str,"[^\128-\193]", "")
-    if (len == string.len(str)) then
-      return string.gsub(str, "(.)", "%1\n")
-    else
-      return string.gsub(str,"([%z\1-\127\194-\244][\128-\191]*)", "%1\n")
-    end
+  local _, len = string.gsub(str,"[^\128-\193]", "")
+  if (len == string.len(str)) then
+    return string.gsub(str, "(.)", "%1\n")
+  else
+    return string.gsub(str,"([%z\1-\127\194-\244][\128-\191]*)", "%1\n")
+  end
 end
 
 -- [ round ]

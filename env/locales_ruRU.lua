@@ -26,13 +26,6 @@ pfUI_locale["ruRU"]["itemtypes"] = {
   ["INVTYPE_PROJECTILE"] = "Боеприпасы",
 }
 
-pfUI_locale["ruRU"]["rangecheck"] = {
-  ["PALADIN"] = "Свет небес",
-  ["PRIEST"] = "Быстрое исцеление",
-  ["DRUID"] = "Целительное прикосновение",
-  ["SHAMAN"] = "Волна исцеления",
-}
-
 pfUI_locale["ruRU"]["hunterpaging"] = {
   ["MELEE"] = "Подрезать крылья",
   ["RANGED"] = "Чародейский выстрел",

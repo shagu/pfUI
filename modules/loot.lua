@@ -348,7 +348,7 @@ pfUI:RegisterModule("loot", function ()
     for index,value in ipairs(UnitPopupMenus["RAID"]) do
       if value == "RAID_REMOVE" then
         table.insert(UnitPopupMenus["RAID"],index+1,"PF_BANKLOOTER")
-        table.insert(UnitPopupMenus["RAID"],index+1,"PF_DISENCHANTLOOTER")        
+        table.insert(UnitPopupMenus["RAID"],index+1,"PF_DISENCHANTLOOTER")
       end
     end
   end
@@ -368,11 +368,11 @@ pfUI:RegisterModule("loot", function ()
       if UnitPopupMenus["PLAYER"][index] == "PF_BANKLOOTER" or UnitPopupMenus["PLAYER"][index] == "PF_DISENCHANTLOOTER" then
         table.remove(UnitPopupMenus["PLAYER"],index,value)
       end
-    end    
+    end
     for index = table.getn(UnitPopupMenus["RAID"]),1,-1 do
       if UnitPopupMenus["RAID"][index] == "PF_BANKLOOTER" or UnitPopupMenus["RAID"][index] == "PF_DISENCHANTLOOTER" then
         table.remove(UnitPopupMenus["RAID"],index,value)
-      end      
+      end
     end
   end
 
@@ -492,6 +492,7 @@ pfUI:RegisterModule("loot", function ()
 
   function pfUI.loot:CreateSlot(id)
     local frame = CreateFrame("LootButton", 'pfLootButton'..id, pfUI.loot)
+    frame:RegisterForClicks('LeftButtonUp', 'RightButtonUp')
     frame:SetPoint("LEFT", C.appearance.border.default*2, 0)
     frame:SetPoint("RIGHT", -C.appearance.border.default*2, 0)
     frame:SetHeight(22)

@@ -26,13 +26,6 @@ pfUI_locale["enUS"]["itemtypes"] = {
   ["INVTYPE_PROJECTILE"] = "Projectile",
 }
 
-pfUI_locale["enUS"]["rangecheck"] = {
-  ["PALADIN"] = "Holy Light",
-  ["PRIEST"] = "Flash Heal",
-  ["DRUID"] = "Healing Touch",
-  ["SHAMAN"] = "Healing Wave",
-}
-
 pfUI_locale["enUS"]["hunterpaging"] = {
   ["MELEE"] = "Wing Clip",
   ["RANGED"] = "Arcane Shot",
