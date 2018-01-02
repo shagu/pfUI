@@ -122,7 +122,7 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
     end
   end)
 
-  if pfUI_config.unitframes.custombg == "0" then
+  if f.config.invert_healthbar == "0" then
     f.incHeal:SetFrameLevel(2)
   else
     f.incHeal:SetFrameLevel(3)
