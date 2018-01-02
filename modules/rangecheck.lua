@@ -63,6 +63,8 @@ pfUI:RegisterModule("rangecheck", function ()
       this.tick = GetTime() + interval
     end
 
+    unitdata["target"] = IsActionInRange(pfUI.rangecheck.slot)
+
     -- skip invalid units
     while not this:NeedRangeScan(units[this.id]) and this.id <= numunits do
       this.id = this.id + 1
@@ -85,8 +87,6 @@ pfUI:RegisterModule("rangecheck", function ()
         unitdata[unit] = IsActionInRange(pfUI.rangecheck.slot)
         TargetLastTarget()
         pfScanActive = false
-      else
-        unitdata[unit] = IsActionInRange(pfUI.rangecheck.slot)
       end
 
       this.id = this.id + 1
