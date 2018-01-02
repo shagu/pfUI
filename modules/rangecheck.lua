@@ -135,6 +135,7 @@ pfUI:RegisterModule("rangecheck", function ()
   end
 
   function pfUI.rangecheck:UnitInSpellRange(unit)
+    if not pfUI.rangecheck.slot then return nil end
     local unit = pfUI.rangecheck:GetRealUnit(unit)
 
     if unitdata[unit] and unitdata[unit] == 1 then
