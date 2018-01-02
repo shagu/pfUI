@@ -102,12 +102,13 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
   if pfUI_config.unitframes.custombg == "1" then
     local cr, cg, cb, ca = pfUI.api.strsplit(",", pfUI_config.unitframes.custombgcolor)
     cr, cg, cb, ca = tonumber(cr), tonumber(cg), tonumber(cb), tonumber(ca)
-    f.hp.bar.texture = f.hp.bar:CreateTexture(nil,"BACKGROUND")
+    f.hp.bar.texture = f.hp:CreateTexture(nil,"BACKGROUND")
     f.hp.bar.texture:SetTexture(cr,cg,cb,ca)
     f.hp.bar.texture:SetAllPoints(f.hp.bar)
   end
 
-  f.incHeal = CreateFrame("StatusBar", nil, f.hp.bar)
+  f.incHeal = CreateFrame("StatusBar", nil, f.hp)
+  f.incHeal:SetFrameLevel(2)
   f.incHeal:SetHeight(f.config.height)
   f.incHeal:SetWidth(f.config.width)
   f.incHeal:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
@@ -121,12 +122,6 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
       pfUI.prediction:TriggerUpdate(UnitName(f.label .. f.id))
     end
   end)
-
-  if pfUI_config.unitframes.custombg == "0" then
-    f.incHeal:SetFrameLevel(2)
-  else
-    f.incHeal:SetFrameLevel(3)
-  end
 
   if f.config.verticalbar == "0" then
     f.incHeal:SetPoint("TOPLEFT", f.hp.bar, "TOPLEFT", 0, 0)
@@ -311,109 +306,17 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
 
       if not this.label then return end
 
-      -- ticker for non event frames
-      if this.tick and not this.lastTick then this.lastTick = GetTime() + this.tick end
+      pfUI.uf:RefreshUnitAnimation(this)
+
+      -- trigger eventless actions (online/offline/range)
+      if not this.lastTick then this.lastTick = GetTime() + (this.tick or .2) end
       if this.lastTick and this.lastTick < GetTime() then
-        this.lastTick = GetTime() + this.tick
-        pfUI.uf:RefreshUnit(this, "all")
-      end
+        this.lastTick = GetTime() + (this.tick or .2)
+        pfUI.uf:RefreshUnitState(this)
 
-      if UnitIsConnected(this.label .. this.id) or ( pfUI.unlock and pfUI.unlock:IsShown()) then
-        if this.config.faderange == "1" then
-          if pfUI.api.UnitInRange(this.label .. this.id, 4) or (pfUI.unlock and pfUI.unlock:IsShown()) then
-            if this:GetAlpha() ~= 1 then
-              this:SetAlpha(1)
-              if this.config.portrait == "bar" then
-                this.portrait:SetAlpha(pfUI_config.unitframes.portraitalpha)
-              end
-            end
-          else
-            if this:GetAlpha() ~= .5 then
-              this:SetAlpha(.5)
-              if this.config.portrait == "bar" then
-                this.portrait:SetAlpha(pfUI_config.unitframes.portraitalpha)
-              end
-            end
-          end
-        else
-          if this:GetAlpha() ~= 1 then
-            this:SetAlpha(1)
-            if this.config.portrait == "bar" then
-              this.portrait:SetAlpha(pfUI_config.unitframes.portraitalpha)
-            end
-          end
-        end
-
-        if not this.cache then return end
-        if not this.cache.hp or not this.cache.power then return end
-
-        local hpDiff = abs(this.cache.hp - this.cache.hpdisplay)
-        local powerDiff = abs(this.cache.power - this.cache.powerdisplay)
-
-        if UnitName(this.label .. this.id) ~= ( this.lastUnit or "" ) then
-          -- instant refresh on unit change (e.g. target)
-          this.cache.hp = UnitHealth(this.label .. this.id)
-          this.cache.hpmax = UnitHealthMax(this.label .. this.id)
-
-          if this.config.invert_healthbar == "1" then
-            this.cache.hp = this.cache.hpmax - this.cache.hp
-          end
-
-          this.cache.hpdisplay = this.cache.hp
-          this.hp.bar:SetMinMaxValues(0, this.cache.hpmax)
-          this.hp.bar:SetValue(this.cache.hp)
-
-          this.cache.powermax = UnitManaMax(this.label .. this.id)
-          this.cache.powerdisplay = this.cache.power
-          this.power.bar:SetMinMaxValues(0, this.cache.powermax)
-          this.power.bar:SetValue(this.cache.power)
-
-          this.lastUnit = UnitName(this.label .. this.id)
-        else
-          -- smoothen animation based on framerate
-          local fpsmod = GetFramerate() / 30
-
-          -- health animation active
-          if this.cache.hpanimation then
-            if this.cache.hpdisplay < this.cache.hp then
-              this.cache.hpdisplay = this.cache.hpdisplay + ceil(hpDiff / (pfUI_config.unitframes.animation_speed * fpsmod))
-            elseif this.cache.hpdisplay > this.cache.hp then
-              this.cache.hpdisplay = this.cache.hpdisplay - ceil(hpDiff / (pfUI_config.unitframes.animation_speed * fpsmod))
-            else
-              this.cache.hpdisplay = this.cache.hp
-              this.cache.hpanimation = nil
-            end
-
-            -- set statusbar
-            this.hp.bar:SetValue(this.cache.hpdisplay)
-          end
-
-          -- power animation active
-          if this.cache.poweranimation then
-            if this.cache.powerdisplay < this.cache.power then
-              this.cache.powerdisplay = this.cache.powerdisplay + ceil(powerDiff / (pfUI_config.unitframes.animation_speed * fpsmod))
-            elseif this.cache.powerdisplay > this.cache.power then
-              this.cache.powerdisplay = this.cache.powerdisplay - ceil(powerDiff / (pfUI_config.unitframes.animation_speed * fpsmod))
-            else
-              this.cache.powerdisplay = this.cache.power
-              this.cache.poweranimation = nil
-            end
-
-            -- set statusbar
-            this.power.bar:SetValue(this.cache.powerdisplay)
-          end
-        end
-      else
-        this.hp.bar:SetMinMaxValues(0, 100)
-        this.power.bar:SetMinMaxValues(0, 100)
-        this.hp.bar:SetValue(0)
-        this.power.bar:SetValue(0)
-
-        if ( this.label == "party" or this.label == "raid" ) and this:GetAlpha() ~= .25 then
-          this:SetAlpha(.25)
-          if this.config.portrait == "bar" then
-            this.portrait:SetAlpha(pfUI_config.unitframes.portraitalpha)
-          end
+        -- update everything on eventless frames (targettarget, etc)
+        if this.tick then
+          pfUI.uf:RefreshUnit(this, "all")
         end
       end
     end)
@@ -615,6 +518,112 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
 
   table.insert(pfUI.uf.frames, f)
   return f
+end
+
+function pfUI.uf:RefreshUnitAnimation(unitframe)
+  if not unitframe.cache then return end
+  if not unitframe.cache.hp or not unitframe.cache.power then return end
+  if not UnitIsConnected(unitframe.label .. unitframe.id) then return end
+
+  local hpDiff = abs(unitframe.cache.hp - unitframe.cache.hpdisplay)
+  local powerDiff = abs(unitframe.cache.power - unitframe.cache.powerdisplay)
+
+  if UnitName(unitframe.label .. unitframe.id) ~= ( unitframe.lastUnit or "" ) then
+    -- instant refresh on unit change (e.g. target)
+    unitframe.cache.hp = UnitHealth(unitframe.label .. unitframe.id)
+    unitframe.cache.hpmax = UnitHealthMax(unitframe.label .. unitframe.id)
+
+    if unitframe.config.invert_healthbar == "1" then
+      unitframe.cache.hp = unitframe.cache.hpmax - unitframe.cache.hp
+    end
+
+    unitframe.cache.hpdisplay = unitframe.cache.hp
+    unitframe.hp.bar:SetMinMaxValues(0, unitframe.cache.hpmax)
+    unitframe.hp.bar:SetValue(unitframe.cache.hp)
+
+    unitframe.cache.powermax = UnitManaMax(unitframe.label .. unitframe.id)
+    unitframe.cache.powerdisplay = unitframe.cache.power
+    unitframe.power.bar:SetMinMaxValues(0, unitframe.cache.powermax)
+    unitframe.power.bar:SetValue(unitframe.cache.power)
+
+    unitframe.lastUnit = UnitName(unitframe.label .. unitframe.id)
+  else
+    -- smoothen animation based on framerate
+    local fpsmod = GetFramerate() / 30
+
+    -- health animation active
+    if unitframe.cache.hpanimation then
+      if unitframe.cache.hpdisplay < unitframe.cache.hp then
+        unitframe.cache.hpdisplay = unitframe.cache.hpdisplay + ceil(hpDiff / (pfUI_config.unitframes.animation_speed * fpsmod))
+      elseif unitframe.cache.hpdisplay > unitframe.cache.hp then
+        unitframe.cache.hpdisplay = unitframe.cache.hpdisplay - ceil(hpDiff / (pfUI_config.unitframes.animation_speed * fpsmod))
+      else
+        unitframe.cache.hpdisplay = unitframe.cache.hp
+        unitframe.cache.hpanimation = nil
+      end
+
+      -- set statusbar
+      unitframe.hp.bar:SetValue(unitframe.cache.hpdisplay)
+    end
+
+    -- power animation active
+    if unitframe.cache.poweranimation then
+      if unitframe.cache.powerdisplay < unitframe.cache.power then
+        unitframe.cache.powerdisplay = unitframe.cache.powerdisplay + ceil(powerDiff / (pfUI_config.unitframes.animation_speed * fpsmod))
+      elseif unitframe.cache.powerdisplay > unitframe.cache.power then
+        unitframe.cache.powerdisplay = unitframe.cache.powerdisplay - ceil(powerDiff / (pfUI_config.unitframes.animation_speed * fpsmod))
+      else
+        unitframe.cache.powerdisplay = unitframe.cache.power
+        unitframe.cache.poweranimation = nil
+      end
+
+      -- set statusbar
+      unitframe.power.bar:SetValue(unitframe.cache.powerdisplay)
+    end
+  end
+end
+
+function pfUI.uf:RefreshUnitState(unitframe)
+  if UnitIsConnected(this.label .. this.id) or (pfUI.unlock and pfUI.unlock:IsShown()) then
+    -- online (or unlock)
+    if unitframe.config.faderange == "1" then
+      if pfUI.api.UnitInRange(unitframe.label .. unitframe.id, 4) or (pfUI.unlock and pfUI.unlock:IsShown()) then
+        if unitframe:GetAlpha() ~= 1 then
+          unitframe:SetAlpha(1)
+          if unitframe.config.portrait == "bar" then
+            unitframe.portrait:SetAlpha(pfUI_config.unitframes.portraitalpha)
+          end
+        end
+      else
+        if unitframe:GetAlpha() ~= .5 then
+          unitframe:SetAlpha(.5)
+          if unitframe.config.portrait == "bar" then
+            unitframe.portrait:SetAlpha(pfUI_config.unitframes.portraitalpha)
+          end
+        end
+      end
+    else
+      if unitframe:GetAlpha() ~= 1 then
+        unitframe:SetAlpha(1)
+        if unitframe.config.portrait == "bar" then
+          unitframe.portrait:SetAlpha(pfUI_config.unitframes.portraitalpha)
+        end
+      end
+    end
+  else
+    -- offline
+    unitframe.hp.bar:SetMinMaxValues(0, 100)
+    unitframe.power.bar:SetMinMaxValues(0, 100)
+    unitframe.hp.bar:SetValue(0)
+    unitframe.power.bar:SetValue(0)
+
+    if ( unitframe.label == "party" or unitframe.label == "raid" ) and unitframe:GetAlpha() ~= .25 then
+      unitframe:SetAlpha(.25)
+      if unitframe.config.portrait == "bar" then
+        unitframe.portrait:SetAlpha(pfUI_config.unitframes.portraitalpha)
+      end
+    end
+  end
 end
 
 function pfUI.uf:RefreshUnit(unit, component)

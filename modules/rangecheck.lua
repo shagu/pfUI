@@ -85,8 +85,6 @@ pfUI:RegisterModule("rangecheck", function ()
         unitdata[unit] = IsActionInRange(pfUI.rangecheck.slot)
         TargetLastTarget()
         pfScanActive = false
-      else
-        unitdata[unit] = IsActionInRange(pfUI.rangecheck.slot)
       end
 
       this.id = this.id + 1
@@ -135,6 +133,12 @@ pfUI:RegisterModule("rangecheck", function ()
   end
 
   function pfUI.rangecheck:UnitInSpellRange(unit)
+    if not pfUI.rangecheck.slot then return nil end
+
+    if UnitIsUnit("target", unit) then
+      return IsActionInRange(pfUI.rangecheck.slot) == 1 and 1 or nil
+    end
+
     local unit = pfUI.rangecheck:GetRealUnit(unit)
 
     if unitdata[unit] and unitdata[unit] == 1 then

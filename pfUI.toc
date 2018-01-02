@@ -2,7 +2,7 @@
 ## Title: |cff33ffccpf|cffffffffUI
 ## Author: Shagu
 ## Notes: A complete user interface replacement.
-## Version: 3.3.0
+## Version: 3.4.0
 ## SavedVariables: pfUI_profiles, pfUI_gold
 ## SavedVariablesPerCharacter: pfUI_config, pfUI_init, pfUI_playerDB
 
@@ -53,6 +53,7 @@ modules\actionbar.lua
 modules\hunterbar.lua
 modules\rangecheck.lua
 modules\chat.lua
+modules\bubbles.lua
 modules\addons.lua
 modules\minimap.lua
 modules\panel.lua
