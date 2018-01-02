@@ -63,8 +63,6 @@ pfUI:RegisterModule("rangecheck", function ()
       this.tick = GetTime() + interval
     end
 
-    unitdata["target"] = IsActionInRange(pfUI.rangecheck.slot)
-
     -- skip invalid units
     while not this:NeedRangeScan(units[this.id]) and this.id <= numunits do
       this.id = this.id + 1
@@ -136,6 +134,11 @@ pfUI:RegisterModule("rangecheck", function ()
 
   function pfUI.rangecheck:UnitInSpellRange(unit)
     if not pfUI.rangecheck.slot then return nil end
+
+    if UnitIsUnit("target", unit) then
+      return IsActionInRange(pfUI.rangecheck.slot) == 1 and 1 or nil
+    end
+
     local unit = pfUI.rangecheck:GetRealUnit(unit)
 
     if unitdata[unit] and unitdata[unit] == 1 then
