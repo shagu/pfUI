@@ -102,12 +102,13 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
   if pfUI_config.unitframes.custombg == "1" then
     local cr, cg, cb, ca = pfUI.api.strsplit(",", pfUI_config.unitframes.custombgcolor)
     cr, cg, cb, ca = tonumber(cr), tonumber(cg), tonumber(cb), tonumber(ca)
-    f.hp.bar.texture = f.hp.bar:CreateTexture(nil,"BACKGROUND")
+    f.hp.bar.texture = f.hp:CreateTexture(nil,"BACKGROUND")
     f.hp.bar.texture:SetTexture(cr,cg,cb,ca)
     f.hp.bar.texture:SetAllPoints(f.hp.bar)
   end
 
-  f.incHeal = CreateFrame("StatusBar", nil, f.hp.bar)
+  f.incHeal = CreateFrame("StatusBar", nil, f.hp)
+  f.incHeal:SetFrameLevel(2)
   f.incHeal:SetHeight(f.config.height)
   f.incHeal:SetWidth(f.config.width)
   f.incHeal:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
@@ -121,12 +122,6 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
       pfUI.prediction:TriggerUpdate(UnitName(f.label .. f.id))
     end
   end)
-
-  if f.config.invert_healthbar == "0" then
-    f.incHeal:SetFrameLevel(2)
-  else
-    f.incHeal:SetFrameLevel(3)
-  end
 
   if f.config.verticalbar == "0" then
     f.incHeal:SetPoint("TOPLEFT", f.hp.bar, "TOPLEFT", 0, 0)
