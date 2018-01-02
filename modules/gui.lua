@@ -1373,6 +1373,9 @@ pfUI:RegisterModule("gui", function ()
       CreateConfig(this, T["Enable Chat Fade"], C.chat.global, "fadeout", "checkbox")
       CreateConfig(this, T["Seconds Before Chat Fade"], C.chat.global, "fadetime")
       CreateConfig(this, T["Mousewheel Scroll Speed"], C.chat.global, "scrollspeed")
+      CreateConfig(this, T["Enable Chat Bubbles"], C.chat.bubbles, "chat", "checkbox")
+      CreateConfig(this, T["Enable Party Chat Bubbles"], C.chat.bubbles, "party", "checkbox")
+      CreateConfig(this, T["Chat Bubble Transparency"], C.chat.bubbles, "alpha")
       this.setup = true
     end
   end)

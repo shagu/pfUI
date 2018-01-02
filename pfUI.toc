@@ -53,6 +53,7 @@ modules\actionbar.lua
 modules\hunterbar.lua
 modules\rangecheck.lua
 modules\chat.lua
+modules\bubbles.lua
 modules\addons.lua
 modules\minimap.lua
 modules\panel.lua
