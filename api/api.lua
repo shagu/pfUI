@@ -412,7 +412,6 @@ function pfUI.api.wipe(src)
   for k in pairs(src) do
     src[k] = nil
   end
-  table.setn(src,0)
   return src
 end
 
