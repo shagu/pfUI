@@ -1422,6 +1422,7 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.tabs.thirdparty.tabs.general = pfUI.gui.tabs.thirdparty.tabs:CreateTabChild(T["Thirdparty"], true)
   pfUI.gui.tabs.thirdparty.tabs.general:SetScript("OnShow", function()
     if not this.setup then
+      CreateConfig(this, T["Use Chat Colors for Meters"], C.thirdparty, "chatbg", "checkbox")
       CreateConfig(this, T["DPSMate (Skin)"], C.thirdparty.dpsmate, "skin", "checkbox")
       CreateConfig(this, T["DPSMate (Dock)"], C.thirdparty.dpsmate, "dock", "checkbox")
       CreateConfig(this, T["SWStats (Skin)"], C.thirdparty.swstats, "skin", "checkbox")

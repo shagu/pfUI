@@ -150,7 +150,16 @@ pfUI:RegisterModule("thirdparty", function ()
       -- remove titlebar
       KLHTM_Gui.title.back:Hide()
       KLHTM_SetGuiScale(.9)
+
       CreateBackdrop(KLHTM_Frame)
+
+      if C.thirdparty.chatbg == "1" then
+        local r, g, b, a = strsplit(",", C.chat.global.background)
+        KLHTM_Frame.backdrop:SetBackdropColor(tonumber(r), tonumber(g), tonumber(b), tonumber(a))
+
+        local r, g, b, a = strsplit(",", C.chat.global.border)
+        KLHTM_Frame.backdrop:SetBackdropBorderColor(tonumber(r), tonumber(g), tonumber(b), tonumber(a))
+      end
 
       -- theme buttons
       local buttons = { "KLHTM_TitleFrameClose", "KLHTM_TitleFrameMinimise",
@@ -265,6 +274,14 @@ pfUI:RegisterModule("thirdparty", function ()
         for k, val in pairs(DPSMateSettings["windows"]) do
           local frame = _G["DPSMate_"..val["name"]]
           CreateBackdrop(frame)
+
+          if C.thirdparty.chatbg == "1" then
+            local r, g, b, a = strsplit(",", C.chat.global.background)
+            frame.backdrop:SetBackdropColor(tonumber(r), tonumber(g), tonumber(b), tonumber(a))
+
+            local r, g, b, a = strsplit(",", C.chat.global.border)
+            frame.backdrop:SetBackdropBorderColor(tonumber(r), tonumber(g), tonumber(b), tonumber(a))
+          end
         end
       end
     end
@@ -321,6 +338,14 @@ pfUI:RegisterModule("thirdparty", function ()
       _G.SW_BARSEPY = 1
 
       CreateBackdrop(SW_BarFrame1)
+
+      if C.thirdparty.chatbg == "1" then
+        local r, g, b, a = strsplit(",", C.chat.global.background)
+        SW_BarFrame1.backdrop:SetBackdropColor(tonumber(r), tonumber(g), tonumber(b), tonumber(a))
+
+        local r, g, b, a = strsplit(",", C.chat.global.border)
+        SW_BarFrame1.backdrop:SetBackdropBorderColor(tonumber(r), tonumber(g), tonumber(b), tonumber(a))
+      end
 
       CreateBackdrop(SW_BarSettingsFrameV2)
       CreateBackdrop(SW_BarSettingsFrameV2_Title, 0)
