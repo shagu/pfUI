@@ -245,7 +245,6 @@ pfUI:RegisterModule("thirdparty", function ()
 
   AddIntegration("DPSMate", function()
     if C.thirdparty.dpsmate.skin == "1" then
-      DEFAULT_CHAT_FRAME:AddMessage("1st launching")
       if DPSMateSettings then
         -- set DPSMate appearance to match pfUI
         for w in pairs(DPSMateSettings["windows"]) do
@@ -557,7 +556,6 @@ pfUI:RegisterModule("thirdparty", function ()
       local AtlasCompare = CreateFrame( "Frame" , "pfEQCompareAtlas", AtlasLootTooltip )
 
       AtlasCompare:SetScript("OnShow", function()
-        if this.itemLink then message(this.itemLink) end
         pfUI.eqcompare.ShowCompare(AtlasLootTooltip)
       end)
 
