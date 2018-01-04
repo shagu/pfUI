@@ -48,10 +48,11 @@ pfUI:RegisterModule("bubbles", function ()
           f.frame.text:SetAllPoints(f.frame)
 
           CreateBackdrop(f.frame, nil, nil, alpha)
-          f.frame.backdrop:SetPoint("TOPLEFT", f, "TOPLEFT", 0, -10)
-          f.frame.backdrop:SetPoint("BOTTOMRIGHT", f, "BOTTOMRIGHT", 0, 10)
+          f.frame.backdrop:SetPoint("TOPLEFT", f, "TOPLEFT", -10, -10)
+          f.frame.backdrop:SetPoint("BOTTOMRIGHT", f, "BOTTOMRIGHT", 10, 10)
 
           f.text:Hide()
+          f.text:SetFont(pfUI.font_default, tonumber(C.global.font_size) * UIParent:GetScale(), "OUTLINE")
           local r,g,b,a = f.text:GetTextColor()
           f.frame.text:SetText(f.text:GetText())
           f.frame.text:SetTextColor(r,g,b,a)
