@@ -92,7 +92,7 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
   pfUI.api.CreateBackdrop(f.hp, default_border)
 
   f.hp.bar = CreateFrame("StatusBar", nil, f.hp)
-  f.hp.bar:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
+  f.hp.bar:SetStatusBarTexture(f.config.bartexture)
   f.hp.bar:SetAllPoints(f.hp)
   if f.config.verticalbar == "1" then
     f.hp.bar:SetOrientation("VERTICAL")
@@ -148,7 +148,7 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
   pfUI.api.CreateBackdrop(f.power, default_border)
 
   f.power.bar = CreateFrame("StatusBar", nil, f.power)
-  f.power.bar:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
+  f.power.bar:SetStatusBarTexture(f.config.bartexture)
   f.power.bar:SetAllPoints(f.power)
   f.power.bar:SetMinMaxValues(0, 100)
 
