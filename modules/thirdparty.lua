@@ -37,8 +37,8 @@ pfUI:RegisterModule("thirdparty", function ()
         -- DPSMate Dual View
         if pfUI.thirdparty.meters.damage and pfUI.thirdparty.meters.threat then
           DPSMate_DPSMate:ClearAllPoints()
-          DPSMate_DPSMate:SetPoint("TOPLEFT", pfUI.chat.right, "TOP", 0 ,0)
-          DPSMate_DPSMate:SetPoint("BOTTOMRIGHT", pfUI.chat.right, "BOTTOMRIGHT", 0 ,0)
+          DPSMate_DPSMate:SetPoint("TOPLEFT", pfUI.chat.right, "TOP", 0, 0)
+          DPSMate_DPSMate:SetPoint("BOTTOMRIGHT", pfUI.chat.right, "BOTTOMRIGHT", 0, 0)
           DPSMate_DPSMate:SetWidth(pfUI.chat.right:GetWidth() / 2)
           DPSMate_DPSMate_ScrollFrame:ClearAllPoints()
           DPSMate_DPSMate_ScrollFrame:SetWidth(pfUI.chat.right:GetWidth() / 2)
@@ -63,7 +63,7 @@ pfUI:RegisterModule("thirdparty", function ()
         if pfUI.thirdparty.meters.damage and pfUI.thirdparty.meters.threat then
           SW_BarFrame1:SetWidth(pfUI.chat.right:GetWidth() / 2)
           SW_BarFrame1:ClearAllPoints()
-          SW_BarFrame1:SetPoint("TOPLEFT", pfUI.chat.right, "TOP", 0 ,0)
+          SW_BarFrame1:SetPoint("TOPLEFT", pfUI.chat.right, "TOP", 0, 0)
           SW_BarFrame1:SetPoint("BOTTOMRIGHT", pfUI.chat.right, "BOTTOMRIGHT", 0 ,0)
           SW_BarFrame1_Resizer:Hide()
           SW_BarsLayout("SW_BarFrame1", true)
@@ -82,8 +82,8 @@ pfUI:RegisterModule("thirdparty", function ()
         if pfUI.thirdparty.meters.damage and pfUI.thirdparty.meters.threat then
           KLHTM_Frame:SetWidth(pfUI.chat.right:GetWidth() / 2)
           KLHTM_Frame:ClearAllPoints()
-          KLHTM_Frame:SetPoint("TOPLEFT", pfUI.chat.right, "TOPLEFT", 0 ,0)
-          KLHTM_Frame:SetPoint("BOTTOMRIGHT", pfUI.chat.right, "BOTTOM", -1 ,0)
+          KLHTM_Frame:SetPoint("TOPLEFT", pfUI.chat.right, "TOPLEFT", 0, 0)
+          KLHTM_Frame:SetPoint("BOTTOMRIGHT", pfUI.chat.right, "BOTTOM", -C.appearance.border.default, 0)
         end
       end
     end
@@ -95,6 +95,11 @@ pfUI:RegisterModule("thirdparty", function ()
     -- show meters
     if pfUI.thirdparty.meters.state == false then
       pfUI.thirdparty.meters.state = true
+
+      -- chat
+      if pfUI.chat and C.chat.right.enable == "1" then
+        pfUI.chat.right:SetAlpha(0)
+      end
 
       -- ktm
       if C.thirdparty.ktm.dock == "1" and KLHTM_Frame then
@@ -116,6 +121,11 @@ pfUI:RegisterModule("thirdparty", function ()
     -- hide meters
     else
       pfUI.thirdparty.meters.state = false
+
+      -- chat
+      if pfUI.chat and C.chat.right.enable == "1" then
+        pfUI.chat.right:SetAlpha(1)
+      end
 
       -- ktm
       if C.thirdparty.ktm.dock == "1" and KLHTM_Frame then
@@ -141,15 +151,14 @@ pfUI:RegisterModule("thirdparty", function ()
       KLHTM_Gui.title.back:Hide()
       KLHTM_SetGuiScale(.9)
 
-      if C.thirdparty.ktm.dock == "1" then
-        KLHTM_Frame:SetBackdrop({
-          bgFile = "Interface\\AddOns\\pfUI\\img\\col", tile = true, tileSize = 8,
-          insets = {left = -1, right = -1, top = -1, bottom = -1},
-        })
+      CreateBackdrop(KLHTM_Frame)
 
-        KLHTM_Frame:SetBackdropColor(0,0,0)
-      else
-        CreateBackdrop(KLHTM_Frame)
+      if C.thirdparty.chatbg == "1" then
+        local r, g, b, a = strsplit(",", C.chat.global.background)
+        KLHTM_Frame.backdrop:SetBackdropColor(tonumber(r), tonumber(g), tonumber(b), tonumber(a))
+
+        local r, g, b, a = strsplit(",", C.chat.global.border)
+        KLHTM_Frame.backdrop:SetBackdropBorderColor(tonumber(r), tonumber(g), tonumber(b), tonumber(a))
       end
 
       -- theme buttons
@@ -236,48 +245,48 @@ pfUI:RegisterModule("thirdparty", function ()
 
   AddIntegration("DPSMate", function()
     if C.thirdparty.dpsmate.skin == "1" then
-      local pfHookDPSMateInitializeFrames = _G.DPSMate.InitializeFrames
-      _G.DPSMate.InitializeFrames = function(self)
-        if DPSMateSettings then
-          -- set DPSMate appearance to match pfUI
-          DPSMateSettings["windows"][1]["titlebarheight"] = 20
-          DPSMateSettings["windows"][1]["titlebarfontsize"] = 12
-          DPSMateSettings["windows"][1]["titlebarfont"] = "Accidental Presidency"
-          DPSMateSettings["windows"][1]["titlebarbgcolor"][1] = 0
-          DPSMateSettings["windows"][1]["titlebarbgcolor"][2] = 0
-          DPSMateSettings["windows"][1]["titlebarbgcolor"][3] = 0
+      if DPSMateSettings then
+        -- set DPSMate appearance to match pfUI
+        for w in pairs(DPSMateSettings["windows"]) do
+          DPSMateSettings["windows"][w]["titlebarheight"] = 20
+          DPSMateSettings["windows"][w]["titlebarfontsize"] = 12
+          DPSMateSettings["windows"][w]["titlebarfont"] = "Accidental Presidency"
+          DPSMateSettings["windows"][w]["titlebaropacity"] = 0
 
-          DPSMateSettings["windows"][1]["titlebarfontcolor"][1] = 1
-          DPSMateSettings["windows"][1]["titlebarfontcolor"][2] = 1
-          DPSMateSettings["windows"][1]["titlebarfontcolor"][3] = 1
+          DPSMateSettings["windows"][w]["titlebarfontcolor"][1] = 1
+          DPSMateSettings["windows"][w]["titlebarfontcolor"][2] = 1
+          DPSMateSettings["windows"][w]["titlebarfontcolor"][3] = 1
 
-          DPSMateSettings["windows"][1]["barheight"] = 11
-          DPSMateSettings["windows"][1]["barfontsize"] = 13
-          DPSMateSettings["windows"][1]["bartexture"] = "normTex"
-          DPSMateSettings["windows"][1]["barfont"] = "Accidental Presidency"
+          DPSMateSettings["windows"][w]["barheight"] = 11
+          DPSMateSettings["windows"][w]["barfontsize"] = 13
+          DPSMateSettings["windows"][w]["bartexture"] = "normTex"
+          DPSMateSettings["windows"][w]["barfont"] = "Accidental Presidency"
 
-          DPSMateSettings["windows"][1]["bgopacity"] = 1
-          DPSMateSettings["windows"][1]["borderopacity"] = 0
-          DPSMateSettings["windows"][1]["opacity"] = 1
-          DPSMateSettings["windows"][1]["contentbgtexture"] = "Solid Background"
-          DPSMateSettings["windows"][1]["contentbgcolor"][1] = 0
-          DPSMateSettings["windows"][1]["contentbgcolor"][2] = 0
-          DPSMateSettings["windows"][1]["contentbgcolor"][3] = 0
-          DPSMateSettings["windows"][1]["contentbgcolor"][3] = 0
+          DPSMateSettings["windows"][w]["opacity"] = 1
+          DPSMateSettings["windows"][w]["contentbgtexture"] = "Solid Background"
+          DPSMateSettings["windows"][w]["bgopacity"] = 0
+          DPSMateSettings["windows"][w]["borderopacity"] = 0
         end
 
-        pfHookDPSMateInitializeFrames(self)
+        DPSMate:InitializeFrames()
+
+        for k, val in pairs(DPSMateSettings["windows"]) do
+          local frame = _G["DPSMate_"..val["name"]]
+          CreateBackdrop(frame)
+
+          if C.thirdparty.chatbg == "1" then
+            local r, g, b, a = strsplit(",", C.chat.global.background)
+            frame.backdrop:SetBackdropColor(tonumber(r), tonumber(g), tonumber(b), tonumber(a))
+
+            local r, g, b, a = strsplit(",", C.chat.global.border)
+            frame.backdrop:SetBackdropBorderColor(tonumber(r), tonumber(g), tonumber(b), tonumber(a))
+          end
+        end
       end
     end
 
     if C.thirdparty.dpsmate.dock == "1" then
       pfUI.thirdparty.meters.damage = true
-
-      local pfDPSMateOnLoad = DPSMate.OnLoad
-      function _G.DPSMate:OnLoad()
-        pfDPSMateOnLoad()
-        DPSMate_DPSMate:Hide()
-      end
 
       if DPSMate_DPSMate then
         DPSMate_DPSMate:Hide()
@@ -295,12 +304,10 @@ pfUI:RegisterModule("thirdparty", function ()
     if C.thirdparty.swstats.skin == "1" then
 
       SW_Settings["OPT_ShowMainWinDPS"] = 1
-
       SW_Settings["Colors"] = SW_Settings["Colors"] or {}
-      SW_Settings["Colors"]["MainWinBack"] = { [1] = 0, [2] = 0, [3] = 0,	[4] = 1, }
-      SW_Settings["Colors"]["Backdrops"] = { [1] = 0, [2] = 0, [3] = 0,	[4] = 0, }
       SW_Settings["Colors"]["TitleBarsFont"] = { [1] = 1, [2] = 1, [3] = 1,	[4] = 1, }
-      SW_Settings["Colors"]["TitleBars"] = { [1] = 0, [2] = 0, [3] = 0,	[4] = 1, }
+      SW_Settings["Colors"]["TitleBars"] = { [1] = 0, [2] = 0, [3] = 0,	[4] = 0, }
+      SW_Settings["Colors"]["Backdrops"] = { [1] = .3, [2] = 1, [3] = .8,	[4] = 1, }
 
       SW_Settings["InfoSettings"] = SW_Settings["InfoSettings"] or {}
       SW_Settings["InfoSettings"][1] = SW_Settings["InfoSettings"][1] or {}
@@ -312,9 +319,9 @@ pfUI:RegisterModule("thirdparty", function ()
       SW_Settings["InfoSettings"][1]["BH"] = 10
       SW_Settings["InfoSettings"][1]["BFS"] = 11
       SW_Settings["InfoSettings"][1]["BFC"] = { [1] = 1, [2] = 1, [3] = 1, [4] = 1, }
-      SW_Settings["InfoSettings"][1]["BC"] = { [1] = 0, [2] = 0, [3] = 0, [4] = 1, }
       SW_Settings["InfoSettings"][1]["OTF"] = ( SW_Settings["InfoSettings"][1]["OTF"] == "1" and "SWStats" ) or SW_Settings["InfoSettings"][1]["OTF"]
       SW_Settings["InfoSettings"][1]["UCC"] = 1
+
 
       SW_BarFrame1_Title:SetPoint("TOPLEFT", 3, 0)
       SW_BarFrame1_Title_Sync:SetScale(.84)
@@ -329,15 +336,27 @@ pfUI:RegisterModule("thirdparty", function ()
       SW_BarFrame1.swoBarY = -22
       _G.SW_BARSEPY = 1
 
-      if C.thirdparty.swstats.dock == "1" then
-        SW_BarFrame1:SetBackdrop({
-          bgFile = "Interface\\AddOns\\pfUI\\img\\col", tile = true, tileSize = 8,
-          insets = {left = -1, right = -1, top = -1, bottom = -1},
-        })
-        SW_BarFrame1:SetBackdropColor(0,0,0)
-      else
-        CreateBackdrop(SW_BarFrame1)
+      CreateBackdrop(SW_BarFrame1)
+
+      if C.thirdparty.chatbg == "1" then
+        local r, g, b, a = strsplit(",", C.chat.global.background)
+        SW_BarFrame1.backdrop:SetBackdropColor(tonumber(r), tonumber(g), tonumber(b), tonumber(a))
+
+        local r, g, b, a = strsplit(",", C.chat.global.border)
+        SW_BarFrame1.backdrop:SetBackdropBorderColor(tonumber(r), tonumber(g), tonumber(b), tonumber(a))
       end
+
+      CreateBackdrop(SW_BarSettingsFrameV2)
+      CreateBackdrop(SW_BarSettingsFrameV2_Title, 0)
+      CreateBackdrop(SW_BarSettingsFrameV2_Tab1, 0)
+      SW_BarSettingsFrameV2_Tab1:SetHeight(24)
+      CreateBackdrop(SW_BarSettingsFrameV2_Tab2, 0)
+      SW_BarSettingsFrameV2_Tab2:SetHeight(24)
+      CreateBackdrop(SW_BarSettingsFrameV2_Tab3, 0)
+      SW_BarSettingsFrameV2_Tab3:SetHeight(24)
+
+      CreateBackdrop(SW_BarReportFrame)
+      CreateBackdrop(SW_BarReportFrame_Title, 0)
     end
 
     if C.thirdparty.swstats.dock == "1" then
@@ -537,7 +556,6 @@ pfUI:RegisterModule("thirdparty", function ()
       local AtlasCompare = CreateFrame( "Frame" , "pfEQCompareAtlas", AtlasLootTooltip )
 
       AtlasCompare:SetScript("OnShow", function()
-        if this.itemLink then message(this.itemLink) end
         pfUI.eqcompare.ShowCompare(AtlasLootTooltip)
       end)
 
