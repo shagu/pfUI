@@ -410,6 +410,7 @@ pfUI:RegisterModule("gui", function ()
     "Interface\\AddOns\\pfUI\\img\\bar:pfUI",
     "Interface\\AddOns\\pfUI\\img\\bar_tukui:TukUI",
     "Interface\\AddOns\\pfUI\\img\\bar_elvui:ElvUI",
+    "Interface\\AddOns\\pfUI\\img\\bar_striped:Striped",
     "Interface\\TargetingFrame\\UI-StatusBar:Wow Status",
     "Interface\\PaperDollInfoFrame\\UI-Character-Skills-Bar:Wow Skill"
   }

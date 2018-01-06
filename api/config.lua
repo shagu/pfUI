@@ -746,5 +746,16 @@ function pfUI:MigrateConfig()
     end
   end
 
+  -- migrating legacy buff/debuff naming (> 3.5.0)
+  if checkversion(3, 5, 0) then
+    local unitframes = { "player", "target", "focus", "group", "grouptarget", "grouppet", "raid", "ttarget", "pet", "fallback" }
+
+    for _, unitframe in pairs(unitframes) do
+      local entry = pfUI_config.unitframes[unitframe]
+      if entry.buffs and entry.buffs == "hide" then entry.buffs = "off" end
+      if entry.debuffs and entry.debuffs == "hide" then entry.debuffs = "off" end
+    end
+  end
+
   pfUI_config.version = pfUI.version.string
 end
