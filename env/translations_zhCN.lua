@@ -416,4 +416,10 @@ pfUI_translation["zhCN"] = {
   ["Your items have been repaired for"] = "你的物品已经修好了",
   ["Your vendor trash has been sold and you earned"] = "你的垃圾已经售出，你赚了",
   ["Zone Name"] = "区域名称",
+  ["Hit Indicator"] = nil,
+  ["Enable Hit Indicator"] = nil,
+  ["Hit Indicator Text Font"] = nil,
+  ["Hit Indicator Text Size"] = nil,
+  ["Show Player Spell Icon"] = nil,
+  ["Show Target Spell Icon"] = nil,
 }

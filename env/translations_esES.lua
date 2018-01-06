@@ -416,4 +416,10 @@ pfUI_translation["esES"] = {
   ["Your items have been repaired for"] = "Tus Objetos Equipados se han reparado por",
   ["Your vendor trash has been sold and you earned"] = "Los Objetos Grises se han vendido y ganas",
   ["Zone Name"] = "Nombre de la Zona",
+  ["Hit Indicator"] = nil,
+  ["Enable Hit Indicator"] = nil,
+  ["Hit Indicator Text Font"] = nil,
+  ["Hit Indicator Text Size"] = nil,
+  ["Show Player Spell Icon"] = nil,
+  ["Show Target Spell Icon"] = nil,
 }

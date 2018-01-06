@@ -416,4 +416,10 @@ pfUI_translation["ruRU"] = {
   ["Your items have been repaired for"] = "Ваши предметы были отремонтированы за",
   ["Your vendor trash has been sold and you earned"] = "Ваш хлам был продан и вы заработали",
   ["Zone Name"] = "Название зоны",
+  ["Hit Indicator"] = nil,
+  ["Enable Hit Indicator"] = nil,
+  ["Hit Indicator Text Font"] = nil,
+  ["Hit Indicator Text Size"] = nil,
+  ["Show Player Spell Icon"] = nil,
+  ["Show Target Spell Icon"] = nil,
 }

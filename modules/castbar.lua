@@ -69,6 +69,13 @@ pfUI:RegisterModule("castbar", function ()
   pfUI.castbar.player.bar.right:SetText("right")
   pfUI.castbar.player.bar.right:SetJustifyH("right")
 
+  -- icon
+  pfUI.castbar.player.icon = pfUI.castbar.player:CreateTexture(nil, "DIALOG")
+  pfUI.castbar.player.icon:SetWidth(font_size + default_border)
+  pfUI.castbar.player.icon:SetHeight(font_size + default_border)
+  pfUI.castbar.player.icon:ClearAllPoints()
+  pfUI.castbar.player.icon:SetPoint("LEFT", pfUI.castbar.player, "LEFT")
+
   -- events
   pfUI.castbar.player:RegisterEvent("SPELLCAST_START")
   pfUI.castbar.player:RegisterEvent("SPELLCAST_STOP")
@@ -184,6 +191,16 @@ pfUI:RegisterModule("castbar", function ()
     pfUI.castbar.player.fadeout = nil
     pfUI.castbar.player:SetAlpha(1)
     pfUI.castbar.player:Show()
+    pfUI.castbar.player.bar:ClearAllPoints()
+    if C.castbar.player.show_icon == "1" and L["spells"][spell] ~= nil then
+      pfUI.castbar.player.icon:SetTexture("Interface\\Icons\\"..L["spells"][spell].icon)
+      pfUI.castbar.player.bar:SetPoint("TOPLEFT", pfUI.castbar.player.icon, "TOPRIGHT")
+      pfUI.castbar.player.bar:SetPoint("BOTTOMRIGHT", pfUI.castbar.player, "BOTTOMRIGHT")
+      pfUI.castbar.player.icon:Show()
+    else
+      pfUI.castbar.player.bar:SetAllPoints(pfUI.castbar.player)
+      pfUI.castbar.player.icon:Hide()
+    end
   end
 
   function pfUI.castbar.player:SpellcastStop()
@@ -385,6 +402,13 @@ pfUI:RegisterModule("castbar", function ()
   pfUI.castbar.target.bar.right:SetText("right")
   pfUI.castbar.target.bar.right:SetJustifyH("right")
 
+  -- icon
+  pfUI.castbar.target.icon = pfUI.castbar.target:CreateTexture(nil, "DIALOG")
+  pfUI.castbar.target.icon:SetWidth(font_size + default_border)
+  pfUI.castbar.target.icon:SetHeight(font_size + default_border)
+  pfUI.castbar.target.icon:ClearAllPoints()
+  pfUI.castbar.target.icon:SetPoint("LEFT", pfUI.castbar.target, "LEFT")
+
   pfUI.castbar.target.bar:SetScript("OnUpdate", function()
     if pfUI.castbar.target.drag and pfUI.castbar.target.drag:IsShown() then this:Show() return end
     if UnitExists("target") and pfUI.castbar.target.casterDB[UnitName("target")] then
@@ -520,6 +544,16 @@ pfUI:RegisterModule("castbar", function ()
 
   function pfUI.castbar.target:Action(mob, spell)
     if L["spells"][spell] ~= nil then
+      pfUI.castbar.player.bar:ClearAllPoints()
+      if C.castbar.target.show_icon == "1" then
+        pfUI.castbar.target.icon:SetTexture("Interface\\Icons\\"..L["spells"][spell].icon)
+        pfUI.castbar.target.bar:SetPoint("TOPLEFT", pfUI.castbar.target.icon, "TOPRIGHT")
+        pfUI.castbar.target.bar:SetPoint("BOTTOMRIGHT", pfUI.castbar.target, "BOTTOMRIGHT")
+        pfUI.castbar.target.icon:Show()
+      else
+        pfUI.castbar.target.bar:SetAllPoints(pfUI.castbar.target)
+        pfUI.castbar.target.icon:Hide()
+      end
       local casttime = L["spells"][spell].t / 1000
       local icon = L["spells"][spell].icon
       pfUI.castbar.target.casterDB[mob] = {cast = spell, starttime = GetTime(), casttime = casttime, icon = icon}

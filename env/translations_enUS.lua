@@ -416,4 +416,10 @@ pfUI_translation["enUS"] = {
   ["Your items have been repaired for"] = nil,
   ["Your vendor trash has been sold and you earned"] = nil,
   ["Zone Name"] = nil,
+  ["Hit Indicator"] = nil,
+  ["Enable Hit Indicator"] = nil,
+  ["Hit Indicator Text Font"] = nil,
+  ["Hit Indicator Text Size"] = nil,
+  ["Show Player Spell Icon"] = nil,
+  ["Show Target Spell Icon"] = nil,
 }
