@@ -24,10 +24,6 @@ for i=1,4 do pfValidUnits["partypet" .. i .. "target"] = true end
 for i=1,40 do pfValidUnits["raid" .. i .. "target"] = true end
 for i=1,40 do pfValidUnits["raidpet" .. i .. "target"] = true end
 
-
-
-
-
 function pfUI.uf:UpdateFrameSize()
   local unit = self.label .. self.id
   local default_border = pfUI_config.appearance.border.default
@@ -52,7 +48,6 @@ function pfUI.uf:UpdateFrameSize()
 end
 
 function pfUI.uf:UpdateConfig()
-
   local f = self
   local C = pfUI_config
   local default_border = pfUI_config.appearance.border.default
@@ -68,7 +63,62 @@ function pfUI.uf:UpdateConfig()
   end
 
   f:SetFrameStrata("BACKGROUND")
-  f.hp:SetPoint("TOP", 0, 0)
+
+  f.portrait:SetFrameStrata("LOW")
+  f.portrait.tex:SetAllPoints(f.portrait)
+  f.portrait.tex:SetTexCoord(.1, .9, .1, .9)
+  f.portrait.model:SetFrameStrata("LOW")
+  f.portrait.model:SetAllPoints(f.portrait)
+
+  if f.config.portrait == "bar" then
+    f.portrait:SetParent(f.hp.bar)
+    f.portrait:SetAllPoints(f.hp.bar)
+
+    f.hp:ClearAllPoints()
+    f.hp:SetPoint("TOP", 0, 0)
+
+    f.portrait:SetAlpha(pfUI_config.unitframes.portraitalpha)
+    if f.portrait.backdrop then f.portrait.backdrop:Hide() end
+
+    f.portrait:Show()
+  elseif f.config.portrait == "left" then
+    f.portrait:SetParent(f)
+    f.portrait:ClearAllPoints()
+    f.portrait:SetPoint("TOPLEFT", f, "TOPLEFT", 0, 0)
+
+    f.hp:ClearAllPoints()
+    f.hp:SetPoint("TOPRIGHT", f, "TOPRIGHT", 0, 0)
+
+    f.portrait:SetAlpha(1)
+
+    pfUI.api.CreateBackdrop(f.portrait, default_border)
+    f.portrait.backdrop:Show()
+    -- still required? remove in two weeks
+    --f.portrait:SetFrameStrata("BACKGROUND")
+    --f.portrait.model:SetFrameLevel(1)
+
+    f.portrait:Show()
+  elseif f.config.portrait == "right" then
+    f.portrait:SetParent(f)
+    f.portrait:ClearAllPoints()
+    f.portrait:SetPoint("TOPRIGHT", f, "TOPRIGHT", 0, 0)
+
+    f.hp:ClearAllPoints()
+    f.hp:SetPoint("TOPLEFT", f, "TOPLEFT", 0, 0)
+
+    f.portrait:SetAlpha(1)
+
+    pfUI.api.CreateBackdrop(f.portrait, default_border)
+    f.portrait.backdrop:Show()
+    -- still required? remove in two weeks
+    --f.portrait:SetFrameStrata("BACKGROUND")
+    --f.portrait.model:SetFrameLevel(1)
+
+    f.portrait:Show()
+  else
+    f.portrait:Hide()
+  end
+
   f.hp:SetWidth(f.config.width)
   f.hp:SetHeight(f.config.height)
   if tonumber(f.config.height) < 0 then f.hp:Hide() end
@@ -88,6 +138,7 @@ function pfUI.uf:UpdateConfig()
     f.hp.bar.texture:SetAllPoints(f.hp.bar)
   end
 
+  f.power:ClearAllPoints()
   f.power:SetPoint(f.config.panchor, f.hp, relative_point, 0, -2*default_border - f.config.pspace)
   f.power:SetWidth((f.config.pwidth ~= "-1" and f.config.pwidth or f.config.width))
   f.power:SetHeight(f.config.pheight)
@@ -120,6 +171,7 @@ function pfUI.uf:UpdateConfig()
   f.hpCenterText:ClearAllPoints()
   f.hpCenterText:SetPoint("TOPLEFT",f.hp.bar, "TOPLEFT", 2*default_border, 1)
   f.hpCenterText:SetPoint("BOTTOMRIGHT",f.hp.bar, "BOTTOMRIGHT", -2*default_border, 0)
+
   f.powerLeftText:SetFont(pfUI.font_unit, C.global.font_unit_size, "OUTLINE")
   f.powerLeftText:SetJustifyH("LEFT")
   f.powerLeftText:SetFontObject(GameFontWhite)
@@ -158,8 +210,10 @@ function pfUI.uf:UpdateConfig()
   end)
 
   if f.config.verticalbar == "0" then
+    f.incHeal:ClearAllPoints()
     f.incHeal:SetPoint("TOPLEFT", f.hp.bar, "TOPLEFT", 0, 0)
   else
+    f.incHeal:ClearAllPoints()
     f.incHeal:SetPoint("BOTTOM", f.hp.bar, "BOTTOM", 0, 0)
   end
 
@@ -194,10 +248,20 @@ function pfUI.uf:UpdateConfig()
   f.raidIcon.texture:SetAllPoints(f.raidIcon)
   f.raidIcon:Hide()
 
-  if f.config.buffs ~= "off" then
+  if f.config.buffs == "off" then
+    for i=1, 32 do
+      if f.buffs and f.buffs[i] then
+        f.buffs[i]:Hide()
+        f.buffs[i] = nil
+      end
+    end
+    f.buffs = nil
+  else
     f.buffs = f.buffs or {}
 
-    for i=1, f.config.bufflimit do
+    for i=1, 32 do
+      if i > tonumber(f.config.bufflimit) then break end
+
       local id = i
       local perrow = f.config.buffperrow
       local row = floor((i-1) / perrow)
@@ -264,14 +328,22 @@ function pfUI.uf:UpdateConfig()
         end
       end)
     end
-  else
-    f.buffs = nil
   end
 
-  if f.config.debuffs ~= "off" then
+  if f.config.debuffs == "off" then
+    for i=1, 32 do
+      if f.debuffs and f.debuffs[i] then
+        f.debuffs[i]:Hide()
+        f.debuffs[i] = nil
+      end
+    end
+    f.debuffs = nil
+  else
     f.debuffs = f.debuffs or {}
 
-    for i=1, f.config.debufflimit do
+    for i=1, 32 do
+      if i > tonumber(f.config.debufflimit) then break end
+
       local id = i
       f.debuffs[i] = f.debuffs[i] or CreateFrame("Button", "pfUI" .. f.fname .. "Debuff" .. i, f)
       f.debuffs[i]:SetID(i)
@@ -310,41 +382,12 @@ function pfUI.uf:UpdateConfig()
         end
       end)
     end
-  else
-    f.debuffs = nil
-  end
-
-  f.portrait:SetFrameStrata("LOW")
-  f.portrait.tex:SetAllPoints(f.portrait)
-  f.portrait.tex:SetTexCoord(.1, .9, .1, .9)
-  f.portrait.model:SetFrameStrata("LOW")
-  f.portrait.model:SetAllPoints(f.portrait)
-
-  if f.config.portrait == "bar" then
-    f.portrait:SetParent(f.hp.bar)
-    f.portrait:SetAllPoints(f.hp.bar)
-    f.portrait:SetAlpha(pfUI_config.unitframes.portraitalpha)
-  elseif f.config.portrait == "left" then
-    f.portrait:SetPoint("TOPLEFT", f, "TOPLEFT", 0, 0)
-    f.hp:ClearAllPoints()
-    f.hp:SetPoint("TOPRIGHT", f, "TOPRIGHT", 0, 0)
-    pfUI.api.CreateBackdrop(f.portrait, default_border)
-    f.portrait:SetFrameStrata("BACKGROUND")
-    f.portrait.model:SetFrameLevel(1)
-  elseif f.config.portrait == "right" then
-    f.portrait:SetPoint("TOPRIGHT", f, "TOPRIGHT", 0, 0)
-    f.hp:ClearAllPoints()
-    f.hp:SetPoint("TOPLEFT", f, "TOPLEFT", 0, 0)
-    pfUI.api.CreateBackdrop(f.portrait, default_border)
-    f.portrait:SetFrameStrata("BACKGROUND")
-    f.portrait.model:SetFrameLevel(1)
-  else
-    f.portrait:Hide()
   end
 
   if f.config.visible == "1" then
-    pfUI.uf:RefreshUnit(f)
+    pfUI.uf:RefreshUnit(f, "all")
     f:EnableScripts()
+    f:UpdateFrameSize()
   else
     f:UnregisterAllEvents()
     f:Hide()
