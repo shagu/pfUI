@@ -64,60 +64,8 @@ function pfUI.uf:UpdateConfig()
 
   f:SetFrameStrata("BACKGROUND")
 
-  f.portrait:SetFrameStrata("LOW")
-  f.portrait.tex:SetAllPoints(f.portrait)
-  f.portrait.tex:SetTexCoord(.1, .9, .1, .9)
-  f.portrait.model:SetFrameStrata("LOW")
-  f.portrait.model:SetAllPoints(f.portrait)
-
-  if f.config.portrait == "bar" then
-    f.portrait:SetParent(f.hp.bar)
-    f.portrait:SetAllPoints(f.hp.bar)
-
-    f.hp:ClearAllPoints()
-    f.hp:SetPoint("TOP", 0, 0)
-
-    f.portrait:SetAlpha(pfUI_config.unitframes.portraitalpha)
-    if f.portrait.backdrop then f.portrait.backdrop:Hide() end
-
-    f.portrait:Show()
-  elseif f.config.portrait == "left" then
-    f.portrait:SetParent(f)
-    f.portrait:ClearAllPoints()
-    f.portrait:SetPoint("TOPLEFT", f, "TOPLEFT", 0, 0)
-
-    f.hp:ClearAllPoints()
-    f.hp:SetPoint("TOPRIGHT", f, "TOPRIGHT", 0, 0)
-
-    f.portrait:SetAlpha(1)
-
-    pfUI.api.CreateBackdrop(f.portrait, default_border)
-    f.portrait.backdrop:Show()
-    -- still required? remove in two weeks
-    --f.portrait:SetFrameStrata("BACKGROUND")
-    --f.portrait.model:SetFrameLevel(1)
-
-    f.portrait:Show()
-  elseif f.config.portrait == "right" then
-    f.portrait:SetParent(f)
-    f.portrait:ClearAllPoints()
-    f.portrait:SetPoint("TOPRIGHT", f, "TOPRIGHT", 0, 0)
-
-    f.hp:ClearAllPoints()
-    f.hp:SetPoint("TOPLEFT", f, "TOPLEFT", 0, 0)
-
-    f.portrait:SetAlpha(1)
-
-    pfUI.api.CreateBackdrop(f.portrait, default_border)
-    f.portrait.backdrop:Show()
-    -- still required? remove in two weeks
-    --f.portrait:SetFrameStrata("BACKGROUND")
-    --f.portrait.model:SetFrameLevel(1)
-
-    f.portrait:Show()
-  else
-    f.portrait:Hide()
-  end
+  f.hp:ClearAllPoints()
+  f.hp:SetPoint("TOP", 0, 0)
 
   f.hp:SetWidth(f.config.width)
   f.hp:SetHeight(f.config.height)
@@ -147,6 +95,58 @@ function pfUI.uf:UpdateConfig()
   pfUI.api.CreateBackdrop(f.power, default_border)
   f.power.bar:SetStatusBarTexture(f.config.bartexture)
   f.power.bar:SetAllPoints(f.power)
+
+  f.portrait:SetFrameStrata("LOW")
+  f.portrait.tex:SetAllPoints(f.portrait)
+  f.portrait.tex:SetTexCoord(.1, .9, .1, .9)
+  f.portrait.model:SetFrameStrata("LOW")
+  f.portrait.model:SetAllPoints(f.portrait)
+
+  if f.config.portrait == "bar" then
+    f.portrait:SetParent(f.hp.bar)
+    f.portrait:SetAllPoints(f.hp.bar)
+
+    f.portrait:SetAlpha(pfUI_config.unitframes.portraitalpha)
+    if f.portrait.backdrop then f.portrait.backdrop:Hide() end
+
+    f.portrait:Show()
+  elseif f.config.portrait == "left" then
+    f.portrait:SetParent(f)
+    f.portrait:ClearAllPoints()
+    f.portrait:SetPoint("TOPLEFT", f, "TOPLEFT", 0, 0)
+
+    f.hp:ClearAllPoints()
+    f.hp:SetPoint("TOPRIGHT", f, "TOPRIGHT", 0, 0)
+
+    f.portrait:SetAlpha(f:GetAlpha())
+
+    pfUI.api.CreateBackdrop(f.portrait, default_border)
+    f.portrait.backdrop:Show()
+    -- still required? remove in two weeks
+    --f.portrait:SetFrameStrata("BACKGROUND")
+    --f.portrait.model:SetFrameLevel(1)
+
+    f.portrait:Show()
+  elseif f.config.portrait == "right" then
+    f.portrait:SetParent(f)
+    f.portrait:ClearAllPoints()
+    f.portrait:SetPoint("TOPRIGHT", f, "TOPRIGHT", 0, 0)
+
+    f.hp:ClearAllPoints()
+    f.hp:SetPoint("TOPLEFT", f, "TOPLEFT", 0, 0)
+
+    f.portrait:SetAlpha(f:GetAlpha())
+
+    pfUI.api.CreateBackdrop(f.portrait, default_border)
+    f.portrait.backdrop:Show()
+    -- still required? remove in two weeks
+    --f.portrait:SetFrameStrata("BACKGROUND")
+    --f.portrait.model:SetFrameLevel(1)
+
+    f.portrait:Show()
+  else
+    f.portrait:Hide()
+  end
 
   f.hpLeftText:SetFont(pfUI.font_unit, C.global.font_unit_size, "OUTLINE")
   f.hpLeftText:SetJustifyH("LEFT")
