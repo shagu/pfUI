@@ -50,7 +50,7 @@ pfUI:RegisterModule("bubbles", function ()
           class = pfUI.bubbles.players[sender].class
         end
         if (class) then
-          r,g,b = RAID_CLASS_COLORS[class].r, RAID_CLASS_COLORS[class].g, RAID_CLASS_COLORS[.class].b
+          r,g,b = RAID_CLASS_COLORS[class].r, RAID_CLASS_COLORS[class].g, RAID_CLASS_COLORS[class].b
         else
           r,g,b = 0.8,0.8,0.8
         end
