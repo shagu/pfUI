@@ -9,6 +9,12 @@ pfUI:RegisterModule("raid", function ()
 
   pfUI.uf.raid = CreateFrame("Button","pfRaid",UIParent)
 
+  function pfUI.uf.raid:UpdateConfig()
+    for i=1, 40 do
+      pfUI.uf.raid[i]:UpdateConfig()
+    end
+  end
+
   for r=1, 8 do
     for g=1, 5 do
       i = g + 5*(r-1)
