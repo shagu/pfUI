@@ -25,7 +25,6 @@ for i=1,40 do pfValidUnits["raid" .. i .. "target"] = true end
 for i=1,40 do pfValidUnits["raidpet" .. i .. "target"] = true end
 
 function pfUI.uf:UpdateFrameSize()
-  local unit = self.label .. self.id
   local default_border = pfUI_config.appearance.border.default
   if pfUI_config.appearance.border.unitframes ~= "-1" then
     default_border = pfUI_config.appearance.border.unitframes
@@ -750,7 +749,7 @@ function pfUI.uf:RefreshUnit(unit, component)
   -- hide and return early on unused frames
   if not ( pfUI.unlock and pfUI.unlock:IsShown() ) then
     -- check existing units or focus frames
-    if unit.unitname then
+    if unit.unitname and unit.unitname ~= "focus" then
       unit:Show()
     elseif UnitName(unit.label .. unit.id) then
       -- hide group while in raid and option is set
