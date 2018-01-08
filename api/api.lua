@@ -635,11 +635,16 @@ end
 -- [ Bar Layout Size ] --
 -- 'bar'  frame reference,
 -- 'barsize'  integer number of buttons,
--- 'formfactor'  string formfactor in cols x rows
-function pfUI.api.BarLayoutSize(bar,barsize,formfactor,iconsize,bordersize)
+-- 'formfactor'  string formfactor in cols x rows,
+-- 'visiblesize' integer buttons actually spawned
+function pfUI.api.BarLayoutSize(bar,barsize,formfactor,iconsize,bordersize,visiblesize)
   assert(barsize > 0 and barsize <= NUM_ACTIONBAR_BUTTONS,"BarLayoutSize: barsize "..tostring(barsize).." is invalid")
   local formfactor = pfUI.api.BarLayoutFormfactor(formfactor)
   local cols, rows = unpack(pfGridmath[barsize][formfactor])
+  if (visiblesize) and (visiblesize < barsize) then
+    cols = math.min(cols,visiblesize)
+    rows = math.min(math.ceil(visiblesize/cols),visiblesize)
+  end  
   local width = (iconsize + bordersize*3) * cols - bordersize
   local height = (iconsize + bordersize*3) * rows - bordersize
   bar._size = {width,height}
