@@ -1,5 +1,5 @@
 pfUI:RegisterModule("gui", function ()
-  local function CreateConfig(parent, caption, category, config, widget, values, skip, named, type)
+  local function CreateConfig(ufunc, parent, caption, category, config, widget, values, skip, named, type)
     -- parent object placement
     if parent.objectCount == nil then
       parent.objectCount = 1
@@ -532,7 +532,7 @@ pfUI:RegisterModule("gui", function ()
     "party:" .. T["Party"],
     "raid:" .. T["Raid"],
     "dynamic:" .. T["Party or Raid"]
-  }
+}
 
   pfUI.gui.dropdowns.num_actionbar_buttons = BarLayoutOptions(NUM_ACTIONBAR_BUTTONS)
   pfUI.gui.dropdowns.num_shapeshift_slots = BarLayoutOptions(NUM_SHAPESHIFT_SLOTS)
