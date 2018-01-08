@@ -39,6 +39,10 @@ pfUI:RegisterModule("gui", function ()
       frame:SetBackdrop(pfUI.backdrop_underline)
       frame:SetBackdropBorderColor(1,1,1,.15)
 
+      if not ufunc and widget ~= "header" and C.gui.reloadmarker == "1" then
+        caption = caption .. " [|cffffaaaa!|r]"
+      end
+
       -- caption
       frame.caption = frame:CreateFontString("Status", "LOW", "GameFontNormal")
       frame.caption:SetFont(pfUI.font_default, C.global.font_size + 2, "OUTLINE")
@@ -552,6 +556,7 @@ pfUI:RegisterModule("gui", function ()
       CreateConfig(nil, this, T["Enable Offscreen Frame Positions"], C.global, "offscreen", "checkbox")
       CreateConfig(nil, this, T["Enable Single Line UIErrors"], C.global, "errors_limit", "checkbox")
       CreateConfig(nil, this, T["Disable All UIErrors"], C.global, "errors_hide", "checkbox")
+      CreateConfig(nil, this, T["Hightlight Settings That Require Reload"], C.gui, "reloadmarker", "checkbox")
 
       -- Delete / Reset
       CreateConfig(nil, this, T["Delete / Reset"], nil, nil, "header")
