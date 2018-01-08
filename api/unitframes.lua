@@ -24,55 +24,35 @@ for i=1,4 do pfValidUnits["partypet" .. i .. "target"] = true end
 for i=1,40 do pfValidUnits["raid" .. i .. "target"] = true end
 for i=1,40 do pfValidUnits["raidpet" .. i .. "target"] = true end
 
-function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
-  local fname
-  if unit == "Party" then
-    fname = "Group" .. (id or "")
-  else
-    fname = (unit or "") .. (id or "")
-  end
-
-  local unit = strlower(unit or "")
-  local id = strlower(id or "")
-  local C = pfUI_config
+function pfUI.uf:UpdateFrameSize()
   local default_border = pfUI_config.appearance.border.default
   if pfUI_config.appearance.border.unitframes ~= "-1" then
     default_border = pfUI_config.appearance.border.unitframes
   end
 
-  local f = CreateFrame("Button", "pf" .. fname, UIParent)
-
-  -- show self in group
-  if unit == "party" and id == "0" then
-    unit = "player"
-    id = ""
+  local spacing = self.config.pspace
+  local width = self.config.width
+  local height = self.config.height
+  local pheight = self.config.pheight
+  local real_height = height + spacing + pheight + 2*default_border
+  local portrait = 0
+  if self.config.portrait == "left" or self.config.portrait == "right" then
+    self.portrait:SetWidth(real_height)
+    self.portrait:SetHeight(real_height)
+    portrait = real_height + spacing + 2*default_border
   end
 
-  if unit == "partypet" and id == "0" then
-    unit = "pet"
-    id = ""
+  self:SetWidth(width + portrait)
+  self:SetHeight(real_height)
+end
+
+function pfUI.uf:UpdateConfig()
+  local f = self
+  local C = pfUI_config
+  local default_border = pfUI_config.appearance.border.default
+  if pfUI_config.appearance.border.unitframes ~= "-1" then
+    default_border = pfUI_config.appearance.border.unitframes
   end
-
-  if unit == "party0target" then
-    unit = "target"
-    id = ""
-  end
-
-  if not pfValidUnits[unit .. id] then
-    f.unitname = unit
-    f.RegisterEvent = function() return end
-    unit = "mouseover"
-    id = ""
-  end
-
-  f.UpdateFrameSize = pfUI.uf.UpdateFrameSize
-  f.GetColor = pfUI.uf.GetColor
-
-  f.label = unit
-  f.fname = fname
-  f.id = id
-  f.config = config or pfUI_config.unitframes.fallback
-  f.tick = tick
 
   local relative_point = "BOTTOM"
   if f.config.panchor == "TOPLEFT" then
@@ -83,37 +63,142 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
 
   f:SetFrameStrata("BACKGROUND")
 
-  f.hp = CreateFrame("Frame",nil, f)
+  f.hp:ClearAllPoints()
   f.hp:SetPoint("TOP", 0, 0)
+
   f.hp:SetWidth(f.config.width)
   f.hp:SetHeight(f.config.height)
   if tonumber(f.config.height) < 0 then f.hp:Hide() end
-
   pfUI.api.CreateBackdrop(f.hp, default_border)
 
-  f.hp.bar = CreateFrame("StatusBar", nil, f.hp)
   f.hp.bar:SetStatusBarTexture(f.config.bartexture)
   f.hp.bar:SetAllPoints(f.hp)
   if f.config.verticalbar == "1" then
     f.hp.bar:SetOrientation("VERTICAL")
   end
-  f.hp.bar:SetMinMaxValues(0, 100)
 
   if pfUI_config.unitframes.custombg == "1" then
     local cr, cg, cb, ca = pfUI.api.strsplit(",", pfUI_config.unitframes.custombgcolor)
     cr, cg, cb, ca = tonumber(cr), tonumber(cg), tonumber(cb), tonumber(ca)
-    f.hp.bar.texture = f.hp:CreateTexture(nil,"BACKGROUND")
+    f.hp.bar.texture = f.hp.bar.texture or f.hp:CreateTexture(nil,"BACKGROUND")
     f.hp.bar.texture:SetTexture(cr,cg,cb,ca)
     f.hp.bar.texture:SetAllPoints(f.hp.bar)
   end
 
-  f.incHeal = CreateFrame("StatusBar", nil, f.hp)
+  f.power:ClearAllPoints()
+  f.power:SetPoint(f.config.panchor, f.hp, relative_point, 0, -2*default_border - f.config.pspace)
+  f.power:SetWidth((f.config.pwidth ~= "-1" and f.config.pwidth or f.config.width))
+  f.power:SetHeight(f.config.pheight)
+  if tonumber(f.config.pheight) < 0 then f.power:Hide() end
+
+  pfUI.api.CreateBackdrop(f.power, default_border)
+  f.power.bar:SetStatusBarTexture(f.config.bartexture)
+  f.power.bar:SetAllPoints(f.power)
+
+  f.portrait:SetFrameStrata("LOW")
+  f.portrait.tex:SetAllPoints(f.portrait)
+  f.portrait.tex:SetTexCoord(.1, .9, .1, .9)
+  f.portrait.model:SetFrameStrata("LOW")
+  f.portrait.model:SetAllPoints(f.portrait)
+
+  if f.config.portrait == "bar" then
+    f.portrait:SetParent(f.hp.bar)
+    f.portrait:SetAllPoints(f.hp.bar)
+
+    f.portrait:SetAlpha(pfUI_config.unitframes.portraitalpha)
+    if f.portrait.backdrop then f.portrait.backdrop:Hide() end
+
+    f.portrait:Show()
+  elseif f.config.portrait == "left" then
+    f.portrait:SetParent(f)
+    f.portrait:ClearAllPoints()
+    f.portrait:SetPoint("TOPLEFT", f, "TOPLEFT", 0, 0)
+
+    f.hp:ClearAllPoints()
+    f.hp:SetPoint("TOPRIGHT", f, "TOPRIGHT", 0, 0)
+
+    f.portrait:SetAlpha(f:GetAlpha())
+
+    pfUI.api.CreateBackdrop(f.portrait, default_border)
+    f.portrait.backdrop:Show()
+    -- still required? remove in two weeks
+    --f.portrait:SetFrameStrata("BACKGROUND")
+    --f.portrait.model:SetFrameLevel(1)
+
+    f.portrait:Show()
+  elseif f.config.portrait == "right" then
+    f.portrait:SetParent(f)
+    f.portrait:ClearAllPoints()
+    f.portrait:SetPoint("TOPRIGHT", f, "TOPRIGHT", 0, 0)
+
+    f.hp:ClearAllPoints()
+    f.hp:SetPoint("TOPLEFT", f, "TOPLEFT", 0, 0)
+
+    f.portrait:SetAlpha(f:GetAlpha())
+
+    pfUI.api.CreateBackdrop(f.portrait, default_border)
+    f.portrait.backdrop:Show()
+    -- still required? remove in two weeks
+    --f.portrait:SetFrameStrata("BACKGROUND")
+    --f.portrait.model:SetFrameLevel(1)
+
+    f.portrait:Show()
+  else
+    f.portrait:Hide()
+  end
+
+  f.hpLeftText:SetFont(pfUI.font_unit, C.global.font_unit_size, "OUTLINE")
+  f.hpLeftText:SetJustifyH("LEFT")
+  f.hpLeftText:SetFontObject(GameFontWhite)
+  f.hpLeftText:SetParent(f.hp.bar)
+  f.hpLeftText:ClearAllPoints()
+  f.hpLeftText:SetPoint("TOPLEFT",f.hp.bar, "TOPLEFT", 2*default_border, 1)
+  f.hpLeftText:SetPoint("BOTTOMRIGHT",f.hp.bar, "BOTTOMRIGHT", -2*default_border, 0)
+
+  f.hpRightText:SetFont(pfUI.font_unit, C.global.font_unit_size, "OUTLINE")
+  f.hpRightText:SetJustifyH("RIGHT")
+  f.hpRightText:SetFontObject(GameFontWhite)
+  f.hpRightText:SetParent(f.hp.bar)
+  f.hpRightText:ClearAllPoints()
+  f.hpRightText:SetPoint("TOPLEFT",f.hp.bar, "TOPLEFT", 2*default_border, 1)
+  f.hpRightText:SetPoint("BOTTOMRIGHT",f.hp.bar, "BOTTOMRIGHT", -2*default_border, 0)
+
+  f.hpCenterText:SetFont(pfUI.font_unit, C.global.font_unit_size, "OUTLINE")
+  f.hpCenterText:SetJustifyH("CENTER")
+  f.hpCenterText:SetFontObject(GameFontWhite)
+  f.hpCenterText:SetParent(f.hp.bar)
+  f.hpCenterText:ClearAllPoints()
+  f.hpCenterText:SetPoint("TOPLEFT",f.hp.bar, "TOPLEFT", 2*default_border, 1)
+  f.hpCenterText:SetPoint("BOTTOMRIGHT",f.hp.bar, "BOTTOMRIGHT", -2*default_border, 0)
+
+  f.powerLeftText:SetFont(pfUI.font_unit, C.global.font_unit_size, "OUTLINE")
+  f.powerLeftText:SetJustifyH("LEFT")
+  f.powerLeftText:SetFontObject(GameFontWhite)
+  f.powerLeftText:SetParent(f.power.bar)
+  f.powerLeftText:ClearAllPoints()
+  f.powerLeftText:SetPoint("TOPLEFT",f.power.bar, "TOPLEFT", 2*default_border, 1)
+  f.powerLeftText:SetPoint("BOTTOMRIGHT",f.power.bar, "BOTTOMRIGHT", -2*default_border, 0)
+
+  f.powerRightText:SetFont(pfUI.font_unit, C.global.font_unit_size, "OUTLINE")
+  f.powerRightText:SetJustifyH("RIGHT")
+  f.powerRightText:SetFontObject(GameFontWhite)
+  f.powerRightText:SetParent(f.power.bar)
+  f.powerRightText:ClearAllPoints()
+  f.powerRightText:SetPoint("TOPLEFT",f.power.bar, "TOPLEFT", 2*default_border, 1)
+  f.powerRightText:SetPoint("BOTTOMRIGHT",f.power.bar, "BOTTOMRIGHT", -2*default_border, 0)
+
+  f.powerCenterText:SetFont(pfUI.font_unit, C.global.font_unit_size, "OUTLINE")
+  f.powerCenterText:SetJustifyH("CENTER")
+  f.powerCenterText:SetFontObject(GameFontWhite)
+  f.powerCenterText:SetParent(f.power.bar)
+  f.powerCenterText:ClearAllPoints()
+  f.powerCenterText:SetPoint("TOPLEFT",f.power.bar, "TOPLEFT", 2*default_border, 1)
+  f.powerCenterText:SetPoint("BOTTOMRIGHT",f.power.bar, "BOTTOMRIGHT", -2*default_border, 0)
+
   f.incHeal:SetFrameLevel(2)
   f.incHeal:SetHeight(f.config.height)
   f.incHeal:SetWidth(f.config.width)
   f.incHeal:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
-  f.incHeal:SetMinMaxValues(0, 1)
-  f.incHeal:SetValue(1)
   f.incHeal:SetStatusBarColor(0, 1, 0, 0.5)
   f.incHeal:Hide()
 
@@ -124,267 +209,73 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
   end)
 
   if f.config.verticalbar == "0" then
+    f.incHeal:ClearAllPoints()
     f.incHeal:SetPoint("TOPLEFT", f.hp.bar, "TOPLEFT", 0, 0)
   else
+    f.incHeal:ClearAllPoints()
     f.incHeal:SetPoint("BOTTOM", f.hp.bar, "BOTTOM", 0, 0)
   end
 
-  f.ressIcon = CreateFrame("Frame", nil, f.hp.bar)
   f.ressIcon:SetFrameLevel(16)
   f.ressIcon:SetWidth(32)
   f.ressIcon:SetHeight(32)
   f.ressIcon:SetPoint("CENTER", f, "CENTER", 0, 4)
-  f.ressIcon.texture = f.ressIcon:CreateTexture(nil,"BACKGROUND")
   f.ressIcon.texture:SetTexture("Interface\\AddOns\\pfUI\\img\\ress")
   f.ressIcon.texture:SetAllPoints(f.ressIcon)
   f.ressIcon:Hide()
 
-  f.power = CreateFrame("Frame",nil, f)
-  f.power:SetPoint(f.config.panchor, f.hp, relative_point, 0, -2*default_border - f.config.pspace)
-  f.power:SetWidth((f.config.pwidth ~= "-1" and f.config.pwidth or f.config.width))
-  f.power:SetHeight(f.config.pheight)
-  if tonumber(f.config.pheight) < 0 then f.power:Hide() end
-
-  pfUI.api.CreateBackdrop(f.power, default_border)
-
-  f.power.bar = CreateFrame("StatusBar", nil, f.power)
-  f.power.bar:SetStatusBarTexture(f.config.bartexture)
-  f.power.bar:SetAllPoints(f.power)
-  f.power.bar:SetMinMaxValues(0, 100)
-
-  f.hpLeftText = f:CreateFontString("Status", "OVERLAY", "GameFontNormalSmall")
-  f.hpLeftText:SetFont(pfUI.font_unit, C.global.font_unit_size, "OUTLINE")
-  f.hpLeftText:SetJustifyH("LEFT")
-  f.hpLeftText:SetFontObject(GameFontWhite)
-  f.hpLeftText:SetParent(f.hp.bar)
-  f.hpLeftText:ClearAllPoints()
-  f.hpLeftText:SetPoint("TOPLEFT",f.hp.bar, "TOPLEFT", 2*default_border, 1)
-  f.hpLeftText:SetPoint("BOTTOMRIGHT",f.hp.bar, "BOTTOMRIGHT", -2*default_border, 0)
-
-  f.hpRightText = f:CreateFontString("Status", "OVERLAY", "GameFontNormalSmall")
-  f.hpRightText:SetFont(pfUI.font_unit, C.global.font_unit_size, "OUTLINE")
-  f.hpRightText:SetJustifyH("RIGHT")
-  f.hpRightText:SetFontObject(GameFontWhite)
-  f.hpRightText:SetParent(f.hp.bar)
-  f.hpRightText:ClearAllPoints()
-  f.hpRightText:SetPoint("TOPLEFT",f.hp.bar, "TOPLEFT", 2*default_border, 1)
-  f.hpRightText:SetPoint("BOTTOMRIGHT",f.hp.bar, "BOTTOMRIGHT", -2*default_border, 0)
-
-  f.hpCenterText = f:CreateFontString("Status", "OVERLAY", "GameFontNormalSmall")
-  f.hpCenterText:SetFont(pfUI.font_unit, C.global.font_unit_size, "OUTLINE")
-  f.hpCenterText:SetJustifyH("CENTER")
-  f.hpCenterText:SetFontObject(GameFontWhite)
-  f.hpCenterText:SetParent(f.hp.bar)
-  f.hpCenterText:ClearAllPoints()
-  f.hpCenterText:SetPoint("TOPLEFT",f.hp.bar, "TOPLEFT", 2*default_border, 1)
-  f.hpCenterText:SetPoint("BOTTOMRIGHT",f.hp.bar, "BOTTOMRIGHT", -2*default_border, 0)
-
-  f.powerLeftText = f:CreateFontString("Status", "OVERLAY", "GameFontNormalSmall")
-  f.powerLeftText:SetFont(pfUI.font_unit, C.global.font_unit_size, "OUTLINE")
-  f.powerLeftText:SetJustifyH("LEFT")
-  f.powerLeftText:SetFontObject(GameFontWhite)
-  f.powerLeftText:SetParent(f.power.bar)
-  f.powerLeftText:ClearAllPoints()
-  f.powerLeftText:SetPoint("TOPLEFT",f.power.bar, "TOPLEFT", 2*default_border, 1)
-  f.powerLeftText:SetPoint("BOTTOMRIGHT",f.power.bar, "BOTTOMRIGHT", -2*default_border, 0)
-
-  f.powerRightText = f:CreateFontString("Status", "OVERLAY", "GameFontNormalSmall")
-  f.powerRightText:SetFont(pfUI.font_unit, C.global.font_unit_size, "OUTLINE")
-  f.powerRightText:SetJustifyH("RIGHT")
-  f.powerRightText:SetFontObject(GameFontWhite)
-  f.powerRightText:SetParent(f.power.bar)
-  f.powerRightText:ClearAllPoints()
-  f.powerRightText:SetPoint("TOPLEFT",f.power.bar, "TOPLEFT", 2*default_border, 1)
-  f.powerRightText:SetPoint("BOTTOMRIGHT",f.power.bar, "BOTTOMRIGHT", -2*default_border, 0)
-
-  f.powerCenterText = f:CreateFontString("Status", "OVERLAY", "GameFontNormalSmall")
-  f.powerCenterText:SetFont(pfUI.font_unit, C.global.font_unit_size, "OUTLINE")
-  f.powerCenterText:SetJustifyH("CENTER")
-  f.powerCenterText:SetFontObject(GameFontWhite)
-  f.powerCenterText:SetParent(f.power.bar)
-  f.powerCenterText:ClearAllPoints()
-  f.powerCenterText:SetPoint("TOPLEFT",f.power.bar, "TOPLEFT", 2*default_border, 1)
-  f.powerCenterText:SetPoint("BOTTOMRIGHT",f.power.bar, "BOTTOMRIGHT", -2*default_border, 0)
-
-  if f.config.visible ~= "1" then
-    f:Hide()
-    return f
-  end
-
-  f:RegisterForClicks('LeftButtonUp', 'RightButtonUp',
-    'MiddleButtonUp', 'Button4Up', 'Button5Up')
-
-  f:RegisterEvent("PLAYER_ENTERING_WORLD")
-
-  f:RegisterEvent("UNIT_DISPLAYPOWER")
-  f:RegisterEvent("UNIT_HEALTH")
-  f:RegisterEvent("UNIT_MAXHEALTH")
-  f:RegisterEvent("UNIT_MANA")
-  f:RegisterEvent("UNIT_MAXMANA")
-  f:RegisterEvent("UNIT_RAGE")
-  f:RegisterEvent("UNIT_MAXRAGE")
-  f:RegisterEvent("UNIT_ENERGY")
-  f:RegisterEvent("UNIT_MAXENERGY")
-  f:RegisterEvent("UNIT_FOCUS")
-
-  f:RegisterEvent("UNIT_PORTRAIT_UPDATE")
-  f:RegisterEvent("UNIT_MODEL_CHANGED")
-  f:RegisterEvent("UNIT_AURA") -- frame=buff, frame=debuff
-
-  f:RegisterEvent("PLAYER_AURAS_CHANGED") -- label=player && frame=buff
-  f:RegisterEvent("PARTY_MEMBERS_CHANGED") -- label=party, frame=leaderIcon
-  f:RegisterEvent("PARTY_LEADER_CHANGED") -- frame=leaderIcon
-  f:RegisterEvent("RAID_ROSTER_UPDATE") -- label=raid
-  f:RegisterEvent("PLAYER_TARGET_CHANGED") -- label=target
-  f:RegisterEvent("PARTY_LOOT_METHOD_CHANGED") -- frame=lootIcon
-  f:RegisterEvent("RAID_TARGET_UPDATE") -- frame=raidIcon
-
-  f:RegisterEvent("UNIT_PET")
-  f:RegisterEvent("UNIT_HAPPINESS")
-
-  f:SetScript("OnShow", function ()
-      pfUI.uf:RefreshUnit(this)
-    end)
-  f:SetScript("OnEvent", function()
-      if this.label == "target" and event == "PLAYER_TARGET_CHANGED" then
-        pfUI.uf:RefreshUnit(this, "all")
-      elseif ( this.label == "party" or this.label == "player" ) and event == "PARTY_MEMBERS_CHANGED" then
-        pfUI.uf:RefreshUnit(this, "all")
-      elseif this.label == "party" and event == "PARTY_MEMBER_ENABLE" then
-        pfUI.uf:RefreshUnit(this, "all")
-      elseif this.label == "party" and event == "PARTY_MEMBER_DISABLE" then
-        pfUI.uf:RefreshUnit(this, "all")
-      elseif this.label == "party" and event == "GROUP_ROSTER_UPDATE" then
-        pfUI.uf:RefreshUnit(this, "all")
-      elseif ( this.label == "raid" or this.label == "party" ) and event == "RAID_ROSTER_UPDATE" then
-        pfUI.uf:RefreshUnit(this, "all")
-      elseif this.label == "player" and event == "PLAYER_AURAS_CHANGED" then
-        pfUI.uf:RefreshUnit(this, "aura")
-      elseif event == "PLAYER_ENTERING_WORLD" then
-        pfUI.uf:RefreshUnit(this, "all")
-      elseif event == "RAID_TARGET_UPDATE" then
-        pfUI.uf:RefreshUnit(this, "raidIcon")
-      elseif event == "PARTY_LOOT_METHOD_CHANGED" then
-        pfUI.uf:RefreshUnit(this, "lootIcon")
-      elseif event == "PARTY_LEADER_CHANGED" then
-        pfUI.uf:RefreshUnit(this, "leaderIcon")
-      elseif event == "UNIT_PET" and this.label == "pet" then
-        pfUI.uf:RefreshUnit(this)
-
-      -- UNIT_XXX Events
-      elseif arg1 and arg1 == this.label .. this.id then
-        if event == "UNIT_PORTRAIT_UPDATE" or event == "UNIT_MODEL_CHANGED" then
-          pfUI.uf:RefreshUnit(this, "portrait")
-        elseif event == "UNIT_AURA" then
-          pfUI.uf:RefreshUnit(this, "aura")
-        else
-          pfUI.uf:RefreshUnit(this)
-        end
-      end
-    end)
-
-  f:SetScript("OnUpdate", function()
-      local unitname = ( this.label and UnitName(this.label) ) or ""
-
-      -- focus unit detection
-      if this.unitname and this.unitname ~= strlower(unitname) then
-        -- invalid focus frame
-        for unit, bool in pairs(pfValidUnits) do
-          local scan = UnitName(unit) or ""
-          if this.unitname == strlower(scan) then
-            this.label = unit
-            if this.portrait then this.portrait.model.lastUnit = nil end
-            this.instantRefresh = true
-            pfUI.uf:RefreshUnit(this, "all")
-            return
-          end
-          this.label = nil
-          this.instantRefresh = true
-          this.hp.bar:SetStatusBarColor(.2,.2,.2)
-        end
-      end
-
-      if not this.label then return end
-
-      pfUI.uf:RefreshUnitAnimation(this)
-
-      -- trigger eventless actions (online/offline/range)
-      if not this.lastTick then this.lastTick = GetTime() + (this.tick or .2) end
-      if this.lastTick and this.lastTick < GetTime() then
-        this.lastTick = GetTime() + (this.tick or .2)
-        pfUI.uf:RefreshUnitState(this)
-
-        -- update everything on eventless frames (targettarget, etc)
-        if this.tick then
-          pfUI.uf:RefreshUnit(this, "all")
-        end
-      end
-    end)
-  f:SetScript("OnEnter", function()
-        if not this.label then return end
-        if this.config.showtooltip == "0" then return end
-        GameTooltip_SetDefaultAnchor(GameTooltip, this)
-        GameTooltip:SetUnit(this.label .. this.id)
-        GameTooltip:Show()
-      end)
-  f:SetScript("OnLeave", function()
-        GameTooltip:FadeOut()
-      end)
-  f:SetScript("OnClick", function ()
-        if not this.label and this.unitname then
-          TargetByName(this.unitname)
-        else
-          pfUI.uf:ClickAction(arg1)
-        end
-      end)
-
-  f.leaderIcon = CreateFrame("Frame", nil, f.hp.bar)
   f.leaderIcon:SetWidth(10)
   f.leaderIcon:SetHeight(10)
   f.leaderIcon:SetPoint("CENTER", f, "TOPLEFT", 0, 0)
-  f.leaderIcon.texture = f.leaderIcon:CreateTexture(nil,"BACKGROUND")
   f.leaderIcon.texture:SetTexture("Interface\\GROUPFRAME\\UI-Group-LeaderIcon")
   f.leaderIcon.texture:SetAllPoints(f.leaderIcon)
   f.leaderIcon:Hide()
 
-  f.lootIcon = CreateFrame("Frame",nil, f.hp.bar)
   f.lootIcon:SetWidth(10)
   f.lootIcon:SetHeight(10)
   f.lootIcon:SetPoint("CENTER", f, "LEFT", 0, 0)
-  f.lootIcon.texture = f.lootIcon:CreateTexture(nil,"BACKGROUND")
+
   f.lootIcon.texture:SetTexture("Interface\\GROUPFRAME\\UI-Group-MasterLooter")
   f.lootIcon.texture:SetAllPoints(f.lootIcon)
   f.lootIcon:Hide()
 
-  f.raidIcon = CreateFrame("Frame", nil, f.hp.bar)
   f.raidIcon:SetWidth(24)
   f.raidIcon:SetHeight(24)
   f.raidIcon:SetPoint("TOP", f, "TOP", 0, 6)
-  f.raidIcon.texture = f.raidIcon:CreateTexture(nil,"ARTWORK")
+
   f.raidIcon.texture:SetTexture("Interface\\AddOns\\pfUI\\img\\raidicons")
   f.raidIcon.texture:SetAllPoints(f.raidIcon)
   f.raidIcon:Hide()
 
+  if f.config.buffs == "off" then
+    for i=1, 32 do
+      if f.buffs and f.buffs[i] then
+        f.buffs[i]:Hide()
+        f.buffs[i] = nil
+      end
+    end
+    f.buffs = nil
+  else
+    f.buffs = f.buffs or {}
 
-  if f.config.buffs ~= "off" then
-    f.buffs = {}
+    for i=1, 32 do
+      if i > tonumber(f.config.bufflimit) then break end
 
-    for i=1, f.config.bufflimit do
       local id = i
       local perrow = f.config.buffperrow
       local row = floor((i-1) / perrow)
 
-      f.buffs[i] = CreateFrame("Button", "pfUI" .. f.fname .. "Buff" .. i, f)
+      f.buffs[i] = f.buffs[i] or CreateFrame("Button", "pfUI" .. f.fname .. "Buff" .. i, f)
       f.buffs[i]:SetID(i)
 
-      f.buffs[i].stacks = f.buffs[i]:CreateFontString(nil, "OVERLAY", f.buffs[i])
+      f.buffs[i].stacks = f.buffs[i].stacks or f.buffs[i]:CreateFontString(nil, "OVERLAY", f.buffs[i])
       f.buffs[i].stacks:SetFont(pfUI.font_unit, C.global.font_unit_size, "OUTLINE")
       f.buffs[i].stacks:SetPoint("BOTTOMRIGHT", f.buffs[i], 2, -2)
       f.buffs[i].stacks:SetJustifyH("LEFT")
       f.buffs[i].stacks:SetShadowColor(0, 0, 0)
       f.buffs[i].stacks:SetShadowOffset(0.8, -0.8)
       f.buffs[i].stacks:SetTextColor(1,1,.5)
-      f.buffs[i].cd = CreateFrame("Model", nil, f.buffs[i], "CooldownFrameTemplate")
+      f.buffs[i].cd = f.buffs[i].cd or CreateFrame("Model", nil, f.buffs[i], "CooldownFrameTemplate")
       f.buffs[i].cd:SetAlpha(0)
 
       f.buffs[i]:RegisterForClicks("RightButtonUp")
@@ -438,21 +329,31 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
     end
   end
 
-  if f.config.debuffs ~= "off" then
-    f.debuffs = {}
+  if f.config.debuffs == "off" then
+    for i=1, 32 do
+      if f.debuffs and f.debuffs[i] then
+        f.debuffs[i]:Hide()
+        f.debuffs[i] = nil
+      end
+    end
+    f.debuffs = nil
+  else
+    f.debuffs = f.debuffs or {}
 
-    for i=1, f.config.debufflimit do
+    for i=1, 32 do
+      if i > tonumber(f.config.debufflimit) then break end
+
       local id = i
-      f.debuffs[i] = CreateFrame("Button", "pfUI" .. f.fname .. "Debuff" .. i, f)
+      f.debuffs[i] = f.debuffs[i] or CreateFrame("Button", "pfUI" .. f.fname .. "Debuff" .. i, f)
       f.debuffs[i]:SetID(i)
-      f.debuffs[i].stacks = f.debuffs[i]:CreateFontString(nil, "OVERLAY", f.debuffs[i])
+      f.debuffs[i].stacks = f.debuffs[i].stacks or f.debuffs[i]:CreateFontString(nil, "OVERLAY", f.debuffs[i])
       f.debuffs[i].stacks:SetFont(pfUI.font_unit, C.global.font_unit_size, "OUTLINE")
       f.debuffs[i].stacks:SetPoint("BOTTOMRIGHT", f.debuffs[i], 2, -2)
       f.debuffs[i].stacks:SetJustifyH("LEFT")
       f.debuffs[i].stacks:SetShadowColor(0, 0, 0)
       f.debuffs[i].stacks:SetShadowOffset(0.8, -0.8)
       f.debuffs[i].stacks:SetTextColor(1,1,.5)
-      f.debuffs[i].cd = CreateFrame("Model", nil, f.debuffs[i], "CooldownFrameTemplate")
+      f.debuffs[i].cd = f.debuffs[i].cd or CreateFrame("Model", nil, f.debuffs[i], "CooldownFrameTemplate")
       f.debuffs[i].cd:SetAlpha(0)
 
       f.debuffs[i]:RegisterForClicks("RightButtonUp")
@@ -482,39 +383,220 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
     end
   end
 
-  if f.config.portrait ~= "off" then
-    f.portrait = CreateFrame("Frame", "pfPortrait" .. f.label .. f.id, f)
-    f.portrait:SetFrameStrata("LOW")
-    f.portrait.tex = f.portrait:CreateTexture("pfPortraitTexture" .. f.label .. f.id, "OVERLAY")
-    f.portrait.tex:SetAllPoints(f.portrait)
-    f.portrait.tex:SetTexCoord(.1, .9, .1, .9)
-
-    f.portrait.model = CreateFrame("PlayerModel", "pfPortraitModel" .. f.label .. f.id, f.portrait)
-    f.portrait.model:SetFrameStrata("LOW")
-    f.portrait.model:SetAllPoints(f.portrait)
-    f.portrait.model.next = CreateFrame("PlayerModel", nil, nil)
-
-    if f.config.portrait == "bar" then
-      f.portrait:SetParent(f.hp.bar)
-      f.portrait:SetAllPoints(f.hp.bar)
-      f.portrait:SetAlpha(pfUI_config.unitframes.portraitalpha)
-
-    elseif f.config.portrait == "left" then
-      f.portrait:SetPoint("TOPLEFT", f, "TOPLEFT", 0, 0)
-      f.hp:ClearAllPoints()
-      f.hp:SetPoint("TOPRIGHT", f, "TOPRIGHT", 0, 0)
-      pfUI.api.CreateBackdrop(f.portrait, default_border)
-      f.portrait:SetFrameStrata("BACKGROUND")
-      f.portrait.model:SetFrameLevel(1)
-    elseif f.config.portrait == "right" then
-      f.portrait:SetPoint("TOPRIGHT", f, "TOPRIGHT", 0, 0)
-      f.hp:ClearAllPoints()
-      f.hp:SetPoint("TOPLEFT", f, "TOPLEFT", 0, 0)
-      pfUI.api.CreateBackdrop(f.portrait, default_border)
-      f.portrait:SetFrameStrata("BACKGROUND")
-      f.portrait.model:SetFrameLevel(1)
-    end
+  if f.config.visible == "1" then
+    pfUI.uf:RefreshUnit(f, "all")
+    f:EnableScripts()
+    f:UpdateFrameSize()
+  else
+    f:UnregisterAllEvents()
+    f:Hide()
   end
+end
+
+function pfUI.uf:EnableScripts()
+  local f = self
+
+  f:RegisterForClicks('LeftButtonUp', 'RightButtonUp',
+    'MiddleButtonUp', 'Button4Up', 'Button5Up')
+
+  f:RegisterEvent("PLAYER_ENTERING_WORLD")
+  f:RegisterEvent("UNIT_DISPLAYPOWER")
+  f:RegisterEvent("UNIT_HEALTH")
+  f:RegisterEvent("UNIT_MAXHEALTH")
+  f:RegisterEvent("UNIT_MANA")
+  f:RegisterEvent("UNIT_MAXMANA")
+  f:RegisterEvent("UNIT_RAGE")
+  f:RegisterEvent("UNIT_MAXRAGE")
+  f:RegisterEvent("UNIT_ENERGY")
+  f:RegisterEvent("UNIT_MAXENERGY")
+  f:RegisterEvent("UNIT_FOCUS")
+  f:RegisterEvent("UNIT_PORTRAIT_UPDATE")
+  f:RegisterEvent("UNIT_MODEL_CHANGED")
+  f:RegisterEvent("UNIT_AURA") -- frame=buff, frame=debuff
+  f:RegisterEvent("PLAYER_AURAS_CHANGED") -- label=player && frame=buff
+  f:RegisterEvent("PARTY_MEMBERS_CHANGED") -- label=party, frame=leaderIcon
+  f:RegisterEvent("PARTY_LEADER_CHANGED") -- frame=leaderIcon
+  f:RegisterEvent("RAID_ROSTER_UPDATE") -- label=raid
+  f:RegisterEvent("PLAYER_TARGET_CHANGED") -- label=target
+  f:RegisterEvent("PARTY_LOOT_METHOD_CHANGED") -- frame=lootIcon
+  f:RegisterEvent("RAID_TARGET_UPDATE") -- frame=raidIcon
+  f:RegisterEvent("UNIT_PET")
+  f:RegisterEvent("UNIT_HAPPINESS")
+
+  f:SetScript("OnShow", function ()
+      pfUI.uf:RefreshUnit(this)
+    end)
+
+  f:SetScript("OnEvent", function()
+    if this.label == "target" and event == "PLAYER_TARGET_CHANGED" then
+      pfUI.uf:RefreshUnit(this, "all")
+    elseif ( this.label == "party" or this.label == "player" ) and event == "PARTY_MEMBERS_CHANGED" then
+      pfUI.uf:RefreshUnit(this, "all")
+    elseif this.label == "party" and event == "PARTY_MEMBER_ENABLE" then
+      pfUI.uf:RefreshUnit(this, "all")
+    elseif this.label == "party" and event == "PARTY_MEMBER_DISABLE" then
+      pfUI.uf:RefreshUnit(this, "all")
+    elseif this.label == "party" and event == "GROUP_ROSTER_UPDATE" then
+      pfUI.uf:RefreshUnit(this, "all")
+    elseif ( this.label == "raid" or this.label == "party" ) and event == "RAID_ROSTER_UPDATE" then
+      pfUI.uf:RefreshUnit(this, "all")
+    elseif this.label == "player" and event == "PLAYER_AURAS_CHANGED" then
+      pfUI.uf:RefreshUnit(this, "aura")
+    elseif event == "PLAYER_ENTERING_WORLD" then
+      pfUI.uf:RefreshUnit(this, "all")
+    elseif event == "RAID_TARGET_UPDATE" then
+      pfUI.uf:RefreshUnit(this, "raidIcon")
+    elseif event == "PARTY_LOOT_METHOD_CHANGED" then
+      pfUI.uf:RefreshUnit(this, "lootIcon")
+    elseif event == "PARTY_LEADER_CHANGED" then
+      pfUI.uf:RefreshUnit(this, "leaderIcon")
+    elseif event == "UNIT_PET" and this.label == "pet" then
+      pfUI.uf:RefreshUnit(this)
+
+    -- UNIT_XXX Events
+    elseif arg1 and arg1 == this.label .. this.id then
+      if event == "UNIT_PORTRAIT_UPDATE" or event == "UNIT_MODEL_CHANGED" then
+        pfUI.uf:RefreshUnit(this, "portrait")
+      elseif event == "UNIT_AURA" then
+        pfUI.uf:RefreshUnit(this, "aura")
+      else
+        pfUI.uf:RefreshUnit(this)
+      end
+    end
+  end)
+
+  f:SetScript("OnUpdate", function()
+    local unitname = ( this.label and UnitName(this.label) ) or ""
+
+    -- focus unit detection
+    if this.unitname and this.unitname ~= strlower(unitname) then
+      -- invalid focus frame
+      for unit, bool in pairs(pfValidUnits) do
+        local scan = UnitName(unit) or ""
+        if this.unitname == strlower(scan) then
+          this.label = unit
+          if this.portrait then this.portrait.model.lastUnit = nil end
+          this.instantRefresh = true
+          pfUI.uf:RefreshUnit(this, "all")
+          return
+        end
+        this.label = nil
+        this.instantRefresh = true
+        this.hp.bar:SetStatusBarColor(.2,.2,.2)
+      end
+    end
+
+    if not this.label then return end
+
+    pfUI.uf:RefreshUnitAnimation(this)
+
+    -- trigger eventless actions (online/offline/range)
+    if not this.lastTick then this.lastTick = GetTime() + (this.tick or .2) end
+    if this.lastTick and this.lastTick < GetTime() then
+      this.lastTick = GetTime() + (this.tick or .2)
+      pfUI.uf:RefreshUnitState(this)
+
+      -- update everything on eventless frames (targettarget, etc)
+      if this.tick then
+        pfUI.uf:RefreshUnit(this, "all")
+      end
+    end
+  end)
+
+  f:SetScript("OnEnter", function()
+    if not this.label then return end
+    if this.config.showtooltip == "0" then return end
+    GameTooltip_SetDefaultAnchor(GameTooltip, this)
+    GameTooltip:SetUnit(this.label .. this.id)
+    GameTooltip:Show()
+  end)
+
+  f:SetScript("OnLeave", function()
+    GameTooltip:FadeOut()
+  end)
+
+  f:SetScript("OnClick", function ()
+    if not this.label and this.unitname then
+      TargetByName(this.unitname)
+    else
+      pfUI.uf:ClickAction(arg1)
+    end
+  end)
+end
+
+function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
+  local fname = (( unit == "Party" ) and "Group" or (unit or "")) .. (id or "")
+  local unit = strlower(unit or "")
+  local id = strlower(id or "")
+
+  -- fake party0 units as self
+  if unit == "party" and id == "0" then
+    unit, id = "player", ""
+  end
+
+  if unit == "partypet" and id == "0" then
+    unit, id = "pet", ""
+  end
+
+  if unit == "party0target" then
+    unit, id = "target", ""
+  end
+
+  local f = CreateFrame("Button", "pf" .. fname, UIParent)
+
+  -- add unitframe functions
+  f.UpdateFrameSize = pfUI.uf.UpdateFrameSize
+  f.UpdateConfig    = pfUI.uf.UpdateConfig
+  f.EnableScripts   = pfUI.uf.EnableScripts
+  f.GetColor        = pfUI.uf.GetColor
+
+  -- cache values to the frame
+  f.label = unit
+  f.fname = fname
+  f.id = id
+  f.config = config or pfUI_config.unitframes.fallback
+  f.tick = tick
+
+  -- disable events for unknown unitstrings
+  if not pfValidUnits[unit .. id] then
+    f.unitname = unit
+    f.label, f.id = "mouseover", ""
+    f.RegisterEvent = function() return end
+  end
+
+  f.hp = CreateFrame("Frame",nil, f)
+  f.hp.bar = CreateFrame("StatusBar", nil, f.hp)
+  f.power = CreateFrame("Frame",nil, f)
+  f.power.bar = CreateFrame("StatusBar", nil, f.power)
+  f.hpLeftText = f:CreateFontString("Status", "OVERLAY", "GameFontNormalSmall")
+  f.hpRightText = f:CreateFontString("Status", "OVERLAY", "GameFontNormalSmall")
+  f.hpCenterText = f:CreateFontString("Status", "OVERLAY", "GameFontNormalSmall")
+  f.powerLeftText = f:CreateFontString("Status", "OVERLAY", "GameFontNormalSmall")
+  f.powerRightText = f:CreateFontString("Status", "OVERLAY", "GameFontNormalSmall")
+  f.powerCenterText = f:CreateFontString("Status", "OVERLAY", "GameFontNormalSmall")
+
+  f.incHeal = CreateFrame("StatusBar", nil, f.hp)
+  f.ressIcon = CreateFrame("Frame", nil, f.hp.bar)
+  f.ressIcon.texture = f.ressIcon:CreateTexture(nil,"BACKGROUND")
+
+  f.leaderIcon = CreateFrame("Frame", nil, f.hp.bar)
+  f.leaderIcon.texture = f.leaderIcon:CreateTexture(nil,"BACKGROUND")
+
+  f.lootIcon = CreateFrame("Frame",nil, f.hp.bar)
+  f.lootIcon.texture = f.lootIcon:CreateTexture(nil,"BACKGROUND")
+
+  f.raidIcon = CreateFrame("Frame", nil, f.hp.bar)
+  f.raidIcon.texture = f.raidIcon:CreateTexture(nil,"ARTWORK")
+
+  f.portrait = CreateFrame("Frame", "pfPortrait" .. f.label .. f.id, f)
+  f.portrait.tex = f.portrait:CreateTexture("pfPortraitTexture" .. f.label .. f.id, "OVERLAY")
+  f.portrait.model = CreateFrame("PlayerModel", "pfPortraitModel" .. f.label .. f.id, f.portrait)
+  f.portrait.model.next = CreateFrame("PlayerModel", nil, nil)
+
+  f:Hide()
+  f:UpdateConfig()
+  f:UpdateFrameSize()
+  f:EnableScripts()
 
   table.insert(pfUI.uf.frames, f)
   return f
@@ -667,7 +749,7 @@ function pfUI.uf:RefreshUnit(unit, component)
   -- hide and return early on unused frames
   if not ( pfUI.unlock and pfUI.unlock:IsShown() ) then
     -- check existing units or focus frames
-    if unit.unitname then
+    if unit.unitname and unit.unitname ~= "focus" then
       unit:Show()
     elseif UnitName(unit.label .. unit.id) then
       -- hide group while in raid and option is set
@@ -1079,29 +1161,6 @@ function pfUI.uf:RefreshUnit(unit, component)
       unit.hp.bar:SetStatusBarColor(.5,.5,.5,.5)
     end
   end
-end
-
-function pfUI.uf.UpdateFrameSize(self)
-  local unit = self.label .. self.id
-  local default_border = pfUI_config.appearance.border.default
-  if pfUI_config.appearance.border.unitframes ~= "-1" then
-    default_border = pfUI_config.appearance.border.unitframes
-  end
-
-  local spacing = self.config.pspace
-  local width = self.config.width
-  local height = self.config.height
-  local pheight = self.config.pheight
-  local real_height = height + spacing + pheight + 2*default_border
-  local portrait = 0
-  if self.config.portrait == "left" or self.config.portrait == "right" then
-    self.portrait:SetWidth(real_height)
-    self.portrait:SetHeight(real_height)
-    portrait = real_height + spacing + 2*default_border
-  end
-
-  self:SetWidth(width + portrait)
-  self:SetHeight(real_height)
 end
 
 function pfUI.uf:ClickAction(button)

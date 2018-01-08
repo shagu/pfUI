@@ -167,13 +167,11 @@ pfUI:RegisterModule("debuffs", function ()
     if not L["debuffs"][effect] then return end
 
     unitlevel = unitlevel or 0
-    --message("add  pending effect " .. unit .. "("  .. unitlevel .. ") - " .. effect)
     if not pfUI.debuffs.objects[unit] then pfUI.debuffs.objects[unit] = {} end
     if not pfUI.debuffs.objects[unit][unitlevel] then pfUI.debuffs.objects[unit][unitlevel] = {} end
     if not pfUI.debuffs.objects[unit][unitlevel][effect] then pfUI.debuffs.objects[unit][unitlevel][effect] = {} end
     if pfUI.debuffs.objects[unit][unitlevel][effect].old and
       pfUI.debuffs.objects[unit][unitlevel][effect].old.start then
-      --message("already pending")
       return
     end
 

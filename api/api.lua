@@ -444,6 +444,15 @@ function pfUI.api.UpdateMovable(frame)
 end
 
 
+-- [ Remove Movable ]
+-- Removes a Frame from the movable list.
+-- 'frame'      [frame]        the frame that should be removed.
+function pfUI.api.RemoveMovable(frame)
+  local name = frame:GetName()
+  pfUI.movables[name] = nil
+end
+
+
 -- [ SetAutoPoint ]
 -- Automatically places the frame according to screen position of the parent.
 -- 'frame'      [frame]        the frame that should be moved.
