@@ -52,8 +52,19 @@ pfUI:RegisterModule("rangecheck", function ()
   pfUI.rangecheck.id = 1
   pfUI.rangecheck:RegisterEvent("ACTIONBAR_SLOT_CHANGED")
   pfUI.rangecheck:RegisterEvent("PLAYER_ENTERING_WORLD")
+  pfUI.rangecheck:RegisterEvent("PLAYER_ENTER_COMBAT")
+  pfUI.rangecheck:RegisterEvent("PLAYER_LEAVE_COMBAT")
   pfUI.rangecheck:SetScript("OnEvent", function()
-    pfUI.rangecheck.slot = this:GetRangeSlot()
+    if event == "ACTIONBAR_SLOT_CHANGED" or event == "PLAYER_ENTERING_WORLD" then
+      pfUI.rangecheck.slot = this:GetRangeSlot()
+    elseif event == "PLAYER_ENTER_COMBAT" then
+      this.lastattack = GetTime()
+      this:Hide()
+    elseif event == "PLAYER_LEAVE_COMBAT" then
+      if not this:ReAttack() then
+        this:Show()
+      end
+    end
   end)
 
   pfUI.rangecheck:SetScript("OnUpdate", function()
@@ -76,15 +87,13 @@ pfUI:RegisterModule("rangecheck", function ()
         if LootFrame and LootFrame:IsShown() then return nil end
         if InspectFrame and InspectFrame:IsShown() then return nil end
         if TradeFrame and TradeFrame:IsShown() then return nil end
-        if PlayerFrame.inCombat and UnitCanAttack("player", "target") then
-          return nil
-        end
 
         pfScanActive = true
         TargetUnit(unit)
         unitdata[unit] = IsActionInRange(pfUI.rangecheck.slot)
         TargetLastTarget()
         pfScanActive = false
+        this:ReAttack()
       end
 
       this.id = this.id + 1
@@ -92,6 +101,16 @@ pfUI:RegisterModule("rangecheck", function ()
       this.id = 1
     end
   end)
+
+  function pfUI.rangecheck:ReAttack()
+    -- we accidentally broke the autoattack... restoring the old state
+    if this.lastattack and this.lastattack + interval > GetTime() and UnitCanAttack("player", "target") then
+      AttackTarget()
+      return true
+    else
+      return nil
+    end
+  end
 
   function pfUI.rangecheck:NeedRangeScan(unit)
     if not UnitExists(unit) then return nil end
