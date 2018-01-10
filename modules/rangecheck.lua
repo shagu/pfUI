@@ -71,11 +71,11 @@ pfUI:RegisterModule("rangecheck", function ()
     if this.id <= numunits and pfUI.rangecheck.slot then
       local unit = units[this.id]
       if not UnitIsUnit("target", unit) then
-        -- don't break looting
+        -- suspend for various conditions
         if pfUI.loot and pfUI.loot:IsShown() then return nil end
         if LootFrame and LootFrame:IsShown() then return nil end
-
-        -- don't break auto-attacks
+        if InspectFrame and InspectFrame:IsShown() then return nil end
+        if TradeFrame and TradeFrame:IsShown() then return nil end
         if PlayerFrame.inCombat and UnitCanAttack("player", "target") then
           return nil
         end
