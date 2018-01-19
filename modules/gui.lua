@@ -854,6 +854,11 @@ pfUI:RegisterModule("gui", function ()
           CreateConfig(update[c], this, T["Debuffs Per Row"], C.unitframes[c], "debuffperrow")
           CreateConfig(update[c], this, T["Enable Debuff Indicators"], C.unitframes[c], "debuff_indicator", "checkbox")
 
+          if c == "player" then
+            CreateConfig(update[c], this, T["Weapon Buffs"], nil, nil, "header")
+            CreateConfig(update[c], this, T["Enable Weapon Buff Indicators"], C.unitframes[c], "wbuffs", "checkbox")
+          end
+
           CreateConfig(update[c], this, T["Text Colors"], nil, nil, "header")
           CreateConfig(update[c], this, T["Enable Health Color"], C.unitframes[c], "healthcolor", "checkbox")
           CreateConfig(update[c], this, T["Enable Power Color"], C.unitframes[c], "powercolor", "checkbox")
