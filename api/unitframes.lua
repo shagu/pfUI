@@ -49,9 +49,9 @@ end
 function pfUI.uf:UpdateConfig()
   local f = self
   local C = pfUI_config
-  local default_border = pfUI_config.appearance.border.default
-  if pfUI_config.appearance.border.unitframes ~= "-1" then
-    default_border = pfUI_config.appearance.border.unitframes
+  local default_border = C.appearance.border.default
+  if C.appearance.border.unitframes ~= "-1" then
+    default_border = C.appearance.border.unitframes
   end
 
   local relative_point = "BOTTOM"
@@ -77,8 +77,8 @@ function pfUI.uf:UpdateConfig()
     f.hp.bar:SetOrientation("VERTICAL")
   end
 
-  if pfUI_config.unitframes.custombg == "1" then
-    local cr, cg, cb, ca = pfUI.api.strsplit(",", pfUI_config.unitframes.custombgcolor)
+  if C.unitframes.custombg == "1" then
+    local cr, cg, cb, ca = pfUI.api.strsplit(",", C.unitframes.custombgcolor)
     cr, cg, cb, ca = tonumber(cr), tonumber(cg), tonumber(cb), tonumber(ca)
     f.hp.bar.texture = f.hp.bar.texture or f.hp:CreateTexture(nil,"BACKGROUND")
     f.hp.bar.texture:SetTexture(cr,cg,cb,ca)
@@ -105,7 +105,7 @@ function pfUI.uf:UpdateConfig()
     f.portrait:SetParent(f.hp.bar)
     f.portrait:SetAllPoints(f.hp.bar)
 
-    f.portrait:SetAlpha(pfUI_config.unitframes.portraitalpha)
+    f.portrait:SetAlpha(C.unitframes.portraitalpha)
     if f.portrait.backdrop then f.portrait.backdrop:Hide() end
 
     f.portrait:Show()
@@ -383,6 +383,63 @@ function pfUI.uf:UpdateConfig()
     end
   end
 
+  if (f:GetName() == "pfPlayer") then 
+    if (C.unitframes.player.wbuffs == "0") then
+      for i=16,17 do
+        if f.wbuffs and f.wbuffs[i] then
+          f.wbuffs[i]:Hide()
+          f.wbuffs[i] = nil
+        end
+      end
+    else
+      f.wbuffs = f.wbuffs or {}
+      for i=16,17 do
+        f.wbuffs[i] = f.wbuffs[i] or CreateFrame("Button", "pfUI" .. f.fname .. "WeaponBuff" .. i, f)
+        f.wbuffs[i]:SetID(i)
+        f.wbuffs[i].stacks = f.wbuffs[i].stacks or f.wbuffs[i]:CreateFontString(nil, "OVERLAY", f.wbuffs[i])
+        f.wbuffs[i].stacks:SetFont(pfUI.font_unit, C.global.font_unit_size, "OUTLINE")
+        f.wbuffs[i].stacks:SetPoint("BOTTOMRIGHT", f.wbuffs[i], 2, -2)
+        f.wbuffs[i].stacks:SetJustifyH("LEFT")
+        f.wbuffs[i].stacks:SetShadowColor(0, 0, 0)
+        f.wbuffs[i].stacks:SetShadowOffset(1,1,.5)
+        f.wbuffs[i].cd = f.wbuffs[i].cd or CreateFrame("Model", nil, f.wbuffs[i], "CooldownFrameTemplate")
+        f.wbuffs[i].cd:SetAlpha(0)        
+
+        f.wbuffs[i]:ClearAllPoints()
+        f.wbuffs[i]:SetWidth(f.config.buffsize)
+        f.wbuffs[i]:SetHeight(f.config.buffsize)
+        f.wbuffs[i]:SetNormalTexture(nil)
+        f.wbuffs[i]:SetScript("OnUpdate", function()
+          if this.hasEnchant then
+            local id, _, timeleft, stacks = this:GetID()
+            if id==16 then
+              _, timeleft, stacks = GetWeaponEnchantInfo()
+            elseif id==17 then
+              _,_,_,_, timeleft, stacks = GetWeaponEnchantInfo()
+            end
+            timeleft = math.floor(timeleft/1000 + 0.5)
+            CooldownFrame_SetTimer(this.cd, GetTime(), timeleft, 1)
+            if stacks and stacks > 0 then
+              this.stacks:SetText(stacks)
+            end
+          end
+        end)
+
+        f.wbuffs[i]:SetScript("OnEnter", function()
+          if not this:GetParent().label then return end
+          GameTooltip:SetOwner(this, "ANCHOR_BOTTOMRIGHT")
+          GameTooltip:SetInventoryItem("player", this:GetID())
+        end)
+
+        f.wbuffs[i]:SetScript("OnLeave", function()
+          if GameTooltip:IsOwned(this) then
+            GameTooltip:Hide()
+          end
+        end)
+      end
+    end
+  end
+
   if f.config.visible == "1" then
     pfUI.uf:RefreshUnit(f, "all")
     f:EnableScripts()
@@ -414,6 +471,7 @@ function pfUI.uf:EnableScripts()
   f:RegisterEvent("UNIT_MODEL_CHANGED")
   f:RegisterEvent("UNIT_AURA") -- frame=buff, frame=debuff
   f:RegisterEvent("PLAYER_AURAS_CHANGED") -- label=player && frame=buff
+  f:RegisterEvent("UNIT_INVENTORY_CHANGED") -- label=player && frame=wbuff
   f:RegisterEvent("PARTY_MEMBERS_CHANGED") -- label=party, frame=leaderIcon
   f:RegisterEvent("PARTY_LEADER_CHANGED") -- frame=leaderIcon
   f:RegisterEvent("RAID_ROSTER_UPDATE") -- label=raid
@@ -440,7 +498,7 @@ function pfUI.uf:EnableScripts()
       pfUI.uf:RefreshUnit(this, "all")
     elseif ( this.label == "raid" or this.label == "party" ) and event == "RAID_ROSTER_UPDATE" then
       pfUI.uf:RefreshUnit(this, "all")
-    elseif this.label == "player" and event == "PLAYER_AURAS_CHANGED" then
+    elseif this.label == "player" and (event == "PLAYER_AURAS_CHANGED" or event == "UNIT_INVENTORY_CHANGED") then
       pfUI.uf:RefreshUnit(this, "aura")
     elseif event == "PLAYER_ENTERING_WORLD" then
       pfUI.uf:RefreshUnit(this, "all")
@@ -719,8 +777,9 @@ function pfUI.uf:RefreshUnit(unit, component)
     if pfScanActive == true then return end
   end
 
+  local C = pfUI_config
   -- show groupframes as raid
-  if pfUI_config["unitframes"]["raidforgroup"] == "1" then
+  if C["unitframes"]["raidforgroup"] == "1" then
     if strsub(unit:GetName(),0,6) == "pfRaid" then
       local id = tonumber(strsub(unit:GetName(),7,8))
 
@@ -739,12 +798,10 @@ function pfUI.uf:RefreshUnit(unit, component)
     end
   end
 
-  local default_border = pfUI_config.appearance.border.default
-  if pfUI_config.appearance.border.unitframes ~= "-1" then
-    default_border = pfUI_config.appearance.border.unitframes
+  local default_border = C.appearance.border.default
+  if C.appearance.border.unitframes ~= "-1" then
+    default_border = C.appearance.border.unitframes
   end
-
-  local C = pfUI_config
 
   -- hide and return early on unused frames
   if not ( pfUI.unlock and pfUI.unlock:IsShown() ) then
@@ -753,7 +810,7 @@ function pfUI.uf:RefreshUnit(unit, component)
       unit:Show()
     elseif UnitName(unit.label .. unit.id) then
       -- hide group while in raid and option is set
-      if pfUI_config["unitframes"]["group"]["hide_in_raid"] == "1" and strsub(unit.label,0,5) == "party" and UnitInRaid("player") then
+      if C["unitframes"]["group"]["hide_in_raid"] == "1" and strsub(unit.label,0,5) == "party" and UnitInRaid("player") then
         unit:Hide()
         return
 
@@ -764,7 +821,7 @@ function pfUI.uf:RefreshUnit(unit, component)
 
       -- hide self in group if solo or hide in raid is set
       elseif unit.fname == "Group0" or unit.fname == "PartyPet0" or unit.fname == "Party0Target" then
-        if ( GetNumPartyMembers() <= 0 ) or ( pfUI_config["unitframes"]["group"]["hide_in_raid"] == "1" and UnitInRaid("player") ) then
+        if ( GetNumPartyMembers() <= 0 ) or ( C["unitframes"]["group"]["hide_in_raid"] == "1" and UnitInRaid("player") ) then
           unit:Hide()
           return
         end
@@ -931,6 +988,58 @@ function pfUI.uf:RefreshUnit(unit, component)
     end
   end
 
+  -- Weapon Buffs
+  if unit.wbuffs and ( component == "all" or component == "aura" ) then
+    local main, off = unit.wbuffs[16], unit.wbuffs[17]
+    main.hasEnchant, main.expiration, main.charges,
+    off.hasEnchant,  off.expiration,  off.charges = GetWeaponEnchantInfo()
+    main:ClearAllPoints()
+    off:ClearAllPoints()
+    pfUI.api.CreateBackdrop(main, default_border)
+    pfUI.api.CreateBackdrop(off, default_border)
+    if not (main.hasEnchant) then
+      main:Hide()
+    else
+      main:SetPoint("TOPRIGHT", unit, "TOPLEFT", -(2*default_border + 1), 0)
+      off:SetPoint("TOPRIGHT", main, "BOTTOMRIGHT", 0, -(2*default_border + 1))
+      local link = GetInventoryItemLink("player", 16)
+      if not link then main:Hide() return end
+      local texture = GetInventoryItemTexture("player", 16)
+      main:SetNormalTexture(texture)
+      for i,v in ipairs({main:GetRegions()}) do
+        if v.SetTexCoord then v:SetTexCoord(.08, .92, .08, .92) end
+      end      
+      main.backdrop:SetBackdropBorderColor(GetItemQualityColor(GetInventoryItemQuality("player",16)))
+      main:Show()
+      if main.charges and main.charges > 0 then
+        main.stacks:SetText(main.charges)
+        main.stacks:Show()
+      else
+        main.stacks:Hide()
+      end
+    end
+    if not (off.hasEnchant) then
+      off:Hide()
+    else
+      off:SetPoint("TOPRIGHT", unit, "TOPLEFT", -(2*default_border + 1), 0)
+      local link = GetInventoryItemLink("player", 16)
+      if not link then off:Hide() return end
+      local texture = GetInventoryItemTexture("player", 16)
+      off:SetNormalTexture(texture)
+      for i,v in ipairs({off:GetRegions()}) do
+        if v.SetTexCoord then v:SetTexCoord(.08, .92, .08, .92) end
+      end
+      off.backdrop:SetBackdropBorderColor(GetItemQualityColor(GetInventoryItemQuality("player",17)))
+      off:Show()
+      if off.charges and off.charges > 0 then
+        off.stacks:SetText(off.charges)
+        off.stacks:Show()
+      else
+        off.stacks:Hide()
+      end
+    end
+  end
+
   -- indicators
   if component == "all" or component == "aura" then
     pfUI.uf:SetupDebuffFilter()
@@ -1033,7 +1142,7 @@ function pfUI.uf:RefreshUnit(unit, component)
 
   -- portrait
   if unit.portrait and ( component == "all" or component == "portrait" ) then
-    if pfUI_config.unitframes.always2dportrait == "1" then
+    if C.unitframes.always2dportrait == "1" then
       unit.portrait.tex:Show()
       unit.portrait.model:Hide()
       SetPortraitTexture(unit.portrait.tex, unit.label .. unit.id)
@@ -1042,7 +1151,7 @@ function pfUI.uf:RefreshUnit(unit, component)
         if unit.config.portrait == "bar" then
           unit.portrait.tex:Hide()
           unit.portrait.model:Hide()
-        elseif pfUI_config.unitframes.portraittexture == "1" then
+        elseif C.unitframes.portraittexture == "1" then
           unit.portrait.tex:Show()
           unit.portrait.model:Hide()
           SetPortraitTexture(unit.portrait.tex, unit.label .. unit.id)
@@ -1055,7 +1164,7 @@ function pfUI.uf:RefreshUnit(unit, component)
         end
       else
         if unit.config.portrait == "bar" then
-          unit.portrait:SetAlpha(pfUI_config.unitframes.portraitalpha)
+          unit.portrait:SetAlpha(C.unitframes.portraitalpha)
         end
         unit.portrait.tex:Hide()
         unit.portrait.model:Show()
@@ -1092,7 +1201,7 @@ function pfUI.uf:RefreshUnit(unit, component)
   end
 
   if unit.cache.hpdisplay ~= unit.cache.hp then
-    if pfUI_config.unitframes.animation_speed == "1" then
+    if C.unitframes.animation_speed == "1" then
       unit.hp.bar:SetValue(unit.cache.hp)
     else
       unit.cache.hpanimation = true
@@ -1100,7 +1209,7 @@ function pfUI.uf:RefreshUnit(unit, component)
   end
 
   if unit.cache.powerdisplay ~= unit.cache.power then
-    if pfUI_config.unitframes.animation_speed == "1" then
+    if C.unitframes.animation_speed == "1" then
       unit.power.bar:SetValue(unit.cache.power)
     else
       unit.cache.poweranimation = true
@@ -1125,17 +1234,17 @@ function pfUI.uf:RefreshUnit(unit, component)
   end
 
   local r, g, b = .2, .2, .2
-  if pfUI_config.unitframes.custom == "1" then
-    local cr, cg, cb, ca = pfUI.api.strsplit(",", pfUI_config.unitframes.customcolor)
+  if C.unitframes.custom == "1" then
+    local cr, cg, cb, ca = pfUI.api.strsplit(",", C.unitframes.customcolor)
     cr, cg, cb, ca = tonumber(cr), tonumber(cg), tonumber(cb), tonumber(ca)
     unit.hp.bar:SetStatusBarColor(cr, cg, cb, ca)
-    if pfUI_config.unitframes.pastel == "1" then
+    if C.unitframes.pastel == "1" then
       r, g, b = (color.r + .5) * .5, (color.g + .5) * .5, (color.b + .5) * .5
     else
       r, g, b = color.r, color.g, color.b
     end
   else
-    if pfUI_config.unitframes.pastel == "1" then
+    if C.unitframes.pastel == "1" then
       r, g, b = (color.r + .5) * .5, (color.g + .5) * .5, (color.b + .5) * .5
     else
       r, g, b = color.r, color.g, color.b
