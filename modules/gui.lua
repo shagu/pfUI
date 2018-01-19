@@ -953,6 +953,7 @@ pfUI:RegisterModule("gui", function ()
       CreateConfig(nil, this, T["Show Equipped Items"], C.bars, "showequipped", "checkbox")
       CreateConfig(nil, this, T["Enable Range Based Auto Paging (Hunter)"], C.bars, "hunterbar", "checkbox")
       CreateConfig(nil, this, T["Enable Action On Key Down"], C.bars, "keydown", "checkbox")
+      CreateConfig(nil, this, T["Switch Bar On Meta Key Press"], C.bars, "pagemaster", "checkbox")
       this.setup = true
     end
   end)

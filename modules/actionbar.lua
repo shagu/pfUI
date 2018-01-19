@@ -54,6 +54,42 @@ pfUI:RegisterModule("actionbar", function ()
     end, true)
   end
 
+  if C.bars.pagemaster == "1" then
+    local modifier = { "ALT", "SHIFT", "CTRL" }
+    local buttons = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "+", "=", "´" }
+    local shift, ctrl, alt, default = 6, 5, 3, 1
+    local current = CURRENT_ACTIONBAR_PAGE
+
+    local function SwitchBar(bar)
+      if CURRENT_ACTIONBAR_PAGE ~= bar then
+        CURRENT_ACTIONBAR_PAGE = bar
+        ChangeActionBarPage()
+      end
+    end
+
+    local pagemaster = CreateFrame("Frame", "pfPageMaster", UIParent)
+    pagemaster:RegisterEvent("PLAYER_ENTERING_WORLD")
+    pagemaster:SetScript("OnEvent", function()
+      for _,mod in pairs(modifier) do
+        for _,but in pairs(buttons) do
+          SetBinding(mod.."-"..but)
+        end
+      end
+    end)
+
+    pagemaster:SetScript("OnUpdate", function()
+      if IsShiftKeyDown() then
+        SwitchBar(shift)
+      elseif IsControlKeyDown() then
+        SwitchBar(ctrl)
+      elseif IsAltKeyDown() then
+        SwitchBar(alt)
+      else
+        SwitchBar(default)
+      end
+    end)
+  end
+
   -- reagent counter
   local reagentslots = { }
   local reagentscan = CreateFrame("GameTooltip", "pfReagentScanner", UIParent, "GameTooltipTemplate")
