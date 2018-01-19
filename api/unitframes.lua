@@ -1028,9 +1028,7 @@ function pfUI.uf:RefreshUnit(unit, component)
       off:SetNormalTexture(texture)
       for i,v in ipairs({off:GetRegions()}) do
         if v.SetTexCoord then v:SetTexCoord(.08, .92, .08, .92) end
-      end      
-      local _, _, itemLink = string.find(link, "(item:%d+:%d+:%d+:%d+)")
-      local _, _, itemRarity, itemLevel, _, _, _, itemEquipLoc, _ = GetItemInfo(itemLink)
+      end
       off.backdrop:SetBackdropBorderColor(GetItemQualityColor(GetInventoryItemQuality("player",17)))
       off:Show()
       if off.charges and off.charges > 0 then
