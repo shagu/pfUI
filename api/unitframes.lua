@@ -176,10 +176,6 @@ function pfUI.uf:UpdateConfig()
 
     pfUI.api.CreateBackdrop(f.portrait, default_border)
     f.portrait.backdrop:Show()
-    -- still required? remove in two weeks
-    --f.portrait:SetFrameStrata("BACKGROUND")
-    --f.portrait.model:SetFrameLevel(1)
-
     f.portrait:Show()
   elseif f.config.portrait == "right" then
     f.portrait:SetParent(f)
@@ -193,10 +189,6 @@ function pfUI.uf:UpdateConfig()
 
     pfUI.api.CreateBackdrop(f.portrait, default_border)
     f.portrait.backdrop:Show()
-    -- still required? remove in two weeks
-    --f.portrait:SetFrameStrata("BACKGROUND")
-    --f.portrait.model:SetFrameLevel(1)
-
     f.portrait:Show()
   else
     f.portrait:Hide()
