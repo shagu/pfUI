@@ -26,8 +26,13 @@ for i=1,40 do pfValidUnits["raidpet" .. i .. "target"] = true end
 
 local aggrodata = { }
 function pfUI.api.UnitHasAggro(unit)
-  if UnitExists(unit) and UnitIsFriend(unit, "player") and ( not aggrodata[unit] or GetTime() < aggrodata[unit].check + 1 ) then
-    aggrodata[unit] = { check = GetTime(), state = 0}
+  if aggrodata[unit] and GetTime() > aggrodata[unit].check + 1 then
+    return aggrodata[unit].state
+  end
+
+  aggrodata[unit] = aggrodata[unit] or { check = GetTime(), state = 0}
+
+  if UnitExists(unit) and UnitIsFriend(unit, "player") then
     for u in pairs(pfValidUnits) do
       local t = u .. "target"
       local tt = t .. "target"
@@ -36,7 +41,8 @@ function pfUI.api.UnitHasAggro(unit)
       end
     end
   end
-  return aggrodata[unit] and aggrodata[unit].state or 0
+
+  return aggrodata[unit].state
 end
 
 pfUI.uf.glow = CreateFrame("Frame")
