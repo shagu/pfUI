@@ -414,6 +414,15 @@ pfUI:RegisterModule("gui", function ()
     table.insert(pfUI.gui.dropdowns.fonts, "Fonts\\FZXHLJW.TTF:FZXHLJW")
   end
 
+  pfUI.gui.dropdowns.scaling = {
+    "0:" .. T["Off"],
+    "4:" .. T["Huge (PixelPerfect)"],
+    "5:" .. T["Large"],
+    "6:" .. T["Medium"],
+    "7:" .. T["Small"],
+    "8:" .. T["Tiny (PixelPerfect)"],
+  }
+
   pfUI.gui.dropdowns.uf_animationspeed = {
     "1:" .. T["Instant"],
     "2:" .. T["Very Fast"],
@@ -551,8 +560,8 @@ pfUI:RegisterModule("gui", function ()
       CreateConfig(nil, this, T["Unit Frame Text Font"], C.global, "font_unit", "dropdown", pfUI.gui.dropdowns.fonts)
       CreateConfig(nil, this, T["Unit Frame Text Size"], C.global, "font_unit_size")
       CreateConfig(nil, this, T["Scrolling Combat Text Font"], C.global, "font_combat", "dropdown", pfUI.gui.dropdowns.fonts)
-      CreateConfig(nil, this, T["Enable Native UI-Scale"], C.global, "pixelperfect", "checkbox")
-      CreateConfig(nil, this, T["Enable Maximum Graphic Details"], C.global, "hdgraphic", "checkbox")
+      CreateConfig(update["hdgraphic"], this, T["Enable UI-Scale"], C.global, "pixelperfect", "dropdown", pfUI.gui.dropdowns.scaling)
+      CreateConfig(update["hdgraphic"], this, T["Enable Maximum Graphic Details"], C.global, "hdgraphic", "checkbox")
       CreateConfig(nil, this, T["Enable Offscreen Frame Positions"], C.global, "offscreen", "checkbox")
       CreateConfig(nil, this, T["Enable Single Line UIErrors"], C.global, "errors_limit", "checkbox")
       CreateConfig(nil, this, T["Disable All UIErrors"], C.global, "errors_hide", "checkbox")
