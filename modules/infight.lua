@@ -12,25 +12,6 @@ pfUI:RegisterModule("infight", function ()
     insets = {left = 0, right = 0, top = 0, bottom = 0},
   }
 
-  pfUI.infight.backdrop_outline = {
-    edgeFile = "Interface\\AddOns\\pfUI\\img\\glow2", edgeSize = 8,
-    insets = {left = 0, right = 0, top = 0, bottom = 0},
-  }
-
-  pfUI.infight.elements = {}
-
-  function pfUI.infight:CreateGlow(unit, frame)
-    local anchor = pfUI.uf[unit]
-    if not pfUI.uf[unit] then anchor = frame end
-    pfUI.infight[unit] = CreateFrame("Frame", "pfUICombat" .. unit,  anchor)
-    pfUI.infight[unit]:SetFrameStrata("BACKGROUND")
-    pfUI.infight[unit]:SetBackdrop(pfUI.infight.backdrop_outline)
-    pfUI.infight[unit]:SetPoint("TOPLEFT", anchor, "TOPLEFT", -7 - default_border,7 + default_border)
-    pfUI.infight[unit]:SetPoint("BOTTOMRIGHT", anchor, "BOTTOMRIGHT", 7 + default_border,-7 - default_border)
-    pfUI.infight[unit]:Hide()
-    table.insert(pfUI.infight.elements, unit)
-  end
-
   pfUI.infight:SetScript("OnUpdate",function(s,e)
     if not pfUI.infight.clock then pfUI.infight.clock = GetTime() -0.1 end
     if GetTime() >= pfUI.infight.clock + 0.1 then
@@ -44,15 +25,6 @@ pfUI:RegisterModule("infight", function ()
         pfUI.infight.fadeModifier = 0.1
       end
       pfUI.infight.fadeValue = pfUI.infight.fadeValue + pfUI.infight.fadeModifier
-
-      for _,unit in pairs (pfUI.infight.elements) do
-        if UnitAffectingCombat(unit) then
-          pfUI.infight[unit]:Show()
-          pfUI.infight[unit]:SetBackdropBorderColor(1,0.2+pfUI.infight.fadeValue, pfUI.infight.fadeValue, 1-pfUI.infight.fadeValue);
-        else
-          pfUI.infight[unit]:Hide()
-        end
-      end
 
       if C.appearance.infight.screen == "1" and pfUI.infight.screen then
         if UnitAffectingCombat("player") then
@@ -71,29 +43,5 @@ pfUI:RegisterModule("infight", function ()
     pfUI.infight.screen:SetBackdrop(pfUI.infight.backdrop)
     pfUI.infight.screen:SetAllPoints(WorldFrame)
     pfUI.infight.screen:Hide()
-  end
-
-  if C.appearance.infight.common == "1" then
-    if pfUI.uf.player and pfUI.uf.player:IsShown() then
-      pfUI.infight:CreateGlow("player")
-    end
-
-    if pfUI.uf.target and pfUI.uf.target:IsShown() then
-      pfUI.infight:CreateGlow("target")
-    end
-
-    if pfUI.uf.targettarget and pfUI.uf.targettarget:IsShown() then
-      pfUI.infight:CreateGlow("targettarget")
-    end
-
-    if pfUI.uf.pet and pfUI.uf.pet:IsShown() then
-      pfUI.infight:CreateGlow("pet")
-    end
-  end
-
-  if C.appearance.infight.group == "1" then
-    for i=1,4 do
-      pfUI.infight:CreateGlow("party" .. i, _G["pfGroup" .. i])
-    end
   end
 end)

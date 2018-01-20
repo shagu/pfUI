@@ -39,6 +39,24 @@ function pfUI.api.UnitHasAggro(unit)
   return aggrodata[unit] and aggrodata[unit].state or 0
 end
 
+pfUI.uf.glow = CreateFrame("Frame")
+pfUI.uf.glow:SetScript("OnUpdate", function()
+  local fpsmod = GetFramerate() / 30
+  if not this.val or this.val >= .9 then
+    this.mod = -0.01 / fpsmod
+  elseif this.val <= .6 then
+    this.mod = 0.01  / fpsmod
+  end
+  this.val = this.val + this.mod
+end)
+
+pfUI.uf.glow.mod = 0
+pfUI.uf.glow.val = 0
+
+function pfUI.uf.glow.UpdateGlowAnimation()
+  this:SetAlpha(pfUI.uf.glow.val)
+end
+
 function pfUI.uf:UpdateFrameSize()
   local default_border = pfUI_config.appearance.border.default
   if pfUI_config.appearance.border.unitframes ~= "-1" then
@@ -86,6 +104,17 @@ function pfUI.uf:UpdateConfig()
   if tonumber(f.config.height) < 0 then f.hp:Hide() end
   pfUI.api.CreateBackdrop(f.hp, default_border)
 
+  f.hp.glow:SetFrameStrata("BACKGROUND")
+  f.hp.glow:SetFrameLevel(0)
+  f.hp.glow:SetBackdrop({
+    edgeFile = "Interface\\AddOns\\pfUI\\img\\glow2", edgeSize = 8,
+    insets = {left = 0, right = 0, top = 0, bottom = 0},
+  })
+  f.hp.glow:SetPoint("TOPLEFT", f.hp, "TOPLEFT", -6 - default_border,6 + default_border)
+  f.hp.glow:SetPoint("BOTTOMRIGHT", f.hp, "BOTTOMRIGHT", 6 + default_border,-6 - default_border)
+  f.hp.glow:SetScript("OnUpdate", pfUI.uf.glow.UpdateGlowAnimation)
+  f.hp.glow:Hide()
+
   f.hp.bar:SetStatusBarTexture(f.config.bartexture)
   f.hp.bar:SetAllPoints(f.hp)
   if f.config.verticalbar == "1" then
@@ -109,6 +138,17 @@ function pfUI.uf:UpdateConfig()
   pfUI.api.CreateBackdrop(f.power, default_border)
   f.power.bar:SetStatusBarTexture(f.config.bartexture)
   f.power.bar:SetAllPoints(f.power)
+
+  f.power.glow:SetFrameStrata("BACKGROUND")
+  f.power.glow:SetFrameLevel(0)
+  f.power.glow:SetBackdrop({
+    edgeFile = "Interface\\AddOns\\pfUI\\img\\glow2", edgeSize = 8,
+    insets = {left = 0, right = 0, top = 0, bottom = 0},
+  })
+  f.power.glow:SetPoint("TOPLEFT", f.power, "TOPLEFT", -6 - default_border,6 + default_border)
+  f.power.glow:SetPoint("BOTTOMRIGHT", f.power, "BOTTOMRIGHT", 6 + default_border,-6 - default_border)
+  f.power.glow:SetScript("OnUpdate", pfUI.uf.glow.UpdateGlowAnimation)
+  f.power.glow:Hide()
 
   f.portrait:SetFrameStrata("LOW")
   f.portrait.tex:SetAllPoints(f.portrait)
@@ -249,7 +289,6 @@ function pfUI.uf:UpdateConfig()
   f.lootIcon:SetWidth(10)
   f.lootIcon:SetHeight(10)
   f.lootIcon:SetPoint("CENTER", f, "LEFT", 0, 0)
-
   f.lootIcon.texture:SetTexture("Interface\\GROUPFRAME\\UI-Group-MasterLooter")
   f.lootIcon.texture:SetAllPoints(f.lootIcon)
   f.lootIcon:Hide()
@@ -511,6 +550,23 @@ function pfUI.uf:EnableScripts()
       this.lastTick = GetTime() + (this.tick or .2)
       pfUI.uf:RefreshUnitState(this)
 
+      if this.config.glowaggro == "1" and pfUI.api.UnitHasAggro(this.label .. this.id) > 0 then
+        this.hp.glow:SetBackdropBorderColor(1,.2,0)
+        this.power.glow:SetBackdropBorderColor(1,.2,0)
+        this.hp.glow:Show()
+        this.power.glow:Show()
+      elseif this.config.glowcombat == "1" and UnitAffectingCombat(this.label .. this.id) then
+        this.hp.glow:SetBackdropBorderColor(1,1,.2)
+        this.power.glow:SetBackdropBorderColor(1,1,.2)
+        this.hp.glow:Show()
+        this.power.glow:Show()
+      else
+        this.hp.glow:SetBackdropBorderColor(1,1,1)
+        this.power.glow:SetBackdropBorderColor(1,1,1)
+        this.hp.glow:Hide()
+        this.power.glow:Hide()
+      end
+
       -- update everything on eventless frames (targettarget, etc)
       if this.tick then
         pfUI.uf:RefreshUnit(this, "all")
@@ -580,9 +636,12 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
   end
 
   f.hp = CreateFrame("Frame",nil, f)
+  f.hp.glow = CreateFrame("Frame", nil, f.hp)
   f.hp.bar = CreateFrame("StatusBar", nil, f.hp)
   f.power = CreateFrame("Frame",nil, f)
+  f.power.glow = CreateFrame("Frame", nil, f.power)
   f.power.bar = CreateFrame("StatusBar", nil, f.power)
+
   f.hpLeftText = f:CreateFontString("Status", "OVERLAY", "GameFontNormalSmall")
   f.hpRightText = f:CreateFontString("Status", "OVERLAY", "GameFontNormalSmall")
   f.hpCenterText = f:CreateFontString("Status", "OVERLAY", "GameFontNormalSmall")

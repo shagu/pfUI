@@ -63,8 +63,6 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("appearance", "castbar",     "castbarcolor",     ".7,.7,.9,.8")
   pfUI:UpdateConfig("appearance", "castbar",     "channelcolor",     ".9,.9,.7,.8")
   pfUI:UpdateConfig("appearance", "infight",     "screen",           "0")
-  pfUI:UpdateConfig("appearance", "infight",     "common",           "1")
-  pfUI:UpdateConfig("appearance", "infight",     "group",            "0")
   pfUI:UpdateConfig("appearance", "bags",        "borderlimit",      "1")
   pfUI:UpdateConfig("appearance", "bags",        "borderonlygear",   "0")
   pfUI:UpdateConfig("appearance", "minimap",     "mouseoverzone",    "0")
@@ -130,6 +128,8 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("unitframes", "player",      "debuff_indicator", "0")
   pfUI:UpdateConfig("unitframes", "player",      "clickcast",        "0")
   pfUI:UpdateConfig("unitframes", "player",      "faderange",        "0")
+  pfUI:UpdateConfig("unitframes", "player",      "glowaggro",        "1")
+  pfUI:UpdateConfig("unitframes", "player",      "glowcombat",       "1")
   pfUI:UpdateConfig("unitframes", "player",      "showtooltip",      "1")
   pfUI:UpdateConfig("unitframes", "player",      "healthcolor",      "1")
   pfUI:UpdateConfig("unitframes", "player",      "powercolor",       "1")
@@ -169,6 +169,8 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("unitframes", "target",      "debuff_indicator", "0")
   pfUI:UpdateConfig("unitframes", "target",      "clickcast",        "0")
   pfUI:UpdateConfig("unitframes", "target",      "faderange",        "0")
+  pfUI:UpdateConfig("unitframes", "target",      "glowaggro",        "1")
+  pfUI:UpdateConfig("unitframes", "target",      "glowcombat",       "1")
   pfUI:UpdateConfig("unitframes", "target",      "showtooltip",      "1")
   pfUI:UpdateConfig("unitframes", "target",      "healthcolor",      "1")
   pfUI:UpdateConfig("unitframes", "target",      "powercolor",       "1")
@@ -205,6 +207,8 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("unitframes", "focus",       "debuff_indicator", "0")
   pfUI:UpdateConfig("unitframes", "focus",       "clickcast",        "0")
   pfUI:UpdateConfig("unitframes", "focus",       "faderange",        "0")
+  pfUI:UpdateConfig("unitframes", "focus",       "glowaggro",        "1")
+  pfUI:UpdateConfig("unitframes", "focus",       "glowcombat",       "1")
   pfUI:UpdateConfig("unitframes", "focus",       "showtooltip",      "1")
   pfUI:UpdateConfig("unitframes", "focus",       "healthcolor",      "1")
   pfUI:UpdateConfig("unitframes", "focus",       "powercolor",       "1")
@@ -240,6 +244,8 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("unitframes", "group",       "debuff_indicator", "1")
   pfUI:UpdateConfig("unitframes", "group",       "clickcast",        "0")
   pfUI:UpdateConfig("unitframes", "group",       "faderange",        "1")
+  pfUI:UpdateConfig("unitframes", "group",       "glowaggro",        "1")
+  pfUI:UpdateConfig("unitframes", "group",       "glowcombat",       "0")
   pfUI:UpdateConfig("unitframes", "group",       "showtooltip",      "1")
   pfUI:UpdateConfig("unitframes", "group",       "healthcolor",      "1")
   pfUI:UpdateConfig("unitframes", "group",       "powercolor",       "1")
@@ -276,6 +282,8 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("unitframes", "grouptarget", "debuff_indicator", "0")
   pfUI:UpdateConfig("unitframes", "grouptarget", "clickcast",        "0")
   pfUI:UpdateConfig("unitframes", "grouptarget", "faderange",        "1")
+  pfUI:UpdateConfig("unitframes", "grouptarget", "glowaggro",        "1")
+  pfUI:UpdateConfig("unitframes", "grouptarget", "glowcombat",       "0")
   pfUI:UpdateConfig("unitframes", "grouptarget", "showtooltip",      "1")
   pfUI:UpdateConfig("unitframes", "grouptarget", "healthcolor",      "1")
   pfUI:UpdateConfig("unitframes", "grouptarget", "powercolor",       "1")
@@ -311,6 +319,8 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("unitframes", "grouppet",    "debuff_indicator", "0")
   pfUI:UpdateConfig("unitframes", "grouppet",    "clickcast",        "0")
   pfUI:UpdateConfig("unitframes", "grouppet",    "faderange",        "1")
+  pfUI:UpdateConfig("unitframes", "grouppet",    "glowaggro",        "1")
+  pfUI:UpdateConfig("unitframes", "grouppet",    "glowcombat",       "0")
   pfUI:UpdateConfig("unitframes", "grouppet",    "showtooltip",      "1")
   pfUI:UpdateConfig("unitframes", "grouppet",    "healthcolor",      "1")
   pfUI:UpdateConfig("unitframes", "grouppet",    "powercolor",       "1")
@@ -346,6 +356,8 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("unitframes", "raid",        "debuff_indicator", "1")
   pfUI:UpdateConfig("unitframes", "raid",        "clickcast",        "0")
   pfUI:UpdateConfig("unitframes", "raid",        "faderange",        "1")
+  pfUI:UpdateConfig("unitframes", "raid",        "glowaggro",        "1")
+  pfUI:UpdateConfig("unitframes", "raid",        "glowcombat",       "0")
   pfUI:UpdateConfig("unitframes", "raid",        "showtooltip",      "1")
   pfUI:UpdateConfig("unitframes", "raid",        "healthcolor",      "1")
   pfUI:UpdateConfig("unitframes", "raid",        "powercolor",       "1")
@@ -381,6 +393,8 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("unitframes", "ttarget",     "debuff_indicator", "0")
   pfUI:UpdateConfig("unitframes", "ttarget",     "clickcast",        "0")
   pfUI:UpdateConfig("unitframes", "ttarget",     "faderange",        "0")
+  pfUI:UpdateConfig("unitframes", "ttarget",     "glowaggro",        "1")
+  pfUI:UpdateConfig("unitframes", "ttarget",     "glowcombat",       "1")
   pfUI:UpdateConfig("unitframes", "ttarget",     "showtooltip",      "1")
   pfUI:UpdateConfig("unitframes", "ttarget",     "healthcolor",      "1")
   pfUI:UpdateConfig("unitframes", "ttarget",     "powercolor",       "1")
@@ -416,6 +430,8 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("unitframes", "pet",         "debuff_indicator", "0")
   pfUI:UpdateConfig("unitframes", "pet",         "clickcast",        "0")
   pfUI:UpdateConfig("unitframes", "pet",         "faderange",        "0")
+  pfUI:UpdateConfig("unitframes", "pet",         "glowaggro",        "1")
+  pfUI:UpdateConfig("unitframes", "pet",         "glowcombat",       "1")
   pfUI:UpdateConfig("unitframes", "pet",         "showtooltip",      "1")
   pfUI:UpdateConfig("unitframes", "pet",         "healthcolor",      "1")
   pfUI:UpdateConfig("unitframes", "pet",         "powercolor",       "1")
@@ -451,6 +467,8 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("unitframes", "fallback",    "debuff_indicator", "0")
   pfUI:UpdateConfig("unitframes", "fallback",    "clickcast",        "0")
   pfUI:UpdateConfig("unitframes", "fallback",    "faderange",        "0")
+  pfUI:UpdateConfig("unitframes", "fallback",    "glowaggro",        "1")
+  pfUI:UpdateConfig("unitframes", "fallback",    "glowcombat",       "1")
   pfUI:UpdateConfig("unitframes", "fallback",    "showtooltip",      "1")
   pfUI:UpdateConfig("unitframes", "fallback",    "healthcolor",      "1")
   pfUI:UpdateConfig("unitframes", "fallback",    "powercolor",       "1")
@@ -754,6 +772,28 @@ function pfUI:MigrateConfig()
       local entry = pfUI_config.unitframes[unitframe]
       if entry.buffs and entry.buffs == "hide" then entry.buffs = "off" end
       if entry.debuffs and entry.debuffs == "hide" then entry.debuffs = "off" end
+    end
+  end
+
+  -- migrating glow settings (> 3.5.1)
+  if checkversion(3, 5, 0) then
+    local common = { "player", "target", "ttarget", "pet" }
+    for _, unitframe in pairs(common) do
+      if pfUI_config.appearance.infight.group == "1" then
+        pfUI_config.unitframes[unitframe].glowcombat = "1"
+        pfUI_config.unitframes[unitframe].glowaggro = "1"
+      else
+        pfUI_config.unitframes[unitframe].glowcombat = "0"
+        pfUI_config.unitframes[unitframe].glowaggro = "0"
+      end
+    end
+
+    if pfUI_config.appearance.infight.group == "1" then
+      pfUI_config.unitframes["group"].glowcombat = "1"
+      pfUI_config.unitframes["group"].glowaggro = "1"
+    else
+      pfUI_config.unitframes["group"].glowcombat = "0"
+      pfUI_config.unitframes["group"].glowaggro = "0"
     end
   end
 
