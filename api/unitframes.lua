@@ -24,6 +24,21 @@ for i=1,4 do pfValidUnits["partypet" .. i .. "target"] = true end
 for i=1,40 do pfValidUnits["raid" .. i .. "target"] = true end
 for i=1,40 do pfValidUnits["raidpet" .. i .. "target"] = true end
 
+local aggrodata = { }
+function pfUI.api.UnitHasAggro(unit)
+  if UnitExists(unit) and UnitIsFriend(unit, "player") and ( not aggrodata[unit] or GetTime() < aggrodata[unit].check + 1 ) then
+    aggrodata[unit] = { check = GetTime(), state = 0}
+    for u in pairs(pfValidUnits) do
+      local t = u .. "target"
+      local tt = t .. "target"
+      if UnitExists(tt) and UnitIsUnit(tt, unit) and UnitCanAttack(t, tt) then
+        aggrodata[unit].state = aggrodata[unit].state + 1
+      end
+    end
+  end
+  return aggrodata[unit] and aggrodata[unit].state or 0
+end
+
 function pfUI.uf:UpdateFrameSize()
   local default_border = pfUI_config.appearance.border.default
   if pfUI_config.appearance.border.unitframes ~= "-1" then
