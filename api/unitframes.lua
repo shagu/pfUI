@@ -26,7 +26,7 @@ for i=1,40 do pfValidUnits["raidpet" .. i .. "target"] = true end
 
 local aggrodata = { }
 function pfUI.api.UnitHasAggro(unit)
-  if aggrodata[unit] and GetTime() > aggrodata[unit].check + 1 then
+  if aggrodata[unit] and GetTime() < aggrodata[unit].check + 1 then
     return aggrodata[unit].state
   end
 
@@ -36,7 +36,12 @@ function pfUI.api.UnitHasAggro(unit)
     for u in pairs(pfValidUnits) do
       local t = u .. "target"
       local tt = t .. "target"
-      if UnitExists(tt) and UnitIsUnit(tt, unit) and UnitCanAttack(t, tt) then
+
+      if UnitExists(t) and UnitIsUnit(t, unit) and UnitCanAttack(u, unit) then
+        aggrodata[unit].state = aggrodata[unit].state + 1
+      end
+
+      if UnitExists(tt) and UnitIsUnit(tt, unit) and UnitCanAttack(t, unit) then
         aggrodata[unit].state = aggrodata[unit].state + 1
       end
     end
