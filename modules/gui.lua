@@ -632,6 +632,7 @@ pfUI:RegisterModule("gui", function ()
           CreateQuestionDialog(T["Load profile"] .. " '|cff33ffcc" .. C.global.profile .. "|r'?", function()
             local selp = C.global.profile
             _G["pfUI_config"] = CopyTable(pfUI_profiles[C.global.profile])
+            pfUI:LoadConfig()
             C.global.profile = selp
             ReloadUI()
           end)
