@@ -12,6 +12,7 @@ pfUI_translation["deDE"] = {
   ["Always Show Item Comparison"] = nil,
   ["Always Use 2D Portraits"] = nil,
   ["Ammo Counter"] = nil,
+  ["Announce Ressurection in chat"] = nil,
   ["Appearance"] = nil,
   ["AtlasLoot"] = nil,
   ["Autohide"] = nil,

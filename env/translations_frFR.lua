@@ -12,6 +12,7 @@ pfUI_translation["frFR"] = {
   ["Always Show Item Comparison"] = "Toujours afficher la comparaison d'objet",
   ["Always Use 2D Portraits"] = "Toujours utiliser les portraits 2D",
   ["Ammo Counter"] = "Compteur de munitions",
+  ["Announce Ressurection in chat"] = nil,
   ["Appearance"] = "Apparence",
   ["AtlasLoot"] = nil,
   ["Autohide"] = "Masquer automatiquement",

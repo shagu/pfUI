@@ -12,6 +12,7 @@ pfUI_translation["koKR"] = {
   ["Always Show Item Comparison"] = "항상 착용 장비와 비교 표시",
   ["Always Use 2D Portraits"] = "항상 2D초상화 사용",
   ["Ammo Counter"] = "탄약 갯수",
+  ["Announce Ressurection in chat"] = nil,
   ["Appearance"] = "외관 설정",
   ["AtlasLoot"] = nil,
   ["Autohide"] = "자동 숨기기",

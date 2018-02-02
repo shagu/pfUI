@@ -12,6 +12,7 @@ pfUI_translation["ruRU"] = {
   ["Always Show Item Comparison"] = "Всегда использовать сравнение предметов",
   ["Always Use 2D Portraits"] = "Всегда использовать 2D портреты",
   ["Ammo Counter"] = "Счетчик боеприпасов",
+  ["Announce Ressurection in chat"] = nil,
   ["Appearance"] = "Внешность",
   ["AtlasLoot"] = nil, -- название аддона
   ["Autohide"] = "Авто-скрытие",

@@ -535,6 +535,14 @@ pfUI:RegisterModule("gui", function ()
     "off:" .. T["Disabled"]
   }
 
+  pfUI.gui.dropdowns.ressannounce = {
+    "disabled:" .. T["Disabled"],
+    "say:" .. T["Say"],
+    "party:" .. T["Party"],
+    "raid:" .. T["Raid"],
+    "dynamic:" .. T["Party or Raid"]
+}
+
   pfUI.gui.dropdowns.num_actionbar_buttons = BarLayoutOptions(NUM_ACTIONBAR_BUTTONS)
   pfUI.gui.dropdowns.num_shapeshift_slots = BarLayoutOptions(NUM_SHAPESHIFT_SLOTS)
   pfUI.gui.dropdowns.num_pet_action_slots = BarLayoutOptions(NUM_PET_ACTION_SLOTS)
@@ -779,6 +787,7 @@ pfUI:RegisterModule("gui", function ()
       CreateConfig(nil, this, T["Show Procs of all Classes"], C.unitframes, "all_procs", "checkbox")
       CreateConfig(nil, this, T["Buff Indicator Size"], C.unitframes, "indicator_size")
       CreateConfig(nil, this, T["Only Show Indicators for Dispellable Debuffs"], C.unitframes, "debuffs_class", "checkbox")
+      CreateConfig(nil, this, T["Announce Ressurection in chat"], C.unitframes, "ressannounce", "dropdown", pfUI.gui.dropdowns.ressannounce)
       CreateConfig(nil, this, T["Clickcast Spells"], nil, nil, "header")
       CreateConfig(nil, this, T["Click Action"], C.unitframes, "clickcast", nil, nil, nil, nil, "STRING")
       CreateConfig(nil, this, T["Shift-Click Action"], C.unitframes, "clickcast_shift", nil, nil, nil, nil, "STRING")

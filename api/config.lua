@@ -105,6 +105,8 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("unitframes", nil,           "clickcast_alt",    "")
   pfUI:UpdateConfig("unitframes", nil,           "clickcast_ctrl",   "")
 
+  pfUI:UpdateConfig("unitframes", nil,           "ressannounce",     "disabled")
+
   pfUI:UpdateConfig("unitframes", "player",      "visible",          "1")
   pfUI:UpdateConfig("unitframes", "player",      "portrait",         "bar")
   pfUI:UpdateConfig("unitframes", "player",      "bartexture",       "Interface\\AddOns\\pfUI\\img\\bar")
