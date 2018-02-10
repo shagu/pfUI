@@ -174,6 +174,11 @@ function pfUI.uf:UpdateConfig()
     f.portrait:SetAlpha(pfUI_config.unitframes.portraitalpha)
     if f.portrait.backdrop then f.portrait.backdrop:Hide() end
 
+    -- place portrait below fonts
+    f.portrait:SetFrameStrata("LOW")
+    f.portrait.model:SetFrameStrata("LOW")
+    f.portrait.model:SetFrameLevel(3)
+
     f.portrait:Show()
   elseif f.config.portrait == "left" then
     f.portrait:SetParent(f)
@@ -184,6 +189,11 @@ function pfUI.uf:UpdateConfig()
     f.hp:SetPoint("TOPRIGHT", f, "TOPRIGHT", 0, 0)
 
     f.portrait:SetAlpha(f:GetAlpha())
+
+    -- make sure incHeal is above
+    f.portrait:SetFrameStrata("BACKGROUND")
+    f.portrait.model:SetFrameStrata("BACKGROUND")
+    f.portrait.model:SetFrameLevel(1)
 
     pfUI.api.CreateBackdrop(f.portrait, default_border)
     f.portrait.backdrop:Show()
@@ -197,6 +207,11 @@ function pfUI.uf:UpdateConfig()
     f.hp:SetPoint("TOPLEFT", f, "TOPLEFT", 0, 0)
 
     f.portrait:SetAlpha(f:GetAlpha())
+
+    -- make sure incHeal is above
+    f.portrait:SetFrameStrata("BACKGROUND")
+    f.portrait.model:SetFrameStrata("BACKGROUND")
+    f.portrait.model:SetFrameLevel(1)
 
     pfUI.api.CreateBackdrop(f.portrait, default_border)
     f.portrait.backdrop:Show()
