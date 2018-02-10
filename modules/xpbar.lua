@@ -15,9 +15,14 @@ pfUI:RegisterModule("xpbar", function ()
   pfUI.xp:RegisterEvent("PLAYER_ENTERING_WORLD")
 
   pfUI.xp:SetScript("OnEvent", function()
-    if event == "PLAYER_ENTERING_WORLD" or event == "PLAYER_LEVEL_UP" then
+    if event == "PLAYER_ENTERING_WORLD" then
       pfUI.xp.starttime = GetTime()
       pfUI.xp.startxp = UnitXP("player")
+    end
+
+    if event == "PLAYER_LEVEL_UP" then
+      -- add previously gained experience to the session
+      pfUI.xp.startxp = pfUI.xp.startxp - UnitXPMax("player")
     end
 
     if UnitXPMax("player") ~= 0 then
