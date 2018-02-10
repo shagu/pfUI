@@ -87,9 +87,11 @@ pfUI:RegisterModule("castbar", function ()
   delayByLag.startTime = nil
 
   function delayByLag:SetCast(cast)
-    if not delayByLag.currentCast and pfUI.castbar.player[cast] then
-      delayByLag.currentCast = cast
-      delayByLag.startTime = GetTime()
+    for custom in pairs(pfUI.castbar.player.customcast) do
+      if strfind(strlower(cast), strlower(custom)) then
+        delayByLag.currentCast = custom
+        delayByLag.startTime = GetTime()
+      end
     end
   end
 
@@ -97,7 +99,7 @@ pfUI:RegisterModule("castbar", function ()
     if this.currentCast and this.startTime then
       local _,_, lag = GetNetStats()
       if this.startTime + lag/1000 < GetTime() then
-        pfUI.castbar.player[this.currentCast](true)
+        pfUI.castbar.player.customcast[this.currentCast](true)
         this.currentCast = nil
         this.startTime = nil
       end
@@ -107,8 +109,8 @@ pfUI:RegisterModule("castbar", function ()
   local aimedshot = L["customcast"]["AIMEDSHOT"]
   local multishot = L["customcast"]["MULTISHOT"]
 
-
-  pfUI.castbar.player[aimedshot] = function(begin)
+  pfUI.castbar.player.customcast = {}
+  pfUI.castbar.player.customcast[aimedshot] = function(begin)
     if begin then
       local duration = 3000
 
@@ -138,7 +140,7 @@ pfUI:RegisterModule("castbar", function ()
     end
   end
 
-  pfUI.castbar.player[multishot] = function(begin)
+  pfUI.castbar.player.customcast[multishot] = function(begin)
     if begin then
       local duration = 500
       if not pfUI.castbar.player.casting then
@@ -150,12 +152,20 @@ pfUI:RegisterModule("castbar", function ()
   end
 
   hooksecurefunc("CastSpell", function(id, bookType)
-    local spellName = GetSpellName(id, bookType)
-    delayByLag:SetCast(spellName)
+    if GetSpellCooldown(id, bookType) ~= 0 then
+      local spellName = GetSpellName(id, bookType)
+      delayByLag:SetCast(spellName, true)
+    end
   end, true)
 
   hooksecurefunc("CastSpellByName", function(spellName, target)
-    delayByLag:SetCast(spellName)
+    for i=1,120 do
+      -- detect if any cast is ongoing
+      if IsCurrentAction(i) then
+        delayByLag:SetCast(spellName)
+        return
+      end
+    end
   end, true)
 
   hooksecurefunc("UseAction", function(slot, target, button)
@@ -236,31 +246,16 @@ pfUI:RegisterModule("castbar", function ()
   pfUI.castbar.player:SetScript("OnEvent", function ()
     if ( event == "SPELLCAST_START" ) then
       pfUI.castbar.player:SpellcastStart(arg1, arg2)
-
-    elseif ( event == "SPELLCAST_CHANNEL_START" ) then
-      pfUI.castbar.player:SpellcastChannelStart(arg1, arg2)
-
-    elseif event == "SPELLCAST_STOP" then
+    elseif event == "SPELLCAST_STOP" or event == "SPELLCAST_FAILED" or event == "SPELLCAST_INTERRUPTED" then
       pfUI.castbar.player:SpellcastStop()
-
-    elseif event == "SPELLCAST_CHANNEL_STOP" then
-      pfUI.castbar.player:SpellcastChannelStop()
-
-    elseif event == "SPELLCAST_FAILED" or event == "SPELLCAST_INTERRUPTED" then
-      if pfUI.castbar.player.casting then
-        pfUI.castbar.player.fadeout = 1
-        pfUI.castbar.player.casting = nil
-
-        pfUI.castbar.player.bar:SetStatusBarColor(1,.5,.5,1)
-        pfUI.castbar.player.bar:SetMinMaxValues(1,100)
-        pfUI.castbar.player.bar:SetValue(100)
-      end
-
     elseif ( event == "SPELLCAST_DELAYED" ) then
       if( pfUI.castbar.player:IsShown() ) then
         pfUI.castbar.player.delay = pfUI.castbar.player.delay + arg1/1000
       end
-
+    elseif ( event == "SPELLCAST_CHANNEL_START" ) then
+      pfUI.castbar.player:SpellcastChannelStart(arg1, arg2)
+    elseif event == "SPELLCAST_CHANNEL_STOP" then
+      pfUI.castbar.player:SpellcastChannelStop()
     elseif ( event == "SPELLCAST_CHANNEL_UPDATE" ) then
       if ( pfUI.castbar.player:IsShown() ) then
         pfUI.castbar.player.delay = pfUI.castbar.player.delay + arg1/1000
