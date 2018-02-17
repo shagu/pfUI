@@ -130,6 +130,8 @@ function pfUI.uf:UpdateConfig()
   f.hp.bar:SetAllPoints(f.hp)
   if f.config.verticalbar == "1" then
     f.hp.bar:SetOrientation("VERTICAL")
+  else
+    f.hp.bar:SetOrientation("HORIZONTAL")
   end
 
   if pfUI_config.unitframes.custombg == "1" then
