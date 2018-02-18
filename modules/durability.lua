@@ -1,0 +1,17 @@
+pfUI:RegisterModule("durability", function ()
+    
+    pfUI.durability = CreateFrame("Frame","pfDurability",UIParent)
+    pfUI.durability:SetPoint("TOPLEFT", pfUI.minimap, "BOTTOMLEFT", 0, -35)
+    UpdateMovable(pfUI.durability)
+    pfUI.durability:SetWidth(80)
+    pfUI.durability:SetHeight(70)
+    pfUI.durability:SetFrameStrata("BACKGROUND")
+    
+    pfUI.durability:SetScript("OnUpdate", function()
+        DurabilityFrame:SetParent(pfUI.durability)
+        DurabilityFrame:ClearAllPoints()
+        DurabilityFrame:SetPoint("CENTER", pfUI.durability)
+        DurabilityFrame:SetFrameLevel(1)
+        pfUI.durability:SetScript("OnUpdate", nil)
+    end)
+end)
