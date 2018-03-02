@@ -710,13 +710,13 @@ function pfUI.api.GetColoredTimeString(remaining)
   if not remaining then return "" end
   if remaining > 99 * 60 * 60 then
     local r,g,b,a = pfUI.api.GetStringColor(C.appearance.cd.daycolor)
-    return "|cff" .. string.format("%02x%02x%02x", r*255, g*255, b*255) .. round(remaining / 60 / 60 / 24) .. "d"
+    return "|cff" .. string.format("%02x%02x%02x", r*255, g*255, b*255) .. round(remaining / 60 / 60 / 24) .. "|rd"
   elseif remaining > 99 * 60 then
     local r,g,b,a = pfUI.api.GetStringColor(C.appearance.cd.hourcolor)
-    return "|cff" .. string.format("%02x%02x%02x", r*255, g*255, b*255) .. round(remaining / 60 / 60) .. "h"
+    return "|cff" .. string.format("%02x%02x%02x", r*255, g*255, b*255) .. round(remaining / 60 / 60) .. "|rh"
   elseif remaining > 99 then
     local r,g,b,a = pfUI.api.GetStringColor(C.appearance.cd.minutecolor)
-    return "|cff" .. string.format("%02x%02x%02x", r*255, g*255, b*255) .. round(remaining / 60) .. "m"
+    return "|cff" .. string.format("%02x%02x%02x", r*255, g*255, b*255) .. round(remaining / 60) .. "|rm"
   elseif remaining <= 5 then
     local r,g,b,a = pfUI.api.GetStringColor(C.appearance.cd.lowcolor)
     return "|cff" .. string.format("%02x%02x%02x", r*255, g*255, b*255) .. round(remaining)

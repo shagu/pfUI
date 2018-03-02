@@ -948,11 +948,29 @@ pfUI:RegisterModule("gui", function ()
     if not this.setup then
       CreateConfig(nil, this, T["Enable Zone Text On Minimap Mouseover"], C.appearance.minimap, "mouseoverzone", "checkbox")
       CreateConfig(nil, this, T["Coordinates Location"], C.appearance.minimap, "coordsloc", "dropdown", pfUI.gui.dropdowns.minimap_cords_position)
-      CreateConfig(nil, this, T["Disable Minimap Buffs"], C.global, "hidebuff", "checkbox")
-      CreateConfig(nil, this, T["Disable Minimap Weapon Buffs"], C.global, "hidewbuff", "checkbox")
       CreateConfig(nil, this, T["Show PvP Icon"], C.unitframes.player, "showPVPMinimap", "checkbox")
       CreateConfig(nil, this, T["Show Inactive Tracking"], C.appearance.minimap, "tracking_pulse", "checkbox")
       CreateConfig(nil, this, T["Tracking Icon Size"], C.appearance.minimap, "tracking_size")
+      this.setup = true
+    end
+  end)
+
+  -- [[ Buffs ]]
+  pfUI.gui.tabs.buffs = pfUI.gui.tabs:CreateTabChild(T["Buffs"], nil, nil, nil, true)
+  pfUI.gui.tabs.buffs.tabs = CreateTabFrame(pfUI.gui.tabs.buffs, "TOP", true)
+
+  -- >> General
+  pfUI.gui.tabs.buffs.tabs.general = pfUI.gui.tabs.buffs.tabs:CreateTabChild(T["Buffs"], true)
+  pfUI.gui.tabs.buffs.tabs.general:SetScript("OnShow", function()
+    if not this.setup then
+      CreateConfig(update["buff"], this, T["Enable Buff Display"], C.buffs, "buffs", "checkbox")
+      CreateConfig(update["buff"], this, T["Enable Debuff Display"], C.buffs, "debuffs", "checkbox")
+      CreateConfig(update["buff"], this, T["Enable Weapon Buff Display"], C.buffs, "weapons", "checkbox")
+      CreateConfig(update["buff"], this, T["Buff Size"], C.buffs, "size")
+      CreateConfig(update["buff"], this, T["Buff Spacing"], C.buffs, "spacing")
+      CreateConfig(update["buff"], this, T["Number Of Buffs Per Row"], C.buffs, "rowsize")
+      CreateConfig(update["buff"], this, T["Show Duration Inside Buff"], C.buffs, "textinside", "checkbox")
+      CreateConfig(update["buff"], this, T["Buff Font Size"], C.buffs, "fontsize")
       this.setup = true
     end
   end)

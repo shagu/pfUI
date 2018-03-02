@@ -44,6 +44,15 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("global",     nil,           "autorepair",       "0")
   pfUI:UpdateConfig("gui",        nil,           "reloadmarker",     "0")
 
+  pfUI:UpdateConfig("buffs",      nil,           "buffs",            "1")
+  pfUI:UpdateConfig("buffs",      nil,           "debuffs",          "1")
+  pfUI:UpdateConfig("buffs",      nil,           "weapons",          "1")
+  pfUI:UpdateConfig("buffs",      nil,           "size",             "24")
+  pfUI:UpdateConfig("buffs",      nil,           "spacing",          "5")
+  pfUI:UpdateConfig("buffs",      nil,           "rowsize",          "16")
+  pfUI:UpdateConfig("buffs",      nil,           "textinside",       "0")
+  pfUI:UpdateConfig("buffs",      nil,           "fontsize",         "-1")
+
   pfUI:UpdateConfig("appearance", "border",      "background",       "0,0,0,1")
   pfUI:UpdateConfig("appearance", "border",      "color",            "0.2,0.2,0.2,1")
   pfUI:UpdateConfig("appearance", "border",      "default",          "3")
@@ -794,6 +803,13 @@ function pfUI:MigrateConfig()
       pfUI_config.unitframes["group"].glowcombat = "0"
       pfUI_config.unitframes["group"].glowaggro = "0"
     end
+  end
+
+  -- migrating old buff settings (> 3.6.1)
+  if checkversion(3, 6, 1) then
+    pfUI_config.buffs.weapons =  pfUI_config.global.hidewbuff == "1" and "0" or "1"
+    pfUI_config.buffs.buffs   =  pfUI_config.global.hidebuff  == "1" and "0" or "1"
+    pfUI_config.buffs.debuffs =  pfUI_config.global.hidebuff  == "1" and "0" or "1"
   end
 
   pfUI_config.version = pfUI.version.string
