@@ -50,7 +50,7 @@ pfUI:RegisterModule("skin", function ()
 
   local pfUIButton = CreateFrame("Button", "GameMenuButtonPFUI", GameMenuFrame, "GameMenuButtonTemplate")
   pfUIButton:SetPoint("TOP", 0, -10)
-  pfUIButton:SetText(T["pfUI Settings"])
+  pfUIButton:SetText(T["|cff33ffccpf|cffffffffUI|cffcccccc Config"])
   pfUIButton:SetScript("OnClick", function()
     pfUI.gui:Show()
     HideUIPanel(GameMenuFrame)
