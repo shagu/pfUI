@@ -10,6 +10,21 @@ f:SetScript("OnEvent", function()
     },
   }
 
+  -- pfUI Dark
+  pfUI_profiles["pfUI Dark"] = {
+    ["appearance"] = {
+      ["border"] = {
+        ["color"] = "0.0,0.0,0.0,1",
+        ["background"] = "0.02,0.02,0.02,0.75",
+      },
+    },
+    ["chat"] = {
+      ["right"] = {
+        ["enable"] = "1",
+      },
+    },
+  }
+
   -- Slim
   pfUI_profiles["Slim"] = {
     ["panel"] = {
