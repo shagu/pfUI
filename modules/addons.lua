@@ -75,19 +75,33 @@ pfUI:RegisterModule("addons", function ()
 
       -- basic frame
       if not pfUI.addons.list[i] then
-        pfUI.addons.list[i] = CreateFrame("Frame", nil, pfUI.addons.list)
+        pfUI.addons.list[i] = CreateFrame("Button", nil, pfUI.addons.list)
         local frame = pfUI.addons.list[i]
 
         frame:SetWidth(350)
         frame:SetHeight(25)
-        frame:SetBackdrop(pfUI.backdrop_underline)
-        frame:SetBackdropBorderColor(.1,.1,.1,1)
         frame:SetPoint("TOPLEFT", 25, i * -25)
+
+        frame:SetBackdrop(pfUI.backdrop_hover)
+        frame:SetBackdropBorderColor(1,1,1,.04)
+
+        frame:EnableMouse(1)
+        frame:SetScript("OnEnter", function()
+          this:SetBackdropBorderColor(1,1,1,.08)
+        end)
+
+        frame:SetScript("OnLeave", function()
+          this:SetBackdropBorderColor(1,1,1,.04)
+        end)
+
+        frame:SetScript("OnClick", function()
+          this.input:Click()
+        end)
 
         -- caption
         frame.caption = frame:CreateFontString("Status", "LOW", "GameFontNormal")
         frame.caption:SetFont(pfUI.font_default, C.global.font_size + 2, "OUTLINE")
-        frame.caption:SetAllPoints(frame)
+        frame.caption:SetPoint("LEFT", frame, "LEFT", 2, 0)
         frame.caption:SetFontObject(GameFontWhite)
         frame.caption:SetJustifyH("LEFT")
         frame.caption:SetText(atitle)
@@ -99,11 +113,10 @@ pfUI:RegisterModule("addons", function ()
         frame.input:SetPushedTexture("")
         frame.input:SetHighlightTexture("")
         CreateBackdrop(frame.input, nil, true)
-        --frame.input:SetBackdrop(pfUI.backdrop)
         frame.input:SetBackdropBorderColor(.3,.3,.3,1)
         frame.input:SetWidth(14)
         frame.input:SetHeight(14)
-        frame.input:SetPoint("TOPRIGHT" , 0, -4)
+        frame.input:SetPoint("RIGHT" , -5, 1)
         frame.input:SetID(i)
         frame.input:SetScript("OnClick", function ()
           if this:GetChecked() then

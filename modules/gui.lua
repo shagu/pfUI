@@ -27,17 +27,16 @@ pfUI:RegisterModule("gui", function ()
     frame:SetPoint("TOPLEFT", 25, parent.objectCount * -25)
     frame:EnableMouse(true)
     frame:SetScript("OnEnter", function()
-      this:SetBackdropBorderColor(1,1,1,.3)
+      this:SetBackdropBorderColor(1,1,1,.08)
     end)
 
     frame:SetScript("OnLeave", function()
-      this:SetBackdropBorderColor(1,1,1,.15)
+      this:SetBackdropBorderColor(1,1,1,.04)
     end)
 
     if not widget or (widget and widget ~= "button") then
-
-      frame:SetBackdrop(pfUI.backdrop_underline)
-      frame:SetBackdropBorderColor(1,1,1,.15)
+      frame:SetBackdrop(pfUI.backdrop_hover)
+      frame:SetBackdropBorderColor(1,1,1,.04)
 
       if not ufunc and widget ~= "header" and C.gui.reloadmarker == "1" then
         caption = caption .. " [|cffffaaaa!|r]"
@@ -46,7 +45,7 @@ pfUI:RegisterModule("gui", function ()
       -- caption
       frame.caption = frame:CreateFontString("Status", "LOW", "GameFontNormal")
       frame.caption:SetFont(pfUI.font_default, C.global.font_size + 2, "OUTLINE")
-      frame.caption:SetAllPoints(frame)
+      frame.caption:SetPoint("LEFT", frame, "LEFT", 3, 1)
       frame.caption:SetFontObject(GameFontWhite)
       frame.caption:SetJustifyH("LEFT")
       frame.caption:SetText(caption)
@@ -64,7 +63,7 @@ pfUI:RegisterModule("gui", function ()
       frame.color:SetWidth(24)
       frame.color:SetHeight(12)
       CreateBackdrop(frame.color)
-      frame.color:SetPoint("TOPRIGHT" , 0, -4)
+      frame.color:SetPoint("RIGHT" , -5, 1)
       frame.color.prev = frame.color.backdrop:CreateTexture("OVERLAY")
       frame.color.prev:SetAllPoints(frame.color)
 
@@ -136,12 +135,14 @@ pfUI:RegisterModule("gui", function ()
     if not widget or widget == "text" then
       -- input field
       frame.input = CreateFrame("EditBox", nil, frame)
+      CreateBackdrop(frame.input, nil, true)
+      frame.input:SetTextInsets(5, 5, 5, 5)
       frame.input:SetTextColor(.2,1,.8,1)
       frame.input:SetJustifyH("RIGHT")
 
       frame.input:SetWidth(100)
-      frame.input:SetHeight(16)
-      frame.input:SetPoint("TOPRIGHT" , 0, -2)
+      frame.input:SetHeight(18)
+      frame.input:SetPoint("RIGHT" , -3, 0)
       frame.input:SetFontObject(GameFontNormal)
       frame.input:SetAutoFocus(false)
       frame.input:SetText(category[config])
@@ -185,7 +186,7 @@ pfUI:RegisterModule("gui", function ()
       CreateBackdrop(frame.input, nil, true)
       frame.input:SetWidth(14)
       frame.input:SetHeight(14)
-      frame.input:SetPoint("TOPRIGHT" , 0, -4)
+      frame.input:SetPoint("RIGHT" , -5, 1)
       frame.input:SetScript("OnClick", function ()
         if this:GetChecked() then
           this:GetParent().category[this:GetParent().config] = "1"
@@ -207,7 +208,7 @@ pfUI:RegisterModule("gui", function ()
 
       frame.input = CreateFrame("Frame", "pfUIDropDownMenu" .. name, frame, "UIDropDownMenuTemplate")
       frame.input:ClearAllPoints()
-      frame.input:SetPoint("TOPRIGHT" , 20, 3)
+      frame.input:SetPoint("RIGHT" , 16, -2)
       frame.input:Show()
       frame.input.point = "TOPRIGHT"
       frame.input.relativePoint = "BOTTOMRIGHT"

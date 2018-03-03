@@ -25,9 +25,7 @@ pfUI_playerDB = {}
 pfUI_config = {}
 pfUI_init = {}
 pfUI_profiles = {}
-if not pfUI_gold then
-  pfUI_gold = {}
-end
+pfUI_gold = {}
 
 -- localization
 pfUI_locale = {}
@@ -115,20 +113,15 @@ function pfUI:RegisterSkin(n, f)
 end
 
 pfUI.backdrop = {
-  bgFile = "Interface\\AddOns\\pfUI\\img\\col", tile = true, tileSize = 8,
-  edgeFile = "Interface\\AddOns\\pfUI\\img\\border", edgeSize = 8,
+  bgFile = "Interface\\BUTTONS\\WHITE8X8", tile = false, tileSize = 0,
+  edgeFile = "Interface\\BUTTONS\\WHITE8X8", edgeSize = 1,
   insets = {left = -1, right = -1, top = -1, bottom = -1},
 }
+pfUI.backdrop_no_top = pfUI.backdrop
 
-pfUI.backdrop_no_top = {
-  bgFile = "Interface\\AddOns\\pfUI\\img\\col", tile = true, tileSize = 8,
-  edgeFile = "Interface\\AddOns\\pfUI\\img\\border_no_top", edgeSize = 8,
+pfUI.backdrop_hover = {
+  edgeFile = "Interface\\BUTTONS\\WHITE8X8", edgeSize = 24,
   insets = {left = -1, right = -1, top = -1, bottom = -1},
-}
-
-pfUI.backdrop_underline = {
-  edgeFile = "Interface\\AddOns\\pfUI\\img\\underline", edgeSize = 8,
-  insets = {left = 0, right = 0, top = 0, bottom = 0},
 }
 
 message = function (msg)

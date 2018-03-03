@@ -45,7 +45,7 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("gui",        nil,           "reloadmarker",     "0")
 
   pfUI:UpdateConfig("appearance", "border",      "background",       "0,0,0,1")
-  pfUI:UpdateConfig("appearance", "border",      "color",            "0.3,0.3,0.3,1")
+  pfUI:UpdateConfig("appearance", "border",      "color",            "0.2,0.2,0.2,1")
   pfUI:UpdateConfig("appearance", "border",      "default",          "3")
   pfUI:UpdateConfig("appearance", "border",      "actionbars",       "-1")
   pfUI:UpdateConfig("appearance", "border",      "unitframes",       "-1")
