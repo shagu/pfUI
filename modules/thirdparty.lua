@@ -151,9 +151,9 @@ pfUI:RegisterModule("thirdparty", function ()
       KLHTM_Gui.title.back:Hide()
       KLHTM_SetGuiScale(.9)
 
-      CreateBackdrop(KLHTM_Frame)
+      CreateBackdrop(KLHTM_Frame, nil, nil, .8)
 
-      if C.thirdparty.chatbg == "1" then
+      if C.thirdparty.chatbg == "1" and C.chat.global.custombg == "1" then
         local r, g, b, a = strsplit(",", C.chat.global.background)
         KLHTM_Frame.backdrop:SetBackdropColor(tonumber(r), tonumber(g), tonumber(b), tonumber(a))
 
@@ -272,9 +272,9 @@ pfUI:RegisterModule("thirdparty", function ()
 
         for k, val in pairs(DPSMateSettings["windows"]) do
           local frame = _G["DPSMate_"..val["name"]]
-          CreateBackdrop(frame)
+          CreateBackdrop(frame, nil, nil, .8)
 
-          if C.thirdparty.chatbg == "1" then
+          if C.thirdparty.chatbg == "1" and C.chat.global.custombg == "1" then
             local r, g, b, a = strsplit(",", C.chat.global.background)
             frame.backdrop:SetBackdropColor(tonumber(r), tonumber(g), tonumber(b), tonumber(a))
 
@@ -336,9 +336,9 @@ pfUI:RegisterModule("thirdparty", function ()
       SW_BarFrame1.swoBarY = -22
       _G.SW_BARSEPY = 1
 
-      CreateBackdrop(SW_BarFrame1)
+      CreateBackdrop(SW_BarFrame1, nil, nil, .8)
 
-      if C.thirdparty.chatbg == "1" then
+      if C.thirdparty.chatbg == "1" and C.chat.global.custombg == "1" then
         local r, g, b, a = strsplit(",", C.chat.global.background)
         SW_BarFrame1.backdrop:SetBackdropColor(tonumber(r), tonumber(g), tonumber(b), tonumber(a))
 
