@@ -125,7 +125,7 @@ pfUI.backdrop_hover = {
 }
 
 message = function (msg)
-  DEFAULT_CHAT_FRAME:AddMessage("|cffcccc33INFO: |cffffff55"..msg)
+  DEFAULT_CHAT_FRAME:AddMessage("|cffcccc33INFO: |cffffff55" .. ( msg or "nil" ))
 end
 
 ScriptErrors:SetScript("OnShow", function(msg)
