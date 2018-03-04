@@ -699,6 +699,8 @@ pfUI:RegisterModule("gui", function ()
       CreateConfig(nil, this, T["Panel Border Size"], C.appearance.border, "panels")
       CreateConfig(nil, this, T["Chat Border Size"], C.appearance.border, "chat")
       CreateConfig(nil, this, T["Bags Border Size"], C.appearance.border, "bags")
+      CreateConfig(nil, this) -- spacer
+      CreateConfig(nil, this, T["Enable Combat Glow Effects On Screen Edges"], C.appearance.infight, "screen", "checkbox")
       this.setup = true
     end
   end)
@@ -878,21 +880,6 @@ pfUI:RegisterModule("gui", function ()
       end)
     end
   end
-
-  -- [[ Combat ]]
-  pfUI.gui.tabs.combat = pfUI.gui.tabs:CreateTabChild(T["Combat"], nil, nil, nil, true)
-  pfUI.gui.tabs.combat.tabs = CreateTabFrame(pfUI.gui.tabs.combat, "TOP", true)
-
-  -- >> General
-  pfUI.gui.tabs.combat.tabs.general = pfUI.gui.tabs.combat.tabs:CreateTabChild(T["Combat"], true)
-  pfUI.gui.tabs.combat.tabs.general:SetScript("OnShow", function()
-    if not this.setup then
-      CreateConfig(nil, this, T["Enable Combat Glow Effects On Screen Edges"], C.appearance.infight, "screen", "checkbox")
-      CreateConfig(nil, this, T["Enable Combat Glow Effects On Unit Frames"], C.appearance.infight, "common", "checkbox")
-      CreateConfig(nil, this, T["Enable Combat Glow Effects On Group Frames"], C.appearance.infight, "group", "checkbox")
-      this.setup = true
-    end
-  end)
 
 
   -- [[ Bags & Bank ]]
