@@ -51,8 +51,13 @@ pfUI:RegisterModule("gui", function ()
       frame.caption:SetText(caption)
     end
 
-    frame.configCategory = category
-    frame.configEntry = config
+    if category == "CVAR" then
+      category = {}
+      category[config] = tostring(GetCVar(config))
+      ufunc = function()
+        SetCVar(this:GetParent().config, this:GetParent().category[config])
+      end
+    end
 
     frame.category = category
     frame.config = config
