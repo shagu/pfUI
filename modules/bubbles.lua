@@ -2,9 +2,6 @@ pfUI:RegisterModule("bubbles", function ()
 
   local alpha = tonumber(C.chat.bubbles.alpha)
 
-  SetCVar("chatBubbles", tonumber(C.chat.bubbles.chat))
-  SetCVar("chatBubblesParty", tonumber(C.chat.bubbles.party))
-
   pfUI.bubbles = CreateFrame("Frame", "pfChatBubbles", UIParent)
   pfUI.bubbles:RegisterEvent("CHAT_MSG_SAY")
   pfUI.bubbles:RegisterEvent("CHAT_MSG_YELL")
