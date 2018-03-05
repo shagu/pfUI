@@ -522,6 +522,19 @@ function pfUI.api.SetAutoPoint(frame, parent, spacing)
   end
 end
 
+-- [ GetDefaultColors ]
+-- Queries the pfUI settings to get the default colors
+-- returns r,g,b,a,r,g,b,a (bg, border)
+local color_cache = false
+function pfUI.api.GetDefaultColors()
+    if not color_cache then
+      local br, bg, bb, ba = pfUI.api.strsplit(",", pfUI_config.appearance.border.background)
+      local er, eg, eb, ea = pfUI.api.strsplit(",", pfUI_config.appearance.border.color)
+      color_cache = { br, bg, bb, ba, er, eg, eb, ea }
+    end
+    return unpack(color_cache)
+end
+
 -- [ Create Backdrop ]
 -- Creates a pfUI compatible frame as backdrop element
 -- 'f'          [frame]         the frame which should get a backdrop.
@@ -538,16 +551,7 @@ function pfUI.api.CreateBackdrop(f, inset, legacy, transp, backdropSetting)
     border = tonumber(pfUI_config.appearance.border.default)
   end
 
-  -- bg and edge colors
-  if not pfUI.cache.br then
-    local br, bg, bb, ba = pfUI.api.strsplit(",", pfUI_config.appearance.border.background)
-    local er, eg, eb, ea = pfUI.api.strsplit(",", pfUI_config.appearance.border.color)
-    pfUI.cache.br, pfUI.cache.bg, pfUI.cache.bb, pfUI.cache.ba = br, bg, bb, ba
-    pfUI.cache.er, pfUI.cache.eg, pfUI.cache.eb, pfUI.cache.ea = er, eg, eb, ea
-  end
-
-  local br, bg, bb, ba =  pfUI.cache.br, pfUI.cache.bg, pfUI.cache.bb, pfUI.cache.ba
-  local er, eg, eb, ea = pfUI.cache.er, pfUI.cache.eg, pfUI.cache.eb, pfUI.cache.ea
+  local br, bg, bb, ba, er, eg, eb, ea = pfUI.api.GetDefaultColors()
   if transp then ba = transp end
 
   -- use legacy backdrop handling
