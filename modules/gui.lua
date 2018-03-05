@@ -63,15 +63,14 @@ pfUI:RegisterModule("gui", function ()
       category = {}
       category[config] = tostring(_G[config] or 0)
 
+      local update = ufunc
+
       ufunc = function()
         _G[config] = this:GetChecked() and 1 or nil
         UIOptionsFrame_Save()
-
-        -- refresh elements
-        MultiActionBar_Update()
-        MultiActionBar_UpdateGridVisibility();
-        UIParent_ManageFramePositions();
-        UpdateMicroButtons()
+        if update then
+          update()
+        end
       end
     end
 
@@ -967,6 +966,7 @@ pfUI:RegisterModule("gui", function ()
     if not this.setup then
       CreateConfig(nil, this, T["Icon Size"], C.bars, "icon_size")
       CreateConfig(nil, this, T["Enable Action Bar Backgrounds"], C.bars, "background", "checkbox")
+      CreateConfig(MultiActionBar_UpdateGridVisibility, this, T["Always Show Action Bar Buttons"], "GVAR", "ALWAYS_SHOW_MULTIBARS", "checkbox")
       CreateConfig(nil, this, T["Enable Range Display On Hotkeys"], C.bars, "glowrange", "checkbox")
       CreateConfig(nil, this, T["Range Display Color"], C.bars, "rangecolor", "color")
       CreateConfig(nil, this, T["Show Macro Text"], C.bars, "showmacro", "checkbox")
@@ -975,6 +975,28 @@ pfUI:RegisterModule("gui", function ()
       CreateConfig(nil, this, T["Enable Range Based Auto Paging (Hunter)"], C.bars, "hunterbar", "checkbox")
       CreateConfig(nil, this, T["Enable Action On Key Down"], C.bars, "keydown", "checkbox")
       CreateConfig(nil, this, T["Switch Bar On Meta Key Press"], C.bars, "pagemaster", "checkbox")
+      this.setup = true
+    end
+  end)
+
+  -- >> Layout
+  pfUI.gui.tabs.actionbar.tabs.layout = pfUI.gui.tabs.actionbar.tabs:CreateTabChild(T["Layout"], true)
+  pfUI.gui.tabs.actionbar.tabs.layout:SetScript("OnShow", function()
+    if not this.setup then
+      CreateConfig(UIParent_ManageFramePositions, this, T["Enable Second Actionbar (BottomLeft)"], "GVAR", "SHOW_MULTI_ACTIONBAR_1", "checkbox")
+      CreateConfig(UIParent_ManageFramePositions, this, T["Enable Left Actionbar (BottomRight)"], "GVAR", "SHOW_MULTI_ACTIONBAR_2", "checkbox")
+      CreateConfig(UIParent_ManageFramePositions, this, T["Enable Right Actionbar (Right)"], "GVAR", "SHOW_MULTI_ACTIONBAR_3", "checkbox")
+      CreateConfig(UIParent_ManageFramePositions, this, T["Enable Vertical Actionbar (TwoRight)"], "GVAR", "SHOW_MULTI_ACTIONBAR_4", "checkbox")
+
+      CreateConfig(update[c], this, T["Form Factor"], nil, nil, "header")
+      CreateConfig(nil, this, T["Main Actionbar (ActionMain)"], C.bars.actionmain, "formfactor", "dropdown", pfUI.gui.dropdowns.num_actionbar_buttons)
+      CreateConfig(nil, this, T["Second Actionbar (BottomLeft)"], C.bars.bottomleft, "formfactor", "dropdown", pfUI.gui.dropdowns.num_actionbar_buttons)
+      CreateConfig(nil, this, T["Left Actionbar (BottomRight)"], C.bars.bottomright, "formfactor", "dropdown", pfUI.gui.dropdowns.num_actionbar_buttons)
+      CreateConfig(nil, this, T["Right Actionbar (Right)"], C.bars.right, "formfactor", "dropdown", pfUI.gui.dropdowns.num_actionbar_buttons)
+      CreateConfig(nil, this, T["Vertical Actionbar (TwoRight)"], C.bars.tworight, "formfactor", "dropdown", pfUI.gui.dropdowns.num_actionbar_buttons)
+      CreateConfig(nil, this, T["Shapeshift Bar (BarShapeShift)"], C.bars.shapeshift, "formfactor", "dropdown", pfUI.gui.dropdowns.num_shapeshift_slots)
+      CreateConfig(nil, this, T["Pet Bar (BarPet)"], C.bars.pet, "formfactor", "dropdown", pfUI.gui.dropdowns.num_pet_action_slots)
+      CreateConfig(nil, this, T["Enable Actionbars"], nil, nil, "button", function() ShowUIPanel(UIOptionsFrame); UIOptionsFrameTab2:Click() end)
       this.setup = true
     end
   end)
@@ -994,22 +1016,6 @@ pfUI:RegisterModule("gui", function ()
       this.setup = true
     end
   end)
-
-  -- >> Layout
-  pfUI.gui.tabs.actionbar.tabs.layout = pfUI.gui.tabs.actionbar.tabs:CreateTabChild(T["Layout"], true)
-  pfUI.gui.tabs.actionbar.tabs.layout:SetScript("OnShow", function()
-    if not this.setup then
-      CreateConfig(nil, this, T["Main Actionbar (ActionMain)"], C.bars.actionmain, "formfactor", "dropdown", pfUI.gui.dropdowns.num_actionbar_buttons)
-      CreateConfig(nil, this, T["Second Actionbar (BottomLeft)"], C.bars.bottomleft, "formfactor", "dropdown", pfUI.gui.dropdowns.num_actionbar_buttons)
-      CreateConfig(nil, this, T["Left Actionbar (BottomRight)"], C.bars.bottomright, "formfactor", "dropdown", pfUI.gui.dropdowns.num_actionbar_buttons)
-      CreateConfig(nil, this, T["Right Actionbar (Right)"], C.bars.right, "formfactor", "dropdown", pfUI.gui.dropdowns.num_actionbar_buttons)
-      CreateConfig(nil, this, T["Vertical Actionbar (TwoRight)"], C.bars.tworight, "formfactor", "dropdown", pfUI.gui.dropdowns.num_actionbar_buttons)
-      CreateConfig(nil, this, T["Shapeshift Bar (BarShapeShift)"], C.bars.shapeshift, "formfactor", "dropdown", pfUI.gui.dropdowns.num_shapeshift_slots)
-      CreateConfig(nil, this, T["Pet Bar (BarPet)"], C.bars.pet, "formfactor", "dropdown", pfUI.gui.dropdowns.num_pet_action_slots)
-      this.setup = true
-    end
-  end)
-
 
   -- [[ Panel ]]
   pfUI.gui.tabs.panel = pfUI.gui.tabs:CreateTabChild(T["Panel"], nil, nil, nil, true)

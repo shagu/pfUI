@@ -240,7 +240,10 @@ pfUI:RegisterModule("actionbar", function ()
   PetActionBarFrame:SetParent(pfUI.bars.pet)
 
   pfUI.bars:SetScript("OnEvent", function()
-      MultiActionBar_UpdateGridVisibility()
+      MultiActionBar_Update()
+      UIParent_ManageFramePositions();
+      MultiActionBar_Update()
+      UpdateMicroButtons()
 
       BarLayoutSize(pfUI.bars.actionmain, NUM_ACTIONBAR_BUTTONS, C.bars.actionmain.formfactor, C.bars.icon_size, default_border)
       pfUI.bars.actionmain:SetWidth(pfUI.bars.actionmain._size[1])
@@ -419,6 +422,10 @@ pfUI:RegisterModule("actionbar", function ()
 
       if SHOW_MULTI_ACTIONBAR_4 then
         pfUI.bars.tworight:Show()
+        for i=1, NUM_ACTIONBAR_BUTTONS do
+          _G["MultiBarLeftButton"..i]:Show()
+        end
+
         pfUI.bars.tworight:SetFrameStrata("LOW")
         pfUI.bars.tworight:ClearAllPoints()
         pfUI.bars.tworight:SetPoint("RIGHT", UIParent, "RIGHT", -5, 0)
