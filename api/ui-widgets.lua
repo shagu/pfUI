@@ -119,6 +119,7 @@ end
 function pfUI.api.CreateScrollFrame(name, parent)
   local f = CreateFrame("ScrollFrame", name, parent)
 
+  local br, bg, bb, ba = GetDefaultColors()
   f.Scroll = function(self, step)
     local current = self:GetVerticalScroll()
     local new = current + step*-25
@@ -145,7 +146,7 @@ function pfUI.api.CreateScrollFrame(name, parent)
 
   f.deco_up.fader = f.deco_up:CreateTexture("OVERLAY")
   f.deco_up.fader:SetTexture(1,1,1,1)
-  f.deco_up.fader:SetGradientAlpha("VERTICAL", 0, 0, 0, 0, 0, 0, 0, 1)
+  f.deco_up.fader:SetGradientAlpha("VERTICAL", br, bg, bb, 0, br, bg, bb, 1)
   f.deco_up.fader:SetAllPoints(f.deco_up)
 
   f.deco_up_indicator = CreateFrame("Button", nil, f.deco_up)
@@ -183,7 +184,7 @@ function pfUI.api.CreateScrollFrame(name, parent)
 
   f.deco_down.fader = f.deco_down:CreateTexture("OVERLAY")
   f.deco_down.fader:SetTexture(1,1,1,1)
-  f.deco_down.fader:SetGradientAlpha("VERTICAL", 0, 0, 0, 1, 0, 0, 0, 0)
+  f.deco_down.fader:SetGradientAlpha("VERTICAL", br, bg, bb, 0, br, bg, bb, 1)
   f.deco_down.fader:SetAllPoints(f.deco_down)
 
   f.deco_down_indicator = CreateFrame("Button", nil, f.deco_down)
