@@ -996,7 +996,6 @@ pfUI:RegisterModule("gui", function ()
       CreateConfig(nil, this, T["Vertical Actionbar (TwoRight)"], C.bars.tworight, "formfactor", "dropdown", pfUI.gui.dropdowns.num_actionbar_buttons)
       CreateConfig(nil, this, T["Shapeshift Bar (BarShapeShift)"], C.bars.shapeshift, "formfactor", "dropdown", pfUI.gui.dropdowns.num_shapeshift_slots)
       CreateConfig(nil, this, T["Pet Bar (BarPet)"], C.bars.pet, "formfactor", "dropdown", pfUI.gui.dropdowns.num_pet_action_slots)
-      CreateConfig(nil, this, T["Enable Actionbars"], nil, nil, "button", function() ShowUIPanel(UIOptionsFrame); UIOptionsFrameTab2:Click() end)
       this.setup = true
     end
   end)
