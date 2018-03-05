@@ -184,7 +184,7 @@ function pfUI.api.CreateScrollFrame(name, parent)
 
   f.deco_down.fader = f.deco_down:CreateTexture("OVERLAY")
   f.deco_down.fader:SetTexture(1,1,1,1)
-  f.deco_down.fader:SetGradientAlpha("VERTICAL", br, bg, bb, 0, br, bg, bb, 1)
+  f.deco_down.fader:SetGradientAlpha("VERTICAL", br, bg, bb, 1, br, bg, bb, 0)
   f.deco_down.fader:SetAllPoints(f.deco_down)
 
   f.deco_down_indicator = CreateFrame("Button", nil, f.deco_down)
