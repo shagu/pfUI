@@ -59,6 +59,22 @@ pfUI:RegisterModule("gui", function ()
       end
     end
 
+    if category == "GVAR" then
+      category = {}
+      category[config] = tostring(_G[config] or 0)
+
+      ufunc = function()
+        _G[config] = this:GetChecked() and 1 or nil
+        UIOptionsFrame_Save()
+
+        -- refresh elements
+        MultiActionBar_Update()
+        MultiActionBar_UpdateGridVisibility();
+        UIParent_ManageFramePositions();
+        UpdateMicroButtons()
+      end
+    end
+
     frame.category = category
     frame.config = config
 
