@@ -586,7 +586,7 @@ pfUI:RegisterModule("gui", function ()
       CreateConfig(nil, this, T["Enable Offscreen Frame Positions"], C.global, "offscreen", "checkbox")
       CreateConfig(nil, this, T["Enable Single Line UIErrors"], C.global, "errors_limit", "checkbox")
       CreateConfig(nil, this, T["Disable All UIErrors"], C.global, "errors_hide", "checkbox")
-      CreateConfig(nil, this, T["Hightlight Settings That Require Reload"], C.gui, "reloadmarker", "checkbox")
+      CreateConfig(nil, this, T["Highlight Settings That Require Reload"], C.gui, "reloadmarker", "checkbox")
 
       -- Delete / Reset
       CreateConfig(nil, this, T["Delete / Reset"], nil, nil, "header")
