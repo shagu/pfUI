@@ -972,8 +972,8 @@ function pfUI.uf:RefreshUnit(unit, component)
       end
 
       unit.debuffs[i]:SetPoint(af, unit, as,
-      (i-1-(row)*perrow)*((2*default_border) + unit.config.debuffsize + 1),
-      invert * (row+buffrow)*((2*default_border) + unit.config.debuffsize + 1) + invert*(2*default_border + 1))
+      (i-1-(row)*perrow)*((2*default_border) + unit.config.debuffsize + 1) + unit.config.debuffhorizontaloffset,
+      invert * (row+buffrow)*((2*default_border) + unit.config.debuffsize + 1) + invert*(2*default_border + 1 + unit.config.debuffverticaloffset))
 
       local texture, stacks, dtype
       if unit.label == "player" then
