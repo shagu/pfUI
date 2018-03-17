@@ -7,6 +7,31 @@ pfUI:RegisterModule("cooldown", function ()
   local hourcolor   = {strsplit(",", C.appearance.cd.hourcolor)}
   local daycolor    = {strsplit(",", C.appearance.cd.daycolor)}
 
+  local function pfCooldownOnUpdate()
+    if not this:GetParent() then this:Hide()  end
+
+    -- avoid to set cooldowns on invalid frames
+    if this:GetParent() and this:GetParent():GetName() and _G[this:GetParent():GetName() .. "Cooldown"] then
+      if not _G[this:GetParent():GetName() .. "Cooldown"]:IsShown() then
+        this:Hide()
+      end
+    end
+
+    if not this.next then this.next = GetTime() + .1 end
+    if this.next > GetTime() then return end
+    this.next = GetTime() + .1
+
+    -- fix own alpha value (should be inherited, but somehow isn't always)
+    this:SetAlpha(this:GetParent():GetAlpha())
+
+    local remaining = this.duration - (GetTime() - this.start)
+    if remaining >= 0 then
+      this.text:SetText(GetColoredTimeString(remaining))
+    else
+      this:Hide()
+    end
+  end
+
   local function pfCreateCoolDown(cooldown, start, duration)
     cooldown.cd = CreateFrame("Frame", "pfCooldownFrame", cooldown:GetParent())
     cooldown.cd:SetAllPoints(cooldown:GetParent())
@@ -16,52 +41,7 @@ pfUI:RegisterModule("cooldown", function ()
     cooldown.cd.text:SetFont(pfUI.font_unit, C.appearance.cd.font_size, "OUTLINE")
     cooldown.cd.text:SetPoint("CENTER", cooldown.cd, "CENTER", 0, 0)
 
-    cooldown.cd:SetScript("OnUpdate", function()
-      if not this:GetParent() then
-        this:Hide()
-      end
-
-      if this:GetParent() and this:GetParent():GetName() and _G[this:GetParent():GetName() .. "Cooldown"] then
-        if not _G[this:GetParent():GetName() .. "Cooldown"]:IsShown() then
-          this:Hide()
-        end
-      end
-
-      if not this.next then this.next = GetTime() + .1 end
-      if this.next > GetTime() then return end
-      this.next = GetTime() + .1
-
-      -- fix own alpha value (should be inherited, but isn't)
-      this:SetAlpha(this:GetParent():GetAlpha())
-
-      local remaining = this.duration - (GetTime() - this.start)
-      if remaining >= 0 then
-        local r, g, b, a = unpack(normalcolor)
-        local unit = ""
-        if remaining <= 3 then
-          r,g,b,a = unpack(lowcolor)
-        end
-        if remaining > 99 then
-          remaining = remaining / 60
-          unit = "m"
-          r,g,b,a = unpack(minutecolor)
-        end
-        if remaining > 99 then
-          remaining = remaining / 60
-          unit = "h"
-          r,g,b,a = unpack(hourcolor)
-        end
-        if remaining > 99 then
-          remaining = remaining / 24
-          unit = "d"
-          r,g,b,a = unpack(daycolor)
-        end
-        this.text:SetText(round(remaining) .. unit)
-        this.text:SetTextColor(r,g,b,a)
-      else
-        this:Hide()
-      end
-    end)
+    cooldown.cd:SetScript("OnUpdate", pfCooldownOnUpdate)
   end
 
   -- hook

@@ -118,8 +118,7 @@ end
 
 function pfUI.api.CreateScrollFrame(name, parent)
   local f = CreateFrame("ScrollFrame", name, parent)
-
-  local br, bg, bb, ba = GetDefaultColors()
+  local br, bg, bb, ba = pfUI.api.GetStringColor(pfUI_config.appearance.border.background)
   f.Scroll = function(self, step)
     local current = self:GetVerticalScroll()
     local new = current + step*-25

@@ -523,16 +523,15 @@ function pfUI.api.SetAutoPoint(frame, parent, spacing)
 end
 
 -- [ GetDefaultColors ]
--- Queries the pfUI settings to get the default colors
--- returns r,g,b,a,r,g,b,a (bg, border)
-local color_cache = false
-function pfUI.api.GetDefaultColors()
-    if not color_cache then
-      local br, bg, bb, ba = pfUI.api.strsplit(",", pfUI_config.appearance.border.background)
-      local er, eg, eb, ea = pfUI.api.strsplit(",", pfUI_config.appearance.border.color)
-      color_cache = { br, bg, bb, ba, er, eg, eb, ea }
-    end
-    return unpack(color_cache)
+-- Queries the pfUI setting strings and extract its color codes
+-- returns r,g,b,a
+local color_cache = {}
+function pfUI.api.GetStringColor(colorstr)
+  if not color_cache[colorstr] then
+    local r, g, b, a = pfUI.api.strsplit(",", colorstr)
+    color_cache[colorstr] = { r, g, b, a }
+  end
+  return unpack(color_cache[colorstr])
 end
 
 -- [ Create Backdrop ]
@@ -551,7 +550,9 @@ function pfUI.api.CreateBackdrop(f, inset, legacy, transp, backdropSetting)
     border = tonumber(pfUI_config.appearance.border.default)
   end
 
-  local br, bg, bb, ba, er, eg, eb, ea = pfUI.api.GetDefaultColors()
+  local br, bg, bb, ba = pfUI.api.GetStringColor(pfUI_config.appearance.border.background)
+  local er, eg, eb, ea = pfUI.api.GetStringColor(pfUI_config.appearance.border.color)
+
   if transp then ba = transp end
 
   -- use legacy backdrop handling
@@ -648,7 +649,7 @@ function pfUI.api.BarLayoutSize(bar,barsize,formfactor,iconsize,bordersize,visib
   if (visiblesize) and (visiblesize < barsize) then
     cols = math.min(cols,visiblesize)
     rows = math.min(math.ceil(visiblesize/cols),visiblesize)
-  end  
+  end
   local width = (iconsize + bordersize*3) * cols - bordersize
   local height = (iconsize + bordersize*3) * rows - bordersize
   bar._size = {width,height}
@@ -700,4 +701,29 @@ function pfUI.api.CreateAutohide(frame)
       this.activeTo = GetTime() + tonumber(pfUI_config.bars.hide_time)
     end
   end)
+end
+
+-- [ GetColoredTime ] --
+-- 'remaining'   the time in seconds that should be converted
+-- return        a colored string including a time unit (m/h/d)
+function pfUI.api.GetColoredTimeString(remaining)
+  if not remaining then return "" end
+  if remaining > 99 * 60 * 60 then
+    local r,g,b,a = pfUI.api.GetStringColor(C.appearance.cd.daycolor)
+    return "|cff" .. string.format("%02x%02x%02x", r*255, g*255, b*255) .. round(remaining / 60 / 60 / 24) .. "d"
+  elseif remaining > 99 * 60 then
+    local r,g,b,a = pfUI.api.GetStringColor(C.appearance.cd.hourcolor)
+    return "|cff" .. string.format("%02x%02x%02x", r*255, g*255, b*255) .. round(remaining / 60 / 60) .. "h"
+  elseif remaining > 99 then
+    local r,g,b,a = pfUI.api.GetStringColor(C.appearance.cd.minutecolor)
+    return "|cff" .. string.format("%02x%02x%02x", r*255, g*255, b*255) .. round(remaining / 60) .. "m"
+  elseif remaining <= 5 then
+    local r,g,b,a = pfUI.api.GetStringColor(C.appearance.cd.lowcolor)
+    return "|cff" .. string.format("%02x%02x%02x", r*255, g*255, b*255) .. round(remaining)
+  elseif remaining >= 0 then
+    local r, g, b, a = pfUI.api.GetStringColor(C.appearance.cd.normalcolor)
+    return "|cff" .. string.format("%02x%02x%02x", r*255, g*255, b*255) .. round(remaining)
+  else
+    return ""
+  end
 end
