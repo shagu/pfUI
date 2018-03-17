@@ -23,6 +23,9 @@ pfUI:RegisterModule("hdgraphic", function ()
         UIParent:SetWidth(screenwidth)
         UIParent:SetHeight(screenheight)
         UIParent:SetPoint("CENTER",0,0)
+
+        SetCVar("uiScale", scale)
+        SetCVar("useUiScale", 1)
       end
     end
   end
