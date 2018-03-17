@@ -931,6 +931,7 @@ pfUI:RegisterModule("gui", function ()
       CreateConfig(nil, this, T["Disable Loot Confirmation Dialog (Without Group)"], C.loot, "autopickup", "checkbox")
       CreateConfig(nil, this, T["Enable Loot Window On MouseCursor"], C.loot, "mousecursor", "checkbox")
       CreateConfig(nil, this, T["Enable Advanced Master Loot Menu"], C.loot, "advancedloot", "checkbox")
+      CreateConfig(nil, this, T["Use Item Rarity Color For Loot-Roll Timer"], C.loot, "raritytimer", "checkbox")
       this.setup = true
     end
   end)

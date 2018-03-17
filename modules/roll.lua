@@ -286,6 +286,10 @@ pfUI:RegisterModule("roll", function ()
     pfUI.roll.frames[id].backdrop:SetBackdropBorderColor(color.r, color.g, color.b)
     pfUI.roll.frames[id].time.bar:SetMinMaxValues(0, pfUI.roll.frames[id].rollTime)
 
+    if C.loot.raritytimer == "1" then
+      pfUI.roll.frames[id].time.bar:SetStatusBarColor(color.r, color.g, color.b, .5)
+    end
+
     if bop then
       pfUI.roll.frames[id].boe.text:SetText("BoP")
       pfUI.roll.frames[id].boe.text:SetTextColor(1,.3,.3,1)
