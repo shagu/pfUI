@@ -9,6 +9,18 @@ pfUI:RegisterModule("unlock", function ()
 
   table.insert(UISpecialFrames, "pfUIUnlockMode")
 
+  function pfUI.unlock:SavePosition(frame)
+    local _, _, _, xpos, ypos = frame:GetPoint()
+    if not C.position[frame:GetName()] then
+      C.position[frame:GetName()] = {}
+    end
+
+    C.position[frame:GetName()]["xpos"] = round(xpos)
+    C.position[frame:GetName()]["ypos"] = round(ypos)
+
+    UpdateMovable(frame)
+  end
+
   pfUI.unlock:SetScript("OnShow", function()
     if not this.setup then
       local size = 1
@@ -203,15 +215,7 @@ pfUI:RegisterModule("unlock", function ()
                     if cframe:GetName() ~= frame:GetName() then
                       local _, _, _, xpos, ypos = cframe:GetPoint()
                       cframe:SetPoint("TOPLEFT", xpos - diffxpos, ypos - diffypos)
-
-                      local _, _, _, xpos, ypos = cframe:GetPoint()
-
-                      if not C.position[cframe:GetName()] then
-                        C.position[cframe:GetName()] = {}
-                      end
-
-                      C.position[cframe:GetName()]["xpos"] = xpos
-                      C.position[cframe:GetName()]["ypos"] = ypos
+                      pfUI.unlock:SavePosition(cframe)
                     end
                   end
                 elseif strsub(frame:GetName(),0,6) == "pfRaid" then
@@ -225,15 +229,7 @@ pfUI:RegisterModule("unlock", function ()
                     if cframe:GetName() ~= frame:GetName() then
                       local _, _, _, xpos, ypos = cframe:GetPoint()
                       cframe:SetPoint("TOPLEFT", xpos - diffxpos, ypos - diffypos)
-
-                      local _, _, _, xpos, ypos = cframe:GetPoint()
-
-                      if not C.position[cframe:GetName()] then
-                        C.position[cframe:GetName()] = {}
-                      end
-
-                      C.position[cframe:GetName()]["xpos"] = xpos
-                      C.position[cframe:GetName()]["ypos"] = ypos
+                      pfUI.unlock:SavePosition(cframe)
                     end
                   end
                 elseif strsub(frame:GetName(),0,7) == "pfGroup" then
@@ -243,15 +239,7 @@ pfUI:RegisterModule("unlock", function ()
                     if cframe:GetName() ~= frame:GetName() then
                       local _, _, _, xpos, ypos = cframe:GetPoint()
                       cframe:SetPoint("TOPLEFT", xpos - diffxpos, ypos - diffypos)
-
-                      local _, _, _, xpos, ypos = cframe:GetPoint()
-
-                      if not C.position[cframe:GetName()] then
-                        C.position[cframe:GetName()] = {}
-                      end
-
-                      C.position[cframe:GetName()]["xpos"] = xpos
-                      C.position[cframe:GetName()]["ypos"] = ypos
+                      pfUI.unlock:SavePosition(cframe)
                     end
                   end
                 elseif strsub(frame:GetName(),0,15) == "pfLootRollFrame" then
@@ -261,26 +249,13 @@ pfUI:RegisterModule("unlock", function ()
                     if cframe:GetName() ~= frame:GetName() then
                       local _, _, _, xpos, ypos = cframe:GetPoint()
                       cframe:SetPoint("TOPLEFT", xpos - diffxpos, ypos - diffypos)
-
-                      local _, _, _, xpos, ypos = cframe:GetPoint()
-
-                      if not C.position[cframe:GetName()] then
-                        C.position[cframe:GetName()] = {}
-                      end
-
-                      C.position[cframe:GetName()]["xpos"] = xpos
-                      C.position[cframe:GetName()]["ypos"] = ypos
+                      pfUI.unlock:SavePosition(cframe)
                     end
                   end
                 end
               end
 
-              if not C.position[frame:GetName()] then
-                C.position[frame:GetName()] = {}
-              end
-
-              C.position[frame:GetName()]["xpos"] = xpos
-              C.position[frame:GetName()]["ypos"] = ypos
+              pfUI.unlock:SavePosition(frame)
               pfUI.unlock.settingChanged = true
           end)
         end
