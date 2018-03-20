@@ -1,75 +1,68 @@
--- this must be set during the initial execution
-if GetLocale() == "zhCN" then
-  STANDARD_TEXT_FONT = "Fonts\\FZXHLJW.TTF"
-elseif GetLocale() == "koKR" then
-  STANDARD_TEXT_FONT = "Fonts\\2002.TTF"
-else
-  STANDARD_TEXT_FONT = "Interface\\AddOns\\pfUI\\fonts\\Myriad-Pro.ttf"
-end
-
 function pfUI.environment:UpdateFonts()
-  -- force locale based fonts
-  if pfUI_config and pfUI_config.global and pfUI_config.global.force_region == "1" then
-    if GetLocale() == "zhCN" then
-      pfUI_config.global.font_default = "Fonts\\FZXHLJW.TTF"
-      pfUI_config.global.font_combat = "Fonts\\FZXHLJW.TTF"
-      pfUI_config.global.font_unit = "Fonts\\FZXHLJW.TTF"
-    elseif GetLocale() == "koKR" then
-      pfUI_config.global.font_default = "Fonts\\2002.TTF"
-      pfUI_config.global.font_combat = "Fonts\\2002.TTF"
-      pfUI_config.global.font_unit = "Fonts\\2002.TTF"
-    end
-  end
+  -- abort when config is not ready yet
+  if not pfUI_config or not pfUI_config.global then return end
 
-  if pfUI_config and pfUI_config.global and pfUI_config.global.font_default then
-    pfUI.font_default = pfUI_config.global.font_default or "Interface\\AddOns\\pfUI\\fonts\\Myriad-Pro.ttf"
-    pfUI.font_unit = pfUI_config.global.font_unit or "Interface\\AddOns\\pfUI\\fonts\\BigNoodleTitling.ttf"
-    pfUI.font_combat = pfUI_config.global.font_combat or "Interface\\AddOns\\pfUI\\fonts\\Continuum.ttf"
+  -- load font configuration
+  local default, unit, combat
+  if pfUI_config.global.force_region == "1" and GetLocale() == "zhCN" then
+    -- force locale compatible fonts
+    default = "Fonts\\FZXHLJW.TTF"
+    combat = "Fonts\\FZXHLJW.TTF"
+    unit = "Fonts\\FZXHLJW.TTF"
+  elseif pfUI_config.global.force_region == "1" and GetLocale() == "koKR" then
+    -- force locale compatible fonts
+    default = "Fonts\\2002.TTF"
+    combat = "Fonts\\2002.TTF"
+    unit = "Fonts\\2002.TTF"
   else
-    pfUI.font_default = "Interface\\AddOns\\pfUI\\fonts\\Myriad-Pro.ttf"
-    pfUI.font_unit = "Interface\\AddOns\\pfUI\\fonts\\BigNoodleTitling.ttf"
-    pfUI.font_combat = "Interface\\AddOns\\pfUI\\fonts\\Continuum.ttf"
+    -- use default entries
+    default = pfUI_config.global.font_default
+    combat = pfUI_config.global.font_combat
+    unit = pfUI_config.global.font_unit
   end
 
-  STANDARD_TEXT_FONT = pfUI.font_default;
-  UNIT_NAME_FONT = pfUI.font_default;
-  DAMAGE_TEXT_FONT = pfUI.font_combat;
-  NAMEPLATE_FONT = pfUI.font_default;
+  -- write setting shortcuts
+  pfUI.font_default = default
+  pfUI.font_combat = combat
+  pfUI.font_unit = unit
 
-  SystemFont:SetFont(pfUI.font_default, 15)
-  GameFontNormal:SetFont(pfUI.font_default, 12)
-  GameFontBlack:SetFont(pfUI.font_default, 12)
-  GameFontNormalSmall:SetFont(pfUI.font_default, 11)
-  GameFontNormalLarge:SetFont(pfUI.font_default, 16)
-  GameFontNormalHuge:SetFont(pfUI.font_default, 20)
-  NumberFontNormal:SetFont(pfUI.font_default, 14, "OUTLINE")
-  NumberFontNormalSmall:SetFont(pfUI.font_default, 14, "OUTLINE")
-  NumberFontNormalLarge:SetFont(pfUI.font_default, 16, "OUTLINE")
-  NumberFontNormalHuge:SetFont(pfUI.font_default, 30, "OUTLINE")
-  QuestTitleFont:SetFont(pfUI.font_default, 18)
-  QuestFont:SetFont(pfUI.font_default, 13)
-  QuestFontHighlight:SetFont(pfUI.font_default, 14)
-  ItemTextFontNormal:SetFont(pfUI.font_default, 15)
-  MailTextFontNormal:SetFont(pfUI.font_default, 15)
-  SubSpellFont:SetFont(pfUI.font_default, 12)
-  DialogButtonNormalText:SetFont(pfUI.font_default, 16)
-  ZoneTextFont:SetFont(pfUI.font_default, 34, "OUTLINE")
-  SubZoneTextFont:SetFont(pfUI.font_default, 24, "OUTLINE")
-  TextStatusBarTextSmall:SetFont(pfUI.font_default, 12, "NORMAL")
-  GameTooltipText:SetFont(pfUI.font_default, 12)
-  GameTooltipTextSmall:SetFont(pfUI.font_default, 12)
-  GameTooltipHeaderText:SetFont(pfUI.font_default, 13)
-  WorldMapTextFont:SetFont(pfUI.font_default, 102, "THICK")
-  InvoiceTextFontNormal:SetFont(pfUI.font_default, 12)
-  InvoiceTextFontSmall:SetFont(pfUI.font_default, 12)
-  CombatTextFont:SetFont(pfUI.font_combat, 25)
+  pfUI.font_default_size = default_size
+  pfUI.font_combat_size = combat_size
+  pfUI.font_unit_size = unit_size
 
-  if pfUI_config and pfUI_config.chat and pfUI_config.chat.text.outline == "1" then
-    ChatFontNormal:SetFont(pfUI.font_default, 13, "OUTLINE")
-  else
-    ChatFontNormal:SetFont(pfUI.font_default, 13)
-  end
+  -- set game constants
+  STANDARD_TEXT_FONT = default
+  DAMAGE_TEXT_FONT   = combat
+  NAMEPLATE_FONT     = default
+  UNIT_NAME_FONT     = default
+
+  -- change default game font objects
+  SystemFont:SetFont(default, 15)
+  GameFontNormal:SetFont(default, 12)
+  GameFontBlack:SetFont(default, 12)
+  GameFontNormalSmall:SetFont(default, 11)
+  GameFontNormalLarge:SetFont(default, 16)
+  GameFontNormalHuge:SetFont(default, 20)
+  NumberFontNormal:SetFont(default, 14, "OUTLINE")
+  NumberFontNormalSmall:SetFont(default, 14, "OUTLINE")
+  NumberFontNormalLarge:SetFont(default, 16, "OUTLINE")
+  NumberFontNormalHuge:SetFont(default, 30, "OUTLINE")
+  QuestTitleFont:SetFont(default, 18)
+  QuestFont:SetFont(default, 13)
+  QuestFontHighlight:SetFont(default, 14)
+  ItemTextFontNormal:SetFont(default, 15)
+  MailTextFontNormal:SetFont(default, 15)
+  SubSpellFont:SetFont(default, 12)
+  DialogButtonNormalText:SetFont(default, 16)
+  ZoneTextFont:SetFont(default, 34, "OUTLINE")
+  SubZoneTextFont:SetFont(default, 24, "OUTLINE")
+  TextStatusBarTextSmall:SetFont(default, 12, "NORMAL")
+  GameTooltipText:SetFont(default, 12)
+  GameTooltipTextSmall:SetFont(default, 12)
+  GameTooltipHeaderText:SetFont(default, 13)
+  WorldMapTextFont:SetFont(default, 102, "THICK")
+  InvoiceTextFontNormal:SetFont(default, 12)
+  InvoiceTextFontSmall:SetFont(default, 12)
+  CombatTextFont:SetFont(combat, 25)
+  ChatFontNormal:SetFont(default, 13, pfUI_config.chat.text.outline == "1" and "OUTLINE")
 end
-
--- run environment update
-pfUI.environment:UpdateFonts()
