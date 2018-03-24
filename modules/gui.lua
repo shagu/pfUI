@@ -66,6 +66,7 @@ pfUI:RegisterModule("gui", function ()
       local update = ufunc
 
       ufunc = function()
+        UIOptionsFrame_Load()
         _G[config] = this:GetChecked() and 1 or nil
         UIOptionsFrame_Save()
         if update then
