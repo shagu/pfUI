@@ -309,7 +309,7 @@ pfUI:RegisterModule("unlock", function ()
 
   function pfUI.unlock:UnlockFrames()
     local txt = T["|cff33ffccUnlock Mode|r\nThis mode allows you to move frames by dragging them using the mouse cursor. Frames can be scaled by scrolling up and down.\nTo scale multiple frames at once (eg. raidframes), hold down the shift key while scrolling. Click into an empty space to go back to the pfUI menu."]
-    pfUI.info:ShowInfoBox(txt, 15, pfUI.unlock)
+    CreateInfoBox(txt, 15, pfUI.unlock)
 
     pfUI.unlock:Show()
     pfUI.gui:Hide()

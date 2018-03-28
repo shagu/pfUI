@@ -576,3 +576,79 @@ function pfUI.api.CreateQuestionDialog(text, yes, no, editbox)
   if question.text:GetStringWidth() > 200 then width = question.text:GetStringWidth() end
   question:SetWidth( width + 2*padding)
 end
+
+
+-- [ Question Dialog ]
+-- Creates a pfUI infobox popup window:
+-- 'text'       [string]        text that will be displayed.
+-- 'time'       [number]        time in seconds till the popup will be faded
+-- 'parent'     [frame]         frame which will be used as parent for the dialog (defaults to UIParent)
+-- 'height'     [number]        manual height of the popup (defaults to 100)
+function pfUI.api.CreateInfoBox(text, time, parent, height)
+  if not text then return end
+  if not time then time = 5 end
+  if not parent then parent = UIParent end
+  if not height then height = 100 end
+
+  local infobox = pfInfoBox
+  if not infobox then
+    infobox = CreateFrame("Button", "pfInfoBox", UIParent)
+    infobox:Hide()
+
+    infobox:SetScript("OnUpdate", function()
+      local time = infobox.lastshow + infobox.duration - GetTime()
+      infobox.timeout:SetValue(time)
+
+      if GetTime() > infobox.lastshow + infobox.duration then
+        infobox:SetAlpha(infobox:GetAlpha()-0.05)
+
+        if infobox:GetAlpha() <= 0.1 then
+          infobox:Hide()
+          infobox:SetAlpha(1)
+        end
+      elseif MouseIsOver(this) then
+        this:SetAlpha(max(0.4, this:GetAlpha() - .1))
+      else
+        this:SetAlpha(min(1, this:GetAlpha() + .1))
+      end
+    end)
+
+    infobox:SetScript("OnClick", function()
+      this:Hide()
+    end)
+
+    infobox.text = infobox:CreateFontString("Status", "HIGH", "GameFontNormal")
+    infobox.text:ClearAllPoints()
+    infobox.text:SetFontObject(GameFontWhite)
+
+    infobox.timeout = CreateFrame("StatusBar", nil, infobox)
+    infobox.timeout:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
+    infobox.timeout:SetStatusBarColor(.3,1,.8,1)
+
+    infobox:ClearAllPoints()
+    infobox.text:SetAllPoints(infobox)
+    infobox.text:SetFont(pfUI.font_default, 14, "OUTLINE")
+
+    pfUI.api.CreateBackdrop(infobox)
+    infobox:SetPoint("TOP", 0, -25)
+
+    infobox.timeout:ClearAllPoints()
+    infobox.timeout:SetPoint("TOPLEFT", infobox, "TOPLEFT", 3, -3)
+    infobox.timeout:SetPoint("TOPRIGHT", infobox, "TOPRIGHT", -3, 3)
+    infobox.timeout:SetHeight(2)
+  end
+
+  infobox.text:SetText(text)
+  infobox.timeout:SetMinMaxValues(0, time)
+  infobox.timeout:SetValue(time)
+
+  infobox.duration = time
+  infobox.lastshow = GetTime()
+
+  infobox:SetWidth(infobox.text:GetStringWidth() + 50)
+  infobox:SetParent(parent)
+  infobox:SetHeight(height)
+
+  infobox:SetFrameStrata("FULLSCREEN_DIALOG")
+  infobox:Show()
+end

@@ -38,7 +38,7 @@ pfUI:RegisterModule("hoverbind", function ()
     pfUI.hoverbind.edit:Show()
 
     local txt = T["|cff33ffccKeybind Mode|r\nThis mode allows you to bind keyboard shortcuts to your actionbars.\nBy hovering a button with your cursor and pressing a key, the key will be assigned to that button.\nHit Escape on a button to remove bindings.\n\nPress Escape or click on an empty area to leave the keybind mode."]
-    pfUI.info:ShowInfoBox(txt, 30,  pfUI.hoverbind.edit)
+    CreateInfoBox(txt, 30,  pfUI.hoverbind.edit)
   end)
 
   pfUI.hoverbind:SetScript("OnHide",function()
