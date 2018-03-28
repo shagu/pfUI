@@ -28,7 +28,8 @@ env\translations_zhTW.lua
 env\translations_esES.lua
 env\translations_ruRU.lua
 
-# profiles
+# environment
+env\tables.lua
 env\profiles.lua
 
 # api
@@ -37,11 +38,6 @@ api\spell.lua
 api\config.lua
 api\ui-widgets.lua
 api\unitframes.lua
-
-# environment
-env\tables.lua
-env\colors.lua
-env\fonts.lua
 
 # modules
 modules\firstrun.lua

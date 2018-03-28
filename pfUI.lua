@@ -46,6 +46,100 @@ pfUI.env = {}
 -- setup pfUI namespace
 setmetatable(pfUI.env, {__index = getfenv(0)})
 
+function pfUI:UpdateColors()
+  ManaBarColor = {}
+  ManaBarColor[0] = { r = 0.00, g = 0.00, b = 1.00, prefix = TEXT(MANA) };
+  ManaBarColor[1] = { r = 1.00, g = 0.00, b = 0.00, prefix = TEXT(RAGE_POINTS) };
+  ManaBarColor[2] = { r = 1.00, g = 0.50, b = 0.25, prefix = TEXT(FOCUS_POINTS) };
+  ManaBarColor[3] = { r = 1.00, g = 1.00, b = 0.00, prefix = TEXT(ENERGY_POINTS) };
+  ManaBarColor[4] = { r = 0.00, g = 1.00, b = 1.00, prefix = TEXT(HAPPINESS_POINTS) };
+
+  RAID_CLASS_COLORS = {
+    ["WARRIOR"] = { r = 0.78, g = 0.61, b = 0.43, colorStr = "ffc79c6e" },
+    ["MAGE"]    = { r = 0.41, g = 0.8,  b = 0.94, colorStr = "ff69ccf0" },
+    ["ROGUE"]   = { r = 1,    g = 0.96, b = 0.41, colorStr = "fffff569" },
+    ["DRUID"]   = { r = 1,    g = 0.49, b = 0.04, colorStr = "ffff7d0a" },
+    ["HUNTER"]  = { r = 0.67, g = 0.83, b = 0.45, colorStr = "ffabd473" },
+    ["SHAMAN"]  = { r = 0.14, g = 0.35, b = 1.0,  colorStr = "ff0070de" },
+    ["PRIEST"]  = { r = 1,    g = 1,    b = 1,    colorStr = "ffffffff" },
+    ["WARLOCK"] = { r = 0.58, g = 0.51, b = 0.79, colorStr = "ff9482c9" },
+    ["PALADIN"] = { r = 0.96, g = 0.55, b = 0.73, colorStr = "fff58cba" },
+  }
+
+  RAID_CLASS_COLORS = setmetatable(RAID_CLASS_COLORS, { __index = function(tab,key)
+    return { r = 0.6,  g = 0.6,  b = 0.6,  colorStr = "ff999999" }
+  end})
+end
+
+function pfUI:UpdateFonts()
+  -- abort when config is not ready yet
+  if not pfUI_config or not pfUI_config.global then return end
+
+  -- load font configuration
+  local default, unit, combat
+  if pfUI_config.global.force_region == "1" and GetLocale() == "zhCN" then
+    -- force locale compatible fonts
+    default = "Fonts\\FZXHLJW.TTF"
+    combat = "Fonts\\FZXHLJW.TTF"
+    unit = "Fonts\\FZXHLJW.TTF"
+  elseif pfUI_config.global.force_region == "1" and GetLocale() == "koKR" then
+    -- force locale compatible fonts
+    default = "Fonts\\2002.TTF"
+    combat = "Fonts\\2002.TTF"
+    unit = "Fonts\\2002.TTF"
+  else
+    -- use default entries
+    default = pfUI_config.global.font_default
+    combat = pfUI_config.global.font_combat
+    unit = pfUI_config.global.font_unit
+  end
+
+  -- write setting shortcuts
+  pfUI.font_default = default
+  pfUI.font_combat = combat
+  pfUI.font_unit = unit
+
+  pfUI.font_default_size = default_size
+  pfUI.font_combat_size = combat_size
+  pfUI.font_unit_size = unit_size
+
+  -- set game constants
+  STANDARD_TEXT_FONT = default
+  DAMAGE_TEXT_FONT   = combat
+  NAMEPLATE_FONT     = default
+  UNIT_NAME_FONT     = default
+
+  -- change default game font objects
+  SystemFont:SetFont(default, 15)
+  GameFontNormal:SetFont(default, 12)
+  GameFontBlack:SetFont(default, 12)
+  GameFontNormalSmall:SetFont(default, 11)
+  GameFontNormalLarge:SetFont(default, 16)
+  GameFontNormalHuge:SetFont(default, 20)
+  NumberFontNormal:SetFont(default, 14, "OUTLINE")
+  NumberFontNormalSmall:SetFont(default, 14, "OUTLINE")
+  NumberFontNormalLarge:SetFont(default, 16, "OUTLINE")
+  NumberFontNormalHuge:SetFont(default, 30, "OUTLINE")
+  QuestTitleFont:SetFont(default, 18)
+  QuestFont:SetFont(default, 13)
+  QuestFontHighlight:SetFont(default, 14)
+  ItemTextFontNormal:SetFont(default, 15)
+  MailTextFontNormal:SetFont(default, 15)
+  SubSpellFont:SetFont(default, 12)
+  DialogButtonNormalText:SetFont(default, 16)
+  ZoneTextFont:SetFont(default, 34, "OUTLINE")
+  SubZoneTextFont:SetFont(default, 24, "OUTLINE")
+  TextStatusBarTextSmall:SetFont(default, 12, "NORMAL")
+  GameTooltipText:SetFont(default, 12)
+  GameTooltipTextSmall:SetFont(default, 12)
+  GameTooltipHeaderText:SetFont(default, 13)
+  WorldMapTextFont:SetFont(default, 102, "THICK")
+  InvoiceTextFontNormal:SetFont(default, 12)
+  InvoiceTextFontSmall:SetFont(default, 12)
+  CombatTextFont:SetFont(combat, 25)
+  ChatFontNormal:SetFont(default, 13, pfUI_config.chat.text.outline == "1" and "OUTLINE")
+end
+
 function pfUI:GetEnvironment()
   -- load api into environment
   for m, func in pairs(pfUI.api or {}) do
@@ -70,8 +164,8 @@ end
 pfUI:SetScript("OnEvent", function()
   -- some addons overwrite color and font settings
   -- need to enforce pfUI's selection every time
-  pfUI.environment:UpdateFonts()
-  pfUI.environment:UpdateColors()
+  pfUI:UpdateFonts()
+  pfUI:UpdateColors()
 
   if arg1 == "pfUI" then
     -- read pfUI version from .toc file
@@ -83,6 +177,7 @@ pfUI:SetScript("OnEvent", function()
 
     pfUI:LoadConfig()
     pfUI:MigrateConfig()
+    pfUI:UpdateFonts()
 
     -- load modules
     for i,m in pairs(this.modules) do
