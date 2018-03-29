@@ -1,4 +1,9 @@
 function pfUI:UpdateConfig(group, subgroup, entry, value)
+  -- create empty config if not existing
+  if not pfUI_config then
+    pfUI_config = {}
+  end
+
   -- check for missing config groups
   if not pfUI_config[group] then
     pfUI_config[group] = {}
