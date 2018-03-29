@@ -106,7 +106,7 @@ pfUI:RegisterModule("buff", function ()
     buff:SetScript("OnEnter", function()
       GameTooltip:SetOwner(this, "ANCHOR_BOTTOMRIGHT")
       if this.mode == this.btype then
-        GameTooltip:SetPlayerBuff(GetPlayerBuff(this.bid, this.btype))
+        GameTooltip:SetPlayerBuff(this.bid)
       elseif this.mode == "MAINHAND" then
         GameTooltip:SetInventoryItem("player", 16)
       elseif this.mode == "OFFHAND" then
@@ -119,7 +119,7 @@ pfUI:RegisterModule("buff", function ()
     end)
 
     buff:SetScript("OnClick", function()
-      CancelPlayerBuff(GetPlayerBuff(this.bid, this.btype))
+      CancelPlayerBuff(this.bid)
     end)
 
     CreateBackdrop(buff)
