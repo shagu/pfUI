@@ -46,6 +46,7 @@ pfUI supports and contains language specific code for the following gameclients.
 * [MobHealth3](http://addons.us.to/addon/mobhealth) Estimates a mob's health
 
 ## Other Addons
+* [pfUI-fonts](https://github.com/shagu/pfUI-fonts) Additional fonts for pfUI
 * [DPSMate](https://github.com/Geigerkind/DPSMate) An advanced combat analyzation tool
 * [DebuffTimers](https://github.com/shagu/DebuffTimers) Timer Overlays for enemy debuffs
 * [Clique](https://github.com/shagu/Clique) Simply powerful click-casting interface
