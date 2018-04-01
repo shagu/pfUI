@@ -3,11 +3,11 @@ function SlashCmdList.PFFOCUS(msg)
   if not pfUI.uf or not pfUI.uf.focus then return end
 
   if msg ~= "" then
-    pfUI.uf.focus:Show()
     pfUI.uf.focus.unitname = strlower(msg)
-  elseif UnitName("target") then
     pfUI.uf.focus:Show()
+  elseif UnitName("target") then
     pfUI.uf.focus.unitname = strlower(UnitName("target"))
+    pfUI.uf.focus:Show()
   else
     pfUI.uf.focus:Hide()
   end
