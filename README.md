@@ -8,10 +8,10 @@ This is **not** an addon-pack like [ShaguUI](http://shagu.org/ShaguUI/), however
 
 ## Screenshots
 
-<img src="http://mephis.he-hosting.de/shaguaddons/pfUI/mmobase/screen.jpg" align="right" width="48.87%">
-<img src="http://mephis.he-hosting.de/shaguaddons/pfUI/mmobase/moveit.jpg" width="48.87%">
-<img src="https://i.imgur.com/eRKDZwe.jpg" align="right" width="48.87%">
-<img src="http://i.imgur.com/xo060dZ.jpg" width="48.87%">
+<img src="https://raw.githubusercontent.com/shagu/ShaguAddons/master/_img/pfUI/config.jpg" align="right" width="48.87%">
+<img src="https://raw.githubusercontent.com/shagu/ShaguAddons/master/_img/pfUI/unlock.jpg" width="48.87%">
+<img src="https://raw.githubusercontent.com/shagu/ShaguAddons/master/_img/pfUI/contrib.jpg" align="right" width="48.87%">
+<img src="https://raw.githubusercontent.com/shagu/ShaguAddons/master/_img/pfUI/maraudon.jpg" width="48.87%">
 
 ## Installation
 1. Download **[Latest Version](https://github.com/shagu/pfUI/archive/master.zip)**
