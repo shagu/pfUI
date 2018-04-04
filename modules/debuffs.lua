@@ -6,43 +6,41 @@ pfUI:RegisterModule("debuffs", function ()
 
   pfUI.debuffs:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_HOSTILEPLAYER_DAMAGE")
   pfUI.debuffs:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_CREATURE_DAMAGE")
+
   pfUI.debuffs:RegisterEvent("CHAT_MSG_SPELL_FAILED_LOCALPLAYER")
   pfUI.debuffs:RegisterEvent("CHAT_MSG_SPELL_SELF_DAMAGE")
+
   pfUI.debuffs:RegisterEvent("PLAYER_TARGET_CHANGED")
   pfUI.debuffs:RegisterEvent("UNIT_AURA")
 
   pfUI.debuffs.active = true
 
   -- CHAT_MSG_SPELL_PERIODIC_HOSTILEPLAYER_DAMAGE // CHAT_MSG_SPELL_PERIODIC_CREATURE_DAMAGE
-  pfUI.debuffs.AURAADDEDOTHERHARMFUL = SanitizePattern(AURAADDEDOTHERHARMFUL)
+  pfUI.debuffs.combatlog = SanitizePattern(AURAADDEDOTHERHARMFUL)
 
-  -- CHAT_MSG_SPELL_FAILED_LOCALPLAYER
-  pfUI.debuffs.SPELLFAILCASTSELF = SanitizePattern(SPELLFAILCASTSELF)
-  pfUI.debuffs.SPELLFAILPERFORMSELF = SanitizePattern(SPELLFAILPERFORMSELF)
-  pfUI.debuffs.SPELLIMMUNESELFOTHER = SanitizePattern(SPELLIMMUNESELFOTHER)
 
-  -- CHAT_MSG_SPELL_SELF_DAMAGE
-  pfUI.debuffs.IMMUNEDAMAGECLASSSELFOTHER = SanitizePattern(IMMUNEDAMAGECLASSSELFOTHER)
-  pfUI.debuffs.SPELLMISSSELFOTHER = SanitizePattern(SPELLMISSSELFOTHER)
-  pfUI.debuffs.SPELLRESISTSELFOTHER = SanitizePattern(SPELLRESISTSELFOTHER)
-  pfUI.debuffs.SPELLEVADEDSELFOTHER = SanitizePattern(SPELLEVADEDSELFOTHER)
-  pfUI.debuffs.SPELLDODGEDSELFOTHER = SanitizePattern(SPELLDODGEDSELFOTHER)
-  pfUI.debuffs.SPELLDEFLECTEDSELFOTHER = SanitizePattern(SPELLDEFLECTEDSELFOTHER)
-  pfUI.debuffs.SPELLREFLECTSELFOTHER = SanitizePattern(SPELLREFLECTSELFOTHER)
-  pfUI.debuffs.SPELLPARRIEDSELFOTHER = SanitizePattern(SPELLPARRIEDSELFOTHER)
-  pfUI.debuffs.SPELLLOGABSORBSELFOTHER = SanitizePattern(SPELLLOGABSORBSELFOTHER)
+  -- Remove Pending
+  pfUI.debuffs.rp = { SanitizePattern(SPELLFAILCASTSELF), SanitizePattern(SPELLFAILPERFORMSELF), SanitizePattern(SPELLIMMUNESELFOTHER),
+    SanitizePattern(IMMUNEDAMAGECLASSSELFOTHER), SanitizePattern(SPELLMISSSELFOTHER), SanitizePattern(SPELLRESISTSELFOTHER),
+    SanitizePattern(SPELLEVADEDSELFOTHER), SanitizePattern(SPELLDODGEDSELFOTHER), SanitizePattern(SPELLDEFLECTEDSELFOTHER),
+    SanitizePattern(SPELLREFLECTSELFOTHER), SanitizePattern(SPELLPARRIEDSELFOTHER), SanitizePattern(SPELLLOGABSORBSELFOTHER) }
+
+  -- Persist Pending
+  pfUI.debuffs.pp = { SanitizePattern(SPELLCASTGOSELF), SanitizePattern(SPELLPERFORMGOSELF), SanitizePattern(SPELLLOGSCHOOLSELFOTHER),
+    SanitizePattern(SPELLLOGCRITSCHOOLSELFOTHER), SanitizePattern(SPELLLOGSELFOTHER), SanitizePattern(SPELLLOGCRITSELFOTHER) }
 
   pfUI.debuffs.objects = {}
+  pfUI.debuffs.pending = {}
 
   -- Gather Data by Events
   pfUI.debuffs:SetScript("OnEvent", function()
     -- Add Combat Log
     if event == "CHAT_MSG_SPELL_PERIODIC_HOSTILEPLAYER_DAMAGE" or event == "CHAT_MSG_SPELL_PERIODIC_CREATURE_DAMAGE" then
-      for unit, effect in string.gfind(arg1, pfUI.debuffs.AURAADDEDOTHERHARMFUL) do
-        if UnitName("target") == unit then
-          this:AddEffect(unit, UnitLevel("target"), effect)
-        else
-          this:AddEffect(unit, 0, effect)
+      for unit, effect in string.gfind(arg1, pfUI.debuffs.combatlog) do
+        local unitlevel = UnitName("target") == unit and UnitLevel("target") or 0
+
+        if not pfUI.debuffs.objects[unit] or not pfUI.debuffs.objects[unit][unitlevel] or not pfUI.debuffs.objects[unit][unitlevel][effect] then
+          this:AddEffect(unit, unitlevel, effect)
         end
       end
 
@@ -58,65 +56,23 @@ pfUI:RegisterModule("debuffs", function ()
         end
       end
 
-    -- Remove Pending Spells on Failure
-    elseif event == "SPELLCAST_FAILED" or event == "CHAT_MSG_SPELL_FAILED_LOCALPLAYER" or event == "CHAT_MSG_SPELL_SELF_DAMAGE" then
-      -- CHAT_MSG_SPELL_FAILED_LOCALPLAYER
-      for effect, _ in string.gfind(arg1, pfUI.debuffs.SPELLFAILCASTSELF) do -- "You fail to cast %s: %s.";
-        pfUI.debuffs:RemovePending(pfUI.debuffs.lastUnit, pfUI.debuffs.lastLevel, effect)
-        return
+    -- Update Pending Spells
+    elseif event == "CHAT_MSG_SPELL_FAILED_LOCALPLAYER" or event == "CHAT_MSG_SPELL_SELF_DAMAGE" then
+      -- Persist pending Spell
+      for _, msg in pairs(pfUI.debuffs.pp) do
+        for effect, _ in string.gfind(arg1, msg) do
+          pfUI.debuffs:PersistPending(effect)
+          return
+        end
       end
 
-      for effect, _ in string.gfind(arg1, pfUI.debuffs.SPELLFAILPERFORMSELF) do -- "You fail to perform %s: %s.";
-        pfUI.debuffs:RemovePending(pfUI.debuffs.lastUnit, pfUI.debuffs.lastLevel, effect)
-        return
+      -- Remove pending spell
+      for _, msg in pairs(pfUI.debuffs.rp) do
+        for effect, _ in string.gfind(arg1, msg) do
+          pfUI.debuffs:RemovePending(effect)
+          return
+        end
       end
-
-      for effect, _ in string.gfind(arg1, pfUI.debuffs.SPELLIMMUNESELFOTHER) do -- "Your %s failed. %s is immune.";
-        pfUI.debuffs:RemovePending(pfUI.debuffs.lastUnit, pfUI.debuffs.lastLevel, effect)
-        return
-      end
-
-      -- CHAT_MSG_SPELL_SELF_DAMAGE
-      for effect, _ in string.gfind(arg1, pfUI.debuffs.SPELLMISSSELFOTHER) do -- "Your %s was resisted by %s.";
-        pfUI.debuffs:RemovePending(pfUI.debuffs.lastUnit, pfUI.debuffs.lastLevel, effect)
-        return
-      end
-
-      for effect, _ in string.gfind(arg1, pfUI.debuffs.SPELLEVADEDSELFOTHER) do -- "Your %s was evaded by %s.";
-        pfUI.debuffs:RemovePending(pfUI.debuffs.lastUnit, pfUI.debuffs.lastLevel, effect)
-        return
-      end
-
-      for effect, _ in string.gfind(arg1, pfUI.debuffs.SPELLDODGEDSELFOTHER) do -- "Your %s was deflected by %s.";
-        pfUI.debuffs:RemovePending(pfUI.debuffs.lastUnit, pfUI.debuffs.lastLevel, effect)
-        return
-      end
-
-      for effect, _ in string.gfind(arg1, pfUI.debuffs.SPELLDODGEDSELFOTHER) do -- "Your %s was dodged by %s.";
-        pfUI.debuffs:RemovePending(pfUI.debuffs.lastUnit, pfUI.debuffs.lastLevel, effect)
-        return
-      end
-
-      for effect, _ in string.gfind(arg1, pfUI.debuffs.SPELLDEFLECTEDSELFOTHER) do -- "Your %s was deflected by %s.";
-        pfUI.debuffs:RemovePending(pfUI.debuffs.lastUnit, pfUI.debuffs.lastLevel, effect)
-        return
-      end
-
-      for effect, _ in string.gfind(arg1, pfUI.debuffs.SPELLREFLECTSELFOTHER) do -- "Your %s is reflected back by %s.";
-        pfUI.debuffs:RemovePending(pfUI.debuffs.lastUnit, pfUI.debuffs.lastLevel, effect)
-        return
-      end
-
-      for effect, _ in string.gfind(arg1, pfUI.debuffs.SPELLPARRIEDSELFOTHER) do -- "Your %s is parried by %s.";
-        pfUI.debuffs:RemovePending(pfUI.debuffs.lastUnit, pfUI.debuffs.lastLevel, effect)
-        return
-      end
-
-      for effect, _ in string.gfind(arg1, pfUI.debuffs.SPELLLOGABSORBSELFOTHER) do --  "Your %s is absorbed by %s.";
-        pfUI.debuffs:RemovePending(pfUI.debuffs.lastUnit, pfUI.debuffs.lastLevel, effect)
-        return
-      end
-
     end
   end)
 
@@ -140,60 +96,33 @@ pfUI:RegisterModule("debuffs", function ()
     pfUI.debuffs:AddPending(UnitName("target"), UnitLevel("target"), effect)
   end, true)
 
-  function pfUI.debuffs:RemovePending(unit, unitlevel, effect)
-    if unit and unitlevel and effect then
-      if pfUI.debuffs.objects[unit] and
-        pfUI.debuffs.objects[unit][unitlevel] and
-        pfUI.debuffs.objects[unit][unitlevel][effect] and
-        pfUI.debuffs.objects[unit][unitlevel][effect].old and
-        pfUI.debuffs.objects[unit][unitlevel][effect].old.start
-      then
-        local new = floor(pfUI.debuffs.objects[unit][unitlevel][effect].start + pfUI.debuffs.objects[unit][unitlevel][effect].duration - GetTime())
-        local saved = floor(pfUI.debuffs.objects[unit][unitlevel][effect].old.start + pfUI.debuffs.objects[unit][unitlevel][effect].old.duration  - GetTime())
-
-        pfUI.debuffs.objects[unit][unitlevel][effect].start = pfUI.debuffs.objects[unit][unitlevel][effect].old.start
-        pfUI.debuffs.objects[unit][unitlevel][effect].duration = pfUI.debuffs.objects[unit][unitlevel][effect].old.duration
-        pfUI.debuffs.objects[unit][unitlevel][effect].old = {}
-
-        if pfUI.uf.target then
-          pfUI.uf:RefreshUnit(pfUI.uf.target, "aura")
-        end
-      end
-    end
-  end
-
-  function pfUI.debuffs:AddPending(unit, unitlevel, effect)
+  function pfUI.debuffs:AddPending(unit, unitlevel, effect, duration)
     if not unit then return end
     if not L["debuffs"][effect] then return end
 
     unitlevel = unitlevel or 0
-    if not pfUI.debuffs.objects[unit] then pfUI.debuffs.objects[unit] = {} end
-    if not pfUI.debuffs.objects[unit][unitlevel] then pfUI.debuffs.objects[unit][unitlevel] = {} end
-    if not pfUI.debuffs.objects[unit][unitlevel][effect] then pfUI.debuffs.objects[unit][unitlevel][effect] = {} end
-    if pfUI.debuffs.objects[unit][unitlevel][effect].old and
-      pfUI.debuffs.objects[unit][unitlevel][effect].old.start then
-      return
-    end
+    pfUI.debuffs.pending = { unit, unitlevel, effect, duration }
+  end
 
-    -- save old values in case of failure
-    pfUI.debuffs.objects[unit][unitlevel][effect].old = {}
-    pfUI.debuffs.objects[unit][unitlevel][effect].old.start = pfUI.debuffs.objects[unit][unitlevel][effect].start
-    pfUI.debuffs.objects[unit][unitlevel][effect].old.duration = pfUI.debuffs.objects[unit][unitlevel][effect].duration
+  function pfUI.debuffs:PersistPending(effect)
+    if pfUI.debuffs.pending[3] == effect then
 
-    -- set new ones
-    pfUI.debuffs.objects[unit][unitlevel][effect].start = GetTime()
-    pfUI.debuffs.objects[unit][unitlevel][effect].duration = L["debuffs"][effect] or 0
+      local unit = pfUI.debuffs.pending[1]
+      local unitlevel = pfUI.debuffs.pending[2]
+      local effect = pfUI.debuffs.pending[3]
+      local duration = pfUI.debuffs.pending[4]
 
-    -- save last unit
-    pfUI.debuffs.lastUnit = unit
-    pfUI.debuffs.lastLevel = unitlevel
-
-    if pfUI.uf.target then
-      pfUI.uf:RefreshUnit(pfUI.uf.target, "aura")
+      pfUI.debuffs:AddEffect(unit, unitlevel, effect, duration)
     end
   end
 
-  function pfUI.debuffs:AddEffect(unit, unitlevel, effect)
+  function pfUI.debuffs:RemovePending(effect)
+    if pfUI.debuffs.pending[3] == effect then
+      pfUI.debuffs.pending = {}
+    end
+  end
+
+  function pfUI.debuffs:AddEffect(unit, unitlevel, effect, duration)
     if not unit or not effect then return end
     unitlevel = unitlevel or 0
     if not pfUI.debuffs.objects[unit] then pfUI.debuffs.objects[unit] = {} end
@@ -202,7 +131,7 @@ pfUI:RegisterModule("debuffs", function ()
 
     pfUI.debuffs.objects[unit][unitlevel][effect].old = {}
     pfUI.debuffs.objects[unit][unitlevel][effect].start = GetTime()
-    pfUI.debuffs.objects[unit][unitlevel][effect].duration = L["debuffs"][effect] or 0
+    pfUI.debuffs.objects[unit][unitlevel][effect].duration = duration or L["debuffs"][effect] or 0
 
     if pfUI.uf.target then
       pfUI.uf:RefreshUnit(pfUI.uf.target, "aura")
