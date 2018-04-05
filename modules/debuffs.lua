@@ -11,6 +11,7 @@ pfUI:RegisterModule("debuffs", function ()
   pfUI.debuffs:RegisterEvent("CHAT_MSG_SPELL_SELF_DAMAGE")
 
   pfUI.debuffs:RegisterEvent("PLAYER_TARGET_CHANGED")
+  pfUI.debuffs:RegisterEvent("SPELLCAST_STOP")
   pfUI.debuffs:RegisterEvent("UNIT_AURA")
 
   pfUI.debuffs.active = true
@@ -73,6 +74,9 @@ pfUI:RegisterModule("debuffs", function ()
           return
         end
       end
+    elseif event == "SPELLCAST_STOP" then
+      -- Persist all spells that have not been removed till here
+      pfUI.debuffs:PersistPending()
     end
   end)
 
@@ -147,7 +151,7 @@ pfUI:RegisterModule("debuffs", function ()
   end
 
   function pfUI.debuffs:PersistPending(effect)
-    if pfUI.debuffs.pending[3] == effect then
+    if pfUI.debuffs.pending[3] == effect or ( effect == nil and pfUI.debuffs.pending[3] ) then
 
       local unit = pfUI.debuffs.pending[1]
       local unitlevel = pfUI.debuffs.pending[2]
