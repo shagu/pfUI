@@ -170,7 +170,7 @@ pfUI:RegisterModule("debuffs", function ()
 
   function pfUI.debuffs:GetMaxRank(effect)
     local max = 0
-    for id in pairs(effect) do
+    for id in pairs(L["debuffs"][effect]) do
       if id > max then max = id end
     end
     return max
@@ -183,9 +183,10 @@ pfUI:RegisterModule("debuffs", function ()
     if not pfUI.debuffs.objects[unit][unitlevel] then pfUI.debuffs.objects[unit][unitlevel] = {} end
     if not pfUI.debuffs.objects[unit][unitlevel][effect] then pfUI.debuffs.objects[unit][unitlevel][effect] = {} end
 
-    pfUI.debuffs.objects[unit][unitlevel][effect].old = {}
     pfUI.debuffs.objects[unit][unitlevel][effect].start = GetTime()
     pfUI.debuffs.objects[unit][unitlevel][effect].duration = duration or pfUI.debuffs:GetDuration(effect)
+
+    pfUI.debuffs.pending = {}
 
     if pfUI.uf.target then
       pfUI.uf:RefreshUnit(pfUI.uf.target, "aura")
@@ -207,7 +208,7 @@ pfUI:RegisterModule("debuffs", function ()
 
     if pfUI.debuffs.objects[unitname] and pfUI.debuffs.objects[unitname][unitlevel] and pfUI.debuffs.objects[unitname][unitlevel][effect] then
       -- clean up db
-      if pfUI.debuffs.objects[unitname][unitlevel][effect].duration + pfUI.debuffs.objects[unitname][unitlevel][effect].start < GetTime() then
+      if pfUI.debuffs.objects[unitname][unitlevel][effect].duration and pfUI.debuffs.objects[unitname][unitlevel][effect].duration + pfUI.debuffs.objects[unitname][unitlevel][effect].start < GetTime() then
         pfUI.debuffs.objects[unitname][unitlevel][effect] = nil
         return 0, 0, 0
       end
@@ -220,7 +221,7 @@ pfUI:RegisterModule("debuffs", function ()
     -- no level data
     elseif pfUI.debuffs.objects[unitname] and pfUI.debuffs.objects[unitname][0] and pfUI.debuffs.objects[unitname][0][effect] then
       -- clean up db
-      if pfUI.debuffs.objects[unitname][0][effect].duration + pfUI.debuffs.objects[unitname][0][effect].start < GetTime() then
+      if pfUI.debuffs.objects[unitname][0][effect].duration and pfUI.debuffs.objects[unitname][0][effect].duration + pfUI.debuffs.objects[unitname][0][effect].start < GetTime() then
         pfUI.debuffs.objects[unitname][0][effect] = nil
         return 0, 0, 0
       end
