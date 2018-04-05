@@ -79,11 +79,15 @@ pfUI:RegisterModule("debuffs", function ()
   -- Gather Data by User Actions
   hooksecurefunc("CastSpell", function(id, bookType)
     local effect = GetSpellName(id, bookType)
-    pfUI.debuffs:AddPending(UnitName("target"), UnitLevel("target"), effect)
+    local _, rank = GetSpellInfo(id, bookType)
+    local duration = pfUI.debuffs:GetDuration(effect, rank)
+    pfUI.debuffs:AddPending(UnitName("target"), UnitLevel("target"), effect, duration)
   end, true)
 
   hooksecurefunc("CastSpellByName", function(effect, target)
-    pfUI.debuffs:AddPending(UnitName("target"), UnitLevel("target"), effect)
+    local _, rank = GetSpellInfo(effect)
+    local duration = pfUI.debuffs:GetDuration(effect, rank)
+    pfUI.debuffs:AddPending(UnitName("target"), UnitLevel("target"), effect, duration)
   end, true)
 
   local scanner = CreateFrame("GameTooltip", "pfDebuffSpellScanner", nil, "GameTooltipTemplate")
@@ -92,16 +96,37 @@ pfUI:RegisterModule("debuffs", function ()
     if GetActionText(slot) or not IsCurrentAction(slot) then return end
     scanner:ClearLines()
     scanner:SetAction(slot)
-    local effect = pfDebuffSpellScannerTextLeft1:GetText()
-    pfUI.debuffs:AddPending(UnitName("target"), UnitLevel("target"), effect)
+    local effect = pfDebuffSpellScannerTextLeft1:IsVisible() and pfDebuffSpellScannerTextLeft1:GetText()
+    local rank = pfDebuffSpellScannerTextRight1:IsVisible() and pfDebuffSpellScannerTextRight1:GetText()
+    local duration = pfUI.debuffs:GetDuration(effect, rank)
+    pfUI.debuffs:AddPending(UnitName("target"), UnitLevel("target"), effect, duration)
   end, true)
+
+  function pfUI.debuffs:GetDuration(effect, rank)
+    if L["debuffs"][effect] and rank then
+      local rank = string.gsub(rank, RANK .. " ", "")
+      local duration = L["debuffs"][effect][tonumber(rank)] or pfUI.debuffs:GetDuration(effect)
+      -- TODO: add combo point calculation here
+      -- TODO: add talent calculation here
+      return duration
+    elseif L["debuffs"][effect] and L["debuffs"][effect][0] then
+      return L["debuffs"][effect][0]
+    elseif L["debuffs"][effect] then
+      return L["debuffs"][effect][pfUI.debuffs:GetMaxRank(effect)]
+    else
+      return 0
+    end
+  end
 
   function pfUI.debuffs:AddPending(unit, unitlevel, effect, duration)
     if not unit then return end
     if not L["debuffs"][effect] then return end
+    local duration = duration or pfUI.debuffs:GetDuration(effect)
+    local unitlevel = unitlevel or 0
 
-    unitlevel = unitlevel or 0
-    pfUI.debuffs.pending = { unit, unitlevel, effect, duration }
+    if duration > 0 then
+      pfUI.debuffs.pending = { unit, unitlevel, effect, duration }
+    end
   end
 
   function pfUI.debuffs:PersistPending(effect)
@@ -122,6 +147,14 @@ pfUI:RegisterModule("debuffs", function ()
     end
   end
 
+  function pfUI.debuffs:GetMaxRank(effect)
+    local max = 0
+    for id in pairs(effect) do
+      if id > max then max = id end
+    end
+    return max
+  end
+
   function pfUI.debuffs:AddEffect(unit, unitlevel, effect, duration)
     if not unit or not effect then return end
     unitlevel = unitlevel or 0
@@ -131,7 +164,7 @@ pfUI:RegisterModule("debuffs", function ()
 
     pfUI.debuffs.objects[unit][unitlevel][effect].old = {}
     pfUI.debuffs.objects[unit][unitlevel][effect].start = GetTime()
-    pfUI.debuffs.objects[unit][unitlevel][effect].duration = duration or L["debuffs"][effect] or 0
+    pfUI.debuffs.objects[unit][unitlevel][effect].duration = duration or pfUI.debuffs:GetDuration(effect)
 
     if pfUI.uf.target then
       pfUI.uf:RefreshUnit(pfUI.uf.target, "aura")
