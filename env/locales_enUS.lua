@@ -122,6 +122,15 @@ pfUI_locale["enUS"]["critters"] = {
   'Wisp',
 }
 
+pfUI_locale["enUS"]["dyndebuffs"] = {
+  ["Rupture"] = "Rupture",
+  ["Kidney Shot"] = "Kidney Shot",
+  ["Rend"] = "Rend",
+  ["Shadow Word: Pain"] = "Shadow Word: Pain",
+  ["Demoralizing Shout"] = "Demoralizing Shout",
+  ["Frostbolt"] = "Frostbolt",
+}
+
 pfUI_locale["enUS"]["interrupts"] = {
   ["Shield Bash"] = true,
   ["Pummel"] = true,

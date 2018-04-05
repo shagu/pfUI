@@ -122,6 +122,15 @@ pfUI_locale["ruRU"]["critters"] = {
   'Огонек',
 }
 
+pfUI_locale["ruRU"]["dyndebuffs"] = {
+  ["Rupture"] = "Рваная рана",
+  ["Kidney Shot"] = "Удар по почкам",
+  ["Rend"] = "Кровопускание",
+  ["Shadow Word: Pain"] = "Слово Тьмы: Боль",
+  ["Demoralizing Shout"] = "Деморализующий крик",
+  ["Frostbolt"] = "Ледяная стрела",
+}
+
 pfUI_locale["ruRU"]["interrupts"] = {
   ["Удар щитом"] = true,
   ["Зуботычина"] = true,

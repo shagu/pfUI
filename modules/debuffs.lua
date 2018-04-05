@@ -106,8 +106,29 @@ pfUI:RegisterModule("debuffs", function ()
     if L["debuffs"][effect] and rank then
       local rank = string.gsub(rank, RANK .. " ", "")
       local duration = L["debuffs"][effect][tonumber(rank)] or pfUI.debuffs:GetDuration(effect)
-      -- TODO: add combo point calculation here
-      -- TODO: add talent calculation here
+      if effect == L["dyndebuffs"]["Rupture"] then
+        -- Rupture: +2 sec per combo point
+        duration = duration + GetComboPoints()*2
+      elseif effect == L["dyndebuffs"]["Kidney Shot"] then
+        -- Kidney Shot: +1 sec per combo point
+        duration = duration + GetComboPoints()*1
+      elseif effect == L["dyndebuffs"]["Rend"] then
+        -- Improved Rend: 15%, 25%, 35%
+        local _,_,_,_,count = GetTalentInfo(1,3)
+        if count and count > 0 then duration = duration + ( duration / 100 * (5+count*10)) end
+      elseif effect == L["dyndebuffs"]["Demoralizing Shout"] then
+        -- Booming Voice: 10% per talent
+        local _,_,_,_,count = GetTalentInfo(2,1)
+        if count and count > 0 then duration = duration + ( duration / 100 * (count*10)) end
+      elseif effect == L["dyndebuffs"]["Shadow Word: Pain"] then
+        -- Improved Shadow Word: Pain: +3s per talent
+        local _,_,_,_,count = GetTalentInfo(3,4)
+        if count and count > 0 then duration = duration + count * 3 end
+      elseif effect == L["dyndebuffs"]["Frostbolt"] then
+        -- Permafrost: +1s per talent
+        local _,_,_,_,count = GetTalentInfo(3,7)
+        if count and count > 0 then duration = duration + count end
+      end
       return duration
     elseif L["debuffs"][effect] and L["debuffs"][effect][0] then
       return L["debuffs"][effect][0]

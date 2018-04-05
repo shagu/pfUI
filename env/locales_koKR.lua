@@ -122,6 +122,15 @@ pfUI_locale["koKR"]["critters"] = {
   '위습',
 }
 
+pfUI_locale["koKR"]["dyndebuffs"] = {
+  ["Rupture"] = "파열",
+  ["Kidney Shot"] = "급소 가격",
+  ["Rend"] = "분쇄",
+  ["Shadow Word: Pain"] = "어둠의 권능: 고통",
+  ["Demoralizing Shout"] = "사기의 외침",
+  ["Frostbolt"] = "얼음 화살",
+}
+
 pfUI_locale["koKR"]["interrupts"] = {
   ["방패 가격"] = true,
   ["자루 공격"] = true,

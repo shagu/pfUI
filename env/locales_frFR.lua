@@ -117,6 +117,15 @@ pfUI_locale["frFR"]["critters"] = {
   'Feu follet',
 }
 
+pfUI_locale["frFR"]["dyndebuffs"] = {
+  ["Rupture"] = "Rupture",
+  ["Kidney Shot"] = "Aiguillon perfide",
+  ["Rend"] = "Pourfendre",
+  ["Shadow Word: Pain"] = "Mot de l'ombre : Douleur",
+  ["Demoralizing Shout"] = "Cri démoralisant",
+  ["Frostbolt"] = "Eclair de givre",
+}
+
 pfUI_locale["frFR"]["interrupts"] = {
   ["Coup de bouclier"] = true,
   ["Volée de coups"] = true,

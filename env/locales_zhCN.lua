@@ -117,6 +117,15 @@ pfUI_locale["zhCN"]["critters"] = {
   '小精灵',
 }
 
+pfUI_locale["zhCN"]["dyndebuffs"] = {
+  ["Rupture"] = "割裂",
+  ["Kidney Shot"] = "肾击",
+  ["Rend"] = "撕裂",
+  ["Shadow Word: Pain"] = "暗言术：痛",
+  ["Demoralizing Shout"] = "挫志怒吼",
+  ["Frostbolt"] = "寒冰箭",
+}
+
 pfUI_locale["zhCN"]["interrupts"] = {
   ["盾击"] = true,
   ["拳击"] = true,

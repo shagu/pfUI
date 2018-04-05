@@ -122,6 +122,15 @@ pfUI_locale["deDE"]["critters"] = {
   'Irrwisch',
 }
 
+pfUI_locale["deDE"]["dyndebuffs"] = {
+  ["Rupture"] = "Blutung",
+  ["Kidney Shot"] = "Nierenhieb",
+  ["Rend"] = "Verwunden",
+  ["Shadow Word: Pain"] = "Schattenwort: Schmerz",
+  ["Demoralizing Shout"] = "Demoralisierungsruf",
+  ["Frostbolt"] = "Frostblitz",
+}
+
 pfUI_locale["deDE"]["interrupts"] = {
   ["Schildhieb"] = true,
   ["Zuschlagen"] = true,

@@ -122,6 +122,15 @@ pfUI_locale["esES"]["critters"] = {
   'Fuego fatuo',
 }
 
+pfUI_locale["esES"]["dyndebuffs"] = {
+  ["Rupture"] = "Ruptura",
+  ["Kidney Shot"] = "Golpe en los riñones",
+  ["Rend"] = "Desgarrar",
+  ["Shadow Word: Pain"] = "Palabra de las Sombras: dolor",
+  ["Demoralizing Shout"] = "Grito desmoralizador",
+  ["Frostbolt"] = "Descarga de Escarcha",
+}
+
 pfUI_locale["esES"]["interrupts"] = {
   ["Azote de escudo"] = true,
   ["Zurrar"] = true,
