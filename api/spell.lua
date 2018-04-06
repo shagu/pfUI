@@ -78,7 +78,7 @@ local spellinfo = {}
 function pfUI.api.GetSpellInfo(index, bookType)
   if spellinfo[index] then return unpack(spellinfo[index]) end
 
-  local name, rank
+  local name, rank, id
   local icon = ""
   local castingTime = 0
   local minRange = 0
@@ -88,18 +88,19 @@ function pfUI.api.GetSpellInfo(index, bookType)
     local _, _, sname, srank = string.find(index, '(.+)%((.+)%)')
     name = sname or index
     rank = srank or GetSpellMaxRank(name)
-    index, bookType = GetSpellIndex(name, rank)
+    id, bookType = GetSpellIndex(name, rank)
   else
     name, rank = GetSpellName(index, bookType)
+    id, bookType = GetSpellIndex(name, rank)
   end
 
-  if name and index then
-    texture = GetSpellTexture(index, bookType)
+  if name and id then
+    texture = GetSpellTexture(id, bookType)
   end
 
-  if index then
+  if id then
     pfSpellScan:ClearLines()
-    pfSpellScan:SetSpell(index, bookType)
+    pfSpellScan:SetSpell(id, bookType)
 
     for i=1, 4 do
       for _, text in pairs({_G["pfSpellScanTextLeft"..i], _G["pfSpellScanTextRight"..i]}) do
@@ -123,6 +124,7 @@ function pfUI.api.GetSpellInfo(index, bookType)
       end
     end
   end
+
   spellinfo[index] = { name, rank, icon, castingTime, minRange, maxRange }
   return name, rank, icon, castingTime, minRange, maxRange
 end

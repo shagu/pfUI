@@ -318,10 +318,11 @@ pfUI:RegisterModule("thirdparty", function ()
       SW_Settings["InfoSettings"][1]["BT"] = 13
       SW_Settings["InfoSettings"][1]["BH"] = 10
       SW_Settings["InfoSettings"][1]["BFS"] = 11
-      SW_Settings["InfoSettings"][1]["BFC"] = { [1] = 1, [2] = 1, [3] = 1, [4] = 1, }
+      SW_Settings["InfoSettings"][1]["BC"]  = { [1] = .5, [2] = .5, [3] = .5, [4] = .5, }
+      SW_Settings["InfoSettings"][1]["BFC"] = { [1] = 1,  [2] = 1,  [3] = 1,  [4] = 1, }
+      SW_Settings["InfoSettings"][1]["OC"]  = { [1] = 1,  [2] = 1,  [3] = 1,  [4] = 1, }
       SW_Settings["InfoSettings"][1]["OTF"] = ( SW_Settings["InfoSettings"][1]["OTF"] == "1" and "SWStats" ) or SW_Settings["InfoSettings"][1]["OTF"]
       SW_Settings["InfoSettings"][1]["UCC"] = 1
-
 
       SW_BarFrame1_Title:SetPoint("TOPLEFT", 3, 0)
       SW_BarFrame1_Title_Sync:SetScale(.84)
