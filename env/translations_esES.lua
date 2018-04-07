@@ -373,6 +373,7 @@ pfUI_translation["esES"] = {
   ["Show Hots of all Classes"] = "Mostrar Curación Periódica (HoTs) de Todas las Clases",
   ["Show Inactive Tracking"] = "Mostrar Rastreo Inactivo",
   ["Show Macro Text"] = "Mostrar Texto de Macro",
+  ["Show Meters By Default"] = nil,
   ["Show Players Only"] = "Solamente Mostrar Jugadores",
   ["Show Procs as Buff Indicators"] = "Mostrar Ocurrencias aleatorias programadas (Procs) como Indicadores de Buffs",
   ["Show Procs of all Classes"] = "Mostrar Ocurrencias aleatorias programadas (Procs) de Todas las Clases",

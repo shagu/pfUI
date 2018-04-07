@@ -373,6 +373,7 @@ pfUI_translation["deDE"] = {
   ["Show Hots of all Classes"] = nil,
   ["Show Inactive Tracking"] = nil,
   ["Show Macro Text"] = nil,
+  ["Show Meters By Default"] = nil,
   ["Show Players Only"] = nil,
   ["Show Procs as Buff Indicators"] = nil,
   ["Show Procs of all Classes"] = nil,

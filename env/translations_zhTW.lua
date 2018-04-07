@@ -373,6 +373,7 @@ pfUI_translation["zhTW"] = {
   ["Show Hots of all Classes"] = "顯示所有職業的Hot",
   ["Show Inactive Tracking"] = nil,
   ["Show Macro Text"] = "顯示巨集的名字",
+  ["Show Meters By Default"] = nil,
   ["Show Players Only"] = "僅顯示自己",
   ["Show Procs as Buff Indicators"] = "在框架的Buff指示器顯示觸發效果",
   ["Show Procs of all Classes"] = "顯示所有職業的觸發效果",

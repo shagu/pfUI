@@ -373,6 +373,7 @@ pfUI_translation["koKR"] = {
   ["Show Hots of all Classes"] = "모든 클래스 핫버프 보기",
   ["Show Inactive Tracking"] = nil,
   ["Show Macro Text"] = "매크로 텍스트 표시",
+  ["Show Meters By Default"] = nil,
   ["Show Players Only"] = "플레이어만 보기",
   ["Show Procs as Buff Indicators"] = "무기활성화버프 버프표시기에 보기",
   ["Show Procs of all Classes"] = "모든 클래스 무기활성화 버프 보기",

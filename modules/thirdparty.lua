@@ -580,4 +580,17 @@ pfUI:RegisterModule("thirdparty", function ()
       end
     end
   end)
+
+  -- toggle meter by default if configured
+  if C.thirdparty.ktm.dock == "1" or C.thirdparty.dpsmate.dock == "1" or C.thirdparty.swstats.dock == "1" then
+    if C.thirdparty.showmeter == "1" then
+      local f = CreateFrame("Frame")
+      f:RegisterEvent("PLAYER_ENTERING_WORLD")
+      f:SetScript("OnEvent", function()
+        pfUI.thirdparty.meters.state = false
+        pfUI.thirdparty.meters:Toggle()
+        this:UnregisterAllEvents()
+      end)
+    end
+  end
 end)

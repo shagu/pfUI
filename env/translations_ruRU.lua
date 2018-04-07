@@ -373,6 +373,7 @@ pfUI_translation["ruRU"] = {
   ["Show Hots of all Classes"] = "Показать лечение со временем (HoT) всех классов",
   ["Show Inactive Tracking"] = "Показать неактивное отслеживание",
   ["Show Macro Text"] = "Показать текст макросов",
+  ["Show Meters By Default"] = nil,
   ["Show Players Only"] = "Показать только игроков",
   ["Show Procs as Buff Indicators"] = "Показать проки (Procs) как индикаторы баффов",
   ["Show Procs of all Classes"] = "Показать проки (Procs) всех классов",
