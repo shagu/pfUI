@@ -842,19 +842,22 @@ function pfUI.uf:RefreshUnit(unit, component)
 
   -- hide and return early on unused frames
   if not ( pfUI.unlock and pfUI.unlock:IsShown() ) then
-    -- check existing units or focus frames
+
     if unit.unitname and unit.unitname ~= "focus" then
+      --keep focus and named frames visible
       unit:Show()
-    elseif UnitName(unit.label .. unit.id) then
+    elseif UnitExists(unit.label .. unit.id) then
       -- hide group while in raid and option is set
       if pfUI_config["unitframes"]["group"]["hide_in_raid"] == "1" and strsub(unit.label,0,5) == "party" and UnitInRaid("player") then
         unit:Hide()
         return
 
-      -- hide existing but too far away pet
-      elseif strsub(unit.label,0,8) == "partypet" and not UnitIsVisible(unit.label .. unit.id) then
-        unit:Hide()
-        return
+      -- hide existing but too far away pet and pets of old group members
+      elseif unit.label == "partypet" then
+        if not UnitIsVisible(unit.label .. unit.id) or not UnitExists("party" .. unit.id) then
+          unit:Hide()
+          return
+        end
 
       -- hide self in group if solo or hide in raid is set
       elseif unit.fname == "Group0" or unit.fname == "PartyPet0" or unit.fname == "Party0Target" then
