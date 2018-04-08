@@ -557,6 +557,9 @@ pfUI:RegisterModule("actionbar", function ()
     button:SetHeight(C.bars.icon_size)
     button:Show()
 
+    local cooldown = _G["PetActionButton"..i..'Cooldown']
+    cooldown.pfCooldownType = "NOGCD"
+
     local icon = _G["PetActionButton"..i..'Icon']
     icon:SetAllPoints(button)
     icon:SetParent(button)
@@ -591,6 +594,9 @@ pfUI:RegisterModule("actionbar", function ()
 
       button:SetNormalTexture("")
       button.SetNormalTexture = function() return end
+
+      local cooldown = _G[actionbutton..i..'Cooldown']
+      cooldown.pfCooldownType = "NOGCD"
 
       local icon = _G[actionbutton..i..'Icon']
       icon:SetAllPoints(button)

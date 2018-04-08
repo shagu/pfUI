@@ -350,6 +350,7 @@ function pfUI.uf:UpdateConfig()
       f.buffs[i].stacks:SetShadowOffset(0.8, -0.8)
       f.buffs[i].stacks:SetTextColor(1,1,.5)
       f.buffs[i].cd = f.buffs[i].cd or CreateFrame("Model", nil, f.buffs[i], "CooldownFrameTemplate")
+      f.buffs[i].cd.pfCooldownType = "ALL"
       f.buffs[i].cd:SetAlpha(0)
 
       f.buffs[i]:RegisterForClicks("RightButtonUp")
@@ -428,6 +429,7 @@ function pfUI.uf:UpdateConfig()
       f.debuffs[i].stacks:SetShadowOffset(0.8, -0.8)
       f.debuffs[i].stacks:SetTextColor(1,1,.5)
       f.debuffs[i].cd = f.debuffs[i].cd or CreateFrame("Model", nil, f.debuffs[i], "CooldownFrameTemplate")
+      f.debuffs[i].cd.pfCooldownType = "ALL"
       f.debuffs[i].cd:SetAlpha(0)
 
       f.debuffs[i]:RegisterForClicks("RightButtonUp")

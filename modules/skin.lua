@@ -16,6 +16,18 @@ pfUI:RegisterModule("skin", function ()
   EnableMovable("ClassTrainerFrame", "Blizzard_TrainerUI")
   EnableMovable("InspectFrame", "Blizzard_InspectUI", { "InspectHonorFrame" })
 
+  if C.appearance.cd.blizzard == "1" then
+    hooksecurefunc("PaperDollItemSlotButton_Update", function()
+        local cooldown = getglobal(this:GetName().."Cooldown")
+        cooldown.pfCooldownType = "ALL"
+    end)
+
+    hooksecurefunc("SpellButton_UpdateButton", function()
+      local cooldown = getglobal(this:GetName().."Cooldown")
+      cooldown.pfCooldownType = "ALL"
+    end)
+  end
+
   _, class = UnitClass("player")
   local color = RAID_CLASS_COLORS[class]
   local cr, cg, cb = color.r , color.g, color.b

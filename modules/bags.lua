@@ -263,13 +263,17 @@ pfUI:RegisterModule("bags", function ()
       if tpl == "BankItemButtonGenericTemplate" then
         local bankslot = pfUI.bags[bag].slots[slot].frame
         local name = "pfBag" .. bag .. "item" .. slot .. "Cooldown"
-        bankslot.cooldown = CreateFrame("Model", name, bankslot, "CooldownFrameTemplate")
-        bankslot.cooldown:SetAllPoints(bankslot)
+        bankslot.cd = CreateFrame("Model", name, bankslot, "CooldownFrameTemplate")
+        bankslot.cd:SetAllPoints(bankslot)
+        bankslot.cd.pfCooldownType = "ALL"
+      else
+        local bagslot = pfUI.bags[bag].slots[slot].frame
+        bagslot.cd = _G[bagslot:GetName().."Cooldown"]
+        bagslot.cd.pfCooldownType = "ALL"
       end
 
       CreateBackdrop(pfUI.bags[bag].slots[slot].frame, default_border)
       pfUI.bags[bag].slots[slot].frame:SetNormalTexture("")
-
       pfUI.bags[bag].slots[slot].bag = bag
       pfUI.bags[bag].slots[slot].slot = slot
       pfUI.bags[bag].slots[slot].frame:SetID(slot)

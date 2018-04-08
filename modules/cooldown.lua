@@ -46,15 +46,21 @@ pfUI:RegisterModule("cooldown", function ()
 
   -- hook
   hooksecurefunc("CooldownFrame_SetTimer", function(this, start, duration, enable)
+    local parent = this.GetParent and this:GetParent()
+
+    if not this.pfCooldownType or ( this.pfCooldownType == "NOGCD" and duration < tonumber(C.appearance.cd.threshold)) then
+      return
+    end
+
     -- realign guessed cooldown frames
-    if this:GetParent() and this:GetParent():GetWidth() / 36 > 0 then
-      this:SetScale(this:GetParent():GetWidth() / 36)
-      this:SetPoint("TOPLEFT", this:GetParent(), "TOPLEFT", -1, 1)
-      this:SetPoint("BOTTOMRIGHT", this:GetParent(), "BOTTOMRIGHT", 1, -1)
+    if parent and parent:GetWidth() / 36 > 0 then
+      this:SetScale(parent:GetWidth() / 36)
+      this:SetPoint("TOPLEFT", parent, "TOPLEFT", -1, 1)
+      this:SetPoint("BOTTOMRIGHT", parent, "BOTTOMRIGHT", 1, -1)
     end
 
     -- print time as text on cooldown frames
-    if ( start > 0 and duration > tonumber(C.appearance.cd.threshold) and enable > 0) then
+    if start > 0 and duration > 0 and enable > 0 then
       if( not this.cd ) then
         pfCreateCoolDown(this, start, duration)
       end
