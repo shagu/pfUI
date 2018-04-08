@@ -11,10 +11,10 @@ pfUI:RegisterModule("feigndeath", function ()
     if event == "PLAYER_TARGET_CHANGED" and UnitIsDead("target") then
       healthscan:SetUnit("target")
       cache[UnitName("target")] = healthbar:GetValue()
-    elseif event == "UNIT_HEALTH" and UnitIsDead(arg1) then
+    elseif event == "UNIT_HEALTH" and UnitIsDead(arg1) and UnitName(arg1) then
       healthscan:SetUnit(arg1)
       cache[UnitName(arg1)] = healthbar:GetValue()
-    elseif event == "UNIT_HEALTH" then
+    elseif event == "UNIT_HEALTH" and UnitName(arg1) then
       cache[UnitName(arg1)] = nil
     end
   end)
