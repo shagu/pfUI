@@ -75,6 +75,8 @@ pfUI:RegisterModule("buff", function ()
     buff.stacks:SetJustifyV("BOTTOM")
     buff.stacks:SetAllPoints(buff)
 
+    buff:RegisterForClicks("RightButtonUp")
+
     buff.btype = btype
     buff.gid = i
 
