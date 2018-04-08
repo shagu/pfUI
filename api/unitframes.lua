@@ -803,12 +803,14 @@ function pfUI.uf:RefreshUnitState(unitframe)
 end
 
 function pfUI.uf:RefreshUnit(unit, component)
+  -- break early on misconfigured UF's
   if not unit.label then return end
   if not unit.hp then return end
   if not unit.power then return end
 
   local component = component or ""
-  -- break early on misconfigured UF's
+
+  -- don't update scanner activity
   if unit.label == "target" or unit.label == "targettarget" then
     if pfScanActive == true then return end
   end
@@ -838,15 +840,17 @@ function pfUI.uf:RefreshUnit(unit, component)
     default_border = pfUI_config.appearance.border.unitframes
   end
 
-  local C = pfUI_config
-
   -- hide and return early on unused frames
   if not ( pfUI.unlock and pfUI.unlock:IsShown() ) then
 
+    --keep focus and named frames visible
     if unit.unitname and unit.unitname ~= "focus" then
-      --keep focus and named frames visible
       unit:Show()
-    elseif UnitExists(unit.label .. unit.id) then
+
+
+    -- only update visibility state for existing units
+    elseif UnitName(unit.label .. unit.id) then
+
       -- hide group while in raid and option is set
       if pfUI_config["unitframes"]["group"]["hide_in_raid"] == "1" and strsub(unit.label,0,5) == "party" and UnitInRaid("player") then
         unit:Hide()
@@ -869,12 +873,12 @@ function pfUI.uf:RefreshUnit(unit, component)
 
       unit:Show()
     else
-      -- hide unused frame
       unit:Hide()
       return
     end
   end
 
+  -- create required fields
   if not unit.cache then unit.cache = {} end
   if not unit.id then unit.id = "" end
 
