@@ -45,29 +45,29 @@ pfUI:RegisterModule("prediction", function ()
       return
     end
 
-    local _, _, evtype, delay = string.find(msg, '(%a+)/(%d+)/')
-    if evtype and evtype == "GrpHealdelay" or evtype == "Healdelay" then
-      pfUI.prediction:HealDelay(sender, delay)
+    local message = {strsplit("/", msg)}
+
+    if message[1] and ( message[1] == "GrpHealdelay" or message[1] == "Healdelay" ) then
+      pfUI.prediction:HealDelay(sender, message[2])
       return
     end
 
-    local _, _, evtype, target, amount, duration  = string.find(msg, '(Heal)/(%a+)/(%d+)/(%d+)/')
-    if evtype and target then
-      pfUI.prediction:Heal(sender, target, amount, duration)
+    if message[1] and message[1] == "Heal" and message[2] then
+      pfUI.prediction:Heal(sender, message[2], message[3], message[4])
       return
     end
 
-    local _, _, evtype, amount, duration, targets = string.find(msg, '(GrpHeal)/(%d+)/(%d+)/(.+)/')
-    if evtype and target then
-      for _, target in pairs({strsplit("/", targets)}) do
-        pfUI.prediction:Heal(sender, target, amount, duration)
+    if message[1] and message[1] == "GrpHeal" and message[2] then
+      for i=4,8 do
+        if message[i] then
+          pfUI.prediction:Heal(sender, message[i], message[2], message[3])
+        end
       end
       return
     end
 
-    local _, _, evtype, target  = string.find(msg, '(Resurrection)/(%a+)/(start)/')
-    if evtype and target then
-      pfUI.prediction:Ress(sender, target)
+    if message[1] and message[1] == "Resurrection" and message[2] then
+      pfUI.prediction:Ress(sender, message[2])
       return
     end
   end
