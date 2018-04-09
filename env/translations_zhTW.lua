@@ -164,6 +164,7 @@ pfUI_translation["zhTW"] = {
   ["Enable Debuff Indicators"] = "在頭像框架上顯示Debuff",
   ["Enable Debuffs"] = "顯示Debuff",
   ["Enable Durations On Blizzard Frames"] = nil,
+  ["Enable Durations On Foreign Frames"] = nil,
   ["Enable Energy Ticks"] = "顯示能量刻度",
   ["Enable Extended Guild Information"] = "公會資訊擴展顯示",
   ["Enable Health Color"] = nil,

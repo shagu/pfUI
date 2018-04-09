@@ -164,6 +164,7 @@ pfUI_translation["koKR"] = {
   ["Enable Debuff Indicators"] = "디버프 표시기 활성화",
   ["Enable Debuffs"] = "디버프 활성화",
   ["Enable Durations On Blizzard Frames"] = nil,
+  ["Enable Durations On Foreign Frames"] = nil,
   ["Enable Energy Ticks"] = "Energy Ticks 활성화",
   ["Enable Extended Guild Information"] = "길드 정보 확장 사용",
   ["Enable Health Color"] = nil,

@@ -164,6 +164,7 @@ pfUI_translation["enUS"] = {
   ["Enable Debuff Indicators"] = nil,
   ["Enable Debuffs"] = nil,
   ["Enable Durations On Blizzard Frames"] = nil,
+  ["Enable Durations On Foreign Frames"] = nil,
   ["Enable Energy Ticks"] = nil,
   ["Enable Extended Guild Information"] = nil,
   ["Enable Health Color"] = nil,

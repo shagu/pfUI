@@ -164,6 +164,7 @@ pfUI_translation["frFR"] = {
   ["Enable Debuff Indicators"] = "Activer l'indicateur des affaiblissements",
   ["Enable Debuffs"] = "Activer les affaiblissements",
   ["Enable Durations On Blizzard Frames"] = nil,
+  ["Enable Durations On Foreign Frames"] = nil,
   ["Enable Energy Ticks"] = "Activer la barre de rechargement d'énergie",
   ["Enable Extended Guild Information"] = "Activer les informations de guilde étendues",
   ["Enable Health Color"] = nil,

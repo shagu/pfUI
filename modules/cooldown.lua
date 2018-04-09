@@ -47,7 +47,7 @@ pfUI:RegisterModule("cooldown", function ()
   -- hook
   hooksecurefunc("CooldownFrame_SetTimer", function(this, start, duration, enable)
     -- abort on unknown frames
-    if not this.pfCooldownType then
+    if C.appearance.cd.foreign == "0" and not this.pfCooldownType then
       return
     end
 

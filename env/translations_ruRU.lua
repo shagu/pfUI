@@ -164,6 +164,7 @@ pfUI_translation["ruRU"] = {
   ["Enable Debuff Indicators"] = "Включить индикаторы дебаффов",
   ["Enable Debuffs"] = "Включить дебаффы",
   ["Enable Durations On Blizzard Frames"] = nil,
+  ["Enable Durations On Foreign Frames"] = nil,
   ["Enable Energy Ticks"] = "Включить восполнение энергии",
   ["Enable Extended Guild Information"] = "Включить расширенную информацию о гильдии",
   ["Enable Health Color"] = "Включить цвет здоровья",

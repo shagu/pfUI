@@ -164,6 +164,7 @@ pfUI_translation["esES"] = {
   ["Enable Debuff Indicators"] = "Activar Indicador de Debuff",
   ["Enable Debuffs"] = "Activar Debuffs",
   ["Enable Durations On Blizzard Frames"] = nil,
+  ["Enable Durations On Foreign Frames"] = nil,
   ["Enable Energy Ticks"] = "Activar Tic de Energía",
   ["Enable Extended Guild Information"] = "Activar Información de Hermandad Extendida",
   ["Enable Health Color"] = "Activar Color de Salud",

@@ -740,6 +740,7 @@ pfUI:RegisterModule("gui", function ()
       CreateConfig(nil, this, T["Cooldown Text Font Size"], C.appearance.cd, "font_size")
       CreateConfig(nil, this, T["Display Debuff Durations"], C.appearance.cd, "debuffs", "checkbox")
       CreateConfig(nil, this, T["Enable Durations On Blizzard Frames"], C.appearance.cd, "blizzard", "checkbox")
+      CreateConfig(nil, this, T["Enable Durations On Foreign Frames"], C.appearance.cd, "foreign", "checkbox")
       this.setup = true
     end
   end)
