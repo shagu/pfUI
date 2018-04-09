@@ -382,13 +382,51 @@ function pfUI.uf:UpdateConfig()
       end
 
       f.buffs[i]:SetScript("OnEnter", function()
-        if not this:GetParent().label then return end
+        local parent = this:GetParent()
+        if not parent.label then return end
 
         GameTooltip:SetOwner(this, "ANCHOR_BOTTOMRIGHT")
-        if this:GetParent().label == "player" then
+        if parent.label == "player" then
           GameTooltip:SetPlayerBuff(GetPlayerBuff(id-1,"HELPFUL"))
         else
-          GameTooltip:SetUnitBuff(this:GetParent().label .. this:GetParent().id, id)
+          GameTooltip:SetUnitBuff(parent.label .. parent.id, id)
+        end
+
+        if IsShiftKeyDown() then
+          local texture = parent.label == "player" and GetPlayerBuffTexture(GetPlayerBuff(id-1,"HELPFUL")) or UnitBuff(parent.label .. parent.id, id)
+
+          local playerlist = ""
+          local first = true
+
+          if UnitInRaid("player") then
+            for i=1,40 do
+              local unitstr = "raid" .. i
+              if not UnitHasBuff(unitstr, texture) and UnitName(unitstr) then
+                playerlist = playerlist .. ( not first and ", " or "") .. UnitName(unitstr)
+                first = nil
+              end
+            end
+          else
+            if not UnitHasBuff("player", texture) then
+              playerlist = playerlist .. ( not first and ", " or "") .. UnitName("player")
+              first = nil
+            end
+
+            for i=1,4 do
+              local unitstr = "party" .. i
+              if not UnitHasBuff(unitstr, texture) and UnitName(unitstr) then
+                playerlist = playerlist .. ( not first and ", " or "") .. UnitName(unitstr)
+                first = nil
+              end
+            end
+          end
+
+          if strlen(playerlist) > 0 then
+            GameTooltip:AddLine(" ")
+            GameTooltip:AddLine(T["Unbuffed"] .. ":", .3, 1, .8)
+            GameTooltip:AddLine(playerlist,1,1,1,1)
+            GameTooltip:Show()
+          end
         end
       end)
 

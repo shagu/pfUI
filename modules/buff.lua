@@ -109,6 +109,43 @@ pfUI:RegisterModule("buff", function ()
       GameTooltip:SetOwner(this, "ANCHOR_BOTTOMRIGHT")
       if this.mode == this.btype then
         GameTooltip:SetPlayerBuff(this.bid)
+
+        if IsShiftKeyDown() then
+          local texture = GetPlayerBuffTexture(this.bid)
+
+          local playerlist = ""
+          local first = true
+
+          if UnitInRaid("player") then
+            for i=1,40 do
+              local unitstr = "raid" .. i
+              if not UnitHasBuff(unitstr, texture) and UnitName(unitstr) then
+                playerlist = playerlist .. ( not first and ", " or "") .. UnitName(unitstr)
+                first = nil
+              end
+            end
+          else
+            if not UnitHasBuff("player", texture) then
+              playerlist = playerlist .. ( not first and ", " or "") .. UnitName("player")
+              first = nil
+            end
+
+            for i=1,4 do
+              local unitstr = "party" .. i
+              if not UnitHasBuff(unitstr, texture) and UnitName(unitstr) then
+                playerlist = playerlist .. ( not first and ", " or "") .. UnitName(unitstr)
+                first = nil
+              end
+            end
+          end
+
+          if strlen(playerlist) > 0 then
+            GameTooltip:AddLine(" ")
+            GameTooltip:AddLine(T["Unbuffed"] .. ":", .3, 1, .8)
+            GameTooltip:AddLine(playerlist,1,1,1,1)
+            GameTooltip:Show()
+          end
+        end
       elseif this.mode == "MAINHAND" then
         GameTooltip:SetInventoryItem("player", 16)
       elseif this.mode == "OFFHAND" then

@@ -34,6 +34,23 @@ function pfUI.api.UnitInRange(unit)
   end
 end
 
+-- [ UnitHasBuff ]
+-- Returns whether a unit has the given buff or not.
+-- unit         [string]        A unit to query (string, unitID)
+-- buff         [string]        The texture of the buff.
+-- return:      [bool]          true if unit has buff otherwise "nil"
+function pfUI.api.UnitHasBuff(unit, buff)
+  local hasbuff = nil
+  for i=1,32 do
+    if UnitBuff(unit, i) == buff then
+      hasbuff = true
+      break
+    end
+  end
+
+  return hasbuff
+end
+
 -- [ strvertical ]
 -- Creates vertical text using linebreaks. Multibyte char friendly.
 -- 'str'        [string]        String to columnize.
