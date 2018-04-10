@@ -2,7 +2,7 @@
 ## Title: |cff33ffccpf|cffffffffUI
 ## Author: Shagu
 ## Notes: A complete user interface replacement.
-## Version: 3.8.7
+## Version: 3.8.8
 ## SavedVariables: pfUI_profiles, pfUI_gold
 ## SavedVariablesPerCharacter: pfUI_config, pfUI_init, pfUI_playerDB
 

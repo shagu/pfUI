@@ -533,6 +533,9 @@ pfUI:RegisterModule("actionbar", function ()
     button:SetWidth(C.bars.icon_size)
     button:SetHeight(C.bars.icon_size)
 
+    local cooldown = _G["ShapeshiftButton"..i..'Cooldown']
+    cooldown.pfCooldownType = "NOGCD"
+
     local icon = _G["ShapeshiftButton"..i..'Icon']
     icon:SetParent(button)
     icon:SetAllPoints(button)
