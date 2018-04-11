@@ -948,12 +948,11 @@ function pfUI.uf:RefreshUnit(unit, component)
 
   -- Loot Icon
   if unit.lootIcon and ( component == "all" or component == "lootIcon" ) then
-    local _, lootmaster = GetLootMethod()
-    if GetNumPartyMembers() == 0 and GetNumRaidMembers() == 0 then
-      unit.lootIcon:Hide()
-    elseif lootmaster and (
-        ( unit.label == "party" and tonumber(unit.id) == lootmaster ) or
-        ( unit.label == "player" and lootmaster == 0 ) )then
+    -- no third return value here.. but leaving this as a hint
+    local method, group, raid = GetLootMethod()
+    local name = group and UnitName(group == 0 and "player" or "party"..group) or raid and UnitName("raid"..raid) or nil
+
+    if name and name == UnitName(unit.label .. unit.id) then
       unit.lootIcon:Show()
     else
       unit.lootIcon:Hide()
