@@ -1331,12 +1331,12 @@ function pfUI.uf:ClickAction(button)
     elseif label == "party" then
       ToggleDropDownMenu(1, nil, getglobal("PartyMemberFrame" .. this.id .. "DropDown"), "cursor")
     elseif label == "raid" then
-      -- RaidFrameDropDown_Initialize expects .name and .unit attributes on raid unit buttons
-      if not (this.name) then this.name = this.lastUnit end
-      if not (this.unit) then this.unit = unitstr end
-      ToggleDropDownMenu(1, nil, getglobal("RaidMemberFrame" .. this.id .. "DropDown"), "cursor")
-      FriendsDropDown.initialize = RaidFrameDropDown_Initialize
+      local name = this.lastname
+      local id = this.id
+      local unit = this.label .. this.id
+
       FriendsDropDown.displayMode = "MENU"
+      FriendsDropDown.initialize = function() UnitPopup_ShowMenu(getglobal(UIDROPDOWNMENU_OPEN_MENU), "PARTY", unit, name, id) end
       ToggleDropDownMenu(1, nil, FriendsDropDown, "cursor")
     end
   else
