@@ -51,6 +51,21 @@ function pfUI.api.UnitHasBuff(unit, buff)
   return hasbuff
 end
 
+-- [[ GetUnitColor ]]
+-- Returns an escape string for the unit aswell as the RGB values
+-- unit         [string]        the unitstring
+-- return:      [table]         string, r, g, b
+function pfUI.api.GetUnitColor(unitstr)
+  local _, class = UnitClass(unitstr)
+
+  local r, g, b = .8, .8, .8
+  if RAID_CLASS_COLORS[class] then
+    r, g, b = RAID_CLASS_COLORS[class].r, RAID_CLASS_COLORS[class].g, RAID_CLASS_COLORS[class].b
+  end
+
+  return string.format("|cff%02x%02x%02x", r * 255, g * 255, b * 255), r, g, b
+end
+
 -- [ strvertical ]
 -- Creates vertical text using linebreaks. Multibyte char friendly.
 -- 'str'        [string]        String to columnize.

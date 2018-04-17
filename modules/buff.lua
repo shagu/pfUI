@@ -120,20 +120,20 @@ pfUI:RegisterModule("buff", function ()
             for i=1,40 do
               local unitstr = "raid" .. i
               if not UnitHasBuff(unitstr, texture) and UnitName(unitstr) then
-                playerlist = playerlist .. ( not first and ", " or "") .. UnitName(unitstr)
+                playerlist = playerlist .. ( not first and ", " or "") .. GetUnitColor(unitstr) .. UnitName(unitstr) .. "|r"
                 first = nil
               end
             end
           else
             if not UnitHasBuff("player", texture) then
-              playerlist = playerlist .. ( not first and ", " or "") .. UnitName("player")
+              playerlist = playerlist .. ( not first and ", " or "") .. GetUnitColor(unitstr) .. UnitName("player") .. "|r"
               first = nil
             end
 
             for i=1,4 do
               local unitstr = "party" .. i
               if not UnitHasBuff(unitstr, texture) and UnitName(unitstr) then
-                playerlist = playerlist .. ( not first and ", " or "") .. UnitName(unitstr)
+                playerlist = playerlist .. ( not first and ", " or "") .. GetUnitColor(unitstr) .. UnitName(unitstr) .. "|r"
                 first = nil
               end
             end
