@@ -195,39 +195,10 @@ pfUI:RegisterModule("actionbar", function ()
   pfUI.bars:RegisterEvent("PLAYER_ENTERING_WORLD")
   pfUI.bars:RegisterEvent("CVAR_UPDATE")
   pfUI.bars:RegisterEvent("PET_BAR_UPDATE")
-  pfUI.bars:RegisterEvent("PET_BAR_UPDATE_COOLDOWN")
   pfUI.bars:RegisterEvent("PLAYER_CONTROL_GAINED")
   pfUI.bars:RegisterEvent("PLAYER_CONTROL_LOST")
   pfUI.bars:RegisterEvent("PLAYER_FARSIGHT_FOCUS_CHANGED")
-  pfUI.bars:RegisterEvent("PET_BAR_SHOWGRID")
-  pfUI.bars:RegisterEvent("PET_BAR_HIDEGRID")
   pfUI.bars:RegisterEvent("UPDATE_SHAPESHIFT_FORMS")
-
-  pfUI.bars.autohide = CreateFrame("Frame", nil, UIParent)
-  pfUI.bars.autohide:RegisterEvent("PLAYER_ENTERING_WORLD")
-  pfUI.bars.autohide:SetScript("OnEvent", function()
-    if C.bars.hide_actionmain == "1" then
-      CreateAutohide(pfUI.bars.actionmain)
-    end
-    if C.bars.hide_bottomleft == "1" then
-      CreateAutohide(pfUI.bars.bottomleft)
-    end
-    if C.bars.hide_bottomright == "1" then
-      CreateAutohide(pfUI.bars.bottomright)
-    end
-    if C.bars.hide_right == "1" then
-      CreateAutohide(pfUI.bars.right)
-    end
-    if C.bars.hide_tworight == "1" then
-      CreateAutohide(pfUI.bars.tworight)
-    end
-    if C.bars.hide_shapeshift == "1" then
-      CreateAutohide(pfUI.bars.shapeshift)
-    end
-    if C.bars.hide_pet == "1" then
-      CreateAutohide(pfUI.bars.pet)
-    end
-  end)
 
   pfUI.bars.actionmain   = CreateFrame("Frame", "pfBarActionMain",  UIParent)
   pfUI.bars.shapeshift   = CreateFrame("Frame", "pfBarShapeshift",  UIParent)
@@ -237,11 +208,9 @@ pfUI:RegisterModule("actionbar", function ()
   pfUI.bars.tworight     = CreateFrame("Frame", "pfBarTwoRight",    UIParent)
   pfUI.bars.pet          = CreateFrame("Frame", "pfBarPet",         UIParent)
 
-  PetActionBarFrame:SetParent(pfUI.bars.pet)
-
   pfUI.bars:SetScript("OnEvent", function()
       MultiActionBar_Update()
-      UIParent_ManageFramePositions();
+      UIParent_ManageFramePositions()
       MultiActionBar_Update()
       UpdateMicroButtons()
 
@@ -478,7 +447,37 @@ pfUI:RegisterModule("actionbar", function ()
         if C.bars.background == "1" then CreateBackdrop(pfUI.bars.actionmain, default_border) end
         if C.bars.background == "1" then CreateBackdrop(pfUI.bars.bottomleft, default_border) end
       end
+
+      -- refresh all grids
+      MultiActionBar_ShowAllGrids()
+      MultiActionBar_HideAllGrids()
     end)
+
+  pfUI.bars.autohide = CreateFrame("Frame", nil, UIParent)
+  pfUI.bars.autohide:RegisterEvent("PLAYER_ENTERING_WORLD")
+  pfUI.bars.autohide:SetScript("OnEvent", function()
+    if C.bars.hide_actionmain == "1" then
+      CreateAutohide(pfUI.bars.actionmain)
+    end
+    if C.bars.hide_bottomleft == "1" then
+      CreateAutohide(pfUI.bars.bottomleft)
+    end
+    if C.bars.hide_bottomright == "1" then
+      CreateAutohide(pfUI.bars.bottomright)
+    end
+    if C.bars.hide_right == "1" then
+      CreateAutohide(pfUI.bars.right)
+    end
+    if C.bars.hide_tworight == "1" then
+      CreateAutohide(pfUI.bars.tworight)
+    end
+    if C.bars.hide_shapeshift == "1" then
+      CreateAutohide(pfUI.bars.shapeshift)
+    end
+    if C.bars.hide_pet == "1" then
+      CreateAutohide(pfUI.bars.pet)
+    end
+  end)
 
   -- create main action bar frame
   pfUI.bars.actionmain:SetFrameStrata("LOW")
@@ -554,6 +553,7 @@ pfUI:RegisterModule("actionbar", function ()
     hotkey:SetJustifyV("TOP")
   end
 
+  PetActionBarFrame:SetParent(pfUI.bars.pet)
   for i = 1, NUM_PET_ACTION_SLOTS do
     local button = _G["PetActionButton"..i]
     button:SetWidth(C.bars.icon_size)
