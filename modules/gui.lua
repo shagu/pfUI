@@ -620,7 +620,7 @@ pfUI:RegisterModule("gui", function ()
           function()
             _G["pfUI_init"] = {}
             this:GetParent():Hide()
-            pfUI.gui:Reload()
+            pfUI.firstrun:NextStep()
           end)
       end, true)
 
@@ -628,6 +628,7 @@ pfUI:RegisterModule("gui", function ()
         CreateQuestionDialog(T["Do you really want to reset your configuration?\nThis also includes frame positions"],
           function()
             _G["pfUI_config"] = {}
+            _G["pfUI_init"] = {}
             pfUI:LoadConfig()
             this:GetParent():Hide()
             pfUI.gui:Reload()
