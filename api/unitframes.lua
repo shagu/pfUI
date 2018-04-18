@@ -408,7 +408,7 @@ function pfUI.uf:UpdateConfig()
             end
           else
             if not UnitHasBuff("player", texture) then
-              playerlist = playerlist .. ( not first and ", " or "") .. GetUnitColor(unitstr) .. UnitName("player") .. "|r"
+              playerlist = playerlist .. ( not first and ", " or "") .. GetUnitColor("player") .. UnitName("player") .. "|r"
               first = nil
             end
 
