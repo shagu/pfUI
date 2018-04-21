@@ -379,6 +379,7 @@ pfUI_translation["ruRU"] = {
   ["Show Players Only"] = "Показать только игроков",
   ["Show Procs as Buff Indicators"] = "Показать проки (Procs) как индикаторы баффов",
   ["Show Procs of all Classes"] = "Показать проки (Procs) всех классов",
+  ["Show Totems as Buff Indicators"] = nil,
   ["Show PvP Icon"] = "Показать PvP иконку",
   ["Show Self in Group Frames"] = "Показать себя в окне группы",
   ["Skins"] = "Оболочки",

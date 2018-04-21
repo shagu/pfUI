@@ -1561,6 +1561,41 @@ function pfUI.uf:SetupBuffFilter()
     table.insert(pfUI.uf.buffs, "interface\\icons\\spell_nature_healingway")
   end
 
+  if (pfUI_config.unitframes.all_procs == "1" or myclass == "SHAMAN") and pfUI_config.unitframes.show_totems == "1" then
+    -- Strength of Earth Totem
+    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_nature_earthbindtotem")
+
+    -- Stoneskin Totem
+    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_nature_stoneskintotem")
+
+    -- Mana Spring Totem
+    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_nature_manaregentotem")
+
+    -- Mana Tide Totem
+    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_frost_summonwaterelemental")
+
+    -- Healing Spring Totem
+    table.insert(pfUI.uf.buffs, "interface\\icons\\inv_spear_04")
+
+    -- Tranquil Air Totem
+    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_nature_brilliance")
+
+    -- Grace of Air Totem
+    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_nature_invisibilitytotem")
+
+    -- Grounding Totem
+    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_nature_groundingtotem")
+
+    -- Nature Resistance Totem
+    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_nature_natureresistancetotem")
+
+    -- Fire Resistance Totem
+    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_fireresistancetotem_01")
+
+    -- Frost Resistance Totem
+    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_frostresistancetotem_01")
+  end
+
   if (pfUI_config.unitframes.all_procs == "1" or myclass == "PRIEST") and pfUI_config.unitframes.show_procs == "1" then
     -- Inspiration
     table.insert(pfUI.uf.buffs, "interface\\icons\\inv_shield_06")

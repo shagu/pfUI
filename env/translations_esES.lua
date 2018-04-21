@@ -379,6 +379,7 @@ pfUI_translation["esES"] = {
   ["Show Players Only"] = "Solamente Mostrar Jugadores",
   ["Show Procs as Buff Indicators"] = "Mostrar Ocurrencias aleatorias programadas (Procs) como Indicadores de Buffs",
   ["Show Procs of all Classes"] = "Mostrar Ocurrencias aleatorias programadas (Procs) de Todas las Clases",
+  ["Show Totems as Buff Indicators"] = nil,
   ["Show PvP Icon"] = "Mostrar Icono de JcJ",
   ["Show Self in Group Frames"] = "Mostrar a ti Mismo en los Marcos del Grupo",
   ["Skins"] = "Piel",
