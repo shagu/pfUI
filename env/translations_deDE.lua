@@ -379,6 +379,7 @@ pfUI_translation["deDE"] = {
   ["Show Players Only"] = nil,
   ["Show Procs as Buff Indicators"] = nil,
   ["Show Procs of all Classes"] = nil,
+  ["Show Totems as Buff Indicators"] = nil,
   ["Show PvP Icon"] = nil,
   ["Show Self in Group Frames"] = nil,
   ["Skins"] = nil,

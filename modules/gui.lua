@@ -804,6 +804,10 @@ pfUI:RegisterModule("gui", function ()
       CreateConfig(nil, this, T["Show Hots as Buff Indicators"], C.unitframes, "show_hots", "checkbox")
       CreateConfig(nil, this, T["Show Hots of all Classes"], C.unitframes, "all_hots", "checkbox")
       CreateConfig(nil, this, T["Show Procs as Buff Indicators"], C.unitframes, "show_procs", "checkbox")
+      local _, myclass = UnitClass("player")
+      if myclass == "SHAMAN" then
+        CreateConfig(nil, this, T["Show Totems as Buff Indicators"], C.unitframes, "show_totems", "checkbox")
+      end
       CreateConfig(nil, this, T["Show Procs of all Classes"], C.unitframes, "all_procs", "checkbox")
       CreateConfig(nil, this, T["Buff Indicator Size"], C.unitframes, "indicator_size")
       CreateConfig(nil, this, T["Only Show Indicators for Dispellable Debuffs"], C.unitframes, "debuffs_class", "checkbox")
