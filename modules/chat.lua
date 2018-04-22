@@ -741,19 +741,27 @@ pfUI:RegisterModule("chat", function ()
   cr, cg, cb = tonumber(cr), tonumber(cg), tonumber(cb)
   wcol = string.format("%02x%02x%02x",cr * 255,cg * 255, cb * 255)
 
+  -- read and parse chat bracket settings
+  local left = string.sub(C.chat.text.bracket, 1, 1)
+  local right = string.sub(C.chat.text.bracket, 2, 2)
+
+  -- read and parse chat time bracket settings
+  local tleft = string.sub(C.chat.text.timebracket, 1, 1)
+  local tright = string.sub(C.chat.text.timebracket, 2, 2)
+
   -- shorten chat channel indicators
   local default = " " .. "%s" .. "|r:" .. "\32"
   _G.CHAT_CHANNEL_GET = "%s" .. "|r:" .. "\32"
-  _G.CHAT_GUILD_GET = '[G]' .. default
-  _G.CHAT_OFFICER_GET = '[O]'.. default
-  _G.CHAT_PARTY_GET = '[P]' .. default
-  _G.CHAT_RAID_GET = '[R]' .. default
-  _G.CHAT_RAID_LEADER_GET = '[RL]' .. default
-  _G.CHAT_RAID_WARNING_GET = '[RW]' .. default
-  _G.CHAT_BATTLEGROUND_GET = '[BG]' .. default
-  _G.CHAT_BATTLEGROUND_LEADER_GET = '[BL]' .. default
-  _G.CHAT_SAY_GET = '[S]' .. default
-  _G.CHAT_YELL_GET = '[Y]' .. default
+  _G.CHAT_GUILD_GET = left .. "G" .. right .. default
+  _G.CHAT_OFFICER_GET = left .. "O" .. right .. default
+  _G.CHAT_PARTY_GET = left .. "P" .. right .. default
+  _G.CHAT_RAID_GET = left .. "R" .. right .. default
+  _G.CHAT_RAID_LEADER_GET = left .. "RL" .. right .. default
+  _G.CHAT_RAID_WARNING_GET = left .. "RW" .. right .. default
+  _G.CHAT_BATTLEGROUND_GET = left .. "BG" .. right .. default
+  _G.CHAT_BATTLEGROUND_LEADER_GET = left .. "BL" .. right .. default
+  _G.CHAT_SAY_GET = left .. "S" .. right .. default
+  _G.CHAT_YELL_GET = left .. "Y" .. right ..default
 
   if C.chat.global.whispermod == "1" then
     _G.CHAT_WHISPER_GET = '|cff' .. wcol .. '[W]' .. default
@@ -793,29 +801,26 @@ pfUI:RegisterModule("chat", function ()
               Name = "|cff" .. Color .. Name .. "|r"
             end
           end
-          text = string.gsub(text, "|Hplayer:(.-)|h%[.-%]|h(.-:-)", "[|Hplayer:%1|h" .. Name .. "|h]" .. "%2")
+          text = string.gsub(text, "|Hplayer:(.-)|h%[.-%]|h(.-:-)", "|r" .. left .. "|Hplayer:%1|h" .. Name .. "|h|r" .. right .. "%2")
         end
 
         -- reduce channel name to number
         if C.chat.text.channelnumonly == "1" then
           local pattern = "%]%s+(.*|Hplayer)"
-          local channel = string.gsub(text, ".*%[(.-)" .. pattern ..".+", "%1")
+          local channel = string.gsub(text, ".*%[(.-)" .. pattern .. ".+", "%1")
           if string.find(channel, "%d+%. ") then
             channel = string.gsub(channel, "(%d+)%..*", "channel%1")
             channel = string.gsub(channel, "channel", "")
             pattern = "%[%d+%..-" .. pattern
-            text = string.gsub(text, pattern, "["..channel.."] ".."%1")
+            text = string.gsub(text, pattern, left .. channel .. right .. " %1")
           end
         end
 
         -- show timestamp in chat
         if C.chat.text.time == "1" then
-          local left = string.sub(C.chat.text.timebracket, 1, 1)
-          local right = string.sub(C.chat.text.timebracket, 2, 2)
-
           local r,g,b,a = strsplit(",", C.chat.text.timecolor)
           local chex = string.format("%02x%02x%02x%02x", a*255, r*255, g*255, b*255)
-          text = "|c" .. chex .. left .. date(C.chat.text.timeformat) .. right .. "|r " .. text
+          text = "|c" .. chex .. tleft .. date(C.chat.text.timeformat) .. tright .. "|r " .. text
         end
 
         if C.chat.global.whispermod == "1" then
