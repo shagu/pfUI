@@ -793,6 +793,11 @@ pfUI:RegisterModule("chat", function ()
     _G["ChatFrame"..i].AddMessage = function (frame, text, a1, a2, a3, a4, a5)
       if text then
 
+        -- Remove prat's CLINK itemlinks.
+        text = gsub(text, '%{CLINK:(%x%x%x%x%x%x%x%x):(%d*):(%d*):(%d*):(%d*):(.-)%}', function(color, id, enchant, suffix, uuid, name)
+          return format('|c%s|Hitem:%s:%s:%s:%s|h[%s]|h|r', color, id, enchant, suffix, uuid, name)
+        end)
+
         -- detect urls
         if C.chat.text.detecturl == "1" then
           local URLPattern = pfUI.chat.URLPattern
