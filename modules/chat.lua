@@ -747,6 +747,7 @@ pfUI:RegisterModule("chat", function ()
   _G.CHAT_BATTLEGROUND_GET = '[BG]' .. default
   _G.CHAT_BATTLEGROUND_LEADER_GET = '[BL]' .. default
   _G.CHAT_SAY_GET = '[S]' .. default
+  _G.CHAT_YELL_GET = '[Y]' .. default
 
   local cr, cg, cb, ca = strsplit(",", C.chat.global.whisper)
   cr, cg, cb = tonumber(cr), tonumber(cg), tonumber(cb)
