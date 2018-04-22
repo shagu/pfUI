@@ -764,7 +764,7 @@ pfUI:RegisterModule("chat", function ()
     if not _G["ChatFrame"..i].HookAddMessage then
       _G["ChatFrame"..i].HookAddMessage = _G["ChatFrame"..i].AddMessage
     end
-    _G["ChatFrame"..i].AddMessage = function (frame, text, ...)
+    _G["ChatFrame"..i].AddMessage = function (frame, text, a1, a2, a3, a4, a5)
       if text then
 
         -- detect urls
@@ -825,7 +825,7 @@ pfUI:RegisterModule("chat", function ()
           end
         end
 
-        _G["ChatFrame"..i].HookAddMessage(frame, text, unpack(arg))
+        _G["ChatFrame"..i].HookAddMessage(frame, text, a1, a2, a3, a4, a5)
       end
     end
   end
