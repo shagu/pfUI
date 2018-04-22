@@ -375,6 +375,7 @@ pfUI_translation["enUS"] = {
   ["Show Hots as Buff Indicators"] = nil,
   ["Show Hots of all Classes"] = nil,
   ["Show Inactive Tracking"] = nil,
+  ["Show Items On Mouseover"] = nil,
   ["Show Macro Text"] = nil,
   ["Show Meters By Default"] = nil,
   ["Show Players Only"] = nil,

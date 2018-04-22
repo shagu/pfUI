@@ -375,6 +375,7 @@ pfUI_translation["zhCN"] = {
   ["Show Hots as Buff Indicators"] = "在框架的Buff指示器显示Hot",
   ["Show Hots of all Classes"] = "显示所有职业的Hot",
   ["Show Inactive Tracking"] = "显示已激活的追踪图标",
+  ["Show Items On Mouseover"] = nil,
   ["Show Macro Text"] = "显示宏的名字",
   ["Show Meters By Default"] = nil,
   ["Show Players Only"] = "仅显示自己",

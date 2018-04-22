@@ -375,6 +375,7 @@ pfUI_translation["frFR"] = {
   ["Show Hots as Buff Indicators"] = "Afficher les soins sur la durée en tant qu'indicateur d'amélioration",
   ["Show Hots of all Classes"] = "Afficher les soins sur la durée de chaque classe",
   ["Show Inactive Tracking"] = nil,
+  ["Show Items On Mouseover"] = nil,
   ["Show Macro Text"] = "Afficher le texte des macros",
   ["Show Meters By Default"] = nil,
   ["Show Players Only"] = "Afficher les joueurs uniquement",

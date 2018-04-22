@@ -375,6 +375,7 @@ pfUI_translation["esES"] = {
   ["Show Hots as Buff Indicators"] = "Mostrar Curación Periódica (HoTs) como Indicador de Buffs",
   ["Show Hots of all Classes"] = "Mostrar Curación Periódica (HoTs) de Todas las Clases",
   ["Show Inactive Tracking"] = "Mostrar Rastreo Inactivo",
+  ["Show Items On Mouseover"] = nil,
   ["Show Macro Text"] = "Mostrar Texto de Macro",
   ["Show Meters By Default"] = nil,
   ["Show Players Only"] = "Solamente Mostrar Jugadores",

@@ -736,6 +736,24 @@ pfUI:RegisterModule("chat", function ()
   end
   ChatFrameEditBox:SetAltArrowKeyMode(false)
 
+  if C.chat.text.mouseover == "1" then
+    for i=1, NUM_CHAT_WINDOWS do
+      local frame = _G["ChatFrame" .. i]
+      frame:SetScript("OnHyperlinkEnter", function()
+        local _, _, linktype = string.find(arg1, "^(.-):(.+)$")
+        if linktype == "item" then
+          GameTooltip:SetOwner(this, "ANCHOR_CURSOR")
+          GameTooltip:SetHyperlink(arg1)
+          GameTooltip:Show()
+        end
+      end)
+
+      frame:SetScript("OnHyperlinkLeave", function()
+        GameTooltip:Hide()
+      end)
+    end
+  end
+
   -- read and parse whisper color settings
   local cr, cg, cb, ca = strsplit(",", C.chat.global.whisper)
   cr, cg, cb = tonumber(cr), tonumber(cg), tonumber(cb)
