@@ -736,6 +736,12 @@ pfUI:RegisterModule("chat", function ()
   end
   ChatFrameEditBox:SetAltArrowKeyMode(false)
 
+  -- read and parse whisper color settings
+  local cr, cg, cb, ca = strsplit(",", C.chat.global.whisper)
+  cr, cg, cb = tonumber(cr), tonumber(cg), tonumber(cb)
+  wcol = string.format("%02x%02x%02x",cr * 255,cg * 255, cb * 255)
+
+  -- shorten chat channel indicators
   local default = " " .. "%s" .. "|r:" .. "\32"
   _G.CHAT_CHANNEL_GET = "%s" .. "|r:" .. "\32"
   _G.CHAT_GUILD_GET = '[G]' .. default
@@ -749,17 +755,10 @@ pfUI:RegisterModule("chat", function ()
   _G.CHAT_SAY_GET = '[S]' .. default
   _G.CHAT_YELL_GET = '[Y]' .. default
 
-  local wcol
   if C.chat.global.whispermod == "1" then
-    local cr, cg, cb, ca = strsplit(",", C.chat.global.whisper)
-    cr, cg, cb = tonumber(cr), tonumber(cg), tonumber(cb)
-    wcol = string.format("%02x%02x%02x",cr * 255,cg * 255, cb * 255)
-
     _G.CHAT_WHISPER_GET = '|cff' .. wcol .. '[W]' .. default
     _G.CHAT_WHISPER_INFORM_GET = '[W]' .. default
   end
-
-  CHAT_YELL_GET = '[Y]' .. default
 
   for i=1,NUM_CHAT_WINDOWS do
     if not _G["ChatFrame"..i].HookAddMessage then
@@ -768,6 +767,7 @@ pfUI:RegisterModule("chat", function ()
     _G["ChatFrame"..i].AddMessage = function (frame, text, ...)
       if text then
 
+        -- detect urls
         if C.chat.text.detecturl == "1" then
           local URLPattern = pfUI.chat.URLPattern
           text = string.gsub (text, URLPattern.WWW.rx, function(a1,a2,a3) return pfUI.chat:FormatLink(URLPattern.WWW.fm,a1,a2,a3) end)
@@ -780,6 +780,7 @@ pfUI:RegisterModule("chat", function ()
           text = string.gsub (text, URLPattern.URL.rx, function(a1,a2,a3) return pfUI.chat:FormatLink(URLPattern.URL.fm,a1,a2,a3) end)
         end
 
+        -- display class colors if already indexed
         if C.chat.text.classcolor == "1" then
           local Name = string.gsub(text, ".*|Hplayer:(.-)|h.*", "%1")
           if pfUI_playerDB[Name] and pfUI_playerDB[Name].class ~= nil then
@@ -795,6 +796,7 @@ pfUI:RegisterModule("chat", function ()
           text = string.gsub(text, "|Hplayer:(.-)|h%[.-%]|h(.-:-)", "[|Hplayer:%1|h" .. Name .. "|h]" .. "%2")
         end
 
+        -- reduce channel name to number
         if C.chat.text.channelnumonly == "1" then
           local pattern = "%]%s+(.*|Hplayer)"
           local channel = string.gsub(text, ".*%[(.-)" .. pattern ..".+", "%1")
