@@ -749,11 +749,11 @@ pfUI:RegisterModule("chat", function ()
   _G.CHAT_SAY_GET = '[S]' .. default
   _G.CHAT_YELL_GET = '[Y]' .. default
 
-  local cr, cg, cb, ca = strsplit(",", C.chat.global.whisper)
-  cr, cg, cb = tonumber(cr), tonumber(cg), tonumber(cb)
-  local wcol = string.format("%02x%02x%02x",cr * 255,cg * 255, cb * 255)
-
   if C.chat.global.whispermod == "1" then
+    local cr, cg, cb, ca = strsplit(",", C.chat.global.whisper)
+    cr, cg, cb = tonumber(cr), tonumber(cg), tonumber(cb)
+    local wcol = string.format("%02x%02x%02x",cr * 255,cg * 255, cb * 255)
+
     _G.CHAT_WHISPER_GET = '|cff' .. wcol .. '[W]' .. default
     _G.CHAT_WHISPER_INFORM_GET = '[W]' .. default
   end
