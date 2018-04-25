@@ -87,7 +87,7 @@ pfUI:RegisterModule("tooltip", function ()
             anchor = pfUI.chat.right
           end
 
-          if pfUI.bag and pfUI.bag.right and pfUI.bag.right:IsShown() then
+          if pfUI.bag and pfUI.bag.right and pfUI.bag.right:IsShown() and C.appearance.bags.movable == "0" then
             anchor = pfUI.bag.right
           end
 
