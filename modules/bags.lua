@@ -169,10 +169,25 @@ pfUI:RegisterModule("bags", function ()
     local y = 0
     local frame = {}
     local iterate = {}
+    -- default length with fixed windows
+    local rowlength = 11
 
     if object == "bank" then
       if not pfUI.bag.left then pfUI.bag.left = CreateFrame("Frame", "pfBank", UIParent) end
-      if pfUI.chat then
+      if C.appearance.bags.movable == "1" then
+        rowlength = C.appearance.bags.bankrowlength
+        pfUI.bag.left:SetWidth((C.appearance.bags.icon_size + default_border*3) * rowlength - default_border)
+        -- avoiding stretching. 0.5 because math rounding
+        local horizontalmargin = GetScreenWidth()/2 - pfUI.bag.left:GetWidth()/2 - 4.5 - default_border
+        local verticalmargin = GetScreenHeight()/2 - pfUI.bag.left:GetHeight()/2 - 4.5 - default_border
+        pfUI.bag.left:SetPoint("CENTER", UIParent, -horizontalmargin, -verticalmargin)
+
+        pfUI.bag.left:SetMovable(1)
+        pfUI.bag.left:SetUserPlaced(1)
+        pfUI.bag.left:RegisterForDrag("LeftButton")
+        pfUI.bag.left:SetScript("OnDragStart", function() this:StartMoving() end)
+        pfUI.bag.left:SetScript("OnDragStop",  function() this:StopMovingOrSizing() end)
+      elseif pfUI.chat then
         pfUI.bag.left:SetPoint("BOTTOMLEFT", pfUI.chat.left, "BOTTOMLEFT", 0, 0)
         pfUI.bag.left:SetPoint("BOTTOMRIGHT", pfUI.chat.left, "BOTTOMRIGHT", 0, 0)
         pfUI.bag.left:SetWidth(C.chat.left.width * pfUI.chat.left:GetScale())
@@ -180,12 +195,26 @@ pfUI:RegisterModule("bags", function ()
         pfUI.bag.left:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", 5, 5)
         pfUI.bag.left:SetWidth(C.chat.left.width)
       end
+
       pfUI.bag.left:EnableMouse(1)
       iterate = pfUI.BANK
       frame = pfUI.bag.left
     else
       if not pfUI.bag.right then pfUI.bag.right = CreateFrame("Frame", "pfBag", UIParent) end
-      if pfUI.chat then
+      if C.appearance.bags.movable == "1" then
+        rowlength = C.appearance.bags.bagrowlength
+        pfUI.bag.right:SetWidth((C.appearance.bags.icon_size + default_border*3) * rowlength - default_border)
+        -- avoiding stretching. 0.5 because math rounding
+        local horizontalmargin = GetScreenWidth()/2 - pfUI.bag.right:GetWidth()/2 - 4.5 - default_border
+        local verticalmargin = GetScreenHeight()/2 - pfUI.bag.right:GetHeight()/2 - 4.5 - default_border
+        pfUI.bag.right:SetPoint("CENTER", UIParent, horizontalmargin, -verticalmargin)
+
+        pfUI.bag.right:SetMovable(1)
+        pfUI.bag.right:SetUserPlaced(1)
+        pfUI.bag.right:RegisterForDrag("LeftButton")
+        pfUI.bag.right:SetScript("OnDragStart", function() this:StartMoving() end)
+        pfUI.bag.right:SetScript("OnDragStop",  function() this:StopMovingOrSizing() end)
+      elseif pfUI.chat then
         pfUI.bag.right:SetPoint("BOTTOMLEFT", pfUI.chat.right, "BOTTOMLEFT", 0, 0)
         pfUI.bag.right:SetPoint("BOTTOMRIGHT", pfUI.chat.right, "BOTTOMRIGHT", 0, 0)
         pfUI.bag.right:SetWidth(C.chat.right.width * pfUI.chat.right:GetScale())
@@ -193,18 +222,22 @@ pfUI:RegisterModule("bags", function ()
         pfUI.bag.right:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", -5, 5)
         pfUI.bag.right:SetWidth(C.chat.right.width)
       end
+
       pfUI.bag.right:EnableMouse(1)
       iterate = pfUI.BACKPACK
       frame = pfUI.bag.right
     end
 
     pfUI.bag:CreateAdditions(frame)
-
     frame:SetFrameStrata("HIGH")
     CreateBackdrop(frame, default_border)
 
-    pfUI.bag.button_size = (frame:GetWidth() - 2*default_border - 9*default_border*3)/ 10
     local topspace = pfUI.bag.right.close:GetHeight() + default_border * 2
+    if C.appearance.bags.movable == "1" then
+      pfUI.bag.button_size = C.appearance.bags.icon_size
+    else
+      pfUI.bag.button_size = (frame:GetWidth() - 2*default_border - (rowlength-1)*default_border*3)/ rowlength
+    end
 
     for id, bag in pairs(iterate) do
       if not pfUI.bags[bag] then
@@ -222,10 +255,11 @@ pfUI:RegisterModule("bags", function ()
         pfUI.bags[bag].slots[slot].frame:SetPoint("TOPLEFT",
           default_border + x*(pfUI.bag.button_size+default_border*3),
           -default_border*2 - y*(pfUI.bag.button_size+default_border*3) - topspace)
+
         pfUI.bags[bag].slots[slot].frame:SetHeight(pfUI.bag.button_size)
         pfUI.bags[bag].slots[slot].frame:SetWidth(pfUI.bag.button_size)
 
-        if x >= 9 then
+        if x >= rowlength - 1 then
           y = y + 1
           x = 0
         else

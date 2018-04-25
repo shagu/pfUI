@@ -918,6 +918,10 @@ pfUI:RegisterModule("gui", function ()
     if not this.setup then
       CreateConfig(nil, this, T["Disable Item Quality Color For \"Common\" Items"], C.appearance.bags, "borderlimit", "checkbox")
       CreateConfig(nil, this, T["Enable Item Quality Color For Equipment Only"], C.appearance.bags, "borderonlygear", "checkbox")
+      CreateConfig(nil, this, T["Enable Movable Bags"], C.appearance.bags, "movable", "checkbox")
+      CreateConfig(nil, this, T["Icon Size"], C.appearance.bags, "icon_size")
+      CreateConfig(nil, this, T["Bagslots Per Row"], C.appearance.bags, "bagrowlength")
+      CreateConfig(nil, this, T["Bankslots Per Row"], C.appearance.bags, "bankrowlength")
       CreateConfig(nil, this, T["Auto Sell Grey Items"], C.global, "autosell", "checkbox")
       CreateConfig(nil, this, T["Auto Repair Items"], C.global, "autorepair", "checkbox")
       this.setup = true
