@@ -475,7 +475,6 @@ function pfUI.api.UpdateMovable(frame)
   end
 end
 
-
 -- [ Remove Movable ]
 -- Removes a Frame from the movable list.
 -- 'frame'      [frame]        the frame that should be removed.
@@ -484,6 +483,34 @@ function pfUI.api.RemoveMovable(frame)
   pfUI.movables[name] = nil
 end
 
+-- [ Load Movable ]
+-- Loads the positions of a Frame.
+-- 'frame'      [frame]        the frame that should be positioned.
+function pfUI.api.LoadMovable(frame)
+  if pfUI_config["position"][frame:GetName()] then
+    if pfUI_config["position"][frame:GetName()]["scale"] then
+      frame:SetScale(pfUI_config["position"][frame:GetName()].scale)
+    end
+
+    if pfUI_config["position"][frame:GetName()]["xpos"] then
+      frame:ClearAllPoints()
+      frame:SetPoint("TOPLEFT", pfUI_config["position"][frame:GetName()].xpos, pfUI_config["position"][frame:GetName()].ypos)
+    end
+  end
+end
+
+-- [ Save Movable ]
+-- Save the positions of a Frame.
+-- 'frame'      [frame]        the frame that should be saved.
+function pfUI.api.SaveMovable(frame)
+  local _, _, _, xpos, ypos = frame:GetPoint()
+  if not C.position[frame:GetName()] then
+    C.position[frame:GetName()] = {}
+  end
+
+  C.position[frame:GetName()]["xpos"] = round(xpos)
+  C.position[frame:GetName()]["ypos"] = round(ypos)
+end
 
 -- [ SetAutoPoint ]
 -- Automatically places the frame according to screen position of the parent.
