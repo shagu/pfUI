@@ -16,6 +16,18 @@ pfUI:RegisterModule("skin", function ()
   EnableMovable("ClassTrainerFrame", "Blizzard_TrainerUI")
   EnableMovable("InspectFrame", "Blizzard_InspectUI", { "InspectHonorFrame" })
 
+  -- durability frame
+  pfUI.durability = CreateFrame("Frame","pfDurability",UIParent)
+  pfUI.durability:SetPoint("TOPLEFT", pfUI.minimap, "BOTTOMLEFT", 0, -35)
+  UpdateMovable(pfUI.durability)
+  pfUI.durability:SetWidth(80)
+  pfUI.durability:SetHeight(70)
+  pfUI.durability:SetFrameStrata("BACKGROUND")
+  DurabilityFrame:SetParent(pfUI.durability)
+  DurabilityFrame:SetAllPoints(pfUI.durability)
+  DurabilityFrame:SetFrameLevel(1)
+  DurabilityFrame.SetPoint = function() return end
+
   if C.appearance.cd.blizzard == "1" then
     hooksecurefunc("PaperDollItemSlotButton_Update", function()
         local cooldown = getglobal(this:GetName().."Cooldown")
