@@ -194,7 +194,7 @@ pfUI:RegisterModule("nameplates", function ()
           elseif j <= 8 then
             this.debuffs[j]:SetPoint("LEFT", this.debuffs[j-1], "RIGHT", 1, 0)
           elseif j > 8 then
-            this.debuffs[j]:SetPoint("TOPLEFT", this.debuffs[1], "BOTTOMLEFT", (j-9) * 13, -1)
+            this.debuffs[j]:SetPoint("TOPLEFT", this.debuffs[j-8], "BOTTOMLEFT", 0, -1)
           end
 
           this.debuffs[j].icon = this.debuffs[j]:CreateTexture(nil, "BORDER")
