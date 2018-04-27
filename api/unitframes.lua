@@ -222,6 +222,25 @@ function pfUI.uf:UpdateConfig()
     f.portrait:Hide()
   end
 
+  if f.config.hitindicator == "1" then
+    f.feedbackText:SetFont(f.config.hitindicatorfont, f.config.hitindicatorsize, "OUTLINE")
+    f.feedbackFontHeight = f.config.hitindicatorsize
+    f.feedbackStartTime = GetTime()
+    if f.config.portrait == "bar" or f.config.portrait == "off" then
+      f.feedbackText:SetParent(f.hp.bar)
+      f.feedbackText:ClearAllPoints()
+      f.feedbackText:SetPoint("CENTER", f.hp.bar, "CENTER")
+    else
+      f.feedbackText:SetParent(f.portrait)
+      f.feedbackText:ClearAllPoints()
+      f.feedbackText:SetPoint("CENTER", f.portrait, "CENTER")
+    end
+    f:RegisterEvent("UNIT_COMBAT")
+  else
+    f.feedbackText:Hide()
+    f:UnregisterEvent("UNIT_COMBAT")
+  end
+
   f.hpLeftText:SetFont(pfUI.font_unit, C.global.font_unit_size, "OUTLINE")
   f.hpLeftText:SetJustifyH("LEFT")
   f.hpLeftText:SetFontObject(GameFontWhite)
@@ -573,6 +592,8 @@ function pfUI.uf:EnableScripts()
         pfUI.uf:RefreshUnit(this, "portrait")
       elseif event == "UNIT_AURA" then
         pfUI.uf:RefreshUnit(this, "aura")
+      elseif event == "UNIT_COMBAT" then
+        CombatFeedback_OnCombatEvent(arg2, arg3, arg4, arg5)
       else
         pfUI.uf:RefreshUnit(this)
       end
@@ -581,6 +602,9 @@ function pfUI.uf:EnableScripts()
 
   f:SetScript("OnUpdate", function()
     local unitname = ( this.label and UnitName(this.label) ) or ""
+
+    -- update combat feedback
+    if this.feedbackText then CombatFeedback_OnUpdate(arg1) end
 
     -- focus unit detection
     if this.unitname and this.unitname ~= strlower(unitname) then
@@ -726,6 +750,7 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
   f.portrait.tex = f.portrait:CreateTexture("pfPortraitTexture" .. f.label .. f.id, "OVERLAY")
   f.portrait.model = CreateFrame("PlayerModel", "pfPortraitModel" .. f.label .. f.id, f.portrait)
   f.portrait.model.next = CreateFrame("PlayerModel", nil, nil)
+  f.feedbackText = f:CreateFontString("pfHitIndicator" .. f.label .. f.id, "OVERLAY", "NumberFontNormalHuge")
 
   f:Hide()
   f:UpdateConfig()

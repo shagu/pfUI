@@ -901,6 +901,10 @@ pfUI:RegisterModule("gui", function ()
           CreateConfig(update[c], this, T["Enable Level Color"], C.unitframes[c], "levelcolor", "checkbox")
           CreateConfig(update[c], this, T["Enable Class Color"], C.unitframes[c], "classcolor", "checkbox")
 
+          CreateConfig(update[c], this, T["Hit Indicator"], nil, nil, "header")
+          CreateConfig(update[c], this, T["Enable Hit Indicator"], C.unitframes[c], "hitindicator", "checkbox")
+          CreateConfig(update[c], this, T["Hit Indicator Text Font"], C.unitframes[c], "hitindicatorfont", "dropdown", pfUI.gui.dropdowns.fonts)
+          CreateConfig(update[c], this, T["Hit Indicator Text Size"], C.unitframes[c], "hitindicatorsize")
           this.setup = true
         end
       end)
