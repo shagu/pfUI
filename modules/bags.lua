@@ -366,7 +366,7 @@ pfUI:RegisterModule("bags", function ()
         pfUI.bags[bag].slots[slot].frame.backdrop:SetBackdropBorderColor(.5,.5,1,.5)
       elseif bagtype == "KEYRING" then
         pfUI.bags[bag].slots[slot].frame.backdrop:SetBackdropBorderColor(.5,1,1,.5)
-      elseif bagtype == "BAG" then
+      else
         pfUI.bags[bag].slots[slot].frame.backdrop:SetBackdropBorderColor(1,1,1,.2)
       end
     end
