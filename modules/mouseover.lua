@@ -2,7 +2,8 @@ pfUI:RegisterModule("mouseover", function ()
   pfUI.uf.mouseover = CreateFrame("Frame", "pfMouseOver", UIParent)
 
   _G.SLASH_PFCAST1, _G.SLASH_LPFCAST2 = "/pfcast", "/pfmouse"
-  function SlashCmdList.PFCAST(msg, editbox)
+  function SlashCmdList.PFCAST(msg)
+    local func = loadstring(msg or "")
     local oldt = true
     local unit = "mouseover"
     if not UnitExists(unit) then
@@ -21,7 +22,12 @@ pfUI:RegisterModule("mouseover", function ()
     if UnitIsUnit("target", unit) then oldt = nil end
 
     TargetUnit(unit)
-    CastSpellByName(msg)
+
+    if func then
+      func()
+    else
+      CastSpellByName(msg)
+    end
 
     if oldt then
       if pfUI.uf.target then
