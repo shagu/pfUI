@@ -361,23 +361,19 @@ pfUI:RegisterModule("panel", function()
           if tmpText and tmpText:GetText() then
             searchstr = string.gsub(DURABILITY_TEMPLATE, "%%[^%s]+", "(.+)")
             _, _, lval, rval = string.find(tmpText:GetText(), searchstr, 1)
-            if lval and rval then
+            if lval and rval and lval ~= rval then
               repPercent = math.ceil(lval / rval * 100)
-			  
-			  itemLink = GetInventoryItemLink("player", id)
- 		      if itemLink and lval ~= rval then
-		        itemRepArray[itemLink] = {}
-				table.insert(itemRepArray[itemLink], repPercent)
-		      end
+              lowestPercent = min(lowestPercent, repPercent)
+              
+              itemLink = GetInventoryItemLink("player", id)
+              itemRepArray[itemLink] = {}
+              table.insert(itemRepArray[itemLink], repPercent)
               break
             end
           end
         end
       else
         repairToolTip:ClearLines()
-      end
-      if repPercent < lowestPercent then
-        lowestPercent = repPercent
       end
     end
     repairToolTip:Hide()
