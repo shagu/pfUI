@@ -1,4 +1,4 @@
-pfUI:RegisterModule("panel", function ()
+pfUI:RegisterModule("panel", function()
 
   local font = C.panel.use_unitfonts == "1" and pfUI.font_unit or pfUI.font_default
   local font_size = C.panel.use_unitfonts == "1" and C.global.font_unit_size or C.global.font_size
@@ -89,7 +89,7 @@ pfUI:RegisterModule("panel", function ()
     if not pfUI.panel.clock.tick then pfUI.panel.clock.tick = GetTime() - 1 end
     if GetTime() >= pfUI.panel.clock.tick + 1 then
       -- time date
-      local tooltip = function ()
+      local tooltip = function()
         GameTooltip:ClearLines()
         GameTooltip_SetDefaultAnchor(GameTooltip, this)
         local h, m = GetGameTime()
@@ -116,7 +116,7 @@ pfUI:RegisterModule("panel", function ()
         GameTooltip:Show()
       end
 
-      local click = function ()
+      local click = function()
         this:RegisterForClicks("LeftButtonUp", "RightButtonUp")
         if arg1 == "LeftButton" then
           if pfUI.panel.clock.timerFrame:IsShown() then
@@ -137,7 +137,7 @@ pfUI:RegisterModule("panel", function ()
       end
 
       -- lag fps
-      local tooltip = function ()
+      local tooltip = function()
         local active = 0
         GameTooltip:ClearLines()
         GameTooltip_SetDefaultAnchor(GameTooltip, this)
@@ -169,7 +169,7 @@ pfUI:RegisterModule("panel", function ()
         GameTooltip:Show()
       end
 
-      local click = function ()
+      local click = function()
         if pfUI.addons:IsShown() then
           pfUI.addons:Hide()
         else
@@ -214,7 +214,7 @@ pfUI:RegisterModule("panel", function ()
   end)
 
   -- Update "exp"
-  function pfUI.panel:UpdateExp ()
+  function pfUI.panel:UpdateExp()
     if UnitLevel("player") ~= 60 then
       curexp = UnitXP("player")
       if oldexp ~= nil then
@@ -244,7 +244,7 @@ pfUI:RegisterModule("panel", function ()
   end
 
   -- Update "bagspace"
-  function pfUI.panel:UpdateBagspace ()
+  function pfUI.panel:UpdateBagspace()
     local maxslots = 0
     local usedslots = 0
 
@@ -274,13 +274,13 @@ pfUI:RegisterModule("panel", function ()
   end
 
   -- Update "gold"
-  function pfUI.panel:UpdateGold ()
+  function pfUI.panel:UpdateGold()
     local gold = floor(GetMoney()/ 100 / 100)
     local silver = floor(mod((GetMoney()/100),100))
     local copper = floor(mod(GetMoney(),100))
     if not pfUI.panel.initMoney then pfUI.panel.initMoney = GetMoney() end
 
-    local tooltip = function ()
+    local tooltip = function()
       pfUI.panel.diffMoney = GetMoney() - pfUI.panel.initMoney
 
       local dmod = ""
@@ -312,7 +312,7 @@ pfUI:RegisterModule("panel", function ()
   end
 
   -- Update "friends"
-  function pfUI.panel:UpdateFriend ()
+  function pfUI.panel:UpdateFriend()
     local online = 0
     local all = GetNumFriends()
     for friendIndex=1, all do
@@ -326,7 +326,7 @@ pfUI:RegisterModule("panel", function ()
   end
 
   -- Update "guild"
-  function pfUI.panel:UpdateGuild ()
+  function pfUI.panel:UpdateGuild()
     GuildRoster()
     local online = GetNumGuildMembers()
     local all = GetNumGuildMembers(true)
@@ -340,7 +340,7 @@ pfUI:RegisterModule("panel", function ()
 
   -- Update "durability"
   local repairToolTip = CreateFrame('GameTooltip', "repairToolTip", this, "GameTooltipTemplate")
-  function pfUI.panel:UpdateRepair ()
+  function pfUI.panel:UpdateRepair()
     local slotnames = { "Head", "Shoulder", "Chest", "Wrist",
       "Hands", "Waist", "Legs", "Feet", "MainHand", "SecondaryHand", "Ranged", }
     local repPercent = 100
@@ -394,15 +394,15 @@ pfUI:RegisterModule("panel", function ()
       end
     end
 
-    local click = function ()
+    local click = function()
       ToggleCharacter("PaperDollFrame")
     end
 
     pfUI.panel:OutputPanel("durability", lowestPercent .. "% " .. ARMOR, tooltip, click)
   end
 
-  function pfUI.panel:UpdateZone ()
-    local tooltip = function ()
+  function pfUI.panel:UpdateZone()
+    local tooltip = function()
       local real = GetRealZoneText()
       local sub = GetSubZoneText()
       GameTooltip:ClearLines()
@@ -418,7 +418,7 @@ pfUI:RegisterModule("panel", function ()
       GameTooltip:Show()
     end
 
-    local click = function ()
+    local click = function()
       if WorldMapFrame:IsShown() then
         WorldMapFrame:Hide()
       else
@@ -429,11 +429,11 @@ pfUI:RegisterModule("panel", function ()
     pfUI.panel:OutputPanel("zone", GetMinimapZoneText(), tooltip, click)
   end
 
-  function pfUI.panel:UpdateAmmo ()
+  function pfUI.panel:UpdateAmmo()
     if not GetInventoryItemQuality("player", 0) then
       pfUI.panel:OutputPanel("ammo", AMMOSLOT .. ": -")
     else
-      local tooltip = function ()
+      local tooltip = function()
         if GetInventoryItemQuality("player", 0) then
           local ammo = GetInventoryItemCount("player", 0)
           GameTooltip:ClearLines()
