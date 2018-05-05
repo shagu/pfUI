@@ -786,3 +786,27 @@ function pfUI.api.GetColoredTimeString(remaining)
     return ""
   end
 end
+
+-- [ GetColorGradient ] --
+-- 'perc'     percentage (0-1)
+-- 'colorMin' table or r,g,b tuple
+-- 'colorMax' table or r,g,b tuple
+-- return r,g,b and hexcolor
+function pfUI.api.GetColorGradient(perc, ...)
+  assert(tonumber(perc),"GetColorGradient: "..tostring(perc).." is not a number")
+  perc = pfUI.api.clamp(perc,0,1)
+  local c1, c2, r1,g1,b1, r2,g2,b2
+  if type(arg[1])=="table" then
+    c1,c2 = arg[1], arg[2]
+    r1,g1,b1 = c1[1] or c1.r, c1[2] or c1.g, c1[3] or c1.b
+    r2,g2,b2 = c2[1] or c2.r, c2[2] or c2.g, c2[3] or c2.b
+  elseif type(arg[1]=="number") then
+    r1,g1,b1 = arg[1], arg[2], arg[3]
+    r2,g2,b2 = arg[4], arg[5], arg[6]
+  end
+  if r1 and r2 and g1 and g2 and b1 and b2 then
+    local r,g,b = r1 + (r2-r1)*perc, g1 + (g2-g1)*perc, b1 + (b2-b1)*perc
+    local hex = string.format("|cff%02x%02x%02x", r*255, g*255, b*255)
+    return r,g,b,hex
+  end
+end
