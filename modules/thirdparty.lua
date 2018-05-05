@@ -5,6 +5,13 @@ pfUI:RegisterModule("thirdparty", function ()
   pfUI.thirdparty.meters.threat = false
   pfUI.thirdparty.meters.state = false
 
+  local showmeter = CreateFrame("Frame")
+  showmeter:SetScript("OnEvent", function()
+    pfUI.thirdparty.meters.state = false
+    pfUI.thirdparty.meters:Toggle()
+    this:UnregisterAllEvents()
+  end)
+
   local function AddIntegration(addon, func)
     local lurker = CreateFrame("Frame", nil)
     lurker.func = func
@@ -240,6 +247,11 @@ pfUI:RegisterModule("thirdparty", function ()
           pfUI.thirdparty.meters:Toggle()
         end)
       end
+
+      -- toggle meter by default if configured
+      if C.thirdparty.showmeter == "1" then
+        showmeter:RegisterEvent("PLAYER_ENTERING_WORLD")
+      end
     end
   end)
 
@@ -297,12 +309,16 @@ pfUI:RegisterModule("thirdparty", function ()
           pfUI.thirdparty.meters:Toggle()
         end)
       end
+
+      -- toggle meter by default if configured
+      if C.thirdparty.showmeter == "1" then
+        showmeter:RegisterEvent("PLAYER_ENTERING_WORLD")
+      end
     end
   end)
 
   AddIntegration("SW_Stats", function()
     if C.thirdparty.swstats.skin == "1" then
-
       SW_Settings["OPT_ShowMainWinDPS"] = 1
       SW_Settings["Colors"] = SW_Settings["Colors"] or {}
       SW_Settings["Colors"]["TitleBarsFont"] = { [1] = 1, [2] = 1, [3] = 1,	[4] = 1, }
@@ -374,6 +390,11 @@ pfUI:RegisterModule("thirdparty", function ()
         pfUI.panel.right.hide:SetScript("OnClick", function()
           pfUI.thirdparty.meters:Toggle()
         end)
+      end
+
+      -- toggle meter by default if configured
+      if C.thirdparty.showmeter == "1" then
+        showmeter:RegisterEvent("PLAYER_ENTERING_WORLD")
       end
     end
   end)
@@ -580,17 +601,4 @@ pfUI:RegisterModule("thirdparty", function ()
       end
     end
   end)
-
-  -- toggle meter by default if configured
-  if C.thirdparty.ktm.dock == "1" or C.thirdparty.dpsmate.dock == "1" or C.thirdparty.swstats.dock == "1" then
-    if C.thirdparty.showmeter == "1" then
-      local f = CreateFrame("Frame")
-      f:RegisterEvent("PLAYER_ENTERING_WORLD")
-      f:SetScript("OnEvent", function()
-        pfUI.thirdparty.meters.state = false
-        pfUI.thirdparty.meters:Toggle()
-        this:UnregisterAllEvents()
-      end)
-    end
-  end
 end)
