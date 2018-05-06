@@ -579,6 +579,8 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("castbar",    "player",      "hide_pfui",        "0")
   pfUI:UpdateConfig("castbar",    "target",      "hide_pfui",        "0")
   pfUI:UpdateConfig("castbar",    nil,           "use_unitfonts",    "0")
+  pfUI:UpdateConfig("castbar",    "player",      "showspellicon",    "0")
+  pfUI:UpdateConfig("castbar",    "target",      "showspellicon",    "0")
 
   pfUI:UpdateConfig("tooltip",    nil,           "position",         "chat")
   pfUI:UpdateConfig("tooltip",    nil,           "cursoralign",      "native")

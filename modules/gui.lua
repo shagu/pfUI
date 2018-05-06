@@ -1120,6 +1120,8 @@ pfUI:RegisterModule("gui", function ()
       CreateConfig(nil, this, T["Disable Blizzard Castbar"], C.castbar.player, "hide_blizz", "checkbox")
       CreateConfig(nil, this, T["Disable pfUI Player Castbar"], C.castbar.player, "hide_pfui", "checkbox")
       CreateConfig(nil, this, T["Disable pfUI Target Castbar"], C.castbar.target, "hide_pfui", "checkbox")
+      CreateConfig(nil, this, T["Show Player Spell Icons"], C.castbar.player, "showspellicon", "checkbox")
+      CreateConfig(nil, this, T["Show Target Spell Icons"], C.castbar.target, "showspellicon", "checkbox")
       this.setup = true
     end
   end)
