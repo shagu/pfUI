@@ -101,6 +101,7 @@ pfUI_translation["ruRU"] = {
   ["Default"] = "По умолчанию",
   ["Delete profile"] = "Удалить профиль",
   ["Delete / Reset"] = "Удалить / Сбросить",
+  ["Detailed Random Roll Announcement"] = nil,
   ["Disable All UIErrors"] = "Отключить все UI ошибки (красный текст сверху экрана)",
   ["Disable Blizzard Castbar"] = "Отключить панель применения Blizzard",
   ["Disabled"] = "Отключено",

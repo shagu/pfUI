@@ -212,7 +212,11 @@ end
 function pfUI.api.SendChatMessageWide(msg)
   local channel = "SAY"
   if UnitInRaid("player") then
+    if ( IsRaidLeader() or IsRaidOfficer() ) then
+      channel = "RAID_WARNING"
+    else
     channel = "RAID"
+    end
   elseif UnitExists("party1") then
     channel = "PARTY"
   end

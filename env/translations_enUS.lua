@@ -101,6 +101,7 @@ pfUI_translation["enUS"] = {
   ["Default"] = nil,
   ["Delete profile"] = nil,
   ["Delete / Reset"] = nil,
+  ["Detailed Random Roll Announcement"] = nil,
   ["Disable All UIErrors"] = nil,
   ["Disable Blizzard Castbar"] = nil,
   ["Disabled"] = nil,

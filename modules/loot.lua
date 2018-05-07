@@ -39,15 +39,17 @@ pfUI:RegisterModule("loot", function ()
     local to = table.getn(candidates)
     if to >= 1 then
       SendChatMessageWide(T["Random Rolling "]..GetLootSlotLink(slot))
-      local k,names = 1, ""
-      for i=1,to do
-        names = (k==1) and (i..":"..pfUI.loot.index_to_name[candidates[i]]) or (names..", "..i..":"..pfUI.loot.index_to_name[candidates[i]])
-        -- fit the maximum names in a single 255 char message (15)
-        if i == to or k == 15 then
-          QueueFunction(SendChatMessageWide,names)
-          names = ""
+      if C.loot.rollannounce == "1" then
+        local k,names = 1, ""
+        for i=1,to do
+          names = (k==1) and (i..":"..pfUI.loot.index_to_name[candidates[i]]) or (names..", "..i..":"..pfUI.loot.index_to_name[candidates[i]])
+          -- fit the maximum names in a single 255 char message (15)
+          if i == to or k == 15 then
+            QueueFunction(SendChatMessageWide,names)
+            names = ""
+          end
+          k = k<15 and k+1 or 1
         end
-        k = k<15 and k+1 or 1
       end
       pfUI.loot:RegisterEvent("CHAT_MSG_SYSTEM")
       pfUI.loot.randomRolling = true
@@ -253,6 +255,8 @@ pfUI:RegisterModule("loot", function ()
       info.notCheckable = 1
       info.isTitle = 1
       UIDropDownMenu_AddButton(info)
+      pfUI.loot:BuildSpecialRollsMenu(UIDROPDOWNMENU_MENU_LEVEL)
+      pfUI.loot:BuildSpecialRecipientsMenu(UIDROPDOWNMENU_MENU_LEVEL)
       for order, class in ipairs(CLASS_SORT_ORDER) do
         local lclass = classes_in_raid[class]
         if (lclass) then
@@ -269,9 +273,9 @@ pfUI:RegisterModule("loot", function ()
           UIDropDownMenu_AddButton(info)
         end
       end
-      pfUI.loot:BuildSpecialRecipientsMenu(UIDROPDOWNMENU_MENU_LEVEL)
-      pfUI.loot:BuildSpecialRollsMenu(UIDROPDOWNMENU_MENU_LEVEL)
     elseif level == 2 then -- players
+      pfUI.loot:BuildSpecialRollsMenu(UIDROPDOWNMENU_MENU_LEVEL)
+      pfUI.loot:BuildSpecialRecipientsMenu(UIDROPDOWNMENU_MENU_LEVEL)
       local players = players_in_class[UIDROPDOWNMENU_MENU_VALUE]
       if (players) and next(players) then
         table.sort(players)
@@ -287,8 +291,6 @@ pfUI:RegisterModule("loot", function ()
           UIDropDownMenu_AddButton(info,UIDROPDOWNMENU_MENU_LEVEL)
         end
       end
-      pfUI.loot:BuildSpecialRecipientsMenu(UIDROPDOWNMENU_MENU_LEVEL)
-      pfUI.loot:BuildSpecialRollsMenu(UIDROPDOWNMENU_MENU_LEVEL)
     end
   end
 
@@ -405,7 +407,7 @@ pfUI:RegisterModule("loot", function ()
           if not ((method == "master" and lootmasterID == 0) or IsRaidLeader()) then
             UnitPopupShown[index] = 0
           end
-          if (unit) and UnitIsPlayer(unit) and not (UnitInRaid(unit) or UnitInParty(unit)) then
+          if (unit) and UnitIsPlayer(unit) and not (UnitInRaid(unit) or (UnitInParty(unit) and UnitExists("party1"))) then
             UnitPopupShown[index] = 0
           end
         end
@@ -487,6 +489,15 @@ pfUI:RegisterModule("loot", function ()
       end
       pfUI.loot:SetHeight(math.max((real*22)+4*C.appearance.border.default), 20)
       pfUI.loot:SetWidth(maxwidth + 22 + 8*C.appearance.border.default )
+    end
+  end
+
+  local function AutoBind(arg1)
+    if GetNumPartyMembers() == 0 and GetNumRaidMembers() == 0 then
+      local dialog = StaticPopup_FindVisible("LOOT_BIND",arg1)
+      if dialog then
+        _G[dialog:GetName().."Button1"]:Click()
+      end
     end
   end
 
@@ -664,13 +675,7 @@ pfUI:RegisterModule("loot", function ()
     end
 
     if C.loot.autopickup == "1" and event == "LOOT_BIND_CONFIRM" then
-      if GetNumPartyMembers() == 0 and GetNumRaidMembers() == 0 then
-        local dialog = StaticPopup_Show("LOOT_BIND")
-        if dialog then
-          dialog.data = arg1
-          StaticPopup1Button1:Click()
-        end
-      end
+      QueueFunction(AutoBind,arg1)
     end
   end)
 

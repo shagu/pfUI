@@ -101,6 +101,7 @@ pfUI_translation["esES"] = {
   ["Default"] = "Por Defecto",
   ["Delete profile"] = "Borrar Perfil",
   ["Delete / Reset"] = "Borrar / Restablecer",
+  ["Detailed Random Roll Announcement"] = nil,
   ["Disable All UIErrors"] = "Desactivar los Errores de la IU",
   ["Disable Blizzard Castbar"] = "Desactivar la Barra de Lanzamiento de Blizzard",
   ["Disabled"] = "Desactivado",
