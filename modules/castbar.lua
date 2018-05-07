@@ -1,5 +1,6 @@
 pfUI:RegisterModule("castbar", function ()
 
+  local pspace
   local font = C.castbar.use_unitfonts == "1" and pfUI.font_unit or pfUI.font_default
   local font_size = C.castbar.use_unitfonts == "1" and C.global.font_unit_size or C.global.font_size
 
@@ -23,7 +24,7 @@ pfUI:RegisterModule("castbar", function ()
   pfUI.castbar.player:SetHeight(C.global.font_size * 1.5)
 
   if pfUI.uf.player then
-    local pspace = tonumber(C.unitframes.player.pspace)
+    pspace = tonumber(C.unitframes.player.pspace)
     pfUI.castbar.player:SetPoint("TOPLEFT", pfUI.uf.player, "BOTTOMLEFT", 0, -default_border * 2 - pspace)
     pfUI.castbar.player:SetWidth(pfUI.uf.player:GetWidth())
   else
@@ -35,11 +36,23 @@ pfUI:RegisterModule("castbar", function ()
   pfUI.castbar.player:Hide()
   pfUI.castbar.player.delay = 0
 
+  -- spell icon
+  pfUI.castbar.player.icon = CreateFrame("StatusBar", "pfPlayerCastbarIcon", pfUI.castbar.player)
+  pfUI.castbar.player.icon:SetPoint("TOPLEFT", pfUI.uf.player, "BOTTOMLEFT", 0, -default_border * 2 - pspace)
+  pfUI.castbar.player.icon:SetWidth(C.global.font_size * 1.5)
+  pfUI.castbar.player.icon:SetHeight(C.global.font_size * 1.5)
+
   -- statusbar
   pfUI.castbar.player.bar = CreateFrame("StatusBar", nil, pfUI.castbar.player)
   pfUI.castbar.player.bar:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
   pfUI.castbar.player.bar:ClearAllPoints()
-  pfUI.castbar.player.bar:SetAllPoints(pfUI.castbar.player)
+  if C.castbar.player.showspellicon == "1" then
+    pfUI.castbar.player.bar:SetPoint("BOTTOMLEFT", pfUI.castbar.player.icon, "BOTTOMRIGHT", 0, 0)
+    pfUI.castbar.player.bar:SetHeight(C.global.font_size * 1.5)
+    pfUI.castbar.player.bar:SetWidth(180)
+  else
+    pfUI.castbar.player.bar:SetAllPoints(pfUI.castbar.player)
+  end
   pfUI.castbar.player.bar:SetMinMaxValues(0, 100)
   pfUI.castbar.player.bar:SetValue(20)
   local r,g,b,a = strsplit(",", C.appearance.castbar.castbarcolor)
@@ -177,6 +190,10 @@ pfUI:RegisterModule("castbar", function ()
   end, true)
 
   function pfUI.castbar.player:SpellcastStart(spell, duration)
+    if C.castbar.player.showspellicon == "1" then
+      local spelltexture = GetSpellTexture(pfUI.api.GetSpellIndex(spell))
+      pfUI.castbar.player.icon:SetStatusBarTexture(spelltexture)
+    end
     pfUI.castbar.player.delay = 0
     pfUI.castbar.player.spell = spell
     pfUI.castbar.player.bar.left:SetText(spell)
@@ -208,10 +225,12 @@ pfUI:RegisterModule("castbar", function ()
   end
 
   function pfUI.castbar.player:SpellcastChannelStart(duration, spell)
+    pfUI.castbar.player.icon:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
     pfUI.castbar.player.delay = 0
     pfUI.castbar.player.spell = spell
     pfUI.castbar.player.bar.left:SetText(spell)
     local r,g,b,a = strsplit(",", C.appearance.castbar.channelcolor)
+    pfUI.castbar.player.icon:SetStatusBarColor(r,g,b,a)
     pfUI.castbar.player.bar:SetStatusBarColor(r,g,b,a)
     pfUI.castbar.player.maxValue = nil
     pfUI.castbar.player.startTime = GetTime()
@@ -334,7 +353,7 @@ pfUI:RegisterModule("castbar", function ()
   pfUI.castbar.target:SetHeight(C.global.font_size * 1.5)
 
   if pfUI.uf.target then
-    local pspace = tonumber(C.unitframes.target.pspace)
+    pspace = tonumber(C.unitframes.target.pspace)
     pfUI.castbar.target:SetPoint("TOPLEFT", pfUI.uf.target, "BOTTOMLEFT", 0, -default_border * 2 - pspace)
     pfUI.castbar.target:SetWidth(pfUI.uf.target:GetWidth())
   else
@@ -346,11 +365,25 @@ pfUI:RegisterModule("castbar", function ()
   pfUI.castbar.target:Hide()
 
 
+  -- spell icon
+  pfUI.castbar.target.icon = CreateFrame("Button", "pfTargetCastbarIcon", pfUI.castbar.target)
+  pfUI.castbar.target.icon:SetPoint("TOPLEFT", pfUI.uf.target, "BOTTOMLEFT", 0, -default_border * 2 - pspace)
+  pfUI.castbar.target.icon:SetWidth(C.global.font_size * 1.5)
+  pfUI.castbar.target.icon:SetHeight(C.global.font_size * 1.5)
+  pfUI.castbar.target.icon.texture = pfUI.castbar.target.icon:CreateTexture(nil, "BACKGROUND")
+  pfUI.castbar.target.icon.texture:SetAllPoints(pfUI.castbar.target.icon)
+
   -- statusbar
   pfUI.castbar.target.bar = CreateFrame("StatusBar", nil, pfUI.castbar.target)
   pfUI.castbar.target.bar:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
   pfUI.castbar.target.bar:ClearAllPoints()
-  pfUI.castbar.target.bar:SetAllPoints(pfUI.castbar.target)
+  if C.castbar.target.showspellicon == "1" then
+    pfUI.castbar.target.bar:SetPoint("BOTTOMLEFT", pfUI.castbar.target.icon, "BOTTOMRIGHT", 0, 0)
+    pfUI.castbar.target.bar:SetHeight(C.global.font_size * 1.5)
+    pfUI.castbar.target.bar:SetWidth(180)
+  else
+    pfUI.castbar.target.bar:SetAllPoints(pfUI.castbar.target)
+  end
   pfUI.castbar.target.bar:SetMinMaxValues(0, 100)
   pfUI.castbar.target.bar:SetValue(20)
   local r,g,b,a = strsplit(",", C.appearance.castbar.castbarcolor)
@@ -386,9 +419,13 @@ pfUI:RegisterModule("castbar", function ()
       local spellname = pfUI.castbar.target.casterDB[UnitName("target")].cast or 0
       local starttime = pfUI.castbar.target.casterDB[UnitName("target")].starttime or 0
       local casttime = pfUI.castbar.target.casterDB[UnitName("target")].casttime or 0
+      local spelltexture = pfUI.castbar.target.casterDB[UnitName("target")].icon
 
       if starttime + casttime > GetTime() then
         if pfUI.castbar.target.bar then
+          if C.castbar.target.showspellicon == "1" then
+            pfUI.castbar.target.icon.texture:SetTexture('Interface\\Icons\\'..spelltexture)
+          end
           pfUI.castbar.target.bar:SetMinMaxValues(0, casttime)
           pfUI.castbar.target.bar:SetValue(GetTime() - starttime)
           pfUI.castbar.target.bar.left:SetText(spellname)
@@ -440,11 +477,15 @@ pfUI:RegisterModule("castbar", function ()
       if UnitExists("target") and pfUI.castbar.target.casterDB[UnitName("target")] then
         local starttime = pfUI.castbar.target.casterDB[UnitName("target")].starttime or 0
         local casttime = pfUI.castbar.target.casterDB[UnitName("target")].casttime or 0
+        local spelltexture = 'Interface\\Icons\\'..pfUI.castbar.target.casterDB[UnitName("target")].icon			
         if starttime + casttime > GetTime() then
           if C.castbar.target.hide_pfui == "1" then
             pfUI.castbar.target:Hide()
           else
             pfUI.castbar.target:Show()
+            if C.castbar.target.showspellicon == "1" then
+              pfUI.castbar.target.icon.texture:SetTexture(spelltexture)
+            end
           end
         elseif pfUI.castbar.target.drag and not pfUI.castbar.target.drag:IsShown() then
           pfUI.castbar.target.casterDB[UnitName("target")] = nil
