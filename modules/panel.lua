@@ -367,7 +367,7 @@ pfUI:RegisterModule("panel", function()
               repPercent = math.floor(lval / rval * 100)
               if repPercent < 100 then
                 local link = GetInventoryItemLink("player",id)
-                local r,g,b,hex = GetColorGradient(repPercent/100, 1,0,0, 0,1,0)
+                local r,g,b,hex = GetColorGradient(repPercent/100, 1,0,0, 1,1,0, 0,1,0) -- red to green through yellow
                 local cPercent = string.format("%s%s%%|r",hex,repPercent)
                 itemLines[table.getn(itemLines)+1]={link, cPercent}
               end
