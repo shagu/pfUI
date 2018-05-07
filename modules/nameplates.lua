@@ -548,6 +548,9 @@ pfUI:RegisterModule("nameplates", function ()
     if C.nameplates.showhp == "1" and healthbar.hptext then
       local min, max = healthbar:GetMinMaxValues()
       local cur = healthbar:GetValue()
+      if MobHealth3 and unitname == UnitName('target') and healthbar:GetAlpha() == 1 then
+        cur, max = MobHealth3:GetUnitHealth('target')
+      end
       healthbar.hptext:SetText(cur .. " / " .. max)
     end
   end
