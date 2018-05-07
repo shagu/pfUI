@@ -37,12 +37,10 @@ pfUI:RegisterModule("castbar", function ()
   pfUI.castbar.player.delay = 0
 
   -- spell icon
-  pfUI.castbar.player.icon = CreateFrame("Button", "pfPlayerCastbarIcon", pfUI.castbar.player)
+  pfUI.castbar.player.icon = CreateFrame("StatusBar", "pfPlayerCastbarIcon", pfUI.castbar.player)
   pfUI.castbar.player.icon:SetPoint("TOPLEFT", pfUI.uf.player, "BOTTOMLEFT", 0, -default_border * 2 - pspace)
   pfUI.castbar.player.icon:SetWidth(C.global.font_size * 1.5)
   pfUI.castbar.player.icon:SetHeight(C.global.font_size * 1.5)
-  pfUI.castbar.player.icon.texture = pfUI.castbar.player.icon:CreateTexture(nil, "BACKGROUND")
-  pfUI.castbar.player.icon.texture:SetAllPoints(pfUI.castbar.player.icon)
 
   -- statusbar
   pfUI.castbar.player.bar = CreateFrame("StatusBar", nil, pfUI.castbar.player)
@@ -194,7 +192,7 @@ pfUI:RegisterModule("castbar", function ()
   function pfUI.castbar.player:SpellcastStart(spell, duration)
     if C.castbar.player.showspellicon == "1" then
       local spelltexture = GetSpellTexture(pfUI.api.GetSpellIndex(spell))
-      pfUI.castbar.player.icon.texture:SetTexture(spelltexture)
+      pfUI.castbar.player.icon:SetStatusBarTexture(spelltexture)
     end
     pfUI.castbar.player.delay = 0
     pfUI.castbar.player.spell = spell
@@ -227,10 +225,12 @@ pfUI:RegisterModule("castbar", function ()
   end
 
   function pfUI.castbar.player:SpellcastChannelStart(duration, spell)
+    pfUI.castbar.player.icon:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
     pfUI.castbar.player.delay = 0
     pfUI.castbar.player.spell = spell
     pfUI.castbar.player.bar.left:SetText(spell)
     local r,g,b,a = strsplit(",", C.appearance.castbar.channelcolor)
+    pfUI.castbar.player.icon:SetStatusBarColor(r,g,b,a)
     pfUI.castbar.player.bar:SetStatusBarColor(r,g,b,a)
     pfUI.castbar.player.maxValue = nil
     pfUI.castbar.player.startTime = GetTime()
