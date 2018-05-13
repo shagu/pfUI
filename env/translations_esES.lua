@@ -300,6 +300,7 @@ pfUI_translation["esES"] = {
   ["Mousewheel Scroll Speed"] = "Velocidad de Rueda",
   ["ms"] = "ms",
   ["Name"] = "Nombre",
+  ["Name (Short)"] = "Nombre (Corto)",
   ["Nameplates"] = "Placas Indentificativas",
   ["Nameplate Width"] = "Ancho de las Placas Indentificativas",
   ["N/A"] = nil,

@@ -1676,6 +1676,8 @@ function pfUI.uf:GetStatusValue(unit, pos)
     return level .. "  " .. name
   elseif config == "name" then
     return unit:GetColor("unit") .. UnitName(unitstr)
+  elseif config == "nameshort" then
+    return unit:GetColor("unit") .. strsub(UnitName(unitstr), 0, 3)
   elseif config == "level" then
     return unit:GetColor("level") .. pfUI.uf:GetLevelString(unitstr)
   elseif config == "class" then

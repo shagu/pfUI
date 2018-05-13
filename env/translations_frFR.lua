@@ -300,6 +300,7 @@ pfUI_translation["frFR"] = {
   ["Mousewheel Scroll Speed"] = nil,
   ["ms"] = nil,
   ["Name"] = "Nom",
+  ["Name (Short)"] = "Nom (Court)",
   ["Nameplates"] = "Barres de vie flottantes",
   ["Nameplate Width"] = "Largeur des barres de vie flottantes",
   ["N/A"] = nil,
