@@ -303,6 +303,7 @@ pfUI_translation["koKR"] = {
   ["Name"] = "이름",
   ["Nameplates"] = "상바",
   ["Nameplate Width"] = "상바 넓이",
+  ["Name (Short)"] = nil,
   ["N/A"] = nil,
   ["Native"] = nil,
   ["Network Down"] = "네트워크 다운로드",

@@ -302,6 +302,7 @@ pfUI_translation["zhCN"] = {
   ["ms"] = "毫秒",
   ["Nameplates"] = "姓名板",
   ["Nameplate Width"] = "姓名板宽度",
+  ["Name (Short)"] = nil,
   ["Name"] = "名字",
   ["N/A"] = nil,
   ["Native"] = "本地",

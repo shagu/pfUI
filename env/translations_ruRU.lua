@@ -302,6 +302,7 @@ pfUI_translation["ruRU"] = {
   ["ms"] = "мс",
   ["Nameplates"] = "Индикаторы здоровья",
   ["Nameplate Width"] = "Ширина индикатора здоровья",
+  ["Name (Short)"] = nil,
   ["Name"] = "Имя",
   ["Native"] = "Родная",
   ["N/A"] = "Н/Д",

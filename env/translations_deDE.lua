@@ -303,6 +303,7 @@ pfUI_translation["deDE"] = {
   ["Name"] = nil,
   ["Nameplates"] = nil,
   ["Nameplate Width"] = nil,
+  ["Name (Short)"] = nil,
   ["N/A"] = nil,
   ["Native"] = nil,
   ["Network Down"] = nil,

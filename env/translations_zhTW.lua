@@ -302,6 +302,7 @@ pfUI_translation["zhTW"] = {
   ["ms"] = "毫秒",
   ["Nameplates"] = "姓名板",
   ["Nameplate Width"] = "姓名板高度",
+  ["Name (Short)"] = nil,
   ["Name"] = "名字",
   ["N/A"] = nil,
   ["Native"] = nil,
