@@ -273,6 +273,7 @@ pfUI:RegisterModule("unlock", function ()
       local frame = _G[frame]
 
       if frame then
+        frame:StopMovingOrSizing()
         frame:SetMovable(false)
         frame.drag:EnableMouse(false)
         frame.drag:Hide()
