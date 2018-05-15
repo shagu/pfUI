@@ -301,6 +301,7 @@ pfUI_translation["enUS"] = {
   ["Mousewheel Scroll Speed"] = nil,
   ["ms"] = nil,
   ["Name"] = nil,
+  ["Name (Short)"] = nil,
   ["Nameplates"] = nil,
   ["Nameplate Width"] = nil,
   ["N/A"] = nil,

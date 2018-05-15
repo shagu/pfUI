@@ -501,6 +501,7 @@ pfUI:RegisterModule("gui", function ()
     "none:" .. T["Disable"],
     "unit:" .. T["Unit String"],
     "name:" .. T["Name"],
+    "nameshort:" .. T["Name (Short)"],
     "level:" .. T["Level"],
     "class:" .. T["Class"],
     "healthdyn:" .. T["Health - Auto"],
