@@ -107,6 +107,18 @@ function pfUI.api.clamp(x, min, max)
   end
 end
 
+-- [ modf ]
+-- Returns integral and fractional part of a number.
+-- 'f'          [float]        the number to breakdown.
+-- returns:     [int],[float]  whole and fractional part.
+function pfUI.api.modf(f)
+  if math.modf then return math.modf(f) end
+  if f > 0 then
+    return math.floor(f), math.mod(f,1)
+  end
+  return math.ceil(f), math.mod(f,1)
+end
+
 -- [ SanitizePattern ]
 -- Sanitizes and convert patterns into gfind compatible ones.
 -- 'pattern'    [string]         unformatted pattern
@@ -788,5 +800,66 @@ function pfUI.api.GetColoredTimeString(remaining)
     return "|cff" .. string.format("%02x%02x%02x", r*255, g*255, b*255) .. round(remaining)
   else
     return ""
+  end
+end
+
+-- [ GetColorGradient ] --
+-- 'perc'     percentage (0-1)
+-- 'color1' table or r,g,b tuple
+-- 'color2' table or r,g,b tuple
+-- ..
+-- 'colorN' table or r,g,b tuple
+-- return r,g,b and hexcolor
+local color_tuples = {}
+function pfUI.api.GetColorGradient(perc, ...)
+  local num = arg.n
+  local r,g,b,hex
+  assert(tonumber(perc), "GetColorGradient: "..tostring(perc).." is not a number")
+  assert((type(arg[1])=="number" and num>5) or (type(arg[1])=="table" and num>1), "GetColorGradient: needs at least 2 colors")
+  perc = pfUI.api.clamp(perc,0,1)
+  if type(arg[1])=="number" then -- called with r,g,b tuples
+    -- shortcircuit the edge cases
+    if perc == 1 then
+      r,g,b = arg[num-2], arg[num-1], arg[num]
+      hex = string.format("|cff%02x%02x%02x", r*255, g*255, b*255)
+      return r,g,b,hex
+    elseif perc == 0 then
+      r,g,b = arg[1], arg[2], arg[3]
+      hex = string.format("|cff%02x%02x%02x", r*255, g*255, b*255)
+      return r,g,b,hex
+    end
+    num = num/3
+    local segment, relativepercent = pfUI.api.modf(perc*(num-1))
+    local r1,g1,b1, r2,g2,b2
+    r1,g1,b1 = arg[segment*3+1], arg[segment*3+2], arg[segment*3+3]
+    r2,g2,b2 = arg[segment*3+4], arg[segment*3+5], arg[segment*3+6]
+    if not r2 or not g2 or not b2 then
+      r,g,b = r1,g1,b1
+      hex = string.format("|cff%02x%02x%02x", r*255, g*255, b*255)
+      return r,g,b,hex
+    else
+      r,g,b = r1 + (r2-r1)*relativepercent, g1 + (g2-g1)*relativepercent, b1 + (b2-b1)*relativepercent
+      hex = string.format("|cff%02x%02x%02x", r*255, g*255, b*255)
+      return r,g,b,hex
+    end
+  elseif type(arg[1])=="table" then -- called with color tables
+    -- shortcircuit the edge cases
+    if perc == 1 then
+      r,g,b = arg[num][1] or arg[num].r, arg[num][2] or arg[num].g, arg[num][3] or arg[num].b
+      hex = string.format("|cff%02x%02x%02x", r*255, g*255, b*255)
+      return r,g,b,hex
+    elseif perc == 0 then
+      r,g,b = arg[1][1] or arg[1].r, arg[1][2] or arg[1].g, arg[1][3] or arg[1].b
+      hex = string.format("|cff%02x%02x%02x", r*255, g*255, b*255)
+      return r,g,b,hex
+    end
+    pfUI.api.wipe(color_tuples)
+    for _,c in ipairs(arg) do
+      local r,g,b = c[1] or c.r, c[2] or c.g, c[3] or c.b
+      color_tuples[table.getn(color_tuples)+1] = r
+      color_tuples[table.getn(color_tuples)+1] = g
+      color_tuples[table.getn(color_tuples)+1] = b
+    end
+    return pfUI.api.GetColorGradient(perc,unpack(color_tuples))
   end
 end
