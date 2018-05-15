@@ -438,7 +438,7 @@ pfUI:RegisterModule("loot", function ()
           local color = ITEM_QUALITY_COLORS[quality]
 
           if(LootSlotIsCoin(id)) then
-            item = string.gsub(item,"\n", ", ")
+            item = string.gsub(string.gsub(item,"\n", ", "), ", $", "")
           end
 
           if(quantity > 1) then
