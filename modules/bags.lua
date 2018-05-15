@@ -61,6 +61,13 @@ pfUI:RegisterModule("bags", function ()
   pfUI.bag:RegisterEvent("BANKFRAME_OPENED")
   pfUI.bag:RegisterEvent("ITEM_LOCK_CHANGED")
 
+  pfUI.bag:SetScript("OnUpdate", function()
+    if this.fakeEvent and this.fakeEvent + 0.2 < GetTime() then
+      pfUI.bag:CheckFullUpdate()
+      this.fakeEvent = nil
+    end
+  end)
+
   pfUI.bag:SetScript("OnEvent", function()
     if event == "PLAYER_ENTERING_WORLD" then
       pfUI.bag:CreateBags()
@@ -77,6 +84,7 @@ pfUI:RegisterModule("bags", function ()
        event == "PLAYERBANKBAGSLOTS_CHANGED" or event == "BAG_UPDATE" or
        event == "BANKFRAME_OPENED" or event == "BANKFRAME_CLOSED" then
       pfUI.bag:CheckFullUpdate()
+      this.fakeEvent = GetTime()
     end
 
     if event == "BAG_UPDATE_COOLDOWN" then
