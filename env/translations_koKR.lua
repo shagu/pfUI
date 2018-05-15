@@ -101,6 +101,7 @@ pfUI_translation["koKR"] = {
   ["Default"] = "기본",
   ["Delete profile"] = "프로파일 삭제",
   ["Delete / Reset"] = "지우기/초기화",
+  ["Detailed Random Roll Announcement"] = nil,
   ["Disable"] = "가리기",
   ["Disable All UIErrors"] = "모든 UI오류 비활성화",
   ["Disable Blizzard Castbar"] = "블리자드 캐스트바 사용 중지",

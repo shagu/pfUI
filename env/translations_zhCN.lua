@@ -101,6 +101,7 @@ pfUI_translation["zhCN"] = {
   ["Default"] = "默认设置",
   ["Delete profile"] = "删除配置",
   ["Delete / Reset"] = "还原",
+  ["Detailed Random Roll Announcement"] = nil,
   ["Disable All UIErrors"] = "禁用所有UI错误",
   ["Disable Blizzard Castbar"] = "隐藏暴雪施法条",
   ["Disabled"] = "不显示",
