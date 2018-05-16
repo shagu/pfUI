@@ -243,7 +243,7 @@ pfUI:RegisterModule("buff", function ()
 
     pfUI.buff.buffs:SetWidth(tonumber(C.buffs.rowsize) * (tonumber(C.buffs.size)+2*tonumber(C.buffs.spacing)))
     pfUI.buff.buffs:SetHeight(ceil(32/tonumber(C.buffs.rowsize)) * ((C.buffs.textinside == "1" and 0 or (fontsize*1.5))+tonumber(C.buffs.size)+2*tonumber(C.buffs.spacing)))
-    pfUI.buff.buffs:SetPoint("TOPRIGHT", pfUI.minimap or UIParent, "TOPLEFT", -2*tonumber(C.buffs.spacing), 0)
+    pfUI.buff.buffs:SetPoint("TOPRIGHT", pfUI.minimap or UIParent, "TOPLEFT", -4*tonumber(C.buffs.spacing), 0)
     UpdateMovable(pfUI.buff.buffs)
 
     pfUI.buff.debuffs:SetWidth(tonumber(C.buffs.rowsize) * (tonumber(C.buffs.size)+2*tonumber(C.buffs.spacing)))
