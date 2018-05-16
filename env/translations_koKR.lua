@@ -385,6 +385,7 @@ pfUI_translation["koKR"] = {
   ["Show Hots as Buff Indicators"] = "핫버프 표시기 보기",
   ["Show Hots of all Classes"] = "모든 클래스 핫버프 보기",
   ["Show Inactive Tracking"] = nil,
+  ["Show Indicator For Castable Pet Actions"] = nil,
   ["Show Items On Mouseover"] = nil,
   ["Show Macro Text"] = "매크로 텍스트 표시",
   ["Show Meters By Default"] = nil,
