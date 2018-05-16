@@ -479,6 +479,14 @@ function pfUI.api.UpdateMovable(frame)
     table.insert(pfUI.movables, name)
   end
 
+  if not frame.posdata then
+    frame.posdata = { scale = frame:GetScale(), pos = {} }
+
+    for i=1,frame:GetNumPoints() do
+      frame.posdata.pos[i] = { frame:GetPoint(i) }
+    end
+  end
+
   if pfUI_config["position"][frame:GetName()] then
     if pfUI_config["position"][frame:GetName()]["scale"] then
       frame:SetScale(pfUI_config["position"][frame:GetName()].scale)
@@ -487,6 +495,13 @@ function pfUI.api.UpdateMovable(frame)
     if pfUI_config["position"][frame:GetName()]["xpos"] then
       frame:ClearAllPoints()
       frame:SetPoint("TOPLEFT", pfUI_config["position"][frame:GetName()].xpos, pfUI_config["position"][frame:GetName()].ypos)
+    end
+  elseif frame.posdata and frame.posdata.pos[1] then
+    frame:ClearAllPoints()
+    frame:SetScale(frame.posdata.scale)
+
+    for id, point in pairs(frame.posdata.pos) do
+      frame:SetPoint(unpack(point))
     end
   end
 end
