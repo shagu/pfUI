@@ -1670,18 +1670,14 @@ function pfUI.uf:GetStatusValue(unit, pos)
     config = "unit"
   end
 
-  local mp, mpmax = UnitMana(unitstr), UnitManaMax(unitstr)
-  local hp, hpmax = UnitHealth(unitstr), UnitHealthMax(unitstr)
-  if unit.label == "target" and (MobHealth3 or MobHealthFrame) and MobHealth_GetTargetCurHP() then
-    hp, hpmax = MobHealth_GetTargetCurHP(), MobHealth_GetTargetMaxHP()
-  end
-	
   if config == "unit" then
     local name = unit:GetColor("unit") .. UnitName(unitstr)
     local level = unit:GetColor("level") .. pfUI.uf:GetLevelString(unitstr)
     return level .. "  " .. name
   elseif config == "name" then
     return unit:GetColor("unit") .. UnitName(unitstr)
+  elseif config == "nameshort" then
+    return unit:GetColor("unit") .. strsub(UnitName(unitstr), 0, 3)
   elseif config == "level" then
     return unit:GetColor("level") .. pfUI.uf:GetLevelString(unitstr)
   elseif config == "class" then
@@ -1689,52 +1685,84 @@ function pfUI.uf:GetStatusValue(unit, pos)
 
   -- health
   elseif config == "health" then
-    return unit:GetColor("health") .. pfUI.api.Abbreviate(hp)
+    if unit.label == "target" and MobHealth3 then
+      local hp, hpmax = MobHealth3:GetUnitHealth(unit.label)
+      return unit:GetColor("health") .. pfUI.api.Abbreviate(hp)
+    elseif unit.label == "target" and MobHealthFrame and MobHealth_GetTargetCurHP() then
+      local hp = MobHealth_GetTargetCurHP()
+      return unit:GetColor("health") .. pfUI.api.Abbreviate(hp)
+    end
+    return unit:GetColor("health") .. pfUI.api.Abbreviate(UnitHealth(unitstr))
   elseif config == "healthmax" then
-    return unit:GetColor("health") .. pfUI.api.Abbreviate(hpmax)
+    if unit.label == "target" and MobHealth3 then
+      local hp, hpmax = MobHealth3:GetUnitHealth(unit.label)
+      return unit:GetColor("health") .. pfUI.api.Abbreviate(hpmax)
+    elseif unit.label == "target" and MobHealthFrame and MobHealth_GetTargetMaxHP() then
+      local hpmax = MobHealth_GetTargetMaxHP()
+      return unit:GetColor("health") .. pfUI.api.Abbreviate(hpmax)
+    end
+    return unit:GetColor("health") .. pfUI.api.Abbreviate(UnitHealthMax(unitstr))
   elseif config == "healthperc" then
-    return unit:GetColor("health") .. ceil(hp / hpmax * 100)
+    return unit:GetColor("health") .. ceil(UnitHealth(unitstr) / UnitHealthMax(unitstr) * 100)
   elseif config == "healthmiss" then
-    local health = ceil(hp - hpmax)
-    if UnitIsDead(unitstr) then
-      return unit:GetColor("health") .. DEAD
-		elseif health == 0 then
-      return unit:GetColor("health") .. "0"
+    local health = ceil(UnitHealth(unitstr) - UnitHealthMax(unitstr))
+    if health == 0 or UnitIsDead(unitstr) then
+      return ""
     else
       return unit:GetColor("health") .. pfUI.api.Abbreviate(health)
     end
   elseif config == "healthdyn" then
-    if hp ~= hpmax then
-      return unit:GetColor("health") .. pfUI.api.Abbreviate(hp) .. " - " .. ceil(hp / hpmax * 100) .. "%"
+    if UnitHealth(unitstr) ~= UnitHealthMax(unitstr) then
+      if unit.label == "target" and MobHealth3 then
+        local hp, hpmax = MobHealth3:GetUnitHealth(unit.label)
+        return unit:GetColor("health") .. pfUI.api.Abbreviate(hp) .. " - " .. ceil(hp / hpmax * 100) .. "%"
+      elseif unit.label == "target" and MobHealthFrame and MobHealth_GetTargetCurHP() then
+        local hp, hpmax = MobHealth_GetTargetCurHP(),MobHealth_GetTargetMaxHP()
+        return unit:GetColor("health") .. pfUI.api.Abbreviate(hp) .. " - " .. ceil(hp / hpmax * 100) .. "%"
+      end
+      return unit:GetColor("health") .. pfUI.api.Abbreviate(UnitHealth(unitstr)) .. " - " .. ceil(UnitHealth(unitstr) / UnitHealthMax(unitstr) * 100) .. "%"
     else
-      return unit:GetColor("health") .. pfUI.api.Abbreviate(hp)
+      if unit.label == "target" and MobHealth3 then
+        local hp, hpmax = MobHealth3:GetUnitHealth(unit.label)
+        return unit:GetColor("health") .. pfUI.api.Abbreviate(hp)
+      elseif unit.label == "target" and MobHealthFrame and MobHealth_GetTargetCurHP() then
+        local hp = MobHealth_GetTargetCurHP()
+        return unit:GetColor("health") .. pfUI.api.Abbreviate(hp)
+      end
+      return unit:GetColor("health") .. pfUI.api.Abbreviate(UnitHealth(unitstr))
     end
   elseif config == "healthminmax" then
+    local hp, hpmax = UnitHealth(unitstr), UnitHealthMax(unitstr)
+    if unit.label == "target" and MobHealth3 then
+      hp, hpmax = MobHealth3:GetUnitHealth(unit.label)
+    elseif unit.label == "target" and MobHealthFrame and MobHealth_GetTargetCurHP() then
+      local hp, hpmax = MobHealth_GetTargetCurHP(), MobHealth_GetTargetMaxHP()
+    end
     return unit:GetColor("health") .. pfUI.api.Abbreviate(hp) .. "/" .. pfUI.api.Abbreviate(hpmax)
 
   -- mana/power/focus
   elseif config == "power" then
-    return unit:GetColor("power") .. pfUI.api.Abbreviate(mp)
+    return unit:GetColor("power") .. pfUI.api.Abbreviate(UnitMana(unitstr))
   elseif config == "powermax" then
-    return unit:GetColor("power") .. pfUI.api.Abbreviate(mpmax)
+    return unit:GetColor("power") .. pfUI.api.Abbreviate(UnitManaMax(unitstr))
   elseif config == "powerperc" then
-    local perc = UnitManaMax(unitstr) > 0 and ceil(mp / mpmax * 100) or 0
+    local perc = UnitManaMax(unitstr) > 0 and ceil(UnitMana(unitstr) / UnitManaMax(unitstr) * 100) or 0
     return unit:GetColor("power") .. perc
   elseif config == "powermiss" then
-    local power = ceil(mp - mpmax)
+    local power = ceil(UnitMana(unitstr) - UnitManaMax(unitstr))
     if power == 0 then
-      return unit:GetColor("power") .. "0"
+      return ""
     else
       return unit:GetColor("power") .. pfUI.api.Abbreviate(power)
     end
   elseif config == "powerdyn" then
-    if mp ~= mpmax then
-      return unit:GetColor("power") .. pfUI.api.Abbreviate(mp) .. " - " .. ceil(mp / mpmax * 100) .. "%"
+    if UnitMana(unitstr) ~= UnitManaMax(unitstr) then
+      return unit:GetColor("power") .. pfUI.api.Abbreviate(UnitMana(unitstr)) .. " - " .. ceil(UnitMana(unitstr) / UnitManaMax(unitstr) * 100) .. "%"
     else
-      return unit:GetColor("power") .. pfUI.api.Abbreviate(mp)
+      return unit:GetColor("power") .. pfUI.api.Abbreviate(UnitMana(unitstr))
     end
   elseif config == "powerminmax" then
-    return unit:GetColor("power") .. pfUI.api.Abbreviate(mp) .. "/" .. pfUI.api.Abbreviate(mpmax)
+    return unit:GetColor("power") .. pfUI.api.Abbreviate(UnitMana(unitstr)) .. "/" .. pfUI.api.Abbreviate(UnitManaMax(unitstr))
   else
     return ""
   end
