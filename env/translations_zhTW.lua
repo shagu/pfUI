@@ -385,6 +385,7 @@ pfUI_translation["zhTW"] = {
   ["Show Hots as Buff Indicators"] = "在框架的Buff指示器顯示Hot",
   ["Show Hots of all Classes"] = "顯示所有職業的Hot",
   ["Show Inactive Tracking"] = nil,
+  ["Show Indicator For Castable Pet Actions"] = nil,
   ["Show Items On Mouseover"] = nil,
   ["Show Macro Text"] = "顯示巨集的名字",
   ["Show Meters By Default"] = nil,

@@ -572,7 +572,14 @@ pfUI:RegisterModule("actionbar", function ()
     texture :SetAlpha(0)
 
     local castable = _G["PetActionButton"..i..'AutoCastable']
-    castable:SetAlpha(0)
+    if C.bars.showcastable == "1" then
+      castable:SetWidth(C.bars.icon_size*1.5)
+      castable:SetHeight(C.bars.icon_size*1.5)
+      castable:SetParent(button)
+      castable:SetTexCoord(.08, .9, .08, .9)
+    else
+      castable:SetAlpha(0)
+    end
 
     local border = _G["PetActionButton"..i..'Border']
     border:SetAlpha(0)

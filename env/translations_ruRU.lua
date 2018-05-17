@@ -385,6 +385,7 @@ pfUI_translation["ruRU"] = {
   ["Show Hots as Buff Indicators"] = "Показать лечение со временем (HoT) как индикаторы баффов",
   ["Show Hots of all Classes"] = "Показать лечение со временем (HoT) всех классов",
   ["Show Inactive Tracking"] = "Показать неактивное отслеживание",
+  ["Show Indicator For Castable Pet Actions"] = nil,
   ["Show Items On Mouseover"] = "Показать всплывающую подсказку при наведении мыши на предмет",
   ["Show Macro Text"] = "Показать текст макросов",
   ["Show Meters By Default"] = "Показать счетчики по умолчанию",

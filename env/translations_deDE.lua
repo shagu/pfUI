@@ -385,6 +385,7 @@ pfUI_translation["deDE"] = {
   ["Show Hots as Buff Indicators"] = nil,
   ["Show Hots of all Classes"] = nil,
   ["Show Inactive Tracking"] = nil,
+  ["Show Indicator For Castable Pet Actions"] = nil,
   ["Show Items On Mouseover"] = nil,
   ["Show Macro Text"] = nil,
   ["Show Meters By Default"] = nil,
