@@ -47,7 +47,7 @@ pfUI:RegisterModule("raid", function ()
       if name then
         for subindex = 1, 5 do
           ids = subindex + 5*(subgroup-1)
-          if pfUI.uf.raid[ids].id == 0 then
+          if pfUI.uf.raid[ids].id == 0 and pfUI.uf.raid[ids].visible == "1" then
             pfUI.uf.raid[ids].id = i
             pfUI.uf.raid[ids]:Show()
             pfUI.uf:RefreshUnit(pfUI.uf.raid[ids], "all")
