@@ -1528,6 +1528,10 @@ function pfUI.uf:SetupBuffFilter()
     -- Blessing of Might
     table.insert(pfUI.uf.buffs, "interface\\icons\\spell_holy_fistofjustice")
     table.insert(pfUI.uf.buffs, "interface\\icons\\spell_holy_greaterblessingofkings")
+
+    -- Blessing of Light
+    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_holy_prayerofhealing02")
+    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_holy_greaterblessingoflight")
   end
 
 
