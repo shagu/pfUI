@@ -26,6 +26,7 @@ This is **not** an addon-pack like [ShaguUI](http://shagu.org/ShaguUI/), however
     /share        Open the configuration import/export dialog
     /gm           Open the ticket Dialog
     /rl           Reload the whole UI
+    /farm         Toggles the Farm-Mode
     /focus        Creates a Focus-Frame for the current target
     /clearfocus   Clears the Focus-Frame
 
