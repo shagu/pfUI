@@ -39,30 +39,30 @@ pfUI:RegisterModule("raid", function ()
     end
   end
 
+  -- add units to the beginning of their groups
+  function pfUI.uf.raid:AddUnitToGroup(index, group)
+    for subindex = 1, 5 do
+      ids = subindex + 5*(group-1)
+      if pfUI.uf.raid[ids].id == 0 and pfUI.uf.raid[ids].config.visible == "1" then
+        pfUI.uf.raid[ids].id = index
+        pfUI.uf.raid[ids]:Show()
+        pfUI.uf:RefreshUnit(pfUI.uf.raid[ids], "all")
+        break
+      end
+    end
+  end
+
   function pfUI.uf.raid:RaidSetup()
     for i=1, 40 do
       pfUI.uf.raid[i].id = 0
       pfUI.uf.raid[i]:Hide()
     end
 
-    -- add units to the beginning of their groups
-    local function AddUnitToGroup(index, group)
-      for subindex = 1, 5 do
-        ids = subindex + 5*(group-1)
-        if pfUI.uf.raid[ids].id == 0 and pfUI.uf.raid[ids].config.visible == "1" then
-          pfUI.uf.raid[ids].id = index
-          pfUI.uf.raid[ids]:Show()
-          pfUI.uf:RefreshUnit(pfUI.uf.raid[ids], "all")
-          break
-        end
-      end
-    end
-
     -- sort tanks into their groups
     for i=1, GetNumRaidMembers() do
       local name, _, subgroup  = GetRaidRosterInfo(i)
       if name and pfUI.uf.raid.tankrole[name] then
-        AddUnitToGroup(i, subgroup)
+        pfUI.uf.raid:AddUnitToGroup(i, subgroup)
       end
     end
 
@@ -70,7 +70,7 @@ pfUI:RegisterModule("raid", function ()
     for i=1, GetNumRaidMembers() do
       local name, _, subgroup  = GetRaidRosterInfo(i)
       if name and not pfUI.uf.raid.tankrole[name] then
-        AddUnitToGroup(i, subgroup)
+        pfUI.uf.raid:AddUnitToGroup(i, subgroup)
       end
     end
   end
