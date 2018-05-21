@@ -98,7 +98,7 @@ pfUI:RegisterModule("buff", function ()
       elseif this.mode == "OFFHAND" then
         local _, _, _, _, ohtime, ohcharge = GetWeaponEnchantInfo()
         timeleft = ohtime/1000
-        charge = ohcharge
+        stacks = ohcharge
       end
 
       this.timer:SetText(timeleft > 0 and GetColoredTimeString(timeleft) or "")
