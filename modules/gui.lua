@@ -827,7 +827,8 @@ pfUI:RegisterModule("gui", function ()
       [2] = { "target",   T["Target"] },
       [3] = { "ttarget",  T["Target-Target"]},
       [4] = { "pet",      T["Pet"] },
-      [5] = { "focus",    T["Focus"] },
+      [5] = { "ptarget",  T["Pet-Target"]},
+      [6] = { "focus",    T["Focus"] },
     },
 
     ["gf"] = {

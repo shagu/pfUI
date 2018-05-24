@@ -93,9 +93,9 @@ end
 function pfUI.uf:UpdateConfig()
   local f = self
   local C = pfUI_config
-  local default_border = pfUI_config.appearance.border.default
-  if pfUI_config.appearance.border.unitframes ~= "-1" then
-    default_border = pfUI_config.appearance.border.unitframes
+  local default_border = C.appearance.border.default
+  if C.appearance.border.unitframes ~= "-1" then
+    default_border = C.appearance.border.unitframes
   end
 
   local relative_point = "BOTTOM"
@@ -134,8 +134,8 @@ function pfUI.uf:UpdateConfig()
     f.hp.bar:SetOrientation("HORIZONTAL")
   end
 
-  if pfUI_config.unitframes.custombg == "1" then
-    local cr, cg, cb, ca = pfUI.api.strsplit(",", pfUI_config.unitframes.custombgcolor)
+  if C.unitframes.custombg == "1" then
+    local cr, cg, cb, ca = pfUI.api.strsplit(",", C.unitframes.custombgcolor)
     cr, cg, cb, ca = tonumber(cr), tonumber(cg), tonumber(cb), tonumber(ca)
     f.hp.bar.texture = f.hp.bar.texture or f.hp:CreateTexture(nil,"BACKGROUND")
     f.hp.bar.texture:SetTexture(cr,cg,cb,ca)
@@ -173,7 +173,7 @@ function pfUI.uf:UpdateConfig()
     f.portrait:SetParent(f.hp.bar)
     f.portrait:SetAllPoints(f.hp.bar)
 
-    f.portrait:SetAlpha(pfUI_config.unitframes.portraitalpha)
+    f.portrait:SetAlpha(C.unitframes.portraitalpha)
     if f.portrait.backdrop then f.portrait.backdrop:Hide() end
 
     -- place portrait below fonts
@@ -547,6 +547,7 @@ function pfUI.uf:EnableScripts()
   f:RegisterEvent("UNIT_MODEL_CHANGED")
   f:RegisterEvent("UNIT_AURA") -- frame=buff, frame=debuff
   f:RegisterEvent("PLAYER_AURAS_CHANGED") -- label=player && frame=buff
+  f:RegisterEvent("UNIT_INVENTORY_CHANGED") -- label=player && frame=buff
   f:RegisterEvent("PARTY_MEMBERS_CHANGED") -- label=party, frame=leaderIcon
   f:RegisterEvent("PARTY_LEADER_CHANGED") -- frame=leaderIcon
   f:RegisterEvent("RAID_ROSTER_UPDATE") -- label=raid
@@ -573,7 +574,7 @@ function pfUI.uf:EnableScripts()
       pfUI.uf:RefreshUnit(this, "all")
     elseif ( this.label == "raid" or this.label == "party" ) and event == "RAID_ROSTER_UPDATE" then
       pfUI.uf:RefreshUnit(this, "all")
-    elseif this.label == "player" and event == "PLAYER_AURAS_CHANGED" then
+    elseif this.label == "player" and (event == "PLAYER_AURAS_CHANGED" or event == "UNIT_INVENTORY_CHANGED") then
       pfUI.uf:RefreshUnit(this, "aura")
     elseif event == "PLAYER_ENTERING_WORLD" then
       pfUI.uf:RefreshUnit(this, "all")
@@ -691,6 +692,10 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
 
   if unit == "partypet" and id == "0" then
     unit, id = "pet", ""
+  end
+
+  if unit == "pettarget" and id == "0" then
+    unit, id = "pettarget", ""
   end
 
   if unit == "party0target" then
@@ -876,12 +881,13 @@ function pfUI.uf:RefreshUnit(unit, component)
   local component = component or ""
 
   -- don't update scanner activity
-  if unit.label == "target" or unit.label == "targettarget" then
+  if unit.label == "target" or unit.label == "targettarget" or unit.label == "pettarget" then
     if pfScanActive == true then return end
   end
 
+  local C = pfUI_config
   -- show groupframes as raid
-  if pfUI_config["unitframes"]["raidforgroup"] == "1" then
+  if C["unitframes"]["raidforgroup"] == "1" then
     if strsub(unit:GetName(),0,6) == "pfRaid" then
       local id = tonumber(strsub(unit:GetName(),7,8))
 
@@ -900,9 +906,9 @@ function pfUI.uf:RefreshUnit(unit, component)
     end
   end
 
-  local default_border = pfUI_config.appearance.border.default
-  if pfUI_config.appearance.border.unitframes ~= "-1" then
-    default_border = pfUI_config.appearance.border.unitframes
+  local default_border = C.appearance.border.default
+  if C.appearance.border.unitframes ~= "-1" then
+    default_border = C.appearance.border.unitframes
   end
 
   -- hide and return early on unused frames
@@ -917,7 +923,7 @@ function pfUI.uf:RefreshUnit(unit, component)
     elseif UnitName(unit.label .. unit.id) then
 
       -- hide group while in raid and option is set
-      if pfUI_config["unitframes"]["group"]["hide_in_raid"] == "1" and strsub(unit.label,0,5) == "party" and UnitInRaid("player") then
+      if C["unitframes"]["group"]["hide_in_raid"] == "1" and strsub(unit.label,0,5) == "party" and UnitInRaid("player") then
         unit:Hide()
         return
 
@@ -928,9 +934,15 @@ function pfUI.uf:RefreshUnit(unit, component)
           return
         end
 
+      elseif unit.label == "pettarget" then
+        if not UnitIsVisible(unit.label .. unit.id) or not UnitExists("pet") then
+          unit:Hide()
+          return
+        end
+
       -- hide self in group if solo or hide in raid is set
       elseif unit.fname == "Group0" or unit.fname == "PartyPet0" or unit.fname == "Party0Target" then
-        if ( GetNumPartyMembers() <= 0 ) or ( pfUI_config["unitframes"]["group"]["hide_in_raid"] == "1" and UnitInRaid("player") ) then
+        if ( GetNumPartyMembers() <= 0 ) or ( C["unitframes"]["group"]["hide_in_raid"] == "1" and UnitInRaid("player") ) then
           unit:Hide()
           return
         end
@@ -1062,15 +1074,15 @@ function pfUI.uf:RefreshUnit(unit, component)
       end
 
       if dtype == "Magic" then
-        unit.debuffs[i].backdrop:SetBackdropBorderColor(0,1,1,1)
+        unit.debuffs[i].backdrop:SetBackdropBorderColor(DebuffTypeColor[dtype].r,DebuffTypeColor[dtype].g,DebuffTypeColor[dtype].b,1)
       elseif dtype == "Poison" then
-        unit.debuffs[i].backdrop:SetBackdropBorderColor(0,1,0,1)
+        unit.debuffs[i].backdrop:SetBackdropBorderColor(DebuffTypeColor[dtype].r,DebuffTypeColor[dtype].g,DebuffTypeColor[dtype].b,1)
       elseif dtype == "Curse" then
-        unit.debuffs[i].backdrop:SetBackdropBorderColor(1,0,1,1)
+        unit.debuffs[i].backdrop:SetBackdropBorderColor(DebuffTypeColor[dtype].r,DebuffTypeColor[dtype].g,DebuffTypeColor[dtype].b,1)
       elseif dtype == "Disease" then
-        unit.debuffs[i].backdrop:SetBackdropBorderColor(1,1,0,1)
+        unit.debuffs[i].backdrop:SetBackdropBorderColor(DebuffTypeColor[dtype].r,DebuffTypeColor[dtype].g,DebuffTypeColor[dtype].b,1)
       else
-        unit.debuffs[i].backdrop:SetBackdropBorderColor(1,0,0,1)
+        unit.debuffs[i].backdrop:SetBackdropBorderColor(DebuffTypeColor.none.r,DebuffTypeColor.none.g,DebuffTypeColor.none.b,1)
       end
 
       if texture then
@@ -1198,7 +1210,7 @@ function pfUI.uf:RefreshUnit(unit, component)
 
   -- portrait
   if unit.portrait and ( component == "all" or component == "portrait" ) then
-    if pfUI_config.unitframes.always2dportrait == "1" then
+    if C.unitframes.always2dportrait == "1" then
       unit.portrait.tex:Show()
       unit.portrait.model:Hide()
       SetPortraitTexture(unit.portrait.tex, unit.label .. unit.id)
@@ -1207,7 +1219,7 @@ function pfUI.uf:RefreshUnit(unit, component)
         if unit.config.portrait == "bar" then
           unit.portrait.tex:Hide()
           unit.portrait.model:Hide()
-        elseif pfUI_config.unitframes.portraittexture == "1" then
+        elseif C.unitframes.portraittexture == "1" then
           unit.portrait.tex:Show()
           unit.portrait.model:Hide()
           SetPortraitTexture(unit.portrait.tex, unit.label .. unit.id)
@@ -1220,7 +1232,7 @@ function pfUI.uf:RefreshUnit(unit, component)
         end
       else
         if unit.config.portrait == "bar" then
-          unit.portrait:SetAlpha(pfUI_config.unitframes.portraitalpha)
+          unit.portrait:SetAlpha(C.unitframes.portraitalpha)
         end
         unit.portrait.tex:Hide()
         unit.portrait.model:Show()
@@ -1257,7 +1269,7 @@ function pfUI.uf:RefreshUnit(unit, component)
   end
 
   if unit.cache.hpdisplay ~= unit.cache.hp then
-    if pfUI_config.unitframes.animation_speed == "1" then
+    if C.unitframes.animation_speed == "1" then
       unit.hp.bar:SetValue(unit.cache.hp)
     else
       unit.cache.hpanimation = true
@@ -1265,7 +1277,7 @@ function pfUI.uf:RefreshUnit(unit, component)
   end
 
   if unit.cache.powerdisplay ~= unit.cache.power then
-    if pfUI_config.unitframes.animation_speed == "1" then
+    if C.unitframes.animation_speed == "1" then
       unit.power.bar:SetValue(unit.cache.power)
     else
       unit.cache.poweranimation = true
@@ -1290,17 +1302,17 @@ function pfUI.uf:RefreshUnit(unit, component)
   end
 
   local r, g, b = .2, .2, .2
-  if pfUI_config.unitframes.custom == "1" then
-    local cr, cg, cb, ca = pfUI.api.strsplit(",", pfUI_config.unitframes.customcolor)
+  if C.unitframes.custom == "1" then
+    local cr, cg, cb, ca = pfUI.api.strsplit(",", C.unitframes.customcolor)
     cr, cg, cb, ca = tonumber(cr), tonumber(cg), tonumber(cb), tonumber(ca)
     unit.hp.bar:SetStatusBarColor(cr, cg, cb, ca)
-    if pfUI_config.unitframes.pastel == "1" then
+    if C.unitframes.pastel == "1" then
       r, g, b = (color.r + .5) * .5, (color.g + .5) * .5, (color.b + .5) * .5
     else
       r, g, b = color.r, color.g, color.b
     end
   else
-    if pfUI_config.unitframes.pastel == "1" then
+    if C.unitframes.pastel == "1" then
       r, g, b = (color.r + .5) * .5, (color.g + .5) * .5, (color.b + .5) * .5
     else
       r, g, b = color.r, color.g, color.b
@@ -1344,7 +1356,7 @@ function pfUI.uf:ClickAction(button)
     DropItemOnUnit(unitstr)
   end
 
-  -- dropdown menues
+  -- dropdown menus
   if button == "RightButton" then
     if label == "player" then
       ToggleDropDownMenu(1, nil, PlayerFrameDropDown, "cursor")
@@ -1355,12 +1367,9 @@ function pfUI.uf:ClickAction(button)
     elseif label == "party" then
       ToggleDropDownMenu(1, nil, getglobal("PartyMemberFrame" .. this.id .. "DropDown"), "cursor")
     elseif label == "raid" then
-      local name = this.lastname
-      local id = this.id
-      local unit = this.label .. this.id
-
+      local name = this.lastUnit
       FriendsDropDown.displayMode = "MENU"
-      FriendsDropDown.initialize = function() UnitPopup_ShowMenu(getglobal(UIDROPDOWNMENU_OPEN_MENU), "PARTY", unit, name, id) end
+      FriendsDropDown.initialize = function() UnitPopup_ShowMenu(getglobal(UIDROPDOWNMENU_OPEN_MENU), "PARTY", unitstr, name, id) end
       ToggleDropDownMenu(1, nil, FriendsDropDown, "cursor")
     end
   else

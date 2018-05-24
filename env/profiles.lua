@@ -119,6 +119,13 @@ f:SetScript("OnEvent", function()
         ["pspace"] = "-1",
         ["width"] = "125",
       },
+      ["ptarget"] = {
+        ["portrait"] = "off",
+        ["pheight"] = "6",
+        ["height"] = "16",
+        ["pspace"] = "-1",
+        ["width"] = "125",
+      },      
     },
   }
 
@@ -167,6 +174,13 @@ f:SetScript("OnEvent", function()
         ["pheight"] = "6",
       },
       ["ttarget"] = {
+        ["portrait"] = "off",
+        ["height"] = "16",
+        ["pspace"] = "-1",
+        ["width"] = "125",
+        ["pheight"] = "6",
+      },
+      ["ptarget"] = {
         ["portrait"] = "off",
         ["height"] = "16",
         ["pspace"] = "-1",

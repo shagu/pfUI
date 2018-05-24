@@ -325,6 +325,7 @@ pfUI_translation["esES"] = {
   ["Panel"] = "Panel",
   ["Pet Bar (BarPet)"] = "Barra de Mascota",
   ["Pet"] = "Mascota",
+  ["Pet-Target"] = nil,
   ["Player"] = "Jugador",
   ["Please enter a name for the new profile.\nExisting profiles sharing the same name will be overwritten."] = "Por favor registrar un nombre para el nuevo perfil.\nPerfiles que ya existe con el mismo nombre serán sobrescribidos.",
   ["Portrait Alpha"] = "Alfa del Retrato",

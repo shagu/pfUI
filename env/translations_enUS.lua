@@ -325,6 +325,7 @@ pfUI_translation["enUS"] = {
   ["Panel"] = nil,
   ["Pet Bar (BarPet)"] = nil,
   ["Pet"] = nil,
+  ["Pet-Target"] = nil,
   ["Player"] = nil,
   ["Please enter a name for the new profile.\nExisting profiles sharing the same name will be overwritten."] = nil,
   ["Portrait Alpha"] = nil,
