@@ -339,13 +339,8 @@ function pfUI.api.QueueFunction(...)
     end)
   end
   assert(type(arg[1])=="function","QueueFunction: arg1 is not a function")
-  local func = arg[1]
-  local args
-  for i=2,arg.n do
-    args = args or {}
-    table.insert(args,arg[i])
-  end
-  table.insert(timer.queue,{func,args})
+  local func = table.remove(arg, 1)
+  table.insert(timer.queue,{func,arg})
   timer:Show() -- start the OnUpdate
 end
 
