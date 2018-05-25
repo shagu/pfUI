@@ -479,12 +479,10 @@ function pfUI.api.UpdateMovable(frame)
     table.insert(pfUI.movables, name)
   end
 
-  if not frame.posdata then
-    frame.posdata = { scale = frame:GetScale(), pos = {} }
-
-    for i=1,frame:GetNumPoints() do
-      frame.posdata.pos[i] = { frame:GetPoint(i) }
-    end
+  -- update position data
+  frame.posdata = { scale = frame:GetScale(), pos = {} }
+  for i=1,frame:GetNumPoints() do
+    frame.posdata.pos[i] = { frame:GetPoint(i) }
   end
 
   if pfUI_config["position"][frame:GetName()] then
