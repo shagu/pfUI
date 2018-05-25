@@ -65,8 +65,8 @@ pfUI:RegisterModule("unlock", function ()
       this.setup = true
     end
 
-    for _,frame in pairs(pfUI.movables) do
-      local frame = _G[frame]
+    for name, frame in pairs(pfUI.movables) do
+      local frame = frame or _G[name]
 
       if frame then
         if not frame:IsShown() then
@@ -74,7 +74,7 @@ pfUI:RegisterModule("unlock", function ()
         end
 
         if not frame.drag then
-          frame.drag = CreateFrame("Button", nil, frame)
+          frame.drag = CreateFrame("Button", "pfUnlockDragger", frame)
           frame.drag:RegisterForClicks("MiddleButtonUp")
           frame.drag:SetAllPoints(frame)
           frame.drag:SetFrameStrata("DIALOG")
@@ -277,8 +277,8 @@ pfUI:RegisterModule("unlock", function ()
   end)
 
   pfUI.unlock:SetScript("OnHide", function()
-    for _,frame in pairs(pfUI.movables) do
-      local frame = _G[frame]
+    for name, frame in pairs(pfUI.movables) do
+      local frame = frame or _G[name]
 
       if frame then
         frame:StopMovingOrSizing()
