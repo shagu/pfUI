@@ -78,7 +78,7 @@ pfUI:RegisterModule("buff", function ()
   local function CreateBuffButton(i, btype, weapon)
     local buttonName, buttonParent
     if btype == "HELPFUL" then
-      if weapon == 1 and C.buffs.separateweapons == "1" then
+      if weapon == 1 then
         buttonName = "pfWepBuffFrame" .. i
         buttonParent = pfUI.buff.wepbuffs
       else
@@ -315,6 +315,7 @@ pfUI:RegisterModule("buff", function ()
     UpdateMovable(pfUI.buff.debuffs)
 
     if C.buffs.separateweapons == "1" then
+      pfUI.buff.wepbuffs:ClearAllPoints()
       pfUI.buff.wepbuffs:SetWidth(tonumber(C.buffs.wepbuffrowsize) * (tonumber(C.buffs.size)+2*tonumber(C.buffs.spacing)))
       pfUI.buff.wepbuffs:SetHeight(ceil(2/tonumber(C.buffs.wepbuffrowsize)) * ((C.buffs.textinside == "1" and 0 or (fontsize*1.5))+tonumber(C.buffs.size)+2*tonumber(C.buffs.spacing)))
       pfUI.buff.wepbuffs:SetPoint("TOPRIGHT", pfUI.buff.debuffs, "BOTTOMRIGHT", 0, 0)
