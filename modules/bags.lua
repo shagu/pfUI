@@ -45,6 +45,20 @@ pfUI:RegisterModule("bags", function ()
     return
   end
 
+  local pfHookUseContainerItem = _G.UseContainerItem
+  function _G.UseContainerItem(bag,slot)
+    if TradeFrame:IsShown() then
+      PickupContainerItem(bag,slot)
+      local slot = TradeFrame_GetAvailableSlot()
+      if slot then ClickTradeButton(slot) end
+      if CursorHasItem() then
+        ClearCursor()
+      end
+    else
+      pfHookUseContainerItem(bag,slot)
+    end
+  end
+
   -- hide blizzard's bankframe
   BankFrame:SetScale(0.001)
   BankFrame:SetPoint("TOPLEFT", 0,0)
