@@ -242,12 +242,8 @@ pfUI:RegisterModule("buff", function ()
   pfUI.buff.wepbuffs = CreateFrame("Frame", "pfWepBuffFrame", UIParent)
   pfUI.buff.wepbuffs.count = 0
   pfUI.buff.wepbuffs.buttons = {}
-  if C.buffs.separateweapons == "1" then
-    for i=1,2 do
-      pfUI.buff.wepbuffs.buttons[i] = CreateBuffButton(i, "HELPFUL", 1)
-    end
-  else
-    pfUI.buff.wepbuffs:Hide()
+  for i=1,2 do
+    pfUI.buff.wepbuffs.buttons[i] = CreateBuffButton(i, "HELPFUL", 1)
   end
 
   -- Buff Frame
@@ -263,7 +259,6 @@ pfUI:RegisterModule("buff", function ()
   for i=1,16 do
     pfUI.buff.debuffs.buttons[i] = CreateBuffButton(i, "HARMFUL")
   end
-
 
   -- config loading
   function pfUI.buff:UpdateConfigBuffButton(buff)
@@ -323,7 +318,11 @@ pfUI:RegisterModule("buff", function ()
       pfUI.buff.wepbuffs:SetWidth(tonumber(C.buffs.wepbuffrowsize) * (tonumber(C.buffs.size)+2*tonumber(C.buffs.spacing)))
       pfUI.buff.wepbuffs:SetHeight(ceil(2/tonumber(C.buffs.wepbuffrowsize)) * ((C.buffs.textinside == "1" and 0 or (fontsize*1.5))+tonumber(C.buffs.size)+2*tonumber(C.buffs.spacing)))
       pfUI.buff.wepbuffs:SetPoint("TOPRIGHT", pfUI.buff.debuffs, "BOTTOMRIGHT", 0, 0)
+      pfUI.buff.wepbuffs:Show()
       UpdateMovable(pfUI.buff.wepbuffs)
+    else
+      pfUI.buff.wepbuffs:Hide()
+      RemoveMovable(pfUI.buff.wepbuffs)
     end
 
     for i=1,32 do
@@ -334,10 +333,8 @@ pfUI:RegisterModule("buff", function ()
       pfUI.buff:UpdateConfigBuffButton(pfUI.buff.debuffs.buttons[i])
     end
 
-    if C.buffs.separateweapons == "1" then
-      for i=1,2 do
-        pfUI.buff:UpdateConfigBuffButton(pfUI.buff.wepbuffs.buttons[i])
-      end
+    for i=1,2 do
+      pfUI.buff:UpdateConfigBuffButton(pfUI.buff.wepbuffs.buttons[i])
     end
 
     pfUI.buff:GetScript("OnEvent")()
