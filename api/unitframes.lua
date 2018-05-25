@@ -1073,17 +1073,11 @@ function pfUI.uf:RefreshUnit(unit, component)
         if v.SetTexCoord then v:SetTexCoord(.08, .92, .08, .92) end
       end
 
-      if dtype == "Magic" then
-        unit.debuffs[i].backdrop:SetBackdropBorderColor(DebuffTypeColor[dtype].r,DebuffTypeColor[dtype].g,DebuffTypeColor[dtype].b,1)
-      elseif dtype == "Poison" then
-        unit.debuffs[i].backdrop:SetBackdropBorderColor(DebuffTypeColor[dtype].r,DebuffTypeColor[dtype].g,DebuffTypeColor[dtype].b,1)
-      elseif dtype == "Curse" then
-        unit.debuffs[i].backdrop:SetBackdropBorderColor(DebuffTypeColor[dtype].r,DebuffTypeColor[dtype].g,DebuffTypeColor[dtype].b,1)
-      elseif dtype == "Disease" then
-        unit.debuffs[i].backdrop:SetBackdropBorderColor(DebuffTypeColor[dtype].r,DebuffTypeColor[dtype].g,DebuffTypeColor[dtype].b,1)
-      else
-        unit.debuffs[i].backdrop:SetBackdropBorderColor(DebuffTypeColor.none.r,DebuffTypeColor.none.g,DebuffTypeColor.none.b,1)
+      local r,g,b = DebuffTypeColor.none.r,DebuffTypeColor.none.g,DebuffTypeColor.none.b
+      if dtype and DebuffTypeColor[dtype] then
+        r,g,b = DebuffTypeColor[dtype].r,DebuffTypeColor[dtype].g,DebuffTypeColor[dtype].b
       end
+      unit.debuffs[i].backdrop:SetBackdropBorderColor(r,g,b,1)
 
       if texture then
         unit.debuffs[i]:Show()
