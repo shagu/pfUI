@@ -6,21 +6,38 @@ pfUI:RegisterModule("buff", function ()
   TemporaryEnchantFrame:UnregisterAllEvents()
 
   local function RefreshBuffButton(buff)
-    buff.id = buff.gid - (buff.btype == "HELPFUL" and pfUI.buff.buffs.offset or 0)
+    if buff.btype == "HELPFUL" then
+      if C.buffs.separateweapons == "1" then
+        buff.id = buff.gid - (buff.weapon ~= nill and buff.gid or 0)
+      else
+        buff.id = buff.gid - pfUI.buff.wepbuffs.count
+      end
+    else
+      buff.id = buff.gid
+    end
     buff.bid = GetPlayerBuff(buff.id-1, buff.btype)
 
-    -- detect weapon buffs
-    if buff.gid <= pfUI.buff.buffs.offset and buff.btype == "HELPFUL" then
-      local mh, mhtime, mhcharge, oh, ohtime, ohcharge = GetWeaponEnchantInfo()
-      if pfUI.buff.buffs.offset == 2 then
-        if buff.gid == 1 then
-          buff.mode = "MAINHAND"
+    --detect weapon buffs
+    if buff.btype == "HELPFUL" and ((C.buffs.separateweapons == "0" and buff.gid <= pfUI.buff.wepbuffs.count) or (pfUI.buff.wepbuffs.count > 0 and buff.weapon ~= nil)) then
+        local mh, mhtime, mhcharge, oh, ohtime, ohcharge = GetWeaponEnchantInfo()
+        if pfUI.buff.wepbuffs.count == 2 then
+          if buff.gid == 1 then
+            buff.mode = "MAINHAND"
+          else
+            buff.mode = "OFFHAND"
+          end
         else
-          buff.mode = "OFFHAND"
+          if C.buffs.separateweapons == "0" then
+            buff.mode = mh and "MAINHAND" or oh and "OFFHAND"
+          else
+            if buff.gid == 1 then
+              buff.mode = mh and "MAINHAND" or oh and "OFFHAND"
+            else
+              buff:Hide()
+              return
+            end
+          end
         end
-      else
-        buff.mode = oh and "OFFHAND" or mh and "MAINHAND"
-      end
 
       -- Set Weapon Texture and Border
       if buff.mode == "MAINHAND" then
@@ -58,8 +75,21 @@ pfUI:RegisterModule("buff", function ()
     buff:Show()
   end
 
-  local function CreateBuffButton(i, btype)
-    local buff = CreateFrame("Button", ( btype == "HELPFUL" and "pfBuffFrameBuff" or "pfDebuffFrameBuff" ) .. i, ( btype == "HARMFUL" and pfUI.buff.debuffs or pfUI.buff.buffs ))
+  local function CreateBuffButton(i, btype, weapon)
+    local buttonName, buttonParent
+    if btype == "HELPFUL" then
+      if weapon == 1 and C.buffs.separateweapons == "1" then
+        buttonName = "pfWepBuffFrame" .. i
+        buttonParent = pfUI.buff.wepbuffs
+      else
+        buttonName = "pfBuffFrameBuff" .. i
+        buttonParent = pfUI.buff.buffs
+      end
+    else
+      buttonName = "pfDebuffFrameBuff" .. i
+      buttonParent = pfUI.buff.debuffs
+    end
+    local buff = CreateFrame("Button", buttonName, buttonParent)
     buff.texture = buff:CreateTexture("BuffIcon" .. i, "BACKGROUND")
     buff.texture:SetTexCoord(.07,.93,.07,.93)
     buff.texture:SetAllPoints(buff)
@@ -77,6 +107,7 @@ pfUI:RegisterModule("buff", function ()
 
     buff:RegisterForClicks("RightButtonUp")
 
+    buff.weapon = weapon
     buff.btype = btype
     buff.gid = i
 
@@ -187,9 +218,9 @@ pfUI:RegisterModule("buff", function ()
   pfUI.buff:SetScript("OnEvent", function()
     if C.buffs.weapons == "1" then
       local mh, mhtime, mhcharge, oh, ohtime, ohcharge = GetWeaponEnchantInfo()
-      pfUI.buff.buffs.offset = (mh and 1 or 0) + (oh and 1 or 0)
+      pfUI.buff.wepbuffs.count = (mh and 1 or 0) + (oh and 1 or 0)
     else
-      pfUI.buff.buffs.offset = 0
+      pfUI.buff.wepbuffs.count = 0
     end
 
     for i=1,32 do
@@ -199,11 +230,28 @@ pfUI:RegisterModule("buff", function ()
     for i=1,16 do
       RefreshBuffButton(pfUI.buff.debuffs.buttons[i])
     end
+
+    if C.buffs.separateweapons == "1" then
+      for i=1,2 do
+        RefreshBuffButton(pfUI.buff.wepbuffs.buttons[i])
+      end
+    end
   end)
+
+  -- Weapon Buffs
+  pfUI.buff.wepbuffs = CreateFrame("Frame", "pfWepBuffFrame", UIParent)
+  pfUI.buff.wepbuffs.count = 0
+  pfUI.buff.wepbuffs.buttons = {}
+  if C.buffs.separateweapons == "1" then
+    for i=1,2 do
+      pfUI.buff.wepbuffs.buttons[i] = CreateBuffButton(i, "HELPFUL", 1)
+    end
+  else
+    pfUI.buff.wepbuffs:Hide()
+  end
 
   -- Buff Frame
   pfUI.buff.buffs = CreateFrame("Frame", "pfBuffFrame", UIParent)
-  pfUI.buff.buffs.offset = 0
   pfUI.buff.buffs.buttons = {}
   for i=1,32 do
     pfUI.buff.buffs.buttons[i] = CreateBuffButton(i, "HELPFUL")
@@ -216,14 +264,34 @@ pfUI:RegisterModule("buff", function ()
     pfUI.buff.debuffs.buttons[i] = CreateBuffButton(i, "HARMFUL")
   end
 
+
   -- config loading
   function pfUI.buff:UpdateConfigBuffButton(buff)
     local fontsize = C.buffs.fontsize == "-1" and C.global.font_size or C.buffs.fontsize
-    local rowcount = floor((buff.gid-1) / tonumber(C.buffs.rowsize))
+    local rowcount, relFrame, offsetX, offsetY
+    if buff.btype == "HELPFUL" then
+      if buff.weapon == 1 and C.buffs.separateweapons == "1" then
+        rowcount = floor((buff.gid-1) / tonumber(C.buffs.wepbuffrowsize))
+        relFrame = pfUI.buff.wepbuffs
+        offsetX = -(buff.gid-1-rowcount*tonumber(C.buffs.wepbuffrowsize))*(tonumber(C.buffs.size)+2*tonumber(C.buffs.spacing))
+        offsetY = -(rowcount) * ((C.buffs.textinside == "1" and 0 or (fontsize*1.5))+tonumber(C.buffs.size)+2*tonumber(C.buffs.spacing))
+      else
+        rowcount = floor((buff.gid-1) / tonumber(C.buffs.buffrowsize))
+        relFrame = pfUI.buff.buffs
+        offsetX = -(buff.gid-1-rowcount*tonumber(C.buffs.buffrowsize))*(tonumber(C.buffs.size)+2*tonumber(C.buffs.spacing))
+        offsetY = -(rowcount) * ((C.buffs.textinside == "1" and 0 or (fontsize*1.5))+tonumber(C.buffs.size)+2*tonumber(C.buffs.spacing))
+      end
+    else
+      rowcount = floor((buff.gid-1) / tonumber(C.buffs.debuffrowsize))
+      relFrame = pfUI.buff.debuffs
+      offsetX = -(buff.gid-1-rowcount*tonumber(C.buffs.debuffrowsize))*(tonumber(C.buffs.size)+2*tonumber(C.buffs.spacing))
+      offsetY = -(rowcount) * ((C.buffs.textinside == "1" and 0 or (fontsize*1.5))+tonumber(C.buffs.size)+2*tonumber(C.buffs.spacing))
+    end
+
     buff:SetWidth(tonumber(C.buffs.size))
     buff:SetHeight(tonumber(C.buffs.size))
     buff:ClearAllPoints()
-    buff:SetPoint("TOPRIGHT", ( buff.btype == "HARMFUL" and pfUI.buff.debuffs or pfUI.buff.buffs ), "TOPRIGHT", -(buff.gid-1-rowcount*tonumber(C.buffs.rowsize))*(tonumber(C.buffs.size)+2*tonumber(C.buffs.spacing)), -(rowcount) * ((C.buffs.textinside == "1" and 0 or (fontsize*1.5))+tonumber(C.buffs.size)+2*tonumber(C.buffs.spacing)))
+    buff:SetPoint("TOPRIGHT", relFrame, "TOPRIGHT",offsetX, offsetY)
 
     buff.timer:SetFont(pfUI.font_default, fontsize, "OUTLINE")
     buff.stacks:SetFont(pfUI.font_default, fontsize+1, "OUTLINE")
@@ -241,15 +309,22 @@ pfUI:RegisterModule("buff", function ()
   function pfUI.buff:UpdateConfig()
     local fontsize = C.buffs.fontsize == "-1" and C.global.font_size or C.buffs.fontsize
 
-    pfUI.buff.buffs:SetWidth(tonumber(C.buffs.rowsize) * (tonumber(C.buffs.size)+2*tonumber(C.buffs.spacing)))
-    pfUI.buff.buffs:SetHeight(ceil(32/tonumber(C.buffs.rowsize)) * ((C.buffs.textinside == "1" and 0 or (fontsize*1.5))+tonumber(C.buffs.size)+2*tonumber(C.buffs.spacing)))
+    pfUI.buff.buffs:SetWidth(tonumber(C.buffs.buffrowsize) * (tonumber(C.buffs.size)+2*tonumber(C.buffs.spacing)))
+    pfUI.buff.buffs:SetHeight(ceil(32/tonumber(C.buffs.buffrowsize)) * ((C.buffs.textinside == "1" and 0 or (fontsize*1.5))+tonumber(C.buffs.size)+2*tonumber(C.buffs.spacing)))
     pfUI.buff.buffs:SetPoint("TOPRIGHT", pfUI.minimap or UIParent, "TOPLEFT", -4*tonumber(C.buffs.spacing), 0)
     UpdateMovable(pfUI.buff.buffs)
 
-    pfUI.buff.debuffs:SetWidth(tonumber(C.buffs.rowsize) * (tonumber(C.buffs.size)+2*tonumber(C.buffs.spacing)))
-    pfUI.buff.debuffs:SetHeight(ceil(16/tonumber(C.buffs.rowsize)) * ((C.buffs.textinside == "1" and 0 or (fontsize*1.5))+tonumber(C.buffs.size)+2*tonumber(C.buffs.spacing)))
+    pfUI.buff.debuffs:SetWidth(tonumber(C.buffs.debuffrowsize) * (tonumber(C.buffs.size)+2*tonumber(C.buffs.spacing)))
+    pfUI.buff.debuffs:SetHeight(ceil(16/tonumber(C.buffs.debuffrowsize)) * ((C.buffs.textinside == "1" and 0 or (fontsize*1.5))+tonumber(C.buffs.size)+2*tonumber(C.buffs.spacing)))
     pfUI.buff.debuffs:SetPoint("TOPRIGHT", pfUI.buff.buffs, "BOTTOMRIGHT", 0, 0)
     UpdateMovable(pfUI.buff.debuffs)
+
+    if C.buffs.separateweapons == "1" then
+      pfUI.buff.wepbuffs:SetWidth(tonumber(C.buffs.wepbuffrowsize) * (tonumber(C.buffs.size)+2*tonumber(C.buffs.spacing)))
+      pfUI.buff.wepbuffs:SetHeight(ceil(2/tonumber(C.buffs.wepbuffrowsize)) * ((C.buffs.textinside == "1" and 0 or (fontsize*1.5))+tonumber(C.buffs.size)+2*tonumber(C.buffs.spacing)))
+      pfUI.buff.wepbuffs:SetPoint("TOPRIGHT", pfUI.buff.debuffs, "BOTTOMRIGHT", 0, 0)
+      UpdateMovable(pfUI.buff.wepbuffs)
+    end
 
     for i=1,32 do
       pfUI.buff:UpdateConfigBuffButton(pfUI.buff.buffs.buttons[i])
@@ -257,6 +332,12 @@ pfUI:RegisterModule("buff", function ()
 
     for i=1,16 do
       pfUI.buff:UpdateConfigBuffButton(pfUI.buff.debuffs.buttons[i])
+    end
+
+    if C.buffs.separateweapons == "1" then
+      for i=1,2 do
+        pfUI.buff:UpdateConfigBuffButton(pfUI.buff.wepbuffs.buttons[i])
+      end
     end
 
     pfUI.buff:GetScript("OnEvent")()
