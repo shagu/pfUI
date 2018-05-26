@@ -2,6 +2,11 @@ pfUI:RegisterModule("pettarget", function ()
   -- do not go further on disabled UFs
   if C.unitframes.disable == "1" then return end
 
+  local default_border = pfUI_config.appearance.border.default
+  if pfUI_config.appearance.border.unitframes ~= "-1" then
+    default_border = pfUI_config.appearance.border.unitframes
+  end
+
   pfUI.uf.pettargetScanner = CreateFrame("Button",nil,UIParent)
   pfUI.uf.pettargetScanner:SetScript("OnUpdate", function()
       if pfUI.uf.pettarget.config.visible == "0" then return end
@@ -16,6 +21,6 @@ pfUI:RegisterModule("pettarget", function ()
 
   pfUI.uf.pettarget = pfUI.uf:CreateUnitFrame("PetTarget", nil, C.unitframes.ptarget, .2)
   pfUI.uf.pettarget:UpdateFrameSize()
-  pfUI.uf.pettarget:SetPoint("BOTTOM", UIParent , "BOTTOM", 0, 201)
+  pfUI.uf.pettarget:SetPoint("TOP", pfUI.uf.pet, "BOTTOM", 0, -default_border)
   UpdateMovable(pfUI.uf.pettarget)
 end)

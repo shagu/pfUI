@@ -121,11 +121,11 @@ f:SetScript("OnEvent", function()
       },
       ["ptarget"] = {
         ["portrait"] = "off",
-        ["pheight"] = "6",
-        ["height"] = "16",
+        ["pheight"] = "-1",
+        ["height"] = "8",
         ["pspace"] = "-1",
         ["width"] = "125",
-      },      
+      },
     },
   }
 
@@ -182,10 +182,10 @@ f:SetScript("OnEvent", function()
       },
       ["ptarget"] = {
         ["portrait"] = "off",
-        ["height"] = "16",
+        ["height"] = "8",
         ["pspace"] = "-1",
         ["width"] = "125",
-        ["pheight"] = "6",
+        ["pheight"] = "-1",
       },
       ["customcolor"] = "0.1,0.2,0.2,1",
       ["custombg"] = "1",
