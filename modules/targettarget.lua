@@ -4,6 +4,7 @@ pfUI:RegisterModule("targettarget", function ()
 
   pfUI.uf.targettargetScanner = CreateFrame("Button",nil,UIParent)
   pfUI.uf.targettargetScanner:SetScript("OnUpdate", function()
+      if pfUI.uf.targettarget.config.visible == "0" then return end
       if ( this.limit or 1) > GetTime() then return else this.limit = GetTime() + .2 end
       if UnitExists("targettarget") or (pfUI.unlock and pfUI.unlock:IsShown()) then
         pfUI.uf.targettarget:Show()

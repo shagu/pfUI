@@ -852,6 +852,7 @@ pfUI:RegisterModule("gui", function ()
         if not this.setup then
           -- link update tables
           update.ttarget     = update["targettarget"]
+          update.ptarget     = update["pettarget"]
           update.grouptarget = update["group"]
           update.grouppet    = update["group"]
 

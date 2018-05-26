@@ -4,6 +4,7 @@ pfUI:RegisterModule("pettarget", function ()
 
   pfUI.uf.pettargetScanner = CreateFrame("Button",nil,UIParent)
   pfUI.uf.pettargetScanner:SetScript("OnUpdate", function()
+      if pfUI.uf.pettarget.config.visible == "0" then return end
       if ( this.limit or 1) > GetTime() then return else this.limit = GetTime() + .2 end
       if UnitExists("pettarget") or (pfUI.unlock and pfUI.unlock:IsShown()) then
         pfUI.uf.pettarget:Show()
