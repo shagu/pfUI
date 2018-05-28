@@ -46,8 +46,12 @@ pfUI supports and contains language specific code for the following gameclients.
 * [WIM](http://addons.us.to/addon/wim), [WIM (continued)](https://github.com/shirsig/WIM) Give whispers an instant messenger feel
 * [MobHealth3](http://addons.us.to/addon/mobhealth) Estimates a mob's health
 
-## Other Addons
+## Plugins
+* [pfUI-eliteoverlay](https://github.com/shagu/pfUI-eliteoverlay) Add elite dragons to unitframes
 * [pfUI-fonts](https://github.com/shagu/pfUI-fonts) Additional fonts for pfUI
+* [pfUI-CustomMedia](https://github.com/mrrosh/pfUI-CustomMedia) A font and texture package
+
+## Other Addons
 * [DPSMate](https://github.com/Geigerkind/DPSMate) An advanced combat analyzation tool
 * [Clique](https://github.com/shagu/Clique) Simply powerful click-casting interface
 * [SortBags](https://github.com/shirsig/SortBags) Automatically stacks and sorts your items.
