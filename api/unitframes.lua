@@ -881,7 +881,7 @@ function pfUI.uf:RefreshUnit(unit, component)
   local component = component or ""
 
   -- don't update scanner activity
-  if unit.label == "target" or unit.label == "targettarget" or unit.label == "pettarget" then
+  if unit.label == "target" or unit.label == "targettarget" then
     if pfScanActive == true then return end
   end
 
