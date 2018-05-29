@@ -75,6 +75,12 @@ pfUI:RegisterModule("farmmode", function ()
       pfUI.tracking:SetPoint("TOPLEFT", pfUI.farmmap, -10, -10)
     end
 
+    -- move pvp icon
+    if pfUI.minimap.pvpicon then
+      pfUI.minimap.pvpicon:ClearAllPoints()
+      pfUI.minimap.pvpicon:SetPoint("BOTTOMRIGHT", pfUI.farmmap, "BOTTOMRIGHT", -5, 5)
+    end
+
     -- save old minimap height
     if pfUI.minimap then
       this.mmoldsize = pfUI.minimap:GetHeight()
@@ -97,6 +103,12 @@ pfUI:RegisterModule("farmmode", function ()
       pfUI.tracking:ClearAllPoints()
       pfUI.tracking:SetPoint("TOPLEFT", pfUI.minimap, -10, -10)
       UpdateMovable(pfUI.tracking)
+    end
+
+    -- move pvp icon
+    if pfUI.minimap.pvpicon then
+      pfUI.minimap.pvpicon:ClearAllPoints()
+      pfUI.minimap.pvpicon:SetPoint("BOTTOMRIGHT", pfUI.minimap, "BOTTOMRIGHT", -5, 5)
     end
 
     -- save old minimap height
