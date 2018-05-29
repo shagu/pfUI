@@ -114,3 +114,4 @@ modules\mapreveal.lua
 modules\unusable.lua
 modules\socialmod.lua
 modules\firstrun.lua
+modules\addonbuttons.lua

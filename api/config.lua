@@ -839,6 +839,12 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("position",   nil,           nil,                nil)
   pfUI:UpdateConfig("disabled",   nil,           nil,                nil)
 
+  pfUI:UpdateConfig("abuttons",   nil,           "position",         "bottom")
+  pfUI:UpdateConfig("abuttons",   nil,           "rowsize",          "6")
+  pfUI:UpdateConfig("abuttons",   nil,           "spacing",          "2")
+  pfUI:UpdateConfig("abuttons",   nil,           "updateinterval",   "3")
+  pfUI:UpdateConfig("abuttons",   nil,           "hideincombat",     "1")
+
   pfUI:UpdateConfig("gm",         nil,           "disable",          "1")
   pfUI:UpdateConfig("gm",         nil,           "server",           "elysium")
 end

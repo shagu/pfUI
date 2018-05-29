@@ -743,6 +743,15 @@ pfUI:RegisterModule("gui", function ()
     "1","2","3","4","5","6","7","8","9","10","11","12"
   }
 
+  pfUI.gui.dropdowns.addonbuttons_position = {
+    "bottom:" .. T["Bottom"],
+    "left:" .. T["Left"],
+  }
+
+  pfUI.gui.dropdowns.num_actionbar_buttons = BarLayoutOptions(NUM_ACTIONBAR_BUTTONS)
+  pfUI.gui.dropdowns.num_shapeshift_slots = BarLayoutOptions(NUM_SHAPESHIFT_SLOTS)
+  pfUI.gui.dropdowns.num_pet_action_slots = BarLayoutOptions(NUM_PET_ACTION_SLOTS)
+
   pfUI.gui.dropdowns.loot_rarity = {}
   for i=0, getn(_G.ITEM_QUALITY_COLORS)-2  do
     local entry = string.format("%d:%s", i, string.format("%s%s%s", _G.ITEM_QUALITY_COLORS[i].hex, _G[string.format("ITEM_QUALITY%d_DESC",i)], FONT_COLOR_CODE_CLOSE))
@@ -1170,6 +1179,18 @@ pfUI:RegisterModule("gui", function ()
     end
   end)
 
+    -- >> Addon buttons
+  pfUI.gui.tabs.minimap.tabs.addonbuttons = pfUI.gui.tabs.minimap.tabs:CreateTabChild(T["Addon Buttons"], true)
+  pfUI.gui.tabs.minimap.tabs.addonbuttons:SetScript("OnShow", function()
+    if not this.setup then
+      CreateConfig(update["addonbuttons"], this, T["Addon Buttons Panel Position"], C.abuttons, "position", "dropdown", pfUI.gui.dropdowns.addonbuttons_position)
+      CreateConfig(update["addonbuttons"], this, T["Number Of Buttons Per Row/Column"], C.abuttons, "rowsize")
+      CreateConfig(update["addonbuttons"], this, T["Button Spacing"], C.abuttons, "spacing")
+      CreateConfig(update["addonbuttons"], this, T["Hide When Entering Combat"], C.abuttons, "hideincombat", "checkbox")
+      this.setup = true
+    end
+  end)
+
   -- [[ Buffs ]]
   pfUI.gui.tabs.buffs = pfUI.gui.tabs:CreateTabChild(T["Buffs"], nil, nil, nil, true)
   pfUI.gui.tabs.buffs.tabs = CreateTabFrame(pfUI.gui.tabs.buffs, "TOP", true)
@@ -1371,7 +1392,6 @@ pfUI:RegisterModule("gui", function ()
       this.setup = true
     end
   end)
-
 
   -- [[ Tooltip ]]
   pfUI.gui.tabs.tooltip = pfUI.gui.tabs:CreateTabChild(T["Tooltip"], nil, nil, nil, true)
