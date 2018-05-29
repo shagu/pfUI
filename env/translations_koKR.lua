@@ -324,6 +324,7 @@ pfUI_translation["koKR"] = {
   ["Panel"] = "패널",
   ["Panel Border Size"] = "패널 테두리 크기",
   ["Pet"] = "팻",
+  ["Pet-Target"] = nil,
   ["Pet Bar (BarPet)"] = "팻바(BarPet)",
   ["Player"] = "플레이어",
   ["Please enter a name for the new profile.\nExisting profiles sharing the same name will be overwritten."] = "새 프로필의 이름을 입력하십시오.\n동일한 이름을 작성하면 기존 프로파일을 덮어 씁니다.",

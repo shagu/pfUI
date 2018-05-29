@@ -497,6 +497,46 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("unitframes", "pet",         "hitindicatorsize", "15")
   pfUI:UpdateConfig("unitframes", "pet",         "hitindicatorfont", "Interface\\AddOns\\pfUI\\fonts\\Continuum.ttf")
 
+  pfUI:UpdateConfig("unitframes", "ptarget",     "visible",          "0")
+  pfUI:UpdateConfig("unitframes", "ptarget",     "portrait",         "bar")
+  pfUI:UpdateConfig("unitframes", "ptarget",     "bartexture",       "Interface\\AddOns\\pfUI\\img\\bar")
+  pfUI:UpdateConfig("unitframes", "ptarget",     "width",            "100")
+  pfUI:UpdateConfig("unitframes", "ptarget",     "height",           "4")
+  pfUI:UpdateConfig("unitframes", "ptarget",     "pheight",          "-1")
+  pfUI:UpdateConfig("unitframes", "ptarget",     "pwidth",           "-1")
+  pfUI:UpdateConfig("unitframes", "ptarget",     "panchor",          "TOP")
+  pfUI:UpdateConfig("unitframes", "ptarget",     "pspace",           "-3")
+  pfUI:UpdateConfig("unitframes", "ptarget",     "buffs",            "off")
+  pfUI:UpdateConfig("unitframes", "ptarget",     "buffsize",         "16")
+  pfUI:UpdateConfig("unitframes", "ptarget",     "bufflimit",        "16")
+  pfUI:UpdateConfig("unitframes", "ptarget",     "buffperrow",       "8")
+  pfUI:UpdateConfig("unitframes", "ptarget",     "debuffs",          "off")
+  pfUI:UpdateConfig("unitframes", "ptarget",     "debuffsize",       "16")
+  pfUI:UpdateConfig("unitframes", "ptarget",     "debufflimit",      "16")
+  pfUI:UpdateConfig("unitframes", "ptarget",     "debuffperrow",     "8")
+  pfUI:UpdateConfig("unitframes", "ptarget",     "invert_healthbar", "0")
+  pfUI:UpdateConfig("unitframes", "ptarget",     "verticalbar",      "0")
+  pfUI:UpdateConfig("unitframes", "ptarget",     "buff_indicator",   "0")
+  pfUI:UpdateConfig("unitframes", "ptarget",     "debuff_indicator", "0")
+  pfUI:UpdateConfig("unitframes", "ptarget",     "clickcast",        "0")
+  pfUI:UpdateConfig("unitframes", "ptarget",     "faderange",        "0")
+  pfUI:UpdateConfig("unitframes", "ptarget",     "glowaggro",        "1")
+  pfUI:UpdateConfig("unitframes", "ptarget",     "glowcombat",       "1")
+  pfUI:UpdateConfig("unitframes", "ptarget",     "showtooltip",      "1")
+  pfUI:UpdateConfig("unitframes", "ptarget",     "healthcolor",      "1")
+  pfUI:UpdateConfig("unitframes", "ptarget",     "powercolor",       "1")
+  pfUI:UpdateConfig("unitframes", "ptarget",     "levelcolor",       "1")
+  pfUI:UpdateConfig("unitframes", "ptarget",     "classcolor",       "1")
+  pfUI:UpdateConfig("unitframes", "ptarget",     "txthpleft",        "none")
+  pfUI:UpdateConfig("unitframes", "ptarget",     "txthpcenter",      "name")
+  pfUI:UpdateConfig("unitframes", "ptarget",     "txthpright",       "none")
+  pfUI:UpdateConfig("unitframes", "ptarget",     "txtpowerleft",     "none")
+  pfUI:UpdateConfig("unitframes", "ptarget",     "txtpowercenter",   "none")
+  pfUI:UpdateConfig("unitframes", "ptarget",     "txtpowerright",    "none")
+  pfUI:UpdateConfig("unitframes", "ptarget",     "hitindicator",     "0")
+  pfUI:UpdateConfig("unitframes", "ptarget",     "hitindicatorsize", "15")
+  pfUI:UpdateConfig("unitframes", "ptarget",     "hitindicatorfont", "Interface\\AddOns\\pfUI\\fonts\\Continuum.ttf")
+
   pfUI:UpdateConfig("unitframes", "fallback",    "visible",           "1")
   pfUI:UpdateConfig("unitframes", "fallback",    "portrait",         "bar")
   pfUI:UpdateConfig("unitframes", "fallback",    "bartexture",       "Interface\\AddOns\\pfUI\\img\\bar")
@@ -778,7 +818,7 @@ function pfUI:MigrateConfig()
 
   -- migrating old to new unitframe texts (> 3.0.0)
   if checkversion(3, 0, 0) then
-    local unitframes = { "player", "target", "focus", "group", "grouptarget", "grouppet", "raid", "ttarget", "pet", "fallback" }
+    local unitframes = { "player", "target", "focus", "group", "grouptarget", "grouppet", "raid", "ttarget", "pet", "ptarget", "fallback" }
 
     for _, unitframe in pairs(unitframes) do
       if pfUI_config.unitframes[unitframe].txtleft then
@@ -824,7 +864,7 @@ function pfUI:MigrateConfig()
 
   -- migrating legacy buff/debuff naming (> 3.5.0)
   if checkversion(3, 5, 0) then
-    local unitframes = { "player", "target", "focus", "group", "grouptarget", "grouppet", "raid", "ttarget", "pet", "fallback" }
+    local unitframes = { "player", "target", "focus", "group", "grouptarget", "grouppet", "raid", "ttarget", "pet", "ptarget", "fallback" }
 
     for _, unitframe in pairs(unitframes) do
       local entry = pfUI_config.unitframes[unitframe]
@@ -835,7 +875,7 @@ function pfUI:MigrateConfig()
 
   -- migrating glow settings (> 3.5.1)
   if checkversion(3, 5, 0) then
-    local common = { "player", "target", "ttarget", "pet" }
+    local common = { "player", "target", "ttarget", "pet", "ptarget"}
     for _, unitframe in pairs(common) do
       if pfUI_config.appearance.infight.group == "1" then
         pfUI_config.unitframes[unitframe].glowcombat = "1"

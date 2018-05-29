@@ -325,6 +325,7 @@ pfUI_translation["zhTW"] = {
   ["Panel"] = "面板",
   ["Pet Bar (BarPet)"] = "寵物動作條",
   ["Pet"] = "寵物",
+  ["Pet-Target"] = nil,
   ["Player"] = "玩家",
   ["Please enter a name for the new profile.\nExisting profiles sharing the same name will be overwritten."] = "請輸入新設定檔的名稱。\n如果你創建具有相同名稱的設定檔將覆蓋現有的設定檔。",
   ["Portrait Alpha"] = "人偶透明度",
