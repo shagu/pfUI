@@ -86,6 +86,9 @@ pfUI:RegisterModule("autovendor", function ()
 
       if C["global"]["autosell"] == "1" then
         autovendor:Show()
+        autovendor.button:Hide()
+      else
+        autovendor.button:Show()
       end
 
       MerchantRepairText:SetText("")
@@ -147,7 +150,7 @@ pfUI:RegisterModule("autovendor", function ()
   if not pfMerchantFrame_Update then
     local pfMerchantFrame_Update = MerchantFrame_Update
     function _G.MerchantFrame_Update()
-      if MerchantFrame.selectedTab == 1 then
+      if MerchantFrame.selectedTab == 1 and C["global"]["autosell"] ~= "1" then
         autovendor.button:Show()
       else
         autovendor.button:Hide()
