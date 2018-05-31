@@ -1,6 +1,6 @@
 pfUI:RegisterModule("pettarget", function ()
   -- do not go further on disabled UFs
-  if C.unitframes.disable == "1" then return end
+  if C.unitframes.disable == "1" or pfUI.uf.pet == nil then return end
 
   local default_border = pfUI_config.appearance.border.default
   if pfUI_config.appearance.border.unitframes ~= "-1" then
