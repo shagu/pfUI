@@ -161,7 +161,7 @@ pfUI:RegisterModule("nameplates", function ()
 
     if not this.healthbar.bgtarget then
       this.healthbar.bgtarget = this.healthbar:CreateTexture(nil, "BACKGROUND")
-      this.healthbar.bgtarget:SetTexture(1,1,1,0.90)
+      this.healthbar.bgtarget:SetTexture(1,1,1,.8)
       this.healthbar.bgtarget:ClearAllPoints()
       this.healthbar.bgtarget:SetPoint("CENTER", this.healthbar, "CENTER", 0, 0)
       this.healthbar.bgtarget:SetWidth(this.healthbar:GetWidth() + 5)
@@ -475,7 +475,7 @@ pfUI:RegisterModule("nameplates", function ()
     end
 
     -- target indicator
-    if UnitExists("target") and healthbar:GetAlpha() == 1 then
+    if UnitExists("target") and healthbar:GetAlpha() == 1 and C.nameplates.targethighlight == "1" then
       healthbar.bgtarget:Show()
     else
       healthbar.bgtarget:Hide()
