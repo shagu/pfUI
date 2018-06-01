@@ -431,6 +431,7 @@ pfUI:RegisterModule("castbar", function ()
   pfUI.castbar.target:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_CREATURE_DAMAGE")
   pfUI.castbar.target:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_CREATURE_BUFFS")
   pfUI.castbar.target:RegisterEvent("CHAT_MSG_SPELL_CREATURE_VS_CREATURE_DAMAGE")
+  pfUI.castbar.target:RegisterEvent("CHAT_MSG_SPELL_CREATURE_VS_CREATURE_BUFF")
   pfUI.castbar.target:RegisterEvent("PLAYER_TARGET_CHANGED")
 
   pfUI.castbar.target.casterDB = {}
