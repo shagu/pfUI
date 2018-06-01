@@ -41,6 +41,7 @@ api\unitframes.lua
 
 # libs
 libs\libcast.lua
+libs\libdebuff.lua
 
 # modules
 modules\firstrun.lua
@@ -83,7 +84,6 @@ modules\infight.lua
 modules\sellvalue.lua
 modules\eqcompare.lua
 modules\map.lua
-modules\debuffs.lua
 modules\uf_tukui.lua
 modules\custom.lua
 modules\gm.lua

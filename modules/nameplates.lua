@@ -541,10 +541,10 @@ pfUI:RegisterModule("nameplates", function ()
           this.debuffs[j].icon:SetTexture(icon)
           this.debuffs[j].icon:SetTexCoord(.078, .92, .079, .937)
 
-          if pfUI.debuffs and pfUI.debuffs.active and name then
+          if libdebuff and name then
             this.debuffs[j].cd = this.debuffs[j].cd or CreateFrame("Model", nil, this.debuffs[j], "CooldownFrameTemplate")
             this.debuffs[j].cd.pfCooldownType = "ALL"
-            local start, duration, timeleft = pfUI.debuffs:GetDebuffInfo("target", name)
+            local start, duration, timeleft = libdebuff:GetDebuffInfo("target", name)
             this.debuffs[j].cd:SetAlpha(0)
             CooldownFrame_SetTimer(this.debuffs[j].cd, start, duration, 1)
           end
@@ -589,7 +589,7 @@ pfUI:RegisterModule("nameplates", function ()
       for i = 1, 16 do
         if not UnitDebuff("target", i) then return end
         local debuff = UnitDebuff("target", i)
-        local effect = (pfUI.debuffs and pfUI.debuffs:GetDebuffName("target", i)) or ""
+        local effect = (libdebuff and libdebuff:GetDebuffName("target", i)) or ""
         pfUI.nameplates.debuffs[i] = { debuff, effect }
       end
     end
