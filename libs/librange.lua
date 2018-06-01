@@ -70,6 +70,7 @@ librange:SetScript("OnEvent", function()
 
   if event == "ACTIONBAR_SLOT_CHANGED" or event == "PLAYER_ENTERING_WORLD" then
     librange.slot = this:GetRangeSlot()
+    this:Show()
   elseif event == "PLAYER_ENTER_COMBAT" then
     this.lastattack = GetTime()
     this:Hide()
