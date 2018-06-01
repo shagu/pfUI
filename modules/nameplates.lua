@@ -159,6 +159,15 @@ pfUI:RegisterModule("nameplates", function ()
       this.healthbar.bg:SetHeight(this.healthbar:GetHeight() + 3)
     end
 
+    if not this.healthbar.bgtarget then
+      this.healthbar.bgtarget = this.healthbar:CreateTexture(nil, "BACKGROUND")
+      this.healthbar.bgtarget:SetTexture(1,1,1,0.90)
+      this.healthbar.bgtarget:ClearAllPoints()
+      this.healthbar.bgtarget:SetPoint("CENTER", this.healthbar, "CENTER", 0, 0)
+      this.healthbar.bgtarget:SetWidth(this.healthbar:GetWidth() + 5)
+      this.healthbar.bgtarget:SetHeight(this.healthbar:GetHeight() + 5)
+    end
+
     this.healthbar.reaction = nil
 
     -- level
@@ -463,6 +472,13 @@ pfUI:RegisterModule("nameplates", function ()
       name:SetTextColor(1,0.4,0.2,0.85)
     elseif red > 0.99 and green > 0.81 and green < 0.82 and blue == 0 then
       name:SetTextColor(1,1,1,0.85)
+    end
+
+    -- target indicator
+    if UnitExists("target") and healthbar:GetAlpha() == 1 then
+      healthbar.bgtarget:Show()
+    else
+      healthbar.bgtarget:Hide()
     end
 
     -- update combopoints
