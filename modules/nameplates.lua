@@ -496,16 +496,17 @@ pfUI:RegisterModule("nameplates", function ()
     end
 
     -- show castbar
-    if healthbar.castbar and pfUI.castbar and C.nameplates["showcastbar"] == "1" and pfUI.castbar.target.casterDB[unitname] ~= nil and pfUI.castbar.target.casterDB[unitname]["cast"] ~= nil then
-      if pfUI.castbar.target.casterDB[unitname]["starttime"] + pfUI.castbar.target.casterDB[unitname]["casttime"] <= GetTime() then
-        pfUI.castbar.target.casterDB[unitname] = nil
+    if healthbar.castbar and pfUI.castbar and C.nameplates["showcastbar"] == "1" then
+      local spellname, start, casttime, icon = libcast:GetCastInfo(unitname)
+      casttime = casttime / 1000
+      if not spellname then
         healthbar.castbar:Hide()
       else
-        healthbar.castbar:SetMinMaxValues(0,  pfUI.castbar.target.casterDB[unitname]["casttime"])
-        healthbar.castbar:SetValue(GetTime() -  pfUI.castbar.target.casterDB[unitname]["starttime"])
-        healthbar.castbar.text:SetText(round( pfUI.castbar.target.casterDB[unitname]["starttime"] +  pfUI.castbar.target.casterDB[unitname]["casttime"] - GetTime(),1))
+        healthbar.castbar:SetMinMaxValues(0,  casttime)
+        healthbar.castbar:SetValue(GetTime() -  start)
+        healthbar.castbar.text:SetText(round(start +  casttime - GetTime(),1))
         if C.nameplates.spellname == "1" and healthbar.castbar.spell then
-          healthbar.castbar.spell:SetText(pfUI.castbar.target.casterDB[unitname]["cast"])
+          healthbar.castbar.spell:SetText(spellname)
         else
           healthbar.castbar.spell:SetText("")
         end
@@ -514,8 +515,8 @@ pfUI:RegisterModule("nameplates", function ()
           this.debuffs[1]:SetPoint("TOPLEFT", healthbar.castbar, "BOTTOMLEFT", 0, -3)
         end
 
-        if pfUI.castbar.target.casterDB[unitname]["icon"] then
-          healthbar.castbar.icon:SetTexture("Interface\\Icons\\" ..  pfUI.castbar.target.casterDB[unitname]["icon"])
+        if icon then
+          healthbar.castbar.icon:SetTexture("Interface\\Icons\\" ..  icon)
           healthbar.castbar.icon:SetTexCoord(.1,.9,.1,.9)
         end
       end

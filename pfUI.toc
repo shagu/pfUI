@@ -39,6 +39,9 @@ api\config.lua
 api\ui-widgets.lua
 api\unitframes.lua
 
+# libs
+libs\libcast.lua
+
 # modules
 modules\firstrun.lua
 modules\gui.lua
