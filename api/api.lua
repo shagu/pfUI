@@ -27,10 +27,8 @@ function pfUI.api.UnitInRange(unit)
     return nil
   elseif CheckInteractDistance(unit, 4) then
     return 1
-  elseif pfUI.rangecheck then
-    return pfUI.rangecheck:UnitInSpellRange(unit)
   else
-    return nil
+    return librange:UnitInSpellRange(unit)
   end
 end
 

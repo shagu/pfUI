@@ -42,6 +42,7 @@ api\unitframes.lua
 # libs
 libs\libcast.lua
 libs\libdebuff.lua
+libs\librange.lua
 
 # modules
 modules\firstrun.lua
@@ -51,7 +52,6 @@ modules\hoverbind.lua
 modules\updatenotify.lua
 modules\actionbar.lua
 modules\hunterbar.lua
-modules\rangecheck.lua
 modules\chat.lua
 modules\bubbles.lua
 modules\addons.lua
