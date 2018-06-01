@@ -549,12 +549,6 @@ pfUI:RegisterModule("thirdparty", function ()
     end)
   end)
 
-  AddIntegration("DebuffTimers", function()
-    if pfUI.debuffs then
-      pfUI.debuffs.active = nil
-    end
-  end)
-
   AddIntegration("FlightMap", function()
     if C.thirdparty.flightmap.enable == "0" then return end
 
