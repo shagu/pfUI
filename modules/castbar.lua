@@ -11,7 +11,6 @@ pfUI:RegisterModule("castbar", function ()
     local cb = CreateFrame("Frame", name, parent or UIParent)
 
     CreateBackdrop(cb, default_border)
-    UpdateMovable(cb)
 
     cb:SetHeight(C.global.font_size * 1.5)
     cb:SetFrameStrata("MEDIUM")
@@ -135,6 +134,8 @@ pfUI:RegisterModule("castbar", function ()
       pfUI.castbar.player:SetPoint("CENTER", 0, -200)
       pfUI.castbar.player:SetWidth(200)
     end
+
+    UpdateMovable(pfUI.castbar.player)
   end
 
   -- [[ pfTargetCastbar ]] --
@@ -149,5 +150,7 @@ pfUI:RegisterModule("castbar", function ()
       pfUI.castbar.target:SetPoint("CENTER", 0, -225)
       pfUI.castbar.target:SetWidth(200)
     end
+
+    UpdateMovable(pfUI.castbar.target)
   end
 end)
