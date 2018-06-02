@@ -56,6 +56,10 @@ pfUI:RegisterModule("castbar", function ()
     cb.bar.right:SetJustifyH("right")
 
     cb:SetScript("OnUpdate", function()
+      if this.drag and this.drag:IsShown() then
+        return
+      end
+
       if this.fadeout and this:GetAlpha() > 0 then
         this:SetAlpha(this:GetAlpha()-0.05)
         if this:GetAlpha() == 0 then
