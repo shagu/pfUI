@@ -226,7 +226,7 @@ pfUI:RegisterModule("actionbar", function ()
           anchor = pfUI.bars.bottomleft
         end
         pfUI.bars.pet:SetPoint("BOTTOM", anchor, "TOP", 0, default_border * 3)
-        UpdateMovable(pfUI.bars.pet)
+        UpdateMovable(pfUI.bars.pet, true)
         BarLayoutSize(pfUI.bars.pet, NUM_PET_ACTION_SLOTS, C.bars.pet.formfactor, C.bars.icon_size, default_border)
         pfUI.bars.pet:SetWidth(pfUI.bars.pet._size[1])
         pfUI.bars.pet:SetHeight(pfUI.bars.pet._size[2])
@@ -271,7 +271,7 @@ pfUI:RegisterModule("actionbar", function ()
           anchor = pfUI.bars.pet
         end
         pfUI.bars.shapeshift:SetPoint("BOTTOM", anchor, "TOP", 0, default_border * 3)
-        UpdateMovable(pfUI.bars.shapeshift)
+        UpdateMovable(pfUI.bars.shapeshift, true)
         if C.bars.background == "1" then CreateBackdrop(pfUI.bars.shapeshift, default_border) end
         BarLayoutSize(pfUI.bars.shapeshift, NUM_SHAPESHIFT_SLOTS, C.bars.shapeshift.formfactor, C.bars.icon_size, default_border,shapeshiftbuttons)
         pfUI.bars.shapeshift:SetWidth(pfUI.bars.shapeshift._size[1])
