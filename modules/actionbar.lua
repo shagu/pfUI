@@ -221,12 +221,11 @@ pfUI:RegisterModule("actionbar", function ()
       if (PetHasActionBar()) then
         PetActionBar_Update()
         pfUI.bars.pet:Show()
-        local anchor = pfUI.bars.actionmain
-        if pfUI.bars.bottomleft:IsShown() then
-          anchor = pfUI.bars.bottomleft
-        end
-        pfUI.bars.pet:SetPoint("BOTTOM", anchor, "TOP", 0, default_border * 3)
-        UpdateMovable(pfUI.bars.pet, true)
+
+        this.pet:ClearAllPoints()
+        this.pet:SetPoint("BOTTOM", this.bottomleft:IsShown() and this.bottomleft or this.actionmain, "TOP", 0, default_border * 3)
+        UpdateMovable(this.pet, true)
+
         BarLayoutSize(pfUI.bars.pet, NUM_PET_ACTION_SLOTS, C.bars.pet.formfactor, C.bars.icon_size, default_border)
         pfUI.bars.pet:SetWidth(pfUI.bars.pet._size[1])
         pfUI.bars.pet:SetHeight(pfUI.bars.pet._size[2])
@@ -263,15 +262,10 @@ pfUI:RegisterModule("actionbar", function ()
           if b:IsShown() then shapeshiftbuttons = shapeshiftbuttons + 1 end
         end
 
-        local anchor = pfUI.bars.actionmain
-        if pfUI.bars.bottomleft:IsShown() then
-          anchor = pfUI.bars.bottomleft
-        end
-        if pfUI.bars.pet:IsShown() then
-          anchor = pfUI.bars.pet
-        end
-        pfUI.bars.shapeshift:SetPoint("BOTTOM", anchor, "TOP", 0, default_border * 3)
-        UpdateMovable(pfUI.bars.shapeshift, true)
+        this.shapeshift:ClearAllPoints()
+        this.shapeshift:SetPoint("BOTTOM", this.bottomleft:IsShown() and this.bottomleft or this.pet:IsShown() and this.pet or this.actionmain, "TOP", 0, default_border * 3)
+        UpdateMovable(this.shapeshift, true)
+
         if C.bars.background == "1" then CreateBackdrop(pfUI.bars.shapeshift, default_border) end
         BarLayoutSize(pfUI.bars.shapeshift, NUM_SHAPESHIFT_SLOTS, C.bars.shapeshift.formfactor, C.bars.icon_size, default_border,shapeshiftbuttons)
         pfUI.bars.shapeshift:SetWidth(pfUI.bars.shapeshift._size[1])
