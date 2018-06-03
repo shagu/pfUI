@@ -460,7 +460,8 @@ end
 -- Loads and update the configured position of the specified frame.
 -- It also creates an entry in the movables table.
 -- 'frame'      [frame]        the frame that should be updated.
-function pfUI.api.UpdateMovable(frame)
+-- 'init'       [bool]         treats the current position as initial data
+function pfUI.api.UpdateMovable(frame, init)
   local name = frame:GetName()
 
   if pfUI_config.global.offscreen == "0" then
@@ -472,9 +473,11 @@ function pfUI.api.UpdateMovable(frame)
   end
 
   -- update position data
-  frame.posdata = { scale = frame:GetScale(), pos = {} }
-  for i=1,frame:GetNumPoints() do
-    frame.posdata.pos[i] = { frame:GetPoint(i) }
+  if not frame.posdata or init then
+    frame.posdata = { scale = frame:GetScale(), pos = {} }
+    for i=1,frame:GetNumPoints() do
+      frame.posdata.pos[i] = { frame:GetPoint(i) }
+    end
   end
 
   if pfUI_config["position"][frame:GetName()] then
