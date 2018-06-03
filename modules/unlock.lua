@@ -264,6 +264,7 @@ pfUI:RegisterModule("unlock", function ()
 
           frame.drag:SetScript("OnClick", function()
             pfUI_config["position"][frame:GetName()] = nil
+            frame:ClearAllPoints()
             UpdateMovable(frame)
           end)
         end
