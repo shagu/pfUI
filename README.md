@@ -4,7 +4,7 @@ An AddOn for World of Warcraft (1.12.1), mostly known as "Vanilla", which aims t
 
 This is **not** an addon-pack like [ShaguUI](http://shagu.org/ShaguUI/), however, there will be support for external addons like MobHealth3 and HealComm, but they will never be shipped within the package.
 
-**Please do not re-upload or distribute outdated versions of this project. However, you are more than welcome to fork or link to the official github page.**
+**Please do not re-upload or distribute outdated versions of this project. However, you are more than welcome to fork or link to the official gitlab page.**
 
 ## Screenshots
 
@@ -41,14 +41,14 @@ pfUI supports and contains language specific code for the following gameclients.
 * Russian (ruRU)
 
 ## Recommended Addons
-* [pfQuest](https://github.com/Shagu/pfQuest) A simple database and quest helper
+* [pfQuest](https://shagu.org/pfQuest) A simple database and quest helper
 * [HealComm](https://github.com/Aviana/HealComm/releases) Visual representation of incoming heals
 * [WIM](http://addons.us.to/addon/wim), [WIM (continued)](https://github.com/shirsig/WIM) Give whispers an instant messenger feel
 * [MobHealth3](http://addons.us.to/addon/mobhealth) Estimates a mob's health
 
 ## Plugins
-* [pfUI-eliteoverlay](https://gitlab.com/shagu/pfUI-eliteoverlay) Add elite dragons to unitframes
-* [pfUI-fonts](https://gitlab.com/shagu/pfUI-fonts) Additional fonts for pfUI
+* [pfUI-eliteoverlay](https://shagu.org/pfUI-eliteoverlay) Add elite dragons to unitframes
+* [pfUI-fonts](https://shagu.org/pfUI-fonts) Additional fonts for pfUI
 * [pfUI-CustomMedia](https://github.com/mrrosh/pfUI-CustomMedia) A font and texture package
 
 ## Other Addons
