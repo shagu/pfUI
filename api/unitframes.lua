@@ -915,6 +915,8 @@ function pfUI.uf:RefreshUnit(unit, component)
     end
   end
 
+  local unitstr = unit.label..unit.id
+
   local default_border = C.appearance.border.default
   if C.appearance.border.unitframes ~= "-1" then
     default_border = C.appearance.border.unitframes
@@ -929,7 +931,7 @@ function pfUI.uf:RefreshUnit(unit, component)
 
 
     -- only update visibility state for existing units
-    elseif UnitName(unit.label .. unit.id) then
+    elseif UnitName(unitstr) then
 
       -- hide group while in raid and option is set
       if C["unitframes"]["group"]["hide_in_raid"] == "1" and strsub(unit.label,0,5) == "party" and UnitInRaid("player") then
@@ -938,13 +940,13 @@ function pfUI.uf:RefreshUnit(unit, component)
 
       -- hide existing but too far away pet and pets of old group members
       elseif unit.label == "partypet" then
-        if not UnitIsVisible(unit.label .. unit.id) or not UnitExists("party" .. unit.id) then
+        if not UnitIsVisible(unitstr) or not UnitExists("party" .. unit.id) then
           unit:Hide()
           return
         end
 
       elseif unit.label == "pettarget" then
-        if not UnitIsVisible(unit.label .. unit.id) or not UnitExists("pet") then
+        if not UnitIsVisible(unitstr) or not UnitExists("pet") then
           unit:Hide()
           return
         end
@@ -972,8 +974,8 @@ function pfUI.uf:RefreshUnit(unit, component)
 
   -- Raid Icon
   if unit.raidIcon and ( component == "all" or component == "raidIcon" ) then
-    local raidIcon = GetRaidTargetIndex(unit.label .. unit.id)
-    if raidIcon and UnitName(unit.label .. unit.id) then
+    local raidIcon = GetRaidTargetIndex(unitstr)
+    if raidIcon and UnitName(unitstr) then
       SetRaidTargetIconTexture(unit.raidIcon.texture, raidIcon)
       unit.raidIcon:Show()
     else
@@ -985,7 +987,7 @@ function pfUI.uf:RefreshUnit(unit, component)
   if unit.leaderIcon and ( component == "all" or component == "leaderIcon" ) then
     if GetNumPartyMembers() == 0 and GetNumRaidMembers() == 0 then
       unit.leaderIcon:Hide()
-    elseif UnitIsPartyLeader(unit.label .. unit.id) then
+    elseif UnitIsPartyLeader(unitstr) then
       unit.leaderIcon:Show()
     else
       unit.leaderIcon:Hide()
@@ -998,7 +1000,7 @@ function pfUI.uf:RefreshUnit(unit, component)
     local method, group, raid = GetLootMethod()
     local name = group and UnitName(group == 0 and "player" or "party"..group) or raid and UnitName("raid"..raid) or nil
 
-    if name and name == UnitName(unit.label .. unit.id) then
+    if name and name == UnitName(unitstr) then
       unit.lootIcon:Show()
     else
       unit.lootIcon:Hide()
@@ -1013,7 +1015,7 @@ function pfUI.uf:RefreshUnit(unit, component)
        stacks = GetPlayerBuffApplications(GetPlayerBuff(i-1,"HELPFUL"))
        texture = GetPlayerBuffTexture(GetPlayerBuff(i-1,"HELPFUL"))
       else
-       texture, stacks = UnitBuff(unit.label .. unit.id ,i)
+       texture, stacks = UnitBuff(unitstr, i)
       end
 
       pfUI.api.CreateBackdrop(unit.buffs[i], default_border)
@@ -1073,7 +1075,7 @@ function pfUI.uf:RefreshUnit(unit, component)
         stacks = GetPlayerBuffApplications(GetPlayerBuff(i-1, "HARMFUL"))
         dtype = GetPlayerBuffDispelType(GetPlayerBuff(i-1, "HARMFUL"))
      else
-       texture, stacks, dtype = UnitDebuff(unit.label .. unit.id ,i)
+       texture, stacks, dtype = UnitDebuff(unitstr, i)
      end
 
       pfUI.api.CreateBackdrop(unit.debuffs[i], default_border)
@@ -1095,8 +1097,8 @@ function pfUI.uf:RefreshUnit(unit, component)
           local timeleft = GetPlayerBuffTimeLeft(GetPlayerBuff(unit.debuffs[i]:GetID() - 1, "HARMFUL"),"HARMFUL")
           CooldownFrame_SetTimer(unit.debuffs[i].cd, GetTime(), timeleft, 1)
         elseif libdebuff then
-          local effect = libdebuff:GetDebuffName(unit.label .. unit.id, unit.debuffs[i]:GetID())
-          local start, duration, timeleft = libdebuff:GetDebuffInfo(unit.label .. unit.id, effect)
+          local effect = libdebuff:GetDebuffName(unitstr, unit.debuffs[i]:GetID())
+          local start, duration, timeleft = libdebuff:GetDebuffInfo(unitstr, effect)
           CooldownFrame_SetTimer(unit.debuffs[i].cd, start, duration, 1)
         end
 
@@ -1117,7 +1119,7 @@ function pfUI.uf:RefreshUnit(unit, component)
     if table.getn(pfUI.uf.debuffs) > 0 and unit.config.debuff_indicator == "1" then
       local infected = false
       for i=1,32 do
-        local _,_,dtype = UnitDebuff(unit.label .. unit.id, i)
+        local _,_,dtype = UnitDebuff(unitstr, i)
         if dtype then
           for _, filter in pairs(pfUI.uf.debuffs) do
             if filter == string.lower(dtype) then
@@ -1186,7 +1188,7 @@ function pfUI.uf:RefreshUnit(unit, component)
       local active = {}
 
       for i=1,32 do
-        local texture = UnitBuff(unit.label .. unit.id,i)
+        local texture = UnitBuff(unitstr, i)
 
         if texture then
           -- match filter
@@ -1216,16 +1218,16 @@ function pfUI.uf:RefreshUnit(unit, component)
     if C.unitframes.always2dportrait == "1" then
       unit.portrait.tex:Show()
       unit.portrait.model:Hide()
-      SetPortraitTexture(unit.portrait.tex, unit.label .. unit.id)
+      SetPortraitTexture(unit.portrait.tex, unitstr)
     else
-      if not UnitIsVisible(unit.label .. unit.id) or not UnitIsConnected(unit.label .. unit.id) then
+      if not UnitIsVisible(unitstr) or not UnitIsConnected(unitstr) then
         if unit.config.portrait == "bar" then
           unit.portrait.tex:Hide()
           unit.portrait.model:Hide()
         elseif C.unitframes.portraittexture == "1" then
           unit.portrait.tex:Show()
           unit.portrait.model:Hide()
-          SetPortraitTexture(unit.portrait.tex, unit.label .. unit.id)
+          SetPortraitTexture(unit.portrait.tex, unitstr)
         else
           unit.portrait.tex:Hide()
           unit.portrait.model:Show()
@@ -1241,14 +1243,14 @@ function pfUI.uf:RefreshUnit(unit, component)
         unit.portrait.model:Show()
 
         if unit.tick then
-          unit.portrait.model.next:SetUnit(unit.label .. unit.id)
-          if unit.portrait.model.lastUnit ~= UnitName(unit.label .. unit.id) or unit.portrait.model:GetModel() ~= unit.portrait.model.next:GetModel() then
-            unit.portrait.model:SetUnit(unit.label .. unit.id)
-            unit.portrait.model.lastUnit = UnitName(unit.label .. unit.id)
+          unit.portrait.model.next:SetUnit(unitstr)
+          if unit.portrait.model.lastUnit ~= UnitName(unitstr) or unit.portrait.model:GetModel() ~= unit.portrait.model.next:GetModel() then
+            unit.portrait.model:SetUnit(unitstr)
+            unit.portrait.model.lastUnit = UnitName(unitstr)
             unit.portrait.model:SetCamera(0)
           end
         else
-          unit.portrait.model:SetUnit(unit.label .. unit.id)
+          unit.portrait.model:SetUnit(unitstr)
           unit.portrait.model:SetCamera(0)
         end
       end
@@ -1256,12 +1258,12 @@ function pfUI.uf:RefreshUnit(unit, component)
   end
 
   -- Unit HP/MP
-  unit.cache.hp = UnitHealth(unit.label..unit.id)
-  unit.cache.hpmax = UnitHealthMax(unit.label..unit.id)
+  unit.cache.hp = UnitHealth(unitstr)
+  unit.cache.hpmax = UnitHealthMax(unitstr)
   unit.cache.hpdisplay = unit.hp.bar:GetValue()
 
-  unit.cache.power = UnitMana(unit.label .. unit.id)
-  unit.cache.powermax = UnitManaMax(unit.label .. unit.id)
+  unit.cache.power = UnitMana(unitstr)
+  unit.cache.powermax = UnitManaMax(unitstr)
   unit.cache.powerdisplay = unit.power.bar:GetValue()
 
   unit.hp.bar:SetMinMaxValues(0, unit.cache.hpmax)
@@ -1288,8 +1290,8 @@ function pfUI.uf:RefreshUnit(unit, component)
   end
 
   local color = { r = .2, g = .2, b = .2 }
-  if UnitIsPlayer(unit.label..unit.id) then
-    local _, class = UnitClass(unit.label..unit.id)
+  if UnitIsPlayer(unitstr) then
+    local _, class = UnitClass(unitstr)
     color = RAID_CLASS_COLORS[class] or color
   elseif unit.label == "pet" then
     local happiness = GetPetHappiness()
@@ -1301,7 +1303,7 @@ function pfUI.uf:RefreshUnit(unit, component)
       color = { r = 0, g = 1, b = 0 }
     end
   else
-    color = UnitReactionColor[UnitReaction(unit.label..unit.id, "player")] or color
+    color = UnitReactionColor[UnitReaction(unitstr, "player")] or color
   end
 
   local r, g, b = .2, .2, .2
@@ -1323,12 +1325,12 @@ function pfUI.uf:RefreshUnit(unit, component)
     unit.hp.bar:SetStatusBarColor(r, g, b)
   end
 
-  local p = ManaBarColor[UnitPowerType(unit.label..unit.id)]
+  local p = ManaBarColor[UnitPowerType(unitstr)]
   local pr, pg, pb = 0, 0, 0
   if p then pr, pg, pb = p.r + .5, p.g +.5, p.b +.5 end
   unit.power.bar:SetStatusBarColor(pr, pg, pb)
 
-  if UnitName(unit.label..unit.id) then
+  if UnitName(unitstr) then
     unit.hpLeftText:SetText(pfUI.uf:GetStatusValue(unit, "hpleft"))
     unit.hpCenterText:SetText(pfUI.uf:GetStatusValue(unit, "hpcenter"))
     unit.hpRightText:SetText(pfUI.uf:GetStatusValue(unit, "hpright"))
@@ -1337,7 +1339,7 @@ function pfUI.uf:RefreshUnit(unit, component)
     unit.powerCenterText:SetText(pfUI.uf:GetStatusValue(unit, "powercenter"))
     unit.powerRightText:SetText(pfUI.uf:GetStatusValue(unit, "powerright"))
 
-    if UnitIsTapped(unit.label .. unit.id) and not UnitIsTappedByPlayer(unit.label .. unit.id) then
+    if UnitIsTapped(unitstr) and not UnitIsTappedByPlayer(unitstr) then
       unit.hp.bar:SetStatusBarColor(.5,.5,.5,.5)
     end
   end
