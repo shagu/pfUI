@@ -136,6 +136,9 @@ pfUI:RegisterModule("bags", function ()
           if pfUI.bags[bag].slots[slot].frame:IsShown() then
             local _, _, locked, _ = GetContainerItemInfo(bag, slot)
             SetItemButtonDesaturated(pfUI.bags[bag].slots[slot].frame, locked, 0.5, 0.5, 0.5)
+            if pfUI.unusable then
+              pfUI.unusable:UpdateSlot(pfUI.bags[bag].slots[slot], bag, slot)
+            end
           end
         end
       end
@@ -423,6 +426,10 @@ pfUI:RegisterModule("bags", function ()
     end
 
     pfUI.bags[bag].slots[slot].frame:Show()
+
+    if pfUI.unusable then
+      pfUI.unusable:UpdateSlot(pfUI.bags[bag].slots[slot], bag, slot)
+    end
   end
 
   function pfUI.bag:CreateBagSlots(frame)
