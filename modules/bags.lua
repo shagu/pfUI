@@ -206,7 +206,8 @@ pfUI:RegisterModule("bags", function ()
     local iterate = {}
     local anchor, rowlength, cwidth
 
-    if object == "bank" then
+    local isLeft = (object == "bank")
+    if isLeft then
       if not pfUI.bag.left then pfUI.bag.left = CreateFrame("Frame", "pfBank", UIParent) end
       anchor = { "BOTTOMLEFT", (pfUI.chat and pfUI.chat.left or nil), "BOTTOMRIGHT" }
       rowlength = tonumber(C.appearance.bags.bankrowlength)
@@ -305,8 +306,23 @@ pfUI:RegisterModule("bags", function ()
     if pfUI.panel then topspace = topspace + pfUI.panel.right:GetHeight() end
     frame:SetHeight( default_border*2 + y*(frame.button_size+default_border*3) + topspace)
 
-    frame:SetScript("OnShow", function() pfUI.bag:CreateBags(object) end)
-    frame:SetScript("OnHide", function() pfUI.bag:CreateBags(object) end)
+    local chat = pfUI.chat.right
+    if isLeft then chat = pfUI.chat.left end
+
+    frame:SetScript("OnShow", function()
+      if chat and chat:IsVisible() then
+        frame.chatWasOpen = true
+        chat:Hide()
+      end
+      pfUI.bag:CreateBags(object)
+    end)
+    frame:SetScript("OnHide", function()
+      if chat and frame.chatWasOpen then
+        chat:Show()
+        frame.chatWasOpen = false
+      end
+      pfUI.bag:CreateBags(object)
+    end)
   end
 
   function pfUI.bag:UpdateBag(bag)
