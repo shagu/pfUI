@@ -75,11 +75,11 @@ pfUI:RegisterModule("unusable", function ()
       for _, v in pairs({"TextRight", "TextLeft"}) do
         local widget = _G["pfUnusableTooltip"..v..id]
         if widget and widget:GetText() then
-          local r, g, b, _ = widget:GetTextColor()
-          local rgb = r + g + b
-          if tostring(rgb) == "1.2509776437655" then
+          local r, g, b = widget:GetTextColor()
+          if r > .9 and g < .2 and b < .2 then
+            -- item contains red text
             result = false
-            break -- item contains red text
+            break
           end
         end
         if not result then break end
