@@ -2,7 +2,6 @@ pfUI:RegisterModule("unusable", function ()
   pfUI.unusable = CreateFrame("Frame", "pfUnusable", UIParent)
   pfUI.unusable.tooltip = CreateFrame("GameTooltip", "pfUnusableTooltip", UIParent, "GameTooltipTemplate")
 
-  pfUI.unusable:UnregisterAllEvents()
   pfUI.unusable:RegisterEvent("MAIL_INBOX_UPDATE")
   pfUI.unusable:RegisterEvent("PLAYER_LEVEL_UP")
   pfUI.unusable:RegisterEvent("SKILL_LINES_CHANGED")
@@ -37,6 +36,8 @@ pfUI:RegisterModule("unusable", function ()
   function pfUI.unusable:UpdateSlot(frame, bag, slot)
     if not pfUI.unusable:IsSlotItemUsable(frame, bag, slot) then
       pfUI.unusable:MakeUnusable(frame)
+    else
+      pfUI.unusable:MakeUsable(frame)
     end
   end
 
@@ -156,7 +157,7 @@ pfUI:RegisterModule("unusable", function ()
         SetDesaturation(frame, nil)
       else
         if slot.oldVertexFunc then
-          _G[frame:GetName().."IconTexture"] = slot.oldVertexFunc
+          _G[frame:GetName().."IconTexture"].SetVertexColor = slot.oldVertexFunc
           slot.oldVertexFunc = nil
         end
 
