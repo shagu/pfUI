@@ -563,7 +563,7 @@ pfUI:RegisterModule("actionbar", function ()
     icon:SetTexCoord(.08, .92, .08, .92)
 
     local texture = _G["PetActionButton"..i..'NormalTexture2']
-    texture :SetAlpha(0)
+    texture:SetAlpha(0)
 
     local castable = _G["PetActionButton"..i..'AutoCastable']
     if C.bars.showcastable == "1" then

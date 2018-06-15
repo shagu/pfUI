@@ -310,6 +310,16 @@ function pfUI.api.hooksecurefunc(name, func, append)
   _G[name] = pfUI.hooks[tostring(func)]["function"]
 end
 
+function pfUI.api.HookScript(f, script, func)
+  local prev = f:GetScript(script)
+
+  f:SetScript(script, function(...)
+    if prev then prev() end
+
+    func()
+  end)
+end
+
 -- [ QueueFunction ]
 -- Add functions to a FIFO queue for execution after a short delay.
 -- '...'        [vararg]        function, [arguments]
