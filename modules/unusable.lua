@@ -62,7 +62,7 @@ pfUI:RegisterModule("unusable", function ()
 
     self.tooltip:SetOwner(UIParent, "ANCHOR_NONE")
     if bag == -1 then
-      self.tooltip:SetInventoryItem("player", self:GetBankFrameSlot(slot))
+      self.tooltip:SetInventoryItem("player", slot + 39)
     elseif bag == "MailBox" then
       self.tooltip:SetInboxItem(slot)
     elseif bag == "Merchant" then
@@ -182,15 +182,4 @@ pfUI:RegisterModule("unusable", function ()
     end
     return id, name
   end
-
-  function pfUI.unusable:GetBankFrameSlot(slot)
-    for i = 1, NUM_BANKGENERIC_SLOTS, 1 do
-      local bankSlot = _G["BankFrameItem" .. i]
-      if bankSlot:GetID() == slot then
-        return i + 39
-      end
-    end
-    return nil
-  end
-
 end)
