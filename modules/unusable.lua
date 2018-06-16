@@ -1,6 +1,7 @@
 pfUI:RegisterModule("unusable", function ()
   pfUI.unusable = CreateFrame("Frame", "pfUnusable", UIParent)
   pfUI.unusable.tooltip = CreateFrame("GameTooltip", "pfUnusableTooltip", UIParent, "GameTooltipTemplate")
+  pfUI.unusable.tooltip:SetOwner(UIParent, "ANCHOR_NONE")
 
   pfUI.unusable:RegisterEvent("MAIL_INBOX_UPDATE")
   pfUI.unusable:RegisterEvent("PLAYER_LEVEL_UP")
@@ -56,11 +57,17 @@ pfUI:RegisterModule("unusable", function ()
       local name, itemLink, _, minLevel = GetItemInfo(item)
 
       if minLevel and minLevel > UnitLevel("player") then
-          return false
+        return false
       end
     end
 
-    self.tooltip:SetOwner(UIParent, "ANCHOR_NONE")
+    for id = 0, 8 do
+      for _, v in pairs({"TextRight", "TextLeft"}) do
+        local widget = _G["pfUnusableTooltip"..v..id]
+        if widget then widget:SetTextColor(1,1,1,1) end
+      end
+    end
+
     if bag == -1 then
       self.tooltip:SetInventoryItem("player", slot + 39)
     elseif bag == "MailBox" then
