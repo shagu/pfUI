@@ -96,4 +96,3 @@ modules\tracking.lua
 modules\easteregg.lua
 modules\farmmode.lua
 modules\pettarget.lua
-modules\unusable.lua
