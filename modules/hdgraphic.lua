@@ -19,13 +19,14 @@ pfUI:RegisterModule("hdgraphic", function ()
       for screenwidth, screenheight in string.gfind(resolution, "(.+)x(.+)") do
         local screenheight = tonumber(screenheight) / 8
         local scale = 768 / ( screenheight * conf )
+
+        SetCVar("uiScale", scale)
+        SetCVar("useUiScale", 1)
+
         UIParent:SetScale(scale)
         UIParent:SetWidth(screenwidth)
         UIParent:SetHeight(screenheight)
         UIParent:SetPoint("CENTER",0,0)
-
-        SetCVar("uiScale", scale)
-        SetCVar("useUiScale", 1)
       end
     end
   end
