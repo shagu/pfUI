@@ -341,7 +341,7 @@ pfUI:RegisterModule("panel", function()
   -- Update "durability"
   local itemLines = {}
   local slotnames = { "Head", "Shoulder", "Chest", "Wrist",
-      "Hands", "Waist", "Legs", "Feet", "MainHand", "SecondaryHand", "Ranged", }  
+      "Hands", "Waist", "Legs", "Feet", "MainHand", "SecondaryHand", "Ranged", }
   local totalRep = 0
   local repairToolTip = CreateFrame('GameTooltip', "repairToolTip", this, "GameTooltipTemplate")
   function pfUI.panel:UpdateRepair()
@@ -381,7 +381,7 @@ pfUI:RegisterModule("panel", function()
       end
     end
     repairToolTip:Hide()
-    
+
     local tooltip = function()
       if totalRep > 0 then
         GameTooltip:ClearLines()
@@ -392,7 +392,7 @@ pfUI:RegisterModule("panel", function()
           GameTooltip:AddDoubleLine(line[1],line[2])
         end
         GameTooltip:Show()
-      end    
+      end
     end
 
     local click = function()
@@ -510,17 +510,18 @@ pfUI:RegisterModule("panel", function()
 
   if pfUI.chat then
     pfUI.panel.left:SetScale(pfUI.chat.left:GetScale())
-    pfUI.panel.left:SetPoint("BOTTOMLEFT", pfUI.chat.left, "BOTTOMLEFT", 2, 2)
-    pfUI.panel.left:SetPoint("BOTTOMRIGHT", pfUI.chat.left, "BOTTOMRIGHT", -2, 2)
+    pfUI.panel.left:SetWidth(tonumber(C.chat.left.width) - 4)
+    pfUI.panel.left:SetPoint("BOTTOM", pfUI.chat.left, "BOTTOM", 0, 2)
   else
     pfUI.panel.left:SetWidth(C.chat.left.width)
     pfUI.panel.left:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", 5, 5)
   end
 
-  UpdateMovable(pfUI.panel.left)
-
+  pfUI.panel.left:SetFrameStrata("DIALOG")
   pfUI.panel.left:SetHeight(C.global.font_size+default_border*2)
+
   CreateBackdrop(pfUI.panel.left, default_border, nil)
+  UpdateMovable(pfUI.panel.left)
 
   pfUI.panel.left.hide = CreateFrame("Button", nil, pfUI.panel.left)
   pfUI.panel.left.hide:SetFrameLevel(0)
@@ -582,18 +583,19 @@ pfUI:RegisterModule("panel", function()
   pfUI.panel.right:SetFrameStrata("FULLSCREEN")
   pfUI.panel.right:ClearAllPoints()
   if pfUI.chat then
-    pfUI.panel.right:SetScale(pfUI.chat.left:GetScale())
-    pfUI.panel.right:SetPoint("BOTTOMLEFT", pfUI.chat.right, "BOTTOMLEFT", 2, 2)
-    pfUI.panel.right:SetPoint("BOTTOMRIGHT", pfUI.chat.right, "BOTTOMRIGHT", -2, 2)
+    pfUI.panel.right:SetScale(pfUI.chat.right:GetScale())
+    pfUI.panel.right:SetWidth(tonumber(C.chat.right.width) - 4)
+    pfUI.panel.right:SetPoint("BOTTOM", pfUI.chat.right, "BOTTOM", 0, 2)
   else
     pfUI.panel.right:SetWidth(C.chat.right.width)
     pfUI.panel.right:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", -5, 5)
   end
 
-  UpdateMovable(pfUI.panel.right)
-
+  pfUI.panel.right:SetFrameStrata("DIALOG")
   pfUI.panel.right:SetHeight(C.global.font_size+default_border*2)
+
   CreateBackdrop(pfUI.panel.right, default_border, nil)
+  UpdateMovable(pfUI.panel.right)
 
   pfUI.panel.right.hide = CreateFrame("Button", nil, pfUI.panel.right)
   pfUI.panel.right.hide:SetFrameLevel(0)
