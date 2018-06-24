@@ -44,6 +44,9 @@ libs\libcast.lua
 libs\libdebuff.lua
 libs\librange.lua
 
+# skins
+skins\blizzard\character.lua
+
 # modules
 modules\firstrun.lua
 modules\gui.lua
