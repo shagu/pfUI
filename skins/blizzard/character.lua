@@ -242,6 +242,10 @@ pfUI:RegisterSkin("Character", function ()
     CreateBackdrop(ReputationDetailFrame)
     StripTextures(ReputationDetailFrame)
     SkinCloseButton(ReputationDetailCloseButton, ReputationDetailFrame, -3, -3)
+
+    SkinCheckbox(ReputationDetailAtWarCheckBox)
+    SkinCheckbox(ReputationDetailInactiveCheckBox)
+    SkinCheckbox(ReputationDetailMainScreenCheckBox)
   end
 
   do -- skills frame

@@ -451,16 +451,15 @@ function pfUI.api.SetAllPointsOffset(frame, parent, offset)
   frame:SetPoint("BOTTOMRIGHT", parent, "BOTTOMRIGHT", -offset, offset)
 end
 
-function pfUI.api.SkinCheckbox(frame, offset)
+function pfUI.api.SkinCheckbox(frame)
   frame:SetNormalTexture("")
   frame:SetPushedTexture("")
   frame:SetHighlightTexture("")
-  CreateBackdrop(frame, nil, nil, .0)
-  local offsetBorder = -5
-  if offset then offsetBorder = offset end
-  frame.backdrop:SetPoint("TOPLEFT", frame, "TOPLEFT", -offsetBorder, offsetBorder)
-  frame.backdrop:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", offsetBorder, -offsetBorder)
-  frame:SetHitRectInsets(-offsetBorder,-offsetBorder,-offsetBorder,-offsetBorder)
+  frame:SetWidth(18)
+  frame:SetHeight(18)
+  CreateBackdrop(frame)
+  frame.backdrop:SetPoint("TOPLEFT", frame, "TOPLEFT", 4, -4)
+  frame.backdrop:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -4, 4)
 end
 
 function pfUI.api.SkinDropDown(frame, offsetX, offsetY)
