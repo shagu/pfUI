@@ -260,6 +260,36 @@ function pfUI.api.CreateScrollChild(name, parent)
   return f
 end
 
+-- [ EnableClickRotate ]
+-- Enables Modelframes to be rotated by click-drag
+-- 'frame'    [frame]         the modelframe that should be used
+function pfUI.api.EnableClickRotate(frame)
+  frame:EnableMouse(true)
+  frame:SetScript("OnUpdate", function()
+    if this.rotate then
+      local x,_ = GetCursorPosition()
+      if this.curx > x then
+        this.rotation = this.rotation - abs(x-this.curx) * 0.025
+      elseif this.curx < x then
+        this.rotation = this.rotation + abs(x-this.curx) * 0.025
+      end
+      this:SetRotation(this.rotation)
+      this.curx, this.cury = x, y
+    end
+  end)
+
+  frame:SetScript("OnMouseDown", function()
+    if arg1 == "LeftButton" then
+      this.rotate = true
+      this.curx, this.cury = GetCursorPosition()
+    end
+  end)
+
+  frame:SetScript("OnMouseUp", function()
+    this.rotate, this.curx, this.cury = nil, nil, nil
+  end)
+end
+
 -- [ Skin Button ]
 -- Applies pfUI skin to buttons:
 -- 'button'     [frame/string]  the button that should be skinned.
@@ -340,6 +370,60 @@ function pfUI.api.SkinCloseButton(button, parentFrame, offsetX, offsetY)
   button.texture:SetVertexColor(1,.25,.25,1)
 end
 
+function pfUI.api.SkinScrollbar(frame)
+  --StripTextures(frame)
+  local name = frame:GetName()
+  local up = _G[name .. "ScrollUpButton"]
+  local down = _G[name .. "ScrollDownButton"]
+  local thumb = frame:GetThumbTexture()
+
+  if not frame.thumb then
+    thumb:SetTexture(nil)
+    frame.thumb = frame:CreateTexture(nil, "ARTWORK")
+    frame.thumb:SetTexture(.8,.8,.8,.8)
+    frame.thumb:SetPoint("TOPLEFT", thumb, "TOPLEFT", 1, -4)
+    frame.thumb:SetPoint("BOTTOMRIGHT", thumb, "BOTTOMRIGHT", -1, 4)
+  end
+
+  if not frame.bg then
+    frame.bg = CreateFrame("Frame", nil, frame)
+    frame.bg:SetPoint("TOPLEFT", up, "BOTTOMLEFT", 0, -3)
+    frame.bg:SetPoint("BOTTOMRIGHT", down, "TOPRIGHT", 0, 3)
+    CreateBackdrop(frame.bg)
+  end
+
+  if up then
+    up:SetNormalTexture(nil)
+    up:SetPushedTexture(nil)
+    up:SetHighlightTexture(nil)
+    up:SetDisabledTexture(nil)
+    CreateBackdrop(up)
+    if not up.icon then
+      StripTextures(up)
+      up.icon = up:CreateTexture(nil, "ARTWORK")
+      up.icon:SetTexture("Interface\\AddOns\\pfUI\\img\\up")
+      up.icon:SetAlpha(.8)
+      SetAllPointsOffset(up.icon, up, 3)
+    end
+  end
+
+  if down then
+    down:SetNormalTexture(nil)
+    down:SetPushedTexture(nil)
+    down:SetHighlightTexture(nil)
+    down:SetDisabledTexture(nil)
+    CreateBackdrop(down)
+
+    if not down.icon then
+      StripTextures(down)
+      down.icon = up:CreateTexture(nil, "ARTWORK")
+      down.icon:SetTexture("Interface\\AddOns\\pfUI\\img\\down")
+      down.icon:SetAlpha(.8)
+      SetAllPointsOffset(down.icon, down, 3)
+    end
+  end
+end
+
 -- [ CenterFrame ]
 -- Clears points and centers a frame
 -- 'frame'           [frame] the frame that should be centered.
@@ -358,17 +442,13 @@ end
 -- 'frame'     [frame]  the frame that should be stripped.
 function pfUI.api.StripTextures(frame)
   for i,v in ipairs({frame:GetRegions()}) do
-    if v.SetTexture then v:SetTexture("") end
+    if v.SetTexture then v:SetTexture(nil) end
   end
 end
 
-function pfUI.api.SkinBackdropOffset(frame, offset)
-  StripTextures(frame)
-  CreateBackdrop(frame, nil, nil, .0)
-  local offsetBorder = -3
-  if offset then offsetBorder = offset end
-  frame.backdrop:SetPoint("TOPLEFT", frame, "TOPLEFT", -offsetBorder, offsetBorder)
-  frame.backdrop:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", offsetBorder, -offsetBorder)
+function pfUI.api.SetAllPointsOffset(frame, parent, offset)
+  frame:SetPoint("TOPLEFT", parent, "TOPLEFT", offset, -offset)
+  frame:SetPoint("BOTTOMRIGHT", parent, "BOTTOMRIGHT", -offset, offset)
 end
 
 function pfUI.api.SkinCheckbox(frame, offset)
@@ -420,9 +500,16 @@ function pfUI.api.SkinDropDown(frame, offsetX, offsetY)
   button:SetDisabledTexture(arrowDisabled)
 end
 
-function pfUI.api.SkinTabBottom(frame)
+function pfUI.api.SkinTab(frame, fixed)
   StripTextures(frame)
-  CreateBackdrop(frame, nil, nil, 0.8, pfUI.backdrop_no_top)
+  CreateBackdrop(frame)
+
+  if not fixed then
+    frame:SetScript("OnShow", function()
+      this:SetWidth(this:GetTextWidth() + 20)
+      _G[this:GetName().."Text"]:SetPoint("CENTER", 0, 0)
+    end)
+  end
 end
 
 -- [ GetCloseButton ]
