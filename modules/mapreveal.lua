@@ -6,7 +6,7 @@ pfUI:RegisterModule("mapreveal", function ()
   pfUI.mapreveal = {}
   function pfUI.mapreveal:UpdateConfig()
     WorldMapFrame_Update()
-  end  
+  end
 
   pfUI.mapreveal.onmap = CreateFrame("CheckButton", "pfUI_mapreveal_onmap", WorldMapFrame, "UICheckButtonTemplate")
   pfUI.mapreveal.onmap:SetNormalTexture("")
@@ -44,7 +44,7 @@ pfUI:RegisterModule("mapreveal", function ()
 
   local function create_hash(prefix, textureName, textureWidth, textureHeight, offsetX, offsetY, mapPointX, mapPointY)
     local hash = string.format(":%s:%s:%s:%s",textureWidth,textureHeight,offsetX,offsetY)
-    if (mapPointX ~= 0 or mapPointY ~= 0) then 
+    if (mapPointX ~= 0 or mapPointY ~= 0) then
       hash = string.format("%s:%s:%s",hash,tostring(mapPointX),tostring(mapPointY))
     end
     if string.sub(textureName, 0, string.len(prefix)) == prefix then
@@ -52,40 +52,40 @@ pfUI:RegisterModule("mapreveal", function ()
     end
     return string.format("|%s",hash)
   end
-  
+
   local function unpack_hash(prefix, hash)
     local _, stored_prefix, textureName, textureWidth, textureHeight, offsetX, offsetY, mapPointX, mapPointY
     _, _, stored_prefix, textureName, textureWidth, textureHeight, offsetX, offsetY = string.find(hash, "^([|]?)([^:]+):([^:]+):([^:]+):([^:]+):([^:]+)")
     if (not textureName or not offsetY) then
-      return 
+      return
     end
     if (offsetY) then
       _, _, mapPointX, mapPointY = string.find(hash,"^[|]?[^:]+:[^:]+:[^:]+:[^:]+:[^:]+:([^:]+):([^:]+)")
     end
-    if (not mapPointY) then 
-      mapPointX = 0 mapPointY = 0 
+    if (not mapPointY) then
+      mapPointX = 0 mapPointY = 0
     end
-    if (stored_prefix ~= "|") then 
-      textureName = string.format("%s%s",prefix,textureName) 
+    if (stored_prefix ~= "|") then
+      textureName = string.format("%s%s",prefix,textureName)
     end
     -- coerce to number by addition; cheaper than tonumber()
-    return textureName, textureWidth + 0, textureHeight + 0, offsetX + 0, offsetY + 0, mapPointX + 0, mapPointY + 0    
+    return textureName, textureWidth + 0, textureHeight + 0, offsetX + 0, offsetY + 0, mapPointX + 0, mapPointY + 0
   end
 
   local function pfWorldMapFrame_Update()
     local r,g,b,a = GetStringColor(C.appearance.worldmap.mapreveal_color)
     local mapFileName, textureHeight, textureWidth = GetMapInfo()
-    
+
     if (not mapFileName) then mapFileName = "World" end
-    
+
     local prefix = string.format("Interface\\WorldMap\\%s\\",mapFileName)
-    local numOverlays = (NUM_WORLDMAP_OVERLAYS == 0) and GetNumMapOverlays() or 0
-    
+    local numOverlays = GetNumMapOverlays()
+
     local alreadyknown = {}
     for i=1, numOverlays do
       local textureName, textureWidth, textureHeight, offsetX, offsetY, mapPointX, mapPointY = GetMapOverlayInfo(i)
       local overlayHash = create_hash(textureName, textureWidth, textureHeight, offsetX, offsetY, mapPointX, mapPointY)
-      alreadyknown[textureName] = overlay_hash
+      alreadyknown[textureName] = overlayHash
     end
 
     local zoneData = overlayData[mapFileName]
@@ -154,9 +154,9 @@ pfUI:RegisterModule("mapreveal", function ()
         end
       end
     end
-    for i = textureCount + 1, NUM_WORLDMAP_OVERLAYS do 
-      _G[string.format("%s%s","WorldMapOverlay",i)]:Hide() 
-    end    
+    for i = textureCount + 1, NUM_WORLDMAP_OVERLAYS do
+      _G[string.format("%s%s","WorldMapOverlay",i)]:Hide()
+    end
   end
 
   hooksecurefunc("WorldMapFrame_Update", pfWorldMapFrame_Update, true)
