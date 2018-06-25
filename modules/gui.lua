@@ -716,6 +716,7 @@ pfUI:RegisterModule("gui", function ()
     if not this.setup then
       CreateConfig(nil, this, T["Background Color"], C.appearance.border, "background", "color")
       CreateConfig(nil, this, T["Border Color"], C.appearance.border, "color", "color")
+      CreateConfig(update["mapreveal"], this, T["Map Reveal Color"], C.appearance.worldmap, "mapreveal_color", "color")
       CreateConfig(nil, this) -- spacer
       CreateConfig(nil, this, T["Global Border Size"], C.appearance.border, "default")
       CreateConfig(nil, this, T["Action Bar Border Size"], C.appearance.border, "actionbars")

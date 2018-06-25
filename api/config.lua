@@ -93,6 +93,8 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("appearance", "minimap",     "coordsloc",        "bottomleft")
   pfUI:UpdateConfig("appearance", "minimap",     "tracking_size",    "16")
   pfUI:UpdateConfig("appearance", "minimap",     "tracking_pulse",   "1")
+  pfUI:UpdateConfig("appearance", "worldmap",    "mapreveal",        "0")
+  pfUI:UpdateConfig("appearance", "worldmap",    "mapreveal_color",  ".4,.4,.4,1")
 
   pfUI:UpdateConfig("loot",       nil,           "autoresize",       "1")
   pfUI:UpdateConfig("loot",       nil,           "autopickup",       "1")
