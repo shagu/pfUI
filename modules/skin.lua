@@ -18,7 +18,11 @@ pfUI:RegisterModule("skin", function ()
 
   -- durability frame
   pfUI.durability = CreateFrame("Frame","pfDurability",UIParent)
-  pfUI.durability:SetPoint("TOPLEFT", pfUI.minimap, "BOTTOMLEFT", 0, -35)
+  if pfUI.minimap then
+    pfUI.durability:SetPoint("TOPLEFT", pfUI.minimap, "BOTTOMLEFT", 0, -35)
+  else
+    pfUI.durability:SetPoint("LEFT", UIParent, "RIGHT", -120, 120)
+  end
   UpdateMovable(pfUI.durability)
   pfUI.durability:SetWidth(80)
   pfUI.durability:SetHeight(70)
