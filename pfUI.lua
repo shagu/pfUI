@@ -20,6 +20,9 @@ end
 pfUI = CreateFrame("Frame", nil, UIParent)
 pfUI:RegisterEvent("ADDON_LOADED")
 
+-- setup bootvar
+pfUI.bootup = true
+
 -- initialize saved variables
 pfUI_playerDB = {}
 pfUI_config = {}
@@ -161,6 +164,32 @@ function pfUI:GetEnvironment()
   return pfUI.env
 end
 
+function pfUI:RegisterModule(n, f)
+  pfUI.module[n] = f
+  table.insert(pfUI.modules, n)
+  if not pfUI.bootup then
+    pfUI:LoadModule(n)
+  end
+end
+
+function pfUI:RegisterSkin(n, f)
+  pfUI.skin[n] = f
+  table.insert(pfUI.skins, n)
+  if not pfUI.bootup then
+    pfUI:LoadSkin(n)
+  end
+end
+
+function pfUI:LoadModule(m)
+  setfenv(pfUI.module[m], pfUI:GetEnvironment())
+  pfUI.module[m]()
+end
+
+function pfUI:LoadSkin(s)
+  setfenv(pfUI.skin[s], pfUI:GetEnvironment())
+  pfUI.skin[s]()
+end
+
 pfUI:SetScript("OnEvent", function()
   -- some addons overwrite color and font settings
   -- need to enforce pfUI's selection every time
@@ -180,32 +209,22 @@ pfUI:SetScript("OnEvent", function()
     pfUI:UpdateFonts()
 
     -- load modules
-    for i,m in pairs(this.modules) do
+    for _, m in pairs(this.modules) do
       if not ( pfUI_config["disabled"] and pfUI_config["disabled"][m]  == "1" ) then
-        setfenv(pfUI.module[m], pfUI:GetEnvironment())
-        pfUI.module[m]()
+        pfUI:LoadModule(m)
       end
     end
 
     -- load skins
-    for i,s in pairs(this.skins) do
+    for _, s in pairs(this.skins) do
       if not ( pfUI_config["disabled"] and pfUI_config["disabled"]["skin_" .. s]  == "1" ) then
-        setfenv(pfUI.skin[s], pfUI:GetEnvironment())
-        pfUI.skin[s]()
+        pfUI:LoadSkin(s)
       end
     end
+
+    pfUI.bootup = nil
   end
 end)
-
-function pfUI:RegisterModule(n, f)
-  pfUI.module[n] = f
-  table.insert(pfUI.modules, n)
-end
-
-function pfUI:RegisterSkin(n, f)
-  pfUI.skin[n] = f
-  table.insert(pfUI.skins, n)
-end
 
 pfUI.backdrop = {
   bgFile = "Interface\\BUTTONS\\WHITE8X8", tile = false, tileSize = 0,
