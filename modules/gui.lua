@@ -114,7 +114,7 @@ pfUI:RegisterModule("gui", function ()
 
           if not this:GetParent():IsShown() then
             category[config] = r .. "," .. g .. "," .. b .. "," .. a
-            pfUI.gui.settingChanged = true
+            if ufunc then ufunc() else pfUI.gui.settingChanged = true end
           end
         end
 
