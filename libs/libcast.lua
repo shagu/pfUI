@@ -116,7 +116,9 @@ libcast:SetScript("OnEvent", function()
 
   -- Fill database with player casts
   if event == "PLAYER_TARGET_CHANGED" then
-    this:TriggerEvents()
+    if not pfScanActive then
+      this:TriggerEvents()
+    end
   elseif event == "SPELLCAST_START" then
     this.db[player] = {cast = arg1, start = GetTime(), casttime = arg2, icon = nil, channel = nil, delay = 0}
     this:TriggerEvents()
