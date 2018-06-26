@@ -152,11 +152,9 @@ pfUI:RegisterModule("eqcompare", function ()
         if target then
           if v.value ~= target.value then
             if v.value > target.value then
-              target.widget:SetTextColor(2.55, .08, .08)
-              v.widget:SetTextColor(.2, 2.4, 0) 
+              v.widget:SetText(v.widget:GetText() .. "|cff88ff88 (+" .. v.value - target.value .. ")")
             else
-              v.widget:SetTextColor(2.55, .08, .08)
-              target.widget:SetTextColor(.2, 2.4, 0)
+              v.widget:SetText(v.widget:GetText() .. "|cffff8888 (-" .. target.value - v.value .. ")")
             end
             target.processed = true
           else
@@ -164,18 +162,15 @@ pfUI:RegisterModule("eqcompare", function ()
           end
         else
           -- this attribute doesnt exist in target
-          v.widget:SetTextColor(.2, 2.4, 0)
+          v.widget:SetTextColor(.4, 1, .4)
         end
-      else
-        -- nothing to compare
-        v.widget:SetTextColor(.2, 2.4, 0)
       end
     end
 
     for _,target in pairs(targetData) do
       if target and not target.processed then
         -- we are an extra value
-        target.widget:SetTextColor(.2, 2.4, 0)
+        target.widget:SetTextColor(.4, 1, .4)
       end
     end
   end
