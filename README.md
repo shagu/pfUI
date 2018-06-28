@@ -63,7 +63,7 @@ big fan of creating configuration UI's, especially not via the Wow-API
 (you might have noticed that in ShaguUI).
 
 **Is there a discord channel?**  
-Yes there is one: https://discord.gg/QTRKanu
+Yes there is one: [Discord Invite](https://discord.gg/QTRKanu)
 
 **How can I donate?**  
 You can't. I'm doing this for fun. Enjoy!
