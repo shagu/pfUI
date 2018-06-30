@@ -597,8 +597,8 @@ pfUI:RegisterModule("thirdparty", function ()
     CreateBackdrop(DruidManaBar)
 
     DruidManaBar:SetScript("OnMouseUp", function(button)
-			pfUI.uf.player:Click(button)
-		end)
+      pfUI.uf.player:Click(button)
+    end)
 
     DruidManaBar:ClearAllPoints()
     DruidManaBar:SetPoint("CENTER", 0, 0)
