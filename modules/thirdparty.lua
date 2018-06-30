@@ -16,10 +16,11 @@ pfUI:RegisterModule("thirdparty", function ()
     local lurker = CreateFrame("Frame", nil)
     lurker.func = func
     lurker:RegisterEvent("VARIABLES_LOADED")
+    lurker:RegisterEvent("PLAYER_ENTERING_WORLD")
     lurker:SetScript("OnEvent",function()
       if IsAddOnLoaded(addon) or _G[addon] then
         this:func()
-        this:UnregisterEvent("VARIABLES_LOADED")
+        this:UnregisterAllEvents()
       end
     end)
   end
@@ -580,6 +581,28 @@ pfUI:RegisterModule("thirdparty", function ()
         ShoppingTooltip2:Hide()
       end)
     end
+  end)
+
+  AddIntegration("DruidManaBarBackground", function()
+    if C.thirdparty.druidmana.enable == "0" then return end
+    DruidManaBar:SetParent(UIParent)
+    DruidManaBar.bd:Hide()
+
+    local p = ManaBarColor[0]
+    local pr, pg, pb = 0, 0, 0
+    if p then pr, pg, pb = p.r + .5, p.g +.5, p.b +.5 end
+    DruidManaBar:SetStatusBarColor(pr, pg, pb)
+    DruidManaBar:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
+
+    CreateBackdrop(DruidManaBar)
+
+    DruidManaBar:SetScript("OnMouseUp", function(button)
+			pfUI.uf.player:Click(button)
+		end)
+
+    DruidManaBar:ClearAllPoints()
+    DruidManaBar:SetPoint("CENTER", 0, 0)
+    UpdateMovable(DruidManaBar)
   end)
 
   AddIntegration("HealComm", function()

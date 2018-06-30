@@ -1237,6 +1237,7 @@ pfUI:RegisterModule("gui", function ()
       CreateConfig(nil, this, T["SortBags"], C.thirdparty.sortbags, "enable", "checkbox")
       CreateConfig(nil, this, T["FlightMap"], C.thirdparty.flightmap, "enable", "checkbox")
       CreateConfig(nil, this, T["AtlasLoot"], C.thirdparty.atlasloot, "enable", "checkbox")
+      CreateConfig(nil, this, T["DruidManaBar"], C.thirdparty.druidmana, "enable", "checkbox")
       this.setup = true
     end
   end)

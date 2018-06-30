@@ -703,6 +703,7 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("thirdparty", "sortbags",    "enable",           "1")
   pfUI:UpdateConfig("thirdparty", "flightmap",   "enable",           "1")
   pfUI:UpdateConfig("thirdparty", "atlasloot",   "enable",           "1")
+  pfUI:UpdateConfig("thirdparty", "druidmana",   "enable",           "1")
   pfUI:UpdateConfig("position",   nil,           nil,                nil)
   pfUI:UpdateConfig("disabled",   nil,           nil,                nil)
 
