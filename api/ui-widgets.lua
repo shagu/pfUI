@@ -324,6 +324,55 @@ function pfUI.api.SkinButton(button, cr, cg, cb)
   b:SetFont(pfUI.font_default, pfUI_config.global.font_size, "OUTLINE")
 end
 
+function pfUI.api.SkinNextPrevButton(frame, direction)
+  StripTextures(frame)
+
+  frame:SetNormalTexture(nil)
+  frame:SetPushedTexture(nil)
+  frame:SetHighlightTexture(nil)
+  frame:SetDisabledTexture(nil)
+  CreateBackdrop(frame)
+  SetAllPointsOffset(frame.backdrop, frame, 4)
+
+  if not frame.icon then
+    frame.icon = frame:CreateTexture(nil, "ARTWORK")
+
+    frame.icon:SetAlpha(.8)
+    SetAllPointsOffset(frame.icon, frame, 10)
+  end
+
+  if direction == "next" then
+    frame.icon:SetTexture("Interface\\AddOns\\pfUI\\img\\right")
+  elseif direction == "prev" then
+    frame.icon:SetTexture("Interface\\AddOns\\pfUI\\img\\left")
+  end
+
+  frame:SetScript("OnMouseDown", function()
+    if frame:IsEnabled() == 1 then
+      this.icon:SetPoint("CENTER", -1, -1)
+    end
+  end)
+
+  frame:SetScript("OnMouseUp", function()
+    this.icon:SetPoint("CENTER", 0, 0)
+  end)
+
+  if not frame.hooked then
+    frame.hooked = true
+    local oldEnable = frame.Enable
+    function frame.Enable(self,btn)
+      self.icon:SetAlpha(.8)
+      if oldEnable then oldEnable(self, btn) end
+    end
+
+    local oldDisable = frame.Disable
+    function frame.Disable(self,btn)
+      self.icon:SetAlpha(.4)
+      if oldDisable then oldDisable(self, btn) end
+    end
+  end
+end
+
 -- [ Skin Rotate Button]
 -- Applies pfUI skin to rotation buttons like in character pane:
 -- 'button'     [frame/string]  the button that should be skinned.
