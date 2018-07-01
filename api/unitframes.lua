@@ -762,6 +762,15 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
   f:UpdateFrameSize()
   f:EnableScripts()
 
+  if f.config.visible == "1" then
+    pfUI.uf:RefreshUnit(f, "all")
+    f:EnableScripts()
+    f:UpdateFrameSize()
+  else
+    f:UnregisterAllEvents()
+    f:Hide()
+  end
+
   table.insert(pfUI.uf.frames, f)
   return f
 end
