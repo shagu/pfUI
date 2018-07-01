@@ -46,6 +46,7 @@ libs\librange.lua
 
 # skins
 skins\blizzard\character.lua
+skins\blizzard\spellbook.lua
 
 # modules
 modules\firstrun.lua
