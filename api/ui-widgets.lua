@@ -500,13 +500,16 @@ function pfUI.api.SkinDropDown(frame, offsetX, offsetY)
 end
 
 function pfUI.api.SkinTab(frame, fixed)
+  frame:SetHeight(20)
   StripTextures(frame)
   CreateBackdrop(frame)
 
   if not fixed then
     frame:SetScript("OnShow", function()
       this:SetWidth(this:GetTextWidth() + 20)
-      _G[this:GetName().."Text"]:SetPoint("CENTER", 0, 0)
+      if this.GetFontString and this:GetFontString() then
+        this:GetFontString():SetPoint("CENTER", 0, 0)
+      end
     end)
   end
 end

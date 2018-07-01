@@ -370,7 +370,6 @@ pfUI:RegisterSkin("Character", function ()
         local tab = _G["CharacterFrameTab"..i]
         SkinTab(tab)
         tab.backdrop:SetFrameLevel(1)
-        tab:SetHeight(18)
 
         if i ~= 1 then
           local lastTab = _G["CharacterFrameTab"..(i-1)]
