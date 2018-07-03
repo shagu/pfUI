@@ -244,6 +244,9 @@ pfUI:RegisterSkin("Character", function ()
     SkinCloseButton(ReputationDetailCloseButton, ReputationDetailFrame, -3, -3)
 
     SkinCheckbox(ReputationDetailAtWarCheckBox)
+    local texWar = ReputationDetailAtWarCheckBox:GetCheckedTexture()
+    texWar:SetWidth(20)
+    texWar:SetHeight(20)
     SkinCheckbox(ReputationDetailInactiveCheckBox)
     SkinCheckbox(ReputationDetailMainScreenCheckBox)
   end
