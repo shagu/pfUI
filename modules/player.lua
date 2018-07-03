@@ -76,6 +76,18 @@ pfUI:RegisterModule("player", function ()
     pfUI.uf.player.power.tick.spark:SetWidth(C.unitframes.player.pheight + 5)
     pfUI.uf.player.power.tick.spark:SetBlendMode('ADD')
 
+    -- update spark size on player frame changes
+    local hookUpdateConfig = pfUI.uf.player.UpdateConfig
+    function pfUI.uf.player.UpdateConfig()
+      -- update spark sizes
+      local spark = pfUI.uf.player.power.tick.spark
+      spark:SetHeight(C.unitframes.player.pheight + 15)
+      spark:SetWidth(C.unitframes.player.pheight + 5)
+
+      -- run default unitframe update function
+      hookUpdateConfig(pfUI.uf.player)
+    end
+
     pfUI.uf.player.power.tick:SetScript("OnUpdate", function()
       if not this.energy then this.energy = UnitMana("player") end
 
