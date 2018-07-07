@@ -59,7 +59,7 @@ pfUI:RegisterModule("eqcompare", function ()
     -- use GameTooltip as default
     if not tooltip then tooltip = GameTooltip end
 
-    if not IsShiftKeyDown() and C.tooltip.compare.showalways ~= "1" then
+    if not IsShiftKeyDown() and C.tooltip.compare.showalways ~= "1" and not MerchantFrame:IsShown() then
       return
     end
 
@@ -156,9 +156,13 @@ pfUI:RegisterModule("eqcompare", function ()
         if target then
           if v.value ~= target.value then
             if v.value > target.value then
-              v.widget:SetText(v.widget:GetText() .. "|cff88ff88 (+" .. v.value - target.value .. ")")
-            else
-              v.widget:SetText(v.widget:GetText() .. "|cffff8888 (-" .. target.value - v.value .. ")")
+              if not strfind(v.widget:GetText(), "|cff88ff88") and not strfind(v.widget:GetText(), "|cffff8888") then
+                v.widget:SetText(v.widget:GetText() .. "|cff88ff88 (+" .. v.value - target.value .. ")")
+              end
+            elseif not v.widget.compSet then
+              if not strfind(v.widget:GetText(), "|cff88ff88") and not strfind(v.widget:GetText(), "|cffff8888") then
+                v.widget:SetText(v.widget:GetText() .. "|cffff8888 (-" .. target.value - v.value .. ")")
+              end
             end
             target.processed = true
           else
