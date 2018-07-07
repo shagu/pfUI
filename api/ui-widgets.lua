@@ -534,10 +534,10 @@ function pfUI.api.SkinDropDown(frame)
     DropDownList1:SetPoint("TOPLEFT", this:GetParent().backdrop, "BOTTOMLEFT", 0, -4)
     DropDownList1:SetPoint("TOPRIGHT", this:GetParent().backdrop, "BOTTOMRIGHT", 0, -4)
     CreateBackdrop(DropDownList1Backdrop, nil, true, .8)
-    DropDownList1.maxWidth = this:GetWidth()
+    DropDownList1.maxWidth = this:GetWidth() > 80 and this:GetWidth() or 80
 
     for i=1, UIDROPDOWNMENU_MAXBUTTONS do
-      _G["DropDownList1Button" .. i]:SetWidth(this:GetWidth())
+      _G["DropDownList1Button" .. i]:SetWidth(DropDownList1.maxWidth)
     end
   end)
 end
