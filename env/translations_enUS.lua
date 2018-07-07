@@ -72,6 +72,7 @@ pfUI_translation["enUS"] = {
   ["Combat"] = nil,
   ["Combat Timer"] = nil,
   ["Combopoint Size"] = nil,
+  ["Compare Item Base Stats"] = nil,
   ["Components"] = nil,
   ["Configuration"] = nil,
   ["Cooldown Color (Days)"] = nil,

@@ -72,6 +72,7 @@ pfUI_translation["frFR"] = {
   ["Combat"] = "Combat",
   ["Combat Timer"] = "Chronomètre de combat",
   ["Combopoint Size"] = "Taille des points de combo",
+  ["Compare Item Base Stats"] = nil,
   ["Components"] = nil,
   ["Configuration"] = "Configuration",
   ["Cooldown Color (Days)"] = "Couleur des temps de recharge (Jours)",

@@ -72,6 +72,7 @@ pfUI_translation["ruRU"] = {
   ["Combat Timer"] = "Таймер боя",
   ["Combat"] = "Бой",
   ["Combopoint Size"] = "Размер комбо очков",
+  ["Compare Item Base Stats"] = nil,
   ["Components"] = "Компоненты",
   ["Configuration"] = "Конфигурация",
   ["Cooldown Color (Days)"] = "Цвет восстановления (дни)",

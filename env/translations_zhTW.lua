@@ -72,6 +72,7 @@ pfUI_translation["zhTW"] = {
   ["Combat Timer"] = "戰鬥計時器",
   ["Combat"] = "戰鬥報警",
   ["Combopoint Size"] = "連擊點大小",
+  ["Compare Item Base Stats"] = nil,
   ["Components"] = nil,
   ["Configuration"] = "配置",
   ["Cooldown Color (Days)"] = "技能冷卻時間顏色[天]",

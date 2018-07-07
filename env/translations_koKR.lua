@@ -72,6 +72,7 @@ pfUI_translation["koKR"] = {
   ["Combat"] = "전투",
   ["Combat Timer"] = "전투 타이머",
   ["Combopoint Size"] = "콤보포인트 크기",
+  ["Compare Item Base Stats"] = nil,
   ["Components"] = nil,
   ["Configuration"] = "구성",
   ["Cooldown"] = "쿨다운",
