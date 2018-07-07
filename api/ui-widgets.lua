@@ -489,9 +489,14 @@ end
 -- [ StripTextures ]
 -- Strips all textures off a frame.
 -- 'frame'     [frame]  the frame that should be stripped.
-function pfUI.api.StripTextures(frame)
+function pfUI.api.StripTextures(frame, hide)
   for i,v in ipairs({frame:GetRegions()}) do
-    if v.SetTexture then v:SetTexture(nil) end
+    if v.SetTexture then
+      v:SetTexture(nil)
+      if hide then
+        v:Hide()
+      end
+    end
   end
 end
 
