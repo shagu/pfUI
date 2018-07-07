@@ -404,6 +404,7 @@ pfUI_translation["zhCN"] = {
   ["Show Players Only"] = "仅显示自己",
   ["Show Procs as Buff Indicators"] = "在框架的Buff指示器显示触发效果",
   ["Show Procs of all Classes"] = "显示所有职业的触发效果",
+  ["Show PvP-Flag Indicator"] = nil,
   ["Show PvP Icon"] = "显示PVP图标",
   ["Show Self in Group Frames"] = "在小队列表中显示自己",
   ["Show Totems as Buff Indicators"] = nil,

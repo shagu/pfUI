@@ -404,6 +404,7 @@ pfUI_translation["frFR"] = {
   ["Show Players Only"] = "Afficher les joueurs uniquement",
   ["Show Procs as Buff Indicators"] = "Afficher les procs en tant qu'indicateur d'amélioration",
   ["Show Procs of all Classes"] = "Afficher les procs de chaque classe",
+  ["Show PvP-Flag Indicator"] = nil,
   ["Show PvP Icon"] = "Afficher l'icône JcJ",
   ["Show Self in Group Frames"] = "S'afficher dans l'UI Groupe",
   ["Show Totems as Buff Indicators"] = nil,

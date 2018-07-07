@@ -404,6 +404,7 @@ pfUI_translation["koKR"] = {
   ["Show Players Only"] = "플레이어만 보기",
   ["Show Procs as Buff Indicators"] = "무기활성화버프 버프표시기에 보기",
   ["Show Procs of all Classes"] = "모든 클래스 무기활성화 버프 보기",
+  ["Show PvP-Flag Indicator"] = nil,
   ["Show PvP Icon"] = "PvP아이콘 표시",
   ["Show Self in Group Frames"] = nil,
   ["Show Totems as Buff Indicators"] = nil,

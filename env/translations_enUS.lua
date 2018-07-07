@@ -404,6 +404,7 @@ pfUI_translation["enUS"] = {
   ["Show Players Only"] = nil,
   ["Show Procs as Buff Indicators"] = nil,
   ["Show Procs of all Classes"] = nil,
+  ["Show PvP-Flag Indicator"] = nil,
   ["Show PvP Icon"] = nil,
   ["Show Self in Group Frames"] = nil,
   ["Show Totems as Buff Indicators"] = nil,
