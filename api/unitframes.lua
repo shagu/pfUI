@@ -332,6 +332,14 @@ function pfUI.uf:UpdateConfig()
   f.lootIcon.texture:SetAllPoints(f.lootIcon)
   f.lootIcon:Hide()
 
+  f.pvpIcon:SetWidth(16)
+  f.pvpIcon:SetHeight(16)
+  f.pvpIcon:SetPoint("CENTER", 0, 0)
+  f.pvpIcon.texture:SetTexture("Interface\\AddOns\\pfUI\\img\\pvp")
+  f.pvpIcon.texture:SetAllPoints(f.pvpIcon)
+  f.pvpIcon.texture:SetVertexColor(1,1,1,.5)
+  f.pvpIcon:Hide()
+
   f.raidIcon:SetWidth(24)
   f.raidIcon:SetHeight(24)
   f.raidIcon:SetPoint("TOP", f, "TOP", 0, 6)
@@ -545,6 +553,7 @@ function pfUI.uf:EnableScripts()
   f:RegisterEvent("UNIT_FOCUS")
   f:RegisterEvent("UNIT_PORTRAIT_UPDATE")
   f:RegisterEvent("UNIT_MODEL_CHANGED")
+  f:RegisterEvent("UNIT_FACTION")
   f:RegisterEvent("UNIT_AURA") -- frame=buff, frame=debuff
   f:RegisterEvent("PLAYER_AURAS_CHANGED") -- label=player && frame=buff
   f:RegisterEvent("UNIT_INVENTORY_CHANGED") -- label=player && frame=buff
@@ -593,6 +602,8 @@ function pfUI.uf:EnableScripts()
         pfUI.uf:RefreshUnit(this, "portrait")
       elseif event == "UNIT_AURA" then
         pfUI.uf:RefreshUnit(this, "aura")
+      elseif event == "UNIT_FACTION" then
+        pfUI.uf:RefreshUnit(this, "pvp")
       elseif event == "UNIT_COMBAT" then
         CombatFeedback_OnCombatEvent(arg2, arg3, arg4, arg5)
       else
@@ -747,6 +758,9 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
 
   f.lootIcon = CreateFrame("Frame",nil, f.hp.bar)
   f.lootIcon.texture = f.lootIcon:CreateTexture(nil,"BACKGROUND")
+
+  f.pvpIcon = CreateFrame("Frame", nil, f.hp.bar)
+  f.pvpIcon.texture = f.pvpIcon:CreateTexture(nil,"BACKGROUND")
 
   f.raidIcon = CreateFrame("Frame", nil, f.hp.bar)
   f.raidIcon.texture = f.raidIcon:CreateTexture(nil,"ARTWORK")
@@ -1004,6 +1018,15 @@ function pfUI.uf:RefreshUnit(unit, component)
       unit.lootIcon:Show()
     else
       unit.lootIcon:Hide()
+    end
+  end
+
+  -- PvP Icon
+  if unit.pvpIcon and ( component == "all" or component == "pvp" ) then
+    if unit.config.showPVP == "1" and UnitIsPVP(unitstr) then
+      unit.pvpIcon:Show()
+    else
+      unit.pvpIcon:Hide()
     end
   end
 

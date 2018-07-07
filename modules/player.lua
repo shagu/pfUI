@@ -14,28 +14,6 @@ pfUI:RegisterModule("player", function ()
 
   pfUI.uf.player = pfUI.uf:CreateUnitFrame("Player", nil, C.unitframes.player)
 
-  pfUI.uf.player.pvpicon = CreateFrame("Frame", nil, pfUI.uf.player)
-  pfUI.uf.player.pvpicon:Hide()
-  pfUI.uf.player.pvpicon:RegisterEvent("UPDATE_FACTION")
-  pfUI.uf.player.pvpicon:RegisterEvent("UNIT_FACTION")
-  pfUI.uf.player.pvpicon:SetFrameStrata("HIGH")
-  pfUI.uf.player.pvpicon:SetWidth(16)
-  pfUI.uf.player.pvpicon:SetHeight(16)
-  pfUI.uf.player.pvpicon:SetAlpha(.25)
-  pfUI.uf.player.pvpicon:SetParent(pfUI.uf.player.hp.bar)
-  pfUI.uf.player.pvpicon:SetPoint("TOP", pfUI.uf.player.hp.bar, "TOP", 0, -5)
-  pfUI.uf.player.pvpicon.texture = pfUI.uf.player.pvpicon:CreateTexture(nil,"DIALOG")
-  pfUI.uf.player.pvpicon.texture:SetTexture("Interface\\AddOns\\pfUI\\img\\pvp")
-  pfUI.uf.player.pvpicon.texture:SetAllPoints(pfUI.uf.player.pvpicon)
-
-  pfUI.uf.player.pvpicon:SetScript("OnEvent", function()
-    if C.unitframes.player.showPVP == "1" and UnitIsPVP("player") then
-      pfUI.uf.player.pvpicon:Show()
-    else
-      pfUI.uf.player.pvpicon:Hide()
-    end
-  end)
-
   pfUI.uf.player:UpdateFrameSize()
   pfUI.uf.player:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOM", -75, 125)
   UpdateMovable(pfUI.uf.player)
@@ -50,9 +28,6 @@ pfUI:RegisterModule("player", function ()
       StaticPopup_Show("CONFIRM_RESET_INSTANCES")
     end
   end)
-
-  pfUI.uf.player:RegisterEvent("UPDATE_FACTION") -- pvp icon
-  pfUI.uf.player:RegisterEvent("UNIT_FACTION") -- pvp icon
 
   if C.unitframes.player.energy == "1" then
     pfUI.uf.player.power.tick = CreateFrame("Frame", nil, pfUI.uf.player.power.bar)

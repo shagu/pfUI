@@ -783,7 +783,6 @@ pfUI:RegisterModule("gui", function ()
       CreateConfig(nil, this, T["Range Check Interval"], C.unitframes, "rangechecki", "dropdown", pfUI.gui.dropdowns.uf_rangecheckinterval)
       CreateConfig(nil, this, T["Combopoint Size"], C.unitframes, "combosize")
       CreateConfig(nil, this, T["Abbreviate Numbers (4200 -> 4.2k)"], C.unitframes, "abbrevnum", "checkbox")
-      CreateConfig(nil, this, T["Show PvP Icon"], C.unitframes.player, "showPVP", "checkbox")
       CreateConfig(nil, this, T["Enable Energy Ticks"], C.unitframes.player, "energy", "checkbox")
       this.setup = true
     end
@@ -859,6 +858,7 @@ pfUI:RegisterModule("gui", function ()
 
           -- build config entries
           CreateConfig(update[c], this, T["Display Frame"] .. ": " .. t, C.unitframes[c], "visible", "checkbox")
+          CreateConfig(update[c], this, T["Show PvP-Flag Indicator"], C.unitframes[c], "showPVP", "checkbox")
           CreateConfig(update[c], this, T["Enable Mouseover Tooltip"], C.unitframes[c], "showtooltip", "checkbox")
           CreateConfig(update[c], this, T["Enable Clickcast"], C.unitframes[c], "clickcast", "checkbox")
           CreateConfig(update[c], this, T["Enable Range Fading"], C.unitframes[c], "faderange", "checkbox")
