@@ -41,13 +41,17 @@ pfUI:RegisterModule("eqcompare", function ()
   }
 
   HookScript(ShoppingTooltip1, "OnShow", function()
-    local targetData = pfUI.eqcompare:ExtractAttributes(ShoppingTooltip1)
-    pfUI.eqcompare:CompareAttributes(ShoppingTooltip1._data, targetData)
+    if C.tooltip.compare.basestats == "1" then
+      local targetData = pfUI.eqcompare:ExtractAttributes(ShoppingTooltip1)
+      pfUI.eqcompare:CompareAttributes(ShoppingTooltip1._data, targetData)
+    end
   end)
 
   HookScript(ShoppingTooltip2, "OnShow", function()
-    local targetData = pfUI.eqcompare:ExtractAttributes(ShoppingTooltip2)
-    pfUI.eqcompare:CompareAttributes(ShoppingTooltip2._data, targetData)
+    if C.tooltip.compare.basestats == "1" then
+      local targetData = pfUI.eqcompare:ExtractAttributes(ShoppingTooltip2)
+      pfUI.eqcompare:CompareAttributes(ShoppingTooltip2._data, targetData)
+    end
   end)
 
   pfUI.eqcompare = CreateFrame( "Frame" , "pfEQCompare", GameTooltip )

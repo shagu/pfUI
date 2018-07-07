@@ -1109,6 +1109,7 @@ pfUI:RegisterModule("gui", function ()
       CreateConfig(nil, this, T["Cursor Tooltip Offset"], C.tooltip, "cursoroffset")
       CreateConfig(nil, this, T["Enable Extended Guild Information"], C.tooltip, "extguild", "checkbox")
       CreateConfig(nil, this, T["Custom Transparency"], C.tooltip, "alpha")
+      CreateConfig(nil, this, T["Compare Item Base Stats"], C.tooltip.compare, "basestats", "checkbox")
       CreateConfig(nil, this, T["Always Show Item Comparison"], C.tooltip.compare, "showalways", "checkbox")
       CreateConfig(nil, this, T["Always Show Extended Vendor Values"], C.tooltip.vendor, "showalways", "checkbox")
       this.setup = true

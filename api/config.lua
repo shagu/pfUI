@@ -633,6 +633,7 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("tooltip",    nil,           "cursoroffset",     "20")
   pfUI:UpdateConfig("tooltip",    nil,           "extguild",         "1")
   pfUI:UpdateConfig("tooltip",    nil,           "alpha",            "0.8")
+  pfUI:UpdateConfig("tooltip",    "compare",     "basestats",        "1")
   pfUI:UpdateConfig("tooltip",    "compare",     "showalways",       "0")
   pfUI:UpdateConfig("tooltip",    "vendor",      "showalways",       "0")
 
