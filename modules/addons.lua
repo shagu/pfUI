@@ -101,7 +101,15 @@ pfUI:RegisterModule("addons", function ()
         end
       end
 
-      f.input:SetChecked(active)
+      if active then
+        if not f.input:GetChecked() then
+          f.input:Click()
+        end
+      else
+        if f.input:GetChecked() then
+          f.input:Click()
+        end
+      end
     end
   end
 
