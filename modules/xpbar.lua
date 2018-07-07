@@ -65,6 +65,7 @@ pfUI:RegisterModule("xpbar", function ()
       local remaining = xpmax - xp
       local remaining_perc = round(remaining / xpmax * 100)
       local exh_perc = 0
+      local xp_persec = ((xp - pfUI.xp.startxp)/(GetTime() - pfUI.xp.starttime))
       if GetXPExhaustion() then
         exh_perc = round(GetXPExhaustion() / xpmax * 100)
       end
@@ -85,6 +86,7 @@ pfUI:RegisterModule("xpbar", function ()
       GameTooltip:AddLine(" ")
       GameTooltip:AddDoubleLine(T["This Session"], "|cffffffff" .. UnitXP("player") - pfUI.xp.startxp)
       GameTooltip:AddDoubleLine(T["Average Per Hour"], "|cffffffff" .. floor(((UnitXP("player") - pfUI.xp.startxp) / (GetTime() - pfUI.xp.starttime)) * 60 * 60))
+      GameTooltip:AddDoubleLine(T["Time Remaining"], "|cffffffff" .. (xp_persec > 0 and SecondsToTime(remaining/xp_persec) or 0))
       GameTooltip:Show()
     end)
 
