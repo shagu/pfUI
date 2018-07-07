@@ -511,41 +511,66 @@ function pfUI.api.SkinCheckbox(frame)
   frame.backdrop:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -4, 4)
 end
 
-function pfUI.api.SkinDropDown(frame, offsetX, offsetY)
-  StripTextures(frame)
-  CreateBackdrop(frame, nil, nil, .0)
-  local offsetXBorder = -16
-  if offsetX then offsetXBorder = offsetX end
-  local offsetYBorder = -4
-  if offsetY then offsetYBorder = offsetY end
-  frame.backdrop:SetPoint("TOPLEFT", frame, "TOPLEFT", -offsetXBorder, offsetYBorder)
-  frame.backdrop:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", offsetXBorder, -offsetYBorder)
-  frame:SetHitRectInsets(-offsetXBorder, -offsetXBorder, -offsetYBorder, -offsetYBorder)
-  local text = _G[frame:GetName().."Text"]
-  text:SetPoint("TOPLEFT", frame.backdrop, "TOPLEFT")
-  text:SetPoint("BOTTOMRIGHT", frame.backdrop, "BOTTOMRIGHT")
-  local button = _G[frame:GetName().."Button"]
-  button:ClearAllPoints()
-  button:SetPoint("RIGHT", frame.backdrop, "RIGHT", -4, 0)
-  button:SetHeight(16)
-  button:SetWidth(16)
-  local arrow = button:CreateTexture()
-  arrow:SetTexture("Interface\\AddOns\\pfUI\\img\\down")
-  arrow:SetAllPoints(button)
-  button:SetNormalTexture(arrow)
-  local arrowHighlighted = button:CreateTexture()
-  arrowHighlighted:SetTexture("Interface\\AddOns\\pfUI\\img\\down")
-  arrowHighlighted:SetAllPoints(button)
-  button:SetHighlightTexture(arrowHighlighted)
-  local arrowPushed = button:CreateTexture()
-  arrowPushed:SetTexture("Interface\\AddOns\\pfUI\\img\\down")
-  arrowPushed:SetAllPoints(button)
-  button:SetPushedTexture(arrowPushed)
-  local arrowDisabled = button:CreateTexture()
-  arrowDisabled:SetTexture("Interface\\AddOns\\pfUI\\img\\down")
-  arrowDisabled:SetAllPoints(button)
-  arrowDisabled:SetVertexColor(0.2, 0.2, 0.2)
-  button:SetDisabledTexture(arrowDisabled)
+function pfUI.api.SkinDropDown(frame)
+  CreateBackdrop(frame)
+  frame.backdrop:SetPoint("TOPLEFT", 15, -1)
+  frame.backdrop:SetPoint("BOTTOMRIGHT", -15, 6)
+
+  for i,v in ipairs({frame:GetRegions()}) do
+    if v.SetTexture then v:Hide() end
+  end
+
+  local button = _G[frame:GetName() .. "Button"]
+  button:SetNormalTexture(nil)
+  button:SetPushedTexture(nil)
+  button:SetHighlightTexture(nil)
+  button:SetDisabledTexture(nil)
+
+  CreateBackdrop(button)
+  button.backdrop:ClearAllPoints()
+  button.backdrop:SetWidth(18)
+  button.backdrop:SetHeight(18)
+  button.backdrop:SetPoint("RIGHT", button, "RIGHT", -2, 0)
+
+  if not button.icon then
+    StripTextures(button)
+    button.icon = button:CreateTexture(nil, "ARTWORK")
+    button.icon:SetTexture("Interface\\AddOns\\pfUI\\img\\down")
+    button.icon:SetAlpha(.8)
+    SetAllPointsOffset(button.icon, button.backdrop, 5)
+  end
+
+  if not cr or not cg or not cb then
+    _, class = UnitClass("player")
+    local color = RAID_CLASS_COLORS[class]
+    cr, cg, cb = color.r , color.g, color.b
+  end
+
+  local funce = button:GetScript("OnEnter")
+  button:SetScript("OnEnter", function()
+    if funce then funce() end
+    this.backdrop:SetBackdropBorderColor(cr,cg,cb,1)
+  end)
+
+  local funcl = button:GetScript("OnLeave")
+  button:SetScript("OnLeave", function()
+    if funcl then funcl() end
+    this.backdrop:SetBackdropBorderColor(pfUI.api.GetStringColor(pfUI_config.appearance.border.color))
+  end)
+
+  local funcc = button:GetScript("OnClick")
+  button:SetScript("OnClick", function()
+    if funcc then funcc() end
+    UIDropDownMenu_JustifyText("RIGHT", this:GetParent())
+    DropDownList1:SetPoint("TOPLEFT", this:GetParent().backdrop, "BOTTOMLEFT", 0, -4)
+    DropDownList1:SetPoint("TOPRIGHT", this:GetParent().backdrop, "BOTTOMRIGHT", 0, -4)
+    CreateBackdrop(DropDownList1Backdrop, nil, true, .8)
+    DropDownList1.maxWidth = this:GetWidth()
+
+    for i=1, UIDROPDOWNMENU_MAXBUTTONS do
+      _G["DropDownList1Button" .. i]:SetWidth(this:GetWidth())
+    end
+  end)
 end
 
 function pfUI.api.SkinTab(frame, fixed)
