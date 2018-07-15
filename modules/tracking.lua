@@ -148,7 +148,7 @@ pfUI:RegisterModule("tracking", function ()
           end
         end
 
-        for _, texture in pairs(knownTrackingSpellTextures[playerClass]) do
+        for _, texture in pairs((knownTrackingSpellTextures[playerClass] or {})) do
           if strfind(spellTexture, texture) and not state.spells[texture] then
               state.spells[texture] = {
                 index = spellIndex,
