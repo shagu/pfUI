@@ -138,6 +138,7 @@ pfUI:RegisterModule("tracking", function ()
       for spellIndex = offset + 1, offset + numSpells do
         local spellTexture = GetSpellTexture(spellIndex, BOOKTYPE_SPELL)
 
+        -- scan for generic tracking icons
         for _, texture in pairs(knownTrackingSpellTextures["any"]) do
           if strfind(spellTexture, texture) and not state.spells[texture] then
             state.spells[texture] = {
@@ -148,13 +149,16 @@ pfUI:RegisterModule("tracking", function ()
           end
         end
 
-        for _, texture in pairs((knownTrackingSpellTextures[playerClass] or {})) do
-          if strfind(spellTexture, texture) and not state.spells[texture] then
-              state.spells[texture] = {
-                index = spellIndex,
-                name = GetSpellName(spellIndex, BOOKTYPE_SPELL),
-                texture = spellTexture
-              }
+        -- scan class specific tracking icons
+        if knownTrackingSpellTextures[playerClass] then
+          for _, texture in pairs(knownTrackingSpellTextures[playerClass]) do
+            if strfind(spellTexture, texture) and not state.spells[texture] then
+                state.spells[texture] = {
+                  index = spellIndex,
+                  name = GetSpellName(spellIndex, BOOKTYPE_SPELL),
+                  texture = spellTexture
+                }
+            end
           end
         end
       end
