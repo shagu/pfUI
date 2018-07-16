@@ -67,6 +67,10 @@ pfUI:RegisterModule("tracking", function ()
   pfUI.tracking:RegisterEvent("SPELLS_CHANGED")
   pfUI.tracking:RegisterEvent("UPDATE_SHAPESHIFT_FORMS")
   pfUI.tracking:SetScript("OnEvent", function()
+    if event == "SPELLS_CHANGED" then
+      state.spells = {}
+    end
+
     this:RefreshSpells()
     local texture = GetTrackingTexture()
     if texture and texture ~= state.texture then
