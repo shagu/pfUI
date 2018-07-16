@@ -82,6 +82,7 @@ pfUI:RegisterModule("nameplates", function ()
       this.nameplate = CreateFrame("Button", nil, this)
       this.nameplate.parent = this
       this.healthbar = this:GetChildren()
+      this.healthbar:SetScript("OnEnter", function() return nil end)
       this.border, this.glow, this.name, this.level, this.levelicon , this.raidicon = this:GetRegions()
       this.healthbar:SetParent(this.nameplate)
       this.border:SetParent(this.nameplate)
@@ -93,11 +94,13 @@ pfUI:RegisterModule("nameplates", function ()
     end
 
     -- init
-    this:SetFrameLevel(0)
-    this:EnableMouse(false)
+    if C.nameplates["legacy"] == "0" then
+      this:SetFrameLevel(0)
+      this:EnableMouse(false)
+    end
 
     -- enable plate overlap
-    if C.nameplates.overlap == "1" then
+    if C.nameplates.overlap == "1" and C.nameplates["legacy"] == "0" then
       this:SetWidth(1)
       this:SetHeight(1)
     else
@@ -109,13 +112,23 @@ pfUI:RegisterModule("nameplates", function ()
     this.nameplate:SetScale(UIParent:GetScale())
     this.nameplate:SetWidth(plate_width)
     this.nameplate:SetHeight(plate_height)
-    this.nameplate:SetPoint("TOP", this, "TOP", 0, -tonumber(C.nameplates.vpos))
+    if C.nameplates["legacy"] == "0" then
+      this.nameplate:SetPoint("TOP", this, "TOP", 0, -tonumber(C.nameplates.vpos))
+    else
+      this.nameplate:SetPoint("TOP", this, "TOP", 0, 0)
+    end
 
     -- add click handlers
     if C.nameplates["clickthrough"] == "0" then
-      this.nameplate:SetScript("OnClick", function() this.parent:Click() end)
+      if C.nameplates["legacy"] == "0" then
+        this.nameplate:SetScript("OnClick", function() this.parent:Click() end)
+      else
+        this.nameplate:EnableMouse(false)
+      end
+
       if C.nameplates["rightclick"] == "1" then
-        this.nameplate:SetScript("OnMouseDown", function()
+        local plate = C.nameplates["legacy"] == "0" and this.nameplate or this
+        plate:SetScript("OnMouseDown", function()
           if arg1 and arg1 == "RightButton" then
             MouselookStart()
 
@@ -127,6 +140,7 @@ pfUI:RegisterModule("nameplates", function ()
         end)
       end
     else
+      this:EnableMouse(false)
       this.nameplate:EnableMouse(false)
     end
 
