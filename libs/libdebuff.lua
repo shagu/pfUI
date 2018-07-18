@@ -12,12 +12,12 @@ setfenv(1, pfUI:GetEnvironment())
 --    start, duration, timeleft
 
 local libdebuff = CreateFrame("Frame", "pfdebuffsScanner", UIParent)
+local scanner = libtipscan:GetScanner("libdebuff")
 
 function libdebuff:GetDebuffName(unit, index)
-  libdebuff.scanner:SetOwner(UIParent, "ANCHOR_NONE")
-  libdebuff.scanner:SetUnitDebuff(unit, index)
-  local text = getglobal("pfDebuffNameScanTextLeft1")
-  return ( text ) and text:GetText() or ""
+  scanner:SetUnitDebuff(unit, index)
+  local text = scanner:Line(1)
+  return ( text ) and text or ""
 end
 
 function libdebuff:GetDebuffInfo(unit, effect)
@@ -140,8 +140,6 @@ function libdebuff:AddEffect(unit, unitlevel, effect, duration)
   end
 end
 
-libdebuff.scanner = CreateFrame('GameTooltip', "pfDebuffNameScan", UIParent, "GameTooltipTemplate")
-
 -- scan for debuff application
 libdebuff:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_HOSTILEPLAYER_DAMAGE")
 libdebuff:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_CREATURE_DAMAGE")
@@ -217,25 +215,21 @@ end)
 -- Gather Data by User Actions
 hooksecurefunc("CastSpell", function(id, bookType)
   local effect = GetSpellName(id, bookType)
-  local _, rank = GetSpellInfo(id, bookType)
+  local _, rank = libspell.GetSpellInfo(id, bookType)
   local duration = libdebuff:GetDuration(effect, rank)
   libdebuff:AddPending(UnitName("target"), UnitLevel("target"), effect, duration)
 end, true)
 
 hooksecurefunc("CastSpellByName", function(effect, target)
-  local _, rank = GetSpellInfo(effect)
+  local _, rank = libspell.GetSpellInfo(effect)
   local duration = libdebuff:GetDuration(effect, rank)
   libdebuff:AddPending(UnitName("target"), UnitLevel("target"), effect, duration)
 end, true)
 
-local scanner = CreateFrame("GameTooltip", "pfDebuffSpellScanner", nil, "GameTooltipTemplate")
-scanner:SetOwner(WorldFrame, "ANCHOR_NONE")
 hooksecurefunc("UseAction", function(slot, target, button)
   if GetActionText(slot) or not IsCurrentAction(slot) then return end
-  scanner:ClearLines()
   scanner:SetAction(slot)
-  local effect = pfDebuffSpellScannerTextLeft1:IsVisible() and pfDebuffSpellScannerTextLeft1:GetText()
-  local rank = pfDebuffSpellScannerTextRight1:IsVisible() and pfDebuffSpellScannerTextRight1:GetText()
+  local effect, rank = scanner:Line(1)
   local duration = libdebuff:GetDuration(effect, rank)
   libdebuff:AddPending(UnitName("target"), UnitLevel("target"), effect, duration)
 end, true)

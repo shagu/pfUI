@@ -1,8 +1,8 @@
 -- load pfUI environment
 setfenv(1, pfUI:GetEnvironment())
 
-local pfSpellScan = CreateFrame("GameTooltip", "pfSpellScan", UIParent, "GameTooltipTemplate")
-pfSpellScan:SetOwner(WorldFrame, "ANCHOR_NONE")
+local scanner = libtipscan:GetScanner("libspell")
+local libspell = {}
 
 -- [ GetSpellMaxRank ]
 -- Returns the maximum rank of a players spell.
@@ -10,7 +10,7 @@ pfSpellScan:SetOwner(WorldFrame, "ANCHOR_NONE")
 -- return:      [string],[number]   maximum rank in characters and the number
 --                                  e.g "Rank 1" and "1"
 local spellmaxrank = {}
-function pfUI.api.GetSpellMaxRank(name)
+function libspell.GetSpellMaxRank(name)
   if spellmaxrank[name] then return unpack(spellmaxrank[name]) end
 
   local rank = { 0, nil}
@@ -40,9 +40,9 @@ end
 -- 'rank'       [string]            rank to query (optional)
 -- return:      [number],[string]   spell index and spellbook id
 local spellindex = {}
-function pfUI.api.GetSpellIndex(name, rank)
+function libspell.GetSpellIndex(name, rank)
   if spellindex[name..(rank or "")] then return unpack(spellindex[name..(rank or "")]) end
-  if not rank then rank = GetSpellMaxRank(name) end
+  if not rank then rank = libspell.GetSpellMaxRank(name) end
 
   for i = 1, GetNumSpellTabs() do
     local _, _, offset, num = GetSpellTabInfo(i)
@@ -75,7 +75,7 @@ end
 --              [number]            Minimum range from the target required to cast the spell
 --              [number]            Maximum range from the target at which you can cast the spell
 local spellinfo = {}
-function pfUI.api.GetSpellInfo(index, bookType)
+function libspell.GetSpellInfo(index, bookType)
   if spellinfo[index] then return unpack(spellinfo[index]) end
 
   local name, rank, id
@@ -87,11 +87,11 @@ function pfUI.api.GetSpellInfo(index, bookType)
   if type(index) == "string" then
     local _, _, sname, srank = string.find(index, '(.+)%((.+)%)')
     name = sname or index
-    rank = srank or GetSpellMaxRank(name)
-    id, bookType = GetSpellIndex(name, rank)
+    rank = srank or libspell.GetSpellMaxRank(name)
+    id, bookType = libspell.GetSpellIndex(name, rank)
   else
     name, rank = GetSpellName(index, bookType)
-    id, bookType = GetSpellIndex(name, rank)
+    id, bookType = libspell.GetSpellIndex(name, rank)
   end
 
   if name and id then
@@ -99,29 +99,19 @@ function pfUI.api.GetSpellInfo(index, bookType)
   end
 
   if id then
-    pfSpellScan:ClearLines()
-    pfSpellScan:SetSpell(id, bookType)
-
-    for i=1, 4 do
-      for _, text in pairs({_G["pfSpellScanTextLeft"..i], _G["pfSpellScanTextRight"..i]}) do
-        if text and text:IsVisible() and text:GetText() then
-          local _, _, sec = string.find(text:GetText(), gsub(SPELL_CAST_TIME_SEC, "%%.3g", "%(.+%)"))
-          local _, _, min = string.find(text:GetText(), gsub(SPELL_CAST_TIME_MIN, "%%.3g", "%(.+%)"))
-          local _, _, range = string.find(text:GetText(), gsub(SPELL_RANGE, "%%s", "%(.+%)"))
-
-          castingTime = (tonumber(sec) or tonumber(min) or 0) * 1000
-
-          if range then
-            local _, _, min, max = string.find(range, "(.+)-(.+)")
-            if min and max then
-              minRange = tonumber(min)
-              maxRange = tonumber(max)
-            else
-              minRange = 0
-              maxRange = tonumber(range)
-            end
-          end
-        end
+    scanner:SetSpell(id, bookType)
+    local _,sec = scanner:Find(gsub(SPELL_CAST_TIME_SEC, "%%.3g", "%(.+%)"))
+    local _,min = scanner:Find(gsub(SPELL_CAST_TIME_MIN, "%%.3g", "%(.+%)"))
+    local _,range = scanner:Find(gsub(SPELL_RANGE, "%%s", "%(.+%)"))
+    castingTime = (tonumber(sec) or tonumber(min) or 0) * 1000
+    if range then
+      local _, _, min, max = string.find(range, "(.+)-(.+)")
+      if min and max then
+        minRange = tonumber(min)
+        maxRange = tonumber(max)
+      else
+        minRange = 0
+        maxRange = tonumber(range)
       end
     end
   end
@@ -129,3 +119,6 @@ function pfUI.api.GetSpellInfo(index, bookType)
   spellinfo[index] = { name, rank, icon, castingTime, minRange, maxRange }
   return name, rank, icon, castingTime, minRange, maxRange
 end
+
+-- add libspell to pfUI API
+pfUI.api.libspell = libspell

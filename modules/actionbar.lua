@@ -72,8 +72,7 @@ pfUI:RegisterModule("actionbar", function ()
 
   -- reagent counter
   local reagentslots = { }
-  local reagentscan = CreateFrame("GameTooltip", "pfReagentScanner", UIParent, "GameTooltipTemplate")
-  reagentscan:SetOwner(UIParent, "ANCHOR_NONE")
+  local scanner = libtipscan:GetScanner("actionbar")
 
   hooksecurefunc("ActionButton_OnEvent", function()
     if event == "BAG_UPDATE" and arg1 < 5 then
@@ -81,25 +80,18 @@ pfUI:RegisterModule("actionbar", function ()
     end
   end)
 
+  local reagent_capture = SPELL_REAGENTS.."(.+)"
   local oldIsConsumableAction = IsConsumableAction
   _G.IsConsumableAction = function(slot)
     if oldIsConsumableAction(slot) then return true end
     if this and this.GetParent and ActionButton_GetPagedID(this) == slot then
       reagentslots[slot] = nil
-      reagentscan:SetAction(slot)
-      if (reagentscan:NumLines() ~=0) then
-        for i=1,reagentscan:NumLines() do
-          local line = getglobal("pfReagentScannerTextLeft" .. i)
-          if line then
-            line = line:GetText()
-            local _, start = strfind(line,SPELL_REAGENTS,1)
-            if start then
-              reagentslots[slot] = strsub(line,start+1)
-              this:RegisterEvent("BAG_UPDATE")
-              return true
-            end
-          end
-        end
+      scanner:SetAction(slot)
+      local _, reagents = scanner:Find(reagent_capture)
+      if reagents then
+        reagentslots[slot] = reagents
+        this:RegisterEvent("BAG_UPDATE")
+        return true        
       end
 
       this:UnregisterEvent("BAG_UPDATE")

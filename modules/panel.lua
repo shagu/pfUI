@@ -318,7 +318,8 @@ pfUI:RegisterModule("panel", function()
       widget.slotnames = { "Head", "Shoulder", "Chest", "Wrist",
         "Hands", "Waist", "Legs", "Feet", "MainHand", "SecondaryHand", "Ranged", }
       widget.totalRep = 0
-      widget.scantip = CreateFrame('GameTooltip', "pfRepairToolTip", this, "GameTooltipTemplate")
+      widget.scantip = libtipscan:GetScanner("panel")
+      widget.duracapture = string.gsub(DURABILITY_TEMPLATE, "%%[^%s]+", "(.+)")
       widget.Click = function() ToggleCharacter("PaperDollFrame") end
       widget.Tooltip = function()
         if widget.totalRep > 0 then
@@ -339,28 +340,17 @@ pfUI:RegisterModule("panel", function()
         wipe(widget.itemLines)
         for i,slotName in pairs(widget.slotnames) do
           local id, _ = GetInventorySlotInfo(slotName.. "Slot")
-          pfRepairToolTip:Hide()
-          pfRepairToolTip:SetOwner(this, "ANCHOR_LEFT")
-          local hasItem, _, repCost = pfRepairToolTip:SetInventoryItem("player", id)
-          if (not hasItem) then
-            pfRepairToolTip:ClearLines()
-          else
+          local hasItem, _, repCost = widget.scantip:SetInventoryItem("player", id)
+          if (hasItem) then
             widget.totalRep = widget.totalRep + repCost
-            for i=1, 32, 1 do
-              local tmpText = _G["pfRepairToolTipTextLeft"..i]
-              if (tmpText ~= nil) and (tmpText:GetText()) then
-                local searchstr = string.gsub(DURABILITY_TEMPLATE, "%%[^%s]+", "(.+)")
-                local _, _, lval, rval = string.find(tmpText:GetText(), searchstr, 1)
-                if (lval and rval) then
-                  repPercent = math.floor(lval / rval * 100)
-                  if repPercent < 100 then
-                    local link = GetInventoryItemLink("player",id)
-                    local r,g,b,hex = GetColorGradient(repPercent/100, 1,0,0, 1,1,0, 0,1,0) -- red to green through yellow
-                    local cPercent = string.format("%s%s%%|r",hex,repPercent)
-                    widget.itemLines[table.getn(widget.itemLines)+1]={link, cPercent}
-                  end
-                  break
-                end
+            local line, lval, rval = widget.scantip:Find(widget.duracapture)
+            if (lval and rval) then
+              repPercent = math.floor(lval / rval * 100)
+              if repPercent < 100 then
+                local link = GetInventoryItemLink("player",id)
+                local r,g,b,hex = GetColorGradient(repPercent/100, 1,0,0, 1,1,0, 0,1,0) -- red to green through yellow
+                local cPercent = string.format("%s%s%%|r",hex,repPercent)
+                widget.itemLines[table.getn(widget.itemLines)+1]={link, cPercent}
               end
             end
           end
@@ -368,7 +358,6 @@ pfUI:RegisterModule("panel", function()
             lowestPercent = repPercent
           end
         end
-        pfRepairToolTip:Hide()
 
         pfUI.panel:OutputPanel("durability", lowestPercent .. "% " .. ARMOR, widget.Tooltip, widget.Click)
       end)

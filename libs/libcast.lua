@@ -289,13 +289,11 @@ hooksecurefunc("CastSpellByName", function(spellName, target)
   end
 end, true)
 
-local scanner = CreateFrame("GameTooltip", "pfSpellScanner", nil, "GameTooltipTemplate")
-scanner:SetOwner(WorldFrame, "ANCHOR_NONE")
+local scanner = libtipscan:GetScanner("libcast")
 hooksecurefunc("UseAction", function(slot, target, button)
   if GetActionText(slot) or not IsCurrentAction(slot) then return end
-  scanner:ClearLines()
   scanner:SetAction(slot)
-  local spellName = pfSpellScannerTextLeft1:GetText()
+  local spellName = scanner:Line(1)
   CastCustom(spellName)
 end, true)
 

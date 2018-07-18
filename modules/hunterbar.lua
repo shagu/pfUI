@@ -3,8 +3,7 @@ pfUI:RegisterModule("hunterbar", function ()
   if class ~= "HUNTER" or C.bars.hunterbar == "0" then return end
 
   pfUI.hunterbar = CreateFrame("Frame", "pfHunterBar", UIParent)
-  pfUI.hunterbar.scanner = CreateFrame("GameTooltip", "pfHunterBarScanner", UIParent, "GameTooltipTemplate")
-  pfUI.hunterbar.scanner:SetOwner(pfUI.hunterbar, "ANCHOR_NONE")
+  local scanner = libtipscan:GetScanner("hunterbar")
 
   pfUI.hunterbar.melee = nil
   pfUI.hunterbar.ranged = nil
@@ -19,13 +18,13 @@ pfUI:RegisterModule("hunterbar", function ()
     for i=1,120 do
       if pfUI.hunterbar.melee and pfUI.hunterbar.ranged then return end
 
-      pfUI.hunterbar.scanner:ClearLines()
-      pfUI.hunterbar.scanner:SetAction(i)
+      scanner:SetAction(i)
 
-      if pfHunterBarScannerTextLeft1 and pfHunterBarScannerTextLeft1:GetText() then
-        if pfHunterBarScannerTextLeft1:GetText() == L["hunterpaging"]["MELEE"] then
+      local left = scanner:Line(1)
+      if left then
+        if left == L["hunterpaging"]["MELEE"] then
           pfUI.hunterbar.melee = i
-        elseif pfHunterBarScannerTextLeft1:GetText() == L["hunterpaging"]["RANGED"] then
+        elseif left == L["hunterpaging"]["RANGED"] then
           pfUI.hunterbar.ranged = i
         end
       end

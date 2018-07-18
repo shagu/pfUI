@@ -1,18 +1,17 @@
 pfUI:RegisterModule("feigndeath", function ()
   local cache = { }
-  local healthscan = CreateFrame("GameTooltip", "pfHpScanner", UIParent, "GameTooltipTemplate")
-  healthscan:SetOwner(healthscan,"ANCHOR_NONE")
-  local healthbar = healthscan:GetChildren()
+  local scanner = libtipscan:GetScanner("feigndeath")
+  local healthbar = scanner:GetChildren()
 
   local cache_update = CreateFrame("Frame")
   cache_update:RegisterEvent("UNIT_HEALTH")
   cache_update:RegisterEvent("PLAYER_TARGET_CHANGED")
   cache_update:SetScript("OnEvent", function()
     if event == "PLAYER_TARGET_CHANGED" and UnitIsDead("target") then
-      healthscan:SetUnit("target")
+      scanner:SetUnit("target")
       cache[UnitName("target")] = healthbar:GetValue()
     elseif event == "UNIT_HEALTH" and UnitIsDead(arg1) and UnitName(arg1) then
-      healthscan:SetUnit(arg1)
+      scanner:SetUnit(arg1)
       cache[UnitName(arg1)] = healthbar:GetValue()
     elseif event == "UNIT_HEALTH" and UnitName(arg1) then
       cache[UnitName(arg1)] = nil

@@ -34,12 +34,13 @@ env\profiles.lua
 
 # api
 api\api.lua
-api\spell.lua
 api\config.lua
 api\ui-widgets.lua
 api\unitframes.lua
 
 # libs
+libs\libtipscan.lua
+libs\libspell.lua
 libs\libcast.lua
 libs\libdebuff.lua
 libs\librange.lua

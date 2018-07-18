@@ -586,15 +586,6 @@ pfUI:RegisterModule("nameplates", function ()
     end
   end
 
-  -- debuff detection
-  local pfNameplateDebuffNameScan = CreateFrame('GameTooltip', "pfNameplateDebuffNameScan", UIParent, "GameTooltipTemplate")
-  local function GetDebuffName(unit, index)
-    pfNameplateDebuffNameScan:SetOwner(UIParent, "ANCHOR_NONE")
-    pfNameplateDebuffNameScan:SetUnitDebuff(unit, index)
-    local text = getglobal("pfNameplateDebuffNameScanTextLeft1")
-    return ( text ) and text:GetText() or ""
-  end
-
   pfUI.nameplates:RegisterEvent("PLAYER_TARGET_CHANGED")
   pfUI.nameplates:RegisterEvent("UNIT_AURA")
   pfUI.nameplates:SetScript("OnEvent", function()
