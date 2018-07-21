@@ -1628,9 +1628,9 @@ function pfUI.uf:SetupBuffFilter()
 
     -- Totemic Power (known issue: one conflicts with Blessed Sunfruit buff)
     table.insert(pfUI.uf.buffs, "interface\\icons\\spell_holy_spiritualguidence")
-	  table.insert(pfUI.uf.buffs, "interface\\icons\\spell_holy_devotion")
-	  table.insert(pfUI.uf.buffs, "interface\\icons\\spell_holy_holynova")
-	  table.insert(pfUI.uf.buffs, "interface\\icons\\spell_magic_magearmor")
+    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_holy_devotion")
+    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_holy_holynova")
+    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_magic_magearmor")
   end
 
   if (pfUI_config.unitframes.all_procs == "1" or myclass == "SHAMAN") and pfUI_config.unitframes.show_totems == "1" then
