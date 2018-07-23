@@ -306,6 +306,7 @@ pfUI_translation["zhCN"] = {
   ["Modules"] = "模块",
   ["Money"] = "金钱",
   ["Mousewheel Scroll Speed"] = "鼠标滚轮翻滚速度",
+  ["MrPlow"] = nil,
   ["ms"] = "毫秒",
   ["Nameplates"] = "姓名板",
   ["Nameplate Width"] = "姓名板宽度",

@@ -306,6 +306,7 @@ pfUI_translation["deDE"] = {
   ["Modules"] = nil,
   ["Money"] = nil,
   ["Mousewheel Scroll Speed"] = nil,
+  ["MrPlow"] = nil,
   ["ms"] = nil,
   ["Name"] = nil,
   ["Nameplates"] = nil,

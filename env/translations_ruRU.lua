@@ -306,6 +306,7 @@ pfUI_translation["ruRU"] = {
   ["Modules"] = "Модули",
   ["Money"] = "Деньги",
   ["Mousewheel Scroll Speed"] = "Скорость прокрутки колесика мыши",
+  ["MrPlow"] = nil,
   ["ms"] = "мс",
   ["Nameplates"] = "Индикаторы здоровья",
   ["Nameplate Width"] = "Ширина индикатора здоровья",

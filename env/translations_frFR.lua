@@ -306,6 +306,7 @@ pfUI_translation["frFR"] = {
   ["Modules"] = "Modules",
   ["Money"] = "Argent",
   ["Mousewheel Scroll Speed"] = nil,
+  ["MrPlow"] = nil,
   ["ms"] = nil,
   ["Name"] = "Nom",
   ["Nameplates"] = "Barres de vie flottantes",

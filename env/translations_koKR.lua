@@ -306,6 +306,7 @@ pfUI_translation["koKR"] = {
   ["Modules"] = "모듈",
   ["Money"] = "골드",
   ["Mousewheel Scroll Speed"] = nil,
+  ["MrPlow"] = nil,
   ["ms"] = "핑",
   ["Name"] = "이름",
   ["Nameplates"] = "상바",

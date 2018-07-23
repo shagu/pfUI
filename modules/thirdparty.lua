@@ -466,6 +466,7 @@ pfUI:RegisterModule("thirdparty", function ()
   end)
 
   AddIntegration("SortBags", function()
+    if C.thirdparty.mrplow.enable == "1" then return end
     if C.thirdparty.sortbags.enable == "0" then return end
 
     pfUI.thirdparty.sortbags = CreateFrame("Frame", nil)
@@ -545,6 +546,95 @@ pfUI:RegisterModule("thirdparty", function ()
 
         pfUI.bag.left.sort:SetScript("OnClick", function()
           SortBankBags()
+        end)
+      end
+    end)
+  end)
+
+  AddIntegration("MrPlow", function()
+    if C.thirdparty.sortbags.enable == "1" then return end
+    if C.thirdparty.mrplow.enable == "0" then return end
+
+    local MrPlowL = AceLibrary and AceLibrary("AceLocale-2.2"):new("MrPlow")
+    if not (MrPlowL and MrPlowL["Bank"]) then return end
+
+    pfUI.thirdparty.mrplow = CreateFrame("Frame", nil)
+    pfUI.thirdparty.mrplow:RegisterEvent("BANKFRAME_OPEN")
+    pfUI.thirdparty.mrplow:RegisterEvent("PLAYER_ENTERING_WORLD")
+    pfUI.thirdparty.mrplow:SetScript("OnEvent", function()
+      -- make sure bagframe was already created
+      if not pfUI.bag or not pfUI.bag.right then return end
+      pfUI.thirdparty.mrplow:UnregisterAllEvents()
+
+      -- draw the button
+      if not pfUI.bag.right.sort then
+        pfUI.bag.right.sort = CreateFrame("Button", "pfBagSlotSort", UIParent)
+        pfUI.bag.right.sort:SetParent(pfUI.bag.right)
+        pfUI.bag.right.sort:SetPoint("TOPRIGHT", -C.appearance.border.default*14 - 45, -C.appearance.border.default)
+        pfUI.bag.right.sort:SetPoint("TOPRIGHT", pfUI.bag.right.keys, "TOPLEFT", -C.appearance.border.default*3, 0)
+
+        CreateBackdrop(pfUI.bag.right.sort)
+        pfUI.bag.right.sort:SetHeight(12)
+        pfUI.bag.right.sort:SetWidth(12)
+        pfUI.bag.right.sort:SetTextColor(1,1,.25,1)
+        pfUI.bag.right.sort:SetFont(pfUI.font_default, C.global.font_size, "OUTLINE")
+        pfUI.bag.right.sort.texture = pfUI.bag.right.sort:CreateTexture("pfBagArrowUp")
+        pfUI.bag.right.sort.texture:SetTexture("Interface\\AddOns\\pfUI\\img\\sort")
+        pfUI.bag.right.sort.texture:ClearAllPoints()
+        pfUI.bag.right.sort.texture:SetPoint("TOPLEFT", pfUI.bag.right.sort, "TOPLEFT", 2, -2)
+        pfUI.bag.right.sort.texture:SetPoint("BOTTOMRIGHT", pfUI.bag.right.sort, "BOTTOMRIGHT", -2, 2)
+        pfUI.bag.right.sort.texture:SetVertexColor(.25,.25,.25,1)
+
+        pfUI.bag.right.sort:SetScript("OnEnter", function ()
+          pfUI.bag.right.sort.backdrop:SetBackdropBorderColor(1,1,.25,1)
+          pfUI.bag.right.sort.texture:SetVertexColor(1,1,.25,1)
+        end)
+
+        pfUI.bag.right.sort:SetScript("OnLeave", function ()
+          CreateBackdrop(pfUI.bag.right.sort)
+          pfUI.bag.right.sort.texture:SetVertexColor(.25,.25,.25,1)
+        end)
+
+        pfUI.bag.right.sort:SetScript("OnClick", function()
+          MrPlow:Works()
+        end)
+
+        pfUI.bag.right.search:ClearAllPoints()
+        pfUI.bag.right.search:SetPoint("TOPLEFT", pfUI.bag.right, "TOPLEFT", C.appearance.border.default, -C.appearance.border.default)
+        pfUI.bag.right.search:SetPoint("TOPRIGHT", pfUI.bag.right.sort, "TOPLEFT", -C.appearance.border.default*3, -C.appearance.border.default)
+      end
+
+      -- draw the button
+      if not pfUI.bag.left.sort then
+        pfUI.bag.left.sort = CreateFrame("Button", "pfBankSlotSort", UIParent)
+        pfUI.bag.left.sort:SetParent(pfUI.bag.left)
+        pfUI.bag.left.sort:SetPoint("TOPRIGHT", -C.appearance.border.default*14 - 45, -C.appearance.border.default)
+        pfUI.bag.left.sort:SetPoint("TOPRIGHT", pfUI.bag.left.bags, "TOPLEFT", -C.appearance.border.default*3, 0)
+
+        CreateBackdrop(pfUI.bag.left.sort)
+        pfUI.bag.left.sort:SetHeight(12)
+        pfUI.bag.left.sort:SetWidth(12)
+        pfUI.bag.left.sort:SetTextColor(1,1,.25,1)
+        pfUI.bag.left.sort:SetFont(pfUI.font_default, C.global.font_size, "OUTLINE")
+        pfUI.bag.left.sort.texture = pfUI.bag.left.sort:CreateTexture("pfBagArrowUp")
+        pfUI.bag.left.sort.texture:SetTexture("Interface\\AddOns\\pfUI\\img\\sort")
+        pfUI.bag.left.sort.texture:ClearAllPoints()
+        pfUI.bag.left.sort.texture:SetPoint("TOPLEFT", pfUI.bag.left.sort, "TOPLEFT", 2, -2)
+        pfUI.bag.left.sort.texture:SetPoint("BOTTOMRIGHT", pfUI.bag.left.sort, "BOTTOMRIGHT", -2, 2)
+        pfUI.bag.left.sort.texture:SetVertexColor(.25,.25,.25,1)
+
+        pfUI.bag.left.sort:SetScript("OnEnter", function ()
+          pfUI.bag.left.sort.backdrop:SetBackdropBorderColor(1,1,.25,1)
+          pfUI.bag.left.sort.texture:SetVertexColor(1,1,.25,1)
+        end)
+
+        pfUI.bag.left.sort:SetScript("OnLeave", function ()
+          CreateBackdrop(pfUI.bag.left.sort)
+          pfUI.bag.left.sort.texture:SetVertexColor(.25,.25,.25,1)
+        end)
+
+        pfUI.bag.left.sort:SetScript("OnClick", function()
+          MrPlow:Works(MrPlowL["Bank"])
         end)
       end
     end)

@@ -306,6 +306,7 @@ pfUI_translation["zhTW"] = {
   ["Modules"] = "高級選項",
   ["Money"] = "金錢",
   ["Mousewheel Scroll Speed"] = nil,
+  ["MrPlow"] = nil,
   ["ms"] = "毫秒",
   ["Nameplates"] = "姓名板",
   ["Nameplate Width"] = "姓名板高度",

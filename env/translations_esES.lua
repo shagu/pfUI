@@ -306,6 +306,7 @@ pfUI_translation["esES"] = {
   ["Modules"] = "Módulos",
   ["Money"] = "Moneda",
   ["Mousewheel Scroll Speed"] = "Velocidad de Rueda",
+  ["MrPlow"] = nil,
   ["ms"] = "ms",
   ["Name"] = "Nombre",
   ["Nameplates"] = "Placas Indentificativas",
