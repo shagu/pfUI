@@ -13,7 +13,7 @@ pfUI:RegisterSkin("Character", function ()
   do -- character frame
     local CharacterFrame = _G["PaperDollFrame"]
     StripTextures(CharacterFrame)
-    CreateBackdrop(CharacterFrame)
+    CreateBackdrop(CharacterFrame, nil, nil, .75)
     CharacterFrame.backdrop:SetPoint("TOPLEFT", 10, -12)
     CharacterFrame.backdrop:SetPoint("BOTTOMRIGHT", -32, 76)
     SkinCloseButton(CharacterFrameCloseButton, CharacterFrame, -37, -17)
@@ -141,7 +141,8 @@ pfUI:RegisterSkin("Character", function ()
   end
 
   do -- pet frame
-    CreateBackdrop(PetPaperDollFrame)
+    CreateBackdrop(PetPaperDollFrame, nil, nil, .75)
+
     PetPaperDollFrame.backdrop:SetPoint("TOPLEFT", 10, -12)
     PetPaperDollFrame.backdrop:SetPoint("BOTTOMRIGHT", -32, 76)
     StripTextures(PetPaperDollFrame)
@@ -189,7 +190,7 @@ pfUI:RegisterSkin("Character", function ()
   end
 
   do -- reputation frame
-    CreateBackdrop(ReputationFrame)
+    CreateBackdrop(ReputationFrame, nil, nil, .75)
     ReputationFrame.backdrop:SetPoint("TOPLEFT", 10, -12)
     ReputationFrame.backdrop:SetPoint("BOTTOMRIGHT", -32, 76)
     StripTextures(ReputationFrame)
@@ -253,7 +254,7 @@ pfUI:RegisterSkin("Character", function ()
 
   do -- skills frame
     StripTextures(SkillFrame)
-    CreateBackdrop(SkillFrame)
+    CreateBackdrop(SkillFrame, nil, nil, .75)
     SkillFrame.backdrop:SetPoint("TOPLEFT", 10, -12)
     SkillFrame.backdrop:SetPoint("BOTTOMRIGHT", -32, 76)
     SkillFrameCancelButton:Hide()
@@ -353,7 +354,7 @@ pfUI:RegisterSkin("Character", function ()
   end
 
   do -- honor tab
-    CreateBackdrop(HonorFrame)
+    CreateBackdrop(HonorFrame, nil, nil, .75)
     HonorFrame.backdrop:SetPoint("TOPLEFT", 10, -12)
     HonorFrame.backdrop:SetPoint("BOTTOMRIGHT", -32, 76)
     StripTextures(HonorFrame)
