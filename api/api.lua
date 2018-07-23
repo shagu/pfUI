@@ -646,7 +646,7 @@ function pfUI.api.CreateBackdrop(f, inset, legacy, transp, backdropSetting)
   local br, bg, bb, ba = pfUI.api.GetStringColor(pfUI_config.appearance.border.background)
   local er, eg, eb, ea = pfUI.api.GetStringColor(pfUI_config.appearance.border.color)
 
-  if transp then ba = transp end
+  if transp and transp < tonumber(ba) then ba = transp end
 
   -- use legacy backdrop handling
   if legacy then
