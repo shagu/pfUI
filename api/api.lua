@@ -358,6 +358,8 @@ end
 -- return:      [string]        a colorized string which is split into
 --                              gold,silver and copper values.
 function pfUI.api.CreateGoldString(money)
+  if type(money) ~= "number" then return "-" end
+
   local gold = floor(money/ 100 / 100)
   local silver = floor(mod((money/100),100))
   local copper = floor(mod(money,100))
