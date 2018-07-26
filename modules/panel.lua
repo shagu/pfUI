@@ -11,7 +11,7 @@ pfUI:RegisterModule("panel", function()
   do -- Widgets
     do -- Clock & Timer
       local widget = CreateFrame("Frame", "pfPanelWidgetClock",UIParent)
-      widget.tooltip = function()
+      widget.Tooltip = function()
         GameTooltip:ClearLines()
         GameTooltip_SetDefaultAnchor(GameTooltip, this)
         local h, m = GetGameTime()
@@ -37,7 +37,7 @@ pfUI:RegisterModule("panel", function()
         GameTooltip:AddDoubleLine(T["Right Click"], "|cffffffff" .. T["Reset Timer"])
         GameTooltip:Show()
       end
-      widget.click = function()
+      widget.Click = function()
         this:RegisterForClicks("LeftButtonUp", "RightButtonUp")
         if arg1 == "LeftButton" then
           if widget.timerFrame:IsShown() then
@@ -53,9 +53,9 @@ pfUI:RegisterModule("panel", function()
         if ( this.tick or 1) > GetTime() then return else this.tick = GetTime() + 1 end
 
         if C.global.twentyfour == "0" then
-          pfUI.panel:OutputPanel("time", date("%I:%M:%S %p"), widget.tooltip, widget.click)
+          pfUI.panel:OutputPanel("time", date("%I:%M:%S %p"), widget.Tooltip, widget.Click)
         else
-          pfUI.panel:OutputPanel("time", date("%H:%M:%S"), widget.tooltip, widget.click)
+          pfUI.panel:OutputPanel("time", date("%H:%M:%S"), widget.Tooltip, widget.Click)
         end
       end)
 
@@ -113,7 +113,7 @@ pfUI:RegisterModule("panel", function()
 
     do -- FPS & Lag
       local widget = CreateFrame("Frame", "pfPanelWidgetLag", UIParent)
-      widget.tooltip = function()
+      widget.Tooltip = function()
         local active = 0
         GameTooltip:ClearLines()
         GameTooltip_SetDefaultAnchor(GameTooltip, this)
@@ -144,7 +144,7 @@ pfUI:RegisterModule("panel", function()
         GameTooltip:AddDoubleLine(T["UI-Scale"], "|cffffffff" .. round(UIParent:GetEffectiveScale(),2))
         GameTooltip:Show()
       end
-      widget.click = function()
+      widget.Click = function()
         if pfUI.addons:IsShown() then
           pfUI.addons:Hide()
         else
@@ -155,7 +155,7 @@ pfUI:RegisterModule("panel", function()
         if ( this.tick or 1) > GetTime() then return else this.tick = GetTime() + 1 end
 
         local _, _, lag = GetNetStats()
-        pfUI.panel:OutputPanel("fps", floor(GetFramerate()) .. " " .. T["fps"] .. " & " .. lag .. " " .. T["ms"], widget.tooltip, widget.click)
+        pfUI.panel:OutputPanel("fps", floor(GetFramerate()) .. " " .. T["fps"] .. " & " .. lag .. " " .. T["ms"], widget.Tooltip, widget.Click)
       end)
     end
 
@@ -222,7 +222,7 @@ pfUI:RegisterModule("panel", function()
       local widget = CreateFrame("Frame", "pfPanelWidgetGold", UIParent)
       widget:RegisterEvent("PLAYER_ENTERING_WORLD")
       widget:RegisterEvent("PLAYER_MONEY")
-      widget.tooltip = function()
+      widget.Tooltip = function()
         local gold = floor(GetMoney()/ 10000)
         local silver = floor(mod((GetMoney()/100),100))
         local copper = floor(mod(GetMoney(),100))
@@ -264,7 +264,7 @@ pfUI:RegisterModule("panel", function()
         pfUI_gold[realm] = pfUI_gold[realm] or {}
         pfUI_gold[realm][unit] = money
 
-        pfUI.panel:OutputPanel("gold", gold .. "|cffffd700g|r " .. silver .. "|cffc7c7cfs|r " .. copper .. "|cffeda55fc|r", widget.tooltip, OpenAllBags)
+        pfUI.panel:OutputPanel("gold", gold .. "|cffffd700g|r " .. silver .. "|cffc7c7cfs|r " .. copper .. "|cffeda55fc|r", widget.Tooltip, OpenAllBags)
       end)
     end
 
@@ -272,7 +272,7 @@ pfUI:RegisterModule("panel", function()
       local widget = CreateFrame("Frame", "pfPanelWidgetFriends", UIParent)
       widget:RegisterEvent("PLAYER_ENTERING_WORLD")
       widget:RegisterEvent("FRIENDLIST_UPDATE")
-      widget.click = function() ToggleFriendsFrame(1) end
+      widget.Click = function() ToggleFriendsFrame(1) end
       widget:SetScript("OnEvent", function()
         local online = 0
         local all = GetNumFriends()
@@ -283,7 +283,7 @@ pfUI:RegisterModule("panel", function()
           end
         end
 
-        pfUI.panel:OutputPanel("friends", FRIENDS .. ": " .. online, nil, widget.click)
+        pfUI.panel:OutputPanel("friends", FRIENDS .. ": " .. online, nil, widget.Click)
       end)
     end
 
@@ -292,15 +292,15 @@ pfUI:RegisterModule("panel", function()
       widget:RegisterEvent("PLAYER_ENTERING_WORLD")
       widget:RegisterEvent("GUILD_ROSTER_UPDATE")
       widget:RegisterEvent("PLAYER_GUILD_UPDATE")
-      widget.click = function() ToggleFriendsFrame(3) end
+      widget.Click = function() ToggleFriendsFrame(3) end
       widget:SetScript("OnEvent", function()
         GuildRoster()
         local online = GetNumGuildMembers()
         local all = GetNumGuildMembers(true)
         if not GetGuildInfo("player") then
-          pfUI.panel:OutputPanel("guild", GUILD .. ": " .. NOT_APPLICABLE, nil, widget.click)
+          pfUI.panel:OutputPanel("guild", GUILD .. ": " .. NOT_APPLICABLE, nil, widget.Click)
         else
-          pfUI.panel:OutputPanel("guild", GUILD .. ": " .. online, nil, widget.click)
+          pfUI.panel:OutputPanel("guild", GUILD .. ": " .. online, nil, widget.Click)
         end
       end)
     end
@@ -319,8 +319,8 @@ pfUI:RegisterModule("panel", function()
         "Hands", "Waist", "Legs", "Feet", "MainHand", "SecondaryHand", "Ranged", }
       widget.totalRep = 0
       widget.scantip = CreateFrame('GameTooltip', "pfRepairToolTip", this, "GameTooltipTemplate")
-      widget.click = function() ToggleCharacter("PaperDollFrame") end
-      widget.tooltip = function()
+      widget.Click = function() ToggleCharacter("PaperDollFrame") end
+      widget.Tooltip = function()
         if widget.totalRep > 0 then
           GameTooltip:ClearLines()
           GameTooltip_SetDefaultAnchor(GameTooltip, this)
@@ -370,7 +370,7 @@ pfUI:RegisterModule("panel", function()
         end
         pfRepairToolTip:Hide()
 
-        pfUI.panel:OutputPanel("durability", lowestPercent .. "% " .. ARMOR, widget.tooltip, widget.click)
+        pfUI.panel:OutputPanel("durability", lowestPercent .. "% " .. ARMOR, widget.Tooltip, widget.Click)
       end)
     end
 
@@ -378,7 +378,7 @@ pfUI:RegisterModule("panel", function()
       local widget = CreateFrame("Frame", "pfPanelWidgetZone", UIParent)
       widget:RegisterEvent("PLAYER_ENTERING_WORLD")
       widget:RegisterEvent("MINIMAP_ZONE_CHANGED")
-      widget.tooltip = function()
+      widget.Tooltip = function()
         local real = GetRealZoneText()
         local sub = GetSubZoneText()
         GameTooltip:ClearLines()
@@ -393,7 +393,7 @@ pfUI:RegisterModule("panel", function()
 
         GameTooltip:Show()
       end
-      widget.click = function()
+      widget.Click = function()
         if WorldMapFrame:IsShown() then
           WorldMapFrame:Hide()
         else
@@ -401,7 +401,7 @@ pfUI:RegisterModule("panel", function()
         end
       end
       widget:SetScript("OnEvent", function()
-        pfUI.panel:OutputPanel("zone", GetMinimapZoneText(), widget.tooltip, widget.click)
+        pfUI.panel:OutputPanel("zone", GetMinimapZoneText(), widget.Tooltip, widget.Click)
       end)
     end
 
@@ -409,7 +409,7 @@ pfUI:RegisterModule("panel", function()
       local widget = CreateFrame("Frame", "pfPanelWidgetAmmo", UIParent)
       widget:RegisterEvent("PLAYER_ENTERING_WORLD")
       widget:RegisterEvent("UNIT_INVENTORY_CHANGED")
-      widget.tooltip = function()
+      widget.Tooltip = function()
         if GetInventoryItemQuality("player", 0) then
           local ammo = GetInventoryItemCount("player", 0)
           GameTooltip:ClearLines()
