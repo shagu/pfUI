@@ -470,19 +470,23 @@ pfUI:RegisterModule("panel", function()
     pfUI.panel:OutputPanel("soulshard", T["Soulshards"] .. ": " .. count, tooltip)
   end
 
+  local panels = {}
   function pfUI.panel:OutputPanel(entry, value, tooltip, func)
     -- return if not yet fully initialized
     if not pfUI.panel.minimap then return end
 
-    local panels = {
-      { pfUI.panel.left.left,    C.panel.left.left },
-      { pfUI.panel.left.center,  C.panel.left.center },
-      { pfUI.panel.left.right,   C.panel.left.right },
-      { pfUI.panel.right.left,   C.panel.right.left },
-      { pfUI.panel.right.center, C.panel.right.center },
-      { pfUI.panel.right.right,  C.panel.right.right },
-      { pfUI.panel.minimap,      C.panel.other.minimap },
-    }
+    -- initialize then panels if not yet done
+    if not panels[1] then
+      panels = {
+        { pfUI.panel.left.left,    C.panel.left.left },
+        { pfUI.panel.left.center,  C.panel.left.center },
+        { pfUI.panel.left.right,   C.panel.left.right },
+        { pfUI.panel.right.left,   C.panel.right.left },
+        { pfUI.panel.right.center, C.panel.right.center },
+        { pfUI.panel.right.right,  C.panel.right.right },
+        { pfUI.panel.minimap,      C.panel.other.minimap },
+      }
+    end
 
     for i,p in pairs(panels) do
       local frame, config = p[1], p[2]
