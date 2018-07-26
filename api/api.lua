@@ -634,7 +634,7 @@ end
 -- 'f'          [frame]         the frame which should get a backdrop.
 -- 'inset'      [int]           backdrop inset, defaults to border size.
 -- 'legacy'     [bool]          use legacy backdrop instead of creating frames.
--- 'transp'     [bool]          force default transparency of 0.8.
+-- 'transp'     [number]        set default transparency
 function pfUI.api.CreateBackdrop(f, inset, legacy, transp, backdropSetting)
   -- exit if now frame was given
   if not f then return end
