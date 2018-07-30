@@ -154,7 +154,7 @@ pfUI:RegisterModule("eqcompare", function ()
       if targetData then
         local target = targetData[attr]
         if target then
-          if v.value ~= target.value then
+          if v.value ~= target.value and v.widget:GetText() then
             if v.value > target.value then
               if not strfind(v.widget:GetText(), "|cff88ff88") and not strfind(v.widget:GetText(), "|cffff8888") then
                 v.widget:SetText(v.widget:GetText() .. "|cff88ff88 (+" .. v.value - target.value .. ")")
