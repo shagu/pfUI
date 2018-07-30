@@ -790,71 +790,70 @@ pfUI:RegisterModule("chat", function ()
   for i=1,NUM_CHAT_WINDOWS do
     if not _G["ChatFrame"..i].HookAddMessage then
       _G["ChatFrame"..i].HookAddMessage = _G["ChatFrame"..i].AddMessage
-    end
-    _G["ChatFrame"..i].AddMessage = function (frame, text, a1, a2, a3, a4, a5)
-      if text then
+      _G["ChatFrame"..i].AddMessage = function (frame, text, a1, a2, a3, a4, a5)
+        if text then
+          -- Remove prat's CLINK itemlinks.
+          text = gsub(text, '%{CLINK:(%x%x%x%x%x%x%x%x):(%d*):(%d*):(%d*):(%d*):(.-)%}', function(color, id, enchant, suffix, uuid, name)
+            return format('|c%s|Hitem:%s:%s:%s:%s|h[%s]|h|r', color, id, enchant, suffix, uuid, name)
+          end)
 
-        -- Remove prat's CLINK itemlinks.
-        text = gsub(text, '%{CLINK:(%x%x%x%x%x%x%x%x):(%d*):(%d*):(%d*):(%d*):(.-)%}', function(color, id, enchant, suffix, uuid, name)
-          return format('|c%s|Hitem:%s:%s:%s:%s|h[%s]|h|r', color, id, enchant, suffix, uuid, name)
-        end)
+          -- detect urls
+          if C.chat.text.detecturl == "1" then
+            local URLPattern = pfUI.chat.URLPattern
+            text = string.gsub (text, URLPattern.WWW.rx, function(a1,a2,a3) return pfUI.chat:FormatLink(URLPattern.WWW.fm,a1,a2,a3) end)
+            text = string.gsub (text, URLPattern.PROTOCOL.rx, function(a1,a2) return pfUI.chat:FormatLink(URLPattern.PROTOCOL.fm,a1,a2) end)
+            text = string.gsub (text, URLPattern.EMAIL.rx, function(a1,a2,a3,a4) return pfUI.chat:FormatLink(URLPattern.EMAIL.fm,a1,a2,a3,a4) end)
+            text = string.gsub (text, URLPattern.PORTIP.rx, function(a1,a2,a3,a4,a5) return pfUI.chat:FormatLink(URLPattern.PORTIP.fm,a1,a2,a3,a4,a5) end)
+            text = string.gsub (text, URLPattern.IP.rx, function(a1,a2,a3,a4) return pfUI.chat:FormatLink(URLPattern.IP.fm,a1,a2,a3,a4) end)
+            text = string.gsub (text, URLPattern.SHORTURL.rx, function(a1,a2,a3) return pfUI.chat:FormatLink(URLPattern.SHORTURL.fm,a1,a2,a3) end)
+            text = string.gsub (text, URLPattern.URLIP.rx, function(a1,a2,a3,a4) return pfUI.chat:FormatLink(URLPattern.URLIP.fm,a1,a2,a3,a4) end)
+            text = string.gsub (text, URLPattern.URL.rx, function(a1,a2,a3) return pfUI.chat:FormatLink(URLPattern.URL.fm,a1,a2,a3) end)
+          end
 
-        -- detect urls
-        if C.chat.text.detecturl == "1" then
-          local URLPattern = pfUI.chat.URLPattern
-          text = string.gsub (text, URLPattern.WWW.rx, function(a1,a2,a3) return pfUI.chat:FormatLink(URLPattern.WWW.fm,a1,a2,a3) end)
-          text = string.gsub (text, URLPattern.PROTOCOL.rx, function(a1,a2) return pfUI.chat:FormatLink(URLPattern.PROTOCOL.fm,a1,a2) end)
-          text = string.gsub (text, URLPattern.EMAIL.rx, function(a1,a2,a3,a4) return pfUI.chat:FormatLink(URLPattern.EMAIL.fm,a1,a2,a3,a4) end)
-          text = string.gsub (text, URLPattern.PORTIP.rx, function(a1,a2,a3,a4,a5) return pfUI.chat:FormatLink(URLPattern.PORTIP.fm,a1,a2,a3,a4,a5) end)
-          text = string.gsub (text, URLPattern.IP.rx, function(a1,a2,a3,a4) return pfUI.chat:FormatLink(URLPattern.IP.fm,a1,a2,a3,a4) end)
-          text = string.gsub (text, URLPattern.SHORTURL.rx, function(a1,a2,a3) return pfUI.chat:FormatLink(URLPattern.SHORTURL.fm,a1,a2,a3) end)
-          text = string.gsub (text, URLPattern.URLIP.rx, function(a1,a2,a3,a4) return pfUI.chat:FormatLink(URLPattern.URLIP.fm,a1,a2,a3,a4) end)
-          text = string.gsub (text, URLPattern.URL.rx, function(a1,a2,a3) return pfUI.chat:FormatLink(URLPattern.URL.fm,a1,a2,a3) end)
-        end
+          -- display class colors if already indexed
+          if C.chat.text.classcolor == "1" then
+            local Name = string.gsub(text, ".*|Hplayer:(.-)|h.*", "%1")
+            if pfUI_playerDB[Name] and pfUI_playerDB[Name].class ~= nil then
+              local Class = pfUI_playerDB[Name].class
+              if Class ~= UNKNOWN then
+                local Color = string.format("%02x%02x%02x",
+                  RAID_CLASS_COLORS[Class].r * 255,
+                  RAID_CLASS_COLORS[Class].g * 255,
+                  RAID_CLASS_COLORS[Class].b * 255)
+                Name = "|cff" .. Color .. Name .. "|r"
+              end
+            end
+            text = string.gsub(text, "|Hplayer:(.-)|h%[.-%]|h(.-:-)", "|r" .. left .. "|Hplayer:%1|h" .. Name .. "|h|r" .. right .. "%2")
+          end
 
-        -- display class colors if already indexed
-        if C.chat.text.classcolor == "1" then
-          local Name = string.gsub(text, ".*|Hplayer:(.-)|h.*", "%1")
-          if pfUI_playerDB[Name] and pfUI_playerDB[Name].class ~= nil then
-            local Class = pfUI_playerDB[Name].class
-            if Class ~= UNKNOWN then
-              local Color = string.format("%02x%02x%02x",
-                RAID_CLASS_COLORS[Class].r * 255,
-                RAID_CLASS_COLORS[Class].g * 255,
-                RAID_CLASS_COLORS[Class].b * 255)
-              Name = "|cff" .. Color .. Name .. "|r"
+          -- reduce channel name to number
+          if C.chat.text.channelnumonly == "1" then
+            local pattern = "%]%s+(.*|Hplayer)"
+            local channel = string.gsub(text, ".*%[(.-)" .. pattern .. ".+", "%1")
+            if string.find(channel, "%d+%. ") then
+              channel = string.gsub(channel, "(%d+)%..*", "channel%1")
+              channel = string.gsub(channel, "channel", "")
+              pattern = "%[%d+%..-" .. pattern
+              text = string.gsub(text, pattern, left .. channel .. right .. " %1")
             end
           end
-          text = string.gsub(text, "|Hplayer:(.-)|h%[.-%]|h(.-:-)", "|r" .. left .. "|Hplayer:%1|h" .. Name .. "|h|r" .. right .. "%2")
-        end
 
-        -- reduce channel name to number
-        if C.chat.text.channelnumonly == "1" then
-          local pattern = "%]%s+(.*|Hplayer)"
-          local channel = string.gsub(text, ".*%[(.-)" .. pattern .. ".+", "%1")
-          if string.find(channel, "%d+%. ") then
-            channel = string.gsub(channel, "(%d+)%..*", "channel%1")
-            channel = string.gsub(channel, "channel", "")
-            pattern = "%[%d+%..-" .. pattern
-            text = string.gsub(text, pattern, left .. channel .. right .. " %1")
+          -- show timestamp in chat
+          if C.chat.text.time == "1" then
+            local r,g,b,a = strsplit(",", C.chat.text.timecolor)
+            local chex = string.format("%02x%02x%02x%02x", a*255, r*255, g*255, b*255)
+            text = "|c" .. chex .. tleft .. date(C.chat.text.timeformat) .. tright .. "|r " .. text
           end
-        end
 
-        -- show timestamp in chat
-        if C.chat.text.time == "1" then
-          local r,g,b,a = strsplit(",", C.chat.text.timecolor)
-          local chex = string.format("%02x%02x%02x%02x", a*255, r*255, g*255, b*255)
-          text = "|c" .. chex .. tleft .. date(C.chat.text.timeformat) .. tright .. "|r " .. text
-        end
-
-        if C.chat.global.whispermod == "1" then
-          -- patch incoming whisper string to match the colors
-          if string.find(text, '|cff'..wcol, 1) == 1 then
-            text = string.gsub(text, "|r", "|r|cff" .. wcol)
+          if C.chat.global.whispermod == "1" then
+            -- patch incoming whisper string to match the colors
+            if string.find(text, '|cff'..wcol, 1) == 1 then
+              text = string.gsub(text, "|r", "|r|cff" .. wcol)
+            end
           end
-        end
 
-        _G["ChatFrame"..i].HookAddMessage(frame, text, a1, a2, a3, a4, a5)
+          _G["ChatFrame"..i].HookAddMessage(frame, text, a1, a2, a3, a4, a5)
+        end
       end
     end
   end
