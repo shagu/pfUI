@@ -27,6 +27,7 @@ This is **not** an addon-pack like [ShaguUI](http://shagu.org/ShaguUI/), however
     /gm           Open the ticket Dialog
     /rl           Reload the whole UI
     /farm         Toggles the Farm-Mode
+    /pfcast       Same as /cast but for mouseover units
     /focus        Creates a Focus-Frame for the current target
     /clearfocus   Clears the Focus-Frame
 
