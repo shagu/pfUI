@@ -52,11 +52,6 @@ pfUI supports and contains language specific code for the following gameclients.
 * [pfUI-fonts](https://shagu.org/pfUI-fonts) Additional fonts for pfUI
 * [pfUI-CustomMedia](https://github.com/mrrosh/pfUI-CustomMedia) A font and texture package
 
-## Other Addons
-* [DPSMate](https://github.com/Geigerkind/DPSMate) An advanced combat analyzation tool
-* [Clique](https://gitlab.com/shagu/Clique) Simply powerful click-casting interface
-* [SortBags](https://github.com/shirsig/SortBags) Automatically stacks and sorts your items.
-
 ## FAQ
 **What does "pfUI" stand for?**  
 The term "*pfui!*" is german and simply stands for "*pooh!*", because I'm not a
