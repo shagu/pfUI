@@ -4,6 +4,7 @@ pfUI:RegisterModule("thirdparty", function ()
   pfUI.thirdparty.meters.damage = false
   pfUI.thirdparty.meters.threat = false
   pfUI.thirdparty.meters.state = false
+  pfUI.thirdparty.bagsort = nil
 
   local showmeter = CreateFrame("Frame")
   showmeter:SetScript("OnEvent", function()
@@ -466,25 +467,32 @@ pfUI:RegisterModule("thirdparty", function ()
   end)
 
   AddIntegration("SortBags", function()
-    if C.thirdparty.mrplow.enable == "1" then return end
     if C.thirdparty.sortbags.enable == "0" then return end
 
+    if not pfUI.thirdparty.bagsort then pfUI.thirdparty.bagsort = "sortbags" end
     pfUI.thirdparty.sortbags = CreateFrame("Frame", nil)
-    pfUI.thirdparty.sortbags:RegisterEvent("BAG_UPDATE")
     pfUI.thirdparty.sortbags:RegisterEvent("PLAYER_ENTERING_WORLD")
     pfUI.thirdparty.sortbags:SetScript("OnEvent", function()
-      -- make sure bagframe was already created
-      if not pfUI.bag or not pfUI.bag.right then return end
       pfUI.thirdparty.sortbags:UnregisterAllEvents()
+
+      -- don't do anything if another bagsorter was found
+      if pfUI.thirdparty.bagsort ~= "sortbags" then return end
+
+      -- make sure the bag module is enabled
+      if not pfUI.bag or not pfUI.bag.right then return end
+
+      local default_border = C.appearance.border.default
+      if C.appearance.border.bags ~= "-1" then
+        default_border = C.appearance.border.bags
+      end
 
       -- draw the button
       if not pfUI.bag.right.sort then
         pfUI.bag.right.sort = CreateFrame("Button", "pfBagSlotSort", UIParent)
         pfUI.bag.right.sort:SetParent(pfUI.bag.right)
-        pfUI.bag.right.sort:SetPoint("TOPRIGHT", -C.appearance.border.default*14 - 45, -C.appearance.border.default)
-        pfUI.bag.right.sort:SetPoint("TOPRIGHT", pfUI.bag.right.keys, "TOPLEFT", -C.appearance.border.default*3, 0)
+        pfUI.bag.right.sort:SetPoint("TOPRIGHT", pfUI.bag.right.keys, "TOPLEFT", -default_border*3, 0)
 
-        CreateBackdrop(pfUI.bag.right.sort)
+        CreateBackdrop(pfUI.bag.right.sort, default_border)
         pfUI.bag.right.sort:SetHeight(12)
         pfUI.bag.right.sort:SetWidth(12)
         pfUI.bag.right.sort:SetTextColor(1,1,.25,1)
@@ -511,18 +519,17 @@ pfUI:RegisterModule("thirdparty", function ()
         end)
 
         pfUI.bag.right.search:ClearAllPoints()
-        pfUI.bag.right.search:SetPoint("TOPLEFT", pfUI.bag.right, "TOPLEFT", C.appearance.border.default, -C.appearance.border.default)
-        pfUI.bag.right.search:SetPoint("TOPRIGHT", pfUI.bag.right.sort, "TOPLEFT", -C.appearance.border.default*3, -C.appearance.border.default)
+        pfUI.bag.right.search:SetPoint("TOPLEFT", pfUI.bag.right, "TOPLEFT", default_border, -default_border)
+        pfUI.bag.right.search:SetPoint("TOPRIGHT", pfUI.bag.right.sort, "TOPLEFT", -default_border*3, -default_border)
       end
 
       -- draw the button
       if not pfUI.bag.left.sort then
         pfUI.bag.left.sort = CreateFrame("Button", "pfBankSlotSort", UIParent)
         pfUI.bag.left.sort:SetParent(pfUI.bag.left)
-        pfUI.bag.left.sort:SetPoint("TOPRIGHT", -C.appearance.border.default*14 - 45, -C.appearance.border.default)
-        pfUI.bag.left.sort:SetPoint("TOPRIGHT", pfUI.bag.left.bags, "TOPLEFT", -C.appearance.border.default*3, 0)
+        pfUI.bag.left.sort:SetPoint("TOPRIGHT", pfUI.bag.left.bags, "TOPLEFT", -default_border*3, 0)
 
-        CreateBackdrop(pfUI.bag.left.sort)
+        CreateBackdrop(pfUI.bag.left.sort, default_border)
         pfUI.bag.left.sort:SetHeight(12)
         pfUI.bag.left.sort:SetWidth(12)
         pfUI.bag.left.sort:SetTextColor(1,1,.25,1)
@@ -552,28 +559,35 @@ pfUI:RegisterModule("thirdparty", function ()
   end)
 
   AddIntegration("MrPlow", function()
-    if C.thirdparty.sortbags.enable == "1" then return end
     if C.thirdparty.mrplow.enable == "0" then return end
 
+    pfUI.thirdparty.bagsort = "mrplow" -- dont't check for sortbags, use mrplow as default
     local MrPlowL = AceLibrary and AceLibrary("AceLocale-2.2"):new("MrPlow")
     if not (MrPlowL and MrPlowL["Bank"]) then return end
 
     pfUI.thirdparty.mrplow = CreateFrame("Frame", nil)
-    pfUI.thirdparty.mrplow:RegisterEvent("BANKFRAME_OPEN")
     pfUI.thirdparty.mrplow:RegisterEvent("PLAYER_ENTERING_WORLD")
     pfUI.thirdparty.mrplow:SetScript("OnEvent", function()
-      -- make sure bagframe was already created
-      if not pfUI.bag or not pfUI.bag.right then return end
       pfUI.thirdparty.mrplow:UnregisterAllEvents()
+
+      -- don't do anything if another bagsorter was found
+      if pfUI.thirdparty.bagsort ~= "mrplow" then return end
+
+      -- make sure the bag module is enabled
+      if not pfUI.bag or not pfUI.bag.right then return end
+
+      local default_border = C.appearance.border.default
+      if C.appearance.border.bags ~= "-1" then
+        default_border = C.appearance.border.bags
+      end
 
       -- draw the button
       if not pfUI.bag.right.sort then
         pfUI.bag.right.sort = CreateFrame("Button", "pfBagSlotSort", UIParent)
         pfUI.bag.right.sort:SetParent(pfUI.bag.right)
-        pfUI.bag.right.sort:SetPoint("TOPRIGHT", -C.appearance.border.default*14 - 45, -C.appearance.border.default)
-        pfUI.bag.right.sort:SetPoint("TOPRIGHT", pfUI.bag.right.keys, "TOPLEFT", -C.appearance.border.default*3, 0)
+        pfUI.bag.right.sort:SetPoint("TOPRIGHT", pfUI.bag.right.keys, "TOPLEFT", -default_border*3, 0)
 
-        CreateBackdrop(pfUI.bag.right.sort)
+        CreateBackdrop(pfUI.bag.right.sort, default_border)
         pfUI.bag.right.sort:SetHeight(12)
         pfUI.bag.right.sort:SetWidth(12)
         pfUI.bag.right.sort:SetTextColor(1,1,.25,1)
@@ -600,18 +614,17 @@ pfUI:RegisterModule("thirdparty", function ()
         end)
 
         pfUI.bag.right.search:ClearAllPoints()
-        pfUI.bag.right.search:SetPoint("TOPLEFT", pfUI.bag.right, "TOPLEFT", C.appearance.border.default, -C.appearance.border.default)
-        pfUI.bag.right.search:SetPoint("TOPRIGHT", pfUI.bag.right.sort, "TOPLEFT", -C.appearance.border.default*3, -C.appearance.border.default)
+        pfUI.bag.right.search:SetPoint("TOPLEFT", pfUI.bag.right, "TOPLEFT", default_border, -default_border)
+        pfUI.bag.right.search:SetPoint("TOPRIGHT", pfUI.bag.right.sort, "TOPLEFT", -default_border*3, -default_border)
       end
 
       -- draw the button
       if not pfUI.bag.left.sort then
         pfUI.bag.left.sort = CreateFrame("Button", "pfBankSlotSort", UIParent)
         pfUI.bag.left.sort:SetParent(pfUI.bag.left)
-        pfUI.bag.left.sort:SetPoint("TOPRIGHT", -C.appearance.border.default*14 - 45, -C.appearance.border.default)
-        pfUI.bag.left.sort:SetPoint("TOPRIGHT", pfUI.bag.left.bags, "TOPLEFT", -C.appearance.border.default*3, 0)
+        pfUI.bag.left.sort:SetPoint("TOPRIGHT", pfUI.bag.left.bags, "TOPLEFT", -default_border*3, 0)
 
-        CreateBackdrop(pfUI.bag.left.sort)
+        CreateBackdrop(pfUI.bag.left.sort, default_border)
         pfUI.bag.left.sort:SetHeight(12)
         pfUI.bag.left.sort:SetWidth(12)
         pfUI.bag.left.sort:SetTextColor(1,1,.25,1)
