@@ -120,7 +120,7 @@ pfUI:RegisterSkin("Character", function ()
             local _, _, itemID = string.find(GetInventoryItemLink("player", slotId), "item:(%d+):%d+:%d+:%d+")
             local itemLevel = ShaguScore.Database[tonumber(itemID)] or 0
             local _, _, itemRarity, _, _, _, _, itemSlot, _ = GetItemInfo(itemID)
-            local r,g,b = GetItemQualityColor(itemRarity)
+            local r,g,b = GetItemQualityColor((itemRarity or 1))
             local score = ShaguScore:Calculate(itemSlot, itemRarity, itemLevel)
             if score and score > 0  then
               if quality and quality > 0 then
