@@ -310,12 +310,15 @@ function pfUI.api.hooksecurefunc(name, func, append)
   _G[name] = pfUI.hooks[tostring(func)]["function"]
 end
 
+-- [ HookScript ]
+-- Sets a function to be called automatically after the original function is called
+-- 'f'          [frame]            the frame that should get a function hook
+-- 'script'     [string]           the name of the function that should be hooked
+-- 'func'       [function]         the function that should run after the original one
 function pfUI.api.HookScript(f, script, func)
   local prev = f:GetScript(script)
-
-  f:SetScript(script, function(...)
+  f:SetScript(script, function()
     if prev then prev() end
-
     func()
   end)
 end
