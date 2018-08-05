@@ -1254,6 +1254,7 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.tabs.components.tabs.modules = pfUI.gui.tabs.components.tabs:CreateTabChild(T["Modules"], true)
   pfUI.gui.tabs.components.tabs.modules:SetScript("OnShow", function()
     if not this.setup then
+      table.sort(pfUI.modules)
       for i,m in pairs(pfUI.modules) do
         if m ~= "gui" then
           -- create disabled entry if not existing and display
