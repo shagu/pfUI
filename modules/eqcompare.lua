@@ -40,91 +40,20 @@ pfUI:RegisterModule("eqcompare", function ()
     [INVTYPE_THROWN] = "RangedSlot",
   }
 
-  HookScript(ShoppingTooltip1, "OnShow", function()
-    if C.tooltip.compare.basestats == "1" then
-      local targetData = pfUI.eqcompare:ExtractAttributes(ShoppingTooltip1)
-      pfUI.eqcompare:CompareAttributes(ShoppingTooltip1._data, targetData)
-    end
-  end)
-
-  HookScript(ShoppingTooltip2, "OnShow", function()
-    if C.tooltip.compare.basestats == "1" then
-      local targetData = pfUI.eqcompare:ExtractAttributes(ShoppingTooltip2)
-      pfUI.eqcompare:CompareAttributes(ShoppingTooltip2._data, targetData)
-    end
-  end)
-
-  pfUI.eqcompare = CreateFrame( "Frame" , "pfEQCompare", GameTooltip )
-  pfUI.eqcompare.ShowCompare = function(tooltip)
-    -- use GameTooltip as default
-    if not tooltip then tooltip = GameTooltip end
-
-    if not IsShiftKeyDown() and C.tooltip.compare.showalways ~= "1" and not MerchantFrame:IsShown() then
-      return
-    end
-
-    local data = pfUI.eqcompare:ExtractAttributes(tooltip)
-    ShoppingTooltip1._data = data
-    ShoppingTooltip2._data = data
-
-    local border = tonumber(C.appearance.border.default)
-
-    for i=1,tooltip:NumLines() do
-      local tmpText = _G[tooltip:GetName() .. "TextLeft"..i]
-
-      for slotType, slotName in pairs(pfUI.slotTable) do
-        if tmpText:GetText() == slotType then
-          local slotID = GetInventorySlotInfo(pfUI.slotTable[slotType])
-
-          -- determine screen part
-          local ltrigger = GetScreenWidth() / 2
-          local x = GetCursorPosition()
-          x = x / UIParent:GetEffectiveScale()
-          if x > ltrigger then ltrigger = nil end
-
-          -- first tooltip
-          ShoppingTooltip1:SetOwner(tooltip, "ANCHOR_NONE");
-          ShoppingTooltip1:ClearAllPoints();
-
-          if ltrigger then
-            ShoppingTooltip1:SetPoint("BOTTOMLEFT", tooltip, "BOTTOMRIGHT", 0, 0);
-          else
-            ShoppingTooltip1:SetPoint("BOTTOMRIGHT", tooltip, "BOTTOMLEFT", -border*2-1, 0);
-          end
-
-          ShoppingTooltip1:SetInventoryItem("player", slotID)
-          ShoppingTooltip1:Show();
-
-          -- second tooltip
-          if pfUI.slotTable[slotType .. "_other"] then
-            local slotID_other = GetInventorySlotInfo(pfUI.slotTable[slotType .. "_other"])
-
-            ShoppingTooltip2:SetOwner(tooltip, "ANCHOR_NONE");
-            ShoppingTooltip2:ClearAllPoints();
-
-            if ltrigger then
-              ShoppingTooltip2:SetPoint("BOTTOMLEFT", ShoppingTooltip1, "BOTTOMRIGHT", 0, 0);
-            else
-              ShoppingTooltip2:SetPoint("BOTTOMRIGHT", ShoppingTooltip1, "BOTTOMLEFT", -border*2-1, 0);
-            end
-
-            ShoppingTooltip2:SetInventoryItem("player", slotID_other)
-            ShoppingTooltip2:Show();
-          end
-          return true
-        end
-      end
-    end
-  end
-  pfUI.eqcompare:SetScript("OnShow", pfUI.eqcompare.ShowCompare)
-
   local function startsWith(str, start)
     return string.sub(str, 1, string.len(start)) == start
   end
 
-  function pfUI.eqcompare:ExtractAttributes(tooltip)
+  local function ExtractAttributes(tooltip)
     local name = tooltip:GetName()
-    local data = {}
+    local iname = GameTooltipTextLeft1 and GameTooltipTextLeft1:GetText()
+
+    -- only run once per item
+    if tooltip.pfCompLastName == iname then return end
+
+    tooltip.pfCompData = {}
+    tooltip.pfCompLastName = iname
+
     for i=1,30 do
       local widget = _G[name.."TextLeft"..i]
       if widget and widget:GetObjectType() == "FontString" then
@@ -139,17 +68,17 @@ pfUI:RegisterModule("eqcompare", function ()
             if value and text then
               -- we've found an attr
               local attr = string.sub(text, space, string.len(text))
-              data[attr] = { value = tonumber(value), widget = widget }
+              tooltip.pfCompData[attr] = { value = tonumber(value), widget = widget }
             end
           end
         end
       end
     end
-    return data
   end
 
-  function pfUI.eqcompare:CompareAttributes(data, targetData)
+  local function CompareAttributes(data, targetData)
     if not data then return end
+
     for attr,v in pairs(data) do
       if targetData then
         local target = targetData[attr]
@@ -170,7 +99,9 @@ pfUI:RegisterModule("eqcompare", function ()
           end
         else
           -- this attribute doesnt exist in target
-          v.widget:SetTextColor(.4, 1, .4)
+          if not strfind(v.widget:GetText(), "|cff88ff88") and not strfind(v.widget:GetText(), "|cffff8888") then
+            v.widget:SetText(v.widget:GetText() .. "|cff88ff88 (+" .. v.value .. ")")
+          end
         end
       end
     end
@@ -178,9 +109,78 @@ pfUI:RegisterModule("eqcompare", function ()
     for _,target in pairs(targetData) do
       if target and not target.processed then
         -- we are an extra value
-        target.widget:SetTextColor(.4, 1, .4)
+        if not strfind(target.widget:GetText(), "|cff88ff88") and not strfind(target.widget:GetText(), "|cffff8888") then
+          target.widget:SetText(target.widget:GetText() .. "|cff88ff88 (+" .. target.value .. ")")
+        end
       end
     end
   end
 
+  HookScript(ShoppingTooltip1, "OnShow", function()
+    if C.tooltip.compare.basestats == "1" then
+      ExtractAttributes(ShoppingTooltip1)
+      ExtractAttributes(GameTooltip)
+      CompareAttributes(GameTooltip.pfCompData, ShoppingTooltip1.pfCompData)
+    end
+  end)
+
+  HookScript(ShoppingTooltip2, "OnShow", function()
+    if C.tooltip.compare.basestats == "1" then
+      ExtractAttributes(ShoppingTooltip2)
+      ExtractAttributes(GameTooltip)
+      CompareAttributes(GameTooltip.pfCompData, ShoppingTooltip2.pfCompData)
+    end
+  end)
+
+  HookScript(GameTooltip, "OnShow", function()
+    if not IsShiftKeyDown() and C.tooltip.compare.showalways ~= "1"then return end
+    local border = tonumber(C.appearance.border.default)
+
+    for i=1,GameTooltip:NumLines() do
+      local tmpText = _G[GameTooltip:GetName() .. "TextLeft"..i]
+
+      for slotType, slotName in pairs(pfUI.slotTable) do
+        if tmpText:GetText() == slotType then
+          local slotID = GetInventorySlotInfo(pfUI.slotTable[slotType])
+
+          -- determine screen part
+          local ltrigger = GetScreenWidth() / 2
+          local x = GetCursorPosition()
+          x = x / UIParent:GetEffectiveScale()
+          if x > ltrigger then ltrigger = nil end
+
+          -- first tooltip
+          ShoppingTooltip1:SetOwner(GameTooltip, "ANCHOR_NONE");
+          ShoppingTooltip1:ClearAllPoints();
+
+          if ltrigger then
+            ShoppingTooltip1:SetPoint("BOTTOMLEFT", GameTooltip, "BOTTOMRIGHT", 0, 0);
+          else
+            ShoppingTooltip1:SetPoint("BOTTOMRIGHT", GameTooltip, "BOTTOMLEFT", -border*2-1, 0);
+          end
+
+          ShoppingTooltip1:SetInventoryItem("player", slotID)
+          ShoppingTooltip1:Show();
+
+          -- second tooltip
+          if pfUI.slotTable[slotType .. "_other"] then
+            local slotID_other = GetInventorySlotInfo(pfUI.slotTable[slotType .. "_other"])
+
+            ShoppingTooltip2:SetOwner(GameTooltip, "ANCHOR_NONE");
+            ShoppingTooltip2:ClearAllPoints();
+
+            if ltrigger then
+              ShoppingTooltip2:SetPoint("BOTTOMLEFT", ShoppingTooltip1, "BOTTOMRIGHT", 0, 0);
+            else
+              ShoppingTooltip2:SetPoint("BOTTOMRIGHT", ShoppingTooltip1, "BOTTOMLEFT", -border*2-1, 0);
+            end
+
+            ShoppingTooltip2:SetInventoryItem("player", slotID_other)
+            ShoppingTooltip2:Show();
+          end
+          return true
+        end
+      end
+    end
+  end)
 end)
