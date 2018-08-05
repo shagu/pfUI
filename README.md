@@ -84,6 +84,9 @@ That's a conflict with prat. You'll have to either disable Prat's class colors b
 **How do I show the Damage- and Threatmeter Dock?**  
 If you enabled the "dock"-feature for your external (third-party) meters such as DPSMate or KTM, then you'll be able to toggle between them and the Right Chat by clicking on the ">" symbol on the bottom-right panel.
 
+**Why is my chat always resetting to only 3 lines of text?**  
+You need to disable the "Simple Chat" in blizzards interface settings (Advanced Options). Then relog and reset/run the firstrun wizard again.
+
 **How can I enable mouseover cast?**  
 Create a macro with "/pfcast SPELLNAME". If you also want to see the cooldown, You might want to add "/run if nil then CastSpellByName("SPELLNAME") end" on top of the macro.
 
