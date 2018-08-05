@@ -95,7 +95,7 @@ function libspell.GetSpellInfo(index, bookType)
   end
 
   if name and id then
-    texture = GetSpellTexture(id, bookType)
+    icon = GetSpellTexture(id, bookType)
   end
 
   if id then
