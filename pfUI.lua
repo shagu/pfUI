@@ -29,7 +29,6 @@ pfUI_config = {}
 pfUI_init = {}
 pfUI_profiles = {}
 pfUI_addon_profiles = {}
-pfUI_gold = {}
 pfUI_cache = {}
 
 -- localization

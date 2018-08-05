@@ -1,4 +1,6 @@
 pfUI:RegisterModule("panel", function()
+  -- initialize gold cache if not yet happened
+  pfUI_cache["gold"] = pfUI_cache["gold"] or {}
 
   local font = C.panel.use_unitfonts == "1" and pfUI.font_unit or pfUI.font_default
   local font_size = C.panel.use_unitfonts == "1" and C.global.font_unit_size or C.global.font_size
@@ -241,7 +243,7 @@ pfUI:RegisterModule("panel", function()
         GameTooltip:AddDoubleLine(T["Login"] .. ":", CreateGoldString(pfUI.panel.initMoney))
         GameTooltip:AddDoubleLine(T["Now"] .. ":", CreateGoldString(GetMoney()))
         GameTooltip:AddDoubleLine("|cffffffff","")
-        for name, gold in pfUI_gold[GetRealmName()] do
+        for name, gold in pfUI_cache["gold"][GetRealmName()] do
           if name ~= UnitName("player") then
             GameTooltip:AddDoubleLine(name .. ":", CreateGoldString(gold))
           end
@@ -261,8 +263,8 @@ pfUI:RegisterModule("panel", function()
         local realm = GetRealmName()
         local unit  = UnitName("player")
         local money = GetMoney()
-        pfUI_gold[realm] = pfUI_gold[realm] or {}
-        pfUI_gold[realm][unit] = money
+        pfUI_cache["gold"][realm] = pfUI_cache["gold"][realm] or {}
+        pfUI_cache["gold"][realm][unit] = money
 
         pfUI.panel:OutputPanel("gold", gold .. "|cffffd700g|r " .. silver .. "|cffc7c7cfs|r " .. copper .. "|cffeda55fc|r", widget.Tooltip, OpenAllBags)
       end)
