@@ -133,7 +133,7 @@ pfUI:RegisterModule("eqcompare", function ()
   end)
 
   HookScript(GameTooltip, "OnShow", function()
-    if not IsShiftKeyDown() and C.tooltip.compare.showalways ~= "1"then return end
+    if not IsShiftKeyDown() and C.tooltip.compare.showalways ~= "1" then return end
     local border = tonumber(C.appearance.border.default)
 
     for i=1,GameTooltip:NumLines() do
