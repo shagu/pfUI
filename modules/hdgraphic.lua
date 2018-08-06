@@ -108,6 +108,7 @@ pfUI:RegisterModule("hdgraphic", function ()
     local f = CreateFrame("Frame")
     f:RegisterEvent("PLAYER_ENTERING_WORLD")
     f:SetScript("OnEvent", pixelperfect)
+    pixelperfect()
   end
 
   pfUI.hdgraphic = {}
