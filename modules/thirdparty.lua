@@ -673,13 +673,8 @@ pfUI:RegisterModule("thirdparty", function ()
 
     CreateBackdrop(AtlasLootTooltip)
     if pfUI.eqcompare then
-      local AtlasCompare = CreateFrame( "Frame" , "pfEQCompareAtlas", AtlasLootTooltip )
-
-      AtlasCompare:SetScript("OnShow", function()
-        pfUI.eqcompare.ShowCompare(AtlasLootTooltip)
-      end)
-
-      AtlasCompare:SetScript("OnHide", function()
+      HookScript(AtlasLootTooltip, "OnShow", pfUI.eqcompare.GameTooltipShow)
+      HookScript(AtlasLootTooltip, "OnHide", function()
         ShoppingTooltip1:Hide()
         ShoppingTooltip2:Hide()
       end)
