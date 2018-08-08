@@ -926,6 +926,8 @@ pfUI:RegisterModule("gui", function ()
     if not this.setup then
       CreateConfig(nil, this, T["Disable Item Quality Color For \"Common\" Items"], C.appearance.bags, "borderlimit", "checkbox")
       CreateConfig(nil, this, T["Enable Item Quality Color For Equipment Only"], C.appearance.bags, "borderonlygear", "checkbox")
+      CreateConfig(nil, this, T["Highlight Unusable Items"], C.appearance.bags, "unusable", "checkbox")
+      CreateConfig(nil, this, T["Unusable Item Color"], C.appearance.bags, "unusable_color", "color")
       CreateConfig(nil, this, T["Enable Movable Bags"], C.appearance.bags, "movable", "checkbox")
       CreateConfig(nil, this, T["Hide Chat When Bags Are Opened"], C.appearance.bags, "hidechat", "checkbox")
       CreateConfig(nil, this, T["Bagslots Per Row"], C.appearance.bags, "bagrowlength")

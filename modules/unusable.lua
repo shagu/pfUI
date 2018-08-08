@@ -1,6 +1,8 @@
 pfUI:RegisterModule("unusable", function ()
   if not pfUI.bag then return end
 
+  if C.appearance.bags.unusable ~= "1" then return end
+
   pfUI.unusable = CreateFrame("Frame")
   pfUI.unusable:RegisterEvent("PLAYER_LEVEL_UP")
   pfUI.unusable:RegisterEvent("SKILL_LINES_CHANGED")
@@ -12,6 +14,7 @@ pfUI:RegisterModule("unusable", function ()
 
   local scanner = libtipscan:GetScanner("unusable")
   local dura_capture = string.gsub(DURABILITY_TEMPLATE, "%%[^%s]+", "(.+)")
+  local r, g, b, a = strsplit(",", C.appearance.bags.unusable_color)
 
   function pfUI.unusable:UpdateSlot(bag, slot)
     local frame = pfUI.bags[bag].slots[slot].frame
@@ -28,7 +31,7 @@ pfUI:RegisterModule("unusable", function ()
         local left = scanner:Line(red_line)
         local _,_, is_durability = string.find(left,dura_capture,1)
         if not is_durability then
-          _G.SetItemButtonTextureVertexColor(_G[name], 0.9, 0, 0)
+          _G.SetItemButtonTextureVertexColor(_G[name],r,g,b,a)
           self.cache[bag][slot] = true
         end
       else
