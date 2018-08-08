@@ -314,7 +314,14 @@ pfUI:RegisterModule("panel", function()
       widget:RegisterEvent("PLAYER_REGEN_ENABLED")
       widget:RegisterEvent("PLAYER_DEAD")
       widget:RegisterEvent("PLAYER_UNGHOST")
-      widget:RegisterEvent("UPDATE_INVENTORY_ALERTS")
+      widget:RegisterEvent("UNIT_INVENTORY_CHANGED")
+
+      -- The following event is disabled as most servers flood this event
+      -- even on other peoples durability changes. Therefore the event
+      -- would run about 50 times per minute (depending on the population)
+      -- while being in AFK in a capital city. We hopefully might be able
+      -- to bring that back, once the most popular servers accept the fix.
+      -- widget:RegisterEvent("UPDATE_INVENTORY_ALERTS")
 
       widget.itemLines = {}
       widget.slotnames = { "Head", "Shoulder", "Chest", "Wrist",
@@ -336,6 +343,8 @@ pfUI:RegisterModule("panel", function()
         end
       end
       widget:SetScript("OnEvent", function()
+        if event == "UNIT_INVENTORY_CHANGED" and arg1 ~= "player" then return end
+
         local repPercent = 100
         local lowestPercent = 100
         widget.totalRep = 0
