@@ -55,14 +55,6 @@ local getText = function(obj)
   return text
 end
 
-local stripPos = function(...)
-  if arg[1] then
-    table.remove(arg,1)
-    table.remove(arg,1)
-  end
-  return unpack(arg)
-end
-
 local findText = function(obj, text, exact)
   local name = obj:GetName()
   for i=1, obj:NumLines() do
@@ -74,11 +66,17 @@ local findText = function(obj, text, exact)
         return i, text
       end
     else
-      if left and (string.find(left, text)) then
-        return i, stripPos(string.find(left,text))
+      if left then
+        local found,_,a1,a2,a3,a4,a5,a6,a7,a8,a9,a10 = string.find(left, text)
+        if found then
+          return i, a1,a2,a3,a4,a5,a6,a7,a8,a9,a10
+        end
       end
-      if right and (string.find(right, text)) then
-        return i, stripPos(string.find(right,text))
+      if right then
+        local found,_,a1,a2,a3,a4,a5,a6,a7,a8,a9,a10 = string.find(right, text)
+        if found then
+          return i, a1,a2,a3,a4,a5,a6,a7,a8,a9,a10
+        end
       end
     end
   end
