@@ -840,13 +840,11 @@ pfUI:RegisterModule("chat", function ()
 
           -- reduce channel name to number
           if C.chat.text.channelnumonly == "1" then
-            local pattern = "%]%s+(.*|Hplayer)"
-            local channel = string.gsub(text, ".*%[(.-)" .. pattern .. ".+", "%1")
+            local channel = string.gsub(text, ".*%[(.-)%]%s+(.*|Hplayer).+", "%1")
             if string.find(channel, "%d+%. ") then
               channel = string.gsub(channel, "(%d+)%..*", "channel%1")
               channel = string.gsub(channel, "channel", "")
-              pattern = "%[%d+%..-" .. pattern
-              text = string.gsub(text, pattern, left .. channel .. right .. " %1")
+              text = string.gsub(text, "%[%d+%..-%]%s+(.*|Hplayer)", left .. channel .. right .. " %1")
             end
           end
 
