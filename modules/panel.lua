@@ -164,7 +164,7 @@ pfUI:RegisterModule("panel", function()
     do -- XP & Kills To Level
       local widget = CreateFrame("Frame", "pfPanelWidgetXP", UIParent)
       widget:RegisterEvent("PLAYER_ENTERING_WORLD")
-      widget:RegisterEvent("PLAYER_MONEY")
+      widget:RegisterEvent("PLAYER_XP_UPDATE")
       widget:SetScript("OnEvent", function()
         if UnitLevel("player") ~= 60 then
           curexp = UnitXP("player")
