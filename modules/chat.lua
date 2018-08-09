@@ -799,6 +799,9 @@ pfUI:RegisterModule("chat", function ()
     _G.CHAT_WHISPER_INFORM_GET = '[W]' .. default
   end
 
+  local r,g,b,a = strsplit(",", C.chat.text.timecolor)
+  local timecolorhex = string.format("%02x%02x%02x%02x", a*255, r*255, g*255, b*255)
+
   for i=1,NUM_CHAT_WINDOWS do
     if not _G["ChatFrame"..i].HookAddMessage then
       _G["ChatFrame"..i].HookAddMessage = _G["ChatFrame"..i].AddMessage
@@ -850,9 +853,7 @@ pfUI:RegisterModule("chat", function ()
 
           -- show timestamp in chat
           if C.chat.text.time == "1" then
-            local r,g,b,a = strsplit(",", C.chat.text.timecolor)
-            local chex = string.format("%02x%02x%02x%02x", a*255, r*255, g*255, b*255)
-            text = "|c" .. chex .. tleft .. date(C.chat.text.timeformat) .. tright .. "|r " .. text
+            text = "|c" .. timecolorhex .. tleft .. date(C.chat.text.timeformat) .. tright .. "|r " .. text
           end
 
           if C.chat.global.whispermod == "1" then
