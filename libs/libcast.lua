@@ -26,15 +26,22 @@ setfenv(1, pfUI:GetEnvironment())
 --
 
 local libcast = CreateFrame("Frame", "pfEnemyCast")
+local player = UnitName("player")
 
 function libcast:GetCastInfo(unit)
   local db = self.db[unit]
 
   -- clean legacy values
-  if db and db.start + db.delay + db.casttime / 1000 > GetTime() then
+  if db and db.cast and db.start + db.delay + db.casttime / 1000 > GetTime() then
     return db.cast, db.start, db.casttime, db.icon, db.delay, db.channel
   elseif db then
-    self.db[unit] = nil
+    -- remove cast action to the database
+    self.db[unit].cast = nil
+    self.db[unit].start = nil
+    self.db[unit].casttime = nil
+    self.db[unit].icon = nil
+    self.db[unit].delay = nil
+    self.db[unit].channel = nil
   end
 
   return nil, 0, 0, "", 0, nil
@@ -52,14 +59,31 @@ function libcast:AddAction(mob, spell, channel)
   if L["spells"][spell] ~= nil then
     local casttime = L["spells"][spell].t
     local icon = L["spells"][spell].icon
-    self.db[mob] = {cast = spell, start = GetTime(), casttime = casttime, icon = icon, delay = 0, channel = channel}
+
+    -- add cast action to the database
+    if not self.db[mob] then self.db[mob] = {} end
+    self.db[mob].cast = spell
+    self.db[mob].start = GetTime()
+    self.db[mob].casttime = casttime
+    self.db[mob].icon = icon
+    self.db[mob].delay = 0
+    self.db[mob].channel = channel
+
     self:TriggerEvents()
   end
 end
 
 function libcast:RemoveAction(mob, spell)
   if self.db[mob] and ( L["interrupts"][spell] ~= nil or spell == "INTERRUPT" ) then
-    self.db[mob] = nil
+
+    -- remove cast action to the database
+    self.db[mob].cast = nil
+    self.db[mob].start = nil
+    self.db[mob].casttime = nil
+    self.db[mob].icon = nil
+    self.db[mob].delay = nil
+    self.db[mob].channel = nil
+
     self:TriggerEvents()
   end
 end
@@ -77,7 +101,7 @@ libcast.SPELL_INTERRUPT = SanitizePattern(SPELLINTERRUPTSELFOTHER)
 libcast.OTHER_SPELL_INTERRUPT = SanitizePattern(SPELLINTERRUPTOTHEROTHER)
 
 -- main data
-libcast.db = {}
+libcast.db = { [player] = {} }
 libcast.frames = {}
 
 -- environmental casts
@@ -112,35 +136,57 @@ libcast:RegisterEvent("SPELLCAST_CHANNEL_UPDATE")
 libcast:RegisterEvent("PLAYER_TARGET_CHANGED")
 
 libcast:SetScript("OnEvent", function()
-  local player = UnitName("player")
-
   -- Fill database with player casts
   if event == "PLAYER_TARGET_CHANGED" then
     if not pfScanActive then
       this:TriggerEvents()
     end
   elseif event == "SPELLCAST_START" then
-    this.db[player] = {cast = arg1, start = GetTime(), casttime = arg2, icon = nil, channel = nil, delay = 0}
+    -- add cast action to the database
+    this.db[player].cast = arg1
+    this.db[player].start = GetTime()
+    this.db[player].casttime = arg2
+    this.db[player].icon = nil
+    this.db[player].delay = 0
+    this.db[player].channel = nil
     this:TriggerEvents()
   elseif event == "SPELLCAST_STOP" or event == "SPELLCAST_FAILED" or event == "SPELLCAST_INTERRUPTED" then
     if this.db[player] and not this.db[player].channel then
-      this.db[player] = nil
+      -- remove cast action to the database
+      this.db[player].cast = nil
+      this.db[player].start = nil
+      this.db[player].casttime = nil
+      this.db[player].icon = nil
+      this.db[player].delay = nil
+      this.db[player].channel = nil
       this:TriggerEvents()
     end
-  elseif ( event == "SPELLCAST_DELAYED" ) then
+  elseif event == "SPELLCAST_DELAYED" then
     if this.db[player] then
       this.db[player].delay = this.db[player].delay + arg1/1000
       this:TriggerEvents()
     end
-  elseif ( event == "SPELLCAST_CHANNEL_START" ) then
-    this.db[player] = {cast = arg2, start = GetTime(), casttime = arg1, icon = nil, channel = true, delay = 0}
+  elseif event == "SPELLCAST_CHANNEL_START" then
+    -- add cast action to the database
+    this.db[player].cast = arg2
+    this.db[player].start = GetTime()
+    this.db[player].casttime = arg1
+    this.db[player].icon = nil
+    this.db[player].delay = 0
+    this.db[player].channel = true
     this:TriggerEvents()
   elseif event == "SPELLCAST_CHANNEL_STOP" then
     if this.db[player] and this.db[player].channel then
-      this.db[player] = nil
+      -- remove cast action to the database
+      this.db[player].cast = nil
+      this.db[player].start = nil
+      this.db[player].casttime = nil
+      this.db[player].icon = nil
+      this.db[player].delay = nil
+      this.db[player].channel = nil
       this:TriggerEvents()
     end
-  elseif ( event == "SPELLCAST_CHANNEL_UPDATE" ) then
+  elseif event == "SPELLCAST_CHANNEL_UPDATE" then
     this.db[player].delay = this.db[player].delay + this.db[player].casttime / 1000 - this.db[player].delay + this.db[player].start - GetTime() - arg1 / 1000
 
   -- Fill database with environmental casts
@@ -240,10 +286,22 @@ libcast.customcast[strlower(aimedshot)] = function(begin)
     local _,_, lag = GetNetStats()
     local start = GetTime() + lag/1000
 
-    libcast.db[UnitName("player")] = {cast = aimedshot, start = start, casttime = duration, icon = icon, delay = 0, channel = nil}
+    -- add cast action to the database
+    libcast.db[player].cast = aimedshot
+    libcast.db[player].start = start
+    libcast.db[player].casttime = duration
+    libcast.db[player].icon = icon
+    libcast.db[player].delay = 0
+    libcast.db[player].channel = nil
     libcast:TriggerEvents()
   else
-    libcast.db[UnitName("player")] = nil
+    -- remove cast action to the database
+    libcast.db[player].cast = nil
+    libcast.db[player].start = nil
+    libcast.db[player].casttime = nil
+    libcast.db[player].icon = nil
+    libcast.db[player].delay = nil
+    libcast.db[player].channel = nil
     libcast:TriggerEvents()
   end
 end
@@ -254,10 +312,22 @@ libcast.customcast[strlower(multishot)] = function(begin)
     local _,_, lag = GetNetStats()
     local start = GetTime() + lag/1000
 
-    libcast.db[UnitName("player")] = {cast = multishot, start = start, casttime = duration, icon = icon, delay = 0, channel = nil}
+    -- add cast action to the database
+    libcast.db[player].cast = multishot
+    libcast.db[player].start = start
+    libcast.db[player].casttime = duration
+    libcast.db[player].icon = icon
+    libcast.db[player].delay = 0
+    libcast.db[player].channel = nil
     libcast:TriggerEvents()
   else
-    libcast.db[UnitName("player")] = nil
+    -- remove cast action to the database
+    libcast.db[player].cast = nil
+    libcast.db[player].start = nil
+    libcast.db[player].casttime = nil
+    libcast.db[player].icon = nil
+    libcast.db[player].delay = nil
+    libcast.db[player].channel = nil
     libcast:TriggerEvents()
   end
 end
