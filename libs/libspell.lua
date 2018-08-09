@@ -11,7 +11,8 @@ local libspell = {}
 --                                  e.g "Rank 1" and "1"
 local spellmaxrank = {}
 function libspell.GetSpellMaxRank(name)
-  if spellmaxrank[name] then return unpack(spellmaxrank[name]) end
+  local cache = spellmaxrank[name]
+  if cache then return cache[1], cache[2] end
 
   local rank = { 0, nil}
   for i = 1, GetNumSpellTabs() do
@@ -41,7 +42,9 @@ end
 -- return:      [number],[string]   spell index and spellbook id
 local spellindex = {}
 function libspell.GetSpellIndex(name, rank)
-  if spellindex[name..(rank or "")] then return unpack(spellindex[name..(rank or "")]) end
+  local cache = spellindex[name..(rank or "")]
+  if cache then return cache[1], cache[2] end
+
   if not rank then rank = libspell.GetSpellMaxRank(name) end
 
   for i = 1, GetNumSpellTabs() do
@@ -76,7 +79,8 @@ end
 --              [number]            Maximum range from the target at which you can cast the spell
 local spellinfo = {}
 function libspell.GetSpellInfo(index, bookType)
-  if spellinfo[index] then return unpack(spellinfo[index]) end
+  local cache = spellinfo[index]
+  if cache then return cache[1], cache[2], cache[3], cache[4], cache[5], cache[6] end
 
   local name, rank, id
   local icon = ""
@@ -100,9 +104,9 @@ function libspell.GetSpellInfo(index, bookType)
 
   if id then
     scanner:SetSpell(id, bookType)
-    local _,sec = scanner:Find(gsub(SPELL_CAST_TIME_SEC, "%%.3g", "%(.+%)"))
-    local _,min = scanner:Find(gsub(SPELL_CAST_TIME_MIN, "%%.3g", "%(.+%)"))
-    local _,range = scanner:Find(gsub(SPELL_RANGE, "%%s", "%(.+%)"))
+    local _, sec = scanner:Find(gsub(SPELL_CAST_TIME_SEC, "%%.3g", "%(.+%)"))
+    local _, min = scanner:Find(gsub(SPELL_CAST_TIME_MIN, "%%.3g", "%(.+%)"))
+    local _, range = scanner:Find(gsub(SPELL_RANGE, "%%s", "%(.+%)"))
     castingTime = (tonumber(sec) or tonumber(min) or 0) * 1000
     if range then
       local _, _, min, max = string.find(range, "(.+)-(.+)")
