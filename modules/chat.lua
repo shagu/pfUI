@@ -73,6 +73,18 @@ pfUI:RegisterModule("chat", function ()
       ["rx"]=" ([_A-Za-z0-9-]+)%.([_A-Za-z0-9-]+)%.(%S+)%s?",
       ["fm"]="%s.%s.%s"},
   }
+
+  pfUI.chat.URLFuncs = {
+    ["WWW"] = function(a1,a2,a3) return pfUI.chat:FormatLink(pfUI.chat.URLPattern.WWW.fm,a1,a2,a3) end,
+    ["PROTOCOL"] = function(a1,a2) return pfUI.chat:FormatLink(pfUI.chat.URLPattern.PROTOCOL.fm,a1,a2) end,
+    ["EMAIL"] = function(a1,a2,a3,a4) return pfUI.chat:FormatLink(pfUI.chat.URLPattern.EMAIL.fm,a1,a2,a3,a4) end,
+    ["PORTIP"] = function(a1,a2,a3,a4,a5) return pfUI.chat:FormatLink(pfUI.chat.URLPattern.PORTIP.fm,a1,a2,a3,a4,a5) end,
+    ["IP"] = function(a1,a2,a3,a4) return pfUI.chat:FormatLink(pfUI.chat.URLPattern.IP.fm,a1,a2,a3,a4) end,
+    ["SHORTURL"] = function(a1,a2,a3) return pfUI.chat:FormatLink(pfUI.chat.URLPattern.SHORTURL.fm,a1,a2,a3) end,
+    ["URLIP"] = function(a1,a2,a3,a4) return pfUI.chat:FormatLink(pfUI.chat.URLPattern.URLIP.fm,a1,a2,a3,a4) end,
+    ["URL"] = function(a1,a2,a3) return pfUI.chat:FormatLink(pfUI.chat.URLPattern.URL.fm,a1,a2,a3) end,
+  }
+
   -- url copy dialog
   function pfUI.chat:FormatLink(formatter,...)
     if not (formatter and arg[1]) then return end
@@ -209,7 +221,7 @@ pfUI:RegisterModule("chat", function ()
     local forwardto = pfUI.chat.left.panelTop.proxy.forwardto
     if pfUI.chat.left.panelTop.proxy.enabled == false then return end
 
-    if arg2 ~= UnitName("player") and arg2 ~=  forwardto  and forwardto ~= UnitName("player") then
+    if arg2 ~= UnitName("player") and arg2 ~= forwardto and forwardto ~= UnitName("player") then
       SendChatMessage("[" .. arg2 .. "]: " .. arg1, "WHISPER", nil, forwardto)
     end
 
@@ -790,7 +802,7 @@ pfUI:RegisterModule("chat", function ()
   for i=1,NUM_CHAT_WINDOWS do
     if not _G["ChatFrame"..i].HookAddMessage then
       _G["ChatFrame"..i].HookAddMessage = _G["ChatFrame"..i].AddMessage
-      _G["ChatFrame"..i].AddMessage = function (frame, text, a1, a2, a3, a4, a5)
+      _G["ChatFrame"..i].AddMessage = function(frame, text, a1, a2, a3, a4, a5)
         if text then
           -- Remove prat's CLINK itemlinks.
           text = gsub(text, '%{CLINK:(%x%x%x%x%x%x%x%x):(%d*):(%d*):(%d*):(%d*):(.-)%}', function(color, id, enchant, suffix, uuid, name)
@@ -800,14 +812,14 @@ pfUI:RegisterModule("chat", function ()
           -- detect urls
           if C.chat.text.detecturl == "1" then
             local URLPattern = pfUI.chat.URLPattern
-            text = string.gsub (text, URLPattern.WWW.rx, function(a1,a2,a3) return pfUI.chat:FormatLink(URLPattern.WWW.fm,a1,a2,a3) end)
-            text = string.gsub (text, URLPattern.PROTOCOL.rx, function(a1,a2) return pfUI.chat:FormatLink(URLPattern.PROTOCOL.fm,a1,a2) end)
-            text = string.gsub (text, URLPattern.EMAIL.rx, function(a1,a2,a3,a4) return pfUI.chat:FormatLink(URLPattern.EMAIL.fm,a1,a2,a3,a4) end)
-            text = string.gsub (text, URLPattern.PORTIP.rx, function(a1,a2,a3,a4,a5) return pfUI.chat:FormatLink(URLPattern.PORTIP.fm,a1,a2,a3,a4,a5) end)
-            text = string.gsub (text, URLPattern.IP.rx, function(a1,a2,a3,a4) return pfUI.chat:FormatLink(URLPattern.IP.fm,a1,a2,a3,a4) end)
-            text = string.gsub (text, URLPattern.SHORTURL.rx, function(a1,a2,a3) return pfUI.chat:FormatLink(URLPattern.SHORTURL.fm,a1,a2,a3) end)
-            text = string.gsub (text, URLPattern.URLIP.rx, function(a1,a2,a3,a4) return pfUI.chat:FormatLink(URLPattern.URLIP.fm,a1,a2,a3,a4) end)
-            text = string.gsub (text, URLPattern.URL.rx, function(a1,a2,a3) return pfUI.chat:FormatLink(URLPattern.URL.fm,a1,a2,a3) end)
+            text = string.gsub (text, URLPattern.WWW.rx, pfUI.chat.URLFuncs.WWW)
+            text = string.gsub (text, URLPattern.PROTOCOL.rx, pfUI.chat.URLFuncs.PROTOCOL)
+            text = string.gsub (text, URLPattern.EMAIL.rx, pfUI.chat.URLFuncs.EMAIL)
+            text = string.gsub (text, URLPattern.PORTIP.rx, pfUI.chat.URLFuncs.PORTIP)
+            text = string.gsub (text, URLPattern.IP.rx, pfUI.chat.URLFuncs.IP)
+            text = string.gsub (text, URLPattern.SHORTURL.rx, pfUI.chat.URLFuncs.SHORTURL)
+            text = string.gsub (text, URLPattern.URLIP.rx, pfUI.chat.URLFuncs.URLIP)
+            text = string.gsub (text, URLPattern.URL.rx, pfUI.chat.URLFuncs.URL)
           end
 
           -- display class colors if already indexed
