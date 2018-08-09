@@ -93,7 +93,10 @@ function libdebuff:AddPending(unit, unitlevel, effect, duration)
   local unitlevel = unitlevel or 0
 
   if duration > 0 then
-    libdebuff.pending = { unit, unitlevel, effect, duration }
+    libdebuff.pending[1] = unit
+    libdebuff.pending[2] = unitlevel
+    libdebuff.pending[3] = effect
+    libdebuff.pending[4] = duration
   end
 end
 
@@ -109,9 +112,16 @@ function libdebuff:PersistPending(effect)
   end
 end
 
+function libdebuff:ClearPending()
+  libdebuff.pending[1] = nil
+  libdebuff.pending[2] = nil
+  libdebuff.pending[3] = nil
+  libdebuff.pending[4] = nil
+end
+
 function libdebuff:RemovePending(effect)
   if libdebuff.pending[3] == effect then
-    libdebuff.pending = {}
+    libdebuff:ClearPending()
   end
 end
 
@@ -133,7 +143,7 @@ function libdebuff:AddEffect(unit, unitlevel, effect, duration)
   libdebuff.objects[unit][unitlevel][effect].start = GetTime()
   libdebuff.objects[unit][unitlevel][effect].duration = duration or libdebuff:GetDuration(effect)
 
-  libdebuff.pending = {}
+  libdebuff:ClearPending()
 
   if pfUI.uf.target then
     pfUI.uf:RefreshUnit(pfUI.uf.target, "aura")
