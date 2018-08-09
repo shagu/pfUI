@@ -324,8 +324,7 @@ pfUI:RegisterModule("panel", function()
       -- widget:RegisterEvent("UPDATE_INVENTORY_ALERTS")
 
       widget.itemLines = {}
-      widget.slotnames = { "Head", "Shoulder", "Chest", "Wrist",
-        "Hands", "Waist", "Legs", "Feet", "MainHand", "SecondaryHand", "Ranged", }
+      widget.durability_slots = { 1, 3, 5, 6, 7, 8, 9, 10, 16, 17, 18 }
       widget.totalRep = 0
       widget.scantip = libtipscan:GetScanner("panel")
       widget.duracapture = string.gsub(DURABILITY_TEMPLATE, "%%[^%s]+", "(.+)")
@@ -349,8 +348,7 @@ pfUI:RegisterModule("panel", function()
         local lowestPercent = 100
         widget.totalRep = 0
         wipe(widget.itemLines)
-        for i,slotName in pairs(widget.slotnames) do
-          local id, _ = GetInventorySlotInfo(slotName.. "Slot")
+        for _, id in pairs(widget.durability_slots) do
           local hasItem, _, repCost = widget.scantip:SetInventoryItem("player", id)
           if (hasItem) then
             widget.totalRep = widget.totalRep + repCost
