@@ -12,8 +12,6 @@ setfenv(1, pfUI:GetEnvironment())
 --
 --  The scanner tooltip returned by :GetScanner has all the Set____ GameTooltip methods with a built-in full clear
 --  In addition the scanner has the following custom methods
---  <scanner>:Clear()
---    empties the scanner tooltip
 --  <scanner>:Text()
 --    return a table with all the left, right texts in {[line] = {left, right}} format
 --  <scanner>:Find(text, [exact])
@@ -38,30 +36,16 @@ local methods = {
   "SetTrainerService", "SetUnit", "SetUnitBuff", "SetUnitDebuff",
 }
 local extra_methods = {
-  "Clear", "Find", "Line", "Text", "List",
+  "Find", "Line", "Text", "List",
 }
-
-local clearText = function(...)
-  for i=1,arg.n do
-    local region = arg[i]
-    if region:IsObjectType("FontString") and region.SetText then
-      region:SetTextColor(0,0,0)
-      region:SetText()
-    end
-  end
-end
-
-local clearTooltip = function(obj)
-  clearText(obj:GetRegions())
-  obj:ClearLines()
-  return obj
-end
 
 local getText = function(obj)
   local name = obj:GetName()
   local text = {}
   for i=1, obj:NumLines() do
-    local left, right = _G[string.format("%sTextLeft%d",name,i)]:GetText(), _G[string.format("%sTextRight%d",name,i)]:GetText()
+    local left, right = _G[string.format("%sTextLeft%d",name,i)], _G[string.format("%sTextRight%d",name,i)]
+    left = left and left:IsVisible() and left:GetText()
+    right = right and right:IsVisible() and right:GetText()
     left = left and left ~= "" and left or nil
     right = right and right ~= "" and right or nil
     if left or right then
@@ -82,7 +66,9 @@ end
 local findText = function(obj, text, exact)
   local name = obj:GetName()
   for i=1, obj:NumLines() do
-    local left, right = _G[string.format("%sTextLeft%d",name,i)]:GetText(), _G[string.format("%sTextRight%d",name,i)]:GetText()
+    local left, right = _G[string.format("%sTextLeft%d",name,i)], _G[string.format("%sTextRight%d",name,i)]
+    left = left and left:IsVisible() and left:GetText()
+    right = right and right:IsVisible() and right:GetText()
     if exact then
       if (left and left == text) or (right and right == text) then
         return i, text
@@ -101,7 +87,10 @@ end
 local lineText = function(obj, line)
   local name = obj:GetName()
   if line <= obj:NumLines() then
-    local left, right = _G[string.format("%sTextLeft%d",name,line)]:GetText(), _G[string.format("%sTextRight%d",name,line)]:GetText()
+    local left, right = _G[string.format("%sTextLeft%d",name,line)], _G[string.format("%sTextRight%d",name,line)]
+    left = left and left:IsVisible() and left:GetText()
+    right = right and right:IsVisible() and right:GetText()
+
     if left or right then
       return left, right
     end
@@ -116,14 +105,14 @@ local findColor = function(obj, r,g,b)
   for i=1, obj:NumLines() do
     local tr, tg, tb
     local left, right = _G[string.format("%sTextLeft%d",name,i)], _G[string.format("%sTextRight%d",name,i)]
-    if left then
+    if left and left:IsVisible() then
       tr, tg, tb = left:GetTextColor()
       tr, tg, tb = round(tr,1), round(tg,1), round(tb,1)
     end
     if tr and (tr == r and tg == g and tb == b) then
       return i
     end
-    if right then
+    if right and right:IsVisible() then
       tr, tg, tb = right:GetTextColor()
       tr, tg, tb = round(tr,1), round(tg,1), round(tb,1)
     end
@@ -139,9 +128,6 @@ libtipscan._registry = setmetatable({},{__index = function(t,k)
   v:SetScript("OnHide", function ()
     this:SetOwner(this,"ANCHOR_NONE")
   end)
-  function v:Clear()
-    clearTooltip(self)
-  end
   function v:Text()
     return getText(self)
   end
@@ -161,7 +147,7 @@ libtipscan._registry = setmetatable({},{__index = function(t,k)
       if v:IsShown() then
         v:Hide()
       end
-      v:Clear()
+      v:ClearLines()
       return old(v, a1,a2,a3,a4,a5,a6,a7,a8,a9,a10)
     end
   end
@@ -180,7 +166,7 @@ end})
 
 function libtipscan:GetScanner(type)
   local scanner = self._registry[type]
-  scanner:Clear()
+  scanner:ClearLines()
   return scanner
 end
 
