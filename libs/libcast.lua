@@ -162,7 +162,7 @@ libcast:SetScript("OnEvent", function()
       this:TriggerEvents()
     end
   elseif event == "SPELLCAST_DELAYED" then
-    if this.db[player] then
+    if this.db[player].cast then
       this.db[player].delay = this.db[player].delay + arg1/1000
       this:TriggerEvents()
     end
