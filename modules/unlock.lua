@@ -176,7 +176,7 @@ pfUI:RegisterModule("unlock", function ()
     local diffypos = frame.oldPos[2] - ypos
 
     for id, frame in pairs(pfUI.unlock.selection) do
-      CreateBackdrop(frame.drag)
+      CreateBackdrop(frame.drag, nil, nil, .8)
       if frame:GetName() ~= name then
         local _, _, _, xpos, ypos = frame:GetPoint()
         frame:SetPoint("TOPLEFT", xpos - diffxpos, ypos - diffypos)
@@ -202,7 +202,7 @@ pfUI:RegisterModule("unlock", function ()
   end
 
   local function DraggerOnLeave()
-    CreateBackdrop(this)
+    CreateBackdrop(this, nil, nil, .8)
   end
 
   local function CreateDragger(f)
