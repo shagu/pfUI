@@ -95,7 +95,7 @@ modules\gm.lua
 modules\mirrortimers.lua
 modules\socialmod.lua
 modules\feigndeath.lua
-modules\hdgraphic.lua
+modules\pixelperfect.lua
 modules\share.lua
 modules\tracking.lua
 modules\easteregg.lua
