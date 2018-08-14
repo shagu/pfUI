@@ -60,6 +60,11 @@ pfUI:RegisterModule("castbar", function ()
         return
       end
 
+      if not UnitExists(this.unitstr) then
+        this:Hide()
+        this.fadeout = nil
+      end
+
       if this.fadeout and this:GetAlpha() > 0 then
         this:SetAlpha(this:GetAlpha()-0.05)
         if this:GetAlpha() == 0 then
