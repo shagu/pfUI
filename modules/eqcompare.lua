@@ -89,11 +89,11 @@ pfUI:RegisterModule("eqcompare", function ()
           if v.value ~= target.value and v.widget:GetText() then
             if v.value > target.value then
               if not strfind(v.widget:GetText(), "|cff88ff88") and not strfind(v.widget:GetText(), "|cffff8888") then
-                v.widget:SetText(v.widget:GetText() .. "|cff88ff88 (+" .. v.value - target.value .. ")")
+                v.widget:SetText(v.widget:GetText() .. "|cff88ff88 (+" .. round(v.value - target.value, 1) .. ")")
               end
             elseif not v.widget.compSet then
               if not strfind(v.widget:GetText(), "|cff88ff88") and not strfind(v.widget:GetText(), "|cffff8888") then
-                v.widget:SetText(v.widget:GetText() .. "|cffff8888 (-" .. target.value - v.value .. ")")
+                v.widget:SetText(v.widget:GetText() .. "|cffff8888 (-" .. round(target.value - v.value, 1) .. ")")
               end
             end
             target.processed = true
