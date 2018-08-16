@@ -65,16 +65,18 @@ pfUI:RegisterModule("castbar", function ()
         this.fadeout = nil
       end
 
+      local name = this.unitstr and UnitName(this.unitstr) or this.unitname
+
       if this.fadeout and this:GetAlpha() > 0 then
-        this:SetAlpha(this:GetAlpha()-0.05)
-        if this:GetAlpha() == 0 then
+        if this:GetAlpha() == 0 or this.playername ~= name then
           this:Hide()
           this.fadeout = nil
         end
+
+        this:SetAlpha(this:GetAlpha()-0.05)
         return
       end
 
-      local name = this.unitstr and UnitName(this.unitstr) or this.unitname
       local spellname, start, duration, icon, delay, channel = libcast:GetCastInfo(name)
       if spellname then
         local max = duration / 1000
@@ -112,6 +114,7 @@ pfUI:RegisterModule("castbar", function ()
         self:SetAlpha(1)
         self:Show()
         self.fadeout = nil
+        self.playername = name
       else
         self.bar:SetMinMaxValues(1,100)
         self.bar:SetValue(100)
