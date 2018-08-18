@@ -270,9 +270,9 @@ pfUI:RegisterModule("nameplates", function ()
       if not this.healthbar.castbar then
         this.healthbar.castbar = CreateFrame("StatusBar", nil, this.healthbar)
         this.healthbar.castbar:Hide()
-        this.healthbar.castbar:SetWidth(this.healthbar:GetWidth())
         this.healthbar.castbar:SetHeight(C.nameplates.heightcast)
         this.healthbar.castbar:SetPoint("TOPLEFT", this.healthbar, "BOTTOMLEFT", 0, -5)
+        this.healthbar.castbar:SetPoint("TOPRIGHT", this.healthbar, "BOTTOMRIGHT", 0, -5)
         this.healthbar.castbar:SetBackdrop({  bgFile = [[Interface\Tooltips\UI-Tooltip-Background]],
                                                insets = {left = -1, right = -1, top = -1, bottom = -1} })
         this.healthbar.castbar:SetBackdropColor(0,0,0,1)
@@ -320,9 +320,9 @@ pfUI:RegisterModule("nameplates", function ()
 
         this.healthbar.castbar.icon = this.healthbar.castbar:CreateTexture(nil, "BORDER")
         this.healthbar.castbar.icon:ClearAllPoints()
-        this.healthbar.castbar.icon:SetPoint("BOTTOMLEFT", this.healthbar.castbar, "BOTTOMRIGHT", 5, 0)
-        this.healthbar.castbar.icon:SetWidth(C.nameplates.heightcast + 5 + C.nameplates.heighthealth)
-        this.healthbar.castbar.icon:SetHeight(C.nameplates.heightcast + 5 + C.nameplates.heighthealth)
+        this.healthbar.castbar.icon:SetPoint("BOTTOMLEFT", this.healthbar.castbar, "BOTTOMRIGHT", 5, -1)
+        this.healthbar.castbar.icon:SetPoint("TOPLEFT", this.healthbar, "TOPRIGHT", 5, 1)
+        this.healthbar.castbar.icon:SetWidth(C.nameplates.heightcast + 8 + C.nameplates.heighthealth)
 
         this.healthbar.castbar.icon.bg = this.healthbar.castbar:CreateTexture(nil, "BACKGROUND")
         this.healthbar.castbar.icon.bg:SetTexture(0,0,0,0.90)
@@ -493,6 +493,78 @@ pfUI:RegisterModule("nameplates", function ()
       healthbar.bgtarget:Show()
     else
       healthbar.bgtarget:Hide()
+    end
+
+    -- target zoom
+    local w, h = healthbar:GetWidth(), healthbar:GetHeight()
+    if UnitExists("target") and healthbar:GetAlpha() == 1 and C.nameplates.targetzoom == "1" then
+      local wc = tonumber(C.nameplates.width)*1.4
+      local hc = tonumber(C.nameplates.heighthealth)*1.3
+      local animation = false
+
+      if wc >= w then
+        wc = w*1.05
+        healthbar:SetWidth(wc)
+        healthbar.bg:SetWidth(wc + 3)
+        healthbar.bgtarget:SetWidth(wc + 5)
+        healthbar.zoomTransition = true
+        animation = true
+      end
+
+      if hc >= h then
+        hc = h*1.05
+        healthbar:SetHeight(hc)
+        healthbar.bg:SetHeight(hc + 3)
+        healthbar.bgtarget:SetHeight(hc + 5)
+        healthbar.zoomTransition = true
+        animation = true
+      end
+
+      if animation == false and not healthbar.zoomed then
+        healthbar:SetWidth(wc)
+        healthbar.bg:SetWidth(wc + 3)
+        healthbar.bgtarget:SetWidth(wc + 5)
+
+        healthbar:SetHeight(hc)
+        healthbar.bg:SetHeight(hc + 3)
+        healthbar.bgtarget:SetHeight(hc + 5)
+
+        healthbar.zoomTransition = nil
+        healthbar.zoomed = true
+      end
+    elseif healthbar.zoomed or healthbar.zoomTransition then
+      local wc = tonumber(C.nameplates.width)
+      local hc = tonumber(C.nameplates.heighthealth)
+      local animation = false
+
+      if wc <= w then
+        wc = w*.95
+        healthbar:SetWidth(wc)
+        healthbar.bg:SetWidth(wc + 3)
+        healthbar.bgtarget:SetWidth(wc + 5)
+        animation = true
+      end
+
+      if hc <= h then
+        hc = h*0.95
+        healthbar:SetHeight(hc)
+        healthbar.bg:SetHeight(hc + 3)
+        healthbar.bgtarget:SetHeight(hc + 5)
+        animation = true
+      end
+
+      if animation == false then
+        healthbar:SetWidth(wc)
+        healthbar.bg:SetWidth(wc + 3)
+        healthbar.bgtarget:SetWidth(wc + 5)
+
+        healthbar:SetHeight(hc)
+        healthbar.bg:SetHeight(hc + 3)
+        healthbar.bgtarget:SetHeight(hc + 5)
+
+        healthbar.zoomTransition = nil
+        healthbar.zoomed = nil
+      end
     end
 
     -- update combopoints
