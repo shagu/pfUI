@@ -1304,5 +1304,7 @@ pfUI:RegisterModule("gui", function ()
     end
   end)
 
-
+  -- make those available to external modules
+  pfUI.gui.CreateConfig = CreateConfig
+  pfUI.gui.update = update
 end)
