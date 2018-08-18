@@ -580,6 +580,8 @@ function pfUI.api.SetAutoPoint(frame, parent, spacing)
 
   local x, y = parent:GetCenter()
 
+  if not x or not y then return end
+
   local off = spacing or 0
 
   frame:ClearAllPoints()
