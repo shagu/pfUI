@@ -337,6 +337,26 @@ pfUI:RegisterModule("chat", function ()
   pfUI.chat:RegisterEvent("WHO_LIST_UPDATE")
   pfUI.chat:RegisterEvent("CHAT_MSG_SYSTEM")
 
+  local function ChatOnMouseWheel()
+    if (arg1 > 0) then
+      if IsShiftKeyDown() then
+        frame:ScrollToTop()
+      else
+        for i=1, C.chat.global.scrollspeed do
+          frame:ScrollUp()
+        end
+      end
+    elseif (arg1 < 0) then
+      if IsShiftKeyDown() then
+        frame:ScrollToBottom()
+      else
+        for i=1, C.chat.global.scrollspeed do
+          frame:ScrollDown()
+        end
+      end
+    end
+  end
+
   function pfUI.chat:RefreshChat()
     local panelheight = C.global.font_size+default_border*5
 
@@ -436,25 +456,7 @@ pfUI:RegisterModule("chat", function ()
       end
 
       frame:EnableMouseWheel(true)
-      frame:SetScript("OnMouseWheel", function()
-        if (arg1 > 0) then
-          if IsShiftKeyDown() then
-            frame:ScrollToTop()
-          else
-            for i=1, C.chat.global.scrollspeed do
-              frame:ScrollUp()
-            end
-          end
-        elseif (arg1 < 0) then
-          if IsShiftKeyDown() then
-            frame:ScrollToBottom()
-          else
-            for i=1, C.chat.global.scrollspeed do
-              frame:ScrollDown()
-            end
-          end
-        end
-      end)
+      frame:SetScript("OnMouseWheel", chatOnMouseWheel)
     end
   end
 
