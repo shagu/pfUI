@@ -344,18 +344,18 @@ pfUI:RegisterModule("chat", function ()
   local function ChatOnMouseWheel()
     if (arg1 > 0) then
       if IsShiftKeyDown() then
-        frame:ScrollToTop()
+        this:ScrollToTop()
       else
         for i=1, C.chat.global.scrollspeed do
-          frame:ScrollUp()
+          this:ScrollUp()
         end
       end
     elseif (arg1 < 0) then
       if IsShiftKeyDown() then
-        frame:ScrollToBottom()
+        this:ScrollToBottom()
       else
         for i=1, C.chat.global.scrollspeed do
-          frame:ScrollDown()
+          this:ScrollDown()
         end
       end
     end
@@ -461,7 +461,7 @@ pfUI:RegisterModule("chat", function ()
       end
 
       frame:EnableMouseWheel(true)
-      frame:SetScript("OnMouseWheel", chatOnMouseWheel)
+      frame:SetScript("OnMouseWheel", ChatOnMouseWheel)
     end
 
     -- update dock frame for all windows
