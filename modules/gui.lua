@@ -836,7 +836,6 @@ pfUI:RegisterModule("gui", function ()
       [2] = { "group",        T["Group"] },
       [3] = { "grouptarget",  T["Group-Target"]},
       [4] = { "grouppet",     T["Group-Pet"] },
-      [5] = { "focus",        T["Focus"] },
     }
   }
 
