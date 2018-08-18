@@ -1290,7 +1290,7 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.tabs.unlock.button:SetScript("OnClick", function()
     pfUI.gui.delaySettingChanged = pfUI.gui.settingChanged
     pfUI.gui.settingChanged = nil
-    pfUI.unlock:UnlockFrames()
+    pfUI.unlock:Show()
   end)
 
   -- [[ Hoverbind ]]
