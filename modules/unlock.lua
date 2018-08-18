@@ -229,8 +229,8 @@ pfUI:RegisterModule("unlock", function ()
       dock.right.texture:SetVertexColor(1,.8,0)
     else
       dock.reset:SetText(T["Unlock"])
-      dock.xcoord:SetText(T["n/a"])
-      dock.ycoord:SetText(T["n/a"])
+      dock.xcoord:SetText(T["N/A"])
+      dock.ycoord:SetText(T["N/A"])
 
       dock.up:Disable()
       dock.down:Disable()
