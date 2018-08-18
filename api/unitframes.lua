@@ -903,6 +903,11 @@ function pfUI.uf:RefreshUnit(unit, component)
 
   local component = component or ""
 
+  if unit.config.visible ~= "1" then
+    unit:Hide()
+    return
+  end
+
   -- don't update scanner activity
   if unit.label == "target" or unit.label == "targettarget" then
     if pfScanActive == true then return end
