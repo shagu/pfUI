@@ -286,7 +286,7 @@ pfUI:RegisterModule("unlock", function ()
     end
 
     if frame.OnMove then frame:OnMove() end
-    UpdateDockValues()
+    QueueFunction(UpdateDockValues)
   end
 
   local function DraggerOnMouseDown()
@@ -557,8 +557,7 @@ pfUI:RegisterModule("unlock", function ()
       frame:StopMovingOrSizing()
       SavePosition(frame)
     end
-
-    UpdateDockValues()
+    QueueFunction(SetDockToFrame, pfUI.unlock.dock.parent)
   end)
   SkinButton(pfUI.unlock.dock.reset,.2,1,.8)
 
