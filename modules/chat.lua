@@ -23,6 +23,10 @@ pfUI:RegisterModule("chat", function ()
   pfUI.chat = CreateFrame("Frame",nil,UIParent)
 
   pfUI.chat.left = CreateFrame("Frame", "pfChatLeft", UIParent)
+  pfUI.chat.left.OnMove = function()
+    pfUI.chat:RefreshChat()
+  end
+
   pfUI.chat.left:SetFrameStrata("BACKGROUND")
   pfUI.chat.left:SetWidth(C.chat.left.width)
   pfUI.chat.left:SetHeight(C.chat.left.height)
@@ -414,11 +418,12 @@ pfUI:RegisterModule("chat", function ()
         -- Combat Log
         FCF_UnDockFrame(frame)
         FCF_Close(frame)
-      elseif i == 1 or frame.isDocked then
+      elseif frame.isDocked then
         -- Left Chat
         FCF_DockFrame(frame)
         tab:SetParent(pfUI.chat.left.panelTop)
         frame:SetParent(pfUI.chat.left)
+        frame:ClearAllPoints()
         frame:SetPoint("TOPLEFT", pfUI.chat.left ,"TOPLEFT", default_border, -panelheight)
         frame:SetPoint("BOTTOMRIGHT", pfUI.chat.left ,"BOTTOMRIGHT", -default_border, panelheight)
       else
@@ -457,6 +462,11 @@ pfUI:RegisterModule("chat", function ()
 
       frame:EnableMouseWheel(true)
       frame:SetScript("OnMouseWheel", chatOnMouseWheel)
+    end
+
+    -- update dock frame for all windows
+    for index, value in DOCKED_CHAT_FRAMES do
+      FCF_UpdateButtonSide(value)
     end
   end
 
