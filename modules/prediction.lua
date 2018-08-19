@@ -78,6 +78,10 @@ pfUI:RegisterModule("prediction", function ()
   end
 
   function pfUI.prediction:Heal(sender, target, amount, duration)
+    if not sender or not target or not amount or not duration then
+      return
+    end
+
     local timeout = duration/1000 + GetTime()
     heals[target] = heals[target] or {}
     heals[target][sender] = { amount, timeout }
