@@ -50,6 +50,7 @@ skins\blizzard\character.lua
 skins\blizzard\spellbook.lua
 skins\blizzard\friends.lua
 skins\blizzard\talents.lua
+skins\blizzard\inspect.lua
 
 # modules
 modules\firstrun.lua
