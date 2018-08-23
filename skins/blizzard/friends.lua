@@ -114,11 +114,11 @@ pfUI:RegisterSkin("Friends", function ()
 
     WhoFrameColumnHeader4:ClearAllPoints()
     WhoFrameColumnHeader4:SetPoint("LEFT", WhoFrameColumnHeader3, "RIGHT", -2, -0)
-    WhoFrameColumnHeader4:SetWidth(48)
+    WhoFrameColumnHeader4:SetWidth(68)
 
     WhoFrameColumnHeader1:ClearAllPoints()
     WhoFrameColumnHeader1:SetPoint("LEFT", WhoFrameColumnHeader4, "RIGHT", -5, -0)
-    WhoFrameColumnHeader1:SetWidth(105)
+    WhoFrameColumnHeader1:SetWidth(85)
 
     WhoFrameColumnHeader2:ClearAllPoints()
     WhoFrameColumnHeader2:SetPoint("LEFT", WhoFrameColumnHeader1, "RIGHT", -5, -0)
@@ -154,10 +154,10 @@ pfUI:RegisterSkin("Friends", function ()
       level:ClearAllPoints()
       level:SetPoint("TOPLEFT", 12, -2)
 
-      name:SetWidth(100)
+      name:SetWidth(80)
       name:SetHeight(14)
       name:ClearAllPoints()
-      name:SetPoint("LEFT", 85, 0)
+      name:SetPoint("LEFT", 105, 0)
     end
 
     StripTextures(WhoListScrollFrame)
@@ -193,12 +193,12 @@ pfUI:RegisterSkin("Friends", function ()
 
     GuildFrameColumnHeader4:ClearAllPoints()
     GuildFrameColumnHeader4:SetPoint("LEFT", GuildFrameColumnHeader3, "RIGHT", -3, -0)
-    GuildFrameColumnHeader4:SetWidth(48)
+    GuildFrameColumnHeader4:SetWidth(68)
     StripTextures(GuildFrameColumnHeader4)
 
     GuildFrameColumnHeader1:ClearAllPoints()
     GuildFrameColumnHeader1:SetPoint("LEFT", GuildFrameColumnHeader4, "RIGHT", -4, -0)
-    GuildFrameColumnHeader1:SetWidth(105)
+    GuildFrameColumnHeader1:SetWidth(85)
     StripTextures(GuildFrameColumnHeader1)
 
     GuildFrameColumnHeader2:ClearAllPoints()
@@ -252,11 +252,11 @@ pfUI:RegisterSkin("Friends", function ()
         _G["GuildFrameButton"..i.."Level"]:ClearAllPoints()
         _G["GuildFrameButton"..i.."Level"]:SetPoint("TOPLEFT", 10, -3)
 
-        _G["GuildFrameButton"..i.."Name"]:SetWidth(100)
+        _G["GuildFrameButton"..i.."Name"]:SetWidth(80)
         _G["GuildFrameButton"..i.."Name"]:SetHeight(14)
 
         _G["GuildFrameButton"..i.."Name"]:ClearAllPoints()
-        _G["GuildFrameButton"..i.."Name"]:SetPoint("LEFT", 85, -3)
+        _G["GuildFrameButton"..i.."Name"]:SetPoint("LEFT", 105, -3)
       end
 
       local frame = _G["GuildFrameGuildStatusButton"..i]
