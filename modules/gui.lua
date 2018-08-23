@@ -577,67 +577,10 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.tabs.settings.tabs.general = pfUI.gui.tabs.settings.tabs:CreateTabChild(T["General"], true)
   pfUI.gui.tabs.settings.tabs.general:SetScript("OnShow", function()
     if not this.setup then
-      CreateConfig(nil, this, T["Language"], C.global, "language", "dropdown", pfUI.gui.dropdowns.languages)
-      CreateConfig(nil, this, T["Enable Region Compatible Font"], C.global, "force_region", "checkbox")
-      CreateConfig(nil, this, T["Standard Text Font"], C.global, "font_default", "dropdown", pfUI.gui.dropdowns.fonts)
-      CreateConfig(nil, this, T["Standard Text Font Size"], C.global, "font_size")
-      CreateConfig(nil, this, T["Unit Frame Text Font"], C.global, "font_unit", "dropdown", pfUI.gui.dropdowns.fonts)
-      CreateConfig(nil, this, T["Unit Frame Text Size"], C.global, "font_unit_size")
-      CreateConfig(nil, this, T["Scrolling Combat Text Font"], C.global, "font_combat", "dropdown", pfUI.gui.dropdowns.fonts)
-      CreateConfig(update["pixelperfect"], this, T["Enable UI-Scale"], C.global, "pixelperfect", "dropdown", pfUI.gui.dropdowns.scaling)
-      CreateConfig(nil, this, T["Enable Offscreen Frame Positions"], C.global, "offscreen", "checkbox")
-      CreateConfig(nil, this, T["Enable Single Line UIErrors"], C.global, "errors_limit", "checkbox")
-      CreateConfig(nil, this, T["Disable All UIErrors"], C.global, "errors_hide", "checkbox")
-      CreateConfig(nil, this, T["Highlight Settings That Require Reload"], C.gui, "reloadmarker", "checkbox")
+      local header = CreateConfig(nil, this, T["Profile"], nil, nil, "header")
+      header:GetParent().objectCount = header:GetParent().objectCount - 1
+      header:SetHeight(20)
 
-      -- Delete / Reset
-      CreateConfig(nil, this, T["Delete / Reset"], nil, nil, "header")
-
-      CreateConfig(nil, this, T["|cffff5555EVERYTHING"], C.global, "profile", "button", function()
-        CreateQuestionDialog(T["Do you really want to reset |cffffaaaaEVERYTHING|r?\n\nThis will reset:\n - Current Configuration\n - Current Frame Positions\n - Firstrun Wizard\n - Addon Cache\n - Saved Profiles"],
-          function()
-            _G["pfUI_init"] = {}
-            _G["pfUI_config"] = {}
-            _G["pfUI_playerDB"] = {}
-            _G["pfUI_profiles"] = {}
-            pfUI:LoadConfig()
-            this:GetParent():Hide()
-            pfUI.gui:Reload()
-          end)
-      end)
-
-      CreateConfig(nil, this, T["Cache"], C.global, "profile", "button", function()
-        CreateQuestionDialog(T["Do you really want to reset the Cache?"],
-          function()
-            _G["pfUI_playerDB"] = {}
-            this:GetParent():Hide()
-            pfUI.gui:Reload()
-          end)
-      end, true)
-
-      CreateConfig(nil, this, T["Firstrun"], C.global, "profile", "button", function()
-        CreateQuestionDialog(T["Do you really want to reset the Firstrun Wizard Settings?"],
-          function()
-            _G["pfUI_init"] = {}
-            this:GetParent():Hide()
-            pfUI.firstrun:NextStep()
-          end)
-      end, true)
-
-      CreateConfig(nil, this, T["Configuration"], C.global, "profile", "button", function()
-        CreateQuestionDialog(T["Do you really want to reset your configuration?\nThis also includes frame positions"],
-          function()
-            _G["pfUI_config"] = {}
-            _G["pfUI_init"] = {}
-            pfUI:LoadConfig()
-            this:GetParent():Hide()
-            pfUI.gui:Reload()
-          end)
-      end, true)
-
-
-      -- Profiles
-      CreateConfig(nil, this, T["Profile"], nil, nil, "header")
       local values = {}
       for name, config in pairs(pfUI_profiles) do table.insert(values, name) end
 
@@ -703,6 +646,65 @@ pfUI:RegisterModule("gui", function ()
             end
           end
         end, false, true)
+      end, true)
+
+      CreateConfig(nil, this, T["Settings"], nil, nil, "header")
+      CreateConfig(nil, this, T["Language"], C.global, "language", "dropdown", pfUI.gui.dropdowns.languages)
+      CreateConfig(nil, this, T["Enable Region Compatible Font"], C.global, "force_region", "checkbox")
+      CreateConfig(nil, this, T["Standard Text Font"], C.global, "font_default", "dropdown", pfUI.gui.dropdowns.fonts)
+      CreateConfig(nil, this, T["Standard Text Font Size"], C.global, "font_size")
+      CreateConfig(nil, this, T["Unit Frame Text Font"], C.global, "font_unit", "dropdown", pfUI.gui.dropdowns.fonts)
+      CreateConfig(nil, this, T["Unit Frame Text Size"], C.global, "font_unit_size")
+      CreateConfig(nil, this, T["Scrolling Combat Text Font"], C.global, "font_combat", "dropdown", pfUI.gui.dropdowns.fonts)
+      CreateConfig(update["pixelperfect"], this, T["Enable UI-Scale"], C.global, "pixelperfect", "dropdown", pfUI.gui.dropdowns.scaling)
+      CreateConfig(nil, this, T["Enable Offscreen Frame Positions"], C.global, "offscreen", "checkbox")
+      CreateConfig(nil, this, T["Enable Single Line UIErrors"], C.global, "errors_limit", "checkbox")
+      CreateConfig(nil, this, T["Disable All UIErrors"], C.global, "errors_hide", "checkbox")
+      CreateConfig(nil, this, T["Highlight Settings That Require Reload"], C.gui, "reloadmarker", "checkbox")
+
+      -- Delete / Reset
+      CreateConfig(nil, this, T["Delete / Reset"], nil, nil, "header")
+
+      CreateConfig(nil, this, T["|cffff5555EVERYTHING"], C.global, "profile", "button", function()
+        CreateQuestionDialog(T["Do you really want to reset |cffffaaaaEVERYTHING|r?\n\nThis will reset:\n - Current Configuration\n - Current Frame Positions\n - Firstrun Wizard\n - Addon Cache\n - Saved Profiles"],
+          function()
+            _G["pfUI_init"] = {}
+            _G["pfUI_config"] = {}
+            _G["pfUI_playerDB"] = {}
+            _G["pfUI_profiles"] = {}
+            pfUI:LoadConfig()
+            this:GetParent():Hide()
+            pfUI.gui:Reload()
+          end)
+      end)
+
+      CreateConfig(nil, this, T["Cache"], C.global, "profile", "button", function()
+        CreateQuestionDialog(T["Do you really want to reset the Cache?"],
+          function()
+            _G["pfUI_playerDB"] = {}
+            this:GetParent():Hide()
+            pfUI.gui:Reload()
+          end)
+      end, true)
+
+      CreateConfig(nil, this, T["Firstrun"], C.global, "profile", "button", function()
+        CreateQuestionDialog(T["Do you really want to reset the Firstrun Wizard Settings?"],
+          function()
+            _G["pfUI_init"] = {}
+            this:GetParent():Hide()
+            pfUI.firstrun:NextStep()
+          end)
+      end, true)
+
+      CreateConfig(nil, this, T["Configuration"], C.global, "profile", "button", function()
+        CreateQuestionDialog(T["Do you really want to reset your configuration?\nThis also includes frame positions"],
+          function()
+            _G["pfUI_config"] = {}
+            _G["pfUI_init"] = {}
+            pfUI:LoadConfig()
+            this:GetParent():Hide()
+            pfUI.gui:Reload()
+          end)
       end, true)
 
       this.setup = true
