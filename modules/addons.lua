@@ -116,8 +116,8 @@ pfUI:RegisterModule("addons", function ()
   -- addon profiles
   pfUI.addons.profile = CreateFrame("Frame", "pfAddonListProfile", pfUI.addons)
   pfUI.addons.profile:SetScript("OnShow", function()
-    pfUI_addon_profiles["Current"] = GetSelectedAddonsList()
-    UIDropDownMenu_SetText("Current", pfUI.addons.profile.dropdown)
+    pfUI_addon_profiles[T["Current"]] = GetSelectedAddonsList()
+    UIDropDownMenu_SetText(T["Current"], pfUI.addons.profile.dropdown)
   end)
 
   pfUI.addons.profile:SetPoint("TOP", pfUI.addons, "TOP", 0, -34)
@@ -190,7 +190,7 @@ pfUI:RegisterModule("addons", function ()
     if profile_name then
       CreateQuestionDialog(T["Delete profile"] .. " '|cff33ffcc" .. profile_name .. "|r'?", function()
         pfUI_addon_profiles[profile_name] = nil
-        SetAddonProfile("Current")
+        SetAddonProfile(T["Current"])
       end)
     end
   end)
@@ -270,7 +270,7 @@ pfUI:RegisterModule("addons", function ()
             DisableAddOn(this:GetID())
           end
           pfUI.addons.hasChanged = true
-          local profile_name = UIDropDownMenu_GetText(pfUI.addons.profile.dropdown) or "Current"
+          local profile_name = UIDropDownMenu_GetText(pfUI.addons.profile.dropdown) or T["Current"]
           pfUI_addon_profiles[profile_name] = GetSelectedAddonsList()
         end)
       end

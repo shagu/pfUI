@@ -111,7 +111,7 @@ pfUI:RegisterModule("unlock", function ()
     end
     C.position[frame:GetName()]["scale"] = scale
 
-    frame.drag.text:SetText("Scale: " .. scale)
+    frame.drag.text:SetText(T["Scale"] .. ": " .. scale)
     frame.drag.text:SetAlpha(1)
 
     frame.drag:SetScript("OnUpdate", function()
