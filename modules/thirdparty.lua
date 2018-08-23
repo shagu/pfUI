@@ -13,19 +13,6 @@ pfUI:RegisterModule("thirdparty", function ()
     this:UnregisterAllEvents()
   end)
 
-  local function AddIntegration(addon, func)
-    local lurker = CreateFrame("Frame", nil)
-    lurker.func = func
-    lurker:RegisterEvent("VARIABLES_LOADED")
-    lurker:RegisterEvent("PLAYER_ENTERING_WORLD")
-    lurker:SetScript("OnEvent",function()
-      if IsAddOnLoaded(addon) or _G[addon] then
-        this:func()
-        this:UnregisterAllEvents()
-      end
-    end)
-  end
-
   function pfUI.thirdparty.meters:Resize()
     if pfUI.chat and pfUI.panel then
 
@@ -154,7 +141,7 @@ pfUI:RegisterModule("thirdparty", function ()
     end
   end
 
-  AddIntegration("KLHThreatMeter", function()
+  HookAddonOrVariable("KLHThreatMeter", function()
     if C.thirdparty.ktm.skin == "1" then
       -- remove titlebar
       KLHTM_Gui.title.back:Hide()
@@ -257,7 +244,7 @@ pfUI:RegisterModule("thirdparty", function ()
     end
   end)
 
-  AddIntegration("DPSMate", function()
+  HookAddonOrVariable("DPSMate", function()
     if C.thirdparty.dpsmate.skin == "1" then
       if DPSMateSettings then
         -- set DPSMate appearance to match pfUI
@@ -319,7 +306,7 @@ pfUI:RegisterModule("thirdparty", function ()
     end
   end)
 
-  AddIntegration("SW_Stats", function()
+  HookAddonOrVariable("SW_Stats", function()
     if C.thirdparty.swstats.skin == "1" then
       SW_Settings["OPT_ShowMainWinDPS"] = 1
       SW_Settings["Colors"] = SW_Settings["Colors"] or {}
@@ -401,7 +388,7 @@ pfUI:RegisterModule("thirdparty", function ()
     end
   end)
 
-  AddIntegration("WIM", function()
+  HookAddonOrVariable("WIM", function()
     if C.thirdparty.wim.enable == "0" then return end
 
     _G.WIM_isLinkURL = function() return false end
@@ -466,7 +453,7 @@ pfUI:RegisterModule("thirdparty", function ()
     end)
   end)
 
-  AddIntegration("SortBags", function()
+  HookAddonOrVariable("SortBags", function()
     if C.thirdparty.sortbags.enable == "0" then return end
 
     if not pfUI.thirdparty.bagsort then pfUI.thirdparty.bagsort = "sortbags" end
@@ -558,7 +545,7 @@ pfUI:RegisterModule("thirdparty", function ()
     end)
   end)
 
-  AddIntegration("MrPlow", function()
+  HookAddonOrVariable("MrPlow", function()
     if C.thirdparty.mrplow.enable == "0" then return end
 
     pfUI.thirdparty.bagsort = "mrplow" -- dont't check for sortbags, use mrplow as default
@@ -653,7 +640,7 @@ pfUI:RegisterModule("thirdparty", function ()
     end)
   end)
 
-  AddIntegration("FlightMap", function()
+  HookAddonOrVariable("FlightMap", function()
     if C.thirdparty.flightmap.enable == "0" then return end
 
     FlightMapTimesBorder:Hide()
@@ -668,7 +655,7 @@ pfUI:RegisterModule("thirdparty", function ()
     FlightMapTimesText:SetFont(pfUI.font_default, 12, "OUTLINE")
   end)
 
-  AddIntegration("AtlasLoot", function()
+  HookAddonOrVariable("AtlasLoot", function()
     if C.thirdparty.atlasloot.enable == "0" then return end
 
     CreateBackdrop(AtlasLootTooltip)
@@ -681,7 +668,7 @@ pfUI:RegisterModule("thirdparty", function ()
     end
   end)
 
-  AddIntegration("DruidManaBarBackground", function()
+  HookAddonOrVariable("DruidManaBarBackground", function()
     if C.thirdparty.druidmana.enable == "0" then return end
     DruidManaBar:SetParent(UIParent)
     DruidManaBar.bd:Hide()
@@ -703,7 +690,7 @@ pfUI:RegisterModule("thirdparty", function ()
     UpdateMovable(DruidManaBar)
   end)
 
-  AddIntegration("HealComm", function()
+  HookAddonOrVariable("HealComm", function()
     -- hook healcomm's addon message to parse single-player events
     if AceLibrary and AceLibrary:HasInstance("HealComm-1.0") and pfUI.prediction then
       local HealComm = AceLibrary("HealComm-1.0")
