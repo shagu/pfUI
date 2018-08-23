@@ -324,55 +324,6 @@ function pfUI.api.SkinButton(button, cr, cg, cb)
   b:SetFont(pfUI.font_default, pfUI_config.global.font_size, "OUTLINE")
 end
 
-function pfUI.api.SkinNextPrevButton(frame, direction)
-  StripTextures(frame)
-
-  frame:SetNormalTexture(nil)
-  frame:SetPushedTexture(nil)
-  frame:SetHighlightTexture(nil)
-  frame:SetDisabledTexture(nil)
-  CreateBackdrop(frame)
-  SetAllPointsOffset(frame.backdrop, frame, 4)
-
-  if not frame.icon then
-    frame.icon = frame:CreateTexture(nil, "ARTWORK")
-
-    frame.icon:SetAlpha(.8)
-    SetAllPointsOffset(frame.icon, frame, 10)
-  end
-
-  if direction == "next" then
-    frame.icon:SetTexture("Interface\\AddOns\\pfUI\\img\\right")
-  elseif direction == "prev" then
-    frame.icon:SetTexture("Interface\\AddOns\\pfUI\\img\\left")
-  end
-
-  frame:SetScript("OnMouseDown", function()
-    if frame:IsEnabled() == 1 then
-      this.icon:SetPoint("CENTER", -1, -1)
-    end
-  end)
-
-  frame:SetScript("OnMouseUp", function()
-    this.icon:SetPoint("CENTER", 0, 0)
-  end)
-
-  if not frame.hooked then
-    frame.hooked = true
-    local oldEnable = frame.Enable
-    function frame.Enable(self,btn)
-      self.icon:SetAlpha(.8)
-      if oldEnable then oldEnable(self, btn) end
-    end
-
-    local oldDisable = frame.Disable
-    function frame.Disable(self,btn)
-      self.icon:SetAlpha(.4)
-      if oldDisable then oldDisable(self, btn) end
-    end
-  end
-end
-
 -- [ Skin Rotate Button]
 -- Applies pfUI skin to rotation buttons like in character pane:
 -- 'button'     [frame/string]  the button that should be skinned.
@@ -419,57 +370,70 @@ function pfUI.api.SkinCloseButton(button, parentFrame, offsetX, offsetY)
   button.texture:SetVertexColor(1,.25,.25,1)
 end
 
-function pfUI.api.SkinScrollbar(frame)
-  --StripTextures(frame)
+function pfUI.api.SkinArrowButton(button, dir)
+  SkinButton(button)
+
+  button:SetHitRectInsets(-3,-3,-3,-3)
+
+  button:SetNormalTexture(nil)
+  button:SetPushedTexture(nil)
+  button:SetHighlightTexture(nil)
+  button:SetDisabledTexture(nil)
+
+  if not button.icon then
+    button.icon = button:CreateTexture(nil, "ARTWORK")
+    button.icon:SetTexture("Interface\\AddOns\\pfUI\\img\\" .. dir)
+    button.icon:SetAlpha(.8)
+    SetAllPointsOffset(button.icon, button, 3)
+  end
+
+  if not button.pfScripted then
+    local enable = button.Enable
+    local disable = button.Disable
+
+    button.Enable = function(self)
+      if enable then enable(self) end
+      self.icon:SetVertexColor(.8,.8,.8,1)
+    end
+
+    button.Disable = function(self)
+      if disable then disable(self) end
+      self.icon:SetVertexColor(.2,.2,.2,1)
+    end
+
+    button.pfScripted = true
+  end
+end
+
+function pfUI.api.SkinScrollbar(frame, parent)
   local name = frame:GetName()
   local up = _G[name .. "ScrollUpButton"]
   local down = _G[name .. "ScrollDownButton"]
   local thumb = frame:GetThumbTexture()
 
-  if not frame.thumb then
-    thumb:SetTexture(nil)
-    frame.thumb = frame:CreateTexture(nil, "ARTWORK")
-    frame.thumb:SetTexture(.8,.8,.8,.8)
-    frame.thumb:SetPoint("TOPLEFT", thumb, "TOPLEFT", 1, -4)
-    frame.thumb:SetPoint("BOTTOMRIGHT", thumb, "BOTTOMRIGHT", -1, 4)
-  end
+  pfUI.api.SkinArrowButton(up, "up")
+  pfUI.api.SkinArrowButton(down, "down")
 
   if not frame.bg then
     frame.bg = CreateFrame("Frame", nil, frame)
     frame.bg:SetPoint("TOPLEFT", up, "BOTTOMLEFT", 0, -3)
     frame.bg:SetPoint("BOTTOMRIGHT", down, "TOPRIGHT", 0, 3)
-    CreateBackdrop(frame.bg)
+    CreateBackdrop(frame.bg, nil, true)
   end
 
-  if up then
-    up:SetNormalTexture(nil)
-    up:SetPushedTexture(nil)
-    up:SetHighlightTexture(nil)
-    up:SetDisabledTexture(nil)
-    CreateBackdrop(up)
-    if not up.icon then
-      StripTextures(up)
-      up.icon = up:CreateTexture(nil, "ARTWORK")
-      up.icon:SetTexture("Interface\\AddOns\\pfUI\\img\\up")
-      up.icon:SetAlpha(.8)
-      SetAllPointsOffset(up.icon, up, 3)
-    end
+  if not frame.thumb then
+    thumb:SetTexture(nil)
+    frame.thumb = frame.bg:CreateTexture(nil, "ARTWORK")
+    frame.thumb:SetTexture(.8,.8,.8,.8)
+    frame.thumb:SetPoint("TOPLEFT", thumb, "TOPLEFT", 1, -4)
+    frame.thumb:SetPoint("BOTTOMRIGHT", thumb, "BOTTOMRIGHT", -1, 4)
   end
 
-  if down then
-    down:SetNormalTexture(nil)
-    down:SetPushedTexture(nil)
-    down:SetHighlightTexture(nil)
-    down:SetDisabledTexture(nil)
-    CreateBackdrop(down)
-
-    if not down.icon then
-      StripTextures(down)
-      down.icon = up:CreateTexture(nil, "ARTWORK")
-      down.icon:SetTexture("Interface\\AddOns\\pfUI\\img\\down")
-      down.icon:SetAlpha(.8)
-      SetAllPointsOffset(down.icon, down, 3)
-    end
+  -- always show parent frame
+  if parent then
+    parent:Show()
+    parent.Hide = function(self) frame.thumb:Hide() end
+    parent.Show = function(self) frame.thumb:Show() end
   end
 end
 

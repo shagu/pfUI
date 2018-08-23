@@ -67,8 +67,14 @@ pfUI:RegisterSkin("Spellbook", function ()
     end
   end
 
-  SkinNextPrevButton(SpellBookPrevPageButton, "prev")
-  SkinNextPrevButton(SpellBookNextPageButton, "next")
+  SkinArrowButton(SpellBookPrevPageButton, "left")
+  SpellBookPrevPageButton:SetWidth(18)
+  SpellBookPrevPageButton:SetHeight(18)
+
+  SkinArrowButton(SpellBookNextPageButton, "right")
+  SpellBookNextPageButton:SetWidth(18)
+  SpellBookNextPageButton:SetHeight(18)
+
   SkinCloseButton(SpellBookCloseButton)
   SpellBookPageText:SetTextColor(1, 1, 1)
 end)
