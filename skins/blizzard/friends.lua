@@ -349,6 +349,39 @@ pfUI:RegisterSkin("Friends", function ()
     GuildInfoCancelButton:SetPoint("TOPLEFT", GuildInfoTextBackground, "BOTTOM", 1, -2)
     GuildInfoCancelButton:SetPoint("TOPRIGHT", GuildInfoTextBackground, "BOTTOMRIGHT", 0, 2)
     GuildInfoCancelButton:SetHeight(22)
+
+    -- guild control
+    StripTextures(GuildControlPopupFrame)
+    CreateBackdrop(GuildControlPopupFrame)
+    GuildControlPopupFrame.backdrop:SetPoint("TOPLEFT", bpad*2+2, 0)
+
+    SkinDropDown(GuildControlPopupFrameDropDown)
+
+    GuildControlPopupFrameAddRankButton:SetPoint("LEFT", GuildControlPopupFrameDropDown, "RIGHT", -12, 3)
+    SkinButton(GuildControlPopupFrameAddRankButton)
+    GuildControlPopupFrameAddRankButton:SetWidth(18)
+    GuildControlPopupFrameAddRankButton:SetHeight(18)
+    GuildControlPopupFrameAddRankButton:SetText("+")
+
+    GuildControlPopupFrameRemoveRankButton:SetPoint("LEFT", GuildControlPopupFrameAddRankButton, "RIGHT", bpad*2-1, 0)
+    SkinButton(GuildControlPopupFrameRemoveRankButton)
+    GuildControlPopupFrameRemoveRankButton:SetWidth(18)
+    GuildControlPopupFrameRemoveRankButton:SetHeight(18)
+    GuildControlPopupFrameRemoveRankButton:SetText("-")
+
+    local _,_,_,_,_,left,right = GuildControlPopupFrameEditBox:GetRegions()
+    left:Hide()
+    right:Hide()
+
+    CreateBackdrop(GuildControlPopupFrameEditBox)
+    GuildControlPopupFrameEditBox:SetHeight(20)
+
+    for i = 1, 13 do
+      SkinCheckbox(_G["GuildControlPopupFrameCheckbox"..i])
+    end
+
+    SkinButton(GuildControlPopupAcceptButton)
+    SkinButton(GuildControlPopupFrameCancelButton)
   end
 
   do -- raid
