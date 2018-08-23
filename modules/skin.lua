@@ -62,6 +62,7 @@ pfUI:RegisterModule("skin", function ()
     "StaticPopup2Button1",
     "StaticPopup2Button2",
   }
+
   local boxes = {
     "StaticPopup1",
     "StaticPopup2",
@@ -70,6 +71,11 @@ pfUI:RegisterModule("skin", function ()
     "DropDownList2MenuBackdrop",
     "DropDownList1Backdrop",
     "DropDownList2Backdrop",
+  }
+
+  local editboxes = {
+    "StaticPopup1EditBox",
+    "StaticPopup1WideEditBox",
   }
 
   GameMenuFrameHeader:SetTexture(nil)
@@ -94,6 +100,13 @@ pfUI:RegisterModule("skin", function ()
 
   for _, box in pairs(boxes) do
     local b = getglobal(box)
+    CreateBackdrop(b, nil, true, .8)
+  end
+
+  for _, edit in pairs(editboxes) do
+    local b = getglobal(edit)
+    b:SetHeight(20)
+    StripTextures(b)
     CreateBackdrop(b, nil, true, .8)
   end
 
