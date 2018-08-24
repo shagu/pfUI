@@ -535,12 +535,13 @@ pfUI:RegisterSkin("Friends", function ()
         local name, guild, level, race, class, zone = GetWhoInfo(off + i)
         local displayedText = ""
 
-        if ( max > MAX_WHOS_FROM_SERVER ) then
-          displayedText = format(WHO_FRAME_SHOWN_TEMPLATE, MAX_WHOS_FROM_SERVER);
+        if num + 1 >= MAX_WHOS_FROM_SERVER then
+          displayedText = format(WHO_FRAME_SHOWN_TEMPLATE, MAX_WHOS_FROM_SERVER)
+          WhoFrameTotals:SetText("|cffffffff" .. format(GetText("WHO_FRAME_TOTAL_TEMPLATE", nil, num), max).."  |cffaaaaaa"..displayedText)
+        else
+          displayedText = format(WHO_FRAME_SHOWN_TEMPLATE, num)
+          WhoFrameTotals:SetText("|cffffffff" .. format(GetText("WHO_FRAME_TOTAL_TEMPLATE", nil, num), num).."  |cffaaaaaa"..displayedText)
         end
-
-        WhoFrameTotals:SetText("|cffffffff" .. format(GetText("WHO_FRAME_TOTAL_TEMPLATE", nil, num), num).."  |cffaaaaaa"..displayedText);
-
 
         class = L["class"][class]
 
