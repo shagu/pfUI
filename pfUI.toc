@@ -106,3 +106,4 @@ modules\farmmode.lua
 modules\pettarget.lua
 modules\mapreveal.lua
 modules\unusable.lua
+modules\socialmod.lua
