@@ -188,7 +188,7 @@ pfUI:RegisterSkin("Friends", function ()
 
   do -- guild
     GuildFrameColumnHeader3:ClearAllPoints()
-    GuildFrameColumnHeader3:SetPoint("TOPLEFT", 20, -70)
+    GuildFrameColumnHeader3:SetPoint("TOPLEFT", 20, -72)
     StripTextures(GuildFrameColumnHeader3)
 
     GuildFrameColumnHeader4:ClearAllPoints()
@@ -206,8 +206,8 @@ pfUI:RegisterSkin("Friends", function ()
     GuildFrameColumnHeader2:SetWidth(127)
     StripTextures(GuildFrameColumnHeader2)
 
-    GuildListScrollFrame:SetPoint("TOPLEFT", GuildFrameButton1, "TOPLEFT", 10, 0)
-    GuildListScrollFrame:SetPoint("BOTTOMRIGHT", GuildFrameButton13, "BOTTOMRIGHT", 0, 0)
+    GuildListScrollFrame:SetPoint("TOPLEFT", GuildFrameButton1, "TOPLEFT", 10, -2)
+    GuildListScrollFrame:SetPoint("BOTTOMRIGHT", GuildFrameButton13, "BOTTOMRIGHT", 0, -4)
     CreateBackdrop(GuildListScrollFrame)
 
     StripTextures(GuildListScrollFrame)
@@ -218,7 +218,8 @@ pfUI:RegisterSkin("Friends", function ()
       StripTextures(_G["GuildFrameGuildStatusColumnHeader"..i])
     end
 
-    GuildFrameTotals:SetPoint("TOPLEFT", GuildListScrollFrame, "BOTTOMLEFT", 0, -14)
+    GuildFrameTotals:ClearAllPoints()
+    GuildFrameTotals:SetPoint("TOPLEFT", GuildListScrollFrame, "BOTTOMLEFT", 1, -7)
     GuildFrameGuildListToggleButton:SetPoint("TOPLEFT", GuildListScrollFrameScrollBarScrollDownButton, "BOTTOMLEFT", 0, -7)
     GuildFrameGuildListToggleButton:SetWidth(16)
     GuildFrameGuildListToggleButton:SetHeight(16)
