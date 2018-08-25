@@ -219,4 +219,119 @@ pfUI:RegisterModule("prediction", function ()
       end
     end
   end
+
+  local healedselfother = SanitizePattern(HEALEDSELFOTHER)
+  local healedselfself = SanitizePattern(HEALEDSELFSELF)
+  local healedcritselfother = SanitizePattern(HEALEDCRITSELFOTHER)
+  local healedcritselfself = SanitizePattern(HEALEDCRITSELFSELF)
+  local spell_queue = { "DUMMY", "DUMMYRank 9", "TARGET" }
+
+  local realm = GetRealmName()
+  local player = UnitName("player")
+  pfUI_cache["prediction"] = pfUI_cache["prediction"] or {}
+  pfUI_cache["prediction"][realm] = pfUI_cache["prediction"][realm] or {}
+  pfUI_cache["prediction"][realm][player] = pfUI_cache["prediction"][realm][player] or {}
+  pfUI_cache["prediction"][realm][player]["heals"] = pfUI_cache["prediction"][realm][player]["heals"] or {}
+  local cache = pfUI_cache["prediction"][realm][player]["heals"]
+
+  -- Gather Data by User Actions
+  hooksecurefunc("CastSpell", function(id, bookType)
+    if not pfUI.prediction.sender.enabled then return end
+    local effect, rank = libspell.GetSpellInfo(id, bookType)
+    spell_queue[1] = effect
+    spell_queue[2] = effect.. ( rank or "" )
+    spell_queue[3] = UnitName("target") and UnitCanAssist("player", "target") and UnitName("target") or UnitName("player")
+  end, true)
+
+  hooksecurefunc("CastSpellByName", function(effect, target)
+    if not pfUI.prediction.sender.enabled then return end
+    local effect, rank = libspell.GetSpellInfo(effect)
+    spell_queue[1] = effect
+    spell_queue[2] = effect.. ( rank or "" )
+    spell_queue[3] = UnitName("target") and UnitCanAssist("player", "target") and UnitName("target") or UnitName("player")
+  end, true)
+
+  local scanner = libtipscan:GetScanner("prediction")
+  hooksecurefunc("UseAction", function(slot, target, button)
+    if not pfUI.prediction.sender.enabled then return end
+    if GetActionText(slot) or not IsCurrentAction(slot) then return end
+    scanner:SetAction(slot)
+    local effect, rank = scanner:Line(1)
+    spell_queue[1] = effect
+    spell_queue[2] = effect.. ( rank or "" )
+    spell_queue[3] = UnitName("target") and UnitCanAssist("player", "target") and UnitName("target") or UnitName("player")
+  end, true)
+
+  pfUI.prediction.sender = CreateFrame("Frame", "pfPredictionSender", UIParent)
+  pfUI.prediction.sender.enabled = true
+  pfUI.prediction.sender.SendHealCommMsg = function(self, msg)
+    SendAddonMessage("HealComm", msg, "RAID")
+    SendAddonMessage("HealComm", msg, "BATTLEGROUND")
+  end
+
+  pfUI.prediction.sender:RegisterEvent("CHAT_MSG_SPELL_SELF_BUFF")
+  pfUI.prediction.sender:RegisterEvent("SPELLCAST_START")
+  pfUI.prediction.sender:RegisterEvent("SPELLCAST_STOP")
+  pfUI.prediction.sender:RegisterEvent("SPELLCAST_FAILED")
+  pfUI.prediction.sender:RegisterEvent("SPELLCAST_INTERRUPTED")
+  pfUI.prediction.sender:RegisterEvent("SPELLCAST_DELAYED")
+  pfUI.prediction.sender:SetScript("OnEvent", function()
+    if event == "CHAT_MSG_SPELL_SELF_BUFF" then
+      -- "Your %s heals %s for %d.";
+      for spell, _, heal in string.gfind(arg1, healedselfother) do
+        if spell == spell_queue[1] then cache[spell_queue[2]] = tonumber(heal) end
+        return
+      end
+
+      -- "Your %s heals you for %d."
+      for spell, heal in string.gfind(arg1, healedselfself) do
+        if spell == spell_queue[1] then cache[spell_queue[2]] = tonumber(heal) end
+        return
+      end
+
+      -- "Your %s critically heals %s for %d."
+      for spell, heal in string.gfind(arg1, healedcritselfother) do
+        if spell == spell_queue[1] and not cache[spell_queue[2]] then cache[spell_queue[2]] = tonumber(heal)*2/3 end
+        return
+      end
+
+      -- "Your %s critically heals you for %d."
+      for spell, _, heal in string.gfind(arg1, healedcritselfself) do
+        if spell == spell_queue[1] and not cache[spell_queue[2]] then cache[spell_queue[2]] = tonumber(heal)*2/3 end
+        return
+      end
+    elseif event == "SPELLCAST_START" then
+      if spell_queue[1] == arg1 and cache[spell_queue[2]] then
+        local sender = player
+        local target = spell_queue[3]
+        local amount = cache[spell_queue[2]]
+        local casttime = arg2
+
+        pfUI.prediction:Heal(player, target, amount, casttime)
+        pfUI.prediction.sender:SendHealCommMsg("Heal/" .. target .. "/" .. amount .. "/" .. casttime .. "/")
+        pfUI.prediction.sender.healing = true
+      elseif spell_queue[1] == arg1 and L["resurrections"][arg1] then
+        pfUI.prediction:Ress(player, spell_queue[3])
+        pfUI.prediction.sender:SendHealCommMsg("Resurrection/" .. spell_queue[3] .. "/start/")
+        pfUI.prediction.sender.resurrecting = true
+      end
+    elseif event == "SPELLCAST_FAILED" or event == "SPELLCAST_INTERRUPTED" then
+      if pfUI.prediction.sender.healing then
+        pfUI.prediction:HealStop(player)
+        pfUI.prediction.sender:SendHealCommMsg("HealStop")
+        pfUI.prediction.sender.healing = nil
+      elseif pfUI.prediction.sender.resurrecting then
+        pfUI.prediction:RessStop(player)
+        pfUI.prediction.sender:SendHealCommMsg("Resurrection/stop/")
+        pfUI.prediction.sender.resurrecting = nil
+      end
+    elseif event =="SPELLCAST_DELAYED" then
+      if pfUI.prediction.sender.healing then
+        pfUI.prediction:HealDelay(player, arg1)
+        pfUI.prediction.sender:SendHealCommMsg("Healdelay/" .. arg1 .. "/")
+      end
+    elseif event == "SPELLCAST_STOP" then
+      pfUI.prediction:HealStop(player)
+    end
+  end)
 end)

@@ -101,8 +101,8 @@ pfUI_locale["deDE"]["critters"] = {
   'Salome',
   'Fischschwarm',
   'Skorpid',
-  'Schaf',
   'Verwandeltes Schaf',
+  'Schaf',
   'Irrwisch der Shen\'dralar',
   'Kränkliches Reh',
   'Kränkliche Gazelle',
@@ -178,6 +178,13 @@ pfUI_locale["deDE"]["interrupts"] = {
   ["M73 Schrapnellgranate"] = true,
   ["Thoriumgranate"] = true,
   ["Goblin-Mörser"] = true,
+}
+
+pfUI_locale["deDE"]["resurrections"] = {
+  ["Auferstehung"] = true,
+  ["Wiedergeburt"] = true,
+  ["Erlösung"] = true,
+  ["Geist der Ahnen"] = true,
 }
 
 pfUI_locale["deDE"]["spells"] = {

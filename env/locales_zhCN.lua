@@ -97,8 +97,8 @@ pfUI_locale["zhCN"]["critters"] = {
   '萨罗米',
   '鱼群',
   '蝎子',
-  '绵羊',
   '小绵羊',
+  '绵羊',
   '辛德拉小精灵',
   '生病的鹿',
   '生病的瞪羚',
@@ -173,6 +173,13 @@ pfUI_locale["zhCN"]["interrupts"] = {
   ["M73破片手榴弹"] = true,
   ["瑟银手榴弹"] = true,
   ["地精迫击炮"] = true,
+}
+
+pfUI_locale["zhCN"]["resurrections"] = {
+  ["复活术"] = true,
+  ["复生"] = true,
+  ["救赎"] = true,
+  ["先祖之魂"] = true,
 }
 
 pfUI_locale["zhCN"]["spells"] = {

@@ -97,8 +97,8 @@ pfUI_locale["frFR"]["critters"] = {
   'Salome',
   'Banc de poisson',
   'Scorpion',
-  'Mouton',
   'Métamorphosé en mouton',
+  'Mouton',
   'Feu follet de Shen\'dralar',
   'Daim malade',
   'Gazelle malade',
@@ -173,6 +173,13 @@ pfUI_locale["frFR"]["interrupts"] = {
   ["Grenade à fragmentation M73"] = true,
   ["Grenade en thorium"] = true,
   ["Mortier des gobelins"] = true,
+}
+
+pfUI_locale["frFR"]["resurrections"] = {
+  ["Résurrection"] = true,
+  ["Renaissance"] = true,
+  ["Rédemption"] = true,
+  ["Esprit ancestral"] = true,
 }
 
 pfUI_locale["frFR"]["spells"] = {

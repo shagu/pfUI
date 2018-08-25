@@ -101,8 +101,8 @@ pfUI_locale["esES"]["critters"] = {
   'Salome',
   'Banco de peces',
   'Escórpido',
-  'Oveja',
   'Oveja polimórfica',
+  'Oveja',
   'Fuego fatuo Shen\'dralar',
   'Ciervo enfermo',
   'Gacela enferma',
@@ -178,6 +178,13 @@ pfUI_locale["esES"]["interrupts"] = {
   ["Granada de fragmentación M73"] = true,
   ["Grabada de torio"] = true,
   ["Mortero goblin"] = true,
+}
+
+pfUI_locale["esES"]["resurrections"] = {
+  ["Resurrección"] = true,
+  ["Renacer"] = true,
+  ["Redención"] = true,
+  ["Espíritu ancestral"] = true,
 }
 
 pfUI_locale["esES"]["spells"] = {

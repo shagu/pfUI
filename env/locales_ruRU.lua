@@ -180,6 +180,13 @@ pfUI_locale["ruRU"]["interrupts"] = {
   ["Гоблинская мортира"] = true,
 }
 
+pfUI_locale["ruRU"]["resurrections"] = {
+  ["Воскрешение"] = true,
+  ["Возрождение"] = true,
+  ["Искупление"] = true,
+  ["Дух предков"] = true,
+}
+
 pfUI_locale["ruRU"]["spells"] = {
   [' Пробуждение каменного дворфа - визуальный эффект']={t=1500,icon='Spell_Nature_Earthquake'},
   ['"Отчаянный" снова принимает облик цыпленка"']={t=1000,icon='Ability_Racial_BearForm'},

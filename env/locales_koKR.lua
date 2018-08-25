@@ -101,8 +101,8 @@ pfUI_locale["koKR"]["critters"] = {
   '살로메',
   '물고기 떼',
   '전갈',
-  '양',
   '변이된 양',
+  '양',
   '셴드랄라 위습',
   '병든 사슴',
   '병든 가젤',
@@ -178,6 +178,13 @@ pfUI_locale["koKR"]["interrupts"] = {
   ["M73 수류탄"] = true,
   ["토륨 수류탄"] = true,
   ["고블린 박격포"] = true,
+}
+
+pfUI_locale["koKR"]["resurrections"] = {
+  ["부활"] = true,
+  ["환생"] = true,
+  ["구원"] = true,
+  ["고대의 영혼"] = true,
 }
 
 pfUI_locale["koKR"]["spells"] = {

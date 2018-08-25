@@ -180,6 +180,13 @@ pfUI_locale["enUS"]["interrupts"] = {
   ["Goblin Mortar"] = true,
 }
 
+pfUI_locale["enUS"]["resurrections"] = {
+  ["Resurrection"] = true,
+  ["Rebirth"] = true,
+  ["Redemption"] = true,
+  ["Ancestral Spirit"] = true,
+}
+
 pfUI_locale["enUS"]["spells"] = {
   ['"Plucky" Resumes Chicken Form']={t=1000,icon='Ability_Racial_BearForm'},
   ['Abomination Spit']={t=2500,icon='Spell_Nature_CorrosiveBreath'},
