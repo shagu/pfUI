@@ -814,6 +814,9 @@ pfUI:RegisterModule("chat", function ()
   local r,g,b,a = strsplit(",", C.chat.text.timecolor)
   local timecolorhex = string.format("%02x%02x%02x%02x", a*255, r*255, g*255, b*255)
 
+  local r,g,b,a = strsplit(",", C.chat.text.unknowncolor)
+  local unknowncolorhex = string.format("%02x%02x%02x%02x", a*255, r*255, g*255, b*255)
+
   for i=1,NUM_CHAT_WINDOWS do
     if not _G["ChatFrame"..i].HookAddMessage then
       _G["ChatFrame"..i].HookAddMessage = _G["ChatFrame"..i].AddMessage
@@ -839,18 +842,26 @@ pfUI:RegisterModule("chat", function ()
 
           -- display class colors if already indexed
           if C.chat.text.classcolor == "1" then
-            local Name = string.gsub(text, ".*|Hplayer:(.-)|h.*", "%1")
-            if pfUI_playerDB[Name] and pfUI_playerDB[Name].class ~= nil then
-              local Class = pfUI_playerDB[Name].class
-              if Class ~= UNKNOWN then
-                local Color = string.format("%02x%02x%02x",
-                  RAID_CLASS_COLORS[Class].r * 255,
-                  RAID_CLASS_COLORS[Class].g * 255,
-                  RAID_CLASS_COLORS[Class].b * 255)
-                Name = "|cff" .. Color .. Name .. "|r"
+
+            for name in string.gfind(text, "|Hplayer:(.-)|h") do
+              local cname
+
+              -- search player in database
+              if pfUI_playerDB[name] and pfUI_playerDB[name].class ~= nil then
+                local class = pfUI_playerDB[name].class
+                if class ~= UNKNOWN then
+                  local color = string.format("%02x%02x%02x",
+                    RAID_CLASS_COLORS[class].r * 255,
+                    RAID_CLASS_COLORS[class].g * 255,
+                    RAID_CLASS_COLORS[class].b * 255)
+                  cname = left .. "|cff" .. color .. name .. "|r" .. right
+                end
+              else
+                cname = left .. "|c" .. unknowncolorhex .. name .. "|r" .. right
               end
+
+              text = string.gsub(text, "|Hplayer:"..name.."|h%["..name.."%]|h(.-:-)", "|Hplayer:"..name.."|h"..cname.."|h%1")
             end
-            text = string.gsub(text, "|Hplayer:(.-)|h%[.-%]|h(.-:-)", "|r" .. left .. "|Hplayer:%1|h" .. Name .. "|h|r" .. right .. "%2")
           end
 
           -- reduce channel name to number
