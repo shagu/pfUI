@@ -278,8 +278,6 @@ libcast.customcast[strlower(aimedshot)] = function(begin)
         duration = duration / 1.3
       elseif UnitBuff("player", i) == "Interface\\Icons\\Inv_Trinket_Naxxramas04" then
         duration = duration / 1.2
-      elseif UnitDebuff("player", i) == "Interface\\Icons\\Spell_Shadow_CurseOfTounges" then
-        duration = duration / 0.5
       end
     end
 
