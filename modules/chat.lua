@@ -785,8 +785,8 @@ pfUI:RegisterModule("chat", function ()
   wcol = string.format("%02x%02x%02x",cr * 255,cg * 255, cb * 255)
 
   -- read and parse chat bracket settings
-  local left = string.sub(C.chat.text.bracket, 1, 1)
-  local right = string.sub(C.chat.text.bracket, 2, 2)
+  local left = "|r" .. string.sub(C.chat.text.bracket, 1, 1)
+  local right = string.sub(C.chat.text.bracket, 2, 2) .. "|r"
 
   -- read and parse chat time bracket settings
   local tleft = string.sub(C.chat.text.timebracket, 1, 1)
@@ -814,8 +814,8 @@ pfUI:RegisterModule("chat", function ()
   local r,g,b,a = strsplit(",", C.chat.text.timecolor)
   local timecolorhex = string.format("%02x%02x%02x%02x", a*255, r*255, g*255, b*255)
 
-  local r,g,b,a = strsplit(",", C.chat.text.unknowncolor)
-  local unknowncolorhex = string.format("%02x%02x%02x%02x", a*255, r*255, g*255, b*255)
+  local r,g,b = strsplit(",", C.chat.text.unknowncolor)
+  local unknowncolorhex = string.format("%02x%02x%02x", r*255, g*255, b*255)
 
   for i=1,NUM_CHAT_WINDOWS do
     if not _G["ChatFrame"..i].HookAddMessage then
@@ -844,23 +844,21 @@ pfUI:RegisterModule("chat", function ()
           if C.chat.text.classcolor == "1" then
 
             for name in string.gfind(text, "|Hplayer:(.-)|h") do
-              local cname
+              local color = unknowncolorhex
 
               -- search player in database
               if pfUI_playerDB[name] and pfUI_playerDB[name].class ~= nil then
                 local class = pfUI_playerDB[name].class
                 if class ~= UNKNOWN then
-                  local color = string.format("%02x%02x%02x",
+                  color = string.format("%02x%02x%02x",
                     RAID_CLASS_COLORS[class].r * 255,
                     RAID_CLASS_COLORS[class].g * 255,
                     RAID_CLASS_COLORS[class].b * 255)
-                  cname = left .. "|cff" .. color .. name .. "|r" .. right
                 end
-              else
-                cname = left .. "|c" .. unknowncolorhex .. name .. "|r" .. right
               end
 
-              text = string.gsub(text, "|Hplayer:"..name.."|h%["..name.."%]|h(.-:-)", "|Hplayer:"..name.."|h"..cname.."|h%1")
+              text = string.gsub(text, "|Hplayer:"..name.."|h%["..name.."%]|h(.-:-)",
+                  left.."|cff"..color.."|Hplayer:"..name.."|h" .. name .. "|h|r"..right.."%1")
             end
           end
 
@@ -890,5 +888,22 @@ pfUI:RegisterModule("chat", function ()
         end
       end
     end
+  end
+
+  -- create playerlinks on shift-click
+  local pfHookSetItemRef = SetItemRef
+  _G.SetItemRef = function(link, text, button)
+    if ( strsub(link, 1, 6) == "player" ) then
+      local name = strsub(link, 8)
+      if ( name and (strlen(name) > 0) ) then
+        name = gsub(name, "([^%s]*)%s+([^%s]*)%s+([^%s]*)", "%3");
+        name = gsub(name, "([^%s]*)%s+([^%s]*)", "%2");
+        if IsShiftKeyDown() and ChatFrameEditBox:IsVisible() then
+          ChatFrameEditBox:Insert("|cffffffff|Hplayer:"..name.."|h["..name.."]|h|r")
+          return
+        end
+      end
+    end
+    pfHookSetItemRef(link, text, button)
   end
 end)
