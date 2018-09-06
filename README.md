@@ -29,6 +29,7 @@ This is **not** an addon-pack like [ShaguUI](http://shagu.org/ShaguUI/), however
     /farm         Toggles the Farm-Mode
     /pfcast       Same as /cast but for mouseover units
     /focus        Creates a Focus-Frame for the current target
+    /castfocus    Same as /cast but for focus frame
     /clearfocus   Clears the Focus-Frame
 
 ## Languages
