@@ -684,7 +684,15 @@ function pfUI.uf:EnableScripts()
 
   f:SetScript("OnClick", function ()
     if not this.label and this.unitname then
+      local player = UnitIsUnit("target", "player")
       TargetByName(this.unitname)
+      if strlower(UnitName("target")) ~= strlower(this.unitname) then
+        if player then
+          TargetUnit("player")
+        else
+          TargetLastTarget()
+        end
+      end
     else
       pfUI.uf:ClickAction(arg1)
     end
