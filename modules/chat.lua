@@ -845,7 +845,7 @@ pfUI:RegisterModule("chat", function ()
 
             for name in string.gfind(text, "|Hplayer:(.-)|h") do
               local color = unknowncolorhex
-
+              local match = false
               -- search player in database
               if pfUI_playerDB[name] and pfUI_playerDB[name].class ~= nil then
                 local class = pfUI_playerDB[name].class
@@ -854,11 +854,14 @@ pfUI:RegisterModule("chat", function ()
                     RAID_CLASS_COLORS[class].r * 255,
                     RAID_CLASS_COLORS[class].g * 255,
                     RAID_CLASS_COLORS[class].b * 255)
+                  match = true
                 end
               end
 
-              text = string.gsub(text, "|Hplayer:"..name.."|h%["..name.."%]|h(.-:-)",
-                  left.."|cff"..color.."|Hplayer:"..name.."|h" .. name .. "|h|r"..right.."%1")
+              if C.chat.text.tintunknown == "1" or match then
+                text = string.gsub(text, "|Hplayer:"..name.."|h%["..name.."%]|h(.-:-)",
+                    left.."|cff"..color.."|Hplayer:"..name.."|h" .. name .. "|h|r"..right.."%1")
+              end
             end
           end
 
