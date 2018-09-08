@@ -902,7 +902,7 @@ function pfUI:MigrateConfig()
       if pfUI_config.appearance.infight.group == "1" then
         pfUI_config.unitframes[unitframe].glowcombat = "1"
         pfUI_config.unitframes[unitframe].glowaggro = "1"
-      else
+      elseif pfUI_config.appearance.infight.group == "0" then
         pfUI_config.unitframes[unitframe].glowcombat = "0"
         pfUI_config.unitframes[unitframe].glowaggro = "0"
       end
@@ -911,7 +911,7 @@ function pfUI:MigrateConfig()
     if pfUI_config.appearance.infight.group == "1" then
       pfUI_config.unitframes["group"].glowcombat = "1"
       pfUI_config.unitframes["group"].glowaggro = "1"
-    else
+    elseif pfUI_config.appearance.infight.group == "0" then
       pfUI_config.unitframes["group"].glowcombat = "0"
       pfUI_config.unitframes["group"].glowaggro = "0"
     end
