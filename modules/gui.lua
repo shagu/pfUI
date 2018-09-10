@@ -491,6 +491,23 @@ pfUI:RegisterModule("gui", function ()
     "off:" .. T["Disabled"]
   }
 
+  pfUI.gui.dropdowns.uf_debuff_indicator = {
+    "0:" .. T["Disabled"],
+    "1:" .. T["Legacy"],
+    "2:" .. T["Glow"],
+    "3:" .. T["Square"],
+    "4:" .. T["Icon"]
+  }
+
+  pfUI.gui.dropdowns.uf_debuff_indicator_size = {
+    ".10:" .. T["10%"],
+    ".25:" .. T["25%"],
+    ".35:" .. T["35%"],
+    ".50:" .. T["50%"],
+    ".65:" .. T["65%"],
+    ".75:" .. T["75%"],
+    ".90:" .. T["90%"],
+  }
 
   pfUI.gui.dropdowns.uf_layout = {
     "default:" .. T["Default"],
@@ -557,6 +574,18 @@ pfUI:RegisterModule("gui", function ()
     "bottomleft:" .. T["Bottom Left"],
     "bottomright:" .. T["Bottom Right"],
     "off:" .. T["Disabled"]
+  }
+
+  pfUI.gui.dropdowns.positions = {
+    "TOPLEFT:" .. T["Top Left"],
+    "TOP:" .. T["Top"],
+    "TOPRIGHT:" .. T["Top Right"],
+    "LEFT:" .. T["Left"],
+    "CENTER:" .. T["Center"],
+    "RIGHT:" .. T["Right"],
+    "BOTTOMLEFT:" .. T["Bottom Left"],
+    "BOTTOM:" .. T["Bottom"],
+    "BOTTOMRIGHT:" .. T["Bottom Right"],
   }
 
   pfUI.gui.dropdowns.num_actionbar_buttons = BarLayoutOptions(NUM_ACTIONBAR_BUTTONS)
@@ -858,7 +887,6 @@ pfUI:RegisterModule("gui", function ()
 
           -- build config entries
           CreateConfig(update[c], this, T["Display Frame"] .. ": " .. t, C.unitframes[c], "visible", "checkbox")
-          CreateConfig(update[c], this, T["Show PvP-Flag Indicator"], C.unitframes[c], "showPVP", "checkbox")
           CreateConfig(update[c], this, T["Enable Mouseover Tooltip"], C.unitframes[c], "showtooltip", "checkbox")
           CreateConfig(update[c], this, T["Enable Clickcast"], C.unitframes[c], "clickcast", "checkbox")
           CreateConfig(update[c], this, T["Enable Range Fading"], C.unitframes[c], "faderange", "checkbox")
@@ -867,6 +895,8 @@ pfUI:RegisterModule("gui", function ()
           CreateConfig(update[c], this, T["Portrait Position"], C.unitframes[c], "portrait", "dropdown", pfUI.gui.dropdowns.uf_portrait_position)
           CreateConfig(update[c], this, T["Status Bar Texture"], C.unitframes[c], "bartexture", "dropdown", pfUI.gui.dropdowns.uf_bartexture)
           CreateConfig(update[c], this, T["UnitFrame Spacing"], C.unitframes[c], "pspace")
+          CreateConfig(update[c], this, T["Show PvP-Flag"], C.unitframes[c], "showPVP", "checkbox")
+          CreateConfig(update[c], this, T["Buffs Class Buffs"], C.unitframes[c], "buff_indicator", "checkbox")
 
           CreateConfig(update[c], this, T["Healthbar"], nil, nil, "header")
           CreateConfig(update[c], this, T["Health Bar Width"], C.unitframes[c], "width")
@@ -885,19 +915,10 @@ pfUI:RegisterModule("gui", function ()
           CreateConfig(update[c], this, T["Right Text"], C.unitframes[c], "txtpowerright", "dropdown", pfUI.gui.dropdowns.uf_texts)
           CreateConfig(update[c], this, T["Power Bar Anchor"], C.unitframes[c], "panchor", "dropdown", pfUI.gui.dropdowns.uf_powerbar_position)
 
-          CreateConfig(update[c], this, T["Buffs"], nil, nil, "header")
-          CreateConfig(update[c], this, T["Buff Position"], C.unitframes[c], "buffs", "dropdown", pfUI.gui.dropdowns.uf_buff_position)
-          CreateConfig(update[c], this, T["Buff Size"], C.unitframes[c], "buffsize")
-          CreateConfig(update[c], this, T["Buff Limit"], C.unitframes[c], "bufflimit")
-          CreateConfig(update[c], this, T["Buffs Per Row"], C.unitframes[c], "buffperrow")
-          CreateConfig(update[c], this, T["Enable Buff Indicators"], C.unitframes[c], "buff_indicator", "checkbox")
-
-          CreateConfig(update[c], this, T["Debuffs"], nil, nil, "header")
-          CreateConfig(update[c], this, T["Debuff Position"], C.unitframes[c], "debuffs", "dropdown", pfUI.gui.dropdowns.uf_buff_position)
-          CreateConfig(update[c], this, T["Debuff Size"], C.unitframes[c], "debuffsize")
-          CreateConfig(update[c], this, T["Debuff Limit"], C.unitframes[c], "debufflimit")
-          CreateConfig(update[c], this, T["Debuffs Per Row"], C.unitframes[c], "debuffperrow")
-          CreateConfig(update[c], this, T["Enable Debuff Indicators"], C.unitframes[c], "debuff_indicator", "checkbox")
+          CreateConfig(update[c], this, T["Combat Text"], nil, nil, "header")
+          CreateConfig(update[c], this, T["Show Combat Text"], C.unitframes[c], "hitindicator", "checkbox")
+          CreateConfig(update[c], this, T["Combat Text Font"], C.unitframes[c], "hitindicatorfont", "dropdown", pfUI.gui.dropdowns.fonts)
+          CreateConfig(update[c], this, T["Combat Text Size"], C.unitframes[c], "hitindicatorsize")
 
           CreateConfig(update[c], this, T["Text Colors"], nil, nil, "header")
           CreateConfig(update[c], this, T["Enable Health Color"], C.unitframes[c], "healthcolor", "checkbox")
@@ -905,10 +926,23 @@ pfUI:RegisterModule("gui", function ()
           CreateConfig(update[c], this, T["Enable Level Color"], C.unitframes[c], "levelcolor", "checkbox")
           CreateConfig(update[c], this, T["Enable Class Color"], C.unitframes[c], "classcolor", "checkbox")
 
-          CreateConfig(update[c], this, T["Hit Indicator"], nil, nil, "header")
-          CreateConfig(update[c], this, T["Enable Hit Indicator"], C.unitframes[c], "hitindicator", "checkbox")
-          CreateConfig(update[c], this, T["Hit Indicator Text Font"], C.unitframes[c], "hitindicatorfont", "dropdown", pfUI.gui.dropdowns.fonts)
-          CreateConfig(update[c], this, T["Hit Indicator Text Size"], C.unitframes[c], "hitindicatorsize")
+          CreateConfig(update[c], this, T["Debuff Indicators"], nil, nil, "header")
+          CreateConfig(update[c], this, T["Debuff Indicator Display"], C.unitframes[c], "debuff_indicator", "dropdown", pfUI.gui.dropdowns.uf_debuff_indicator)
+          CreateConfig(update[c], this, T["Debuff Indicator Position"], C.unitframes[c], "debuff_ind_pos", "dropdown", pfUI.gui.dropdowns.positions)
+          CreateConfig(update[c], this, T["Debuff Indicator Size"], C.unitframes[c], "debuff_ind_size", "dropdown", pfUI.gui.dropdowns.uf_debuff_indicator_size)
+
+          CreateConfig(update[c], this, T["Buffs"], nil, nil, "header")
+          CreateConfig(update[c], this, T["Buff Position"], C.unitframes[c], "buffs", "dropdown", pfUI.gui.dropdowns.uf_buff_position)
+          CreateConfig(update[c], this, T["Buff Size"], C.unitframes[c], "buffsize")
+          CreateConfig(update[c], this, T["Buff Limit"], C.unitframes[c], "bufflimit")
+          CreateConfig(update[c], this, T["Buffs Per Row"], C.unitframes[c], "buffperrow")
+
+          CreateConfig(update[c], this, T["Debuffs"], nil, nil, "header")
+          CreateConfig(update[c], this, T["Debuff Position"], C.unitframes[c], "debuffs", "dropdown", pfUI.gui.dropdowns.uf_buff_position)
+          CreateConfig(update[c], this, T["Debuff Size"], C.unitframes[c], "debuffsize")
+          CreateConfig(update[c], this, T["Debuff Limit"], C.unitframes[c], "debufflimit")
+          CreateConfig(update[c], this, T["Debuffs Per Row"], C.unitframes[c], "debuffperrow")
+
           this.setup = true
         end
       end)

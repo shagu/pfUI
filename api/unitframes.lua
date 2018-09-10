@@ -860,48 +860,53 @@ function pfUI.uf:RefreshUnitAnimation(unitframe)
   end
 end
 
-function pfUI.uf:RefreshUnitState(unitframe)
-  if UnitIsConnected(this.label .. this.id) or (pfUI.unlock and pfUI.unlock:IsShown()) then
-    -- online (or unlock)
-    if unitframe.config.faderange == "1" then
-      if pfUI.api.UnitInRange(unitframe.label .. unitframe.id, 4) or (pfUI.unlock and pfUI.unlock:IsShown()) then
-        if unitframe:GetAlpha() ~= 1 then
-          unitframe:SetAlpha(1)
-          if unitframe.config.portrait == "bar" then
-            unitframe.portrait:SetAlpha(pfUI_config.unitframes.portraitalpha)
-          end
-        end
-      else
-        if unitframe:GetAlpha() ~= .5 then
-          unitframe:SetAlpha(.5)
-          if unitframe.config.portrait == "bar" then
-            unitframe.portrait:SetAlpha(pfUI_config.unitframes.portraitalpha)
-          end
-        end
-      end
-    else
-      if unitframe:GetAlpha() ~= 1 then
-        unitframe:SetAlpha(1)
-        if unitframe.config.portrait == "bar" then
-          unitframe.portrait:SetAlpha(pfUI_config.unitframes.portraitalpha)
-        end
-      end
-    end
-  else
-    -- offline
-    unitframe.hp.bar:SetMinMaxValues(0, 100)
-    unitframe.power.bar:SetMinMaxValues(0, 100)
-    unitframe.hp.bar:SetValue(0)
-    unitframe.power.bar:SetValue(0)
+function pfUI.uf:RefreshUnitState(unit)
+  local alpha = 1
+  local unlock = pfUI.unlock and pfUI.unlock:IsShown() or nil
 
-    if ( unitframe.label == "party" or unitframe.label == "raid" ) and unitframe:GetAlpha() ~= .25 then
-      unitframe:SetAlpha(.25)
-      if unitframe.config.portrait == "bar" then
-        unitframe.portrait:SetAlpha(pfUI_config.unitframes.portraitalpha)
-      end
+  if not UnitIsConnected(unit.label .. unit.id) and not unlock then
+    -- offline
+    alpha = .25
+    unit.hp.bar:SetMinMaxValues(0, 100)
+    unit.power.bar:SetMinMaxValues(0, 100)
+    unit.hp.bar:SetValue(0)
+    unit.power.bar:SetValue(0)
+  elseif unit.config.faderange == "1" and not pfUI.api.UnitInRange(unit.label .. unit.id, 4) and not unlock then
+    alpha = .5
+  end
+
+  -- skip if alpha is already correct
+  if floor(unit:GetAlpha()*10+.5) == floor(alpha*10+.5) then return end
+
+  -- set unitframe alpha
+  unit:SetAlpha(alpha)
+
+  -- refresh portrait alpha
+  if unit.config.portrait == "bar" then
+    unit.portrait:SetAlpha(pfUI_config.unitframes.portraitalpha)
+  end
+
+  -- refresh debuff indicator alpha
+  local disptype = unit.config.debuff_indicator
+  local indicator = unit.hp.bar.debuffindicators
+  if indicator then
+    indicator:SetAlpha(0)
+    if ( disptype == "4" or disptype == "3" ) then
+      indicator:SetAlpha(1)
+    elseif disptype == "2" then
+      indicator:SetAlpha(.4)
+    elseif disptype == "1" then
+      indicator:SetAlpha(.2)
     end
   end
 end
+
+local pfDebuffColors = {
+  ["Magic"]   = { 0.1, 0.7, 0.8, 1 },
+  ["Poison"]  = { 0.2, 0.7, 0.3, 1 },
+  ["Curse"]   = { 0.6, 0.2, 0.6, 1 },
+  ["Disease"] = { 0.9, 0.7, 0.2, 1 }
+}
 
 function pfUI.uf:RefreshUnit(unit, component)
   -- break early on misconfigured UF's
@@ -1152,71 +1157,116 @@ function pfUI.uf:RefreshUnit(unit, component)
   -- indicators
   if component == "all" or component == "aura" then
     pfUI.uf:SetupDebuffFilter()
-    if table.getn(pfUI.uf.debuffs) > 0 and unit.config.debuff_indicator == "1" then
-      local infected = false
-      for i=1,32 do
-        local _,_,dtype = UnitDebuff(unitstr, i)
-        if dtype then
-          for _, filter in pairs(pfUI.uf.debuffs) do
-            if filter == string.lower(dtype) then
-              if dtype == "Magic" then
-                if not unit.hp.bar.magic then
-                  unit.hp.bar.magic = CreateFrame("Frame", unit.hp.bar)
-                  unit.hp.bar.magic:SetAllPoints(unit)
-                  unit.hp.bar.magic:SetParent(unit.hp.bar)
-                  unit.hp.bar.magic.tex = unit.hp.bar.magic:CreateTexture("OVERLAY")
-                  unit.hp.bar.magic.tex:SetAllPoints(unit.hp.bar.magic)
-                  unit.hp.bar.magic.tex:SetTexture(.2,.8,.8,.4)
-                end
-                unit.hp.bar.magic:Show()
-                infected = true
+    if table.getn(pfUI.uf.debuffs) > 0 and unit.config.debuff_indicator ~= "0" then
+      unit.hp.bar.debuffindicators = unit.hp.bar.debuffindicators or CreateFrame("Frame", nil, unit.hp.bar)
 
-              elseif dtype == "Poison" then
-                if not unit.hp.bar.poison then
-                  unit.hp.bar.poison = CreateFrame("Frame", unit.hp.bar)
-                  unit.hp.bar.poison:SetAllPoints(unit)
-                  unit.hp.bar.poison:SetParent(unit.hp.bar)
-                  unit.hp.bar.poison.tex = unit.hp.bar.poison:CreateTexture("OVERLAY")
-                  unit.hp.bar.poison.tex:SetAllPoints(unit.hp.bar.poison)
-                  unit.hp.bar.poison.tex:SetTexture(.2,.8,.2,.4)
-                end
-                unit.hp.bar.poison:Show()
-                infected = true
+      -- 0 = OFF, 1 = Legacy, 2 = Glow, 3 = Square, 4 = Icons
+      local disptype = unit.config.debuff_indicator
+      local indicator = unit.hp.bar.debuffindicators
+      local indipos = unit.config.debuff_ind_pos
+      local count = 0
+      local size
 
-              elseif dtype == "Curse" then
-                if not unit.hp.bar.curse then
-                  unit.hp.bar.curse = CreateFrame("Frame", unit.hp.bar)
-                  unit.hp.bar.curse:SetAllPoints(unit)
-                  unit.hp.bar.curse:SetParent(unit.hp.bar)
-                  unit.hp.bar.curse.tex = unit.hp.bar.curse:CreateTexture("OVERLAY")
-                  unit.hp.bar.curse.tex:SetAllPoints(unit.hp.bar.curse)
-                  unit.hp.bar.curse.tex:SetTexture(.8,.2,.8,.4)
-                end
-                unit.hp.bar.curse:Show()
-                infected = true
-
-              elseif dtype == "Disease" then
-                if not unit.hp.bar.disease then
-                  unit.hp.bar.disease = CreateFrame("Frame", unit.hp.bar)
-                  unit.hp.bar.disease:SetAllPoints(unit)
-                  unit.hp.bar.disease:SetParent(unit.hp.bar)
-                  unit.hp.bar.disease.tex = unit.hp.bar.disease:CreateTexture("OVERLAY")
-                  unit.hp.bar.disease.tex:SetAllPoints(unit.hp.bar.disease)
-                  unit.hp.bar.disease.tex:SetTexture(.8,.8,.2,.4)
-                end
-                unit.hp.bar.disease:Show()
-                infected = true
-              end
-            end
-          end
+      if disptype == "4" or disptype == "3" then
+        size = unit.hp.bar:GetHeight() * tonumber(unit.config.debuff_ind_size)
+        if size ~= indicator.size or disptype ~= indicator.disp or indipos ~= indicator.ipos then
+          indicator:ClearAllPoints()
+          indicator:SetPoint(indipos, 0, 0)
+          indicator:SetHeight(size)
+          indicator:SetWidth(size)
+          indicator.size = size
+          indicator.disp = disptype
+          indicator.ipos  = indipos
+        end
+      elseif disptype == "2" or disptype == "1" then
+        size = "FULL"
+        if size ~= indicator.size or disptype ~= indicator.disp or indipos ~= indicator.ipos then
+          indicator:ClearAllPoints()
+          indicator:SetAllPoints(unit.hp.bar)
+          indicator.size = size
+          indicator.disp = disptype
+          indicator.ipos = indipos
         end
       end
-      if infected == false then
-        if unit.hp.bar.magic then unit.hp.bar.magic:Hide() end
-        if unit.hp.bar.poison then unit.hp.bar.poison:Hide() end
-        if unit.hp.bar.curse then unit.hp.bar.curse:Hide() end
-        if unit.hp.bar.disease then unit.hp.bar.disease:Hide() end
+
+      for _, debuff in pairs(pfUI.uf.debuffs) do
+        indicator[debuff] = indicator[debuff] or CreateFrame("Frame", nil, indicator)
+        indicator[debuff]:SetParent(indicator)
+        indicator[debuff].tex = indicator[debuff].tex or indicator[debuff]:CreateTexture(nil)
+        indicator[debuff].tex:SetAllPoints(indicator[debuff])
+
+        if indicator.size ~= indicator[debuff].size or disptype ~= indicator[debuff].disp then
+          if disptype == "4" then
+            indicator[debuff].tex:SetTexture("Interface\\AddOns\\pfUI\\img\\debuffs\\" .. debuff)
+            indicator[debuff].tex:SetVertexColor(unpack(pfDebuffColors[debuff]))
+            indicator[debuff].tex:Show()
+            indicator[debuff]:ClearAllPoints()
+            indicator[debuff]:SetHeight(size)
+            indicator[debuff]:SetWidth(size)
+            indicator[debuff]:SetBackdrop(nil)
+          elseif disptype == "3" then
+            indicator[debuff].tex:SetTexture(unpack(pfDebuffColors[debuff]))
+            indicator[debuff].tex:SetVertexColor(1,1,1,1)
+            indicator[debuff].tex:Show()
+            indicator[debuff]:ClearAllPoints()
+            indicator[debuff]:SetHeight(size)
+            indicator[debuff]:SetWidth(size)
+            indicator[debuff]:SetBackdrop(nil)
+          elseif disptype == "2" then
+            indicator[debuff].tex:Hide()
+            indicator[debuff]:SetAllPoints(unit.hp.bar)
+            indicator[debuff]:SetBackdrop({
+              edgeFile = "Interface\\AddOns\\pfUI\\img\\glow", edgeSize = 8,
+              insets = {left = 0, right = 0, top = 0, bottom = 0},
+            })
+            indicator[debuff]:SetBackdropBorderColor(unpack(pfDebuffColors[debuff]))
+          elseif disptype == "1" then
+            indicator[debuff].tex:SetTexture(unpack(pfDebuffColors[debuff]))
+            indicator[debuff].tex:SetVertexColor(1,1,1,1)
+            indicator[debuff].tex:Show()
+            indicator[debuff]:SetAllPoints(unit.hp.bar)
+            indicator[debuff]:SetBackdrop(nil)
+          end
+
+          indicator[debuff].size = indicator.size
+          indicator[debuff].disp = indicator.disp
+        end
+
+        indicator[debuff].visible = nil
+
+        for i=1,16 do
+          local _, _, dtype = UnitDebuff(unitstr, i)
+          if dtype == debuff then
+            indicator[debuff].visible = true
+          end
+        end
+
+        if indicator[debuff].visible then
+          indicator[debuff]:Show()
+          indicator:Show()
+          indicator:SetAlpha(0)
+          if disptype == "4" or disptype == "3" then
+            indicator:SetAlpha(1)
+          elseif disptype == "2" then
+            indicator:SetAlpha(.4)
+          elseif disptype == "1" then
+            indicator:SetAlpha(.2)
+          end
+
+          if disptype == "4" or disptype == "3" then
+            indicator[debuff]:SetPoint("LEFT", indicator, "LEFT", count*(size+1), 0)
+            count = count + 1
+          end
+        else
+          indicator[debuff]:Hide()
+        end
       end
+
+      if disptype == "4" or disptype == "3" then
+        indicator:SetWidth(count*(size+1))
+      end
+    elseif unit.hp.bar.debuffindicators then
+      unit.hp.bar.debuffindicators:Hide()
     end
 
     pfUI.uf:SetupBuffFilter()
@@ -1379,6 +1429,8 @@ function pfUI.uf:RefreshUnit(unit, component)
       unit.hp.bar:SetStatusBarColor(.5,.5,.5,.5)
     end
   end
+
+  pfUI.uf:RefreshUnitState(unit)
 end
 
 function pfUI.uf:ClickAction(button)
@@ -1507,19 +1559,19 @@ function pfUI.uf:SetupDebuffFilter()
   local _, myclass = UnitClass("player")
   pfUI.uf.debuffs = {}
   if myclass == "PALADIN" or myclass == "PRIEST" or myclass == "WARLOCK" or pfUI_config.unitframes.debuffs_class == "0" then
-    table.insert(pfUI.uf.debuffs, "magic")
+    table.insert(pfUI.uf.debuffs, "Magic")
   end
 
   if myclass == "DRUID" or myclass == "PALADIN" or myclass == "SHAMAN" or pfUI_config.unitframes.debuffs_class == "0" then
-    table.insert(pfUI.uf.debuffs, "poison")
+    table.insert(pfUI.uf.debuffs, "Poison")
   end
 
   if myclass == "PRIEST" or myclass == "PALADIN" or myclass == "SHAMAN" or pfUI_config.unitframes.debuffs_class == "0" then
-    table.insert(pfUI.uf.debuffs, "disease")
+    table.insert(pfUI.uf.debuffs, "Disease")
   end
 
   if myclass == "DRUID" or myclass == "MAGE" or pfUI_config.unitframes.debuffs_class == "0" then
-    table.insert(pfUI.uf.debuffs, "curse")
+    table.insert(pfUI.uf.debuffs, "Curse")
   end
 end
 
