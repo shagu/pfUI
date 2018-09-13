@@ -894,19 +894,21 @@ pfUI:RegisterModule("chat", function ()
   end
 
   -- create playerlinks on shift-click
-  local pfHookSetItemRef = SetItemRef
-  _G.SetItemRef = function(link, text, button)
-    if ( strsub(link, 1, 6) == "player" ) then
-      local name = strsub(link, 8)
-      if ( name and (strlen(name) > 0) ) then
-        name = gsub(name, "([^%s]*)%s+([^%s]*)%s+([^%s]*)", "%3");
-        name = gsub(name, "([^%s]*)%s+([^%s]*)", "%2");
-        if IsShiftKeyDown() and ChatFrameEditBox:IsVisible() then
-          ChatFrameEditBox:Insert("|cffffffff|Hplayer:"..name.."|h["..name.."]|h|r")
-          return
+  if C.chat.text.playerlinks == "1" then
+    local pfHookSetItemRef = SetItemRef
+    _G.SetItemRef = function(link, text, button)
+      if ( strsub(link, 1, 6) == "player" ) then
+        local name = strsub(link, 8)
+        if ( name and (strlen(name) > 0) ) then
+          name = gsub(name, "([^%s]*)%s+([^%s]*)%s+([^%s]*)", "%3");
+          name = gsub(name, "([^%s]*)%s+([^%s]*)", "%2");
+          if IsShiftKeyDown() and ChatFrameEditBox:IsVisible() then
+            ChatFrameEditBox:Insert("|cffffffff|Hplayer:"..name.."|h["..name.."]|h|r")
+            return
+          end
         end
       end
+      pfHookSetItemRef(link, text, button)
     end
-    pfHookSetItemRef(link, text, button)
   end
 end)
