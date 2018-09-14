@@ -144,8 +144,34 @@ pfUI:RegisterModule("thirdparty", function ()
   HookAddonOrVariable("KLHThreatMeter", function()
     if C.thirdparty.ktm.skin == "1" then
       -- remove titlebar
-      KLHTM_Gui.title.back:Hide()
-      KLHTM_SetGuiScale(.9)
+      if KLHTM_Gui then 
+        if KLHTM_Gui.title then
+          KLHTM_Gui.title.back:Hide() 
+        end
+        if KLHTM_Gui.frame then
+          KLHTM_SetGuiScale(.9)
+        end
+        if KLHTM_Gui.raid then
+          -- skin rows (raid)
+          for i in pairs(KLHTM_Gui.raid.rows) do
+            KLHTM_Gui.raid.rows[i].bar:SetTexture("Interface\\AddOns\\pfUI\\img\\bar")
+            KLHTM_Gui.raid.rows[i].bar:SetAlpha(.75)
+
+            if _G["KLHTM_RaidFrameRow" .. i .. "NameText"] then
+              _G["KLHTM_RaidFrameRow" .. i .. "NameText"]:SetFont(pfUI.font_default, 13, "OUTLINE")
+              _G["KLHTM_RaidFrameRow" .. i .. "ThreatText"]:SetFont(pfUI.font_default, 13, "OUTLINE")
+              _G["KLHTM_RaidFrameRow" .. i .. "PercentThreatText"]:SetFont(pfUI.font_default, 13, "OUTLINE")
+            end
+          end          
+        end
+        if KLHTM_Gui.self then
+          -- skin rows (self)
+          for i in pairs(KLHTM_Gui.self.rows) do
+            KLHTM_Gui.self.rows[i].bar:SetTexture("Interface\\AddOns\\pfUI\\img\\bar")
+            KLHTM_Gui.self.rows[i].bar:SetAlpha(.75)
+          end          
+        end
+      end
 
       CreateBackdrop(KLHTM_Frame, nil, nil, (C.thirdparty.chatbg == "1" and .8))
 
@@ -194,30 +220,12 @@ pfUI:RegisterModule("thirdparty", function ()
       KLHTM_TitleFrameRaidView:SetText("R")
       KLHTM_TitleFrameMasterTarget:SetText("T")
 
-      -- skin rows (raid)
-      for i in pairs(KLHTM_Gui.raid.rows) do
-        KLHTM_Gui.raid.rows[i].bar:SetTexture("Interface\\AddOns\\pfUI\\img\\bar")
-        KLHTM_Gui.raid.rows[i].bar:SetAlpha(.75)
-
-        if _G["KLHTM_RaidFrameRow" .. i .. "NameText"] then
-          _G["KLHTM_RaidFrameRow" .. i .. "NameText"]:SetFont(pfUI.font_default, 13, "OUTLINE")
-          _G["KLHTM_RaidFrameRow" .. i .. "ThreatText"]:SetFont(pfUI.font_default, 13, "OUTLINE")
-          _G["KLHTM_RaidFrameRow" .. i .. "PercentThreatText"]:SetFont(pfUI.font_default, 13, "OUTLINE")
-        end
-      end
-
       KLHTM_RaidFrameHeaderNameText:SetFont(pfUI.font_default, 12, "OUTLINE")
       KLHTM_RaidFrameHeaderThreatText:SetFont(pfUI.font_default, 12, "OUTLINE")
       KLHTM_RaidFrameHeaderPercentThreatText:SetFont(pfUI.font_default, 12, "OUTLINE")
       KLHTM_RaidFrameBottomThreatDefecitText:SetFont(pfUI.font_default, 12, "OUTLINE")
       KLHTM_RaidFrameBottomMasterTargetText:SetFont(pfUI.font_default, 12, "OUTLINE")
       KLHTM_RaidFrameHeaderName:SetHeight(12)
-
-      -- skin rows (self)
-      for i in pairs(KLHTM_Gui.self.rows) do
-        KLHTM_Gui.self.rows[i].bar:SetTexture("Interface\\AddOns\\pfUI\\img\\bar")
-        KLHTM_Gui.self.rows[i].bar:SetAlpha(.75)
-      end
 
       -- remove seperators
       if KLHTM_RaidFrameLine then KLHTM_RaidFrameLine:Hide() end
