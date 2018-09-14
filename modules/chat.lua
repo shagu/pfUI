@@ -20,6 +20,21 @@ pfUI:RegisterModule("chat", function ()
 
   _G.CHAT_FONT_HEIGHTS = { 8, 10, 12, 14, 16, 18, 20 }
 
+
+  -- add dropdown menu button to ignore player
+  UnitPopupButtons["IGNORE_PLAYER"] = { text = IGNORE_PLAYER, dist = 0 }
+  for index,value in ipairs(UnitPopupMenus["FRIEND"]) do
+    if value == "GUILD_LEAVE" then
+      table.insert(UnitPopupMenus["FRIEND"], index+1, "IGNORE_PLAYER")
+    end
+  end
+
+  hooksecurefunc("UnitPopup_OnClick", function(self)
+    if this.value == "IGNORE_PLAYER" then
+      AddIgnore(_G[UIDROPDOWNMENU_INIT_MENU].name)
+    end
+  end)
+
   pfUI.chat = CreateFrame("Frame",nil,UIParent)
 
   pfUI.chat.left = CreateFrame("Frame", "pfChatLeft", UIParent)
