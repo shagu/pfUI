@@ -147,6 +147,7 @@ pfUI:RegisterModule("skin", function ()
   CreateBackdrop(TicketStatusFrame)
   TicketStatusFrame:ClearAllPoints()
   TicketStatusFrame:SetPoint("TOP", 0, -5)
+  UpdateMovable(TicketStatusFrame)
   function TicketStatusFrame_OnEvent()
     if ( event == "PLAYER_ENTERING_WORLD" ) then
       GetGMTicket()
