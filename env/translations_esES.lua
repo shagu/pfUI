@@ -227,6 +227,7 @@ pfUI_translation["esES"] = {
   ["FPS & Ping"] = "IPS y Ping",
   ["Friends Online"] = "Amigos Conectados",
   ["General"] = "General",
+  ["Generate Playerlinks"] = nil,
   ["Global Border Size"] = "Tamaño del Borde Global",
   ["Glow"] = nil,
   ["GM-Mode"] = "Modo-MJ",

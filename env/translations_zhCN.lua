@@ -227,6 +227,7 @@ pfUI_translation["zhCN"] = {
   ["fps"] = "帧",
   ["Friends Online"] = "在线好友",
   ["General"] = "默认",
+  ["Generate Playerlinks"] = nil,
   ["Global Border Size"] = "全局边框大小",
   ["Glow"] = nil,
   ["GM-Mode"] = "GM模式",

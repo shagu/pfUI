@@ -227,6 +227,7 @@ pfUI_translation["deDE"] = {
   ["FPS & Ping"] = nil,
   ["Friends Online"] = nil,
   ["General"] = nil,
+  ["Generate Playerlinks"] = nil,
   ["Global Border Size"] = nil,
   ["Glow"] = nil,
   ["GM-Mode"] = nil,

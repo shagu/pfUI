@@ -227,6 +227,7 @@ pfUI_translation["ruRU"] = {
   ["fps"] = "кад./сек.",
   ["Friends Online"] = "Друзья в сети",
   ["General"] = "Общее",
+  ["Generate Playerlinks"] = nil,
   ["Global Border Size"] = "Размер глобальной границы",
   ["Glow"] = nil,
   ["GM-Mode"] = "Режим ГМ",

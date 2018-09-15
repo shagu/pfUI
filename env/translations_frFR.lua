@@ -227,6 +227,7 @@ pfUI_translation["frFR"] = {
   ["FPS & Ping"] = "FPS & Latence",
   ["Friends Online"] = "Amis connectés",
   ["General"] = "Général",
+  ["Generate Playerlinks"] = nil,
   ["Global Border Size"] = "Taille globale des bordures",
   ["Glow"] = nil,
   ["GM-Mode"] = "Mode GM",

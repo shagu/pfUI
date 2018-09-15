@@ -227,6 +227,7 @@ pfUI_translation["koKR"] = {
   ["FPS & Ping"] = "프레임&핑",
   ["Friends Online"] = "접속중인 친구",
   ["General"] = "일반 설정",
+  ["Generate Playerlinks"] = nil,
   ["Global Border Size"] = "글로벌 테두리 크기",
   ["Glow"] = nil,
   ["GM-Mode"] = "GM 모드",
