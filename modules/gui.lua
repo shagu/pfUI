@@ -896,7 +896,7 @@ pfUI:RegisterModule("gui", function ()
           CreateConfig(update[c], this, T["Status Bar Texture"], C.unitframes[c], "bartexture", "dropdown", pfUI.gui.dropdowns.uf_bartexture)
           CreateConfig(update[c], this, T["UnitFrame Spacing"], C.unitframes[c], "pspace")
           CreateConfig(update[c], this, T["Show PvP-Flag"], C.unitframes[c], "showPVP", "checkbox")
-          CreateConfig(update[c], this, T["Buffs Class Buffs"], C.unitframes[c], "buff_indicator", "checkbox")
+          CreateConfig(update[c], this, T["Display Class Buffs"], C.unitframes[c], "buff_indicator", "checkbox")
 
           CreateConfig(update[c], this, T["Healthbar"], nil, nil, "header")
           CreateConfig(update[c], this, T["Health Bar Width"], C.unitframes[c], "width")
