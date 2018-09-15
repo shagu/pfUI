@@ -19,7 +19,7 @@ pfUI:RegisterModule("firstrun", function ()
     table.insert(pfUI.firstrun.steps, step)
   end
 
-  local txt = T["|cff33ffccBlizzard: \"Interface Options\"|r\n\nDo you want me to setup the recommended blizzard UI settings?\nThis will enable settings that can be found in the Interface section of your client.\nOptions like Buff Durations, Instant Quest Text, Auto Selfcast and others will be set."]
+  local txt = T["|cff33ffccBlizzard: \"Interface Options\"|r\n\nDo you want me to set up the recommended Blizzard UI settings?\nThis will enable settings that can be found in the Interface section of your client.\nOptions like Buff Durations, Instant Quest Text, Auto Selfcast and others will be set."]
   pfUI.firstrun:AddStep("cvars", function() pfUI.SetupCVars() end, nil, txt)
 
   local all_yes = false
@@ -38,7 +38,7 @@ pfUI:RegisterModule("firstrun", function ()
         pfUI.firstrun:NextStep()
       end
 
-      local txt = T["Welcome to |cff33ffccpf|cffffffffUI|r!\n\nI'm the first run wizzard that will guide you through some basic configuration.\nIf you're lazy, feel free to hit the \"Use Defaults\" button. If you whish to run this\ndialog again, go to the settings and hit the \"Reset Firstrun\" button.\n\nVisit |cff33ffcchttp://shagu.org|r to check for the latest version."]
+      local txt = T["Welcome to |cff33ffccpf|cffffffffUI|r!\n\nI'm the first run wizard that will guide you through some basic configuration.\nIf you're lazy, feel free to hit the \"Use Defaults\" button. If you wish to run this\ndialog again, go to the settings and hit the \"Reset Firstrun\" button.\n\nVisit |cff33ffcchttp://shagu.org|r to check for the latest version."]
 
       CreateQuestionDialog(txt, { T["Customize"], yes } , { T["Use Defaults"], no })
       return
