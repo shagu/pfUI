@@ -50,7 +50,7 @@ pfUI supports and contains language specific code for the following gameclients.
 ## Plugins
 * [pfUI-eliteoverlay](https://shagu.org/pfUI-eliteoverlay) Add elite dragons to unitframes
 * [pfUI-fonts](https://shagu.org/pfUI-fonts) Additional fonts for pfUI
-* [pfUI-CustomMedia](https://github.com/mrrosh/pfUI-CustomMedia) A font and texture package
+* [pfUI-CustomMedia](https://gitlab.com/mrrosh/pfUI-CustomMedia) Additional textures for pfUI
 
 ## FAQ
 **What does "pfUI" stand for?**  
