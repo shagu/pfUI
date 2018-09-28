@@ -34,6 +34,7 @@ env\profiles.lua
 
 # api
 api\api.lua
+api\tbc.lua
 api\config.lua
 api\ui-widgets.lua
 api\unitframes.lua
