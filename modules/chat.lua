@@ -858,7 +858,7 @@ pfUI:RegisterModule("chat", function ()
           -- display class colors if already indexed
           if C.chat.text.classcolor == "1" then
 
-            for name in string.gfind(text, "|Hplayer:(.-)|h") do
+            for name in gfind(text, "|Hplayer:(.-)|h") do
               local color = unknowncolorhex
               local match = false
               -- search player in database

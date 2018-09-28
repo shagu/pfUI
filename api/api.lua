@@ -883,3 +883,6 @@ function pfUI.api.GetColorGradient(perc)
     gradientcolors[perc].b,
     gradientcolors[perc].h
 end
+
+-- [ shortcuts ]
+pfUI.api.gfind = string.gfind

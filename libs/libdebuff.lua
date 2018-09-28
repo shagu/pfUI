@@ -179,7 +179,7 @@ libdebuff.pending = {}
 libdebuff:SetScript("OnEvent", function()
   -- Add Combat Log
   if event == "CHAT_MSG_SPELL_PERIODIC_HOSTILEPLAYER_DAMAGE" or event == "CHAT_MSG_SPELL_PERIODIC_CREATURE_DAMAGE" then
-    for unit, effect in string.gfind(arg1, libdebuff.combatlog) do
+    for unit, effect in gfind(arg1, libdebuff.combatlog) do
       local unitlevel = UnitName("target") == unit and UnitLevel("target") or 0
 
       if not libdebuff.objects[unit] or not libdebuff.objects[unit][unitlevel] or not libdebuff.objects[unit][unitlevel][effect] then
@@ -203,7 +203,7 @@ libdebuff:SetScript("OnEvent", function()
   elseif event == "CHAT_MSG_SPELL_FAILED_LOCALPLAYER" or event == "CHAT_MSG_SPELL_SELF_DAMAGE" then
     -- Persist pending Spell
     for _, msg in pairs(libdebuff.pp) do
-      for effect, _ in string.gfind(arg1, msg) do
+      for effect, _ in gfind(arg1, msg) do
         libdebuff:PersistPending(effect)
         return
       end
@@ -211,7 +211,7 @@ libdebuff:SetScript("OnEvent", function()
 
     -- Remove pending spell
     for _, msg in pairs(libdebuff.rp) do
-      for effect, _ in string.gfind(arg1, msg) do
+      for effect, _ in gfind(arg1, msg) do
         libdebuff:RemovePending(effect)
         return
       end

@@ -7,7 +7,7 @@ pfUI:RegisterModule("autoshift", function ()
   pfUI.autoshift.scanString = string.gsub(SPELL_FAILED_ONLY_SHAPESHIFT, "%%s", "(.+)")
 
   function pfUI.autoshift:SwitchStance()
-    for stance in string.gfind(pfUI.autoshift.lastError, pfUI.autoshift.scanString) do
+    for stance in gfind(pfUI.autoshift.lastError, pfUI.autoshift.scanString) do
       for _, stance in pairs({ strsplit(",", stance)}) do
         pfUI.autoshift.CastSpellByName(string.gsub(stance,"^%s*(.-)%s*$", "%1"))
       end

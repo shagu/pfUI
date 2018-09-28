@@ -16,7 +16,7 @@ pfUI:RegisterModule("pixelperfect", function ()
       -- apply pixel dependent scaling
       local resolution = GetCVar("gxResolution")
 
-      for screenwidth, screenheight in string.gfind(resolution, "(.+)x(.+)") do
+      for screenwidth, screenheight in gfind(resolution, "(.+)x(.+)") do
         local screenheight = tonumber(screenheight) / 8
         local scale = 768 / ( screenheight * conf )
 
