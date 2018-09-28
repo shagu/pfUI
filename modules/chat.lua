@@ -480,7 +480,7 @@ pfUI:RegisterModule("chat", function ()
     end
 
     -- update dock frame for all windows
-    for index, value in DOCKED_CHAT_FRAMES do
+    for index, value in pairs(DOCKED_CHAT_FRAMES) do
       FCF_UpdateButtonSide(value)
     end
   end
