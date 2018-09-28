@@ -7,6 +7,7 @@ setfenv(1, pfUI:GetEnvironment())
 
 -- the "MiniMapTrackingFrame" is called "MiniMapTracking"
 pfUI.api.MiniMapTrackingFrame = _G.MiniMapTracking
+pfUI.api.UIOptionsFrame = _G.InterfaceOptionsFrame
 
 -- gfind got replaced by gmatch
 pfUI.api.gfind = string.gmatch
