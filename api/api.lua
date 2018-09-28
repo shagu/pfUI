@@ -184,7 +184,8 @@ end
 -- returns:     [string]     the type of the bag, e.g "QUIVER"
 function pfUI.api.GetBagFamily(bag)
   if bag == -2 then return "KEYRING" end
-  if bag == 0 then return "BAG" end
+  if bag == 0 then return "BAG" end -- backpack
+  if bag == -1 then return "BAG" end -- bank
 
   local _, _, id = strfind(GetInventoryItemLink("player", ContainerIDToInventoryID(bag)) or "", "item:(%d+)")
   if id then
