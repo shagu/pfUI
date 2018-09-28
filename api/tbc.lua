@@ -42,3 +42,12 @@ end
 
 -- blacklist unrequired modules
 pfUI.module.autoshift = true
+
+-- keyring returns
+function pfUI.api.GetContainerNumSlots(bag)
+  if bag == -2 and pfUI.bag and not pfUI.bag.showKeyring then
+    return 0
+  else
+    return _G.GetContainerNumSlots(bag)
+  end
+end
