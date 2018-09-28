@@ -122,9 +122,9 @@ end
 
 libtipscan._registry = setmetatable({},{__index = function(t,k)
   local v = CreateFrame("GameTooltip", string.format("%s%s",baseName,k), nil, "GameTooltipTemplate")
-  v:SetOwner(v,"ANCHOR_NONE")
+  v:SetOwner(UIParent,"ANCHOR_NONE")
   v:SetScript("OnHide", function ()
-    this:SetOwner(this,"ANCHOR_NONE")
+    this:SetOwner(UIParent,"ANCHOR_NONE")
   end)
   function v:Text()
     return getText(self)
