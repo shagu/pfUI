@@ -1892,20 +1892,11 @@ function pfUI.uf.GetColor(self, preset)
     b = UnitReactionColor[UnitReaction(unitstr, "player")].b
 
   elseif preset == "health" and config["healthcolor"] == "1" then
-    local perc = UnitHealth(unitstr) / UnitHealthMax(unitstr)
-    local r1, g1, b1, r2, g2, b2
-    if perc <= 0.5 then
-      perc = perc * 2
-      r1, g1, b1 = 1, 0, 0
-      r2, g2, b2 = 1, 1, 0
+    if UnitHealthMax(unitstr) > 0 then
+      r, g, b = GetColorGradient(UnitHealth(unitstr) / UnitHealthMax(unitstr))
     else
-      perc = perc * 2 - 1
-      r1, g1, b1 = 1, 1, 0
-      r2, g2, b2 = 0, 1, 0
+      r, g, b = 0, 0, 0
     end
-    r = r1 + (r2 - r1)*perc
-    g = g1 + (g2 - g1)*perc
-    b = b1 + (b2 - b1)*perc
 
   elseif preset == "power" and config["powercolor"] == "1" then
     r = ManaBarColor[UnitPowerType(unitstr)].r
