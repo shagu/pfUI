@@ -172,7 +172,7 @@ pfUI:RegisterModule("prediction", function ()
   function pfUI.prediction:UpdateUnitFrames(name, heal, ress)
     OVERHEALPERCENT = OVERHEALPERCENT or 20
 
-    for id, frame in _G.pfUI.uf.frames do
+    for id, frame in pairs(_G.pfUI.uf.frames) do
       if frame:IsVisible() and frame.label and frame.id then
         local unit = frame.label .. frame.id
         local health, maxHealth = UnitHealth(unit), UnitHealthMax(unit)
