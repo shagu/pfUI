@@ -42,8 +42,9 @@ end
 
 -- blacklist unrequired modules
 pfUI.module.autoshift = true
+pfUI.module.itemclick = true
 
--- keyring returns
+-- the function GetContainerNumSlots returns numbers for keyrings in tbc
 function pfUI.api.GetContainerNumSlots(bag)
   if bag == -2 and pfUI.bag and not pfUI.bag.showKeyring then
     return 0

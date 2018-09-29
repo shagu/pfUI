@@ -82,6 +82,7 @@ modules\xpbar.lua
 modules\autoshift.lua
 modules\autovendor.lua
 modules\bags.lua
+modules\itemclick.lua
 modules\cooldown.lua
 modules\tooltip.lua
 modules\thirdparty.lua
