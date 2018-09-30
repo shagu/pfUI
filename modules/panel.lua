@@ -127,15 +127,15 @@ pfUI:RegisterModule("panel", function()
         end
 
         local memkb, gckb = gcinfo()
-        local memmb = round(memkb/1000, 2)
-        local gcmb = round(gckb/1000, 2)
+        local memmb = memkb and memkb > 0 and round((memkb or 0)/1000, 2) .. " MB" or UNAVAILABLE
+        local gcmb = gckb and gckb > 0 and round((gckb or 0)/1000, 2) .. " MB" or UNAVAILABLE
 
         local nin, nout, nping = GetNetStats()
 
         GameTooltip:AddDoubleLine(T["Active Addons"], "|cffffffff" .. active .. "|cff555555 / |cffffffff" .. GetNumAddOns())
         GameTooltip:AddLine(" ")
-        GameTooltip:AddDoubleLine(T["Memory Usage"], "|cffffffff" .. memmb .. " MB")
-        GameTooltip:AddDoubleLine(T["Next Memory Cleanup"], "|cffffffff" .. gcmb .. " MB")
+        GameTooltip:AddDoubleLine(T["Memory Usage"], "|cffffffff" .. memmb)
+        GameTooltip:AddDoubleLine(T["Next Memory Cleanup"], "|cffffffff" .. gcmb)
         GameTooltip:AddLine(" ")
         GameTooltip:AddDoubleLine(T["Network Down"], "|cffffffff" .. round(nin,1) .. "KB/s")
         GameTooltip:AddDoubleLine(T["Network Up"], "|cffffffff" .. round(nout,1) .. "KB/s")
