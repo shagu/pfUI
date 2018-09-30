@@ -627,14 +627,14 @@ pfUI:RegisterModule("nameplates", function ()
           this.debuffs[j].icon:SetTexture(icon)
           this.debuffs[j].icon:SetTexCoord(.078, .92, .079, .937)
 
-          if name and libdebuff then
+          if icon then
             this.debuffs[j].cd = this.debuffs[j].cd or CreateFrame("Model", nil, this.debuffs[j], "CooldownFrameTemplate")
             this.debuffs[j].cd.pfCooldownType = "ALL"
 
-            local name, rank, texture, stacks, dtype, duration, timeleft = libdebuff:UnitDebuff("target", i)
+            local name, rank, texture, stacks, dtype, duration, timeleft = libdebuff:UnitDebuff("target", j)
             if duration and timeleft then
               this.debuffs[j].cd:SetAlpha(0)
-              CooldownFrame_SetTimer(this.debuffs[i].cd, GetTime() + timeleft - duration, duration, 1)
+              CooldownFrame_SetTimer(this.debuffs[j].cd, GetTime() + timeleft - duration, duration, 1)
             end
           end
 
