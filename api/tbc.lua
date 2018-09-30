@@ -47,7 +47,11 @@ function pfUI.api.UnitDebuff(unitstr, i)
 end
 
 -- use native UnitDebuff instead of libdebuff emulation
-pfUI.api.libdebuff = { ["UnitDebuff"] = _G.UnitDebuff }
+pfUI.api.libdebuff = {
+  ["UnitDebuff"] = function(self, unit, i)
+    return _G.UnitDebuff(unit, i)
+  end
+}
 
 -- blacklist unrequired modules
 pfUI.module.autoshift = true

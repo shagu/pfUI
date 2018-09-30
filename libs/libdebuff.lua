@@ -145,16 +145,16 @@ libdebuff:SetScript("OnEvent", function()
     for unit, effect in gfind(arg1, libdebuff.combatlog) do
       local unitlevel = UnitName("target") == unit and UnitLevel("target") or 0
       if not libdebuff.objects[unit] or not libdebuff.objects[unit][unitlevel] or not libdebuff.objects[unit][unitlevel][effect] then
-        this:AddEffect(unit, unitlevel, effect)
+        libdebuff:AddEffect(unit, unitlevel, effect)
       end
     end
 
   -- Add Missing Buffs by Iteration
   elseif ( event == "UNIT_AURA" and arg1 == "target" ) or event == "PLAYER_TARGET_CHANGED" then
     for i=1, 16 do
-      effect, rank, texture, stacks, dtype, duration, timeleft = this:UnitDebuff("target", i)
+      effect, rank, texture, stacks, dtype, duration, timeleft = libdebuff:UnitDebuff("target", i)
       if texture and effect and duration then
-        this:AddEffect(UnitName("target"), UnitLevel("target"), effect)
+        libdebuff:AddEffect(UnitName("target"), UnitLevel("target"), effect)
       end
     end
 
