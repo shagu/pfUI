@@ -527,6 +527,8 @@ pfUI:RegisterModule("loot", function ()
       LootFrame.selectedSlot = pfUI.loot.selectedSlot
       LootFrame.selectedQuality = pfUI.loot.selectedQuality
       LootFrame.selectedItemName = pfUI.loot.selectedItemName
+
+      LootSlot(this:GetID())
     end)
 
     frame:SetScript("OnEnter", function()

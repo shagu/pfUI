@@ -29,6 +29,10 @@ end
 function pfUI.api.CreateFrame(f, n, p, t)
   if f == "Model" and t == "CooldownFrameTemplate" then
     return _G.CreateFrame("Cooldown", n, p, t)
+  elseif  f == "LootButton" then
+    local ret = _G.CreateFrame("Button", n, p, t)
+    ret.SetSlot = ret.SetID
+    return ret
   else
     return _G.CreateFrame(f, n, p, t)
   end
