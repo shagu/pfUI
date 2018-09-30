@@ -34,11 +34,20 @@ function pfUI.api.CreateFrame(f, n, p, t)
   end
 end
 
--- tbc changed the return values
+-- fake vanilla UnitBuff return values
 function pfUI.api.UnitBuff(unitstr, i)
   local name, rank, icon, count = _G.UnitBuff(unitstr, i)
   return icon, count
 end
+
+-- fake vanilla UnitDebuff return values
+function pfUI.api.UnitDebuff(unitstr, i)
+  local name, rank, texture, stacks, dtype, duration, timeLeft = _G.UnitDebuff(unitstr, i)
+  return texture, stacks, dtype
+end
+
+-- use native UnitDebuff instead of libdebuff emulation
+pfUI.api.libdebuff = { ["UnitDebuff"] = _G.UnitDebuff }
 
 -- blacklist unrequired modules
 pfUI.module.autoshift = true
