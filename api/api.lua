@@ -852,7 +852,8 @@ end
 -- return r,g,b and hexcolor
 local gradientcolors = {}
 function pfUI.api.GetColorGradient(perc)
-  if perc < 0 or perc > 1 then return nil,nil,nil,nil end
+  -- fallback to black on bad numbers
+  if perc < 0 or perc > 1 then return 0,0,0,"|cff000000" end
 
   if not gradientcolors[perc] then
     local r1, g1, b1, r2, g2, b2
