@@ -3,55 +3,18 @@ setfenv(1, pfUI:GetEnvironment())
 
 --[[ libdebuff ]]--
 -- A pfUI library that detects and saves all ongoing debuffs of players, NPCs and enemies.
+-- The functions UnitDebuff is exposed to the modules which allows to query debuffs like you
+-- would on later expansions.
 --
---  libdebuff:GetDebuffName(unit, index)
---    Returns the debuff name with the given index of the specified unit
---
---  libdebuff:GetDebuffInfo(unit, effect)
+--  libdebuff:UnitDebuff(unit, id)
 --    Returns debuff informations on the given effect of the specified unit.
---    start, duration, timeleft
+--    name, rank, texture, stacks, dtype, duration, timeleft
+
+-- return instantly when another libdebuff is already active
+if pfUI.api.libdebuff then return end
 
 local libdebuff = CreateFrame("Frame", "pfdebuffsScanner", UIParent)
 local scanner = libtipscan:GetScanner("libdebuff")
-
-function libdebuff:GetDebuffName(unit, index)
-  scanner:SetUnitDebuff(unit, index)
-  local text = scanner:Line(1)
-  return ( text ) and text or ""
-end
-
-function libdebuff:GetDebuffInfo(unit, effect)
-  local unitname = UnitName(unit)
-  local unitlevel = UnitLevel(unit)
-
-  if libdebuff.objects[unitname] and libdebuff.objects[unitname][unitlevel] and libdebuff.objects[unitname][unitlevel][effect] then
-    -- clean up db
-    if libdebuff.objects[unitname][unitlevel][effect].duration and libdebuff.objects[unitname][unitlevel][effect].duration + libdebuff.objects[unitname][unitlevel][effect].start < GetTime() then
-      libdebuff.objects[unitname][unitlevel][effect] = nil
-      return 0, 0, 0
-    end
-    local start = libdebuff.objects[unitname][unitlevel][effect].start
-    local duration = libdebuff.objects[unitname][unitlevel][effect].duration
-    local timeleft = duration + start - GetTime()
-
-    return start, duration, timeleft
-
-  -- no level data
-  elseif libdebuff.objects[unitname] and libdebuff.objects[unitname][0] and libdebuff.objects[unitname][0][effect] then
-    -- clean up db
-    if libdebuff.objects[unitname][0][effect].duration and libdebuff.objects[unitname][0][effect].duration + libdebuff.objects[unitname][0][effect].start < GetTime() then
-      libdebuff.objects[unitname][0][effect] = nil
-      return 0, 0, 0
-    end
-    local start = libdebuff.objects[unitname][0][effect].start
-    local duration = libdebuff.objects[unitname][0][effect].duration
-    local timeleft = duration + start - GetTime()
-
-    return start, duration, timeleft
-  else
-    return 0, 0, 0
-  end
-end
 
 function libdebuff:GetDuration(effect, rank)
   if L["debuffs"][effect] and rank then
@@ -181,7 +144,6 @@ libdebuff:SetScript("OnEvent", function()
   if event == "CHAT_MSG_SPELL_PERIODIC_HOSTILEPLAYER_DAMAGE" or event == "CHAT_MSG_SPELL_PERIODIC_CREATURE_DAMAGE" then
     for unit, effect in gfind(arg1, libdebuff.combatlog) do
       local unitlevel = UnitName("target") == unit and UnitLevel("target") or 0
-
       if not libdebuff.objects[unit] or not libdebuff.objects[unit][unitlevel] or not libdebuff.objects[unit][unitlevel][effect] then
         this:AddEffect(unit, unitlevel, effect)
       end
@@ -190,12 +152,9 @@ libdebuff:SetScript("OnEvent", function()
   -- Add Missing Buffs by Iteration
   elseif ( event == "UNIT_AURA" and arg1 == "target" ) or event == "PLAYER_TARGET_CHANGED" then
     for i=1, 16 do
-      texture, _, _ = UnitDebuff("target" , i)
-      if texture then
-        local effect = this:GetDebuffName("target", i)
-        if effect ~= "" and this:GetDebuffInfo("target", effect) == 0 then
-          this:AddEffect(UnitName("target"), UnitLevel("target"), effect)
-        end
+      effect, rank, texture, stacks, dtype, duration, timeleft = this:UnitDebuff("target", i)
+      if texture and effect and duration then
+        this:AddEffect(UnitName("target"), UnitLevel("target"), effect)
       end
     end
 
@@ -243,6 +202,38 @@ hooksecurefunc("UseAction", function(slot, target, button)
   local duration = libdebuff:GetDuration(effect, rank)
   libdebuff:AddPending(UnitName("target"), UnitLevel("target"), effect, duration)
 end, true)
+
+function libdebuff:UnitDebuff(unit, id)
+  scanner:SetUnitDebuff(unit, id)
+  local effect = ( scanner:Line(1) ) or ""
+  local unitname = UnitName(unit)
+  local unitlevel = UnitLevel(unit)
+  local texture, stacks, dtype = UnitDebuff(unit, id)
+  local duration, timeleft = nil, nil
+  local rank = nil -- no backport
+
+  if libdebuff.objects[unitname] and libdebuff.objects[unitname][unitlevel] and libdebuff.objects[unitname][unitlevel][effect] then
+    -- clean up cache
+    if libdebuff.objects[unitname][unitlevel][effect].duration and libdebuff.objects[unitname][unitlevel][effect].duration + libdebuff.objects[unitname][unitlevel][effect].start < GetTime() then
+      libdebuff.objects[unitname][unitlevel][effect] = nil
+    else
+      duration = libdebuff.objects[unitname][unitlevel][effect].duration
+      timeleft = duration + libdebuff.objects[unitname][unitlevel][effect].start - GetTime()
+    end
+
+  -- no level data
+  elseif libdebuff.objects[unitname] and libdebuff.objects[unitname][0] and libdebuff.objects[unitname][0][effect] then
+    -- clean up cache
+    if libdebuff.objects[unitname][0][effect].duration and libdebuff.objects[unitname][0][effect].duration + libdebuff.objects[unitname][0][effect].start < GetTime() then
+      libdebuff.objects[unitname][0][effect] = nil
+    else
+      duration = libdebuff.objects[unitname][0][effect].duration
+      timeleft = duration + libdebuff.objects[unitname][0][effect].start - GetTime()
+    end
+  end
+
+  return name, rank, texture, stacks, dtype, duration, timeleft
+end
 
 -- add libdebuff to pfUI API
 pfUI.api.libdebuff = libdebuff

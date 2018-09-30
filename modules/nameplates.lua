@@ -665,9 +665,8 @@ pfUI:RegisterModule("nameplates", function ()
       pfUI.nameplates.debuffs = {}
       for i = 1, 16 do
         if not UnitDebuff("target", i) then return end
-        local debuff = UnitDebuff("target", i)
-        local effect = (libdebuff and libdebuff:GetDebuffName("target", i)) or ""
-        pfUI.nameplates.debuffs[i] = { debuff, effect }
+        local name, _, texture = libdebuff:UnitDebuff("target", i)
+        pfUI.nameplates.debuffs[i] = { texture, name }
       end
     end
   end)

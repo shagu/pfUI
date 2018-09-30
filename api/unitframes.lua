@@ -1138,9 +1138,10 @@ function pfUI.uf:RefreshUnit(unit, component)
           local timeleft = GetPlayerBuffTimeLeft(GetPlayerBuff(unit.debuffs[i]:GetID() - 1, "HARMFUL"),"HARMFUL")
           CooldownFrame_SetTimer(unit.debuffs[i].cd, GetTime(), timeleft, 1)
         elseif libdebuff then
-          local effect = libdebuff:GetDebuffName(unitstr, unit.debuffs[i]:GetID())
-          local start, duration, timeleft = libdebuff:GetDebuffInfo(unitstr, effect)
-          CooldownFrame_SetTimer(unit.debuffs[i].cd, start, duration, 1)
+          local name, rank, texture, stacks, dtype, duration, timeleft = libdebuff:UnitDebuff(unitstr, i)
+          if duration and timeleft then
+            CooldownFrame_SetTimer(unit.debuffs[i].cd, GetTime() + timeleft - duration, duration, 1)
+          end
         end
 
         if stacks > 1 then
