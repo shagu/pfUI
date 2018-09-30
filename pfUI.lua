@@ -47,6 +47,9 @@ pfUI.version = {}
 pfUI.hooks = {}
 pfUI.env = {}
 
+local _, _, _, client = GetBuildInfo()
+pfUI.client = client or 11200
+
 -- setup pfUI namespace
 setmetatable(pfUI.env, {__index = getfenv(0)})
 

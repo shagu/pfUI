@@ -1,4 +1,4 @@
-if GetBuildInfo() ~= "2.4.3" then return end
+if pfUI.client < 20000 then return end
 
 message("TBC compat module loaded. Good Luck!")
 
