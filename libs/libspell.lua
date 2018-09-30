@@ -1,6 +1,9 @@
 -- load pfUI environment
 setfenv(1, pfUI:GetEnvironment())
 
+-- return instantly when another libspell is already active
+if pfUI.api.libspell then return end
+
 local scanner = libtipscan:GetScanner("libspell")
 local libspell = {}
 

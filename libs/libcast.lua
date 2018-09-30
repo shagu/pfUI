@@ -25,6 +25,9 @@ setfenv(1, pfUI:GetEnvironment())
 --    spell can be set to "INTERRUPT" to force remove an action.
 --
 
+-- return instantly when another libcast is already active
+if pfUI.api.libcast then return end
+
 local libcast = CreateFrame("Frame", "pfEnemyCast")
 local player = UnitName("player")
 

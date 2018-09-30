@@ -8,6 +8,9 @@ setfenv(1, pfUI:GetEnvironment())
 --    Returns `1` if the unit is within a 40y range
 --
 
+-- return instantly when another librange is already active
+if pfUI.api.librange then return end
+
 local librange = CreateFrame("Frame", "pfRangecheck", UIParent)
 
 -- table of 40y spells per class
@@ -183,5 +186,5 @@ function librange:UnitInSpellRange(unit)
   end
 end
 
--- add libdebuff to pfUI API
+-- add librange to pfUI API
 pfUI.api.librange = librange

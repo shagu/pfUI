@@ -25,6 +25,9 @@ setfenv(1, pfUI:GetEnvironment())
 --  <scanner>:List()
 --    prints a list of all available scanner methods
 
+-- return instantly when another libtipscan is already active
+if pfUI.api.libtipscan then return end
+
 local libtipscan = {}
 local baseName = "pfUIScan"
 local methods = {
