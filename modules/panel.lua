@@ -243,7 +243,7 @@ pfUI:RegisterModule("panel", function()
         GameTooltip:AddDoubleLine(T["Login"] .. ":", CreateGoldString(pfUI.panel.initMoney))
         GameTooltip:AddDoubleLine(T["Now"] .. ":", CreateGoldString(GetMoney()))
         GameTooltip:AddDoubleLine("|cffffffff","")
-        for name, gold in pfUI_cache["gold"][GetRealmName()] do
+        for name, gold in pairs(pfUI_cache["gold"][GetRealmName()]) do
           if name ~= UnitName("player") then
             GameTooltip:AddDoubleLine(name .. ":", CreateGoldString(gold))
           end
