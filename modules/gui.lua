@@ -748,6 +748,9 @@ pfUI:RegisterModule("gui", function ()
       CreateConfig(nil, this, T["Border Color"], C.appearance.border, "color", "color")
       CreateConfig(update["mapreveal"], this, T["Map Reveal Color"], C.appearance.worldmap, "mapreveal_color", "color")
       CreateConfig(nil, this) -- spacer
+      CreateConfig(nil, this, T["Enable Frame Shadow"], C.appearance.border, "shadow", "checkbox")
+      CreateConfig(nil, this, T["Frame Shadow Intensity"], C.appearance.border, "shadow_intensity", "dropdown", pfUI.gui.dropdowns.uf_debuff_indicator_size)
+      CreateConfig(nil, this) -- spacer
       CreateConfig(nil, this, T["Global Border Size"], C.appearance.border, "default")
       CreateConfig(nil, this, T["Action Bar Border Size"], C.appearance.border, "actionbars")
       CreateConfig(nil, this, T["Unit Frame Border Size"], C.appearance.border, "unitframes")

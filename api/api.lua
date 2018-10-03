@@ -681,46 +681,65 @@ function pfUI.api.CreateBackdrop(f, inset, legacy, transp, backdropSetting)
     f:SetBackdrop(backdrop)
     f:SetBackdropColor(br, bg, bb, ba)
     f:SetBackdropBorderColor(er, eg, eb , ea)
-    return
-  end
-
-  -- increase clickable area if available
-  if f.SetHitRectInsets then
-    f:SetHitRectInsets(-border,-border,-border,-border)
-  end
-
-  -- use new backdrop behaviour
-  if not f.backdrop then
-    f:SetBackdrop(nil)
-
-    local backdrop = pfUI.backdrop
-    local b = CreateFrame("Frame", nil, f)
-    if tonumber(border) > 1 then
-      local border = tonumber(border) - 1
-      backdrop.insets = {left = -1, right = -1, top = -1, bottom = -1}
-      b:SetPoint("TOPLEFT", f, "TOPLEFT", -border, border)
-      b:SetPoint("BOTTOMRIGHT", f, "BOTTOMRIGHT", border, -border)
-    else
-      local border = tonumber(border)
-      backdrop.insets = {left = 0, right = 0, top = 0, bottom = 0}
-      b:SetPoint("TOPLEFT", f, "TOPLEFT", -border, border)
-      b:SetPoint("BOTTOMRIGHT", f, "BOTTOMRIGHT", border, -border)
+  else
+    -- increase clickable area if available
+    if f.SetHitRectInsets then
+      f:SetHitRectInsets(-border,-border,-border,-border)
     end
 
-    local level = f:GetFrameLevel()
-    if level < 1 then
-      b:SetFrameLevel(level)
-    else
-      b:SetFrameLevel(level - 1)
+    -- use new backdrop behaviour
+    if not f.backdrop then
+      f:SetBackdrop(nil)
+
+      local backdrop = pfUI.backdrop
+      local b = CreateFrame("Frame", nil, f)
+      if tonumber(border) > 1 then
+        local border = tonumber(border) - 1
+        backdrop.insets = {left = -1, right = -1, top = -1, bottom = -1}
+        b:SetPoint("TOPLEFT", f, "TOPLEFT", -border, border)
+        b:SetPoint("BOTTOMRIGHT", f, "BOTTOMRIGHT", border, -border)
+      else
+        local border = tonumber(border)
+        backdrop.insets = {left = 0, right = 0, top = 0, bottom = 0}
+        b:SetPoint("TOPLEFT", f, "TOPLEFT", -border, border)
+        b:SetPoint("BOTTOMRIGHT", f, "BOTTOMRIGHT", border, -border)
+      end
+
+      local level = f:GetFrameLevel()
+      if level < 1 then
+        b:SetFrameLevel(level)
+      else
+        b:SetFrameLevel(level - 1)
+      end
+
+      f.backdrop = b
+      b:SetBackdrop(backdrop)
     end
 
-    f.backdrop = b
-    b:SetBackdrop(backdrop)
+    local b = f.backdrop
+    b:SetBackdropColor(br, bg, bb, ba)
+    b:SetBackdropBorderColor(er, eg, eb , ea)
   end
 
-  local b = f.backdrop
-  b:SetBackdropColor(br, bg, bb, ba)
-  b:SetBackdropBorderColor(er, eg, eb , ea)
+  -- add shadow
+  if not f.backdrop_shadow and pfUI_config.appearance.border.shadow == "1" then
+    local size = 8
+    local inset = size-1
+    local anchor = f.backdrop or f
+    local intensity = tonumber(pfUI_config.appearance.border.shadow_intensity)
+
+    f.backdrop_shadow = CreateFrame("Frame", nil, anchor)
+    f.backdrop_shadow:SetFrameStrata("BACKGROUND")
+    f.backdrop_shadow:SetFrameLevel(1)
+
+    f.backdrop_shadow:SetPoint("TOPLEFT", anchor, "TOPLEFT", -inset, inset)
+    f.backdrop_shadow:SetPoint("BOTTOMRIGHT", anchor, "BOTTOMRIGHT", inset, -inset)
+    f.backdrop_shadow:SetBackdrop({
+      edgeFile = "Interface\\AddOns\\pfUI\\img\\glow2", edgeSize = size,
+      insets = {left = 0, right = 0, top = 0, bottom = 0},
+    })
+    f.backdrop_shadow:SetBackdropBorderColor(0,0,0,intensity)
+  end
 end
 
 -- [ Bar Layout Options ] --
