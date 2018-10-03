@@ -19,8 +19,6 @@ pfUI:RegisterModule("castbar", function ()
     cb.unitstr = unitstr
     cb.unitname = unitname
 
-    cb.delay = 0
-
     -- statusbar
     cb.bar = CreateFrame("StatusBar", nil, cb)
     cb.bar:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
@@ -77,18 +75,23 @@ pfUI:RegisterModule("castbar", function ()
         return
       end
 
-      local spellname, start, duration, icon, delay, channel = libcast:GetCastInfo(name)
-      if spellname then
+      local cast, nameSubtext, text, texture, startTime, endTime, isTradeSkill = UnitCastingInfo(name)
+      if cast then
+        local duration = endTime - startTime
         local max = duration / 1000
-        local cur = channel and duration / 1000 - delay + start - GetTime() or
-                    GetTime() - start - delay
+        local cur = GetTime() - startTime / 1000
+
+        if UnitChannelInfo(name) then
+          cur = duration + startTime / 1000 - GetTime() -- channel
+        end
+
         cur = cur > max and max or cur
         cur = cur < 0 and 0 or cur
 
         this.bar:SetValue(cur)
 
-        if delay > 0 then
-          delay = "|cffffaaaa" .. (channel and "-" or "+") .. round(delay,1) .. " |r "
+        if this.delay and this.delay > 0 then
+          local delay = "|cffffaaaa" .. (channel and "-" or "+") .. round(this.delay,1) .. " |r "
           this.bar.right:SetText(delay .. string.format("%.1f",cur) .. " / " .. round(max,1))
         else
           this.bar.right:SetText(string.format("%.1f",cur) .. " / " .. round(max,1))
@@ -102,27 +105,38 @@ pfUI:RegisterModule("castbar", function ()
       end
     end)
 
-    function cb.OnEvent(self)
-      local name = self.unitstr and UnitName(self.unitstr) or self.unitname
-
-      local spellname, start, casttime, icon, delay, channel = libcast:GetCastInfo(name)
-      if spellname then
-        self.bar:SetStatusBarColor(strsplit(",", C.appearance.castbar[(channel and "channelcolor" or "castbarcolor")]))
-        self.bar:SetMinMaxValues(0, casttime / 1000)
-        self.bar.left:SetText(spellname)
-
-        self:SetAlpha(1)
-        self:Show()
-        self.fadeout = nil
-        self.playername = name
-      else
-        self.bar:SetMinMaxValues(1,100)
-        self.bar:SetValue(100)
-        self.fadeout = 1
-      end
+    -- register for all castbar events
+    for _, event in pairs(CASTBAR_EVENTS) do
+      cb:RegisterEvent(event)
     end
 
-    libcast:RegisterEventFunc(cb.OnEvent, cb)
+    cb:SetScript("OnEvent", function()
+      if strfind(event, "DELAYED") then
+        this.delay = ( this.delay or 0 ) + arg1/1000
+      end
+
+      local name = this.unitstr and UnitName(this.unitstr) or this.unitname
+      if not name then return end
+      local cast, nameSubtext, text, texture, startTime, endTime, isTradeSkill = UnitCastingInfo(name)
+      local channel = UnitChannelInfo(name)
+
+      if cast then
+        local duration = endTime - startTime
+        this.bar:SetStatusBarColor(strsplit(",", C.appearance.castbar[(channel and "channelcolor" or "castbarcolor")]))
+        this.bar:SetMinMaxValues(0, duration / 1000)
+        this.bar.left:SetText(cast)
+
+        this:SetAlpha(1)
+        this:Show()
+        this.fadeout = nil
+      else
+        this.bar:SetMinMaxValues(1,100)
+        this.bar:SetValue(100)
+        this.delay = 0
+        this.fadeout = 1
+      end
+    end)
+
     return cb
   end
 

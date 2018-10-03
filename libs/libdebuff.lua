@@ -12,6 +12,7 @@ setfenv(1, pfUI:GetEnvironment())
 
 -- return instantly when another libdebuff is already active
 if pfUI.api.libdebuff then return end
+if pfUI.client >= 20000 then return end
 
 local libdebuff = CreateFrame("Frame", "pfdebuffsScanner", UIParent)
 local scanner = libtipscan:GetScanner("libdebuff")

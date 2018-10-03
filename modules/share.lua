@@ -178,10 +178,10 @@ pfUI:RegisterModule("share", function ()
       bit_pattern = bit_pattern .. bin_bits
     end
 
-    if math.mod(string.len(bit_pattern), 3) == 2 then
+    if mod(string.len(bit_pattern), 3) == 2 then
       trailing = '=='
       bit_pattern = bit_pattern .. '0000000000000000'
-    elseif math.mod(string.len(bit_pattern), 3) == 1 then
+    elseif mod(string.len(bit_pattern), 3) == 1 then
       trailing = '='
       bit_pattern = bit_pattern .. '00000000'
     end

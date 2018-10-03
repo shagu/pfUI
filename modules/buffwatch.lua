@@ -31,13 +31,13 @@ pfUI:RegisterModule("buffwatch", function ()
     local counter = 1
     local l = string.len(text)
     for i = 1, l, 3 do
-      counter = math.mod(counter*8161, 4294967279) + (string.byte(text,i)*16776193) + ((string.byte(text,i+1) or (l-i+256))*8372226) + ((string.byte(text,i+2) or (l-i+256))*3932164)
+      counter = mod(counter*8161, 4294967279) + (string.byte(text,i)*16776193) + ((string.byte(text,i+1) or (l-i+256))*8372226) + ((string.byte(text,i+2) or (l-i+256))*3932164)
     end
-    counter = math.mod(8161, 4294967279) + (string.byte(text,l)*16776193) + ((string.byte(text,l+1) or (l-l+256))*8372226) + ((string.byte(text,l+2) or (l+256))*3932164)
+    counter = mod(8161, 4294967279) + (string.byte(text,l)*16776193) + ((string.byte(text,l+1) or (l-l+256))*8372226) + ((string.byte(text,l+2) or (l+256))*3932164)
 
-    local hash = math.mod(math.mod(counter, 4294967291),16777216)
-    local r = (hash - (math.mod(hash,65536))) / 65536
-    local g = ((hash - r*65536) - ( math.mod((hash - r*65536),256)) ) / 256
+    local hash = mod(mod(counter, 4294967291),16777216)
+    local r = (hash - (mod(hash,65536))) / 65536
+    local g = ((hash - r*65536) - ( mod((hash - r*65536),256)) ) / 256
     local b = hash - r*65536 - g*256
     rgbcache[text] = { r / 255, g / 255, b / 255 }
     return unpack(rgbcache[text])
@@ -58,7 +58,7 @@ pfUI:RegisterModule("buffwatch", function ()
 
   local function GetBuffData(unit, id, type, skipTooltip)
     if unit == "player" then
-      local bid = GetPlayerBuff(id-1, type)
+      local bid = GetPlayerBuff(PLAYER_BUFF_START_ID+id, type)
       local remaining = GetPlayerBuffTimeLeft(bid)
       local texture = GetPlayerBuffTexture(bid)
       local name
@@ -93,7 +93,7 @@ pfUI:RegisterModule("buffwatch", function ()
         DEFAULT_CHAT_FRAME:AddMessage("|cff33ffcc" .. skill .. "|r" .. T["is now blacklisted."])
       end
     elseif this.parent.unit == "player" then
-      CancelPlayerBuff(GetPlayerBuff(this.id-1,this.type))
+      CancelPlayerBuff(GetPlayerBuff(PLAYER_BUFF_START_ID+this.id,this.type))
     end
   end
 
@@ -101,7 +101,7 @@ pfUI:RegisterModule("buffwatch", function ()
     GameTooltip:SetOwner(this, "NONE")
 
     if this.unit == "player" then
-      GameTooltip:SetPlayerBuff(GetPlayerBuff(this.id-1,this.type))
+      GameTooltip:SetPlayerBuff(GetPlayerBuff(PLAYER_BUFF_START_ID+this.id,this.type))
     elseif this.type == "HARMFUL" then
       GameTooltip:SetUnitDebuff(this.unit, this.id)
     elseif this.type == "HELPFUL" then

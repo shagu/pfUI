@@ -174,6 +174,11 @@ pfUI:RegisterModule("eqcompare", function ()
     end
   end
 
+  -- add HookScript method if not already existing
+  GameTooltip.HookScript = GameTooltip.HookScript or HookScript
+  ShoppingTooltip1.HookScript = ShoppingTooltip1.HookScript or HookScript
+  ShoppingTooltip2.HookScript = ShoppingTooltip2.HookScript or HookScript
+
   pfUI.eqcompare.ShoppingTooltipShow = function()
     -- abort if no comparison tooltip has been set
     if not pfUI.eqcompare.tooltip then return end
@@ -184,9 +189,9 @@ pfUI:RegisterModule("eqcompare", function ()
   end
 
   -- Add Gametooltip Hooks
-  HookScript(GameTooltip, "OnShow", pfUI.eqcompare.GameTooltipShow)
+  GameTooltip:HookScript("OnShow", pfUI.eqcompare.GameTooltipShow)
   if C.tooltip.compare.basestats == "1" then
-    HookScript(ShoppingTooltip1, "OnShow", pfUI.eqcompare.ShoppingTooltipShow)
-    HookScript(ShoppingTooltip2, "OnShow", pfUI.eqcompare.ShoppingTooltipShow)
+    ShoppingTooltip1:HookScript("OnShow", pfUI.eqcompare.ShoppingTooltipShow)
+    ShoppingTooltip2:HookScript("OnShow", pfUI.eqcompare.ShoppingTooltipShow)
   end
 end)

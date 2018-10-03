@@ -19,10 +19,9 @@ pfUI:RegisterModule("nameplates", function ()
       pfUI.nameplates.scanner.parentCount = parentCount
 
       for _, nameplate in ipairs({WorldFrame:GetChildren()}) do
-        if not nameplate.done and nameplate:GetObjectType() == "Button" then
+        if not nameplate.done and nameplate:GetObjectType() == NAMEPLATE_FRAMETYPE then
           local regions = nameplate:GetRegions()
           if regions and regions:GetObjectType() == "Texture" and regions:GetTexture() == "Interface\\Tooltips\\Nameplate-Border" then
-
             local visible = nameplate:IsVisible()
             nameplate:Hide()
             nameplate:SetScript("OnShow", pfUI.nameplates.OnShow)
@@ -83,7 +82,16 @@ pfUI:RegisterModule("nameplates", function ()
       this.nameplate.parent = this
       this.healthbar = this:GetChildren()
       this.healthbar:SetScript("OnEnter", function() return nil end)
-      this.border, this.glow, this.name, this.level, this.levelicon , this.raidicon = this:GetRegions()
+
+      for i, frame in pairs({this:GetRegions()}) do
+        if NAMEPLATE_OBJECTORDER[i] == "_" then
+          frame.Show = function() return end
+          frame:Hide()
+        else
+          this[NAMEPLATE_OBJECTORDER[i]] = frame
+        end
+      end
+
       this.healthbar:SetParent(this.nameplate)
       this.border:SetParent(this.nameplate)
       this.glow:SetParent(this.nameplate)
@@ -120,7 +128,7 @@ pfUI:RegisterModule("nameplates", function ()
 
     -- add click handlers
     if C.nameplates["clickthrough"] == "0" then
-      if C.nameplates["legacy"] == "0" then
+      if C.nameplates["legacy"] == "0" and pfUI.client < 20000 then
         this.nameplate:SetScript("OnClick", function() this.parent:Click() end)
       else
         this.nameplate:EnableMouse(false)
@@ -589,16 +597,17 @@ pfUI:RegisterModule("nameplates", function ()
 
     -- show castbar
     if healthbar.castbar and pfUI.castbar and C.nameplates["showcastbar"] == "1" then
-      local spellname, start, casttime, icon = libcast:GetCastInfo(unitname)
-      casttime = casttime / 1000
-      if not spellname then
+      local cast, nameSubtext, text, texture, startTime, endTime, isTradeSkill = UnitCastingInfo(unitname)
+
+      if not cast then
         healthbar.castbar:Hide()
       else
-        healthbar.castbar:SetMinMaxValues(0,  casttime)
-        healthbar.castbar:SetValue(GetTime() -  start)
-        healthbar.castbar.text:SetText(round(start +  casttime - GetTime(),1))
+        local duration = endTime - startTime
+        healthbar.castbar:SetMinMaxValues(0,  duration/1000)
+        healthbar.castbar:SetValue(GetTime() - startTime/1000)
+        healthbar.castbar.text:SetText(round(startTime/1000 + duration/1000 - GetTime(),1))
         if C.nameplates.spellname == "1" and healthbar.castbar.spell then
-          healthbar.castbar.spell:SetText(spellname)
+          healthbar.castbar.spell:SetText(cast)
         else
           healthbar.castbar.spell:SetText("")
         end
@@ -608,7 +617,7 @@ pfUI:RegisterModule("nameplates", function ()
         end
 
         if icon then
-          healthbar.castbar.icon:SetTexture("Interface\\Icons\\" ..  icon)
+          healthbar.castbar.icon:SetTexture("Interface\\Icons\\" ..  texture)
           healthbar.castbar.icon:SetTexCoord(.1,.9,.1,.9)
         end
       end
@@ -634,7 +643,7 @@ pfUI:RegisterModule("nameplates", function ()
           this.debuffs[j].icon:SetTexCoord(.078, .92, .079, .937)
 
           if icon then
-            this.debuffs[j].cd = this.debuffs[j].cd or CreateFrame("Model", nil, this.debuffs[j], "CooldownFrameTemplate")
+            this.debuffs[j].cd = this.debuffs[j].cd or CreateFrame(COOLDOWN_FRAME_TYPE, nil, this.debuffs[j], "CooldownFrameTemplate")
             this.debuffs[j].cd.pfCooldownType = "ALL"
 
             local name, rank, texture, stacks, dtype, duration, timeleft = libdebuff:UnitDebuff("target", j)

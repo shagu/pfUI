@@ -56,11 +56,11 @@ pfUI:RegisterModule("socialmod", function ()
           zone = ( zone == playerzone and "|cffffffff" or "|cffaaaaaa" ) .. zone .. "|r"
           name = "|cff" .. string.format("%02x%02x%02x", ccolor.r*255, ccolor.g*255, ccolor.b*255) .. name .. "|r"
 
-          _G["FriendsFrameFriendButton"..i.."ButtonTextNameLocation"]:SetText(format(TEXT(FRIENDS_LIST_TEMPLATE), name, zone, status))
+          _G["FriendsFrameFriendButton"..i..FRIENDS_NAME_LOCATION]:SetText(format(TEXT(FRIENDS_LIST_TEMPLATE), name, zone, status))
           _G["FriendsFrameFriendButton"..i.."ButtonTextInfo"]:SetText(format(TEXT(FRIENDS_LEVEL_TEMPLATE), level, class))
           _G["FriendsFrameFriendButton"..i.."ButtonTextInfo"]:SetTextColor(lcolor.r + .2, lcolor.g + .2, lcolor.b + .2)
         else
-          _G["FriendsFrameFriendButton"..i.."ButtonTextNameLocation"]:SetText(format(TEXT(FRIENDS_LIST_OFFLINE_TEMPLATE), name))
+          _G["FriendsFrameFriendButton"..i..FRIENDS_NAME_LOCATION]:SetText(format(TEXT(FRIENDS_LIST_OFFLINE_TEMPLATE), name))
           _G["FriendsFrameFriendButton"..i.."ButtonTextInfo"]:SetText(TEXT(UNKNOWN))
           _G["FriendsFrameFriendButton"..i.."ButtonTextInfo"]:SetTextColor(.2,.2,.2)
         end

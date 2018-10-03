@@ -3,6 +3,10 @@ pfUI.api = { }
 -- load pfUI environment
 setfenv(1, pfUI:GetEnvironment())
 
+-- Client API shortcuts
+gfind = string.gmatch or string.gfind
+mod = math.mod or mod
+
 -- [ strsplit ]
 -- Splits a string using a delimiter.
 -- 'delimiter'  [string]        characters that will be interpreted as delimiter
@@ -110,11 +114,11 @@ end
 -- 'f'          [float]        the number to breakdown.
 -- returns:     [int],[float]  whole and fractional part.
 function pfUI.api.modf(f)
-  if math.modf then return math.modf(f) end
+  if modf then return modf(f) end
   if f > 0 then
-    return math.floor(f), math.mod(f,1)
+    return math.floor(f), mod(f,1)
   end
-  return math.ceil(f), math.mod(f,1)
+  return math.ceil(f), mod(f,1)
 end
 
 -- [ SanitizePattern ]
@@ -281,47 +285,6 @@ do -- create a scope so we don't have to worry about upvalue collisions
     unitinfo.lclass,unitinfo.class = _G.UNKNOWN, "UNKNOWN"
     return unitinfo
   end
-end
-
--- [ hooksecurefunc ]
--- Hooks a global function and injects custom code
--- 'name'       [string]           name of the function that should be hooked
--- 'func'       [function]         function containing the custom code
--- 'append'     [bool]             optional variable, used to append custom
---                                 code instead of prepending it
-function pfUI.api.hooksecurefunc(name, func, append)
-  if not _G[name] then return end
-
-  pfUI.hooks[tostring(func)] = {}
-  pfUI.hooks[tostring(func)]["old"] = _G[name]
-  pfUI.hooks[tostring(func)]["new"] = func
-
-  if append then
-    pfUI.hooks[tostring(func)]["function"] = function(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10)
-      pfUI.hooks[tostring(func)]["old"](a1, a2, a3, a4, a5, a6, a7, a8, a9, a10)
-      pfUI.hooks[tostring(func)]["new"](a1, a2, a3, a4, a5, a6, a7, a8, a9, a10)
-    end
-  else
-    pfUI.hooks[tostring(func)]["function"] = function(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10)
-      pfUI.hooks[tostring(func)]["new"](a1, a2, a3, a4, a5, a6, a7, a8, a9, a10)
-      pfUI.hooks[tostring(func)]["old"](a1, a2, a3, a4, a5, a6, a7, a8, a9, a10)
-    end
-  end
-
-  _G[name] = pfUI.hooks[tostring(func)]["function"]
-end
-
--- [ HookScript ]
--- Sets a function to be called automatically after the original function is called
--- 'f'          [frame]            the frame that should get a function hook
--- 'script'     [string]           the name of the function that should be hooked
--- 'func'       [function]         the function that should run after the original one
-function pfUI.api.HookScript(f, script, func)
-  local prev = f:GetScript(script)
-  f:SetScript(script, function()
-    if prev then prev() end
-    func()
-  end)
 end
 
 -- [ HookAddonOrVariable ]
@@ -903,6 +866,3 @@ function pfUI.api.GetColorGradient(perc)
     gradientcolors[perc].b,
     gradientcolors[perc].h
 end
-
--- [ shortcuts ]
-pfUI.api.gfind = string.gfind

@@ -502,7 +502,7 @@ pfUI:RegisterModule("loot", function ()
   end
 
   function pfUI.loot:CreateSlot(id)
-    local frame = CreateFrame("LootButton", 'pfLootButton'..id, pfUI.loot)
+    local frame = CreateFrame(LOOT_BUTTON_FRAME_TYPE, 'pfLootButton'..id, pfUI.loot)
     frame:RegisterForClicks('LeftButtonUp', 'RightButtonUp')
     frame:SetPoint("LEFT", C.appearance.border.default*2, 0)
     frame:SetPoint("RIGHT", -C.appearance.border.default*2, 0)

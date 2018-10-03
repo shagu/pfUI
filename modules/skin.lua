@@ -161,7 +161,7 @@ pfUI:RegisterModule("skin", function ()
     end
   end
 
-  UIOptionsFrame:SetScript("OnShow", function()
+  UI_OPTIONS_FRAME:SetScript("OnShow", function()
     -- default events
     UIOptionsFrame_Load();
     MultiActionBar_Update();
@@ -172,15 +172,15 @@ pfUI:RegisterModule("skin", function ()
     -- customize
     UIOptionsBlackground:Hide()
 
-    UIOptionsFrame:SetMovable(true)
-    UIOptionsFrame:EnableMouse(true)
-    UIOptionsFrame:SetScale(.8)
-    UIOptionsFrame:SetScript("OnMouseDown",function()
-      UIOptionsFrame:StartMoving()
+    UI_OPTIONS_FRAME:SetMovable(true)
+    UI_OPTIONS_FRAME:EnableMouse(true)
+    UI_OPTIONS_FRAME:SetScale(.8)
+    UI_OPTIONS_FRAME:SetScript("OnMouseDown",function()
+      UI_OPTIONS_FRAME:StartMoving()
     end)
 
-    UIOptionsFrame:SetScript("OnMouseUp",function()
-      UIOptionsFrame:StopMovingOrSizing()
+    UI_OPTIONS_FRAME:SetScript("OnMouseUp",function()
+      UI_OPTIONS_FRAME:StopMovingOrSizing()
     end)
   end)
 

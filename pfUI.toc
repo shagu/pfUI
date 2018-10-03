@@ -32,9 +32,12 @@ env\translations_ruRU.lua
 env\tables.lua
 env\profiles.lua
 
+# compat
+compat\vanilla.lua
+compat\tbc.lua
+
 # api
 api\api.lua
-api\tbc.lua
 api\config.lua
 api\ui-widgets.lua
 api\unitframes.lua

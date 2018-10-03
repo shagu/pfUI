@@ -15,7 +15,7 @@ pfUI:RegisterModule("buff", function ()
     else
       buff.id = buff.gid
     end
-    buff.bid = GetPlayerBuff(buff.id-1, buff.btype)
+    buff.bid = GetPlayerBuff(PLAYER_BUFF_START_ID+buff.id, buff.btype)
 
     --detect weapon buffs
     if buff.btype == "HELPFUL" and ((C.buffs.separateweapons == "0" and buff.gid <= pfUI.buff.wepbuffs.count) or (pfUI.buff.wepbuffs.count > 0 and buff.weapon ~= nil)) then
@@ -203,7 +203,7 @@ pfUI:RegisterModule("buff", function ()
     local offset = (mh and 1 or 0) + (oh and 1 or 0)
 
     for i=1,32 do
-      local bid, untilCancelled = GetPlayerBuff(i-1, "HELPFUL")
+      local bid, untilCancelled = GetPlayerBuff(PLAYER_BUFF_START_ID+i, "HELPFUL")
       if bid < 0 then
         return i - 1 + offset
       end

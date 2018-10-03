@@ -114,7 +114,7 @@ pfUI:RegisterModule("mapreveal", function ()
           if (j < numTexturesVert) then
             texturePixelHeight,textureFileHeight = 256,256
           else
-            texturePixelHeight = math.mod(textureHeight, 256)
+            texturePixelHeight = mod(textureHeight, 256)
             if (texturePixelHeight == 0) then texturePixelHeight = 256 end
             textureFileHeight = 16
             while (textureFileHeight < texturePixelHeight) do
@@ -129,7 +129,7 @@ pfUI:RegisterModule("mapreveal", function ()
             if (k < numTexturesHorz) then
               texturePixelWidth, textureFileWidth = 256,256
             else
-              texturePixelWidth = math.mod(textureWidth, 256)
+              texturePixelWidth = mod(textureWidth, 256)
               if (texturePixelWidth == 0) then texturePixelWidth = 256 end
               textureFileWidth = 16
               while (textureFileWidth < texturePixelWidth) do

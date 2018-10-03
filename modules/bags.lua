@@ -318,7 +318,7 @@ pfUI:RegisterModule("bags", function ()
       if tpl == "BankItemButtonGenericTemplate" then
         local bankslot = pfUI.bags[bag].slots[slot].frame
         local name = "pfBag" .. bag .. "item" .. slot .. "Cooldown"
-        bankslot.cd = CreateFrame("Model", name, bankslot, "CooldownFrameTemplate")
+        bankslot.cd = CreateFrame(COOLDOWN_FRAME_TYPE, name, bankslot, "CooldownFrameTemplate")
         bankslot.cd:SetAllPoints(bankslot)
         bankslot.cd.pfCooldownType = "ALL"
       else

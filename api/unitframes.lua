@@ -376,7 +376,7 @@ function pfUI.uf:UpdateConfig()
       f.buffs[i].stacks:SetShadowColor(0, 0, 0)
       f.buffs[i].stacks:SetShadowOffset(0.8, -0.8)
       f.buffs[i].stacks:SetTextColor(1,1,.5)
-      f.buffs[i].cd = f.buffs[i].cd or CreateFrame("Model", nil, f.buffs[i])
+      f.buffs[i].cd = f.buffs[i].cd or CreateFrame(COOLDOWN_FRAME_TYPE, nil, f.buffs[i])
       f.buffs[i].cd.pfCooldownType = "ALL"
 
       f.buffs[i]:RegisterForClicks("RightButtonUp")
@@ -403,7 +403,7 @@ function pfUI.uf:UpdateConfig()
       if f:GetName() == "pfPlayer" then
         f.buffs[i]:SetScript("OnUpdate", function()
           if ( this.tick or 1) > GetTime() then return else this.tick = GetTime() + .4 end
-          local timeleft = GetPlayerBuffTimeLeft(GetPlayerBuff(this:GetID()-1,"HELPFUL"))
+          local timeleft = GetPlayerBuffTimeLeft(GetPlayerBuff(PLAYER_BUFF_START_ID+this:GetID(),"HELPFUL"))
           CooldownFrame_SetTimer(this.cd, GetTime(), timeleft, 1)
         end)
       end
@@ -414,13 +414,13 @@ function pfUI.uf:UpdateConfig()
 
         GameTooltip:SetOwner(this, "ANCHOR_BOTTOMRIGHT")
         if parent.label == "player" then
-          GameTooltip:SetPlayerBuff(GetPlayerBuff(id-1,"HELPFUL"))
+          GameTooltip:SetPlayerBuff(GetPlayerBuff(PLAYER_BUFF_START_ID+id,"HELPFUL"))
         else
           GameTooltip:SetUnitBuff(parent.label .. parent.id, id)
         end
 
         if IsShiftKeyDown() then
-          local texture = parent.label == "player" and GetPlayerBuffTexture(GetPlayerBuff(id-1,"HELPFUL")) or UnitBuff(parent.label .. parent.id, id)
+          local texture = parent.label == "player" and GetPlayerBuffTexture(GetPlayerBuff(PLAYER_BUFF_START_ID+id,"HELPFUL")) or UnitBuff(parent.label .. parent.id, id)
 
           local playerlist = ""
           local first = true
@@ -463,7 +463,7 @@ function pfUI.uf:UpdateConfig()
 
       f.buffs[i]:SetScript("OnClick", function()
         if this:GetParent().label == "player" then
-          CancelPlayerBuff(GetPlayerBuff(id-1,"HELPFUL"))
+          CancelPlayerBuff(GetPlayerBuff(PLAYER_BUFF_START_ID+id,"HELPFUL"))
         end
       end)
     end
@@ -493,7 +493,7 @@ function pfUI.uf:UpdateConfig()
       f.debuffs[i].stacks:SetShadowColor(0, 0, 0)
       f.debuffs[i].stacks:SetShadowOffset(0.8, -0.8)
       f.debuffs[i].stacks:SetTextColor(1,1,.5)
-      f.debuffs[i].cd = f.debuffs[i].cd or CreateFrame("Model", nil, f.debuffs[i])
+      f.debuffs[i].cd = f.debuffs[i].cd or CreateFrame(COOLDOWN_FRAME_TYPE, nil, f.debuffs[i])
       f.debuffs[i].cd.pfCooldownType = "ALL"
 
       f.debuffs[i]:RegisterForClicks("RightButtonUp")
@@ -505,7 +505,7 @@ function pfUI.uf:UpdateConfig()
       if f:GetName() == "pfPlayer" then
         f.debuffs[i]:SetScript("OnUpdate", function()
           if ( this.tick or 1) > GetTime() then return else this.tick = GetTime() + .4 end
-          local timeleft = GetPlayerBuffTimeLeft(GetPlayerBuff(this:GetID()-1,"HARMFUL"))
+          local timeleft = GetPlayerBuffTimeLeft(GetPlayerBuff(PLAYER_BUFF_START_ID+this:GetID(),"HARMFUL"))
           CooldownFrame_SetTimer(this.cd, GetTime(), timeleft, 1)
         end)
       end
@@ -514,7 +514,7 @@ function pfUI.uf:UpdateConfig()
         if not this:GetParent().label then return end
         GameTooltip:SetOwner(this, "ANCHOR_BOTTOMRIGHT")
         if this:GetParent().label == "player" then
-          GameTooltip:SetPlayerBuff(GetPlayerBuff(id-1,"HARMFUL"))
+          GameTooltip:SetPlayerBuff(GetPlayerBuff(PLAYER_BUFF_START_ID+id,"HARMFUL"))
         else
           GameTooltip:SetUnitDebuff(this:GetParent().label .. this:GetParent().id, id)
         end
@@ -526,7 +526,7 @@ function pfUI.uf:UpdateConfig()
 
       f.debuffs[i]:SetScript("OnClick", function()
         if this:GetParent().label == "player" then
-          CancelPlayerBuff(GetPlayerBuff(id-1,"HARMFUL"))
+          CancelPlayerBuff(GetPlayerBuff(PLAYER_BUFF_START_ID+id,"HARMFUL"))
         end
       end)
     end
@@ -1061,8 +1061,8 @@ function pfUI.uf:RefreshUnit(unit, component)
     for i=1, unit.config.bufflimit do
       local texture, stacks
       if unit.label == "player" then
-       stacks = GetPlayerBuffApplications(GetPlayerBuff(i-1,"HELPFUL"))
-       texture = GetPlayerBuffTexture(GetPlayerBuff(i-1,"HELPFUL"))
+       stacks = GetPlayerBuffApplications(GetPlayerBuff(PLAYER_BUFF_START_ID+i,"HELPFUL"))
+       texture = GetPlayerBuffTexture(GetPlayerBuff(PLAYER_BUFF_START_ID+i,"HELPFUL"))
       else
        texture, stacks = UnitBuff(unitstr, i)
       end
@@ -1120,9 +1120,9 @@ function pfUI.uf:RefreshUnit(unit, component)
 
       local texture, stacks, dtype
       if unit.label == "player" then
-        texture = GetPlayerBuffTexture(GetPlayerBuff(i-1, "HARMFUL"))
-        stacks = GetPlayerBuffApplications(GetPlayerBuff(i-1, "HARMFUL"))
-        dtype = GetPlayerBuffDispelType(GetPlayerBuff(i-1, "HARMFUL"))
+        texture = GetPlayerBuffTexture(GetPlayerBuff(PLAYER_BUFF_START_ID+i, "HARMFUL"))
+        stacks = GetPlayerBuffApplications(GetPlayerBuff(PLAYER_BUFF_START_ID+i, "HARMFUL"))
+        dtype = GetPlayerBuffDispelType(GetPlayerBuff(PLAYER_BUFF_START_ID+i, "HARMFUL"))
      else
        texture, stacks, dtype = UnitDebuff(unitstr, i)
      end
@@ -1143,7 +1143,7 @@ function pfUI.uf:RefreshUnit(unit, component)
         unit.debuffs[i]:Show()
 
         if unit:GetName() == "pfPlayer" then
-          local timeleft = GetPlayerBuffTimeLeft(GetPlayerBuff(unit.debuffs[i]:GetID() - 1, "HARMFUL"),"HARMFUL")
+          local timeleft = GetPlayerBuffTimeLeft(GetPlayerBuff(PLAYER_BUFF_START_ID+unit.debuffs[i]:GetID(), "HARMFUL"),"HARMFUL")
           CooldownFrame_SetTimer(unit.debuffs[i].cd, GetTime(), timeleft, 1)
         elseif libdebuff then
           local name, rank, texture, stacks, dtype, duration, timeleft = libdebuff:UnitDebuff(unitstr, i)

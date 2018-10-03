@@ -1,7 +1,7 @@
 pfUI:RegisterModule("tracking", function ()
 
-  MiniMapTrackingFrame:UnregisterAllEvents()
-  MiniMapTrackingFrame:Hide()
+  MINIMAP_TRACKING_FRAME:UnregisterAllEvents()
+  MINIMAP_TRACKING_FRAME:Hide()
 
   local function HasEntries(tbl)
     for _ in pairs(tbl) do
