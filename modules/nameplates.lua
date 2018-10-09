@@ -401,7 +401,7 @@ pfUI:RegisterModule("nameplates", function ()
 
     -- disable click events while spell is targeting
     local mouseEnabled = this.nameplate:IsMouseEnabled()
-    if C.nameplates["clickthrough"] == "0" and SpellIsTargeting() == mouseEnabled then
+    if C.nameplates["clickthrough"] == "0" and C.nameplates["legacy"] == "0" and SpellIsTargeting() == mouseEnabled then
       this.nameplate:EnableMouse(not mouseEnabled)
     end
 
