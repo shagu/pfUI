@@ -403,6 +403,7 @@ function pfUI.uf:UpdateConfig()
 
       if f:GetName() == "pfPlayer" then
         f.buffs[i]:SetScript("OnUpdate", function()
+          if ( this.tick or 1) > GetTime() then return else this.tick = GetTime() + .4 end
           local timeleft = GetPlayerBuffTimeLeft(GetPlayerBuff(this:GetID()-1,"HELPFUL"))
           CooldownFrame_SetTimer(this.cd, GetTime(), timeleft, 1)
         end)
@@ -502,6 +503,15 @@ function pfUI.uf:UpdateConfig()
       f.debuffs[i]:SetWidth(f.config.debuffsize)
       f.debuffs[i]:SetHeight(f.config.debuffsize)
       f.debuffs[i]:SetNormalTexture(nil)
+
+      if f:GetName() == "pfPlayer" then
+        f.debuffs[i]:SetScript("OnUpdate", function()
+          if ( this.tick or 1) > GetTime() then return else this.tick = GetTime() + .4 end
+          local timeleft = GetPlayerBuffTimeLeft(GetPlayerBuff(this:GetID()-1,"HARMFUL"))
+          CooldownFrame_SetTimer(this.cd, GetTime(), timeleft, 1)
+        end)
+      end
+
       f.debuffs[i]:SetScript("OnEnter", function()
         if not this:GetParent().label then return end
         GameTooltip:SetOwner(this, "ANCHOR_BOTTOMRIGHT")
