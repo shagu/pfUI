@@ -153,8 +153,14 @@ libdebuff:SetScript("OnEvent", function()
   elseif ( event == "UNIT_AURA" and arg1 == "target" ) or event == "PLAYER_TARGET_CHANGED" then
     for i=1, 16 do
       effect, rank, texture, stacks, dtype, duration, timeleft = libdebuff:UnitDebuff("target", i)
-      if texture and effect and duration then
-        libdebuff:AddEffect(UnitName("target"), UnitLevel("target"), effect)
+
+      if texture and effect and effect ~= "" and duration then
+        -- don't overwrite existing timers
+        local unitlevel = UnitLevel("target") or 0
+        local unit = UnitName("target")
+        if not libdebuff.objects[unit] or not libdebuff.objects[unit][unitlevel] or not libdebuff.objects[unit][unitlevel][effect] then
+          libdebuff:AddEffect(unit, unitlevel, effect)
+        end
       end
     end
 
