@@ -211,12 +211,13 @@ end, true)
 
 function libdebuff:UnitDebuff(unit, id)
   scanner:SetUnitDebuff(unit, id)
-  local effect = ( scanner:Line(1) ) or ""
+  local effect = scanner:Line(1) or ""
   local unitname = UnitName(unit)
   local unitlevel = UnitLevel(unit)
   local texture, stacks, dtype = UnitDebuff(unit, id)
-  local duration, timeleft = nil, nil
+  local duration, timeleft = nil, .001
   local rank = nil -- no backport
+
 
   if libdebuff.objects[unitname] and libdebuff.objects[unitname][unitlevel] and libdebuff.objects[unitname][unitlevel][effect] then
     -- clean up cache
@@ -238,7 +239,7 @@ function libdebuff:UnitDebuff(unit, id)
     end
   end
 
-  return name, rank, texture, stacks, dtype, duration, timeleft
+  return effect, rank, texture, stacks, dtype, duration, timeleft
 end
 
 -- add libdebuff to pfUI API
