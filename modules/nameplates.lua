@@ -399,6 +399,12 @@ pfUI:RegisterModule("nameplates", function ()
       end
     end
 
+    -- disable click events while spell is targeting
+    local mouseEnabled = this.nameplate:IsMouseEnabled()
+    if C.nameplates["clickthrough"] == "0" and SpellIsTargeting() == mouseEnabled then
+      this.nameplate:EnableMouse(not mouseEnabled)
+    end
+
     -- level elite indicator
     if this.needEliteUpdate and pfUI.nameplates.mobs[unitname] then
       if level:GetText() ~= nil then
