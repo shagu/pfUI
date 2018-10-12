@@ -76,7 +76,7 @@ Report Errors, Issues and Feature Requests in the [Bugtracker](https://gitlab.co
 Please make sure to have the latest version installed and check for conflicting addons beforehand.
 
 **Can I use Clique with pfUI?**  
-A pfUI compatible version of Clique can be found [Here](https://gitlab.com/shagu/Clique/releases). If you want to keep your current version of Clique, you'll have to apply this [Patch](https://gitlab.com/shagu/Clique/commit/a5ee56c3f803afbdda07bae9cd330e0d4a75d75a).
+A pfUI compatible version of Clique can be found [Here](https://gitlab.com/shagu/Clique/-/archive/master/Clique-master.zip). If you want to keep your current version of Clique, you'll have to apply this [Patch](https://gitlab.com/shagu/Clique/commit/a5ee56c3f803afbdda07bae9cd330e0d4a75d75a).
 
 **How do I show the Damage- and Threatmeter Dock?**  
 If you enabled the "dock"-feature for your external (third-party) meters such as DPSMate or KTM, then you'll be able to toggle between them and the Right Chat by clicking on the ">" symbol on the bottom-right panel.
