@@ -85,11 +85,8 @@ function pfUI.api.CreateTabChild(self, title, bwidth, bheight, bottom, static)
     end
   end
 
-  local backdrop = CreateFrame("Frame", nil, child)
-  backdrop:SetFrameLevel(1)
-  backdrop:SetPoint("TOPLEFT", child, "TOPLEFT", -5, 5)
-  backdrop:SetPoint("BOTTOMRIGHT", child, "BOTTOMRIGHT", 5, -5)
-  CreateBackdrop(backdrop, nil, true)
+  CreateBackdrop(child)
+  SetAllPointsOffset(child.backdrop, child, -5,5)
 
   local ret = scrollchild or child
   ret.button = b
