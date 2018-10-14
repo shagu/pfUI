@@ -478,13 +478,10 @@ function pfUI.api.SkinCheckbox(frame)
 end
 
 function pfUI.api.SkinDropDown(frame)
+  StripTextures(frame)
   CreateBackdrop(frame)
   frame.backdrop:SetPoint("TOPLEFT", 15, -1)
   frame.backdrop:SetPoint("BOTTOMRIGHT", -15, 6)
-
-  for i,v in ipairs({frame:GetRegions()}) do
-    if v.SetTexture then v:Hide() end
-  end
 
   local button = _G[frame:GetName() .. "Button"]
   button:SetNormalTexture(nil)
@@ -492,16 +489,18 @@ function pfUI.api.SkinDropDown(frame)
   button:SetHighlightTexture(nil)
   button:SetDisabledTexture(nil)
 
+  StripTextures(button)
   CreateBackdrop(button)
+
   button.backdrop:ClearAllPoints()
   button.backdrop:SetWidth(18)
   button.backdrop:SetHeight(18)
   button.backdrop:SetPoint("RIGHT", button, "RIGHT", -2, 0)
 
   if not button.icon then
-    StripTextures(button)
-    button.icon = button:CreateTexture(nil, "ARTWORK")
+    button.icon = button:CreateTexture(nil, "OVERLAY")
     button.icon:SetTexture("Interface\\AddOns\\pfUI\\img\\down")
+    button.icon:SetVertexColor(1,.9,.1)
     button.icon:SetAlpha(.8)
     SetAllPointsOffset(button.icon, button.backdrop, 5)
   end
@@ -537,6 +536,8 @@ function pfUI.api.SkinDropDown(frame)
       _G["DropDownList1Button" .. i]:SetWidth(DropDownList1.maxWidth)
     end
   end)
+
+  frame.button = button
 end
 
 function pfUI.api.SkinTab(frame, fixed)
