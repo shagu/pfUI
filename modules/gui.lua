@@ -229,52 +229,41 @@ pfUI:RegisterModule("gui", function ()
 
       frame.input = CreateFrame("Frame", "pfUIDropDownMenu" .. name, frame, "UIDropDownMenuTemplate")
       frame.input:ClearAllPoints()
-      frame.input:SetPoint("RIGHT" , 16, -2)
-      frame.input:Show()
-      frame.input.point = "TOPRIGHT"
-      frame.input.relativePoint = "BOTTOMRIGHT"
+      frame.input:SetPoint("RIGHT", 16, -3)
       frame.input.values = values
 
-      frame.input.Refresh = function()
-        local function CreateValues()
-          local info = {}
-          for i, k in pairs(frame.input.values) do
-            -- get human readable
-            local value, text = strsplit(":", k)
-            text = text or value
+      UIDropDownMenu_SetWidth(160, frame.input)
+      UIDropDownMenu_SetButtonWidth(160, frame.input)
+      UIDropDownMenu_JustifyText("RIGHT", frame.input)
+      UIDropDownMenu_Initialize(frame.input, function()
+        local info = {}
+        for i, k in pairs(frame.input.values) do
+          -- get human readable
+          local value, text = strsplit(":", k)
+          text = text or value
 
-            info.text = text
-            info.checked = false
-            info.func = function()
-              UIDropDownMenu_SetSelectedID(frame.input, this:GetID(), 0)
-              if category[config] ~= value then
-                category[config] = value
-                if ufunc then ufunc() else pfUI.gui.settingChanged = true end
-              end
-            end
-
-            UIDropDownMenu_AddButton(info)
-            if category[config] == value then
-              frame.input.current = i
+          info.text = text
+          info.checked = false
+          info.func = function()
+            UIDropDownMenu_SetSelectedID(frame.input, this:GetID(), 0)
+            UIDropDownMenu_SetText(this:GetText(), frame.input)
+            if category[config] ~= value then
+              category[config] = value
+              if ufunc then ufunc() else pfUI.gui.settingChanged = true end
             end
           end
+
+          UIDropDownMenu_AddButton(info)
+          if category[config] == value then
+            frame.input.current = i
+          end
         end
-
-        UIDropDownMenu_Initialize(frame.input, CreateValues)
-      end
-
-      frame.input:Refresh()
-
-      UIDropDownMenu_SetWidth(120, frame.input)
-      UIDropDownMenu_SetButtonWidth(125, frame.input)
-      UIDropDownMenu_JustifyText("RIGHT", frame.input)
+      end)
       UIDropDownMenu_SetSelectedID(frame.input, frame.input.current)
 
-      for i,v in ipairs({frame.input:GetRegions()}) do
-        if v.SetTexture then v:Hide() end
-        if v.SetTextColor then v:SetTextColor(.2,1,.8) end
-        if v.SetBackdrop then CreateBackdrop(v) end
-      end
+      SkinDropDown(frame.input)
+      frame.input.backdrop:Hide()
+      frame.input.button.icon:SetParent(frame.input.button.backdrop)
     end
 
     return frame
