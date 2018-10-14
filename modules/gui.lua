@@ -130,6 +130,9 @@ pfUI:RegisterModule("gui", function ()
         ColorPickerFrame:SetFrameStrata("DIALOG")
         ShowUIPanel(ColorPickerFrame)
       end)
+
+      -- hide shadows on wrong stratas
+      frame.color.backdrop_shadow:Hide()
     end
 
     if widget == "warning" then
@@ -182,6 +185,9 @@ pfUI:RegisterModule("gui", function ()
           this:SetTextColor(1,.3,.3,1)
         end
       end)
+
+      -- hide shadows on wrong stratas
+      frame.input.backdrop_shadow:Hide()
     end
 
     -- use button widget
@@ -195,6 +201,9 @@ pfUI:RegisterModule("gui", function ()
       frame.button:SetText(caption)
       frame.button:SetTextColor(1,1,1,1)
       frame.button:SetScript("OnClick", values)
+
+      -- hide shadows on wrong stratas
+      frame.button.backdrop_shadow:Hide()
     end
 
     -- use checkbox widget
@@ -219,6 +228,9 @@ pfUI:RegisterModule("gui", function ()
       end)
 
       if category[config] == "1" then frame.input:SetChecked() end
+
+      -- hide shadows on wrong stratas
+      frame.input.backdrop_shadow:Hide()
     end
 
     -- use dropdown widget
@@ -264,6 +276,10 @@ pfUI:RegisterModule("gui", function ()
       SkinDropDown(frame.input)
       frame.input.backdrop:Hide()
       frame.input.button.icon:SetParent(frame.input.button.backdrop)
+
+      -- hide shadows on wrong stratas
+      frame.input.backdrop_shadow:Hide()
+      frame.input.button.backdrop_shadow:Hide()
     end
 
     -- use list widget
@@ -337,6 +353,12 @@ pfUI:RegisterModule("gui", function ()
         category[config] = newconf
         frame.input:Refresh()
       end)
+
+      -- hide shadows on wrong stratas
+      frame.input.backdrop_shadow:Hide()
+      frame.input.button.backdrop_shadow:Hide()
+      frame.add.backdrop_shadow:Hide()
+      frame.del.backdrop_shadow:Hide()
     end
 
     return frame
