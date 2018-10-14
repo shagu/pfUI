@@ -266,6 +266,79 @@ pfUI:RegisterModule("gui", function ()
       frame.input.button.icon:SetParent(frame.input.button.backdrop)
     end
 
+    -- use list widget
+    if widget == "list" then
+      if not pfUI.gui.ddc then pfUI.gui.ddc = 1 else pfUI.gui.ddc = pfUI.gui.ddc + 1 end
+      local name = pfUI.gui.ddc
+      if named then name = named end
+
+      frame.input = CreateFrame("Frame", "pfUIDropDownMenu" .. name, frame, "UIDropDownMenuTemplate")
+      frame.input:ClearAllPoints()
+      frame.input:SetPoint("RIGHT" , -22, -3)
+      frame.category = category
+      frame.config = configh
+
+      frame.input.Refresh = function()
+        local function CreateValues()
+          for _, val in pairs({strsplit("#", category[config])}) do
+            UIDropDownMenu_AddButton({
+              ["text"] = val,
+              ["checked"] = false,
+              ["func"] = function()
+                UIDropDownMenu_SetSelectedID(frame.input, this:GetID(), 0)
+              end
+            })
+          end
+        end
+
+        UIDropDownMenu_Initialize(frame.input, CreateValues)
+        UIDropDownMenu_SetText("", frame.input)
+      end
+
+      frame.input:Refresh()
+
+      UIDropDownMenu_SetWidth(160, frame.input)
+      UIDropDownMenu_SetButtonWidth(160, frame.input)
+      UIDropDownMenu_JustifyText("RIGHT", frame.input)
+      UIDropDownMenu_SetSelectedID(frame.input, frame.input.current)
+
+      SkinDropDown(frame.input)
+      frame.input.backdrop:Hide()
+      frame.input.button.icon:SetParent(frame.input.button.backdrop)
+
+      frame.add = CreateFrame("Button", "pfUIDropDownMenu" .. name .. "Add", frame, "UIPanelButtonTemplate")
+      SkinButton(frame.add)
+      frame.add:SetWidth(18)
+      frame.add:SetHeight(18)
+      frame.add:SetPoint("RIGHT", -21, 0)
+      frame.add:GetFontString():SetPoint("CENTER", 1, 0)
+      frame.add:SetText("+")
+      frame.add:SetTextColor(.5,1,.5,1)
+      frame.add:SetScript("OnClick", function()
+        CreateQuestionDialog(T["New entry:"], function()
+            category[config] = category[config] .. "#" .. this:GetParent().input:GetText()
+          end, false, true)
+      end)
+
+      frame.del = CreateFrame("Button", "pfUIDropDownMenu" .. name .. "Del", frame, "UIPanelButtonTemplate")
+      SkinButton(frame.del)
+      frame.del:SetWidth(18)
+      frame.del:SetHeight(18)
+      frame.del:SetPoint("RIGHT", -2, 0)
+      frame.del:GetFontString():SetPoint("CENTER", 1, 0)
+      frame.del:SetText("-")
+      frame.del:SetTextColor(1,.5,.5,1)
+      frame.del:SetScript("OnClick", function()
+        local sel = UIDropDownMenu_GetSelectedID(frame.input)
+        local newconf = ""
+        for id, val in pairs({strsplit("#", category[config])}) do
+          if id ~= sel then newconf = newconf .. "#" .. val end
+        end
+        category[config] = newconf
+        frame.input:Refresh()
+      end)
+    end
+
     return frame
   end
 
