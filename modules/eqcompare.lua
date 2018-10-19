@@ -102,8 +102,10 @@ pfUI:RegisterModule("eqcompare", function ()
           end
         else
           -- this attribute doesnt exist in target
-          if not strfind(v.widget:GetText(), "|cff88ff88") and not strfind(v.widget:GetText(), "|cffff8888") then
-            v.widget:SetText(v.widget:GetText() .. "|cff88ff88 (+" .. v.value .. ")")
+          if v.widget and v.widget:GetText() then
+            if not strfind(v.widget:GetText(), "|cff88ff88") and not strfind(v.widget:GetText(), "|cffff8888") then
+              v.widget:SetText(v.widget:GetText() .. "|cff88ff88 (+" .. v.value .. ")")
+            end
           end
         end
       end
