@@ -132,7 +132,9 @@ pfUI:RegisterModule("gui", function ()
       end)
 
       -- hide shadows on wrong stratas
-      frame.color.backdrop_shadow:Hide()
+      if frame.color.backdrop_shadow then
+        frame.color.backdrop_shadow:Hide()
+      end
     end
 
     if widget == "warning" then
@@ -187,7 +189,9 @@ pfUI:RegisterModule("gui", function ()
       end)
 
       -- hide shadows on wrong stratas
-      frame.input.backdrop_shadow:Hide()
+      if frame.input.backdrop_shadow then
+        frame.input.backdrop_shadow:Hide()
+      end
     end
 
     -- use button widget
@@ -203,7 +207,9 @@ pfUI:RegisterModule("gui", function ()
       frame.button:SetScript("OnClick", values)
 
       -- hide shadows on wrong stratas
-      frame.button.backdrop_shadow:Hide()
+      if frame.button.backdrop_shadow then
+        frame.button.backdrop_shadow:Hide()
+      end
     end
 
     -- use checkbox widget
@@ -230,7 +236,9 @@ pfUI:RegisterModule("gui", function ()
       if category[config] == "1" then frame.input:SetChecked() end
 
       -- hide shadows on wrong stratas
-      frame.input.backdrop_shadow:Hide()
+      if frame.input.backdrop_shadow then
+        frame.input.backdrop_shadow:Hide()
+      end
     end
 
     -- use dropdown widget
@@ -278,8 +286,10 @@ pfUI:RegisterModule("gui", function ()
       frame.input.button.icon:SetParent(frame.input.button.backdrop)
 
       -- hide shadows on wrong stratas
-      frame.input.backdrop_shadow:Hide()
-      frame.input.button.backdrop_shadow:Hide()
+      if frame.input.backdrop_shadow then
+        frame.input.backdrop_shadow:Hide()
+        frame.input.button.backdrop_shadow:Hide()
+      end
     end
 
     -- use list widget
@@ -355,10 +365,12 @@ pfUI:RegisterModule("gui", function ()
       end)
 
       -- hide shadows on wrong stratas
-      frame.input.backdrop_shadow:Hide()
-      frame.input.button.backdrop_shadow:Hide()
-      frame.add.backdrop_shadow:Hide()
-      frame.del.backdrop_shadow:Hide()
+      if frame.input.backdrop_shadow then
+        frame.input.backdrop_shadow:Hide()
+        frame.input.button.backdrop_shadow:Hide()
+        frame.add.backdrop_shadow:Hide()
+        frame.del.backdrop_shadow:Hide()
+      end
     end
 
     return frame
