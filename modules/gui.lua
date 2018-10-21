@@ -664,6 +664,17 @@ pfUI:RegisterModule("gui", function ()
     "elysium:" .. T["Elysium Based Core"],
   }
 
+  pfUI.gui.dropdowns.buffbarfilter = {
+    "none:"      .. T["None"],
+    "whitelist:" .. T["Whitelist"],
+    "blacklist:" .. T["Blacklist"],
+  }
+
+  pfUI.gui.dropdowns.buffbarsort = {
+    "asc:" .. T["Ascending"],
+    "desc:" .. T["Descending"],
+  }
+
   pfUI.gui.dropdowns.minimap_cords_position = {
     "topleft:" .. T["Top Left"],
     "topright:" .. T["Top Right"],
@@ -1132,6 +1143,48 @@ pfUI:RegisterModule("gui", function ()
     end
   end)
 
+  -- >> Buff Bars
+  pfUI.gui.tabs.buffs.tabs.buffbars = pfUI.gui.tabs.buffs.tabs:CreateTabChild(T["Bars"], true)
+  pfUI.gui.tabs.buffs.tabs.buffbars:SetScript("OnShow", function()
+    if not this.setup then
+      CreateConfig(update[c], this, T["Player Buffs"], nil, nil, "header")
+      CreateConfig(nil, this, T["Enable Bar"], C.buffbar.pbuff, "enable", "checkbox")
+      CreateConfig(nil, this, T["Sort Order"], C.buffbar.pbuff, "sort", "dropdown", pfUI.gui.dropdowns.buffbarsort)
+      CreateConfig(nil, this, T["Custom Color"], C.buffbar.pbuff, "color", "color")
+      CreateConfig(nil, this, T["Automatic Color"], C.buffbar.pbuff, "autocolor", "checkbox")
+      CreateConfig(nil, this, T["Buffbar Width"], C.buffbar.pbuff, "width")
+      CreateConfig(nil, this, T["Buffbar Height"], C.buffbar.pbuff, "height")
+      CreateConfig(nil, this, T["Filter Mode"], C.buffbar.pbuff, "filter", "dropdown", pfUI.gui.dropdowns.buffbarfilter)
+      CreateConfig(nil, this, T["Time Threshold"], C.buffbar.pbuff, "threshold")
+      CreateConfig(nil, this, T["Whitelist"], C.buffbar.pbuff, "whitelist", "list")
+      CreateConfig(nil, this, T["Blacklist"], C.buffbar.pbuff, "blacklist", "list")
+
+      CreateConfig(update[c], this, T["Player Debuffs"], nil, nil, "header")
+      CreateConfig(nil, this, T["Enable Bar"], C.buffbar.pdebuff, "enable", "checkbox")
+      CreateConfig(nil, this, T["Sort Order"], C.buffbar.pdebuff, "sort", "dropdown", pfUI.gui.dropdowns.buffbarsort)
+      CreateConfig(nil, this, T["Custom Color"], C.buffbar.pdebuff, "color", "color")
+      CreateConfig(nil, this, T["Automatic Color"], C.buffbar.pdebuff, "autocolor", "checkbox")
+      CreateConfig(nil, this, T["Buffbar Width"], C.buffbar.pdebuff, "width")
+      CreateConfig(nil, this, T["Buffbar Height"], C.buffbar.pdebuff, "height")
+      CreateConfig(nil, this, T["Filter Mode"], C.buffbar.pdebuff, "filter", "dropdown", pfUI.gui.dropdowns.buffbarfilter)
+      CreateConfig(nil, this, T["Time Threshold"], C.buffbar.pdebuff, "threshold")
+      CreateConfig(nil, this, T["Whitelist"], C.buffbar.pdebuff, "whitelist", "list")
+      CreateConfig(nil, this, T["Blacklist"], C.buffbar.pdebuff, "blacklist", "list")
+
+      CreateConfig(update[c], this, T["Target Debuffs"], nil, nil, "header")
+      CreateConfig(nil, this, T["Enable Bar"], C.buffbar.tdebuff, "enable", "checkbox")
+      CreateConfig(nil, this, T["Sort Order"], C.buffbar.tdebuff, "sort", "dropdown", pfUI.gui.dropdowns.buffbarsort)
+      CreateConfig(nil, this, T["Custom Color"], C.buffbar.tdebuff, "color", "color")
+      CreateConfig(nil, this, T["Automatic Color"], C.buffbar.tdebuff, "autocolor", "checkbox")
+      CreateConfig(nil, this, T["Buffbar Width"], C.buffbar.tdebuff, "width")
+      CreateConfig(nil, this, T["Buffbar Height"], C.buffbar.tdebuff, "height")
+      CreateConfig(nil, this, T["Filter Mode"], C.buffbar.tdebuff, "filter", "dropdown", pfUI.gui.dropdowns.buffbarfilter)
+      CreateConfig(nil, this, T["Time Threshold"], C.buffbar.tdebuff, "threshold")
+      CreateConfig(nil, this, T["Whitelist"], C.buffbar.tdebuff, "whitelist", "list")
+      CreateConfig(nil, this, T["Blacklist"], C.buffbar.tdebuff, "blacklist", "list")
+      this.setup = true
+    end
+  end)
 
   -- [[ Actionbar ]]
   pfUI.gui.tabs.actionbar = pfUI.gui.tabs:CreateTabChild(T["Actionbar"], nil, nil, nil, true)

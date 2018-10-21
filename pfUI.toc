@@ -87,6 +87,7 @@ modules\cooldown.lua
 modules\tooltip.lua
 modules\thirdparty.lua
 modules\buff.lua
+modules\buffwatch.lua
 modules\nameplates.lua
 modules\loot.lua
 modules\roll.lua
