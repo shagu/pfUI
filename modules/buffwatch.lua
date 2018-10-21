@@ -142,7 +142,7 @@ pfUI:RegisterModule("buffwatch", function ()
     frame = _G[framename] or CreateFrame("Button", framename, parent)
     frame:EnableMouse(1)
     frame:Hide()
-    frame:SetPoint("BOTTOM", 0, (bar-1)*(20+2*border+1))
+    frame:SetPoint("BOTTOM", 0, (bar-1)*(height+2*border+1))
     frame:SetWidth(width)
     frame:SetHeight(height)
 
