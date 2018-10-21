@@ -857,7 +857,7 @@ function pfUI.api.GetColoredTimeString(remaining)
     return "|cff" .. string.format("%02x%02x%02x", r*255, g*255, b*255) .. round(remaining / 60) .. "|rm"
   elseif remaining <= 5 then
     local r,g,b,a = pfUI.api.GetStringColor(C.appearance.cd.lowcolor)
-    return "|cff" .. string.format("%02x%02x%02x", r*255, g*255, b*255) .. round(remaining)
+    return "|cff" .. string.format("%02x%02x%02x", r*255, g*255, b*255) .. string.format("%.1f", round(remaining,1))
   elseif remaining >= 0 then
     local r, g, b, a = pfUI.api.GetStringColor(C.appearance.cd.normalcolor)
     return "|cff" .. string.format("%02x%02x%02x", r*255, g*255, b*255) .. round(remaining)
