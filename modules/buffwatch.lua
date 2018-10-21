@@ -381,7 +381,7 @@ pfUI:RegisterModule("buffwatch", function ()
     UpdateMovable(pfUI.uf.player.debuffbar)
   end
 
-  -- create target castbar
+  -- create target debuffbars
   if pfUI.uf.target and C.buffbar.tdebuff.enable == "1" then
     local config = C.buffbar.tdebuff
     local r, g, b, a = strsplit(",", config.color)
