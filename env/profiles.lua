@@ -49,6 +49,20 @@ f:SetScript("OnEvent", function()
         ["actionbars"] = "1",
       },
     },
+    ["buffbar"] = {
+      ["pdebuff"] = {
+        ["enable"] = "1",
+        ["height"] = "14",
+      },
+      ["pbuff"] = {
+        ["enable"] = "1",
+        ["height"] = "14",
+      },
+      ["tdebuff"] = {
+        ["enable"] = "1",
+        ["height"] = "14",
+      },
+    },
     ["chat"] = {
       ["global"] = {
         ["tabmouse"] = "1",
@@ -80,6 +94,8 @@ f:SetScript("OnEvent", function()
     },
     ["unitframes"] = {
       ["target"] = {
+        ["debuffs"] = "off",
+        ["buffsize"] = "14",
         ["pheight"] = "6",
         ["height"] = "35",
         ["panchor"] = "TOPLEFT",
@@ -93,6 +109,8 @@ f:SetScript("OnEvent", function()
         ["width"] = "125",
       },
       ["player"] = {
+        ["buffs"] = "off",
+        ["debuffs"] = "off",
         ["txthpleft"] = "powerdyn",
         ["height"] = "35",
         ["showPVP"] = "1",
