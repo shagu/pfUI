@@ -154,7 +154,7 @@ libdebuff:SetScript("OnEvent", function()
     for i=1, 16 do
       effect, rank, texture, stacks, dtype, duration, timeleft = libdebuff:UnitDebuff("target", i)
 
-      if texture and effect and effect ~= "" and duration then
+      if texture and effect and effect ~= "" then
         -- don't overwrite existing timers
         local unitlevel = UnitLevel("target") or 0
         local unit = UnitName("target")
@@ -215,7 +215,7 @@ function libdebuff:UnitDebuff(unit, id)
   local unitname = UnitName(unit)
   local unitlevel = UnitLevel(unit)
   local texture, stacks, dtype = UnitDebuff(unit, id)
-  local duration, timeleft = nil, .001
+  local duration, timeleft = nil, -1
   local rank = nil -- no backport
 
 
