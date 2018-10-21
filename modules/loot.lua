@@ -420,6 +420,11 @@ pfUI:RegisterModule("loot", function ()
 
   pfUI.loot.slots = {}
   function pfUI.loot:UpdateLootFrame()
+    if C.loot.mousecursor == "1" then
+      pfUI.loot:SetClampedToScreen(true)
+    else
+      pfUI.loot:SetClampedToScreen(false)
+    end
     local maxrarity, maxwidth = 0, 0
 
     local items = GetNumLootItems()
