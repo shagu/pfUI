@@ -668,6 +668,31 @@ pfUI:RegisterModule("thirdparty", function ()
     end
   end)
 
+  HookAddonOrVariable("MyRolePlay", function()
+    if C.thirdparty.myroleplay.enable == "0" then return end
+
+    if pfUI.uf.target then
+      -- set mrp icon to target frame
+      mrpButtonIconFrame:SetParent(pfUI.uf.target)
+      mrpButtonIconFrame:SetFrameStrata("DIALOG")
+      mrpButtonIconFrame:SetWidth(20)
+      mrpButtonIconFrame:SetHeight(20)
+      mrpButtonIconFrame:SetPoint("TOPRIGHT", pfUI.uf.target, "TOPRIGHT", 10, 10)
+      function _G.mrpMoveIcon()
+        mrpButtonIconFrame:SetPoint("TOPRIGHT", pfUI.uf.target, "TOPRIGHT", 10, 10)
+      end
+    end
+
+    if pfUI.uf.player then
+      -- set tooltip function for player frame
+      local oldfunc = pfUI.uf.player:GetScript("OnEnter")
+      pfUI.uf.player:SetScript("OnEnter", function()
+        oldfunc()
+        mrpDisplayTooltip("player", "PLAYER")
+      end)
+    end
+  end)
+
   HookAddonOrVariable("DruidManaBarBackground", function()
     if C.thirdparty.druidmana.enable == "0" then return end
     DruidManaBar:SetParent(UIParent)
