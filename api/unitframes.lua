@@ -177,8 +177,8 @@ function pfUI.uf:UpdateConfig()
     if f.portrait.backdrop then f.portrait.backdrop:Hide() end
 
     -- place portrait below fonts
-    f.portrait:SetFrameStrata("LOW")
-    f.portrait.model:SetFrameStrata("LOW")
+    f.portrait:SetFrameStrata("BACKGROUND")
+    f.portrait.model:SetFrameStrata("BACKGROUND")
     f.portrait.model:SetFrameLevel(3)
 
     f.portrait:Show()
