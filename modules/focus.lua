@@ -20,7 +20,7 @@ function SlashCmdList.PFCLEARFOCUS(msg)
   end
 end
 
-SLASH_PFCASTFOCUS1 = '/castfocus'
+SLASH_PFCASTFOCUS1, SLASH_PFCASTFOCUS2 = '/castfocus', '/pfcastfocus'
 function SlashCmdList.PFCASTFOCUS(msg)
   if not pfUI.uf.focus or not pfUI.uf.focus:IsShown() or not pfUI.uf.focus.unitname then
     UIErrorsFrame:AddMessage(SPELL_FAILED_BAD_TARGETS, 1, 0, 0)
