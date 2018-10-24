@@ -1,4 +1,16 @@
 pfUI:RegisterModule("gui", function ()
+  local function PrepareDropDownButton(index)
+    if index > _G.UIDROPDOWNMENU_MAXBUTTONS then
+      for i=1,3 do
+        local name = "DropDownList" .. i .. "Button" .. index
+        local parent = _G["DropDownList" .. i]
+        _G.UIDROPDOWNMENU_MAXBUTTONS = index
+        _G[name] = CreateFrame("Button", name, parent, "UIDropDownMenuButtonTemplate")
+        _G[name]:SetID(index)
+      end
+    end
+  end
+
   local function CreateConfig(ufunc, parent, caption, category, config, widget, values, skip, named, type)
     -- parent object placement
     if parent.objectCount == nil then
@@ -258,6 +270,9 @@ pfUI:RegisterModule("gui", function ()
       UIDropDownMenu_Initialize(frame.input, function()
         local info = {}
         for i, k in pairs(frame.input.values) do
+          -- create new dropdown buttons when we reach the limit
+          PrepareDropDownButton(i)
+
           -- get human readable
           local value, text = strsplit(":", k)
           text = text or value
@@ -306,7 +321,10 @@ pfUI:RegisterModule("gui", function ()
 
       frame.input.Refresh = function()
         local function CreateValues()
-          for _, val in pairs({strsplit("#", category[config])}) do
+          for i, val in pairs({strsplit("#", category[config])}) do
+            -- create new dropdown buttons when we reach the limit
+            PrepareDropDownButton(i)
+
             UIDropDownMenu_AddButton({
               ["text"] = val,
               ["checked"] = false,
