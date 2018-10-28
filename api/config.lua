@@ -61,9 +61,14 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("buffs",      nil,           "fontsize",         "-1")
 
   pfUI:UpdateConfig("buffbar",    "pbuff",       "enable",           "0")
+  pfUI:UpdateConfig("buffbar",    "pbuff",       "use_unitfonts",    "0")
   pfUI:UpdateConfig("buffbar",    "pbuff",       "sort",             "asc")
-  pfUI:UpdateConfig("buffbar",    "pbuff",       "color",            ".1,.1,.1,1")
-  pfUI:UpdateConfig("buffbar",    "pbuff",       "autocolor",        "1")
+  pfUI:UpdateConfig("buffbar",    "pbuff",       "color",            ".5,.5,.5,1")
+  pfUI:UpdateConfig("buffbar",    "pbuff",       "bordercolor",      "0,0,0,0")
+  pfUI:UpdateConfig("buffbar",    "pbuff",       "textcolor",        "1,1,1,1")
+  pfUI:UpdateConfig("buffbar",    "pbuff",       "dtypebg",          "1")
+  pfUI:UpdateConfig("buffbar",    "pbuff",       "dtypeborder",      "0")
+  pfUI:UpdateConfig("buffbar",    "pbuff",       "dtypetext",        "0")
   pfUI:UpdateConfig("buffbar",    "pbuff",       "width",            "-1")
   pfUI:UpdateConfig("buffbar",    "pbuff",       "height",           "20")
   pfUI:UpdateConfig("buffbar",    "pbuff",       "filter",           "blacklist")
@@ -72,9 +77,14 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("buffbar",    "pbuff",       "blacklist",        "")
 
   pfUI:UpdateConfig("buffbar",    "pdebuff",     "enable",           "0")
+  pfUI:UpdateConfig("buffbar",    "pdebuff",     "use_unitfonts",    "0")
   pfUI:UpdateConfig("buffbar",    "pdebuff",     "sort",             "asc")
-  pfUI:UpdateConfig("buffbar",    "pdebuff",     "color",            ".1,.1,.1,1")
-  pfUI:UpdateConfig("buffbar",    "pdebuff",     "autocolor",        "1")
+  pfUI:UpdateConfig("buffbar",    "pdebuff",     "color",            "8,.4,.4,1")
+  pfUI:UpdateConfig("buffbar",    "pdebuff",     "bordercolor",      "0,0,0,0")
+  pfUI:UpdateConfig("buffbar",    "pdebuff",     "textcolor",        "1,1,1,1")
+  pfUI:UpdateConfig("buffbar",    "pdebuff",     "dtypebg",          "0")
+  pfUI:UpdateConfig("buffbar",    "pdebuff",     "dtypeborder",      "1")
+  pfUI:UpdateConfig("buffbar",    "pdebuff",     "dtypetext",        "0")
   pfUI:UpdateConfig("buffbar",    "pdebuff",     "width",            "-1")
   pfUI:UpdateConfig("buffbar",    "pdebuff",     "height",           "20")
   pfUI:UpdateConfig("buffbar",    "pdebuff",     "filter",           "blacklist")
@@ -83,9 +93,14 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("buffbar",    "pdebuff",     "blacklist",        "")
 
   pfUI:UpdateConfig("buffbar",    "tdebuff",     "enable",           "0")
+  pfUI:UpdateConfig("buffbar",    "tdebuff",     "use_unitfonts",    "0")
   pfUI:UpdateConfig("buffbar",    "tdebuff",     "sort",             "asc")
-  pfUI:UpdateConfig("buffbar",    "tdebuff",     "color",            ".1,.1,.1,1")
-  pfUI:UpdateConfig("buffbar",    "tdebuff",     "autocolor",        "1")
+  pfUI:UpdateConfig("buffbar",    "tdebuff",     "color",            ".8,.4,.4,1")
+  pfUI:UpdateConfig("buffbar",    "tdebuff",     "bordercolor",      "0,0,0,0")
+  pfUI:UpdateConfig("buffbar",    "tdebuff",     "textcolor",        "1,1,1,1")
+  pfUI:UpdateConfig("buffbar",    "tdebuff",     "dtypebg",          "0")
+  pfUI:UpdateConfig("buffbar",    "tdebuff",     "dtypeborder",      "1")
+  pfUI:UpdateConfig("buffbar",    "tdebuff",     "dtypetext",        "0")
   pfUI:UpdateConfig("buffbar",    "tdebuff",     "width",            "-1")
   pfUI:UpdateConfig("buffbar",    "tdebuff",     "height",           "20")
   pfUI:UpdateConfig("buffbar",    "tdebuff",     "filter",           "blacklist")
@@ -982,6 +997,20 @@ function pfUI:MigrateConfig()
     pfUI_config.buffs.buffs   =  pfUI_config.global.hidebuff  == "1" and "0" or "1"
     pfUI_config.buffs.debuffs =  pfUI_config.global.hidebuff  == "1" and "0" or "1"
   end
+
+  -- migrating default debuffbar color settings (> 3.16)
+  if checkversion(3, 16, 0) then
+
+    if pfUI_config.buffbar.pdebuff.color == ".1,.1,.1,1" then
+      pfUI_config.buffbar.pdebuff.color = ".8,.4,.4,1"
+    end
+
+    if pfUI_config.buffbar.tdebuff.color == ".1,.1,.1,1" then
+      pfUI_config.buffbar.tdebuff.color   =  ".8,.4,.4,1"
+    end
+  end
+
+  pfUI:UpdateConfig("buffbar",    "tdebuff",     "color",            ".5,.1,.1,1")
 
   pfUI_config.version = pfUI.version.string
 end
