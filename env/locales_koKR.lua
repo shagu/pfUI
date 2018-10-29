@@ -129,6 +129,7 @@ pfUI_locale["koKR"]["dyndebuffs"] = {
   ["Shadow Word: Pain"] = "어둠의 권능: 고통",
   ["Demoralizing Shout"] = "사기의 외침",
   ["Frostbolt"] = "얼음 화살",
+  ["Gouge"] = "후려치기",
 }
 
 pfUI_locale["koKR"]["interrupts"] = {

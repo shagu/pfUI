@@ -129,6 +129,7 @@ pfUI_locale["esES"]["dyndebuffs"] = {
   ["Shadow Word: Pain"] = "Palabra de las Sombras: dolor",
   ["Demoralizing Shout"] = "Grito desmoralizador",
   ["Frostbolt"] = "Descarga de Escarcha",
+  ["Gouge"] = "Incapacitación",
 }
 
 pfUI_locale["esES"]["interrupts"] = {

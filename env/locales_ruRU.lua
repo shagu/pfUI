@@ -129,6 +129,7 @@ pfUI_locale["ruRU"]["dyndebuffs"] = {
   ["Shadow Word: Pain"] = "Слово Тьмы: Боль",
   ["Demoralizing Shout"] = "Деморализующий крик",
   ["Frostbolt"] = "Ледяная стрела",
+  ["Gouge"] = "Парализующий удар",
 }
 
 pfUI_locale["ruRU"]["interrupts"] = {

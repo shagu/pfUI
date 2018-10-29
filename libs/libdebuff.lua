@@ -38,6 +38,10 @@ function libdebuff:GetDuration(effect, rank)
       -- Permafrost: +1s per talent
       local _,_,_,_,count = GetTalentInfo(3,7)
       if count and count > 0 then duration = duration + count end
+    elseif effect == L["dyndebuffs"]["Gouge"] then
+      -- Improved Gouge: +.5s per talent
+      local _,_,_,_,count = GetTalentInfo(2,1)
+      if count and count > 0 then duration = duration + (count*.5) end
     end
     return duration
   elseif L["debuffs"][effect] and L["debuffs"][effect][0] then

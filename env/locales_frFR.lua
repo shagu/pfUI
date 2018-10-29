@@ -124,6 +124,7 @@ pfUI_locale["frFR"]["dyndebuffs"] = {
   ["Shadow Word: Pain"] = "Mot de l'ombre : Douleur",
   ["Demoralizing Shout"] = "Cri démoralisant",
   ["Frostbolt"] = "Eclair de givre",
+  ["Gouge"] = "Suriner",
 }
 
 pfUI_locale["frFR"]["interrupts"] = {

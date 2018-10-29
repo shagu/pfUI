@@ -129,6 +129,7 @@ pfUI_locale["deDE"]["dyndebuffs"] = {
   ["Shadow Word: Pain"] = "Schattenwort: Schmerz",
   ["Demoralizing Shout"] = "Demoralisierungsruf",
   ["Frostbolt"] = "Frostblitz",
+  ["Gouge"] = "Solarplexus",
 }
 
 pfUI_locale["deDE"]["interrupts"] = {

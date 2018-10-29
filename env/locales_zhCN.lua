@@ -124,6 +124,7 @@ pfUI_locale["zhCN"]["dyndebuffs"] = {
   ["Shadow Word: Pain"] = "暗言术：痛",
   ["Demoralizing Shout"] = "挫志怒吼",
   ["Frostbolt"] = "寒冰箭",
+  ["Gouge"] = "凿击",
 }
 
 pfUI_locale["zhCN"]["interrupts"] = {
