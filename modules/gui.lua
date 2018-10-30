@@ -742,7 +742,8 @@ pfUI:RegisterModule("gui", function ()
         local values = {}
         for name, config in pairs(pfUI_profiles) do table.insert(values, name) end
         pfUIDropDownMenuProfile.values = values
-        pfUIDropDownMenuProfile.Refresh()
+        UIDropDownMenu_SetSelectedID(pfUIDropDownMenuProfile, 0, 0)
+        UIDropDownMenu_SetText("", pfUIDropDownMenuProfile)
       end
 
       CreateConfig(nil, this, T["Select profile"], C.global, "profile", "dropdown", values, false, "Profile")
