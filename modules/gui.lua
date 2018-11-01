@@ -833,6 +833,17 @@ pfUI:RegisterModule("gui", function ()
           end)
       end)
 
+      CreateConfig(nil, this, T["Configuration"], C.global, "profile", "button", function()
+        CreateQuestionDialog(T["Do you really want to reset your configuration?\nThis also includes frame positions"],
+          function()
+            _G["pfUI_config"] = {}
+            _G["pfUI_init"] = {}
+            pfUI:LoadConfig()
+            this:GetParent():Hide()
+            pfUI.gui:Reload()
+          end)
+      end, true)
+
       CreateConfig(nil, this, T["Cache"], C.global, "profile", "button", function()
         CreateQuestionDialog(T["Do you really want to reset the Cache?"],
           function()
@@ -843,23 +854,9 @@ pfUI:RegisterModule("gui", function ()
       end, true)
 
       CreateConfig(nil, this, T["Firstrun"], C.global, "profile", "button", function()
-        CreateQuestionDialog(T["Do you really want to reset the Firstrun Wizard Settings?"],
-          function()
-            _G["pfUI_init"] = {}
-            this:GetParent():Hide()
-            pfUI.firstrun:NextStep()
-          end)
-      end, true)
-
-      CreateConfig(nil, this, T["Configuration"], C.global, "profile", "button", function()
-        CreateQuestionDialog(T["Do you really want to reset your configuration?\nThis also includes frame positions"],
-          function()
-            _G["pfUI_config"] = {}
-            _G["pfUI_init"] = {}
-            pfUI:LoadConfig()
-            this:GetParent():Hide()
-            pfUI.gui:Reload()
-          end)
+        _G["pfUI_init"] = {}
+        pfUI.gui:Hide()
+        pfUI.firstrun:NextStep()
       end, true)
 
       this.setup = true

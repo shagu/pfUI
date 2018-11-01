@@ -57,7 +57,6 @@ skins\blizzard\talents.lua
 skins\blizzard\inspect.lua
 
 # modules
-modules\firstrun.lua
 modules\gui.lua
 modules\unlock.lua
 modules\hoverbind.lua
@@ -113,3 +112,4 @@ modules\pettarget.lua
 modules\mapreveal.lua
 modules\unusable.lua
 modules\socialmod.lua
+modules\firstrun.lua
