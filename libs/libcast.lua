@@ -3,27 +3,46 @@ setfenv(1, pfUI:GetEnvironment())
 
 --[[ libcast ]]--
 -- A pfUI library that detects and saves all ongoing castbars of players, NPCs and enemies.
--- This also includes spells that usually don't have a castbar like Multi-Shot and Aimed Shot.
+-- The library also includes spells that usually don't have a castbar like Multi-Shot and Aimed Shot.
+-- This is exclusivly used for vanilla in order to provide UnitChannelInfo and UnitCastingInfo functions.
 --
---  libcast:GetCastInfo(unit)
---    Returns all ongoing casts of a unit (name)
---    cast, start, casttime, icon, delay, channel
+-- External functions:
+--   UnitChannelInfo(unit)
+--     Returns information on the spell currently cast by the specified unit.
+--     Returns nil if no spell is being cast.
 --
---  libcast:RegisterEventFunc(func, frame)
---    Triggers the given function `func` with `frame` as arg1,
---    whenever a new cast-event was detected
+--     cast[String] - The name of the spell, or nil if no spell is being cast.
+--     nameSubtext[String] - (DUMMY) The string describing the rank of the spell, e.g. "Rank 1".
+--     text[String] - The name to be displayed.
+--     texture[String] - The texture path associated with the spell.
+--     startTime[Number] - Specifies when casting has begun, in milliseconds.
+--     endTime[Number] - Specifies when casting will end, in milliseconds.
+--     isTradeSkill[Boolean] - (DUMMY) Specifies if the cast is a tradeskill
 --
---  libcast:TriggerEvents()
---    Triggers all registered event functions.
+--   UnitCastingInfo(unit)
+--     Returns information on the spell currently channeled by the specified unit.
+--     Returns nil if no spell is being channeled.
 --
---  libcast:AddAction(mob, spell, channel)
---    Adds a spell to the database by using pfUI's spell database
---    to obtain durations and icons
+--     cast[String] - The name of the spell, or nil if no spell is being cast.
+--     nameSubtext[String] - (DUMMY) The string describing the rank of the spell, e.g. "Rank 1".
+--     text[String] - The name to be displayed.
+--     texture[String] - The texture path associated with the spell.
+--     startTime[Number] - Specifies when casting has begun, in milliseconds.
+--     endTime[Number] - Specifies when casting will end, in milliseconds.
+--     isTradeSkill[Boolean] - (DUMMY) Specifies if the cast is a tradeskill
 --
---  libcast:RemoveAction(mob, spell)
---    Removes the castbar of a given mob, if `spell` is an interrupt.
---    spell can be set to "INTERRUPT" to force remove an action.
+-- Internal functions:
+--   libcast:AddAction(mob, spell, channel)
+--     Adds a spell to the database by using pfUI's spell database
+--     to obtain durations and icons
 --
+--   libcast:RemoveAction(mob, spell)
+--     Removes the castbar of a given mob, if `spell` is an interrupt.
+--     spell can be set to "INTERRUPT" to force remove an action.
+--
+
+-- return instantly if we're not on a vanilla client
+if pfUI.client > 11200 then return end
 
 -- return instantly when another libcast is already active
 if pfUI.api.libcast then return end
