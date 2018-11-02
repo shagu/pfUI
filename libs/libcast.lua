@@ -316,7 +316,6 @@ libcast.customcast[strlower(aimedshot)] = function(begin)
     libcast.db[player].casttime = duration
     libcast.db[player].icon = icon
     libcast.db[player].channel = nil
-    libcast:TriggerEvents()
   else
     -- remove cast action to the database
     libcast.db[player].cast = nil
@@ -324,7 +323,6 @@ libcast.customcast[strlower(aimedshot)] = function(begin)
     libcast.db[player].casttime = nil
     libcast.db[player].icon = nil
     libcast.db[player].channel = nil
-    libcast:TriggerEvents()
   end
 end
 
@@ -340,7 +338,6 @@ libcast.customcast[strlower(multishot)] = function(begin)
     libcast.db[player].casttime = duration
     libcast.db[player].icon = icon
     libcast.db[player].channel = nil
-    libcast:TriggerEvents()
   else
     -- remove cast action to the database
     libcast.db[player].cast = nil
@@ -348,7 +345,6 @@ libcast.customcast[strlower(multishot)] = function(begin)
     libcast.db[player].casttime = nil
     libcast.db[player].icon = nil
     libcast.db[player].channel = nil
-    libcast:TriggerEvents()
   end
 end
 
