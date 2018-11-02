@@ -144,9 +144,9 @@ pfUI:RegisterModule("thirdparty", function ()
   HookAddonOrVariable("KLHThreatMeter", function()
     if C.thirdparty.ktm.skin == "1" then
       -- remove titlebar
-      if KLHTM_Gui then 
+      if KLHTM_Gui then
         if KLHTM_Gui.title then
-          KLHTM_Gui.title.back:Hide() 
+          KLHTM_Gui.title.back:Hide()
         end
         if KLHTM_Gui.frame then
           KLHTM_SetGuiScale(.9)
@@ -162,14 +162,14 @@ pfUI:RegisterModule("thirdparty", function ()
               _G["KLHTM_RaidFrameRow" .. i .. "ThreatText"]:SetFont(pfUI.font_default, 13, "OUTLINE")
               _G["KLHTM_RaidFrameRow" .. i .. "PercentThreatText"]:SetFont(pfUI.font_default, 13, "OUTLINE")
             end
-          end          
+          end
         end
         if KLHTM_Gui.self then
           -- skin rows (self)
           for i in pairs(KLHTM_Gui.self.rows) do
             KLHTM_Gui.self.rows[i].bar:SetTexture("Interface\\AddOns\\pfUI\\img\\bar")
             KLHTM_Gui.self.rows[i].bar:SetAlpha(.75)
-          end          
+          end
         end
       end
 
@@ -318,9 +318,9 @@ pfUI:RegisterModule("thirdparty", function ()
     if C.thirdparty.swstats.skin == "1" then
       SW_Settings["OPT_ShowMainWinDPS"] = 1
       SW_Settings["Colors"] = SW_Settings["Colors"] or {}
-      SW_Settings["Colors"]["TitleBarsFont"] = { [1] = 1, [2] = 1, [3] = 1,	[4] = 1, }
-      SW_Settings["Colors"]["TitleBars"] = { [1] = 0, [2] = 0, [3] = 0,	[4] = 0, }
-      SW_Settings["Colors"]["Backdrops"] = { [1] = .3, [2] = 1, [3] = .8,	[4] = 1, }
+      SW_Settings["Colors"]["TitleBarsFont"] = { [1] = 1, [2] = 1, [3] = 1, [4] = 1, }
+      SW_Settings["Colors"]["TitleBars"] = { [1] = 0, [2] = 0, [3] = 0, [4] = 0, }
+      SW_Settings["Colors"]["Backdrops"] = { [1] = .3, [2] = 1, [3] = .8, [4] = 1, }
 
       SW_Settings["InfoSettings"] = SW_Settings["InfoSettings"] or {}
       SW_Settings["InfoSettings"][1] = SW_Settings["InfoSettings"][1] or {}
@@ -403,7 +403,7 @@ pfUI:RegisterModule("thirdparty", function ()
 
     hooksecurefunc("WIM_WindowOnShow", function()
       -- blue shaman
-      _G.WIM_ClassColors[WIM_LOCALIZED_SHAMAN]	= "0070de"
+      _G.WIM_ClassColors[WIM_LOCALIZED_SHAMAN] = "0070de"
 
       local windowname = this:GetName()
 
