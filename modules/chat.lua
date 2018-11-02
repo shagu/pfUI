@@ -337,13 +337,6 @@ pfUI:RegisterModule("chat", function ()
 
   pfUI.chat:RegisterEvent("PLAYER_ENTERING_WORLD")
   pfUI.chat:RegisterEvent("UI_SCALE_CHANGED")
-  pfUI.chat:RegisterEvent("FRIENDLIST_UPDATE")
-  pfUI.chat:RegisterEvent("GUILD_ROSTER_UPDATE")
-  pfUI.chat:RegisterEvent("RAID_ROSTER_UPDATE")
-  pfUI.chat:RegisterEvent("PARTY_MEMBERS_CHANGED")
-  pfUI.chat:RegisterEvent("PLAYER_TARGET_CHANGED")
-  pfUI.chat:RegisterEvent("WHO_LIST_UPDATE")
-  pfUI.chat:RegisterEvent("CHAT_MSG_SYSTEM")
 
   local function ChatOnMouseWheel()
     if (arg1 > 0) then
@@ -586,76 +579,12 @@ pfUI:RegisterModule("chat", function ()
   end
 
   pfUI.chat:SetScript("OnEvent", function()
-      if event == "PLAYER_ENTERING_WORLD" or event == "UI_SCALE_CHANGED" then
-        pfUI.chat:RefreshChat()
-        FCF_DockUpdate()
-        if C.chat.right.enable == "0" and C.chat.right.alwaysshow == "0" then
-          pfUI.chat.right:Hide()
-        end
-      elseif event == "FRIENDLIST_UPDATE" or event == "PLAYER_ENTERING_WORLD" then
-        local Name, Class, Level
-        for i = 1, GetNumFriends() do
-          Name, Level, Class = GetFriendInfo(i)
-          Class = L["class"][Class] or nil
-          if Name and Level and Class and pfUI_playerDB then
-            pfUI_playerDB[Name] = { class = Class, level = Level }
-          end
-        end
-      elseif event == "GUILD_ROSTER_UPDATE" or event == "PLAYER_ENTERING_WORLD" then
-        local Name, Class, Level
-        for i = 1, GetNumGuildMembers() do
-          Name, _, _, Level, Class = GetGuildRosterInfo(i)
-          Class = L["class"][Class] or nil
-          if Name and Level and Class and pfUI_playerDB then
-            pfUI_playerDB[Name] = { class = Class, level = Level }
-          end
-        end
-
-      elseif event == "RAID_ROSTER_UPDATE" or event == "PLAYER_ENTERING_WORLD" then
-        local Name, Class, SubGroup, Level
-        for i = 1, GetNumRaidMembers() do
-          Name, _, SubGroup, Level, Class = GetRaidRosterInfo(i)
-          Class = L["class"][Class] or nil
-          if Name and Level and Class and pfUI_playerDB then
-            pfUI_playerDB[Name] = { class = Class, level = Level }
-          end
-        end
-
-      elseif event == "PARTY_MEMBERS_CHANGED" or event == "PLAYER_ENTERING_WORLD" then
-        local Name, Class, Level, Unit
-        for i = 1, GetNumPartyMembers() do
-          Unit = "party" .. i
-          _, Class = UnitClass(Unit)
-          Name = UnitName(Unit)
-          Level = UnitLevel(Unit)
-          if Name and Level and Class and pfUI_playerDB then
-            pfUI_playerDB[Name] = { class = Class, level = Level }
-          end
-        end
-
-      elseif event == "PLAYER_TARGET_CHANGED" then
-        local Name, Class, Level
-        if not UnitIsPlayer("target") or not UnitIsFriend("player", "target") then
-          return
-        end
-        _, Class = UnitClass("target")
-        Level = UnitLevel("target")
-        Name = UnitName("target")
-        if Name and Level and Class and pfUI_playerDB then
-          pfUI_playerDB[Name] = { class = Class, level = Level }
-        end
-
-      elseif event == "WHO_LIST_UPDATE" or event == "CHAT_MSG_SYSTEM" then
-        local Name, Class, Level
-        for i = 1, GetNumWhoResults() do
-          Name, _, Level, _, Class, _ = GetWhoInfo(i)
-          Class = L["class"][Class] or nil
-          if Name and Level and Class and pfUI_playerDB then
-            pfUI_playerDB[Name] = { class = Class, level = Level }
-          end
-        end
-      end
-    end)
+    pfUI.chat:RefreshChat()
+    FCF_DockUpdate()
+    if C.chat.right.enable == "0" and C.chat.right.alwaysshow == "0" then
+      pfUI.chat.right:Hide()
+    end
+  end)
 
   for i=1, NUM_CHAT_WINDOWS do
     _G["ChatFrame" .. i .. "UpButton"]:Hide()
@@ -850,9 +779,8 @@ pfUI:RegisterModule("chat", function ()
             for name in gfind(text, "|Hplayer:(.-)|h") do
               local color = unknowncolorhex
               local match = false
-              -- search player in database
-              if pfUI_playerDB[name] and pfUI_playerDB[name].class ~= nil then
-                local class = pfUI_playerDB[name].class
+              local class = GetUnitData(name)
+              if class then
                 if class ~= UNKNOWN then
                   color = string.format("%02x%02x%02x",
                     RAID_CLASS_COLORS[class].r * 255,

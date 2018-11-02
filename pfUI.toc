@@ -48,6 +48,7 @@ libs\libspell.lua
 libs\libcast.lua
 libs\libdebuff.lua
 libs\librange.lua
+libs\libunitscan.lua
 
 # skins
 skins\blizzard\character.lua
