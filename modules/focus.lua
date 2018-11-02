@@ -37,7 +37,7 @@ function SlashCmdList.PFCASTFOCUS(msg)
     if pfUI.uf.focus.label and pfUI.uf.focus.id then
       TargetUnit(pfUI.uf.focus.label .. pfUI.uf.focus.id)
     else
-      TargetByName(pfUI.uf.focus.unitname)
+      TargetByName(pfUI.uf.focus.unitname, true)
     end
 
     if strlower(UnitName("target")) ~= strlower(pfUI.uf.focus.unitname) then
