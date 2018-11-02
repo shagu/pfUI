@@ -638,7 +638,7 @@ function pfUI.api.CreateQuestionDialog(text, yes, no, editbox)
 
     question.input:SetFontObject(GameFontNormal)
     question.input:SetScript("OnEscapePressed", function() this:ClearFocus() end)
-    question.input:SetFocus()
+    question.input:SetAutoFocus(true)
   end
 
   -- buttons
