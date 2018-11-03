@@ -79,7 +79,7 @@ libunitscan:SetScript("OnEvent", function()
     local name, class, level
     for i = 1, GetNumFriends() do
       name, level, class = GetFriendInfo(i)
-      class = L["class"][Class] or nil
+      class = L["class"][class] or nil
       AddData("players", name, class, level)
     end
 
@@ -87,7 +87,7 @@ libunitscan:SetScript("OnEvent", function()
     local name, class, level
     for i = 1, GetNumGuildMembers() do
       name, _, _, level, class = GetGuildRosterInfo(i)
-      class = L["class"][Class] or nil
+      class = L["class"][class] or nil
       AddData("players", name, class, level)
     end
 
@@ -95,7 +95,7 @@ libunitscan:SetScript("OnEvent", function()
     local name, class, SubGroup, level
     for i = 1, GetNumRaidMembers() do
       name, _, SubGroup, level, class = GetRaidRosterInfo(i)
-      class = L["class"][Class] or nil
+      class = L["class"][class] or nil
       AddData("players", name, class, level)
     end
 
@@ -113,7 +113,7 @@ libunitscan:SetScript("OnEvent", function()
     local name, class, level
     for i = 1, GetNumWhoResults() do
       name, _, level, _, class, _ = GetWhoInfo(i)
-      class = L["class"][Class] or nil
+      class = L["class"][class] or nil
       AddData("players", name, class, level)
     end
 
