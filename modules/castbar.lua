@@ -113,6 +113,7 @@ pfUI:RegisterModule("castbar", function ()
         this.bar:SetMinMaxValues(1,100)
         this.bar:SetValue(100)
         this.fadeout = 1
+        this.delay = 0
       end
     end)
 
