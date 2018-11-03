@@ -68,10 +68,12 @@ pfUI:RegisterModule("firstrun", function ()
     CreateBackdrop(f, nil, nil, .85)
 
     -- text
-    f.text = f:CreateFontString("Status", "LOW", "GameFontNormal")
+    f.text = f:CreateFontString("Status", "OVERLAY", "GameFontNormal")
     f.text:SetFontObject(GameFontWhite)
+    f.text:SetJustifyV("TOP")
+    f.text:SetJustifyH("CENTER")
     f.text:SetPoint("TOPLEFT", f, "TOPLEFT", 10, -10)
-    f.text:SetPoint("TOPRIGHT", f, "TOPRIGHT", -10, -10)
+    f.text:SetPoint("BOTTOMRIGHT", f, "BOTTOMRIGHT", -10, 10)
 
     f.progress = CreateFrame("StatusBar", nil, f)
     f.progress:SetPoint("BOTTOMLEFT", 100, 10)
