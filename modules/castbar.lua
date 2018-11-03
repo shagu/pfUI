@@ -68,7 +68,6 @@ pfUI:RegisterModule("castbar", function ()
         end
 
         this:SetAlpha(this:GetAlpha()-0.05)
-        return
       end
 
       local name = this.unitstr and UnitName(this.unitstr) or this.unitname
