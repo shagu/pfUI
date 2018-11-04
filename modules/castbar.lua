@@ -74,6 +74,10 @@ pfUI:RegisterModule("castbar", function ()
       if not name then return end
 
       local cast, nameSubtext, text, texture, startTime, endTime, isTradeSkill = UnitCastingInfo(name)
+      if not cast then
+        -- scan for channel spells if no cast was found
+        cast, nameSubtext, text, texture, startTime, endTime, isTradeSkill = UnitChannelInfo(name)
+      end
 
       if cast then
         local duration = endTime - startTime
@@ -92,7 +96,7 @@ pfUI:RegisterModule("castbar", function ()
         end
 
         if channel then
-          cur = duration + startTime / 1000 - GetTime() -- channel
+          cur = max + startTime/1000 - GetTime()
         end
 
         cur = cur > max and max or cur
