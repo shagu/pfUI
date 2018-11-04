@@ -470,7 +470,10 @@ pfUI:RegisterModule("loot", function ()
           maxrarity = math.max(maxrarity, quality)
           maxwidth = math.max(maxwidth, slot.name:GetStringWidth())
 
-          slot[LOOT_BUTTON_SLOT_FUNCTION](slot, id)
+          slot:SetID(id)
+          if slot.SetSlot then
+            slot:SetSlot(id)
+          end
 
           slot:Enable()
           slot:Show()
