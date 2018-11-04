@@ -247,6 +247,7 @@ pfUI:RegisterModule("buffwatch", function ()
           frame.bars[bar].cacheName = data[3]
           frame.bars[bar].text:SetText(data[3])
 
+          -- calculate dynamic auto color
           local r, g, b
           if frame.type == "HARMFUL" then
             r, g, b = 1, .2, .2
@@ -256,15 +257,19 @@ pfUI:RegisterModule("buffwatch", function ()
             end
           else
             r,g,b = str2rgb(data[3])
-            frame.bars[bar].bar:SetStatusBarColor(r,g,b,1)
           end
 
+          -- set auto background color
           if frame.config.dtypebg == "1" then
             frame.bars[bar].bar:SetStatusBarColor(r,g,b,1)
           end
+
+          -- set auto border color
           if frame.config.dtypeborder == "1" then
             frame.bars[bar].backdrop:SetBackdropBorderColor(r,g,b,1)
           end
+
+          -- set auto text color
           if frame.config.dtypetext == "1" then
             frame.bars[bar].text:SetTextColor(r,g,b,1)
           end
