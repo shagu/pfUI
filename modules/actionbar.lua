@@ -526,6 +526,16 @@ pfUI:RegisterModule("actionbar", function ()
     icon:SetAllPoints(button)
     icon:SetTexCoord(.08, .92, .08, .92)
 
+    local pushed = button:GetPushedTexture()
+    pushed:SetAllPoints(button)
+    pushed:SetTexCoord(.08,.92,.08,.92)
+    button.SetPushedTexture = function() return end
+  
+    local checked = button:GetCheckedTexture()
+    checked:SetAllPoints(button)
+    checked:SetTexCoord(.08,.92,.08,.92)
+    button.SetCheckedTexture = function() return end
+
     local texture = _G["ShapeshiftButton"..i..'NormalTexture']
     texture:SetAlpha(0)
 
@@ -553,6 +563,16 @@ pfUI:RegisterModule("actionbar", function ()
     icon:SetAllPoints(button)
     icon:SetParent(button)
     icon:SetTexCoord(.08, .92, .08, .92)
+
+    local pushed = button:GetPushedTexture()
+    pushed:SetAllPoints(button)
+    pushed:SetTexCoord(.08,.92,.08,.92)
+    button.SetPushedTexture = function() return end
+  
+    local checked = button:GetCheckedTexture()
+    checked:SetAllPoints(button)
+    checked:SetTexCoord(.08,.92,.08,.92)
+    button.SetCheckedTexture = function() return end
 
     local texture = _G["PetActionButton"..i..'NormalTexture2']
     texture:SetAlpha(0)
@@ -597,6 +617,16 @@ pfUI:RegisterModule("actionbar", function ()
       local icon = _G[actionbutton..i..'Icon']
       icon:SetAllPoints(button)
       icon:SetTexCoord(.08, .92, .08, .92)
+
+      local pushed = button:GetPushedTexture()
+      pushed:SetAllPoints(button)
+      pushed:SetTexCoord(.08,.92,.08,.92)
+      button.SetPushedTexture = function() return end
+    
+      local checked = button:GetCheckedTexture()
+      checked:SetAllPoints(button)
+      checked:SetTexCoord(.08,.92,.08,.92)
+      button.SetCheckedTexture = function() return end
 
       local border = _G[actionbutton..i..'Border']
       if C.bars.showequipped == "1" then
