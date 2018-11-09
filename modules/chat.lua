@@ -405,11 +405,12 @@ pfUI:RegisterModule("chat", function ()
 
       if i == 3 and C.chat.right.enable == "1" then
         -- Loot & Spam
+        local bottompadding = pfUI.panel and not pfUI_config.position["pfPanelRight"] and panelheight or default_border
         tab:SetParent(pfUI.chat.right.panelTop)
         frame:SetParent(pfUI.chat.right)
         frame:ClearAllPoints()
         frame:SetPoint("TOPLEFT", pfUI.chat.right ,"TOPLEFT", default_border, -panelheight)
-        frame:SetPoint("BOTTOMRIGHT", pfUI.chat.right ,"BOTTOMRIGHT", -default_border, panelheight)
+        frame:SetPoint("BOTTOMRIGHT", pfUI.chat.right ,"BOTTOMRIGHT", -default_border, bottompadding)
         frame:Show()
       elseif i == 2 and C.chat.global.combathide == "1" then
         -- Combat Log
@@ -417,12 +418,13 @@ pfUI:RegisterModule("chat", function ()
         FCF_Close(frame)
       elseif frame.isDocked then
         -- Left Chat
+        local bottompadding = pfUI.panel and not pfUI_config.position["pfPanelLeft"] and panelheight or default_border
         FCF_DockFrame(frame)
         tab:SetParent(pfUI.chat.left.panelTop)
         frame:SetParent(pfUI.chat.left)
         frame:ClearAllPoints()
         frame:SetPoint("TOPLEFT", pfUI.chat.left ,"TOPLEFT", default_border, -panelheight)
-        frame:SetPoint("BOTTOMRIGHT", pfUI.chat.left ,"BOTTOMRIGHT", -default_border, panelheight)
+        frame:SetPoint("BOTTOMRIGHT", pfUI.chat.left ,"BOTTOMRIGHT", -default_border, bottompadding)
       else
         FCF_UnDockFrame(frame)
         frame:SetParent(UIParent)
