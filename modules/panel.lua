@@ -296,14 +296,22 @@ pfUI:RegisterModule("panel", function()
       widget:RegisterEvent("PLAYER_GUILD_UPDATE")
       widget.Click = function() ToggleFriendsFrame(3) end
       widget:SetScript("OnEvent", function()
-        GuildRoster()
-        local online = GetNumGuildMembers()
-        local all = GetNumGuildMembers(true)
-        if not GetGuildInfo("player") then
-          pfUI.panel:OutputPanel("guild", GUILD .. ": " .. NOT_APPLICABLE, nil, widget.Click)
-        else
-          pfUI.panel:OutputPanel("guild", GUILD .. ": " .. online, nil, widget.Click)
+        local count = 0
+        for i = 1, GetNumGuildMembers() do
+          local _, _, _, _, _, _, _, _, online = GetGuildRosterInfo(i)
+          if online then count = count + 1 end
         end
+
+        if GetGuildInfo("player") then
+          pfUI.panel:OutputPanel("guild", GUILD .. ": " .. count, nil, widget.Click)
+        else
+          pfUI.panel:OutputPanel("guild", GUILD .. ": " .. NOT_APPLICABLE, nil, widget.Click)
+        end
+      end)
+
+      widget:SetScript("OnUpdate",function()
+        if ( this.tick or 10) > GetTime() then return else this.tick = GetTime() + 10 end
+        GuildRoster()
       end)
     end
 
