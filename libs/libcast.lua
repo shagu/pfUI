@@ -214,7 +214,9 @@ libcast:SetScript("OnEvent", function()
       this.db[player].channel = nil
     end
   elseif event == "SPELLCAST_CHANNEL_UPDATE" then
-    this.db[player].start = this.db[player].start - arg1 / 1000
+    if this.db[player].cast then
+      this.db[player].start = -this.db[player].casttime/1000 + GetTime() + arg1/1000
+    end
   -- Fill database with environmental casts
   elseif arg1 then
     -- (.+) begins to cast (.+).
