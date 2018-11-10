@@ -59,6 +59,7 @@ pfUI:RegisterModule("buffwatch", function ()
   local function GetBuffData(unit, id, type, skipTooltip)
     if unit == "player" then
       local bid = GetPlayerBuff(PLAYER_BUFF_START_ID+id, type)
+      local stacks = GetPlayerBuffApplications(bid)
       local remaining = GetPlayerBuffTimeLeft(bid)
       local texture = GetPlayerBuffTexture(bid)
       local name
@@ -68,10 +69,10 @@ pfUI:RegisterModule("buffwatch", function ()
         name = scanner:Line(1)
       end
 
-      return remaining, texture, name
+      return remaining, texture, name, stacks
     elseif libdebuff then
       local name, rank, texture, stacks, dtype, duration, timeleft = libdebuff:UnitDebuff(unit, id)
-      return timeleft, texture, name
+      return timeleft, texture, name, stacks
     end
   end
 
@@ -182,6 +183,12 @@ pfUI:RegisterModule("buffwatch", function ()
     frame.icon:SetPoint("LEFT", frame, "LEFT", 0, 0)
     frame.icon:SetTexCoord(.07,.93,.07,.93)
 
+    frame.stacks = frame.bar:CreateFontString("Status", "DIALOG", "GameFontWhite")
+    frame.stacks:SetFont(font, C.global.font_size, "OUTLINE")
+    frame.stacks:SetAllPoints(frame.icon)
+    frame.stacks:SetJustifyH("CENTER")
+    frame.stacks:SetJustifyV("CENTER")
+
     frame.parent = parent
     frame:SetScript("OnUpdate", StatusBarOnUpdate)
     frame:SetScript("OnShow", StatusBarRefreshParent)
@@ -203,18 +210,20 @@ pfUI:RegisterModule("buffwatch", function ()
   local function RefreshBuffBarFrame(frame)
     -- reinitialize all active buffs
     for i=1,32 do
-      local timeleft, texture, name = GetBuffData(frame.unit, i, frame.type)
+      local timeleft, texture, name, stacks = GetBuffData(frame.unit, i, frame.type)
 
       if texture and name and name ~= "" and BuffIsVisible(frame.config, name) and timeleft and timeleft ~= 0 then
         frame.buffs[i][1] = timeleft
         frame.buffs[i][2] = i
         frame.buffs[i][3] = name
         frame.buffs[i][4] = texture
+        frame.buffs[i][5] = stacks
       else
         frame.buffs[i][1] = 0
         frame.buffs[i][2] = nil
         frame.buffs[i][3] = nil
         frame.buffs[i][4] = nil
+        frame.buffs[i][5] = 0
       end
     end
 
@@ -285,6 +294,12 @@ pfUI:RegisterModule("buffwatch", function ()
         if frame.bars[bar].cacheMaxDuration ~= frame.durations[data[4]][2] then
           frame.bars[bar].cacheMaxDuration = frame.durations[data[4]][2]
           frame.bars[bar].bar:SetMinMaxValues(0, frame.durations[data[4]][2])
+        end
+
+        if data[5] > 1 then
+          frame.bars[bar].stacks:SetText(data[5])
+        else
+          frame.bars[bar].stacks:SetText("")
         end
 
         frame.bars[bar]:Show()
