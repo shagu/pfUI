@@ -123,6 +123,7 @@ pfUI:RegisterModule("castbar", function ()
     -- register for spell delay
     cb:RegisterEvent(CASTBAR_DELAY_EVENT)
     cb:SetScript("OnEvent", function()
+      if not UnitIsUnit(this.unitstr, "player") then return end
       this.delay = ( this.delay or 0 ) + arg1/1000
     end)
 
