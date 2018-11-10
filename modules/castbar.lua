@@ -121,10 +121,16 @@ pfUI:RegisterModule("castbar", function ()
     end)
 
     -- register for spell delay
-    cb:RegisterEvent(CASTBAR_DELAY_EVENT)
+    cb:RegisterEvent(CASTBAR_EVENT_CAST_DELAY)
+    cb:RegisterEvent(CASTBAR_EVENT_CHANNEL_DELAY)
     cb:SetScript("OnEvent", function()
       if not UnitIsUnit(this.unitstr, "player") then return end
-      this.delay = ( this.delay or 0 ) + arg1/1000
+
+      if event == CASTBAR_EVENT_CAST_DELAY then
+        this.delay = ( this.delay or 0 ) + arg1/1000
+      elseif event == CASTBAR_EVENT_CHANNEL_DELAY then
+        this.delay = ( this.delay or 0 ) + this.bar:GetValue() - arg1/1000
+      end
     end)
 
     cb:SetAlpha(0)

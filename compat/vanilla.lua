@@ -4,7 +4,8 @@ setfenv(1, pfUI:GetEnvironment())
 if pfUI.client > 11200 then return end
 
 -- [[ Constants ]]--
-CASTBAR_DELAY_EVENT = "SPELLCAST_DELAYED" -- SPELLCAST_CHANNEL_UPDATE ?
+CASTBAR_EVENT_CAST_DELAY = "SPELLCAST_DELAYED"
+CASTBAR_EVENT_CHANNEL_DELAY = "SPELLCAST_CHANNEL_UPDATE"
 
 NAMEPLATE_OBJECTORDER = { "border", "glow", "name", "level", "levelicon",
   "raidicon" }
