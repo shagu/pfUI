@@ -50,6 +50,13 @@ function GetContainerNumSlots(bag)
   end
 end
 
+-- map libdebuff to the regular function
+libdebuff = {
+  ["UnitDebuff"] = function(self, a1, a2, a3)
+    return _G.UnitDebuff(a1,a2,a3)
+  end
+}
+
 --[[ DEBUG ]]--
 function TargetByName()
   message("|cffff5555You shouldn't be here!|r TargetByName is blacklisted")
