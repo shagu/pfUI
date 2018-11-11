@@ -7,6 +7,7 @@ DEFAULT_CHAT_FRAME:AddMessage("Compatibility Mode for |cff33ffccTBC |cffffff002.
 -- blacklist unrequired modules
 pfUI.module.autoshift = true
 pfUI.module.itemclick = true
+pfUI.module.hdgraphic = true
 
 -- [[ Constants ]]--
 CASTBAR_EVENT_CAST_DELAY = "UNIT_SPELLCAST_DELAYED"
