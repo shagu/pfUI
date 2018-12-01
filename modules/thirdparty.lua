@@ -277,6 +277,9 @@ pfUI:RegisterModule("thirdparty", function ()
           DPSMateSettings["windows"][w]["borderopacity"] = 0
         end
 
+        if DPSMate.UpdatePointer then
+          DPSMate:UpdatePointer()
+        end
         DPSMate:InitializeFrames()
 
         for k, val in pairs(DPSMateSettings["windows"]) do
