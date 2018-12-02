@@ -220,10 +220,6 @@ pfUI:RegisterModule("prediction", function ()
     end
   end
 
-  local healedselfother = SanitizePattern(HEALEDSELFOTHER)
-  local healedselfself = SanitizePattern(HEALEDSELFSELF)
-  local healedcritselfother = SanitizePattern(HEALEDCRITSELFOTHER)
-  local healedcritselfself = SanitizePattern(HEALEDCRITSELFSELF)
   local spell_queue = { "DUMMY", "DUMMYRank 9", "TARGET" }
 
   local realm = GetRealmName()
@@ -278,25 +274,29 @@ pfUI:RegisterModule("prediction", function ()
   pfUI.prediction.sender:SetScript("OnEvent", function()
     if event == "CHAT_MSG_SPELL_SELF_BUFF" then
       -- "Your %s heals %s for %d.";
-      for spell, _, heal in gfind(arg1, healedselfother) do
+      local spell, _, heal = cmatch(arg1, HEALEDSELFOTHER)
+      if spell and heal then
         if spell == spell_queue[1] then cache[spell_queue[2]] = tonumber(heal) end
         return
       end
 
       -- "Your %s heals you for %d."
-      for spell, heal in gfind(arg1, healedselfself) do
+      local spell, heal = cmatch(arg1, HEALEDSELFSELF)
+      if spell and heal then
         if spell == spell_queue[1] then cache[spell_queue[2]] = tonumber(heal) end
         return
       end
 
       -- "Your %s critically heals %s for %d."
-      for spell, heal in gfind(arg1, healedcritselfother) do
+      local spell, heal = cmatch(arg1, HEALEDCRITSELFOTHER)
+      if spell and heal then
         if spell == spell_queue[1] and not cache[spell_queue[2]] then cache[spell_queue[2]] = tonumber(heal)*2/3 end
         return
       end
 
       -- "Your %s critically heals you for %d."
-      for spell, _, heal in gfind(arg1, healedcritselfself) do
+      local spell, _, heal = cmatch(arg1, HEALEDCRITSELFSELF)
+      if spell and heal then
         if spell == spell_queue[1] and not cache[spell_queue[2]] then cache[spell_queue[2]] = tonumber(heal)*2/3 end
         return
       end
