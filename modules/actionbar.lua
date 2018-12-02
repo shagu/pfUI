@@ -72,30 +72,39 @@ pfUI:RegisterModule("actionbar", function ()
 
   -- reagent counter
   local reagentslots = { }
+  local reagentbuttons = { }
+  local reagent_capture = SPELL_REAGENTS.."(.+)"
   local scanner = libtipscan:GetScanner("actionbar")
+  local reagentcounter = CreateFrame("Frame", "pfReagentCounter", UIParent)
+  reagentcounter:RegisterEvent("PLAYER_ENTERING_WORLD")
+  reagentcounter:RegisterEvent("ACTIONBAR_SLOT_CHANGED")
+  reagentcounter:RegisterEvent("BAG_UPDATE")
+  reagentcounter:SetScript("OnEvent", function()
+    for slot = 1, 120 do
+      -- update reagent names per slot
+      if event == "PLAYER_ENTERING_WORLD" or event == "ACTIONBAR_SLOT_CHANGED" then
+        reagentslots[slot] = nil
+        scanner:SetAction(slot)
+        local _, reagents = scanner:Find(reagent_capture)
+        if reagents then
+          reagentslots[slot] = reagents
+        end
+      end
 
-  hooksecurefunc("ActionButton_OnEvent", function()
-    if event == "BAG_UPDATE" and arg1 < 5 then
-      ActionButton_Update()
+      -- update buttons
+      if reagentbuttons[slot] then
+        _G.this = reagentbuttons[slot]
+        ActionButton_Update()
+      end
     end
   end)
 
-  local reagent_capture = SPELL_REAGENTS.."(.+)"
   local oldIsConsumableAction = IsConsumableAction
   _G.IsConsumableAction = function(slot)
     if oldIsConsumableAction(slot) then return true end
     if this and this.GetParent and ActionButton_GetPagedID(this) == slot then
-      reagentslots[slot] = nil
-      scanner:SetAction(slot)
-      local _, reagents = scanner:Find(reagent_capture)
-      if reagents then
-        reagentslots[slot] = reagents
-        this:RegisterEvent("BAG_UPDATE")
-        return true        
-      end
-
-      this:UnregisterEvent("BAG_UPDATE")
-      return nil
+      reagentbuttons[slot] = reagentbuttons[slot] or this
+      return reagentslots[slot] and true
     end
   end
 
@@ -105,7 +114,9 @@ pfUI:RegisterModule("actionbar", function ()
       return GetItemCount(reagentslots[slot])
     end
 
-    if oldGetActionCount(slot) then return oldGetActionCount(slot) end
+    if oldGetActionCount(slot) then
+      return oldGetActionCount(slot)
+    end
   end
 
   if C.bars.glowrange == "1" then
@@ -530,7 +541,7 @@ pfUI:RegisterModule("actionbar", function ()
     pushed:SetAllPoints(button)
     pushed:SetTexCoord(.08,.92,.08,.92)
     button.SetPushedTexture = function() return end
-  
+
     local checked = button:GetCheckedTexture()
     checked:SetAllPoints(button)
     checked:SetTexCoord(.08,.92,.08,.92)
@@ -568,7 +579,7 @@ pfUI:RegisterModule("actionbar", function ()
     pushed:SetAllPoints(button)
     pushed:SetTexCoord(.08,.92,.08,.92)
     button.SetPushedTexture = function() return end
-  
+
     local checked = button:GetCheckedTexture()
     checked:SetAllPoints(button)
     checked:SetTexCoord(.08,.92,.08,.92)
@@ -622,7 +633,7 @@ pfUI:RegisterModule("actionbar", function ()
       pushed:SetAllPoints(button)
       pushed:SetTexCoord(.08,.92,.08,.92)
       button.SetPushedTexture = function() return end
-    
+
       local checked = button:GetCheckedTexture()
       checked:SetAllPoints(button)
       checked:SetTexCoord(.08,.92,.08,.92)
