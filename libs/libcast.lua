@@ -103,6 +103,8 @@ UnitCastingInfo = _G.UnitCastingInfo or function(unit)
 end
 
 function libcast:AddAction(mob, spell, channel)
+  if not mob or not spell then return nil end
+
   if L["spells"][spell] ~= nil then
     local casttime = L["spells"][spell].t
     local icon = L["spells"][spell].icon
@@ -114,7 +116,11 @@ function libcast:AddAction(mob, spell, channel)
     self.db[mob].casttime = casttime
     self.db[mob].icon = icon
     self.db[mob].channel = channel
+
+    return true
   end
+
+  return nil
 end
 
 function libcast:RemoveAction(mob, spell)
@@ -128,18 +134,6 @@ function libcast:RemoveAction(mob, spell)
     self.db[mob].channel = nil
   end
 end
-
--- Combatlog parser strings
-libcast.SPELL_CAST = SanitizePattern(SPELLCASTOTHERSTART)
-libcast.SPELL_PERFORM = SanitizePattern(SPELLPERFORMOTHERSTART)
-libcast.SPELL_GAINS = SanitizePattern(AURAADDEDOTHERHELPFUL)
-libcast.SPELL_AFFLICTED = SanitizePattern(AURAADDEDOTHERHARMFUL)
-libcast.SPELL_HIT = SanitizePattern(SPELLLOGSELFOTHER)
-libcast.SPELL_CRIT = SanitizePattern(SPELLLOGCRITSELFOTHER)
-libcast.OTHER_SPELL_HIT = SanitizePattern(SPELLLOGOTHEROTHER)
-libcast.OTHER_SPELL_CRIT = SanitizePattern(SPELLLOGCRITOTHEROTHER)
-libcast.SPELL_INTERRUPT = SanitizePattern(SPELLINTERRUPTSELFOTHER)
-libcast.OTHER_SPELL_INTERRUPT = SanitizePattern(SPELLINTERRUPTOTHEROTHER)
 
 -- main data
 libcast.db = { [player] = {} }
@@ -219,65 +213,47 @@ libcast:SetScript("OnEvent", function()
     end
   -- Fill database with environmental casts
   elseif arg1 then
+    local mob, spell
+
     -- (.+) begins to cast (.+).
-    for mob, spell in gfind(arg1, libcast.SPELL_CAST) do
-      libcast:AddAction(mob, spell)
-      return
-    end
+    mob, spell = cmatch(arg1, SPELLCASTOTHERSTART)
+    if libcast:AddAction(mob, spell) then return end
 
     -- (.+) begins to perform (.+).
-    for mob, spell in gfind(arg1, libcast.SPELL_PERFORM) do
-      libcast:AddAction(mob, spell)
-      return
-    end
+    mob, spell = cmatch(arg1, SPELLPERFORMOTHERSTART)
+    if libcast:AddAction(mob, spell) then return end
 
     -- (.+) gains (.+).
-    for mob, spell in gfind(arg1, libcast.SPELL_GAINS) do
-      libcast:RemoveAction(mob, spell)
-      return
-    end
+    mob, spell = cmatch(arg1, AURAADDEDOTHERHELPFUL)
+    if libcast:RemoveAction(mob, spell) then return end
 
     -- (.+) is afflicted by (.+).
-    for mob, spell in gfind(arg1, libcast.SPELL_AFFLICTED) do
-      libcast:RemoveAction(mob, spell)
-      return
-    end
+    mob, spell = cmatch(arg1, AURAADDEDOTHERHARMFUL)
+    if libcast:RemoveAction(mob, spell) then return end
 
     -- Your (.+) hits (.+) for (%d+).
-    for spell, mob in gfind(arg1, libcast.SPELL_HIT) do
-      libcast:RemoveAction(mob, spell)
-      return
-    end
+    spell, mob = cmatch(arg1, SPELLLOGSELFOTHER)
+    if libcast:RemoveAction(mob, spell) then return end
 
     -- Your (.+) crits (.+) for (%d+).
-    for spell, mob in gfind(arg1, libcast.SPELL_CRIT) do
-      libcast:RemoveAction(mob, spell)
-      return
-    end
+    spell, mob = cmatch(arg1, SPELLLOGCRITSELFOTHER)
+    if libcast:RemoveAction(mob, spell) then return end
 
     -- (.+)'s (.+) %a hits (.+) for (%d+).
-    for _, spell, mob in gfind(arg1, libcast.OTHER_SPELL_HIT) do
-      libcast:RemoveAction(mob, spell)
-      return
-    end
+    _, spell, mob = cmatch(arg1, SPELLLOGOTHEROTHER)
+    if libcast:RemoveAction(mob, spell) then return end
 
     -- (.+)'s (.+) %a crits (.+) for (%d+).
-    for _, spell, mob in gfind(arg1, libcast.OTHER_SPELL_CRIT) do
-      libcast:RemoveAction(mob, spell)
-      return
-    end
+    _, spell, mob = cmatch(arg1, SPELLLOGCRITOTHEROTHER)
+    if libcast:RemoveAction(mob, spell) then return end
 
-    -- You interrupt (.+)'s (.+).";
-    for mob, spell in gfind(arg1, libcast.SPELL_INTERRUPT) do
-      libcast:RemoveAction(mob, "INTERRUPT")
-      return
-    end
+    -- You interrupt (.+)'s (.+).
+    mob, spell = cmatch(arg1, SPELLINTERRUPTSELFOTHER)
+    if libcast:RemoveAction(mob, spell) then return end
 
     -- (.+) interrupts (.+)'s (.+).
-    for _, mob, spell in gfind(arg1, libcast.OTHER_SPELL_INTERRUPT) do
-      libcast:RemoveAction(mob, "INTERRUPT")
-      return
-    end
+    _, mob, spell = cmatch(arg1, SPELLINTERRUPTOTHEROTHER)
+    if libcast:RemoveAction(mob, spell) then return end
   end
 end)
 
