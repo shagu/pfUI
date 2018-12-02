@@ -121,25 +121,63 @@ function pfUI.api.modf(f)
   return math.ceil(f), mod(f,1)
 end
 
+-- [ GetCaptures ]
+-- Returns the indexes of a given regex pattern
+-- 'pat'        [string]         unformatted pattern
+-- returns:     [numbers]        capture indexes
+local capture_cache = {}
+function pfUI.api.GetCaptures(pat)
+  local r = capture_cache
+  if not r[pat] then
+    for a, b, c, d, e in string.gfind(pat, gsub(pat, "%d%$", "%%(.-)$")) do
+      r[pat] = { a, b, c, d, e}
+    end
+  end
+
+  if not r[pat] then return nil, nil, nil, nil end
+  return r[pat][1], r[pat][2], r[pat][3], r[pat][4], r[pat][5]
+end
+
 -- [ SanitizePattern ]
 -- Sanitizes and convert patterns into gfind compatible ones.
 -- 'pattern'    [string]         unformatted pattern
 -- returns:     [string]         simplified gfind compatible pattern
+local sanitize_cache = {}
 function pfUI.api.SanitizePattern(pattern)
-  -- escape brackets
-  pattern = gsub(pattern, "%(", "%%(")
-  pattern = gsub(pattern, "%)", "%%)")
+  if not sanitize_cache[pattern] then
+    local ret = pattern
+    -- escape brackets
+    ret = gsub(ret, "%((.+)%)", "%%(%1%%)")
+    -- remove capture indexes
+    ret = gsub(ret, "%d%$","")
+    -- catch all characters
+    ret = gsub(ret, "%%%a","(.+)")
+    sanitize_cache[pattern] = ret
+  end
+  return sanitize_cache[pattern]
+end
 
-  -- remove bad capture indexes
-  pattern = gsub(pattern, "%d%$s","s") -- %1$s to %s
-  pattern = gsub(pattern, "%d%$d","d") -- %1$d to %d
-  pattern = gsub(pattern, "%ds","s") -- %2s to %s
+-- [ cmatch ]
+-- Same as string.match but aware of capture indexes (up to 5)
+-- 'str'        [string]         input string that should be matched
+-- 'pat'        [string]         unformatted pattern
+-- returns:     [strings]        matched string in capture order
+function pfUI.api.cmatch(str, pat)
+  -- read capture indexes
+  local a,b,c,d,e = GetCaptures(pat)
 
-  -- add capture to all findings
-  pattern = gsub(pattern, "%%s", "(.+)")
-  pattern = gsub(pattern, "%%d", "(%%d+)")
+  for va, vb, vc, vd, ve in string.gfind(str, pfUI.api.SanitizePattern(pat)) do
+    -- initialize return values
+    local ra, rb, rc, rd, re
 
-  return pattern
+    -- put entries into the proper return values
+    ra = e == "1" and ve or d == "1" and vd or c == "1" and vc or b == "1" and vb or va
+    rb = e == "2" and ve or d == "2" and vd or c == "2" and vc or a == "2" and va or vb
+    rc = e == "3" and ve or d == "3" and vd or a == "3" and va or b == "3" and vb or vc
+    rd = e == "4" and ve or a == "4" and va or c == "4" and vc or b == "4" and vb or vd
+    re = a == "5" and va or d == "5" and vd or c == "5" and vc or b == "5" and vb or ve
+    return ra, rb, rc, rd, re
+  end
 end
 
 -- [ GetItemLinkByName ]
