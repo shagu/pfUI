@@ -130,17 +130,14 @@ libdebuff:RegisterEvent("SPELLCAST_STOP")
 libdebuff:RegisterEvent("UNIT_AURA")
 
 -- Remove Pending
-libdebuff.rp = { SanitizePattern(SPELLFAILCASTSELF), SanitizePattern(SPELLFAILPERFORMSELF), SanitizePattern(SPELLIMMUNESELFOTHER),
-  SanitizePattern(IMMUNEDAMAGECLASSSELFOTHER), SanitizePattern(SPELLMISSSELFOTHER), SanitizePattern(SPELLRESISTSELFOTHER),
-  SanitizePattern(SPELLEVADEDSELFOTHER), SanitizePattern(SPELLDODGEDSELFOTHER), SanitizePattern(SPELLDEFLECTEDSELFOTHER),
-  SanitizePattern(SPELLREFLECTSELFOTHER), SanitizePattern(SPELLPARRIEDSELFOTHER), SanitizePattern(SPELLLOGABSORBSELFOTHER) }
+libdebuff.rp = { SPELLFAILCASTSELF, SPELLFAILPERFORMSELF, SPELLIMMUNESELFOTHER,
+  IMMUNEDAMAGECLASSSELFOTHER, SPELLMISSSELFOTHER, SPELLRESISTSELFOTHER,
+  SPELLEVADEDSELFOTHER, SPELLDODGEDSELFOTHER, SPELLDEFLECTEDSELFOTHER,
+  SPELLREFLECTSELFOTHER, SPELLPARRIEDSELFOTHER, SPELLLOGABSORBSELFOTHER }
 
 -- Persist Pending
-libdebuff.pp = { SanitizePattern(SPELLCASTGOSELF), SanitizePattern(SPELLPERFORMGOSELF), SanitizePattern(SPELLLOGSCHOOLSELFOTHER),
-  SanitizePattern(SPELLLOGCRITSCHOOLSELFOTHER), SanitizePattern(SPELLLOGSELFOTHER), SanitizePattern(SPELLLOGCRITSELFOTHER) }
-
--- Aura Pending
-libdebuff.combatlog = SanitizePattern(AURAADDEDOTHERHARMFUL)
+libdebuff.pp = { SPELLCASTGOSELF, SPELLPERFORMGOSELF, SPELLLOGSCHOOLSELFOTHER,
+  SPELLLOGCRITSCHOOLSELFOTHER, SPELLLOGSELFOTHER, SPELLLOGCRITSELFOTHER }
 
 libdebuff.objects = {}
 libdebuff.pending = {}
@@ -149,7 +146,8 @@ libdebuff.pending = {}
 libdebuff:SetScript("OnEvent", function()
   -- Add Combat Log
   if event == "CHAT_MSG_SPELL_PERIODIC_HOSTILEPLAYER_DAMAGE" or event == "CHAT_MSG_SPELL_PERIODIC_CREATURE_DAMAGE" then
-    for unit, effect in gfind(arg1, libdebuff.combatlog) do
+    local unit, effect = cmatch(arg1, AURAADDEDOTHERHARMFUL)
+    if unit and effect then
       local unitlevel = UnitName("target") == unit and UnitLevel("target") or 0
       if not libdebuff.objects[unit] or not libdebuff.objects[unit][unitlevel] or not libdebuff.objects[unit][unitlevel][effect] then
         libdebuff:AddEffect(unit, unitlevel, effect)
@@ -175,7 +173,8 @@ libdebuff:SetScript("OnEvent", function()
   elseif event == "CHAT_MSG_SPELL_FAILED_LOCALPLAYER" or event == "CHAT_MSG_SPELL_SELF_DAMAGE" then
     -- Persist pending Spell
     for _, msg in pairs(libdebuff.pp) do
-      for effect, _ in gfind(arg1, msg) do
+      local effect = cmatch(arg1, msg)
+      if effect then
         libdebuff:PersistPending(effect)
         return
       end
@@ -183,7 +182,8 @@ libdebuff:SetScript("OnEvent", function()
 
     -- Remove pending spell
     for _, msg in pairs(libdebuff.rp) do
-      for effect, _ in gfind(arg1, msg) do
+      local effect = cmatch(arg1, msg)
+      if effect then
         libdebuff:RemovePending(effect)
         return
       end
