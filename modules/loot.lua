@@ -21,7 +21,6 @@ pfUI:RegisterModule("loot", function ()
     ["PF_BANKLOOTER"] = {T["Set Banker"],"bankLooter"},
     ["PF_DISENCHANTLOOTER"] = {T["Set Disenchanter"],"disenchantLooter"},
   }
-  pfUI.loot.rollCapture = SanitizePattern(RANDOM_ROLL_RESULT)
   pfUI.loot.me = (UnitName("player"))
   pfUI.loot.index_to_name = {}
   pfUI.loot.name_to_index = {}
@@ -656,7 +655,7 @@ pfUI:RegisterModule("loot", function ()
     if event == "CHAT_MSG_SYSTEM" then
       -- random rolling, check for our own roll
       if pfUI.loot.randomRolling ~= nil then
-        local _, _, who, roll, from, to = string.find(arg1, pfUI.loot.rollCapture)
+        local who, roll, from, to = cmatch(arg1, RANDOM_ROLL_RESULT)
         if (who) and  who == pfUI.loot.me then
           local winner = tonumber(roll)
           GiveMasterLoot(pfUI.loot.selectedSlot, pfUI.loot.randoms[winner])
@@ -665,7 +664,7 @@ pfUI:RegisterModule("loot", function ()
       end
       -- collecting rolls from raid, discard duplicates and 'cheating'
       if pfUI.loot.monitorRolling ~= nil then
-        local _, _, who, roll, from, to = string.find(arg1, pfUI.loot.rollCapture)
+        local who, roll, from, to = cmatch(arg1, RANDOM_ROLL_RESULT)
         if (who) and not pfUI.loot.rollers[who] then
           if tonumber(from)==1 and tonumber(to)==100 then
             if pfUI.loot.name_to_index[who] ~= nil then
