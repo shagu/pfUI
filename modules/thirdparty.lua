@@ -666,6 +666,72 @@ pfUI:RegisterModule("thirdparty", function ()
     FlightMapTimesText:SetFont(pfUI.font_default, 12, "OUTLINE")
   end)
 
+  HookAddonOrVariable("TheoryCraft_SetUpButton", function()
+    if C.thirdparty.theorycraft.enable == "0" then return end
+
+    -- set pfUI bar font
+    if TheoryCraft_Settings then
+      TheoryCraft_Settings["FontPath"] = C.bars.font
+    end
+
+    if not pfUI.bars then return end
+
+    -- make theorycraft aware of pfUI bars
+    for i=1,10 do
+      for j=1,10 do
+        TheoryCraft_SetUpButton(pfUI.bars[i][j]:GetName(), "Normal")
+      end
+    end
+  end)
+
+  HookAddonOrVariable("SM_GetActionSpell", function()
+    if C.thirdparty.supermacro.enable == "0" then return end
+    if not pfUI.bars then return end
+
+    -- refresh super macro texture
+    local function SMRefresh()
+      local slot = this:GetID()
+      local text = GetActionText(slot)
+
+      if text then
+        if _G.SM_ACTION_SPELL and _G.SM_ACTION_SPELL["regular"] and _G.SM_ACTION_SPELL["regular"][text] then
+          this.icon:SetTexture(_G.SM_ACTION_SPELL["regular"][text].texture)
+        end
+      end
+    end
+
+    -- hook events to include SuperMacro refreshs
+    local ButtonEvent = pfUI.bars[1][1]:GetScript("OnEvent")
+    local function NewButtonEvent()
+      ButtonEvent()
+      SMRefresh()
+    end
+
+    -- hook events to include SuperMacro refreshs
+    local ButtonEnter = pfUI.bars[1][1]:GetScript("OnEnter")
+    local function NewButtonEnter()
+      ButtonEnter()
+      SM_ActionButton_SetTooltip()
+    end
+
+    -- reassign the new event handler
+    for i=1,10 do
+      for j=1,12 do
+        pfUI.bars[i][j]:SetScript("OnEvent", NewButtonEvent)
+        pfUI.bars[i][j]:SetScript("OnEnter", NewButtonEnter)
+      end
+    end
+
+    -- trigger the event whenever SuperMacro got an update
+    hooksecurefunc("SM_UpdateActionSpell", function()
+      for i=1,10 do
+        for j=1,12 do
+          pfUI.bars[i][j].forceupdate = true
+        end
+      end
+    end)
+  end)
+
   HookAddonOrVariable("AtlasLoot", function()
     if C.thirdparty.atlasloot.enable == "0" then return end
 

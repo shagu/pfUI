@@ -668,32 +668,66 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("unitframes", "fallback",    "hitindicatorsize", "15")
   pfUI:UpdateConfig("unitframes", "fallback",    "hitindicatorfont", "Interface\\AddOns\\pfUI\\fonts\\Continuum.ttf")
 
-  pfUI:UpdateConfig("bars",       nil,           "icon_size",        "20")
-  pfUI:UpdateConfig("bars",       nil,           "background",       "1")
+  pfUI:UpdateConfig("bars",       "bar1",        "pageable",         "1")
+  pfUI:UpdateConfig("bars",       "bar2",        "pageable",         "1")
+
+  pfUI:UpdateConfig("bars",       "bar1",        "enable",           "1")
+  pfUI:UpdateConfig("bars",       "bar3",        "enable",           "1")
+  pfUI:UpdateConfig("bars",       "bar4",        "enable",           "1")
+  pfUI:UpdateConfig("bars",       "bar5",        "enable",           "1")
+  pfUI:UpdateConfig("bars",       "bar6",        "enable",           "1")
+  pfUI:UpdateConfig("bars",       "bar11",       "enable",           "1")
+  pfUI:UpdateConfig("bars",       "bar12",       "enable",           "1")
+
+  pfUI:UpdateConfig("bars",       "bar3",        "formfactor",       "6 x 2")
+  pfUI:UpdateConfig("bars",       "bar5",        "formfactor",       "6 x 2")
+  pfUI:UpdateConfig("bars",       "bar4",        "formfactor",       "1 x 12")
+  pfUI:UpdateConfig("bars",       "bar11",       "formfactor",       "10 x 1")
+  pfUI:UpdateConfig("bars",       "bar12",       "formfactor",       "10 x 1")
+
+  pfUI:UpdateConfig("bars",       "bar11",       "icon_size",        "18")
+  pfUI:UpdateConfig("bars",       "bar12",       "icon_size",        "18")
+
+  for i=1,12 do
+    pfUI:UpdateConfig("bars",     "bar"..i,      "enable",           "0")
+    pfUI:UpdateConfig("bars",     "bar"..i,      "pageable",         "0")
+    pfUI:UpdateConfig("bars",     "bar"..i,      "icon_size",        "20")
+    pfUI:UpdateConfig("bars",     "bar"..i,      "formfactor",       "12 x 1")
+    pfUI:UpdateConfig("bars",     "bar"..i,      "background",       "1")
+    pfUI:UpdateConfig("bars",     "bar"..i,      "showempty",        "1")
+    pfUI:UpdateConfig("bars",     "bar"..i,      "showmacro",        "1")
+    pfUI:UpdateConfig("bars",     "bar"..i,      "showkeybind",      "1")
+    pfUI:UpdateConfig("bars",     "bar"..i,      "showcount",        "1")
+    pfUI:UpdateConfig("bars",     "bar"..i,      "autohide",         "0")
+    pfUI:UpdateConfig("bars",     "bar"..i,      "hide_time",        "3")
+    if i ~= 11 and i ~= 12 then
+      pfUI:UpdateConfig("bars",     "bar"..i,      "buttons",           "12")
+    end
+  end
+
+  pfUI:UpdateConfig("bars",       nil,           "keydown",          "0")
+  pfUI:UpdateConfig("bars",       nil,           "altself",          "0")
+  pfUI:UpdateConfig("bars",       nil,           "animation",        "zoomfade")
+  pfUI:UpdateConfig("bars",       nil,           "hunterbar",        "0")
+  pfUI:UpdateConfig("bars",       nil,           "pagemaster",       "0")
+  pfUI:UpdateConfig("bars",       nil,           "showcastable",     "1")
   pfUI:UpdateConfig("bars",       nil,           "glowrange",        "1")
   pfUI:UpdateConfig("bars",       nil,           "rangecolor",       "1,0.1,0.1,1")
-  pfUI:UpdateConfig("bars",       nil,           "showmacro",        "1")
-  pfUI:UpdateConfig("bars",       nil,           "showkeybind",      "1")
+  pfUI:UpdateConfig("bars",       nil,           "showoom",          "1")
+  pfUI:UpdateConfig("bars",       nil,           "oomcolor",         ".2,.2,1,1")
+  pfUI:UpdateConfig("bars",       nil,           "showna",           "1")
+  pfUI:UpdateConfig("bars",       nil,           "nacolor",          ".3,.3,.3,1")
   pfUI:UpdateConfig("bars",       nil,           "showequipped",     "1")
-  pfUI:UpdateConfig("bars",       nil,           "hunterbar",        "0")
-  pfUI:UpdateConfig("bars",       nil,           "keydown",          "0")
-  pfUI:UpdateConfig("bars",       nil,           "pagemaster",       "0")
-  pfUI:UpdateConfig("bars",       nil,           "showcastable",     "0")
-  pfUI:UpdateConfig("bars",       nil,           "hide_time",        "1")
-  pfUI:UpdateConfig("bars",       nil,           "hide_actionmain",  "0")
-  pfUI:UpdateConfig("bars",       nil,           "hide_bottomleft",  "0")
-  pfUI:UpdateConfig("bars",       nil,           "hide_bottomright", "0")
-  pfUI:UpdateConfig("bars",       nil,           "hide_right",       "0")
-  pfUI:UpdateConfig("bars",       nil,           "hide_tworight",    "0")
-  pfUI:UpdateConfig("bars",       nil,           "hide_shapeshift",  "0")
-  pfUI:UpdateConfig("bars",       nil,           "hide_pet",         "0")
-  pfUI:UpdateConfig("bars",       "actionmain",  "formfactor",       "12 x 1")
-  pfUI:UpdateConfig("bars",       "bottomleft",  "formfactor",       "12 x 1")
-  pfUI:UpdateConfig("bars",       "bottomright", "formfactor",       "6 x 2")
-  pfUI:UpdateConfig("bars",       "right",       "formfactor",       "6 x 2")
-  pfUI:UpdateConfig("bars",       "tworight",    "formfactor",       "1 x 12")
-  pfUI:UpdateConfig("bars",       "shapeshift",  "formfactor",       "10 x 1")
-  pfUI:UpdateConfig("bars",       "pet",         "formfactor",       "10 x 1")
+  pfUI:UpdateConfig("bars",       nil,           "eqcolor",          ".2,.8,.2,.2")
+
+  pfUI:UpdateConfig("bars",       nil,           "font",             "Interface\\AddOns\\pfUI\\fonts\\BigNoodleTitling.ttf")
+  pfUI:UpdateConfig("bars",       nil,           "font_offset",      "0")
+  pfUI:UpdateConfig("bars",       nil,           "macro_size",       "9")
+  pfUI:UpdateConfig("bars",       nil,           "macro_color",      "1,1,1,1")
+  pfUI:UpdateConfig("bars",       nil,           "count_size",       "11")
+  pfUI:UpdateConfig("bars",       nil,           "count_color",      ".2,1,.8,1")
+  pfUI:UpdateConfig("bars",       nil,           "bind_size",        "9")
+  pfUI:UpdateConfig("bars",       nil,           "bind_color",       "1,1,0,1")
 
   pfUI:UpdateConfig("panel",      nil,           "use_unitfonts",    "0")
   pfUI:UpdateConfig("panel",      nil,           "hide_leftchat",    "0")
@@ -797,6 +831,8 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("thirdparty", "sortbags",    "enable",           "1")
   pfUI:UpdateConfig("thirdparty", "mrplow",      "enable",           "1")
   pfUI:UpdateConfig("thirdparty", "flightmap",   "enable",           "1")
+  pfUI:UpdateConfig("thirdparty", "theorycraft", "enable",           "1")
+  pfUI:UpdateConfig("thirdparty", "supermacro", "enable",           "1")
   pfUI:UpdateConfig("thirdparty", "atlasloot",   "enable",           "1")
   pfUI:UpdateConfig("thirdparty", "myroleplay",  "enable",           "1")
   pfUI:UpdateConfig("thirdparty", "druidmana",   "enable",           "1")
@@ -1025,6 +1061,127 @@ function pfUI:MigrateConfig()
       if entry.buffs and entry.buffs == "bottom" then entry.buffs = "BOTTOMLEFT" end
       if entry.debuffs and entry.debuffs == "top" then entry.debuffs = "TOPLEFT" end
       if entry.debuffs and entry.debuffs == "bottom" then entry.debuffs = "BOTTOMLEFT" end
+    end
+  end
+
+  -- migrating actionbar settings (> 3.18)
+  if checkversion(3, 18, 0) then
+
+    local migratebars = {
+      ["pfBarActionMain"] = "pfActionBarMain",
+      ["pfBarBottomLeft"] = "pfActionBarTop",
+      ["pfBarBottomRight"] = "pfActionBarLeft",
+      ["pfBarTwoRight"] = "pfActionBarVertical",
+      ["pfBarRight"] = "pfActionBarRight",
+      ["pfBarShapeshift"] = "pfActionBarStances",
+      ["pfBarPet"] = "pfActionBarPet",
+    }
+
+    -- migrate bar positions and scaling
+    for oldname, newname in pairs(migratebars) do
+      if pfUI_config.position[oldname] then
+        pfUI_config.position[newname] = pfUI.api.CopyTable(pfUI_config.position[oldname])
+        pfUI_config.position[oldname] = nil
+      end
+    end
+
+    -- migrate global settings to bar specifics
+    for i=1,12 do
+      if pfUI_config.bars.icon_size then
+        pfUI_config.bars["bar"..i].icon_size = pfUI_config.bars.icon_size
+      end
+
+      if pfUI_config.bars.background then
+        pfUI_config.bars["bar"..i].background = pfUI_config.bars.background
+      end
+
+      if pfUI_config.bars.showmacro then
+        pfUI_config.bars["bar"..i].showmacro = pfUI_config.bars.showmacro
+      end
+
+      if pfUI_config.bars.showkeybind then
+        pfUI_config.bars["bar"..i].showkeybind = pfUI_config.bars.showkeybind
+      end
+
+      if pfUI_config.bars.hide_time then
+        pfUI_config.bars["bar"..i].hide_time = pfUI_config.bars.hide_time
+      end
+    end
+
+    pfUI_config.bars.icon_size = nil
+    pfUI_config.bars.background = nil
+    pfUI_config.bars.showmacro = nil
+    pfUI_config.bars.showkeybind = nil
+    pfUI_config.bars.hide_time = nil
+
+    if pfUI_config.bars.hide_actionmain then
+      pfUI_config.bars.bar1.autohide = pfUI_config.bars.hide_actionmain
+      pfUI_config.bars.hide_actionmain = nil
+    end
+
+    if pfUI_config.bars.hide_bottomleft then
+      pfUI_config.bars.bar6.autohide = pfUI_config.bars.hide_bottomleft
+      pfUI_config.bars.hide_bottomleft = nil
+    end
+
+    if pfUI_config.bars.hide_bottomright then
+      pfUI_config.bars.bar5.autohide = pfUI_config.bars.hide_bottomright
+      pfUI_config.bars.hide_bottomright = nil
+    end
+
+    if pfUI_config.bars.hide_right then
+      pfUI_config.bars.bar3.autohide = pfUI_config.bars.hide_right
+      pfUI_config.bars.hide_right = nil
+    end
+
+    if pfUI_config.bars.hide_tworight then
+      pfUI_config.bars.bar4.autohide = pfUI_config.bars.hide_tworight
+      pfUI_config.bars.hide_tworight = nil
+    end
+
+    if pfUI_config.bars.hide_shapeshift then
+      pfUI_config.bars.bar11.autohide = pfUI_config.bars.hide_shapeshift
+      pfUI_config.bars.hide_shapeshift = nil
+    end
+
+    if pfUI_config.bars.hide_pet then
+      pfUI_config.bars.bar12.autohide = pfUI_config.bars.hide_pet
+      pfUI_config.bars.hide_pet = nil
+    end
+
+    if pfUI_config.bars.actionmain and pfUI_config.bars.actionmain.formfactor then
+      pfUI_config.bars.bar1.formfactor = pfUI_config.bars.actionmain.formfactor
+      pfUI_config.bars.actionmain.formfactor = nil
+    end
+
+    if pfUI_config.bars.bottomleft and pfUI_config.bars.bottomleft.formfactor then
+      pfUI_config.bars.bar6.formfactor = pfUI_config.bars.bottomleft.formfactor
+      pfUI_config.bars.bottomleft.formfactor = nil
+    end
+
+    if pfUI_config.bars.bottomright and pfUI_config.bars.bottomright.formfactor then
+      pfUI_config.bars.bar5.formfactor = pfUI_config.bars.bottomright.formfactor
+      pfUI_config.bars.bottomright.formfactor = nil
+    end
+
+    if pfUI_config.bars.right and pfUI_config.bars.right.formfactor then
+      pfUI_config.bars.bar3.formfactor = pfUI_config.bars.right.formfactor
+      pfUI_config.bars.right.formfactor = nil
+    end
+
+    if pfUI_config.bars.tworight and pfUI_config.bars.tworight.formfactor then
+      pfUI_config.bars.bar4.formfactor = pfUI_config.bars.tworight.formfactor
+      pfUI_config.bars.tworight.formfactor = nil
+    end
+
+    if pfUI_config.bars.shapeshift and pfUI_config.bars.shapeshift.formfactor then
+      pfUI_config.bars.bar11.formfactor = pfUI_config.bars.shapeshift.formfactor
+      pfUI_config.bars.shapeshift.formfactor = nil
+    end
+
+    if pfUI_config.bars.pet and pfUI_config.bars.pet.formfactor then
+      pfUI_config.bars.bar12.formfactor = pfUI_config.bars.pet.formfactor
+      pfUI_config.bars.pet.formfactor = nil
     end
   end
 

@@ -87,6 +87,20 @@ pfUI:RegisterModule("gui", function ()
       end
     end
 
+    if category == "UVAR" then
+      category = {}
+      category[config] = _G[config]
+
+      local update = ufunc
+
+      ufunc = function()
+        _G[config] = this:GetChecked() and "1" or "0"
+        if update then
+          update()
+        end
+      end
+    end
+
     frame.category = category
     frame.config = config
 
@@ -717,9 +731,17 @@ pfUI:RegisterModule("gui", function ()
     "BOTTOMRIGHT:" .. T["Bottom Right"],
   }
 
-  pfUI.gui.dropdowns.num_actionbar_buttons = BarLayoutOptions(NUM_ACTIONBAR_BUTTONS)
-  pfUI.gui.dropdowns.num_shapeshift_slots = BarLayoutOptions(NUM_SHAPESHIFT_SLOTS)
-  pfUI.gui.dropdowns.num_pet_action_slots = BarLayoutOptions(NUM_PET_ACTION_SLOTS)
+  pfUI.gui.dropdowns.actionbuttonanimations = {
+    "none:" .. T["None"],
+    "zoomfade:" .. T["Zoom & Fade"],
+    "shrinkreturn:" .. T["Shrink & Return"],
+    "elasticzoom:" .. T["Elastic Zoom"],
+    "wobblezoom:" .. T["Wobble Zoom"],
+  }
+
+  pfUI.gui.dropdowns.actionbarbuttons = {
+    "1","2","3","4","5","6","7","8","9","10","11","12"
+  }
 
   pfUI.gui.dropdowns.loot_rarity = {}
   for i=0, getn(_G.ITEM_QUALITY_COLORS)-2  do
@@ -1236,59 +1258,80 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.tabs.actionbar = pfUI.gui.tabs:CreateTabChild(T["Actionbar"], nil, nil, nil, true)
   pfUI.gui.tabs.actionbar.tabs = CreateTabFrame(pfUI.gui.tabs.actionbar, "TOP", true)
 
+  local barnames = { {11, "Stance/Shapeshift Bar"}, {12, "Pet Actionbar"}, {1, "Main Actionbar"},
+    {6, "Top Actionbar"}, {5, "Left Actionbar"}, {3, "Right Actionbar"}, {4, "Vertical Actionbar"},
+    {2, "Paging Actionbar"}, {7, "Special Actionbar"}, {8, "Stance Bar 1"}, {9, "Stance Bar 2"}, {10, "Stance Bar 3"} }
+
   -- >> General
   pfUI.gui.tabs.actionbar.tabs.general = pfUI.gui.tabs.actionbar.tabs:CreateTabChild(T["General"], true)
   pfUI.gui.tabs.actionbar.tabs.general:SetScript("OnShow", function()
     if not this.setup then
-      CreateConfig(nil, this, T["Icon Size"], C.bars, "icon_size")
-      CreateConfig(nil, this, T["Enable Action Bar Backgrounds"], C.bars, "background", "checkbox")
-      CreateConfig(MultiActionBar_UpdateGridVisibility, this, T["Always Show Action Bar Buttons"], "GVAR", "ALWAYS_SHOW_MULTIBARS", "checkbox")
-      CreateConfig(nil, this, T["Enable Range Display On Hotkeys"], C.bars, "glowrange", "checkbox")
-      CreateConfig(nil, this, T["Range Display Color"], C.bars, "rangecolor", "color")
-      CreateConfig(nil, this, T["Show Macro Text"], C.bars, "showmacro", "checkbox")
-      CreateConfig(nil, this, T["Show Hotkey Text"], C.bars, "showkeybind", "checkbox")
-      CreateConfig(nil, this, T["Show Equipped Items"], C.bars, "showequipped", "checkbox")
-      CreateConfig(nil, this, T["Enable Range Based Auto Paging (Hunter)"], C.bars, "hunterbar", "checkbox")
-      CreateConfig(nil, this, T["Enable Action On Key Down"], C.bars, "keydown", "checkbox")
-      CreateConfig(nil, this, T["Switch Bar On Meta Key Press"], C.bars, "pagemaster", "checkbox")
-      CreateConfig(nil, this, T["Show Indicator For Castable Pet Actions"], C.bars, "showcastable", "checkbox")
+      CreateConfig(update["bars"], this, T["Trigger Actions On Key Down"], C.bars, "keydown", "checkbox")
+      CreateConfig(update["bars"], this, T["Alt Self Cast For All Hotkeys"], C.bars, "altself", "checkbox")
+      CreateConfig(update["bars"], this, T["Button Animation"], C.bars, "animation", "dropdown", pfUI.gui.dropdowns.actionbuttonanimations)
+      CreateConfig(update["bars"], this, T["Highlight Equipped Items"], C.bars, "showequipped", "checkbox")
+      CreateConfig(update["bars"], this, T["Equipped Item Color"], C.bars, "eqcolor", "color")
+      CreateConfig(update["bars"], this, T["Highlight Out Of Range Spells"], C.bars, "glowrange", "checkbox")
+      CreateConfig(update["bars"], this, T["Out Of Range Color"], C.bars, "rangecolor", "color")
+      CreateConfig(update["bars"], this, T["Highlight Out Of Mana Spells"], C.bars, "showoom", "checkbox")
+      CreateConfig(update["bars"], this, T["Out Of Mana Color"], C.bars, "oomcolor", "color")
+      CreateConfig(update["bars"], this, T["Highlight Not Usable Spells"], C.bars, "showna", "checkbox")
+      CreateConfig(update["bars"], this, T["Not Usable Color"], C.bars, "nacolor", "color")
+      CreateConfig(update["bars"], this, T["Lock Actionbars"], "UVAR", "LOCK_ACTIONBAR", "checkbox")
+
+      CreateConfig(nil, this, "Font Options", nil, nil, "header")
+      CreateConfig(update["bars"], this, T["Font"], C.bars, "font", "dropdown", pfUI.gui.dropdowns.fonts)
+      CreateConfig(update["bars"], this, T["Font Padding"], C.bars, "font_offset")
+      CreateConfig(update["bars"], this, T["Macro Text Size"], C.bars, "macro_size")
+      CreateConfig(update["bars"], this, T["Macro Text Color"], C.bars, "macro_color", "color")
+      CreateConfig(update["bars"], this, T["Item Count Text Size"], C.bars, "count_size")
+      CreateConfig(update["bars"], this, T["Item Count Text Color"], C.bars, "count_color", "color")
+      CreateConfig(update["bars"], this, T["Keybind Text Size"], C.bars, "bind_size")
+      CreateConfig(update["bars"], this, T["Keybind Text Color"], C.bars, "bind_color", "color")
+
+      CreateConfig(nil, this, "Auto Paging", nil, nil, "header")
+      CreateConfig(nil, this, T["Switch Pages On Meta Key Press"], C.bars, "pagemaster", "checkbox")
+      CreateConfig(nil, this, T["Range Based Hunter Paging"], C.bars, "hunterbar", "checkbox")
       this.setup = true
     end
   end)
 
-  -- >> Layout
-  pfUI.gui.tabs.actionbar.tabs.layout = pfUI.gui.tabs.actionbar.tabs:CreateTabChild(T["Layout"], true)
-  pfUI.gui.tabs.actionbar.tabs.layout:SetScript("OnShow", function()
+  pfUI.gui.tabs.actionbar.tabs.bars = pfUI.gui.tabs.actionbar.tabs:CreateTabChild("Bars", true)
+  pfUI.gui.tabs.actionbar.tabs.bars:SetScript("OnShow", function()
     if not this.setup then
-      CreateConfig(UIParent_ManageFramePositions, this, T["Enable Second Actionbar (BottomLeft)"], "GVAR", "SHOW_MULTI_ACTIONBAR_1", "checkbox")
-      CreateConfig(UIParent_ManageFramePositions, this, T["Enable Left Actionbar (BottomRight)"], "GVAR", "SHOW_MULTI_ACTIONBAR_2", "checkbox")
-      CreateConfig(UIParent_ManageFramePositions, this, T["Enable Right Actionbar (Right)"], "GVAR", "SHOW_MULTI_ACTIONBAR_3", "checkbox")
-      CreateConfig(UIParent_ManageFramePositions, this, T["Enable Vertical Actionbar (TwoRight)"], "GVAR", "SHOW_MULTI_ACTIONBAR_4", "checkbox")
+      for _, data in pairs(barnames) do
+        local id, caption = data[1], data[2]
+        local formfactors = BarLayoutOptions(id < 11 and NUM_ACTIONBAR_BUTTONS or id > 11 and NUM_SHAPESHIFT_SLOTS or NUM_PET_ACTION_SLOTS)
+        CreateConfig(update[c], this, caption, nil, nil, "header")
+        CreateConfig(update["bars"], this, T["Enable"], C.bars["bar"..id], "enable", "checkbox")
 
-      CreateConfig(update[c], this, T["Form Factor"], nil, nil, "header")
-      CreateConfig(nil, this, T["Main Actionbar (ActionMain)"], C.bars.actionmain, "formfactor", "dropdown", pfUI.gui.dropdowns.num_actionbar_buttons)
-      CreateConfig(nil, this, T["Second Actionbar (BottomLeft)"], C.bars.bottomleft, "formfactor", "dropdown", pfUI.gui.dropdowns.num_actionbar_buttons)
-      CreateConfig(nil, this, T["Left Actionbar (BottomRight)"], C.bars.bottomright, "formfactor", "dropdown", pfUI.gui.dropdowns.num_actionbar_buttons)
-      CreateConfig(nil, this, T["Right Actionbar (Right)"], C.bars.right, "formfactor", "dropdown", pfUI.gui.dropdowns.num_actionbar_buttons)
-      CreateConfig(nil, this, T["Vertical Actionbar (TwoRight)"], C.bars.tworight, "formfactor", "dropdown", pfUI.gui.dropdowns.num_actionbar_buttons)
-      CreateConfig(nil, this, T["Shapeshift Bar (BarShapeShift)"], C.bars.shapeshift, "formfactor", "dropdown", pfUI.gui.dropdowns.num_shapeshift_slots)
-      CreateConfig(nil, this, T["Pet Bar (BarPet)"], C.bars.pet, "formfactor", "dropdown", pfUI.gui.dropdowns.num_pet_action_slots)
-      this.setup = true
-    end
-  end)
+        if id ~= 11 and id ~= 12 then
+          CreateConfig(update["bars"], this, T["Buttons"], C.bars["bar"..id], "buttons", "dropdown", pfUI.gui.dropdowns.actionbarbuttons)
 
-  -- >> Autohide
-  pfUI.gui.tabs.actionbar.tabs.autohide = pfUI.gui.tabs.actionbar.tabs:CreateTabChild(T["Autohide"], true)
-  pfUI.gui.tabs.actionbar.tabs.autohide:SetScript("OnShow", function()
-    if not this.setup then
-      CreateConfig(nil, this, T["Seconds Until Action Bars Autohide"], C.bars, "hide_time")
-      CreateConfig(nil, this, T["Enable Autohide For BarActionMain"], C.bars, "hide_actionmain", "checkbox")
-      CreateConfig(nil, this, T["Enable Autohide For BarBottomLeft"], C.bars, "hide_bottomleft", "checkbox")
-      CreateConfig(nil, this, T["Enable Autohide For BarBottomRight"], C.bars, "hide_bottomright", "checkbox")
-      CreateConfig(nil, this, T["Enable Autohide For BarRight"], C.bars, "hide_right", "checkbox")
-      CreateConfig(nil, this, T["Enable Autohide For BarTwoRight"], C.bars, "hide_tworight", "checkbox")
-      CreateConfig(nil, this, T["Enable Autohide For BarShapeShift"], C.bars, "hide_shapeshift", "checkbox")
-      CreateConfig(nil, this, T["Enable Autohide For BarPet"], C.bars, "hide_pet", "checkbox")
+          if id ~= 1 then
+            CreateConfig(update["bars"], this, T["Pageable"], C.bars["bar"..id], "pageable", "checkbox")
+          end
+        end
+
+        if id == 12 then
+          CreateConfig(update["bars"], this, T["Auto-Castable Action Indicator"], C.bars, "showcastable", "checkbox")
+        end
+
+        CreateConfig(update["bars"], this, T["Icon Size"], C.bars["bar"..id], "icon_size")
+        CreateConfig(update["bars"], this, T["Layout"], C.bars["bar"..id], "formfactor", "dropdown", formfactors)
+        CreateConfig(update["bars"], this, T["Bar Background"], C.bars["bar"..id], "background", "checkbox")
+        CreateConfig(update["bars"], this, T["Show Hotkey Text"], C.bars["bar"..id], "showkeybind", "checkbox")
+
+        if id ~= 11 and id ~= 12 then
+          CreateConfig(update["bars"], this, T["Show Macro Text"], C.bars["bar"..id], "showmacro", "checkbox")
+          CreateConfig(update["bars"], this, T["Show Item Count Text"], C.bars["bar"..id], "showcount", "checkbox")
+        elseif id ~= 11 then
+          CreateConfig(update["bars"], this, T["Show Empty Buttons"], C.bars["bar"..id], "showempty", "checkbox")
+        end
+
+        CreateConfig(update["bars"], this, T["Enable Autohide"], C.bars["bar"..id], "autohide", "checkbox")
+        CreateConfig(update["bars"], this, T["Autohide Timeout"], C.bars["bar"..id], "hide_time")
+      end
       this.setup = true
     end
   end)
@@ -1477,6 +1520,8 @@ pfUI:RegisterModule("gui", function ()
       CreateConfig(nil, this, "SortBags", C.thirdparty.sortbags, "enable", "checkbox")
       CreateConfig(nil, this, "MrPlow", C.thirdparty.mrplow, "enable", "checkbox")
       CreateConfig(nil, this, "FlightMap", C.thirdparty.flightmap, "enable", "checkbox")
+      CreateConfig(nil, this, "TheoryCraft", C.thirdparty.theorycraft, "enable", "checkbox")
+      CreateConfig(nil, this, "SuperMacro", C.thirdparty.supermacro, "enable", "checkbox")
       CreateConfig(nil, this, "AtlasLoot", C.thirdparty.atlasloot, "enable", "checkbox")
       CreateConfig(nil, this, "MyRolePlay", C.thirdparty.myroleplay, "enable", "checkbox")
       CreateConfig(nil, this, "DruidManaBar", C.thirdparty.druidmana, "enable", "checkbox")

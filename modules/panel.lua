@@ -715,16 +715,16 @@ pfUI:RegisterModule("panel", function()
   pfUI.panel.autohide:RegisterEvent("PLAYER_ENTERING_WORLD")
   pfUI.panel.autohide:SetScript("OnEvent", function()
     if C.panel.hide_leftchat == "1" then
-      CreateAutohide(pfUI.panel.left)
+      EnableAutohide(pfUI.panel.left, 2)
     end
     if C.panel.hide_rightchat == "1" then
-      CreateAutohide(pfUI.panel.right)
+      EnableAutohide(pfUI.panel.right, 2)
     end
     if C.panel.hide_minimap == "1" then
-      CreateAutohide(pfUI.panel.minimap)
+      EnableAutohide(pfUI.panel.minimap, 2)
     end
     if C.panel.hide_microbar == "1" then
-      CreateAutohide(pfUI.panel.microbutton)
+      EnableAutohide(pfUI.panel.microbutton, 2)
     end
   end)
 end)

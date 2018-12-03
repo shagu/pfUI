@@ -1,14 +1,23 @@
 pfUI:RegisterModule("hoverbind", function ()
   local default_border = C.appearance.border.default
   local keymap = {
-    ["BonusActionButton"]         = "ACTIONBUTTON",
-    ["MultiBarBottomLeftButton"]  = "MULTIACTIONBAR1BUTTON",
-    ["MultiBarBottomRightButton"] = "MULTIACTIONBAR2BUTTON",
-    ["MultiBarRightButton"]       = "MULTIACTIONBAR3BUTTON",
-    ["MultiBarLeftButton"]        = "MULTIACTIONBAR4BUTTON",
-    ["ShapeshiftButton"]          = "SHAPESHIFTBUTTON",
-    ["PetActionButton"]           = "BONUSACTIONBUTTON",
+    -- buttons to binding association
+    ["pfActionBarMainButton"]     = "ACTIONBUTTON",
+    ["pfActionBarTopButton"]      = "MULTIACTIONBAR1BUTTON",
+    ["pfActionBarLeftButton"]     = "MULTIACTIONBAR2BUTTON",
+    ["pfActionBarRightButton"]    = "MULTIACTIONBAR3BUTTON",
+    ["pfActionBarVerticalButton"] = "MULTIACTIONBAR4BUTTON",
+    ["pfActionBarStancesButton"]  = "SHAPESHIFTBUTTON",
+    ["pfActionBarPetButton"]      = "BONUSACTIONBUTTON",
+
+    -- special buttons
+    ["pfActionBarPagingButton"]        = "PFPAGING",
+    ["pfActionBarSpecialButton"]       = "PFSPECIAL",
+    ["pfActionBarStancePaging1Button"] = "PFSTANCEONE",
+    ["pfActionBarStancePaging2Button"] = "PFSTANCETWO",
+    ["pfActionBarStancePaging3Button"] = "PFSTANCETHREE",
   }
+
   local modifiers = {
     ["ALT"]   = "ALT-",
     ["CTRL"]  = "CTRL-",
@@ -54,7 +63,9 @@ pfUI:RegisterModule("hoverbind", function ()
     local hovername = (frame and frame.GetName) and (frame:GetName()) or ""
     local binding = pfUI.hoverbind:GetBinding(hovername)
     if arg1 == "ESCAPE" and not binding then pfUI.hoverbind:Hide() return end
-    if (binding) then
+    if binding == "NOBIND" then
+      UIErrorsFrame:AddMessage(T["Keybinding failed due to client restrictions."], 1, .2, .2)
+    elseif binding then
       if arg1 == "ESCAPE" then
         local key = (GetBindingKey(binding))
         if (key) then
@@ -77,7 +88,9 @@ pfUI:RegisterModule("hoverbind", function ()
   function pfUI.hoverbind:GetBinding(button_name)
     local found,_,buttontype,buttonindex = string.find(button_name,"^(%a+)(%d+)$")
     if found then
-      if keymap[buttontype] then
+      if keymap[buttontype] and keymap[buttontype] == "NOBIND" then
+        return "NOBIND"
+      elseif keymap[buttontype] then
         return string.format("%s%d",keymap[buttontype],buttonindex)
       elseif buttontype == "ActionButton" then
         return string.format("ACTIONBUTTON%d",buttonindex)

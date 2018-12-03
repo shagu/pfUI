@@ -814,11 +814,12 @@ function pfUI.api.BarButtonAnchor(button,basename,buttonindex,barsize,formfactor
   return button._anchor
 end
 
--- [ Create Autohide ] --
+-- [ Enable Autohide ] --
 -- 'frame'  the frame that should be hidden
-function pfUI.api.CreateAutohide(frame)
+function pfUI.api.EnableAutohide(frame, timeout)
   if not frame then return end
-  frame.hover = CreateFrame("Frame", frame:GetName() .. "Autohide", frame)
+
+  frame.hover = frame.hover or CreateFrame("Frame", frame:GetName() .. "Autohide", frame)
   frame.hover:SetParent(frame)
   frame.hover:SetAllPoints(frame)
   frame.hover.parent = frame
@@ -828,18 +829,31 @@ function pfUI.api.CreateAutohide(frame)
     this:Hide()
   end)
 
+  local timeout = timeout
   frame.hover:SetScript("OnUpdate", function()
     if MouseIsOver(this, 10, -10, -10, 10) then
-      this.activeTo = GetTime() + tonumber(pfUI_config.bars.hide_time)
+      this.activeTo = GetTime() + timeout
       this.parent:SetAlpha(1)
     elseif this.activeTo then
       if this.activeTo < GetTime() and this.parent:GetAlpha() > 0 then
         this.parent:SetAlpha(this.parent:GetAlpha() - 0.1)
       end
     else
-      this.activeTo = GetTime() + tonumber(pfUI_config.bars.hide_time)
+      this.activeTo = GetTime() + timeout
     end
   end)
+end
+
+-- [ Disable Autohide ] --
+-- 'frame'  the frame that should get the autohide removed
+function pfUI.api.DisableAutohide(frame)
+  if not frame then return end
+  if not frame.hover then return end
+
+  frame.hover:UnregisterAllEvents()
+  frame.hover:SetScript("OnUpdate", nil)
+  frame.hover:Hide()
+  frame:SetAlpha(1)
 end
 
 -- [ GetColoredTime ] --

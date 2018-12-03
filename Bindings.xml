@@ -1,0 +1,72 @@
+<!-- No, we cannot do that in lua... -->
+<Bindings>
+  <!-- Paging Bar -->
+  <Binding name="PFPAGING1" runOnUp="true" header="PFBARPAGING">pfActionButton(13)</Binding>
+  <Binding name="PFPAGING2" runOnUp="true">pfActionButton(14)</Binding>
+  <Binding name="PFPAGING3" runOnUp="true">pfActionButton(15)</Binding>
+  <Binding name="PFPAGING4" runOnUp="true">pfActionButton(16)</Binding>
+  <Binding name="PFPAGING5" runOnUp="true">pfActionButton(17)</Binding>
+  <Binding name="PFPAGING6" runOnUp="true">pfActionButton(18)</Binding>
+  <Binding name="PFPAGING7" runOnUp="true">pfActionButton(19)</Binding>
+  <Binding name="PFPAGING8" runOnUp="true">pfActionButton(20)</Binding>
+  <Binding name="PFPAGING9" runOnUp="true">pfActionButton(21)</Binding>
+  <Binding name="PFPAGING10" runOnUp="true">pfActionButton(22)</Binding>
+  <Binding name="PFPAGING11" runOnUp="true">pfActionButton(23)</Binding>
+  <Binding name="PFPAGING12" runOnUp="true">pfActionButton(24)</Binding>
+
+  <!-- Special Bar -->
+  <Binding name="PFSPECIAL1" runOnUp="true" header="PFBARSPECIAL">pfActionButton(73)</Binding>
+  <Binding name="PFSPECIAL2" runOnUp="true">pfActionButton(74)</Binding>
+  <Binding name="PFSPECIAL3" runOnUp="true">pfActionButton(75)</Binding>
+  <Binding name="PFSPECIAL4" runOnUp="true">pfActionButton(76)</Binding>
+  <Binding name="PFSPECIAL5" runOnUp="true">pfActionButton(77)</Binding>
+  <Binding name="PFSPECIAL6" runOnUp="true">pfActionButton(78)</Binding>
+  <Binding name="PFSPECIAL7" runOnUp="true">pfActionButton(79)</Binding>
+  <Binding name="PFSPECIAL8" runOnUp="true">pfActionButton(80)</Binding>
+  <Binding name="PFSPECIAL9" runOnUp="true">pfActionButton(81)</Binding>
+  <Binding name="PFSPECIAL10" runOnUp="true">pfActionButton(82)</Binding>
+  <Binding name="PFSPECIAL11" runOnUp="true">pfActionButton(83)</Binding>
+  <Binding name="PFSPECIAL12" runOnUp="true">pfActionButton(84)</Binding>
+
+  <!-- Stance Bar 1 -->
+  <Binding name="PFSTANCEONE1" runOnUp="true" header="PFBARSTANCEONE">pfActionButton(85)</Binding>
+  <Binding name="PFSTANCEONE2" runOnUp="true">pfActionButton(86)</Binding>
+  <Binding name="PFSTANCEONE3" runOnUp="true">pfActionButton(87)</Binding>
+  <Binding name="PFSTANCEONE4" runOnUp="true">pfActionButton(88)</Binding>
+  <Binding name="PFSTANCEONE5" runOnUp="true">pfActionButton(89)</Binding>
+  <Binding name="PFSTANCEONE6" runOnUp="true">pfActionButton(90)</Binding>
+  <Binding name="PFSTANCEONE7" runOnUp="true">pfActionButton(91)</Binding>
+  <Binding name="PFSTANCEONE8" runOnUp="true">pfActionButton(92)</Binding>
+  <Binding name="PFSTANCEONE9" runOnUp="true">pfActionButton(93)</Binding>
+  <Binding name="PFSTANCEONE10" runOnUp="true">pfActionButton(94)</Binding>
+  <Binding name="PFSTANCEONE11" runOnUp="true">pfActionButton(95)</Binding>
+  <Binding name="PFSTANCEONE12" runOnUp="true">pfActionButton(96)</Binding>
+
+  <!-- Stance Bar 2 -->
+  <Binding name="PFSTANCETWO1" runOnUp="true" header="PFBARSTANCETWO">pfActionButton(97)</Binding>
+  <Binding name="PFSTANCETWO2" runOnUp="true">pfActionButton(98)</Binding>
+  <Binding name="PFSTANCETWO3" runOnUp="true">pfActionButton(99)</Binding>
+  <Binding name="PFSTANCETWO4" runOnUp="true">pfActionButton(100)</Binding>
+  <Binding name="PFSTANCETWO5" runOnUp="true">pfActionButton(101)</Binding>
+  <Binding name="PFSTANCETWO6" runOnUp="true">pfActionButton(102)</Binding>
+  <Binding name="PFSTANCETWO7" runOnUp="true">pfActionButton(103)</Binding>
+  <Binding name="PFSTANCETWO8" runOnUp="true">pfActionButton(104)</Binding>
+  <Binding name="PFSTANCETWO9" runOnUp="true">pfActionButton(105)</Binding>
+  <Binding name="PFSTANCETWO10" runOnUp="true">pfActionButton(106)</Binding>
+  <Binding name="PFSTANCETWO11" runOnUp="true">pfActionButton(107)</Binding>
+  <Binding name="PFSTANCETWO12" runOnUp="true">pfActionButton(108)</Binding>
+
+  <!-- Stance Bar 3 -->
+  <Binding name="PFSTANCETHREE1" runOnUp="true" header="PFBARSTANCETHREE">pfActionButton(109)</Binding>
+  <Binding name="PFSTANCETHREE2" runOnUp="true">pfActionButton(110)</Binding>
+  <Binding name="PFSTANCETHREE3" runOnUp="true">pfActionButton(111)</Binding>
+  <Binding name="PFSTANCETHREE4" runOnUp="true">pfActionButton(112)</Binding>
+  <Binding name="PFSTANCETHREE5" runOnUp="true">pfActionButton(113)</Binding>
+  <Binding name="PFSTANCETHREE6" runOnUp="true">pfActionButton(114)</Binding>
+  <Binding name="PFSTANCETHREE7" runOnUp="true">pfActionButton(115)</Binding>
+  <Binding name="PFSTANCETHREE8" runOnUp="true">pfActionButton(116)</Binding>
+  <Binding name="PFSTANCETHREE9" runOnUp="true">pfActionButton(117)</Binding>
+  <Binding name="PFSTANCETHREE10" runOnUp="true">pfActionButton(118)</Binding>
+  <Binding name="PFSTANCETHREE11" runOnUp="true">pfActionButton(119)</Binding>
+  <Binding name="PFSTANCETHREE12" runOnUp="true">pfActionButton(120)</Binding>
+</Bindings>
