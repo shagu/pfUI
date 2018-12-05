@@ -130,6 +130,7 @@ pfUI:RegisterModule("skin", function ()
   CreateBackdrop(ShoppingTooltip2, nil, nil, alpha)
   CreateBackdrop(ItemRefTooltip, nil, nil, alpha)
 
+  ShoppingTooltip1:SetClampedToScreen(true)
   ShoppingTooltip1:SetScript("OnShow", function()
     local a, b, c, d, e = this:GetPoint()
     local border = tonumber(C.appearance.border.default)
@@ -137,6 +138,7 @@ pfUI:RegisterModule("skin", function ()
     if a then this:SetPoint(a, b, c, d, e) end
   end)
 
+  ShoppingTooltip2:SetClampedToScreen(true)
   ShoppingTooltip2:SetScript("OnShow", function()
     local a, b, c, d, e = this:GetPoint()
     local border = tonumber(C.appearance.border.default)
