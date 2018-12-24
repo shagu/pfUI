@@ -119,3 +119,4 @@ modules\unusable.lua
 modules\socialmod.lua
 modules\firstrun.lua
 modules\addonbuttons.lua
+modules\afkcam.lua
