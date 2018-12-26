@@ -389,20 +389,28 @@ function pfUI.uf:UpdateConfig()
       f.buffs[i]:RegisterForClicks("RightButtonUp")
       f.buffs[i]:ClearAllPoints()
 
-      local invert, af, as
-      if f.config.buffs == "top" then
-        invert = 1
+      local invert_h, invert_v, af
+      if f.config.buffs == "TOPLEFT" then
+        invert_h = 1
+        invert_v = 1
         af = "BOTTOMLEFT"
-        as = "TOPLEFT"
-      elseif f.config.buffs == "bottom" then
-        invert = -1
+      elseif f.config.buffs == "BOTTOMLEFT" then
+        invert_h = -1
+        invert_v = 1
         af = "TOPLEFT"
-        as = "BOTTOMLEFT"
+      elseif f.config.buffs == "TOPRIGHT" then
+        invert_h = 1
+        invert_v = -1
+        af = "BOTTOMRIGHT"
+      elseif f.config.buffs == "BOTTOMRIGHT" then
+        invert_h = -1
+        invert_v = -1
+        af = "TOPRIGHT"
       end
 
-      f.buffs[i]:SetPoint(af, f, as,
-      (i-1-row*perrow)*((2*default_border) + f.config.buffsize + 1),
-      invert * (row)*((2*default_border) + f.config.buffsize + 1) + invert*(2*default_border + 1))
+      f.buffs[i]:SetPoint(af, f, f.config.buffs,
+      invert_v * (i-1-row*perrow)*(2*default_border + f.config.buffsize + 1),
+      invert_h * (row*(2*default_border + f.config.buffsize + 1) + (2*default_border + 1)))
 
       f.buffs[i]:SetWidth(f.config.buffsize)
       f.buffs[i]:SetHeight(f.config.buffsize)
@@ -1125,20 +1133,28 @@ function pfUI.uf:RefreshUnit(unit, component)
         if unit.buffs[3*bperrow+1] and unit.buffs[3*bperrow+1]:IsShown() then buffrow = buffrow + 1 end
       end
 
-      local invert, af, as
-      if unit.config.debuffs == "top" then
-        invert = 1
+      local invert_h, invert_v, af
+      if unit.config.debuffs == "TOPLEFT" then
+        invert_h = 1
+        invert_v = 1
         af = "BOTTOMLEFT"
-        as = "TOPLEFT"
-      elseif unit.config.debuffs == "bottom" then
-        invert = -1
+      elseif unit.config.debuffs == "BOTTOMLEFT" then
+        invert_h = -1
+        invert_v = 1
         af = "TOPLEFT"
-        as = "BOTTOMLEFT"
+      elseif unit.config.debuffs == "TOPRIGHT" then
+        invert_h = 1
+        invert_v = -1
+        af = "BOTTOMRIGHT"
+      elseif unit.config.debuffs == "BOTTOMRIGHT" then
+        invert_h = -1
+        invert_v = -1
+        af = "TOPRIGHT"
       end
 
-      unit.debuffs[i]:SetPoint(af, unit, as,
-      (i-1-(row)*perrow)*((2*default_border) + unit.config.debuffsize + 1),
-      invert * (row+buffrow)*((2*default_border) + unit.config.debuffsize + 1) + invert*(2*default_border + 1))
+      unit.debuffs[i]:SetPoint(af, unit, unit.config.debuffs,
+      invert_v * (i-1-row*perrow)*(2*default_border + unit.config.debuffsize + 1),
+      invert_h * ((row+buffrow)*(2*default_border + unit.config.debuffsize + 1) + (2*default_border + 1)))
 
       local texture, stacks, dtype
       if unit.label == "player" then

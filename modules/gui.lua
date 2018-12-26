@@ -602,8 +602,10 @@ pfUI:RegisterModule("gui", function ()
   }
 
   pfUI.gui.dropdowns.uf_buff_position = {
-    "top:" .. T["Top"],
-    "bottom:" .. T["Bottom"],
+    "TOPLEFT:" .. T["Top Left"],
+    "TOPRIGHT:" .. T["Top Right"],
+    "BOTTOMLEFT:" .. T["Bottom Left"],
+    "BOTTOMRIGHT:" .. T["Bottom Right"],
     "off:" .. T["Disabled"]
   }
 
