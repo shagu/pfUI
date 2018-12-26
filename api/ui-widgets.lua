@@ -298,7 +298,7 @@ function pfUI.api.SkinButton(button, cr, cg, cb)
   if not b then b = button end
   if not b then return end
   if not cr or not cg or not cb then
-    _, class = UnitClass("player")
+    local _, class = UnitClass("player")
     local color = RAID_CLASS_COLORS[class]
     cr, cg, cb = color.r , color.g, color.b
   end
@@ -477,7 +477,7 @@ function pfUI.api.SkinCheckbox(frame)
   frame.backdrop:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -4, 4)
 end
 
-function pfUI.api.SkinDropDown(frame)
+function pfUI.api.SkinDropDown(frame, cr, cg, cb)
   StripTextures(frame)
   CreateBackdrop(frame)
   frame.backdrop:SetPoint("TOPLEFT", 15, -1)
@@ -506,7 +506,7 @@ function pfUI.api.SkinDropDown(frame)
   end
 
   if not cr or not cg or not cb then
-    _, class = UnitClass("player")
+    local _, class = UnitClass("player")
     local color = RAID_CLASS_COLORS[class]
     cr, cg, cb = color.r , color.g, color.b
   end
