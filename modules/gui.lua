@@ -939,6 +939,7 @@ pfUI:RegisterModule("gui", function ()
       CreateConfig(nil, this, T["Range Check Interval"], C.unitframes, "rangechecki", "dropdown", pfUI.gui.dropdowns.uf_rangecheckinterval)
       CreateConfig(nil, this, T["Combopoint Size"], C.unitframes, "combosize")
       CreateConfig(nil, this, T["Abbreviate Numbers (4200 -> 4.2k)"], C.unitframes, "abbrevnum", "checkbox")
+      CreateConfig(nil, this, T["Show Resting"], C.unitframes.player, "showRest", "checkbox")
       CreateConfig(nil, this, T["Enable Energy Ticks"], C.unitframes.player, "energy", "checkbox")
       this.setup = true
     end

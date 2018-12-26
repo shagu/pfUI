@@ -343,10 +343,17 @@ function pfUI.uf:UpdateConfig()
   f.raidIcon:SetWidth(24)
   f.raidIcon:SetHeight(24)
   f.raidIcon:SetPoint("TOP", f, "TOP", 0, 6)
-
   f.raidIcon.texture:SetTexture("Interface\\AddOns\\pfUI\\img\\raidicons")
   f.raidIcon.texture:SetAllPoints(f.raidIcon)
   f.raidIcon:Hide()
+
+  f.restIcon:SetWidth(16)
+  f.restIcon:SetHeight(16)
+  f.restIcon:SetPoint("TOP", f, "TOPLEFT", 0, -1)
+  f.restIcon.texture:SetTexture("Interface\\CharacterFrame\\UI-StateIcon", true)
+  f.restIcon.texture:SetTexCoord(0, .5, 0, .421875)
+  f.restIcon.texture:SetAllPoints(f.restIcon)
+  f.restIcon:Hide()
 
   if f.config.buffs == "off" then
     for i=1, 32 do
@@ -567,7 +574,8 @@ function pfUI.uf:EnableScripts()
   f:RegisterEvent("UNIT_INVENTORY_CHANGED") -- label=player && frame=buff
   f:RegisterEvent("PARTY_MEMBERS_CHANGED") -- label=party, frame=leaderIcon
   f:RegisterEvent("PARTY_LEADER_CHANGED") -- frame=leaderIcon
-  f:RegisterEvent("RAID_ROSTER_UPDATE") -- label=raid
+  f:RegisterEvent("RAID_ROSTER_UPDATE") -- label=raidIcon
+  f:RegisterEvent("PLAYER_UPDATE_RESTING") -- label=restIcon
   f:RegisterEvent("PLAYER_TARGET_CHANGED") -- label=target
   f:RegisterEvent("PARTY_LOOT_METHOD_CHANGED") -- frame=lootIcon
   f:RegisterEvent("RAID_TARGET_UPDATE") -- frame=raidIcon
@@ -597,6 +605,8 @@ function pfUI.uf:EnableScripts()
       pfUI.uf:RefreshUnit(this, "all")
     elseif event == "RAID_TARGET_UPDATE" then
       pfUI.uf:RefreshUnit(this, "raidIcon")
+    elseif this.label == "player" and event == "PLAYER_UPDATE_RESTING" then
+      pfUI.uf:RefreshUnit(this, "restIcon")
     elseif event == "PARTY_LOOT_METHOD_CHANGED" then
       pfUI.uf:RefreshUnit(this, "lootIcon")
     elseif event == "PARTY_LEADER_CHANGED" then
@@ -780,6 +790,9 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
 
   f.raidIcon = CreateFrame("Frame", nil, f.hp.bar)
   f.raidIcon.texture = f.raidIcon:CreateTexture(nil,"ARTWORK")
+
+  f.restIcon = CreateFrame("Frame", nil, f.hp.bar)
+  f.restIcon.texture = f.restIcon:CreateTexture(nil, "BACKGROUND")
 
   f.portrait = CreateFrame("Frame", "pfPortrait" .. f.label .. f.id, f)
   f.portrait.tex = f.portrait:CreateTexture("pfPortraitTexture" .. f.label .. f.id, "OVERLAY")
@@ -1053,6 +1066,15 @@ function pfUI.uf:RefreshUnit(unit, component)
       unit.pvpIcon:Show()
     else
       unit.pvpIcon:Hide()
+    end
+  end
+
+  -- Rest Icon
+  if unit.restIcon and unit:GetName() == "pfPlayer" and ( component == "all" or component == "restIcon" ) then
+    if C.unitframes.player.showRest == "1" and UnitIsUnit(unitstr, "player") and IsResting() then
+      unit.restIcon:Show()
+    else
+      unit.restIcon:Hide()
     end
   end
 

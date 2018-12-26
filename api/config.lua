@@ -186,6 +186,7 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("unitframes", nil,           "clickcast_ctrl",   "")
 
   pfUI:UpdateConfig("unitframes", "player",      "showPVPMinimap",   "0")
+  pfUI:UpdateConfig("unitframes", "player",      "showRest",         "0")
   pfUI:UpdateConfig("unitframes", "player",      "energy",           "1")
 
   pfUI:UpdateConfig("unitframes", "player",      "visible",          "1")
