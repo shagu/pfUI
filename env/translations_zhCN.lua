@@ -373,6 +373,7 @@ pfUI_translation["zhCN"] = {
   ["Profile"] = "配置文件",
   ["Raid Icon Size"] = "团队图标大小",
   ["Raid"] = "团队",
+  ["Random Roll Announcement Rarity"] = nil,  
   ["Random Rolling"] = "随机Roll点 物品:",
   ["Random"] = "给随机玩家",
   ["Range Check Interval"] = "范围检查间隔",

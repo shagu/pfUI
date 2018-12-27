@@ -373,6 +373,7 @@ pfUI_translation["deDE"] = {
   ["Profile"] = nil,
   ["Raid Icon Size"] = nil,
   ["Raid"] = nil,
+  ["Random Roll Announcement Rarity"] = nil,  
   ["Random"] = nil,
   ["Random Rolling"] = nil,
   ["Range Check Interval"] = nil,

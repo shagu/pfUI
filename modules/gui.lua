@@ -717,6 +717,12 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.dropdowns.num_shapeshift_slots = BarLayoutOptions(NUM_SHAPESHIFT_SLOTS)
   pfUI.gui.dropdowns.num_pet_action_slots = BarLayoutOptions(NUM_PET_ACTION_SLOTS)
 
+  pfUI.gui.dropdowns.loot_rarity = {}
+  for i=0, getn(_G.ITEM_QUALITY_COLORS)-2  do
+    local entry = string.format("%d:%s", i, string.format("%s%s%s", _G.ITEM_QUALITY_COLORS[i].hex, _G[string.format("ITEM_QUALITY%d_DESC",i)], FONT_COLOR_CODE_CLOSE))
+    table.insert(pfUI.gui.dropdowns.loot_rarity, entry)
+  end
+
   -- main tab frame
   pfUI.gui.tabs = CreateTabFrame(pfUI.gui, "LEFT")
   pfUI.gui.tabs:SetPoint("TOPLEFT", pfUI.gui, "TOPLEFT", 0, -25)
@@ -1113,6 +1119,7 @@ pfUI:RegisterModule("gui", function ()
       CreateConfig(nil, this, T["Disable Loot Confirmation Dialog (Without Group)"], C.loot, "autopickup", "checkbox")
       CreateConfig(nil, this, T["Enable Loot Window On MouseCursor"], C.loot, "mousecursor", "checkbox")
       CreateConfig(nil, this, T["Enable Advanced Master Loot Menu"], C.loot, "advancedloot", "checkbox")
+      CreateConfig(nil, this, T["Random Roll Announcement Rarity"], C.loot, "rollannouncequal", "dropdown", pfUI.gui.dropdowns.loot_rarity)
       CreateConfig(nil, this, T["Detailed Random Roll Announcement"], C.loot, "rollannounce", "checkbox")
       CreateConfig(nil, this, T["Use Item Rarity Color For Loot-Roll Timer"], C.loot, "raritytimer", "checkbox")
       this.setup = true

@@ -373,6 +373,7 @@ pfUI_translation["frFR"] = {
   ["Profile"] = "Profil",
   ["Raid Icon Size"] = "Taille des icônes de Raid",
   ["Raid"] = "Raid",
+  ["Random Roll Announcement Rarity"] = nil,  
   ["Random"] = nil,
   ["Random Rolling"] = nil,
   ["Range Check Interval"] = nil,

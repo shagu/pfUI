@@ -154,6 +154,7 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("loot",       nil,           "autopickup",       "1")
   pfUI:UpdateConfig("loot",       nil,           "mousecursor",      "1")
   pfUI:UpdateConfig("loot",       nil,           "advancedloot",     "1")
+  pfUI:UpdateConfig("loot",       nil,           "rollannouncequal", "3")
   pfUI:UpdateConfig("loot",       nil,           "rollannounce",     "0")
   pfUI:UpdateConfig("loot",       nil,           "raritytimer",      "1")
 

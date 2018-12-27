@@ -37,18 +37,21 @@ pfUI:RegisterModule("loot", function ()
     local slot = pfUI.loot.selectedSlot or 0
     local to = table.getn(candidates)
     if to >= 1 then
-      SendChatMessageWide(T["Random Rolling "]..GetLootSlotLink(slot))
-      if C.loot.rollannounce == "1" then
-        local k,names = 1, ""
-        for i=1,to do
-          names = (k==1) and (i..":"..pfUI.loot.index_to_name[candidates[i]]) or (names..", "..i..":"..pfUI.loot.index_to_name[candidates[i]])
-          -- fit the maximum names in a single 255 char message (15)
-          if i == to or k == 15 then
-            QueueFunction(SendChatMessageWide,names)
-            names = ""
+      local _,_,_,quality = GetLootSlotInfo(slot)
+      if quality >= tonumber(C.loot.rollannouncequal) then
+        SendChatMessageWide(T["Random Rolling "]..GetLootSlotLink(slot))
+        if C.loot.rollannounce == "1" then
+          local k,names = 1, ""
+          for i=1,to do
+            names = (k==1) and (i..":"..pfUI.loot.index_to_name[candidates[i]]) or (names..", "..i..":"..pfUI.loot.index_to_name[candidates[i]])
+            -- fit the maximum names in a single 255 char message (15)
+            if i == to or k == 15 then
+              QueueFunction(SendChatMessageWide,names)
+              names = ""
+            end
+            k = k<15 and k+1 or 1
           end
-          k = k<15 and k+1 or 1
-        end
+        end        
       end
       pfUI.loot:RegisterEvent("CHAT_MSG_SYSTEM")
       pfUI.loot.randomRolling = true

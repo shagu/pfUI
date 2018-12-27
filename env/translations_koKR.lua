@@ -373,6 +373,7 @@ pfUI_translation["koKR"] = {
   ["Profile"] = "프로파일",
   ["Raid"] = "레이드",
   ["Raid Icon Size"] = "레이드 아이콘 크기",
+  ["Random Roll Announcement Rarity"] = nil,  
   ["Random"] = nil,
   ["Random Rolling"] = nil,
   ["Range Check Interval"] = nil,

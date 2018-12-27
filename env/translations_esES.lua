@@ -373,6 +373,7 @@ pfUI_translation["esES"] = {
   ["Profile"] = "Perfil",
   ["Raid"] = "Banda",
   ["Raid Icon Size"] = "Tamaño de los iconos de banda",
+  ["Random Roll Announcement Rarity"] = nil,  
   ["Random"] = "Aleatorio",
   ["Random Rolling"] = "Tirar los dados aleatoriamente",
   ["Range Check Interval"] = "Intervalo de comprobación de alcance",

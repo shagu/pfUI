@@ -373,6 +373,7 @@ pfUI_translation["ruRU"] = {
   ["Profile"] = "Профиль",
   ["Raid Icon Size"] = "Размер иконки рейда",
   ["Raid"] = "Рейд",
+  ["Random Roll Announcement Rarity"] = nil,  
   ["Random Rolling"] = "Случайный бросок",
   ["Random"] = "Случайно",
   ["Range Check Interval"] = "Интервал проверки диапазона",
