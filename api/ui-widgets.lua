@@ -355,7 +355,7 @@ end
 -- 'offsetX'     [integer]  offsets the button horizontally
 -- 'offsetY'     [integer]  offsets the button vertically
 function pfUI.api.SkinCloseButton(button, parentFrame, offsetX, offsetY)
-  SkinButton(button)
+  SkinButton(button, 1, .25, .25)
 
   button:SetWidth(15)
   button:SetHeight(15)
