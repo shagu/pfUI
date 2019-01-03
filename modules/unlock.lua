@@ -348,6 +348,8 @@ pfUI:RegisterModule("unlock", function ()
       pfUI_config["position"][frame:GetName()] = nil
       frame:ClearAllPoints()
       UpdateMovable(frame)
+
+      if frame.OnMove then frame:OnMove() end
     end
     UpdateDockValues()
   end
@@ -557,6 +559,9 @@ pfUI:RegisterModule("unlock", function ()
       frame:StopMovingOrSizing()
       SavePosition(frame)
     end
+
+    if frame.OnMove then frame:OnMove() end
+
     QueueFunction(SetDockToFrame, pfUI.unlock.dock.parent)
   end)
   SkinButton(pfUI.unlock.dock.reset,.2,1,.8)
