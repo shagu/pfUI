@@ -1,8 +1,8 @@
 # pfUI
 
-An AddOn for World of Warcraft (1.12.1), mostly known as "Vanilla", which aims to be a full replacement for the original interface. The design is highly inspired by TukUI and ElvUI, bringing modern features and a minimalistic style that's easy to use right from the start. It is entirely written from scratch without any inclusion of third-party addons or libraries.
+An AddOn for World of Warcraft (1.12.1), mostly known as "Vanilla", which aims to be a full replacement for the original interface. The design is inspired by several screenshots I've seen from TukUI, ElvUI and others. This addon delivers modern features and a minimalistic style that's easy to use right from the start. It is entirely written from scratch without any inclusion of third-party addons or libraries.
 
-This is **not** an addon-pack like [ShaguUI](http://shagu.org/ShaguUI/), however, there will be support for external addons like MobHealth3 and HealComm, but they will never be shipped within the package.
+This is **not** an addon-pack like [ShaguUI](http://shagu.org/ShaguUI/), however, there is support for external addons like MobHealth3, DPSMate and others, but they will never be shipped within the package.
 
 **Please do not re-upload or distribute outdated versions of this project. However, you are more than welcome to fork or link to the official gitlab page.**
 
