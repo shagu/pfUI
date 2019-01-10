@@ -655,8 +655,20 @@ pfUI:RegisterModule("chat", function ()
   pfUI.chat.editbox = CreateFrame("Frame", "pfChatInputBox", UIParent)
   if C.chat.text.input_height == "0" then
     pfUI.chat.editbox:SetHeight(22)
+
+    if ChatFrameEditBoxLanguage then
+      pfUI.api.SkinButton(ChatFrameEditBoxLanguage)
+      ChatFrameEditBoxLanguage:SetWidth(22)
+      ChatFrameEditBoxLanguage:SetHeight(22)
+    end
   else
     pfUI.chat.editbox:SetHeight(C.chat.text.input_height)
+
+    if ChatFrameEditBoxLanguage then
+      pfUI.api.SkinButton(ChatFrameEditBoxLanguage)
+      ChatFrameEditBoxLanguage:SetWidth(C.chat.text.input_height)
+      ChatFrameEditBoxLanguage:SetHeight(C.chat.text.input_height)
+    end
   end
 
   -- to make sure SHOW_MULTI_ACTIONBAR_1 is set to the real value, we need to wait.
