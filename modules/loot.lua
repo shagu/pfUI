@@ -51,7 +51,7 @@ pfUI:RegisterModule("loot", function ()
             end
             k = k<15 and k+1 or 1
           end
-        end        
+        end
       end
       pfUI.loot:RegisterEvent("CHAT_MSG_SYSTEM")
       pfUI.loot.randomRolling = true
@@ -389,6 +389,7 @@ pfUI:RegisterModule("loot", function ()
     pfUI.loot:AddMasterLootMenus()
     hooksecurefunc("UnitPopup_OnClick",function()
       local dropdownFrame = getglobal(UIDROPDOWNMENU_INIT_MENU)
+      if not dropdownFrame then return end
       local button = this.value
       local unit = dropdownFrame.unit
       local name = dropdownFrame.name
