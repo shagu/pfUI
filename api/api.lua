@@ -686,7 +686,7 @@ function pfUI.api.CreateBackdrop(f, inset, legacy, transp, backdropSetting)
   -- use legacy backdrop handling
   if legacy then
     local backdrop = pfUI.backdrop
-    if backdropSetting then backdrop = backdropSetting end
+    if backdropSetting then f:SetBackdrop(backdropSetting) end
     f:SetBackdrop(backdrop)
     f:SetBackdropColor(br, bg, bb, ba)
     f:SetBackdropBorderColor(er, eg, eb , ea)
@@ -698,20 +698,19 @@ function pfUI.api.CreateBackdrop(f, inset, legacy, transp, backdropSetting)
 
     -- use new backdrop behaviour
     if not f.backdrop then
-      f:SetBackdrop(nil)
+      if f:GetBackdrop() then f:SetBackdrop(nil) end
 
-      local backdrop = pfUI.backdrop
       local b = CreateFrame("Frame", nil, f)
       if tonumber(border) > 1 then
         local border = tonumber(border) - 1
-        backdrop.insets = {left = -1, right = -1, top = -1, bottom = -1}
         b:SetPoint("TOPLEFT", f, "TOPLEFT", -border, border)
         b:SetPoint("BOTTOMRIGHT", f, "BOTTOMRIGHT", border, -border)
+        b:SetBackdrop(pfUI.backdrop)
       else
         local border = tonumber(border)
-        backdrop.insets = {left = 0, right = 0, top = 0, bottom = 0}
         b:SetPoint("TOPLEFT", f, "TOPLEFT", -border, border)
         b:SetPoint("BOTTOMRIGHT", f, "BOTTOMRIGHT", border, -border)
+        b:SetBackdrop(pfUI.backdrop_thin)
       end
 
       local level = f:GetFrameLevel()
@@ -722,7 +721,6 @@ function pfUI.api.CreateBackdrop(f, inset, legacy, transp, backdropSetting)
       end
 
       f.backdrop = b
-      b:SetBackdrop(backdrop)
     end
 
     local b = f.backdrop
@@ -732,22 +730,16 @@ function pfUI.api.CreateBackdrop(f, inset, legacy, transp, backdropSetting)
 
   -- add shadow
   if not f.backdrop_shadow and pfUI_config.appearance.border.shadow == "1" then
-    local size = 8
-    local inset = size-1
     local anchor = f.backdrop or f
-    local intensity = tonumber(pfUI_config.appearance.border.shadow_intensity)
 
     f.backdrop_shadow = CreateFrame("Frame", nil, anchor)
     f.backdrop_shadow:SetFrameStrata("BACKGROUND")
     f.backdrop_shadow:SetFrameLevel(1)
 
-    f.backdrop_shadow:SetPoint("TOPLEFT", anchor, "TOPLEFT", -inset, inset)
-    f.backdrop_shadow:SetPoint("BOTTOMRIGHT", anchor, "BOTTOMRIGHT", inset, -inset)
-    f.backdrop_shadow:SetBackdrop({
-      edgeFile = "Interface\\AddOns\\pfUI\\img\\glow2", edgeSize = size,
-      insets = {left = 0, right = 0, top = 0, bottom = 0},
-    })
-    f.backdrop_shadow:SetBackdropBorderColor(0,0,0,intensity)
+    f.backdrop_shadow:SetPoint("TOPLEFT", anchor, "TOPLEFT", -7, 7)
+    f.backdrop_shadow:SetPoint("BOTTOMRIGHT", anchor, "BOTTOMRIGHT", 7, -7)
+    f.backdrop_shadow:SetBackdrop(pfUI.backdrop_shadow)
+    f.backdrop_shadow:SetBackdropBorderColor(0,0,0,tonumber(pfUI_config.appearance.border.shadow_intensity))
   end
 end
 

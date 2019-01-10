@@ -239,9 +239,20 @@ pfUI.backdrop = {
 }
 pfUI.backdrop_no_top = pfUI.backdrop
 
+pfUI.backdrop_thin = {
+  bgFile = "Interface\\BUTTONS\\WHITE8X8", tile = false, tileSize = 0,
+  edgeFile = "Interface\\BUTTONS\\WHITE8X8", edgeSize = 1,
+  insets = {left = 0, right = 0, top = 0, bottom = 0},
+}
+
 pfUI.backdrop_hover = {
   edgeFile = "Interface\\BUTTONS\\WHITE8X8", edgeSize = 24,
   insets = {left = -1, right = -1, top = -1, bottom = -1},
+}
+
+pfUI.backdrop_shadow = {
+  edgeFile = "Interface\\AddOns\\pfUI\\img\\glow2", edgeSize = 8,
+  insets = {left = 0, right = 0, top = 0, bottom = 0},
 }
 
 message = function (msg)
