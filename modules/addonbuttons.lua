@@ -25,7 +25,8 @@ pfUI:RegisterModule("addonbuttons", function ()
     "MiniMapBattlefieldFrame",
     "pfMinimapButton",
     "GatherNote",
-    "MiniNotePOI"
+    "MiniNotePOI",
+    "FWGMinimapPOI",
   }
 
   pfUI.addonbuttons = CreateFrame("Frame", "pfMinimapButtons", UIParent)
@@ -158,6 +159,10 @@ pfUI:RegisterModule("addonbuttons", function ()
 
   local function SetupMainFrame()
     pfUI.addonbuttons:ClearAllPoints()
+    if pfUI.minimap then
+      pfUI.addonbuttons:SetScale(pfUI.minimap:GetScale())
+    end
+
     pfUI.addonbuttons.minimapbutton:ClearAllPoints()
     if C.abuttons.position == "bottom" then
       pfUI.addonbuttons:SetWidth(pfUI.minimap:GetWidth())
