@@ -1057,8 +1057,8 @@ function pfUI:MigrateConfig()
     end
   end
 
-  -- migrating default debuffbar color settings (> 3.17)
-  if checkversion(3, 17, 0) then
+  -- migrate buff/debuff position settings (> 3.19)
+  if checkversion(3, 19, 0) then
     local unitframes = { "player", "target", "focus", "group", "grouptarget", "grouppet", "raid", "ttarget", "pet", "ptarget", "fallback" }
 
     for _, unitframe in pairs(unitframes) do
@@ -1070,8 +1070,8 @@ function pfUI:MigrateConfig()
     end
   end
 
-  -- migrating actionbar settings (> 3.18)
-  if checkversion(3, 18, 0) then
+  -- migrating actionbar settings (> 3.19)
+  if checkversion(3, 19, 0) then
 
     local migratebars = {
       ["pfBarActionMain"] = "pfActionBarMain",
