@@ -840,9 +840,9 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("disabled",   nil,           nil,                nil)
 
   pfUI:UpdateConfig("abuttons",   nil,           "position",         "bottom")
+  pfUI:UpdateConfig("abuttons",   nil,           "showdefault",      "0")
   pfUI:UpdateConfig("abuttons",   nil,           "rowsize",          "6")
   pfUI:UpdateConfig("abuttons",   nil,           "spacing",          "2")
-  pfUI:UpdateConfig("abuttons",   nil,           "updateinterval",   "3")
   pfUI:UpdateConfig("abuttons",   nil,           "hideincombat",     "1")
 
   pfUI:UpdateConfig("gm",         nil,           "disable",          "1")

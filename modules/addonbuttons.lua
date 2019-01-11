@@ -173,7 +173,6 @@ pfUI:RegisterModule("addonbuttons", function ()
       pfUI.addonbuttons:SetPoint("TOP", pfUI.minimap, "BOTTOM", 0 , -default_border * 3)
       pfUI.addonbuttons.minimapbutton.icon:SetTexture("Interface\\AddOns\\pfUI\\img\\down.tga")
       pfUI.addonbuttons.minimapbutton:SetPoint("BOTTOM", pfUI.minimap, "BOTTOM", 0, 4)
-
     else
       pfUI.addonbuttons:SetWidth(ceil((GetNumButtons() > 0 and GetNumButtons() or 1) / tonumber(C.abuttons.rowsize)) * GetStringSize() + tonumber(C.abuttons.spacing))
       pfUI.addonbuttons:SetHeight(pfUI.minimap:GetHeight())
@@ -181,10 +180,6 @@ pfUI:RegisterModule("addonbuttons", function ()
       pfUI.addonbuttons.minimapbutton.icon:SetTexture("Interface\\AddOns\\pfUI\\img\\left.tga")
       pfUI.addonbuttons.minimapbutton:SetPoint("LEFT", pfUI.minimap, "LEFT", 4, 0)
     end
-    UpdateMovable(pfUI.addonbuttons)
-    UpdateMovable(pfUI.addonbuttons.minimapbutton)
-    pfUI.addonbuttons.minimapbutton:Show()
-
   end
 
   local function UpdatePanel()
@@ -380,13 +375,12 @@ pfUI:RegisterModule("addonbuttons", function ()
   end
 
   pfUI.addonbuttons:SetScript("OnUpdate", function()
-    pfUI.addonbuttons.last_updated = pfUI.addonbuttons.last_updated + arg1
-    while (pfUI.addonbuttons.last_updated > tonumber(C.abuttons.updateinterval)) do
-      pfUI.addonbuttons:ProcessButtons()
-      pfUI.addonbuttons.last_updated = pfUI.addonbuttons.last_updated - tonumber(C.abuttons.updateinterval)
-      for k, v in pfUI.addonbuttons.overrides do
-        _G[k] = v
-      end
+    -- throttle updates to once per 3 seconds
+    if ( this.tick or 1) > GetTime() then return else this.tick = GetTime() + 3 end
+
+    pfUI.addonbuttons:ProcessButtons()
+    for k, v in pfUI.addonbuttons.overrides do
+      _G[k] = v
     end
   end)
 
@@ -397,8 +391,12 @@ pfUI:RegisterModule("addonbuttons", function ()
       end
     else
       pfUI.addonbuttons:ProcessButtons()
-      if not pfUI.addonbuttons:IsShown() and GetNumButtons() > 0 and event == "PLAYER_LOGIN" then
-        pfUI.addonbuttons:Show()
+      if event == "PLAYER_LOGIN" then
+        if C.abuttons.showdefault == "1" and GetNumButtons() > 0 then
+          pfUI.addonbuttons:Show()
+        else
+          pfUI.addonbuttons:Hide()
+        end
       end
     end
   end)
