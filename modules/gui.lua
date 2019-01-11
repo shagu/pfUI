@@ -1185,6 +1185,7 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.tabs.minimap.tabs.addonbuttons = pfUI.gui.tabs.minimap.tabs:CreateTabChild(T["Addon Buttons"], true)
   pfUI.gui.tabs.minimap.tabs.addonbuttons:SetScript("OnShow", function()
     if not this.setup then
+      CreateConfig(nil,                    this, T["Enable Addon Button Frame"], C.abuttons, "enable", "checkbox")
       CreateConfig(update["addonbuttons"], this, T["Addon Buttons Panel Position"], C.abuttons, "position", "dropdown", pfUI.gui.dropdowns.addonbuttons_position)
       CreateConfig(update["addonbuttons"], this, T["Show Addon Buttons On Login"], C.abuttons, "showdefault", "checkbox")
       CreateConfig(update["addonbuttons"], this, T["Number Of Buttons Per Row/Column"], C.abuttons, "rowsize")

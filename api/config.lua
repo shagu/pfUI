@@ -839,6 +839,7 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("position",   nil,           nil,                nil)
   pfUI:UpdateConfig("disabled",   nil,           nil,                nil)
 
+  pfUI:UpdateConfig("abuttons",   nil,           "enable",           "0")
   pfUI:UpdateConfig("abuttons",   nil,           "position",         "bottom")
   pfUI:UpdateConfig("abuttons",   nil,           "showdefault",      "0")
   pfUI:UpdateConfig("abuttons",   nil,           "rowsize",          "6")

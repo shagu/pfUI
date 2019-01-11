@@ -1,5 +1,6 @@
 pfUI:RegisterModule("addonbuttons", function ()
   if not pfUI.minimap then return end
+  if C.abuttons.enable == "0" then return end
 
   local default_border = C.appearance.border.default
   if C.appearance.border.panels ~= "-1" then
@@ -159,9 +160,7 @@ pfUI:RegisterModule("addonbuttons", function ()
 
   local function SetupMainFrame()
     pfUI.addonbuttons:ClearAllPoints()
-    if pfUI.minimap then
-      pfUI.addonbuttons:SetScale(pfUI.minimap:GetScale())
-    end
+    pfUI.addonbuttons:SetScale(pfUI.minimap:GetScale())
 
     pfUI.addonbuttons.minimapbutton:ClearAllPoints()
     if C.abuttons.position == "bottom" then
