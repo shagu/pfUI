@@ -29,22 +29,14 @@ pfUI:RegisterModule("addonbuttons", function ()
   }
 
   pfUI.addonbuttons = CreateFrame("Frame", "pfMinimapButtons", UIParent)
-  CreateBackdrop(pfUI.addonbuttons)
   pfUI.addonbuttons:SetFrameStrata("HIGH")
   pfUI.addonbuttons:Hide()
-  UpdateMovable(pfUI.addonbuttons)
-
+  CreateBackdrop(pfUI.addonbuttons)
 
   pfUI.addonbuttons.minimapbutton = CreateFrame("Button", "pfMinimapButton", UIParent)
   pfUI.addonbuttons.minimapbutton:SetFrameStrata("MEDIUM")
-  pfUI.addonbuttons.minimapbutton:SetWidth(10)
-  pfUI.addonbuttons.minimapbutton:SetHeight(10)
-  CreateBackdrop(pfUI.addonbuttons.minimapbutton, C.appearance.border.default)
-  UpdateMovable(pfUI.addonbuttons.minimapbutton)
-
-  pfUI.addonbuttons.minimapbutton.icon = pfUI.addonbuttons.minimapbutton:CreateTexture("BACKGROUND")
-  pfUI.addonbuttons.minimapbutton.icon:SetAllPoints(pfUI.addonbuttons.minimapbutton)
-  pfUI.addonbuttons.minimapbutton.icon:SetVertexColor(1,1,1,1)
+  pfUI.addonbuttons.minimapbutton:SetWidth(12)
+  pfUI.addonbuttons.minimapbutton:SetHeight(12)
 
   pfUI.addonbuttons.minimapbutton:SetScript("OnClick", function()
     if pfUI.addonbuttons:IsShown() then
@@ -66,7 +58,7 @@ pfUI:RegisterModule("addonbuttons", function ()
 
 
   local function GetButtonSize()
-    if C.abuttons.position == "bottom" then
+    if C.abuttons.position == "bottom" or C.abuttons.position == "top" then
       return (pfUI.minimap:GetWidth() - (tonumber(C.abuttons.spacing) * (tonumber(C.abuttons.rowsize) + 1))) / tonumber(C.abuttons.rowsize)
     else
       return (pfUI.minimap:GetHeight() - (tonumber(C.abuttons.spacing) * (tonumber(C.abuttons.rowsize) + 1))) / tonumber(C.abuttons.rowsize)
@@ -171,14 +163,26 @@ pfUI:RegisterModule("addonbuttons", function ()
       pfUI.addonbuttons:SetWidth(pfUI.minimap:GetWidth())
       pfUI.addonbuttons:SetHeight(ceil((GetNumButtons() > 0 and GetNumButtons() or 1) / tonumber(C.abuttons.rowsize)) * GetStringSize() + tonumber(C.abuttons.spacing))
       pfUI.addonbuttons:SetPoint("TOP", pfUI.minimap, "BOTTOM", 0 , -default_border * 3)
-      pfUI.addonbuttons.minimapbutton.icon:SetTexture("Interface\\AddOns\\pfUI\\img\\down.tga")
+      SkinArrowButton(pfUI.addonbuttons.minimapbutton, "down")
       pfUI.addonbuttons.minimapbutton:SetPoint("BOTTOM", pfUI.minimap, "BOTTOM", 0, 4)
-    else
+    elseif C.abuttons.position == "left" then
       pfUI.addonbuttons:SetWidth(ceil((GetNumButtons() > 0 and GetNumButtons() or 1) / tonumber(C.abuttons.rowsize)) * GetStringSize() + tonumber(C.abuttons.spacing))
       pfUI.addonbuttons:SetHeight(pfUI.minimap:GetHeight())
       pfUI.addonbuttons:SetPoint("TOPRIGHT", pfUI.minimap, "TOPLEFT", -default_border * 3, 0)
-      pfUI.addonbuttons.minimapbutton.icon:SetTexture("Interface\\AddOns\\pfUI\\img\\left.tga")
+      SkinArrowButton(pfUI.addonbuttons.minimapbutton, "left")
       pfUI.addonbuttons.minimapbutton:SetPoint("LEFT", pfUI.minimap, "LEFT", 4, 0)
+    elseif C.abuttons.position == "top" then
+      pfUI.addonbuttons:SetWidth(pfUI.minimap:GetWidth())
+      pfUI.addonbuttons:SetHeight(ceil((GetNumButtons() > 0 and GetNumButtons() or 1) / tonumber(C.abuttons.rowsize)) * GetStringSize() + tonumber(C.abuttons.spacing))
+      pfUI.addonbuttons:SetPoint("BOTTOM", pfUI.minimap, "TOP", 0 , default_border * 3)
+      SkinArrowButton(pfUI.addonbuttons.minimapbutton, "up")
+      pfUI.addonbuttons.minimapbutton:SetPoint("TOP", pfUI.minimap, "TOP", 0, -4)
+    elseif C.abuttons.position == "right" then
+      pfUI.addonbuttons:SetWidth(ceil((GetNumButtons() > 0 and GetNumButtons() or 1) / tonumber(C.abuttons.rowsize)) * GetStringSize() + tonumber(C.abuttons.spacing))
+      pfUI.addonbuttons:SetHeight(pfUI.minimap:GetHeight())
+      pfUI.addonbuttons:SetPoint("TOPLEFT", pfUI.minimap, "TOPRIGHT", default_border * 3, 0)
+      SkinArrowButton(pfUI.addonbuttons.minimapbutton, "right")
+      pfUI.addonbuttons.minimapbutton:SetPoint("RIGHT", pfUI.minimap, "RIGHT", -4, 0)
     end
   end
 
@@ -285,7 +289,7 @@ pfUI:RegisterModule("addonbuttons", function ()
       top_frame:SetParent(pfUI.addonbuttons)
     end
 
-    if C.abuttons.position == "bottom" then
+    if C.abuttons.position == "bottom" or C.abuttons.position == "top" then
       offsetX = ((index - row_index * tonumber(C.abuttons.rowsize)) * (tonumber(C.abuttons.spacing))) + (((index - row_index * tonumber(C.abuttons.rowsize)) - 1) * GetButtonSize()) + (GetButtonSize() / 2)
       offsetY = -(((row_index + 1) * tonumber(C.abuttons.spacing)) + (row_index * GetButtonSize()) + (GetButtonSize() / 2))
       frame:SetPoint("CENTER", pfUI.addonbuttons, "TOPLEFT", offsetX/final_scale, offsetY/final_scale)

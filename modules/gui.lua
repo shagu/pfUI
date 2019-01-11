@@ -746,6 +746,8 @@ pfUI:RegisterModule("gui", function ()
   pfUI.gui.dropdowns.addonbuttons_position = {
     "bottom:" .. T["Bottom"],
     "left:" .. T["Left"],
+    "top:" .. T["Top"],
+    "right:" .. T["Right"],
   }
 
   pfUI.gui.dropdowns.num_actionbar_buttons = BarLayoutOptions(NUM_ACTIONBAR_BUTTONS)

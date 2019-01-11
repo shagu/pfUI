@@ -379,10 +379,11 @@ function pfUI.api.SkinArrowButton(button, dir)
 
   if not button.icon then
     button.icon = button:CreateTexture(nil, "ARTWORK")
-    button.icon:SetTexture("Interface\\AddOns\\pfUI\\img\\" .. dir)
     button.icon:SetAlpha(.8)
     SetAllPointsOffset(button.icon, button, 3)
   end
+
+  button.icon:SetTexture("Interface\\AddOns\\pfUI\\img\\" .. dir)
 
   if not button.pfScripted then
     local enable = button.Enable
