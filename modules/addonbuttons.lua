@@ -312,6 +312,15 @@ pfUI:RegisterModule("addonbuttons", function ()
 
   local function ManualAddOrRemove(action)
     local button = GetMouseFocus()
+
+    if action ~= "reset" and action ~= "add" and action ~= "del" then
+      DEFAULT_CHAT_FRAME:AddMessage("|cff33ffccpf|rUI Addon Button Panel:")
+      DEFAULT_CHAT_FRAME:AddMessage("|cff33ffcc/abp add|r - " .. T["Add button to the frame"])
+      DEFAULT_CHAT_FRAME:AddMessage("|cff33ffcc/abp del|r - " .. T["Remove button from the frame"])
+      DEFAULT_CHAT_FRAME:AddMessage("|cff33ffcc/abp reset|r - " .. T["Reset all manually added or ignored buttons"])
+      return
+    end
+
     if action == "reset" then
       for i, button_name in ipairs(pfUI_cache["abuttons"]["add"]) do
         if getglobal(button_name) ~= nil then
@@ -324,7 +333,7 @@ pfUI:RegisterModule("addonbuttons", function ()
       pfUI_cache["abuttons"]["add"] = {}
       pfUI_cache["abuttons"]["del"] = {}
       pfUI.addonbuttons:ProcessButtons()
-      message("Lists of added and deleted buttons are cleared")
+      DEFAULT_CHAT_FRAME:AddMessage("|cff33ffccpf|rUI ABP|r: " .. T["Lists of added and deleted buttons are cleared"])
       return
     else
       if IsButtonValid(button) then
@@ -334,9 +343,9 @@ pfUI:RegisterModule("addonbuttons", function ()
           end
           if not TableMatch(pfUI.addonbuttons.buttons, button:GetName()) and not TableMatch(pfUI_cache["abuttons"]["add"], button:GetName()) then
             table.insert(pfUI_cache["abuttons"]["add"], button:GetName())
-            message("Added button: " .. button:GetName())
+            DEFAULT_CHAT_FRAME:AddMessage("|cff33ffccpf|rUI ABP|r: " .. T["Added button"] .. ": " .. button:GetName())
           else
-            message("Button already exists in pfMinimapButtons frame")
+            DEFAULT_CHAT_FRAME:AddMessage("|cff33ffccpf|rUI ABP|r: " .. T["Button already exists in pfMinimapButtons frame"])
             return
           end
         elseif action == "del" then
@@ -346,24 +355,21 @@ pfUI:RegisterModule("addonbuttons", function ()
           if TableMatch(pfUI.addonbuttons.buttons, button:GetName()) then
             table.remove(pfUI.addonbuttons.buttons, TableMatch(pfUI.addonbuttons.buttons, button:GetName()))
           else
-            message("Button not found in pfMinimapButtons frame")
+            DEFAULT_CHAT_FRAME:AddMessage("|cff33ffccpf|rUI ABP|r: " .. T["Button not found in pfMinimapButtons frame"])
             return
           end
           if not TableMatch(pfUI_cache["abuttons"]["del"], button:GetName()) then
             table.insert(pfUI_cache["abuttons"]["del"], button:GetName())
             RestoreButton(button)
-            message("Removed button: " .. button:GetName())
+            DEFAULT_CHAT_FRAME:AddMessage("|cff33ffccpf|rUI ABP|r: " .. T["Removed button"] .. ": " .. button:GetName())
           end
-        else
-          message("/abp add - to add button to the frame")
-          message("/abp del - to remove button from the frame")
-          message("/abp reset - to reset all manually added or ignored buttons")
-          return
         end
         pfUI.addonbuttons:ProcessButtons()
         return
+      else
+        DEFAULT_CHAT_FRAME:AddMessage("|cff33ffccpf|rUI ABP|r: " .. T["Not a valid button!"])
+        return
       end
-      message("Not a valid button!")
     end
   end
 
@@ -412,7 +418,7 @@ pfUI:RegisterModule("addonbuttons", function ()
 
   pfUI.addonbuttons:UpdateConfig()
 
-  _G.SLASH_PFABP1 = "/abp"
+  _G.SLASH_PFABP1, _G.SLASH_PFABP2 = "/abp", "/pfabp"
   _G.SlashCmdList.PFABP = ManualAddOrRemove
 
 end)
