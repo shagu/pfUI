@@ -378,7 +378,8 @@ pfUI:RegisterModule("addonbuttons", function ()
     pfUI.addonbuttons:GetScript("OnEvent")()
   end
 
-  pfUI.addonbuttons:SetScript("OnUpdate", function()
+  pfUI.addonbuttons.scanner = CreateFrame("Frame", "pfAddonButtonScanner", UIParent)
+  pfUI.addonbuttons.scanner:SetScript("OnUpdate", function()
     -- throttle updates to once per 3 seconds
     if ( this.tick or 1) > GetTime() then return else this.tick = GetTime() + 3 end
 
