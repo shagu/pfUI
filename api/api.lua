@@ -823,11 +823,7 @@ function pfUI.api.EnableAutohide(frame, timeout)
   frame.hover:SetParent(frame)
   frame.hover:SetAllPoints(frame)
   frame.hover.parent = frame
-
-  frame.hover:RegisterEvent("PLAYER_LEAVING_WORLD")
-  frame.hover:SetScript("OnEvent", function()
-    this:Hide()
-  end)
+  frame.hover:Show()
 
   local timeout = timeout
   frame.hover:SetScript("OnUpdate", function()
@@ -850,7 +846,6 @@ function pfUI.api.DisableAutohide(frame)
   if not frame then return end
   if not frame.hover then return end
 
-  frame.hover:UnregisterAllEvents()
   frame.hover:SetScript("OnUpdate", nil)
   frame.hover:Hide()
   frame:SetAlpha(1)
