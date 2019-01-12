@@ -115,124 +115,60 @@ end
 
 function pfUI.api.CreateScrollFrame(name, parent)
   local f = CreateFrame("ScrollFrame", name, parent)
-  local br, bg, bb, ba = pfUI.api.GetStringColor(pfUI_config.appearance.border.background)
-  f.Scroll = function(self, step)
-    local current = self:GetVerticalScroll()
-    local new = current + step*-25
-    local max = self:GetVerticalScrollRange() + 25
 
-    if max > 25 then
-      if new < 0 then
-        self:SetVerticalScroll(0)
-      elseif new > max then
-        self:SetVerticalScroll(max)
-      else
-        self:SetVerticalScroll(new)
-      end
+  -- create slider
+  f.slider = CreateFrame("Slider", nil, f)
+  f.slider:SetOrientation('VERTICAL')
+  f.slider:SetPoint("TOPLEFT", f, "TOPRIGHT", -7, 0)
+  f.slider:SetPoint("BOTTOMRIGHT", 0, 0)
+  f.slider:SetThumbTexture("Interface\\AddOns\\pfUI\\img\\col")
+  f.slider.thumb = f.slider:GetThumbTexture()
+  f.slider.thumb:SetHeight(50)
+  f.slider.thumb:SetTexture(.3,1,.8,.5)
+
+  f.slider:SetScript("OnValueChanged", function()
+    f:SetVerticalScroll(this:GetValue())
+    f.UpdateScrollState()
+  end)
+
+  f.UpdateScrollState = function()
+    f.slider:SetMinMaxValues(0, f:GetVerticalScrollRange())
+    f.slider:SetValue(f:GetVerticalScroll())
+
+    local m = f:GetHeight()+f:GetVerticalScrollRange()
+    local v = f:GetHeight()
+    local ratio = v / m
+
+    if ratio < 1 then
+      local size = math.floor(v * ratio)
+      f.slider.thumb:SetHeight(size)
+      f.slider:Show()
+    else
+      f.slider:Hide()
+    end
+  end
+
+  f.Scroll = function(self, step)
+    local step = step or 0
+
+    local current = f:GetVerticalScroll()
+    local max = f:GetVerticalScrollRange()
+    local new = current - step
+
+    if new >= max then
+      f:SetVerticalScroll(max)
+    elseif new <= 0 then
+      f:SetVerticalScroll(0)
+    else
+      f:SetVerticalScroll(new)
     end
 
-    self:UpdateScrollState()
+    f:UpdateScrollState()
   end
 
   f:EnableMouseWheel(1)
-
-  f.deco_up = CreateFrame("Frame", nil, f)
-  f.deco_up:SetPoint("TOPLEFT", f, "TOPLEFT", -4, 4)
-  f.deco_up:SetPoint("BOTTOMRIGHT", f, "TOPRIGHT", 4, -25)
-
-  f.deco_up.fader = f.deco_up:CreateTexture("OVERLAY")
-  f.deco_up.fader:SetTexture(1,1,1,1)
-  f.deco_up.fader:SetGradientAlpha("VERTICAL", br, bg, bb, 0, br, bg, bb, 1)
-  f.deco_up.fader:SetAllPoints(f.deco_up)
-
-  f.deco_up_indicator = CreateFrame("Button", nil, f.deco_up)
-  f.deco_up_indicator:SetFrameLevel(128)
-  f.deco_up_indicator:Hide()
-  f.deco_up_indicator:SetPoint("TOP", f.deco_up, "TOP", 0, -6)
-  f.deco_up_indicator:SetHeight(12)
-  f.deco_up_indicator:SetWidth(12)
-  f.deco_up_indicator.modifier = 0.03
-  f.deco_up_indicator:SetScript("OnClick", function()
-    local f = this:GetParent():GetParent()
-    f:Scroll(3)
-  end)
-
-  f.deco_up_indicator:SetScript("OnUpdate", function()
-    local alpha = this:GetAlpha()
-    local fpsmod = GetFramerate() / 30
-
-    if alpha >= .75 then
-      this.modifier = -0.03 / fpsmod
-    elseif alpha <= .25 then
-      this.modifier = 0.03  / fpsmod
-    end
-
-    this:SetAlpha(alpha + this.modifier)
-  end)
-
-  f.deco_up_indicator.tex = f.deco_up_indicator:CreateTexture("OVERLAY")
-  f.deco_up_indicator.tex:SetTexture("Interface\\AddOns\\pfUI\\img\\up")
-  f.deco_up_indicator.tex:SetAllPoints(f.deco_up_indicator)
-
-  f.deco_down = CreateFrame("Frame", nil, f)
-  f.deco_down:SetPoint("BOTTOMLEFT", f, "BOTTOMLEFT", -4, -4)
-  f.deco_down:SetPoint("TOPRIGHT", f, "BOTTOMRIGHT", 4, 25)
-
-  f.deco_down.fader = f.deco_down:CreateTexture("OVERLAY")
-  f.deco_down.fader:SetTexture(1,1,1,1)
-  f.deco_down.fader:SetGradientAlpha("VERTICAL", br, bg, bb, 1, br, bg, bb, 0)
-  f.deco_down.fader:SetAllPoints(f.deco_down)
-
-  f.deco_down_indicator = CreateFrame("Button", nil, f.deco_down)
-  f.deco_down_indicator:SetFrameLevel(128)
-  f.deco_down_indicator:Hide()
-  f.deco_down_indicator:SetPoint("BOTTOM", f.deco_down, "BOTTOM", 0, 6)
-  f.deco_down_indicator:SetHeight(12)
-  f.deco_down_indicator:SetWidth(12)
-  f.deco_down_indicator.modifier = 0.03
-  f.deco_down_indicator:SetScript("OnClick", function()
-    local f = this:GetParent():GetParent()
-    f:Scroll(-3)
-  end)
-
-  f.deco_down_indicator:SetScript("OnUpdate", function()
-    local alpha = this:GetAlpha()
-    local fpsmod = GetFramerate() / 30
-
-    if alpha >= .75 then
-      this.modifier = -0.03 / fpsmod
-    elseif alpha <= .25 then
-      this.modifier = 0.03 / fpsmod
-    end
-
-    this:SetAlpha(alpha + this.modifier)
-  end)
-
-  f.deco_down_indicator.tex = f.deco_down_indicator:CreateTexture("OVERLAY")
-  f.deco_down_indicator.tex:SetTexture("Interface\\AddOns\\pfUI\\img\\down")
-  f.deco_down_indicator.tex:SetAllPoints(f.deco_down_indicator)
-
-  f.UpdateScrollState = function(self)
-    -- Update Scroll Indicators: Hide/Show if required.
-    local current = floor(self:GetVerticalScroll())
-    local max = floor(self:GetVerticalScrollRange() + 25)
-
-    if current > 0 then
-      self.deco_up_indicator:Show()
-    else
-      self.deco_up_indicator:Hide()
-    end
-
-    if max > 25 and current < max then
-      self.deco_down_indicator:Show()
-      self.deco_down_indicator:SetAlpha(.75)
-    else
-      self.deco_down_indicator:Hide()
-    end
-  end
-
   f:SetScript("OnMouseWheel", function()
-    this:Scroll(arg1)
+    this:Scroll(arg1*10)
   end)
 
   return f
@@ -250,7 +186,7 @@ function pfUI.api.CreateScrollChild(name, parent)
 
   -- OnShow is fired too early, postpone to the first frame draw
   f:SetScript("OnUpdate", function()
-    this:GetParent():UpdateScrollState()
+    this:GetParent():Scroll()
     this:SetScript("OnUpdate", nil)
   end)
 
