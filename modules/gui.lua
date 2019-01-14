@@ -1549,6 +1549,7 @@ pfUI:RegisterModule("gui", function ()
       CreateConfig(nil, this, "AtlasLoot", C.thirdparty.atlasloot, "enable", "checkbox")
       CreateConfig(nil, this, "MyRolePlay", C.thirdparty.myroleplay, "enable", "checkbox")
       CreateConfig(nil, this, "DruidManaBar", C.thirdparty.druidmana, "enable", "checkbox")
+      CreateConfig(nil, this, "NoteIt", C.thirdparty.noteit, "enable", "checkbox")
       this.setup = true
     end
   end)

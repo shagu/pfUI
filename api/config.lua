@@ -836,6 +836,7 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("thirdparty", "atlasloot",   "enable",           "1")
   pfUI:UpdateConfig("thirdparty", "myroleplay",  "enable",           "1")
   pfUI:UpdateConfig("thirdparty", "druidmana",   "enable",           "1")
+  pfUI:UpdateConfig("thirdparty", "noteit",      "enable",           "1")
   pfUI:UpdateConfig("position",   nil,           nil,                nil)
   pfUI:UpdateConfig("disabled",   nil,           nil,                nil)
 

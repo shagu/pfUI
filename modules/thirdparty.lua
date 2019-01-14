@@ -811,4 +811,93 @@ pfUI:RegisterModule("thirdparty", function ()
       pfUI.prediction.sender.enabled = nil
     end
   end)
+
+  HookAddonOrVariable("NoteIt", function()
+    if C.thirdparty.noteit.enable == "0" then return end
+
+    -- Main window
+    pfUI.api.StripTextures(NoteInputFrame, true)
+    CreateBackdrop(NoteInputFrame, nil, nil, .75)
+    NoteInputFrame.backdrop:SetPoint("TOPLEFT", 10, -12)
+    NoteInputFrame.backdrop:SetPoint("BOTTOMRIGHT", -32, 30)
+
+    -- close button
+    pfUI.api.SkinCloseButton(NoteInputFrameCloseButton, NoteInputFrame, -37, -17)
+
+    -- Options button
+    pfUI.api.SkinButton(NoteInputOptionsButton)
+    NoteInputOptionsButton:ClearAllPoints()
+    NoteInputOptionsButton:SetPoint("TOPLEFT", NoteInputTextBackground, "BOTTOMLEFT", 0, -15)
+    NoteInputOptionsButton:SetWidth(145)
+
+    -- Delete button
+    pfUI.api.SkinButton(NoteInputDeleteButton)
+    NoteInputDeleteButton:ClearAllPoints()
+    NoteInputDeleteButton:SetPoint("TOPLEFT", NoteInputOptionsButton, "BOTTOMLEFT", 0, -4)
+    NoteInputDeleteButton:SetWidth(145)
+
+    -- Save button
+    pfUI.api.SkinButton(NoteInputFrameSaveButton)
+    NoteInputFrameSaveButton:ClearAllPoints()
+    NoteInputFrameSaveButton:SetPoint("TOPRIGHT", NoteInputTextBackground, "BOTTOMRIGHT", 0, -15)
+    NoteInputFrameSaveButton:SetWidth(145)
+
+    --  Cancel button
+    pfUI.api.SkinButton(NoteInputFrameExitButton)
+    NoteInputFrameExitButton:ClearAllPoints()
+    NoteInputFrameExitButton:SetPoint("TOPLEFT", NoteInputFrameSaveButton, "BOTTOMLEFT", 0, -4)
+    NoteInputFrameExitButton:SetWidth(145)
+
+    -- Window title
+    NoteInputTitleText:SetTextColor(1,1,.25,1)
+
+    -- Scrollbars
+    pfUI.api.SkinScrollbar(NoteInputNameChooseFrameScrollBar)
+    pfUI.api.SkinScrollbar(NoteInputNoteFrameScrollBar)
+
+    -- Search/Input label frame
+    NoteInputNameLabel:ClearAllPoints()
+    NoteInputNameLabel:SetPoint("TOPLEFT", NoteInputTitleText, "BOTTOMLEFT", -10, 0)
+
+    -- Search/Input input frame
+    pfUI.api.StripTextures(NoteInputNameEditBox)
+    CreateBackdrop(NoteInputNameEditBox)
+    NoteInputNameEditBox:SetTextInsets(5,5,5,5)
+    NoteInputNameEditBox:ClearAllPoints()
+    NoteInputNameEditBox:SetPoint("TOPLEFT", NoteInputNameLabel, "BOTTOMLEFT", 0, 0)
+    NoteInputNameEditBox:SetPoint("TOPRIGHT", NoteInputNameLabel, "BOTTOMRIGHT", 0, 0)
+    NoteInputNameEditBox:SetHeight(20)
+
+    -- Frame holding the list (i think)
+    pfUI.api.StripTextures(NoteInputNameChooseFrame)
+    CreateBackdrop(NoteInputNameChooseFrame)
+    NoteInputNameChooseFrame:ClearAllPoints()
+    NoteInputNameChooseFrame:SetPoint("TOPLEFT", NoteInputNameEditBox, "BOTTOMLEFT", 0, -10)
+    NoteInputNameChooseFrame:SetPoint("TOPRIGHT", NoteInputNameEditBox, "BOTTOMRIGHT", -20, 0)
+    NoteInputNameChooseFrame:SetHeight(100)
+
+    -- Note label frame
+    NoteInputNoteLabel:ClearAllPoints()
+    NoteInputNoteLabel:SetPoint("TOPLEFT", NoteInputNameChooseFrame, "BOTTOMLEFT", 0, 0)
+    NoteInputNoteLabel:SetPoint("TOPRIGHT", NoteInputNameChooseFrame, "BOTTOMRIGHT", 0, 0)
+
+    -- Note input frame
+    pfUI.api.StripTextures(NoteInputNoteFrame)
+    CreateBackdrop(NoteInputNoteFrame)
+    NoteInputNoteEditBox:SetTextInsets(5,5,5,5)
+    NoteInputNoteFrame:ClearAllPoints()
+    NoteInputNoteFrame:SetPoint("TOPLEFT", NoteInputNoteLabel, "BOTTOMLEFT", 0, 0)
+    NoteInputNoteFrame:SetPoint("TOPRIGHT", NoteInputNoteLabel, "BOTTOMRIGHT", 0, 0)
+    NoteInputNoteFrame:SetHeight(140)
+
+    -- Weird frames
+    NoteInputNameChooseBackground:Hide()
+    NoteInputTextBackground:Hide()
+
+    NoteInputTextBackground:ClearAllPoints()
+    NoteInputTextBackground:SetPoint("TOPLEFT", NoteInputNameChooseFrame, "BOTTOMLEFT", -2, -38)
+    NoteInputTextBackground:SetPoint("TOPRIGHT", NoteInputNameChooseFrame, "BOTTOMRIGHT", 22, -38)
+
+
+  end)
 end)
