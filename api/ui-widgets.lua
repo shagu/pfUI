@@ -561,6 +561,57 @@ function pfUI.api.SkinTab(frame, fixed)
   end
 end
 
+function pfUI.api.SkinSlider(frame)
+  local orientation = frame:GetOrientation()
+  local thumb = frame:GetThumbTexture()
+
+  if not frame.bg then
+    frame.bg = CreateFrame("Frame", nil, frame)
+    frame.bg:SetAllPoints(frame)
+    CreateBackdrop(frame.bg, nil, true)
+  end
+
+  if not frame.thumb then
+    thumb:SetTexture(nil)
+    frame.thumb = frame.bg:CreateTexture(nil, "ARTWORK")
+    frame.thumb:SetTexture(1, .82, 0)
+    frame.thumb:SetPoint("TOPLEFT", thumb, "TOPLEFT", 1, -4)
+    frame.thumb:SetPoint("BOTTOMRIGHT", thumb, "BOTTOMRIGHT", -1, 4)
+  end
+
+  for i,region in ipairs({frame:GetRegions()}) do
+    if region:GetObjectType() == 'FontString' then
+      local point, anchor, anchorPoint, x, y = region:GetPoint()
+      if orientation == 'VERTICAL' then
+        if string.find(anchorPoint, "TOP") then -- top text
+          region:ClearAllPoints()
+          region:SetPoint("BOTTOM", anchor, "TOP", 0, 4)
+        elseif string.find(anchorPoint, "BOTTOM") then -- bottom text
+          region:ClearAllPoints()
+          region:SetPoint("TOP", anchor, "BOTTOM", 0, -4)
+        end
+        anchor:SetHeight(anchor:GetHeight() - 4)
+      else
+        if string.find(anchorPoint, 'BOTTOM') then
+          region:SetPoint(point, anchor, anchorPoint, x, y - 6)
+        elseif string.find(anchorPoint, 'TOP') then
+          region:SetPoint(point, anchor, anchorPoint, x, y + 2)
+        end
+      end
+    end
+  end
+
+  if orientation == 'VERTICAL' then
+    frame:SetWidth(10)
+    thumb:SetHeight(22)
+    thumb:SetWidth(12)
+  else
+    frame:SetHeight(10)
+    thumb:SetHeight(17)
+    thumb:SetWidth(17)
+  end
+end
+
 -- [ GetCloseButton ]
 -- Get the close button from a frame.
 -- 'frame'     [frame]  the frame that should be searched for the button.
