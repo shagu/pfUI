@@ -65,8 +65,6 @@ pfUI:RegisterModule("chatcopy", function ()
   local f = CreateFrame("Frame")
   f:RegisterEvent("PLAYER_ENTERING_WORLD")
   f:SetScript("OnEvent", function()
-    local combat = {}
-
     for i=1, _G.NUM_CHAT_WINDOWS do
       local frame = _G["ChatFrame"..i]
       local name = frame:GetName()
