@@ -65,6 +65,8 @@ modules\updatenotify.lua
 modules\actionbar.lua
 modules\hunterbar.lua
 modules\chat.lua
+modules\whisperproxy.lua
+modules\chatcopy.lua
 modules\bubbles.lua
 modules\addons.lua
 modules\minimap.lua
