@@ -11,7 +11,6 @@ pfUI:RegisterModule("actionbar", function ()
     if f.Show and killshow then f.Show = function() return end end
     if f.UnregisterAllEvents then f:UnregisterAllEvents() end
     if f.Hide then f:Hide() end
-    for i,v in ipairs({f:GetChildren()}) do kill(v) end
   end
 
   kill(MainMenuBar)
