@@ -579,9 +579,9 @@ end
 --                              accessed with "GetParent().input".
 function pfUI.api.CreateQuestionDialog(text, yes, no, editbox)
   -- do not allow multiple instances of question dialogs
-  if pfQuestionDialog and pfQuestionDialog:IsShown() then
-    pfQuestionDialog:Hide()
-    pfQuestionDialog = nil
+  if _G["pfQuestionDialog"] and _G["pfQuestionDialog"]:IsShown() then
+    _G["pfQuestionDialog"]:Hide()
+    _G["pfQuestionDialog"] = nil
     return
   end
 
