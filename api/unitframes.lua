@@ -24,6 +24,98 @@ for i=1,4 do pfValidUnits["partypet" .. i .. "target"] = true end
 for i=1,40 do pfValidUnits["raid" .. i .. "target"] = true end
 for i=1,40 do pfValidUnits["raidpet" .. i .. "target"] = true end
 
+local function BuffOnUpdate()
+  if ( this.tick or 1) > GetTime() then return else this.tick = GetTime() + .4 end
+  local timeleft = GetPlayerBuffTimeLeft(GetPlayerBuff(PLAYER_BUFF_START_ID+this.id,"HELPFUL"))
+  CooldownFrame_SetTimer(this.cd, GetTime(), timeleft, 1)
+end
+
+local function BuffOnEnter()
+  local parent = this:GetParent()
+  if not parent.label then return end
+
+  GameTooltip:SetOwner(this, "ANCHOR_BOTTOMRIGHT")
+  if parent.label == "player" then
+    GameTooltip:SetPlayerBuff(GetPlayerBuff(PLAYER_BUFF_START_ID+this.id,"HELPFUL"))
+  else
+    GameTooltip:SetUnitBuff(parent.label .. parent.id, this.id)
+  end
+
+  if IsShiftKeyDown() then
+    local texture = parent.label == "player" and GetPlayerBuffTexture(GetPlayerBuff(PLAYER_BUFF_START_ID+this.id,"HELPFUL")) or UnitBuff(parent.label .. parent.id, this.id)
+
+    local playerlist = ""
+    local first = true
+
+    if UnitInRaid("player") then
+      for i=1,40 do
+        local unitstr = "raid" .. i
+        if not UnitHasBuff(unitstr, texture) and UnitName(unitstr) then
+          playerlist = playerlist .. ( not first and ", " or "") .. GetUnitColor(unitstr) .. UnitName(unitstr) .. "|r"
+          first = nil
+        end
+      end
+    else
+      if not UnitHasBuff("player", texture) then
+        playerlist = playerlist .. ( not first and ", " or "") .. GetUnitColor("player") .. UnitName("player") .. "|r"
+        first = nil
+      end
+
+      for i=1,4 do
+        local unitstr = "party" .. i
+        if not UnitHasBuff(unitstr, texture) and UnitName(unitstr) then
+          playerlist = playerlist .. ( not first and ", " or "") .. GetUnitColor(unitstr) .. UnitName(unitstr) .. "|r"
+          first = nil
+        end
+      end
+    end
+
+    if strlen(playerlist) > 0 then
+      GameTooltip:AddLine(" ")
+      GameTooltip:AddLine(T["Unbuffed"] .. ":", .3, 1, .8)
+      GameTooltip:AddLine(playerlist,1,1,1,1)
+      GameTooltip:Show()
+    end
+  end
+end
+
+local function BuffOnLeave()
+  GameTooltip:Hide()
+end
+
+local function BuffOnClick()
+  if this:GetParent().label == "player" then
+    CancelPlayerBuff(GetPlayerBuff(PLAYER_BUFF_START_ID+this.id,"HELPFUL"))
+  end
+end
+
+local function DebuffOnUpdate()
+  if ( this.tick or 1) > GetTime() then return else this.tick = GetTime() + .4 end
+  local timeleft = GetPlayerBuffTimeLeft(GetPlayerBuff(PLAYER_BUFF_START_ID+this.id,"HARMFUL"))
+  CooldownFrame_SetTimer(this.cd, GetTime(), timeleft, 1)
+end
+
+local function DebuffOnEnter()
+  if not this:GetParent().label then return end
+
+  GameTooltip:SetOwner(this, "ANCHOR_BOTTOMRIGHT")
+  if this:GetParent().label == "player" then
+    GameTooltip:SetPlayerBuff(GetPlayerBuff(PLAYER_BUFF_START_ID+this.id,"HARMFUL"))
+  else
+    GameTooltip:SetUnitDebuff(this:GetParent().label .. this:GetParent().id, this.id)
+  end
+end
+
+local function DebuffOnLeave()
+  GameTooltip:Hide()
+end
+
+local function DebuffOnClick()
+  if this:GetParent().label == "player" then
+    CancelPlayerBuff(GetPlayerBuff(PLAYER_BUFF_START_ID+this.id,"HARMFUL"))
+  end
+end
+
 local aggrodata = { }
 function pfUI.api.UnitHasAggro(unit)
   if aggrodata[unit] and GetTime() < aggrodata[unit].check + 1 then
@@ -369,13 +461,10 @@ function pfUI.uf:UpdateConfig()
     for i=1, 32 do
       if i > tonumber(f.config.bufflimit) then break end
 
-      local id = i
       local perrow = f.config.buffperrow
       local row = floor((i-1) / perrow)
 
       f.buffs[i] = f.buffs[i] or CreateFrame("Button", "pfUI" .. f.fname .. "Buff" .. i, f)
-      f.buffs[i]:SetID(i)
-
       f.buffs[i].stacks = f.buffs[i].stacks or f.buffs[i]:CreateFontString(nil, "OVERLAY", f.buffs[i])
       f.buffs[i].stacks:SetFont(pfUI.font_unit, C.global.font_unit_size, "OUTLINE")
       f.buffs[i].stacks:SetPoint("BOTTOMRIGHT", f.buffs[i], 2, -2)
@@ -385,6 +474,7 @@ function pfUI.uf:UpdateConfig()
       f.buffs[i].stacks:SetTextColor(1,1,.5)
       f.buffs[i].cd = f.buffs[i].cd or CreateFrame(COOLDOWN_FRAME_TYPE, nil, f.buffs[i])
       f.buffs[i].cd.pfCooldownType = "ALL"
+      f.buffs[i].id = i
 
       f.buffs[i]:RegisterForClicks("RightButtonUp")
       f.buffs[i]:ClearAllPoints()
@@ -416,71 +506,12 @@ function pfUI.uf:UpdateConfig()
       f.buffs[i]:SetHeight(f.config.buffsize)
 
       if f:GetName() == "pfPlayer" then
-        f.buffs[i]:SetScript("OnUpdate", function()
-          if ( this.tick or 1) > GetTime() then return else this.tick = GetTime() + .4 end
-          local timeleft = GetPlayerBuffTimeLeft(GetPlayerBuff(PLAYER_BUFF_START_ID+this:GetID(),"HELPFUL"))
-          CooldownFrame_SetTimer(this.cd, GetTime(), timeleft, 1)
-        end)
+        f.buffs[i]:SetScript("OnUpdate", BuffOnUpdate)
       end
 
-      f.buffs[i]:SetScript("OnEnter", function()
-        local parent = this:GetParent()
-        if not parent.label then return end
-
-        GameTooltip:SetOwner(this, "ANCHOR_BOTTOMRIGHT")
-        if parent.label == "player" then
-          GameTooltip:SetPlayerBuff(GetPlayerBuff(PLAYER_BUFF_START_ID+id,"HELPFUL"))
-        else
-          GameTooltip:SetUnitBuff(parent.label .. parent.id, id)
-        end
-
-        if IsShiftKeyDown() then
-          local texture = parent.label == "player" and GetPlayerBuffTexture(GetPlayerBuff(PLAYER_BUFF_START_ID+id,"HELPFUL")) or UnitBuff(parent.label .. parent.id, id)
-
-          local playerlist = ""
-          local first = true
-
-          if UnitInRaid("player") then
-            for i=1,40 do
-              local unitstr = "raid" .. i
-              if not UnitHasBuff(unitstr, texture) and UnitName(unitstr) then
-                playerlist = playerlist .. ( not first and ", " or "") .. GetUnitColor(unitstr) .. UnitName(unitstr) .. "|r"
-                first = nil
-              end
-            end
-          else
-            if not UnitHasBuff("player", texture) then
-              playerlist = playerlist .. ( not first and ", " or "") .. GetUnitColor("player") .. UnitName("player") .. "|r"
-              first = nil
-            end
-
-            for i=1,4 do
-              local unitstr = "party" .. i
-              if not UnitHasBuff(unitstr, texture) and UnitName(unitstr) then
-                playerlist = playerlist .. ( not first and ", " or "") .. GetUnitColor(unitstr) .. UnitName(unitstr) .. "|r"
-                first = nil
-              end
-            end
-          end
-
-          if strlen(playerlist) > 0 then
-            GameTooltip:AddLine(" ")
-            GameTooltip:AddLine(T["Unbuffed"] .. ":", .3, 1, .8)
-            GameTooltip:AddLine(playerlist,1,1,1,1)
-            GameTooltip:Show()
-          end
-        end
-      end)
-
-      f.buffs[i]:SetScript("OnLeave", function()
-        GameTooltip:Hide()
-      end)
-
-      f.buffs[i]:SetScript("OnClick", function()
-        if this:GetParent().label == "player" then
-          CancelPlayerBuff(GetPlayerBuff(PLAYER_BUFF_START_ID+id,"HELPFUL"))
-        end
-      end)
+      f.buffs[i]:SetScript("OnEnter", BuffOnEnter)
+      f.buffs[i]:SetScript("OnLeave", BuffOnLeave)
+      f.buffs[i]:SetScript("OnClick", BuffOnClick)
     end
   end
 
@@ -498,9 +529,7 @@ function pfUI.uf:UpdateConfig()
     for i=1, 32 do
       if i > tonumber(f.config.debufflimit) then break end
 
-      local id = i
       f.debuffs[i] = f.debuffs[i] or CreateFrame("Button", "pfUI" .. f.fname .. "Debuff" .. i, f)
-      f.debuffs[i]:SetID(i)
       f.debuffs[i].stacks = f.debuffs[i].stacks or f.debuffs[i]:CreateFontString(nil, "OVERLAY", f.debuffs[i])
       f.debuffs[i].stacks:SetFont(pfUI.font_unit, C.global.font_unit_size, "OUTLINE")
       f.debuffs[i].stacks:SetPoint("BOTTOMRIGHT", f.debuffs[i], 2, -2)
@@ -510,6 +539,7 @@ function pfUI.uf:UpdateConfig()
       f.debuffs[i].stacks:SetTextColor(1,1,.5)
       f.debuffs[i].cd = f.debuffs[i].cd or CreateFrame(COOLDOWN_FRAME_TYPE, nil, f.debuffs[i])
       f.debuffs[i].cd.pfCooldownType = "ALL"
+      f.debuffs[i].id = i
 
       f.debuffs[i]:RegisterForClicks("RightButtonUp")
       f.debuffs[i]:ClearAllPoints()
@@ -518,38 +548,19 @@ function pfUI.uf:UpdateConfig()
       f.debuffs[i]:SetNormalTexture(nil)
 
       if f:GetName() == "pfPlayer" then
-        f.debuffs[i]:SetScript("OnUpdate", function()
-          if ( this.tick or 1) > GetTime() then return else this.tick = GetTime() + .4 end
-          local timeleft = GetPlayerBuffTimeLeft(GetPlayerBuff(PLAYER_BUFF_START_ID+this:GetID(),"HARMFUL"))
-          CooldownFrame_SetTimer(this.cd, GetTime(), timeleft, 1)
-        end)
+        f.debuffs[i]:SetScript("OnUpdate", DebuffOnUpdate)
       end
 
-      f.debuffs[i]:SetScript("OnEnter", function()
-        if not this:GetParent().label then return end
-        GameTooltip:SetOwner(this, "ANCHOR_BOTTOMRIGHT")
-        if this:GetParent().label == "player" then
-          GameTooltip:SetPlayerBuff(GetPlayerBuff(PLAYER_BUFF_START_ID+id,"HARMFUL"))
-        else
-          GameTooltip:SetUnitDebuff(this:GetParent().label .. this:GetParent().id, id)
-        end
-      end)
-
-      f.debuffs[i]:SetScript("OnLeave", function()
-        GameTooltip:Hide()
-      end)
-
-      f.debuffs[i]:SetScript("OnClick", function()
-        if this:GetParent().label == "player" then
-          CancelPlayerBuff(GetPlayerBuff(PLAYER_BUFF_START_ID+id,"HARMFUL"))
-        end
-      end)
+      f.debuffs[i]:SetScript("OnEnter", DebuffOnEnter)
+      f.debuffs[i]:SetScript("OnLeave", DebuffOnLeave)
+      f.debuffs[i]:SetScript("OnClick", DebuffOnClick)
     end
   end
 
   if f.config.visible == "1" then
     pfUI.uf:RefreshUnit(f, "all")
     f:EnableScripts()
+    f:EnableEvents()
     f:UpdateFrameSize()
   else
     f:UnregisterAllEvents()
@@ -557,11 +568,142 @@ function pfUI.uf:UpdateConfig()
   end
 end
 
-function pfUI.uf:EnableScripts()
-  local f = self
+function pfUI.uf.OnShow()
+  pfUI.uf:RefreshUnit(this)
+end
 
-  f:RegisterForClicks('LeftButtonUp', 'RightButtonUp',
-    'MiddleButtonUp', 'Button4Up', 'Button5Up')
+function pfUI.uf.OnEvent()
+  if this.label == "target" and event == "PLAYER_TARGET_CHANGED" then
+    pfUI.uf:RefreshUnit(this, "all")
+  elseif ( this.label == "party" or this.label == "player" ) and event == "PARTY_MEMBERS_CHANGED" then
+    pfUI.uf:RefreshUnit(this, "all")
+  elseif this.label == "party" and event == "PARTY_MEMBER_ENABLE" then
+    pfUI.uf:RefreshUnit(this, "all")
+  elseif this.label == "party" and event == "PARTY_MEMBER_DISABLE" then
+    pfUI.uf:RefreshUnit(this, "all")
+  elseif this.label == "party" and event == "GROUP_ROSTER_UPDATE" then
+    pfUI.uf:RefreshUnit(this, "all")
+  elseif ( this.label == "raid" or this.label == "party" ) and event == "RAID_ROSTER_UPDATE" then
+    pfUI.uf:RefreshUnit(this, "all")
+  elseif this.label == "player" and (event == "PLAYER_AURAS_CHANGED" or event == "UNIT_INVENTORY_CHANGED") then
+    pfUI.uf:RefreshUnit(this, "aura")
+  elseif event == "PLAYER_ENTERING_WORLD" then
+    pfUI.uf:RefreshUnit(this, "all")
+  elseif event == "RAID_TARGET_UPDATE" then
+    pfUI.uf:RefreshUnit(this, "raidIcon")
+  elseif this.label == "player" and event == "PLAYER_UPDATE_RESTING" then
+    pfUI.uf:RefreshUnit(this, "restIcon")
+  elseif event == "PARTY_LOOT_METHOD_CHANGED" then
+    pfUI.uf:RefreshUnit(this, "lootIcon")
+  elseif event == "PARTY_LEADER_CHANGED" then
+    pfUI.uf:RefreshUnit(this, "leaderIcon")
+  elseif event == "UNIT_PET" and this.label == "pet" then
+    pfUI.uf:RefreshUnit(this)
+
+  -- UNIT_XXX Events
+  elseif arg1 and arg1 == this.label .. this.id then
+    if event == "UNIT_PORTRAIT_UPDATE" or event == "UNIT_MODEL_CHANGED" then
+      pfUI.uf:RefreshUnit(this, "portrait")
+    elseif event == "UNIT_AURA" then
+      pfUI.uf:RefreshUnit(this, "aura")
+    elseif event == "UNIT_FACTION" then
+      pfUI.uf:RefreshUnit(this, "pvp")
+    elseif event == "UNIT_COMBAT" then
+      CombatFeedback_OnCombatEvent(arg2, arg3, arg4, arg5)
+    else
+      pfUI.uf:RefreshUnit(this)
+    end
+  end
+end
+
+function pfUI.uf.OnUpdate()
+  local unitname = ( this.label and UnitName(this.label) ) or ""
+
+  -- update combat feedback
+  if this.feedbackText then CombatFeedback_OnUpdate(arg1) end
+
+  -- focus unit detection
+  if this.unitname and this.unitname ~= strlower(unitname) then
+    -- invalid focus frame
+    for unit, bool in pairs(pfValidUnits) do
+      local scan = UnitName(unit) or ""
+      if this.unitname == strlower(scan) then
+        this.label = unit
+        if this.portrait then this.portrait.model.lastUnit = nil end
+        this.instantRefresh = true
+        pfUI.uf:RefreshUnit(this, "all")
+        return
+      end
+      this.label = nil
+      this.instantRefresh = true
+      this.hp.bar:SetStatusBarColor(.2,.2,.2)
+    end
+  end
+
+  if not this.label then return end
+
+  pfUI.uf:RefreshUnitAnimation(this)
+
+  -- trigger eventless actions (online/offline/range)
+  if not this.lastTick then this.lastTick = GetTime() + (this.tick or .2) end
+  if this.lastTick and this.lastTick < GetTime() then
+    this.lastTick = GetTime() + (this.tick or .2)
+    pfUI.uf:RefreshUnitState(this)
+
+    if this.config.glowaggro == "1" and pfUI.api.UnitHasAggro(this.label .. this.id) > 0 then
+      this.hp.glow:SetBackdropBorderColor(1,.2,0)
+      this.power.glow:SetBackdropBorderColor(1,.2,0)
+      this.hp.glow:Show()
+      this.power.glow:Show()
+    elseif this.config.glowcombat == "1" and UnitAffectingCombat(this.label .. this.id) then
+      this.hp.glow:SetBackdropBorderColor(1,1,.2)
+      this.power.glow:SetBackdropBorderColor(1,1,.2)
+      this.hp.glow:Show()
+      this.power.glow:Show()
+    else
+      this.hp.glow:SetBackdropBorderColor(1,1,1)
+      this.power.glow:SetBackdropBorderColor(1,1,1)
+      this.hp.glow:Hide()
+      this.power.glow:Hide()
+    end
+
+    -- update everything on eventless frames (targettarget, etc)
+    if this.tick then
+      pfUI.uf:RefreshUnit(this, "all")
+    end
+  end
+end
+
+function pfUI.uf.OnEnter()
+  if not this.label then return end
+  if this.config.showtooltip == "0" then return end
+  GameTooltip_SetDefaultAnchor(GameTooltip, this)
+  GameTooltip:SetUnit(this.label .. this.id)
+  GameTooltip:Show()
+end
+
+function pfUI.uf.OnLeave()
+  GameTooltip:FadeOut()
+end
+
+function pfUI.uf.OnClick()
+  if not this.label and this.unitname then
+    local player = UnitIsUnit("target", "player")
+    TargetByName(this.unitname, true)
+    if strlower(UnitName("target")) ~= strlower(this.unitname) then
+      if player then
+        TargetUnit("player")
+      else
+        TargetLastTarget()
+      end
+    end
+  else
+    pfUI.uf:ClickAction(arg1)
+  end
+end
+
+function pfUI.uf:EnableEvents()
+  local f = self
 
   f:RegisterEvent("PLAYER_ENTERING_WORLD")
   f:RegisterEvent("UNIT_DISPLAYPOWER")
@@ -590,139 +732,19 @@ function pfUI.uf:EnableScripts()
   f:RegisterEvent("UNIT_PET")
   f:RegisterEvent("UNIT_HAPPINESS")
 
-  f:SetScript("OnShow", function ()
-      pfUI.uf:RefreshUnit(this)
-    end)
+  f:RegisterForClicks('LeftButtonUp', 'RightButtonUp',
+    'MiddleButtonUp', 'Button4Up', 'Button5Up')
+end
 
-  f:SetScript("OnEvent", function()
-    if this.label == "target" and event == "PLAYER_TARGET_CHANGED" then
-      pfUI.uf:RefreshUnit(this, "all")
-    elseif ( this.label == "party" or this.label == "player" ) and event == "PARTY_MEMBERS_CHANGED" then
-      pfUI.uf:RefreshUnit(this, "all")
-    elseif this.label == "party" and event == "PARTY_MEMBER_ENABLE" then
-      pfUI.uf:RefreshUnit(this, "all")
-    elseif this.label == "party" and event == "PARTY_MEMBER_DISABLE" then
-      pfUI.uf:RefreshUnit(this, "all")
-    elseif this.label == "party" and event == "GROUP_ROSTER_UPDATE" then
-      pfUI.uf:RefreshUnit(this, "all")
-    elseif ( this.label == "raid" or this.label == "party" ) and event == "RAID_ROSTER_UPDATE" then
-      pfUI.uf:RefreshUnit(this, "all")
-    elseif this.label == "player" and (event == "PLAYER_AURAS_CHANGED" or event == "UNIT_INVENTORY_CHANGED") then
-      pfUI.uf:RefreshUnit(this, "aura")
-    elseif event == "PLAYER_ENTERING_WORLD" then
-      pfUI.uf:RefreshUnit(this, "all")
-    elseif event == "RAID_TARGET_UPDATE" then
-      pfUI.uf:RefreshUnit(this, "raidIcon")
-    elseif this.label == "player" and event == "PLAYER_UPDATE_RESTING" then
-      pfUI.uf:RefreshUnit(this, "restIcon")
-    elseif event == "PARTY_LOOT_METHOD_CHANGED" then
-      pfUI.uf:RefreshUnit(this, "lootIcon")
-    elseif event == "PARTY_LEADER_CHANGED" then
-      pfUI.uf:RefreshUnit(this, "leaderIcon")
-    elseif event == "UNIT_PET" and this.label == "pet" then
-      pfUI.uf:RefreshUnit(this)
+function pfUI.uf:EnableScripts()
+  local f = self
 
-    -- UNIT_XXX Events
-    elseif arg1 and arg1 == this.label .. this.id then
-      if event == "UNIT_PORTRAIT_UPDATE" or event == "UNIT_MODEL_CHANGED" then
-        pfUI.uf:RefreshUnit(this, "portrait")
-      elseif event == "UNIT_AURA" then
-        pfUI.uf:RefreshUnit(this, "aura")
-      elseif event == "UNIT_FACTION" then
-        pfUI.uf:RefreshUnit(this, "pvp")
-      elseif event == "UNIT_COMBAT" then
-        CombatFeedback_OnCombatEvent(arg2, arg3, arg4, arg5)
-      else
-        pfUI.uf:RefreshUnit(this)
-      end
-    end
-  end)
-
-  f:SetScript("OnUpdate", function()
-    local unitname = ( this.label and UnitName(this.label) ) or ""
-
-    -- update combat feedback
-    if this.feedbackText then CombatFeedback_OnUpdate(arg1) end
-
-    -- focus unit detection
-    if this.unitname and this.unitname ~= strlower(unitname) then
-      -- invalid focus frame
-      for unit, bool in pairs(pfValidUnits) do
-        local scan = UnitName(unit) or ""
-        if this.unitname == strlower(scan) then
-          this.label = unit
-          if this.portrait then this.portrait.model.lastUnit = nil end
-          this.instantRefresh = true
-          pfUI.uf:RefreshUnit(this, "all")
-          return
-        end
-        this.label = nil
-        this.instantRefresh = true
-        this.hp.bar:SetStatusBarColor(.2,.2,.2)
-      end
-    end
-
-    if not this.label then return end
-
-    pfUI.uf:RefreshUnitAnimation(this)
-
-    -- trigger eventless actions (online/offline/range)
-    if not this.lastTick then this.lastTick = GetTime() + (this.tick or .2) end
-    if this.lastTick and this.lastTick < GetTime() then
-      this.lastTick = GetTime() + (this.tick or .2)
-      pfUI.uf:RefreshUnitState(this)
-
-      if this.config.glowaggro == "1" and pfUI.api.UnitHasAggro(this.label .. this.id) > 0 then
-        this.hp.glow:SetBackdropBorderColor(1,.2,0)
-        this.power.glow:SetBackdropBorderColor(1,.2,0)
-        this.hp.glow:Show()
-        this.power.glow:Show()
-      elseif this.config.glowcombat == "1" and UnitAffectingCombat(this.label .. this.id) then
-        this.hp.glow:SetBackdropBorderColor(1,1,.2)
-        this.power.glow:SetBackdropBorderColor(1,1,.2)
-        this.hp.glow:Show()
-        this.power.glow:Show()
-      else
-        this.hp.glow:SetBackdropBorderColor(1,1,1)
-        this.power.glow:SetBackdropBorderColor(1,1,1)
-        this.hp.glow:Hide()
-        this.power.glow:Hide()
-      end
-
-      -- update everything on eventless frames (targettarget, etc)
-      if this.tick then
-        pfUI.uf:RefreshUnit(this, "all")
-      end
-    end
-  end)
-
-  f:SetScript("OnEnter", function()
-    if not this.label then return end
-    if this.config.showtooltip == "0" then return end
-    GameTooltip_SetDefaultAnchor(GameTooltip, this)
-    GameTooltip:SetUnit(this.label .. this.id)
-    GameTooltip:Show()
-  end)
-
-  f:SetScript("OnLeave", function()
-    GameTooltip:FadeOut()
-  end)
-
-  f:SetScript("OnClick", function ()
-    if not this.label and this.unitname then
-      local player = UnitIsUnit("target", "player")
-      TargetByName(this.unitname, true)
-      if strlower(UnitName("target")) ~= strlower(this.unitname) then
-        if player then
-          TargetUnit("player")
-        else
-          TargetLastTarget()
-        end
-      end
-    else
-      pfUI.uf:ClickAction(arg1)
-    end
-  end)
+  f:SetScript("OnShow", pfUI.uf.OnShow)
+  f:SetScript("OnEvent", pfUI.uf.OnEvent)
+  f:SetScript("OnUpdate", pfUI.uf.OnUpdate)
+  f:SetScript("OnEnter", pfUI.uf.OnEnter)
+  f:SetScript("OnLeave", pfUI.uf.OnLeave)
+  f:SetScript("OnClick", pfUI.uf.OnClick)
 end
 
 function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
@@ -753,6 +775,7 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
   f.UpdateFrameSize = pfUI.uf.UpdateFrameSize
   f.UpdateConfig    = pfUI.uf.UpdateConfig
   f.EnableScripts   = pfUI.uf.EnableScripts
+  f.EnableEvents    = pfUI.uf.EnableEvents
   f.GetColor        = pfUI.uf.GetColor
 
   -- cache values to the frame
@@ -812,10 +835,12 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
   f:UpdateConfig()
   f:UpdateFrameSize()
   f:EnableScripts()
+  f:EnableEvents()
 
   if f.config.visible == "1" then
     pfUI.uf:RefreshUnit(f, "all")
     f:EnableScripts()
+    f:EnableEvents()
     f:UpdateFrameSize()
   else
     f:UnregisterAllEvents()
@@ -1181,7 +1206,7 @@ function pfUI.uf:RefreshUnit(unit, component)
         unit.debuffs[i]:Show()
 
         if unit:GetName() == "pfPlayer" then
-          local timeleft = GetPlayerBuffTimeLeft(GetPlayerBuff(PLAYER_BUFF_START_ID+unit.debuffs[i]:GetID(), "HARMFUL"),"HARMFUL")
+          local timeleft = GetPlayerBuffTimeLeft(GetPlayerBuff(PLAYER_BUFF_START_ID+unit.debuffs[i].id, "HARMFUL"),"HARMFUL")
           CooldownFrame_SetTimer(unit.debuffs[i].cd, GetTime(), timeleft, 1)
         elseif libdebuff then
           local name, rank, texture, stacks, dtype, duration, timeleft = libdebuff:UnitDebuff(unitstr, i)
