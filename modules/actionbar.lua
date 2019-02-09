@@ -407,7 +407,6 @@ pfUI:RegisterModule("actionbar", function ()
     end
 
     self.highlight:Show()
-    GameTooltip:Show()
   end
 
   local function ButtonLeave(self)
