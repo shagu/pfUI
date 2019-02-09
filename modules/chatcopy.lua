@@ -62,9 +62,61 @@ pfUI:RegisterModule("chatcopy", function ()
     return f
   end
 
+  local limit = 100
   local f = CreateFrame("Frame")
   f:RegisterEvent("PLAYER_ENTERING_WORLD")
   f:SetScript("OnEvent", function()
+
+    local button = CreateFrame("Button", "pfChatCopyButton", pfUI.chat.left.panelTop)
+    button:SetPoint("TOPRIGHT", 0, 0)
+    button:RegisterForClicks("LeftButtonUp", "RightButtonUp")
+    button:SetFrameStrata("TOOLTIP")
+    button:SetWidth(16)
+    button:SetHeight(16)
+    button:SetAlpha(.25)
+    button.icon = button:CreateTexture(nil,"BACKGROUND")
+    button.icon:SetTexture("Interface\\Buttons\\UI-GuildButton-PublicNote-Disabled")
+    button.icon:SetAllPoints()
+
+    button:SetScript("OnClick", function()
+      if arg1 == "LeftButton" then
+        this.state = not this.state
+
+        for i=1, _G.NUM_CHAT_WINDOWS do
+          local frame = _G["ChatFrame"..i]
+          local scroll = frame.scroll
+
+          if scroll and this.state then
+            scroll:Show()
+          elseif scroll then
+            scroll:Hide()
+          end
+        end
+
+        if this.state then
+          button.icon:SetTexture("Interface\\Buttons\\UI-GuildButton-PublicNote-Up")
+        else
+          button.icon:SetTexture("Interface\\Buttons\\UI-GuildButton-PublicNote-Disabled")
+        end
+      elseif arg1 == "RightButton" then
+        if ChatMenu:IsShown() then
+          ChatMenu:Hide()
+        else
+          ChatMenu:Show()
+          ChatMenu:ClearAllPoints()
+          ChatMenu:SetPoint("BOTTOMLEFT", this, "TOPRIGHT", 0, 0)
+        end
+      end
+    end)
+
+    button:SetScript("OnEnter", function()
+      this:SetAlpha(1)
+    end)
+
+    button:SetScript("OnLeave", function()
+      this:SetAlpha(.4)
+    end)
+
     for i=1, _G.NUM_CHAT_WINDOWS do
       local frame = _G["ChatFrame"..i]
       local name = frame:GetName()
@@ -88,8 +140,8 @@ pfUI:RegisterModule("chatcopy", function ()
             table.insert(history, 1, "|cffffffff"..msg)
           end
 
-          if history[50] then
-            table.remove(history, 50)
+          if history[limit] then
+            table.remove(history, limit)
           end
           AddMessage(self,msg,r,g,b)
         end
@@ -98,7 +150,7 @@ pfUI:RegisterModule("chatcopy", function ()
         local font, size, flags = frame:GetFont()
 
         -- build the frames
-        local scroll = CreateScrollFrame(nil, frame)
+        local scroll = CreateScrollFrame("ChatFrameScroll"..i, frame)
         scroll:SetAllPoints(frame)
         scroll.tex = scroll:CreateTexture(nil, "BACKGROUND")
         scroll.tex:SetTexture(0,0,0,.95)
@@ -113,19 +165,18 @@ pfUI:RegisterModule("chatcopy", function ()
         editbox:SetTextColor(1,1,1,1)
         editbox:SetFontObject(ChatFontNormal)
         editbox:SetFont(font, size, flags)
-        editbox:SetMaxLetters(99999)
         editbox:SetAutoFocus(true)
         editbox:SetMultiLine(true)
+        editbox:SetMaxLetters(0)
 
         editbox:SetScript("OnEscapePressed", function ()
           this:ClearFocus()
-          this:GetParent():Hide()
         end)
 
         scroll:SetScrollChild(editbox)
         scroll:SetScript("OnShow", function()
           editbox:SetText("")
-          for i=50,0,-1 do
+          for i=limit,0,-1 do
             if history[i] then
               editbox:Insert("\n" .. history[i])
             end
@@ -147,50 +198,10 @@ pfUI:RegisterModule("chatcopy", function ()
           end)
         end)
 
-        local button = CreateFrame("Button", nil, frame)
-        button:RegisterForClicks("LeftButtonUp", "RightButtonUp")
-        if pfUI.chat then
-          button:SetPoint("TOPRIGHT", 0, 24)
-        else
-          button:SetPoint("TOPRIGHT", -3, -3)
-        end
-
-        button:SetFrameStrata("TOOLTIP")
-        button:SetWidth(16)
-        button:SetHeight(16)
-        button:SetAlpha(.25)
-        button.icon = button:CreateTexture(nil,"BACKGROUND")
-        button.icon:SetTexture("Interface\\Buttons\\UI-GuildButton-PublicNote-Disabled")
-        button.icon:SetAllPoints()
-
-        button:SetScript("OnClick", function()
-          if arg1 == "LeftButton" then
-            if scroll:IsShown() then
-              scroll:Hide()
-              button.icon:SetTexture("Interface\\Buttons\\UI-GuildButton-PublicNote-Disabled")
-            else
-              scroll:Show()
-              button.icon:SetTexture("Interface\\Buttons\\UI-GuildButton-PublicNote-Up")
-            end
-          elseif arg1 == "RightButton" then
-            if ChatMenu:IsShown() then
-              ChatMenu:Hide()
-            else
-              ChatMenu:Show()
-              ChatMenu:ClearAllPoints()
-              ChatMenu:SetPoint("BOTTOMLEFT", this, "TOPRIGHT", 0, 0)
-            end
-          end
-        end)
-
-        button:SetScript("OnEnter", function()
-          this:SetAlpha(1)
-        end)
-
-        button:SetScript("OnLeave", function()
-          this:SetAlpha(.4)
-        end)
+        frame.scroll = scroll
       end
     end
+
+    this:UnregisterAllEvents()
   end)
 end)
