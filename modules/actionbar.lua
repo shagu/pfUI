@@ -297,8 +297,10 @@ pfUI:RegisterModule("actionbar", function ()
     -- active border
     if active then
       self.backdrop:SetBackdropBorderColor(cr,cg,cb,1)
+      self.active:Show()
     else
       CreateBackdrop(self)
+      self.active:Hide()
     end
 
     -- keybinds
@@ -555,6 +557,13 @@ pfUI:RegisterModule("actionbar", function ()
       f.highlight:SetBackdropBorderColor(1,1,1,.8)
       f.highlight:SetAllPoints()
       f.highlight:Hide()
+
+      -- active
+      f.active = CreateFrame("Frame", nil, f)
+      f.active:SetBackdrop(backdrop_highlight)
+      f.active:SetBackdropBorderColor(1,1,.5,1)
+      f.active:SetAllPoints()
+      f.active:Hide()
     end
 
     -- set animation
