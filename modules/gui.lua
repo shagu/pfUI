@@ -1285,7 +1285,7 @@ pfUI:RegisterModule("gui", function ()
 
   local barnames = { {11, "Stance/Shapeshift Bar"}, {12, "Pet Actionbar"}, {1, "Main Actionbar"},
     {6, "Top Actionbar"}, {5, "Left Actionbar"}, {3, "Right Actionbar"}, {4, "Vertical Actionbar"},
-    {2, "Paging Actionbar"}, {7, "Special Actionbar"}, {8, "Stance Bar 1"}, {9, "Stance Bar 2"}, {10, "Stance Bar 3"} }
+    {2, "Paging Actionbar"}, {7, "Stance Bar 1"}, {8, "Stance Bar 2"}, {9, "Stance Bar 3"}, {10, "Stance Bar 4"} }
 
   -- >> General
   pfUI.gui.tabs.actionbar.tabs.general = pfUI.gui.tabs.actionbar.tabs:CreateTabChild(T["General"], true)

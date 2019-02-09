@@ -32,10 +32,10 @@ pfUI:RegisterModule("actionbar", function ()
     [12] = "BONUSACTIONBUTTON",
     -- additional keybinds
     [2] = "PFPAGING",
-    [7] = "PFSPECIAL",
-    [8] = "PFSTANCEONE",
-    [9] = "PFSTANCETWO",
-    [10] = "PFSTANCETHREE",
+    [7] = "PFSTANCEONE",
+    [8] = "PFSTANCETWO",
+    [9] = "PFSTANCETHREE",
+    [10] = "PFSTANCEFOUR",
   }
 
   local blizzbarmapping = {
@@ -54,10 +54,10 @@ pfUI:RegisterModule("actionbar", function ()
     [4] = "Vertical",
     [5] = "Left",
     [6] = "Top",
-    [7] = "Special",
-    [8] = "StancePaging1",
-    [9] = "StancePaging2",
-    [10] = "StancePaging3",
+    [7] = "StanceBar1",
+    [8] = "StanceBar2",
+    [9] = "StanceBar3",
+    [10] = "StanceBar4",
     [11] = "Stances",
     [12] = "Pet",
   }
@@ -863,10 +863,10 @@ pfUI:RegisterModule("actionbar", function ()
   -- Localize custom keybinds for additional actionbars (see Bindings.xml)
   local names = {
     ["PAGING"] = "Paging",
-    ["SPECIAL"] = "Special",
     ["STANCEONE"] = "Stance 1",
     ["STANCETWO"] = "Stance 2",
     ["STANCETHREE"] = "Stance 3",
+    ["STANCEFOUR"] = "Stance 4",
   }
 
   for name, loc in pairs(names) do
