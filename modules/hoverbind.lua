@@ -11,11 +11,11 @@ pfUI:RegisterModule("hoverbind", function ()
     ["pfActionBarPetButton"]      = "BONUSACTIONBUTTON",
 
     -- special buttons
-    ["pfActionBarPagingButton"]        = "PFPAGING",
-    ["pfActionBarStancePaging1Button"] = "PFSTANCEONE",
-    ["pfActionBarStancePaging2Button"] = "PFSTANCETWO",
-    ["pfActionBarStancePaging3Button"] = "PFSTANCETHREE",
-    ["pfActionBarStancePaging4Button"] = "PFSTANCEFOUR",
+    ["pfActionBarPagingButton"]     = "PFPAGING",
+    ["pfActionBarStanceBar1Button"] = "PFSTANCEONE",
+    ["pfActionBarStanceBar2Button"] = "PFSTANCETWO",
+    ["pfActionBarStanceBar3Button"] = "PFSTANCETHREE",
+    ["pfActionBarStanceBar4Button"] = "PFSTANCEFOUR",
   }
 
   local modifiers = {
@@ -63,9 +63,7 @@ pfUI:RegisterModule("hoverbind", function ()
     local hovername = (frame and frame.GetName) and (frame:GetName()) or ""
     local binding = pfUI.hoverbind:GetBinding(hovername)
     if arg1 == "ESCAPE" and not binding then pfUI.hoverbind:Hide() return end
-    if binding == "NOBIND" then
-      UIErrorsFrame:AddMessage(T["Keybinding failed due to client restrictions."], 1, .2, .2)
-    elseif binding then
+    if binding then
       if arg1 == "ESCAPE" then
         local key = (GetBindingKey(binding))
         if (key) then
@@ -86,11 +84,9 @@ pfUI:RegisterModule("hoverbind", function ()
   end)
 
   function pfUI.hoverbind:GetBinding(button_name)
-    local found,_,buttontype,buttonindex = string.find(button_name,"^(%a+)(%d+)$")
+    local found,_,buttontype,buttonindex = string.find(button_name,"^(.-)(%d+)$")
     if found then
-      if keymap[buttontype] and keymap[buttontype] == "NOBIND" then
-        return "NOBIND"
-      elseif keymap[buttontype] then
+      if keymap[buttontype] then
         return string.format("%s%d",keymap[buttontype],buttonindex)
       elseif buttontype == "ActionButton" then
         return string.format("ACTIONBUTTON%d",buttonindex)
