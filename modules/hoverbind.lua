@@ -12,10 +12,10 @@ pfUI:RegisterModule("hoverbind", function ()
 
     -- special buttons
     ["pfActionBarPagingButton"]        = "PFPAGING",
-    ["pfActionBarSpecialButton"]       = "PFSPECIAL",
     ["pfActionBarStancePaging1Button"] = "PFSTANCEONE",
     ["pfActionBarStancePaging2Button"] = "PFSTANCETWO",
     ["pfActionBarStancePaging3Button"] = "PFSTANCETHREE",
+    ["pfActionBarStancePaging4Button"] = "PFSTANCEFOUR",
   }
 
   local modifiers = {
