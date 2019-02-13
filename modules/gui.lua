@@ -361,6 +361,7 @@ pfUI:RegisterModule("gui", function ()
       frame.add:SetScript("OnClick", function()
         CreateQuestionDialog(T["New entry:"], function()
             category[config] = category[config] .. "#" .. this:GetParent().input:GetText()
+            if ufunc then ufunc() else pfUI.gui.settingChanged = true end
           end, false, true)
       end)
 
@@ -380,6 +381,7 @@ pfUI:RegisterModule("gui", function ()
         end
         category[config] = newconf
         frame.input:Refresh()
+        if ufunc then ufunc() else pfUI.gui.settingChanged = true end
       end)
 
       -- hide shadows on wrong stratas
