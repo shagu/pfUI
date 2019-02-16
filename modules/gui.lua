@@ -317,7 +317,7 @@ pfUI:RegisterModule("gui", function ()
       frame.input:ClearAllPoints()
       frame.input:SetPoint("RIGHT" , -22, -3)
       frame.category = category
-      frame.config = configh
+      frame.config = config
 
       frame.input.Refresh = function()
         local function CreateValues()
