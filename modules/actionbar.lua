@@ -984,6 +984,7 @@ pfUI:RegisterModule("actionbar", function ()
   -- reagent counter
   local reagent_slots = { }
   local reagent_counts = { }
+  local reagent_textureslots = { }
   local reagent_capture = SPELL_REAGENTS.."(.+)"
   local scanner = libtipscan:GetScanner("actionbar")
   local reagentcounter = CreateFrame("Frame", "pfReagentCounter", UIParent)
@@ -995,20 +996,27 @@ pfUI:RegisterModule("actionbar", function ()
       this.event = true
     else
       for slot = 1, 120 do
-        -- clear cached reagent slots on SLOT_CHANGED
-        local hadslot = reagent_slots[slot]
-        reagent_slots[slot] = nil
-        if HasAction(slot) then
-          scanner:SetAction(slot)
-          local _, reagents = scanner:Find(reagent_capture)
-          if reagents then
-            reagent_slots[slot] = reagents
-            reagent_counts[reagents] = reagent_counts[reagents] or 0
-          end
+        local texture = GetActionTexture(slot)
+
+        -- update buttons that previously had an reagent
+        if reagent_slots[slot] and not texture then
+          reagent_textureslots[slot] = nil
+          reagent_slots[slot] = nil
+          RefreshSlot(slot)
         end
 
-        if reagent_slots[slot] or hadslot then
-          RefreshSlot(slot)
+        -- search for reagents on buttons with different icon
+        if reagent_textureslots[slot] ~= texture then
+          if HasAction(slot) then
+            reagent_textureslots[slot] = texture
+            scanner:SetAction(slot)
+            local _, reagents = scanner:Find(reagent_capture)
+            if reagents then
+              reagent_slots[slot] = reagents
+              reagent_counts[reagents] = reagent_counts[reagents] or 0
+              RefreshSlot(slot)
+            end
+          end
         end
       end
     end
