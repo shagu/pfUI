@@ -306,7 +306,6 @@ pfUI_translation["esES"] = {
   ["Item Count Text Size"] = nil,
   ["Item Durability"] = "Durabilidad del objeto",
   ["Item Slot Size"] = "Tamaño de las casillas",
-  ["Keybinding failed due to client restrictions."] = nil,
   ["Keybind Text Color"] = nil,
   ["Keybind Text Size"] = nil,
   ["Language"] = "Idioma",

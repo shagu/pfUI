@@ -306,7 +306,6 @@ pfUI_translation["zhTW"] = {
   ["Item Count Text Size"] = nil,
   ["Item Durability"] = "裝備耐久",
   ["Item Slot Size"] = "物品槽大小",
-  ["Keybinding failed due to client restrictions."] = nil,
   ["Keybind Text Color"] = nil,
   ["Keybind Text Size"] = nil,
   ["Language"] = "語言",

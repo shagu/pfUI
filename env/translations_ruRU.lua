@@ -306,7 +306,6 @@ pfUI_translation["ruRU"] = {
   ["Item Count Text Size"] = nil,
   ["Item Durability"] = "Прочность предметов",
   ["Item Slot Size"] = "Размер ячейки предмета",
-  ["Keybinding failed due to client restrictions."] = nil,
   ["Keybind Text Color"] = nil,
   ["Keybind Text Size"] = nil,
   ["Language"] = "Язык",

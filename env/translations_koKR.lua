@@ -306,7 +306,6 @@ pfUI_translation["koKR"] = {
   ["Item Count Text Size"] = nil,
   ["Item Durability"] = "아이템 내구도",
   ["Item Slot Size"] = nil,
-  ["Keybinding failed due to client restrictions."] = nil,
   ["Keybind Text Color"] = nil,
   ["Keybind Text Size"] = nil,
   ["Language"] = "언어 선택",
