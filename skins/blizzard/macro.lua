@@ -58,6 +58,8 @@ pfUI:RegisterSkin("Macro", function ()
       CreateBackdrop(MacroPopupFrame, nil, nil, .9)
       StripTextures(MacroPopupScrollFrame)
       SkinScrollbar(MacroPopupScrollFrameScrollBar)
+      MacroPopupFrame:SetFrameStrata("DIALOG")
+      MacroPopupFrame:SetPoint("TOPLEFT", MacroFrame, "TOPRIGHT", 2*border, 0)
 
       MacroPopupNameLeft:SetTexture(nil)
       MacroPopupNameMiddle:SetTexture(nil)
