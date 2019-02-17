@@ -197,6 +197,18 @@ pfUI:RegisterModule("actionbar", function ()
     local start, duration, enable
     local castable, autocast
 
+    -- abort as early as possible on regular state update
+    if event == "ACTIONBAR_UPDATE_STATE" and self.bar ~= 11 and self.bar ~= 12 then
+      if IsCurrentAction(sid) then
+        self.backdrop:SetBackdropBorderColor(cr,cg,cb,1)
+        self.active:Show()
+      else
+        CreateBackdrop(self)
+        self.active:Hide()
+      end
+      return
+    end
+
     if self.bar == 11 then
       -- stance button
       id = sid
@@ -220,7 +232,6 @@ pfUI:RegisterModule("actionbar", function ()
       usable, oom = IsUsableAction(sid)
       start, duration, enable = GetActionCooldown(sid)
     end
-
 
     if not self.showempty and self.backdrop and not texture and showgrid == 0 then
       self.backdrop:Hide()
