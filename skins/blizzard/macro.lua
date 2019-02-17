@@ -8,6 +8,7 @@ pfUI:RegisterSkin("Macro", function ()
     if arg1 == "Blizzard_MacroUI" then
       StripTextures(MacroFrame)
       CreateBackdrop(MacroFrame, nil, nil, .9)
+      SetAllPointsOffset(MacroFrame.backdrop, MacroFrame, 3)
       EnableMovable(MacroFrame)
 
       MacroFrame:SetWidth(360)
@@ -59,7 +60,7 @@ pfUI:RegisterSkin("Macro", function ()
       StripTextures(MacroPopupScrollFrame)
       SkinScrollbar(MacroPopupScrollFrameScrollBar)
       MacroPopupFrame:SetFrameStrata("DIALOG")
-      MacroPopupFrame:SetPoint("TOPLEFT", MacroFrame, "TOPRIGHT", 2*border, 0)
+      MacroPopupFrame:SetPoint("TOPLEFT", MacroFrame.backdrop, "TOPRIGHT", 2*border, -border)
 
       MacroPopupNameLeft:SetTexture(nil)
       MacroPopupNameMiddle:SetTexture(nil)
