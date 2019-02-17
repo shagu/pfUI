@@ -410,6 +410,7 @@ pfUI:RegisterModule("actionbar", function ()
       local name, _, _, token = GetPetActionInfo(self:GetID())
       if token then
         GameTooltip:AddLine(_G[name])
+        GameTooltip:Show()
       else
         GameTooltip:SetPetAction(self:GetID())
       end
