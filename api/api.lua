@@ -340,7 +340,6 @@ end
 function pfUI.api.HookAddonOrVariable(addon, func)
   local lurker = CreateFrame("Frame", nil)
   lurker.func = func
-  lurker:RegisterEvent("ADDON_LOADED")
   lurker:RegisterEvent("VARIABLES_LOADED")
   lurker:RegisterEvent("PLAYER_ENTERING_WORLD")
   lurker:SetScript("OnEvent",function()
