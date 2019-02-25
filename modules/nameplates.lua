@@ -5,18 +5,22 @@ pfUI:RegisterModule("nameplates", function ()
   pfUI.nameplates = CreateFrame("Frame", nil, UIParent)
 
   -- catch all nameplates
+  local childs
+  local regions
+  local nameplate
+  local initialized = 0
+  local parentCount = 0
+
   pfUI.nameplates.scanner = CreateFrame("Frame", "pfNameplateScanner", UIParent)
-  pfUI.nameplates.scanner.parentCount = 0
   pfUI.nameplates.scanner:SetScript("OnUpdate", function()
-    local parentCount = WorldFrame:GetNumChildren()
+    parentCount = WorldFrame:GetNumChildren()
+    if initialized < parentCount then
+      childs = { WorldFrame:GetChildren() }
 
-    -- [[ scan nameplate frames ]]
-    if pfUI.nameplates.scanner.parentCount < parentCount then
-      pfUI.nameplates.scanner.parentCount = parentCount
-
-      for _, nameplate in ipairs({WorldFrame:GetChildren()}) do
-        if not nameplate.done and nameplate:GetObjectType() == NAMEPLATE_FRAMETYPE then
-          local regions = nameplate:GetRegions()
+      for i=initialized + 1, parentCount do
+        nameplate = childs[i]
+        if nameplate:GetObjectType() == NAMEPLATE_FRAMETYPE then
+          regions = nameplate:GetRegions()
           if regions and regions:GetObjectType() == "Texture" and regions:GetTexture() == "Interface\\Tooltips\\Nameplate-Border" then
             local visible = nameplate:IsVisible()
             nameplate:Hide()
@@ -24,10 +28,11 @@ pfUI:RegisterModule("nameplates", function ()
             nameplate:SetScript("OnUpdate", pfUI.nameplates.OnUpdate)
             nameplate:SetAlpha(1)
             if visible then nameplate:Show() end
-            nameplate.done = true
           end
         end
       end
+
+      initialized = parentCount
     end
   end)
 
