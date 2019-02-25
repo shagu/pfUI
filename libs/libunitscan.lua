@@ -142,7 +142,8 @@ if pfUI.client <= 11200 then
     -- don't scan when another unit is in target
     if UnitExists("target") or UnitName("target") then return end
 
-    for name in pairs(queue) do
+    local name = next(queue)
+    if name then
       -- try to target the unknown unit
       TargetByName(name, true)
       ClearTarget()
