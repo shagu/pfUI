@@ -34,13 +34,21 @@ pfUI:RegisterModule("player", function ()
     pfUI.uf.player.power.tick:RegisterEvent("PLAYER_ENTERING_WORLD")
     pfUI.uf.player.power.tick:RegisterEvent("UNIT_DISPLAYPOWER")
 
+    pfUI.uf.player.power.tick:SetScript("OnShow", function()
+      this.spark:Show()
+    end)
+
+    pfUI.uf.player.power.tick:SetScript("OnHide", function()
+      this.spark:Hide()
+    end)
+
     pfUI.uf.player.power.tick:SetScript("OnEvent", function()
       if event == "PLAYER_ENTERING_WORLD" then this.lastTick = GetTime() end
       if event == "PLAYER_ENTERING_WORLD" or ( event == "UNIT_DISPLAYPOWER" and arg1 == "player" ) then
         if UnitPowerType("player") ~= 3 then
-          this.spark:Hide()
+          this:Hide()
         else
-          this.spark:Show()
+          this:Show()
         end
       end
     end)
@@ -64,6 +72,7 @@ pfUI:RegisterModule("player", function ()
     end
 
     pfUI.uf.player.power.tick:SetScript("OnUpdate", function()
+      if UnitPowerType("player") ~= 3 then this:Hide() end
       if not this.energy then this.energy = UnitMana("player") end
 
       if(UnitMana("player") > this.energy or GetTime() >= this.lastTick + 2) then
