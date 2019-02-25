@@ -20,9 +20,11 @@ local libdebuff = CreateFrame("Frame", "pfdebuffsScanner", UIParent)
 local scanner = libtipscan:GetScanner("libdebuff")
 
 function libdebuff:GetDuration(effect, rank)
-  if L["debuffs"][effect] and rank then
-    local rank = string.gsub(rank, RANK .. " ", "")
-    local duration = L["debuffs"][effect][tonumber(rank)] or libdebuff:GetDuration(effect)
+  if L["debuffs"][effect] then
+    local rank = rank and tonumber(string.gsub(rank, RANK .. " ", "")) or 0
+    local rank = L["debuffs"][effect][rank] and rank or libdebuff:GetMaxRank(effect)
+    local duration = L["debuffs"][effect][rank]
+
     if effect == L["dyndebuffs"]["Rupture"] then
       -- Rupture: +2 sec per combo point
       duration = duration + GetComboPoints()*2
@@ -47,10 +49,6 @@ function libdebuff:GetDuration(effect, rank)
       if count and count > 0 then duration = duration + (count*.5) end
     end
     return duration
-  elseif L["debuffs"][effect] and L["debuffs"][effect][0] then
-    return L["debuffs"][effect][0]
-  elseif L["debuffs"][effect] then
-    return L["debuffs"][effect][libdebuff:GetMaxRank(effect)]
   else
     return 0
   end
@@ -157,7 +155,10 @@ libdebuff:SetScript("OnEvent", function()
   -- Add Missing Buffs by Iteration
   elseif ( event == "UNIT_AURA" and arg1 == "target" ) or event == "PLAYER_TARGET_CHANGED" then
     for i=1, 16 do
-      effect, rank, texture, stacks, dtype, duration, timeleft = libdebuff:UnitDebuff("target", i)
+      local effect, rank, texture, stacks, dtype, duration, timeleft = libdebuff:UnitDebuff("target", i)
+
+      -- abort when no further debuff was found
+      if not texture then return end
 
       if texture and effect and effect ~= "" then
         -- don't overwrite existing timers
@@ -217,14 +218,17 @@ hooksecurefunc("UseAction", function(slot, target, button)
 end, true)
 
 function libdebuff:UnitDebuff(unit, id)
-  scanner:SetUnitDebuff(unit, id)
-  local effect = scanner:Line(1) or ""
   local unitname = UnitName(unit)
   local unitlevel = UnitLevel(unit)
   local texture, stacks, dtype = UnitDebuff(unit, id)
   local duration, timeleft = nil, -1
   local rank = nil -- no backport
+  local effect
 
+  if texture then
+    scanner:SetUnitDebuff(unit, id)
+    effect = scanner:Line(1) or ""
+  end
 
   if libdebuff.objects[unitname] and libdebuff.objects[unitname][unitlevel] and libdebuff.objects[unitname][unitlevel][effect] then
     -- clean up cache
