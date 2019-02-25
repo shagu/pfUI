@@ -465,6 +465,9 @@ function pfUI.uf:UpdateConfig()
       local row = floor((i-1) / perrow)
 
       f.buffs[i] = f.buffs[i] or CreateFrame("Button", "pfUI" .. f.fname .. "Buff" .. i, f)
+      f.buffs[i].texture = f.buffs[i].texture or f.buffs[i]:CreateTexture()
+      f.buffs[i].texture:SetTexCoord(.08, .92, .08, .92)
+      f.buffs[i].texture:SetAllPoints()
       f.buffs[i].stacks = f.buffs[i].stacks or f.buffs[i]:CreateFontString(nil, "OVERLAY", f.buffs[i])
       f.buffs[i].stacks:SetFont(pfUI.font_unit, C.global.font_unit_size, "OUTLINE")
       f.buffs[i].stacks:SetPoint("BOTTOMRIGHT", f.buffs[i], 2, -2)
@@ -530,6 +533,9 @@ function pfUI.uf:UpdateConfig()
       if i > tonumber(f.config.debufflimit) then break end
 
       f.debuffs[i] = f.debuffs[i] or CreateFrame("Button", "pfUI" .. f.fname .. "Debuff" .. i, f)
+      f.debuffs[i].texture = f.debuffs[i].texture or f.debuffs[i]:CreateTexture()
+      f.debuffs[i].texture:SetTexCoord(.08, .92, .08, .92)
+      f.debuffs[i].texture:SetAllPoints()
       f.debuffs[i].stacks = f.debuffs[i].stacks or f.debuffs[i]:CreateFontString(nil, "OVERLAY", f.debuffs[i])
       f.debuffs[i].stacks:SetFont(pfUI.font_unit, C.global.font_unit_size, "OUTLINE")
       f.debuffs[i].stacks:SetPoint("BOTTOMRIGHT", f.debuffs[i], 2, -2)
@@ -1123,10 +1129,7 @@ function pfUI.uf:RefreshUnit(unit, component)
       end
 
       pfUI.api.CreateBackdrop(unit.buffs[i], default_border)
-      unit.buffs[i]:SetNormalTexture(texture)
-      for i,v in ipairs({unit.buffs[i]:GetRegions()}) do
-        if v.SetTexCoord then v:SetTexCoord(.08, .92, .08, .92) end
-      end
+      unit.buffs[i].texture:SetTexture(texture)
 
       if texture then
         unit.buffs[i]:Show()
@@ -1191,10 +1194,7 @@ function pfUI.uf:RefreshUnit(unit, component)
      end
 
       pfUI.api.CreateBackdrop(unit.debuffs[i], default_border)
-      unit.debuffs[i]:SetNormalTexture(texture)
-      for i,v in ipairs({unit.debuffs[i]:GetRegions()}) do
-        if v.SetTexCoord then v:SetTexCoord(.08, .92, .08, .92) end
-      end
+      unit.debuffs[i].texture:SetTexture(texture)
 
       local r,g,b = DebuffTypeColor.none.r,DebuffTypeColor.none.g,DebuffTypeColor.none.b
       if dtype and DebuffTypeColor[dtype] then
