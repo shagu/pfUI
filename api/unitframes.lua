@@ -587,8 +587,6 @@ function pfUI.uf.OnEvent()
     pfUI.uf:RefreshUnit(this, "all")
   elseif this.label == "party" and event == "PARTY_MEMBER_DISABLE" then
     pfUI.uf:RefreshUnit(this, "all")
-  elseif this.label == "party" and event == "GROUP_ROSTER_UPDATE" then
-    pfUI.uf:RefreshUnit(this, "all")
   elseif ( this.label == "raid" or this.label == "party" ) and event == "RAID_ROSTER_UPDATE" then
     pfUI.uf:RefreshUnit(this, "all")
   elseif this.label == "player" and (event == "PLAYER_AURAS_CHANGED" or event == "UNIT_INVENTORY_CHANGED") then
