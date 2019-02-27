@@ -39,7 +39,7 @@ pfUI:RegisterModule("loot", function ()
     if to >= 1 then
       local _,_,_,quality = GetLootSlotInfo(slot)
       if quality >= tonumber(C.loot.rollannouncequal) then
-        SendChatMessageWide(T["Random Rolling "]..GetLootSlotLink(slot))
+        SendChatMessageWide(T["Random Rolling"].." "..GetLootSlotLink(slot))
         if C.loot.rollannounce == "1" then
           local k,names = 1, ""
           for i=1,to do
@@ -651,6 +651,7 @@ pfUI:RegisterModule("loot", function ()
     if event == "LOOT_CLOSED" then
       StaticPopup_Hide("LOOT_BIND")
       HideUIPanel(this)
+      if DropDownList1:IsShown() then CloseDropDownMenus() end
       for _, v in pairs(this.slots) do
         v:Hide()
       end
