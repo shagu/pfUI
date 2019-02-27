@@ -973,7 +973,7 @@ function pfUI.uf:RefreshUnit(unit, component)
   if not unit.label then return end
   if not unit.hp then return end
   if not unit.power then return end
-
+  if not unit.id then unit.id = "" end
   local component = component or ""
 
   if unit.config.visible ~= "1" then
@@ -1060,7 +1060,6 @@ function pfUI.uf:RefreshUnit(unit, component)
 
   -- create required fields
   if not unit.cache then unit.cache = {} end
-  if not unit.id then unit.id = "" end
 
   if not unit:IsShown() then return end
 
