@@ -276,13 +276,13 @@ pfUI:RegisterModule("gui", function ()
       frame.input = CreateFrame("Frame", "pfUIDropDownMenu" .. name, frame, "UIDropDownMenuTemplate")
       frame.input:ClearAllPoints()
       frame.input:SetPoint("RIGHT", 16, -3)
-      frame.input.values = values
 
       UIDropDownMenu_SetWidth(160, frame.input)
       UIDropDownMenu_SetButtonWidth(160, frame.input)
       UIDropDownMenu_JustifyText("RIGHT", frame.input)
       UIDropDownMenu_Initialize(frame.input, function()
         local info = {}
+        frame.input.values = _G.type(values)=="function" and values() or values
         for i, k in pairs(frame.input.values) do
           -- create new dropdown buttons when we reach the limit
           PrepareDropDownButton(i)
@@ -749,10 +749,6 @@ pfUI:RegisterModule("gui", function ()
     "top:" .. T["Top"],
     "right:" .. T["Right"],
   }
-
-  pfUI.gui.dropdowns.num_actionbar_buttons = BarLayoutOptions(NUM_ACTIONBAR_BUTTONS)
-  pfUI.gui.dropdowns.num_shapeshift_slots = BarLayoutOptions(NUM_SHAPESHIFT_SLOTS)
-  pfUI.gui.dropdowns.num_pet_action_slots = BarLayoutOptions(NUM_PET_ACTION_SLOTS)
 
   pfUI.gui.dropdowns.loot_rarity = {}
   for i=0, getn(_G.ITEM_QUALITY_COLORS)-2  do
@@ -1326,7 +1322,6 @@ pfUI:RegisterModule("gui", function ()
     if not this.setup then
       for _, data in pairs(barnames) do
         local id, caption = data[1], data[2]
-        local formfactors = BarLayoutOptions(id < 11 and NUM_ACTIONBAR_BUTTONS or id > 11 and NUM_SHAPESHIFT_SLOTS or NUM_PET_ACTION_SLOTS)
         CreateConfig(update[c], this, caption, nil, nil, "header")
         CreateConfig(update["bars"], this, T["Enable"], C.bars["bar"..id], "enable", "checkbox")
 
@@ -1342,6 +1337,9 @@ pfUI:RegisterModule("gui", function ()
           CreateConfig(update["bars"], this, T["Auto-Castable Action Indicator"], C.bars, "showcastable", "checkbox")
         end
 
+        local formfactors = function()
+          return BarLayoutOptions(tonumber(C.bars["bar"..id].buttons) or id < 11 and NUM_ACTIONBAR_BUTTONS or id > 11 and NUM_SHAPESHIFT_SLOTS or NUM_PET_ACTION_SLOTS)
+        end
         CreateConfig(update["bars"], this, T["Icon Size"], C.bars["bar"..id], "icon_size")
         CreateConfig(update["bars"], this, T["Layout"], C.bars["bar"..id], "formfactor", "dropdown", formfactors)
         CreateConfig(update["bars"], this, T["Bar Background"], C.bars["bar"..id], "background", "checkbox")

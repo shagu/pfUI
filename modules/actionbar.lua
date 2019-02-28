@@ -660,6 +660,12 @@ pfUI:RegisterModule("actionbar", function ()
       return
     end
 
+    -- we changed bar size and stored layout is invalid, fallback
+    if not pfGridmath[buttons][BarLayoutFormfactor(formfactor)] then
+      formfactor = BarLayoutOptions(buttons)[1]
+      C.bars["bar"..i].formfactor = formfactor
+    end
+
     local border = C.appearance.border.default
     if C.appearance.border.actionbars ~= "-1" then
       border = C.appearance.border.actionbars
