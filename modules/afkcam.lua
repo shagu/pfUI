@@ -125,6 +125,7 @@ pfUI:RegisterModule("afkcam", function ()
     SetCVar("cameraYawMoveSpeed",afkcam._speed)
     SetCVar("UnitNameOwn", afkcam._ownname)
     SetView(4)
+    ResetView(4)
     if not UIParent:IsVisible() and afkcam._ui_visible then
       UIParent:Show()
     end
