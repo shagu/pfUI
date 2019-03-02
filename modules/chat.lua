@@ -165,12 +165,15 @@ pfUI:RegisterModule("chat", function ()
   end)
 
   pfUI.chat.urlcopy.SetItemRef = SetItemRef
+  pfUI.chat.urlcopy.CopyText = function(text)
+    pfUI.chat.urlcopy.text:SetText(text)
+    pfUI.chat.urlcopy:Show()
+  end
 
   function _G.SetItemRef(link, text, button)
     if (strsub(link, 1, 3) == "url") then
       if string.len(link) > 4 and string.sub(link,1,4) == "url:" then
-        pfUI.chat.urlcopy.text:SetText(string.sub(link,5, string.len(link)))
-        pfUI.chat.urlcopy:Show()
+        pfUI.chat.urlcopy.CopyText(string.sub(link,5, string.len(link)))
       end
       return
     end
