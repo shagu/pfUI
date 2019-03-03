@@ -11,56 +11,67 @@ pfUI:RegisterModule("unlock", function ()
   -- frame labels and their config section relation
   local frame_configs = {
     -- unitframes
-    ["Player"]        = { "uf", "player" },
-    ["Target"]        = { "uf", "target" },
-    ["TargetTarget"]  = { "uf", "ttarget" },
-    ["Pet"]           = { "uf", "pet" },
-    ["PetTarget"]     = { "uf", "ptarget" },
-    ["Focus"]         = { "uf", "focus" },
+    ["Player"]        = { T["Unit Frames"], T["Player"] },
+    ["Target"]        = { T["Unit Frames"], T["Target"] },
+    ["TargetTarget"]  = { T["Unit Frames"], T["Target-Target"] },
+    ["Pet"]           = { T["Unit Frames"], T["Pet"] },
+    ["PetTarget"]     = { T["Unit Frames"], T["Pet-Target"] },
+    ["Focus"]         = { T["Unit Frames"], T["Focus"] },
 
     -- combopoints
-    ["Combo%d"]       = { "uf", "general" },
+    ["Combo%d"]       = { T["Unit Frames"], T["General"] },
 
     -- groupframes
-    ["Raid%d"]        = { "gf", "raid" },
-    ["Raid%d%d"]      = { "gf", "raid" },
-    ["Group%d"]       = { "gf", "group" },
-    ["Party%dTarget"] = { "gf", "grouptarget" },
-    ["PartyPet%d"]    = { "gf", "grouppet" },
+    ["Raid%d"]        = { T["Group Frames"], T["Raid"] },
+    ["Raid%d%d"]      = { T["Group Frames"], T["Raid"] },
+    ["Group%d"]       = { T["Group Frames"], T["Group"] },
+    ["Party%dTarget"] = { T["Group Frames"], T["Group-Target"] },
+    ["PartyPet%d"]    = { T["Group Frames"], T["Group-Pet"] },
 
     -- chat
-    ["ChatLeft"]      = { "chat", "general" },
-    ["ChatRight"]     = { "chat", "general" },
-    ["ChatInputBox"]  = { "chat", "general" },
+    ["ChatLeft"]      = { T["Chat"], nil },
+    ["ChatRight"]     = { T["Chat"], nil },
+    ["ChatInputBox"]  = { T["Chat"], nil },
 
     -- loot
-    ["LootRollFrame%d"] = { "loot", "general" },
+    ["LootRollFrame%d"] = { T["Loot"], nil },
 
     -- panel
-    ["PanelLeft"]      = { "panel", "general" },
-    ["PanelRight"]     = { "panel", "general" },
-    ["PanelMinimap"]   = { "panel", "general" },
-    ["PanelMicroButton"] = { "panel", "general" },
+    ["PanelLeft"]        = { T["Panel"], T["General"] },
+    ["PanelRight"]       = { T["Panel"], T["General"] },
+    ["PanelMinimap"]     = { T["Panel"], T["General"] },
+    ["PanelMicroButton"] = { T["Panel"], T["General"] },
 
     -- actionbar
-    ["BarActionMain"]  = { "actionbar", "general" },
-    ["BarBottomLeft"]  = { "actionbar", "general" },
-    ["BarBottomRight"] = { "actionbar", "general" },
-    ["BarRight"]       = { "actionbar", "general" },
-    ["BarTwoRight"]    = { "actionbar", "general" },
-    ["BarShapeShift"]  = { "actionbar", "general" },
+    ["ActionBarMain"]        = { T["Actionbar"], T["Main Actionbar"]},
+    ["ActionBarPaging"]      = { T["Actionbar"], T["Paging Actionbar"]},
+    ["ActionBarRight"]       = { T["Actionbar"], T["Right Actionbar"]},
+    ["ActionBarVertical"]    = { T["Actionbar"], T["Vertical Actionbar"]},
+    ["ActionBarLeft"]        = { T["Actionbar"], T["Left Actionbar"]},
+    ["ActionBarTop"]         = { T["Actionbar"], T["Top Actionbar"]},
+    ["ActionBarStanceBar1"]  = { T["Actionbar"], T["Stance Bar 1"]},
+    ["ActionBarStanceBar2"]  = { T["Actionbar"], T["Stance Bar 2"]},
+    ["ActionBarStanceBar3"]  = { T["Actionbar"], T["Stance Bar 3"]},
+    ["ActionBarStanceBar4"]  = { T["Actionbar"], T["Stance Bar 4"]},
+    ["ActionBarStances"]     = { T["Actionbar"], T["Stance/Shapeshift Actionbar"]},
+    ["ActionBarPet"]         = { T["Actionbar"], T["Pet Actionbar"]},
 
     -- castbar
-    ["TargetCastbar"]  = { "castbar", "general" },
-    ["PlayerCastbar"]  = { "castbar", "general" },
+    ["TargetCastbar"]  = { T["Castbar"], nil },
+    ["PlayerCastbar"]  = { T["Castbar"], nil },
 
     -- minimap
-    ["Minimap"]        = { "minimap", "general" },
-    ["UITracking"]     = { "minimap", "general" },
+    ["Minimap"]        = { T["Minimap"], T["Minimap"] },
+    ["UITracking"]     = { T["Minimap"], T["Minimap"] },
 
     -- buffs
-    ["BuffFrame"]        = { "buffs", "general" },
-    ["DebuffFrame"]     = { "buffs", "general" },
+    ["BuffFrame"]      = { T["Buffs"], T["Buff/Debuff Icons"] },
+    ["DebuffFrame"]    = { T["Buffs"], T["Buff/Debuff Icons"] },
+
+    -- buffbars
+    ["PlayerBuffBar"]   = { T["Buffs"], T["Player Buff Bar"] },
+    ["PlayerDebuffBar"] = { T["Buffs"], T["Player Debuff Bar"] },
+    ["TargetDebuffBar"] = { T["Buffs"], T["Target Debuff Bar"] },
   }
 
   local function GetFrames()
@@ -194,10 +205,10 @@ pfUI:RegisterModule("unlock", function ()
   end
 
   local function OpenConfigDialog(category, view)
-    if pfUI.gui.tabs[category] and pfUI.gui.tabs[category].tabs[view] then
-      pfUI.gui:Show()
-      pfUI.gui.tabs[category].button:Click()
-      pfUI.gui.tabs[category].tabs[view].button:Click()
+    pfUI.gui:Show()
+    pfUI.gui.frames[category]:Click()
+    if view then
+      pfUI.gui.frames[category][view]:Click()
     end
   end
 
@@ -245,7 +256,7 @@ pfUI:RegisterModule("unlock", function ()
 
     -- update config button
     local cat, conf = GetConfigTable(drag.label)
-    if cat and conf then
+    if cat then
       dock.config:Enable()
     else
       dock.config:Disable()
@@ -650,7 +661,7 @@ pfUI:RegisterModule("unlock", function ()
   pfUI.unlock.dock.config:SetText(T["Configure"])
   pfUI.unlock.dock.config:SetScript("OnClick", function()
     local cat, conf = GetConfigTable(pfUI.unlock.dock.parent.label)
-    if cat and conf then OpenConfigDialog(cat, conf) end
+    if cat then OpenConfigDialog(cat, conf) end
   end)
   SkinButton(pfUI.unlock.dock.config,.2,1,.8)
 end)
