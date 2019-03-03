@@ -16,8 +16,7 @@ pfUI:RegisterModule("gui", function ()
       end)
     end
 
-    U = setmetatable({}, { __index = function(tab,key)
-      local value = tostring(key)
+    U = setmetatable({}, { __index = function(tab,value)
       if pfUI[value] and pfUI[value].UpdateConfig then
         return function() pfUI[value]:UpdateConfig() end
       elseif pfUI.uf[value] and pfUI.uf[value].UpdateConfig then
@@ -1418,18 +1417,18 @@ pfUI:RegisterModule("gui", function ()
       }
     }
 
-    -- link Update tables
-    U.ttarget     = U["targettarget"]
-    U.ptarget     = U["pettarget"]
-    U.grouptarget = U["group"]
-    U.grouppet    = U["group"]
-
     for label in pairs(unitframeSettings) do
       for id, data in pairs(unitframeSettings[label]) do
         local c = data[1]
         local t = data[2]
 
         CreateGUIEntry(label == "uf" and T["Unit Frames"] or T["Group Frames"], t, function()
+          -- link Update tables
+          U.ttarget     = U["targettarget"]
+          U.ptarget     = U["pettarget"]
+          U.grouptarget = U["group"]
+          U.grouppet    = U["group"]
+
           -- build config entries
           CreateConfig(U[c], T["Display Frame"] .. ": " .. t, C.unitframes[c], "visible", "checkbox")
           CreateConfig(U[c], T["Enable Mouseover Tooltip"], C.unitframes[c], "showtooltip", "checkbox")
