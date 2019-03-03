@@ -255,7 +255,24 @@ pfUI:RegisterModule("share", function ()
     f:EnableMouse(true)
     f:SetScript("OnMouseDown", function() f:StartMoving() end)
     f:SetScript("OnMouseUp", function() f:StopMovingOrSizing() end)
+
+    f:SetScript("OnShow", function()
+      if pfUI.gui and pfUI.gui:IsShown() then
+        f.hadGUI = true
+        pfUI.gui:Hide()
+      else
+        f.hadGUI = nil
+      end
+    end)
+
+    f:SetScript("OnHide", function()
+      if f.hadGUI then
+        pfUI.gui:Show()
+      end
+    end)
+
     CreateBackdrop(f, nil, true, 0.8)
+    table.insert(UISpecialFrames, "pfShare")
 
     do -- Edit Box
       f.scroll = pfUI.api.CreateScrollFrame("pfShareScroll", f)
