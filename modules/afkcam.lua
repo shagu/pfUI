@@ -138,19 +138,48 @@ pfUI:RegisterModule("afkcam", function ()
     afkcam._spinning = false
   end
 
+  local delay = CreateFrame("Frame")
+  delay:Hide()
+
+  delay:RegisterEvent("AUCTION_ITEM_LIST_UPDATE")
+  delay:SetScript("OnEvent", function()
+    this.delay = GetTime() + 5
+  end)
+
+  delay:SetScript("OnUpdate", function()
+    if ( this.tick or 0) > GetTime() then return else this.tick = GetTime() + 1 end
+
+    local name = UnitName("player")
+    local cast = UnitCastingInfo(name)
+    if not cast then cast = UnitChannelInfo(name) end
+    if not this.delay then this.delay = 0 end
+
+    if cast then
+      this.delay = GetTime() + 5
+    end
+
+    if this.delay < GetTime() then
+      afkcam:start()
+      this:Hide()
+    end
+  end)
+
   afkcam:SetScript("OnEvent", function()
     if event == "CHAT_MSG_SYSTEM" then
       if (arg1 == _G.MARKED_AFK) or strfind(arg1, MARKED_AFK_CAPTURE) then
-        this:start()
+        delay:Show()
       elseif (arg1 == _G.CLEARED_AFK) then
+        delay:Hide()
         this:stop()
       end
     else
       if this._spinning then
+        delay:Hide()
         this:stop()
       end
     end
   end)
+
   afkcam:RegisterEvent("CHAT_MSG_SYSTEM")
   afkcam:RegisterEvent("PLAYER_REGEN_DISABLED")
   afkcam:RegisterEvent("PLAYER_LEAVING_WORLD") -- reseting cvars on PLAYER_LOGOUT crashes the client ¯\_(ツ)_/¯
