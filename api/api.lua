@@ -20,6 +20,27 @@ function pfUI.api.strsplit(delimiter, subject)
   return unpack(fields)
 end
 
+-- [ checkversion ]
+-- Compares a given version (major,minor,fix) and compares it to the current
+-- 'chkmajor'   [number]        the major number to check
+-- 'chkminor'   [number]        the minor number to check
+-- 'chkfix'     [number]        the fix number to check
+--
+-- return:      [boolean]       true when the current version is smaller or equal
+--                              to the given value, otherwise returns nil.
+local major, minor, fix = nil, nil, nil
+function pfUI.api.checkversion(chkmajor, chkminor, chkfix)
+  if not major and not minor and not fix then
+    -- load and convert current version
+    major, minor, fix = pfUI.api.strsplit(".", tostring(pfUI_config.version))
+    major, minor, fix = tonumber(major) or 0, tonumber(minor) or 0, tonumber(fix) or 0
+  end
+
+  local chkversion = chkmajor + chkminor/100 + chkfix/10000
+  local curversion = major + minor/100 + fix/10000
+  return curversion <= chkversion and true or nil
+end
+
 -- [ UnitInRange ]
 -- Returns whether a party/raid member is nearby.
 -- It takes care of the rangecheck module if existing.

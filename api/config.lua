@@ -1,3 +1,6 @@
+-- load pfUI environment
+setfenv(1, pfUI:GetEnvironment())
+
 function pfUI:UpdateConfig(group, subgroup, entry, value)
   -- create empty config if not existing
   if not pfUI_config then
@@ -852,18 +855,6 @@ function pfUI:LoadConfig()
 end
 
 function pfUI:MigrateConfig()
-  -- config version
-  local major, minor, fix = pfUI.api.strsplit(".", tostring(pfUI_config.version))
-  local major = tonumber(major) or 0
-  local minor = tonumber(minor) or 0
-  local fix   = tonumber(fix)   or 0
-
-  local function checkversion(chkmajor, chkminor, chkfix)
-    local chkversion = chkmajor + chkminor/100 + chkfix/10000
-    local curversion = major + minor/100 + fix/10000
-    return curversion <= chkversion and true or nil
-  end
-
   -- migrating to new fonts (1.5 -> 1.6)
   if checkversion(1, 6, 0) then
     -- migrate font_default
