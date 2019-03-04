@@ -263,7 +263,11 @@ pfUI:RegisterModule("actionbar", function ()
       end
 
       -- update macro text
-      self.macro:SetText(GetActionText(sid))
+      if C.bars["bar"..self.bar] and C.bars["bar"..self.bar].showmacro == "1" then
+        self.macro:SetText(GetActionText(sid))
+      else
+        self.macro:SetText("")
+      end
     end
 
     -- update usable
