@@ -615,20 +615,6 @@ function pfUI.api.SkinSlider(frame)
   end
 end
 
--- [ GetCloseButton ]
--- Get the close button from a frame.
--- 'frame'     [frame]  the frame that should be searched for the button.
-function pfUI.api.GetCloseButton(frame)
-  for i,v in ipairs({frame:GetChildren()}) do
-    if v.GetObjectType and v:GetObjectType() == "Button" and v.GetNormalTexture and v:GetNormalTexture() then
-      if v:GetNormalTexture().GetTexture and v:GetNormalTexture():GetTexture() == "Interface\\Buttons\\UI-Panel-MinimizeButton-Up" then
-        return v
-      end
-    end
-  end
-  return nil
-end
-
 -- [ Question Dialog ]
 -- Creates a pfUI user dialog popup:
 -- 'text'       [string]        text that will be displayed.
