@@ -258,11 +258,13 @@ end
 
 -- [ Skin Button ]
 -- Applies pfUI skin to buttons:
--- 'button'     [frame/string]  the button that should be skinned.
--- 'cr'         [int]           mouseover color (red), defaults to classcolor.
--- 'cg'         [int]           mouseover color (green), defaults to classcolor.
--- 'cb'         [int]           mouseover color (blue), defaults to classcolor.
-function pfUI.api.SkinButton(button, cr, cg, cb)
+-- 'button'            [frame/string]  the button that should be skinned.
+-- 'cr'                [int]           mouseover color (red), defaults to classcolor.
+-- 'cg'                [int]           mouseover color (green), defaults to classcolor.
+-- 'cb'                [int]           mouseover color (blue), defaults to classcolor.
+-- 'icon'              [texture]       the button icon that should be skinned.
+-- 'disableHighlight'  [bool]          disable mouseover highlight.
+function pfUI.api.SkinButton(button, cr, cg, cb, icon, disableHighlight)
   local b = getglobal(button)
   if not b then b = button end
   if not b then return end
@@ -272,13 +274,31 @@ function pfUI.api.SkinButton(button, cr, cg, cb)
     cr, cg, cb = color.r , color.g, color.b
   end
   pfUI.api.CreateBackdrop(b, nil, true)
-  b:SetNormalTexture(nil)
-  b:SetHighlightTexture(nil)
+  b:SetNormalTexture("")
+  b:SetHighlightTexture("")
   b:SetPushedTexture(nil)
   b:SetDisabledTexture(nil)
 
-  SetHighlight(b, cr, cg, cb)
+  if not disableHighlight then
+    SetHighlight(b, cr, cg, cb)
+  end
+  
+  if icon then
+    HandleIcon(b, icon)
+  end
+
   b:SetFont(pfUI.font_default, pfUI_config.global.font_size, "OUTLINE")
+  
+  b.LockHighlight = function()
+    b:SetBackdropBorderColor(cr,cg,cb,1)
+    b.locked = true
+  end
+  b.UnlockHighlight = function()
+    if not MouseIsOver(b) then
+      b:SetBackdropBorderColor(GetStringColor(pfUI_config.appearance.border.color))
+    end
+    b.locked = false
+  end
 end
 
 -- [ Skin Collapse Button ]
