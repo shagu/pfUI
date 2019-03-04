@@ -1,90 +1,89 @@
-pfUI:RegisterSkin("Macro", function ()
+pfUI:RegisterSkin("MacroFrame", function ()
   local border = tonumber(pfUI_config.appearance.border.default)
   local bpad = border > 1 and border - 1 or 1
 
-  local f = CreateFrame("Frame")
-  f:RegisterEvent("ADDON_LOADED")
-  f:SetScript("OnEvent", function()
-    if arg1 == "Blizzard_MacroUI" then
-      StripTextures(MacroFrame)
-      CreateBackdrop(MacroFrame, nil, nil, .9)
-      SetAllPointsOffset(MacroFrame.backdrop, MacroFrame, 3)
-      EnableMovable(MacroFrame)
+  HookAddonOrVariable("Blizzard_MacroUI", function()
+    StripTextures(MacroFrame)
+    CreateBackdrop(MacroFrame, nil, nil, .75)
+    MacroFrame.backdrop:SetPoint("TOPLEFT", 10, -10)
+    MacroFrame.backdrop:SetPoint("BOTTOMRIGHT", -32, 72)
+    MacroFrame:SetHitRectInsets(10,32,10,72)
+    EnableMovable(MacroFrame)
 
-      MacroFrame:SetWidth(360)
-      MacroFrame:SetHeight(460)
+    SkinCloseButton(MacroFrameCloseButton, MacroFrame.backdrop, -6, -6)
 
-      SkinCloseButton(MacroFrameCloseButton, MacroFrame, -6, -6)
-      SkinTab(MacroFrameTab1)
-      SkinTab(MacroFrameTab2)
-      MacroFrameTab2:SetPoint("LEFT", MacroFrameTab1, "RIGHT", 2*bpad + 4, 0)
+    local MacroFrameHeaderText = GetNoNameObject(MacroFrame, "FontString", "BORDER", CREATE_MACROS)
+    MacroFrameHeaderText:ClearAllPoints()
+    MacroFrameHeaderText:SetPoint("TOP", MacroFrame.backdrop, "TOP", 0, -10)
 
-      for i=1, 18 do
-        local button = _G["MacroButton"..i]
-        StripTextures(button)
-        CreateBackdrop(button)
-        button:SetHighlightTexture([[Interface\Buttons\ButtonHilight-Square]])
-        button:SetCheckedTexture([[Interface\Buttons\CheckButtonHilight]])
-        local icon = _G["MacroButton"..i..'Icon']
-        icon:SetAllPoints(button)
-        icon:SetTexCoord(.08, .92, .08, .92)
-      end
-      StripTextures(MacroFrameSelectedMacroButton)
-      CreateBackdrop(MacroFrameSelectedMacroButton)
-      MacroFrameSelectedMacroButtonIcon:SetAllPoints(MacroFrameSelectedMacroButton)
-      MacroFrameSelectedMacroButtonIcon:SetTexCoord(.08, .92, .08, .92)
-      MacroFrameSelectedMacroName:SetPoint("TOPLEFT", MacroFrameSelectedMacroButton, "TOPRIGHT", 6, 3)
+    SkinTab(MacroFrameTab1)
+    SkinTab(MacroFrameTab2)
+    MacroFrameTab2:ClearAllPoints()
+    MacroFrameTab2:SetPoint("LEFT", MacroFrameTab1, "RIGHT", border*2 + 1, 0)
 
-      SkinButton(MacroDeleteButton)
-      MacroDeleteButton:ClearAllPoints()
-      MacroDeleteButton:SetPoint("BOTTOMLEFT", 20, 17)
-      SkinButton(MacroExitButton)
-      MacroExitButton:ClearAllPoints()
-      MacroExitButton:SetPoint("BOTTOMRIGHT", -20, 17)
-      SkinButton(MacroNewButton)
-      MacroNewButton:ClearAllPoints()
-      MacroNewButton:SetPoint("RIGHT", MacroExitButton, "LEFT", -2*bpad, 0)
-      SkinButton(MacroEditButton)
-
-      MacroEditButton:ClearAllPoints()
-      MacroEditButton:SetHeight(22)
-      MacroEditButton:SetWidth(150)
-      MacroEditButton:SetPoint("BOTTOMLEFT", MacroFrameSelectedMacroButton, "BOTTOMRIGHT", 6, -2)
-
-      CreateBackdrop(MacroFrameTextBackground, nil, nil, 1)
-      SkinScrollbar(MacroFrameScrollFrameScrollBar)
-      MacroFrameCharLimitText:SetPoint("BOTTOM", MacroFrameTextBackground, "BOTTOM", 0, -16)
-
-      StripTextures(MacroPopupFrame)
-      CreateBackdrop(MacroPopupFrame, nil, nil, .9)
-      StripTextures(MacroPopupScrollFrame)
-      SkinScrollbar(MacroPopupScrollFrameScrollBar)
-      MacroPopupFrame:SetFrameStrata("DIALOG")
-      MacroPopupFrame:SetPoint("TOPLEFT", MacroFrame.backdrop, "TOPRIGHT", 2*border, -border)
-
-      MacroPopupNameLeft:SetTexture(nil)
-      MacroPopupNameMiddle:SetTexture(nil)
-      MacroPopupNameRight:SetTexture(nil)
-      CreateBackdrop(MacroPopupEditBox)
-      MacroPopupEditBox:SetScript("OnEscapePressed", function()
-        MacroPopupFrame:Hide()
-        MacroFrame_Update()
-      end)
-
-      for i=1, 20 do
-        local button = _G["MacroPopupButton"..i]
-        StripTextures(button)
-        CreateBackdrop(button)
-        button:SetHighlightTexture([[Interface\Buttons\ButtonHilight-Square]])
-        button:SetCheckedTexture([[Interface\Buttons\CheckButtonHilight]])
-        local icon = _G["MacroPopupButton"..i..'Icon']
-        icon:SetAllPoints(button)
-        icon:SetTexCoord(.08, .92, .08, .92)
-      end
-      SkinButton(MacroPopupCancelButton)
-      SkinButton(MacroPopupOkayButton)
-      MacroPopupOkayButton:ClearAllPoints()
-      MacroPopupOkayButton:SetPoint("RIGHT", MacroPopupCancelButton, "LEFT", -2*bpad, 0)
+    for i=1, MAX_MACROS do
+      local button = _G["MacroButton"..i]
+      local icon = _G["MacroButton"..i..'Icon']
+      StripTextures(button)
+      SkinButton(button, nil, nil, nil, icon)
+      button:SetCheckedTexture([[Interface\Buttons\CheckButtonHilight]])
     end
+    StripTextures(MacroFrameSelectedMacroButton)
+    SkinButton(MacroFrameSelectedMacroButton, nil, nil, nil, MacroFrameSelectedMacroButtonIcon, true)
+    MacroFrameSelectedMacroName:ClearAllPoints()
+    MacroFrameSelectedMacroName:SetPoint("TOPLEFT", MacroFrameSelectedMacroButton, "TOPRIGHT", 6, 3)
+
+    SkinButton(MacroEditButton)
+    SkinButton(MacroDeleteButton)
+    SkinButton(MacroExitButton)
+    SkinButton(MacroNewButton)
+    MacroNewButton:ClearAllPoints()
+    MacroNewButton:SetPoint("RIGHT", MacroExitButton, "LEFT", -2*bpad, 0)
+
+    MacroEditButton:SetHeight(22)
+    MacroEditButton:SetWidth(150)
+    MacroEditButton:ClearAllPoints()
+    MacroEditButton:SetPoint("BOTTOMLEFT", MacroFrameSelectedMacroButton, "BOTTOMRIGHT", 6, -2)
+
+    MacroFrameEnterMacroText:ClearAllPoints()
+    MacroFrameEnterMacroText:SetPoint("BOTTOMLEFT", MacroFrameTextBackground, "TOPLEFT", 8, 2)
+
+    CreateBackdrop(MacroFrameTextBackground, nil, true)
+    MacroFrameTextBackground:ClearAllPoints()
+    MacroFrameTextBackground:SetPoint("TOPLEFT", MacroFrame, "TOPLEFT", 18, -300)
+    StripTextures(MacroFrameScrollFrame)
+    SkinScrollbar(MacroFrameScrollFrameScrollBar)
+    MacroFrameScrollFrame:ClearAllPoints()
+    MacroFrameScrollFrame:SetPoint("TOPLEFT", MacroFrameSelectedMacroBackground, "BOTTOMLEFT", 11, -13)
+
+
+
+    StripTextures(MacroPopupFrame)
+    CreateBackdrop(MacroPopupFrame, nil, nil, .75)
+    MacroPopupFrame:SetFrameStrata("DIALOG")
+    MacroPopupFrame:ClearAllPoints()
+    MacroPopupFrame:SetPoint("TOPLEFT", MacroFrame.backdrop, "TOPRIGHT", 2*border, 0)
+
+    StripTextures(MacroPopupScrollFrame)
+    SkinScrollbar(MacroPopupScrollFrameScrollBar)
+
+    MacroPopupEditBox:DisableDrawLayer("BACKGROUND")
+    CreateBackdrop(MacroPopupEditBox, nil, true)
+    MacroPopupEditBox:SetScript("OnEscapePressed", function()
+      MacroPopupFrame:Hide()
+      MacroFrame_Update()
+    end)
+
+    for i=1, NUM_MACRO_ICONS_SHOWN do
+      local button = _G["MacroPopupButton"..i]
+      local icon = _G["MacroPopupButton"..i..'Icon']
+      StripTextures(button)
+      SkinButton(button, nil, nil, nil, icon)
+      button:SetCheckedTexture([[Interface\Buttons\CheckButtonHilight]])
+    end
+    SkinButton(MacroPopupCancelButton)
+    SkinButton(MacroPopupOkayButton)
+    MacroPopupOkayButton:ClearAllPoints()
+    MacroPopupOkayButton:SetPoint("RIGHT", MacroPopupCancelButton, "LEFT", -2*bpad, 0)
   end)
 end)
