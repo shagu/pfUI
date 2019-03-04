@@ -78,6 +78,7 @@ skins\blizzard\game_menu.lua
 skins\blizzard\guild_registrar.lua
 skins\blizzard\help.lua
 skins\blizzard\options-interface.lua
+skins\blizzard\options-sound.lua
 
 # modules
 modules\gui.lua
