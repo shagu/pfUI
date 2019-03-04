@@ -2,8 +2,6 @@ pfUI:RegisterSkin("Options-Interface", function ()
   local border = tonumber(pfUI_config.appearance.border.default)
   local bpad = border > 1 and border - 1 or 1
 
-  UIOptionsFrame:ClearAllPoints()
-  UIOptionsFrame:SetPoint("CENTER", 0, 0)
   UIOptionsFrame:SetParent(UIParent)
   UIOptionsFrame:SetWidth(1024)
   UIOptionsFrame:SetHeight(700)
@@ -11,6 +9,11 @@ pfUI:RegisterSkin("Options-Interface", function ()
   StripTextures(UIOptionsFrame)
   CreateBackdrop(UIOptionsFrame, nil, nil, .75)
   EnableMovable(UIOptionsFrame)
+
+  HookScript(UIOptionsFrame, "OnShow", function()
+    this:ClearAllPoints()
+    this:SetPoint("CENTER", 0, 0)
+  end)
 
   UIOptionsFrame.backdrop:SetPoint("BOTTOMRIGHT", 0, 50)
   UIOptionsFrame:SetHitRectInsets(0,0,0,50)

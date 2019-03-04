@@ -6,6 +6,11 @@ pfUI:RegisterSkin("Options-Sound", function ()
   CreateBackdrop(SoundOptionsFrame, nil, true, .75)
   EnableMovable(SoundOptionsFrame)
 
+  HookScript(SoundOptionsFrame, "OnShow", function()
+    this:ClearAllPoints()
+    this:SetPoint("CENTER", 0, 0)
+  end)
+
   local SoundOptionsFrameHeaderText = GetNoNameObject(SoundOptionsFrame, "FontString", "ARTWORK", SOUNDOPTIONS_MENU)
   SoundOptionsFrameHeaderText:ClearAllPoints()
   SoundOptionsFrameHeaderText:SetPoint("TOP", 0, -10)

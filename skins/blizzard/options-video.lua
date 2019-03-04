@@ -5,6 +5,11 @@ pfUI:RegisterSkin("Options-Video", function ()
   CreateBackdrop(OptionsFrame, nil, nil, .75)
   EnableMovable(OptionsFrame)
 
+  HookScript(OptionsFrame, "OnShow", function()
+    this:ClearAllPoints()
+    this:SetPoint("CENTER", 0, 0)
+  end)
+
   OptionsFrameHeader:SetTexture("")
   local OptionsFrameHeaderText = GetNoNameObject(OptionsFrame, "FontString", "ARTWORK", VIDEOOPTIONS_MENU)
   OptionsFrameHeaderText:ClearAllPoints()
