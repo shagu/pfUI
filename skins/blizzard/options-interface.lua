@@ -2,16 +2,30 @@ pfUI:RegisterSkin("Options-Interface", function ()
   local border = tonumber(pfUI_config.appearance.border.default)
   local bpad = border > 1 and border - 1 or 1
 
+  UIOptionsFrame:ClearAllPoints()
+  UIOptionsFrame:SetPoint("CENTER", 0, 0)
+  UIOptionsFrame:SetParent(UIParent)
+  UIOptionsFrame:SetWidth(1024)
+  UIOptionsFrame:SetHeight(700)
+
   StripTextures(UIOptionsFrame)
   CreateBackdrop(UIOptionsFrame, nil, nil, .75)
   EnableMovable(UIOptionsFrame)
 
-  UIOptionsFrame.backdrop:SetPoint("TOPLEFT", 120, -30)
-  UIOptionsFrame.backdrop:SetPoint("BOTTOMRIGHT", -120, 120)
-  UIOptionsFrame:SetHitRectInsets(120,120,30,120)
+  UIOptionsFrame.backdrop:SetPoint("BOTTOMRIGHT", 0, 50)
+  UIOptionsFrame:SetHitRectInsets(0,0,0,50)
 
-  SkinCloseButton(GetNoNameObject(UIOptionsFrame, "Button", nil, "UI--Panel--MinimizeButton--Up"), UIOptionsFrame.backdrop, -6, -6)
+  local close = GetNoNameObject(UIOptionsFrame, "Button", nil, "UI--Panel--MinimizeButton--Up")
 
+  -- increase button layer
+  UIOptionsFrameTab1:SetFrameLevel(8)
+  UIOptionsFrameTab2:SetFrameLevel(8)
+  UIOptionsFrameDefaults:SetFrameLevel(8)
+  UIOptionsFrameCancel:SetFrameLevel(8)
+  UIOptionsFrameOkay:SetFrameLevel(8)
+  close:SetFrameLevel(8)
+
+  SkinCloseButton(close, UIOptionsFrame.backdrop, -6, -6)
   UIOptionsFrameTitle:ClearAllPoints()
   UIOptionsFrameTitle:SetPoint("TOP", UIOptionsFrame.backdrop, "TOP", 0, -10)
 
@@ -35,7 +49,7 @@ pfUI:RegisterSkin("Options-Interface", function ()
   end)
 
   UIOptionsFrameCheckButton1:ClearAllPoints() -- Invert Mouse button
-  UIOptionsFrameCheckButton1:SetPoint("TOPLEFT", UIOptionsFrameSlider1, "TOPRIGHT", 40, 10)
+  UIOptionsFrameCheckButton1:SetPoint("TOPLEFT", UIOptionsFrameSlider1, "TOPRIGHT", 38, 14)
 
   for i=1, 69 do
     local buton = _G["UIOptionsFrameCheckButton"..i]
