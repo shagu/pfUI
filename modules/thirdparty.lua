@@ -505,11 +505,18 @@ pfUI:RegisterModule("thirdparty", function ()
         pfUI.bag.right.sort:SetScript("OnEnter", function ()
           pfUI.bag.right.sort.backdrop:SetBackdropBorderColor(1,1,.25,1)
           pfUI.bag.right.sort.texture:SetVertexColor(1,1,.25,1)
+          GameTooltip:SetOwner(this, "ANCHOR_RIGHT")
+          GameTooltip:SetText(GetAddOnMetadata("SortBags","Title"))
+          GameTooltip:AddLine(GetAddOnMetadata("SortBags","Notes"),1,1,1)
+          GameTooltip:Show()
         end)
 
         pfUI.bag.right.sort:SetScript("OnLeave", function ()
           CreateBackdrop(pfUI.bag.right.sort)
           pfUI.bag.right.sort.texture:SetVertexColor(.25,.25,.25,1)
+          if GameTooltip:IsOwned(this) then
+            GameTooltip:Hide()
+          end          
         end)
 
         pfUI.bag.right.sort:SetScript("OnClick", function()
@@ -542,11 +549,18 @@ pfUI:RegisterModule("thirdparty", function ()
         pfUI.bag.left.sort:SetScript("OnEnter", function ()
           pfUI.bag.left.sort.backdrop:SetBackdropBorderColor(1,1,.25,1)
           pfUI.bag.left.sort.texture:SetVertexColor(1,1,.25,1)
+          GameTooltip:SetOwner(this, "ANCHOR_RIGHT")
+          GameTooltip:SetText(GetAddOnMetadata("SortBags","Title"))
+          GameTooltip:AddLine(GetAddOnMetadata("SortBags","Notes"),1,1,1)
+          GameTooltip:Show()
         end)
 
         pfUI.bag.left.sort:SetScript("OnLeave", function ()
           CreateBackdrop(pfUI.bag.left.sort)
           pfUI.bag.left.sort.texture:SetVertexColor(.25,.25,.25,1)
+          if GameTooltip:IsOwned(this) then
+            GameTooltip:Hide()
+          end
         end)
 
         pfUI.bag.left.sort:SetScript("OnClick", function()
@@ -559,9 +573,9 @@ pfUI:RegisterModule("thirdparty", function ()
   HookAddonOrVariable("MrPlow", function()
     if C.thirdparty.mrplow.enable == "0" then return end
 
-    pfUI.thirdparty.bagsort = "mrplow" -- dont't check for sortbags, use mrplow as default
     local MrPlowL = AceLibrary and AceLibrary("AceLocale-2.2"):new("MrPlow")
     if not (MrPlowL and MrPlowL["Bank"]) then return end
+    pfUI.thirdparty.bagsort = "mrplow" -- dont't check for sortbags, use mrplow as default
 
     pfUI.thirdparty.mrplow = CreateFrame("Frame", nil)
     pfUI.thirdparty.mrplow:RegisterEvent("PLAYER_ENTERING_WORLD")
@@ -600,11 +614,18 @@ pfUI:RegisterModule("thirdparty", function ()
         pfUI.bag.right.sort:SetScript("OnEnter", function ()
           pfUI.bag.right.sort.backdrop:SetBackdropBorderColor(1,1,.25,1)
           pfUI.bag.right.sort.texture:SetVertexColor(1,1,.25,1)
+          GameTooltip:SetOwner(this, "ANCHOR_RIGHT")
+          GameTooltip:SetText(MrPlowL["Mr Plow"])
+          GameTooltip:AddLine(MrPlowL["The Works"],1,1,1)
+          GameTooltip:Show()
         end)
 
         pfUI.bag.right.sort:SetScript("OnLeave", function ()
           CreateBackdrop(pfUI.bag.right.sort)
           pfUI.bag.right.sort.texture:SetVertexColor(.25,.25,.25,1)
+          if GameTooltip:IsOwned(this) then
+            GameTooltip:Hide()
+          end
         end)
 
         pfUI.bag.right.sort:SetScript("OnClick", function()
@@ -637,11 +658,18 @@ pfUI:RegisterModule("thirdparty", function ()
         pfUI.bag.left.sort:SetScript("OnEnter", function ()
           pfUI.bag.left.sort.backdrop:SetBackdropBorderColor(1,1,.25,1)
           pfUI.bag.left.sort.texture:SetVertexColor(1,1,.25,1)
+          GameTooltip:SetOwner(this, "ANCHOR_RIGHT")
+          GameTooltip:SetText(MrPlowL["Mr Plow"])
+          GameTooltip:AddLine(MrPlowL["Bank"],1,1,1)
+          GameTooltip:Show()
         end)
 
         pfUI.bag.left.sort:SetScript("OnLeave", function ()
           CreateBackdrop(pfUI.bag.left.sort)
           pfUI.bag.left.sort.texture:SetVertexColor(.25,.25,.25,1)
+          if GameTooltip:IsOwned(this) then
+            GameTooltip:Hide()
+          end
         end)
 
         pfUI.bag.left.sort:SetScript("OnClick", function()

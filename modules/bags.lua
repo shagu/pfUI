@@ -4,6 +4,12 @@ pfUI:RegisterModule("bags", function ()
     default_border = C.appearance.border.bags
   end
 
+  local knownInventorySpellTextures = {
+    Spell_Holy_RemoveCurse = {frame="disenchant"},
+    Spell_Nature_MoonKey = {frame="picklock"},    
+  }
+  local scanner = libtipscan:GetScanner("openable")
+  local openable = {}
   -- prevent from being placed offscreen
   _G.StackSplitFrame:SetClampedToScreen(true)
 
@@ -60,6 +66,7 @@ pfUI:RegisterModule("bags", function ()
   pfUI.bag:RegisterEvent("BANKFRAME_CLOSED")
   pfUI.bag:RegisterEvent("BANKFRAME_OPENED")
   pfUI.bag:RegisterEvent("ITEM_LOCK_CHANGED")
+  pfUI.bag:RegisterEvent("SPELLS_CHANGED")
 
   pfUI.bag:SetScript("OnEvent", function()
     if event == "PLAYER_ENTERING_WORLD" then
@@ -71,6 +78,11 @@ pfUI:RegisterModule("bags", function ()
 
       pfUI.bag:CreateBagSlots(pfUI.bag.right)
       pfUI.bag:CreateBagSlots(pfUI.bag.left)
+      pfUI.bag:RefreshSpells()
+    end
+
+    if event == "SPELLS_CHANGED" then
+      pfUI.bag:RefreshSpells()
     end
 
     if event == "BAG_CLOSED" or event == "PLAYERBANKSLOTS_CHANGED" or
@@ -297,6 +309,30 @@ pfUI:RegisterModule("bags", function ()
     end
   end
 
+  function pfUI.bag:Openable(bag, slot, hasItem)
+    local prev_bag, prev_slot = openable.bag, openable.slot
+    if bag == prev_bag and slot == prev_slot then
+      openable.bag = nil
+      openable.slot = nil
+      openable.name = nil
+    end    
+    if hasItem then
+      scanner:SetBagItem(bag, slot)
+      if scanner:Find(_G.ITEM_OPENABLE, true) then
+        openable.bag = bag
+        openable.slot = slot
+        openable.name = scanner:Line(1)
+      end
+    end
+    if pfUI.bag.right and pfUI.bag.right.open then
+      if openable.bag and openable.slot then
+        pfUI.bag.right.open.texture:SetTexture("Interface\\AddOns\\pfUI\\img\\full")
+      else
+        pfUI.bag.right.open.texture:SetTexture("Interface\\AddOns\\pfUI\\img\\empty")
+      end
+    end
+  end
+
   function pfUI.bag:UpdateSlot(bag, slot)
     if not pfUI.bags[bag] then return end
 
@@ -342,11 +378,14 @@ pfUI:RegisterModule("bags", function ()
     SetItemButtonCount(pfUI.bags[bag].slots[slot].frame, count)
     SetItemButtonDesaturated(pfUI.bags[bag].slots[slot].frame, locked, 0.5, 0.5, 0.5)
 
+    local hasItem
     if texture then
-      pfUI.bags[bag].slots[slot].frame.hasItem = 1
+      hasItem = 1
     else
-      pfUI.bags[bag].slots[slot].frame.hasItem = nil
+      hasItem = nil
     end
+    pfUI.bags[bag].slots[slot].frame.hasItem = hasItem
+    pfUI.bag:Openable(bag, slot, hasItem)
 
     ContainerFrame_UpdateCooldown(bag, pfUI.bags[bag].slots[slot].frame)
 
@@ -503,6 +542,47 @@ pfUI:RegisterModule("bags", function ()
     end
   end
 
+  function pfUI.bag:ReanchorAdditions()
+    local frame = pfUI.bag.right
+    local show_disenchant = (frame.disenchant:GetID() > 0)
+    local show_picklock = (frame.picklock:GetID() > 0)
+    if not show_disenchant then
+      frame.disenchant:Hide()
+      frame.picklock:SetPoint("TOPRIGHT", frame.open, "TOPLEFT", -default_border*3, 0)
+    else
+      frame.disenchant:Show()
+      frame.picklock:SetPoint("TOPRIGHT", frame.disenchant, "TOPLEFT", -default_border*3, 0)
+    end
+    if not show_picklock then
+      frame.picklock:Hide()
+      if show_disenchant then
+        frame.keys:SetPoint("TOPRIGHT", frame.disenchant, "TOPLEFT", -default_border*3, 0)
+      else
+        frame.keys:SetPoint("TOPRIGHT", frame.open, "TOPLEFT", -default_border*3, 0)
+      end
+    else
+      frame.picklock:Show()
+      frame.keys:SetPoint("TOPRIGHT", frame.picklock, "TOPLEFT", -default_border*3, 0)
+    end
+  end
+
+  function pfUI.bag:RefreshSpells()
+    if not (pfUI.bag and pfUI.bag.right) then return end
+    for tabIndex = 1, GetNumSpellTabs() do
+      local _, _, offset, numSpells = GetSpellTabInfo(tabIndex)
+      for spellIndex = offset + 1, offset + numSpells do
+        local spellTexture = GetSpellTexture(spellIndex, BOOKTYPE_SPELL)
+        -- scan for disenchant and pick lock
+        for texture, widget in pairs(knownInventorySpellTextures) do
+          if strfind(spellTexture, texture) and pfUI.bag.right[widget.frame] then
+            pfUI.bag.right[widget.frame]:SetID(spellIndex)
+          end
+        end
+      end
+    end
+    pfUI.bag:ReanchorAdditions()
+  end
+
   function pfUI.bag:CreateAdditions(frame)
     -- bag additions
     if frame == pfUI.bag.right then
@@ -551,11 +631,17 @@ pfUI:RegisterModule("bags", function ()
         frame.bags:SetScript("OnEnter", function ()
           frame.bags.backdrop:SetBackdropBorderColor(1,1,.25,1)
           frame.bags.texture:SetVertexColor(1,1,.25,1)
+          GameTooltip:SetOwner(this, "ANCHOR_RIGHT")
+          GameTooltip:SetText(_G.TUTORIAL_TITLE10)
+          GameTooltip:Show()
         end)
 
         frame.bags:SetScript("OnLeave", function ()
           CreateBackdrop(frame.bags, default_border)
           frame.bags.texture:SetVertexColor(.25,.25,.25,1)
+          if GameTooltip:IsOwned(this) then
+            GameTooltip:Hide()
+          end
         end)
 
         frame.bags:SetScript("OnClick", function()
@@ -567,10 +653,146 @@ pfUI:RegisterModule("bags", function ()
         end)
       end
 
+      -- open button
+      if not frame.open then
+        frame.open = CreateFrame("Button", "pfBagSlotOpen", frame)
+        frame.open:SetPoint("TOPRIGHT", frame.bags, "TOPLEFT", -default_border*3, 0)
+        CreateBackdrop(frame.open, default_border)
+        frame.open:SetHeight(12)
+        frame.open:SetWidth(12)
+        frame.open:SetTextColor(1,1,.25,1)
+        frame.open:SetFont(pfUI.font_default, C.global.font_size, "OUTLINE")
+        frame.open.texture = frame.open:CreateTexture("pfBagOpenContainer")
+        frame.open.texture:SetTexture("Interface\\AddOns\\pfUI\\img\\empty")
+        frame.open.texture:ClearAllPoints()
+        frame.open.texture:SetPoint("TOPLEFT", frame.open, "TOPLEFT", 3, -1)
+        frame.open.texture:SetPoint("BOTTOMRIGHT", frame.open, "BOTTOMRIGHT", -3, 1)
+        frame.open.texture:SetVertexColor(.25,.25,.25,1)
+
+        frame.open:SetScript("OnEnter", function ()
+          frame.open.backdrop:SetBackdropBorderColor(1,1,.25,1)
+          frame.open.texture:SetVertexColor(1,1,.25,1)
+          GameTooltip:SetOwner(this, "ANCHOR_RIGHT")
+          if openable.bag and openable.slot then
+            --GameTooltip:SetBagItem(openable.bag, openable.slot) -- alternative for full container tooltip
+            GameTooltip:SetText(openable.name)
+          else
+            GameTooltip:SetText(_G.EMPTY)
+          end
+          GameTooltip:Show()
+        end)
+
+        frame.open:SetScript("OnLeave", function ()
+          CreateBackdrop(frame.open, default_border)
+          frame.open.texture:SetVertexColor(.25,.25,.25,1)
+          if GameTooltip:IsOwned(this) then
+            GameTooltip:Hide()
+          end
+        end)
+
+        frame.open:SetScript("OnClick", function()
+          if openable.bag and openable.slot then
+            ClearCursor()
+            if MerchantFrame:IsShown() then
+              HideUIPanel(MerchantFrame)
+            end
+            UseContainerItem(openable.bag, openable.slot)
+          end
+        end)
+      end
+
+      -- disenchant button
+      if not frame.disenchant then
+        frame.disenchant = CreateFrame("Button", "pfBagSlotDisenchant", frame)
+        frame.disenchant:SetPoint("TOPRIGHT", frame.open, "TOPLEFT", -default_border*3, 0)
+        CreateBackdrop(frame.disenchant, default_border)
+        frame.disenchant:SetHeight(12)
+        frame.disenchant:SetWidth(12)
+        frame.disenchant:SetTextColor(1,1,.25,1)
+        frame.disenchant:SetFont(pfUI.font_default, C.global.font_size, "OUTLINE")
+        frame.disenchant.texture = frame.disenchant:CreateTexture("pfBagDisenchant")
+        frame.disenchant.texture:SetTexture("Interface\\AddOns\\pfUI\\img\\disenchant")
+        frame.disenchant.texture:ClearAllPoints()
+        frame.disenchant.texture:SetPoint("TOPLEFT", frame.disenchant, "TOPLEFT", 3, -1)
+        frame.disenchant.texture:SetPoint("BOTTOMRIGHT", frame.disenchant, "BOTTOMRIGHT", -3, 1)
+        frame.disenchant.texture:SetVertexColor(.25,.25,.25,1)
+
+        frame.disenchant:SetScript("OnEnter", function ()
+          frame.disenchant.backdrop:SetBackdropBorderColor(1,1,.25,1)
+          frame.disenchant.texture:SetVertexColor(1,1,.25,1)
+          local id = this:GetID()
+          if id and id > 0 then
+            local name = GetSpellName(id, BOOKTYPE_SPELL)
+            GameTooltip:SetOwner(this, "ANCHOR_RIGHT")
+            GameTooltip:SetText(name)
+            GameTooltip:Show()
+          end
+        end)
+
+        frame.disenchant:SetScript("OnLeave", function ()
+          CreateBackdrop(frame.disenchant, default_border)
+          frame.disenchant.texture:SetVertexColor(.25,.25,.25,1)
+          if GameTooltip:IsOwned(this) then
+            GameTooltip:Hide()
+          end
+        end)
+
+        frame.disenchant:SetScript("OnClick", function()
+          local id = this:GetID()
+          if id and id > 0 then
+            CastSpell(id,BOOKTYPE_SPELL)
+          end
+        end)
+      end
+
+      -- pick lock button
+      if not frame.picklock then
+        frame.picklock = CreateFrame("Button", "pfBagSlotPicklock", frame)
+        frame.picklock:SetPoint("TOPRIGHT", frame.disenchant, "TOPLEFT", -default_border*3, 0)
+        CreateBackdrop(frame.picklock, default_border)
+        frame.picklock:SetHeight(12)
+        frame.picklock:SetWidth(12)
+        frame.picklock:SetTextColor(1,1,.25,1)
+        frame.picklock:SetFont(pfUI.font_default, C.global.font_size, "OUTLINE")
+        frame.picklock.texture = frame.picklock:CreateTexture("pfBagPicklock")
+        frame.picklock.texture:SetTexture("Interface\\AddOns\\pfUI\\img\\picklock")
+        frame.picklock.texture:ClearAllPoints()
+        frame.picklock.texture:SetPoint("TOPLEFT", frame.picklock, "TOPLEFT", 3, -1)
+        frame.picklock.texture:SetPoint("BOTTOMRIGHT", frame.picklock, "BOTTOMRIGHT", -3, 1)
+        frame.picklock.texture:SetVertexColor(.25,.25,.25,1)
+
+        frame.picklock:SetScript("OnEnter", function ()
+          frame.picklock.backdrop:SetBackdropBorderColor(1,1,.25,1)
+          frame.picklock.texture:SetVertexColor(1,1,.25,1)
+          local id = this:GetID()
+          if id and id > 0 then
+            local name = GetSpellName(id, BOOKTYPE_SPELL)
+            GameTooltip:SetOwner(this, "ANCHOR_RIGHT")
+            GameTooltip:SetText(name)
+            GameTooltip:Show()
+          end          
+        end)
+
+        frame.picklock:SetScript("OnLeave", function ()
+          CreateBackdrop(frame.picklock, default_border)
+          frame.picklock.texture:SetVertexColor(.25,.25,.25,1)
+          if GameTooltip:IsOwned(this) then
+            GameTooltip:Hide()
+          end          
+        end)
+
+        frame.picklock:SetScript("OnClick", function()
+          local id = this:GetID()
+          if id and id > 0 then
+            CastSpell(id,BOOKTYPE_SPELL)
+          end
+        end)
+      end
+
       -- key button
       if not frame.keys then
         frame.keys = CreateFrame("Button", "pfBagSlotShow", frame)
-        frame.keys:SetPoint("TOPRIGHT", frame.bags, "TOPLEFT", -default_border*3, 0)
+        frame.keys:SetPoint("TOPRIGHT", frame.picklock, "TOPLEFT", -default_border*3, 0)
         CreateBackdrop(frame.keys, default_border)
         frame.keys:SetHeight(12)
         frame.keys:SetWidth(12)
@@ -586,11 +808,17 @@ pfUI:RegisterModule("bags", function ()
         frame.keys:SetScript("OnEnter", function ()
           frame.keys.backdrop:SetBackdropBorderColor(1,1,.25,1)
           frame.keys.texture:SetVertexColor(1,1,.25,1)
+          GameTooltip:SetOwner(this, "ANCHOR_RIGHT")
+          GameTooltip:SetText(_G.KEYRING)
+          GameTooltip:Show()
         end)
 
         frame.keys:SetScript("OnLeave", function ()
           CreateBackdrop(frame.keys, default_border)
           frame.keys.texture:SetVertexColor(.25,.25,.25,1)
+          if GameTooltip:IsOwned(this) then
+            GameTooltip:Hide()
+          end           
         end)
 
         frame.keys:SetScript("OnClick", function()
@@ -710,11 +938,17 @@ pfUI:RegisterModule("bags", function ()
         frame.bags:SetScript("OnEnter", function ()
           frame.bags.backdrop:SetBackdropBorderColor(1,1,.25,1)
           frame.bags.texture:SetVertexColor(1,1,.25,1)
+          GameTooltip:SetOwner(this, "ANCHOR_RIGHT")
+          GameTooltip:SetText(_G.TUTORIAL_TITLE10)
+          GameTooltip:Show()          
         end)
 
         frame.bags:SetScript("OnLeave", function ()
           CreateBackdrop(frame.bags, default_border)
           frame.bags.texture:SetVertexColor(.25,.25,.25,1)
+          if GameTooltip:IsOwned(this) then
+            GameTooltip:Hide()
+          end          
         end)
 
         frame.bags:SetScript("OnClick", function()
