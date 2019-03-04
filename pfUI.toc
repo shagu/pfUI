@@ -68,6 +68,7 @@ skins\blizzard\battlefield_minimap.lua
 skins\blizzard\GMSurvey.lua
 skins\blizzard\keybindings.lua
 skins\blizzard\merchant.lua
+skins\blizzard\popup_dialogs.lua
 
 # modules
 modules\gui.lua
