@@ -4,25 +4,15 @@ pfUI:RegisterSkin("Friends", function ()
 
   StripTextures(FriendsFrame, true)
   CreateBackdrop(FriendsFrame, nil, nil, .75)
-  FriendsFrame.backdrop:SetPoint("TOPLEFT", 10, -12)
-  FriendsFrame.backdrop:SetPoint("BOTTOMRIGHT", -32, 76)
+  FriendsFrame.backdrop:SetPoint("TOPLEFT", 8, -10)
+  FriendsFrame.backdrop:SetPoint("BOTTOMRIGHT", -32, 74)
+  FriendsFrame:SetHitRectInsets(8,32,10,74)
+  EnableMovable("FriendsFrame")
 
-  SkinCloseButton(FriendsFrameCloseButton, CharacterFrame, -37, -17)
-  FriendsFrameCloseButton:SetParent(FriendsFrame)
-  FriendsFrameCloseButton:ClearAllPoints()
-  FriendsFrameCloseButton:SetPoint("TOPRIGHT", FriendsFrame.backdrop, "TOPRIGHT", -4, -4)
+  SkinCloseButton(FriendsFrameCloseButton, FriendsFrame.backdrop, -6, -6)
 
-  for i = 1, 2 do
-    for _, name in pairs({"FriendsFrameToggleTab", "IgnoreFrameToggleTab"}) do
-      local tab = _G[name..i]
-      StripTextures(tab, true)
-      CreateBackdrop(tab)
-      tab:SetWidth(75)
-      tab:SetHeight(25)
-      tab:ClearAllPoints()
-      tab:SetPoint("TOPLEFT", FriendsFrame, "TOPLEFT", (i-1)*(75 + 2*bpad + 1)+21, -48 + border)
-    end
-  end
+  FriendsFrameTitleText:ClearAllPoints()
+  FriendsFrameTitleText:SetPoint("TOP", FriendsFrame.backdrop, "TOP", 0, -10)
 
   FriendsFrameTab1:ClearAllPoints()
   FriendsFrameTab1:SetPoint("TOPLEFT", FriendsFrame.backdrop, "BOTTOMLEFT", bpad, -(border + (border == 1 and 1 or 2)))
@@ -36,142 +26,140 @@ pfUI:RegisterSkin("Friends", function ()
     SkinTab(tab)
   end
 
-  do -- friends
+  do -- Friends Tab
+    -- Friends SubTab
+    SkinTab(FriendsFrameToggleTab1)
+    FriendsFrameToggleTab1:ClearAllPoints()
+    FriendsFrameToggleTab1:SetPoint("BOTTOMLEFT", FriendsFrameFriendsScrollFrame, "TOPLEFT", 0, border*2 + 1)
+    SkinTab(FriendsFrameToggleTab2)
+    FriendsFrameToggleTab2:ClearAllPoints()
+    FriendsFrameToggleTab2:SetPoint("LEFT", FriendsFrameToggleTab1, "RIGHT", border*2 + 1, 0)
+
     StripTextures(FriendsFrameFriendsScrollFrame)
     CreateBackdrop(FriendsFrameFriendsScrollFrame)
-    SkinScrollbar(FriendsFrameFriendsScrollFrameScrollBar, FriendsFrameFriendsScrollFrame)
+    SkinScrollbar(FriendsFrameFriendsScrollFrameScrollBar, true)
 
     SkinButton(FriendsFrameAddFriendButton)
-    FriendsFrameAddFriendButton:ClearAllPoints()
-    FriendsFrameAddFriendButton:SetPoint("TOPLEFT", FriendsFrameFriendsScrollFrame, "BOTTOMLEFT", -bpad, -5)
     FriendsFrameAddFriendButton:SetWidth(158)
+    FriendsFrameAddFriendButton:ClearAllPoints()
+    FriendsFrameAddFriendButton:SetPoint("TOPLEFT", FriendsFrameFriendsScrollFrame, "BOTTOMLEFT", -bpad, -border*2)
 
     SkinButton(FriendsFrameRemoveFriendButton)
-    FriendsFrameRemoveFriendButton:ClearAllPoints()
-    FriendsFrameRemoveFriendButton:SetPoint("TOPLEFT", FriendsFrameAddFriendButton, "BOTTOMLEFT", 0, -4)
     FriendsFrameRemoveFriendButton:SetWidth(158)
+    FriendsFrameRemoveFriendButton:ClearAllPoints()
+    FriendsFrameRemoveFriendButton:SetPoint("TOP", FriendsFrameAddFriendButton, "BOTTOM", 0, -4)
 
     SkinButton(FriendsFrameSendMessageButton)
-    FriendsFrameSendMessageButton:ClearAllPoints()
-    FriendsFrameSendMessageButton:SetPoint("TOPRIGHT", FriendsFrameFriendsScrollFrameScrollBarScrollDownButton, "BOTTOMRIGHT", bpad, -5)
     FriendsFrameSendMessageButton:SetWidth(158)
+    FriendsFrameSendMessageButton:ClearAllPoints()
+    FriendsFrameSendMessageButton:SetPoint("TOPRIGHT", FriendsFrameFriendsScrollFrameScrollBarScrollDownButton, "BOTTOMRIGHT", bpad, -border*2)
 
     SkinButton(FriendsFrameGroupInviteButton)
-    FriendsFrameGroupInviteButton:ClearAllPoints()
-    FriendsFrameGroupInviteButton:SetPoint("TOPLEFT", FriendsFrameSendMessageButton, "BOTTOMLEFT", 0, -4)
     FriendsFrameGroupInviteButton:SetWidth(158)
+    FriendsFrameGroupInviteButton:ClearAllPoints()
+    FriendsFrameGroupInviteButton:SetPoint("TOP", FriendsFrameSendMessageButton, "BOTTOM", 0, -4)
 
-    for i = 1, 10 do
+    for i = 1, FRIENDS_TO_DISPLAY do
       local frame = _G["FriendsFrameFriendButton"..i]
       if frame then
         local tex = frame:GetHighlightTexture()
-        tex:SetTexture(1,1,1,.1)
         tex:ClearAllPoints()
         tex:SetPoint("TOPLEFT", frame, "TOPLEFT", 0, 0)
         tex:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -5, 2)
         frame:SetHeight(30)
       end
     end
-  end
 
-  do -- ignore
+    -- Ignore SubTab
+    SkinTab(IgnoreFrameToggleTab1)
+    IgnoreFrameToggleTab1:ClearAllPoints()
+    IgnoreFrameToggleTab1:SetPoint("BOTTOMLEFT", FriendsFrameIgnoreScrollFrame, "TOPLEFT", 0, border*2 + 1)
+    SkinTab(IgnoreFrameToggleTab2)
+    IgnoreFrameToggleTab2:ClearAllPoints()
+    IgnoreFrameToggleTab2:SetPoint("LEFT", IgnoreFrameToggleTab1, "RIGHT", border*2 + 1, 0)
+
     StripTextures(FriendsFrameIgnoreScrollFrame)
     CreateBackdrop(FriendsFrameIgnoreScrollFrame)
-    SkinScrollbar(FriendsFrameIgnoreScrollFrameScrollBar, FriendsFrameIgnoreScrollFrame)
+    SkinScrollbar(FriendsFrameIgnoreScrollFrameScrollBar, true)
+    FriendsFrameIgnoreScrollFrame:SetHeight(329)
 
-    for i = 1, 20 do
+    SkinButton(FriendsFrameIgnorePlayerButton)
+    FriendsFrameIgnorePlayerButton:SetWidth(158)
+    FriendsFrameIgnorePlayerButton:ClearAllPoints()
+    FriendsFrameIgnorePlayerButton:SetPoint("TOPLEFT", FriendsFrameIgnoreScrollFrame, "BOTTOMLEFT", -bpad, -border*2)
+
+    SkinButton(FriendsFrameStopIgnoreButton)
+    FriendsFrameStopIgnoreButton:SetWidth(158)
+    FriendsFrameStopIgnoreButton:ClearAllPoints()
+    FriendsFrameStopIgnoreButton:SetPoint("TOPRIGHT", FriendsFrameIgnoreScrollFrameScrollBarScrollDownButton, "BOTTOMRIGHT", bpad, -border*2)
+
+    for i = 1, IGNORES_TO_DISPLAY do
       local frame = _G["FriendsFrameIgnoreButton"..i]
       if frame then
         local tex = frame:GetHighlightTexture()
-        tex:SetTexture(1,1,1,.1)
         tex:ClearAllPoints()
         tex:SetPoint("TOPLEFT", frame, "TOPLEFT", 0, -2)
         tex:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -5, -1)
       end
     end
-
-    SkinButton(FriendsFrameIgnorePlayerButton)
-    FriendsFrameIgnorePlayerButton:ClearAllPoints()
-    FriendsFrameIgnorePlayerButton:SetPoint("TOPLEFT", FriendsFrameIgnoreScrollFrame, "BOTTOMLEFT", -bpad, -4)
-    FriendsFrameIgnorePlayerButton:SetWidth(158)
-
-    SkinButton(FriendsFrameStopIgnoreButton)
-    FriendsFrameStopIgnoreButton:ClearAllPoints()
-    FriendsFrameStopIgnoreButton:SetPoint("TOPRIGHT", FriendsFrameIgnoreScrollFrameScrollBarScrollDownButton, "BOTTOMRIGHT", bpad, -4)
-    FriendsFrameStopIgnoreButton:SetWidth(158)
   end
 
-  do -- who
+  do -- Who Tab
     WhoListScrollFrame:SetPoint("TOPLEFT", 25, -70)
     WhoFrameButton1:SetPoint("TOPLEFT", WhoListScrollFrame, "TOPLEFT", -5, -5)
 
     StripTextures(WhoListScrollFrame)
     CreateBackdrop(WhoListScrollFrame)
-    SkinScrollbar(WhoListScrollFrameScrollBar, WhoListScrollFrame)
+    SkinScrollbar(WhoListScrollFrameScrollBar, true)
 
+    StripTextures(WhoFrameColumnHeader3)
     WhoFrameColumnHeader3:ClearAllPoints()
-    WhoFrameColumnHeader3:SetPoint("BOTTOMLEFT", WhoListScrollFrame, "TOPLEFT", 5, 4)
+    WhoFrameColumnHeader3:SetPoint("BOTTOMLEFT", WhoListScrollFrame, "TOPLEFT", 0, 4)
 
+    StripTextures(WhoFrameColumnHeader4)
+    WhoFrameColumnHeader4:SetWidth(70)
     WhoFrameColumnHeader4:ClearAllPoints()
-    WhoFrameColumnHeader4:SetPoint("LEFT", WhoFrameColumnHeader3, "RIGHT", -2, -0)
-    WhoFrameColumnHeader4:SetWidth(68)
+    WhoFrameColumnHeader4:SetPoint("LEFT", WhoFrameColumnHeader3, "RIGHT", -2, 0)
 
+    StripTextures(WhoFrameColumnHeader1)
+    WhoFrameColumnHeader1:SetWidth(70)
     WhoFrameColumnHeader1:ClearAllPoints()
-    WhoFrameColumnHeader1:SetPoint("LEFT", WhoFrameColumnHeader4, "RIGHT", -5, -0)
-    WhoFrameColumnHeader1:SetWidth(85)
+    WhoFrameColumnHeader1:SetPoint("LEFT", WhoFrameColumnHeader4, "RIGHT", -2, 0)
 
+    StripTextures(WhoFrameColumnHeader2)
     WhoFrameColumnHeader2:ClearAllPoints()
-    WhoFrameColumnHeader2:SetPoint("LEFT", WhoFrameColumnHeader1, "RIGHT", -5, -0)
-
-    for i = 1, 4 do
-      StripTextures(_G["WhoFrameColumnHeader"..i])
-    end
+    WhoFrameColumnHeader2:SetPoint("LEFT", WhoFrameColumnHeader1, "RIGHT", -2, 0)
 
     SkinDropDown(WhoFrameDropDown)
     WhoFrameDropDown.backdrop:SetPoint("BOTTOMRIGHT", WhoListScrollFrame.backdrop, "TOPRIGHT", 0, 3)
     WhoFrameDropDownButton:ClearAllPoints()
     WhoFrameDropDownButton:SetPoint("RIGHT", WhoFrameDropDown.backdrop, "RIGHT", 0, 0)
-    UIDropDownMenu_SetWidth(95, WhoFrameDropDown)
-    WhoFrameDropDownButton.SetPoint = function() return end
-    WhoFrameDropDown.SetWidth = function() return end
-    WhoFrameDropDownMiddle.SetWidth = function() return end
-    WhoFrameDropDownText.SetWidth = function() return end
-    WhoFrameDropDownHighlightTexture:SetTexture(nil)
 
-    for i = 1, 17 do
-      local button = _G["WhoFrameButton"..i]
+    for i = 1, WHOS_TO_DISPLAY do
       local level = _G["WhoFrameButton"..i.."Level"]
-      local name = _G["WhoFrameButton"..i.."Name"]
-
-      if button then
-        local tex = button:GetHighlightTexture()
-        tex:SetTexture(1,1,1,.1)
-        tex:ClearAllPoints()
-        tex:SetPoint("TOPLEFT", button, "TOPLEFT", 5, -2)
-        tex:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", 0, -1)
-      end
-
       level:ClearAllPoints()
-      level:SetPoint("TOPLEFT", 12, -2)
+      level:SetPoint("TOPLEFT", 10, -3)
 
-      name:SetWidth(80)
-      name:SetHeight(14)
+      local class = _G["WhoFrameButton"..i.."Class"]
+      class:SetWidth(70)
+      class:ClearAllPoints()
+      class:SetPoint("LEFT", level, "RIGHT", 10, 0)
+
+      local name = _G["WhoFrameButton"..i.."Name"]
+      name:SetWidth(70)
       name:ClearAllPoints()
-      name:SetPoint("LEFT", 105, 0)
+      name:SetPoint("LEFT", class, "RIGHT", 0, 0)
     end
 
-    StripTextures(WhoListScrollFrame)
-    SkinScrollbar(WhoListScrollFrameScrollBar)
-
-    CreateBackdrop(WhoFrameEditBox)
+    CreateBackdrop(WhoFrameEditBox, nil, true)
     WhoFrameEditBox:SetTextInsets(5,5,5,5)
     WhoFrameEditBox:ClearAllPoints()
-    WhoFrameEditBox:SetPoint("TOPLEFT",  WhoListScrollFrame, "BOTTOMLEFT", 0, -5)
+    WhoFrameEditBox:SetPoint("TOPLEFT",  WhoListScrollFrame.backdrop, "BOTTOMLEFT", 0, -4)
     WhoFrameEditBox:SetPoint("TOPRIGHT",  WhoListScrollFrameScrollBarScrollDownButton, "BOTTOMRIGHT", 0, -5)
     WhoFrameEditBox:SetHeight(20)
 
     WhoFrameTotals:ClearAllPoints()
-    WhoFrameTotals:SetPoint("TOP", WhoListScrollFrame, "BOTTOM", 0, -57)
+    WhoFrameTotals:SetPoint("BOTTOM", FriendsFrame.backdrop, "BOTTOM", 0, 8)
 
     SkinButton(WhoFrameWhoButton)
     WhoFrameWhoButton:ClearAllPoints()
@@ -186,51 +174,54 @@ pfUI:RegisterSkin("Friends", function ()
     WhoFrameGroupInviteButton:SetPoint("TOPRIGHT", WhoFrameEditBox, "BOTTOMRIGHT", bpad, -5)
   end
 
-  do -- guild
-    GuildFrameColumnHeader3:ClearAllPoints()
-    GuildFrameColumnHeader3:SetPoint("TOPLEFT", 20, -72)
-    StripTextures(GuildFrameColumnHeader3)
-
-    GuildFrameColumnHeader4:ClearAllPoints()
-    GuildFrameColumnHeader4:SetPoint("LEFT", GuildFrameColumnHeader3, "RIGHT", -3, -0)
-    GuildFrameColumnHeader4:SetWidth(68)
-    StripTextures(GuildFrameColumnHeader4)
-
-    GuildFrameColumnHeader1:ClearAllPoints()
-    GuildFrameColumnHeader1:SetPoint("LEFT", GuildFrameColumnHeader4, "RIGHT", -4, -0)
-    GuildFrameColumnHeader1:SetWidth(85)
-    StripTextures(GuildFrameColumnHeader1)
-
-    GuildFrameColumnHeader2:ClearAllPoints()
-    GuildFrameColumnHeader2:SetPoint("LEFT", GuildFrameColumnHeader1, "RIGHT", -14, -0)
-    GuildFrameColumnHeader2:SetWidth(127)
-    StripTextures(GuildFrameColumnHeader2)
-
-    GuildListScrollFrame:SetPoint("TOPLEFT", GuildFrameButton1, "TOPLEFT", 10, -2)
-    GuildListScrollFrame:SetPoint("BOTTOMRIGHT", GuildFrameButton13, "BOTTOMRIGHT", 0, -4)
-    CreateBackdrop(GuildListScrollFrame)
-
-    StripTextures(GuildListScrollFrame)
-    SkinScrollbar(GuildListScrollFrameScrollBar, GuildListScrollFrame)
-
+  do -- Guild Tab
     for i = 1, 4 do
       StripTextures(_G["GuildFrameColumnHeader"..i])
       StripTextures(_G["GuildFrameGuildStatusColumnHeader"..i])
     end
 
-    GuildFrameTotals:ClearAllPoints()
-    GuildFrameTotals:SetPoint("TOPLEFT", GuildListScrollFrame, "BOTTOMLEFT", 1, -7)
-    GuildFrameGuildListToggleButton:SetPoint("TOPLEFT", GuildListScrollFrameScrollBarScrollDownButton, "BOTTOMLEFT", 0, -7)
-    GuildFrameGuildListToggleButton:SetWidth(16)
-    GuildFrameGuildListToggleButton:SetHeight(16)
-    pfUI.api.SkinArrowButton(GuildFrameGuildListToggleButton, "right")
-    GuildFrameGuildListToggleButton:SetFont(STANDARD_TEXT_FONT, C.global.font_size - 1)
-    GuildFrameGuildListToggleButton:SetTextColor(1,1,1)
+    GuildFrameColumnHeader3:ClearAllPoints()
+    GuildFrameColumnHeader3:SetPoint("TOPLEFT", 20, -70)
+
+    GuildFrameColumnHeader4:ClearAllPoints()
+    GuildFrameColumnHeader4:SetPoint("LEFT", GuildFrameColumnHeader3, "RIGHT", -2, -0)
+    GuildFrameColumnHeader4:SetWidth(70)
+
+    GuildFrameColumnHeader1:ClearAllPoints()
+    GuildFrameColumnHeader1:SetPoint("LEFT", GuildFrameColumnHeader4, "RIGHT", -2, -0)
+    GuildFrameColumnHeader1:SetWidth(64)
+
+    GuildFrameColumnHeader2:ClearAllPoints()
+    GuildFrameColumnHeader2:SetPoint("LEFT", GuildFrameColumnHeader1, "RIGHT", -2, -0)
+
+    StripTextures(GuildListScrollFrame)
+    CreateBackdrop(GuildListScrollFrame)
+    SkinScrollbar(GuildListScrollFrameScrollBar, true)
+
+    for i = 1, GUILDMEMBERS_TO_DISPLAY do
+      local level = _G["GuildFrameButton"..i.."Level"]
+      level:ClearAllPoints()
+      level:SetPoint("TOPLEFT", 10, -3)
+
+      local class = _G["GuildFrameButton"..i.."Class"]
+      class:SetWidth(70)
+      class:ClearAllPoints()
+      class:SetPoint("LEFT", level, "RIGHT", 10, 0)
+
+      local name = _G["GuildFrameButton"..i.."Name"]
+      name:SetWidth(70)
+      name:ClearAllPoints()
+      name:SetPoint("LEFT", class, "RIGHT", 0, 0)
+    end
+
+    SkinArrowButton(GuildFrameGuildListToggleButton, "right", 16)
+    GuildFrameGuildListToggleButton:ClearAllPoints()
+    GuildFrameGuildListToggleButton:SetPoint("TOPLEFT", GuildListScrollFrame, "BOTTOMRIGHT", -20, 20)
 
     CreateBackdrop(GuildMOTDEditButton)
     GuildMOTDEditButton:ClearAllPoints()
-    GuildMOTDEditButton:SetPoint("TOPLEFT", GuildListScrollFrame, "BOTTOMLEFT", 0, -30)
-    GuildMOTDEditButton:SetPoint("BOTTOMRIGHT", GuildListScrollFrameScrollBarScrollDownButton, "BOTTOMRIGHT", 0, -88)
+    GuildMOTDEditButton:SetPoint("TOPLEFT", GuildListScrollFrame, "BOTTOMLEFT", 0, -border*2)
+    GuildMOTDEditButton:SetPoint("BOTTOMRIGHT", GuildListScrollFrameScrollBarScrollDownButton, "BOTTOMRIGHT", 0, -68)
 
     GuildFrameNotesLabel:SetPoint("TOPLEFT", GuildMOTDEditButton, 2, -2)
     GuildFrameNotesLabel:SetTextColor(.5,.5,.5,1)
@@ -240,140 +231,101 @@ pfUI:RegisterSkin("Friends", function ()
     GuildFrameNotesText:SetPoint("BOTTOMRIGHT", GuildMOTDEditButton, "BOTTOMRIGHT", -4, 4)
     GuildFrameNotesText:SetTextColor(1,1,1,1)
 
-    for i = 1, 13 do
-      local frame = _G["GuildFrameButton"..i]
-      if frame then
-        local tex = frame:GetHighlightTexture()
-        tex:SetTexture(1,1,1,.1)
-        tex:ClearAllPoints()
-        tex:SetPoint("TOPLEFT", frame, "TOPLEFT", 10, -3)
-        tex:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", 4, -2)
-        frame:SetHeight(17)
-
-        _G["GuildFrameButton"..i.."Level"]:ClearAllPoints()
-        _G["GuildFrameButton"..i.."Level"]:SetPoint("TOPLEFT", 10, -3)
-
-        _G["GuildFrameButton"..i.."Name"]:SetWidth(80)
-        _G["GuildFrameButton"..i.."Name"]:SetHeight(14)
-
-        _G["GuildFrameButton"..i.."Name"]:ClearAllPoints()
-        _G["GuildFrameButton"..i.."Name"]:SetPoint("LEFT", 105, -3)
-      end
-
-      local frame = _G["GuildFrameGuildStatusButton"..i]
-      if frame then
-        local tex = frame:GetHighlightTexture()
-        tex:SetTexture(1,1,1,.1)
-        tex:ClearAllPoints()
-        tex:SetPoint("TOPLEFT", frame, "TOPLEFT", 10, -3)
-        tex:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", 4, -2)
-        frame:SetHeight(17)
-      end
-    end
-
+    StripTextures(GuildFrameLFGFrame)
     GuildFrameLFGFrame:ClearAllPoints()
     GuildFrameLFGFrame:SetPoint("TOPRIGHT", -35, -45)
-    StripTextures(GuildFrameLFGFrame)
     SkinCheckbox(GuildFrameLFGButton)
 
-    GuildFrameGuildInformationButton:SetHeight(18)
-    GuildFrameGuildInformationButton:SetPoint("TOPLEFT", GuildMOTDEditButton, "BOTTOMLEFT", -bpad, -bpad - 2)
     SkinButton(GuildFrameGuildInformationButton)
+    GuildFrameGuildInformationButton:ClearAllPoints()
+    GuildFrameGuildInformationButton:SetPoint("TOPLEFT", GuildMOTDEditButton, "BOTTOMLEFT", -bpad, -5)
 
-    GuildFrameAddMemberButton:SetHeight(18)
     SkinButton(GuildFrameAddMemberButton)
+    GuildFrameAddMemberButton:SetPoint("LEFT", GuildFrameGuildInformationButton, "RIGHT", 3, 0)
+    GuildFrameAddMemberButton:SetPoint("RIGHT", GuildFrameControlButton, "LEFT", -3, 0)
 
-    GuildFrameControlButton:SetHeight(18)
-    GuildFrameControlButton:ClearAllPoints()
-    GuildFrameControlButton:SetPoint("TOPRIGHT", GuildMOTDEditButton, "BOTTOMRIGHT", bpad, -bpad - 2)
     SkinButton(GuildFrameControlButton)
+    GuildFrameControlButton:ClearAllPoints()
+    GuildFrameControlButton:SetPoint("TOPRIGHT", GuildMOTDEditButton, "BOTTOMRIGHT", bpad, -5)
 
     -- side dock dialog
     StripTextures(GuildMemberDetailFrame)
-    CreateBackdrop(GuildMemberDetailFrame)
-    SetAllPointsOffset(GuildMemberDetailFrame.backdrop, GuildMemberDetailFrame, 2*bpad)
+    CreateBackdrop(GuildMemberDetailFrame, nil, true, .75)
+    GuildMemberDetailFrame:ClearAllPoints()
+    GuildMemberDetailFrame:SetPoint("TOPLEFT", FriendsFrame.backdrop, "TOPRIGHT", border*2, 0)
 
-    GuildMemberDetailZoneText:SetPoint("RIGHT", -20, 0)
-    GuildMemberDetailZoneText:SetJustifyH("RIGHT")
+    SkinCloseButton(GuildMemberDetailCloseButton, GuildMemberDetailFrame, -6, -6)
 
-    GuildMemberDetailRankText:SetPoint("RIGHT", -20, 0)
-    GuildMemberDetailRankText:SetJustifyH("RIGHT")
+    for _,text in pairs({"ZoneText", "RankText", "OnlineText"}) do
+      text = _G["GuildMemberDetail"..text]
+      text:SetPoint("RIGHT", -20, 0)
+      text:SetJustifyH("RIGHT")
+    end
 
-    GuildMemberDetailOnlineText:SetPoint("RIGHT", -20, 0)
-    GuildMemberDetailOnlineText:SetJustifyH("RIGHT")
-
-    SkinArrowButton(GuildFramePromoteButton, "up")
-    GuildFramePromoteButton:SetWidth(12)
-    GuildFramePromoteButton:SetHeight(12)
+    SkinArrowButton(GuildFramePromoteButton, "up", 12)
     GuildFramePromoteButton:ClearAllPoints()
     GuildFramePromoteButton:SetPoint("TOPLEFT", GuildMemberDetailRankText, "TOPRIGHT", 3, 6)
 
-    SkinArrowButton(GuildFrameDemoteButton, "down")
-    GuildFrameDemoteButton:SetWidth(12)
-    GuildFrameDemoteButton:SetHeight(12)
+    SkinArrowButton(GuildFrameDemoteButton, "down", 12)
     GuildFrameDemoteButton:ClearAllPoints()
     GuildFrameDemoteButton:SetPoint("BOTTOMLEFT", GuildMemberDetailRankText, "BOTTOMRIGHT", 3, -6)
 
     StripTextures(GuildMemberNoteBackground)
-    CreateBackdrop(GuildMemberNoteBackground)
-    SetAllPointsOffset(GuildMemberNoteBackground.backdrop, GuildMemberNoteBackground, 2)
+    CreateBackdrop(GuildMemberNoteBackground, nil, true)
 
     StripTextures(GuildMemberOfficerNoteBackground)
-    CreateBackdrop(GuildMemberOfficerNoteBackground)
-    SetAllPointsOffset(GuildMemberOfficerNoteBackground.backdrop, GuildMemberOfficerNoteBackground, 2)
+    CreateBackdrop(GuildMemberOfficerNoteBackground, nil, true)
 
     SkinButton(GuildMemberRemoveButton)
-    SkinButton(GuildMemberGroupInviteButton)
+    GuildMemberRemoveButton:ClearAllPoints()
+    GuildMemberRemoveButton:SetPoint("BOTTOMRIGHT", GuildMemberDetailFrame, "BOTTOM", -bpad, 8)
 
-    SkinCloseButton(GuildMemberDetailCloseButton)
-    GuildMemberDetailCloseButton:SetPoint("TOPRIGHT", -6, -6)
+    SkinButton(GuildMemberGroupInviteButton)
+    GuildMemberGroupInviteButton:ClearAllPoints()
+    GuildMemberGroupInviteButton:SetPoint("BOTTOMLEFT", GuildMemberDetailFrame, "BOTTOM", bpad, 8)
 
     -- guild info dock
     StripTextures(GuildInfoFrame)
-    CreateBackdrop(GuildInfoFrame)
-    SetAllPointsOffset(GuildInfoFrame.backdrop, GuildInfoFrame, 2*bpad +2)
+    CreateBackdrop(GuildInfoFrame, nil, true, .75)
+
+    SkinCloseButton(GuildInfoCloseButton, GuildInfoFrame, -6, -6)
+
     CreateBackdrop(GuildInfoTextBackground, nil, true)
-
-    SkinScrollbar(GuildInfoFrameScrollFrameScrollBar, GuildInfoFrameScrollFrame)
-
-    SkinCloseButton(GuildInfoCloseButton)
-    GuildInfoCloseButton:SetPoint("TOPRIGHT",  -8, -8)
+    SkinScrollbar(GuildInfoFrameScrollFrameScrollBar)
 
     SkinButton(GuildInfoSaveButton)
     GuildInfoSaveButton:ClearAllPoints()
-    GuildInfoSaveButton:SetPoint("TOPLEFT", GuildInfoTextBackground, "BOTTOMLEFT", 0, -2)
-    GuildInfoSaveButton:SetPoint("TOPRIGHT", GuildInfoTextBackground, "BOTTOM", -1, 2)
-    GuildInfoSaveButton:SetHeight(22)
+    GuildInfoSaveButton:SetPoint("BOTTOMRIGHT", GuildInfoFrame, "BOTTOM", -bpad, 8)
 
     SkinButton(GuildInfoCancelButton)
     GuildInfoCancelButton:ClearAllPoints()
-    GuildInfoCancelButton:SetPoint("TOPLEFT", GuildInfoTextBackground, "BOTTOM", 1, -2)
-    GuildInfoCancelButton:SetPoint("TOPRIGHT", GuildInfoTextBackground, "BOTTOMRIGHT", 0, 2)
-    GuildInfoCancelButton:SetHeight(22)
+    GuildInfoCancelButton:SetPoint("BOTTOMLEFT", GuildInfoFrame, "BOTTOM", bpad, 8)
 
     -- guild control
     StripTextures(GuildControlPopupFrame)
-    CreateBackdrop(GuildControlPopupFrame)
-    GuildControlPopupFrame.backdrop:SetPoint("TOPLEFT", bpad*2+2, 0)
+    CreateBackdrop(GuildControlPopupFrame, nil, true, .75)
+    GuildControlPopupFrame:ClearAllPoints()
+    GuildControlPopupFrame:SetPoint("TOPLEFT", FriendsFrame.backdrop, "TOPRIGHT", border*2, 0)
 
     SkinDropDown(GuildControlPopupFrameDropDown)
 
-    GuildControlPopupFrameAddRankButton:SetPoint("LEFT", GuildControlPopupFrameDropDown, "RIGHT", -12, 3)
     SkinButton(GuildControlPopupFrameAddRankButton)
     GuildControlPopupFrameAddRankButton:SetWidth(18)
     GuildControlPopupFrameAddRankButton:SetHeight(18)
     GuildControlPopupFrameAddRankButton:SetText("+")
+    GuildControlPopupFrameAddRankButton:ClearAllPoints()
+    GuildControlPopupFrameAddRankButton:SetPoint("LEFT", GuildControlPopupFrameDropDown.backdrop, "RIGHT", 4, 0)
 
-    GuildControlPopupFrameRemoveRankButton:SetPoint("LEFT", GuildControlPopupFrameAddRankButton, "RIGHT", bpad*2-1, 0)
     SkinButton(GuildControlPopupFrameRemoveRankButton)
     GuildControlPopupFrameRemoveRankButton:SetWidth(18)
     GuildControlPopupFrameRemoveRankButton:SetHeight(18)
     GuildControlPopupFrameRemoveRankButton:SetText("-")
+    GuildControlPopupFrameRemoveRankButton:ClearAllPoints()
+    GuildControlPopupFrameRemoveRankButton:SetPoint("LEFT", GuildControlPopupFrameAddRankButton, "RIGHT", 2*bpad, 0)
 
     local _,_,_,_,_,left,right = GuildControlPopupFrameEditBox:GetRegions()
     left:Hide()
     right:Hide()
-
     CreateBackdrop(GuildControlPopupFrameEditBox)
     GuildControlPopupFrameEditBox:SetHeight(20)
 
@@ -381,76 +333,68 @@ pfUI:RegisterSkin("Friends", function ()
       SkinCheckbox(_G["GuildControlPopupFrameCheckbox"..i])
     end
 
-    SkinButton(GuildControlPopupAcceptButton)
     SkinButton(GuildControlPopupFrameCancelButton)
+    SkinButton(GuildControlPopupAcceptButton)
+    GuildControlPopupAcceptButton:ClearAllPoints()
+    GuildControlPopupAcceptButton:SetPoint("RIGHT", GuildControlPopupFrameCancelButton, "LEFT", -2*bpad, 0)
   end
 
-  do -- raid
-    SkinButton(RaidFrameConvertToRaidButton)
-    SkinButton(RaidFrameRaidInfoButton)
+  do -- Raid Tab
+    StripTextures(RaidInfoFrame)
+    CreateBackdrop(RaidInfoFrame, nil, true, .75)
+    RaidInfoFrame:ClearAllPoints()
+    RaidInfoFrame:SetPoint("TOPLEFT", FriendsFrame.backdrop, "TOPRIGHT", border*2, 0)
 
+    SkinCloseButton(RaidInfoCloseButton, RaidInfoFrame, -6, -6)
+
+    StripTextures(RaidInfoScrollFrame)
+    SkinScrollbar(RaidInfoScrollFrameScrollBar)
+
+    RaidInfoInstanceLabel:ClearAllPoints()
+    RaidInfoInstanceLabel:SetPoint("TOPLEFT", RaidInfoSubheader, "BOTTOMLEFT", 0, -6)
+
+    RaidInfoIDLabel:ClearAllPoints()
+    RaidInfoIDLabel:SetPoint("TOPRIGHT", RaidInfoSubheader, "BOTTOMRIGHT", 24, -6)
+
+    for i=1, 10 do
+      _G["RaidInfoInstance"..i.."Name"]:SetPoint("TOPLEFT", 2, -2)
+    end
+
+    SkinButton(RaidFrameRaidInfoButton)
     RaidFrameRaidInfoButton:ClearAllPoints()
     RaidFrameRaidInfoButton:SetPoint("TOPRIGHT", -70, -37)
+    RaidFrameRaidInfoButton.SetPoint = function() end
 
+    SkinButton(RaidFrameConvertToRaidButton)
     RaidFrameConvertToRaidButton:ClearAllPoints()
-    RaidFrameConvertToRaidButton:SetPoint("RIGHT", RaidFrameRaidInfoButton, "LEFT", -4, 0)
-
-    StripTextures(RaidInfoFrame)
-    CreateBackdrop(RaidInfoFrame)
-    RaidInfoFrame.backdrop:SetPoint("TOPLEFT", 2*bpad, 0)
-
-    SkinCloseButton(RaidInfoCloseButton)
-    StripTextures(RaidInfoScrollFrame)
-    CreateBackdrop(RaidInfoScrollFrame)
-    RaidInfoScrollFrame.backdrop:SetPoint("TOPLEFT", -10, 10)
-    RaidInfoScrollFrame.backdrop:SetPoint("BOTTOMRIGHT", 5, -5)
-    RaidInfoScrollFrame:SetPoint("TOPLEFT", 28, -60)
-    SkinScrollbar(RaidInfoScrollFrameScrollBar, RaidInfoScrollFrame)
-    RaidInfoScrollFrameScrollBar:ClearAllPoints()
-    RaidInfoScrollFrameScrollBar:SetPoint("LEFT", RaidInfoScrollFrame.backdrop, "RIGHT", 5, 0)
-
-    RaidInfoScrollFrameScrollBarScrollUpButton:ClearAllPoints()
-    RaidInfoScrollFrameScrollBarScrollUpButton:SetWidth(16)
-    RaidInfoScrollFrameScrollBarScrollUpButton:SetHeight(16)
-    RaidInfoScrollFrameScrollBarScrollUpButton:SetPoint("TOPLEFT", RaidInfoScrollFrame.backdrop, "TOPRIGHT", 3, 0)
-
-    RaidInfoScrollFrameScrollBarScrollDownButton:ClearAllPoints()
-    RaidInfoScrollFrameScrollBarScrollDownButton:SetWidth(16)
-    RaidInfoScrollFrameScrollBarScrollDownButton:SetHeight(16)
-    RaidInfoScrollFrameScrollBarScrollDownButton:SetPoint("BOTTOMLEFT", RaidInfoScrollFrame.backdrop, "BOTTOMRIGHT", 3, 0)
-
-    RaidInfoInstanceLabel:SetParent(RaidInfoScrollChildFrame)
-    RaidInfoInstanceLabel:ClearAllPoints()
-    RaidInfoInstanceLabel:SetPoint("TOPLEFT", RaidInfoScrollChildFrame, "TOPLEFT", -2, 2)
-
-    RaidInfoIDLabel:SetParent(RaidInfoScrollChildFrame)
-    RaidInfoIDLabel:ClearAllPoints()
-    RaidInfoIDLabel:SetPoint("TOPRIGHT", RaidInfoScrollChildFrame, "TOPRIGHT", -30, 2)
+    RaidFrameConvertToRaidButton:SetPoint("RIGHT", RaidFrameRaidInfoButton, "LEFT", -2*bpad, 0)
 
     HookAddonOrVariable("Blizzard_RaidUI", function()
-      for i = 1, 40 do
+      for i = 1, MAX_RAID_MEMBERS do
         StripTextures(_G["RaidGroupButton"..i])
+        CreateBackdrop(_G["RaidGroupButton"..i], nil, true)
+        SetHighlight(_G["RaidGroupButton"..i], 1, 1, 0)
       end
 
-      for i = 1, 8 do
-        for j = 1, 5 do
-          local border = CreateFrame("Frame", nil, _G["RaidGroup" .. i])
-          CreateBackdrop(border, nil, true)
-          border:SetAllPoints(_G["RaidGroup"..i.."Slot"..j])
-          _G["RaidGroup"..i.."Slot"..j]:Hide()
-        end
+      for i = 1, NUM_RAID_GROUPS do
         StripTextures(_G["RaidGroup" .. i])
+
+        _G["RaidGroup" .. i .. "Label"]:ClearAllPoints()
         _G["RaidGroup" .. i .. "Label"]:SetPoint("TOP", 0, 10)
-        _G["RaidGroup" .. i .. "Label"]:SetTextColor(.4,.4,.4)
+
+        for j = 1, MEMBERS_PER_RAID_GROUP do
+          StripTextures(_G["RaidGroup"..i.."Slot"..j])
+          CreateBackdrop(_G["RaidGroup"..i.."Slot"..j], nil, true)
+          SetHighlight(_G["RaidGroup"..i.."Slot"..j], 1, 1, 0)
+        end
       end
 
       SkinButton(RaidFrameReadyCheckButton)
-      RaidFrameAddMemberButton:ClearAllPoints()
-      RaidFrameAddMemberButton:SetPoint("TOPLEFT", 45, -37)
-
-      SkinButton(RaidFrameAddMemberButton)
       RaidFrameReadyCheckButton:ClearAllPoints()
-      RaidFrameReadyCheckButton:SetPoint("LEFT", RaidFrameAddMemberButton, "RIGHT", 2, 0)
+      RaidFrameReadyCheckButton:SetPoint("RIGHT", RaidFrameRaidInfoButton, "LEFT", -2*bpad, 0)
+      SkinButton(RaidFrameAddMemberButton)
+      RaidFrameAddMemberButton:ClearAllPoints()
+      RaidFrameAddMemberButton:SetPoint("RIGHT", RaidFrameReadyCheckButton, "LEFT", -2*bpad, 0)
     end)
   end
 end)
