@@ -501,19 +501,8 @@ function pfUI.api.SkinSlider(frame)
   local orientation = frame:GetOrientation()
   local thumb = frame:GetThumbTexture()
 
-  if not frame.bg then
-    frame.bg = CreateFrame("Frame", nil, frame)
-    frame.bg:SetAllPoints(frame)
-    CreateBackdrop(frame.bg, nil, true)
-  end
-
-  if not frame.thumb then
-    thumb:SetTexture(nil)
-    frame.thumb = frame.bg:CreateTexture(nil, "ARTWORK")
-    frame.thumb:SetTexture(1, .82, 0)
-    frame.thumb:SetPoint("TOPLEFT", thumb, "TOPLEFT", 1, -4)
-    frame.thumb:SetPoint("BOTTOMRIGHT", thumb, "BOTTOMRIGHT", -1, 4)
-  end
+  CreateBackdrop(frame, nil, true)
+  thumb:SetTexture(1, .82, 0)
 
   for i,region in ipairs({frame:GetRegions()}) do
     if region:GetObjectType() == 'FontString' then
@@ -540,10 +529,10 @@ function pfUI.api.SkinSlider(frame)
   if orientation == 'VERTICAL' then
     frame:SetWidth(10)
     thumb:SetHeight(22)
-    thumb:SetWidth(12)
+    thumb:SetWidth(frame:GetWidth())
   else
     frame:SetHeight(10)
-    thumb:SetHeight(17)
+    thumb:SetHeight(frame:GetHeight())
     thumb:SetWidth(17)
   end
 end
