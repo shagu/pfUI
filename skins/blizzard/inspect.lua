@@ -66,7 +66,7 @@ pfUI:RegisterSkin("InspectFrame", function ()
         frame:SetScript("OnEnter", function()
           if not GetInventoryItemLink(InspectFrame.unit, this:GetID()) and this.hasItem then
             GameTooltip:SetOwner(this, "ANCHOR_TOPRIGHT")
-            GameTooltip:SetHyperlink("item:"..cache[this:GetID()])
+            GameTooltip:SetHyperlink("item:"..cache[this:GetID()]["id"])
             GameTooltip:Show()
           else
             funce()
@@ -137,15 +137,23 @@ pfUI:RegisterSkin("InspectFrame", function ()
       end
 
       hooksecurefunc("InspectPaperDollItemSlotButton_Update", function(button)
-        UpdateSlots()
-        QueueFunction(UpdateSlots)
-
         local link = GetInventoryItemLink(InspectFrame.unit, button:GetID())
         if link then
           local _,_,itemID = string.find(link, 'item:(%d+)')
-          cache[button:GetID()] = itemID
-        end
-      end)
+          cache[button:GetID()] = {}
+          cache[button:GetID()]["id"] = itemID
+          cache[button:GetID()]["tex"] = GetInventoryItemTexture(InspectFrame.unit, button:GetID())
+          cache[button:GetID()]["count"] = GetInventoryItemCount(InspectFrame.unit, button:GetID())
+        elseif cache[button:GetID()] then
+					-- restore cache information
+					SetItemButtonTexture(button, cache[button:GetID()]["tex"])
+					SetItemButtonCount(button, cache[button:GetID()]["count"]);
+					button.hasItem = 1;
+				end
+				
+        UpdateSlots()
+        QueueFunction(UpdateSlots)
+      end, 1)
     end
 
     do -- Honor Tab
