@@ -80,6 +80,7 @@ skins\blizzard\help.lua
 skins\blizzard\options-interface.lua
 skins\blizzard\options-sound.lua
 skins\blizzard\options-video.lua
+skins\blizzard\petition.lua
 
 # modules
 modules\gui.lua
