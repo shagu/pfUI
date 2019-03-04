@@ -2,7 +2,6 @@ pfUI:RegisterModule("skin", function ()
   -- movable default frames
 
   EnableMovable("QuestLogFrame")
-  EnableMovable("GossipFrame")
   EnableMovable("TradeFrame")
   EnableMovable("MerchantFrame")
   EnableMovable("DressUpFrame")

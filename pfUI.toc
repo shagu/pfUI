@@ -58,6 +58,7 @@ skins\blizzard\talents.lua
 skins\blizzard\inspect.lua
 skins\blizzard\macro.lua
 skins\blizzard\miscellaneous.lua
+skins\blizzard\gossip&quest.lua
 
 # modules
 modules\gui.lua
