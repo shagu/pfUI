@@ -2,7 +2,6 @@ pfUI:RegisterModule("skin", function ()
   -- movable default frames
 
   EnableMovable("TradeFrame")
-  EnableMovable("MerchantFrame")
   EnableMovable("DressUpFrame")
 
   EnableMovable("ClassTrainerFrame", "Blizzard_TrainerUI")
