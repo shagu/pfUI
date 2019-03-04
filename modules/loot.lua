@@ -511,6 +511,12 @@ pfUI:RegisterModule("loot", 20400, function ()
     end
   end
 
+  local function CloseOnClick()
+    local lootbind = StaticPopup_FindVisible("LOOT_BIND")
+    local masterloot = UIDROPDOWNMENU_INIT_MENU and (UIDROPDOWNMENU_INIT_MENU == "GroupLootDropDown")
+    if lootbind or masterloot then else CloseLoot() end
+  end
+
   function pfUI.loot:CreateSlot(id)
     local frame = CreateFrame(LOOT_BUTTON_FRAME_TYPE, 'pfLootButton'..id, pfUI.loot)
     frame:RegisterForClicks('LeftButtonUp', 'RightButtonUp')
@@ -529,7 +535,7 @@ pfUI:RegisterModule("loot", 20400, function ()
       end
 
       StaticPopup_Hide("CONFIRM_LOOT_DISTRIBUTION")
-
+      local numItems = GetNumLootItems()
       pfUI.loot.selectedLootButton = this:GetName()
       pfUI.loot.selectedSlot = this:GetID()
       pfUI.loot.selectedQuality = this.quality
@@ -539,6 +545,10 @@ pfUI:RegisterModule("loot", 20400, function ()
       LootFrame.selectedItemName = pfUI.loot.selectedItemName
 
       LootSlot(this:GetID())
+      -- workaround for bugged disenchant / container loot on some servers
+      if numItems == 1 then
+        QueueFunction(CloseOnClick)
+      end
     end)
 
     frame:SetScript("OnEnter", function()
