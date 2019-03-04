@@ -72,6 +72,7 @@ skins\blizzard\popup_dialogs.lua
 skins\blizzard\stable.lua
 skins\blizzard\trade.lua
 skins\blizzard\trainer.lua
+skins\blizzard\battlefield.lua
 
 # modules
 modules\gui.lua
