@@ -158,10 +158,16 @@ pfUI:RegisterSkin("QuestLogFrame", function ()
       QuestLogDetailScrollFrame:Hide()
     end
 
-    if QuestLogFrameLevelsCheckButton:GetChecked() then
-      local numEntries = GetNumQuestLogEntries()
-      local questIndex, text, level, questTag, isHeader
-      for i=1, QUESTS_DISPLAYED do
+    local numEntries = GetNumQuestLogEntries()
+    local questIndex, text, level, questTag, isHeader
+
+    for i=1, QUESTS_DISPLAYED do
+      -- update tracked quest marks
+      _G["QuestLogTitle"..i.."Check"]:ClearAllPoints()
+      _G["QuestLogTitle"..i.."Check"]:SetPoint("RIGHT", _G["QuestLogTitle"..i], "LEFT", 24, 0)
+
+      -- update quest level
+      if QuestLogFrameLevelsCheckButton:GetChecked() then
         questIndex = i + FauxScrollFrame_GetOffset(QuestLogListScrollFrame)
         if questIndex <= numEntries then
           text, level, questTag, isHeader = GetQuestLogTitle(questIndex)
