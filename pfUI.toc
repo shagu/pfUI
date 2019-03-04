@@ -63,6 +63,7 @@ skins\blizzard\professions.lua
 skins\blizzard\auction.lua
 skins\blizzard\questlog.lua
 skins\blizzard\mail.lua
+skins\blizzard\readycheck.lua
 
 # modules
 modules\gui.lua
