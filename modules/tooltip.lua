@@ -1,11 +1,4 @@
 pfUI:RegisterModule("tooltip", function ()
-  local alpha = tonumber(C.tooltip.alpha)
-  CreateBackdrop(GameTooltip, nil, nil, alpha)
-
-  -- prevent tooltips from being placed offscreen
-  GameTooltip:SetClampedToScreen(true)
-  GameTooltipStatusBar:SetClampedToScreen(true)
-
   if C.tooltip.position == "cursor" then
     function _G.GameTooltip_SetDefaultAnchor(tooltip, parent)
       tooltip:SetOwner(parent, "ANCHOR_CURSOR")

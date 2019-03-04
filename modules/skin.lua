@@ -56,34 +56,6 @@ pfUI:RegisterModule("skin", function ()
     CreateBackdrop(b, nil, true, .8)
   end
 
-  local alpha = tonumber(C.tooltip.alpha)
-
-  -- skin worldmap tooltips
-  WorldMapTooltip:SetScript("OnShow", function()
-    CreateBackdrop(WorldMapTooltip, nil, nil, alpha)
-  end)
-
-  -- skin item tooltips
-  CreateBackdrop(ShoppingTooltip1, nil, nil, alpha)
-  CreateBackdrop(ShoppingTooltip2, nil, nil, alpha)
-  CreateBackdrop(ItemRefTooltip, nil, nil, alpha)
-
-  ShoppingTooltip1:SetClampedToScreen(true)
-  ShoppingTooltip1:SetScript("OnShow", function()
-    local a, b, c, d, e = this:GetPoint()
-    local border = tonumber(C.appearance.border.default)
-    if not d or d == 0 then d = (border*2) + ( d or 0 ) + 1 end
-    if a then this:SetPoint(a, b, c, d, e) end
-  end)
-
-  ShoppingTooltip2:SetClampedToScreen(true)
-  ShoppingTooltip2:SetScript("OnShow", function()
-    local a, b, c, d, e = this:GetPoint()
-    local border = tonumber(C.appearance.border.default)
-    if not d or d == 0 then d = (border*2) + ( d or 0 ) + 1 end
-    if a then this:SetPoint(a, b, c, d, e) end
-  end)
-
   if C.global.errors_limit == "1" then
     UIErrorsFrame:SetHeight(25)
   end
