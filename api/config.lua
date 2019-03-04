@@ -821,6 +821,18 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("nameplates", nil,           "cpdisplay",        "0")
   pfUI:UpdateConfig("nameplates", nil,           "targethighlight",  "0")
   pfUI:UpdateConfig("nameplates", nil,           "targetzoom",       "0")
+
+  pfUI:UpdateConfig("abuttons",   nil,           "enable",           "0")
+  pfUI:UpdateConfig("abuttons",   nil,           "position",         "bottom")
+  pfUI:UpdateConfig("abuttons",   nil,           "showdefault",      "0")
+  pfUI:UpdateConfig("abuttons",   nil,           "rowsize",          "6")
+  pfUI:UpdateConfig("abuttons",   nil,           "spacing",          "2")
+  pfUI:UpdateConfig("abuttons",   nil,           "hideincombat",     "1")
+
+  pfUI:UpdateConfig("gm",         nil,           "disable",          "1")
+  pfUI:UpdateConfig("gm",         nil,           "server",           "elysium")
+
+  pfUI:UpdateConfig("questlog",   nil,           "showQuestLevels",  "0")
   pfUI:UpdateConfig("thirdparty", nil,           "chatbg",           "1")
   pfUI:UpdateConfig("thirdparty", nil,           "showmeter",        "0")
   pfUI:UpdateConfig("thirdparty", "dpsmate",     "skin",             "1")
@@ -835,25 +847,14 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("thirdparty", "mrplow",      "enable",           "1")
   pfUI:UpdateConfig("thirdparty", "flightmap",   "enable",           "1")
   pfUI:UpdateConfig("thirdparty", "theorycraft", "enable",           "1")
-  pfUI:UpdateConfig("thirdparty", "supermacro", "enable",           "1")
+  pfUI:UpdateConfig("thirdparty", "supermacro",  "enable",           "1")
   pfUI:UpdateConfig("thirdparty", "atlasloot",   "enable",           "1")
   pfUI:UpdateConfig("thirdparty", "myroleplay",  "enable",           "1")
   pfUI:UpdateConfig("thirdparty", "druidmana",   "enable",           "1")
   pfUI:UpdateConfig("thirdparty", "noteit",      "enable",           "1")
+
   pfUI:UpdateConfig("position",   nil,           nil,                nil)
   pfUI:UpdateConfig("disabled",   nil,           nil,                nil)
-
-  pfUI:UpdateConfig("abuttons",   nil,           "enable",           "0")
-  pfUI:UpdateConfig("abuttons",   nil,           "position",         "bottom")
-  pfUI:UpdateConfig("abuttons",   nil,           "showdefault",      "0")
-  pfUI:UpdateConfig("abuttons",   nil,           "rowsize",          "6")
-  pfUI:UpdateConfig("abuttons",   nil,           "spacing",          "2")
-  pfUI:UpdateConfig("abuttons",   nil,           "hideincombat",     "1")
-
-  pfUI:UpdateConfig("gm",         nil,           "disable",          "1")
-  pfUI:UpdateConfig("gm",         nil,           "server",           "elysium")
-	
-	pfUI:UpdateConfig("questlog",   nil,           "showQuestLevels",  nil)
 end
 
 function pfUI:MigrateConfig()
