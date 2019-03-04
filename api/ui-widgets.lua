@@ -344,7 +344,8 @@ function pfUI.api.SkinArrowButton(button, dir)
   end
 end
 
-function pfUI.api.SkinScrollbar(frame, parent)
+function pfUI.api.SkinScrollbar(frame, always)
+  local parent = frame:GetParent()
   local name = frame:GetName()
   local up = _G[name .. "ScrollUpButton"]
   local down = _G[name .. "ScrollDownButton"]
@@ -369,7 +370,7 @@ function pfUI.api.SkinScrollbar(frame, parent)
   end
 
   -- always show parent frame
-  if parent then
+  if always then
     parent:Show()
     parent.Hide = function(self) frame.thumb:Hide() end
     parent.Show = function(self) frame.thumb:Show() end
