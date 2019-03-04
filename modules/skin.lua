@@ -7,7 +7,6 @@ pfUI:RegisterModule("skin", function ()
   EnableMovable("MerchantFrame")
   EnableMovable("DressUpFrame")
 
-  EnableMovable("TalentFrame", "Blizzard_TalentUI")
   EnableMovable("TradeSkillFrame", "Blizzard_TradeSkillUI")
   EnableMovable("ClassTrainerFrame", "Blizzard_TrainerUI")
 
