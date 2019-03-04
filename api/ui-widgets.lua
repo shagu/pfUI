@@ -766,3 +766,33 @@ function pfUI.api.CreateInfoBox(text, time, parent, height)
   infobox:SetFrameStrata("FULLSCREEN_DIALOG")
   infobox:Show()
 end
+
+function pfUI.api.SkinMoneyInputFrame(frame)
+  local gold_editbox = _G[frame:GetName().."Gold"]
+  StripTextures(gold_editbox, true, "BACKGROUND")
+  CreateBackdrop(gold_editbox, nil, true)
+  local goldIcon = GetNoNameObject(gold_editbox, "Texture", nil, "MoneyIcons")
+  goldIcon:Show()
+  goldIcon:ClearAllPoints()
+  goldIcon:SetPoint("LEFT", gold_editbox, "RIGHT", 2, 0)
+
+  local silver_editbox = _G[frame:GetName().."Silver"]
+  StripTextures(silver_editbox, true, "BACKGROUND")
+  CreateBackdrop(silver_editbox, nil, true)
+  silver_editbox:ClearAllPoints()
+  silver_editbox:SetPoint("LEFT", goldIcon, "RIGHT", 2, 0)
+  local silverIcon = GetNoNameObject(silver_editbox, "Texture", nil, "MoneyIcons")
+  silverIcon:Show()
+  silverIcon:ClearAllPoints()
+  silverIcon:SetPoint("LEFT", silver_editbox, "RIGHT", 2, 0)
+
+  local copper_editbox = _G[frame:GetName().."Copper"]
+  StripTextures(copper_editbox, true, "BACKGROUND")
+  CreateBackdrop(copper_editbox, nil, true)
+  copper_editbox:ClearAllPoints()
+  copper_editbox:SetPoint("LEFT", silverIcon, "RIGHT", 2, 0)
+  local copperIcon = GetNoNameObject(copper_editbox, "Texture", nil, "MoneyIcons")
+  copperIcon:Show()
+  copperIcon:ClearAllPoints()
+  copperIcon:SetPoint("LEFT", copper_editbox, "RIGHT", 2, 0)
+end
