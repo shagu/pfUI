@@ -223,6 +223,32 @@ function pfUI.api.EnableClickRotate(frame)
   end)
 end
 
+function pfUI.api.SetHighlight(frame, cr, cg, cb)
+  if not frame then return end
+  if not cr or not cg or not cb then
+    local _, class = UnitClass("player")
+    local color = RAID_CLASS_COLORS[class]
+    cr, cg, cb = color.r , color.g, color.b
+  end
+  
+  if not frame.pfEnterLeave then
+    local funce = frame:GetScript("OnEnter")
+    local funcl = frame:GetScript("OnLeave")
+    frame:SetScript("OnEnter", function()
+      if funce then funce() end
+      if this.locked then return end
+      (this.backdrop or this):SetBackdropBorderColor(cr,cg,cb,1)
+    end)
+    frame:SetScript("OnLeave", function()
+      if funcl then funcl() end
+      if this.locked then return end
+      (this.backdrop or this):SetBackdropBorderColor(GetStringColor(pfUI_config.appearance.border.color))
+    end)
+
+    frame.pfEnterLeave = true
+  end
+end
+
 -- [ Skin Button ]
 -- Applies pfUI skin to buttons:
 -- 'button'     [frame/string]  the button that should be skinned.
@@ -244,21 +270,7 @@ function pfUI.api.SkinButton(button, cr, cg, cb)
   b:SetPushedTexture(nil)
   b:SetDisabledTexture(nil)
 
-  if not b.pfEnterLeave then
-    local funce = b:GetScript("OnEnter")
-    local funcl = b:GetScript("OnLeave")
-    b:SetScript("OnEnter", function()
-      if funce then funce() end
-      pfUI.api.CreateBackdrop(b, nil, true)
-      b:SetBackdropBorderColor(cr,cg,cb,1)
-    end)
-    b:SetScript("OnLeave", function()
-      if funcl then funcl() end
-      pfUI.api.CreateBackdrop(b, nil, true)
-    end)
-
-    b.pfEnterLeave = true
-  end
+  SetHighlight(b, cr, cg, cb)
   b:SetFont(pfUI.font_default, pfUI_config.global.font_size, "OUTLINE")
 end
 
@@ -502,17 +514,7 @@ function pfUI.api.SkinDropDown(frame, cr, cg, cb)
     cr, cg, cb = color.r , color.g, color.b
   end
 
-  local funce = button:GetScript("OnEnter")
-  button:SetScript("OnEnter", function()
-    if funce then funce() end
-    this.backdrop:SetBackdropBorderColor(cr,cg,cb,1)
-  end)
-
-  local funcl = button:GetScript("OnLeave")
-  button:SetScript("OnLeave", function()
-    if funcl then funcl() end
-    this.backdrop:SetBackdropBorderColor(pfUI.api.GetStringColor(pfUI_config.appearance.border.color))
-  end)
+  SetHighlight(button, cr, cg, cb)
 
   local funcc = button:GetScript("OnClick")
   button:SetScript("OnClick", function()
