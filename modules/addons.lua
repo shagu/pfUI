@@ -299,5 +299,19 @@ pfUI:RegisterModule("addons", function ()
     end
   end
 
+  pfUI.addons.scroll.slider:SetScript("OnValueChanged", function()
+    this:GetParent():SetVerticalScroll(this:GetValue())
+  end)
+  pfUI.addons.scroll:SetScript("OnScrollRangeChanged", function()
+    this.slider:SetMinMaxValues(1, floor(this:GetVerticalScrollRange() + 25))
+  end)
+  pfUI.addons.scroll:SetScript("OnShow", function()
+    this.slider:SetValue(floor(this:GetVerticalScroll()))
+    pfUI.addons.scroll:ShowVisibleRange()
+  end)
+  pfUI.addons.scroll:SetScript("OnVerticalScroll", function()
+    pfUI.addons.scroll:ShowVisibleRange()
+    this.slider:SetValue(floor(this:GetVerticalScroll()))
+  end)
 
 end)
