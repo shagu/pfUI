@@ -852,6 +852,8 @@ function pfUI:LoadConfig()
 
   pfUI:UpdateConfig("gm",         nil,           "disable",          "1")
   pfUI:UpdateConfig("gm",         nil,           "server",           "elysium")
+	
+	pfUI:UpdateConfig("questlog",   nil,           "showQuestLevels",  nil)
 end
 
 function pfUI:MigrateConfig()

@@ -61,6 +61,7 @@ skins\blizzard\miscellaneous.lua
 skins\blizzard\gossip&quest.lua
 skins\blizzard\professions.lua
 skins\blizzard\auction.lua
+skins\blizzard\questlog.lua
 
 # modules
 modules\gui.lua
