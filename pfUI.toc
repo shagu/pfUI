@@ -83,6 +83,7 @@ skins\blizzard\options-video.lua
 skins\blizzard\petition.lua
 skins\blizzard\taxi.lua
 skins\blizzard\tooltips.lua
+skins\blizzard\tabard.lua
 
 # modules
 modules\gui.lua
