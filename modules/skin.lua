@@ -84,29 +84,6 @@ pfUI:RegisterModule("skin", function ()
     if a then this:SetPoint(a, b, c, d, e) end
   end)
 
-  UI_OPTIONS_FRAME:SetScript("OnShow", function()
-    -- default events
-    UIOptionsFrame_Load();
-    MultiActionBar_Update();
-    MultiActionBar_ShowAllGrids();
-    Disable_BagButtons();
-    UpdateMicroButtons();
-
-    -- customize
-    UIOptionsBlackground:Hide()
-
-    UI_OPTIONS_FRAME:SetMovable(true)
-    UI_OPTIONS_FRAME:EnableMouse(true)
-    UI_OPTIONS_FRAME:SetScale(.8)
-    UI_OPTIONS_FRAME:SetScript("OnMouseDown",function()
-      UI_OPTIONS_FRAME:StartMoving()
-    end)
-
-    UI_OPTIONS_FRAME:SetScript("OnMouseUp",function()
-      UI_OPTIONS_FRAME:StopMovingOrSizing()
-    end)
-  end)
-
   if C.global.errors_limit == "1" then
     UIErrorsFrame:SetHeight(25)
   end

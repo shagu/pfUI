@@ -77,6 +77,7 @@ skins\blizzard\dressup.lua
 skins\blizzard\game_menu.lua
 skins\blizzard\guild_registrar.lua
 skins\blizzard\help.lua
+skins\blizzard\options-interface.lua
 
 # modules
 modules\gui.lua
