@@ -1,7 +1,5 @@
 pfUI:RegisterModule("skin", function ()
   -- movable default frames
-  EnableMovable("CharacterFrame", nil, { "PaperDollFrame",
-      "PetPaperDollFrame", "ReputationFrame", "SkillFrame", "HonorFrame" } )
 
   EnableMovable("QuestLogFrame")
   EnableMovable("FriendsFrame")
