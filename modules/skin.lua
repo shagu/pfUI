@@ -1,7 +1,4 @@
 pfUI:RegisterModule("skin", function ()
-  -- movable default frames
-
-  EnableMovable("DressUpFrame")
 
   -- durability frame
   pfUI.durability = CreateFrame("Frame","pfDurability",UIParent)

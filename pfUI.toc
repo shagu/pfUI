@@ -73,6 +73,7 @@ skins\blizzard\stable.lua
 skins\blizzard\trade.lua
 skins\blizzard\trainer.lua
 skins\blizzard\battlefield.lua
+skins\blizzard\dressup.lua
 
 # modules
 modules\gui.lua
