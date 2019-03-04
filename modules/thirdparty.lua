@@ -781,10 +781,16 @@ pfUI:RegisterModule("thirdparty", function ()
     DruidManaBar:SetStatusBarColor(pr, pg, pb)
     DruidManaBar:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
 
+    local f = pfUI.uf.player
+    DruidManaBar:SetWidth((f.config.pwidth ~= "-1" and f.config.pwidth or f.config.width))
+    DruidManaBar:SetHeight(f.config.pheight)
+    DruidManaBar.text:SetFont(pfUI.font_unit, C.global.font_unit_size, "OUTLINE")
+    DruidManaBar.text:SetFontObject(GameFontWhite)
+
     CreateBackdrop(DruidManaBar)
 
     DruidManaBar:SetScript("OnMouseUp", function(button)
-      pfUI.uf.player:Click(button)
+      f:Click(button)
     end)
 
     DruidManaBar:ClearAllPoints()
