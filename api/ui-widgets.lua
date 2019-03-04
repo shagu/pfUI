@@ -519,13 +519,12 @@ function pfUI.api.SkinDropDown(frame, cr, cg, cb)
   button:SetHighlightTexture(nil)
   button:SetDisabledTexture(nil)
 
-  StripTextures(button)
   CreateBackdrop(button)
 
   button.backdrop:ClearAllPoints()
   button.backdrop:SetWidth(18)
   button.backdrop:SetHeight(18)
-  button.backdrop:SetPoint("RIGHT", button, "RIGHT", -2, 0)
+  button.backdrop:SetPoint("RIGHT", frame.backdrop, "RIGHT", -2, 0)
 
   if not button.icon then
     button.icon = button:CreateTexture(nil, "OVERLAY")
@@ -548,13 +547,17 @@ function pfUI.api.SkinDropDown(frame, cr, cg, cb)
     if funcc then funcc() end
     UIDropDownMenu_JustifyText("RIGHT", this:GetParent())
     DropDownList1:SetPoint("TOPLEFT", this:GetParent().backdrop, "BOTTOMLEFT", 0, -4)
-    DropDownList1:SetPoint("TOPRIGHT", this:GetParent().backdrop, "BOTTOMRIGHT", 0, -4)
-    CreateBackdrop(DropDownList1Backdrop, nil, true, .8)
-    DropDownList1.maxWidth = this:GetWidth() > 80 and this:GetWidth() or 80
 
-    for i=1, UIDROPDOWNMENU_MAXBUTTONS do
-      _G["DropDownList1Button" .. i]:SetWidth(DropDownList1.maxWidth)
+    local DropDownListWidth = DropDownList1:GetWidth()
+    local DropDownFrameWidth = this:GetParent().backdrop:GetWidth()
+    if DropDownListWidth < DropDownFrameWidth then
+      local diff = DropDownFrameWidth - DropDownListWidth
+      DropDownList1:SetWidth(DropDownList1:GetWidth() + diff)
+      for i=1, UIDROPDOWNMENU_MAXBUTTONS do
+        _G["DropDownList1Button" .. i]:SetWidth(_G["DropDownList1Button" .. i]:GetWidth() + diff)
+      end
     end
+    CreateBackdrop(DropDownList1Backdrop, nil, true, .8)
   end)
 
   frame.button = button
