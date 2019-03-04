@@ -16,11 +16,16 @@ pfUI:RegisterModule("gui", function ()
       end)
     end
 
-    U = setmetatable({}, { __index = function(tab,value)
-      if pfUI[value] and pfUI[value].UpdateConfig then
-        return function() pfUI[value]:UpdateConfig() end
-      elseif pfUI.uf[value] and pfUI.uf[value].UpdateConfig then
-        return function() pfUI.uf[value]:UpdateConfig() end
+    U = setmetatable({}, { __index = function(tab,key)
+      local ufunc
+      if pfUI[key] and pfUI[key].UpdateConfig then
+        ufunc = pfUI[key].UpdateConfig
+      elseif pfUI.uf and pfUI.uf[key] and pfUI.uf[key].UpdateConfig then
+        ufunc = pfUI.uf[key].UpdateConfig
+      end
+      if ufunc then
+        rawset(tab,key,ufunc)
+        return ufunc
       end
     end})
 
@@ -326,7 +331,6 @@ pfUI:RegisterModule("gui", function ()
         frame.input = CreateFrame("Frame", "pfUIDropDownMenu" .. name, frame, "UIDropDownMenuTemplate")
         frame.input:ClearAllPoints()
         frame.input:SetPoint("RIGHT", 16, -3)
-        frame.input.values = values
 
         UIDropDownMenu_SetWidth(160, frame.input)
         UIDropDownMenu_SetButtonWidth(160, frame.input)
@@ -382,7 +386,7 @@ pfUI:RegisterModule("gui", function ()
         frame.input:ClearAllPoints()
         frame.input:SetPoint("RIGHT" , -22, -3)
         frame.category = category
-        frame.config = configh
+        frame.config = config
 
         frame.input.Refresh = function()
           local function CreateValues()
