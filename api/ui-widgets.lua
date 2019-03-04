@@ -308,7 +308,7 @@ function pfUI.api.SkinCloseButton(button, parentFrame, offsetX, offsetY)
   button.texture:SetVertexColor(1,.25,.25,1)
 end
 
-function pfUI.api.SkinArrowButton(button, dir)
+function pfUI.api.SkinArrowButton(button, dir, size)
   SkinButton(button)
 
   button:SetHitRectInsets(-3,-3,-3,-3)
@@ -317,6 +317,11 @@ function pfUI.api.SkinArrowButton(button, dir)
   button:SetPushedTexture(nil)
   button:SetHighlightTexture(nil)
   button:SetDisabledTexture(nil)
+
+  if size then
+    button:SetWidth(size)
+    button:SetHeight(size)
+  end
 
   if not button.icon then
     button.icon = button:CreateTexture(nil, "ARTWORK")
