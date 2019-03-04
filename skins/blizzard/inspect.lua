@@ -1,141 +1,159 @@
-pfUI:RegisterSkin("Inspect", function ()
+pfUI:RegisterSkin("InspectFrame", function ()
   local border = tonumber(pfUI_config.appearance.border.default)
   local bpad = border > 1 and border - 1 or 1
 
   HookAddonOrVariable("Blizzard_InspectUI", function()
-    StripTextures(InspectFrame, true)
-  	CreateBackdrop(InspectFrame, nil, nil, .75)
-    InspectFrame.backdrop:SetPoint("TOPLEFT", 10, -12)
-  	InspectFrame.backdrop:SetPoint("BOTTOMRIGHT", -31, 75)
+    local cache = {}
 
-    SkinCloseButton(InspectFrameCloseButton)
-    StripTextures(InspectPaperDollFrame)
+    CreateBackdrop(InspectFrame, nil, nil, .75)
+    InspectFrame.backdrop:SetPoint("TOPLEFT", 10, -10)
+    InspectFrame.backdrop:SetPoint("BOTTOMRIGHT", -30, 72)
+    InspectFrame:SetHitRectInsets(10,30,10,72)
+    EnableMovable("InspectFrame", "Blizzard_InspectUI", INSPECTFRAME_SUBFRAMES)
 
-    InspectModelRotateLeftButton:Hide()
-    InspectModelRotateRightButton:Hide()
-    EnableClickRotate(InspectModelFrame)
+    SkinCloseButton(InspectFrameCloseButton, InspectFrame.backdrop, -6, -6)
 
-  	local slots = {
-  		"HeadSlot",
-  		"NeckSlot",
-  		"ShoulderSlot",
-  		"BackSlot",
-  		"ChestSlot",
-  		"ShirtSlot",
-  		"TabardSlot",
-  		"WristSlot",
-  		"HandsSlot",
-  		"WaistSlot",
-  		"LegsSlot",
-  		"FeetSlot",
-  		"Finger0Slot",
-  		"Finger1Slot",
-  		"Trinket0Slot",
-  		"Trinket1Slot",
-  		"MainHandSlot",
-  		"SecondaryHandSlot",
-  		"RangedSlot",
-  	}
+    InspectFrame:DisableDrawLayer("ARTWORK")
 
-  	for _, slot in pairs(slots) do
-      local frame = _G["Inspect"..slot]
-  		local texture = _G["Inspect"..slot.."IconTexture"]
-      texture:SetTexCoord(.08, .92, .08, .92)
-      texture:ClearAllPoints()
-      texture:SetPoint("TOPLEFT", frame, "TOPLEFT", 4, -4)
-      texture:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -4, 4)
+    InspectNameText:ClearAllPoints()
+    InspectNameText:SetPoint("TOP", InspectFrame.backdrop, "TOP", 0, -10)
 
-      StripTextures(frame)
-      CreateBackdrop(frame)
-
-      frame.backdrop:SetPoint("TOPLEFT", frame, "TOPLEFT", 2, -2)
-      frame.backdrop:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -2, 2)
-  	end
-
-    local function UpdateSlots()
-      if not InspectFrame.unit then return end
-
-      local guild, title, rank = GetGuildInfo(InspectFrame.unit)
-      if guild then
-        InspectGuildText:SetPoint("TOP", InspectLevelText, "BOTTOM", 0, -1)
-        InspectGuildText:SetText(format(TEXT(GUILD_TITLE_TEMPLATE), title, guild))
-        InspectGuildText:Show()
-      else
-        InspectGuildText:SetText("")
-        InspectGuildText:Hide()
-      end
-
-      for i, vslot in pairs(slots) do
-        local id = GetInventorySlotInfo(vslot)
-        local link = GetInventoryItemLink(InspectFrame.unit, id)
-        local slot = _G["Inspect" .. vslot]
-        local retry = false
-
-        if link and slot.hasItem then
-          local _, _, link = string.find(link, "(item:%d+:%d+:%d+:%d+)");
-          local _, _, quality = GetItemInfo(link)
-
-          if not quality then
-            retry = true
-          else
-            slot.backdrop:SetBackdropBorderColor(GetItemQualityColor(quality))
-
-            if ShaguScore then
-              if not slot.scoreText then
-                slot.scoreText = slot:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-                slot.scoreText:SetFont(pfUI.font_default, 12, "OUTLINE")
-                slot.scoreText:SetPoint("BOTTOMRIGHT", 0, 0)
-              end
-
-              local r,g,b = GetItemQualityColor(quality)
-              local _, _, itemID = string.find(link, "item:(%d+):%d+:%d+:%d+")
-              local itemLevel = ShaguScore.Database[tonumber(itemID)] or 0
-              local score = ShaguScore:Calculate(vslot, quality, itemLevel)
-              if score and score > 0 then
-                slot.scoreText:SetText(score)
-                slot.scoreText:SetTextColor(r, g, b)
-              else
-                slot.scoreText:SetText("")
-              end
-            end
-          end
-        elseif slot.hasItem then
-          retry = true
-        else
-          CreateBackdrop(slot)
-          if slot.scoreText then
-            slot.scoreText:SetText("")
-          end
-        end
-
-        if retry == true and InspectFrame.unit then
-          QueueFunction(UpdateSlots)
-        end
-      end
-    end
-
-  	hooksecurefunc("InspectPaperDollItemSlotButton_Update", function()
-      UpdateSlots()
-      QueueFunction(UpdateSlots)
-    end)
-
-  	-- honor tab
-  	StripTextures(InspectHonorFrame)
-    CreateBackdrop(InspectHonorFrameProgressBar)
-  	InspectHonorFrameProgressBar:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
-    InspectHonorFrameProgressBar:SetHeight(24)
-
-    -- tabs
+    SkinTab(InspectFrameTab1)
     InspectFrameTab1:ClearAllPoints()
     InspectFrameTab1:SetPoint("TOPLEFT", InspectFrame.backdrop, "BOTTOMLEFT", bpad, -(border + (border == 1 and 1 or 2)))
-    for i = 1, 2 do
-      local tab = _G["InspectFrameTab"..i]
-      local lastTab = _G["InspectFrameTab"..(i-1)]
-      if lastTab then
-        tab:ClearAllPoints()
-        tab:SetPoint("LEFT", lastTab, "RIGHT", border*2 + 1, 0)
+    SkinTab(InspectFrameTab2)
+    InspectFrameTab2:ClearAllPoints()
+    InspectFrameTab2:SetPoint("LEFT", InspectFrameTab1, "RIGHT", border*2 + 1, 0)
+
+    do -- Character Tab
+      StripTextures(InspectPaperDollFrame)
+
+      EnableClickRotate(InspectModelFrame)
+      InspectModelRotateLeftButton:Hide()
+      InspectModelRotateRightButton:Hide()
+
+      local slots = {
+        "HeadSlot",
+        "NeckSlot",
+        "ShoulderSlot",
+        "BackSlot",
+        "ChestSlot",
+        "ShirtSlot",
+        "TabardSlot",
+        "WristSlot",
+        "HandsSlot",
+        "WaistSlot",
+        "LegsSlot",
+        "FeetSlot",
+        "Finger0Slot",
+        "Finger1Slot",
+        "Trinket0Slot",
+        "Trinket1Slot",
+        "MainHandSlot",
+        "SecondaryHandSlot",
+        "RangedSlot",
+      }
+
+      for _, slot in pairs(slots) do
+        local frame = _G["Inspect"..slot]
+        StripTextures(frame)
+        CreateBackdrop(frame)
+        SetAllPointsOffset(frame.backdrop, frame, 2)
+
+        HandleIcon(frame.backdrop, _G["Inspect"..slot.."IconTexture"])
+
+        local funce = frame:GetScript("OnEnter")
+        frame:SetScript("OnEnter", function()
+          if not GetInventoryItemLink(InspectFrame.unit, this:GetID()) and this.hasItem then
+            GameTooltip:SetOwner(this, "ANCHOR_TOPRIGHT")
+            GameTooltip:SetHyperlink("item:"..cache[this:GetID()])
+            GameTooltip:Show()
+          else
+            funce()
+          end
+        end)
       end
-      SkinTab(tab)
+
+      local function UpdateSlots()
+        if not InspectFrame.unit then return end
+
+        local guild, title, rank = GetGuildInfo(InspectFrame.unit)
+        if guild then
+          InspectGuildText:SetPoint("TOP", InspectLevelText, "BOTTOM", 0, -1)
+          InspectGuildText:SetText(format(TEXT(GUILD_TITLE_TEMPLATE), title, guild))
+          InspectGuildText:Show()
+        else
+          InspectGuildText:SetText("")
+          InspectGuildText:Hide()
+        end
+
+        for i, vslot in pairs(slots) do
+          local id = GetInventorySlotInfo(vslot)
+          local link = GetInventoryItemLink(InspectFrame.unit, id)
+          local slot = _G["Inspect" .. vslot]
+          local retry = false
+
+          if link and slot.hasItem then
+            local _, _, link = string.find(link, "(item:%d+:%d+:%d+:%d+)");
+            local _, _, quality = GetItemInfo(link)
+
+            if not quality then
+              retry = true
+            else
+              slot.backdrop:SetBackdropBorderColor(GetItemQualityColor(quality))
+
+              if ShaguScore then
+                if not slot.scoreText then
+                  slot.scoreText = slot:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+                  slot.scoreText:SetFont(pfUI.font_default, 12, "OUTLINE")
+                  slot.scoreText:SetPoint("BOTTOMRIGHT", 0, 0)
+                end
+
+                local r,g,b = GetItemQualityColor(quality)
+                local _, _, itemID = string.find(link, "item:(%d+):%d+:%d+:%d+")
+                local itemLevel = ShaguScore.Database[tonumber(itemID)] or 0
+                local score = ShaguScore:Calculate(vslot, quality, itemLevel)
+                if score and score > 0 then
+                  slot.scoreText:SetText(score)
+                  slot.scoreText:SetTextColor(r, g, b)
+                else
+                  slot.scoreText:SetText("")
+                end
+              end
+            end
+          elseif slot.hasItem then
+            retry = true
+          else
+            CreateBackdrop(slot)
+            if slot.scoreText then
+              slot.scoreText:SetText("")
+            end
+          end
+
+          if retry == true and InspectFrame.unit then
+            QueueFunction(UpdateSlots)
+          end
+        end
+      end
+
+      hooksecurefunc("InspectPaperDollItemSlotButton_Update", function(button)
+        UpdateSlots()
+        QueueFunction(UpdateSlots)
+
+        local link = GetInventoryItemLink(InspectFrame.unit, button:GetID())
+        if link then
+          local _,_,itemID = string.find(link, 'item:(%d+)')
+          cache[button:GetID()] = itemID
+        end
+      end)
+    end
+
+    do -- Honor Tab
+      StripTextures(InspectHonorFrame)
+
+      CreateBackdrop(InspectHonorFrameProgressBar)
+      InspectHonorFrameProgressBar:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
+      InspectHonorFrameProgressBar:SetHeight(24)
     end
   end)
 end)

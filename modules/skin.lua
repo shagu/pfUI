@@ -11,7 +11,6 @@ pfUI:RegisterModule("skin", function ()
   EnableMovable("TalentFrame", "Blizzard_TalentUI")
   EnableMovable("TradeSkillFrame", "Blizzard_TradeSkillUI")
   EnableMovable("ClassTrainerFrame", "Blizzard_TrainerUI")
-  EnableMovable("InspectFrame", "Blizzard_InspectUI", { "InspectHonorFrame" })
 
   -- durability frame
   pfUI.durability = CreateFrame("Frame","pfDurability",UIParent)
