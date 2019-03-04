@@ -66,6 +66,7 @@ skins\blizzard\mail.lua
 skins\blizzard\readycheck.lua
 skins\blizzard\battlefield_minimap.lua
 skins\blizzard\GMSurvey.lua
+skins\blizzard\keybindings.lua
 
 # modules
 modules\gui.lua
