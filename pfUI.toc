@@ -76,6 +76,7 @@ skins\blizzard\battlefield.lua
 skins\blizzard\dressup.lua
 skins\blizzard\game_menu.lua
 skins\blizzard\guild_registrar.lua
+skins\blizzard\help.lua
 
 # modules
 modules\gui.lua

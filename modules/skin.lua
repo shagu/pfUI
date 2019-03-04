@@ -84,23 +84,6 @@ pfUI:RegisterModule("skin", function ()
     if a then this:SetPoint(a, b, c, d, e) end
   end)
 
-  CreateBackdrop(TicketStatusFrame)
-  TicketStatusFrame:ClearAllPoints()
-  TicketStatusFrame:SetPoint("TOP", 0, -5)
-  UpdateMovable(TicketStatusFrame)
-  function TicketStatusFrame_OnEvent()
-    if ( event == "PLAYER_ENTERING_WORLD" ) then
-      GetGMTicket()
-    else
-      if ( arg1 ~= 0 ) then
-        this:Show()
-        refreshTime = GMTICKET_CHECK_INTERVAL
-      else
-        this:Hide()
-      end
-    end
-  end
-
   UI_OPTIONS_FRAME:SetScript("OnShow", function()
     -- default events
     UIOptionsFrame_Load();
