@@ -3,8 +3,6 @@ pfUI:RegisterModule("skin", function ()
 
   EnableMovable("DressUpFrame")
 
-  EnableMovable("ClassTrainerFrame", "Blizzard_TrainerUI")
-
   -- durability frame
   pfUI.durability = CreateFrame("Frame","pfDurability",UIParent)
   if pfUI.minimap then
