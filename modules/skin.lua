@@ -32,28 +32,12 @@ pfUI:RegisterModule("skin", function ()
   local color = RAID_CLASS_COLORS[class]
   local cr, cg, cb = color.r , color.g, color.b
 
-  local buttons = {
-    "GameMenuButtonOptions",
-    "GameMenuButtonSoundOptions",
-    "GameMenuButtonUIOptions",
-    "GameMenuButtonKeybindings",
-    "GameMenuButtonMacros",
-    "GameMenuButtonLogout",
-    "GameMenuButtonQuit",
-    "GameMenuButtonContinue",
-  }
-
   local boxes = {
-    "GameMenuFrame",
     "DropDownList1MenuBackdrop",
     "DropDownList2MenuBackdrop",
     "DropDownList1Backdrop",
     "DropDownList2Backdrop",
   }
-
-  GameMenuFrameHeader:SetTexture(nil)
-  GameMenuFrame:SetHeight(GameMenuFrame:GetHeight()+2)
-  GameMenuFrame:SetWidth(GameMenuFrame:GetWidth()-30)
 
   local pfUIButton = CreateFrame("Button", "GameMenuButtonPFUI", GameMenuFrame, "GameMenuButtonTemplate")
   pfUIButton:SetPoint("TOP", 0, -10)
@@ -67,21 +51,9 @@ pfUI:RegisterModule("skin", function ()
   local point, relativeTo, relativePoint, xOffset, yOffset = GameMenuButtonOptions:GetPoint()
   GameMenuButtonOptions:SetPoint(point, relativeTo, relativePoint, xOffset, yOffset - 22)
 
-  for _, button in pairs(buttons) do
-    SkinButton(button)
-  end
-
   for _, box in pairs(boxes) do
     local b = getglobal(box)
     CreateBackdrop(b, nil, true, .8)
-  end
-
-  for i,v in ipairs({GameMenuFrame:GetRegions()}) do
-    if v.SetTextColor then
-      v:SetTextColor(1,1,1,1)
-      v:SetPoint("TOP", GameMenuFrame, "TOP", 0, 16)
-      v:SetFont(pfUI.font_default, C.global.font_size + 2, "OUTLINE")
-    end
   end
 
   local alpha = tonumber(C.tooltip.alpha)
