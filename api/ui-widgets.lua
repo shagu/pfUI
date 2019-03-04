@@ -262,6 +262,41 @@ function pfUI.api.SkinButton(button, cr, cg, cb)
   b:SetFont(pfUI.font_default, pfUI_config.global.font_size, "OUTLINE")
 end
 
+-- [ Skin Collapse Button ]
+-- Applies pfUI skin to collapse/expand buttons:
+-- 'button'   [frame/string]  the button that should be skinned.
+function pfUI.api.SkinCollapseButton(button, all)
+  local b = getglobal(button)
+  if not b then b = button end
+  if not b then return end
+  
+  b.icon = CreateFrame("Button", b:GetName().."CollapseButton", b)
+  local size = 10
+  if all then size = 14 end
+  b.icon:SetWidth(size)
+  b.icon:SetHeight(size)
+  b.icon:SetPoint("LEFT", 0, 0)
+  CreateBackdrop(b.icon)
+  b.icon.text = b.icon:CreateFontString(nil, "OVERLAY")
+  b.icon.text:SetFontObject(GameFontWhite)
+  b.icon.text:SetPoint("CENTER", 0, 0)  
+  b:SetNormalTexture(nil)
+  b.SetNormalTexture = function(self, tex)
+    if not tex or tex == "" then
+      self.icon:Hide()
+    else
+      self.icon.text:SetText(strfind(tex, "MinusButton") and "-" or "+")
+      self.icon:Show()
+    end
+  end
+  
+  local highlight = _G[b:GetName().."Highlight"]
+  if highlight then
+    highlight:SetTexture("")
+    highlight.SetTexture = function(self, tex) return end
+  end
+end
+
 -- [ Skin Rotate Button]
 -- Applies pfUI skin to rotation buttons like in character pane:
 -- 'button'     [frame/string]  the button that should be skinned.
