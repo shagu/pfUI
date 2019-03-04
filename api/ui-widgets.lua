@@ -249,6 +249,13 @@ function pfUI.api.SetHighlight(frame, cr, cg, cb)
   end
 end
 
+function pfUI.api.HandleIcon(frame, icon)
+  if not frame or not icon then return end
+
+  SetAllPointsOffset(icon, frame, 3)
+  icon:SetTexCoord(.08, .92, .08, .92)
+end
+
 -- [ Skin Button ]
 -- Applies pfUI skin to buttons:
 -- 'button'     [frame/string]  the button that should be skinned.
