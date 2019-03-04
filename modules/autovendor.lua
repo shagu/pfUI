@@ -1,4 +1,7 @@
 pfUI:RegisterModule("autovendor", function ()
+  local border = tonumber(pfUI_config.appearance.border.default)
+  local bpad = border > 1 and border - 1 or 1
+  
   local scanlist = {}
 
   local function RepairItems()
@@ -94,25 +97,20 @@ pfUI:RegisterModule("autovendor", function ()
       MerchantRepairText:SetText("")
       if MerchantRepairItemButton:IsShown() then
         autovendor.button:ClearAllPoints()
-        autovendor.button:SetPoint("RIGHT", MerchantRepairItemButton, "LEFT", -2, 0)
+        autovendor.button:SetPoint("RIGHT", MerchantRepairItemButton, "LEFT", -4*bpad, 0)
       else
         autovendor.button:ClearAllPoints()
-        autovendor.button:SetPoint("BOTTOMRIGHT", MerchantFrame, "BOTTOMLEFT", 172, 91)
+        autovendor.button:SetPoint("RIGHT", MerchantBuyBackItemItemButton, "LEFT", -20, 0)
       end
     end
   end)
 
   -- Setup Autosell button
-  autovendor.button = CreateFrame("Button", "pfMerchantautovendor.buttonButton", MerchantFrame)
+  autovendor.button = CreateFrame("Button", "pfMerchantAutoVendorButton", MerchantFrame)
   autovendor.button:SetWidth(36)
   autovendor.button:SetHeight(36)
-  autovendor.button.icon = autovendor.button:CreateTexture("BORDER")
-  autovendor.button.icon:SetAllPoints(autovendor.button)
+  autovendor.button.icon = autovendor.button:CreateTexture("ARTWORK")
   autovendor.button.icon:SetTexture("Interface\\Icons\\Spell_Shadow_SacrificialShield")
-  autovendor.button.icon:SetVertexColor(1,.8,.4)
-  autovendor.button:SetNormalTexture("")
-  autovendor.button:SetPushedTexture("Interface\\Buttons\\UI-Quickslot-Depress")
-  autovendor.button:SetHighlightTexture("Interface\\Buttons\\ButtonHilight-Square")
   autovendor.button:SetScript("OnEnter", function()
     GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
     GameTooltip:SetText(T["Sell Grey Items"]);
@@ -122,6 +120,7 @@ pfUI:RegisterModule("autovendor", function ()
   autovendor.button:SetScript("OnLeave", function()
     GameTooltip:Hide();
   end)
+  SkinButton(autovendor.button, nil, nil, nil, autovendor.button.icon)
 
   autovendor.button:SetScript("OnClick", function()
     autovendor:Show()
@@ -134,15 +133,15 @@ pfUI:RegisterModule("autovendor", function ()
 
       if scanlist[1] then
         autovendor.button:Enable()
-        autovendor.button.icon:SetVertexColor(1,.8,.4)
+        autovendor.button.icon:SetDesaturated(false)
       else
         autovendor.button:Disable()
-        autovendor.button.icon:SetVertexColor(.5,.5,.5)
+        autovendor.button.icon:SetDesaturated(true)
       end
 
     else
       autovendor.button:Disable()
-      autovendor.button.icon:SetVertexColor(.5,.5,.5)
+      autovendor.button.icon:SetDesaturated(true)
     end
   end
 
