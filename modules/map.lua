@@ -107,5 +107,16 @@ pfUI:RegisterModule("map", function ()
         WorldMapButton.coords.text:SetText("")
       end
     end)
+    
+    SkinButton(WorldMapZoomOutButton)
+    
+    SkinCloseButton(WorldMapFrameCloseButton, WorldMapFrame, -3, -3)
+    
+    SkinDropDown(WorldMapContinentDropDown)
+    
+    SkinDropDown(WorldMapZoneDropDown)
+    local point, anchor, anchorPoint, x, y = WorldMapZoneDropDown:GetPoint()
+    WorldMapZoneDropDown:ClearAllPoints()
+    WorldMapZoneDropDown:SetPoint(point, anchor, anchorPoint, x+8, y)
   end)
 end)
