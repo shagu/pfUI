@@ -64,6 +64,7 @@ skins\blizzard\auction.lua
 skins\blizzard\questlog.lua
 skins\blizzard\mail.lua
 skins\blizzard\readycheck.lua
+skins\blizzard\battlefield_minimap.lua
 
 # modules
 modules\gui.lua
