@@ -12,6 +12,65 @@ pfUI:RegisterSkin("Gossip and Quest", function ()
     SkinButton(button)
   end
 
+  do -- quest gossip
+    StripTextures(QuestGreetingScrollChildFrame)
+    local titles = { CurrentQuestsText, AvailableQuestsText, QuestTitleText, QuestDetailObjectiveTitleText, QuestDetailRewardTitleText, QuestProgressTitleText }
+    for _, string in pairs(titles) do
+      if not string._SetTextColor then
+        string._SetTextColor = string.SetTextColor
+        string.SetTextColor = function() return end
+      end
+      string:_SetTextColor(1,1,.2,1)
+      string:SetShadowColor(0,0,0,0)
+    end
+
+    local texts = { QuestFont, GreetingText, QuestDescription, QuestObjectiveText, QuestDetailItemChooseText, QuestDetailItemReceiveText, QuestDetailSpellLearnText, QuestProgressText }
+    for _, string in pairs(texts) do
+      if not string._SetTextColor then
+        string._SetTextColor = string.SetTextColor
+        string.SetTextColor = function() return end
+      end
+      string:_SetTextColor(1,1,1,1)
+    end
+
+    QuestTitleText:SetPoint("TOPLEFT", 10, -10)
+    QuestProgressTitleText:SetPoint("TOPLEFT", 10, -10)
+
+    for _, name in pairs({ "QuestProgressItem", "QuestDetailItem" }) do
+      for i = 1, 6 do
+        local item = _G[name..i]
+        local icon = _G[name..i.."IconTexture"]
+        local count = _G[name..i.."Count"]
+        local xsize = item:GetWidth() - 10
+        local ysize = item:GetHeight() - 10
+
+        StripTextures(item)
+        SkinButton(item)
+        item:SetWidth(xsize)
+
+        icon:SetWidth(ysize)
+        icon:SetHeight(ysize)
+        icon:ClearAllPoints()
+        icon:SetPoint("LEFT", 3, 0)
+        icon:SetTexCoord(.08, .92, .08, .92)
+      end
+    end
+
+    hooksecurefunc("QuestFrameProgressItems_Update", function()
+      QuestProgressRequiredItemsText:SetTextColor(1, 1, 0.2)
+      QuestProgressRequiredItemsText:SetShadowColor(0,0,0,0)
+
+      local reqmoney = GetQuestMoneyToGet()
+      if reqmoney > 0 then
+        if reqmoney > GetMoney() then
+          QuestProgressRequiredMoneyText:SetTextColor(0.4, 0.4, 0.4)
+        else
+          QuestProgressRequiredMoneyText:SetTextColor(.4, 1, 0.4)
+        end
+      end
+    end)
+  end
+
   for _, f in pairs(frames) do
     local frameName = f
     local frame = _G[frameName.."Frame"]
@@ -35,20 +94,10 @@ pfUI:RegisterSkin("Gossip and Quest", function ()
 
       StripTextures(_G[frame:GetName()..panel.."Panel"])
 
-      local texture = "StationeryTest"
-      if date("%m%d") == "0223" then texture = "Stationery_Val" end
-      local tex_Left = frame:CreateTexture("BACKGROUND")
-      tex_Left:SetTexture("Interface\\Stationery\\"..texture.."1")
-      tex_Left:SetPoint("TOPLEFT", 23, -81)
-      tex_Left:SetHeight(330)
-      local tex_Right = frame:CreateTexture("BACKGROUND")
-      tex_Right:SetTexture("Interface\\Stationery\\"..texture.."2")
-      tex_Right:SetPoint("LEFT", tex_Left, "RIGHT", 0, 0)
-      tex_Right:SetHeight(330)
-
       local scroll = _G[frameName..panel.."ScrollFrame"]
       scroll:SetHeight(330)
       SkinScrollbar(_G[scroll:GetName().."ScrollBar"])
+      CreateBackdrop(scroll, nil, true, .75)
 
       if panel ~= 'Greeting' then
         local num_items, hook_func
@@ -64,33 +113,8 @@ pfUI:RegisterSkin("Gossip and Quest", function ()
           local button = _G[frameName..panel.."Item"..i]
           StripTextures(button)
           CreateBackdrop(button, nil, true, .5)
-
-          local itemButton = CreateFrame("Button", button:GetName().."ItemButton", button)
-          itemButton:SetWidth(37)
-          itemButton:SetHeight(37)
-          itemButton:SetPoint("LEFT", 2, 0)
-          itemButton.icon = itemButton:CreateTexture("ARTWORK")
-          SkinButton(itemButton, nil, nil, nil, itemButton.icon, true)
-          itemButton.text = itemButton:CreateFontString("Status", "LOW", "GameFontNormal")
-          itemButton.text:SetFontObject(GameFontWhite)
-          itemButton.text:SetPoint("BOTTOMRIGHT", -4, 1)
-          itemButton.text:SetFont(pfUI.font_default, C.global.font_size, "OUTLINE")
         end
 
-        hooksecurefunc(hook_func, function()
-          for i = 1, num_items do
-            local button = _G[frameName..panel.."Item"..i]
-            if button:IsShown() then
-              local itemButton = _G[button:GetName().."ItemButton"]
-              local texture = _G[button:GetName().."IconTexture"]:GetTexture()
-              local numItems = _G[button:GetName().."Count"]:GetText() or 1
-
-              itemButton.icon:SetTexture(texture)
-              itemButton.text:SetText(tonumber(numItems) > 1 and numItems)
-              _G[button:GetName().."Count"]:SetText()
-            end
-          end
-        end, 1)
       end
     end
   end
