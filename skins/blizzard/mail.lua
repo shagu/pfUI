@@ -22,14 +22,22 @@ pfUI:RegisterSkin("Mailbox", function ()
     InboxTitleText:ClearAllPoints()
     InboxTitleText:SetPoint("TOP", MailFrame.backdrop, "TOP", 0, -10)
 
+    CreateBackdrop(InboxFrame, nil, nil, .75)
+    InboxFrame.backdrop:SetPoint("TOPLEFT", _G["MailItem"..1], "TOPLEFT", 0, 1)
+    InboxFrame.backdrop:SetPoint("BOTTOMRIGHT", _G["MailItem"..INBOXITEMS_TO_DISPLAY], "BOTTOMRIGHT", 0, 0)
+    _G["MailItem"..1]:SetPoint("TOPLEFT", 28, -70)
+
     for i = 1, INBOXITEMS_TO_DISPLAY do
       StripTextures(_G["MailItem"..i])
-      CreateBackdrop(_G["MailItem"..i], nil, true)
-      _G["MailItem"..i]:SetBackdropColor(.87,.68,.34)
-
       StripTextures(_G["MailItem"..i.."Button"])
       SkinButton(_G["MailItem"..i.."Button"], nil, nil, nil, _G["MailItem"..i.."ButtonIcon"])
     end
+
+    InboxPrevPageButton:ClearAllPoints()
+    InboxPrevPageButton:SetPoint("TOPLEFT", InboxFrame.backdrop, "BOTTOMLEFT", 0, -10)
+
+    InboxNextPageButton:ClearAllPoints()
+    InboxNextPageButton:SetPoint("TOPRIGHT", InboxFrame.backdrop, "BOTTOMRIGHT", 0, -10)
 
     SkinArrowButton(InboxPrevPageButton, "left", 18)
     SkinArrowButton(InboxNextPageButton, "right", 18)
@@ -51,10 +59,15 @@ pfUI:RegisterSkin("Mailbox", function ()
 
     StripTextures(SendMailFrame)
     StripTextures(SendMailScrollFrame)
+    CreateBackdrop(SendMailScrollFrame, nil, true)
     SkinScrollbar(SendMailScrollFrameScrollBar)
     SendMailBodyEditBox:SetMaxLetters(2000)
 
     SkinMoneyInputFrame(SendMailMoney)
+
+    SendMailBodyEditBox:SetTextColor(1,1,1,1)
+    StationeryBackgroundLeft:Hide()
+    StationeryBackgroundRight:Hide()
   end
 
   do -- OpenMailFrame
@@ -84,7 +97,11 @@ pfUI:RegisterSkin("Mailbox", function ()
     SkinButton(OpenMailLetterButton, nil, nil, nil, OpenMailLetterButtonIconTexture)
 
     StripTextures(OpenMailScrollFrame)
+    CreateBackdrop(OpenMailScrollFrame, nil, true)
     SkinScrollbar(OpenMailScrollFrameScrollBar)
+    OpenMailBodyText:SetTextColor(1,1,1,1)
+    OpenStationeryBackgroundLeft:Hide()
+    OpenStationeryBackgroundRight:Hide()
   end
 
   -- support for addon 'Mail'
