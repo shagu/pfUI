@@ -1,4 +1,4 @@
-pfUI:RegisterSkin("StaticPopupDialogs", function ()
+pfUI:RegisterSkin("Popup Dialogs", function ()
   for i = 1, STATICPOPUP_NUMDIALOGS do
     local dialog = _G["StaticPopup"..i]
 

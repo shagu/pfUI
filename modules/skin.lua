@@ -28,10 +28,6 @@ pfUI:RegisterModule("skin", function ()
     end)
   end
 
-  _, class = UnitClass("player")
-  local color = RAID_CLASS_COLORS[class]
-  local cr, cg, cb = color.r , color.g, color.b
-
   local boxes = {
     "DropDownList1MenuBackdrop",
     "DropDownList2MenuBackdrop",

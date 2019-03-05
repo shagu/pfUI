@@ -1,4 +1,4 @@
-pfUI:RegisterSkin("StackSplitFrame", function ()
+pfUI:RegisterSkin("Stack Split", function ()
   StripTextures(StackSplitFrame)
   CreateBackdrop(StackSplitFrame, nil, nil, .75)
 
@@ -6,7 +6,7 @@ pfUI:RegisterSkin("StackSplitFrame", function ()
   SkinButton(StackSplitCancelButton)
 end)
 
-pfUI:RegisterSkin("CoinPickupFrame", function ()
+pfUI:RegisterSkin("Coin Pickup", function ()
   StripTextures(CoinPickupFrame)
   CreateBackdrop(CoinPickupFrame, nil, nil, .75)
 
@@ -14,7 +14,7 @@ pfUI:RegisterSkin("CoinPickupFrame", function ()
   SkinButton(CoinPickupCancelButton)
 end)
 
-pfUI:RegisterSkin("ColorPickerFrame", function ()
+pfUI:RegisterSkin("Color Picker", function ()
   CreateBackdrop(ColorPickerFrame)
 
   ColorPickerFrameHeader:SetTexture("")
@@ -29,7 +29,7 @@ pfUI:RegisterSkin("ColorPickerFrame", function ()
   SkinSlider(OpacitySliderFrame)
 end)
 
-pfUI:RegisterSkin("OpacityFrame", function ()
+pfUI:RegisterSkin("Opacity", function ()
   CreateBackdrop(OpacityFrame, nil, true, .75)
 
   SkinSlider(OpacityFrameSlider)
@@ -37,20 +37,13 @@ pfUI:RegisterSkin("OpacityFrame", function ()
   OpacityFrameSlider:SetPoint("CENTER", 0, 0)
 end)
 
-pfUI:RegisterSkin("TutorialFrame", function ()
+pfUI:RegisterSkin("Tutorial", function ()
   CreateBackdrop(TutorialFrame, nil, true, .75)
-  --[[
-    for i = 1, MAX_TUTORIAL_ALERTS do
-    local button = _G["TutorialFrameAlertButton"..i]
-    end
-  --]]
   SkinCheckbox(TutorialFrameCheckButton)
   SkinButton(TutorialFrameOkayButton)
 end)
 
-pfUI:RegisterSkin("QuestTimerFrame", function ()
+pfUI:RegisterSkin("Quest Timer", function ()
   CreateBackdrop(QuestTimerFrame, nil, nil, .75)
-  --EnableMovable(QuestTimerFrame) -- Does not work! I need to fix it later! point update in UIParent_ManageFramePositions
-
   QuestTimerHeader:Hide()
 end)

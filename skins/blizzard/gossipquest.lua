@@ -1,4 +1,4 @@
-pfUI:RegisterSkin("Gossip&Quest Frames", function ()
+pfUI:RegisterSkin("Gossip and Quest", function ()
   local frames = {'Quest', 'Gossip'}
   local panels = {'Greeting', 'Detail', 'Progress', 'Reward'}
   local buttons = {

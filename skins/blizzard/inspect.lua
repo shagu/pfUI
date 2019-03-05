@@ -1,4 +1,4 @@
-pfUI:RegisterSkin("InspectFrame", function ()
+pfUI:RegisterSkin("Inspect", function ()
   local border = tonumber(pfUI_config.appearance.border.default)
   local bpad = border > 1 and border - 1 or 1
 
@@ -150,7 +150,7 @@ pfUI:RegisterSkin("InspectFrame", function ()
 					SetItemButtonCount(button, cache[button:GetID()]["count"]);
 					button.hasItem = 1;
 				end
-				
+
         UpdateSlots()
         QueueFunction(UpdateSlots)
       end, 1)

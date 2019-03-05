@@ -1,4 +1,4 @@
-pfUI:RegisterSkin("PetStableFrame", function ()
+pfUI:RegisterSkin("Pet Stable Master", function ()
   StripTextures(PetStableFrame)
   CreateBackdrop(PetStableFrame, nil, nil, .75)
   PetStableFrame.backdrop:SetPoint("TOPLEFT", 10, -10)
