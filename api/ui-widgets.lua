@@ -230,7 +230,7 @@ function pfUI.api.SetHighlight(frame, cr, cg, cb)
     local color = RAID_CLASS_COLORS[class]
     cr, cg, cb = color.r , color.g, color.b
   end
-  
+
   if not frame.pfEnterLeave then
     local funce = frame:GetScript("OnEnter")
     local funcl = frame:GetScript("OnLeave")
@@ -282,13 +282,13 @@ function pfUI.api.SkinButton(button, cr, cg, cb, icon, disableHighlight)
   if not disableHighlight then
     SetHighlight(b, cr, cg, cb)
   end
-  
+
   if icon then
     HandleIcon(b, icon)
   end
 
   b:SetFont(pfUI.font_default, pfUI_config.global.font_size, "OUTLINE")
-  
+
   b.LockHighlight = function()
     b:SetBackdropBorderColor(cr,cg,cb,1)
     b.locked = true
@@ -308,17 +308,17 @@ function pfUI.api.SkinCollapseButton(button, all)
   local b = getglobal(button)
   if not b then b = button end
   if not b then return end
-  
+
   b.icon = CreateFrame("Button", b:GetName().."CollapseButton", b)
   local size = 10
   if all then size = 14 end
   b.icon:SetWidth(size)
   b.icon:SetHeight(size)
-  b.icon:SetPoint("LEFT", 0, 0)
+  b.icon:SetPoint("LEFT", 2, 2)
   CreateBackdrop(b.icon)
   b.icon.text = b.icon:CreateFontString(nil, "OVERLAY")
   b.icon.text:SetFontObject(GameFontWhite)
-  b.icon.text:SetPoint("CENTER", 0, 0)  
+  b.icon.text:SetPoint("CENTER", -1, 0)
   b:SetNormalTexture(nil)
   b.SetNormalTexture = function(self, tex)
     if not tex or tex == "" then
@@ -328,7 +328,7 @@ function pfUI.api.SkinCollapseButton(button, all)
       self.icon:Show()
     end
   end
-  
+
   local highlight = _G[b:GetName().."Highlight"]
   if highlight then
     highlight:SetTexture("")
