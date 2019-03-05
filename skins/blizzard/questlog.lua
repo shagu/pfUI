@@ -5,7 +5,7 @@ pfUI:RegisterSkin("Quest Log", function ()
   _G.QUESTS_DISPLAYED = 23
   _G.MAX_WATCHABLE_QUESTS = 20 -- TODO
 
-  do -- quest frame
+  do -- quest log frame
     hooksecurefunc("QuestLog_OnShow", function()
       QuestLogFrame:ClearAllPoints()
       QuestLogFrame:SetPoint("TOPLEFT", 10, -104)
@@ -170,38 +170,24 @@ pfUI:RegisterSkin("Quest Log", function ()
     QuestLogDetailScrollFrame.backdrop:SetPoint("BOTTOMRIGHT", 26, -5)
 
     -- skin item buttons
-    for i = 1, MAX_OBJECTIVES do
-      local button = _G["QuestLogItem"..i]
-      StripTextures(button)
-      CreateBackdrop(button, nil, true, .5)
+    for i = 1, MAX_NUM_ITEMS do
+      local name = "QuestLogItem" .. i
+      local item = _G[name]
+      local icon = _G[name.."IconTexture"]
+      local count = _G[name.."Count"]
+      local xsize = item:GetWidth() - 10
+      local ysize = item:GetHeight() - 10
 
-      local itemButton = CreateFrame("Button", button:GetName().."ItemButton", button)
-      itemButton:SetWidth(37)
-      itemButton:SetHeight(37)
-      itemButton:SetPoint("LEFT", 2, 0)
-      itemButton.icon = itemButton:CreateTexture("ARTWORK")
-      itemButton.icon:SetTexture(_G[button:GetName().."IconTexture"]:GetTexture())
-      SkinButton(itemButton, nil, nil, nil, itemButton.icon, true)
-      itemButton.text = itemButton:CreateFontString("Status", "LOW", "GameFontNormal")
-      itemButton.text:SetFontObject(GameFontWhite)
-      itemButton.text:SetPoint("BOTTOMRIGHT", -4, 1)
-      itemButton.text:SetFont(pfUI.font_default, C.global.font_size, "OUTLINE")
+      StripTextures(item)
+      SkinButton(item)
+      item:SetWidth(xsize)
+
+      icon:SetWidth(ysize)
+      icon:SetHeight(ysize)
+      icon:ClearAllPoints()
+      icon:SetPoint("LEFT", 3, 0)
+      icon:SetTexCoord(.08, .92, .08, .92)
     end
-
-    hooksecurefunc("QuestLog_UpdateQuestDetails", function()
-      for i = 1, MAX_OBJECTIVES do
-        local button = _G["QuestLogItem"..i]
-        if button:IsShown() then
-          local itemButton = _G[button:GetName().."ItemButton"]
-          local texture = _G[button:GetName().."IconTexture"]:GetTexture()
-          local numItems = _G[button:GetName().."Count"]:GetText() or 1
-
-          itemButton.icon:SetTexture(texture)
-          itemButton.text:SetText(tonumber(numItems) > 1 and numItems)
-          _G[button:GetName().."Count"]:SetText()
-        end
-      end
-    end, 1)
 
     do -- overwrite colors
       hooksecurefunc("QuestLog_UpdateQuestDetails", function()
