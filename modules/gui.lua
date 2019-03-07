@@ -1068,6 +1068,17 @@ pfUI:RegisterModule("gui", function ()
       local entry = string.format("%d:%s", i, string.format("%s%s%s", _G.ITEM_QUALITY_COLORS[i].hex, _G[string.format("ITEM_QUALITY%d_DESC",i)], FONT_COLOR_CODE_CLOSE))
       table.insert(pfUI.gui.dropdowns.loot_rarity, entry)
     end
+
+    pfUI.gui.dropdowns.screenshot_battle = {
+      "0:".._G.NONE,
+      "1:"..T["Won"],
+      "2:"..T["Ended"],
+    }
+    pfUI.gui.dropdowns.screenshot_loot = {"0:".._G.NONE}
+    for i=3, 5 do
+      local entry = string.format("%d:%s", i, string.format("%s%s%s", _G.ITEM_QUALITY_COLORS[i].hex, _G[string.format("ITEM_QUALITY%d_DESC",i)], FONT_COLOR_CODE_CLOSE))
+        table.insert(pfUI.gui.dropdowns.screenshot_loot, entry)
+    end    
   end
 
   do -- Generate Config UI
@@ -1371,6 +1382,20 @@ pfUI:RegisterModule("gui", function ()
       CreateConfig(nil, T["Display Debuff Durations"], C.appearance.cd, "debuffs", "checkbox")
       CreateConfig(nil, T["Enable Durations On Blizzard Frames"], C.appearance.cd, "blizzard", "checkbox")
       CreateConfig(nil, T["Enable Durations On Foreign Frames"], C.appearance.cd, "foreign", "checkbox")
+    end)
+
+    CreateGUIEntry(T["Settings"], T["Screenshot"], function()
+      CreateConfig(nil, T["Trigger"], nil, nil, "header")
+      CreateConfig(nil, T["Timer (minutes, 0 to disable)"], C.screenshot, "interval")
+      CreateConfig(nil, T["Level Up"], C.screenshot, "levelup", "checkbox")
+      CreateConfig(nil, T["PvP Rank"], C.screenshot, "pvprank", "checkbox")
+      CreateConfig(nil, T["Reputation Level"], C.screenshot, "faction", "checkbox")
+      CreateConfig(nil, T["Battleground"], C.screenshot, "battleground", "dropdown", pfUI.gui.dropdowns.screenshot_battle)
+      CreateConfig(nil, T["Honorable Kill"], C.screenshot, "hk", "checkbox")
+      CreateConfig(nil, T["Looted"], C.screenshot, "loot", "dropdown", pfUI.gui.dropdowns.screenshot_loot)
+      CreateConfig(nil, T["Options"], nil, nil, "header")
+      CreateConfig(nil, T["Hide UI"], C.screenshot, "hideui", "checkbox")
+      CreateConfig(nil, T["Caption"], C.screenshot, "caption", "checkbox")
     end)
 
     CreateGUIEntry(T["Settings"], T["GM-Mode"], function()

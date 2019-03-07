@@ -831,6 +831,16 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("abuttons",   nil,           "spacing",          "2")
   pfUI:UpdateConfig("abuttons",   nil,           "hideincombat",     "1")
 
+  pfUI:UpdateConfig("screenshot", nil,           "interval",         "0")
+  pfUI:UpdateConfig("screenshot", nil,           "levelup",          "1")
+  pfUI:UpdateConfig("screenshot", nil,           "pvprank",          "1")
+  pfUI:UpdateConfig("screenshot", nil,           "faction",          "1")
+  pfUI:UpdateConfig("screenshot", nil,           "battleground",     "1")
+  pfUI:UpdateConfig("screenshot", nil,           "hk",               "1")
+  pfUI:UpdateConfig("screenshot", nil,           "loot",             "4")
+  pfUI:UpdateConfig("screenshot", nil,           "hideui",           "0")
+  pfUI:UpdateConfig("screenshot", nil,           "caption",          "0")
+
   pfUI:UpdateConfig("gm",         nil,           "disable",          "1")
   pfUI:UpdateConfig("gm",         nil,           "server",           "elysium")
 
