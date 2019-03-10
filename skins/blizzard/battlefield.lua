@@ -1,4 +1,4 @@
-pfUI:RegisterSkin("Battlefield Map", function ()
+pfUI:RegisterSkin("Battlefield", function ()
   local border = tonumber(pfUI_config.appearance.border.default)
   local bpad = border > 1 and border - 1 or 1
 
