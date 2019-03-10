@@ -182,18 +182,30 @@ pfUI:RegisterSkin("Quest Log", function ()
       local item = _G[name]
       local icon = _G[name.."IconTexture"]
       local count = _G[name.."Count"]
-      local xsize = item:GetWidth() - 10
-      local ysize = item:GetHeight() - 10
+      local title = _G[name.."Name"]
 
-      StripTextures(item)
-      SkinButton(item)
+      local xsize = item:GetWidth() -12
+      local ysize = item:GetHeight() -12
+
       item:SetWidth(xsize)
+      StripTextures(item)
+      CreateBackdrop(item, nil, nil, .75)
+      SetAllPointsOffset(item.backdrop, item, 4)
+      SetHighlight(item)
 
       icon:SetWidth(ysize)
       icon:SetHeight(ysize)
       icon:ClearAllPoints()
-      icon:SetPoint("LEFT", 3, 0)
+      icon:SetPoint("LEFT", 6, 0)
       icon:SetTexCoord(.08, .92, .08, .92)
+      icon:SetParent(item.backdrop)
+      icon:SetDrawLayer("OVERLAY")
+
+      count:SetParent(item.backdrop)
+      count:SetDrawLayer("OVERLAY")
+
+      title:SetParent(item.backdrop)
+      title:SetDrawLayer("OVERLAY")
     end
   end
 end)

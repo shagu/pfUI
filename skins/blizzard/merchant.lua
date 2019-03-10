@@ -24,8 +24,11 @@ pfUI:RegisterSkin("Merchant", function ()
   for i = 1, BUYBACK_ITEMS_PER_PAGE, 1 do
     local merchantButton = _G["MerchantItem"..i]
     StripTextures(merchantButton)
-    CreateBackdrop(merchantButton, nil, nil, .75)
     merchantButton:SetHeight(37)
+
+    local bg = merchantButton:CreateTexture(nil, "LOW")
+    bg:SetTexture(1,1,1,.05)
+    bg:SetAllPoints()
 
     local itemButton = _G["MerchantItem"..i.."ItemButton"]
     StripTextures(itemButton)
@@ -51,7 +54,9 @@ pfUI:RegisterSkin("Merchant", function ()
   SkinArrowButton(MerchantNextPageButton, "right", 18)
 
   StripTextures(MerchantBuyBackItem)
-  CreateBackdrop(MerchantBuyBackItem, nil, nil, .75)
+  local bg = MerchantBuyBackItem:CreateTexture(nil, "LOW")
+  bg:SetTexture(1,1,1,.05)
+  bg:SetAllPoints()
 
   StripTextures(MerchantBuyBackItemItemButton)
   SkinButton(MerchantBuyBackItemItemButton, nil, nil, nil, _G[MerchantBuyBackItemItemButton:GetName()..'IconTexture'])
