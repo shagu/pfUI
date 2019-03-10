@@ -126,9 +126,7 @@ pfUI:RegisterModule("afkcam", function ()
     SetCVar("UnitNameOwn", afkcam._ownname)
     SetView(4)
 
-    -- set and save defaults again
-    ResetView(4)
-    SaveView(4)
+    SetCVar("cameraCustomViewSmoothing", "1")
 
     if not UIParent:IsVisible() and afkcam._ui_visible then
       UIParent:Show()
