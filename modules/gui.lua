@@ -1646,7 +1646,7 @@ pfUI:RegisterModule("gui", function ()
         return BarLayoutOptions(tonumber(C.bars["bar"..id].buttons) or id < 11 and NUM_ACTIONBAR_BUTTONS or id > 11 and NUM_SHAPESHIFT_SLOTS or NUM_PET_ACTION_SLOTS)
       end
 
-      CreateGUIEntry("Actionbar", caption, function()
+      CreateGUIEntry(T["Actionbar"], caption, function()
         CreateConfig(U["bars"], T["Enable"], C.bars["bar"..id], "enable", "checkbox")
 
         if id ~= 11 and id ~= 12 then
