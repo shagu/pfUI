@@ -65,8 +65,7 @@ pfUI:RegisterSkin("Mailbox", function ()
 
     SkinMoneyInputFrame(SendMailMoney)
 
-    SendMailBodyEditBox:SetTextColor(1,1,1,1)
-    StationeryBackgroundLeft:Hide()
+    StationeryBackgroundLeft:SetAllPoints()
     StationeryBackgroundRight:Hide()
   end
 
@@ -99,8 +98,9 @@ pfUI:RegisterSkin("Mailbox", function ()
     StripTextures(OpenMailScrollFrame)
     CreateBackdrop(OpenMailScrollFrame, nil, true)
     SkinScrollbar(OpenMailScrollFrameScrollBar)
-    OpenMailBodyText:SetTextColor(1,1,1,1)
-    OpenStationeryBackgroundLeft:Hide()
+
+    OpenStationeryBackgroundLeft:SetTexCoord(.1,1,.1,.9)
+    OpenStationeryBackgroundLeft:SetAllPoints()
     OpenStationeryBackgroundRight:Hide()
   end
 

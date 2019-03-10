@@ -159,10 +159,17 @@ pfUI:RegisterSkin("Quest Log", function ()
     StripTextures(QuestLogDetailScrollFrame)
     SkinScrollbar(QuestLogDetailScrollFrameScrollBar)
 
+
+
     QuestLogDetailScrollFrame:ClearAllPoints()
     QuestLogDetailScrollFrame:SetPoint("TOPLEFT", QuestLogListScrollFrame, "TOPRIGHT", 35, 0)
     QuestLogDetailScrollFrame:SetHeight(376)
     QuestLogDetailScrollChildFrame:SetHeight(376)
+
+    local bg = QuestLogDetailScrollFrame:CreateTexture(nil, "BACKGROUND")
+    bg:SetAllPoints()
+    bg:SetTexCoord(.1,1,0,1)
+    bg:SetTexture("Interface\\Stationery\\StationeryTest1")
 
     -- quest log backdrop
     CreateBackdrop(QuestLogDetailScrollFrame, nil, nil, .75)
@@ -187,55 +194,6 @@ pfUI:RegisterSkin("Quest Log", function ()
       icon:ClearAllPoints()
       icon:SetPoint("LEFT", 3, 0)
       icon:SetTexCoord(.08, .92, .08, .92)
-    end
-
-    do -- overwrite colors
-      hooksecurefunc("QuestLog_UpdateQuestDetails", function()
-        for i=1, GetNumQuestLeaderBoards() do
-          local string = _G["QuestLogObjective"..i]
-
-          if not string._SetTextColor then
-            string._SetTextColor = string.SetTextColor
-            string.SetTextColor = function() return end
-          end
-
-          local text, type, finished = GetQuestLogLeaderBoard(i)
-          if finished then
-            string:_SetTextColor(.4, 1, .4)
-          else
-            string:_SetTextColor(.4, .4, .4)
-          end
-        end
-
-        local reqmoney = GetQuestLogRequiredMoney()
-        if reqmoney > 0 then
-          if reqmoney > GetMoney() then
-            QuestLogRequiredMoneyText:SetTextColor(1, .4, .4);
-          else
-            QuestLogRequiredMoneyText:SetTextColor(.4, 1, .4);
-          end
-        end
-      end)
-
-      local titles = { QuestLogQuestTitle, QuestLogDescriptionTitle, QuestLogRewardTitleText }
-      for _, string in pairs(titles) do
-        if not string._SetTextColor then
-          string._SetTextColor = string.SetTextColor
-          string.SetTextColor = function() return end
-        end
-        string:_SetTextColor(1,1,.2,1)
-        string:SetShadowColor(0,0,0,0)
-      end
-
-      local texts = { QuestLogObjectivesText, QuestLogTimerText, QuestLogQuestDescription,
-      QuestLogItemChooseText, QuestLogItemReceiveText, QuestLogSpellLearnText }
-      for _, string in pairs(texts) do
-        if not string._SetTextColor then
-          string._SetTextColor = string.SetTextColor
-          string.SetTextColor = function() return end
-        end
-        string:_SetTextColor(1,1,1,1)
-      end
     end
   end
 end)

@@ -14,24 +14,6 @@ pfUI:RegisterSkin("Gossip and Quest", function ()
 
   do -- quest gossip
     StripTextures(QuestGreetingScrollChildFrame)
-    local titles = { CurrentQuestsText, AvailableQuestsText, QuestTitleText, QuestDetailObjectiveTitleText, QuestDetailRewardTitleText, QuestProgressTitleText }
-    for _, string in pairs(titles) do
-      if not string._SetTextColor then
-        string._SetTextColor = string.SetTextColor
-        string.SetTextColor = function() return end
-      end
-      string:_SetTextColor(1,1,.2,1)
-      string:SetShadowColor(0,0,0,0)
-    end
-
-    local texts = { QuestFont, GreetingText, QuestDescription, QuestObjectiveText, QuestDetailItemChooseText, QuestDetailItemReceiveText, QuestDetailSpellLearnText, QuestProgressText }
-    for _, string in pairs(texts) do
-      if not string._SetTextColor then
-        string._SetTextColor = string.SetTextColor
-        string.SetTextColor = function() return end
-      end
-      string:_SetTextColor(1,1,1,1)
-    end
 
     QuestTitleText:SetPoint("TOPLEFT", 10, -10)
     QuestProgressTitleText:SetPoint("TOPLEFT", 10, -10)
@@ -55,20 +37,6 @@ pfUI:RegisterSkin("Gossip and Quest", function ()
         icon:SetTexCoord(.08, .92, .08, .92)
       end
     end
-
-    hooksecurefunc("QuestFrameProgressItems_Update", function()
-      QuestProgressRequiredItemsText:SetTextColor(1, 1, 0.2)
-      QuestProgressRequiredItemsText:SetShadowColor(0,0,0,0)
-
-      local reqmoney = GetQuestMoneyToGet()
-      if reqmoney > 0 then
-        if reqmoney > GetMoney() then
-          QuestProgressRequiredMoneyText:SetTextColor(0.4, 0.4, 0.4)
-        else
-          QuestProgressRequiredMoneyText:SetTextColor(.4, 1, 0.4)
-        end
-      end
-    end)
   end
 
   for _, f in pairs(frames) do
@@ -98,6 +66,11 @@ pfUI:RegisterSkin("Gossip and Quest", function ()
       scroll:SetHeight(330)
       SkinScrollbar(_G[scroll:GetName().."ScrollBar"])
       CreateBackdrop(scroll, nil, true, .75)
+
+      local bg = scroll:CreateTexture(nil, "LOW")
+      bg:SetAllPoints()
+      bg:SetTexCoord(.1,1,0,1)
+      bg:SetTexture("Interface\\Stationery\\StationeryTest1")
 
       if panel ~= 'Greeting' then
         local num_items, hook_func
