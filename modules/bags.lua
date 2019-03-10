@@ -98,7 +98,7 @@ pfUI:RegisterModule("bags", function ()
         local bagsize = GetContainerNumSlots(bag)
         if bag == -2 and pfUI.bag.showKeyring == true then bagsize = GetKeyRingSize() end
         for slot=1, bagsize do
-          if pfUI.bags[bag].slots[slot].frame:IsShown() then
+          if pfUI.bags[bag] and pfUI.bags[bag].slots[slot] and pfUI.bags[bag].slots[slot].frame:IsShown() then
             local _, _, locked, _ = GetContainerItemInfo(bag, slot)
             SetItemButtonDesaturated(pfUI.bags[bag].slots[slot].frame, locked, 0.5, 0.5, 0.5)
           end
