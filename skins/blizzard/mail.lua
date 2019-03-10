@@ -1,6 +1,18 @@
 pfUI:RegisterSkin("Mailbox", function ()
   local border = tonumber(pfUI_config.appearance.border.default)
   local bpad = border > 1 and border - 1 or 1
+  local skin = CreateFrame("Frame")
+  skin:SetScript("OnEvent", function()
+    this:UnregisterEvent("MAIL_SHOW")
+    if not this._Mail then
+      StripTextures(SendMailPackageButton)
+      SkinButton(SendMailPackageButton)
+      hooksecurefunc("SendMailFrame_Update", function()
+        HandleIcon(SendMailPackageButton, SendMailPackageButton:GetNormalTexture())
+      end, 1)
+    end
+  end)
+  skin:RegisterEvent("MAIL_SHOW")
 
   StripTextures(MailFrame, true)
   CreateBackdrop(MailFrame, nil, nil, .75)
@@ -104,8 +116,8 @@ pfUI:RegisterSkin("Mailbox", function ()
     OpenStationeryBackgroundRight:Hide()
   end
 
-  -- support for addon 'Mail'
-  if IsAddOnLoaded("Mail") then
+  HookAddonOrVariable("Mail", function()
+    skin._Mail = true
     for i = 1, 21 do
       local button = _G["MailAttachment"..i]
       StripTextures(button)
@@ -122,12 +134,6 @@ pfUI:RegisterSkin("Mailbox", function ()
     SkinButton(button) -- hack! only it happened to do it
     button:ClearAllPoints()
     button:SetPoint("RIGHT", SendMailCancelButton, "LEFT", -2*bpad, 0)
+  end)
 
-  else
-    StripTextures(SendMailPackageButton)
-    SkinButton(SendMailPackageButton)
-    hooksecurefunc("SendMailFrame_Update", function()
-      HandleIcon(SendMailPackageButton, SendMailPackageButton:GetNormalTexture())
-    end, 1)
-  end
 end)
