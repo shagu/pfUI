@@ -18,7 +18,24 @@ pfUI:RegisterSkin("Gossip and Quest", function ()
     QuestTitleText:SetPoint("TOPLEFT", 10, -10)
     QuestProgressTitleText:SetPoint("TOPLEFT", 10, -10)
 
-    for _, name in pairs({ "QuestProgressItem", "QuestDetailItem" }) do
+    StripTextures(QuestRewardItemHighlight)
+    local QuestRewardItemHighlight = CreateFrame("Frame", nil, QuestRewardScrollChildFrame)
+    local QuestRewardItemHighlightBG = QuestRewardItemHighlight:CreateTexture(nil, "OVERLAY")
+    QuestRewardItemHighlightBG:SetTexture(1,1,1,.2)
+    QuestRewardItemHighlightBG:SetAllPoints()
+
+    hooksecurefunc("QuestFrameItems_Update", function()
+      QuestRewardItemHighlight:Hide()
+    end)
+
+    hooksecurefunc("QuestRewardItem_OnClick", function()
+      if this.type == "choice" then
+        QuestRewardItemHighlight:SetAllPoints(this.backdrop)
+        QuestRewardItemHighlight:Show()
+      end
+    end)
+
+    for _, name in pairs({ "QuestProgressItem", "QuestDetailItem", "QuestRewardItem" }) do
       for i = 1, 6 do
         local name = name .. i
         local item = _G[name]
