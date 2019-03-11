@@ -65,6 +65,7 @@ skins\blizzard\questlog.lua
 skins\blizzard\mail.lua
 skins\blizzard\readycheck.lua
 skins\blizzard\battlefield_minimap.lua
+skins\blizzard\battlefield_score.lua
 skins\blizzard\survey.lua
 skins\blizzard\keybindings.lua
 skins\blizzard\merchant.lua
