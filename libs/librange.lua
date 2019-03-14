@@ -38,6 +38,8 @@ local spells = {
   },
 }
 
+local _, class = UnitClass("player")
+
 -- units that should be scanned
 local units = {}
 table.insert(units, "pet")
@@ -61,8 +63,6 @@ librange:RegisterEvent("PLAYER_ENTERING_WORLD")
 librange:RegisterEvent("PLAYER_ENTER_COMBAT")
 librange:RegisterEvent("PLAYER_LEAVE_COMBAT")
 librange:SetScript("OnEvent", function()
-  local _, class = UnitClass("player")
-
   -- disable range checking activities
   if C.unitframes.rangecheck == "0" or not spells[class] then
     this:Hide()
