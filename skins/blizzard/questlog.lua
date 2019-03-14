@@ -44,10 +44,10 @@ pfUI:RegisterSkin("Quest Log", function ()
     QuestLogTrack:SetWidth(8)
     QuestLogTrack:ClearAllPoints()
     QuestLogTrack:SetPoint("RIGHT", QuestLogQuestCount, "LEFT", -5, 0)
-    HookScript(QuestLogTrack, "OnShow", function()
-      QuestLogTrackTitle:Hide()
-      QuestLogTrackTracking:SetTexture(.8,.8,.8,1)
-    end)
+
+    StripTextures(QuestLogTrack)
+    QuestLogTrackTracking:SetTexture(.8,.8,.8,1)
+    QuestLogTrackTitle:Hide()
 
     SkinButton(QuestLogFrameAbandonButton)
     QuestLogFrameAbandonButton:ClearAllPoints()
@@ -91,9 +91,20 @@ pfUI:RegisterSkin("Quest Log", function ()
       QuestLog_UpdateQuestDetails()
     end)
 
-    EmptyQuestLogFrame:SetScript("OnShow", function() QuestLogFrameExpandButton:Disable() end)
-    EmptyQuestLogFrame:SetScript("OnHide", function() QuestLogFrameExpandButton:Enable() end)
     StripTextures(EmptyQuestLogFrame)
+    EmptyQuestLogFrame:SetScript("OnShow", function()
+      -- trigger hide events
+      if QuestLogDetailScrollFrame:IsShown() then
+        QuestLogDetailScrollFrame:Hide()
+      else
+        QuestLogDetailScrollFrame:GetScript("OnHide")()
+      end
+      QuestLogFrameExpandButton:Disable()
+    end)
+
+    EmptyQuestLogFrame:SetScript("OnHide", function()
+      QuestLogFrameExpandButton:Enable()
+    end)
   end
 
   do -- left pane
