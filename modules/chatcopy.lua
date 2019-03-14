@@ -132,10 +132,10 @@ pfUI:RegisterModule("chatcopy", function ()
         local history = {}
         local AddMessage = frame.AddMessage
         frame.AddMessage = function(self,msg,r,g,b)
-          if r and g and b then
+          if msg and r and g and b then
             local col = string.format("|cff%02x%02x%02x", r*255, g*255, b*255)
             table.insert(history, 1, col..string.gsub(msg, "|r", col))
-          else
+          elseif msg then
             table.insert(history, 1, "|cffffffff"..msg)
           end
 
