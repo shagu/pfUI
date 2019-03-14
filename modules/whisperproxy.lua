@@ -36,17 +36,19 @@ pfUI:RegisterModule("whisperproxy", function ()
     end
   end
 
+  local proxyOK = { OKAY, function()
+    pfUI.chat.whisperproxy.forwardto = this:GetParent().input:GetText()
+    ToggleProxy()
+  end }
+
+  local proxyCancel = { CANCEL, function()
+    pfUI.chat.whisperproxy.forwardto = ""
+  end }
+
   proxy:RegisterForClicks("LeftButtonUp", "RightButtonUp")
   proxy:SetScript("OnClick", function()
     if proxy.forwardto == "" or arg1 == "RightButton" then
-      CreateQuestionDialog(T["Please enter a name of a character who should receive your whispers:"],
-      function()
-        pfUI.chat.whisperproxy.forwardto = this:GetParent().input:GetText()
-        ToggleProxy()
-      end,
-      function()
-        pfUI.chat.whisperproxy.forwardto = ""
-      end, true)
+      CreateQuestionDialog(T["Please enter a name of a character who should receive your whispers:"], proxyOK, proxyCancel, true)
     else
       ToggleProxy()
     end
