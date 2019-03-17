@@ -132,7 +132,9 @@ function pfUI.api.UnitHasAggro(unit)
     return aggrodata[unit].state
   end
 
-  aggrodata[unit] = { check = GetTime(), state = 0}
+  aggrodata[unit] = aggrodata[unit] or { }
+  aggrodata[unit].check = GetTime()
+  aggrodata[unit].state = 0
 
   if UnitExists(unit) and UnitIsFriend(unit, "player") then
     for u in pairs(pfValidUnits) do
