@@ -1447,41 +1447,34 @@ function pfUI.uf:RefreshUnit(unit, component)
     end
   end
 
-  local color = { r = .2, g = .2, b = .2 }
+  local r, g, b, a = .2, .2, .2, 1
   if UnitIsPlayer(unitstr) then
     local _, class = UnitClass(unitstr)
-    color = RAID_CLASS_COLORS[class] or color
+    if RAID_CLASS_COLORS[class] then
+      local color = RAID_CLASS_COLORS[class]
+      r, g, b = color.r, color.g, color.b
+    end
   elseif unit.label == "pet" then
     local happiness = GetPetHappiness()
     if happiness == 1 then
-      color = { r = 1, g = 0, b = 0 }
+      r, g, b = 1, 0, 0
     elseif happiness == 2 then
-      color = { r = 1, g = 1, b = 0 }
+      r, g, b = 1, 1, 0
     else
-      color = { r = 0, g = 1, b = 0 }
+      r, g, b = 0, 1, 0
     end
   else
-    color = UnitReactionColor[UnitReaction(unitstr, "player")] or color
+    local color = UnitReactionColor[UnitReaction(unitstr, "player")]
+    r, g, b = color.r, color.g, color.b
   end
 
-  local r, g, b = .2, .2, .2
   if C.unitframes.custom == "1" then
-    local cr, cg, cb, ca = pfUI.api.strsplit(",", C.unitframes.customcolor)
-    cr, cg, cb, ca = tonumber(cr), tonumber(cg), tonumber(cb), tonumber(ca)
-    unit.hp.bar:SetStatusBarColor(cr, cg, cb, ca)
-    if C.unitframes.pastel == "1" then
-      r, g, b = (color.r + .5) * .5, (color.g + .5) * .5, (color.b + .5) * .5
-    else
-      r, g, b = color.r, color.g, color.b
-    end
-  else
-    if C.unitframes.pastel == "1" then
-      r, g, b = (color.r + .5) * .5, (color.g + .5) * .5, (color.b + .5) * .5
-    else
-      r, g, b = color.r, color.g, color.b
-    end
-    unit.hp.bar:SetStatusBarColor(r, g, b)
+    r, g, b, a = pfUI.api.strsplit(",", C.unitframes.customcolor)
+  elseif C.unitframes.pastel == "1" then
+    r, g, b = (r + .5) * .5, (g + .5) * .5, (b + .5) * .5
   end
+
+  unit.hp.bar:SetStatusBarColor(r, g, b, a)
 
   local p = ManaBarColor[UnitPowerType(unitstr)]
   local pr, pg, pb = 0, 0, 0
