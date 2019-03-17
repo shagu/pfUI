@@ -24,6 +24,16 @@ for i=1,4 do pfValidUnits["partypet" .. i .. "target"] = true end
 for i=1,40 do pfValidUnits["raid" .. i .. "target"] = true end
 for i=1,40 do pfValidUnits["raidpet" .. i .. "target"] = true end
 
+local glow = {
+  edgeFile = "Interface\\AddOns\\pfUI\\img\\glow", edgeSize = 8,
+  insets = {left = 0, right = 0, top = 0, bottom = 0},
+}
+
+local glow2 = {
+  edgeFile = "Interface\\AddOns\\pfUI\\img\\glow2", edgeSize = 8,
+  insets = {left = 0, right = 0, top = 0, bottom = 0},
+}
+
 local function BuffOnUpdate()
   if ( this.tick or 1) > GetTime() then return else this.tick = GetTime() + .4 end
   local timeleft = GetPlayerBuffTimeLeft(GetPlayerBuff(PLAYER_BUFF_START_ID+this.id,"HELPFUL"))
@@ -209,10 +219,7 @@ function pfUI.uf:UpdateConfig()
 
   f.hp.glow:SetFrameStrata("BACKGROUND")
   f.hp.glow:SetFrameLevel(0)
-  f.hp.glow:SetBackdrop({
-    edgeFile = "Interface\\AddOns\\pfUI\\img\\glow2", edgeSize = 8,
-    insets = {left = 0, right = 0, top = 0, bottom = 0},
-  })
+  f.hp.glow:SetBackdrop(glow2)
   f.hp.glow:SetPoint("TOPLEFT", f.hp, "TOPLEFT", -6 - default_border,6 + default_border)
   f.hp.glow:SetPoint("BOTTOMRIGHT", f.hp, "BOTTOMRIGHT", 6 + default_border,-6 - default_border)
   f.hp.glow:SetScript("OnUpdate", pfUI.uf.glow.UpdateGlowAnimation)
@@ -246,10 +253,7 @@ function pfUI.uf:UpdateConfig()
 
   f.power.glow:SetFrameStrata("BACKGROUND")
   f.power.glow:SetFrameLevel(0)
-  f.power.glow:SetBackdrop({
-    edgeFile = "Interface\\AddOns\\pfUI\\img\\glow2", edgeSize = 8,
-    insets = {left = 0, right = 0, top = 0, bottom = 0},
-  })
+  f.power.glow:SetBackdrop(glow2)
   f.power.glow:SetPoint("TOPLEFT", f.power, "TOPLEFT", -6 - default_border,6 + default_border)
   f.power.glow:SetPoint("BOTTOMRIGHT", f.power, "BOTTOMRIGHT", 6 + default_border,-6 - default_border)
   f.power.glow:SetScript("OnUpdate", pfUI.uf.glow.UpdateGlowAnimation)
@@ -1284,10 +1288,7 @@ function pfUI.uf:RefreshUnit(unit, component)
           elseif disptype == "2" then
             indicator[debuff].tex:Hide()
             indicator[debuff]:SetAllPoints(unit.hp.bar)
-            indicator[debuff]:SetBackdrop({
-              edgeFile = "Interface\\AddOns\\pfUI\\img\\glow", edgeSize = 8,
-              insets = {left = 0, right = 0, top = 0, bottom = 0},
-            })
+            indicator[debuff]:SetBackdrop(glow)
             indicator[debuff]:SetBackdropBorderColor(unpack(pfDebuffColors[debuff]))
           elseif disptype == "1" then
             indicator[debuff].tex:SetTexture(unpack(pfDebuffColors[debuff]))
