@@ -42,6 +42,24 @@ local extra_methods = {
   "Find", "Line", "Text", "List",
 }
 
+local getFontString = function(obj)
+  local name = obj:GetName()
+  local r, g, b, color
+  local text, segment
+
+  for i=1, obj:NumLines() do
+    local left = _G[string.format("%sTextLeft%d",name,i)]
+    segment = left and left:IsVisible() and left:GetText()
+    segment = segment and segment ~= "" and segment or nil
+    if segment then
+      r, g, b, a = left:GetTextColor()
+      segment = "|c" .. string.format("ff%02x%02x%02x", r*255, g*255, b*255) .. segment .. "|r"
+      text = text and text .. "\n" .. segment or segment
+    end
+  end
+  return text
+end
+
 local getText = function(obj)
   local name = obj:GetName()
   local text = {}
@@ -131,6 +149,9 @@ libtipscan._registry = setmetatable({},{__index = function(t,k)
   end)
   function v:Text()
     return getText(self)
+  end
+  function v:FontString()
+    return getFontString(self)
   end
   function v:Find(text, exact)
     return findText(self, text, exact)
