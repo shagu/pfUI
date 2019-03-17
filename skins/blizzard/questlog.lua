@@ -1,4 +1,6 @@
 pfUI:RegisterSkin("Quest Log", function ()
+  UIPanelWindows["QuestLogFrame"] = {area = "doublewide", pushable = 0, whileDead = 1}
+
   local border = tonumber(pfUI_config.appearance.border.default)
   local bpad = border > 1 and border - 1 or 1
 
