@@ -1450,10 +1450,8 @@ function pfUI.uf:RefreshUnit(unit, component)
   local r, g, b, a = .2, .2, .2, 1
   if UnitIsPlayer(unitstr) then
     local _, class = UnitClass(unitstr)
-    if RAID_CLASS_COLORS[class] then
-      local color = RAID_CLASS_COLORS[class]
-      r, g, b = color.r, color.g, color.b
-    end
+    local color = RAID_CLASS_COLORS[class]
+    if color then r, g, b = color.r, color.g, color.b end
   elseif unit.label == "pet" then
     local happiness = GetPetHappiness()
     if happiness == 1 then
@@ -1465,7 +1463,7 @@ function pfUI.uf:RefreshUnit(unit, component)
     end
   else
     local color = UnitReactionColor[UnitReaction(unitstr, "player")]
-    r, g, b = color.r, color.g, color.b
+    if color then r, g, b = color.r, color.g, color.b end
   end
 
   if C.unitframes.custom == "1" then
