@@ -84,7 +84,7 @@ pfUI:RegisterModule("map", function ()
     end
 
     -- coordinates
-    WorldMapButton.coords = CreateFrame("Frame", "pfWorldMapButtonCoords", WorldMapButton)
+    WorldMapButton.coords = WorldMapButton.coords or CreateFrame("Frame", "pfWorldMapButtonCoords", WorldMapButton)
     WorldMapButton.coords.text = WorldMapButton.coords:CreateFontString(nil, "OVERLAY")
     WorldMapButton.coords.text:SetPoint("BOTTOMRIGHT", WorldMapButton, "BOTTOMRIGHT", -10, 10)
     WorldMapButton.coords.text:SetFont(pfUI.font_default, C.global.font_size, "OUTLINE")
@@ -107,13 +107,13 @@ pfUI:RegisterModule("map", function ()
         WorldMapButton.coords.text:SetText("")
       end
     end)
-    
+
     SkinButton(WorldMapZoomOutButton)
-    
+
     SkinCloseButton(WorldMapFrameCloseButton, WorldMapFrame, -3, -3)
-    
+
     SkinDropDown(WorldMapContinentDropDown)
-    
+
     SkinDropDown(WorldMapZoneDropDown)
     local point, anchor, anchorPoint, x, y = WorldMapZoneDropDown:GetPoint()
     WorldMapZoneDropDown:ClearAllPoints()
