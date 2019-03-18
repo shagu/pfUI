@@ -94,11 +94,28 @@ pfUI:RegisterModule("afkcam", function ()
   clock.time:SetJustifyH("CENTER")
   clock.time:SetPoint("TOP", 0, -10)
   clock:SetScript("OnUpdate", function()
+    local h, m = GetGameTime()
+    local noon = "AM"
+    local time = ""
     if C.global.twentyfour == "0" then
-      clock.time:SetText(date("%I|cff33ffcc:|r%M %p"))
+      if C.global.servertime == "1" then
+        if h > 12 then
+          h = h - 12
+          noon = "PM"
+        end
+        time = string.format("%.2d|cff33ffcc:|r%.2d %s", h, m, noon)
+      else
+        time = date("%I|cff33ffcc:|r%M %p")
+      end
+      clock.time:SetText(time)
     else
-      clock.time:SetText(date("%H|cff33ffcc:|r%M"))
+      if C.global.servertime == "1" then
+        time = string.format("%.2d|cff33ffcc:|r%.2d", h, m)
+      else
+        time = date("%H|cff33ffcc:|r%M")
+      end
     end
+    clock.time:SetText(time)
   end)
 
   function afkcam:start()
