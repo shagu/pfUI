@@ -26,7 +26,7 @@ pfUI:RegisterModule("panel", function()
             noon = " PM"
           end
           time = date("%I:%M %p")
-          servertime = string.format("%.2d:%.2d", h, m) .. noon
+          servertime = string.format("%.2d:%.2d %s", h, m, noon)
         else
           time = date("%H:%M")
           servertime = string.format("%.2d:%.2d", h, m)
@@ -54,11 +54,27 @@ pfUI:RegisterModule("panel", function()
       widget:SetScript("OnUpdate",function()
         if ( this.tick or 1) > GetTime() then return else this.tick = GetTime() + 1 end
 
+        local h, m = GetGameTime()
+        local noon = "AM"
+        local time = ""
         if C.global.twentyfour == "0" then
-          pfUI.panel:OutputPanel("time", date("%I:%M:%S %p"), widget.Tooltip, widget.Click)
+          if C.global.servertime == "1" then
+            if h > 12 then
+              h = h - 12
+              noon = "PM"
+            end
+            time = string.format("%.2d:%.2d %s", h, m, noon)
+          else
+            time = date("%I:%M:%S %p")
+          end
         else
-          pfUI.panel:OutputPanel("time", date("%H:%M:%S"), widget.Tooltip, widget.Click)
+          if C.global.servertime == "1" then
+            time = string.format("%.2d:%.2d", h, m)
+          else
+            time = date("%H:%M:%S")
+          end
         end
+        pfUI.panel:OutputPanel("time", time, widget.Tooltip, widget.Click)
       end)
 
       widget.timerFrame = CreateFrame("Frame", "pfUITimer", UIParent)

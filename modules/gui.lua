@@ -1690,6 +1690,7 @@ pfUI:RegisterModule("gui", function ()
       CreateConfig(nil, T["Only Count Bagspace On Regular Bags"], C.panel.bag, "ignorespecial", "checkbox")
       CreateConfig(nil, T["Enable Micro Bar"], C.panel.micro, "enable", "checkbox")
       CreateConfig(nil, T["Enable 24h Clock"], C.global, "twentyfour", "checkbox")
+      CreateConfig(nil, T["Servertime"], C.global, "servertime", "checkbox")
     end)
 
     CreateGUIEntry(T["Panel"], T["Auto Hide"], function()
