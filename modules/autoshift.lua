@@ -69,7 +69,7 @@ pfUI:RegisterModule("autoshift", function ()
       for id, errorstring in pairs(pfUI.autoshift.errors) do
         if arg1 == errorstring then
           for i=0,31,1 do
-            currBuffTex = GetPlayerBuffTexture(i)
+            local currBuffTex = GetPlayerBuffTexture(i)
             if (currBuffTex) then
               for id, bufftype in pairs(pfUI.autoshift.buffs) do
                 if string.find(string.lower(currBuffTex), bufftype, 1) then

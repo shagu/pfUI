@@ -90,7 +90,7 @@ pfUI:RegisterModule("addonbuttons", function ()
 
   local function TablePartialMatch(table, needle)
     for i,v in ipairs(table) do
-      pos_start, pos_end = strfind(strlower(needle), strlower(v))
+      local pos_start, pos_end = strfind(strlower(needle), strlower(v))
       if pos_start == 1 then
         return i
       end

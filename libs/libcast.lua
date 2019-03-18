@@ -213,7 +213,7 @@ libcast:SetScript("OnEvent", function()
     end
   -- Fill database with environmental casts
   elseif arg1 then
-    local mob, spell
+    local mob, spell, _
 
     -- (.+) begins to cast (.+).
     mob, spell = cmatch(arg1, SPELLCASTOTHERSTART)

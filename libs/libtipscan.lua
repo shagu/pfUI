@@ -44,7 +44,7 @@ local extra_methods = {
 
 local getFontString = function(obj)
   local name = obj:GetName()
-  local r, g, b, color
+  local r, g, b, color, a
   local text, segment
 
   for i=1, obj:NumLines() do

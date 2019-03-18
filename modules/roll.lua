@@ -249,7 +249,7 @@ pfUI:RegisterModule("roll", function ()
 
   function _G.GroupLootFrame_OpenNewFrame(id, rollTime)
     -- clear cache if possible
-    local nothing = nil
+    local visible = nil
     for i=1,4 do
       visible = visible or pfUI.roll.frames[i]:IsVisible()
     end

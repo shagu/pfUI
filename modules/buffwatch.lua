@@ -144,7 +144,7 @@ pfUI:RegisterModule("buffwatch", function ()
 
     local font = parent.config.use_unitfonts == "1" and pfUI.font_unit or pfUI.font_default
 
-    frame = _G[framename] or CreateFrame("Button", framename, parent)
+    local frame = _G[framename] or CreateFrame("Button", framename, parent)
     frame:EnableMouse(1)
     frame:Hide()
     frame:SetPoint("BOTTOM", 0, (bar-1)*(height+2*border+1))
@@ -306,6 +306,7 @@ pfUI:RegisterModule("buffwatch", function ()
         -- set stacks
         if data[5] > 1 then
           local stacks_percentage = data[5] / (frame.charges[uuid] * .01)
+          local sr, sg, sb, sa
           if stacks_percentage >= 90 then
             sr, sg, sb, sa = .3, 1, .3, 1
           elseif stacks_percentage >= 60 then

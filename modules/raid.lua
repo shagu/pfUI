@@ -24,7 +24,7 @@ pfUI:RegisterModule("raid", function ()
 
   for r=1, 8 do
     for g=1, 5 do
-      i = g + 5*(r-1)
+      local i = g + 5*(r-1)
       pfUI.uf.raid[i] = pfUI.uf:CreateUnitFrame("Raid", i, C.unitframes.raid)
       pfUI.uf.raid[i]:UpdateFrameSize()
 
@@ -42,7 +42,7 @@ pfUI:RegisterModule("raid", function ()
   -- add units to the beginning of their groups
   function pfUI.uf.raid:AddUnitToGroup(index, group)
     for subindex = 1, 5 do
-      ids = subindex + 5*(group-1)
+      local ids = subindex + 5*(group-1)
       if pfUI.uf.raid[ids].id == 0 and pfUI.uf.raid[ids].config.visible == "1" then
         pfUI.uf.raid[ids].id = index
         pfUI.uf.raid[ids]:Show()

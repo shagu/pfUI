@@ -163,10 +163,11 @@ pfUI:RegisterModule("panel", function()
 
     do -- XP & Kills To Level
       local widget = CreateFrame("Frame", "pfPanelWidgetXP", UIParent)
+      local curexp, difexp, maxexp, remexp, oldexp, remstring
       widget:RegisterEvent("PLAYER_ENTERING_WORLD")
       widget:RegisterEvent("PLAYER_XP_UPDATE")
       widget:SetScript("OnEvent", function()
-        if UnitLevel("player") ~= 60 then
+        if UnitLevel("player") < _G.MAX_PLAYER_LEVEL then
           curexp = UnitXP("player")
           if oldexp ~= nil then
             difexp = curexp - oldexp
@@ -208,7 +209,7 @@ pfUI:RegisterModule("panel", function()
             local bagsize = GetContainerNumSlots(bag)
             maxslots = maxslots + bagsize
             for j = 1,bagsize do
-              link = GetContainerItemLink(bag,j)
+              local link = GetContainerItemLink(bag,j)
               if link then
                 usedslots = usedslots + 1
               end
@@ -279,7 +280,7 @@ pfUI:RegisterModule("panel", function()
         local online = 0
         local all = GetNumFriends()
         for friendIndex=1, all do
-          friend_name, friend_level, friend_class, friend_area, friend_connected = GetFriendInfo(friendIndex)
+          local friend_name, friend_level, friend_class, friend_area, friend_connected = GetFriendInfo(friendIndex)
           if ( friend_connected ) then
             online = online + 1
           end

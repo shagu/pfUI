@@ -594,7 +594,7 @@ pfUI:RegisterModule("chat", function ()
   -- read and parse whisper color settings
   local cr, cg, cb, ca = strsplit(",", C.chat.global.whisper)
   cr, cg, cb = tonumber(cr), tonumber(cg), tonumber(cb)
-  wcol = string.format("%02x%02x%02x",cr * 255,cg * 255, cb * 255)
+  local wcol = string.format("%02x%02x%02x",cr * 255,cg * 255, cb * 255)
 
   -- read and parse chat bracket settings
   local left = "|r" .. string.sub(C.chat.text.bracket, 1, 1)

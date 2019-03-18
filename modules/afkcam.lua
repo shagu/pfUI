@@ -87,7 +87,7 @@ pfUI:RegisterModule("afkcam", function ()
   overlay._parent = afkcam
   afkcam.overlay = overlay
 
-  clock = CreateFrame("Frame", "pfAFKClock", overlay)
+  local clock = CreateFrame("Frame", "pfAFKClock", overlay)
   clock:SetAllPoints(overlay)
   clock.time = clock:CreateFontString("Status", "OVERLAY")
   clock.time:SetFont("Interface\\AddOns\\pfUI\\fonts\\Hooge.ttf", 32, "THICKOUTLINE")

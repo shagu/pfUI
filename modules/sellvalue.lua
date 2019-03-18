@@ -44,6 +44,7 @@ pfUI:RegisterModule("sellvalue", function ()
   local pfHookSetBagItem = GameTooltip.SetBagItem
   function GameTooltip.SetBagItem(self, container, slot)
     GameTooltip.itemLink = GetContainerItemLink(container, slot)
+    local _
     _, GameTooltip.itemCount = GetContainerItemInfo(container, slot)
     return pfHookSetBagItem(self, container, slot)
   end

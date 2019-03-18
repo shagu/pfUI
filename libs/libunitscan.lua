@@ -84,7 +84,7 @@ libunitscan:SetScript("OnEvent", function()
     end
 
   elseif event == "GUILD_ROSTER_UPDATE" then
-    local name, class, level
+    local name, class, level, _
     for i = 1, GetNumGuildMembers() do
       name, _, _, level, class = GetGuildRosterInfo(i)
       class = L["class"][class] or nil
@@ -92,7 +92,7 @@ libunitscan:SetScript("OnEvent", function()
     end
 
   elseif event == "RAID_ROSTER_UPDATE" then
-    local name, class, SubGroup, level
+    local name, class, SubGroup, level, _
     for i = 1, GetNumRaidMembers() do
       name, _, SubGroup, level, class = GetRaidRosterInfo(i)
       class = L["class"][class] or nil
@@ -100,7 +100,7 @@ libunitscan:SetScript("OnEvent", function()
     end
 
   elseif event == "PARTY_MEMBERS_CHANGED" then
-    local name, class, level, unit
+    local name, class, level, unit, _
     for i = 1, GetNumPartyMembers() do
       unit = "party" .. i
       _, class = UnitClass(unit)
@@ -110,7 +110,7 @@ libunitscan:SetScript("OnEvent", function()
     end
 
   elseif event == "WHO_LIST_UPDATE" or event == "CHAT_MSG_SYSTEM" then
-    local name, class, level
+    local name, class, level, _
     for i = 1, GetNumWhoResults() do
       name, _, level, _, class, _ = GetWhoInfo(i)
       class = L["class"][class] or nil
@@ -119,7 +119,7 @@ libunitscan:SetScript("OnEvent", function()
 
   elseif event == "UPDATE_MOUSEOVER_UNIT" or event == "PLAYER_TARGET_CHANGED" then
     local scan = event == "PLAYER_TARGET_CHANGED" and "target" or "mouseover"
-    local name, class, level
+    local name, class, level, elite, _
     if UnitIsPlayer(scan) then
       _, class = UnitClass(scan)
       level = UnitLevel(scan)

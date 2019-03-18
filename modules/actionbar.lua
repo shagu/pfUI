@@ -983,10 +983,10 @@ pfUI:RegisterModule("actionbar", function ()
   pager:RegisterEvent("UPDATE_BONUS_ACTIONBAR")
   pager:RegisterEvent("ACTIONBAR_PAGE_CHANGED")
   pager:SetScript("OnEvent", function()
-    bar = GetActiveBar()
+    local bar = GetActiveBar()
 
     for i=1,12 do
-      id = i + (bar-1)*12
+      local id = i + (bar-1)*12
       bars[1][i].bar = bar
       bars[1][i]:SetID(id)
       bars[1][i].forceupdate = true

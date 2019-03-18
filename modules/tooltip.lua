@@ -96,8 +96,8 @@ pfUI:RegisterModule("tooltip", function ()
 
   pfUI.tooltipStatusBar = CreateFrame('Frame', nil, GameTooltipStatusBar)
   pfUI.tooltipStatusBar:SetScript("OnUpdate", function()
-      hp = GameTooltipStatusBar:GetValue()
-      _, hpm = GameTooltipStatusBar:GetMinMaxValues()
+      local hp = GameTooltipStatusBar:GetValue()
+      local _, hpm = GameTooltipStatusBar:GetMinMaxValues()
 
       if hp and hpm then
         if hp >= 1000 then hp = round(hp / 1000, 1) .. "k" end
