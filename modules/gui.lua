@@ -19,9 +19,9 @@ pfUI:RegisterModule("gui", function ()
     U = setmetatable({}, { __index = function(tab,key)
       local ufunc
       if pfUI[key] and pfUI[key].UpdateConfig then
-        ufunc = pfUI[key].UpdateConfig
+        ufunc = function() return pfUI[key]:UpdateConfig() end
       elseif pfUI.uf and pfUI.uf[key] and pfUI.uf[key].UpdateConfig then
-        ufunc = pfUI.uf[key].UpdateConfig
+        ufunc = function() return pfUI.uf[key]:UpdateConfig() end
       end
       if ufunc then
         rawset(tab,key,ufunc)
