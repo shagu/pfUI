@@ -2,9 +2,13 @@ pfUI:RegisterSkin("Tooltips", function ()
   local border = tonumber(C.appearance.border.default)
   local alpha = tonumber(C.tooltip.alpha)
 
-  for _, tooltip in pairs({GameTooltip, ItemRefTooltip, ShoppingTooltip1, ShoppingTooltip2, WorldMapTooltip}) do
+  for _, tooltip in pairs({GameTooltip, ItemRefTooltip, ShoppingTooltip1, ShoppingTooltip2}) do
     CreateBackdrop(tooltip, nil, nil, alpha)
   end
+
+  HookScript(WorldMapTooltip, "OnShow", function()
+    CreateBackdrop(WorldMapTooltip, nil, nil, alpha)
+  end)
 
   SkinCloseButton(ItemRefCloseButton, ItemRefTooltip, -6, -6)
 
