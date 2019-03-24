@@ -41,6 +41,8 @@ pfUI:RegisterSkin("Profession", function ()
       local scrollframe = _G[name.."ListScrollFrame"]
       local close = _G[frame.."CloseButton"]
       local title = _G[frame.."TitleText"]
+      local points = _G[frame.."PointsText"]
+
       local frame = _G[frame]
 
       -- build remaining tradeskills
@@ -172,6 +174,11 @@ pfUI:RegisterSkin("Profession", function ()
 
           title:SetParent(item.backdrop)
           title:SetDrawLayer("OVERLAY")
+        end
+
+        if points then
+          points:ClearAllPoints()
+          points:SetPoint("RIGHT", create, "LEFT", -20, 0)
         end
 
         StripTextures(icon)
