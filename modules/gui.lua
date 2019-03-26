@@ -1098,12 +1098,12 @@ pfUI:RegisterModule("gui", function ()
       this.versionc:SetWidth(200)
       this.versionc:SetJustifyH("LEFT")
       this.versionc:SetText(T["Version"] .. ":")
+
       this.version = this:CreateFontString("Status", "LOW", "GameFontWhite")
       this.version:SetFont(pfUI.font_default, C.global.font_size)
       this.version:SetPoint("TOPRIGHT", 375, -170)
       this.version:SetWidth(200)
       this.version:SetJustifyH("RIGHT")
-      this.version:SetText("3.20.0")
 
       this.update = this:CreateFontString("Status", "LOW", "GameFontWhite")
       this.update:SetFont(pfUI.font_default, C.global.font_size)
@@ -1112,30 +1112,18 @@ pfUI:RegisterModule("gui", function ()
       this.update:SetJustifyH("CENTER")
       this.update:SetTextColor(.2,1,.8)
 
-      local f = CreateFrame("Frame", nil, this)
-      f.text = this.update
-      f:SetScript("OnUpdate", function()
-        if ( this.tick or 0) > GetTime() then return else this.tick = GetTime() + 1 end
-
-        local localversion  = tonumber(pfUI.version.major*10000 + pfUI.version.minor*100 + pfUI.version.fix)
-        local remoteversion = tonumber(pfUI_init.updateavailable) or 0
-        if localversion < remoteversion then
-          this.text:SetText("|cffffffff[|r!|cffffffff] " .. T["A new version is available"])
-        end
-      end)
-
       this.screenc = this:CreateFontString("Status", "LOW", "GameFontWhite")
       this.screenc:SetFont(pfUI.font_default, C.global.font_size)
       this.screenc:SetPoint("TOPLEFT", 200, -200)
       this.screenc:SetWidth(200)
       this.screenc:SetJustifyH("LEFT")
       this.screenc:SetText(T["Resolution"] .. ":")
+
       this.screen = this:CreateFontString("Status", "LOW", "GameFontWhite")
       this.screen:SetFont(pfUI.font_default, C.global.font_size)
       this.screen:SetPoint("TOPRIGHT", 375, -200)
       this.screen:SetWidth(200)
       this.screen:SetJustifyH("RIGHT")
-      this.screen:SetText(GetCVar("gxResolution"))
 
       this.scalec = this:CreateFontString("Status", "LOW", "GameFontWhite")
       this.scalec:SetFont(pfUI.font_default, C.global.font_size)
@@ -1143,12 +1131,12 @@ pfUI:RegisterModule("gui", function ()
       this.scalec:SetWidth(200)
       this.scalec:SetJustifyH("LEFT")
       this.scalec:SetText(T["Scaling"] .. ":")
+
       this.scale = this:CreateFontString("Status", "LOW", "GameFontWhite")
       this.scale:SetFont(pfUI.font_default, C.global.font_size)
       this.scale:SetPoint("TOPRIGHT", 375, -220)
       this.scale:SetWidth(200)
       this.scale:SetJustifyH("RIGHT")
-      this.scale:SetText(round(UIParent:GetEffectiveScale(),2))
 
       this.clientc = this:CreateFontString("Status", "LOW", "GameFontWhite")
       this.clientc:SetFont(pfUI.font_default, C.global.font_size)
@@ -1156,12 +1144,12 @@ pfUI:RegisterModule("gui", function ()
       this.clientc:SetWidth(200)
       this.clientc:SetJustifyH("LEFT")
       this.clientc:SetText(T["Gameclient"] .. ":")
+
       this.client = this:CreateFontString("Status", "LOW", "GameFontWhite")
       this.client:SetFont(pfUI.font_default, C.global.font_size)
       this.client:SetPoint("TOPRIGHT", 375, -250)
       this.client:SetWidth(200)
       this.client:SetJustifyH("RIGHT")
-      this.client:SetText(GetBuildInfo() .. " (" .. GetLocale() .. ")")
 
       this.langc = this:CreateFontString("Status", "LOW", "GameFontWhite")
       this.langc:SetFont(pfUI.font_default, C.global.font_size)
@@ -1174,7 +1162,25 @@ pfUI:RegisterModule("gui", function ()
       this.lang:SetPoint("TOPRIGHT", 375, -270)
       this.lang:SetWidth(200)
       this.lang:SetJustifyH("RIGHT")
-      this.lang:SetText(lang)
+
+      -- info updater
+      local f = CreateFrame("Frame", nil, this)
+      f:SetScript("OnUpdate", function()
+        if ( this.tick or 0) > GetTime() then return else this.tick = GetTime() + 1 end
+
+        local parent = this:GetParent()
+        local localversion  = tonumber(pfUI.version.major*10000 + pfUI.version.minor*100 + pfUI.version.fix)
+        local remoteversion = tonumber(pfUI_init.updateavailable) or 0
+        if localversion < remoteversion then
+          parent.update:SetText("|cffffffff[|r!|cffffffff] " .. T["A new version is available"])
+        end
+
+        parent.version:SetText(pfUI.version.string)
+        parent.screen:SetText(GetCVar("gxResolution"))
+        parent.scale:SetText(round(UIParent:GetEffectiveScale(),2))
+        parent.client:SetText(GetBuildInfo() .. " (" .. GetLocale() .. ")")
+        parent.lang:SetText(lang)
+      end)
 
       local discord = CreateFrame("Button", nil, this)
       discord:SetPoint("TOPLEFT", 150, -335)
