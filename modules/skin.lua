@@ -1,4 +1,22 @@
 pfUI:RegisterModule("skin", function ()
+  -- align UIParent panels
+  pfUI.panelalign = CreateFrame("Frame", "pfUIParentPanelAlign", UIParent)
+  pfUI.panelalign:SetScript("OnUpdate", function()
+    local left = UIParent.left
+    local center = UIParent.center
+
+    -- reset anchors
+    if not left or not left:IsShown() or not center or not center:IsShown() then
+      UIParent.pfLeftAligned = nil
+      return
+    elseif center and center:IsShown() and left and left:IsShown() then
+      local width = left.backdrop and left.backdrop:GetRight() or left:GetRight()
+      if width ~= UIParent.pfLeftAligned then
+        center:SetPoint("TOPLEFT", "UIParent", "TOPLEFT", width + 10, -104)
+        UIParent.pfLeftAligned = width
+      end
+    end
+  end)
 
   -- durability frame
   pfUI.durability = CreateFrame("Frame","pfDurability",UIParent)

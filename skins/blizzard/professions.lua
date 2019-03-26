@@ -18,7 +18,6 @@ pfUI:RegisterSkin("Profession", function ()
 
     HookAddonOrVariable(addon, function()
       _G[displayed] = 23
-      _G.UIPanelWindows[frame] = {area = "doublewide", pushable = 0, whileDead = 1}
 
       local SetSelection = frame.."_SetSelection"
       local icon = _G[template.."Icon"]
