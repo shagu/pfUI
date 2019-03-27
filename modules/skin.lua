@@ -5,12 +5,22 @@ pfUI:RegisterModule("skin", function ()
     local left = UIParent.left
     local center = UIParent.center
 
+    -- detect outer frame backdrops
+    if left and not left.rightObj then
+      left.rightObj = left.backdrop or left
+      for _, frame in pairs({left:GetChildren()}) do
+        if frame.backdrop and frame.backdrop.GetRight and frame.backdrop:GetRight() > left.rightObj:GetRight() then
+          left.rightObj = frame.backdrop
+        end
+      end
+    end
+
     -- reset anchors
     if not left or not left:IsShown() or not center or not center:IsShown() then
       UIParent.pfLeftAligned = nil
       return
     elseif center and center:IsShown() and left and left:IsShown() then
-      local width = left.backdrop and left.backdrop:GetRight() or left:GetRight()
+      local width = left.rightObj:GetRight()
       if width ~= UIParent.pfLeftAligned then
         center:SetPoint("TOPLEFT", "UIParent", "TOPLEFT", width + 10, -104)
         UIParent.pfLeftAligned = width
@@ -19,7 +29,7 @@ pfUI:RegisterModule("skin", function ()
   end)
 
   -- durability frame
-  pfUI.durability = CreateFrame("Frame","pfDurability",UIParent)
+  pfUI.durability = CreateFrame("Frame", "pfDurability", UIParent)
   if pfUI.minimap then
     pfUI.durability:SetPoint("TOPLEFT", pfUI.minimap, "BOTTOMLEFT", 0, -35)
   else
