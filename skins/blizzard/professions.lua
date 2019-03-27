@@ -41,6 +41,7 @@ pfUI:RegisterSkin("Profession", function ()
       local close = _G[frame.."CloseButton"]
       local title = _G[frame.."TitleText"]
       local points = _G[frame.."PointsText"]
+      local requiretext = _G[name .. "RequirementText"]
 
       local frame = _G[frame]
 
@@ -190,13 +191,15 @@ pfUI:RegisterSkin("Profession", function ()
 
         reagentlabel:ClearAllPoints()
         reagentlabel:SetTextColor(1,1,1,1)
-        reagentlabel:SetPoint("TOPLEFT", seltitle, "BOTTOMLEFT", -45, -15)
 
         local scanner = libtipscan:GetScanner(name)
         hooksecurefunc(SetSelection, function(id)
           if id and id ~= 0 then
             detailscroll:Show()
             HandleIcon(icon, icon:GetNormalTexture())
+
+            local off = requiretext and requiretext:GetHeight() or 1
+            reagentlabel:SetPoint("TOPLEFT", seltitle, "BOTTOMLEFT", -45, -15-off)
 
             if name == "TradeSkill" then
               local itemlink  = GetTradeSkillItemLink(id)
