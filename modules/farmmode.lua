@@ -85,6 +85,7 @@ pfUI:RegisterModule("farmmode", function ()
     if pfUI.minimap then
       this.mmoldsize = pfUI.minimap:GetHeight()
       pfUI.minimap:SetHeight(16)
+      pfUI.minimap:SetAlpha(1)
       pfUI.farmmap.button:Show()
     end
 
@@ -93,7 +94,7 @@ pfUI:RegisterModule("farmmode", function ()
   end)
 
   pfUI.farmmap:SetScript("OnHide", function()
-    Minimap:Show()
+    ShowUIPanel(Minimap)
 
     -- move existing nodes to new minimap
     MoveNodes(Minimap)
@@ -113,7 +114,8 @@ pfUI:RegisterModule("farmmode", function ()
 
     -- save old minimap height
     if pfUI.minimap then
-      pfUI.minimap:SetHeight(this.mmoldsize)
+      pfUI.minimap:SetHeight(140)
+      pfUI.minimap:SetAlpha(1)
       pfUI.farmmap.button:Hide()
     end
 

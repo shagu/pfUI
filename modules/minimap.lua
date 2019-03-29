@@ -1,4 +1,5 @@
 pfUI:RegisterModule("minimap", function ()
+  local border = tonumber(pfUI_config.appearance.border.default)
   MinimapToggleButton:Hide()
   MinimapBorderTop:Hide()
   MinimapZoneTextButton:Hide()
@@ -15,6 +16,9 @@ pfUI:RegisterModule("minimap", function ()
   pfUI.minimap:SetWidth(140)
   pfUI.minimap:SetHeight(140)
   pfUI.minimap:SetFrameStrata("BACKGROUND")
+  pfUI.minimap:SetScript("OnShow", function()
+    QueueFunction(ShowUIPanel, Minimap)
+  end)
 
   Minimap:SetParent(pfUI.minimap)
   Minimap:SetPoint("CENTER", pfUI.minimap, "CENTER", 0.5, -.5)
@@ -22,8 +26,24 @@ pfUI:RegisterModule("minimap", function ()
   Minimap:SetMaskTexture("Interface\\AddOns\\pfUI\\img\\minimap")
   Minimap:EnableMouseWheel(true)
   Minimap:SetScript("OnMouseWheel", function()
-      if(arg1 > 0) then Minimap_ZoomIn() else Minimap_ZoomOut() end
-    end)
+    if(arg1 > 0) then Minimap_ZoomIn() else Minimap_ZoomOut() end
+  end)
+
+  hooksecurefunc("ToggleMinimap", function()
+    if pfUI.farmmap and pfUI.farmmap:IsShown() then
+      Minimap:Hide()
+      return
+    end
+
+    if Minimap:IsVisible() then
+      pfUI.minimap:SetHeight(140)
+      pfUI.minimap:SetAlpha(1)
+    else
+      pfUI.minimap:SetHeight(-border-5)
+      pfUI.minimap:SetAlpha(0)
+      Minimap:Hide()
+    end
+  end, true)
 
   -- battleground icon
   MiniMapBattlefieldFrame:ClearAllPoints()
