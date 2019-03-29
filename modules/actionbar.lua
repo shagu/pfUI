@@ -831,8 +831,8 @@ pfUI:RegisterModule("actionbar", function ()
               -- create/reset bar1 backdrop if required
               CreateBackdrop(bars[1], border)
               bars[1].backdrop:ClearAllPoints()
-              bars[1].backdrop:SetPoint("BOTTOMRIGHT", bars[1], "BOTTOMRIGHT", border-1, -border+1)
-              bars[1].backdrop:SetPoint("TOPLEFT", bars[1], "TOPLEFT", -border+1, border-1)
+              bars[1].backdrop:SetPoint("BOTTOMRIGHT", bars[1], "BOTTOMRIGHT", bpad, -bpad)
+              bars[1].backdrop:SetPoint("TOPLEFT", bars[1], "TOPLEFT", -bpad, bpad)
             end
 
             if C.bars.bar6.background == "1" then
