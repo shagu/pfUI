@@ -809,7 +809,7 @@ end
 -- 'barsize'  integer number of buttons,
 -- 'formfactor'  string formfactor in cols x rows,
 -- 'visiblesize' integer buttons actually spawned
-function pfUI.api.BarLayoutSize(bar,barsize,formfactor,iconsize,bordersize,visiblesize)
+function pfUI.api.BarLayoutSize(bar,barsize,formfactor,iconsize,bordersize,padding)
   assert(barsize > 0 and barsize <= NUM_ACTIONBAR_BUTTONS,"BarLayoutSize: barsize "..tostring(barsize).." is invalid")
   local formfactor = pfUI.api.BarLayoutFormfactor(formfactor)
   local cols, rows = unpack(pfGridmath[barsize][formfactor])
@@ -817,8 +817,8 @@ function pfUI.api.BarLayoutSize(bar,barsize,formfactor,iconsize,bordersize,visib
     cols = math.min(cols,visiblesize)
     rows = math.min(math.ceil(visiblesize/cols),visiblesize)
   end
-  local width = (iconsize + bordersize*3) * cols - bordersize
-  local height = (iconsize + bordersize*3) * rows - bordersize
+  local width = (iconsize + bordersize*2+padding) * cols + padding
+  local height = (iconsize + bordersize*2+padding) * rows + padding
   bar._size = {width,height}
   return bar._size
 end
@@ -828,16 +828,16 @@ end
 -- 'basename'  name of button frame without index
 -- 'buttonindex'  index number of button on bar
 -- 'formfactor'  string formfactor in cols x rows
-function pfUI.api.BarButtonAnchor(button,basename,buttonindex,barsize,formfactor,iconsize,bordersize)
+function pfUI.api.BarButtonAnchor(button,basename,buttonindex,barsize,formfactor,iconsize,bordersize,padding)
   assert(barsize > 0 and barsize <= NUM_ACTIONBAR_BUTTONS,"BarButtonAnchor: barsize "..tostring(barsize).." is invalid")
   local formfactor = pfUI.api.BarLayoutFormfactor(formfactor)
   local parent = button:GetParent()
   local cols, rows = unpack(pfGridmath[barsize][formfactor])
   if buttonindex == 1 then
-    button._anchor = {"TOPLEFT", parent, "TOPLEFT", bordersize, -bordersize}
+    button._anchor = {"TOPLEFT", parent, "TOPLEFT", bordersize+padding, -bordersize-padding}
   else
     local col = buttonindex-((math.ceil(buttonindex/cols)-1)*cols)
-    button._anchor = col==1 and {"TOP",getglobal(basename..(buttonindex-cols)),"BOTTOM",0,-(bordersize*3)} or {"LEFT",getglobal(basename..(buttonindex-1)),"RIGHT",(bordersize*3),0}
+    button._anchor = col==1 and {"TOP",getglobal(basename..(buttonindex-cols)),"BOTTOM",0,-(bordersize*2+padding)} or {"LEFT",getglobal(basename..(buttonindex-1)),"RIGHT",(bordersize*2+padding),0}
   end
   return button._anchor
 end
@@ -947,7 +947,7 @@ end
 -- 'scantype'   [string]       scanning Region or Children
 -- 'objtype'    [string]
 -- 'layer'      [string]
--- 'arg1'       [string]       
+-- 'arg1'       [string]
 -- return object
 
 -- NOTE: special symbols must be escaped by the SAME symbol!

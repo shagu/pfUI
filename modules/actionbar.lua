@@ -6,6 +6,12 @@ pfUI:RegisterModule("actionbar", function ()
   local backdrop_highlight = { edgeFile = "Interface\\AddOns\\pfUI\\img\\glow", edgeSize = 8 }
   local showgrid = 0
 
+  local border = tonumber(C.appearance.border.default)
+  if C.appearance.border.actionbars ~= "-1" then
+    border = tonumber(C.appearance.border.actionbars)
+  end
+  local bpad = border > 1 and border - 1 or 1
+
   -- hide blizzard bars
   local function kill(f, killshow)
     if f.Show and killshow then f.Show = function() return end end
@@ -203,7 +209,7 @@ pfUI:RegisterModule("actionbar", function ()
         self.backdrop:SetBackdropBorderColor(cr,cg,cb,1)
         self.active:Show()
       else
-        CreateBackdrop(self)
+        CreateBackdrop(self, border)
         self.active:Hide()
       end
       return
@@ -314,7 +320,7 @@ pfUI:RegisterModule("actionbar", function ()
       self.backdrop:SetBackdropBorderColor(cr,cg,cb,1)
       self.active:Show()
     else
-      CreateBackdrop(self)
+      CreateBackdrop(self, border)
       self.active:Hide()
     end
 
@@ -632,7 +638,7 @@ pfUI:RegisterModule("actionbar", function ()
     f.showempty = showempty == "1" and true or nil
     f:SetHeight(size)
     f:SetWidth(size)
-    CreateBackdrop(f)
+    CreateBackdrop(f, border)
 
     return f
   end
@@ -642,6 +648,7 @@ pfUI:RegisterModule("actionbar", function ()
     local buttonbasename = "pfActionBar" .. barnames[i] .. "Button"
     local enable = C.bars["bar"..i].enable
     local size = C.bars["bar"..i].icon_size
+    local spacing = C.bars["bar"..i].spacing
     local background = C.bars["bar"..i].background
     local formfactor = C.bars["bar"..i].formfactor
     local autohide = C.bars["bar"..i].autohide
@@ -668,11 +675,6 @@ pfUI:RegisterModule("actionbar", function ()
     if not pfGridmath[buttons][BarLayoutFormfactor(formfactor)] then
       formfactor = BarLayoutOptions(buttons)[1]
       C.bars["bar"..i].formfactor = formfactor
-    end
-
-    local border = C.appearance.border.default
-    if C.appearance.border.actionbars ~= "-1" then
-      border = C.appearance.border.actionbars
     end
 
     local font = pfUI.font_unit
@@ -759,7 +761,7 @@ pfUI:RegisterModule("actionbar", function ()
       bars[i][j] = CreateActionButton(bars[i], i, j)
       bars[i][j].bar = i
 
-      BarButtonAnchor(bars[i][j], buttonbasename, j, buttons, formfactor, size, border)
+      BarButtonAnchor(bars[i][j], buttonbasename, j, buttons, formfactor, size, border, spacing)
       bars[i][j]:ClearAllPoints()
       bars[i][j]:SetPoint(unpack(bars[i][j]._anchor))
       bars[i][j]:Show()
@@ -779,7 +781,7 @@ pfUI:RegisterModule("actionbar", function ()
     end
 
     -- adjust actionbar size
-    BarLayoutSize(bars[i], buttons, formfactor, size, border)
+    BarLayoutSize(bars[i], buttons, formfactor, size, border, spacing)
     bars[i]:SetWidth(bars[i]._size[1])
     bars[i]:SetHeight(bars[i]._size[2])
     bars[i]:ClearAllPoints()
@@ -792,7 +794,7 @@ pfUI:RegisterModule("actionbar", function ()
     elseif i == 5 then -- right
       bars[i]:SetPoint("BOTTOMRIGHT", bars[1], "BOTTOMLEFT", -3*border, 0)
     elseif i == 6 then -- top
-      bars[i]:SetPoint("BOTTOM", bars[1], "TOP", 0, border)
+      bars[i]:SetPoint("BOTTOM", bars[1], "TOP", 0, -1)
     elseif i == 11 then -- stances
       bars[i]:SetPoint("BOTTOM", bars[6], "TOP", 0, 3*border)
     elseif i == 12 then -- pet
@@ -805,7 +807,7 @@ pfUI:RegisterModule("actionbar", function ()
 
     -- apply backdrop settings
     if background == "1" then
-      CreateBackdrop(bars[i])
+      CreateBackdrop(bars[i], border)
       bars[i].backdrop:Show()
 
       -- share backdrop of main and top actionbar
@@ -816,17 +818,18 @@ pfUI:RegisterModule("actionbar", function ()
             and C.bars.bar1.background == "1" and C.bars.bar6.background == "1"
             and C.bars.bar1.autohide == "0" and C.bars.bar6.autohide == "0"
             and C.bars.bar1.icon_size == C.bars.bar6.icon_size
+            and C.bars.bar1.spacing == C.bars.bar6.spacing
             and C.bars.bar1.formfactor == C.bars.bar6.formfactor
             and C.bars.bar1.buttons == C.bars.bar6.buttons
           then
             bars[1].backdrop:ClearAllPoints()
-            bars[1].backdrop:SetPoint("BOTTOMRIGHT", bars[1], "BOTTOMRIGHT", border-1, -border+1)
+            bars[1].backdrop:SetPoint("BOTTOMRIGHT", bars[1], "BOTTOMRIGHT", bpad, -bpad)
             bars[1].backdrop:SetPoint("TOPLEFT", bars[6].backdrop, "TOPLEFT", 0, 0)
             bars[6].backdrop:Hide()
           else
             if C.bars.bar1.background == "1" then
               -- create/reset bar1 backdrop if required
-              CreateBackdrop(bars[1])
+              CreateBackdrop(bars[1], border)
               bars[1].backdrop:ClearAllPoints()
               bars[1].backdrop:SetPoint("BOTTOMRIGHT", bars[1], "BOTTOMRIGHT", border-1, -border+1)
               bars[1].backdrop:SetPoint("TOPLEFT", bars[1], "TOPLEFT", -border+1, border-1)
