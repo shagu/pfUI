@@ -798,7 +798,7 @@ pfUI:RegisterModule("thirdparty", function ()
     UpdateMovable(DruidManaBar)
   end)
 
-  HookAddonOrVariable("HealComm", function()
+  local EnableHealComm = function()
     -- hook healcomm's addon message to parse single-player events
     if AceLibrary and AceLibrary:HasInstance("HealComm-1.0") and pfUI.prediction then
       local HealComm = AceLibrary("HealComm-1.0")
@@ -816,7 +816,10 @@ pfUI:RegisterModule("thirdparty", function ()
       pfUI.prediction.sender:UnregisterAllEvents()
       pfUI.prediction.sender.enabled = nil
     end
-  end)
+  end
+
+  HookAddonOrVariable("HealComm", EnableHealComm)
+  HookAddonOrVariable("LunaUnitFrames", EnableHealComm)
 
   HookAddonOrVariable("NoteIt", function()
     if C.thirdparty.noteit.enable == "0" then return end
