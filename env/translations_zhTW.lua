@@ -489,6 +489,7 @@ pfUI_translation["zhTW"] = {
   ["Sort Order"] = "整理循序",
   ["Soulshard Counter"] = "靈魂碎片",
   ["Soulshards"] = "靈魂碎片",
+  ["Spacing"] = nil,
   ["Special Recipient"] = "特殊指定角色",
   ["Square"] = "方形",
   ["Stance Bar 1"] = nil,

@@ -489,6 +489,7 @@ pfUI_translation["esES"] = {
   ["Sort Order"] = "Orden de clasificación",
   ["Soulshard Counter"] = "Contador de fragmentos de alma",
   ["Soulshards"] = "Fragmentos de alma",
+  ["Spacing"] = nil,
   ["Special Recipient"] = "Destinatario especial",
   ["Square"] = "Cuadrado",
   ["Stance Bar 1"] = nil,

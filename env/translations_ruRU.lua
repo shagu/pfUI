@@ -489,6 +489,7 @@ pfUI_translation["ruRU"] = {
   ["Sort Order"] = "Порядок сортировки",
   ["Soulshard Counter"] = "Счетчик камней душ",
   ["Soulshards"] = "Камни душ",
+  ["Spacing"] = nil,
   ["Special Recipient"] = "Конкретный получатель",
   ["Square"] = "Квадрат",
   ["Stance Bar 1"] = nil,

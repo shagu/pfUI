@@ -489,6 +489,7 @@ pfUI_translation["koKR"] = {
   ["Sort Order"] = nil,
   ["Soulshard Counter"] = "영혼조각 갯수",
   ["Soulshards"] = "영혼의 조각",
+  ["Spacing"] = nil,
   ["Special Recipient"] = nil,
   ["Square"] = nil,
   ["Stance Bar 1"] = nil,

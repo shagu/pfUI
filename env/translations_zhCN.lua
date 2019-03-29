@@ -489,6 +489,7 @@ pfUI_translation["zhCN"] = {
   ["Sort Order"] = "整理顺序",
   ["Soulshard Counter"] = "灵魂碎片",
   ["Soulshards"] = "灵魂碎片",
+  ["Spacing"] = nil,
   ["Special Recipient"] = "特殊指定角色",
   ["Square"] = "方块",
   ["Stance Bar 1"] = nil,

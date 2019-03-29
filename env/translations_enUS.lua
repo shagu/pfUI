@@ -489,6 +489,7 @@ pfUI_translation["enUS"] = {
   ["Sort Order"] = nil,
   ["Soulshard Counter"] = nil,
   ["Soulshards"] = nil,
+  ["Spacing"] = nil,
   ["Special Recipient"] = nil,
   ["Square"] = nil,
   ["Stance Bar 1"] = nil,
