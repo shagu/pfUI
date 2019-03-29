@@ -463,6 +463,24 @@ pfUI:RegisterModule("gui", function ()
       return frame
     end
 
+    local TabFrameOnMouseDown = function()
+      pfUI.gui.search:ClearFocus()
+    end
+
+    local TabFrameOnClick = function()
+      if this.area:IsShown() then
+        return
+      else
+        -- hide all others
+        for id, name in pairs(this.parent) do
+          if type(name) == "table" and name.area and id ~= "parent" then
+            name.area:Hide()
+          end
+        end
+        this.area:Show()
+      end
+    end
+
     local width, height = 130, 20
     function CreateTabFrame(parent, title)
       if not parent.area.count then parent.area.count = 0 end
@@ -472,19 +490,8 @@ pfUI:RegisterModule("gui", function ()
       f:SetPoint("BOTTOMRIGHT", parent.area, "TOPLEFT", width, -(parent.area.count+1)*height)
       f.parent = parent
 
-      f:SetScript("OnClick", function()
-        if this.area:IsShown() then
-          return
-        else
-          -- hide all others
-          for id, name in pairs(f.parent) do
-            if type(name) == "table" and name.area and id ~= "parent" then
-              name.area:Hide()
-            end
-          end
-          this.area:Show()
-        end
-      end)
+      f:SetScript("OnMouseDown", TabFrameOnMouseDown)
+      f:SetScript("OnClick", TabFrameOnClick)
 
       -- background
       f.bg = f:CreateTexture(nil, "BACKGROUND")
@@ -707,6 +714,9 @@ pfUI:RegisterModule("gui", function ()
 
     -- searchbar
     local function SearchEntryClick()
+      -- clear search focus
+      pfUI.gui.search:ClearFocus()
+
       -- open submenus
       for i=table.getn(this.obj),1,-1 do
         this.obj[i]:Click()
