@@ -786,7 +786,7 @@ end
 -- [ Bar Layout Formfactor ] --
 -- 'option'  string option as used in pfUI_config.bars[bar].option
 -- returns:  integer formfactor
-local formfactors = {} -- we'll use memoization so we only compute once, then lookup.
+local formfactors = {}
 setmetatable(formfactors, {__mode = "v"}) -- weak table so values not referenced are collected on next gc
 function pfUI.api.BarLayoutFormfactor(option)
   if formfactors[option] then
@@ -805,18 +805,14 @@ function pfUI.api.BarLayoutFormfactor(option)
 end
 
 -- [ Bar Layout Size ] --
--- 'bar'  frame reference,
--- 'barsize'  integer number of buttons,
--- 'formfactor'  string formfactor in cols x rows,
--- 'visiblesize' integer buttons actually spawned
+-- 'bar'        frame reference,
+-- 'barsize'    integer number of buttons,
+-- 'formfactor' string formfactor in cols x rows,
+-- 'padding'    the spacing between buttons
 function pfUI.api.BarLayoutSize(bar,barsize,formfactor,iconsize,bordersize,padding)
   assert(barsize > 0 and barsize <= NUM_ACTIONBAR_BUTTONS,"BarLayoutSize: barsize "..tostring(barsize).." is invalid")
   local formfactor = pfUI.api.BarLayoutFormfactor(formfactor)
   local cols, rows = unpack(pfGridmath[barsize][formfactor])
-  if (visiblesize) and (visiblesize < barsize) then
-    cols = math.min(cols,visiblesize)
-    rows = math.min(math.ceil(visiblesize/cols),visiblesize)
-  end
   local width = (iconsize + bordersize*2+padding) * cols + padding
   local height = (iconsize + bordersize*2+padding) * rows + padding
   bar._size = {width,height}
@@ -824,10 +820,13 @@ function pfUI.api.BarLayoutSize(bar,barsize,formfactor,iconsize,bordersize,paddi
 end
 
 -- [ Bar Button Anchor ] --
--- 'button'  frame reference
--- 'basename'  name of button frame without index
+-- 'button'       frame reference
+-- 'basename'     name of button frame without index
 -- 'buttonindex'  index number of button on bar
--- 'formfactor'  string formfactor in cols x rows
+-- 'formfactor'   string formfactor in cols x rows
+-- 'iconsize'     size of the button
+-- 'bordersize'   default bordersize
+-- 'padding'      the spacing between buttons
 function pfUI.api.BarButtonAnchor(button,basename,buttonindex,barsize,formfactor,iconsize,bordersize,padding)
   assert(barsize > 0 and barsize <= NUM_ACTIONBAR_BUTTONS,"BarButtonAnchor: barsize "..tostring(barsize).." is invalid")
   local formfactor = pfUI.api.BarLayoutFormfactor(formfactor)
