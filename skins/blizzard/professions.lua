@@ -190,6 +190,7 @@ pfUI:RegisterSkin("Profession", function ()
         seltitle:SetTextColor(.8,.8,.8,1)
 
         reagentlabel:ClearAllPoints()
+        reagentlabel:SetPoint("TOPLEFT", seltitle, "BOTTOMLEFT", -45, -15)
         reagentlabel:SetTextColor(1,1,1,1)
 
         local scanner = libtipscan:GetScanner(name)
@@ -198,13 +199,13 @@ pfUI:RegisterSkin("Profession", function ()
             detailscroll:Show()
             HandleIcon(icon, icon:GetNormalTexture())
 
-            local off = requiretext and requiretext:GetHeight() or 1
-            reagentlabel:SetPoint("TOPLEFT", seltitle, "BOTTOMLEFT", -45, -15-off)
-
             if name == "TradeSkill" then
               local itemlink  = GetTradeSkillItemLink(id)
               if not itemlink then return end
               local _, _, link = string.find(itemlink, "(item:%d+:%d+:%d+:%d+)")
+
+              local off = requiretext and requiretext:GetHeight() or 1
+              reagentlabel:SetPoint("TOPLEFT", seltitle, "BOTTOMLEFT", -45, -15-off)
 
               if link then
                 scanner:SetHyperlink(link)
