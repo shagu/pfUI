@@ -47,7 +47,7 @@ pfUI:RegisterModule("nameplates", function ()
         if NAMEPLATE_OBJECTORDER[i] == "_" then
           frame.Show = function() return end
           frame:Hide()
-        else
+        elseif NAMEPLATE_OBJECTORDER[i] then
           this[NAMEPLATE_OBJECTORDER[i]] = frame
         end
       end
