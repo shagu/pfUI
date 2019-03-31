@@ -10,7 +10,7 @@ pfUI:RegisterSkin("Tooltips", function ()
     CreateBackdrop(WorldMapTooltip, nil, nil, alpha)
   end)
 
-  SkinCloseButton(ItemRefCloseButton, ItemRefTooltip, -6, -6)
+  SkinCloseButton(ItemRefCloseButton, ItemRefTooltip.backdrop, -6, -6)
 
   for _, tooltip in pairs({ShoppingTooltip1, ShoppingTooltip2}) do
     tooltip:SetClampedToScreen(true)
