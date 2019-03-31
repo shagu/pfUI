@@ -6,7 +6,7 @@ pfUI:RegisterModule("bags", function ()
 
   local knownInventorySpellTextures = {
     Spell_Holy_RemoveCurse = {frame="disenchant"},
-    Spell_Nature_MoonKey = {frame="picklock"},    
+    Spell_Nature_MoonKey = {frame="picklock"},
   }
   local scanner = libtipscan:GetScanner("openable")
   local openable = {}
@@ -315,7 +315,7 @@ pfUI:RegisterModule("bags", function ()
       openable.bag = nil
       openable.slot = nil
       openable.name = nil
-    end    
+    end
     if hasItem then
       scanner:SetBagItem(bag, slot)
       if scanner:Find(_G.ITEM_OPENABLE, true) then
@@ -674,8 +674,8 @@ pfUI:RegisterModule("bags", function ()
           frame.open.texture:SetVertexColor(1,1,.25,1)
           GameTooltip:SetOwner(this, "ANCHOR_RIGHT")
           if openable.bag and openable.slot then
-            --GameTooltip:SetBagItem(openable.bag, openable.slot) -- alternative for full container tooltip
-            GameTooltip:SetText(openable.name)
+            -- GameTooltip:SetText(openable.name) -- title only
+            GameTooltip:SetBagItem(openable.bag, openable.slot)
           else
             GameTooltip:SetText(_G.EMPTY)
           end
@@ -698,6 +698,15 @@ pfUI:RegisterModule("bags", function ()
             end
             UseContainerItem(openable.bag, openable.slot)
           end
+
+          -- update tooltip
+          if openable.bag and openable.slot then
+            -- GameTooltip:SetText(openable.name) -- title only
+            GameTooltip:SetBagItem(openable.bag, openable.slot)
+          else
+            GameTooltip:SetText(_G.EMPTY)
+          end
+          GameTooltip:Show()
         end)
       end
 
@@ -770,7 +779,7 @@ pfUI:RegisterModule("bags", function ()
             GameTooltip:SetOwner(this, "ANCHOR_RIGHT")
             GameTooltip:SetText(name)
             GameTooltip:Show()
-          end          
+          end
         end)
 
         frame.picklock:SetScript("OnLeave", function ()
@@ -778,7 +787,7 @@ pfUI:RegisterModule("bags", function ()
           frame.picklock.texture:SetVertexColor(.25,.25,.25,1)
           if GameTooltip:IsOwned(this) then
             GameTooltip:Hide()
-          end          
+          end
         end)
 
         frame.picklock:SetScript("OnClick", function()
@@ -818,7 +827,7 @@ pfUI:RegisterModule("bags", function ()
           frame.keys.texture:SetVertexColor(.25,.25,.25,1)
           if GameTooltip:IsOwned(this) then
             GameTooltip:Hide()
-          end           
+          end
         end)
 
         frame.keys:SetScript("OnClick", function()
@@ -940,7 +949,7 @@ pfUI:RegisterModule("bags", function ()
           frame.bags.texture:SetVertexColor(1,1,.25,1)
           GameTooltip:SetOwner(this, "ANCHOR_RIGHT")
           GameTooltip:SetText(_G.TUTORIAL_TITLE10)
-          GameTooltip:Show()          
+          GameTooltip:Show()
         end)
 
         frame.bags:SetScript("OnLeave", function ()
@@ -948,7 +957,7 @@ pfUI:RegisterModule("bags", function ()
           frame.bags.texture:SetVertexColor(.25,.25,.25,1)
           if GameTooltip:IsOwned(this) then
             GameTooltip:Hide()
-          end          
+          end
         end)
 
         frame.bags:SetScript("OnClick", function()
