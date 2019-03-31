@@ -1385,7 +1385,7 @@ pfUI:RegisterModule("gui", function ()
     end)
 
     CreateGUIEntry(T["Settings"], T["Screenshot"], function()
-      CreateConfig(nil, T["Timer In Minuntes"], C.screenshot, "interval")
+      CreateConfig(nil, T["Timer In Minutes"], C.screenshot, "interval")
       CreateConfig(nil, T["Level Up"], C.screenshot, "levelup", "checkbox")
       CreateConfig(nil, T["PvP Rank"], C.screenshot, "pvprank", "checkbox")
       CreateConfig(nil, T["Reputation Level"], C.screenshot, "faction", "checkbox")
