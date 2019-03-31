@@ -6,7 +6,7 @@ pfUI:RegisterModule("screenshot", function ()
     and C.screenshot.battleground == "0"
     and C.screenshot.hk == "0"
     and C.screenshot.loot == "0" then
-    return 
+    return
   end
   local LOOT_ITEM_SELF_MULTIPLEregex = string.gsub(_G.LOOT_ITEM_SELF_MULTIPLE,"%%sx%%d", "(.+)x(%%d+)")
   local LOOT_ITEM_SELFregex = string.gsub(_G.LOOT_ITEM_SELF,"%%s", "(.+)")
@@ -21,18 +21,16 @@ pfUI:RegisterModule("screenshot", function ()
   pfUI.screenshot.caption:SetWidth(400)
   pfUI.screenshot.caption:SetHeight(200)
   pfUI.screenshot.caption.text = pfUI.screenshot.caption:CreateFontString("Label", "OVERLAY")
-  pfUI.screenshot.caption.text:SetFont("Interface\\AddOns\\pfUI\\fonts\\BigNoodleTitling.ttf", 32, "THICKOUTLINE")
-  pfUI.screenshot.caption.text:SetShadowColor(0,0,0)
-  pfUI.screenshot.caption.text:SetShadowOffset(2,1)
+  pfUI.screenshot.caption.text:SetFont(C.screenshot.caption_font, C.screenshot.caption_size, "THICKOUTLINE")
   pfUI.screenshot.caption.text:SetAllPoints(pfUI.screenshot.caption)
   pfUI.screenshot.caption.text:SetJustifyH("CENTER")
   pfUI.screenshot.caption.text:SetJustifyV("TOP")
 
   function pfUI.screenshot.OnEvent()
     return this[event]~=nil and this[event](this,event,arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8,arg9,arg10,arg11)
-  end  
+  end
   pfUI.screenshot:SetScript("OnEvent", pfUI.screenshot.OnEvent)
-  
+
   if tonumber(C.screenshot.interval) > 0 then
     pfUI.screenshot._elapsed = 0
     pfUI.screenshot._interval = tonumber(C.screenshot.interval)*60
@@ -104,7 +102,7 @@ pfUI:RegisterModule("screenshot", function ()
   function pfUI.screenshot:PLAYER_LEVEL_UP()
     local dt = date("%a, %b %d, %Y %X")
     local loc = string.format("%s - %s",GetRealZoneText(),GetSubZoneText())
-    local name = string.format("%s : Level %d!",UnitName("player"),arg1)
+    local name = string.format("%s : %s %d!",UnitName("player"), LEVEL, arg1)
     self:CustomScreenshot("levelup", dt, loc, name)
   end
 
@@ -114,7 +112,7 @@ pfUI:RegisterModule("screenshot", function ()
       self._lastRank = rankNumber
       local dt = date("%a, %b %d, %Y %X")
       local loc = string.format("%s - %s",GetRealZoneText(),GetSubZoneText())
-      local name = string.format("%s : Rank %s!",UnitName("player"),rankName or _G.NONE)
+      local name = string.format("%s : %s %s!",UnitName("player"),RANK, rankName or _G.NONE)
       self:CustomScreenshot("pvprank", dt, loc, name)
     end
   end
@@ -132,7 +130,7 @@ pfUI:RegisterModule("screenshot", function ()
     local factioncode = UnitFactionGroup("player") == "Alliance" and 1 or 0
     if GetBattlefieldInstanceExpiration() > 0 then
       local won = GetBattlefieldWinner() and GetBattlefieldWinner() == factioncode
-      if C.screenshot.battleground == "2" 
+      if C.screenshot.battleground == "2"
         or (C.screenshot.battleground == "1" and won) then
         local dt = date("%a, %b %d, %Y %X")
         local loc = string.format("%s - %s",GetRealZoneText(),GetSubZoneText())
@@ -147,7 +145,7 @@ pfUI:RegisterModule("screenshot", function ()
     if instancetype and instancetype == "pvp" then return end -- not if we're in a BG
     local dt = date("%a, %b %d, %Y %X")
     local loc = string.format("%s - %s",GetRealZoneText(),GetSubZoneText())
-    self:CustomScreenshot("hk", dt, loc, "Honorable Kill!")
+    self:CustomScreenshot("hk", dt, loc, T["Honorable Kill!"])
   end
 
   function pfUI.screenshot:CHAT_MSG_LOOT()
@@ -162,7 +160,7 @@ pfUI:RegisterModule("screenshot", function ()
         if quality and quality >= tonumber(C.screenshot.loot) then
           local dt = date("%a, %b %d, %Y %X")
           local loc = string.format("%s - %s",GetRealZoneText(),GetSubZoneText())
-          local name = string.format("You got %s!",item)
+          local name = string.format("%s %s!", T["You got"], item)
           self:CustomScreenshot("loot", dt, loc, name)
         end
       end

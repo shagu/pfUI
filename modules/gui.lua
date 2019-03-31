@@ -1078,7 +1078,7 @@ pfUI:RegisterModule("gui", function ()
     for i=3, 5 do
       local entry = string.format("%d:%s", i, string.format("%s%s%s", _G.ITEM_QUALITY_COLORS[i].hex, _G[string.format("ITEM_QUALITY%d_DESC",i)], FONT_COLOR_CODE_CLOSE))
         table.insert(pfUI.gui.dropdowns.screenshot_loot, entry)
-    end    
+    end
   end
 
   do -- Generate Config UI
@@ -1385,17 +1385,18 @@ pfUI:RegisterModule("gui", function ()
     end)
 
     CreateGUIEntry(T["Settings"], T["Screenshot"], function()
-      CreateConfig(nil, T["Trigger"], nil, nil, "header")
-      CreateConfig(nil, T["Timer (minutes, 0 to disable)"], C.screenshot, "interval")
+      CreateConfig(nil, T["Timer In Minuntes"], C.screenshot, "interval")
       CreateConfig(nil, T["Level Up"], C.screenshot, "levelup", "checkbox")
       CreateConfig(nil, T["PvP Rank"], C.screenshot, "pvprank", "checkbox")
       CreateConfig(nil, T["Reputation Level"], C.screenshot, "faction", "checkbox")
-      CreateConfig(nil, T["Battleground"], C.screenshot, "battleground", "dropdown", pfUI.gui.dropdowns.screenshot_battle)
       CreateConfig(nil, T["Honorable Kill"], C.screenshot, "hk", "checkbox")
-      CreateConfig(nil, T["Looted"], C.screenshot, "loot", "dropdown", pfUI.gui.dropdowns.screenshot_loot)
+      CreateConfig(nil, T["Battleground Statistics"], C.screenshot, "battleground", "dropdown", pfUI.gui.dropdowns.screenshot_battle)
+      CreateConfig(nil, T["Item Looted"], C.screenshot, "loot", "dropdown", pfUI.gui.dropdowns.screenshot_loot)
       CreateConfig(nil, T["Options"], nil, nil, "header")
-      CreateConfig(nil, T["Hide UI"], C.screenshot, "hideui", "checkbox")
-      CreateConfig(nil, T["Caption"], C.screenshot, "caption", "checkbox")
+      CreateConfig(nil, T["Show Description"], C.screenshot, "caption", "checkbox")
+      CreateConfig(nil, T["Description Font"], C.screenshot, "caption_font", "dropdown", pfUI.gui.dropdowns.fonts)
+      CreateConfig(nil, T["Description Font Size"], C.screenshot, "caption_size")
+      CreateConfig(nil, T["Hide All UI Elements"], C.screenshot, "hideui", "checkbox")
     end)
 
     CreateGUIEntry(T["Settings"], T["GM-Mode"], function()
