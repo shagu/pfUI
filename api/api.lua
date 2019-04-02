@@ -14,6 +14,7 @@ mod = math.mod or mod
 -- 'subject'    [string]        String to split.
 -- return:      [list]          a list of strings.
 function pfUI.api.strsplit(delimiter, subject)
+  if not subject then return nil end
   local delimiter, fields = delimiter or ":", {}
   local pattern = string.format("([^%s]+)", delimiter)
   string.gsub(subject, pattern, function(c) fields[table.getn(fields)+1] = c end)
