@@ -14,7 +14,7 @@ pfUI:RegisterSkin("Tooltips", function ()
 
   for _, tooltip in pairs({ShoppingTooltip1, ShoppingTooltip2}) do
     tooltip:SetClampedToScreen(true)
-    tooltip:SetScript("OnShow", function()
+    HookScript(tooltip, "OnShow", function()
       local a, b, c, x, y = this:GetPoint()
       if not x or x == 0 then x = (border*2) + ( x or 0 ) + 1 end
       if a then this:SetPoint(a, b, c, x, y) end
