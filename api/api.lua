@@ -168,20 +168,16 @@ local sanitize_cache = {}
 function pfUI.api.SanitizePattern(pattern, dbg)
   if not sanitize_cache[pattern] then
     local ret = pattern
-    -- escape brackets
-    ret = gsub(ret, "%((.+)%)", "%%(%1%%)")
+    -- escape magic characters
+    ret = gsub(ret, "([%+%-%*%(%)%?%[%]%^])", "%%%1")
     -- remove capture indexes
     ret = gsub(ret, "%d%$","")
-
     -- catch all characters
     ret = gsub(ret, "(%%%a)","%(%1+%)")
-
     -- convert all %s to .+
     ret = gsub(ret, "%%s%+",".+")
-
     -- set priority to numbers over strings
     ret = gsub(ret, "%(.%+%)%(%%d%+%)","%(.-%)%(%%d%+%)")
-
     -- cache it
     sanitize_cache[pattern] = ret
   end
