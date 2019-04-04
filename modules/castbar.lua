@@ -149,13 +149,21 @@ pfUI:RegisterModule("castbar", function ()
   if C.castbar.player.hide_pfui == "0" then
     pfUI.castbar.player = CreateCastbar("pfPlayerCastbar", UIParent, "player")
 
+    local width = C.castbar.player.width ~= "0" and C.castbar.player.width
+
     if pfUI.uf.player then
       local pspace = tonumber(C.unitframes.player.pspace)
+      local width = C.castbar.player.width ~= "-1" and C.castbar.player.width or pfUI.uf.player:GetWidth()
       pfUI.castbar.player:SetPoint("TOPLEFT", pfUI.uf.player, "BOTTOMLEFT", 0, -default_border * 2 - pspace)
-      pfUI.castbar.player:SetWidth(pfUI.uf.player:GetWidth())
+      pfUI.castbar.player:SetWidth(width)
     else
+      local width = C.castbar.player.width ~= "-1" and C.castbar.player.width or 200
       pfUI.castbar.player:SetPoint("CENTER", 0, -200)
-      pfUI.castbar.player:SetWidth(200)
+      pfUI.castbar.player:SetWidth(width)
+    end
+
+    if C.castbar.player.height ~= "-1" then
+      pfUI.castbar.player:SetHeight(C.castbar.player.height)
     end
 
     UpdateMovable(pfUI.castbar.player)
@@ -167,11 +175,17 @@ pfUI:RegisterModule("castbar", function ()
 
     if pfUI.uf.target then
       local pspace = tonumber(C.unitframes.target.pspace)
+      local width = C.castbar.target.width ~= "-1" and C.castbar.target.width or pfUI.uf.target:GetWidth()
       pfUI.castbar.target:SetPoint("TOPLEFT", pfUI.uf.target, "BOTTOMLEFT", 0, -default_border * 2 - pspace)
-      pfUI.castbar.target:SetWidth(pfUI.uf.target:GetWidth())
+      pfUI.castbar.target:SetWidth(width)
     else
+      local width = C.castbar.target.width ~= "-1" and C.castbar.target.width or 200
       pfUI.castbar.target:SetPoint("CENTER", 0, -225)
-      pfUI.castbar.target:SetWidth(200)
+      pfUI.castbar.target:SetWidth(width)
+    end
+
+    if C.castbar.target.height ~= "-1" then
+      pfUI.castbar.target:SetHeight(C.castbar.target.height)
     end
 
     UpdateMovable(pfUI.castbar.target)

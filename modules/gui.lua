@@ -1759,8 +1759,16 @@ pfUI:RegisterModule("gui", function ()
       CreateConfig(nil, T["Casting Color"], C.appearance.castbar, "castbarcolor", "color")
       CreateConfig(nil, T["Channeling Color"], C.appearance.castbar, "channelcolor", "color")
       CreateConfig(nil, T["Disable Blizzard Castbar"], C.castbar.player, "hide_blizz", "checkbox")
-      CreateConfig(nil, T["Disable pfUI Player Castbar"], C.castbar.player, "hide_pfui", "checkbox")
-      CreateConfig(nil, T["Disable pfUI Target Castbar"], C.castbar.target, "hide_pfui", "checkbox")
+
+      CreateConfig(nil, T["Player Castbar"], nil, nil, "header")
+      CreateConfig(nil, T["Castbar Width"], C.castbar.player, "width")
+      CreateConfig(nil, T["Castbar Height"], C.castbar.player, "height")
+      CreateConfig(nil, T["Disable Player Castbar"], C.castbar.player, "hide_pfui", "checkbox")
+
+      CreateConfig(nil, T["Target Castbar"], nil, nil, "header")
+      CreateConfig(nil, T["Castbar Width"], C.castbar.target, "width")
+      CreateConfig(nil, T["Castbar Height"], C.castbar.target, "height")
+      CreateConfig(nil, T["Disable Target Castbar"], C.castbar.target, "hide_pfui", "checkbox")
     end)
 
     CreateGUIEntry(T["Chat"], nil, function()
