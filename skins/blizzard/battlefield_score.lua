@@ -10,11 +10,11 @@ pfUI:RegisterSkin("Battlefield Score", function ()
 
   SkinCloseButton(WorldStateScoreFrameCloseButton, WorldStateScoreFrame.backdrop, -6, -6)
 
-	WorldStateScoreFrameLabel:ClearAllPoints()
-	WorldStateScoreFrameLabel:SetPoint("TOP", WorldStateScoreFrame.backdrop, "TOP", 0, -10)
+  WorldStateScoreFrameLabel:ClearAllPoints()
+  WorldStateScoreFrameLabel:SetPoint("TOP", WorldStateScoreFrame.backdrop, "TOP", 0, -10)
 
   StripTextures(WorldStateScoreScrollFrame)
-	SkinScrollbar(WorldStateScoreScrollFrameScrollBar)
+  SkinScrollbar(WorldStateScoreScrollFrameScrollBar)
 
   WorldStateScoreFrameTab1:ClearAllPoints()
   WorldStateScoreFrameTab1:SetPoint("TOPLEFT", WorldStateScoreFrame.backdrop, "BOTTOMLEFT", bpad, -(border + (border == 1 and 1 or 2)))
@@ -24,9 +24,9 @@ pfUI:RegisterSkin("Battlefield Score", function ()
     if lastTab then
       tab:ClearAllPoints()
       tab:SetPoint("LEFT", lastTab, "RIGHT", border*2 + 1, 0)
-		end
+    end
     SkinTab(tab)
-	end
+  end
 
-	SkinButton(WorldStateScoreFrameLeaveButton)
+  SkinButton(WorldStateScoreFrameLeaveButton)
 end)

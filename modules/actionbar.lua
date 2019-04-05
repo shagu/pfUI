@@ -288,7 +288,7 @@ pfUI:RegisterModule("actionbar", function ()
     end
 
     -- don't go further on those events
-    if event == "ACTIONBAR_UPDATE_USABLE" or event == "UPDATE_INVENTORY_ALERTS"	then return end
+    if event == "ACTIONBAR_UPDATE_USABLE" or event == "UPDATE_INVENTORY_ALERTS" then return end
 
     -- icon
     if texture ~= self.texture then

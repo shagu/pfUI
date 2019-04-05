@@ -1875,7 +1875,7 @@ function pfUI.uf:GetStatusValue(unit, pos)
     local health = ceil(hp - hpmax)
     if UnitIsDead(unitstr) then
       return unit:GetColor("health") .. DEAD
-		elseif health == 0 then
+    elseif health == 0 then
       return unit:GetColor("health") .. "0"
     else
       return unit:GetColor("health") .. pfUI.api.Abbreviate(health)

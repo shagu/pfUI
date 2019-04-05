@@ -231,7 +231,7 @@ pfUI:RegisterModule("roll", function ()
       if not this:GetParent():GetParent().rollID then return end
       local left = GetLootRollTimeLeft(this:GetParent():GetParent().rollID)
       local min, max = this:GetMinMaxValues()
-      if left < min or left > max then left = min	end
+      if left < min or left > max then left = min end
       this:SetValue(left)
     end)
 
