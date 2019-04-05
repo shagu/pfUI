@@ -64,9 +64,10 @@ pfUI:RegisterSkin("Inspect", function ()
 
         local funce = frame:GetScript("OnEnter")
         frame:SetScript("OnEnter", function()
+          local bid = this:GetID()
           if not GetInventoryItemLink(InspectFrame.unit, this:GetID()) and this.hasItem then
             GameTooltip:SetOwner(this, "ANCHOR_TOPRIGHT")
-            GameTooltip:SetHyperlink("item:"..cache[this:GetID()]["id"])
+            GameTooltip:SetHyperlink("item:"..cache[bid]["id"])
             GameTooltip:Show()
           else
             funce()
@@ -137,19 +138,21 @@ pfUI:RegisterSkin("Inspect", function ()
       end
 
       hooksecurefunc("InspectPaperDollItemSlotButton_Update", function(button)
-        local link = GetInventoryItemLink(InspectFrame.unit, button:GetID())
+        local bid = button:GetID()
+        local link = GetInventoryItemLink(InspectFrame.unit, bid)
         if link then
           local _,_,itemID = string.find(link, 'item:(%d+)')
-          cache[button:GetID()] = {}
-          cache[button:GetID()]["id"] = itemID
-          cache[button:GetID()]["tex"] = GetInventoryItemTexture(InspectFrame.unit, button:GetID())
-          cache[button:GetID()]["count"] = GetInventoryItemCount(InspectFrame.unit, button:GetID())
-        elseif cache[button:GetID()] then
-					-- restore cache information
-					SetItemButtonTexture(button, cache[button:GetID()]["tex"])
-					SetItemButtonCount(button, cache[button:GetID()]["count"]);
-					button.hasItem = 1;
-				end
+          cache[bid] = cache[bid] or {}
+          cache[bid]["id"] = itemID
+          cache[bid]["tex"] = GetInventoryItemTexture(InspectFrame.unit, button:GetID())
+          cache[bid]["count"] = GetInventoryItemCount(InspectFrame.unit, button:GetID())
+          cache[bid]["name"] = UnitName(InspectFrame.unit)
+        elseif cache[bid] and UnitName(InspectFrame.unit) == cache[bid].name then
+          -- restore cache information
+          SetItemButtonTexture(button, cache[bid]["tex"])
+          SetItemButtonCount(button, cache[bid]["count"])
+          button.hasItem = 1
+        end
 
         UpdateSlots()
         QueueFunction(UpdateSlots)
