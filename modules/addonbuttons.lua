@@ -310,10 +310,17 @@ pfUI:RegisterModule("addonbuttons", function ()
     end
   end
 
-  local function ManualAddOrRemove(action)
-    local button = GetMouseFocus()
+  local function ManualAddOrRemove(msg)
+    local _, _, action, arg = string.find(msg, "%s?(%w+)%s?(.*)")
 
-    if action ~= "reset" and action ~= "add" and action ~= "del" then
+    local button
+    if arg and arg ~= "" then
+      button = getglobal(arg)
+    else
+      button = GetMouseFocus()
+    end
+
+    if action == "" or (action ~= "reset" and action ~= "add" and action ~= "del") then
       DEFAULT_CHAT_FRAME:AddMessage("|cff33ffccpf|rUI Addon Button Panel:")
       DEFAULT_CHAT_FRAME:AddMessage("|cff33ffcc/abp add|r - " .. T["Add button to the frame"])
       DEFAULT_CHAT_FRAME:AddMessage("|cff33ffcc/abp del|r - " .. T["Remove button from the frame"])
