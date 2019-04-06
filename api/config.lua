@@ -731,7 +731,7 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("bars",       nil,           "macro_color",      "1,1,1,1")
   pfUI:UpdateConfig("bars",       nil,           "count_size",       "11")
   pfUI:UpdateConfig("bars",       nil,           "count_color",      ".2,1,.8,1")
-  pfUI:UpdateConfig("bars",       nil,           "bind_size",        "9")
+  pfUI:UpdateConfig("bars",       nil,           "bind_size",        "8")
   pfUI:UpdateConfig("bars",       nil,           "bind_color",       "1,1,0,1")
 
   pfUI:UpdateConfig("panel",      nil,           "use_unitfonts",    "0")
