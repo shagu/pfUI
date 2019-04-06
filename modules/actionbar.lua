@@ -19,6 +19,20 @@ pfUI:RegisterModule("actionbar", function ()
     if f.Hide then f:Hide() end
   end
 
+  -- also abbreviate mouse buttons
+  local OrigGetBindingText = GetBindingText
+  local function GetBindingText(msg, mod, abbrev)
+    local txt = OrigGetBindingText(msg, mod, abbrev)
+    if abbrev then
+      txt = string.gsub(txt, _G[string.format("%s%s", mod, "BUTTON3")], "MB3")
+      txt = string.gsub(txt, _G[string.format("%s%s", mod, "BUTTON4")], "MB4")
+      txt = string.gsub(txt, _G[string.format("%s%s", mod, "BUTTON5")], "MB5")
+      txt = string.gsub(txt, _G[string.format("%s%s", mod, "MOUSEWHEELDOWN")], "MWD")
+      txt = string.gsub(txt, _G[string.format("%s%s", mod, "MOUSEWHEELUP")], "MWU")
+    end
+    return txt
+  end
+
   kill(MainMenuBar)
 
   local blizzard_elements = { MultiBarBottomLeft,
