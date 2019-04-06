@@ -1711,7 +1711,9 @@ pfUI:RegisterModule("gui", function ()
         if id ~= 11 and id ~= 12 then
           CreateConfig(U["bars"], T["Show Macro Text"], C.bars["bar"..id], "showmacro", "checkbox")
           CreateConfig(U["bars"], T["Show Item Count Text"], C.bars["bar"..id], "showcount", "checkbox")
-        elseif id ~= 11 then
+        end
+
+        if id ~= 11 then
           CreateConfig(U["bars"], T["Show Empty Buttons"], C.bars["bar"..id], "showempty", "checkbox")
         end
 
