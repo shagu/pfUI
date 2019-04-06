@@ -241,8 +241,10 @@ pfUI:RegisterModule("actionbar", function ()
 
     if not self.showempty and self.backdrop and not texture and showgrid == 0 then
       self.backdrop:Hide()
+      self.hide = true
     else
       self.backdrop:Show()
+      self.hide = nil
     end
 
     -- update cooldown
@@ -325,9 +327,9 @@ pfUI:RegisterModule("actionbar", function ()
     end
 
     -- keybinds
-    if self.bar == bar and self.bar ~= 11 and self.bar ~= 12 then
+    if not self.hide and self.bar == bar and self.bar ~= 11 and self.bar ~= 12 then
       self.keybind:SetText(GetBindingText(GetBindingKey("ACTIONBUTTON"..id), "KEY_", 1))
-    elseif buttontypes[self.bar] then
+    elseif not self.hide and buttontypes[self.bar] then
       self.keybind:SetText(GetBindingText(GetBindingKey(buttontypes[self.bar]..id), "KEY_", 1))
     else
       self.keybind:SetText("")
