@@ -87,7 +87,7 @@ pfUI:RegisterModule("gm", function ()
   -- table.insert(UnitPopupMenus["PET"], "GM_HEADER")
 
   hooksecurefunc("UnitPopup_OnClick", function()
-   local dropdownFrame = getglobal(UIDROPDOWNMENU_INIT_MENU)
+   local dropdownFrame = _G[UIDROPDOWNMENU_INIT_MENU]
    local button = this.value
    local unit = dropdownFrame.unit
    local name = dropdownFrame.name

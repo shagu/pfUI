@@ -833,7 +833,7 @@ function pfUI.api.BarButtonAnchor(button,basename,buttonindex,barsize,formfactor
     button._anchor = {"TOPLEFT", parent, "TOPLEFT", bordersize+padding, -bordersize-padding}
   else
     local col = buttonindex-((math.ceil(buttonindex/cols)-1)*cols)
-    button._anchor = col==1 and {"TOP",getglobal(basename..(buttonindex-cols)),"BOTTOM",0,-(bordersize*2+padding)} or {"LEFT",getglobal(basename..(buttonindex-1)),"RIGHT",(bordersize*2+padding),0}
+    button._anchor = col==1 and {"TOP",_G[basename..(buttonindex-cols)],"BOTTOM",0,-(bordersize*2+padding)} or {"LEFT",_G[basename..(buttonindex-1)],"RIGHT",(bordersize*2+padding),0}
   end
   return button._anchor
 end

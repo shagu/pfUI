@@ -272,7 +272,7 @@ end
 -- 'icon'              [texture]       the button icon that should be skinned.
 -- 'disableHighlight'  [bool]          disable mouseover highlight.
 function pfUI.api.SkinButton(button, cr, cg, cb, icon, disableHighlight)
-  local b = getglobal(button)
+  local b = _G[button]
   if not b then b = button end
   if not b then return end
   if not cr or not cg or not cb then
@@ -312,7 +312,7 @@ end
 -- Applies pfUI skin to collapse/expand buttons:
 -- 'button'   [frame/string]  the button that should be skinned.
 function pfUI.api.SkinCollapseButton(button, all)
-  local b = getglobal(button)
+  local b = _G[button]
   if not b then b = button end
   if not b then return end
 

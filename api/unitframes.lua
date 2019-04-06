@@ -1522,11 +1522,11 @@ function pfUI.uf:ClickAction(button)
     elseif label == "pet" then
       ToggleDropDownMenu(1, nil, PetFrameDropDown, "cursor")
     elseif label == "party" then
-      ToggleDropDownMenu(1, nil, getglobal("PartyMemberFrame" .. this.id .. "DropDown"), "cursor")
+      ToggleDropDownMenu(1, nil, _G["PartyMemberFrame" .. this.id .. "DropDown"], "cursor")
     elseif label == "raid" then
       local name = this.lastUnit
       FriendsDropDown.displayMode = "MENU"
-      FriendsDropDown.initialize = function() UnitPopup_ShowMenu(getglobal(UIDROPDOWNMENU_OPEN_MENU), "PARTY", unitstr, name, id) end
+      FriendsDropDown.initialize = function() UnitPopup_ShowMenu(_G[UIDROPDOWNMENU_OPEN_MENU], "PARTY", unitstr, name, id) end
       ToggleDropDownMenu(1, nil, FriendsDropDown, "cursor")
     end
   else

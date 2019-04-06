@@ -88,7 +88,7 @@ pfUI:RegisterModule("raid", function ()
   end
 
   hooksecurefunc("UnitPopup_OnClick", function()
-    local dropdownFrame = getglobal(UIDROPDOWNMENU_INIT_MENU)
+    local dropdownFrame = _G[UIDROPDOWNMENU_INIT_MENU]
     local button = this.value
     local unit = dropdownFrame.unit
     local name = dropdownFrame.name
