@@ -627,6 +627,7 @@ pfUI:RegisterModule("actionbar", function ()
     f.keybind:SetTextColor(unpack(bind_color))
     f.keybind:SetJustifyH("RIGHT")
     f.keybind:SetJustifyV("TOP")
+    f.keybind:SetNonSpaceWrap(false)
 
     -- item count options
     if showcount == "1" then f.count:Show() else f.count:Hide() end
