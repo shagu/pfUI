@@ -859,11 +859,23 @@ pfUI:RegisterModule("actionbar", function ()
   -- create actionbars
   pfUI.bars = bars
 
-  function pfUI.bars:UpdateConfig()
+  pfUI.bars.UpdateGrid = function(self, state)
+    showgrid = state
+    for j=1,12 do
+      for i=1,12 do
+        if pfUI.bars[i][j] then
+          pfUI.bars[i][j].forceupdate = true
+        end
+      end
+    end
+  end
+
+  pfUI.bars.UpdateConfig = function(self)
     for i=1,12 do
       CreateActionBar(i)
     end
   end
+
   pfUI.bars:UpdateConfig()
 
   -- helper function to update by slot

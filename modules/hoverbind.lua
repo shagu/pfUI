@@ -43,6 +43,7 @@ pfUI:RegisterModule("hoverbind", function ()
   end)
 
   pfUI.hoverbind:SetScript("OnShow", function()
+    if pfUI.bars then pfUI.bars:UpdateGrid(1) end
     pfUI.gui:Hide()
     pfUI.hoverbind.edit:Show()
 
@@ -51,6 +52,7 @@ pfUI:RegisterModule("hoverbind", function ()
   end)
 
   pfUI.hoverbind:SetScript("OnHide",function()
+    if pfUI.bars then pfUI.bars:UpdateGrid(0) end
     pfUI.hoverbind.edit:Hide()
     pfUI.gui:Show()
   end)
