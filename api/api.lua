@@ -380,15 +380,15 @@ end
 -- Add functions to a FIFO queue for execution after a short delay.
 -- '...'        [vararg]        function, [arguments]
 local timer
-function pfUI.api.QueueFunction(...)
-  if not (timer) then
-    timer = CreateFrame("frame")
+function pfUI.api.QueueFunction(a1,a2,a3,a4,a5,a6,a7,a8,a9)
+  if not timer then
+    timer = CreateFrame("Frame")
     timer.queue = {}
     timer.interval = TOOLTIP_UPDATE_TIME
     timer.DeQueue = function()
       local item = table.remove(timer.queue,1)
-      if (item) then
-        item[1](unpack(item[2]))
+      if item then
+        item[1](item[2],item[3],item[4],item[5],item[6],item[7],item[8],item[9])
       end
       if table.getn(timer.queue) == 0 then
         timer:Hide() -- no need to run the OnUpdate when the queue is empty
@@ -402,9 +402,7 @@ function pfUI.api.QueueFunction(...)
       end
     end)
   end
-  assert(type(arg[1])=="function","QueueFunction: arg1 is not a function")
-  local func = table.remove(arg, 1)
-  table.insert(timer.queue,{func,arg})
+  table.insert(timer.queue,{a1,a2,a3,a4,a5,a6,a7,a8,a9})
   timer:Show() -- start the OnUpdate
 end
 
