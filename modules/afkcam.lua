@@ -1,4 +1,4 @@
-pfUI:RegisterModule("afkcam", function ()
+pfUI:RegisterModule("afkcam", 20400, function ()
   local MARKED_AFK_CAPTURE = string.gsub(_G.MARKED_AFK_MESSAGE, "%%s", "(.+)")
   local social_chats = {
     "CHAT_MSG_SAY",

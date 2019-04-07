@@ -1,4 +1,4 @@
-pfUI:RegisterModule("castbar", function ()
+pfUI:RegisterModule("castbar", 20400, function ()
   local font = C.castbar.use_unitfonts == "1" and pfUI.font_unit or pfUI.font_default
   local font_size = C.castbar.use_unitfonts == "1" and C.global.font_unit_size or C.global.font_size
 

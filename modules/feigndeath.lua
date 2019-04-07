@@ -1,4 +1,4 @@
-pfUI:RegisterModule("feigndeath", function ()
+pfUI:RegisterModule("feigndeath", 20400, function ()
   local cache = { }
   local scanner = libtipscan:GetScanner("feigndeath")
   local healthbar = scanner:GetChildren()

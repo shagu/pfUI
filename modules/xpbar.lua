@@ -1,4 +1,4 @@
-pfUI:RegisterModule("xpbar", function ()
+pfUI:RegisterModule("xpbar", 20400, function ()
   pfUI.xp = CreateFrame("Frame",nil, UIParent)
   pfUI.xp:SetWidth(5)
   if pfUI.chat then

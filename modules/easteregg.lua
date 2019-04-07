@@ -1,4 +1,4 @@
-pfUI:RegisterModule("easteregg", function ()
+pfUI:RegisterModule("easteregg", 20400, function ()
   -- merry x-mas!
   if date("%m%d") == "1224" or date("%m%d") == "1225" then
     local title = (UnitFactionGroup("player") == "Horde") and PVP_RANK_18_0 or PVP_RANK_18_1

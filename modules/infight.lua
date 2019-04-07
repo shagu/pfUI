@@ -1,4 +1,4 @@
-pfUI:RegisterModule("infight", function ()
+pfUI:RegisterModule("infight", 20400, function ()
   local default_border = C.appearance.border.default
   if C.appearance.border.unitframes ~= "-1" then
     default_border = C.appearance.border.unitframes

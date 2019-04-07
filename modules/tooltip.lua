@@ -1,4 +1,4 @@
-pfUI:RegisterModule("tooltip", function ()
+pfUI:RegisterModule("tooltip", 20400, function ()
   if C.tooltip.position == "cursor" then
     function _G.GameTooltip_SetDefaultAnchor(tooltip, parent)
       tooltip:SetOwner(parent, "ANCHOR_CURSOR")

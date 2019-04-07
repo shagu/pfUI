@@ -1,4 +1,4 @@
-pfUI:RegisterSkin("Game Menu", function ()
+pfUI:RegisterSkin("Game Menu", 20400, function ()
   StripTextures(GameMenuFrame)
   CreateBackdrop(GameMenuFrame, nil, true, .75)
   GameMenuFrame:SetHeight(GameMenuFrame:GetHeight() + 2)

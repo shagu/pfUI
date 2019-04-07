@@ -1,4 +1,4 @@
-pfUI:RegisterModule("map", function ()
+pfUI:RegisterModule("map", 20400, function ()
 
   function _G.ToggleWorldMap()
     if WorldMapFrame:IsShown() then

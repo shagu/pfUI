@@ -1,4 +1,4 @@
-pfUI:RegisterModule("chatcopy", function ()
+pfUI:RegisterModule("chatcopy", 20400, function ()
   -- temporary till the new API is merged
   local function CreateScrollFrame(name, parent)
     local f = CreateFrame("ScrollFrame", name, parent)

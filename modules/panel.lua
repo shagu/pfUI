@@ -1,4 +1,4 @@
-pfUI:RegisterModule("panel", function()
+pfUI:RegisterModule("panel", 20400, function()
   -- initialize gold cache if not yet happened
   pfUI_cache["gold"] = pfUI_cache["gold"] or {}
 
