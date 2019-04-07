@@ -94,12 +94,19 @@ pfUI:RegisterModule("chat", function ()
   }
 
   -- url copy dialog
-  function pfUI.chat:FormatLink(formatter,...)
-    if not (formatter and arg[1]) then return end
-    local a1,a2,a3,a4,a5,a6,a7,a8,a9,a10 = arg[1],arg[2],arg[3],arg[4],arg[5],arg[6],arg[7],arg[8],arg[9],arg[10]
+  function pfUI.chat:FormatLink(formatter,a1,a2,a3,a4,a5,a6,a7,a8,a9,a10)
+    if not (formatter and a1) then return end
     local newtext = string.format(formatter,a1,a2,a3,a4,a5,a6,a7,a8,a9,a10)
+
     -- check the last capture index for consecutive trailing dots (invalid top level domain)
-    local invalidtld = string.find(arg[arg.n], "(%.%.)$")
+    local invalidtld
+    for _, arg in pairs({a10,a9,a8,a7,a6,a5,a4,a3,a2,a1}) do
+      if arg then
+        invalidtld = string.find(arg, "(%.%.)$")
+        break
+      end
+    end
+
     if (invalidtld) then return newtext end
     if formatter == self.URLPattern.EMAIL.fm then -- email parser
       local colon = string.find(a1,":")
