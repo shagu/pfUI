@@ -64,7 +64,7 @@ librange:RegisterEvent("PLAYER_ENTER_COMBAT")
 librange:RegisterEvent("PLAYER_LEAVE_COMBAT")
 librange:SetScript("OnEvent", function()
   -- disable range checking activities
-  if C.unitframes.rangecheck == "0" or not spells[class] then
+  if pfUI_config.unitframes.rangecheck == "0" or not spells[class] then
     this:Hide()
     return
   end
