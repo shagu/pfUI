@@ -136,14 +136,7 @@ pfUI:RegisterModule("unlock", function ()
   end
 
   local function SavePosition(frame)
-    local _, _, _, xpos, ypos = frame:GetPoint()
-    if not C.position[frame:GetName()] then
-      C.position[frame:GetName()] = {}
-    end
-
-    C.position[frame:GetName()]["xpos"] = round(xpos)
-    C.position[frame:GetName()]["ypos"] = round(ypos)
-
+    SaveMovable(frame)
     UpdateMovable(frame)
   end
 
@@ -343,8 +336,8 @@ pfUI:RegisterModule("unlock", function ()
     for id, frame in pairs(pfUI.unlock.selection) do
       CreateBackdrop(frame.drag, nil, nil, .8)
       if frame:GetName() ~= name then
-        local _, _, _, xpos, ypos = frame:GetPoint()
-        frame:SetPoint("TOPLEFT", xpos - diffxpos, ypos - diffypos)
+        local anchor, _, _, xpos, ypos = frame:GetPoint()
+        frame:SetPoint(anchor or "TOPLEFT", xpos - diffxpos, ypos - diffypos)
       end
       SavePosition(frame)
     end
@@ -589,8 +582,8 @@ pfUI:RegisterModule("unlock", function ()
   pfUI.unlock.dock.left.texture:SetPoint("BOTTOMRIGHT", pfUI.unlock.dock.left, "BOTTOMRIGHT", -4, 2)
   pfUI.unlock.dock.left:SetScript("OnClick", function()
     local frame = pfUI.unlock.dock.parent.frame
-    local _, _, _, xpos, ypos = frame:GetPoint()
-    frame:SetPoint("TOPLEFT", xpos - 1, ypos)
+    local anchor, _, _, xpos, ypos = frame:GetPoint()
+    frame:SetPoint(anchor or "TOPLEFT", xpos - 1, ypos)
     SavePosition(frame)
     UpdateDockValues()
   end)
@@ -608,8 +601,8 @@ pfUI:RegisterModule("unlock", function ()
   pfUI.unlock.dock.right.texture:SetPoint("BOTTOMRIGHT", pfUI.unlock.dock.right, "BOTTOMRIGHT", -4, 2)
   pfUI.unlock.dock.right:SetScript("OnClick", function()
     local frame = pfUI.unlock.dock.parent.frame
-    local _, _, _, xpos, ypos = frame:GetPoint()
-    frame:SetPoint("TOPLEFT", xpos + 1, ypos)
+    local anchor, _, _, xpos, ypos = frame:GetPoint()
+    frame:SetPoint(anchor or "TOPLEFT", xpos + 1, ypos)
     SavePosition(frame)
     UpdateDockValues()
   end)
@@ -627,8 +620,8 @@ pfUI:RegisterModule("unlock", function ()
   pfUI.unlock.dock.up.texture:SetPoint("BOTTOMRIGHT", pfUI.unlock.dock.up, "BOTTOMRIGHT", -4, 2)
   pfUI.unlock.dock.up:SetScript("OnClick", function()
     local frame = pfUI.unlock.dock.parent.frame
-    local _, _, _, xpos, ypos = frame:GetPoint()
-    frame:SetPoint("TOPLEFT", xpos, ypos + 1)
+    local anchor, _, _, xpos, ypos = frame:GetPoint()
+    frame:SetPoint(anchor or "TOPLEFT", xpos, ypos + 1)
     SavePosition(frame)
     UpdateDockValues()
   end)
@@ -646,8 +639,8 @@ pfUI:RegisterModule("unlock", function ()
   pfUI.unlock.dock.down.texture:SetPoint("BOTTOMRIGHT", pfUI.unlock.dock.down, "BOTTOMRIGHT", -4, 2)
   pfUI.unlock.dock.down:SetScript("OnClick", function()
     local frame = pfUI.unlock.dock.parent.frame
-    local _, _, _, xpos, ypos = frame:GetPoint()
-    frame:SetPoint("TOPLEFT", xpos, ypos - 1)
+    local anchor, _, _, xpos, ypos = frame:GetPoint()
+    frame:SetPoint(anchor or "TOPLEFT", xpos, ypos - 1)
     SavePosition(frame)
     UpdateDockValues()
   end)
