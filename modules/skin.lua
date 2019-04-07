@@ -63,18 +63,6 @@ pfUI:RegisterModule("skin", function ()
     "DropDownList2Backdrop",
   }
 
-  local pfUIButton = CreateFrame("Button", "GameMenuButtonPFUI", GameMenuFrame, "GameMenuButtonTemplate")
-  pfUIButton:SetPoint("TOP", 0, -10)
-  pfUIButton:SetText(T["|cff33ffccpf|cffffffffUI|cffcccccc Config"])
-  pfUIButton:SetScript("OnClick", function()
-    pfUI.gui:Show()
-    HideUIPanel(GameMenuFrame)
-  end)
-  SkinButton(pfUIButton)
-
-  local point, relativeTo, relativePoint, xOffset, yOffset = GameMenuButtonOptions:GetPoint()
-  GameMenuButtonOptions:SetPoint(point, relativeTo, relativePoint, xOffset, yOffset - 22)
-
   for _, box in pairs(boxes) do
     local b = _G[box]
     CreateBackdrop(b, nil, true, .8)
