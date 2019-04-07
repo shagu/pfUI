@@ -167,21 +167,29 @@ function pfUI:GetEnvironment()
   return pfUI.env
 end
 
-function pfUI:RegisterModule(n, f)
-  if pfUI.module[n] then return end
-  pfUI.module[n] = f
-  table.insert(pfUI.modules, n)
+function pfUI:RegisterModule(name, a2, a3)
+  local hasv = type(a2) == "number"
+  local func, version = hasv and a3 or a2, hasv and a2 or 11200
+  if pfUI.client > version then return end
+  if pfUI.module[name] then return end
+
+  pfUI.module[name] = func
+  table.insert(pfUI.modules, name)
   if not pfUI.bootup then
-    pfUI:LoadModule(n)
+    pfUI:LoadModule(name)
   end
 end
 
-function pfUI:RegisterSkin(n, f)
-  if pfUI.skin[n] then return end
-  pfUI.skin[n] = f
-  table.insert(pfUI.skins, n)
+function pfUI:RegisterSkin(name, a2, a3)
+  local hasv = type(a2) == "number"
+  local func, version = hasv and a3 or a2, hasv and a2 or 11200
+  if pfUI.client > version then return end
+  if pfUI.skin[name] then return end
+
+  pfUI.skin[name] = func
+  table.insert(pfUI.skins, name)
   if not pfUI.bootup then
-    pfUI:LoadSkin(n)
+    pfUI:LoadSkin(name)
   end
 end
 
