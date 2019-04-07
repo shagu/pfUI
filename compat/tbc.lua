@@ -12,9 +12,7 @@ pfUI.module.hdgraphic = true
 -- [[ Constants ]]--
 CASTBAR_EVENT_CAST_DELAY = "UNIT_SPELLCAST_DELAYED"
 CASTBAR_EVENT_CHANNEL_DELAY = "UNIT_SPELLCAST_CHANNEL_UPDATE"
-
-NAMEPLATE_OBJECTORDER = { "border", "glow", "_", "_", "name", "level",
-  "levelicon", "raidicon" }
+NAMEPLATE_OBJECTORDER = { "border", "_", "_", "glow", "name", "level", "levelicon", "raidicon" }
 
 NAMEPLATE_FRAMETYPE = "Frame"
 
