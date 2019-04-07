@@ -74,9 +74,9 @@ pfUI:RegisterModule("gui", function ()
 
       -- basic frame
       local frame = CreateFrame("Frame", nil, this)
+      frame:SetWidth(this.parent:GetRight()-this.parent:GetLeft()-20)
       frame:SetHeight(22)
-      frame:SetPoint("TOPLEFT", 5, (this.objectCount*-23)-5)
-      frame:SetWidth(this.parent:GetParent():GetWidth()/this.parent:GetEffectiveScale()-20)
+      frame:SetPoint("TOPLEFT", this, "TOPLEFT", 5, (this.objectCount*-23)-5)
 
       -- populate search index
       if caption and this and this.GetParent and widget ~= "button" and widget ~= "header" then
