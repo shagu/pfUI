@@ -30,7 +30,7 @@ pfUI:RegisterModule("easteregg", function ()
 
   -- happy new year
   if date("%m%d") == "1231" or date("%m%d") == "0101" then
-    local fireworks = CreateFrame("Button", "pfFireworks", UIParent)
+    local fireworks = CreateFrame("Button", "pfFireworks", WorldFrame)
     fireworks:SetFrameStrata("DIALOG")
     fireworks:SetAllPoints()
     fireworks:Hide()
