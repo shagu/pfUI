@@ -76,7 +76,7 @@ pfUI:RegisterModule("farmmode", function ()
     end
 
     -- move pvp icon
-    if pfUI.minimap.pvpicon then
+    if pfUI.minimap and pfUI.minimap.pvpicon then
       pfUI.minimap.pvpicon:ClearAllPoints()
       pfUI.minimap.pvpicon:SetPoint("BOTTOMRIGHT", pfUI.farmmap, "BOTTOMRIGHT", -5, 5)
     end
@@ -102,12 +102,12 @@ pfUI:RegisterModule("farmmode", function ()
     -- move tracking frame
     if pfUI.tracking then
       pfUI.tracking:ClearAllPoints()
-      pfUI.tracking:SetPoint("TOPLEFT", pfUI.minimap, -10, -10)
+      pfUI.tracking:SetPoint("TOPLEFT", pfUI.minimap or Minimap, -10, -10)
       UpdateMovable(pfUI.tracking)
     end
 
     -- move pvp icon
-    if pfUI.minimap.pvpicon then
+    if pfUI.minimap and pfUI.minimap.pvpicon then
       pfUI.minimap.pvpicon:ClearAllPoints()
       pfUI.minimap.pvpicon:SetPoint("BOTTOMRIGHT", pfUI.minimap, "BOTTOMRIGHT", -5, 5)
     end
