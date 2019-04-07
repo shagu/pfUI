@@ -30,11 +30,8 @@ pfUI:RegisterModule("map", function ()
       CloseDropDownMenus()
       SetMapToCurrentZone()
       WorldMapFrame_PingPlayerPosition()
-      LoadMovable(this)
 
       -- customize
-      this:SetMovable(true)
-      this:EnableMouse(true)
       this:EnableKeyboard(false)
       this:EnableMouseWheel(1)
     end)
@@ -60,16 +57,20 @@ pfUI:RegisterModule("map", function ()
       SaveMovable(this)
     end)
 
+    WorldMapFrame:SetAlpha(c_position.alpha)
+    WorldMapFrame:SetScale(c_position.scale)
+
     WorldMapFrame:ClearAllPoints()
-    WorldMapFrame:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
+    WorldMapFrame:SetPoint("CENTER", 0, 0)
     WorldMapFrame:SetWidth(WorldMapButton:GetWidth() + 15)
     WorldMapFrame:SetHeight(WorldMapButton:GetHeight() + 55)
 
+    WorldMapFrame:SetMovable(true)
+    WorldMapFrame:EnableMouse(true)
+    LoadMovable(WorldMapFrame)
+
     WorldMapFrameCloseButton:SetPoint("TOPRIGHT", WorldMapFrame, "TOPRIGHT", 0, 0)
     CreateBackdrop(WorldMapFrame)
-
-    WorldMapFrame:SetAlpha(c_position.alpha)
-    WorldMapFrame:SetScale(c_position.scale)
 
     BlackoutWorld:Hide()
 
