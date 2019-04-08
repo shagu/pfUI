@@ -525,7 +525,8 @@ end
 -- [ Load Movable ]
 -- Loads the positions of a Frame.
 -- 'frame'      [frame]        the frame that should be positioned.
-function pfUI.api.LoadMovable(frame)
+-- 'init'       [bool]         treats the current position as initial data
+function pfUI.api.LoadMovable(frame, init)
   -- update position data
   if not frame.posdata or init then
     frame.posdata = { scale = frame:GetScale(), pos = {} }
@@ -584,7 +585,7 @@ function pfUI.api.UpdateMovable(frame, init)
     pfUI.movables[name] = frame
   end
 
-  LoadMovable(frame)
+  LoadMovable(frame, init)
 end
 
 -- [ Remove Movable ]
