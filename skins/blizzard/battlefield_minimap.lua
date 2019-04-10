@@ -14,6 +14,10 @@ pfUI:RegisterSkin("Battlefield Minimap", function ()
     BattlefieldMinimapTabText:ClearAllPoints()
     BattlefieldMinimapTabText:SetPoint("CENTER", 0, 0)
 
+    HookScript(BattlefieldMinimap, "OnShow", function()
+      BattlefieldMinimapTab:Hide()
+    end)
+
     hooksecurefunc("BattlefieldMinimap_ShowOpacity", function()
       OpacityFrame:ClearAllPoints()
       OpacityFrame:SetPoint("TOPRIGHT", "BattlefieldMinimap", "TOPLEFT", -2*border, 0)
