@@ -5,6 +5,7 @@ pfUI:RegisterModule("actionbar", 20400, function ()
 
   local backdrop_highlight = { edgeFile = "Interface\\AddOns\\pfUI\\img\\glow", edgeSize = 8 }
   local showgrid = 0
+  local showgrid_pet = 0
 
   local border = tonumber(C.appearance.border.default)
   if C.appearance.border.actionbars ~= "-1" then
@@ -218,7 +219,7 @@ pfUI:RegisterModule("actionbar", 20400, function ()
     local castable, autocast, token
 
     -- abort as early as possible on regular state update
-    if event == "ACTIONBAR_UPDATE_STATE" and self.bar ~= 11 and self.bar ~= 12 then
+    if event == "ACTIONBAR_UPDATE_STATE" and not self.hide and self.bar ~= 11 and self.bar ~= 12 then
       if IsCurrentAction(sid) then
         self.backdrop:SetBackdropBorderColor(cr,cg,cb,1)
         self.active:Show()
@@ -228,6 +229,8 @@ pfUI:RegisterModule("actionbar", 20400, function ()
       end
       return
     end
+
+    local grid = self.bar == 12 and showgrid_pet or showgrid
 
     if self.bar == 11 then
       -- stance button
@@ -269,7 +272,7 @@ pfUI:RegisterModule("actionbar", 20400, function ()
       end
     end
 
-    if not self.showempty and self.backdrop and not texture and showgrid == 0 then
+    if not self.showempty and self.backdrop and not texture and grid == 0 then
       self.backdrop:Hide()
       self.hide = true
     else
@@ -436,14 +439,14 @@ pfUI:RegisterModule("actionbar", 20400, function ()
   local function ButtonClick(self)
     local self = self or this
 
+    local grid = self.bar == 12 and showgrid_pet or showgrid
     local mouse = arg1 and not keystate
     local keystate = keystate
 
     if ( pfUI_config.bars.keydown == "1" and keystate == "down" ) or (pfUI_config.bars.keydown == "0" and keystate == "up" ) or self.bar == 11 or mouse then
-
       if self.bar == 11 then
         CastShapeshiftForm(self.id)
-      elseif showgrid == 1 then
+      elseif grid == 1 then
         PickupAction(self.id)
       elseif self.bar == 12 then
         if arg1 == "LeftButton" then
@@ -545,10 +548,6 @@ pfUI:RegisterModule("actionbar", 20400, function ()
       f:RegisterEvent("UPDATE_INVENTORY_ALERTS")
       f:RegisterEvent("ACTIONBAR_UPDATE_COOLDOWN")
       f:RegisterEvent("UNIT_INVENTORY_CHANGED")
-
-      -- show/hide grid
-      f:RegisterEvent("ACTIONBAR_SHOWGRID")
-      f:RegisterEvent("ACTIONBAR_HIDEGRID")
 
       if bar ~= 11 then
         f:RegisterForDrag("LeftButton", "RightButton")
@@ -921,13 +920,21 @@ pfUI:RegisterModule("actionbar", 20400, function ()
   -- create actionbars
   pfUI.bars = bars
 
-  pfUI.bars.UpdateGrid = function(self, state)
-    showgrid = state
-    for j=1,12 do
-      for i=1,12 do
-        if pfUI.bars[i][j] then
-          pfUI.bars[i][j].forceupdate = true
+  pfUI.bars.UpdateGrid = function(self, state, typ)
+    if not typ then
+      showgrid = state
+
+      for j=1,12 do
+        for i=1,10 do
+          if pfUI.bars[i][j] then
+            pfUI.bars[i][j].forceupdate = true
+          end
         end
+      end
+    elseif typ == "PET" then
+      showgrid_pet = state
+      for j=1,10 do
+        pfUI.bars[12][j].forceupdate = true
       end
     end
   end
@@ -1122,11 +1129,18 @@ pfUI:RegisterModule("actionbar", 20400, function ()
   local grid = CreateFrame("Frame")
   grid:RegisterEvent("ACTIONBAR_SHOWGRID")
   grid:RegisterEvent("ACTIONBAR_HIDEGRID")
+  grid:RegisterEvent("PET_BAR_SHOWGRID")
+  grid:RegisterEvent("PET_BAR_HIDEGRID")
+
   grid:SetScript("OnEvent", function()
     if event == "ACTIONBAR_SHOWGRID" then
-      showgrid = 1
-    else
-      showgrid = 0
+      pfUI.bars:UpdateGrid(1)
+    elseif event == "ACTIONBAR_HIDEGRID" then
+      pfUI.bars:UpdateGrid(0)
+    elseif event == "PET_BAR_SHOWGRID" then
+      pfUI.bars:UpdateGrid(1, "PET")
+    elseif event == "PET_BAR_HIDEGRID" then
+      pfUI.bars:UpdateGrid(0, "PET")
     end
   end)
 
