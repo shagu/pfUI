@@ -1050,7 +1050,7 @@ function pfUI.uf:RefreshUnit(unit, component)
 
       -- hide self in group if solo or hide in raid is set
       elseif unit.fname == "Group0" or unit.fname == "PartyPet0" or unit.fname == "Party0Target" then
-        if ( C["unitframes"]["group"]["hide_in_raid"] == "1" and UnitInRaid("player") ) then
+        if GetNumPartyMembers() <= 0 or ( C["unitframes"]["group"]["hide_in_raid"] == "1" and UnitInRaid("player") ) then
           unit:Hide()
           return
         end
