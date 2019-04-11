@@ -424,8 +424,10 @@ pfUI:RegisterModule("actionbar", 20400, function ()
 
     if ( pfUI_config.bars.keydown == "1" and keystate == "down" ) or (pfUI_config.bars.keydown == "0" and keystate == "up" ) or self.bar == 11 or mouse then
       -- trigger effect
-      self.animation.active = 0
-      self.animation:Show()
+      if self:GetAlpha() > .1  or C.bars.animalways == "1" then
+        self.animation.active = 0
+        self.animation:Show()
+      end
       -- clear highlight
       if not MouseIsOver(self) then
         self.highlight:Hide()
