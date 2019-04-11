@@ -230,6 +230,9 @@ pfUI:RegisterModule("actionbar", 20400, function ()
       return
     end
 
+    -- set the own ID for compatibility
+    self:SetID(self.id)
+
     local grid = self.bar == 12 and showgrid_pet or showgrid
 
     if self.bar == 11 then
