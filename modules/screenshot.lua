@@ -8,9 +8,10 @@ pfUI:RegisterModule("screenshot", function ()
     and C.screenshot.loot == "0" then
     return
   end
-  local LOOT_ITEM_SELF_MULTIPLEregex = string.gsub(_G.LOOT_ITEM_SELF_MULTIPLE,"%%sx%%d", "(.+)x(%%d+)")
-  local LOOT_ITEM_SELFregex = string.gsub(_G.LOOT_ITEM_SELF,"%%s", "(.+)")
-  local FACTION_STANDING_CHANGEDregex = string.gsub(_G.FACTION_STANDING_CHANGED,"%%s", "(.+)")
+  local LOOT_ITEM_SELF_MULTIPLEregex = SanitizePattern(_G.LOOT_ITEM_SELF_MULTIPLE)
+  local LOOT_ITEM_SELFregex = SanitizePattern(_G.LOOT_ITEM_SELF)
+  local FACTION_STANDING_CHANGEDregex = SanitizePattern(_G.FACTION_STANDING_CHANGED)
+
   local color2quality = {}
   for i=-1,6 do
     color2quality[_G.ITEM_QUALITY_COLORS[i].hex] = i
