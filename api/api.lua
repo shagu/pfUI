@@ -702,7 +702,7 @@ function pfUI.api.CreateBackdrop(f, inset, legacy, transp, backdropSetting)
 
   -- use legacy backdrop handling
   if legacy then
-    local backdrop = pfUI.backdrop
+    local backdrop = border == 1 and pfUI.backdrop_thin or pfUI.backdrop
     if backdropSetting then f:SetBackdrop(backdropSetting) end
     f:SetBackdrop(backdrop)
     f:SetBackdropColor(br, bg, bb, ba)
