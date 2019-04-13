@@ -63,7 +63,9 @@ pfUI:RegisterModule("farmmode", 20400, function ()
     SaveMovable(this)
   end)
 
-  pfUI.farmmap:SetScript("OnShow", function()
+  pfUI.farmmap:SetScript("OnUpdate", function()
+    if not Minimap:IsShown() then return end
+
     Minimap:Hide()
 
     -- move existing nodes to new minimap
