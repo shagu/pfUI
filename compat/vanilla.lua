@@ -48,11 +48,3 @@ function hooksecurefunc(name, func, append)
 
   _G[name] = pfUI.hooks[tostring(func)]["function"]
 end
-
-function HookScript(f, script, func)
-  local prev = f:GetScript(script)
-  f:SetScript(script, function()
-    if prev then prev() end
-    func()
-  end)
-end

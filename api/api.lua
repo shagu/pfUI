@@ -351,6 +351,19 @@ do -- create a scope so we don't have to worry about upvalue collisions
   end
 end
 
+-- [ HookScript ]
+-- Securely post-hooks a script handler.
+-- 'f'          [frame]             the frame which needs a hook
+-- 'script'     [string]            the handler to hook
+-- 'func'       [function]          the function that should be added
+function HookScript(f, script, func)
+  local prev = f:GetScript(script)
+  f:SetScript(script, function()
+    if prev then prev() end
+    func()
+  end)
+end
+
 -- [ HookAddonOrVariable ]
 -- Sets a function to be called automatically once an addon gets loaded
 -- 'addon'      [string]            addon or variable name
