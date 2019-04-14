@@ -473,6 +473,7 @@ pfUI_translation["zhTW"] = {
   ["Shift-Click"] = "Shift點擊",
   ["Shift-Click Action"] = "SHIFT點擊操作",
   ["Show Addon Buttons On Login"] = nil,
+  ["Show Animation On Hidden Bars"] = nil,
   ["Show Combat Text"] = "顯示戰鬥訊息",
   ["Show Description"] = nil,
   ["Show Duration Inside Buff"] = "顯示持續時間在Buff裏面",

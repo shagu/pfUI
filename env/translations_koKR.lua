@@ -473,6 +473,7 @@ pfUI_translation["koKR"] = {
   ["Shift-Click"] = nil,
   ["Shift-Click Action"] = "쉬프트-클릭 액션",
   ["Show Addon Buttons On Login"] = nil,
+  ["Show Animation On Hidden Bars"] = nil,
   ["Show Combat Text"] = nil,
   ["Show Description"] = nil,
   ["Show Duration Inside Buff"] = nil,

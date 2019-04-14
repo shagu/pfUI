@@ -473,6 +473,7 @@ pfUI_translation["enUS"] = {
   ["Shift-Click"] = nil,
   ["Shift-Click Action"] = nil,
   ["Show Addon Buttons On Login"] = nil,
+  ["Show Animation On Hidden Bars"] = nil,
   ["Show Combat Text"] = nil,
   ["Show Description"] = nil,
   ["Show Duration Inside Buff"] = nil,

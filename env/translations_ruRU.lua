@@ -473,6 +473,7 @@ pfUI_translation["ruRU"] = {
   ["Shift-Click"] = "Shift+нажатие",
   ["Shift-Click Action"] = "Действие при Shift+нажатие",
   ["Show Addon Buttons On Login"] = "Показывать окно кнопок аддонов при входе в игру",
+  ["Show Animation On Hidden Bars"] = nil,
   ["Show Combat Text"] = "Показать текст боя",
   ["Show Description"] = nil,
   ["Show Duration Inside Buff"] = "Показать продолжительность внутри баффа",
