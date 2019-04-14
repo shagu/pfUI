@@ -1,4 +1,4 @@
-pfUI:RegisterModule("roll", function ()
+pfUI:RegisterModule("roll", 20400, function ()
   pfUI.roll = CreateFrame("Frame", "pfLootRoll", UIParent)
   pfUI.roll.frames = {}
 
