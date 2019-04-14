@@ -516,7 +516,7 @@ pfUI:RegisterModule("thirdparty", function ()
           pfUI.bag.right.sort.texture:SetVertexColor(.25,.25,.25,1)
           if GameTooltip:IsOwned(this) then
             GameTooltip:Hide()
-          end          
+          end
         end)
 
         pfUI.bag.right.sort:SetScript("OnClick", function()
@@ -848,6 +848,7 @@ pfUI:RegisterModule("thirdparty", function ()
 
   HookAddonOrVariable("HealComm", EnableHealComm)
   HookAddonOrVariable("LunaUnitFrames", EnableHealComm)
+  HookAddonOrVariable("NotGrid", EnableHealComm)
 
   HookAddonOrVariable("NoteIt", function()
     if C.thirdparty.noteit.enable == "0" then return end
