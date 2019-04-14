@@ -263,7 +263,17 @@ function pfUI.api.GetBagFamily(bag)
     if bagsubtype == "DEFAULT" then return "BAG" end
     if bagsubtype == "SOULBAG" then return "SOULBAG" end
     if bagsubtype == "QUIVER" then return "QUIVER" end
-    if bagsubtype == nil then return "SPECIAL" end
+    if bagsubtype == nil and GetContainerNumFreeSlots then
+      -- handle new bag classes introduced in TBC
+      local _, subtype = GetContainerNumFreeSlots(bag)
+      if subtype and subtype > 0 then
+        return "SPECIAL"
+      else
+        return "BAG"
+      end
+    elseif bagsubtype == nil then
+      return "SPECIAL"
+    end
   end
 
   return nil
