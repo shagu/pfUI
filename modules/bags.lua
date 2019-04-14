@@ -1,4 +1,4 @@
-pfUI:RegisterModule("bags", function ()
+pfUI:RegisterModule("bags", 20400, function ()
   local default_border = C.appearance.border.default
   if C.appearance.border.bags ~= "-1" then
     default_border = C.appearance.border.bags
