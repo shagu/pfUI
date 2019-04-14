@@ -632,7 +632,7 @@ end
 -- 'no'         [function]      function that is triggered on 'Cancel' button.
 -- 'editbox'    [bool]          if set, a inputfield will be shown. it can be.
 --                              accessed with "GetParent().input".
-function pfUI.api.CreateQuestionDialog(text, yes, no, editbox)
+function pfUI.api.CreateQuestionDialog(text, yes, no, editbox, onclose)
   -- do not allow multiple instances of question dialogs
   if _G["pfQuestionDialog"] and _G["pfQuestionDialog"]:IsShown() then
     _G["pfQuestionDialog"]:Hide()
@@ -672,6 +672,9 @@ function pfUI.api.CreateQuestionDialog(text, yes, no, editbox)
   question:SetScript("OnMouseUp",function()
     this:StopMovingOrSizing()
   end)
+
+  question:SetScript("OnHide", onclose)
+
   pfUI.api.CreateBackdrop(question, nil, nil, .85)
 
   -- text
