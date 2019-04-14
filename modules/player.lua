@@ -1,4 +1,4 @@
-pfUI:RegisterModule("player", function ()
+pfUI:RegisterModule("player", 20400, function ()
   -- do not go further on disabled UFs
   if C.unitframes.disable == "1" then return end
 
