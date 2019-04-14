@@ -151,7 +151,7 @@ local capture_cache = {}
 function pfUI.api.GetCaptures(pat)
   local r = capture_cache
   if not r[pat] then
-    for a, b, c, d, e in string.gfind(gsub(pat, "%((.+)%)", "%1"), gsub(pat, "%d%$", "%%(.-)$")) do
+    for a, b, c, d, e in gfind(gsub(pat, "%((.+)%)", "%1"), gsub(pat, "%d%$", "%%(.-)$")) do
       r[pat] = { a, b, c, d, e}
     end
   end
