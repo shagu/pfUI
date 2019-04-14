@@ -1,4 +1,4 @@
-pfUI:RegisterModule("loot", function ()
+pfUI:RegisterModule("loot", 20400, function ()
   pfUI.loot = CreateFrame("Frame", "pfLootFrame", UIParent)
   pfUI.loot:Hide()
   pfUI.loot:SetFrameStrata("DIALOG")
