@@ -772,6 +772,8 @@ function pfUI.uf:EnableScripts()
     f:SetAttribute("unit", f.label .. f.id)
     f:SetAttribute("type1", "target")
     f:SetAttribute("type2", "showmenu")
+
+    RegisterStateDriver(f, 'visibility', "show")
   else
     f:SetScript("OnClick", pfUI.uf.OnClick)
   end
