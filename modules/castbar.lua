@@ -127,9 +127,15 @@ pfUI:RegisterModule("castbar", 20400, function ()
       if not UnitIsUnit(this.unitstr, "player") then return end
 
       if event == CASTBAR_EVENT_CAST_DELAY then
-        this.delay = ( this.delay or 0 ) + arg1/1000
+        local name = this.unitstr and UnitName(this.unitstr) or this.unitname
+        local isCast, nameSubtext, text, texture, startTime, endTime, isTradeSkill = UnitCastingInfo(name)
+        if not isCast then return end
+        this.delay = this.delay + (endTime - this.endTime) / 1000
       elseif event == CASTBAR_EVENT_CHANNEL_DELAY then
-        this.delay = ( this.delay or 0 ) + this.bar:GetValue() - arg1/1000
+        local name = this.unitstr and UnitName(this.unitstr) or this.unitname
+        local isChannel, _, _, _, startTime, endTime = UnitChannelInfo(name)
+        if not isChannel then return end
+        this.delay = ( this.delay or 0 ) + this.bar:GetValue() - (endTime/1000 - GetTime())
       end
     end)
 
