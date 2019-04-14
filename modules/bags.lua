@@ -485,7 +485,7 @@ pfUI:RegisterModule("bags", 20400, function ()
             CreateBackdrop(f.frame, default_border)
             f.frame.backdrop:SetBackdropBorderColor(.2,1,.8,1)
           end
-          SlotEnter()
+          SlotEnter(this)
         end)
 
         local SlotLeave = frame.bagslots.slots[slot].frame:GetScript("OnLeave")
