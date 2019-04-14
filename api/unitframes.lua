@@ -712,6 +712,23 @@ function pfUI.uf.OnClick()
   end
 end
 
+function pfUI.uf:RightClickAction(unit)
+  if unit == "player" then
+    ToggleDropDownMenu(1, nil, PlayerFrameDropDown, "cursor")
+  elseif unit == "target" then
+    ToggleDropDownMenu(1, nil, TargetFrameDropDown, "cursor")
+  elseif unit == "pet" then
+    ToggleDropDownMenu(1, nil, PetFrameDropDown, "cursor")
+  elseif unit == "party" then
+    ToggleDropDownMenu(1, nil, getglobal("PartyMemberFrame" .. this.id .. "DropDown"), "cursor")
+  elseif unit == "raid" then
+    local name = this.lastUnit
+    FriendsDropDown.displayMode = "MENU"
+    FriendsDropDown.initialize = function() UnitPopup_ShowMenu(_G[UIDROPDOWNMENU_OPEN_MENU], "PARTY", unitstr, name, id) end
+    ToggleDropDownMenu(1, nil, FriendsDropDown, "cursor")
+  end
+end
+
 function pfUI.uf:EnableEvents()
   local f = self
 
@@ -749,12 +766,21 @@ end
 function pfUI.uf:EnableScripts()
   local f = self
 
+  -- handle secure unit button templates (> vanilla)
+  if f.SetAttribute then
+    f.showmenu = pfUI.uf.RightClickAction
+    f:SetAttribute("unit", f.label .. f.id)
+    f:SetAttribute("type1", "target")
+    f:SetAttribute("type2", "showmenu")
+  else
+    f:SetScript("OnClick", pfUI.uf.OnClick)
+  end
+
   f:SetScript("OnShow", pfUI.uf.OnShow)
   f:SetScript("OnEvent", pfUI.uf.OnEvent)
   f:SetScript("OnUpdate", pfUI.uf.OnUpdate)
   f:SetScript("OnEnter", pfUI.uf.OnEnter)
   f:SetScript("OnLeave", pfUI.uf.OnLeave)
-  f:SetScript("OnClick", pfUI.uf.OnClick)
 end
 
 function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
@@ -779,7 +805,7 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
     unit, id = "target", ""
   end
 
-  local f = CreateFrame("Button", "pf" .. fname, UIParent)
+  local f = CreateFrame("Button", "pf" .. fname, UIParent, UNITFRAME_SECURE_TEMPLATE)
 
   -- add unitframe functions
   f.UpdateFrameSize = pfUI.uf.UpdateFrameSize
@@ -1515,20 +1541,7 @@ function pfUI.uf:ClickAction(button)
 
   -- dropdown menus
   if button == "RightButton" then
-    if label == "player" then
-      ToggleDropDownMenu(1, nil, PlayerFrameDropDown, "cursor")
-    elseif label == "target" then
-      ToggleDropDownMenu(1, nil, TargetFrameDropDown, "cursor")
-    elseif label == "pet" then
-      ToggleDropDownMenu(1, nil, PetFrameDropDown, "cursor")
-    elseif label == "party" then
-      ToggleDropDownMenu(1, nil, _G["PartyMemberFrame" .. this.id .. "DropDown"], "cursor")
-    elseif label == "raid" then
-      local name = this.lastUnit
-      FriendsDropDown.displayMode = "MENU"
-      FriendsDropDown.initialize = function() UnitPopup_ShowMenu(_G[UIDROPDOWNMENU_OPEN_MENU], "PARTY", unitstr, name, id) end
-      ToggleDropDownMenu(1, nil, FriendsDropDown, "cursor")
-    end
+    pfUI.uf:RightClickAction(label)
   else
     -- drop food on petframe
     if label == "pet" and CursorHasItem() then

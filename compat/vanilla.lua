@@ -24,6 +24,7 @@ PLAYER_BUFF_START_ID = -1
 
 ACTIONBAR_SECURE_TEMPLATE_BAR = nil
 ACTIONBAR_SECURE_TEMPLATE_BUTTON = nil
+UNITFRAME_SECURE_TEMPLATE = nil
 
 --[[ Vanilla API Extensions ]]--
 function hooksecurefunc(name, func, append)
