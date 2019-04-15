@@ -401,7 +401,7 @@ pfUI:RegisterModule("actionbar", 20400, function ()
   local function ButtonDrag(self)
     local self = self or this
 
-    if _G.LOCK_ACTIONBAR == "1" and not IsShiftKeyDown() then return end
+    if _G.LOCK_ACTIONBAR == "1" then return end
 
     if self.bar == 12 then
       PickupPetAction(self.id)
