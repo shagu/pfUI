@@ -176,7 +176,7 @@ libcast:SetScript("OnEvent", function()
     this.db[player].cast = arg1
     this.db[player].start = GetTime()
     this.db[player].casttime = arg2
-    this.db[player].icon = nil
+    this.db[player].icon = L["spells"][arg1] and "Interface\\Icons\\"..L["spells"][arg1].icon or nil
     this.db[player].channel = nil
   elseif event == "SPELLCAST_STOP" or event == "SPELLCAST_FAILED" or event == "SPELLCAST_INTERRUPTED" then
     if this.db[player] and not this.db[player].channel then
@@ -196,7 +196,7 @@ libcast:SetScript("OnEvent", function()
     this.db[player].cast = arg2
     this.db[player].start = GetTime()
     this.db[player].casttime = arg1
-    this.db[player].icon = nil
+    this.db[player].icon = L["spells"][arg2] and "Interface\\Icons\\"..L["spells"][arg2].icon or nil
     this.db[player].channel = true
   elseif event == "SPELLCAST_CHANNEL_STOP" then
     if this.db[player] and this.db[player].channel then
