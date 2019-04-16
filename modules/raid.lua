@@ -1,4 +1,4 @@
-pfUI:RegisterModule("raid", function ()
+pfUI:RegisterModule("raid", 20400, function ()
   -- do not go further on disabled UFs
   if C.unitframes.disable == "1" then return end
 
