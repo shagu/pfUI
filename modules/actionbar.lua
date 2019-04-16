@@ -230,8 +230,8 @@ pfUI:RegisterModule("actionbar", 20400, function ()
       return
     end
 
-    -- set the own ID for compatibility
-    self:SetID(self.id)
+    -- set the own ID for compatibility to some vanilla addons
+    if pfUI.client <= 11200 then self:SetID(self.id) end
 
     local grid = self.bar == 12 and showgrid_pet or showgrid
 
