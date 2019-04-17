@@ -737,10 +737,9 @@ pfUI:RegisterModule("actionbar", 20400, function ()
       return
     end
 
-    -- we changed bar size and stored layout is invalid, fallback
+    -- the stored layout is invalid, temporary fallback
     if not pfGridmath[buttons][BarLayoutFormfactor(formfactor)] then
       formfactor = BarLayoutOptions(buttons)[1]
-      C.bars["bar"..i].formfactor = formfactor
     end
 
     local font = pfUI.font_unit
