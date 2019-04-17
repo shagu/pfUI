@@ -885,6 +885,10 @@ pfUI:RegisterModule("gui", 20400, function ()
         "7:" .. T["Small"],
         "8:" .. T["Tiny (PixelPerfect)"],
       },
+      ["orientation"] = {
+        "HORIZONTAL:" .. T["Horizontal"],
+        "VERTICAL:" .. T["Vertical"],
+      },
       ["uf_animationspeed"] = {
         "1:" .. T["Instant"],
         "2:" .. T["Very Fast"],
@@ -1734,11 +1738,24 @@ pfUI:RegisterModule("gui", 20400, function ()
       CreateConfig(nil, T["Right Panel: Center"], C.panel.right, "center", "dropdown", pfUI.gui.dropdowns.panel_values)
       CreateConfig(nil, T["Right Panel: Right"], C.panel.right, "right", "dropdown", pfUI.gui.dropdowns.panel_values)
       CreateConfig(nil, T["Other Panel: Minimap"], C.panel.other, "minimap", "dropdown", pfUI.gui.dropdowns.panel_values)
-      CreateConfig(nil, T["Always Show Experience And Reputation Bar"], C.panel.xp, "showalways", "checkbox")
       CreateConfig(nil, T["Only Count Bagspace On Regular Bags"], C.panel.bag, "ignorespecial", "checkbox")
       CreateConfig(nil, T["Enable Micro Bar"], C.panel.micro, "enable", "checkbox")
       CreateConfig(nil, T["Enable 24h Clock"], C.global, "twentyfour", "checkbox")
       CreateConfig(nil, T["Servertime"], C.global, "servertime", "checkbox")
+
+      CreateConfig(nil, T["Experience Bar"], nil, nil, "header")
+      CreateConfig(nil, T["Always Show"], C.panel.xp, "xp_always", "checkbox")
+      CreateConfig(nil, T["Hide Timeout"], C.panel.xp, "xp_timeout")
+      CreateConfig(nil, T["Width"], C.panel.xp, "xp_width")
+      CreateConfig(nil, T["Height"], C.panel.xp, "xp_height")
+      CreateConfig(nil, T["Orientation"], C.panel.xp, "xp_mode", "dropdown", pfUI.gui.dropdowns.orientation)
+
+      CreateConfig(nil, T["Reputation Bar"], nil, nil, "header")
+      CreateConfig(nil, T["Always Show"], C.panel.xp, "rep_always", "checkbox")
+      CreateConfig(nil, T["Hide Timeout"], C.panel.xp, "rep_timeout")
+      CreateConfig(nil, T["Width"], C.panel.xp, "rep_width")
+      CreateConfig(nil, T["Height"], C.panel.xp, "rep_height")
+      CreateConfig(nil, T["Orientation"], C.panel.xp, "rep_mode", "dropdown", pfUI.gui.dropdowns.orientation)
     end)
 
     CreateGUIEntry(T["Panel"], T["Auto Hide"], function()

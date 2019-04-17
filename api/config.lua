@@ -750,8 +750,17 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("panel",      "right",       "right",            "gold")
   pfUI:UpdateConfig("panel",      "other",       "minimap",          "zone")
   pfUI:UpdateConfig("panel",      "micro",       "enable",           "0")
-  pfUI:UpdateConfig("panel",      "xp",          "showalways",       "0")
   pfUI:UpdateConfig("panel",      "bag",         "ignorespecial",    "1")
+  pfUI:UpdateConfig("panel",      "xp",          "xp_always",        "0")
+  pfUI:UpdateConfig("panel",      "xp",          "xp_timeout",       "5")
+  pfUI:UpdateConfig("panel",      "xp",          "xp_width",         "5")
+  pfUI:UpdateConfig("panel",      "xp",          "xp_height",        "100")
+  pfUI:UpdateConfig("panel",      "xp",          "xp_mode",          "VERTICAL")
+  pfUI:UpdateConfig("panel",      "xp",          "rep_always",       "0")
+  pfUI:UpdateConfig("panel",      "xp",          "rep_timeout",      "5")
+  pfUI:UpdateConfig("panel",      "xp",          "rep_width",        "5")
+  pfUI:UpdateConfig("panel",      "xp",          "rep_height",       "100")
+  pfUI:UpdateConfig("panel",      "xp",          "rep_mode",         "VERTICAL")
 
   pfUI:UpdateConfig("castbar",    "player",      "hide_blizz",       "1")
   pfUI:UpdateConfig("castbar",    "player",      "hide_pfui",        "0")
@@ -1206,6 +1215,12 @@ function pfUI:MigrateConfig()
       pfUI_config.bars.bar12.formfactor = pfUI_config.bars.pet.formfactor
       pfUI_config.bars.pet.formfactor = nil
     end
+  end
+
+  -- migrate xp-showalways (> 4.0.2)
+  if checkversion(4, 0, 2) then
+    pfUI_config.panel.xp.xp_always = pfUI_config.panel.xp.showalways
+    pfUI_config.panel.xp.rep_always = pfUI_config.panel.xp.showalways
   end
 
   pfUI_config.version = pfUI.version.string

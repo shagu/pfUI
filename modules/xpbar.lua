@@ -1,6 +1,19 @@
 pfUI:RegisterModule("xpbar", 20400, function ()
-  pfUI.xp = CreateFrame("Frame",nil, UIParent)
-  pfUI.xp:SetWidth(5)
+
+  local xp_timeout = tonumber(C.panel.xp.xp_timeout)
+  local xp_width = C.panel.xp.xp_width
+  local xp_height = C.panel.xp.xp_height
+  local xp_mode = C.panel.xp.xp_mode
+
+  local rep_timeout = tonumber(C.panel.xp.rep_timeout)
+  local rep_width = C.panel.xp.rep_width
+  local rep_height = C.panel.xp.rep_height
+  local rep_mode = C.panel.xp.rep_mode
+
+  pfUI.xp = CreateFrame("Frame", "pfExperienceBar", UIParent)
+  pfUI.xp:SetWidth(xp_width)
+  pfUI.xp:SetHeight(xp_height)
+
   if pfUI.chat then
     pfUI.xp:SetPoint("TOPLEFT", pfUI.chat.left, "TOPRIGHT", C.appearance.border.default*2, 0)
     pfUI.xp:SetPoint("BOTTOMLEFT", pfUI.chat.left, "BOTTOMRIGHT", C.appearance.border.default*2, 0)
@@ -10,6 +23,8 @@ pfUI:RegisterModule("xpbar", 20400, function ()
   end
   pfUI.xp:SetFrameStrata("BACKGROUND")
   CreateBackdrop(pfUI.xp)
+  UpdateMovable(pfUI.xp)
+
   pfUI.xp:RegisterEvent("PLAYER_LEVEL_UP")
   pfUI.xp:RegisterEvent("PLAYER_XP_UPDATE")
   pfUI.xp:RegisterEvent("PLAYER_ENTERING_WORLD")
@@ -36,7 +51,7 @@ pfUI:RegisterModule("xpbar", 20400, function ()
         pfUI.xp.restedbar:Hide()
       end
       pfUI.xp:SetAlpha(1)
-      pfUI.xp.tick = GetTime() + 3.00
+      pfUI.xp.tick = GetTime() + xp_timeout
 
     else
       pfUI.xp:Hide(0)
@@ -44,7 +59,7 @@ pfUI:RegisterModule("xpbar", 20400, function ()
   end)
 
   pfUI.xp:SetScript("OnUpdate",function()
-      if C.panel.xp.showalways == "1" then return end
+      if C.panel.xp.xp_always == "1" then return end
       if pfUI.xp:GetAlpha() == 0 or pfUI.xp.mouseover == true then return end
       if not pfUI.xp.tick then
         pfUI.xp.tick = GetTime() + 0.01
@@ -103,7 +118,7 @@ pfUI:RegisterModule("xpbar", 20400, function ()
   pfUI.xp.bar:SetFrameStrata("LOW")
   pfUI.xp.bar:SetStatusBarColor(.25,.25,1,1)
   pfUI.xp.bar:SetMinMaxValues(0, 100)
-  pfUI.xp.bar:SetOrientation("VERTICAL")
+  pfUI.xp.bar:SetOrientation(xp_mode)
   pfUI.xp.bar:SetValue(59)
 
   pfUI.xp.restedbar = CreateFrame("StatusBar", nil, pfUI.xp)
@@ -113,10 +128,11 @@ pfUI:RegisterModule("xpbar", 20400, function ()
   pfUI.xp.restedbar:SetFrameStrata("MEDIUM")
   pfUI.xp.restedbar:SetStatusBarColor(1,.25,1,.5)
   pfUI.xp.restedbar:SetMinMaxValues(0, 100)
-  pfUI.xp.restedbar:SetOrientation("VERTICAL")
+  pfUI.xp.restedbar:SetOrientation(xp_mode)
 
-  pfUI.rep = CreateFrame("Frame",nil, UIParent)
-  pfUI.rep:SetWidth(5)
+  pfUI.rep = CreateFrame("Frame","pfReputationBar", UIParent)
+  pfUI.rep:SetWidth(rep_width)
+  pfUI.rep:SetHeight(rep_height)
   if pfUI.chat then
     pfUI.rep:SetPoint("TOPRIGHT",pfUI.chat.right,"TOPLEFT", -C.appearance.border.default*2, 0)
     pfUI.rep:SetPoint("BOTTOMRIGHT",pfUI.chat.right,"BOTTOMLEFT",-C.appearance.border.default*2, 0)
@@ -126,13 +142,14 @@ pfUI:RegisterModule("xpbar", 20400, function ()
   end
   pfUI.rep:SetFrameStrata("BACKGROUND")
   CreateBackdrop(pfUI.rep)
+  UpdateMovable(pfUI.rep)
 
   pfUI.rep.bar = CreateFrame("StatusBar", nil, pfUI.rep)
   pfUI.rep.bar:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
   pfUI.rep.bar:ClearAllPoints()
   pfUI.rep.bar:SetAllPoints(pfUI.rep)
   pfUI.rep.bar:SetMinMaxValues(0, 100)
-  pfUI.rep.bar:SetOrientation("VERTICAL")
+  pfUI.rep.bar:SetOrientation(rep_mode)
   pfUI.rep.bar:SetValue(59)
 
   pfUI.rep:RegisterEvent("UPDATE_FACTION")
@@ -152,13 +169,13 @@ pfUI:RegisterModule("xpbar", 20400, function ()
           local color = FACTION_BAR_COLORS[standingID]
           pfUI.rep.bar:SetStatusBarColor((color.r + .5) * .5, (color.g + .5) * .5, (color.b + .5) * .5, 1)
           pfUI.rep:SetAlpha(1)
-          pfUI.rep.tick = GetTime() + 3.00
+          pfUI.rep.tick = GetTime() + rep_timeout
         end
       end
     end)
 
   pfUI.rep:SetScript("OnUpdate",function()
-      if C.panel.xp.showalways == "1" then return end
+      if C.panel.xp.rep_always == "1" then return end
       if pfUI.rep:GetAlpha() == 0 or pfUI.rep.mouseover == true then return end
       if not pfUI.rep.tick then
         pfUI.rep.tick = GetTime() + 0.01
