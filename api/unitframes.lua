@@ -183,6 +183,11 @@ function pfUI.uf:UpdateFrameSize()
   local height = self.config.height
   local pheight = self.config.pheight
   local real_height = height + spacing + pheight + 2*default_border
+  if spacing ~= abs(spacing) and abs(spacing) > tonumber(pheight) then
+    real_height = height
+    spacing = 0
+  end
+
   local portrait = 0
   if self.config.portrait == "left" or self.config.portrait == "right" then
     self.portrait:SetWidth(real_height)
