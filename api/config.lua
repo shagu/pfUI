@@ -726,6 +726,7 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("bars",       nil,           "nacolor",          ".3,.3,.3,1")
   pfUI:UpdateConfig("bars",       nil,           "showequipped",     "1")
   pfUI:UpdateConfig("bars",       nil,           "eqcolor",          ".2,.8,.2,.2")
+  pfUI:UpdateConfig("bars",       nil,           "shiftdrag",        "1")
 
   pfUI:UpdateConfig("bars",       nil,           "font",             "Interface\\AddOns\\pfUI\\fonts\\BigNoodleTitling.ttf")
   pfUI:UpdateConfig("bars",       nil,           "font_offset",      "0")

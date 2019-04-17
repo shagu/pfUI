@@ -1663,6 +1663,7 @@ pfUI:RegisterModule("gui", 20400, function ()
       CreateConfig(U["bars"], T["Highlight Not Usable Spells"], C.bars, "showna", "checkbox")
       CreateConfig(U["bars"], T["Not Usable Color"], C.bars, "nacolor", "color")
       CreateConfig(U["bars"], T["Lock Actionbars"], "UVAR", "LOCK_ACTIONBAR", "checkbox")
+      CreateConfig(U["bars"], T["Always Allow Drag Via Shift Key"], C.bars, "shiftdrag", "checkbox")
 
       CreateConfig(nil, "Font Options", nil, nil, "header")
       CreateConfig(U["bars"], T["Font"], C.bars, "font", "dropdown", pfUI.gui.dropdowns.fonts)
