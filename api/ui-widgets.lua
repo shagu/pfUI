@@ -198,7 +198,7 @@ end
 -- 'frame'    [frame]         the modelframe that should be used
 function pfUI.api.EnableClickRotate(frame)
   frame:EnableMouse(true)
-  frame:SetScript("OnUpdate", function()
+  HookScript(frame, "OnUpdate", function()
     if this.rotate then
       local x,_ = GetCursorPosition()
       if this.curx > x then
@@ -211,14 +211,14 @@ function pfUI.api.EnableClickRotate(frame)
     end
   end)
 
-  frame:SetScript("OnMouseDown", function()
+  HookScript(frame, "OnMouseDown", function()
     if arg1 == "LeftButton" then
       this.rotate = true
       this.curx, this.cury = GetCursorPosition()
     end
   end)
 
-  frame:SetScript("OnMouseUp", function()
+  HookScript(frame, "OnMouseUp", function()
     this.rotate, this.curx, this.cury = nil, nil, nil
   end)
 end
