@@ -62,6 +62,11 @@ pfUI:RegisterModule("castbar", 20400, function ()
     cb.bar.right:SetText("right")
     cb.bar.right:SetJustifyH("right")
 
+    cb.bar.lag = cb.bar:CreateTexture(nil, "OVERLAY")
+    cb.bar.lag:SetPoint("TOPRIGHT", cb.bar, "TOPRIGHT", 0, 0)
+    cb.bar.lag:SetPoint("BOTTOMRIGHT", cb.bar, "BOTTOMRIGHT", 0, 0)
+    cb.bar.lag:SetTexture(1,.2,.2,.2)
+
     cb:SetScript("OnUpdate", function()
       if this.drag and this.drag:IsShown() then
         this:SetAlpha(1)
@@ -115,6 +120,14 @@ pfUI:RegisterModule("castbar", 20400, function ()
           else
             this.bar:SetPoint("TOPLEFT", this, 0, 0)
             this.icon:Hide()
+          end
+
+          if this.showlag then
+            local _, _, lag = GetNetStats()
+            local width = duration / this:GetWidth() * lag/100
+            this.bar.lag:SetWidth(width)
+          else
+            this.bar.lag:Hide()
           end
         end
 
@@ -178,6 +191,7 @@ pfUI:RegisterModule("castbar", 20400, function ()
   if C.castbar.player.hide_pfui == "0" then
     pfUI.castbar.player = CreateCastbar("pfPlayerCastbar", UIParent, "player")
     pfUI.castbar.player.showicon = C.castbar.player.showicon == "1" and true or nil
+    pfUI.castbar.player.showlag = C.castbar.player.showlag == "1" and true or nil
 
     if pfUI.uf.player then
       local pspace = tonumber(C.unitframes.player.pspace)
@@ -201,6 +215,7 @@ pfUI:RegisterModule("castbar", 20400, function ()
   if C.castbar.target.hide_pfui == "0" then
     pfUI.castbar.target = CreateCastbar("pfTargetCastbar", UIParent, "target")
     pfUI.castbar.target.showicon = C.castbar.target.showicon == "1" and true or nil
+    pfUI.castbar.target.showlag = C.castbar.target.showlag == "1" and true or nil
 
     if pfUI.uf.target then
       local pspace = tonumber(C.unitframes.target.pspace)
