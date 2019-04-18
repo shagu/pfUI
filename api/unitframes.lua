@@ -1481,27 +1481,40 @@ function pfUI.uf:RefreshUnit(unit, component)
   end
 
   local r, g, b, a = .2, .2, .2, 1
-  if UnitIsPlayer(unitstr) then
-    local _, class = UnitClass(unitstr)
-    local color = RAID_CLASS_COLORS[class]
-    if color then r, g, b = color.r, color.g, color.b end
-  elseif unit.label == "pet" then
-    local happiness = GetPetHappiness()
-    if happiness == 1 then
-      r, g, b = 1, 0, 0
-    elseif happiness == 2 then
-      r, g, b = 1, 1, 0
+  local custom = nil
+  if C.unitframes.customfullhp == "1" and UnitHealth(unitstr) == UnitHealthMax(unitstr) then
+    r, g, b, a = pfUI.api.strsplit(",", C.unitframes.customcolor)
+    custom = true
+  elseif C.unitframes.custom == "0" then
+    if UnitIsPlayer(unitstr) then
+      local _, class = UnitClass(unitstr)
+      local color = RAID_CLASS_COLORS[class]
+      if color then r, g, b = color.r, color.g, color.b end
+    elseif unit.label == "pet" then
+      local happiness = GetPetHappiness()
+      if happiness == 1 then
+        r, g, b = 1, 0, 0
+      elseif happiness == 2 then
+        r, g, b = 1, 1, 0
+      else
+        r, g, b = 0, 1, 0
+      end
     else
-      r, g, b = 0, 1, 0
+      local color = UnitReactionColor[UnitReaction(unitstr, "player")]
+      if color then r, g, b = color.r, color.g, color.b end
     end
-  else
-    local color = UnitReactionColor[UnitReaction(unitstr, "player")]
-    if color then r, g, b = color.r, color.g, color.b end
+  elseif C.unitframes.custom == "1"  then
+    r, g, b, a = pfUI.api.strsplit(",", C.unitframes.customcolor)
+    custom = true
+  elseif C.unitframes.custom == "2" then
+    if UnitHealthMax(unitstr) > 0 then
+      r, g, b = GetColorGradient(UnitHealth(unitstr) / UnitHealthMax(unitstr))
+    else
+      r, g, b = 0, 0, 0
+    end
   end
 
-  if C.unitframes.custom == "1" then
-    r, g, b, a = pfUI.api.strsplit(",", C.unitframes.customcolor)
-  elseif C.unitframes.pastel == "1" then
+  if C.unitframes.pastel == "1" and not custom then
     r, g, b = (r + .5) * .5, (g + .5) * .5, (b + .5) * .5
   end
 

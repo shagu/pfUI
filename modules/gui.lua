@@ -950,6 +950,11 @@ pfUI:RegisterModule("gui", 20400, function ()
         "default:" .. T["Default"],
         "tukui:TukUI"
       },
+      ["uf_color"] = {
+        "0:" .. T["Class"],
+        "1:" .. T["Custom"],
+        "2:" .. T["Health"],
+      },
       ["uf_texts"] = {
         "none:" .. T["Disable"],
         "unit:" .. T["Unit String"],
@@ -1411,8 +1416,9 @@ pfUI:RegisterModule("gui", 20400, function ()
     CreateGUIEntry(T["Unit Frames"], T["General"], function()
       CreateConfig(nil, T["Disable pfUI Unit Frames"], C.unitframes, "disable", "checkbox")
       CreateConfig(nil, T["Enable Pastel Colors"], C.unitframes, "pastel", "checkbox")
-      CreateConfig(nil, T["Enable Custom Color Health Bars"], C.unitframes, "custom", "checkbox")
+      CreateConfig(nil, T["Health Bar Color"], C.unitframes, "custom", "dropdown", pfUI.gui.dropdowns.uf_color)
       CreateConfig(nil, T["Custom Health Bar Color"], C.unitframes, "customcolor", "color")
+      CreateConfig(nil, T["Use Custom Color On Full Health"], C.unitframes, "customfullhp", "checkbox")
       CreateConfig(nil, T["Enable Custom Color Health Bar Background"], C.unitframes, "custombg", "checkbox")
       CreateConfig(nil, T["Custom Health Bar Background Color"], C.unitframes, "custombgcolor", "color")
       CreateConfig(nil, T["Healthbar Animation Speed"], C.unitframes, "animation_speed", "dropdown", pfUI.gui.dropdowns.uf_animationspeed)
