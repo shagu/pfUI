@@ -7,6 +7,8 @@ pfUI:RegisterModule("castbar", 20400, function ()
     default_border = C.appearance.border.unitframes
   end
 
+  local cbtexture = C.appearance.castbar.texture
+
   local function CreateCastbar(name, parent, unitstr, unitname)
     local cb = CreateFrame("Frame", name, parent or UIParent)
 
@@ -29,7 +31,7 @@ pfUI:RegisterModule("castbar", 20400, function ()
 
     -- statusbar
     cb.bar = CreateFrame("StatusBar", nil, cb)
-    cb.bar:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
+    cb.bar:SetStatusBarTexture(cbtexture)
     cb.bar:ClearAllPoints()
     cb.bar:SetAllPoints(cb)
     cb.bar:SetMinMaxValues(0, 100)

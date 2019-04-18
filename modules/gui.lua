@@ -1780,6 +1780,7 @@ pfUI:RegisterModule("gui", 20400, function ()
       CreateConfig(nil, T["Use Unit Fonts"], C.castbar, "use_unitfonts", "checkbox")
       CreateConfig(nil, T["Casting Color"], C.appearance.castbar, "castbarcolor", "color")
       CreateConfig(nil, T["Channeling Color"], C.appearance.castbar, "channelcolor", "color")
+      CreateConfig(nil, T["Castbar Texture"], C.appearance.castbar, "texture", "dropdown", pfUI.gui.dropdowns.uf_bartexture)
       CreateConfig(nil, T["Disable Blizzard Castbar"], C.castbar.player, "hide_blizz", "checkbox")
 
       CreateConfig(nil, T["Player Castbar"], nil, nil, "header")
