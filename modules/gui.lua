@@ -1500,7 +1500,7 @@ pfUI:RegisterModule("gui", 20400, function ()
           CreateConfig(U[c], T["Show Raid Mark"], C.unitframes[c], "raidicon", "checkbox")
           CreateConfig(U[c], T["Show Loot Icon"], C.unitframes[c], "looticon", "checkbox")
           CreateConfig(U[c], T["Show Leader Icon"], C.unitframes[c], "leadericon", "checkbox")
-          CreateConfig(U[c], T["Display Class Buffs"], C.unitframes[c], "buff_indicator", "checkbox")
+          CreateConfig(U[c], T["Show Class Buff Indicators"], C.unitframes[c], "buff_indicator", "checkbox")
 
           CreateConfig(U[c], T["Healthbar"], nil, nil, "header")
           CreateConfig(U[c], T["Health Bar Width"], C.unitframes[c], "width")
