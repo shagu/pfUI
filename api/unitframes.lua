@@ -1652,7 +1652,7 @@ function pfUI.uf:AddIcon(frame, pos, icon)
   local iconsize = C.unitframes.indicator_size
   if not frame.hp then return end
   local frame = frame.hp.bar
-  if pos > floor(frame:GetWidth() / iconsize) then return end
+  if pos > ceil(frame:GetWidth() / iconsize) then return end
 
   if not frame.icon then frame.icon = {} end
 
