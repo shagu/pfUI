@@ -598,6 +598,12 @@ pfUI:RegisterModule("panel", 20400, function()
   pfUI.panel.left.right.text:SetPoint("CENTER", 0, 0)
   pfUI.panel.left.right.text:SetFontObject(GameFontWhite)
 
+  if C.panel.left.left == "none"
+  and C.panel.left.center == "none"
+  and C.panel.left.right == "none" then
+    pfUI.panel.left:Hide()
+  end
+
   pfUI.panel.right = CreateFrame("Frame", "pfPanelRight", UIParent)
   pfUI.panel.right:SetFrameStrata("FULLSCREEN")
   pfUI.panel.right:ClearAllPoints()
@@ -671,6 +677,12 @@ pfUI:RegisterModule("panel", 20400, function()
   pfUI.panel.right.right.text:SetAllPoints(pfUI.panel.right.right)
   pfUI.panel.right.right.text:SetPoint("CENTER", 0, 0)
   pfUI.panel.right.right.text:SetFontObject(GameFontWhite)
+
+  if C.panel.right.left == "none"
+  and C.panel.right.center == "none"
+  and C.panel.right.right == "none" then
+    pfUI.panel.right:Hide()
+  end
 
   pfUI.panel.minimap = CreateFrame("Button", "pfPanelMinimap", UIParent)
   CreateBackdrop(pfUI.panel.minimap, default_border)
