@@ -1495,13 +1495,13 @@ function pfUI.uf:RefreshUnit(unit, component)
     end
   end
 
-  local r, g, b, a = .2, .2, .2, 1
-
+  -- set healthbar color
   local custom_active = nil
   local customfullhp = unit.config.defcolor == "0" and unit.config.customfullhp or C.unitframes.customfullhp
   local customcolor = unit.config.defcolor == "0" and unit.config.customcolor or C.unitframes.customcolor
   local custom = unit.config.defcolor == "0" and unit.config.custom or C.unitframes.custom
 
+  local r, g, b, a = .2, .2, .2, 1
   if customfullhp == "1" and UnitHealth(unitstr) == UnitHealthMax(unitstr) then
     r, g, b, a = pfUI.api.strsplit(",", customcolor)
     custom_active = true
@@ -1540,10 +1540,24 @@ function pfUI.uf:RefreshUnit(unit, component)
 
   unit.hp.bar:SetStatusBarColor(r, g, b, a)
 
-  local p = ManaBarColor[UnitPowerType(unitstr)]
-  local pr, pg, pb = 0, 0, 0
-  if p then pr, pg, pb = p.r + .5, p.g +.5, p.b +.5 end
-  unit.power.bar:SetStatusBarColor(pr, pg, pb)
+  -- set powerbar color
+  local mana = unit.config.defcolor == "0" and unit.config.manacolor or C.unitframes.manacolor
+  local rage = unit.config.defcolor == "0" and unit.config.ragecolor or C.unitframes.ragecolor
+  local energy = unit.config.defcolor == "0" and unit.config.energycolor or C.unitframes.energycolor
+  local focus = unit.config.defcolor == "0" and unit.config.focuscolor or C.unitframes.focuscolor
+
+  local r, g, b, a = .5, .5, .5, 1
+  local utype = UnitPowerType(unitstr)
+  if utype == 0 then
+    r, g, b, a = pfUI.api.strsplit(",", mana)
+  elseif utype == 1 then
+    r, g, b, a = pfUI.api.strsplit(",", rage)
+  elseif utype == 2 then
+    r, g, b, a = pfUI.api.strsplit(",", focus)
+  elseif utype == 3 then
+    r, g, b, a = pfUI.api.strsplit(",", energy)
+  end
+  unit.power.bar:SetStatusBarColor(r, g, b, a)
 
   if UnitName(unitstr) then
     unit.hpLeftText:SetText(pfUI.uf:GetStatusValue(unit, "hpleft"))
