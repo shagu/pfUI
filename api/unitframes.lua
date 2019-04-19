@@ -240,8 +240,11 @@ function pfUI.uf:UpdateConfig()
     f.hp.bar:SetOrientation("HORIZONTAL")
   end
 
-  if C.unitframes.custombg == "1" then
-    local cr, cg, cb, ca = pfUI.api.strsplit(",", C.unitframes.custombgcolor)
+  local custombg = f.config.defcolor == "0" and f.config.custombg or C.unitframes.custombg
+  local custombgcolor = f.config.defcolor == "0" and f.config.custombgcolor or C.unitframes.custombgcolor
+
+  if custombg == "1" then
+    local cr, cg, cb, ca = pfUI.api.strsplit(",", custombgcolor)
     cr, cg, cb, ca = tonumber(cr), tonumber(cg), tonumber(cb), tonumber(ca)
     f.hp.bar.texture = f.hp.bar.texture or f.hp:CreateTexture(nil,"BACKGROUND")
     f.hp.bar.texture:SetTexture(cr,cg,cb,ca)
@@ -1493,11 +1496,16 @@ function pfUI.uf:RefreshUnit(unit, component)
   end
 
   local r, g, b, a = .2, .2, .2, 1
-  local custom = nil
-  if C.unitframes.customfullhp == "1" and UnitHealth(unitstr) == UnitHealthMax(unitstr) then
-    r, g, b, a = pfUI.api.strsplit(",", C.unitframes.customcolor)
-    custom = true
-  elseif C.unitframes.custom == "0" then
+
+  local custom_active = nil
+  local customfullhp = unit.config.defcolor == "0" and unit.config.customfullhp or C.unitframes.customfullhp
+  local customcolor = unit.config.defcolor == "0" and unit.config.customcolor or C.unitframes.customcolor
+  local custom = unit.config.defcolor == "0" and unit.config.custom or C.unitframes.custom
+
+  if customfullhp == "1" and UnitHealth(unitstr) == UnitHealthMax(unitstr) then
+    r, g, b, a = pfUI.api.strsplit(",", customcolor)
+    custom_active = true
+  elseif custom == "0" then
     if UnitIsPlayer(unitstr) then
       local _, class = UnitClass(unitstr)
       local color = RAID_CLASS_COLORS[class]
@@ -1515,10 +1523,10 @@ function pfUI.uf:RefreshUnit(unit, component)
       local color = UnitReactionColor[UnitReaction(unitstr, "player")]
       if color then r, g, b = color.r, color.g, color.b end
     end
-  elseif C.unitframes.custom == "1"  then
-    r, g, b, a = pfUI.api.strsplit(",", C.unitframes.customcolor)
-    custom = true
-  elseif C.unitframes.custom == "2" then
+  elseif custom == "1"  then
+    r, g, b, a = pfUI.api.strsplit(",", customcolor)
+    custom_active = true
+  elseif custom == "2" then
     if UnitHealthMax(unitstr) > 0 then
       r, g, b = GetColorGradient(UnitHealth(unitstr) / UnitHealthMax(unitstr))
     else
@@ -1526,7 +1534,7 @@ function pfUI.uf:RefreshUnit(unit, component)
     end
   end
 
-  if C.unitframes.pastel == "1" and not custom then
+  if C.unitframes.pastel == "1" and not custom_active then
     r, g, b = (r + .5) * .5, (g + .5) * .5, (b + .5) * .5
   end
 
