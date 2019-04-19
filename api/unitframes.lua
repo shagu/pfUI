@@ -1102,36 +1102,48 @@ function pfUI.uf:RefreshUnit(unit, component)
 
   -- Raid Icon
   if unit.raidIcon and ( component == "all" or component == "raidIcon" ) then
-    local raidIcon = GetRaidTargetIndex(unitstr)
-    if raidIcon and UnitName(unitstr) then
-      SetRaidTargetIconTexture(unit.raidIcon.texture, raidIcon)
-      unit.raidIcon:Show()
-    else
+    if unit.config.raidicon == "0" then
       unit.raidIcon:Hide()
+    else
+      local raidIcon = GetRaidTargetIndex(unitstr)
+      if raidIcon and UnitName(unitstr) then
+        SetRaidTargetIconTexture(unit.raidIcon.texture, raidIcon)
+        unit.raidIcon:Show()
+      else
+        unit.raidIcon:Hide()
+      end
     end
   end
 
   -- Leader Icon
   if unit.leaderIcon and ( component == "all" or component == "leaderIcon" ) then
-    if GetNumPartyMembers() == 0 and GetNumRaidMembers() == 0 then
+    if unit.config.leadericon == "0" then
       unit.leaderIcon:Hide()
-    elseif UnitIsPartyLeader(unitstr) then
-      unit.leaderIcon:Show()
     else
-      unit.leaderIcon:Hide()
+      if GetNumPartyMembers() == 0 and GetNumRaidMembers() == 0 then
+        unit.leaderIcon:Hide()
+      elseif UnitIsPartyLeader(unitstr) then
+        unit.leaderIcon:Show()
+      else
+        unit.leaderIcon:Hide()
+      end
     end
   end
 
   -- Loot Icon
   if unit.lootIcon and ( component == "all" or component == "lootIcon" ) then
-    -- no third return value here.. but leaving this as a hint
-    local method, group, raid = GetLootMethod()
-    local name = group and UnitName(group == 0 and "player" or "party"..group) or raid and UnitName("raid"..raid) or nil
-
-    if name and name == UnitName(unitstr) then
-      unit.lootIcon:Show()
-    else
+    if unit.config.looticon == "0" then
       unit.lootIcon:Hide()
+    else
+      -- no third return value here.. but leaving this as a hint
+      local method, group, raid = GetLootMethod()
+      local name = group and UnitName(group == 0 and "player" or "party"..group) or raid and UnitName("raid"..raid) or nil
+
+      if name and name == UnitName(unitstr) then
+        unit.lootIcon:Show()
+      else
+        unit.lootIcon:Hide()
+      end
     end
   end
 
