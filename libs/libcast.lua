@@ -178,12 +178,18 @@ libcast:RegisterEvent("PLAYER_TARGET_CHANGED")
 libcast:SetScript("OnEvent", function()
   -- Fill database with player casts
   if event == "SPELLCAST_START" then
+    local icon = L["spells"][arg1] and string.format("%s%s", "Interface\\Icons\\", L["spells"][arg1].icon) or texture
     -- add cast action to the database
     this.db[player].cast = arg1
     this.db[player].start = GetTime()
     this.db[player].casttime = arg2
-    this.db[player].icon = L["spells"][arg1] and string.format("%s%s", "Interface\\Icons\\", L["spells"][arg1].icon) or texture
+    this.db[player].icon = icon
     this.db[player].channel = nil
+    if not L["spells"][arg1] or not L["spells"][arg1].icon or not L["spells"][arg1].t then
+      L["spells"][arg1] = L["spells"][arg1] or { }
+      L["spells"][arg1].icon = L["spells"][arg1].icon or icon
+      L["spells"][arg1].t = L["spells"][arg1].t or arg2
+    end
     texture = nil
   elseif event == "SPELLCAST_STOP" or event == "SPELLCAST_FAILED" or event == "SPELLCAST_INTERRUPTED" then
     if this.db[player] and not this.db[player].channel then
