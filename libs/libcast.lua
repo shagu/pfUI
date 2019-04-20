@@ -107,7 +107,7 @@ function libcast:AddAction(mob, spell, channel)
 
   if L["spells"][spell] ~= nil then
     local casttime = L["spells"][spell].t
-    local icon = L["spells"][spell].icon
+    local icon = string.format("%s%s", "Interface\\Icons\\", L["spells"][spell].icon)
 
     -- add cast action to the database
     if not self.db[mob] then self.db[mob] = {} end
@@ -182,7 +182,7 @@ libcast:SetScript("OnEvent", function()
     this.db[player].cast = arg1
     this.db[player].start = GetTime()
     this.db[player].casttime = arg2
-    this.db[player].icon = L["spells"][arg1] and "Interface\\Icons\\"..L["spells"][arg1].icon or texture
+    this.db[player].icon = L["spells"][arg1] and string.format("%s%s", "Interface\\Icons\\", L["spells"][arg1].icon) or texture
     this.db[player].channel = nil
     texture = nil
   elseif event == "SPELLCAST_STOP" or event == "SPELLCAST_FAILED" or event == "SPELLCAST_INTERRUPTED" then
@@ -205,7 +205,7 @@ libcast:SetScript("OnEvent", function()
     this.db[player].cast = arg2
     this.db[player].start = GetTime()
     this.db[player].casttime = arg1
-    this.db[player].icon = L["spells"][arg2] and "Interface\\Icons\\"..L["spells"][arg2].icon or texture
+    this.db[player].icon = L["spells"][arg2] and string.format("%s%s", "Interface\\Icons\\", L["spells"][arg2].icon) or texture
     this.db[player].channel = true
     texture = nil
   elseif event == "SPELLCAST_CHANNEL_STOP" then
