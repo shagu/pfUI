@@ -685,9 +685,6 @@ pfUI:RegisterModule("panel", 20400, function()
   end
 
   pfUI.panel.minimap = CreateFrame("Button", "pfPanelMinimap", UIParent)
-  CreateBackdrop(pfUI.panel.minimap, default_border)
-  UpdateMovable(pfUI.panel.minimap)
-  pfUI.panel.minimap:SetHeight(C.global.font_size+default_border*2)
   if pfUI.minimap then
     pfUI.panel.minimap:SetPoint("TOP", pfUI.minimap, "BOTTOM", 0 , -default_border*3)
     pfUI.panel.minimap:SetWidth(pfUI.minimap:GetWidth())
@@ -695,7 +692,13 @@ pfUI:RegisterModule("panel", 20400, function()
     pfUI.panel.minimap:SetWidth(200)
     pfUI.panel.minimap:SetPoint("TOP", UIParent, "TOP", 0, -5)
   end
+
+  pfUI.panel.minimap:SetHeight(C.global.font_size+default_border*2)
   pfUI.panel.minimap:SetFrameStrata("MEDIUM")
+
+  CreateBackdrop(pfUI.panel.minimap, default_border)
+  UpdateMovable(pfUI.panel.minimap)
+
   pfUI.panel.minimap.text = pfUI.panel.minimap:CreateFontString("MinimapZoneText", "LOW", "GameFontNormal")
   pfUI.panel.minimap.text:SetFont(font, font_size, "OUTLINE")
   pfUI.panel.minimap.text:SetPoint("CENTER", 0, 0)
