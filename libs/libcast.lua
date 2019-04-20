@@ -158,6 +158,12 @@ libcast:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_CREATURE_BUFFS")
 libcast:RegisterEvent("CHAT_MSG_SPELL_CREATURE_VS_CREATURE_DAMAGE")
 libcast:RegisterEvent("CHAT_MSG_SPELL_CREATURE_VS_CREATURE_BUFF")
 
+-- scan for textures
+local texture = nil
+hooksecurefunc("UseAction", function(id) texture = GetActionTexture(id) end)
+hooksecurefunc("CastSpell", function(id, bookType) texture = GetSpellTexture(id, bookType) end)
+hooksecurefunc("UseContainerItem", function(id, index) texture = GetContainerItemInfo(id, index) end)
+
 -- player spells
 libcast:RegisterEvent("SPELLCAST_START")
 libcast:RegisterEvent("SPELLCAST_STOP")
@@ -176,8 +182,9 @@ libcast:SetScript("OnEvent", function()
     this.db[player].cast = arg1
     this.db[player].start = GetTime()
     this.db[player].casttime = arg2
-    this.db[player].icon = L["spells"][arg1] and "Interface\\Icons\\"..L["spells"][arg1].icon or nil
+    this.db[player].icon = L["spells"][arg1] and "Interface\\Icons\\"..L["spells"][arg1].icon or texture
     this.db[player].channel = nil
+    texture = nil
   elseif event == "SPELLCAST_STOP" or event == "SPELLCAST_FAILED" or event == "SPELLCAST_INTERRUPTED" then
     if this.db[player] and not this.db[player].channel then
       -- remove cast action to the database
@@ -186,6 +193,8 @@ libcast:SetScript("OnEvent", function()
       this.db[player].casttime = nil
       this.db[player].icon = nil
       this.db[player].channel = nil
+    else
+      texture = nil
     end
   elseif event == "SPELLCAST_DELAYED" then
     if this.db[player].cast then
@@ -196,8 +205,9 @@ libcast:SetScript("OnEvent", function()
     this.db[player].cast = arg2
     this.db[player].start = GetTime()
     this.db[player].casttime = arg1
-    this.db[player].icon = L["spells"][arg2] and "Interface\\Icons\\"..L["spells"][arg2].icon or nil
+    this.db[player].icon = L["spells"][arg2] and "Interface\\Icons\\"..L["spells"][arg2].icon or texture
     this.db[player].channel = true
+    texture = nil
   elseif event == "SPELLCAST_CHANNEL_STOP" then
     if this.db[player] and this.db[player].channel then
       -- remove cast action to the database
