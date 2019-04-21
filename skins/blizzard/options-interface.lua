@@ -18,7 +18,7 @@ pfUI:RegisterSkin("Options - Interface", function ()
   UIOptionsFrame.backdrop:SetPoint("BOTTOMRIGHT", 0, 50)
   UIOptionsFrame:SetHitRectInsets(0,0,0,50)
 
-  local close = GetNoNameObject(UIOptionsFrame, "Button", nil, "UI--Panel--MinimizeButton--Up")
+  local close = GetNoNameObject(UIOptionsFrame, "Button", nil, "UI-Panel-MinimizeButton-Up")
 
   -- increase button layer
   UIOptionsFrameTab1:SetFrameLevel(8)

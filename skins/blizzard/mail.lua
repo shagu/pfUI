@@ -129,8 +129,8 @@ pfUI:RegisterSkin("Mailbox", function ()
         button.icon:SetTexture(tex)
       end
     end
-    SkinButton(GetNoNameObject(InboxFrame, "Button", nil, "UI--Panel--Button--Up", OPENMAIL))
-    local button = GetNoNameObject(SendMailFrame, "Button", nil, "UI--Panel--Button--Up", SEND_LABEL) -- this is SendMailMailButton
+    SkinButton(GetNoNameObject(InboxFrame, "Button", nil, "UI-Panel-Button-Up", OPENMAIL))
+    local button = GetNoNameObject(SendMailFrame, "Button", nil, "UI-Panel-Button-Up", SEND_LABEL) -- this is SendMailMailButton
     SkinButton(button) -- hack! only it happened to do it
     button:ClearAllPoints()
     button:SetPoint("RIGHT", SendMailCancelButton, "LEFT", -2*bpad, 0)

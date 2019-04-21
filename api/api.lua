@@ -960,11 +960,10 @@ end
 -- 'layer'      [string]
 -- 'arg1'       [string]
 -- return object
-
--- NOTE: special symbols must be escaped by the SAME symbol!
--- e.g. symbol '\':  '\\'
--- symbol '-': '--'
 function pfUI.api.GetNoNameObject(frame, objtype, layer, arg1, arg2)
+  local arg1 = arg1 and gsub(arg1, "([%+%-%*%(%)%?%[%]%^])", "%%%1")
+  local arg2 = arg2 and gsub(arg2, "([%+%-%*%(%)%?%[%]%^])", "%%%1")
+
   local objects
   if objtype == "Texture" or objtype == "FontString" then
     objects = {frame:GetRegions()}
@@ -980,25 +979,25 @@ function pfUI.api.GetNoNameObject(frame, objtype, layer, arg1, arg2)
       if objtype == "Texture" and object.SetTexture and object:GetTexture() ~= "Interface\\BUTTONS\\WHITE8X8" then
         if arg1 then
           local texture = object:GetTexture()
-          if texture and not string.find(texture, arg1) then check = false end
+          if texture and not string.find(texture, arg1, 1) then check = false end
         end
 
         if check then return object end
       elseif objtype == "FontString" and object.SetText then
         if arg1 then
           local text = object:GetText()
-          if text and not string.find(text, arg1) then check = false end
+          if text and not string.find(text, arg1, 1) then check = false end
         end
 
         if check then return object end
       elseif objtype == "Button" and object.GetNormalTexture and object:GetNormalTexture() then
         if arg1 then
           local texture = object:GetNormalTexture():GetTexture()
-          if texture and not string.find(texture, arg1) then check = false end
+          if texture and not string.find(texture, arg1, 1) then check = false end
         end
         if arg2 then
           local text = object:GetText()
-          if text and not string.find(text, arg2) then check = false end
+          if text and not string.find(text, arg2, 1) then check = false end
         end
 
         if check then return object end
