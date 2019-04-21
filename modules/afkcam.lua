@@ -1,5 +1,5 @@
 pfUI:RegisterModule("afkcam", 20400, function ()
-  local MARKED_AFK_CAPTURE = string.gsub(_G.MARKED_AFK_MESSAGE, "%%s", "(.+)")
+  local MARKED_AFK_CAPTURE = SanitizePattern(MARKED_AFK_MESSAGE)
   local social_chats = {
     "CHAT_MSG_SAY",
     "CHAT_MSG_WHISPER",
