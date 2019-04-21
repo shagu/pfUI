@@ -152,15 +152,16 @@ function pfUI:GetEnvironment()
     pfUI.env[m] = func
   end
 
-  local lang = pfUI_config.global and pfUI_translation[pfUI_config.global.language] and pfUI_config.global.language or GetLocale()
-  local T = setmetatable(pfUI_translation[lang] or {}, { __index = function(tab,key)
-    local value = tostring(key)
-    rawset(tab,key,value)
-    return value
-  end})
+  if pfUI_config and pfUI_config.global and pfUI_config.global.language and not pfUI.env.T then
+    local lang = pfUI_config and pfUI_config.global and pfUI_config.global.language and pfUI_translation[pfUI_config.global.language] and pfUI_config.global.language or GetLocale()
+    pfUI.env.T = setmetatable(pfUI_translation[lang] or {}, { __index = function(tab,key)
+      local value = tostring(key)
+      rawset(tab,key,value)
+      return value
+    end})
+  end
 
   pfUI.env._G = getfenv(0)
-  pfUI.env.T = T
   pfUI.env.C = pfUI_config
   pfUI.env.L = (pfUI_locale[GetLocale()] or pfUI_locale["enUS"])
 
