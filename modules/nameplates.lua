@@ -559,7 +559,7 @@ pfUI:RegisterModule("nameplates", 20400, function ()
         end
 
         if icon then
-          healthbar.castbar.icon:SetTexture("Interface\\Icons\\" ..  texture)
+          healthbar.castbar.icon:SetTexture(texture)
           healthbar.castbar.icon:SetTexCoord(.1,.9,.1,.9)
         end
       end
