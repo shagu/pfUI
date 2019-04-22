@@ -576,10 +576,7 @@ end
 -- 'frame'      [frame]        the frame that should be saved.
 function pfUI.api.SaveMovable(frame)
   local anchor, _, _, xpos, ypos = frame:GetPoint()
-  if not C.position[frame:GetName()] then
-    C.position[frame:GetName()] = {}
-  end
-
+  C.position[frame:GetName()] = C.position[frame:GetName()] or {}
   C.position[frame:GetName()]["xpos"] = round(xpos)
   C.position[frame:GetName()]["ypos"] = round(ypos)
   C.position[frame:GetName()]["anchor"] = anchor
