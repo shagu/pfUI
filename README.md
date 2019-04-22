@@ -31,6 +31,7 @@ This is **not** an addon-pack like [ShaguUI](http://shagu.org/ShaguUI/), however
     /focus        Creates a Focus-Frame for the current target
     /castfocus    Same as /cast but for focus frame
     /clearfocus   Clears the Focus-Frame
+    /swapfocus    Toggle Focus and Target-Frame
     /abp          Addon Button Panel
 
 ## Languages

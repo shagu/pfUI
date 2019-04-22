@@ -1,4 +1,4 @@
-SLASH_PFFOCUS1 = '/focus'
+SLASH_PFFOCUS1, SLASH_PFFOCUS2 = '/focus', '/pffocus'
 function SlashCmdList.PFFOCUS(msg)
   if not pfUI.uf or not pfUI.uf.focus then return end
 
@@ -13,7 +13,7 @@ function SlashCmdList.PFFOCUS(msg)
   end
 end
 
-SLASH_PFCLEARFOCUS1 = '/clearfocus'
+SLASH_PFCLEARFOCUS1, SLASH_PFCLEARFOCUS2 = '/clearfocus', '/pfclearfocus'
 function SlashCmdList.PFCLEARFOCUS(msg)
   if pfUI.uf and pfUI.uf.focus then
     pfUI.uf.focus:Hide()
@@ -62,6 +62,18 @@ function SlashCmdList.PFCASTFOCUS(msg)
     else
       TargetLastTarget()
     end
+  end
+end
+
+SLASH_PFSWAPFOCUS1, SLASH_PFSWAPFOCUS2 = '/swapfocus', '/pfswapfocus'
+function SlashCmdList.PFSWAPFOCUS(msg)
+  if not pfUI.uf or not pfUI.uf.focus then return end
+
+  local oldunit = UnitExists("target") and strlower(UnitName("target"))
+  if oldunit and pfUI.uf.focus.unitname then
+    TargetByName(pfUI.uf.focus.unitname)
+    pfUI.uf.focus.unitname = oldunit
+    pfUI.uf.focus:Show()
   end
 end
 
