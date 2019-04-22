@@ -162,7 +162,7 @@ pfUI:RegisterModule("castbar", 20400, function ()
     cb:RegisterEvent(CASTBAR_EVENT_CAST_DELAY)
     cb:RegisterEvent(CASTBAR_EVENT_CHANNEL_DELAY)
     cb:SetScript("OnEvent", function()
-      if not UnitIsUnit(this.unitstr, "player") then return end
+      if this.unitstr and not UnitIsUnit(this.unitstr, "player") then return end
 
       if event == CASTBAR_EVENT_CAST_DELAY then
         local name = this.unitstr and UnitName(this.unitstr) or this.unitname
