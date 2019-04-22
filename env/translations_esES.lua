@@ -436,6 +436,7 @@ pfUI_translation["esES"] = {
   ["Rage Color"] = nil,
   ["Raid"] = "Banda",
   ["Raid Icon Size"] = "Tamaño de los iconos de banda",
+  ["Raid Mark Size"] = nil,
   ["Random"] = "Aleatorio",
   ["Random Roll Announcement Rarity"] = "Anuncio para tirar los dados aleatoriamente",
   ["Random Rolling"] = "Tirar los dados aleatoriamente",

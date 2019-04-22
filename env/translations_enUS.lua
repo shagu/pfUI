@@ -436,6 +436,7 @@ pfUI_translation["enUS"] = {
   ["Rage Color"] = nil,
   ["Raid"] = nil,
   ["Raid Icon Size"] = nil,
+  ["Raid Mark Size"] = nil,
   ["Random"] = nil,
   ["Random Roll Announcement Rarity"] = nil,
   ["Random Rolling"] = nil,

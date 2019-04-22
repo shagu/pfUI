@@ -436,6 +436,7 @@ pfUI_translation["zhTW"] = {
   ["Rage Color"] = nil,
   ["Raid"] = "團隊",
   ["Raid Icon Size"] = "團隊圖示大小",
+  ["Raid Mark Size"] = nil,
   ["Random"] = "給隨機玩家",
   ["Random Roll Announcement Rarity"] = "隨機Roll點公示稀有度",
   ["Random Rolling"] = "隨機Roll點 物品:",

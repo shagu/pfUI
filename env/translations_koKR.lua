@@ -436,6 +436,7 @@ pfUI_translation["koKR"] = {
   ["Rage Color"] = nil,
   ["Raid"] = "레이드",
   ["Raid Icon Size"] = "레이드 아이콘 크기",
+  ["Raid Mark Size"] = nil,
   ["Random"] = nil,
   ["Random Roll Announcement Rarity"] = nil,
   ["Random Rolling"] = nil,

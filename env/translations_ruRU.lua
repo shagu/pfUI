@@ -436,6 +436,7 @@ pfUI_translation["ruRU"] = {
   ["Rage Color"] = "Цвет ярости",
   ["Raid"] = "Рейд",
   ["Raid Icon Size"] = "Размер иконки рейда",
+  ["Raid Mark Size"] = nil,
   ["Random"] = "Случайно",
   ["Random Roll Announcement Rarity"] = "Оповещение случайного броска для качества предмета",
   ["Random Rolling"] = "Случайный бросок костей для",
