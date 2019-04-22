@@ -236,4 +236,39 @@ pfUI:RegisterModule("castbar", 20400, function ()
 
     UpdateMovable(pfUI.castbar.target)
   end
+
+  -- [[ pfFocusCastbar ]] --
+  if C.castbar.focus.hide_pfui == "0" and pfUI.uf.focus then
+    pfUI.castbar.focus = CreateCastbar("pfFocusCastbar", UIParent)
+    pfUI.castbar.focus.showicon = C.castbar.focus.showicon == "1" and true or nil
+    pfUI.castbar.focus.showlag = C.castbar.focus.showlag == "1" and true or nil
+
+    local pspace = tonumber(C.unitframes.focus.pspace)
+    local width = C.castbar.focus.width ~= "-1" and C.castbar.focus.width or pfUI.uf.focus:GetWidth()
+    pfUI.castbar.focus:SetPoint("TOPLEFT", pfUI.uf.focus, "BOTTOMLEFT", 0, -default_border * 2 - pspace)
+    pfUI.castbar.focus:SetWidth(width)
+
+    if C.castbar.focus.height ~= "-1" then
+      pfUI.castbar.focus:SetHeight(C.castbar.focus.height)
+    end
+
+    -- make sure the castbar is set to the same name as the focus frame is
+    HookScript(pfUI.castbar.focus, "OnUpdate", function()
+      -- remove unitname when focus unit changed
+      if this.lastunit ~= pfUI.uf.focus.unitname then
+        this.lastunit = pfUI.uf.focus.unitname
+        pfUI.castbar.focus.unitname = nil
+      end
+
+      -- attach a proper unitname as soon as we get a unitstr
+      if not pfUI.castbar.focus.unitname and pfUI.uf.focus.unitname ~= "focus" and pfUI.uf.focus.label and pfUI.uf.focus.id then
+        local unitstr = string.format("%s%s", pfUI.uf.focus.label, pfUI.uf.focus.id)
+        if UnitExists(unitstr) and strlower(UnitName(unitstr)) == pfUI.uf.focus.unitname then
+          pfUI.castbar.focus.unitname = UnitName(unitstr)
+        end
+      end
+    end)
+
+    UpdateMovable(pfUI.castbar.focus)
+  end
 end)

@@ -1824,6 +1824,13 @@ pfUI:RegisterModule("gui", 20400, function ()
       CreateConfig(nil, T["Castbar Width"], C.castbar.target, "width")
       CreateConfig(nil, T["Castbar Height"], C.castbar.target, "height")
       CreateConfig(nil, T["Disable Target Castbar"], C.castbar.target, "hide_pfui", "checkbox")
+
+      CreateConfig(nil, T["Focus Castbar"], nil, nil, "header")
+      CreateConfig(nil, T["Show Spell Icon"], C.castbar.focus, "showicon", "checkbox")
+      CreateConfig(nil, T["Show Lag"], C.castbar.focus, "showlag", "checkbox")
+      CreateConfig(nil, T["Castbar Width"], C.castbar.focus, "width")
+      CreateConfig(nil, T["Castbar Height"], C.castbar.focus, "height")
+      CreateConfig(nil, T["Disable Focus Castbar"], C.castbar.focus, "hide_pfui", "checkbox")
     end)
 
     CreateGUIEntry(T["Chat"], nil, function()
