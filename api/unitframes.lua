@@ -1953,6 +1953,24 @@ function pfUI.uf:GetStatusValue(unit, pos)
     else
       return unit:GetColor("health") .. pfUI.api.Abbreviate(hp)
     end
+  elseif config == "namehealth" then
+    local health = ceil(hp - hpmax)
+    if UnitIsDead(unitstr) then
+      return unit:GetColor("health") .. DEAD
+    elseif health == 0 then
+      return unit:GetColor("unit") .. UnitName(unitstr)
+    else
+      return unit:GetColor("health") .. pfUI.api.Abbreviate(health)
+    end
+  elseif config == "shortnamehealth" then
+    local health = ceil(hp - hpmax)
+    if UnitIsDead(unitstr) then
+      return unit:GetColor("health") .. DEAD
+    elseif health == 0 then
+      return unit:GetColor("unit") .. strsub(UnitName(unitstr), 0, 3)
+    else
+      return unit:GetColor("health") .. pfUI.api.Abbreviate(health)
+    end
   elseif config == "healthminmax" then
     return unit:GetColor("health") .. pfUI.api.Abbreviate(hp) .. "/" .. pfUI.api.Abbreviate(hpmax)
 

@@ -962,6 +962,8 @@ pfUI:RegisterModule("gui", 20400, function ()
         "nameshort:" .. T["Name (Short)"],
         "level:" .. T["Level"],
         "class:" .. T["Class"],
+        "namehealth:" .. T["Name | Health Missing"],
+        "shortnamehealth:" .. T["Name (Short) | Health Missing"],
         "healthdyn:" .. T["Health - Auto"],
         "health:" .. T["Health - Current"],
         "healthmax:" .. T["Health - Max"],
