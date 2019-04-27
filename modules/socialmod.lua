@@ -10,10 +10,30 @@ pfUI:RegisterModule("socialmod", function ()
         if name then
           if class then
             local color = RAID_CLASS_COLORS[class]
-            if online then
-              _G["GuildFrameButton"..i.."Class"]:SetTextColor(color.r,color.g,color.b,1)
+            local classicon = _G["GuildFrameButton"..i].classicon
+            local coords = CLASS_ICON_TCOORDS[class]
+
+            -- do we have classicons? (skin enabled?)
+            if classicon then
+              _G["GuildFrameButton"..i.."Class"]:SetTextColor(0,0,0,0)
+
+              if coords then
+                classicon:SetTexCoord(unpack(coords))
+              else
+                classicon:SetTexCoord(0,1,0,1)
+              end
+
+              if online then
+                _G["GuildFrameButton"..i.."Name"]:SetTextColor(color.r,color.g,color.b,1)
+              else
+                _G["GuildFrameButton"..i.."Name"]:SetTextColor(color.r,color.g,color.b,.5)
+              end
             else
-              _G["GuildFrameButton"..i.."Class"]:SetTextColor(color.r,color.g,color.b,.5)
+              if online then
+                _G["GuildFrameButton"..i.."Class"]:SetTextColor(color.r,color.g,color.b,1)
+              else
+                _G["GuildFrameButton"..i.."Class"]:SetTextColor(color.r,color.g,color.b,.5)
+              end
             end
           end
 
@@ -116,10 +136,25 @@ pfUI:RegisterModule("socialmod", function ()
         end
 
         if class then
+          local classicon = _G["WhoFrameButton"..i].classicon
+          local coords = CLASS_ICON_TCOORDS[class]
           local color = RAID_CLASS_COLORS[class]
-          _G["WhoFrameButton"..i.."Class"]:SetTextColor(color.r,color.g,color.b,1)
+
+          -- do we have classicons? (skin enabled?)
+          if classicon then
+            _G["WhoFrameButton"..i.."Class"]:SetTextColor(0,0,0,0)
+            _G["WhoFrameButton"..i.."Name"]:SetTextColor(color.r,color.g,color.b,1)
+
+            if coords then
+              classicon:SetTexCoord(unpack(coords))
+            else
+              classicon:SetTexCoord(0,1,0,1)
+            end
+          else
+            _G["WhoFrameButton"..i.."Class"]:SetTextColor(color.r,color.g,color.b,1)
+          end
         else
-          _G["WhoFrameButton"..i.."Class"]:SetTextColor(1, 1, 1)
+          _G["WhoFrameButton"..i.."Class"]:Hide()
         end
 
         local color = GetDifficultyColor(level)

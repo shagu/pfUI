@@ -117,12 +117,12 @@ pfUI:RegisterSkin("Friends", function ()
     WhoFrameColumnHeader3:SetPoint("BOTTOMLEFT", WhoListScrollFrame, "TOPLEFT", 0, 4)
 
     StripTextures(WhoFrameColumnHeader4)
-    WhoFrameColumnHeader4:SetWidth(70)
+    WhoFrameColumnHeader4:SetWidth(32)
     WhoFrameColumnHeader4:ClearAllPoints()
     WhoFrameColumnHeader4:SetPoint("LEFT", WhoFrameColumnHeader3, "RIGHT", -2, 0)
 
     StripTextures(WhoFrameColumnHeader1)
-    WhoFrameColumnHeader1:SetWidth(70)
+    WhoFrameColumnHeader1:SetWidth(120)
     WhoFrameColumnHeader1:ClearAllPoints()
     WhoFrameColumnHeader1:SetPoint("LEFT", WhoFrameColumnHeader4, "RIGHT", -2, 0)
 
@@ -141,12 +141,19 @@ pfUI:RegisterSkin("Friends", function ()
       level:SetPoint("TOPLEFT", 10, -3)
 
       local class = _G["WhoFrameButton"..i.."Class"]
-      class:SetWidth(70)
+      class:SetWidth(30)
       class:ClearAllPoints()
       class:SetPoint("LEFT", level, "RIGHT", 10, 0)
 
+      local frame = _G["WhoFrameButton"..i]
+      frame.classicon = frame.classicon or frame:CreateTexture(nil, "OVERLAY")
+      frame.classicon:SetPoint("CENTER", class, "CENTER", -4, 0)
+      frame.classicon:SetWidth(15)
+      frame.classicon:SetHeight(15)
+      frame.classicon:SetTexture("Interface\\AddOns\\pfUI\\img\\classicons")
+
       local name = _G["WhoFrameButton"..i.."Name"]
-      name:SetWidth(70)
+      name:SetWidth(120)
       name:ClearAllPoints()
       name:SetPoint("LEFT", class, "RIGHT", 0, 0)
     end
@@ -180,17 +187,21 @@ pfUI:RegisterSkin("Friends", function ()
       StripTextures(_G["GuildFrameGuildStatusColumnHeader"..i])
     end
 
+    -- level
     GuildFrameColumnHeader3:ClearAllPoints()
     GuildFrameColumnHeader3:SetPoint("TOPLEFT", 20, -70)
 
+    -- class
     GuildFrameColumnHeader4:ClearAllPoints()
-    GuildFrameColumnHeader4:SetPoint("LEFT", GuildFrameColumnHeader3, "RIGHT", -2, -0)
-    GuildFrameColumnHeader4:SetWidth(70)
+    GuildFrameColumnHeader4:SetPoint("LEFT", GuildFrameColumnHeader3, "RIGHT", -12, -0)
+    GuildFrameColumnHeader4:SetWidth(32)
 
+    -- name
     GuildFrameColumnHeader1:ClearAllPoints()
     GuildFrameColumnHeader1:SetPoint("LEFT", GuildFrameColumnHeader4, "RIGHT", -2, -0)
-    GuildFrameColumnHeader1:SetWidth(64)
+    GuildFrameColumnHeader1:SetWidth(120)
 
+    -- zone
     GuildFrameColumnHeader2:ClearAllPoints()
     GuildFrameColumnHeader2:SetPoint("LEFT", GuildFrameColumnHeader1, "RIGHT", -2, -0)
 
@@ -204,12 +215,19 @@ pfUI:RegisterSkin("Friends", function ()
       level:SetPoint("TOPLEFT", 10, -3)
 
       local class = _G["GuildFrameButton"..i.."Class"]
-      class:SetWidth(70)
+      class:SetWidth(30)
       class:ClearAllPoints()
-      class:SetPoint("LEFT", level, "RIGHT", 10, 0)
+      class:SetPoint("LEFT", level, "RIGHT", 5, 0)
+
+      local frame = _G["GuildFrameButton"..i]
+      frame.classicon = frame.classicon or frame:CreateTexture(nil, "OVERLAY")
+      frame.classicon:SetPoint("CENTER", class, "CENTER", -4, 0)
+      frame.classicon:SetWidth(15)
+      frame.classicon:SetHeight(15)
+      frame.classicon:SetTexture("Interface\\AddOns\\pfUI\\img\\classicons")
 
       local name = _G["GuildFrameButton"..i.."Name"]
-      name:SetWidth(70)
+      name:SetWidth(120)
       name:ClearAllPoints()
       name:SetPoint("LEFT", class, "RIGHT", 0, 0)
     end
