@@ -413,6 +413,10 @@ pfUI:RegisterModule("actionbar", 20400, function ()
   local function ButtonDragStop(self)
     local self = self or this
 
+    if MacroFrame_SaveMacro then
+      MacroFrame_SaveMacro()
+    end
+
     if self.bar == 12 then
       PickupPetAction(self.id)
     else
@@ -464,6 +468,10 @@ pfUI:RegisterModule("actionbar", 20400, function ()
           TogglePetAutocast(self.id)
         end
       else
+        if MacroFrame_SaveMacro then
+          MacroFrame_SaveMacro()
+        end
+
         UseAction(self.id)
       end
     end
