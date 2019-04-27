@@ -441,7 +441,7 @@ pfUI:RegisterModule("bags", 20400, function ()
     local position = "RIGHT"
 
     if frame == pfUI.bag.left then
-      min, max = 1, GetNumBankSlots()
+      min, max = 1, math.min(6, GetNumBankSlots())
       tpl = "BankItemButtonBagTemplate"
       name, append = "pfUIBankBBag", ""
       position = "LEFT"
