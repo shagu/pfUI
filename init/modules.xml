@@ -50,6 +50,7 @@
   <Include file="..\modules\custom.lua"/>
   <Include file="..\modules\gm.lua"/>
   <Include file="..\modules\mirrortimers.lua"/>
+  <Include file="..\modules\messenger.lua"/>
   <Include file="..\modules\feigndeath.lua"/>
   <Include file="..\modules\pixelperfect.lua"/>
   <Include file="..\modules\hdgraphic.lua"/>

@@ -6,6 +6,7 @@
 ## SavedVariables: pfUI_profiles, pfUI_addon_profiles, pfUI_cache
 ## SavedVariablesPerCharacter: pfUI_config, pfUI_init, pfUI_playerDB
 
+# main
 pfUI.lua
 
 init\env.xml
