@@ -18,9 +18,10 @@ pfUI:RegisterModule("socialmod", function ()
               _G["GuildFrameButton"..i.."Class"]:SetTextColor(0,0,0,0)
 
               if coords then
+                classicon:Show()
                 classicon:SetTexCoord(unpack(coords))
               else
-                classicon:SetTexCoord(0,1,0,1)
+                classicon:Hide()
               end
 
               if online then
@@ -146,9 +147,10 @@ pfUI:RegisterModule("socialmod", function ()
             _G["WhoFrameButton"..i.."Name"]:SetTextColor(color.r,color.g,color.b,1)
 
             if coords then
+              classicon:Show()
               classicon:SetTexCoord(unpack(coords))
             else
-              classicon:SetTexCoord(0,1,0,1)
+              classicon:Hide()
             end
           else
             _G["WhoFrameButton"..i.."Class"]:SetTextColor(color.r,color.g,color.b,1)

@@ -151,6 +151,7 @@ pfUI:RegisterSkin("Friends", function ()
       frame.classicon:SetWidth(15)
       frame.classicon:SetHeight(15)
       frame.classicon:SetTexture("Interface\\AddOns\\pfUI\\img\\classicons")
+      frame.classicon:Hide()
 
       local name = _G["WhoFrameButton"..i.."Name"]
       name:SetWidth(120)
@@ -225,6 +226,7 @@ pfUI:RegisterSkin("Friends", function ()
       frame.classicon:SetWidth(15)
       frame.classicon:SetHeight(15)
       frame.classicon:SetTexture("Interface\\AddOns\\pfUI\\img\\classicons")
+      frame.classicon:Hide()
 
       local name = _G["GuildFrameButton"..i.."Name"]
       name:SetWidth(120)
