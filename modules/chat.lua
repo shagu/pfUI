@@ -601,7 +601,7 @@ pfUI:RegisterModule("chat", 20400, function ()
   -- read and parse whisper color settings
   local cr, cg, cb, ca = strsplit(",", C.chat.global.whisper)
   cr, cg, cb = tonumber(cr), tonumber(cg), tonumber(cb)
-  local wcol = string.format("%02x%02x%02x",cr * 255,cg * 255, cb * 255)
+  local wcol = rgbhex(cr, cg, cb)
 
   -- read and parse chat bracket settings
   local left = "|r" .. string.sub(C.chat.text.bracket, 1, 1)
@@ -626,15 +626,15 @@ pfUI:RegisterModule("chat", 20400, function ()
   _G.CHAT_YELL_GET = left .. "Y" .. right ..default
 
   if C.chat.global.whispermod == "1" then
-    _G.CHAT_WHISPER_GET = '|cff' .. wcol .. '[W]' .. default
+    _G.CHAT_WHISPER_GET = wcol .. '[W]' .. default
     _G.CHAT_WHISPER_INFORM_GET = '[W]' .. default
   end
 
   local r,g,b,a = strsplit(",", C.chat.text.timecolor)
-  local timecolorhex = string.format("%02x%02x%02x%02x", a*255, r*255, g*255, b*255)
+  local timecolorhex = rgbhex(r,g,b,a)
 
   local r,g,b = strsplit(",", C.chat.text.unknowncolor)
-  local unknowncolorhex = string.format("%02x%02x%02x", r*255, g*255, b*255)
+  local unknowncolorhex = rgbhex(r,g,b)
 
   for i=1,NUM_CHAT_WINDOWS do
     if not _G["ChatFrame"..i].HookAddMessage then
@@ -668,17 +668,14 @@ pfUI:RegisterModule("chat", 20400, function ()
               local class = GetUnitData(name)
               if class then
                 if class ~= UNKNOWN then
-                  color = string.format("%02x%02x%02x",
-                    RAID_CLASS_COLORS[class].r * 255,
-                    RAID_CLASS_COLORS[class].g * 255,
-                    RAID_CLASS_COLORS[class].b * 255)
+                  color = rgbhex(RAID_CLASS_COLORS[class])
                   match = true
                 end
               end
 
               if C.chat.text.tintunknown == "1" or match then
                 text = string.gsub(text, "|Hplayer:"..name.."|h%["..name.."%]|h(.-:-)",
-                    left.."|cff"..color.."|Hplayer:"..name.."|h" .. name .. "|h|r"..right.."%1")
+                    left..color.."|Hplayer:"..name.."|h" .. name .. "|h|r"..right.."%1")
               end
             end
           end
@@ -695,13 +692,13 @@ pfUI:RegisterModule("chat", 20400, function ()
 
           -- show timestamp in chat
           if C.chat.text.time == "1" then
-            text = "|c" .. timecolorhex .. tleft .. date(C.chat.text.timeformat) .. tright .. "|r " .. text
+            text = timecolorhex .. tleft .. date(C.chat.text.timeformat) .. tright .. "|r " .. text
           end
 
           if C.chat.global.whispermod == "1" then
             -- patch incoming whisper string to match the colors
-            if string.find(text, '|cff'..wcol, 1) == 1 then
-              text = string.gsub(text, "|r", "|r|cff" .. wcol)
+            if string.find(text, wcol, 1) == 1 then
+              text = string.gsub(text, "|r", "|r" .. wcol)
             end
           end
 

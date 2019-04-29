@@ -87,7 +87,7 @@ function pfUI.api.GetUnitColor(unitstr)
     r, g, b = RAID_CLASS_COLORS[class].r, RAID_CLASS_COLORS[class].g, RAID_CLASS_COLORS[class].b
   end
 
-  return string.format("|cff%02x%02x%02x", r * 255, g * 255, b * 255), r, g, b
+  return pfUI.api.rgbhex(r,g,b), r, g, b
 end
 
 -- [ strvertical ]
@@ -680,7 +680,7 @@ function pfUI.api.SetAutoPoint(frame, parent, spacing)
   end
 end
 
--- [ GetDefaultColors ]
+-- [ GetStringColor ]
 -- Queries the pfUI setting strings and extract its color codes
 -- returns r,g,b,a
 local color_cache = {}
@@ -690,6 +690,39 @@ function pfUI.api.GetStringColor(colorstr)
     color_cache[colorstr] = { r, g, b, a }
   end
   return unpack(color_cache[colorstr])
+end
+
+-- [ rgbhex ]
+-- Returns color format from color info
+-- 'r'          [table or number]  color table or r color component
+-- 'g'          [number] optional g color component
+-- 'b'          [number] optional b color component
+-- 'a'          [number] optional alpha component
+-- returns color string in the form of '|caaxxyyzz'
+local hexcolor_cache = {}
+function pfUI.api.rgbhex(r, g, b, a)
+  local key
+  if type(r)=="table" then
+    local _r,_g,_b,_a
+    if r.r then
+      _r,_g,_b,_a = r.r, r.g, r.b, r.a or 1
+    elseif table.getn(r) >= 3 then
+      _r,_g,_b,_a = r[1], r[2], r[3], r[4] or 1
+    end
+    if _r and _g and _b and _a then
+      key = string.format("%s%s%s%s",_r,_g,_b,_a)
+      if hexcolor_cache[key] == nil then
+        hexcolor_cache[key] = string.format("|c%02x%02x%02x%02x", _a*255, _r*255, _g*255, _b*255)
+      end
+    end
+  elseif tonumber(r) and g and b then
+    a = a or 1
+    key = string.format("%s%s%s%s",r,g,b,a)
+    if hexcolor_cache[key] == nil then
+      hexcolor_cache[key] = string.format("|c%02x%02x%02x%02x", a*255, r*255, g*255, b*255)
+    end
+  end
+  return hexcolor_cache[key] or ""
 end
 
 -- [ Create Backdrop ]
@@ -887,19 +920,19 @@ function pfUI.api.GetColoredTimeString(remaining)
   if not remaining then return "" end
   if remaining > 99 * 60 * 60 then
     local r,g,b,a = pfUI.api.GetStringColor(C.appearance.cd.daycolor)
-    return "|cff" .. string.format("%02x%02x%02x", r*255, g*255, b*255) .. round(remaining / 60 / 60 / 24) .. "|rd"
+    return pfUI.api.rgbhex(r,g,b) .. round(remaining / 60 / 60 / 24) .. "|rd"
   elseif remaining > 99 * 60 then
     local r,g,b,a = pfUI.api.GetStringColor(C.appearance.cd.hourcolor)
-    return "|cff" .. string.format("%02x%02x%02x", r*255, g*255, b*255) .. round(remaining / 60 / 60) .. "|rh"
+    return pfUI.api.rgbhex(r,g,b) .. round(remaining / 60 / 60) .. "|rh"
   elseif remaining > 99 then
     local r,g,b,a = pfUI.api.GetStringColor(C.appearance.cd.minutecolor)
-    return "|cff" .. string.format("%02x%02x%02x", r*255, g*255, b*255) .. round(remaining / 60) .. "|rm"
+    return pfUI.api.rgbhex(r,g,b) .. round(remaining / 60) .. "|rm"
   elseif remaining <= 5 then
     local r,g,b,a = pfUI.api.GetStringColor(C.appearance.cd.lowcolor)
-    return "|cff" .. string.format("%02x%02x%02x", r*255, g*255, b*255) .. string.format("%.1f", round(remaining,1))
+    return pfUI.api.rgbhex(r,g,b) .. string.format("%.1f", round(remaining,1))
   elseif remaining >= 0 then
     local r, g, b, a = pfUI.api.GetStringColor(C.appearance.cd.normalcolor)
-    return "|cff" .. string.format("%02x%02x%02x", r*255, g*255, b*255) .. round(remaining)
+    return pfUI.api.rgbhex(r,g,b) .. round(remaining)
   else
     return ""
   end
@@ -928,7 +961,7 @@ function pfUI.api.GetColorGradient(perc)
     local r = r1 + (r2 - r1)*perc
     local g = g1 + (g2 - g1)*perc
     local b = b1 + (b2 - b1)*perc
-    local h = string.format("|cff%02x%02x%02x", r*255, g*255, b*255)
+    local h = pfUI.api.rgbhex(r,g,b)
 
     gradientcolors[perc] = {}
     gradientcolors[perc].r = r

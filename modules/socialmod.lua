@@ -75,7 +75,7 @@ pfUI:RegisterModule("socialmod", function ()
           local lcolor = GetDifficultyColor(tonumber(level)) or { 1, 1, 1 }
 
           zone = ( zone == playerzone and "|cffffffff" or "|cffaaaaaa" ) .. zone .. "|r"
-          name = "|cff" .. string.format("%02x%02x%02x", ccolor.r*255, ccolor.g*255, ccolor.b*255) .. name .. "|r"
+          name = RgbHex(ccolor) .. name .. "|r"
 
           _G["FriendsFrameFriendButton"..i..FRIENDS_NAME_LOCATION]:SetText(format(TEXT(FRIENDS_LIST_TEMPLATE), name, zone, status))
           _G["FriendsFrameFriendButton"..i.."ButtonTextInfo"]:SetText(format(TEXT(FRIENDS_LEVEL_TEMPLATE), level, class))

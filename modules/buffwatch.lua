@@ -315,7 +315,7 @@ pfUI:RegisterModule("buffwatch", function ()
             sr, sg, sb, sa = 1, .3, .3, 1
           end
           if frame.config.colorstacks == "1" then
-            frame.bars[bar].stacks:SetText("|cff" .. string.format("%02x%02x%02x", sr*255, sg*255, sb*255) .. data[5])
+            frame.bars[bar].stacks:SetText(rgbhex(sr,sg,sb) .. data[5])
           else
             frame.bars[bar].stacks:SetText(data[5])
           end

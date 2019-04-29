@@ -53,7 +53,7 @@ local getFontString = function(obj)
     segment = segment and segment ~= "" and segment or nil
     if segment then
       r, g, b, a = left:GetTextColor()
-      segment = "|c" .. string.format("ff%02x%02x%02x", r*255, g*255, b*255) .. segment .. "|r"
+      segment = rgbhex(r,g,b) .. segment .. "|r"
       text = text and text .. "\n" .. segment or segment
     end
   end

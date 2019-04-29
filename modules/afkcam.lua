@@ -64,8 +64,8 @@ pfUI:RegisterModule("afkcam", 20400, function ()
     local class = GetUnitData(arg2 or "")
     local author, msg
     if class and class ~= UNKNOWN then
-      local class_color = string.format("%02x%02x%02x", RAID_CLASS_COLORS[class].r * 255, RAID_CLASS_COLORS[class].g * 255, RAID_CLASS_COLORS[class].b * 255)
-      author = string.format("|cff%s%s|r",class_color,arg2)
+      local class_color = rgbhex(RAID_CLASS_COLORS[class])
+      author = string.format("%s%s|r",class_color,arg2)
     else
       author = arg2
     end

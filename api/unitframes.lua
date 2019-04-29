@@ -1412,7 +1412,7 @@ function pfUI.uf:RefreshUnit(unit, component)
         pfUI.uf:AddIcon(unit, pos, icon)
       end
 
-      -- hide unued icon slots
+      -- hide unused icon slots
       for pos=table.getn(active)+1, 6 do
         pfUI.uf:HideIcon(unit, pos)
       end
@@ -2062,5 +2062,5 @@ function pfUI.uf.GetColor(self, preset)
   g = ( g + .75 ) * .5
   b = ( b + .75 ) * .5
 
-  return "|cff" .. string.format("%02x%02x%02x", r*255, g*255, b*255)
+  return rgbhex(r,g,b)
 end
