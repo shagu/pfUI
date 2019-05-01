@@ -1243,15 +1243,27 @@ pfUI:RegisterModule("gui", 20400, function ()
       local values = {}
       for name, config in pairs(pfUI_profiles) do table.insert(values, name) end
 
-      local function pfUpdateProfiles()
+      local function ReloadProfiles()
+        local oldval = UIDropDownMenu_GetText(pfUIDropDownMenuProfile)
         local values = {}
-        for name, config in pairs(pfUI_profiles) do table.insert(values, name) end
-        pfUIDropDownMenuProfile.values = values
-        UIDropDownMenu_SetSelectedID(pfUIDropDownMenuProfile, 0, 0)
-        UIDropDownMenu_SetText("", pfUIDropDownMenuProfile)
+        local exists
+
+        for name, config in pairs(pfUI_profiles) do
+          table.insert(values, name)
+          if name == oldval then
+            exists = true
+          end
+        end
+
+        if not exists then
+          UIDropDownMenu_SetText("", pfUIDropDownMenuProfile)
+          UIDropDownMenu_SetSelectedID(pfUIDropDownMenuProfile, 0, 0)
+        end
+
+        return values
       end
 
-      CreateConfig(nil, T["Select profile"], C.global, "profile", "dropdown", values, false, "Profile")
+      CreateConfig(function() return end, T["Select profile"], C.global, "profile", "dropdown", ReloadProfiles, false, "Profile")
 
       -- load profile
       CreateConfig(nil, T["Load profile"], C.global, "profile", "button", function()
@@ -1271,7 +1283,7 @@ pfUI:RegisterModule("gui", 20400, function ()
         if C.global.profile and pfUI_profiles[C.global.profile] then
           CreateQuestionDialog(T["Delete profile"] .. " '|cff33ffcc" .. C.global.profile .. "|r'?", function()
             pfUI_profiles[C.global.profile] = nil
-            pfUpdateProfiles()
+            ReloadProfiles()
             this:GetParent():Hide()
           end)
         end
@@ -1301,8 +1313,8 @@ pfUI:RegisterModule("gui", 20400, function ()
             profile = (string.gsub(profile,"^%s*(.-)%s*$", "%1"))
             if profile and profile ~= "" then
               pfUI_profiles[profile] = CopyTable(C)
-              pfUpdateProfiles()
               this:GetParent():Hide()
+              ReloadProfiles()
             end
           end
         end, false, true)
