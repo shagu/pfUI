@@ -21,11 +21,11 @@ setfenv(1, pfUI:GetEnvironment())
 --     player[Boolean] - Returns true if unit is a player
 --
 -- Internal functions:
---   libcast:AddData(db, name, class, level, elite)
+--   libunitscan:AddData(db, name, class, level, elite)
 --     Adds unit data to a given db. Where db should be either "players" or "mobs"
 --
 
--- return instantly when another librange is already active
+-- return instantly when another libunitscan is already active
 if pfUI.api.libunitscan then return end
 
 local units = { players = {}, mobs = {} }
@@ -80,6 +80,8 @@ libunitscan:SetScript("OnEvent", function()
     for i = 1, GetNumFriends() do
       name, level, class = GetFriendInfo(i)
       class = L["class"][class] or nil
+      -- friendlist updates due to friend going off-line return level 0, let's not overwrite good older values
+      level = level > 0 and level or nil
       AddData("players", name, class, level)
     end
 
