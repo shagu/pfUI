@@ -1,4 +1,14 @@
 pfUI:RegisterModule("socialmod", function ()
+  local playerdb = _G.pfUI_playerDB
+  pfUI.socialmod = CreateFrame("Frame", "pfSocialMod", UIParent)
+  pfUI.socialmod:RegisterEvent("CHAT_MSG_SYSTEM")
+  pfUI.socialmod:SetScript("OnEvent", function()
+    local name = cmatch(arg1, _G.ERR_FRIEND_ONLINE_SS)
+    name = cmatch(arg1, _G.ERR_FRIEND_OFFLINE_S)
+    if name and playerdb[name] and playerdb[name].cname then
+      playerdb[name].lastseen = date("%a %d-%b-%Y")
+    end
+  end)
   do -- add colors to guild list
     hooksecurefunc("GuildStatus_Update", function()
       local playerzone = GetRealZoneText()
@@ -68,22 +78,36 @@ pfUI:RegisterModule("socialmod", function ()
 
       for i=1, FRIENDS_TO_DISPLAY do
         local name, level, class, zone, connected, status = GetFriendInfo(off + i)
-        if not name then break end
-
+        if not name or name == _G.UNKNOWN then break end
+        local friendNameLoc = _G["FriendsFrameFriendButton"..i..FRIENDS_NAME_LOCATION]
+        local friendInfo = _G["FriendsFrameFriendButton"..i.."ButtonTextInfo"]
         if connected then
+          if not class or class == _G.UNKNOWN then break end
           local ccolor = RAID_CLASS_COLORS[L["class"][class]] or { 1, 1, 1 }
           local lcolor = GetDifficultyColor(tonumber(level)) or { 1, 1, 1 }
 
           zone = ( zone == playerzone and "|cffffffff" or "|cffaaaaaa" ) .. zone .. "|r"
-          name = RgbHex(ccolor) .. name .. "|r"
+          local cname = rgbhex(ccolor) .. name .. "|r"
+          if playerdb[name] then
+            playerdb[name].lastseen = date("%a %d-%b-%Y")
+            playerdb[name].cname = cname
+          end
 
-          _G["FriendsFrameFriendButton"..i..FRIENDS_NAME_LOCATION]:SetText(format(TEXT(FRIENDS_LIST_TEMPLATE), name, zone, status))
-          _G["FriendsFrameFriendButton"..i.."ButtonTextInfo"]:SetText(format(TEXT(FRIENDS_LEVEL_TEMPLATE), level, class))
-          _G["FriendsFrameFriendButton"..i.."ButtonTextInfo"]:SetTextColor(lcolor.r + .2, lcolor.g + .2, lcolor.b + .2)
+          friendNameLoc:SetText(format(TEXT(FRIENDS_LIST_TEMPLATE), cname, zone, status))
+          friendInfo:SetText(format(TEXT(FRIENDS_LEVEL_TEMPLATE), level, class))
+          friendNameLoc:SetVertexColor(1,1,1,.9)
+          friendInfo:SetVertexColor(1,1,1,.9)
         else
-          _G["FriendsFrameFriendButton"..i..FRIENDS_NAME_LOCATION]:SetText(format(TEXT(FRIENDS_LIST_OFFLINE_TEMPLATE), name))
-          _G["FriendsFrameFriendButton"..i.."ButtonTextInfo"]:SetText(TEXT(UNKNOWN))
-          _G["FriendsFrameFriendButton"..i.."ButtonTextInfo"]:SetTextColor(.2,.2,.2)
+          if playerdb[name] and playerdb[name].cname and playerdb[name].level and playerdb[name].lastseen then
+            friendNameLoc:SetText(format(TEXT(FRIENDS_LIST_OFFLINE_TEMPLATE), playerdb[name].cname))
+            friendInfo:SetText(format(TEXT(FRIENDS_LEVEL_TEMPLATE), playerdb[name].level, playerdb[name].lastseen))
+            friendInfo:SetVertexColor(1,1,1,.3)
+          else
+            friendNameLoc:SetText(format(TEXT(FRIENDS_LIST_OFFLINE_TEMPLATE), name))
+            friendInfo:SetText(TEXT(UNKNOWN))
+            friendInfo:SetVertexColor(1,1,1,.2)
+          end
+          friendNameLoc:SetVertexColor(1,1,1,.6)
         end
       end
     end, true)
