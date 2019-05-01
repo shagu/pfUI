@@ -155,6 +155,16 @@ pfUI:RegisterModule("nameplates", 20400, function ()
       this.healthbar.bgtarget:SetHeight(this.healthbar:GetHeight() + 5)
     end
 
+    if not this.healthbar.glowtarget then
+      this.healthbar.glowtarget = this.nameplate:CreateTexture(nil, "BACKGROUND")
+      this.healthbar.glowtarget:SetTexture("Interface\\AddOns\\pfUI\\img\\dot")
+      this.healthbar.glowtarget:ClearAllPoints()
+      this.healthbar.glowtarget:SetPoint("CENTER", this.healthbar, "CENTER", 0, 0)
+      this.healthbar.glowtarget:SetWidth(this.healthbar:GetWidth() + 50)
+      this.healthbar.glowtarget:SetHeight(this.healthbar:GetHeight() + 25)
+      this.healthbar.glowtarget:SetVertexColor(1,1,1,1)
+    end
+
     this.healthbar.reaction = nil
 
     -- level
@@ -449,6 +459,13 @@ pfUI:RegisterModule("nameplates", 20400, function ()
       healthbar.bgtarget:Show()
     else
       healthbar.bgtarget:Hide()
+    end
+
+    -- glow target indicator
+    if UnitExists("target") and healthbar:GetAlpha() == 1 and C.nameplates.targetglow == "1" then
+      healthbar.glowtarget:Show()
+    else
+      healthbar.glowtarget:Hide()
     end
 
     -- target zoom

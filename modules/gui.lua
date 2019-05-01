@@ -1926,6 +1926,7 @@ pfUI:RegisterModule("gui", 20400, function ()
       CreateConfig(nil, T["Castbar Height"], C.nameplates, "heightcast")
       CreateConfig(nil, T["Enable Combo Point Display"], C.nameplates, "cpdisplay", "checkbox")
       CreateConfig(nil, T["Highlight Target Nameplate"], C.nameplates, "targethighlight", "checkbox")
+      CreateConfig(nil, T["Draw Glow Around Target Nameplate"], C.nameplates, "targetglow", "checkbox")
       CreateConfig(nil, T["Zoom Target Nameplate"], C.nameplates, "targetzoom", "checkbox")
     end)
 
