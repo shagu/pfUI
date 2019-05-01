@@ -1,6 +1,7 @@
 pfUI:RegisterModule("nameplates", 20400, function ()
   local font = C.nameplates.use_unitfonts == "1" and pfUI.font_unit or pfUI.font_default
   local font_size = C.nameplates.use_unitfonts == "1" and C.global.font_unit_size or C.global.font_size
+  local inactive_alpha = tonumber(C.nameplates.notargalpha)
 
   pfUI.nameplates = CreateFrame("Frame", nil, UIParent)
 
@@ -340,6 +341,9 @@ pfUI:RegisterModule("nameplates", 20400, function ()
   -- Nameplate OnUpdate
   function pfUI.nameplates:OnUpdate()
     if not this.setup then pfUI.nameplates:OnShow() return end
+
+    -- set nameplate alpha
+    if this:GetAlpha() < inactive_alpha then this:SetAlpha(inactive_alpha) end
 
     local healthbar = this.healthbar
     local border, glow, name, level, levelicon , raidicon, combopoints = this.border, this.glow, this.name, this.level, this.levelicon , this.raidicon, this.combopoints

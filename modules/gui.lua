@@ -1928,6 +1928,7 @@ pfUI:RegisterModule("gui", 20400, function ()
       CreateConfig(nil, T["Highlight Target Nameplate"], C.nameplates, "targethighlight", "checkbox")
       CreateConfig(nil, T["Draw Glow Around Target Nameplate"], C.nameplates, "targetglow", "checkbox")
       CreateConfig(nil, T["Zoom Target Nameplate"], C.nameplates, "targetzoom", "checkbox")
+      CreateConfig(nil, T["Inactive Nameplate Alpha"], C.nameplates, "notargalpha")
     end)
 
     CreateGUIEntry(T["Thirdparty"], T["Integrations"], function()
