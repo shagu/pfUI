@@ -270,20 +270,18 @@ pfUI:RegisterModule("panel", 20400, function()
         GameTooltip:Show()
       end
       widget:SetScript("OnEvent", function()
-        local gold = floor(GetMoney()/ 100 / 100)
-        local silver = floor(mod((GetMoney()/100),100))
-        local copper = floor(mod(GetMoney(),100))
-
-        pfUI.panel.initMoney = pfUI.panel.initMoney or GetMoney()
-        pfUI.panel.diffMoney = GetMoney() - pfUI.panel.initMoney
-
         local realm = GetRealmName()
         local unit  = UnitName("player")
         local money = GetMoney()
+        local goldstr = CreateGoldString(GetMoney())
+
+        pfUI.panel.initMoney = pfUI.panel.initMoney or money
+        pfUI.panel.diffMoney = money - pfUI.panel.initMoney
+
         pfUI_cache["gold"][realm] = pfUI_cache["gold"][realm] or {}
         pfUI_cache["gold"][realm][unit] = money
 
-        pfUI.panel:OutputPanel("gold", gold .. "|cffffd700g|r " .. silver .. "|cffc7c7cfs|r " .. copper .. "|cffeda55fc|r", widget.Tooltip, OpenAllBags)
+        pfUI.panel:OutputPanel("gold", goldstr, widget.Tooltip, OpenAllBags)
       end)
     end
 
