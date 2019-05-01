@@ -1727,8 +1727,24 @@ pfUI:RegisterModule("gui", 20400, function ()
     end)
 
     -- Shared Actionbar Settings
-    local barnames = { {1, "Main Actionbar"}, {6, "Top Actionbar"}, {5, "Left Actionbar"}, {3, "Right Actionbar"}, {4, "Vertical Actionbar"},
-      {11, "Stance/Shapeshift Bar"}, {12, "Pet Actionbar"}, {2, "Paging Actionbar"}, {7, "Stance Bar 1"}, {8, "Stance Bar 2"}, {9, "Stance Bar 3"}, {10, "Stance Bar 4"}
+    local barnames = {
+      -- default
+      {1, T["Main Actionbar"]},
+      {6, T["Top Actionbar"]},
+      {5, T["Left Actionbar"]},
+      {3, T["Right Actionbar"]},
+      {4, T["Vertical Actionbar"]},
+
+      -- special
+      {2, T["Paging Actionbar"]},
+      {7, T["Stance Bar 1"]},
+      {8, T["Stance Bar 2"]},
+      {9, T["Stance Bar 3"]},
+      {10, T["Stance Bar 4"]},
+
+      -- class
+      {11, T["Shapeshift Bar"]},
+      {12, T["Pet Actionbar"]},
     }
 
     for _, data in pairs(barnames) do

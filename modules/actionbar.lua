@@ -981,11 +981,11 @@ pfUI:RegisterModule("actionbar", 20400, function ()
 
   -- Localize custom keybinds for additional actionbars (see Bindings.xml)
   local names = {
-    ["PAGING"] = "Paging",
-    ["STANCEONE"] = "Stance 1",
-    ["STANCETWO"] = "Stance 2",
-    ["STANCETHREE"] = "Stance 3",
-    ["STANCEFOUR"] = "Stance 4",
+    ["PAGING"] = T["Paging Actionbar"],
+    ["STANCEONE"] = T["Stance Bar 1"],
+    ["STANCETWO"] = T["Stance Bar 2"],
+    ["STANCETHREE"] = T["Stance Bar 3"],
+    ["STANCEFOUR"] = T["Stance Bar 4"],
   }
 
   for name, loc in pairs(names) do
