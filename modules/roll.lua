@@ -291,10 +291,10 @@ pfUI:RegisterModule("roll", 20400, function ()
     end
 
     if bop then
-      pfUI.roll.frames[id].boe.text:SetText("BoP")
+      pfUI.roll.frames[id].boe.text:SetText(T["BoP"])
       pfUI.roll.frames[id].boe.text:SetTextColor(1,.3,.3,1)
     else
-      pfUI.roll.frames[id].boe.text:SetText("BoE")
+      pfUI.roll.frames[id].boe.text:SetText(T["BoE"])
       pfUI.roll.frames[id].boe.text:SetTextColor(.3,1,.3,1)
     end
 
