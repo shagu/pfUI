@@ -2,6 +2,7 @@ pfUI:RegisterModule("nameplates", 20400, function ()
   local font = C.nameplates.use_unitfonts == "1" and pfUI.font_unit or pfUI.font_default
   local font_size = C.nameplates.use_unitfonts == "1" and C.global.font_unit_size or C.global.font_size
   local inactive_alpha = tonumber(C.nameplates.notargalpha)
+  local glowr, glowg, glowb, glowa = GetStringColor(C.nameplates.glowcolor)
 
   pfUI.nameplates = CreateFrame("Frame", nil, UIParent)
 
@@ -163,7 +164,7 @@ pfUI:RegisterModule("nameplates", 20400, function ()
       this.healthbar.glowtarget:SetPoint("CENTER", this.healthbar, "CENTER", 0, 0)
       this.healthbar.glowtarget:SetWidth(this.healthbar:GetWidth() + 50)
       this.healthbar.glowtarget:SetHeight(this.healthbar:GetHeight() + 25)
-      this.healthbar.glowtarget:SetVertexColor(1,1,1,1)
+      this.healthbar.glowtarget:SetVertexColor(glowr, glowg, glowb, glowa)
     end
 
     this.healthbar.reaction = nil

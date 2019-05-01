@@ -1009,6 +1009,7 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("nameplates", nil,           "cpdisplay",        "0")
   pfUI:UpdateConfig("nameplates", nil,           "targethighlight",  "0")
   pfUI:UpdateConfig("nameplates", nil,           "targetglow",       "1")
+  pfUI:UpdateConfig("nameplates", nil,           "glowcolor",        "1,1,1,1")
   pfUI:UpdateConfig("nameplates", nil,           "targetzoom",       "0")
   pfUI:UpdateConfig("nameplates", nil,           "notargalpha",      ".75")
 
