@@ -1930,6 +1930,8 @@ pfUI:RegisterModule("gui", 20400, function ()
       CreateConfig(nil, T["Glow Color Around Target Nameplate"], C.nameplates, "glowcolor", "color")
       CreateConfig(nil, T["Zoom Target Nameplate"], C.nameplates, "targetzoom", "checkbox")
       CreateConfig(nil, T["Inactive Nameplate Alpha"], C.nameplates, "notargalpha")
+      CreateConfig(nil, T["Healthbar Texture"], C.nameplates, "healthtexture", "dropdown", pfUI.gui.dropdowns.uf_bartexture)
+
     end)
 
     CreateGUIEntry(T["Thirdparty"], T["Integrations"], function()

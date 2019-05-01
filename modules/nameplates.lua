@@ -3,6 +3,7 @@ pfUI:RegisterModule("nameplates", 20400, function ()
   local font_size = C.nameplates.use_unitfonts == "1" and C.global.font_unit_size or C.global.font_size
   local inactive_alpha = tonumber(C.nameplates.notargalpha)
   local glowr, glowg, glowb, glowa = GetStringColor(C.nameplates.glowcolor)
+  local hptexture = C.nameplates.healthtexture
 
   pfUI.nameplates = CreateFrame("Frame", nil, UIParent)
 
@@ -133,7 +134,7 @@ pfUI:RegisterModule("nameplates", 20400, function ()
     this.name:SetPoint("TOP", this.nameplate, "TOP", 0, 0)
 
     -- healthbar
-    this.healthbar:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
+    this.healthbar:SetStatusBarTexture(hptexture)
     this.healthbar:ClearAllPoints()
     this.healthbar:SetPoint("TOP", this.name, "BOTTOM", 0, -3)
     this.healthbar:SetWidth(C.nameplates.width)

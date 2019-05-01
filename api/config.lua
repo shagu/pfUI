@@ -1012,6 +1012,7 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("nameplates", nil,           "glowcolor",        "1,1,1,1")
   pfUI:UpdateConfig("nameplates", nil,           "targetzoom",       "0")
   pfUI:UpdateConfig("nameplates", nil,           "notargalpha",      ".75")
+  pfUI:UpdateConfig("nameplates", nil,           "healthtexture",    "Interface\\AddOns\\pfUI\\img\\bar")
 
   pfUI:UpdateConfig("abuttons",   nil,           "enable",           "0")
   pfUI:UpdateConfig("abuttons",   nil,           "position",         "bottom")
