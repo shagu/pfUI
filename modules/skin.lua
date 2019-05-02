@@ -56,17 +56,32 @@ pfUI:RegisterModule("skin", 20400, function ()
     end)
   end
 
-  local boxes = {
-    "DropDownList1MenuBackdrop",
-    "DropDownList2MenuBackdrop",
-    "DropDownList1Backdrop",
-    "DropDownList2Backdrop",
-  }
-
-  for _, box in pairs(boxes) do
-    local b = _G[box]
-    CreateBackdrop(b, nil, true, .8)
+  for i = 1, UIDROPDOWNMENU_MAXLEVELS do
+    CreateBackdrop(_G["DropDownList"..i.."MenuBackdrop"], nil, true, .8)
+    CreateBackdrop(_G["DropDownList"..i.."Backdrop"], nil, true, .8)
   end
+
+  hooksecurefunc("ToggleDropDownMenu", function(level, value, dropDownFrame, anchorName, xOffset, yOffset)
+    if not dropDownFrame then dropDownFrame = this end
+    if not level then level = 1 end
+    local listFrame = _G["DropDownList"..level]
+    local point, relativeTo, relativePoint, xOffset, yOffset = listFrame:GetPoint()
+
+    if level == 1 then
+      if dropDownFrame.displayMode == "MENU" then return end
+      if point == "TOPLEFT" then
+        listFrame:SetPoint(point, this:GetParent().backdrop, relativePoint, 0, -4)
+      elseif point == "BOTTOMLEFT" then
+        listFrame:SetPoint(point, this:GetParent().backdrop, relativePoint, 0, 4)
+      end
+    else
+      if point == "TOPLEFT" then
+        listFrame:SetPoint(point, relativeTo, relativePoint, xOffset + 8, 0)
+      else
+        listFrame:SetPoint(point, relativeTo, relativePoint, xOffset - 4, 0)
+      end
+    end
+  end, 1)
 
   if C.global.errors_limit == "1" then
     UIErrorsFrame:SetHeight(25)
