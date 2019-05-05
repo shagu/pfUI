@@ -107,7 +107,7 @@ function libcast:AddAction(mob, spell, channel)
 
   if L["spells"][spell] ~= nil then
     local casttime = L["spells"][spell].t
-    local icon = string.format("%s%s", "Interface\\Icons\\", L["spells"][spell].icon)
+    local icon = L["spells"][spell].icon and string.format("%s%s", "Interface\\Icons\\", L["spells"][spell].icon) or nil
 
     -- add cast action to the database
     if not self.db[mob] then self.db[mob] = {} end
