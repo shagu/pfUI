@@ -101,13 +101,12 @@ pfUI:RegisterModule("socialmod", function ()
           if playerdb[name] and playerdb[name].cname and playerdb[name].level and playerdb[name].lastseen then
             friendNameLoc:SetText(format(TEXT(FRIENDS_LIST_OFFLINE_TEMPLATE), playerdb[name].cname))
             friendInfo:SetText(format(TEXT(FRIENDS_LEVEL_TEMPLATE), playerdb[name].level, playerdb[name].lastseen))
-            friendInfo:SetVertexColor(1,1,1,.3)
           else
-            friendNameLoc:SetText(format(TEXT(FRIENDS_LIST_OFFLINE_TEMPLATE), name))
+            friendNameLoc:SetText(format(TEXT(FRIENDS_LIST_OFFLINE_TEMPLATE), name.."|r"))
             friendInfo:SetText(TEXT(UNKNOWN))
-            friendInfo:SetVertexColor(1,1,1,.2)
           end
-          friendNameLoc:SetVertexColor(1,1,1,.6)
+          friendNameLoc:SetVertexColor(1,1,1,.4)
+          friendInfo:SetVertexColor(1,1,1,.4)
         end
       end
     end, true)
