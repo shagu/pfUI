@@ -6,12 +6,45 @@ pfUI:RegisterModule("thirdparty", function ()
   pfUI.thirdparty.meters.state = false
   pfUI.thirdparty.bagsort = nil
 
+  local ktm_scale = 0.9
+
   local showmeter = CreateFrame("Frame")
   showmeter:SetScript("OnEvent", function()
     pfUI.thirdparty.meters.state = false
     pfUI.thirdparty.meters:Toggle()
     this:UnregisterAllEvents()
   end)
+
+  local function GetKtmWidthDiff(view, match_size)
+    local default_width = 0
+    for column, header in view.head do
+      if (header.vis()) then
+        default_width = default_width + header.width
+      else
+        default_width = default_width + 0.1
+      end
+    end
+    return match_size / (default_width + 12)
+  end
+
+  local function SetKtmWidth(view, diff_width)
+    for column, header in view.head do
+      header.width = round(round(header.width * diff_width) / ktm_scale)
+    end
+  end
+
+  local function RefreshKtmWidth(width)
+    local width = width or pfUI.chat.right:GetWidth()
+    if (pfUI.thirdparty.meters.damage and pfUI.thirdparty.meters.threat) then 
+      width = width / 2
+    end
+    SetKtmWidth(KLHTM_Gui.raid, GetKtmWidthDiff(KLHTM_Gui.raid, width))
+    SetKtmWidth(KLHTM_Gui.self, GetKtmWidthDiff(KLHTM_Gui.self, width))
+    KLHTM_Redraw(true)
+    KLHTM_UpdateRaidFrame()
+    KLHTM_UpdateSelfFrame()
+    KLHTM_UpdateFrame()
+  end
 
   function pfUI.thirdparty.meters:Resize()
     if pfUI.chat and pfUI.panel then
@@ -69,17 +102,20 @@ pfUI:RegisterModule("thirdparty", function ()
       if KLHTM_Frame and C.thirdparty.ktm.dock == "1" then
         -- KLHTM Single View
         if not pfUI.thirdparty.meters.damage and pfUI.thirdparty.meters.threat then
-          KLHTM_Frame:SetWidth(pfUI.chat.right:GetWidth())
+          RefreshKtmWidth()
           KLHTM_Frame:ClearAllPoints()
-          KLHTM_Frame:SetAllPoints(pfUI.chat.right)
+          KLHTM_Frame:SetPoint("TOPLEFT", pfUI.chat.right, "TOPLEFT", 0, 0)
+          KLHTM_Frame:SetPoint("BOTTOMRIGHT", pfUI.chat.right, "BOTTOMRIGHT", 0, pfUI.panel.right:GetHeight())
+          KLHTM_Frame.backdrop:SetPoint("BOTTOMRIGHT", KLHTM_Frame, "BOTTOMRIGHT", 0, -(KLHTM_Frame:GetBottom() - pfUI.chat.right:GetBottom()))
         end
 
         -- KLHTM Dual View
         if pfUI.thirdparty.meters.damage and pfUI.thirdparty.meters.threat then
-          KLHTM_Frame:SetWidth(pfUI.chat.right:GetWidth() / 2)
+          RefreshKtmWidth()
           KLHTM_Frame:ClearAllPoints()
           KLHTM_Frame:SetPoint("TOPLEFT", pfUI.chat.right, "TOPLEFT", 0, 0)
-          KLHTM_Frame:SetPoint("BOTTOMRIGHT", pfUI.chat.right, "BOTTOM", -C.appearance.border.default, 0)
+          KLHTM_Frame:SetPoint("BOTTOMRIGHT", pfUI.chat.right, "BOTTOM", -C.appearance.border.default, pfUI.panel.right:GetHeight())
+          KLHTM_Frame.backdrop:SetPoint("BOTTOMRIGHT", KLHTM_Frame, "BOTTOMRIGHT", 0, -(KLHTM_Frame:GetBottom() - pfUI.chat.right:GetBottom()))
         end
       end
     end
@@ -149,7 +185,7 @@ pfUI:RegisterModule("thirdparty", function ()
           KLHTM_Gui.title.back:Hide()
         end
         if KLHTM_Gui.frame then
-          KLHTM_SetGuiScale(.9)
+          KLHTM_SetGuiScale(ktm_scale)
         end
         if KLHTM_Gui.raid then
           -- skin rows (raid)
