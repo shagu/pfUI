@@ -706,15 +706,7 @@ end
 
 function pfUI.uf.OnClick()
   if not this.label and this.unitname then
-    local player = UnitIsUnit("target", "player")
     TargetByName(this.unitname, true)
-    if strlower(UnitName("target")) ~= strlower(this.unitname) then
-      if player then
-        TargetUnit("player")
-      else
-        TargetLastTarget()
-      end
-    end
   else
     pfUI.uf:ClickAction(arg1)
   end
