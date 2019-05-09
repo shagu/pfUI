@@ -523,11 +523,12 @@ pfUI:RegisterModule("chat", 20400, function ()
   end
 
   pfUI.chat.editbox = CreateFrame("Frame", "pfChatInputBox", UIParent)
+  pfUI.chat.editbox:SetFrameStrata("DIALOG")
   if C.chat.text.input_height == "0" then
     pfUI.chat.editbox:SetHeight(22)
 
     if ChatFrameEditBoxLanguage then
-      pfUI.api.SkinButton(ChatFrameEditBoxLanguage)
+      SkinButton(ChatFrameEditBoxLanguage)
       ChatFrameEditBoxLanguage:SetWidth(22)
       ChatFrameEditBoxLanguage:SetHeight(22)
     end
@@ -535,7 +536,7 @@ pfUI:RegisterModule("chat", 20400, function ()
     pfUI.chat.editbox:SetHeight(C.chat.text.input_height)
 
     if ChatFrameEditBoxLanguage then
-      pfUI.api.SkinButton(ChatFrameEditBoxLanguage)
+      SkinButton(ChatFrameEditBoxLanguage)
       ChatFrameEditBoxLanguage:SetWidth(C.chat.text.input_height)
       ChatFrameEditBoxLanguage:SetHeight(C.chat.text.input_height)
     end
