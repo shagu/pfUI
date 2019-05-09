@@ -352,7 +352,6 @@ pfUI:RegisterModule("unlock", 20400, function ()
     pfUI.unlock.selection = GetFrames()
     for id, frame in pairs(pfUI.unlock.selection) do
       pfUI_config["position"][frame:GetName()] = nil
-      frame:ClearAllPoints()
       UpdateMovable(frame)
 
       if frame.OnMove then frame:OnMove() end
