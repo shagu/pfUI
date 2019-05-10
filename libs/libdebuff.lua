@@ -18,6 +18,7 @@ if pfUI.api.libdebuff then return end
 
 local libdebuff = CreateFrame("Frame", "pfdebuffsScanner", UIParent)
 local scanner = libtipscan:GetScanner("libdebuff")
+local lastspell
 
 function libdebuff:GetDuration(effect, rank)
   if L["debuffs"][effect] then
@@ -54,51 +55,50 @@ function libdebuff:GetDuration(effect, rank)
   end
 end
 
-function libdebuff:AddPending(unit, unitlevel, effect, duration)
-  if not unit then return end
-  if not L["debuffs"][effect] then return end
-  local duration = duration or libdebuff:GetDuration(effect)
-  local unitlevel = unitlevel or 0
-
-  if duration > 0 then
-    libdebuff.pending[1] = unit
-    libdebuff.pending[2] = unitlevel
-    libdebuff.pending[3] = effect
-    libdebuff.pending[4] = duration
-  end
-end
-
-function libdebuff:PersistPending(effect)
-  if libdebuff.pending[3] == effect or ( effect == nil and libdebuff.pending[3] ) then
-
-    local unit = libdebuff.pending[1]
-    local unitlevel = libdebuff.pending[2]
-    local effect = libdebuff.pending[3]
-    local duration = libdebuff.pending[4]
-
-    libdebuff:AddEffect(unit, unitlevel, effect, duration)
-  end
-end
-
-function libdebuff:ClearPending()
-  libdebuff.pending[1] = nil
-  libdebuff.pending[2] = nil
-  libdebuff.pending[3] = nil
-  libdebuff.pending[4] = nil
-end
-
-function libdebuff:RemovePending(effect)
-  if libdebuff.pending[3] == effect then
-    libdebuff:ClearPending()
-  end
-end
-
 function libdebuff:GetMaxRank(effect)
   local max = 0
   for id in pairs(L["debuffs"][effect]) do
     if id > max then max = id end
   end
   return max
+end
+
+function libdebuff:UpdateUnits()
+  if not pfUI.uf.target then return end
+  pfUI.uf:RefreshUnit(pfUI.uf.target, "aura")
+end
+
+function libdebuff:AddPending(unit, unitlevel, effect, duration)
+  if not unit then return end
+  if not L["debuffs"][effect] then return end
+
+  if duration > 0 and libdebuff.pending[3] ~= effect then
+    libdebuff.pending[1] = unit
+    libdebuff.pending[2] = unitlevel or 0
+    libdebuff.pending[3] = effect
+    libdebuff.pending[4] = duration or libdebuff:GetDuration(effect)
+  end
+end
+
+function libdebuff:RemovePending()
+  libdebuff.pending[1] = nil
+  libdebuff.pending[2] = nil
+  libdebuff.pending[3] = nil
+  libdebuff.pending[4] = nil
+end
+
+function libdebuff:PersistPending(effect)
+  if not libdebuff.pending[3] then return end
+  if libdebuff.pending[3] == effect or ( effect == nil and libdebuff.pending[3] ) then
+    libdebuff:AddEffect(libdebuff.pending[1], libdebuff.pending[2], libdebuff.pending[3], libdebuff.pending[4])
+    libdebuff:RemovePending()
+  end
+end
+
+function libdebuff:RevertLastAction()
+  lastspell.start = lastspell.start_old
+  lastspell.start_old = nil
+  libdebuff:UpdateUnits()
 end
 
 function libdebuff:AddEffect(unit, unitlevel, effect, duration)
@@ -108,14 +108,15 @@ function libdebuff:AddEffect(unit, unitlevel, effect, duration)
   if not libdebuff.objects[unit][unitlevel] then libdebuff.objects[unit][unitlevel] = {} end
   if not libdebuff.objects[unit][unitlevel][effect] then libdebuff.objects[unit][unitlevel][effect] = {} end
 
+  -- save current effect as lastspell
+  lastspell = libdebuff.objects[unit][unitlevel][effect]
+
+  libdebuff.objects[unit][unitlevel][effect].effect = effect
+  libdebuff.objects[unit][unitlevel][effect].start_old = libdebuff.objects[unit][unitlevel][effect].start
   libdebuff.objects[unit][unitlevel][effect].start = GetTime()
   libdebuff.objects[unit][unitlevel][effect].duration = duration or libdebuff:GetDuration(effect)
 
-  libdebuff:ClearPending()
-
-  if pfUI.uf.target then
-    pfUI.uf:RefreshUnit(pfUI.uf.target, "aura")
-  end
+  libdebuff:UpdateUnits()
 end
 
 -- scan for debuff application
@@ -128,10 +129,10 @@ libdebuff:RegisterEvent("SPELLCAST_STOP")
 libdebuff:RegisterEvent("UNIT_AURA")
 
 -- Remove Pending
-libdebuff.rp = { SPELLFAILCASTSELF, SPELLFAILPERFORMSELF, SPELLIMMUNESELFOTHER,
-  IMMUNEDAMAGECLASSSELFOTHER, SPELLMISSSELFOTHER, SPELLRESISTSELFOTHER,
-  SPELLEVADEDSELFOTHER, SPELLDODGEDSELFOTHER, SPELLDEFLECTEDSELFOTHER,
-  SPELLREFLECTSELFOTHER, SPELLPARRIEDSELFOTHER, SPELLLOGABSORBSELFOTHER }
+libdebuff.rp = { SPELLIMMUNESELFOTHER, IMMUNEDAMAGECLASSSELFOTHER,
+  SPELLMISSSELFOTHER, SPELLRESISTSELFOTHER, SPELLEVADEDSELFOTHER,
+  SPELLDODGEDSELFOTHER, SPELLDEFLECTEDSELFOTHER, SPELLREFLECTSELFOTHER,
+  SPELLPARRIEDSELFOTHER, SPELLLOGABSORBSELFOTHER }
 
 -- Persist Pending
 libdebuff.pp = { SPELLCASTGOSELF, SPELLPERFORMGOSELF, SPELLLOGSCHOOLSELFOTHER,
@@ -184,14 +185,18 @@ libdebuff:SetScript("OnEvent", function()
     -- Remove pending spell
     for _, msg in pairs(libdebuff.rp) do
       local effect = cmatch(arg1, msg)
-      if effect then
-        libdebuff:RemovePending(effect)
+      if effect and libdebuff.pending[3] == effect then
+        -- instant removal of the pending spell
+        libdebuff:RemovePending()
+        return
+      elseif effect and lastspell.start_old and lastspell.effect == effect then
+        -- late removal of debuffs (e.g hunter arrows as they hit late)
+        libdebuff:RevertLastAction()
         return
       end
     end
   elseif event == "SPELLCAST_STOP" then
-    -- Persist all spells that have not been removed till here
-    libdebuff:PersistPending()
+    QueueFunction(libdebuff.PersistPending)
   end
 end)
 
