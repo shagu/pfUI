@@ -18,6 +18,7 @@ if pfUI.api.libdebuff then return end
 
 local libdebuff = CreateFrame("Frame", "pfdebuffsScanner", UIParent)
 local scanner = libtipscan:GetScanner("libdebuff")
+local _, class = UnitClass("player")
 local lastspell
 
 function libdebuff:GetDuration(effect, rank)
@@ -128,6 +129,11 @@ libdebuff:RegisterEvent("PLAYER_TARGET_CHANGED")
 libdebuff:RegisterEvent("SPELLCAST_STOP")
 libdebuff:RegisterEvent("UNIT_AURA")
 
+-- register seal handler
+if class == "PALADIN" then
+  libdebuff:RegisterEvent("CHAT_MSG_COMBAT_SELF_HITS")
+end
+
 -- Remove Pending
 libdebuff.rp = { SPELLIMMUNESELFOTHER, IMMUNEDAMAGECLASSSELFOTHER,
   SPELLMISSSELFOTHER, SPELLRESISTSELFOTHER, SPELLEVADEDSELFOTHER,
@@ -143,8 +149,26 @@ libdebuff.pending = {}
 
 -- Gather Data by Events
 libdebuff:SetScript("OnEvent", function()
+  -- paladin seal refresh
+  if event == "CHAT_MSG_COMBAT_SELF_HITS" then
+    local hit = cmatch(arg1, COMBATHITSELFOTHER)
+    local crit = cmatch(arg1, COMBATHITCRITSELFOTHER)
+    if hit or crit then
+      for seal in L["judgements"] do
+        local name = UnitName("target")
+        local level = UnitLevel("target")
+        if name and libdebuff.objects[name] then
+          if level and libdebuff.objects[name][level] and libdebuff.objects[name][level][seal] then
+            libdebuff:AddEffect(name, level, seal)
+          elseif libdebuff.objects[name][0] and libdebuff.objects[name][0][seal] then
+            libdebuff:AddEffect(name, 0, seal)
+          end
+        end
+      end
+    end
+
   -- Add Combat Log
-  if event == "CHAT_MSG_SPELL_PERIODIC_HOSTILEPLAYER_DAMAGE" or event == "CHAT_MSG_SPELL_PERIODIC_CREATURE_DAMAGE" then
+  elseif event == "CHAT_MSG_SPELL_PERIODIC_HOSTILEPLAYER_DAMAGE" or event == "CHAT_MSG_SPELL_PERIODIC_CREATURE_DAMAGE" then
     local unit, effect = cmatch(arg1, AURAADDEDOTHERHARMFUL)
     if unit and effect then
       local unitlevel = UnitName("target") == unit and UnitLevel("target") or 0

@@ -132,6 +132,13 @@ pfUI_locale["koKR"]["dyndebuffs"] = {
   ["Gouge"] = "후려치기",
 }
 
+pfUI_locale["koKR"]["judgements"] = {
+  ["정의의 심판"] = true,
+  ["빛의 심판"] = true,
+  ["지혜의 심판"] = true,
+  ["성전사의 심판"] = true,
+}
+
 pfUI_locale["koKR"]["interrupts"] = {
   ["방패 가격"] = true,
   ["자루 공격"] = true,

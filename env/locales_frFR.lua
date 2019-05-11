@@ -127,6 +127,13 @@ pfUI_locale["frFR"]["dyndebuffs"] = {
   ["Gouge"] = "Suriner",
 }
 
+pfUI_locale["frFR"]["judgements"] = {
+  ["Jugement de justice"] = true,
+  ["Jugement de lumière"] = true,
+  ["Jugement de sagesse"] = true,
+  ["Jugement du Croisé"] = true,
+}
+
 pfUI_locale["frFR"]["interrupts"] = {
   ["Coup de bouclier"] = true,
   ["Volée de coups"] = true,

@@ -132,6 +132,13 @@ pfUI_locale["enUS"]["dyndebuffs"] = {
   ["Gouge"] = "Gouge",
 }
 
+pfUI_locale["enUS"]["judgements"] = {
+  ["Judgement of Justice"] = true,
+  ["Judgement of Light"] = true,
+  ["Judgement of Wisdom"] = true,
+  ["Judgement of the Crusader"] = true,
+}
+
 pfUI_locale["enUS"]["interrupts"] = {
   ["Shield Bash"] = true,
   ["Pummel"] = true,

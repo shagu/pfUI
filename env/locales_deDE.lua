@@ -132,6 +132,13 @@ pfUI_locale["deDE"]["dyndebuffs"] = {
   ["Gouge"] = "Solarplexus",
 }
 
+pfUI_locale["deDE"]["judgements"] = {
+  ["Richturteil der Gerechtigkeit"] = true,
+  ["Richturteil des Lichts"] = true,
+  ["Richturteil der Weisheit"] = true,
+  ["Richturteil des Kreuzfahrers"] = true,
+}
+
 pfUI_locale["deDE"]["interrupts"] = {
   ["Schildhieb"] = true,
   ["Zuschlagen"] = true,

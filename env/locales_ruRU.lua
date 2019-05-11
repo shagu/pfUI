@@ -132,6 +132,13 @@ pfUI_locale["ruRU"]["dyndebuffs"] = {
   ["Gouge"] = "Парализующий удар",
 }
 
+pfUI_locale["ruRU"]["judgements"] = {
+  ["Правосудие справедливости"] = true,
+  ["Правосудие света"] = true,
+  ["Правосудие мудрости"] = true,
+  ["Правосудие воина света"] = true,
+}
+
 pfUI_locale["ruRU"]["interrupts"] = {
   ["Удар щитом"] = true,
   ["Зуботычина"] = true,

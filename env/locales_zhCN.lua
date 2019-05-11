@@ -127,6 +127,13 @@ pfUI_locale["zhCN"]["dyndebuffs"] = {
   ["Gouge"] = "凿击",
 }
 
+pfUI_locale["zhCN"]["judgements"] = {
+  ["公正审判"] = true,
+  ["圣光审判"] = true,
+  ["智慧审判"] = true,
+  ["十字军审判"] = true,
+}
+
 pfUI_locale["zhCN"]["interrupts"] = {
   ["盾击"] = true,
   ["拳击"] = true,

@@ -132,6 +132,13 @@ pfUI_locale["esES"]["dyndebuffs"] = {
   ["Gouge"] = "Incapacitación",
 }
 
+pfUI_locale["esES"]["judgements"] = {
+  ["Sentencia de Justicia"] = true,
+  ["Sentencia de Luz"] = true,
+  ["Sentencia de Sabiduría"] = true,
+  ["Sentencia del Cruzado"] = true,
+}
+
 pfUI_locale["esES"]["interrupts"] = {
   ["Azote de escudo"] = true,
   ["Zurrar"] = true,
