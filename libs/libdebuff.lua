@@ -213,7 +213,7 @@ libdebuff:SetScript("OnEvent", function()
         -- instant removal of the pending spell
         libdebuff:RemovePending()
         return
-      elseif effect and lastspell.start_old and lastspell.effect == effect then
+      elseif effect and lastspell and lastspell.start_old and lastspell.effect == effect then
         -- late removal of debuffs (e.g hunter arrows as they hit late)
         libdebuff:RevertLastAction()
         return
