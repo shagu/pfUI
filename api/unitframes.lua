@@ -615,7 +615,7 @@ function pfUI.uf.OnEvent()
     pfUI.uf:RefreshUnit(this, "lootIcon")
   elseif event == "PARTY_LEADER_CHANGED" then
     pfUI.uf:RefreshUnit(this, "leaderIcon")
-  elseif event == "UNIT_PET" and this.label == "pet" then
+  elseif ( event == "UNIT_HAPPINESS" or event == "UNIT_PET" ) and this.label == "pet" then
     pfUI.uf:RefreshUnit(this)
 
   -- UNIT_XXX Events
