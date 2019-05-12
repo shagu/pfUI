@@ -451,6 +451,8 @@ pfUI:RegisterModule("actionbar", 20400, function ()
     local grid = self.bar == 12 and showgrid_pet or showgrid
     local mouse = arg1 and not keystate
     local keystate = keystate
+    local slfcast = C.bars.altself == "1" and IsAltKeyDown() and true or self.slfcast
+    self.slfcast = nil
 
     if ( pfUI_config.bars.keydown == "1" and keystate == "down" ) or (pfUI_config.bars.keydown == "0" and keystate == "up" ) or self.bar == 11 or mouse then
       if self.bar == 11 then
@@ -472,7 +474,7 @@ pfUI:RegisterModule("actionbar", 20400, function ()
           MacroFrame_SaveMacro()
         end
 
-        UseAction(self.id)
+        UseAction(self.id, nil, slfcast)
       end
     end
   end
@@ -996,9 +998,8 @@ pfUI:RegisterModule("actionbar", 20400, function ()
   end
 
   -- Map Keybinds to button clicks
-  function _G.pfActionButton(slot, slf, opt)
+  function _G.pfActionButton(slot, slfcast, opt)
     local bar, button = 1, slot
-    local slf = C.bars.altself == "1" and IsAltKeyDown() and true or slf
 
     -- determine the proper bar and button
     if opt and blizzbarmapping[opt] then
@@ -1009,7 +1010,10 @@ pfUI:RegisterModule("actionbar", 20400, function ()
     end
 
     local frame = bars[bar][button]
-    if frame then frame:Click() end
+    if frame then
+      frame.slfcast = slfcast
+      frame:Click()
+    end
   end
 
   function _G.ActionBar_PageUp() -- TODO TBC
