@@ -140,10 +140,6 @@ libdebuff.rp = { SPELLIMMUNESELFOTHER, IMMUNEDAMAGECLASSSELFOTHER,
   SPELLDODGEDSELFOTHER, SPELLDEFLECTEDSELFOTHER, SPELLREFLECTSELFOTHER,
   SPELLPARRIEDSELFOTHER, SPELLLOGABSORBSELFOTHER }
 
--- Persist Pending
-libdebuff.pp = { SPELLCASTGOSELF, SPELLPERFORMGOSELF, SPELLLOGSCHOOLSELFOTHER,
-  SPELLLOGCRITSCHOOLSELFOTHER, SPELLLOGSELFOTHER, SPELLLOGCRITSELFOTHER }
-
 libdebuff.objects = {}
 libdebuff.pending = {}
 
@@ -197,15 +193,6 @@ libdebuff:SetScript("OnEvent", function()
 
   -- Update Pending Spells
   elseif event == "CHAT_MSG_SPELL_FAILED_LOCALPLAYER" or event == "CHAT_MSG_SPELL_SELF_DAMAGE" then
-    -- Persist pending Spell
-    for _, msg in pairs(libdebuff.pp) do
-      local effect = cmatch(arg1, msg)
-      if effect then
-        libdebuff:PersistPending(effect)
-        return
-      end
-    end
-
     -- Remove pending spell
     for _, msg in pairs(libdebuff.rp) do
       local effect = cmatch(arg1, msg)
