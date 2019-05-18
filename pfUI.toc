@@ -85,6 +85,7 @@ skins\blizzard\petition.lua
 skins\blizzard\taxi.lua
 skins\blizzard\tooltips.lua
 skins\blizzard\tabard.lua
+skins\blizzard\itemtext.lua
 
 # modules
 modules\gui.lua
