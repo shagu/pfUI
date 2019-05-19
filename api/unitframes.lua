@@ -593,6 +593,7 @@ function pfUI.uf.OnShow()
 end
 
 function pfUI.uf.OnEvent()
+  -- update regular frames
   if this.label == "target" and event == "PLAYER_TARGET_CHANGED" then
     pfUI.uf:RefreshUnit(this, "all")
   elseif ( this.label == "party" or this.label == "player" ) and event == "PARTY_MEMBERS_CHANGED" then
@@ -607,14 +608,6 @@ function pfUI.uf.OnEvent()
     pfUI.uf:RefreshUnit(this, "aura")
   elseif event == "PLAYER_ENTERING_WORLD" then
     pfUI.uf:RefreshUnit(this, "all")
-  elseif event == "RAID_TARGET_UPDATE" then
-    pfUI.uf:RefreshUnit(this, "raidIcon")
-  elseif this.label == "player" and event == "PLAYER_UPDATE_RESTING" then
-    pfUI.uf:RefreshUnit(this, "restIcon")
-  elseif event == "PARTY_LOOT_METHOD_CHANGED" then
-    pfUI.uf:RefreshUnit(this, "lootIcon")
-  elseif event == "PARTY_LEADER_CHANGED" then
-    pfUI.uf:RefreshUnit(this, "leaderIcon")
   elseif ( event == "UNIT_HAPPINESS" or event == "UNIT_PET" ) and this.label == "pet" then
     pfUI.uf:RefreshUnit(this)
 
@@ -631,6 +624,17 @@ function pfUI.uf.OnEvent()
     else
       pfUI.uf:RefreshUnit(this)
     end
+  end
+
+  -- update indicators
+  if event == "PARTY_LEADER_CHANGED" or
+     event == "PARTY_LOOT_METHOD_CHANGED" or
+     event == "PARTY_MEMBERS_CHANGED" or
+     event == "RAID_TARGET_UPDATE" or
+     event == "RAID_ROSTER_UPDATE" or
+     event == "PLAYER_UPDATE_RESTING"
+  then
+    pfUI.uf:RefreshIndicators(this)
   end
 end
 
@@ -665,8 +669,11 @@ function pfUI.uf.OnUpdate()
   -- trigger eventless actions (online/offline/range)
   if not this.lastTick then this.lastTick = GetTime() + (this.tick or .2) end
   if this.lastTick and this.lastTick < GetTime() then
+    local unitstr = this.label .. this.id
+
     this.lastTick = GetTime() + (this.tick or .2)
     pfUI.uf:RefreshUnitState(this)
+    pfUI.uf:RefreshIndicators(this)
 
     if this.config.glowaggro == "1" and pfUI.api.UnitHasAggro(this.label .. this.id) > 0 then
       this.hp.glow:SetBackdropBorderColor(1,.2,0)
@@ -992,6 +999,51 @@ function pfUI.uf:RefreshUnitState(unit)
   end
 end
 
+function pfUI.uf:RefreshIndicators(unit)
+  if not unit.label or not unit.id then return end
+  local unitstr = unit.label .. unit.id
+
+  if unit.leaderIcon then -- Leader Icon
+    if unit.config.leadericon == "1" and UnitIsPartyLeader(unitstr) and ( GetNumPartyMembers() > 0 or GetNumRaidMembers() > 0 ) then
+      unit.leaderIcon:Show()
+    else
+      unit.leaderIcon:Hide()
+    end
+  end
+
+  if unit.lootIcon then -- Loot Icon
+    if unit.config.looticon == "0" then
+      unit.lootIcon:Hide()
+    else
+      -- no third return value here.. but leaving this as a hint
+      local method, group, raid = GetLootMethod()
+      local name = group and UnitName(group == 0 and "player" or "party"..group) or raid and UnitName("raid"..raid) or nil
+
+      if name and name == UnitName(unitstr) then
+        unit.lootIcon:Show()
+      else
+        unit.lootIcon:Hide()
+      end
+    end
+  end
+
+  if unit.pvpIcon then -- PvP Icon
+    if unit.config.showPVP == "1" and UnitIsPVP(unitstr) then
+      unit.pvpIcon:Show()
+    else
+      unit.pvpIcon:Hide()
+    end
+  end
+
+  if unit.restIcon and unit:GetName() == "pfPlayer" then -- Rest Icon
+    if C.unitframes.player.showRest == "1" and UnitIsUnit(unitstr, "player") and IsResting() then
+      unit.restIcon:Show()
+    else
+      unit.restIcon:Hide()
+    end
+  end
+end
+
 local pfDebuffColors = {
   ["Magic"]   = { 0.1, 0.7, 0.8, 1 },
   ["Poison"]  = { 0.2, 0.7, 0.3, 1 },
@@ -1107,56 +1159,6 @@ function pfUI.uf:RefreshUnit(unit, component)
       else
         unit.raidIcon:Hide()
       end
-    end
-  end
-
-  -- Leader Icon
-  if unit.leaderIcon and ( component == "all" or component == "leaderIcon" ) then
-    if unit.config.leadericon == "0" then
-      unit.leaderIcon:Hide()
-    else
-      if GetNumPartyMembers() == 0 and GetNumRaidMembers() == 0 then
-        unit.leaderIcon:Hide()
-      elseif UnitIsPartyLeader(unitstr) then
-        unit.leaderIcon:Show()
-      else
-        unit.leaderIcon:Hide()
-      end
-    end
-  end
-
-  -- Loot Icon
-  if unit.lootIcon and ( component == "all" or component == "lootIcon" ) then
-    if unit.config.looticon == "0" then
-      unit.lootIcon:Hide()
-    else
-      -- no third return value here.. but leaving this as a hint
-      local method, group, raid = GetLootMethod()
-      local name = group and UnitName(group == 0 and "player" or "party"..group) or raid and UnitName("raid"..raid) or nil
-
-      if name and name == UnitName(unitstr) then
-        unit.lootIcon:Show()
-      else
-        unit.lootIcon:Hide()
-      end
-    end
-  end
-
-  -- PvP Icon
-  if unit.pvpIcon and ( component == "all" or component == "pvp" ) then
-    if unit.config.showPVP == "1" and UnitIsPVP(unitstr) then
-      unit.pvpIcon:Show()
-    else
-      unit.pvpIcon:Hide()
-    end
-  end
-
-  -- Rest Icon
-  if unit.restIcon and unit:GetName() == "pfPlayer" and ( component == "all" or component == "restIcon" ) then
-    if C.unitframes.player.showRest == "1" and UnitIsUnit(unitstr, "player") and IsResting() then
-      unit.restIcon:Show()
-    else
-      unit.restIcon:Hide()
     end
   end
 
