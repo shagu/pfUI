@@ -170,25 +170,24 @@ pfUI:RegisterModule("prediction", function ()
   end
 
   function pfUI.prediction:UpdateUnitFrames(name, heal, ress)
-    OVERHEALPERCENT = OVERHEALPERCENT or 20
-
     for id, frame in pairs(_G.pfUI.uf.frames) do
       if frame:IsVisible() and frame.label and frame.id then
+        local overhealperc = tonumber(frame.config.overhealperc)
         local unit = frame.label .. frame.id
         local health, maxHealth = UnitHealth(unit), UnitHealthMax(unit)
 
         if UnitName(unit) == name then
           if ress and UnitIsDeadOrGhost(unit) then
             frame.ressIcon:Show()
-          elseif heal and heal > 0 and (health < maxHealth or OVERHEALPERCENT > 0 ) then
+          elseif heal and heal > 0 and (health < maxHealth or overhealperc > 0 ) then
             local width = frame.config.width
             local height = frame.config.height
 
             if frame.config.verticalbar == "0" then
               local healthWidth = width * (health / maxHealth)
               local incWidth = width * heal / maxHealth
-              if healthWidth + incWidth > width * (1+(OVERHEALPERCENT/100)) then
-                incWidth = width * (1+OVERHEALPERCENT/100) - healthWidth
+              if healthWidth + incWidth > width * (1+(overhealperc/100)) then
+                incWidth = width * (1+overhealperc/100) - healthWidth
               end
 
               if frame.config.invert_healthbar == "1" then
@@ -199,8 +198,8 @@ pfUI:RegisterModule("prediction", function ()
             else
               local healthHeight = height * (health / maxHealth)
               local incHeight = height * heal / maxHealth
-              if healthHeight + incHeight > height * (1+(OVERHEALPERCENT/100)) then
-                incHeight = height * (1+OVERHEALPERCENT/100) - healthHeight
+              if healthHeight + incHeight > height * (1+(overhealperc/100)) then
+                incHeight = height * (1+overhealperc/100) - healthHeight
               end
 
               if frame.config.invert_healthbar == "1" then

@@ -946,6 +946,19 @@ pfUI:RegisterModule("gui", 20400, function ()
         ".75:75%",
         ".90:90%",
       },
+      ["uf_overheal"] = {
+        "0:0%",
+        "10:10%",
+        "20:20%",
+        "30:30%",
+        "40:40%",
+        "50:50%",
+        "60:60%",
+        "70:70%",
+        "80:80%",
+        "90:90%",
+        "100:100%",
+      },
       ["uf_layout"] = {
         "default:" .. T["Default"],
         "tukui:TukUI"
@@ -1522,6 +1535,7 @@ pfUI:RegisterModule("gui", 20400, function ()
           CreateConfig(U[c], T["Show Raid Mark"], C.unitframes[c], "raidicon", "checkbox")
           CreateConfig(U[c], T["Raid Mark Size"], C.unitframes[c], "raidiconsize")
           CreateConfig(U[c], T["Show Class Buff Indicators"], C.unitframes[c], "buff_indicator", "checkbox")
+          CreateConfig(U[c], T["Display Overheal"], C.unitframes[c], "overhealperc", "dropdown", pfUI.gui.dropdowns.uf_overheal)
 
           CreateConfig(U[c], T["Healthbar"], nil, nil, "header")
           CreateConfig(U[c], T["Health Bar Width"], C.unitframes[c], "width")
