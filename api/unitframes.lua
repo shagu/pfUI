@@ -1042,6 +1042,16 @@ function pfUI.uf:RefreshIndicators(unit)
       unit.restIcon:Hide()
     end
   end
+
+  if unit.raidIcon then -- Raid Icon
+    local raidIcon = UnitName(unitstr) and GetRaidTargetIndex(unitstr)
+    if unit.config.raidicon == "1" and raidIcon then
+      SetRaidTargetIconTexture(unit.raidIcon.texture, raidIcon)
+      unit.raidIcon:Show()
+    else
+      unit.raidIcon:Hide()
+    end
+  end
 end
 
 local pfDebuffColors = {
@@ -1146,21 +1156,6 @@ function pfUI.uf:RefreshUnit(unit, component)
   if not unit.cache then unit.cache = {} end
 
   if not unit:IsShown() then return end
-
-  -- Raid Icon
-  if unit.raidIcon and ( component == "all" or component == "raidIcon" ) then
-    if unit.config.raidicon == "0" then
-      unit.raidIcon:Hide()
-    else
-      local raidIcon = GetRaidTargetIndex(unitstr)
-      if raidIcon and UnitName(unitstr) then
-        SetRaidTargetIconTexture(unit.raidIcon.texture, raidIcon)
-        unit.raidIcon:Show()
-      else
-        unit.raidIcon:Hide()
-      end
-    end
-  end
 
   -- Buffs
   if unit.buffs and ( component == "all" or component == "aura" ) then
