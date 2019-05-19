@@ -159,10 +159,10 @@ libcast:RegisterEvent("CHAT_MSG_SPELL_CREATURE_VS_CREATURE_DAMAGE")
 libcast:RegisterEvent("CHAT_MSG_SPELL_CREATURE_VS_CREATURE_BUFF")
 
 -- scan for textures
-local texture = nil
-hooksecurefunc("UseAction", function(id) texture = GetActionTexture(id) end)
-hooksecurefunc("CastSpell", function(id, bookType) texture = GetSpellTexture(id, bookType) end)
-hooksecurefunc("UseContainerItem", function(id, index) texture = GetContainerItemInfo(id, index) end)
+local lastcasttex = nil
+hooksecurefunc("UseAction", function(id) lastcasttex = GetActionTexture(id) end)
+hooksecurefunc("CastSpell", function(id, bookType) lastcasttex = GetSpellTexture(id, bookType) end)
+hooksecurefunc("UseContainerItem", function(id, index) lastcasttex = GetContainerItemInfo(id, index) end)
 
 -- player spells
 libcast:RegisterEvent("SPELLCAST_START")
@@ -178,7 +178,7 @@ libcast:RegisterEvent("PLAYER_TARGET_CHANGED")
 libcast:SetScript("OnEvent", function()
   -- Fill database with player casts
   if event == "SPELLCAST_START" then
-    local icon = L["spells"][arg1] and L["spells"][arg1].icon and string.format("%s%s", "Interface\\Icons\\", L["spells"][arg1].icon) or texture
+    local icon = L["spells"][arg1] and L["spells"][arg1].icon and string.format("%s%s", "Interface\\Icons\\", L["spells"][arg1].icon) or lastcasttex
     -- add cast action to the database
     this.db[player].cast = arg1
     this.db[player].start = GetTime()
@@ -190,7 +190,7 @@ libcast:SetScript("OnEvent", function()
       L["spells"][arg1].icon = L["spells"][arg1].icon or icon
       L["spells"][arg1].t = L["spells"][arg1].t or arg2
     end
-    texture = nil
+    lastcasttex = nil
   elseif event == "SPELLCAST_STOP" or event == "SPELLCAST_FAILED" or event == "SPELLCAST_INTERRUPTED" then
     if this.db[player] and not this.db[player].channel then
       -- remove cast action to the database
@@ -200,7 +200,7 @@ libcast:SetScript("OnEvent", function()
       this.db[player].icon = nil
       this.db[player].channel = nil
     else
-      texture = nil
+      lastcasttex = nil
     end
   elseif event == "SPELLCAST_DELAYED" then
     if this.db[player].cast then
@@ -211,9 +211,9 @@ libcast:SetScript("OnEvent", function()
     this.db[player].cast = arg2
     this.db[player].start = GetTime()
     this.db[player].casttime = arg1
-    this.db[player].icon = L["spells"][arg2] and L["spells"][arg2].icon and string.format("%s%s", "Interface\\Icons\\", L["spells"][arg2].icon) or texture
+    this.db[player].icon = L["spells"][arg2] and L["spells"][arg2].icon and string.format("%s%s", "Interface\\Icons\\", L["spells"][arg2].icon) or lastcasttex
     this.db[player].channel = true
-    texture = nil
+    lastcasttex = nil
   elseif event == "SPELLCAST_CHANNEL_STOP" then
     if this.db[player] and this.db[player].channel then
       -- remove cast action to the database
