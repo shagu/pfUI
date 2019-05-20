@@ -442,66 +442,266 @@ pfUI:RegisterModule("thirdparty", "vanilla", function ()
     if C.thirdparty.wim.enable == "0" then return end
 
     _G.WIM_isLinkURL = function() return false end
+    _G.WIM_ConvertURLtoLinks = function(text) -- use pfUI link handler (it is more correct)
+      return pfUI.chat:HandleLink(text)
+    end
+
+		-- replace wim class colors with pfUI ones
+    hooksecurefunc("WIM_InitClassProps", function()
+      for class in pairs(RAID_CLASS_COLORS) do
+        local wimclass = _G[format("WIM_LOCALIZED_%s",class)]
+        local colorstr = gsub(RAID_CLASS_COLORS[class].colorStr, "^ff", "")
+        _G.WIM_ClassColors[wimclass] = colorstr
+      end
+    end, true)
+
+    -- convo menu
+    CreateBackdrop(WIM_Icon_ToolTip, 0, nil, tonumber(C.tooltip.alpha))
+    CreateBackdrop(WIM_ConversationMenu, 0, nil, .75)
+    for i=1, _G.WIM_MaxMenuCount do
+      local btn, btnClose = _G["WIM_ConversationMenuTellButton"..i], _G["WIM_ConversationMenuTellButton"..i.."Close"]
+      SkinCloseButton(btnClose, btn, -4, -1)
+      btnClose:SetWidth(13)
+      btnClose:SetHeight(13)
+    end
+    hooksecurefunc("WIM_Icon_DropDown_Update", function()
+      for i=1,_G.WIM_MaxMenuCount do
+        local btn = _G["WIM_ConversationMenuTellButton"..i]
+        if i==1 and btn:IsEnabled() == 0 then return end
+        if not btn:IsShown() then return end
+        local btn_txt = btn:GetText()
+        local user = btn.theUser
+        local userclr = _G.WIM_PlayerCache[user] and _G.WIM_PlayerCache[user].class and _G.WIM_UserWithClassColor(user)
+        if userclr and user ~= userclr then
+          btn_txt = gsub(btn_txt, user, format("|r%s",userclr))
+          btn:SetText(btn_txt)
+        end
+      end
+    end, true)
+
+    do -- history frame
+      CreateBackdrop(WIM_HistoryFrame, nil, nil, .8)
+      WIM_HistoryFrame.backdrop:SetPoint("TOPLEFT", 10, -10)
+      WIM_HistoryFrame.backdrop:SetPoint("BOTTOMRIGHT", -10, 10)
+      WIM_HistoryFrame:SetHitRectInsets(10,10,10,10)
+      StripTextures(WIM_HistoryFrameTitle)
+
+      SkinCloseButton(WIM_HistoryFrameTitleExitButton, WIM_HistoryFrame.backdrop, -6, -6)
+
+      SkinArrowButton(WIM_HistoryFrameMessageListScrollUp, 'up', 18)
+      WIM_HistoryFrameMessageListScrollUp:SetPoint("TOPLEFT", WIM_HistoryFrameMessageListScrollingMessageFrame, "TOPRIGHT", 10, -6)
+      SkinArrowButton(WIM_HistoryFrameMessageListScrollDown, 'down', 18)
+      WIM_HistoryFrameMessageListScrollDown:SetPoint("BOTTOMLEFT", WIM_HistoryFrameMessageListScrollingMessageFrame, "BOTTOMRIGHT", 10, 0)
+    end    
+    do -- options frame
+      CreateBackdrop(WIM_Options, nil, nil, .8)
+      WIM_Options.backdrop:SetPoint("TOPLEFT", 12, -10)
+      WIM_Options.backdrop:SetPoint("BOTTOMRIGHT", -12, 0)
+      WIM_Options:SetHitRectInsets(12,12,10,0)
+
+      WIM_OptionsTitleBorder:SetTexture(nil)
+      WIM_OptionsTitleString:SetPoint("TOP", WIM_Options.backdrop, "TOP", 0, -4)
+
+      SkinCloseButton(WIM_OptionsExitButton, WIM_Options.backdrop, -6, -6)
+      WIM_OptionsHelpButton:ClearAllPoints()
+      WIM_OptionsHelpButton:SetPoint("RIGHT", WIM_OptionsExitButton, "LEFT", -10, 0)
+      WIM_OptionsHelpButton:SetHighlightTexture(nil)
+
+      SkinCheckbox(WIM_OptionsEnableWIM)
+
+      do -- display
+        StripTextures(WIM_OptionsDisplayCaption)
+        SkinCheckbox(WIM_OptionsDisplayShowShortcutBar)
+        SkinCheckbox(WIM_OptionsDisplayShowTimeStamps)
+        SkinCheckbox(WIM_OptionsDisplayShowCharacterInfo)
+        SkinCheckbox(WIM_OptionsDisplayShowCharacterInfoClassIcon)
+        SkinCheckbox(WIM_OptionsDisplayShowCharacterInfoClassColor)
+        SkinCheckbox(WIM_OptionsDisplayShowCharacterInfoDetails)
+        if WIM_OptionsDisplayShowCharacterInfoZone then SkinCheckbox(WIM_OptionsDisplayShowCharacterInfoZone) end
+
+        SkinSlider(WIM_OptionsDisplayFontSize)
+        SkinSlider(WIM_OptionsDisplayWindowSize)
+        SkinSlider(WIM_OptionsDisplayWindowAlpha)
+      end
+      do -- minimap
+        StripTextures(WIM_OptionsMiniMapCaption)
+        SkinCheckbox(WIM_OptionsMiniMapEnabled)
+        SkinCheckbox(WIM_OptionsMiniMapFreeMoving)
+
+        SkinSlider(WIM_OptionsMiniMapIconPosition)
+      end
+      -- alignment for WIM_OptionsTabbedFrame:
+      WIM_OptionsOptionTab1:SetPoint("TOPLEFT", WIM_OptionsMiniMap, "BOTTOMLEFT", 10, -4) -- move the upper bound WIM_OptionsTabbedFrame
+      WIM_OptionsDisplay:SetHeight(540) -- move the lower bound WIM_OptionsTabbedFrame
+      WIM_Options_GeneralScroll:SetPoint("BOTTOMRIGHT", WIM_OptionsTabbedFrame, "BOTTOMRIGHT", -30, 10)
+      -------------------------------------------------
+
+      -- wrap SkinCheckbox to fix issues with scrollframe breaking layers
+      local SkinScrollchildCheckbox = function(f, s)
+        SkinCheckbox(f, s)
+        f.backdrop:SetParent(f:GetParent())
+        f:SetParent(f.backdrop)
+      end
+      do -- general tab
+        SkinTab(WIM_OptionsOptionTab1)
+        SkinScrollbar(WIM_Options_GeneralScrollScrollBar)
+
+        SkinScrollchildCheckbox(WIM_OptionsTabbedFrameGeneralAutoFocus)
+        SkinScrollchildCheckbox(WIM_OptionsTabbedFrameGeneralKeepFocus)
+        SkinScrollchildCheckbox(WIM_OptionsTabbedFrameGeneralKeepFocusRested)
+        SkinScrollchildCheckbox(WIM_OptionsTabbedFrameGeneralShowToolTips)
+        SkinScrollchildCheckbox(WIM_OptionsTabbedFrameGeneralPopOnSend)
+        SkinScrollchildCheckbox(WIM_OptionsTabbedFrameGeneralPopNew)
+        SkinScrollchildCheckbox(WIM_OptionsTabbedFrameGeneralPopUpdate)
+        SkinScrollchildCheckbox(WIM_OptionsTabbedFrameGeneralPopCombat)
+        SkinScrollchildCheckbox(WIM_OptionsTabbedFrameGeneralSupress)
+        SkinScrollchildCheckbox(WIM_OptionsTabbedFrameGeneralPlaySoundWisp)
+        SkinScrollchildCheckbox(WIM_OptionsTabbedFrameGeneralSortOrderAlpha)
+        SkinScrollchildCheckbox(WIM_OptionsTabbedFrameGeneralShowAFK)
+        SkinScrollchildCheckbox(WIM_OptionsTabbedFrameGeneralUseEscape)
+        SkinScrollchildCheckbox(WIM_OptionsTabbedFrameGeneralInterceptSlashWisp)
+        SkinScrollchildCheckbox(WIM_OptionsTabbedFrameGeneralBlockLowLevel)
+      end
+      do -- windows tab
+        SkinTab(WIM_OptionsOptionTab2)
+
+        SkinCheckbox(WIM_OptionsTabbedFrameWindowWindowCascade)
+        SkinButton(WIM_OptionsTabbedFrameWindowWindowAnchor)
+        SkinDropDown(WIM_OptionsTabbedFrameWindowCascadeDirection)
+        SkinSlider(WIM_OptionsTabbedFrameWindowWindowWidth)
+        SkinSlider(WIM_OptionsTabbedFrameWindowWindowHeight)
+        WIM_OptionsTabbedFrameWindowWindowHeight:SetPoint("TOPLEFT", WIM_OptionsTabbedFrameWindowWindowWidth, "BOTTOMLEFT", 0, -40)
+        WIM_OptionsTabbedFrameWindowWindowHeight:SetMinMaxValues(240, 600) -- fix min value. WIM.lua:643.
+      end
+      do -- filters tab
+        SkinTab(WIM_OptionsOptionTab3)
+
+        SkinCheckbox(WIM_OptionsTabbedFrameFilterAliasShowAsComment)
+        for _,v in pairs({"Alias", "Filtering"}) do
+          SkinCheckbox(_G["WIM_OptionsTabbedFrameFilter"..v.."Enabled"])
+          SkinButton(_G["WIM_OptionsTabbedFrameFilter"..v.."ColumnHeader1"])
+          SkinButton(_G["WIM_OptionsTabbedFrameFilter"..v.."ColumnHeader2"])
+          SkinScrollbar(_G["WIM_OptionsTabbedFrameFilter"..v.."PanelScrollBarScrollBar"])
+          SkinButton(_G["WIM_OptionsTabbedFrameFilter"..v.."PanelAdd"])
+          SkinButton(_G["WIM_OptionsTabbedFrameFilter"..v.."PanelRemove"])
+          SkinButton(_G["WIM_OptionsTabbedFrameFilter"..v.."PanelEdit"])
+        end
+
+        CreateBackdrop(WIM_Options_AliasWindow, nil, nil, .8)
+        WIM_Options_AliasWindowTitleBorder:SetTexture(nil)
+        CreateBackdrop(WIM_Options_AliasWindowPanel1, nil, nil)
+        WIM_Options_AliasWindowPanel1.backdrop:SetPoint("TOPLEFT", 0, -4)
+        WIM_Options_AliasWindowPanel1.backdrop:SetPoint("BOTTOMRIGHT", 0, 8)
+        CreateBackdrop(WIM_Options_AliasWindowPanel2, nil, nil)
+        WIM_Options_AliasWindowPanel2.backdrop:SetPoint("TOPLEFT", 0, -4)
+        WIM_Options_AliasWindowPanel2.backdrop:SetPoint("BOTTOMRIGHT", 0, 8)
+        SkinButton(WIM_Options_AliasWindowOK)
+        SkinButton(WIM_Options_AliasWindowCancel)
+
+        CreateBackdrop(WIM_Options_FilterWindow, nil, nil, .8)
+        WIM_Options_FilterWindowTitleBorder:SetTexture(nil)
+        CreateBackdrop(WIM_Options_FilterWindowPanel1, nil, nil)
+        WIM_Options_FilterWindowPanel1.backdrop:SetPoint("TOPLEFT", 0, -4)
+        WIM_Options_FilterWindowPanel1.backdrop:SetPoint("BOTTOMRIGHT", 0, 8)
+        SkinCheckbox(WIM_Options_FilterWindow_ActionIgnore)
+        SkinCheckbox(WIM_Options_FilterWindow_ActionBlock)
+        SkinButton(WIM_Options_FilterWindowOK)
+        SkinButton(WIM_Options_FilterWindowCancel)
+      end
+      do -- history tab
+        SkinTab(WIM_OptionsOptionTab4)
+
+        SkinCheckbox(WIM_OptionsTabbedFrameHistoryEnabled)
+        SkinCheckbox(WIM_OptionsTabbedFrameHistoryRecordEveryone)
+        SkinCheckbox(WIM_OptionsTabbedFrameHistoryRecordFriends)
+        SkinCheckbox(WIM_OptionsTabbedFrameHistoryRecordGuild)
+        SkinCheckbox(WIM_OptionsTabbedFrameHistoryShowInMessage)
+        SkinCheckbox(WIM_OptionsTabbedFrameHistorySetMaxToStore)
+        SkinCheckbox(WIM_OptionsTabbedFrameHistorySetAutoDelete)
+        SkinDropDown(WIM_OptionsTabbedFrameHistoryMessageCount)
+        SkinDropDown(WIM_OptionsTabbedFrameHistoryMaxCount)
+        SkinDropDown(WIM_OptionsTabbedFrameHistoryAutoDeleteTime)
+        SkinButton(WIM_OptionsTabbedFrameHistoryColumnHeader1)
+        SkinButton(WIM_OptionsTabbedFrameHistoryColumnHeader2)
+        SkinScrollbar(WIM_OptionsTabbedFrameHistoryPanelScrollBarScrollBar)
+        SkinButton(WIM_OptionsTabbedFrameHistoryPanelDeleteUser)
+        SkinButton(WIM_OptionsTabbedFrameHistoryPanelViewHistory)
+      end
+    end
+    do -- help frame
+      CreateBackdrop(WIM_Help, nil, nil, .8)
+      WIM_HelpTitleBorder:SetTexture(nil)
+      SkinCloseButton(WIM_HelpExitButton, WIM_Help.backdrop, -6, -6)
+      SkinTab(WIM_HelpTab1)
+      SkinTab(WIM_HelpTab2)
+      SkinTab(WIM_HelpTab3)
+      SkinTab(WIM_HelpTabCredits)
+      SkinScrollbar(WIM_HelpScrollFrameScrollBar)
+    end
 
     hooksecurefunc("WIM_WindowOnShow", function()
-      -- blue shaman
-      _G.WIM_ClassColors[WIM_LOCALIZED_SHAMAN] = "0070de"
+      if this.backdrop then return end -- already skinned
 
       local windowname = this:GetName()
+      CreateBackdrop(this, nil, nil, .8)
+      local from = _G[windowname.."From"]
+      from:ClearAllPoints()
+      from:SetPoint("TOP", 0, -10)
+      local exit = _G[windowname.."ExitButton"]
+      SkinCloseButton(exit, this.backdrop, -6, -6)
+      local history = _G[windowname.."HistoryButton"]
+      history:ClearAllPoints()
+      history:SetPoint("TOPRIGHT", exit, "TOPLEFT", -2, 2)
 
-      CreateBackdrop(_G[windowname], nil, nil, .8)
-      CreateBackdropShadow(_G[windowname])
+      this.avatar = CreateFrame("Frame", nil, this)
+      this.avatar:SetAllPoints(this)
 
-      _G[windowname .. "From"]:ClearAllPoints()
-      _G[windowname .. "From"]:SetPoint("TOP", 0, -10)
+      local classicon = _G[windowname .. "ClassIcon"]
+      classicon:SetTexCoord(.3, .7, .3, .7)
+      classicon:SetParent(this.avatar)
+      classicon:ClearAllPoints()
+      classicon:SetPoint("TOPLEFT", 10 , -10)
+      classicon:SetWidth(26)
+      classicon:SetHeight(26)
 
-      _G[windowname].avatar = CreateFrame("Frame", nil, _G[windowname])
-      _G[windowname].avatar:SetAllPoints(_G[windowname])
-      _G[windowname .. "ClassIcon"]:SetTexCoord(.3, .7, .3, .7)
-      _G[windowname .. "ClassIcon"]:SetParent(_G[windowname].avatar)
-      _G[windowname .. "ClassIcon"]:ClearAllPoints()
-      _G[windowname .. "ClassIcon"]:SetPoint("TOPLEFT", 10 , -10)
-      _G[windowname .. "ClassIcon"]:SetWidth(26)
-      _G[windowname .. "ClassIcon"]:SetHeight(26)
+      local msgframe = _G[windowname .. "ScrollingMessageFrame"]
+      msgframe:SetPoint("TOPLEFT", this, "TOPLEFT", 10, -45)
+      msgframe:SetPoint("BOTTOMRIGHT", this, "BOTTOMRIGHT", -32, 32)
+      msgframe:SetFont(pfUI.font_default, C.global.font_size)
 
-      _G[windowname .. "ScrollingMessageFrame"]:SetPoint("TOPLEFT", _G[windowname], "TOPLEFT", 10, -45)
-      _G[windowname .. "ScrollingMessageFrame"]:SetPoint("BOTTOMRIGHT", _G[windowname], "BOTTOMRIGHT", -32, 32)
-      _G[windowname .. "ScrollingMessageFrame"]:SetFont(pfUI.font_default, C.global.font_size)
+      local msgbox = _G[windowname .. "MsgBox"]
+      CreateBackdrop(msgbox)
+      msgbox:ClearAllPoints()
+      msgbox:SetPoint("TOPLEFT", msgframe, "BOTTOMLEFT", 0, -5)
+      msgbox:SetPoint("TOPRIGHT", msgframe, "BOTTOMRIGHT", 0, -5)
+      msgbox:SetTextInsets(5, 5, 5, 5)
+      msgbox:SetHeight(20)
 
-      CreateBackdrop(_G[windowname .. "MsgBox"])
-      _G[windowname .. "MsgBox"]:ClearAllPoints()
-      _G[windowname .. "MsgBox"]:SetPoint("TOPLEFT", _G[windowname .. "ScrollingMessageFrame"], "BOTTOMLEFT", 0, -5)
-      _G[windowname .. "MsgBox"]:SetPoint("TOPRIGHT", _G[windowname .. "ScrollingMessageFrame"], "BOTTOMRIGHT", 0, -5)
-      _G[windowname .. "MsgBox"]:SetTextInsets(5, 5, 5, 5)
-      _G[windowname .. "MsgBox"]:SetHeight(20)
-      for i,v in ipairs({_G[windowname .. "MsgBox"]:GetRegions()}) do
-        if i==6  then v:SetTexture(.1,.1,.1,.5) end
+      for i = 1, 5 do
+        local btn = _G[windowname .. "ShortcutFrameButton"..i]
+        local icon = _G[windowname .. "ShortcutFrameButton"..i.."Icon"]
+        local prev_btn = _G[windowname .. "ShortcutFrameButton"..(i-1)]
+        StripTextures(btn, nil, "ARTWORK")
+        icon:SetDrawLayer("ARTWORK")
+        SkinButton(btn, nil, nil, nil, icon)
+        btn:ClearAllPoints()
+        if not prev_btn then
+          btn:SetPoint("TOP", exit, "BOTTOM", 0, -20)
+        else
+          btn:SetPoint("TOP", prev_btn, "BOTTOM", 0, -4)
+        end
       end
+      local scrollup, scrolldown = _G[windowname .. "ScrollUp"], _G[windowname .. "ScrollDown"]
+      SkinArrowButton(scrollup, "up", 18)
+      SkinArrowButton(scrolldown, "down", 18)
+      scrolldown:ClearAllPoints()
+      scrolldown:SetPoint("BOTTOMRIGHT", -4, 30)
+      scrollup:ClearAllPoints()
+      scrollup:SetPoint("BOTTOMLEFT", scrolldown, "TOPLEFT", 0, 2)
 
-      CreateBackdrop(_G[windowname .. "ShortcutFrameButton1"])
-      for i,v in ipairs({_G[windowname .. "ShortcutFrameButton1"]:GetRegions()}) do
-        if i >= 2 and i < 7 then v:SetTexture(.1,.1,.1,0) end
-      end
-
-      CreateBackdrop(_G[windowname .. "ShortcutFrameButton2"])
-      for i,v in ipairs({_G[windowname .. "ShortcutFrameButton2"]:GetRegions()}) do
-        if i >= 2 and i < 7 then v:SetTexture(.1,.1,.1,0) end
-      end
-
-      CreateBackdrop(_G[windowname .. "ShortcutFrameButton3"])
-      for i,v in ipairs({_G[windowname .. "ShortcutFrameButton3"]:GetRegions()}) do
-        if i >= 2 and i < 7 then v:SetTexture(.1,.1,.1,0) end
-      end
-
-      CreateBackdrop(_G[windowname .. "ShortcutFrameButton4"])
-      for i,v in ipairs({_G[windowname .. "ShortcutFrameButton4"]:GetRegions()}) do
-        if i >= 2 and i < 7 then v:SetTexture(.1,.1,.1,0) end
-      end
-
-      CreateBackdrop(_G[windowname .. "ShortcutFrameButton5"])
-      for i,v in ipairs({_G[windowname .. "ShortcutFrameButton5"]:GetRegions()}) do
-        if i >= 2 and i < 7 then v:SetTexture(.1,.1,.1,0) end
-      end
+      StripTextures(_G[windowname .. "IgnoreConfirm"])
+      SkinButton(_G[windowname .. "IgnoreConfirmYes"])
+      SkinButton(_G[windowname .. "IgnoreConfirmNo"])
     end)
   end)
 

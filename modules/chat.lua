@@ -122,6 +122,19 @@ pfUI:RegisterModule("chat", "vanilla:tbc", function ()
     return " |cffccccff|Hurl:" .. newtext .. "|h[" .. newtext .. "]|h|r "
   end
 
+  function pfUI.chat:HandleLink(text)
+    local URLPattern = pfUI.chat.URLPattern
+    text = string.gsub (text, URLPattern.WWW.rx, pfUI.chat.URLFuncs.WWW)
+    text = string.gsub (text, URLPattern.PROTOCOL.rx, pfUI.chat.URLFuncs.PROTOCOL)
+    text = string.gsub (text, URLPattern.EMAIL.rx, pfUI.chat.URLFuncs.EMAIL)
+    text = string.gsub (text, URLPattern.PORTIP.rx, pfUI.chat.URLFuncs.PORTIP)
+    text = string.gsub (text, URLPattern.IP.rx, pfUI.chat.URLFuncs.IP)
+    text = string.gsub (text, URLPattern.SHORTURL.rx, pfUI.chat.URLFuncs.SHORTURL)
+    text = string.gsub (text, URLPattern.URLIP.rx, pfUI.chat.URLFuncs.URLIP)
+    text = string.gsub (text, URLPattern.URL.rx, pfUI.chat.URLFuncs.URL)
+    return text
+  end
+
   pfUI.chat.urlcopy = CreateFrame("Frame", "pfURLCopy", UIParent)
   pfUI.chat.urlcopy:Hide()
   pfUI.chat.urlcopy:SetWidth(270)
@@ -652,15 +665,7 @@ pfUI:RegisterModule("chat", "vanilla:tbc", function ()
 
           -- detect urls
           if C.chat.text.detecturl == "1" then
-            local URLPattern = pfUI.chat.URLPattern
-            text = string.gsub (text, URLPattern.WWW.rx, pfUI.chat.URLFuncs.WWW)
-            text = string.gsub (text, URLPattern.PROTOCOL.rx, pfUI.chat.URLFuncs.PROTOCOL)
-            text = string.gsub (text, URLPattern.EMAIL.rx, pfUI.chat.URLFuncs.EMAIL)
-            text = string.gsub (text, URLPattern.PORTIP.rx, pfUI.chat.URLFuncs.PORTIP)
-            text = string.gsub (text, URLPattern.IP.rx, pfUI.chat.URLFuncs.IP)
-            text = string.gsub (text, URLPattern.SHORTURL.rx, pfUI.chat.URLFuncs.SHORTURL)
-            text = string.gsub (text, URLPattern.URLIP.rx, pfUI.chat.URLFuncs.URLIP)
-            text = string.gsub (text, URLPattern.URL.rx, pfUI.chat.URLFuncs.URL)
+            text = pfUI.chat:HandleLink(text)
           end
 
           -- display class colors if already indexed
