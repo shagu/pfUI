@@ -378,13 +378,23 @@ pfUI:RegisterModule("thirdparty", "vanilla", function ()
       SW_Settings["InfoSettings"][1]["OTF"] = ( SW_Settings["InfoSettings"][1]["OTF"] == "1" and "SWStats" ) or SW_Settings["InfoSettings"][1]["OTF"]
       SW_Settings["InfoSettings"][1]["UCC"] = 1
 
+      local SkinSW_RoundButton = function(n, s)
+        local s = s or 14
+        local btn, normal, highlight = _G[n], _G[string.format("%s_Normal",n)], _G[string.format("%s_Highlight",n)]
+        StripTextures(normal)
+        StripTextures(highlight)
+        CreateBackdrop(btn)
+        btn:SetHeight(s)
+        btn:SetWidth(s)
+        SetHighlight(btn)
+      end
+
       SW_BarFrame1_Title:SetPoint("TOPLEFT", 3, 0)
       SW_BarFrame1_Title_Sync:SetScale(.84)
       SW_BarFrame1_Title_Report:SetScale(.84)
       SW_BarFrame1_Title_Settings:SetScale(.84)
       SW_BarFrame1_Title_Close:SetScale(.84)
       SW_BarFrame1_Title_Console:SetScale(.84)
-      SW_BarFrame1_Title_TimeLine:SetScale(.84)
       SW_BarFrame1_Title_TimeLine:SetScale(.84)
 
       -- bar padding
@@ -402,17 +412,186 @@ pfUI:RegisterModule("thirdparty", "vanilla", function ()
         SW_BarFrame1.backdrop:SetBackdropBorderColor(tonumber(r), tonumber(g), tonumber(b), tonumber(a))
       end
 
-      CreateBackdrop(SW_BarSettingsFrameV2)
+      SkinCheckbox(SW_OptChk_Running, 20)
+      for i=1, SW_OPT_COUNT do
+        SkinSW_RoundButton(string.format("SW_BarFrame1_Selector_Opt%d",i))
+        if i == 1 then
+          _G[string.format("SW_BarFrame1_Selector_Opt%d",i)]:SetPoint("TOPLEFT", SW_OptChk_Running, "TOPRIGHT", 3, -3)
+        end
+      end
+      SW_BarFrame1_Selector:SetPoint("TOPLEFT", SW_BarFrame1.backdrop, "BOTTOMLEFT", 10, 0)
+
+      -- mode settings
+      CreateBackdrop(SW_BarSettingsFrameV2, nil, nil, .8)
       CreateBackdrop(SW_BarSettingsFrameV2_Title, 0)
       CreateBackdrop(SW_BarSettingsFrameV2_Tab1, 0)
       SW_BarSettingsFrameV2_Tab1:SetHeight(24)
+      SW_BarSettingsFrameV2_Tab1_Text:SetParent(SW_BarSettingsFrameV2_Tab1.backdrop)
       CreateBackdrop(SW_BarSettingsFrameV2_Tab2, 0)
       SW_BarSettingsFrameV2_Tab2:SetHeight(24)
+      SW_BarSettingsFrameV2_Tab2_Text:SetParent(SW_BarSettingsFrameV2_Tab2.backdrop)
       CreateBackdrop(SW_BarSettingsFrameV2_Tab3, 0)
       SW_BarSettingsFrameV2_Tab3:SetHeight(24)
+      SW_BarSettingsFrameV2_Tab3_Text:SetParent(SW_BarSettingsFrameV2_Tab3.backdrop)
+      SkinCheckbox(SW_OptChk_Rank, 18)
+      SkinCheckbox(SW_OptChk_Num, 18)
+      SkinCheckbox(SW_OptChk_Percent, 18)
+      SkinCheckbox(SW_Filter_None, 18)
+      SkinCheckbox(SW_Filter_PC, 18)
+      SkinCheckbox(SW_Filter_NPC, 18)
+      SkinCheckbox(SW_Filter_Group, 18)
+      SkinCheckbox(SW_Filter_EverGroup, 18)
+      SkinCheckbox(SW_HealOpt_Eff, 18)
+      SkinCheckbox(SW_HealOpt_OH, 18)
+      SkinCheckbox(SW_HealOpt_IF, 18)
+      SkinDropDown(SW_InfoTypeDropDown)
+      SkinDropDown(SW_ClassFilterDropDown)
+      SkinDropDown(SW_SchoolDropDown)
+      if SW_SchoolDropDown:GetWidth() < 100 then
+        UIDropDownMenu_SetWidth(100, SW_SchoolDropDown) -- SW_Stats is missing this in init
+      end
+      SkinButton(SW_SetInfoVarTxtFrame_Button)
+      SkinButton(SW_SetInfoVarFromTarget)
+      CreateBackdrop(SW_CS_BarC_Button)
+      SetAllPointsOffset(SW_CS_BarC_Button.backdrop,SW_CS_BarC_Button,2)
+      SetHighlight(SW_CS_BarC_Button)
+      CreateBackdrop(SW_CS_FontC_Button)
+      SetAllPointsOffset(SW_CS_FontC_Button.backdrop,SW_CS_FontC_Button,2)
+      SetHighlight(SW_CS_FontC_Button)
+      CreateBackdrop(SW_CS_OptC_Button)
+      SetAllPointsOffset(SW_CS_OptC_Button.backdrop,SW_CS_OptC_Button,2)
+      SetHighlight(SW_CS_OptC_Button)
+      SkinSlider(SW_BarHeightSlider)
+      SW_BarHeightSliderLow:ClearAllPoints()
+      SW_BarHeightSliderLow:SetPoint("TOPRIGHT", SW_BarHeightSlider, "TOPLEFT", -2, -2)
+      SW_BarHeightSliderHigh:ClearAllPoints()
+      SW_BarHeightSliderHigh:SetPoint("BOTTOMRIGHT", SW_BarHeightSlider, "BOTTOMLEFT", -2, 2)
+      SkinSlider(SW_ColCountSlider)
+      SkinSlider(SW_TextureSlider)
+      SkinSlider(SW_FontSizeSlider)
+      SkinButton(SW_SetFrameTxtFrame_Button)
+      SkinButton(SW_SetOptTxtFrame_Button)
+      SkinCheckbox(SW_ColorsOptUseClass)
+      SW_BarSettings_Visuals:SetPoint("TOPLEFT", 5, -50)
+      SW_BarSettings_Visuals:SetPoint("BOTTOMRIGHT", 2, 10)
+      SkinCheckbox(SW_PF_Inactive,18)
+      SkinCheckbox(SW_PF_Active,18)
+      SkinCheckbox(SW_PF_Current,18)
+      SkinCheckbox(SW_PF_VPP,18)
+      SkinCheckbox(SW_PF_VPR,18)
+      SkinCheckbox(SW_PF_MM,18)
+      SkinCheckbox(SW_PF_MR,18)
+      SkinCheckbox(SW_PF_MB,18)
+      SkinCheckbox(SW_PF_Ignore,18)
 
-      CreateBackdrop(SW_BarReportFrame)
+      -- general settings
+      CreateBackdrop(SW_GeneralSettings, nil, nil, .8)
+      CreateBackdrop(SW_GeneralSettings_Title, 0)
+      SkinCheckbox(SW_Chk_ShowTLB,18)
+      SkinCheckbox(SW_Chk_ShowSyncB,18)
+      SkinCheckbox(SW_Chk_ShowConsoleB,18)
+      SkinCheckbox(SW_Chk_ShowDPS,18)
+      CreateBackdrop(SW_CS_Damage_Button)
+      SetAllPointsOffset(SW_CS_Damage_Button.backdrop, SW_CS_Damage_Button, 2)
+      SetHighlight(SW_CS_Damage_Button)
+      CreateBackdrop(SW_CS_Heal_Button)
+      SetAllPointsOffset(SW_CS_Heal_Button.backdrop, SW_CS_Heal_Button, 2)
+      SetHighlight(SW_CS_Heal_Button)
+      CreateBackdrop(SW_CS_TitleBar_Button)
+      SetAllPointsOffset(SW_CS_TitleBar_Button.backdrop, SW_CS_TitleBar_Button, 2)
+      SetHighlight(SW_CS_TitleBar_Button)
+      CreateBackdrop(SW_CS_TitleFont_Button)
+      SetAllPointsOffset(SW_CS_TitleFont_Button.backdrop, SW_CS_TitleFont_Button, 2)
+      SetHighlight(SW_CS_TitleFont_Button)
+      CreateBackdrop(SW_CS_Backdrops_Button)
+      SetAllPointsOffset(SW_CS_Backdrops_Button.backdrop, SW_CS_Backdrops_Button, 2)
+      SetHighlight(SW_CS_Backdrops_Button)
+      CreateBackdrop(SW_CS_MainWinBack_Button)
+      SetAllPointsOffset(SW_CS_MainWinBack_Button.backdrop, SW_CS_MainWinBack_Button, 2)
+      SetHighlight(SW_CS_MainWinBack_Button)
+      CreateBackdrop(SW_CS_ClassCAlpha_Button)
+      SetAllPointsOffset(SW_CS_ClassCAlpha_Button.backdrop, SW_CS_ClassCAlpha_Button, 2)
+      SetHighlight(SW_CS_ClassCAlpha_Button)
+      SkinSlider(SW_OptCountSlider)
+      SkinSlider(SW_GeneralSettingsIconSlider)
+      SkinSlider(SW_GeneralSettingsIconRadiusSlider)
+
+      -- announce
+      CreateBackdrop(SW_BarReportFrame, nil, nil, .8)
       CreateBackdrop(SW_BarReportFrame_Title, 0)
+      SkinCheckbox(SW_RepTo_Say,18)
+      SkinCheckbox(SW_RepTo_Group,18)
+      SkinCheckbox(SW_RepTo_Raid,18)
+      SkinCheckbox(SW_RepTo_Guild,18)
+      SkinCheckbox(SW_RepTo_Channel,18)
+      SkinCheckbox(SW_RepTo_Whisper,18)
+      SkinCheckbox(SW_RepTo_Officer,18)
+      SkinCheckbox(SW_RepTo_Clipboard,18)
+      SkinCheckbox(SW_Chk_RepMulti,18)
+      SkinSlider(SW_BarReportFrameRepAmountSlider)
+      SkinButton(SW_BarReportFrame_SendReport)
+      SkinButton(SW_BarReportFrame_VarText_SetTextFromTarget)
+      StripTextures(SW_BarReportFrame_VarText_EditBox, "BACKGROUND")
+      CreateBackdrop(SW_BarReportFrame_VarText_EditBox)
+
+      -- copy
+      CreateBackdrop(SW_TextWindow, nil, nil, .75)
+      CreateBackdrop(SW_TextWindow_Title, 0)
+      SkinSlider(SW_TextWindowExportSlider)
+      StripTextures(SW_TextWindow_EditBox, "BACKGROUND")
+      CreateBackdrop(SW_TextWindow_EditBox)
+
+      -- sync
+      CreateBackdrop(SW_BarSyncFrame, nil, nil, .8)
+      CreateBackdrop(SW_BarSyncFrame_Title, 0)
+      SkinCheckbox(SW_AutoVoteYes,18)
+      SkinCheckbox(SW_AutoVoteNo,18)
+      SkinScrollbar(SW_SyncListScrollBar)
+
+      -- timeline
+      CreateBackdrop(SW_TimeLine, nil, nil, .8)
+      CreateBackdrop(SW_TimeLine_Title, 0)
+      SkinCheckbox(SW_Chk_TL_SafeMode,18)
+      SkinCheckbox(SW_Chk_TL_SingleSelect,18)
+      SkinCheckbox(SW_Chk_TL_AutoZone,18)
+      SkinCheckbox(SW_Chk_TL_AutoDelete,18)
+      SkinButton(SW_TL_Nuke)
+      SkinButton(SW_TL_ReloadUI)
+      SkinButton(SW_TL_Select)
+      SkinButton(SW_TL_Merge)
+      for i=1,10 do
+        SkinSW_RoundButton(string.format("SW_TimeLine_Item%d_Delete",i),12)
+        SkinSW_RoundButton(string.format("SW_TimeLine_Item%d_Rename",i),12)
+      end
+      SkinScrollbar(SW_TL_SelectorScrollBar)
+
+      -- console
+      CreateBackdrop(SW_FrameConsole, nil, nil, .75)
+      CreateBackdrop(SW_FrameConsole_Title, 0)
+      SW_FrameConsole_Title:SetHeight(24)
+      SkinArrowButton(SW_FrameConsole_Text1_MsgUp, "up", 13)
+      SkinArrowButton(SW_FrameConsole_Text1_MsgDown, "down", 13)
+      SkinArrowButton(SW_FrameConsole_Text1_MsgBottom, "down", 13)
+      SW_FrameConsole_Text1_MsgUp:SetPoint("BOTTOMRIGHT", -5, 45)
+      SW_FrameConsole_Text1_MsgDown:SetPoint("BOTTOMRIGHT", -5, 30)
+      SW_FrameConsole_Text1_MsgBottom:SetPoint("BOTTOMRIGHT", -5, 12)
+      CreateBackdrop(SW_FrameConsole_Tab1, 0)
+      SW_FrameConsole_Tab1:SetHeight(24)
+      SW_FrameConsole_Tab1_Text:SetParent(SW_FrameConsole_Tab1.backdrop)
+      CreateBackdrop(SW_FrameConsole_Tab2, 0)
+      SW_FrameConsole_Tab2:SetHeight(24)
+      SW_FrameConsole_Tab2_Text:SetParent(SW_FrameConsole_Tab2.backdrop)
+      SkinCheckbox(SW_Chk_ShowEvent,18)
+      SkinCheckbox(SW_Chk_ShowOrigStr,18)
+      SkinCheckbox(SW_Chk_ShowRegEx,18)
+      SkinCheckbox(SW_Chk_ShowMatch,18)
+      SkinCheckbox(SW_Chk_ShowSyncInfo,18)
+      SkinArrowButton(SW_FrameConsole_Text2_MsgUp,"up",13)
+      SkinArrowButton(SW_FrameConsole_Text2_MsgDown,"down",13)
+      SkinArrowButton(SW_FrameConsole_Text2_MsgBottom,"down",13)
+      SW_FrameConsole_Text2_MsgUp:SetPoint("BOTTOMRIGHT", -5, 45)
+      SW_FrameConsole_Text2_MsgDown:SetPoint("BOTTOMRIGHT", -5, 30)
+      SW_FrameConsole_Text2_MsgBottom:SetPoint("BOTTOMRIGHT", -5, 12)
     end
 
     if C.thirdparty.swstats.dock == "1" then
@@ -421,9 +600,20 @@ pfUI:RegisterModule("thirdparty", "vanilla", function ()
       SW_Settings["SHOWMAIN"] = nil
       SW_BarFrame1:Hide()
 
+      SW_OptChk_Running:ClearAllPoints()
+      SW_OptChk_Running:SetParent(SW_BarFrame1_Title)
+      SW_OptChk_Running:SetPoint("RIGHT", SW_BarFrame1_Title_TimeLine, "LEFT", -2, 0)
       -- hide bottom panels
-      SW_OptChk_Running:Hide()
       SW_BarFrame1_Selector:Hide()
+
+      -- let user select mode by clicking the title
+      HookScript(SW_BarFrame1_Title, "OnMouseUp", function()
+        local page = SW_Settings and SW_Settings.BarFrames and SW_Settings.BarFrames.SW_BarFrame1 and SW_Settings.BarFrames.SW_BarFrame1.Selected
+        if page then
+          local target = (arg1 == "LeftButton") and (page + 1) or (arg1 == "RightButton") and (page - 1)
+          SW_OptKey((target > SW_OPT_COUNT) and 1 or (target < 1) and SW_OPT_COUNT or target)
+        end
+      end)
 
       if pfUI.panel then
         pfUI.panel.right.hide:SetScript("OnClick", function()
