@@ -16,6 +16,11 @@ if pfUI.client > 11200 then return end
 -- return instantly when another libdebuff is already active
 if pfUI.api.libdebuff then return end
 
+-- fix a typo (missing $) in ruRU capture index
+if GetLocale() == "ruRU" then
+  SPELLREFLECTSELFOTHER = gsub(SPELLREFLECTSELFOTHER, "%%2s", "%%2%$s")
+end
+
 local libdebuff = CreateFrame("Frame", "pfdebuffsScanner", UIParent)
 local scanner = libtipscan:GetScanner("libdebuff")
 local _, class = UnitClass("player")
