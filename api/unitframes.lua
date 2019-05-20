@@ -596,11 +596,11 @@ function pfUI.uf.OnEvent()
   -- update regular frames
   if this.label == "target" and event == "PLAYER_TARGET_CHANGED" then
     pfUI.uf:RefreshUnit(this, "all")
-  elseif ( this.label == "party" or this.label == "player" ) and event == "PARTY_MEMBERS_CHANGED" then
+  elseif ( this.label == "raid" or this.label == "party" or this.label == "player" ) and event == "PARTY_MEMBERS_CHANGED" then
     pfUI.uf:RefreshUnit(this, "all")
-  elseif this.label == "party" and event == "PARTY_MEMBER_ENABLE" then
+  elseif ( this.label == "raid" or this.label == "party" ) and event == "PARTY_MEMBER_ENABLE" then
     pfUI.uf:RefreshUnit(this, "all")
-  elseif this.label == "party" and event == "PARTY_MEMBER_DISABLE" then
+  elseif ( this.label == "raid" or this.label == "party" ) and event == "PARTY_MEMBER_DISABLE" then
     pfUI.uf:RefreshUnit(this, "all")
   elseif ( this.label == "raid" or this.label == "party" ) and event == "RAID_ROSTER_UPDATE" then
     pfUI.uf:RefreshUnit(this, "all")
