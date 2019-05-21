@@ -99,6 +99,18 @@ pfUI:RegisterModule("tooltip", 20400, function ()
       local hp = GameTooltipStatusBar:GetValue()
       local _, hpm = GameTooltipStatusBar:GetMinMaxValues()
 
+      if MobHealthFrame then
+        local perc = UnitHealth("mouseover")
+        local name = UnitName("mouseover") or ""
+        local level = UnitLevel("mouseover") or ""
+        local index = name .. ":" .. level
+        local ppp = MobHealth_PPP(index)
+        if perc and ppp and ppp > 0 then
+          hp = round(perc * ppp)
+          hpm = round(100 * ppp)
+        end
+      end
+
       if hp and hpm then
         if hp >= 1000 then hp = round(hp / 1000, 1) .. "k" end
         if hpm >= 1000 then hpm = round(hpm / 1000, 1) .. "k" end
