@@ -111,6 +111,7 @@ pfUI:RegisterSkin("Mailbox", function ()
     CreateBackdrop(OpenMailScrollFrame, nil, true)
     SkinScrollbar(OpenMailScrollFrameScrollBar)
 
+    OpenStationeryBackgroundLeft:SetDrawLayer("BORDER")
     OpenStationeryBackgroundLeft:SetTexCoord(.1,1,.1,.9)
     OpenStationeryBackgroundLeft:SetAllPoints()
     OpenStationeryBackgroundRight:Hide()
