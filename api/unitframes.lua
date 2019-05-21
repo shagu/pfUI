@@ -730,6 +730,7 @@ function pfUI.uf:RightClickAction(unit)
     ToggleDropDownMenu(1, nil, getglobal("PartyMemberFrame" .. this.id .. "DropDown"), "cursor")
   elseif unit == "raid" then
     local name = this.lastUnit
+    local unitstr = this.label .. this.id
     FriendsDropDown.displayMode = "MENU"
     FriendsDropDown.initialize = function() UnitPopup_ShowMenu(_G[UIDROPDOWNMENU_OPEN_MENU], "PARTY", unitstr, name, id) end
     ToggleDropDownMenu(1, nil, FriendsDropDown, "cursor")
