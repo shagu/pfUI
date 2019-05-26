@@ -44,7 +44,7 @@ pfUI:RegisterModule("buffwatch", function ()
   end
 
   -- iterate over given tables and return the first frame that is shown
-  local function FirstOneShown(anchors, v)
+  local function FirstOneShown(anchors)
     for _, tbl in pairs(anchors) do
       for i=32, 1, -1 do
         if tbl and tbl[i] and tbl[i]:IsShown() and tbl[i]:IsVisible() then
@@ -346,7 +346,7 @@ pfUI:RegisterModule("buffwatch", function ()
     if pfUI.unlock and pfUI.unlock:IsShown() then return end
 
     if not pfUI_config["position"][self:GetName()] then
-      local anchor = FirstOneShown(self.anchors, ( self.unit == "target"))
+      local anchor = FirstOneShown(self.anchors)
 
       if not self.lastanchor or self.lastanchor ~= anchor then
         self:ClearAllPoints()
