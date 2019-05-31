@@ -1008,7 +1008,8 @@ pfUI:RegisterModule("gui", 20400, function ()
       ["tooltip_position"] = {
         "bottom:" .. T["Bottom"],
         "chat:" .. T["Dodge"],
-        "cursor:" .. T["Cursor"]
+        "cursor:" .. T["Cursor"],
+        "free:" .. T["Custom"]
       },
       ["tooltip_align"] = {
         "native:" .. T["Native"],

@@ -1,4 +1,27 @@
 pfUI:RegisterModule("tooltip", 20400, function ()
+  
+  pfUI.tooltip = CreateFrame('Frame', "pfTooltip", GameTooltip)
+  pfUI.tooltip.anchorframe = CreateFrame('Frame', "pfTooltipAnchor", UIParent)
+  pfUI.tooltip.anchorframe:SetWidth(128)
+  pfUI.tooltip.anchorframe:SetHeight(72)
+  pfUI.tooltip.anchorframe:SetPoint("TOP", UIParent, "TOP", 0, -50)
+  pfUI.tooltip.anchorframe:Hide()
+  UpdateMovable(pfUI.tooltip.anchorframe)
+
+  function pfUI.tooltip:GetAnchorPoint()
+    local prefix = "TOP"
+    local suffix = "RIGHT"
+    local px, py = UIParent:GetCenter()
+    local tx, ty = this.anchorframe:GetCenter()
+    if (tx < px) then
+      suffix = "LEFT"
+    end
+    if (ty < py) then
+      prefix = "BOTTOM"
+    end
+    return prefix..suffix
+  end
+
   if C.tooltip.position == "cursor" then
     function _G.GameTooltip_SetDefaultAnchor(tooltip, parent)
       tooltip:SetOwner(parent, "ANCHOR_CURSOR")
@@ -30,7 +53,6 @@ pfUI:RegisterModule("tooltip", 20400, function ()
   end
 
   local units = { "mouseover", "player", "pet", "target", "party", "partypet", "raid", "raidpet" }
-  pfUI.tooltip = CreateFrame('Frame', "pfTooltip", GameTooltip)
   function pfUI.tooltip:GetUnit()
     pfUI.tooltip.unit = "none"
 
@@ -89,6 +111,11 @@ pfUI:RegisterModule("tooltip", 20400, function ()
             GameTooltip:SetPoint("BOTTOMRIGHT", anchor, "TOPRIGHT", 0, C.appearance.border.default*2)
           else
             GameTooltip:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", -5, 5)
+          end
+        elseif C.tooltip.position == "free" then
+          local point = this:GetAnchorPoint()
+          if point then
+            GameTooltip:SetPoint(point, this.anchorframe, point, 0, 0)
           end
         end
       end
