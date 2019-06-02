@@ -246,6 +246,7 @@ pfUI:RegisterModule("bags", 20400, function ()
     pfUI.bag:CreateAdditions(frame)
     frame:SetFrameStrata("HIGH")
     CreateBackdrop(frame, default_border)
+    CreateBackdropShadow(frame)
 
     local topspace = pfUI.bag.right.close:GetHeight() + default_border * 2
 
@@ -449,6 +450,7 @@ pfUI:RegisterModule("bags", 20400, function ()
 
     frame.bagslots:SetPoint("BOTTOM"..position, frame, "TOP"..position, 0, default_border*3)
     CreateBackdrop(frame.bagslots, default_border)
+    CreateBackdropShadow(frame.bagslots)
 
     local extra = 0
     if frame == pfUI.bag.left and GetNumBankSlots() < 6 then extra = 1 end

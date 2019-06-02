@@ -27,6 +27,7 @@ pfUI:RegisterModule("addons", 20400, function ()
   pfUI.addons:Hide()
 
   CreateBackdrop(pfUI.addons, nil, true, .75)
+  CreateBackdropShadow(pfUI.addons)
 
   pfUI.addons:SetScript("OnHide", function()
     UIDropDownMenu_ClearAll(this.profile.dropdown)

@@ -4,6 +4,8 @@ pfUI:RegisterSkin("Guild Tabard", function ()
 
   StripTextures(TabardFrame)
   CreateBackdrop(TabardFrame, nil, nil, .75)
+  CreateBackdropShadow(TabardFrame)
+
   TabardFrame.backdrop:SetPoint("TOPLEFT", 10, -10)
   TabardFrame.backdrop:SetPoint("BOTTOMRIGHT", -32, 72)
   TabardFrame:SetHitRectInsets(10,32,10,72)

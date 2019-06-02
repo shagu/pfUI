@@ -4,6 +4,8 @@ pfUI:RegisterSkin("Trade", function ()
 
   StripTextures(TradeFrame)
   CreateBackdrop(TradeFrame, nil, nil, .75)
+  CreateBackdropShadow(TradeFrame)
+
   TradeFrame.backdrop:SetPoint("TOPLEFT", 8, -20)
   TradeFrame.backdrop:SetPoint("BOTTOMRIGHT", -16, 30)
   TradeFrame:SetHitRectInsets(8,16,20,30)

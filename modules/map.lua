@@ -71,6 +71,7 @@ pfUI:RegisterModule("map", 20400, function ()
     -- skin
     WorldMapFrameCloseButton:SetPoint("TOPRIGHT", WorldMapFrame, "TOPRIGHT", 0, 0)
     CreateBackdrop(WorldMapFrame)
+    CreateBackdropShadow(WorldMapFrame)
 
     BlackoutWorld:Hide()
     StripTextures(WorldMapFrame)

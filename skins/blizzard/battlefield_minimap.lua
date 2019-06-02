@@ -4,6 +4,7 @@ pfUI:RegisterSkin("Battlefield Minimap", function ()
   HookAddonOrVariable("Blizzard_BattlefieldMinimap", function()
     StripTextures(BattlefieldMinimap)
     CreateBackdrop(BattlefieldMinimap, nil, nil, 0)
+    CreateBackdropShadow(BattlefieldMinimap)
 
     BattlefieldMinimap:SetWidth(220)
     BattlefieldMinimap:SetHeight(146)

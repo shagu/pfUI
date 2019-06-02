@@ -4,6 +4,8 @@ pfUI:RegisterSkin("Merchant", function ()
 
   StripTextures(MerchantFrame)
   CreateBackdrop(MerchantFrame, nil, nil, .75)
+  CreateBackdropShadow(MerchantFrame)
+
   MerchantFrame.backdrop:SetPoint("TOPLEFT", 10, -10)
   MerchantFrame.backdrop:SetPoint("BOTTOMRIGHT", -32, 58)
   MerchantFrame:SetHitRectInsets(10,32,10,58)

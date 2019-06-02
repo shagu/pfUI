@@ -66,6 +66,7 @@ pfUI:RegisterModule("firstrun", 20400, function ()
     end)
 
     CreateBackdrop(f, nil, nil, .85)
+    CreateBackdropShadow(f)
 
     -- text
     f.text = f:CreateFontString("Status", "OVERLAY", "GameFontNormal")

@@ -38,6 +38,8 @@ pfUI:RegisterModule("chat", 20400, function ()
   pfUI.chat.left:SetScript("OnShow", function() pfUI.chat:RefreshChat() end)
   UpdateMovable(pfUI.chat.left)
   CreateBackdrop(pfUI.chat.left, default_border, nil, .8)
+  CreateBackdropShadow(pfUI.chat.left)
+
   if C.chat.global.custombg == "1" then
     local r, g, b, a = strsplit(",", C.chat.global.background)
     pfUI.chat.left.backdrop:SetBackdropColor(tonumber(r), tonumber(g), tonumber(b), tonumber(a))
@@ -195,6 +197,7 @@ pfUI:RegisterModule("chat", 20400, function ()
   pfUI.chat.right:SetScript("OnShow", function() pfUI.chat:RefreshChat() end)
   UpdateMovable(pfUI.chat.right)
   CreateBackdrop(pfUI.chat.right, default_border, nil, .8)
+  CreateBackdropShadow(pfUI.chat.right)
   if C.chat.global.custombg == "1" then
     local r, g, b, a = strsplit(",", C.chat.global.background)
     pfUI.chat.right.backdrop:SetBackdropColor(tonumber(r), tonumber(g), tonumber(b), tonumber(a))

@@ -4,6 +4,8 @@ pfUI:RegisterSkin("Friends", function ()
 
   StripTextures(FriendsFrame, true)
   CreateBackdrop(FriendsFrame, nil, nil, .75)
+  CreateBackdropShadow(FriendsFrame)
+
   FriendsFrame.backdrop:SetPoint("TOPLEFT", 8, -10)
   FriendsFrame.backdrop:SetPoint("BOTTOMRIGHT", -32, 74)
   FriendsFrame:SetHitRectInsets(8,32,10,74)

@@ -272,6 +272,7 @@ pfUI:RegisterModule("share", 20400, function ()
     end)
 
     CreateBackdrop(f, nil, true, 0.8)
+    CreateBackdropShadow(f)
     table.insert(UISpecialFrames, "pfShare")
 
     do -- Edit Box

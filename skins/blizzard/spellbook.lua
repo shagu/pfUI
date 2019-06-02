@@ -4,6 +4,8 @@ pfUI:RegisterSkin("Spellbook", function ()
 
   StripTextures(SpellBookFrame)
   CreateBackdrop(SpellBookFrame, nil, nil, .75)
+  CreateBackdropShadow(SpellBookFrame)
+
   SpellBookFrame.backdrop:SetPoint("TOPLEFT", 12, -12)
   SpellBookFrame.backdrop:SetPoint("BOTTOMRIGHT", -30, 72)
   SpellBookFrame:SetHitRectInsets(12,30,12,72)

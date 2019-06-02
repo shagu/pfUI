@@ -2,6 +2,8 @@ pfUI:RegisterSkin("GM Survey", function ()
   HookAddonOrVariable("Blizzard_GMSurveyUI", function()
     StripTextures(GMSurveyFrame)
     CreateBackdrop(GMSurveyFrame, nil, nil, .75)
+    CreateBackdropShadow(GMSurveyFrame)
+
     GMSurveyFrame.backdrop:SetPoint("TOPLEFT", 10, 0)
     GMSurveyFrame.backdrop:SetPoint("BOTTOMRIGHT", -72, 40)
     GMSurveyFrame:SetHitRectInsets(10,72,0,40)

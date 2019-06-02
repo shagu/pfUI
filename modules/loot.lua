@@ -493,8 +493,10 @@ pfUI:RegisterModule("loot", 20400, function ()
       local color = ITEM_QUALITY_COLORS[maxrarity]
       if maxrarity <= 1 then
         CreateBackdrop(pfUI.loot)
+        CreateBackdropShadow(pfUI.loot)
       else
         CreateBackdrop(pfUI.loot)
+        CreateBackdropShadow(pfUI.loot)
         pfUI.loot.backdrop:SetBackdropBorderColor(color.r, color.g, color.b, 1)
       end
       pfUI.loot:SetHeight(math.max((real*22)+4*C.appearance.border.default), 20)

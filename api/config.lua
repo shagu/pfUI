@@ -117,7 +117,7 @@ function pfUI:LoadConfig()
 
   pfUI:UpdateConfig("appearance", "border",      "background",       "0,0,0,1")
   pfUI:UpdateConfig("appearance", "border",      "color",            "0.2,0.2,0.2,1")
-  pfUI:UpdateConfig("appearance", "border",      "shadow",           "0")
+  pfUI:UpdateConfig("appearance", "border",      "shadow",           "1")
   pfUI:UpdateConfig("appearance", "border",      "shadow_intensity", ".35")
   pfUI:UpdateConfig("appearance", "border",      "default",          "3")
   pfUI:UpdateConfig("appearance", "border",      "actionbars",       "-1")

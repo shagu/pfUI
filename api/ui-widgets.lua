@@ -674,6 +674,7 @@ function pfUI.api.CreateQuestionDialog(text, yes, no, editbox, onclose)
   question:SetScript("OnHide", onclose)
 
   pfUI.api.CreateBackdrop(question, nil, nil, .85)
+  pfUI.api.CreateBackdropShadow(question)
 
   -- text
   question.text = question:CreateFontString("Status", "LOW", "GameFontNormal")

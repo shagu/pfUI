@@ -10,6 +10,7 @@ pfUI:RegisterSkin("Auctionhouse", function ()
 
     StripTextures(AuctionFrame, true)
     CreateBackdrop(AuctionFrame, nil, nil, .75)
+    CreateBackdropShadow(AuctionFrame)
     EnableMovable(AuctionFrame)
 
     SkinCloseButton(AuctionFrameCloseButton, AuctionFrame.backdrop, -6, -6)
@@ -205,6 +206,8 @@ pfUI:RegisterSkin("Auctionhouse", function ()
     do -- AuctionDressUpFrame
       StripTextures(AuctionDressUpFrame, nil, "BACKGROUND")
       CreateBackdrop(AuctionDressUpFrame, nil, true, .75)
+      CreateBackdropShadow(AuctionDressUpFrame)
+
       AuctionDressUpFrame:ClearAllPoints()
       AuctionDressUpFrame:SetPoint("LEFT", AuctionFrame.backdrop, "RIGHT", 4, 0)
 

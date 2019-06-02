@@ -16,6 +16,8 @@ pfUI:RegisterSkin("Mailbox", function ()
 
   StripTextures(MailFrame, true)
   CreateBackdrop(MailFrame, nil, nil, .75)
+  CreateBackdropShadow(MailFrame)
+
   MailFrame.backdrop:SetPoint("TOPLEFT", 12, -12)
   MailFrame.backdrop:SetPoint("BOTTOMRIGHT", -30, 72)
   MailFrame:SetHitRectInsets(12,30,12,72)

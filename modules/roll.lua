@@ -79,6 +79,8 @@ pfUI:RegisterModule("roll", 20400, function ()
     local f = CreateFrame("Frame", "pfLootRollFrame" .. id, UIParent)
 
     CreateBackdrop(f, nil, nil, .8)
+    CreateBackdropShadow(f)
+
     f.backdrop:SetFrameStrata("BACKGROUND")
     f.hasItem = 1
 

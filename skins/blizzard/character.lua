@@ -11,6 +11,8 @@ pfUI:RegisterSkin("Character", function ()
   }
 
   CreateBackdrop(CharacterFrame, nil, nil, .75)
+  CreateBackdropShadow(CharacterFrame)
+
   CharacterFrame.backdrop:SetPoint("TOPLEFT", 10, -10)
   CharacterFrame.backdrop:SetPoint("BOTTOMRIGHT", -30, 72)
   CharacterFrame:SetHitRectInsets(10,30,10,72)

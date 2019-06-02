@@ -5,6 +5,8 @@ pfUI:RegisterSkin("KeyBindings", function ()
   HookAddonOrVariable("Blizzard_BindingUI", function()
     StripTextures(KeyBindingFrame)
     CreateBackdrop(KeyBindingFrame, nil, nil, .75)
+    CreateBackdropShadow(KeyBindingFrame)
+
     KeyBindingFrame.backdrop:SetPoint("TOPLEFT", 2, 10)
     KeyBindingFrame.backdrop:SetPoint("BOTTOMRIGHT", -42, 10)
     KeyBindingFrame:SetHitRectInsets(2,42,10,10)

@@ -4,6 +4,8 @@ pfUI:RegisterSkin("Battlefield", function ()
 
   StripTextures(BattlefieldFrame)
   CreateBackdrop(BattlefieldFrame, nil, nil, .75)
+  CreateBackdropShadow(BattlefieldFrame)
+
   BattlefieldFrame.backdrop:SetPoint("TOPLEFT", 10, -10)
   BattlefieldFrame.backdrop:SetPoint("BOTTOMRIGHT", -32, 72)
   BattlefieldFrame:SetHitRectInsets(10,32,10,72)

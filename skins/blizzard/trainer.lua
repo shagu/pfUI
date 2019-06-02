@@ -5,6 +5,8 @@ pfUI:RegisterSkin("Trainer", function ()
   HookAddonOrVariable("Blizzard_TrainerUI", function()
     StripTextures(ClassTrainerFrame)
     CreateBackdrop(ClassTrainerFrame, nil, nil, .75)
+    CreateBackdropShadow(ClassTrainerFrame)
+
     ClassTrainerFrame.backdrop:SetPoint("TOPLEFT", 10, -10)
     ClassTrainerFrame.backdrop:SetPoint("BOTTOMRIGHT", -32, 72)
     ClassTrainerFrame:SetHitRectInsets(10,32,10,72)

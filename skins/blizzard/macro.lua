@@ -5,6 +5,8 @@ pfUI:RegisterSkin("Macro", function ()
   HookAddonOrVariable("Blizzard_MacroUI", function()
     StripTextures(MacroFrame)
     CreateBackdrop(MacroFrame, nil, nil, .75)
+    CreateBackdropShadow(MacroFrame)
+
     MacroFrame.backdrop:SetPoint("TOPLEFT", 10, -10)
     MacroFrame.backdrop:SetPoint("BOTTOMRIGHT", -32, 72)
     MacroFrame:SetHitRectInsets(10,32,10,72)

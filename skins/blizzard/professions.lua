@@ -53,6 +53,7 @@ pfUI:RegisterSkin("Profession", function ()
 
       StripTextures(frame)
       CreateBackdrop(frame, nil, nil, .75)
+      CreateBackdropShadow(frame)
 
       frame:SetWidth(676)
       frame:SetHeight(440)

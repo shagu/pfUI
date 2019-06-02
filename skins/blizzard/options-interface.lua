@@ -8,6 +8,8 @@ pfUI:RegisterSkin("Options - Interface", function ()
 
   StripTextures(UIOptionsFrame)
   CreateBackdrop(UIOptionsFrame, nil, nil, .75)
+  CreateBackdropShadow(UIOptionsFrame)
+
   EnableMovable(UIOptionsFrame)
 
   HookScript(UIOptionsFrame, "OnShow", function()

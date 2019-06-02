@@ -23,6 +23,7 @@ pfUI:RegisterModule("xpbar", 20400, function ()
   end
   pfUI.xp:SetFrameStrata("BACKGROUND")
   CreateBackdrop(pfUI.xp)
+  CreateBackdropShadow(pfUI.xp)
   UpdateMovable(pfUI.xp)
 
   pfUI.xp:RegisterEvent("PLAYER_LEVEL_UP")
@@ -142,6 +143,7 @@ pfUI:RegisterModule("xpbar", 20400, function ()
   end
   pfUI.rep:SetFrameStrata("BACKGROUND")
   CreateBackdrop(pfUI.rep)
+  CreateBackdropShadow(pfUI.rep)
   UpdateMovable(pfUI.rep)
 
   pfUI.rep.bar = CreateFrame("StatusBar", nil, pfUI.rep)

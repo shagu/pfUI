@@ -4,6 +4,8 @@ pfUI:RegisterSkin("Options - Sound", function ()
 
   StripTextures(SoundOptionsFrame)
   CreateBackdrop(SoundOptionsFrame, nil, true, .75)
+  CreateBackdropShadow(SoundOptionsFrame)
+
   EnableMovable(SoundOptionsFrame)
 
   HookScript(SoundOptionsFrame, "OnShow", function()

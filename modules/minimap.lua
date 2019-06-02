@@ -11,6 +11,7 @@ pfUI:RegisterModule("minimap", 20400, function ()
 
   pfUI.minimap = CreateFrame("Frame","pfMinimap",UIParent)
   CreateBackdrop(pfUI.minimap)
+  CreateBackdropShadow(pfUI.minimap)
   pfUI.minimap:SetPoint("TOPRIGHT", UIParent, -5, -5)
   UpdateMovable(pfUI.minimap)
   pfUI.minimap:SetWidth(140)

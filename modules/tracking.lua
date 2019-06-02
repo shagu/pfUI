@@ -51,6 +51,8 @@ pfUI:RegisterModule("tracking", function ()
   pfUI.tracking = CreateFrame("Button", "pfUITracking", UIParent)
   pfUI.tracking:SetFrameStrata("LOW")
   CreateBackdrop(pfUI.tracking, config.border)
+  CreateBackdropShadow(pfUI.tracking)
+
   pfUI.tracking:SetPoint("TOPLEFT", pfUI.minimap, -10, -10)
   UpdateMovable(pfUI.tracking)
   pfUI.tracking:SetWidth(config.size)

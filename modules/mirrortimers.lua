@@ -18,6 +18,7 @@ pfUI:RegisterModule("mirrortimers", function ()
     statusBar:SetHeight(18)
     statusBar:SetPoint("TOP", 0, 0)
     CreateBackdrop(statusBar)
+    CreateBackdropShadow(statusBar)
 
     mirrorTimer:SetWidth(statusBar:GetWidth())
     mirrorTimer:SetHeight(statusBar:GetHeight())

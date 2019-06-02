@@ -4,6 +4,8 @@ pfUI:RegisterSkin("Battlefield Score", function ()
 
   StripTextures(WorldStateScoreFrame)
   CreateBackdrop(WorldStateScoreFrame, nil, nil, .75)
+  CreateBackdropShadow(WorldStateScoreFrame)
+
   WorldStateScoreFrame.backdrop:SetPoint("TOPLEFT", 10, -14)
   WorldStateScoreFrame.backdrop:SetPoint("BOTTOMRIGHT", -112, 68)
   WorldStateScoreFrame:SetHitRectInsets(10,112,14,68)

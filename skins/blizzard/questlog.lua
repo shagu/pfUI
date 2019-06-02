@@ -17,6 +17,8 @@ pfUI:RegisterSkin("Quest Log", function ()
 
     StripTextures(QuestLogFrame, true)
     CreateBackdrop(QuestLogFrame, nil, nil, .75)
+    CreateBackdropShadow(QuestLogFrame)
+
     EnableMovable(QuestLogFrame)
 
     QuestLogTitleText:ClearAllPoints()

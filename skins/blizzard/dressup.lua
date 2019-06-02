@@ -4,6 +4,8 @@ pfUI:RegisterSkin("Dress Up Frame", function ()
 
   StripTextures(DressUpFrame, nil, "ARTWORK")
   CreateBackdrop(DressUpFrame, nil, nil, .75)
+  CreateBackdropShadow(DressUpFrame)
+
   DressUpFrame.backdrop:SetPoint("TOPLEFT", 10, -10)
   DressUpFrame.backdrop:SetPoint("BOTTOMRIGHT", -32, 72)
   DressUpFrame:SetHitRectInsets(10,32,10,72)

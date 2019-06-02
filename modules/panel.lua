@@ -538,6 +538,7 @@ pfUI:RegisterModule("panel", 20400, function()
   pfUI.panel.left:SetHeight(C.global.font_size*1.5)
 
   CreateBackdrop(pfUI.panel.left, default_border, nil)
+  CreateBackdropShadow(pfUI.panel.left)
   UpdateMovable(pfUI.panel.left)
 
   pfUI.panel.left.hide = CreateFrame("Button", nil, pfUI.panel.left)
@@ -618,6 +619,7 @@ pfUI:RegisterModule("panel", 20400, function()
   pfUI.panel.right:SetHeight(C.global.font_size*1.5)
 
   CreateBackdrop(pfUI.panel.right, default_border, nil)
+  CreateBackdropShadow(pfUI.panel.right)
   UpdateMovable(pfUI.panel.right)
 
   pfUI.panel.right.hide = CreateFrame("Button", nil, pfUI.panel.right)
@@ -695,6 +697,7 @@ pfUI:RegisterModule("panel", 20400, function()
   pfUI.panel.minimap:SetFrameStrata("MEDIUM")
 
   CreateBackdrop(pfUI.panel.minimap, default_border)
+  CreateBackdropShadow(pfUI.panel.minimap)
   UpdateMovable(pfUI.panel.minimap)
 
   pfUI.panel.minimap.text = pfUI.panel.minimap:CreateFontString("MinimapZoneText", "LOW", "GameFontNormal")

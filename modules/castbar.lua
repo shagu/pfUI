@@ -28,6 +28,7 @@ pfUI:RegisterModule("castbar", 20400, function ()
     cb.icon.texture:SetAllPoints()
     cb.icon.texture:SetTexCoord(.08, .92, .08, .92)
     CreateBackdrop(cb.icon, default_border)
+    CreateBackdropShadow(cb.icon)
 
     -- statusbar
     cb.bar = CreateFrame("StatusBar", nil, cb)
@@ -39,6 +40,7 @@ pfUI:RegisterModule("castbar", 20400, function ()
     local r,g,b,a = strsplit(",", C.appearance.castbar.castbarcolor)
     cb.bar:SetStatusBarColor(r,g,b,a)
     CreateBackdrop(cb.bar, default_border)
+    CreateBackdropShadow(cb.bar)
 
     -- text left
     cb.bar.left = cb.bar:CreateFontString("Status", "DIALOG", "GameFontNormal")

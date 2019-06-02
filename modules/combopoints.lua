@@ -23,6 +23,7 @@ pfUI:RegisterModule("combopoints", function ()
             pfUI.combopoints["combopoint" .. point]:SetWidth(combo_size)
             pfUI.combopoints["combopoint" .. point]:SetHeight(combo_size)
             CreateBackdrop(pfUI.combopoints["combopoint" .. point])
+            CreateBackdropShadow(pfUI.combopoints["combopoint" .. point])
 
             if pfUI.uf.target then
               pfUI.combopoints["combopoint" .. point]:SetPoint("TOPLEFT", pfUI.uf.target, "TOPRIGHT", C.appearance.border.default*3, -(point - 1) * (combo_size + C.appearance.border.default*3))

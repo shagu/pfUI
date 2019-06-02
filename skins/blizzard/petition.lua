@@ -4,6 +4,8 @@ pfUI:RegisterSkin("Petition", function ()
 
   StripTextures(PetitionFrame)
   CreateBackdrop(PetitionFrame, nil, nil, .75)
+  CreateBackdropShadow(PetitionFrame)
+
   PetitionFrame.backdrop:SetPoint("TOPLEFT", 12, -16)
   PetitionFrame.backdrop:SetPoint("BOTTOMRIGHT", -28, 66)
   PetitionFrame:SetHitRectInsets(12,28,16,66)

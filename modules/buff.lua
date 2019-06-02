@@ -52,6 +52,7 @@ pfUI:RegisterModule("buff", 20400, function ()
       buff.mode = buff.btype
       buff.texture:SetTexture(GetPlayerBuffTexture(buff.bid))
       CreateBackdrop(buff)
+      CreateBackdropShadow(buff)
 
       if buff.btype == "HARMFUL" then
         local dtype = GetPlayerBuffDispelType(buff.bid)
@@ -193,6 +194,7 @@ pfUI:RegisterModule("buff", 20400, function ()
     end)
 
     CreateBackdrop(buff)
+    CreateBackdropShadow(buff)
     RefreshBuffButton(buff)
 
     return buff

@@ -5,6 +5,8 @@ pfUI:RegisterSkin("Talents", function ()
   HookAddonOrVariable("Blizzard_TalentUI", function()
     StripTextures(TalentFrame)
     CreateBackdrop(TalentFrame, nil, nil, .75)
+    CreateBackdropShadow(TalentFrame)
+
     TalentFrame.backdrop:SetPoint("TOPLEFT", 10, -10)
     TalentFrame.backdrop:SetPoint("BOTTOMRIGHT", -32, 72)
     TalentFrame:SetHitRectInsets(10,32,10,72)

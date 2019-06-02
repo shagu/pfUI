@@ -4,6 +4,8 @@ pfUI:RegisterSkin("Help", function ()
 
   StripTextures(HelpFrame)
   CreateBackdrop(HelpFrame, nil, nil, .75)
+  CreateBackdropShadow(HelpFrame)
+
   HelpFrame.backdrop:SetPoint("TOPLEFT", 4, -4)
   HelpFrame.backdrop:SetPoint("BOTTOMRIGHT", -44, 12)
   HelpFrame:SetHitRectInsets(4,44,4,12)

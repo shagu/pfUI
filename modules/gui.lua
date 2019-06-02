@@ -623,6 +623,7 @@ pfUI:RegisterModule("gui", 20400, function ()
     end)
 
     CreateBackdrop(pfUI.gui, nil, true, .85)
+    CreateBackdropShadow(pfUI.gui)
     table.insert(UISpecialFrames, "pfConfigGUI")
 
     -- make some locals available to thirdparty

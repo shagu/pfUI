@@ -6,6 +6,8 @@ pfUI:RegisterSkin("Inspect", function ()
     local cache = {}
 
     CreateBackdrop(InspectFrame, nil, nil, .75)
+    CreateBackdropShadow(InspectFrame)
+
     InspectFrame.backdrop:SetPoint("TOPLEFT", 10, -10)
     InspectFrame.backdrop:SetPoint("BOTTOMRIGHT", -30, 72)
     InspectFrame:SetHitRectInsets(10,30,10,72)

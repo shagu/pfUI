@@ -885,6 +885,7 @@ pfUI:RegisterModule("actionbar", 20400, function ()
     -- apply backdrop settings
     if background == "1" then
       CreateBackdrop(bars[i], border)
+      CreateBackdropShadow(bars[i])
       bars[i].backdrop:Show()
 
       -- share backdrop of main and top actionbar

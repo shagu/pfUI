@@ -823,6 +823,8 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
     f.RegisterEvent = function() return end
   end
 
+  CreateBackdropShadow(f)
+
   f.hp = CreateFrame("Frame",nil, f)
   f.hp.bar = CreateFrame("StatusBar", nil, f.hp)
   f.power = CreateFrame("Frame",nil, f)
@@ -1154,7 +1156,9 @@ function pfUI.uf:RefreshUnit(unit, component)
        texture, stacks = UnitBuff(unitstr, i)
       end
 
-      pfUI.api.CreateBackdrop(unit.buffs[i], default_border)
+      CreateBackdrop(unit.buffs[i], default_border)
+      CreateBackdropShadow(unit.buffs[i])
+
       unit.buffs[i].texture:SetTexture(texture)
 
       if texture then
@@ -1219,7 +1223,9 @@ function pfUI.uf:RefreshUnit(unit, component)
        texture, stacks, dtype = UnitDebuff(unitstr, i)
      end
 
-      pfUI.api.CreateBackdrop(unit.debuffs[i], default_border)
+      CreateBackdrop(unit.debuffs[i], default_border)
+      CreateBackdropShadow(unit.debuffs[i])
+
       unit.debuffs[i].texture:SetTexture(texture)
 
       local r,g,b = DebuffTypeColor.none.r,DebuffTypeColor.none.g,DebuffTypeColor.none.b

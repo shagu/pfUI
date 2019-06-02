@@ -200,6 +200,7 @@ pfUI:RegisterModule("buffwatch", function ()
     frame:SetScript("OnLeave", StatusBarOnLeave)
 
     CreateBackdrop(frame)
+    CreateBackdropShadow(frame)
     if bordercolor.r ~= "0" and bordercolor.g ~= "0" and bordercolor.b ~= "0" and bordercolor.a ~= "0" then
       frame.backdrop:SetBackdropBorderColor(bordercolor.r,bordercolor.g,bordercolor.b,1)
     end

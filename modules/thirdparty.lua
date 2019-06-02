@@ -35,7 +35,7 @@ pfUI:RegisterModule("thirdparty", function ()
 
   local function RefreshKtmWidth(width)
     local width = width or pfUI.chat.right:GetWidth()
-    if (pfUI.thirdparty.meters.damage and pfUI.thirdparty.meters.threat) then 
+    if (pfUI.thirdparty.meters.damage and pfUI.thirdparty.meters.threat) then
       width = width / 2
     end
     SetKtmWidth(KLHTM_Gui.raid, GetKtmWidthDiff(KLHTM_Gui.raid, width))
@@ -210,6 +210,7 @@ pfUI:RegisterModule("thirdparty", function ()
       end
 
       CreateBackdrop(KLHTM_Frame, nil, nil, (C.thirdparty.chatbg == "1" and .8))
+      CreateBackdropShadow(KLHTM_Frame)
 
       if C.thirdparty.chatbg == "1" and C.chat.global.custombg == "1" then
         local r, g, b, a = strsplit(",", C.chat.global.background)
@@ -321,6 +322,7 @@ pfUI:RegisterModule("thirdparty", function ()
         for k, val in pairs(DPSMateSettings["windows"]) do
           local frame = _G["DPSMate_"..val["name"]]
           CreateBackdrop(frame, nil, nil, (C.thirdparty.chatbg == "1" and .8))
+          CreateBackdropShadow(frame)
 
           if C.thirdparty.chatbg == "1" and C.chat.global.custombg == "1" then
             local r, g, b, a = strsplit(",", C.chat.global.background)
@@ -390,6 +392,7 @@ pfUI:RegisterModule("thirdparty", function ()
       _G.SW_BARSEPY = 1
 
       CreateBackdrop(SW_BarFrame1, nil, nil, (C.thirdparty.chatbg == "1" and .8))
+      CreateBackdropShadow(SW_BarFrame1)
 
       if C.thirdparty.chatbg == "1" and C.chat.global.custombg == "1" then
         local r, g, b, a = strsplit(",", C.chat.global.background)
@@ -447,6 +450,8 @@ pfUI:RegisterModule("thirdparty", function ()
       local windowname = this:GetName()
 
       CreateBackdrop(_G[windowname], nil, nil, .8)
+      CreateBackdropShadow(_G[windowname])
+
       _G[windowname .. "From"]:ClearAllPoints()
       _G[windowname .. "From"]:SetPoint("TOP", 0, -10)
 
@@ -724,6 +729,7 @@ pfUI:RegisterModule("thirdparty", function ()
     FlightMapTimesFrame:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
     FlightMapTimesFrame:SetHeight(18)
     CreateBackdrop(FlightMapTimesFrame)
+    CreateBackdropShadow(FlightMapTimesFrame)
 
     FlightMapTimesText:ClearAllPoints()
     FlightMapTimesText:SetPoint("CENTER", FlightMapTimesFrame, "CENTER", 0, 0)
@@ -800,6 +806,8 @@ pfUI:RegisterModule("thirdparty", function ()
     if C.thirdparty.atlasloot.enable == "0" then return end
 
     CreateBackdrop(AtlasLootTooltip)
+    CreateBackdropShadow(AtlasLootTooltip)
+
     if pfUI.eqcompare then
       HookScript(AtlasLootTooltip, "OnShow", pfUI.eqcompare.GameTooltipShow)
       HookScript(AtlasLootTooltip, "OnHide", function()
@@ -852,6 +860,7 @@ pfUI:RegisterModule("thirdparty", function ()
     DruidManaBar.text:SetFontObject(GameFontWhite)
 
     CreateBackdrop(DruidManaBar)
+    CreateBackdropShadow(DruidManaBar)
 
     DruidManaBar:SetScript("OnMouseUp", function(button)
       f:Click(button)
@@ -892,6 +901,8 @@ pfUI:RegisterModule("thirdparty", function ()
     -- Main window
     pfUI.api.StripTextures(NoteInputFrame, true)
     CreateBackdrop(NoteInputFrame, nil, nil, .75)
+    CreateBackdropShadow(NoteInputFrame)
+
     NoteInputFrame.backdrop:SetPoint("TOPLEFT", 10, -12)
     NoteInputFrame.backdrop:SetPoint("BOTTOMRIGHT", -32, 30)
 

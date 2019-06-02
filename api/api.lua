@@ -790,20 +790,24 @@ function pfUI.api.CreateBackdrop(f, inset, legacy, transp, backdropSetting)
     b:SetBackdropColor(br, bg, bb, ba)
     b:SetBackdropBorderColor(er, eg, eb , ea)
   end
+end
 
-  -- add shadow
-  if not f.backdrop_shadow and pfUI_config.appearance.border.shadow == "1" then
-    local anchor = f.backdrop or f
-
-    f.backdrop_shadow = CreateFrame("Frame", nil, anchor)
-    f.backdrop_shadow:SetFrameStrata("BACKGROUND")
-    f.backdrop_shadow:SetFrameLevel(1)
-
-    f.backdrop_shadow:SetPoint("TOPLEFT", anchor, "TOPLEFT", -7, 7)
-    f.backdrop_shadow:SetPoint("BOTTOMRIGHT", anchor, "BOTTOMRIGHT", 7, -7)
-    f.backdrop_shadow:SetBackdrop(pfUI.backdrop_shadow)
-    f.backdrop_shadow:SetBackdropBorderColor(0,0,0,tonumber(pfUI_config.appearance.border.shadow_intensity))
+-- [ Create Shadow ]
+-- Creates a pfUI compatible frame as shadow element
+-- 'f'          [frame]         the frame which should get a backdrop.
+function pfUI.api.CreateBackdropShadow(f)
+  if f.backdrop_shadow or pfUI_config.appearance.border.shadow ~= "1" then
+    return
   end
+
+  local anchor = f.backdrop or f
+  f.backdrop_shadow = CreateFrame("Frame", nil, anchor)
+  f.backdrop_shadow:SetFrameStrata("BACKGROUND")
+  f.backdrop_shadow:SetFrameLevel(1)
+  f.backdrop_shadow:SetPoint("TOPLEFT", anchor, "TOPLEFT", -7, 7)
+  f.backdrop_shadow:SetPoint("BOTTOMRIGHT", anchor, "BOTTOMRIGHT", 7, -7)
+  f.backdrop_shadow:SetBackdrop(pfUI.backdrop_shadow)
+  f.backdrop_shadow:SetBackdropBorderColor(0,0,0,tonumber(pfUI_config.appearance.border.shadow_intensity))
 end
 
 -- [ Bar Layout Options ] --

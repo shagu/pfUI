@@ -74,6 +74,8 @@ pfUI:RegisterSkin("Gossip and Quest", function ()
     local frame = _G[frameName.."Frame"]
     local NPCName = _G[frame:GetName().."NpcNameText"]
     CreateBackdrop(frame, nil, nil, .75)
+    CreateBackdropShadow(frame)
+
     frame.backdrop:SetPoint("TOPLEFT", 12, -18)
     frame.backdrop:SetPoint("BOTTOMRIGHT", -28, 66)
     frame:SetHitRectInsets(12,28,18,66)

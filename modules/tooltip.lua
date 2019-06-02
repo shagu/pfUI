@@ -1,5 +1,5 @@
 pfUI:RegisterModule("tooltip", 20400, function ()
-  
+
   pfUI.tooltip = CreateFrame('Frame', "pfTooltip", GameTooltip)
   pfUI.tooltip.anchorframe = CreateFrame('Frame', "pfTooltipAnchor", UIParent)
   pfUI.tooltip.anchorframe:SetWidth(128)
@@ -154,6 +154,8 @@ pfUI:RegisterModule("tooltip", 20400, function ()
   GameTooltipStatusBar:SetPoint("BOTTOMRIGHT", GameTooltip, "TOPRIGHT", 0, 0)
   GameTooltipStatusBar:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
   CreateBackdrop(GameTooltipStatusBar)
+  CreateBackdropShadow(GameTooltipStatusBar)
+
   GameTooltipStatusBar.SetStatusBarColor_orig = GameTooltipStatusBar.SetStatusBarColor
   GameTooltipStatusBar.SetStatusBarColor = function() return end
 
