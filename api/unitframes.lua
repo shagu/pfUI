@@ -453,6 +453,14 @@ function pfUI.uf:UpdateConfig()
   f.restIcon.texture:SetAllPoints(f.restIcon)
   f.restIcon:Hide()
 
+  f.happinessIcon:SetWidth(12)
+  f.happinessIcon:SetHeight(12)
+  f.happinessIcon:SetPoint("CENTER", f, "TOPLEFT", default_border, -default_border)
+  f.happinessIcon.texture:SetTexture("Interface\\AddOns\\pfUI\\img\\neutral")
+  f.happinessIcon.texture:SetAllPoints(f.happinessIcon)
+  f.happinessIcon.texture:SetVertexColor(1, 1, 0, 1)
+  f.happinessIcon:Hide()
+
   if f.config.buffs == "off" then
     for i=1, 32 do
       if f.buffs and f.buffs[i] then
@@ -857,6 +865,9 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
   f.restIcon = CreateFrame("Frame", nil, f.hp.bar)
   f.restIcon.texture = f.restIcon:CreateTexture(nil, "BACKGROUND")
 
+  f.happinessIcon = CreateFrame("Frame", nil, f.hp.bar)
+  f.happinessIcon.texture = f.happinessIcon:CreateTexture(nil, "BACKGROUND")
+
   f.portrait = CreateFrame("Frame", "pfPortrait" .. f.label .. f.id, f)
   f.portrait.tex = f.portrait:CreateTexture("pfPortraitTexture" .. f.label .. f.id, "OVERLAY")
   f.portrait.model = CreateFrame("PlayerModel", "pfPortraitModel" .. f.label .. f.id, f.portrait)
@@ -1028,6 +1039,25 @@ function pfUI.uf:RefreshIndicators(unit)
       unit.restIcon:Show()
     else
       unit.restIcon:Hide()
+    end
+  end
+
+  if unit.happinessIcon and unit:GetName() == "pfPet" then -- Happiness Icon
+    if UnitIsVisible("pet") then
+      local happiness = GetPetHappiness()
+      if happiness == 1 then
+        unit.happinessIcon.texture:SetTexture("Interface\\AddOns\\pfUI\\img\\sad")
+        unit.happinessIcon.texture:SetVertexColor(1, 0, 0, 1)
+      elseif happiness == 2 then
+        unit.happinessIcon.texture:SetTexture("Interface\\AddOns\\pfUI\\img\\neutral")
+        unit.happinessIcon.texture:SetVertexColor(1, 1, 0, 1)
+      else
+        unit.happinessIcon.texture:SetTexture("Interface\\AddOns\\pfUI\\img\\happy")
+        unit.happinessIcon.texture:SetVertexColor(0, 1, 0, 1)
+      end
+      unit.happinessIcon:Show()
+    else
+      unit.happinessIcon:Hide()
     end
   end
 
