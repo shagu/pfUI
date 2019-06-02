@@ -236,7 +236,7 @@ pfUI:RegisterModule("chat", 20400, function ()
   end
 
   function pfUI.chat:RefreshChat()
-    local panelheight = C.global.font_size+default_border*5
+    local panelheight = C.global.font_size*1.5 + default_border*2 + 2
 
     if C.chat.global.sticky == "1" then
       ChatTypeInfo.WHISPER.sticky = 1
