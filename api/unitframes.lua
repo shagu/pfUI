@@ -1043,21 +1043,25 @@ function pfUI.uf:RefreshIndicators(unit)
   end
 
   if unit.happinessIcon and unit:GetName() == "pfPet" then -- Happiness Icon
-    if UnitIsVisible("pet") then
-      local happiness = GetPetHappiness()
-      if happiness == 1 then
-        unit.happinessIcon.texture:SetTexture("Interface\\AddOns\\pfUI\\img\\sad")
-        unit.happinessIcon.texture:SetVertexColor(1, 0, 0, 1)
-      elseif happiness == 2 then
-        unit.happinessIcon.texture:SetTexture("Interface\\AddOns\\pfUI\\img\\neutral")
-        unit.happinessIcon.texture:SetVertexColor(1, 1, 0, 1)
-      else
-        unit.happinessIcon.texture:SetTexture("Interface\\AddOns\\pfUI\\img\\happy")
-        unit.happinessIcon.texture:SetVertexColor(0, 1, 0, 1)
-      end
-      unit.happinessIcon:Show()
-    else
+    if unit.config.happinessicon == "0" then
       unit.happinessIcon:Hide()
+    else
+      if UnitIsVisible("pet") then
+        local happiness = GetPetHappiness()
+        if happiness == 1 then
+          unit.happinessIcon.texture:SetTexture("Interface\\AddOns\\pfUI\\img\\sad")
+          unit.happinessIcon.texture:SetVertexColor(1, 0, 0, 1)
+        elseif happiness == 2 then
+          unit.happinessIcon.texture:SetTexture("Interface\\AddOns\\pfUI\\img\\neutral")
+          unit.happinessIcon.texture:SetVertexColor(1, 1, 0, 1)
+        else
+          unit.happinessIcon.texture:SetTexture("Interface\\AddOns\\pfUI\\img\\happy")
+          unit.happinessIcon.texture:SetVertexColor(0, 1, 0, 1)
+        end
+        unit.happinessIcon:Show()
+      else
+        unit.happinessIcon:Hide()
+      end      
     end
   end
 

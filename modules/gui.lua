@@ -1535,6 +1535,9 @@ pfUI:RegisterModule("gui", 20400, function ()
           CreateConfig(U[c], T["Show PvP-Flag"], C.unitframes[c], "showPVP", "checkbox")
           CreateConfig(U[c], T["Show Loot Icon"], C.unitframes[c], "looticon", "checkbox")
           CreateConfig(U[c], T["Show Leader Icon"], C.unitframes[c], "leadericon", "checkbox")
+          if c == "pet" then
+            CreateConfig(U[c], T["Show Happiness Icon"], C.unitframes[c], "happinessicon", "checkbox")
+          end
           CreateConfig(U[c], T["Show Raid Mark"], C.unitframes[c], "raidicon", "checkbox")
           CreateConfig(U[c], T["Raid Mark Size"], C.unitframes[c], "raidiconsize")
           CreateConfig(U[c], T["Show Class Buff Indicators"], C.unitframes[c], "buff_indicator", "checkbox")
