@@ -535,7 +535,7 @@ pfUI:RegisterModule("panel", 20400, function()
   end
 
   pfUI.panel.left:SetFrameStrata("DIALOG")
-  pfUI.panel.left:SetHeight(C.global.font_size+default_border*2)
+  pfUI.panel.left:SetHeight(C.global.font_size*1.5)
 
   CreateBackdrop(pfUI.panel.left, default_border, nil)
   UpdateMovable(pfUI.panel.left)
@@ -615,7 +615,7 @@ pfUI:RegisterModule("panel", 20400, function()
   end
 
   pfUI.panel.right:SetFrameStrata("DIALOG")
-  pfUI.panel.right:SetHeight(C.global.font_size+default_border*2)
+  pfUI.panel.right:SetHeight(C.global.font_size*1.5)
 
   CreateBackdrop(pfUI.panel.right, default_border, nil)
   UpdateMovable(pfUI.panel.right)
@@ -691,7 +691,7 @@ pfUI:RegisterModule("panel", 20400, function()
     pfUI.panel.minimap:SetPoint("TOP", UIParent, "TOP", 0, -5)
   end
 
-  pfUI.panel.minimap:SetHeight(C.global.font_size+default_border*2)
+  pfUI.panel.minimap:SetHeight(C.global.font_size*1.5)
   pfUI.panel.minimap:SetFrameStrata("MEDIUM")
 
   CreateBackdrop(pfUI.panel.minimap, default_border)
