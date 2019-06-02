@@ -157,9 +157,9 @@ end
 pfUI.uf.glow = CreateFrame("Frame")
 pfUI.uf.glow:SetScript("OnUpdate", function()
   local fpsmod = GetFramerate() / 30
-  if not this.val or this.val >= .9 then
+  if not this.val or this.val >= .8 then
     this.mod = -0.01 / fpsmod
-  elseif this.val <= .6 then
+  elseif this.val <= .4 then
     this.mod = 0.01  / fpsmod
   end
   this.val = this.val + this.mod
@@ -216,6 +216,14 @@ function pfUI.uf:UpdateConfig()
 
   f:SetFrameStrata("BACKGROUND")
 
+  f.glow:SetFrameStrata("BACKGROUND")
+  f.glow:SetFrameLevel(0)
+  f.glow:SetBackdrop(glow2)
+  f.glow:SetPoint("TOPLEFT", f, "TOPLEFT", -6 - default_border,6 + default_border)
+  f.glow:SetPoint("BOTTOMRIGHT", f, "BOTTOMRIGHT", 6 + default_border,-6 - default_border)
+  f.glow:SetScript("OnUpdate", pfUI.uf.glow.UpdateGlowAnimation)
+  f.glow:Hide()
+
   f.hp:ClearAllPoints()
   f.hp:SetPoint("TOP", 0, 0)
 
@@ -223,14 +231,6 @@ function pfUI.uf:UpdateConfig()
   f.hp:SetHeight(f.config.height)
   if tonumber(f.config.height) < 0 then f.hp:Hide() end
   pfUI.api.CreateBackdrop(f.hp, default_border)
-
-  f.hp.glow:SetFrameStrata("BACKGROUND")
-  f.hp.glow:SetFrameLevel(0)
-  f.hp.glow:SetBackdrop(glow2)
-  f.hp.glow:SetPoint("TOPLEFT", f.hp, "TOPLEFT", -6 - default_border,6 + default_border)
-  f.hp.glow:SetPoint("BOTTOMRIGHT", f.hp, "BOTTOMRIGHT", 6 + default_border,-6 - default_border)
-  f.hp.glow:SetScript("OnUpdate", pfUI.uf.glow.UpdateGlowAnimation)
-  f.hp.glow:Hide()
 
   f.hp.bar:SetStatusBarTexture(f.config.bartexture)
   f.hp.bar:SetAllPoints(f.hp)
@@ -260,14 +260,6 @@ function pfUI.uf:UpdateConfig()
   pfUI.api.CreateBackdrop(f.power, default_border)
   f.power.bar:SetStatusBarTexture(f.config.bartexture)
   f.power.bar:SetAllPoints(f.power)
-
-  f.power.glow:SetFrameStrata("BACKGROUND")
-  f.power.glow:SetFrameLevel(0)
-  f.power.glow:SetBackdrop(glow2)
-  f.power.glow:SetPoint("TOPLEFT", f.power, "TOPLEFT", -6 - default_border,6 + default_border)
-  f.power.glow:SetPoint("BOTTOMRIGHT", f.power, "BOTTOMRIGHT", 6 + default_border,-6 - default_border)
-  f.power.glow:SetScript("OnUpdate", pfUI.uf.glow.UpdateGlowAnimation)
-  f.power.glow:Hide()
 
   f.portrait:SetFrameStrata("LOW")
   f.portrait.tex:SetAllPoints(f.portrait)
@@ -676,20 +668,14 @@ function pfUI.uf.OnUpdate()
     pfUI.uf:RefreshIndicators(this)
 
     if this.config.glowaggro == "1" and pfUI.api.UnitHasAggro(this.label .. this.id) > 0 then
-      this.hp.glow:SetBackdropBorderColor(1,.2,0)
-      this.power.glow:SetBackdropBorderColor(1,.2,0)
-      this.hp.glow:Show()
-      this.power.glow:Show()
+      this.glow:SetBackdropBorderColor(1,.2,0)
+      this.glow:Show()
     elseif this.config.glowcombat == "1" and UnitAffectingCombat(this.label .. this.id) then
-      this.hp.glow:SetBackdropBorderColor(1,1,.2)
-      this.power.glow:SetBackdropBorderColor(1,1,.2)
-      this.hp.glow:Show()
-      this.power.glow:Show()
+      this.glow:SetBackdropBorderColor(1,1,.2)
+      this.glow:Show()
     else
-      this.hp.glow:SetBackdropBorderColor(1,1,1)
-      this.power.glow:SetBackdropBorderColor(1,1,1)
-      this.hp.glow:Hide()
-      this.power.glow:Hide()
+      this.glow:SetBackdropBorderColor(1,1,1)
+      this.glow:Hide()
     end
 
     -- update everything on eventless frames (targettarget, etc)
@@ -838,11 +824,10 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
   end
 
   f.hp = CreateFrame("Frame",nil, f)
-  f.hp.glow = CreateFrame("Frame", nil, f.hp)
   f.hp.bar = CreateFrame("StatusBar", nil, f.hp)
   f.power = CreateFrame("Frame",nil, f)
-  f.power.glow = CreateFrame("Frame", nil, f.power)
   f.power.bar = CreateFrame("StatusBar", nil, f.power)
+  f.glow = CreateFrame("Frame", nil, f)
 
   f.hpLeftText = f:CreateFontString("Status", "OVERLAY", "GameFontNormalSmall")
   f.hpRightText = f:CreateFontString("Status", "OVERLAY", "GameFontNormalSmall")
