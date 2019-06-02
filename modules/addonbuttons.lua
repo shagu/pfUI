@@ -34,7 +34,7 @@ pfUI:RegisterModule("addonbuttons", function ()
   pfUI.addonbuttons:SetFrameStrata("HIGH")
   pfUI.addonbuttons:Hide()
   CreateBackdrop(pfUI.addonbuttons)
-  CreateBackdropShadow(frame.addonbuttons)
+  CreateBackdropShadow(pfUI.addonbuttons)
 
   pfUI.addonbuttons.minimapbutton = CreateFrame("Button", "pfMinimapButton", pfUI.minimap or UIParent)
   pfUI.addonbuttons.minimapbutton:SetFrameStrata("MEDIUM")
