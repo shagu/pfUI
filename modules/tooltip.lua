@@ -132,7 +132,7 @@ pfUI:RegisterModule("tooltip", 20400, function ()
         local level = UnitLevel("mouseover") or ""
         local index = name .. ":" .. level
         local ppp = MobHealth_PPP(index)
-        if perc and ppp and ppp > 0 then
+        if perc and ppp and ppp > 0 and not UnitIsUnit("mouseover", "pet") then
           hp = round(perc * ppp)
           hpm = round(100 * ppp)
         end
