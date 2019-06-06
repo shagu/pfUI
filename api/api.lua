@@ -680,6 +680,76 @@ function pfUI.api.SetAutoPoint(frame, parent, spacing)
   end
 end
 
+-- [ GetBestAnchor ]
+-- Returns the best anchor of a frame, based on its position
+-- 'self'       [frame]        the frame that should be checked
+-- returns:     [string]       the name of the best anchor
+function pfUI.api.GetBestAnchor(self)
+  local scale = self:GetScale()
+  local x, y = self:GetCenter()
+  local a = GetScreenWidth()  / scale / 3
+  local b = GetScreenWidth()  / scale / 3 * 2
+  local c = GetScreenHeight() / scale / 3 * 2
+  local d = GetScreenHeight() / scale / 3
+  if not x or not y then return end
+
+  if x < a and y > c then
+    return "TOPLEFT"
+  elseif x > a and x < b and y > c then
+    return "TOP"
+  elseif x > b and y > c then
+    return "TOPRIGHT"
+  elseif x < a and y > d and y < c then
+    return "LEFT"
+  elseif x > a and x < b and y > d and y < c then
+    return "CENTER"
+  elseif x > b and y > d and y < c then
+    return "RIGHT"
+  elseif x < a and y < d then
+    return "BOTTOMLEFT"
+  elseif x > a and x < b and y < d then
+    return "BOTTOM"
+  elseif x > b and y < d then
+    return "BOTTOMRIGHT"
+  end
+end
+
+-- [ ConvertFrameAnchor ]
+-- Converts a frame anchor into another one while preserving the frame position
+-- 'self'       [frame]        the frame that should get another anchor.
+-- 'anchor'     [string]       the new anchor that shall be used
+-- returns:     anchor, x, y   can directly be used in SetPoint()
+function pfUI.api.ConvertFrameAnchor(self, anchor)
+  local scale, x, y, _ = self:GetScale(), nil, nil, nil
+
+  if anchor == "CENTER" then
+    x, y = self:GetCenter()
+    x, y = x - GetScreenWidth()/2/scale, y - GetScreenHeight()/2/scale
+  elseif anchor == "TOPLEFT" then
+    x, y = self:GetLeft(), self:GetTop() - GetScreenHeight()/scale
+  elseif anchor == "TOP" then
+    x, _ = self:GetCenter()
+    x, y = x - GetScreenWidth()/2/scale, self:GetTop() - GetScreenHeight()/scale
+  elseif anchor == "TOPRIGHT" then
+    x, y = self:GetRight() - GetScreenWidth()/scale, self:GetTop() - GetScreenHeight()/scale
+  elseif anchor == "RIGHT" then
+    _, y = self:GetCenter()
+    x, y = self:GetRight() - GetScreenWidth()/scale, y - GetScreenHeight()/2/scale
+  elseif anchor == "BOTTOMRIGHT" then
+    x, y = self:GetRight() - GetScreenWidth()/scale, self:GetBottom()
+  elseif anchor == "BOTTOM" then
+    x, _ = self:GetCenter()
+    x, y = x - GetScreenWidth()/2/scale, self:GetBottom()
+  elseif anchor == "BOTTOMLEFT" then
+    x, y = self:GetLeft(), self:GetBottom()
+  elseif anchor == "LEFT" then
+    _, y = self:GetCenter()
+    x, y = self:GetLeft(), y - GetScreenHeight()/2/scale
+  end
+
+  return anchor, round(x, 2), round(y, 2)
+end
+
 -- [ GetStringColor ]
 -- Queries the pfUI setting strings and extract its color codes
 -- returns r,g,b,a
