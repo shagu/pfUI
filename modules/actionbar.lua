@@ -429,19 +429,19 @@ pfUI:RegisterModule("actionbar", 20400, function ()
     local mouse = arg1 and not keystate
     local keystate = keystate
 
+    -- trigger action animation
     if ( pfUI_config.bars.keydown == "1" and keystate == "down" ) or (pfUI_config.bars.keydown == "0" and keystate == "up" ) or self.bar == 11 or mouse then
-      -- trigger effect
       if self:GetAlpha() > .1  or C.bars.animalways == "1" then
         self.animation.active = 0
         self.animation:Show()
       end
-      -- clear highlight
-      if not MouseIsOver(self) then
-        self.highlight:Hide()
-      end
-    elseif keystate == "down" then
-      -- show highlight
+    end
+
+    -- handle button highlight
+    if keystate == "down" then
       self.highlight:Show()
+    elseif not MouseIsOver(self) then
+      self.highlight:Hide()
     end
   end
 
