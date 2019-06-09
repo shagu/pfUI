@@ -8,6 +8,14 @@ pfUI:RegisterModule("unlock", 20400, function ()
     { "pfLootRollFrame",  4       },
   }
 
+  local anchors = {
+    "TOPLEFT", "TOP", "TOPRIGHT", "RIGHT", "BOTTOMRIGHT", "BOTTOM", "BOTTOMLEFT", "LEFT", "CENTER"
+  }
+
+
+  local spanframe = CreateFrame("Frame", "pfUnlockSelector", UIParent)
+  spanframe:Hide()
+
   -- frame labels and their config section relation
   local frame_configs = {
     -- unitframes
@@ -222,6 +230,19 @@ pfUI:RegisterModule("unlock", 20400, function ()
     if pfUI_config["position"] and pfUI_config["position"][drag.fname] and pfUI_config["position"][drag.fname]["xpos"] then
       dock.xcoord:SetText(pfUI_config["position"][drag.fname]["xpos"])
       dock.ycoord:SetText(pfUI_config["position"][drag.fname]["ypos"])
+      local anchor = pfUI_config["position"][drag.fname]["anchor"] or "TOPLEFT"
+
+      for id, k in pairs(anchors) do
+        -- get human readable
+        local value, text = strsplit(":", k)
+        text = text or value
+
+        if value == anchor then
+          UIDropDownMenu_SetSelectedID(pfUI.unlock.dock.anchor, id, 0)
+          UIDropDownMenu_SetText(text, pfUI.unlock.dock.anchor)
+        end
+      end
+
       dock.reset:SetText(T["Reset"])
 
       dock.up:Enable()
@@ -331,16 +352,48 @@ pfUI:RegisterModule("unlock", 20400, function ()
 
     frame:StopMovingOrSizing()
 
-    local _, _, _, xpos, ypos = frame:GetPoint()
+    -- calculate and move selection offsets
+    local anchor, _, _, xpos, ypos = frame:GetPoint()
     local diffxpos = frame.oldPos[1] - xpos
     local diffypos = frame.oldPos[2] - ypos
-
     for id, frame in pairs(pfUI.unlock.selection) do
-      CreateBackdrop(frame.drag, nil, nil, .8)
       if frame:GetName() ~= name then
         local anchor, _, _, xpos, ypos = frame:GetPoint()
         frame:SetPoint(anchor or "TOPLEFT", xpos - diffxpos, ypos - diffypos)
       end
+    end
+
+    -- detect best anchor
+    local bestanchor = "TOPLEFT"
+    local left, top, right, bottom
+    spanframe:ClearAllPoints()
+
+    for id, frame in pairs(pfUI.unlock.selection) do
+      if not left or frame:GetLeft() < left then
+        spanframe:SetPoint("LEFT", frame, "LEFT", 0, 0)
+        left = frame:GetLeft()
+      end
+      if not top or frame:GetTop() > top then
+        top = frame:GetTop()
+        spanframe:SetPoint("TOP", frame, "TOP", 0, 0)
+      end
+      if not right or frame:GetRight() > right then
+        right = frame:GetRight()
+        spanframe:SetPoint("RIGHT", frame, "RIGHT", 0, 0)
+      end
+      if not bottom or frame:GetBottom() < bottom then
+        bottom = frame:GetBottom()
+        spanframe:SetPoint("BOTTOM", frame, "BOTTOM", 0, 0)
+      end
+    end
+    bestanchor = GetBestAnchor(spanframe)
+
+    -- save all frame positions
+    for id, frame in pairs(pfUI.unlock.selection) do
+      CreateBackdrop(frame.drag, nil, nil, .8)
+      local anchor, x, y = ConvertFrameAnchor(frame, bestanchor)
+      frame:ClearAllPoints()
+      frame:SetPoint(anchor, UIParent, anchor, x, y)
       SavePosition(frame)
     end
 
@@ -456,8 +509,8 @@ pfUI:RegisterModule("unlock", 20400, function ()
 
   -- dock frame
   pfUI.unlock.dock = CreateFrame("Button", "pfUnlockDock", pfUI.unlock)
-  pfUI.unlock.dock:SetWidth(140)
-  pfUI.unlock.dock:SetHeight(140)
+  pfUI.unlock.dock:SetWidth(150)
+  pfUI.unlock.dock:SetHeight(160)
   pfUI.unlock.dock:SetFrameStrata("FULLSCREEN_DIALOG")
   pfUI.unlock.dock:Hide()
   CreateBackdrop(pfUI.unlock.dock)
@@ -469,28 +522,63 @@ pfUI:RegisterModule("unlock", 20400, function ()
   pfUI.unlock.dock.title:SetJustifyH("left")
   pfUI.unlock.dock.title:SetPoint("TOP", 0, -5)
 
+  -- anchor
+  pfUI.unlock.dock.anchor = CreateFrame("Frame", "pfUIUnlockAnchorDropDownMenu", pfUI.unlock.dock, "UIDropDownMenuTemplate")
+  pfUI.unlock.dock.anchor:ClearAllPoints()
+  pfUI.unlock.dock.anchor:SetPoint("TOP", 0, -25)
+
+  UIDropDownMenu_SetWidth(120, pfUI.unlock.dock.anchor)
+  UIDropDownMenu_SetButtonWidth(120, pfUI.unlock.dock.anchor)
+  UIDropDownMenu_JustifyText("RIGHT", pfUI.unlock.dock.anchor)
+  UIDropDownMenu_Initialize(pfUI.unlock.dock.anchor, function()
+    local info = {}
+    for id, k in pairs(anchors) do
+      -- get human readable
+      local value, text = strsplit(":", k)
+      local id = id
+      text = text or value
+
+      info.text = text
+      info.checked = false
+      info.func = function()
+        UIDropDownMenu_SetSelectedID(pfUI.unlock.dock.anchor, id, 0)
+        UIDropDownMenu_SetText(text, pfUI.unlock.dock.anchor)
+
+        local frame = pfUI.unlock.dock.parent.frame
+        local anchor, x, y = ConvertFrameAnchor(frame, text)
+        frame:ClearAllPoints()
+        frame:SetPoint(anchor, UIParent, anchor, x, y)
+
+        SavePosition(frame)
+        UpdateDockValues()
+      end
+
+      UIDropDownMenu_AddButton(info)
+    end
+  end)
+
+  SkinDropDown(pfUI.unlock.dock.anchor)
+
   -- x coordinates
   pfUI.unlock.dock.xcoordcap = pfUI.unlock.dock:CreateFontString("Status", "DIALOG", "GameFontNormal")
   pfUI.unlock.dock.xcoordcap:SetFont(pfUI.font_default, C.global.font_size, "OUTLINE")
   pfUI.unlock.dock.xcoordcap:SetJustifyH("LEFT")
-  pfUI.unlock.dock.xcoordcap:SetPoint("TOPLEFT", 5, -33)
+  pfUI.unlock.dock.xcoordcap:SetPoint("TOPLEFT", 5, -63)
   pfUI.unlock.dock.xcoordcap:SetText("X:")
   pfUI.unlock.dock.xcoord = CreateFrame("EditBox", nil, pfUI.unlock.dock)
   pfUI.unlock.dock.xcoord:SetTextInsets(5, 5, 5, 5)
   pfUI.unlock.dock.xcoord:SetJustifyH("CENTER")
   pfUI.unlock.dock.xcoord:SetWidth(45)
   pfUI.unlock.dock.xcoord:SetHeight(18)
-  pfUI.unlock.dock.xcoord:SetPoint("TOPLEFT", pfUI.unlock.dock, "TOPLEFT", 20, -30)
+  pfUI.unlock.dock.xcoord:SetPoint("TOPLEFT", pfUI.unlock.dock, "TOPLEFT", 20, -60)
   pfUI.unlock.dock.xcoord:SetFontObject(GameFontNormal)
   pfUI.unlock.dock.xcoord:SetAutoFocus(false)
 
   pfUI.unlock.dock.xcoord:SetScript("OnEscapePressed", function(self)
     if tonumber(this:GetText()) then
       local frame = pfUI.unlock.dock.parent.frame
-      local xpos = tonumber(pfUI.unlock.dock.xcoord:GetText())
-      local ypos = tonumber(pfUI.unlock.dock.ycoord:GetText())
-
-      frame:SetPoint("TOPLEFT", xpos, ypos)
+      local anchor, _, _, xpos, ypos = frame:GetPoint()
+      frame:SetPoint(anchor, xpos, ypos)
       SavePosition(frame)
     else
       UpdateDockValues()
@@ -513,23 +601,21 @@ pfUI:RegisterModule("unlock", 20400, function ()
   pfUI.unlock.dock.ycoordcap:SetFont(pfUI.font_default, C.global.font_size, "OUTLINE")
   pfUI.unlock.dock.ycoordcap:SetText("Y:")
   pfUI.unlock.dock.ycoordcap:SetJustifyH("LEFT")
-  pfUI.unlock.dock.ycoordcap:SetPoint("TOPLEFT", 75, -33)
+  pfUI.unlock.dock.ycoordcap:SetPoint("TOPLEFT", 75, -63)
   pfUI.unlock.dock.ycoord = CreateFrame("EditBox", nil, pfUI.unlock.dock)
   pfUI.unlock.dock.ycoord:SetTextInsets(5, 5, 5, 5)
   pfUI.unlock.dock.ycoord:SetJustifyH("CENTER")
   pfUI.unlock.dock.ycoord:SetWidth(45)
   pfUI.unlock.dock.ycoord:SetHeight(18)
-  pfUI.unlock.dock.ycoord:SetPoint("TOPLEFT", pfUI.unlock.dock, "TOPLEFT", 90, -30)
+  pfUI.unlock.dock.ycoord:SetPoint("TOPLEFT", pfUI.unlock.dock, "TOPLEFT", 90, -60)
   pfUI.unlock.dock.ycoord:SetFontObject(GameFontNormal)
   pfUI.unlock.dock.ycoord:SetAutoFocus(false)
 
   pfUI.unlock.dock.ycoord:SetScript("OnEscapePressed", function(self)
     if tonumber(this:GetText()) then
       local frame = pfUI.unlock.dock.parent.frame
-      local xpos = tonumber(pfUI.unlock.dock.xcoord:GetText())
-      local ypos = tonumber(pfUI.unlock.dock.ycoord:GetText())
-
-      frame:SetPoint("TOPLEFT", xpos, ypos)
+      local anchor, _, _, xpos, ypos = frame:GetPoint()
+      frame:SetPoint(anchor, xpos, ypos)
       SavePosition(frame)
     else
       UpdateDockValues()
@@ -550,8 +636,8 @@ pfUI:RegisterModule("unlock", 20400, function ()
   -- reset button
   pfUI.unlock.dock.reset = CreateFrame("Button", "pfDragDockReset", pfUI.unlock.dock, "UIPanelButtonTemplate")
   pfUI.unlock.dock.reset:SetHeight(18)
-  pfUI.unlock.dock.reset:SetPoint("TOPLEFT", 5, -55)
-  pfUI.unlock.dock.reset:SetPoint("TOPRIGHT", -5, -55)
+  pfUI.unlock.dock.reset:SetPoint("TOPLEFT", 5, -85)
+  pfUI.unlock.dock.reset:SetPoint("TOPRIGHT", -5, -85)
   pfUI.unlock.dock.reset:SetScript("OnClick", function()
     local frame = pfUI.unlock.dock.parent.frame
 
@@ -575,7 +661,7 @@ pfUI:RegisterModule("unlock", 20400, function ()
   pfUI.unlock.dock.left = CreateFrame("Button", "pfDragDockPosUp", pfUI.unlock.dock, "UIPanelButtonTemplate")
   pfUI.unlock.dock.left:SetHeight(18)
   pfUI.unlock.dock.left:SetWidth(18)
-  pfUI.unlock.dock.left:SetPoint("TOP", -50, -80)
+  pfUI.unlock.dock.left:SetPoint("TOP", -50, -110)
   pfUI.unlock.dock.left.texture = pfUI.unlock.dock.left:CreateTexture("arrow")
   pfUI.unlock.dock.left.texture:SetTexture("Interface\\AddOns\\pfUI\\img\\left")
   pfUI.unlock.dock.left.texture:ClearAllPoints()
@@ -594,7 +680,7 @@ pfUI:RegisterModule("unlock", 20400, function ()
   pfUI.unlock.dock.right = CreateFrame("Button", "pfDragDockPosUp", pfUI.unlock.dock, "UIPanelButtonTemplate")
   pfUI.unlock.dock.right:SetHeight(18)
   pfUI.unlock.dock.right:SetWidth(18)
-  pfUI.unlock.dock.right:SetPoint("TOP", -25, -80)
+  pfUI.unlock.dock.right:SetPoint("TOP", -25, -110)
   pfUI.unlock.dock.right.texture = pfUI.unlock.dock.right:CreateTexture("arrow")
   pfUI.unlock.dock.right.texture:SetTexture("Interface\\AddOns\\pfUI\\img\\right")
   pfUI.unlock.dock.right.texture:ClearAllPoints()
@@ -613,7 +699,7 @@ pfUI:RegisterModule("unlock", 20400, function ()
   pfUI.unlock.dock.up = CreateFrame("Button", "pfDragDockPosUp", pfUI.unlock.dock, "UIPanelButtonTemplate")
   pfUI.unlock.dock.up:SetHeight(18)
   pfUI.unlock.dock.up:SetWidth(18)
-  pfUI.unlock.dock.up:SetPoint("TOP", 25, -80)
+  pfUI.unlock.dock.up:SetPoint("TOP", 25, -110)
   pfUI.unlock.dock.up.texture = pfUI.unlock.dock.up:CreateTexture("arrow")
   pfUI.unlock.dock.up.texture:SetTexture("Interface\\AddOns\\pfUI\\img\\up")
   pfUI.unlock.dock.up.texture:ClearAllPoints()
@@ -632,7 +718,7 @@ pfUI:RegisterModule("unlock", 20400, function ()
   pfUI.unlock.dock.down = CreateFrame("Button", "pfDragDockPosUp", pfUI.unlock.dock, "UIPanelButtonTemplate")
   pfUI.unlock.dock.down:SetHeight(18)
   pfUI.unlock.dock.down:SetWidth(18)
-  pfUI.unlock.dock.down:SetPoint("TOP", 50, -80)
+  pfUI.unlock.dock.down:SetPoint("TOP", 50, -110)
   pfUI.unlock.dock.down.texture = pfUI.unlock.dock.down:CreateTexture("arrow")
   pfUI.unlock.dock.down.texture:SetTexture("Interface\\AddOns\\pfUI\\img\\down")
   pfUI.unlock.dock.down.texture:ClearAllPoints()
