@@ -570,15 +570,13 @@ pfUI:RegisterModule("bags", 20400, function ()
 
   function pfUI.bag:RefreshSpells()
     if not (pfUI.bag and pfUI.bag.right) then return end
-    for tabIndex = 1, GetNumSpellTabs() do
-      local _, _, offset, numSpells = GetSpellTabInfo(tabIndex)
-      for spellIndex = offset + 1, offset + numSpells do
-        local spellTexture = GetSpellTexture(spellIndex, BOOKTYPE_SPELL)
-        -- scan for disenchant and pick lock
-        for texture, widget in pairs(knownInventorySpellTextures) do
-          if strfind(spellTexture, texture) and pfUI.bag.right[widget.frame] then
-            pfUI.bag.right[widget.frame]:SetID(spellIndex)
-          end
+    local _, _, offset, numSpells = GetSpellTabInfo(1)
+    for spellIndex = offset + 1, offset + numSpells do
+      local spellTexture = GetSpellTexture(spellIndex, BOOKTYPE_SPELL)
+      -- scan for disenchant and pick lock
+      for texture, widget in pairs(knownInventorySpellTextures) do
+        if strfind(spellTexture, texture) and pfUI.bag.right[widget.frame] then
+          pfUI.bag.right[widget.frame]:SetID(spellIndex)
         end
       end
     end
