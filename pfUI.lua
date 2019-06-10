@@ -47,6 +47,33 @@ pfUI.version = {}
 pfUI.hooks = {}
 pfUI.env = {}
 
+-- detect current addon path
+local tocs = { "", "-master", "-tbc", "-wotlk" }
+for _, name in pairs(tocs) do
+  local current = string.format("pfUI%s", name)
+  local _, title = GetAddOnInfo(current)
+  if title then
+    pfUI.name = current
+    pfUI.path = "Interface\\AddOns\\" .. current
+    break
+  end
+end
+
+-- handle/convert media dir paths
+pfUI.media = setmetatable({}, { __index = function(tab,key)
+  local value = tostring(key)
+  if strfind(value, "img:") then
+    value = string.gsub(value, "img:", pfUI.path .. "\\img\\")
+  elseif strfind(value, "font:") then
+    value = string.gsub(value, "font:", pfUI.path .. "\\fonts\\")
+  else
+    value = string.gsub(value, "Interface\\AddOns\\pfUI\\", pfUI.path .. "\\")
+  end
+  rawset(tab,key,value)
+  return value
+end})
+
+-- cache client version
 local _, _, _, client = GetBuildInfo()
 pfUI.client = client or 11200
 
@@ -210,7 +237,7 @@ pfUI:SetScript("OnEvent", function()
   pfUI:UpdateFonts()
   pfUI:UpdateColors()
 
-  if arg1 == "pfUI" then
+  if arg1 == pfUI.name then
     -- read pfUI version from .toc file
     local major, minor, fix = pfUI.api.strsplit(".", tostring(GetAddOnMetadata("pfUI", "Version")))
     pfUI.version.major = tonumber(major) or 1
