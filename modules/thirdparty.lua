@@ -741,7 +741,7 @@ pfUI:RegisterModule("thirdparty", function ()
 
     -- set pfUI bar font
     if TheoryCraft_Settings then
-      TheoryCraft_Settings["FontPath"] = C.bars.font
+      TheoryCraft_Settings["FontPath"] = pfUI.media[C.bars.font]
     end
 
     if not pfUI.bars then return end

@@ -122,9 +122,9 @@ function pfUI:UpdateFonts()
     unit = "Fonts\\2002.TTF"
   else
     -- use default entries
-    default = pfUI_config.global.font_default
-    combat = pfUI_config.global.font_combat
-    unit = pfUI_config.global.font_unit
+    default = pfUI.media[pfUI_config.global.font_default]
+    combat = pfUI.media[pfUI_config.global.font_combat]
+    unit = pfUI.media[pfUI_config.global.font_unit]
   end
 
   -- write setting shortcuts

@@ -232,7 +232,7 @@ function pfUI.uf:UpdateConfig()
   if tonumber(f.config.height) < 0 then f.hp:Hide() end
   pfUI.api.CreateBackdrop(f.hp, default_border)
 
-  f.hp.bar:SetStatusBarTexture(f.config.bartexture)
+  f.hp.bar:SetStatusBarTexture(pfUI.media[f.config.bartexture])
   f.hp.bar:SetAllPoints(f.hp)
   if f.config.verticalbar == "1" then
     f.hp.bar:SetOrientation("VERTICAL")
@@ -258,7 +258,7 @@ function pfUI.uf:UpdateConfig()
   if tonumber(f.config.pheight) < 0 then f.power:Hide() end
 
   pfUI.api.CreateBackdrop(f.power, default_border)
-  f.power.bar:SetStatusBarTexture(f.config.bartexture)
+  f.power.bar:SetStatusBarTexture(pfUI.media[f.config.bartexture])
   f.power.bar:SetAllPoints(f.power)
 
   f.portrait:SetFrameStrata("LOW")
@@ -321,7 +321,7 @@ function pfUI.uf:UpdateConfig()
   end
 
   if f.config.hitindicator == "1" then
-    f.feedbackText:SetFont(f.config.hitindicatorfont, f.config.hitindicatorsize, "OUTLINE")
+    f.feedbackText:SetFont(pfUI.media[f.config.hitindicatorfont], f.config.hitindicatorsize, "OUTLINE")
     f.feedbackFontHeight = f.config.hitindicatorsize
     f.feedbackStartTime = GetTime()
     if f.config.portrait == "bar" or f.config.portrait == "off" then

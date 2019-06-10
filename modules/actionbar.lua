@@ -512,7 +512,7 @@ pfUI:RegisterModule("actionbar", 20400, function ()
   local function CreateActionButton(parent, bar, button)
     -- load config
     local size = C.bars["bar"..bar].icon_size
-    local font = C.bars.font
+    local font = pfUI.media[C.bars.font]
     local font_offset = tonumber(C.bars.font_offset)
 
     local macro_size = tonumber(C.bars.macro_size)

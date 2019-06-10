@@ -7,7 +7,7 @@ pfUI:RegisterModule("castbar", 20400, function ()
     default_border = C.appearance.border.unitframes
   end
 
-  local cbtexture = C.appearance.castbar.texture
+  local cbtexture = pfUI.media[C.appearance.castbar.texture]
 
   local function CreateCastbar(name, parent, unitstr, unitname)
     local cb = CreateFrame("Frame", name, parent or UIParent)
