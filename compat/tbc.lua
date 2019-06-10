@@ -1,13 +1,6 @@
 -- load pfUI environment
 setfenv(1, pfUI:GetEnvironment())
-
-if pfUI.client < 20000 or pfUI.client > 20400 then return end
-DEFAULT_CHAT_FRAME:AddMessage("Compatibility Mode for |cff33ffccTBC |cffffff002.4.3|r has been loaded. Good Luck!")
-
--- blacklist unrequired modules
-pfUI.module.autoshift = true
-pfUI.module.itemclick = true
-pfUI.module.hdgraphic = true
+if pfUI.expansion ~= "tbc" then return end
 
 -- [[ Constants ]]--
 CASTBAR_EVENT_CAST_DELAY = "UNIT_SPELLCAST_DELAYED"

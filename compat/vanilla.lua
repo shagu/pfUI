@@ -1,7 +1,6 @@
 -- load pfUI environment
 setfenv(1, pfUI:GetEnvironment())
-
-if pfUI.client > 11200 then return end
+if pfUI.expansion ~= "vanilla" then return end
 
 -- [[ Constants ]]--
 CASTBAR_EVENT_CAST_DELAY = "SPELLCAST_DELAYED"
