@@ -1,4 +1,4 @@
-pfUI:RegisterModule("mirrortimers", function ()
+pfUI:RegisterModule("mirrortimers", "vanilla", function ()
   for i = 1, MIRRORTIMER_NUMTIMERS do
     local mirrorTimer = _G["MirrorTimer"..i]
     local statusBar = _G["MirrorTimer"..i.."StatusBar"]

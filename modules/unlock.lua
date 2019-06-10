@@ -1,4 +1,4 @@
-pfUI:RegisterModule("unlock", 20400, function ()
+pfUI:RegisterModule("unlock", "vanilla:tbc", function ()
   -- grouped frames
   local clusters = {
     -- Name            Shift  Ctrl

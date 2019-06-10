@@ -1,4 +1,4 @@
-pfUI:RegisterModule("xpbar", 20400, function ()
+pfUI:RegisterModule("xpbar", "vanilla:tbc", function ()
 
   local xp_timeout = tonumber(C.panel.xp.xp_timeout)
   local xp_width = C.panel.xp.xp_width

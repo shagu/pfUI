@@ -1,4 +1,4 @@
-pfUI:RegisterSkin("Stack Split", function ()
+pfUI:RegisterSkin("Stack Split", "vanilla", function ()
   StripTextures(StackSplitFrame)
   CreateBackdrop(StackSplitFrame, nil, nil, .75)
   CreateBackdropShadow(StackSplitFrame)

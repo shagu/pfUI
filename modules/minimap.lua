@@ -1,4 +1,4 @@
-pfUI:RegisterModule("minimap", 20400, function ()
+pfUI:RegisterModule("minimap", "vanilla:tbc", function ()
   local border = tonumber(pfUI_config.appearance.border.default)
   MinimapToggleButton:Hide()
   MinimapBorderTop:Hide()

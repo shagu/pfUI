@@ -1,4 +1,4 @@
-pfUI:RegisterModule("screenshot", function ()
+pfUI:RegisterModule("screenshot", "vanilla", function ()
   if C.screenshot.interval == "0"
     and C.screenshot.levelup == "0"
     and C.screenshot.pvprank == "0"

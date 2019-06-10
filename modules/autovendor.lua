@@ -1,4 +1,4 @@
-pfUI:RegisterModule("autovendor", 20400, function ()
+pfUI:RegisterModule("autovendor", "vanilla:tbc", function ()
   local border = tonumber(pfUI_config.appearance.border.default)
   local bpad = border > 1 and border - 1 or 1
 

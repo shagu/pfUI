@@ -1,4 +1,4 @@
-pfUI:RegisterSkin("Tooltips", 20400, function ()
+pfUI:RegisterSkin("Tooltips", "vanilla:tbc", function ()
   local border = tonumber(C.appearance.border.default)
   local alpha = tonumber(C.tooltip.alpha)
 

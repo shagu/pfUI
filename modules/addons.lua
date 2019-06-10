@@ -1,4 +1,4 @@
-pfUI:RegisterModule("addons", 20400, function ()
+pfUI:RegisterModule("addons", "vanilla:tbc", function ()
   -- add main menu button
   local pfUIAddonButton = CreateFrame("Button", "GameMenuButtonPFUIAddOns", GameMenuFrame, "GameMenuButtonTemplate")
   pfUIAddonButton:SetPoint("TOP", 0, -32)

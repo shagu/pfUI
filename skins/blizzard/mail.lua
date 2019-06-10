@@ -1,4 +1,4 @@
-pfUI:RegisterSkin("Mailbox", function ()
+pfUI:RegisterSkin("Mailbox", "vanilla", function ()
   local border = tonumber(pfUI_config.appearance.border.default)
   local bpad = border > 1 and border - 1 or 1
   local skin = CreateFrame("Frame")

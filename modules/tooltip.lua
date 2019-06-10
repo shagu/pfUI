@@ -1,4 +1,4 @@
-pfUI:RegisterModule("tooltip", 20400, function ()
+pfUI:RegisterModule("tooltip", "vanilla:tbc", function ()
 
   pfUI.tooltip = CreateFrame('Frame', "pfTooltip", GameTooltip)
   pfUI.tooltip.anchorframe = CreateFrame('Frame', "pfTooltipAnchor", UIParent)

@@ -1,4 +1,4 @@
-pfUI:RegisterModule("thirdparty", function ()
+pfUI:RegisterModule("thirdparty", "vanilla", function ()
   pfUI.thirdparty = {}
   pfUI.thirdparty.meters = {}
   pfUI.thirdparty.meters.damage = false

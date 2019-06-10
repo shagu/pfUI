@@ -1,4 +1,4 @@
-pfUI:RegisterSkin("Game Menu", 20400, function ()
+pfUI:RegisterSkin("Game Menu", "vanilla:tbc", function ()
   StripTextures(GameMenuFrame)
   CreateBackdrop(GameMenuFrame, nil, true, .75)
   CreateBackdropShadow(GameMenuFrame)

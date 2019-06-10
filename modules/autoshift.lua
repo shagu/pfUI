@@ -1,4 +1,4 @@
-pfUI:RegisterModule("autoshift", 11200, function ()
+pfUI:RegisterModule("autoshift", "vanilla", function ()
   pfUI.autoshift = CreateFrame("Frame")
   pfUI.autoshift:RegisterEvent("UI_ERROR_MESSAGE")
 

@@ -1,4 +1,4 @@
-pfUI:RegisterModule("sellvalue", function ()
+pfUI:RegisterModule("sellvalue", "vanilla", function ()
   pfUI.sellvalue = CreateFrame( "Frame" , "pfGameTooltip", GameTooltip )
 
   pfUI.sellvalue:SetScript("OnHide", function()

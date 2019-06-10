@@ -1,4 +1,4 @@
-pfUI:RegisterModule("updatenotify", 20400, function ()
+pfUI:RegisterModule("updatenotify", "vanilla:tbc", function ()
   local alreadyshown = false
   local localversion  = tonumber(pfUI.version.major*10000 + pfUI.version.minor*100 + pfUI.version.fix)
   local remoteversion = tonumber(pfUI_init.updateavailable) or 0

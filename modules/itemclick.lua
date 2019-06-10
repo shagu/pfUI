@@ -1,4 +1,4 @@
-pfUI:RegisterModule("itemclick", function ()
+pfUI:RegisterModule("itemclick", "vanilla", function ()
   -- small module that tries to decide if an item should be used or dropped into
   -- the auctionhouse search or trade window
 

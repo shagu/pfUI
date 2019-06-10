@@ -1,4 +1,4 @@
-pfUI:RegisterModule("eqcompare", function ()
+pfUI:RegisterModule("eqcompare", "vanilla", function ()
   local loc = pfUI.cache["locale"]
   for key, value in pairs(L["itemtypes"]) do setglobal(key, value) end
   INVTYPE_WEAPON_OTHER = INVTYPE_WEAPON.."_other";

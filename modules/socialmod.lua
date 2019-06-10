@@ -1,4 +1,4 @@
-pfUI:RegisterModule("socialmod", function ()
+pfUI:RegisterModule("socialmod", "vanilla", function ()
   local playerdb = _G.pfUI_playerDB
   pfUI.socialmod = CreateFrame("Frame", "pfSocialMod", UIParent)
   pfUI.socialmod:RegisterEvent("CHAT_MSG_SYSTEM")

@@ -1,4 +1,4 @@
-pfUI:RegisterModule("actionbar", 20400, function ()
+pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
   local _, class = UnitClass("player")
   local color = RAID_CLASS_COLORS[class]
   local cr, cg, cb = color.r , color.g, color.b

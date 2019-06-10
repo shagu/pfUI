@@ -1,4 +1,4 @@
-pfUI:RegisterModule("unusable", function ()
+pfUI:RegisterModule("unusable", "vanilla", function ()
   if not pfUI.bag then return end
 
   if C.appearance.bags.unusable ~= "1" then return end

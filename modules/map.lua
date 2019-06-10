@@ -1,4 +1,4 @@
-pfUI:RegisterModule("map", 20400, function ()
+pfUI:RegisterModule("map", "vanilla:tbc", function ()
   table.insert(UISpecialFrames, "WorldMapFrame")
 
   function _G.ToggleWorldMap()

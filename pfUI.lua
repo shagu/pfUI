@@ -75,7 +75,19 @@ end})
 
 -- cache client version
 local _, _, _, client = GetBuildInfo()
-pfUI.client = client or 11200
+client = client or 11200
+
+-- detect client expansion
+if client >= 20000 and client <= 20400 then
+  pfUI.expansion = "tbc"
+  pfUI.client = client
+elseif client >= 30000 and client <= 30300 then
+  pfUI.expansion = "wotlk"
+  pfUI.client = client
+else
+  pfUI.expansion = "vanilla"
+  pfUI.client = client
+end
 
 -- setup pfUI namespace
 setmetatable(pfUI.env, {__index = getfenv(0)})
@@ -196,10 +208,12 @@ function pfUI:GetEnvironment()
 end
 
 function pfUI:RegisterModule(name, a2, a3)
-  local hasv = type(a2) == "number"
-  local func, version = hasv and a3 or a2, hasv and a2 or 11200
-  if pfUI.client > version then return end
   if pfUI.module[name] then return end
+  local hasv = type(a2) == "string"
+  local func, version = hasv and a3 or a2, hasv and a2 or "vanilla:tbc:wotlk"
+
+  -- check for client compatibility
+  if not strfind(version, pfUI.expansion) then return end
 
   pfUI.module[name] = func
   table.insert(pfUI.modules, name)
@@ -209,10 +223,12 @@ function pfUI:RegisterModule(name, a2, a3)
 end
 
 function pfUI:RegisterSkin(name, a2, a3)
-  local hasv = type(a2) == "number"
-  local func, version = hasv and a3 or a2, hasv and a2 or 11200
-  if pfUI.client > version then return end
   if pfUI.skin[name] then return end
+  local hasv = type(a2) == "string"
+  local func, version = hasv and a3 or a2, hasv and a2 or "vanilla:tbc:wotlk"
+
+  -- check for client compatibility
+  if not strfind(version, pfUI.expansion) then return end
 
   pfUI.skin[name] = func
   table.insert(pfUI.skins, name)

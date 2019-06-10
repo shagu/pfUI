@@ -1,4 +1,4 @@
-pfUI:RegisterModule("mouseover", function ()
+pfUI:RegisterModule("mouseover", "vanilla", function ()
   pfUI.uf.mouseover = CreateFrame("Frame", "pfMouseOver", UIParent)
 
   _G.SLASH_PFCAST1, _G.SLASH_PFCAST2 = "/pfcast", "/pfmouse"

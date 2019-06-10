@@ -1,4 +1,4 @@
-pfUI:RegisterModule("prediction", function ()
+pfUI:RegisterModule("prediction", "vanilla", function ()
   local heals = {}
   local ress = {}
   local events = {}

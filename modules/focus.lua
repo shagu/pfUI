@@ -77,7 +77,7 @@ function SlashCmdList.PFSWAPFOCUS(msg)
   end
 end
 
-pfUI:RegisterModule("focus", function ()
+pfUI:RegisterModule("focus", "vanilla", function ()
   -- do not go further on disabled UFs
   if C.unitframes.disable == "1" then return end
 

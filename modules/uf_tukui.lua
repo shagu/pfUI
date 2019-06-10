@@ -1,4 +1,4 @@
-pfUI:RegisterModule("uf_tukui", function ()
+pfUI:RegisterModule("uf_tukui", "vanilla:tbc", function ()
   if C.unitframes.disable == "1" or C.unitframes.layout ~= "tukui" then return end
 
   -- update player layout

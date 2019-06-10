@@ -1,4 +1,4 @@
-pfUI:RegisterModule("hunterbar", function ()
+pfUI:RegisterModule("hunterbar", "vanilla", function ()
   local _,class = UnitClass("player")
   if class ~= "HUNTER" or C.bars.hunterbar == "0" then return end
 

@@ -1,4 +1,4 @@
-pfUI:RegisterModule("tracking", function ()
+pfUI:RegisterModule("tracking", "vanilla", function ()
 
   MINIMAP_TRACKING_FRAME:UnregisterAllEvents()
   MINIMAP_TRACKING_FRAME:Hide()

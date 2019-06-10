@@ -1,4 +1,4 @@
-pfUI:RegisterModule("gm", function ()
+pfUI:RegisterModule("gm", "vanilla", function ()
   -- do not load by default
   if C.gm.disable == "1" then return end
 

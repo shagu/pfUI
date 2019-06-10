@@ -1,4 +1,4 @@
-pfUI:RegisterSkin("Flightmaster", function ()
+pfUI:RegisterSkin("Flightmaster", "vanilla", function ()
   StripTextures(TaxiFrame)
   CreateBackdrop(TaxiFrame, nil, nil, .75)
   CreateBackdropShadow(TaxiFrame)
