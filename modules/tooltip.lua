@@ -28,12 +28,13 @@ pfUI:RegisterModule("tooltip", "vanilla:tbc", function ()
       if C.tooltip.cursoralign ~= "native" then
         -- create mouse follow frame
         if not tooltip.cursor then
-          tooltip.cursor = CreateFrame("Frame")
+          tooltip.cursor = CreateFrame("Frame", nil, UIParent)
           tooltip.cursor:SetWidth(tonumber(C.tooltip.cursoroffset) * 2)
           tooltip.cursor:SetHeight(tonumber(C.tooltip.cursoroffset) * 2)
           tooltip.cursor:SetScript("OnUpdate", function()
+            local scale = UIParent:GetScale()
             local x, y = GetCursorPosition()
-            this:SetPoint("CENTER", UIParent, "BOTTOMLEFT", x, y)
+            this:SetPoint("CENTER", UIParent, "BOTTOMLEFT", x/scale, y/scale)
             if C.tooltip.cursoralign == "top" then
               tooltip.cursor:SetWidth(tooltip:GetWidth())
             end
