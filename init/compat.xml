@@ -1,0 +1,4 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+  <Include file="..\compat\vanilla.lua"/>
+  <Include file="..\compat\tbc.lua"/>
+</Ui>
