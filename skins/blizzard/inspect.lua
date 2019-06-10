@@ -165,7 +165,7 @@ pfUI:RegisterSkin("Inspect", function ()
       StripTextures(InspectHonorFrame)
 
       CreateBackdrop(InspectHonorFrameProgressBar)
-      InspectHonorFrameProgressBar:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
+      InspectHonorFrameProgressBar:SetStatusBarTexture(pfUI.media["img:bar"])
       InspectHonorFrameProgressBar:SetHeight(24)
     end
   end)

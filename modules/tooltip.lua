@@ -152,7 +152,7 @@ pfUI:RegisterModule("tooltip", 20400, function ()
   GameTooltipStatusBar:ClearAllPoints()
   GameTooltipStatusBar:SetPoint("BOTTOMLEFT", GameTooltip, "TOPLEFT", 0, 0)
   GameTooltipStatusBar:SetPoint("BOTTOMRIGHT", GameTooltip, "TOPRIGHT", 0, 0)
-  GameTooltipStatusBar:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
+  GameTooltipStatusBar:SetStatusBarTexture(pfUI.media["img:bar"])
   CreateBackdrop(GameTooltipStatusBar)
   CreateBackdropShadow(GameTooltipStatusBar)
 

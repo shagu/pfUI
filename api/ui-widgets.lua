@@ -121,7 +121,7 @@ function pfUI.api.CreateScrollFrame(name, parent)
   f.slider:SetOrientation('VERTICAL')
   f.slider:SetPoint("TOPLEFT", f, "TOPRIGHT", -7, 0)
   f.slider:SetPoint("BOTTOMRIGHT", 0, 0)
-  f.slider:SetThumbTexture("Interface\\AddOns\\pfUI\\img\\col")
+  f.slider:SetThumbTexture(pfUI.media["img:col"])
   f.slider.thumb = f.slider:GetThumbTexture()
   f.slider.thumb:SetHeight(50)
   f.slider.thumb:SetTexture(.3,1,.8,.5)
@@ -383,7 +383,7 @@ function pfUI.api.SkinCloseButton(button, parentFrame, offsetX, offsetY)
   end
 
   button.texture = button:CreateTexture("pfQuestionDialogCloseTex")
-  button.texture:SetTexture("Interface\\AddOns\\pfUI\\img\\close")
+  button.texture:SetTexture(pfUI.media["img:close"])
   button.texture:ClearAllPoints()
   button.texture:SetAllPoints(button)
   button.texture:SetVertexColor(1,.25,.25,1)
@@ -410,7 +410,7 @@ function pfUI.api.SkinArrowButton(button, dir, size)
     SetAllPointsOffset(button.icon, button, 3)
   end
 
-  button.icon:SetTexture("Interface\\AddOns\\pfUI\\img\\" .. dir)
+  button.icon:SetTexture(pfUI.media["img:"..dir])
 
   if not button.pfScripted then
     local enable = button.Enable
@@ -535,7 +535,7 @@ function pfUI.api.SkinDropDown(frame, cr, cg, cb)
 
   if not button.icon then
     button.icon = button:CreateTexture(nil, "OVERLAY")
-    button.icon:SetTexture("Interface\\AddOns\\pfUI\\img\\down")
+    button.icon:SetTexture(pfUI.media["img:down"])
     button.icon:SetVertexColor(1,.9,.1)
     button.icon:SetAlpha(.8)
     SetAllPointsOffset(button.icon, button.backdrop, 5)
@@ -738,7 +738,7 @@ function pfUI.api.CreateQuestionDialog(text, yes, no, editbox, onclose)
   question.close:SetHeight(10)
   question.close:SetWidth(10)
   question.close.texture = question.close:CreateTexture("pfQuestionDialogCloseTex")
-  question.close.texture:SetTexture("Interface\\AddOns\\pfUI\\img\\close")
+  question.close.texture:SetTexture(pfUI.media["img:close"])
   question.close.texture:ClearAllPoints()
   question.close.texture:SetAllPoints(question.close)
   question.close.texture:SetVertexColor(1,.25,.25,1)
@@ -811,7 +811,7 @@ function pfUI.api.CreateInfoBox(text, time, parent, height)
     infobox.text:SetFontObject(GameFontWhite)
 
     infobox.timeout = CreateFrame("StatusBar", nil, infobox)
-    infobox.timeout:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
+    infobox.timeout:SetStatusBarTexture(pfUI.media["img:bar"])
     infobox.timeout:SetStatusBarColor(.3,1,.8,1)
 
     infobox:ClearAllPoints()

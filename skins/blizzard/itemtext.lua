@@ -81,7 +81,7 @@ pfUI:RegisterSkin("Books", function ()
 
   CreateBackdrop(ItemTextStatusBar, nil, true)
   ItemTextStatusBar:DisableDrawLayer("OVERLAY")
-  ItemTextStatusBar:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
+  ItemTextStatusBar:SetStatusBarTexture(pfUI.media["img:bar"])
   ItemTextStatusBar:SetHeight(12)
   ItemTextStatusBar:ClearAllPoints()
   ItemTextStatusBar:SetPoint("BOTTOM", ItemTextScrollFrame, "BOTTOM", 0, 50)

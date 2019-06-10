@@ -160,7 +160,7 @@ pfUI:RegisterModule("nameplates", 20400, function ()
 
     if not this.healthbar.glowtarget then
       this.healthbar.glowtarget = this.nameplate:CreateTexture(nil, "BACKGROUND")
-      this.healthbar.glowtarget:SetTexture("Interface\\AddOns\\pfUI\\img\\dot")
+      this.healthbar.glowtarget:SetTexture(pfUI.media["img:dot"])
       this.healthbar.glowtarget:ClearAllPoints()
       this.healthbar.glowtarget:SetPoint("CENTER", this.healthbar, "CENTER", 0, 0)
       this.healthbar.glowtarget:SetWidth(this.healthbar:GetWidth() + 50)
@@ -187,7 +187,7 @@ pfUI:RegisterModule("nameplates", 20400, function ()
     this.raidicon:SetHeight(C.nameplates.raidiconsize)
     this.raidicon:SetPoint("CENTER", this.healthbar, "CENTER", 0, -5)
     this.raidicon:SetDrawLayer("OVERLAY")
-    this.raidicon:SetTexture("Interface\\AddOns\\pfUI\\img\\raidicons")
+    this.raidicon:SetTexture(pfUI.media["img:raidicons"])
 
     -- add debuff frames
     if C.nameplates["showdebuffs"] == "1" then
@@ -262,7 +262,7 @@ pfUI:RegisterModule("nameplates", 20400, function ()
         this.healthbar.castbar:SetBackdrop({  bgFile = [[Interface\Tooltips\UI-Tooltip-Background]],
                                                insets = {left = -1, right = -1, top = -1, bottom = -1} })
         this.healthbar.castbar:SetBackdropColor(0,0,0,1)
-        this.healthbar.castbar:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
+        this.healthbar.castbar:SetStatusBarTexture(pfUI.media["img:bar"])
         this.healthbar.castbar:SetStatusBarColor(.9,.8,0,1)
 
         plate.healthbar.castbar:SetScript("OnShow", function()

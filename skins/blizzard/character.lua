@@ -151,7 +151,7 @@ pfUI:RegisterSkin("Character", function ()
     StripTextures(PetAttributesFrame)
     StripTextures(PetPaperDollFrameExpBar)
     CreateBackdrop(PetPaperDollFrameExpBar, nil, true)
-    PetPaperDollFrameExpBar:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
+    PetPaperDollFrameExpBar:SetStatusBarTexture(pfUI.media["img:bar"])
     PetPaperDollFrameExpBar:ClearAllPoints()
     PetPaperDollFrameExpBar:SetPoint("BOTTOM", PetModelFrame, "BOTTOM", 0, -120)
 
@@ -187,7 +187,7 @@ pfUI:RegisterSkin("Character", function ()
       local bar = _G["ReputationBar" .. i]
       StripTextures(bar)
       CreateBackdrop(bar)
-      bar:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
+      bar:SetStatusBarTexture(pfUI.media["img:bar"])
 
       local war = _G["ReputationBar"..i.."AtWarCheck"]
       StripTextures(war)
@@ -245,7 +245,7 @@ pfUI:RegisterSkin("Character", function ()
         frame:ClearAllPoints()
         frame:SetPoint("TOPLEFT", lastframe, "BOTTOMLEFT", 0, -6)
       end
-      frame:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
+      frame:SetStatusBarTexture(pfUI.media["img:bar"])
       frame:SetHeight(12)
     end
 
@@ -261,7 +261,7 @@ pfUI:RegisterSkin("Character", function ()
 
     StripTextures(SkillDetailStatusBar)
     CreateBackdrop(SkillDetailStatusBar)
-    SkillDetailStatusBar:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
+    SkillDetailStatusBar:SetStatusBarTexture(pfUI.media["img:bar"])
     SkillDetailStatusBar:SetParent(SkillDetailScrollFrame)
 
     StripTextures(SkillDetailStatusBarUnlearnButton)
@@ -277,7 +277,7 @@ pfUI:RegisterSkin("Character", function ()
   do -- Honor Tab
     StripTextures(HonorFrame)
 
-    HonorFrameProgressBar:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
+    HonorFrameProgressBar:SetStatusBarTexture(pfUI.media["img:bar"])
     CreateBackdrop(HonorFrameProgressBar)
     HonorFrameProgressBar:SetHeight(24)
   end

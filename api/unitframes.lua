@@ -25,12 +25,12 @@ for i=1,40 do pfValidUnits["raid" .. i .. "target"] = true end
 for i=1,40 do pfValidUnits["raidpet" .. i .. "target"] = true end
 
 local glow = {
-  edgeFile = "Interface\\AddOns\\pfUI\\img\\glow", edgeSize = 8,
+  edgeFile = pfUI.media["img:glow"], edgeSize = 8,
   insets = {left = 0, right = 0, top = 0, bottom = 0},
 }
 
 local glow2 = {
-  edgeFile = "Interface\\AddOns\\pfUI\\img\\glow2", edgeSize = 8,
+  edgeFile = pfUI.media["img:glow2"], edgeSize = 8,
   insets = {left = 0, right = 0, top = 0, bottom = 0},
 }
 
@@ -390,7 +390,7 @@ function pfUI.uf:UpdateConfig()
   f.incHeal:SetFrameLevel(2)
   f.incHeal:SetHeight(f.config.height)
   f.incHeal:SetWidth(f.config.width)
-  f.incHeal:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
+  f.incHeal:SetStatusBarTexture(pfUI.media["img:bar"])
   f.incHeal:SetStatusBarColor(0, 1, 0, 0.5)
   f.incHeal:Hide()
 
@@ -412,7 +412,7 @@ function pfUI.uf:UpdateConfig()
   f.ressIcon:SetWidth(32)
   f.ressIcon:SetHeight(32)
   f.ressIcon:SetPoint("CENTER", f, "CENTER", 0, 4)
-  f.ressIcon.texture:SetTexture("Interface\\AddOns\\pfUI\\img\\ress")
+  f.ressIcon.texture:SetTexture(pfUI.media["img:ress"])
   f.ressIcon.texture:SetAllPoints(f.ressIcon)
   f.ressIcon:Hide()
 
@@ -433,7 +433,7 @@ function pfUI.uf:UpdateConfig()
   f.pvpIcon:SetWidth(16)
   f.pvpIcon:SetHeight(16)
   f.pvpIcon:SetPoint("CENTER", 0, 0)
-  f.pvpIcon.texture:SetTexture("Interface\\AddOns\\pfUI\\img\\pvp")
+  f.pvpIcon.texture:SetTexture(pfUI.media["img:pvp"])
   f.pvpIcon.texture:SetAllPoints(f.pvpIcon)
   f.pvpIcon.texture:SetVertexColor(1,1,1,.5)
   f.pvpIcon:Hide()
@@ -441,7 +441,7 @@ function pfUI.uf:UpdateConfig()
   f.raidIcon:SetWidth(f.config.raidiconsize)
   f.raidIcon:SetHeight(f.config.raidiconsize)
   f.raidIcon:SetPoint("TOP", f, "TOP", 0, 6)
-  f.raidIcon.texture:SetTexture("Interface\\AddOns\\pfUI\\img\\raidicons")
+  f.raidIcon.texture:SetTexture(pfUI.media["img:raidicons"])
   f.raidIcon.texture:SetAllPoints(f.raidIcon)
   f.raidIcon:Hide()
 
@@ -456,7 +456,7 @@ function pfUI.uf:UpdateConfig()
   f.happinessIcon:SetWidth(12)
   f.happinessIcon:SetHeight(12)
   f.happinessIcon:SetPoint("CENTER", f, "TOPLEFT", default_border, -default_border)
-  f.happinessIcon.texture:SetTexture("Interface\\AddOns\\pfUI\\img\\neutral")
+  f.happinessIcon.texture:SetTexture(pfUI.media["img:neutral"])
   f.happinessIcon.texture:SetAllPoints(f.happinessIcon)
   f.happinessIcon.texture:SetVertexColor(1, 1, 0, 1)
   f.happinessIcon:Hide()
@@ -1049,19 +1049,19 @@ function pfUI.uf:RefreshIndicators(unit)
       if UnitIsVisible("pet") then
         local happiness = GetPetHappiness()
         if happiness == 1 then
-          unit.happinessIcon.texture:SetTexture("Interface\\AddOns\\pfUI\\img\\sad")
+          unit.happinessIcon.texture:SetTexture(pfUI.media["img:sad"])
           unit.happinessIcon.texture:SetVertexColor(1, 0, 0, 1)
         elseif happiness == 2 then
-          unit.happinessIcon.texture:SetTexture("Interface\\AddOns\\pfUI\\img\\neutral")
+          unit.happinessIcon.texture:SetTexture(pfUI.media["img:neutral"])
           unit.happinessIcon.texture:SetVertexColor(1, 1, 0, 1)
         else
-          unit.happinessIcon.texture:SetTexture("Interface\\AddOns\\pfUI\\img\\happy")
+          unit.happinessIcon.texture:SetTexture(pfUI.media["img:happy"])
           unit.happinessIcon.texture:SetVertexColor(0, 1, 0, 1)
         end
         unit.happinessIcon:Show()
       else
         unit.happinessIcon:Hide()
-      end      
+      end
     end
   end
 
@@ -1335,7 +1335,7 @@ function pfUI.uf:RefreshUnit(unit, component)
 
         if indicator.size ~= indicator[debuff].size or disptype ~= indicator[debuff].disp then
           if disptype == "4" then
-            indicator[debuff].tex:SetTexture("Interface\\AddOns\\pfUI\\img\\debuffs\\" .. debuff)
+            indicator[debuff].tex:SetTexture(pfUI.media["img:"..debuff])
             indicator[debuff].tex:SetVertexColor(unpack(pfDebuffColors[debuff]))
             indicator[debuff].tex:Show()
             indicator[debuff]:ClearAllPoints()

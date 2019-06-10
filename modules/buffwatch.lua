@@ -154,7 +154,7 @@ pfUI:RegisterModule("buffwatch", function ()
     frame.bar = CreateFrame("StatusBar", "pfBuffBar" .. bar, frame)
     frame.bar:SetPoint("TOPLEFT", frame, "TOPLEFT", height+1, 0)
     frame.bar:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", 0, 0)
-    frame.bar:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
+    frame.bar:SetStatusBarTexture(pfUI.media["img:bar"])
     frame.bar:SetStatusBarColor(color.r, color.g, color.b, color.a)
 
     frame.text = frame.bar:CreateFontString("Status", "DIALOG", "GameFontNormal")

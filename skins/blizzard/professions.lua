@@ -114,7 +114,7 @@ pfUI:RegisterSkin("Profession", function ()
 
         StripTextures(_G[name.."RankFrameBorder"])
         CreateBackdrop(rankbar, nil, true)
-        rankbar:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
+        rankbar:SetStatusBarTexture(pfUI.media["img:bar"])
         rankbar:ClearAllPoints()
         rankbar:SetPoint("TOPLEFT", backdrop.backdrop, "TOPLEFT", 0, 25)
         rankbar:SetPoint("BOTTOMRIGHT", backdrop.backdrop, "TOPRIGHT", 0, 6)

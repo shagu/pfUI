@@ -3,7 +3,7 @@ pfUI:RegisterModule("actionbar", 20400, function ()
   local color = RAID_CLASS_COLORS[class]
   local cr, cg, cb = color.r , color.g, color.b
 
-  local backdrop_highlight = { edgeFile = "Interface\\AddOns\\pfUI\\img\\glow", edgeSize = 8 }
+  local backdrop_highlight = { edgeFile = pfUI.media["img:glow"], edgeSize = 8 }
   local showgrid = 0
   local showgrid_pet = 0
 

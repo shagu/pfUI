@@ -13,7 +13,7 @@ pfUI:RegisterModule("mirrortimers", function ()
     mirrorTimer.scale = 1
     mirrorTimer.value = 0
 
-    statusBar:SetStatusBarTexture("Interface\\AddOns\\pfUI\\img\\bar")
+    statusBar:SetStatusBarTexture(pfUI.media["img:bar"])
     statusBar:SetWidth(222)
     statusBar:SetHeight(18)
     statusBar:SetPoint("TOP", 0, 0)

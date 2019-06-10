@@ -8,7 +8,7 @@ pfUI:RegisterModule("infight", 20400, function ()
   pfUI.infight = CreateFrame("Frame", "pfUICombat", UIParent)
 
   pfUI.infight.backdrop = {
-    edgeFile = "Interface\\AddOns\\pfUI\\img\\glow", edgeSize = 8,
+    edgeFile = pfUI.media["img:glow"], edgeSize = 8,
     insets = {left = 0, right = 0, top = 0, bottom = 0},
   }
 

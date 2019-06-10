@@ -286,7 +286,7 @@ pfUI.backdrop_hover = {
 }
 
 pfUI.backdrop_shadow = {
-  edgeFile = "Interface\\AddOns\\pfUI\\img\\glow2", edgeSize = 8,
+  edgeFile = pfUI.media["img:glow2"], edgeSize = 8,
   insets = {left = 0, right = 0, top = 0, bottom = 0},
 }
 

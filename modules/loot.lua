@@ -604,14 +604,14 @@ pfUI:RegisterModule("loot", 20400, function ()
     frame.name:SetFont(pfUI.font_default, C.global.font_size, "OUTLINE")
 
     frame.rarity = frame:CreateTexture(nil, "ARTWORK")
-    frame.rarity:SetTexture"Interface\\AddOns\\pfUI\\img\\bar"
+    frame.rarity:SetTexture(pfUI.media["img:bar"])
     frame.rarity:SetPoint("LEFT", frame.ficon, "RIGHT", 0, 0)
     frame.rarity:SetPoint("RIGHT", frame)
     frame.rarity:SetAlpha(.15)
     frame.rarity:SetAllPoints(frame)
 
     frame.hover = frame:CreateTexture(nil, "ARTWORK")
-    frame.hover:SetTexture"Interface\\AddOns\\pfUI\\img\\bar"
+    frame.hover:SetTexture(pfUI.media["img:bar"])
     frame.hover:SetPoint("LEFT", frame.ficon, "RIGHT", 0, 0)
     frame.hover:SetPoint("RIGHT", frame)
     frame.hover:SetAlpha(.15)

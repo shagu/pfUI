@@ -7,7 +7,7 @@ pfUI:RegisterModule("whisperproxy", function ()
   proxy:SetHeight(12)
   proxy.tex = proxy:CreateTexture(nil, "OVERLAY")
   proxy.tex:SetAllPoints()
-  proxy.tex:SetTexture("Interface\\AddOns\\pfUI\\img\\proxy")
+  proxy.tex:SetTexture(pfUI.media["img:proxy"])
   proxy.tex:SetVertexColor(.5,.5,.5,1)
   proxy:SetAlpha(0.4)
 
