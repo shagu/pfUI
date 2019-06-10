@@ -45,9 +45,9 @@ pfUI:RegisterModule("tooltip", "vanilla:tbc", function ()
         if C.tooltip.cursoralign == "top" then
           tooltip:SetPoint("BOTTOMLEFT", tooltip.cursor, "TOPLEFT", 0, 0)
         elseif C.tooltip.cursoralign == "left" then
-          tooltip:SetPoint("BOTTOMRIGHT", tooltip.cursor, "TOPLEFT", 0, 0)
+          tooltip:SetPoint("BOTTOMRIGHT", tooltip.cursor, "LEFT", 0, 0)
         elseif C.tooltip.cursoralign == "right" then
-          tooltip:SetPoint("BOTTOMLEFT", tooltip.cursor, "TOPRIGHT", 0, 0)
+          tooltip:SetPoint("BOTTOMLEFT", tooltip.cursor, "RIGHT", 0, 0)
         end
       end
     end
