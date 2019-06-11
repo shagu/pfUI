@@ -123,10 +123,10 @@ pfUI:RegisterModule("addoncompat", function ()
       CreateQuestionDialog(
         T["The addon selection has changed."] .. "\n"
         .. T["Do you want to reload the UI now?"],
-        {"Yes", function()
+        {T["Yes"], function()
           ReloadUI()
         end},
-        {"No", function() end},
+        {T["No"], function() end},
         nil)
     end
   end
