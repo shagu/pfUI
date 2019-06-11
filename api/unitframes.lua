@@ -769,7 +769,7 @@ function pfUI.uf:EnableScripts()
   local f = self
 
   -- handle secure unit button templates (> vanilla)
-  if f.SetAttribute then
+  if f.SetAttribute and RegisterStateDriver then
     f.showmenu = pfUI.uf.RightClickAction
     f:SetAttribute("unit", f.label .. f.id)
     f:SetAttribute("type1", "target")
