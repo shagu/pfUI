@@ -762,8 +762,13 @@ function pfUI.api.CreateQuestionDialog(text, yes, no, editbox, onclose)
   question:SetHeight(textspace + inputspace + buttonspace + padding)
 
   local width = 200
-  if question.text:GetStringWidth() > 200 then width = question.text:GetStringWidth() end
-  question:SetWidth( width + 2*padding)
+
+  -- delay the auto sizing, to make sure the font rendering happened
+  question:SetScript("OnUpdate", function()
+    if question.text:GetStringWidth() > width then width = question.text:GetStringWidth() end
+    question:SetWidth( width + 2*padding)
+    this:SetScript("OnUpdate", nil)
+  end)
 end
 
 
