@@ -481,6 +481,7 @@ pfUI:RegisterModule("thirdparty", "vanilla", function ()
 
     do -- history frame
       CreateBackdrop(WIM_HistoryFrame, nil, nil, .8)
+      CreateBackdropShadow(WIM_HistoryFrame)
       WIM_HistoryFrame.backdrop:SetPoint("TOPLEFT", 10, -10)
       WIM_HistoryFrame.backdrop:SetPoint("BOTTOMRIGHT", -10, 10)
       WIM_HistoryFrame:SetHitRectInsets(10,10,10,10)
@@ -492,9 +493,10 @@ pfUI:RegisterModule("thirdparty", "vanilla", function ()
       WIM_HistoryFrameMessageListScrollUp:SetPoint("TOPLEFT", WIM_HistoryFrameMessageListScrollingMessageFrame, "TOPRIGHT", 10, -6)
       SkinArrowButton(WIM_HistoryFrameMessageListScrollDown, 'down', 18)
       WIM_HistoryFrameMessageListScrollDown:SetPoint("BOTTOMLEFT", WIM_HistoryFrameMessageListScrollingMessageFrame, "BOTTOMRIGHT", 10, 0)
-    end    
+    end
     do -- options frame
       CreateBackdrop(WIM_Options, nil, nil, .8)
+      CreateBackdropShadow(WIM_Options)
       WIM_Options.backdrop:SetPoint("TOPLEFT", 12, -10)
       WIM_Options.backdrop:SetPoint("BOTTOMRIGHT", -12, 0)
       WIM_Options:SetHitRectInsets(12,12,10,0)
@@ -644,6 +646,7 @@ pfUI:RegisterModule("thirdparty", "vanilla", function ()
 
       local windowname = this:GetName()
       CreateBackdrop(this, nil, nil, .8)
+      CreateBackdropShadow(this)
       local from = _G[windowname.."From"]
       from:ClearAllPoints()
       from:SetPoint("TOP", 0, -10)
