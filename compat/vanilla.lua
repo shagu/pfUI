@@ -6,8 +6,13 @@ if pfUI.expansion ~= "vanilla" then return end
 CASTBAR_EVENT_CAST_DELAY = "SPELLCAST_DELAYED"
 CASTBAR_EVENT_CHANNEL_DELAY = "SPELLCAST_CHANNEL_UPDATE"
 
-NAMEPLATE_OBJECTORDER = { "border", "glow", "name", "level", "levelicon",
-  "raidicon" }
+MICRO_BUTTONS = {
+  'CharacterMicroButton', 'SpellbookMicroButton', 'TalentMicroButton',
+  'QuestLogMicroButton', 'SocialsMicroButton', 'WorldMapMicroButton',
+  'MainMenuMicroButton', 'HelpMicroButton',
+}
+
+NAMEPLATE_OBJECTORDER = { "border", "glow", "name", "level", "levelicon", "raidicon" }
 
 NAMEPLATE_FRAMETYPE = "Button"
 

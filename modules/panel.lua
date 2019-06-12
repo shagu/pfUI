@@ -716,12 +716,6 @@ pfUI:RegisterModule("panel", "vanilla:tbc", function()
     pfUI.panel.microbutton:SetWidth(145)
     pfUI.panel.microbutton:SetFrameStrata("MEDIUM")
 
-    local MICRO_BUTTONS = {
-      'CharacterMicroButton', 'SpellbookMicroButton', 'TalentMicroButton',
-      'QuestLogMicroButton', 'SocialsMicroButton', 'WorldMapMicroButton',
-      'MainMenuMicroButton', 'HelpMicroButton',
-    }
-
     for i=1,table.getn(MICRO_BUTTONS) do
       local anchor = _G[MICRO_BUTTONS[i-1]] or pfUI.panel.microbutton
       local button = _G[MICRO_BUTTONS[i]]
