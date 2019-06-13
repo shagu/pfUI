@@ -100,7 +100,7 @@ pfUI:RegisterModule("autovendor", "vanilla:tbc", function ()
         autovendor.button:SetPoint("RIGHT", MerchantRepairItemButton, "LEFT", -4*bpad, 0)
       else
         autovendor.button:ClearAllPoints()
-        autovendor.button:SetPoint("RIGHT", MerchantBuyBackItemItemButton, "LEFT", -20, 0)
+        autovendor.button:SetPoint("RIGHT", MerchantBuyBackItemItemButton, "LEFT", -14, 0)
       end
     end
   end)

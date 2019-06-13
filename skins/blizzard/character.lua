@@ -1,6 +1,26 @@
-pfUI:RegisterSkin("Character", "vanilla", function ()
+pfUI:RegisterSkin("Character", "vanilla:tbc", function ()
   local border = tonumber(pfUI_config.appearance.border.default)
   local bpad = border > 1 and border - 1 or 1
+
+  -- Compatibility
+  if PlayerTitleDropDown then -- tbc, wotlk
+    -- Character Tab
+    SkinDropDown(PlayerTitleDropDown)
+    PlayerTitleDropDown:SetPoint("TOP", CharacterLevelText, "BOTTOM", 0, -2)
+    PlayerTitleDropDownText:SetPoint("LEFT", PlayerTitleDropDown.backdrop, "LEFT", 6, 2)
+    SkinDropDown(PlayerStatFrameLeftDropDown)
+    SkinDropDown(PlayerStatFrameRightDropDown)
+
+    -- Honor Tab
+    StripTextures(PVPFrame)
+  else -- vanilla
+    -- Honor Tab
+    StripTextures(HonorFrame)
+
+    HonorFrameProgressBar:SetStatusBarTexture(pfUI.media["img:bar"])
+    CreateBackdrop(HonorFrameProgressBar)
+    HonorFrameProgressBar:SetHeight(24)
+  end
 
   local magicResTextureCords = {
     {0.21875, 0.78125, 0.25, 0.3203125},
@@ -272,13 +292,5 @@ pfUI:RegisterSkin("Character", "vanilla", function ()
     SkillDetailStatusBarUnlearnButton:SetPoint("LEFT", SkillDetailStatusBar, "RIGHT", 6, 0)
     SkillDetailStatusBarUnlearnButton:SetPushedTexture(nil)
     SkillDetailStatusBarUnlearnButton:SetNormalTexture("Interface\\Buttons\\UI-GroupLoot-Pass-Up")
-  end
-
-  do -- Honor Tab
-    StripTextures(HonorFrame)
-
-    HonorFrameProgressBar:SetStatusBarTexture(pfUI.media["img:bar"])
-    CreateBackdrop(HonorFrameProgressBar)
-    HonorFrameProgressBar:SetHeight(24)
   end
 end)

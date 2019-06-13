@@ -1,4 +1,4 @@
-pfUI:RegisterSkin("Macro", "vanilla", function ()
+pfUI:RegisterSkin("Macro", "vanilla:tbc", function ()
   local border = tonumber(pfUI_config.appearance.border.default)
   local bpad = border > 1 and border - 1 or 1
 
@@ -28,7 +28,6 @@ pfUI:RegisterSkin("Macro", "vanilla", function ()
       local icon = _G["MacroButton"..i..'Icon']
       StripTextures(button)
       SkinButton(button, nil, nil, nil, icon)
-      button:SetCheckedTexture([[Interface\Buttons\CheckButtonHilight]])
     end
     StripTextures(MacroFrameSelectedMacroButton)
     SkinButton(MacroFrameSelectedMacroButton, nil, nil, nil, MacroFrameSelectedMacroButtonIcon, true)
@@ -81,7 +80,6 @@ pfUI:RegisterSkin("Macro", "vanilla", function ()
       local icon = _G["MacroPopupButton"..i..'Icon']
       StripTextures(button)
       SkinButton(button, nil, nil, nil, icon)
-      button:SetCheckedTexture([[Interface\Buttons\CheckButtonHilight]])
     end
     SkinButton(MacroPopupCancelButton)
     SkinButton(MacroPopupOkayButton)

@@ -1,5 +1,13 @@
-pfUI:RegisterSkin("Readycheck", "vanilla", function ()
+pfUI:RegisterSkin("Readycheck", "vanilla:tbc", function ()
   HookAddonOrVariable("Blizzard_RaidUI", function()
+    -- Compatibility
+    local update_func
+    if ReadyCheckFrame_OnUpdate then -- tbc
+      update_func = "ReadyCheckFrame_OnUpdate"
+    else -- vanilla
+      update_func = "ReadyCheck_OnUpdate"
+    end
+  
     StripTextures(ReadyCheckFrame, true)
     CreateBackdrop(ReadyCheckFrame, nil, nil, .75)
     CreateBackdropShadow(ReadyCheckFrame)
@@ -35,7 +43,7 @@ pfUI:RegisterSkin("Readycheck", "vanilla", function ()
       frame.bar:SetMinMaxValues(0, max)
     end, 1)
 
-    hooksecurefunc("ReadyCheck_OnUpdate", function()
+    hooksecurefunc(update_func, function()
       if not ReadyCheckFrame.timer then return end
 
       local perc = ReadyCheckFrame.timer/max

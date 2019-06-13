@@ -1,48 +1,58 @@
-pfUI:RegisterSkin("Talents", "vanilla", function ()
+pfUI:RegisterSkin("Talents", "vanilla:tbc", function ()
   local border = tonumber(pfUI_config.appearance.border.default)
   local bpad = border > 1 and border - 1 or 1
 
   HookAddonOrVariable("Blizzard_TalentUI", function()
-    StripTextures(TalentFrame)
-    CreateBackdrop(TalentFrame, nil, nil, .75)
-    CreateBackdropShadow(TalentFrame)
+    -- Compatibility
+    local TALENT_FRAME, TALENT_FRAME_NAME
+    if PlayerTalentFrame then -- tbc
+      TALENT_FRAME = _G.PlayerTalentFrame
+    else -- vanilla
+      TALENT_FRAME = _G.TalentFrame
+    end
+    TALENT_FRAME_NAME = TALENT_FRAME:GetName()
 
-    TalentFrame.backdrop:SetPoint("TOPLEFT", 10, -10)
-    TalentFrame.backdrop:SetPoint("BOTTOMRIGHT", -32, 72)
-    TalentFrame:SetHitRectInsets(10,32,10,72)
-    EnableMovable(TalentFrame)
 
-    TalentFrame:DisableDrawLayer("BACKGROUND")
-    TalentFrameCancelButton:Hide()
+    StripTextures(TALENT_FRAME)
+    CreateBackdrop(TALENT_FRAME, nil, nil, .75)
+    CreateBackdropShadow(TALENT_FRAME)
 
-    TalentFrameTitleText:ClearAllPoints()
-    TalentFrameTitleText:SetPoint("TOP", TalentFrame.backdrop, "TOP", 0, -10)
-    TalentFrameSpentPoints:ClearAllPoints()
-    TalentFrameSpentPoints:SetPoint("TOP", TalentFrame.backdrop, "TOP", 0, -48)
+    TALENT_FRAME.backdrop:SetPoint("TOPLEFT", 10, -10)
+    TALENT_FRAME.backdrop:SetPoint("BOTTOMRIGHT", -32, 72)
+    TALENT_FRAME:SetHitRectInsets(10,32,10,72)
+    EnableMovable(TALENT_FRAME)
 
-    SkinCloseButton(TalentFrameCloseButton, TalentFrame.backdrop, -6, -6)
+    TALENT_FRAME:DisableDrawLayer("BACKGROUND")
+    _G[TALENT_FRAME_NAME.."CancelButton"]:Hide()
 
-    StripTextures(TalentFrameScrollFrame)
-    SkinScrollbar(TalentFrameScrollFrameScrollBar)
+    _G[TALENT_FRAME_NAME.."TitleText"]:ClearAllPoints()
+    _G[TALENT_FRAME_NAME.."TitleText"]:SetPoint("TOP", TALENT_FRAME.backdrop, "TOP", 0, -10)
+    _G[TALENT_FRAME_NAME.."SpentPoints"]:ClearAllPoints()
+    _G[TALENT_FRAME_NAME.."SpentPoints"]:SetPoint("TOP", TALENT_FRAME.backdrop, "TOP", 0, -48)
 
-    TalentFrameTalentPointsText:ClearAllPoints()
-    TalentFrameTalentPointsText:SetPoint("BOTTOMRIGHT", TalentFrame, "BOTTOMRIGHT", -65, 83)
+    SkinCloseButton(_G[TALENT_FRAME_NAME.."CloseButton"], TALENT_FRAME.backdrop, -6, -6)
+
+    StripTextures(_G[TALENT_FRAME_NAME.."ScrollFrame"])
+    SkinScrollbar(_G[TALENT_FRAME_NAME.."ScrollFrameScrollBar"])
+
+    _G[TALENT_FRAME_NAME.."TalentPointsText"]:ClearAllPoints()
+    _G[TALENT_FRAME_NAME.."TalentPointsText"]:SetPoint("BOTTOMRIGHT", TALENT_FRAME, "BOTTOMRIGHT", -65, 83)
 
     for i = 1, MAX_NUM_TALENTS do
-      local talent = _G["TalentFrameTalent"..i]
+      local talent = _G[TALENT_FRAME_NAME.."Talent"..i]
       if talent then
         StripTextures(talent)
-        SkinButton(talent, nil, nil, nil, _G["TalentFrameTalent"..i.."IconTexture"])
+        SkinButton(talent, nil, nil, nil, _G[TALENT_FRAME_NAME.."Talent"..i.."IconTexture"])
 
-        _G["TalentFrameTalent"..i.."Rank"]:SetFont(pfUI.font_default, C.global.font_size, "OUTLINE")
+        _G[TALENT_FRAME_NAME.."Talent"..i.."Rank"]:SetFont(pfUI.font_default, C.global.font_size, "OUTLINE")
       end
     end
 
-    TalentFrameTab1:ClearAllPoints()
-    TalentFrameTab1:SetPoint("TOPLEFT", TalentFrame.backdrop, "BOTTOMLEFT", bpad, -(border + (border == 1 and 1 or 2)))
+    _G[TALENT_FRAME_NAME.."Tab1"]:ClearAllPoints()
+    _G[TALENT_FRAME_NAME.."Tab1"]:SetPoint("TOPLEFT", TALENT_FRAME.backdrop, "BOTTOMLEFT", bpad, -(border + (border == 1 and 1 or 2)))
     for i = 1, 5 do
-      local tab = _G["TalentFrameTab"..i]
-      local lastTab = _G["TalentFrameTab"..(i-1)]
+      local tab = _G[TALENT_FRAME_NAME.."Tab"..i]
+      local lastTab = _G[TALENT_FRAME_NAME.."Tab"..(i-1)]
       if lastTab then
         tab:ClearAllPoints()
         tab:SetPoint("LEFT", lastTab, "RIGHT", border*2 + 1, 0)

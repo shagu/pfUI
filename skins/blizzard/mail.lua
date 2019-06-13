@@ -1,18 +1,128 @@
-pfUI:RegisterSkin("Mailbox", "vanilla", function ()
+pfUI:RegisterSkin("Mailbox", "vanilla:tbc", function ()
   local border = tonumber(pfUI_config.appearance.border.default)
   local bpad = border > 1 and border - 1 or 1
-  local skin = CreateFrame("Frame")
-  skin:SetScript("OnEvent", function()
-    this:UnregisterEvent("MAIL_SHOW")
-    if not this._Mail then
-      StripTextures(SendMailPackageButton)
-      SkinButton(SendMailPackageButton)
+
+  -- Compatibility
+  local StationeryBackgroundLeft, StationeryBackgroundRight
+  if ATTACHMENTS_MAX_SEND then -- tbc
+    do -- SendMailFrame
+      for i = 1, ATTACHMENTS_MAX_SEND do
+        local btn = _G["SendMailAttachment"..i]
+        StripTextures(btn)
+        SkinButton(btn, nil, nil, nil, nil, true)
+      end
+
       hooksecurefunc("SendMailFrame_Update", function()
-        HandleIcon(SendMailPackageButton, SendMailPackageButton:GetNormalTexture())
-      end, 1)
+        for i = 1, ATTACHMENTS_MAX_SEND do
+          local btn = _G["SendMailAttachment"..i]
+          HandleIcon(btn, btn:GetNormalTexture())
+
+          local link = GetSendMailItemLink(i)
+          if link then
+            local r,g,b = GetItemQualityColor(select(3, GetItemInfo(link)))
+            btn:SetBackdropBorderColor(r,g,b,1)
+            else
+            btn:SetBackdropBorderColor(GetStringColor(pfUI_config.appearance.border.color))
+          end
+        end
+      end)
+
+      StationeryBackgroundLeft, StationeryBackgroundRight = SendStationeryBackgroundLeft, SendStationeryBackgroundRight
     end
-  end)
-  skin:RegisterEvent("MAIL_SHOW")
+
+    do -- OpenMailFrame
+      for i = 1, ATTACHMENTS_MAX_RECEIVE do
+        SkinButton(_G["OpenMailAttachmentButton"..i], nil, nil, nil, _G["OpenMailAttachmentButton"..i.."IconTexture"], true)
+      end
+
+      hooksecurefunc("InboxFrame_OnClick", function(index)
+        for i=1, ATTACHMENTS_MAX_RECEIVE do
+          local link = GetInboxItemLink(index, i)
+          if not link then return end
+          local r,g,b = GetItemQualityColor(select(3, GetItemInfo(link)))
+          _G["OpenMailAttachmentButton"..i]:SetBackdropBorderColor(r,g,b,1)
+        end
+      end)
+
+      SkinButton(OpenMailReportSpamButton)
+    end
+  else -- vanilla
+    do -- SendMailFrame
+      local skin = CreateFrame("Frame")
+      skin:SetScript("OnEvent", function()
+        this:UnregisterEvent("MAIL_SHOW")
+        if not this._Mail then
+          StripTextures(SendMailPackageButton)
+          SkinButton(SendMailPackageButton, nil, nil, nil, nil, true)
+
+          hooksecurefunc("SendMailFrame_Update", function()
+            HandleIcon(SendMailPackageButton, SendMailPackageButton:GetNormalTexture())
+
+            local link = GetItemLinkByName(GetSendMailItem())
+            if link then
+              local _,_,linkstr = string.find(link, "(item:%d+:%d+:%d+:%d+)")
+              local _,_,quality = GetItemInfo(linkstr)
+              local r,g,b = GetItemQualityColor(quality)
+              SendMailPackageButton:SetBackdropBorderColor(r,g,b,1)
+              else
+              SendMailPackageButton:SetBackdropBorderColor(GetStringColor(pfUI_config.appearance.border.color))
+            end
+          end, 1)
+        end
+      end)
+      skin:RegisterEvent("MAIL_SHOW")
+
+      HookAddonOrVariable("Mail", function()
+        skin._Mail = true
+        for i = 1, 21 do
+          local button = _G["MailAttachment"..i]
+          StripTextures(button)
+
+          SkinButton(button, nil, nil, nil, nil, true)
+          local orig = button.SetNormalTexture
+          button.SetNormalTexture = function(self, tex)
+            orig(self, tex)
+
+            if button.item then
+              HandleIcon(self, self:GetNormalTexture())
+
+              local link = GetContainerItemLink(button.item[1], button.item[2])
+              local _,_,linkstr = string.find(link, "(item:%d+:%d+:%d+:%d+)")
+              local _,_,quality = GetItemInfo(linkstr)
+              local r,g,b = GetItemQualityColor(quality)
+              self:SetBackdropBorderColor(r,g,b,1)
+            else
+              self:SetBackdropBorderColor(GetStringColor(pfUI_config.appearance.border.color))
+            end
+          end
+        end
+        SkinButton(GetNoNameObject(InboxFrame, "Button", nil, "UI-Panel-Button-Up", OPENMAIL))
+        local button = GetNoNameObject(SendMailFrame, "Button", nil, "UI-Panel-Button-Up", SEND_LABEL) -- this is SendMailMailButton
+        SkinButton(button) -- hack! only it happened to do it
+        button:ClearAllPoints()
+        button:SetPoint("RIGHT", SendMailCancelButton, "LEFT", -2*bpad, 0)
+      end)
+
+      StationeryBackgroundLeft, StationeryBackgroundRight = _G.StationeryBackgroundLeft, _G.StationeryBackgroundRight
+    end
+
+    do -- OpenMailFrame
+      SkinButton(OpenMailPackageButton, nil, nil, nil, OpenMailPackageButtonIconTexture)
+
+      hooksecurefunc("InboxFrame_OnClick", function(index)
+        local name = GetInboxItem(index)
+        if name then
+          local link = GetItemLinkByName(name)
+          local _,_,linkstr = string.find(link, "(item:%d+:%d+:%d+:%d+)")
+          local _,_,quality = GetItemInfo(linkstr)
+          local r,g,b = GetItemQualityColor(quality)
+          OpenMailPackageButton:SetBackdropBorderColor(r,g,b,1)
+        else
+          OpenMailPackageButton:SetBackdropBorderColor(GetStringColor(pfUI_config.appearance.border.color))
+        end
+      end)
+    end
+  end
 
   StripTextures(MailFrame, true)
   CreateBackdrop(MailFrame, nil, nil, .75)
@@ -106,7 +216,6 @@ pfUI:RegisterSkin("Mailbox", "vanilla", function ()
     OpenMailReplyButton:SetPoint("RIGHT", OpenMailDeleteButton, "LEFT", -2*bpad, 0)
 
     SkinButton(OpenMailMoneyButton, nil, nil, nil, OpenMailMoneyButtonIconTexture)
-    SkinButton(OpenMailPackageButton, nil, nil, nil, OpenMailPackageButtonIconTexture)
     SkinButton(OpenMailLetterButton, nil, nil, nil, OpenMailLetterButtonIconTexture)
 
     StripTextures(OpenMailScrollFrame)
@@ -118,25 +227,4 @@ pfUI:RegisterSkin("Mailbox", "vanilla", function ()
     OpenStationeryBackgroundLeft:SetAllPoints()
     OpenStationeryBackgroundRight:Hide()
   end
-
-  HookAddonOrVariable("Mail", function()
-    skin._Mail = true
-    for i = 1, 21 do
-      local button = _G["MailAttachment"..i]
-      StripTextures(button)
-      SkinButton(button)
-
-      button.icon = button:CreateTexture(button:GetName().."Icon", "ARTWORK")
-      HandleIcon(button, button.icon)
-      button.SetNormalTexture = function(self, tex)
-        button.icon:SetTexture(tex)
-      end
-    end
-    SkinButton(GetNoNameObject(InboxFrame, "Button", nil, "UI-Panel-Button-Up", OPENMAIL))
-    local button = GetNoNameObject(SendMailFrame, "Button", nil, "UI-Panel-Button-Up", SEND_LABEL) -- this is SendMailMailButton
-    SkinButton(button) -- hack! only it happened to do it
-    button:ClearAllPoints()
-    button:SetPoint("RIGHT", SendMailCancelButton, "LEFT", -2*bpad, 0)
-  end)
-
 end)

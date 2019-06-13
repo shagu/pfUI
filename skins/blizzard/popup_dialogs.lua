@@ -1,7 +1,13 @@
-pfUI:RegisterSkin("Popup Dialogs", "vanilla", function ()
+pfUI:RegisterSkin("Popup Dialogs", "vanilla:tbc", function ()
   for i = 1, STATICPOPUP_NUMDIALOGS do
-    local dialog = _G["StaticPopup"..i]
+    -- Compatibility
+    local money = _G["StaticPopup"..i.."MoneyInputFrame"]
+    if money then -- tbc
+      SkinMoneyInputFrame(money)
+    end
 
+
+    local dialog = _G["StaticPopup"..i]
     CreateBackdrop(dialog, nil, true, .75)
     CreateBackdropShadow(dialog)
 

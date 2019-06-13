@@ -34,4 +34,13 @@
   <Include file="..\skins\blizzard\tooltips.lua"/>
   <Include file="..\skins\blizzard\tabard.lua"/>
   <Include file="..\skins\blizzard\itemtext.lua"/>
+
+  <!-- TBC -->
+  <Include file="..\skins\blizzard\tracking.lua"/>
+  <Include file="..\skins\blizzard\guildbank.lua"/>
+  <Include file="..\skins\blizzard\socket.lua"/>
+  <Include file="..\skins\blizzard\arena_registrar.lua"/>
+  <Include file="..\skins\blizzard\arena.lua"/>
+  <Include file="..\skins\blizzard\time_manager.lua"/>
+  <Include file="..\skins\blizzard\lfg.lua"/>
 </Ui>

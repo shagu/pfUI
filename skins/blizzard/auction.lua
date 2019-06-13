@@ -1,8 +1,17 @@
-pfUI:RegisterSkin("Auctionhouse", "vanilla", function ()
+pfUI:RegisterSkin("Auctionhouse", "vanilla:tbc", function ()
   local border = tonumber(pfUI_config.appearance.border.default)
   local bpad = border > 1 and border - 1 or 1
-
   HookAddonOrVariable("Blizzard_AuctionUI", function()
+    -- Compatibility
+    if BrowseResetButton then -- tbc
+      SkinButton(BrowseResetButton)
+    else -- vanilla
+      SkinArrowButton(BidPrevPageButton, "left", 18)
+      SkinArrowButton(BidNextPageButton, "right", 18)
+      SkinArrowButton(AuctionsPrevPageButton, "left", 18)
+      SkinArrowButton(AuctionsNextPageButton, "right", 18)
+    end
+
     hooksecurefunc("AuctionFrame_OnShow", function()
       AuctionFrame:ClearAllPoints()
       AuctionFrame:SetPoint("TOPLEFT", 10, -104)
@@ -88,7 +97,6 @@ pfUI:RegisterSkin("Auctionhouse", "vanilla", function ()
       BrowseLevelHyphen:SetPoint("LEFT", BrowseMinLevel, "RIGHT", 4, 0)
 
       SkinDropDown(BrowseDropDown)
-      BrowseDropDown:SetWidth(160)
       BrowseDropDown:ClearAllPoints()
       BrowseDropDown:SetPoint("LEFT", BrowseMaxLevel, "RIGHT", 20, 0)
 
@@ -135,9 +143,6 @@ pfUI:RegisterSkin("Auctionhouse", "vanilla", function ()
         end
       end, 1)
 
-      SkinArrowButton(BidPrevPageButton, "left", 18)
-      SkinArrowButton(BidNextPageButton, "right", 18)
-
       SkinMoneyInputFrame(BidBidPrice)
       BidBidPrice:ClearAllPoints()
       BidBidPrice:SetPoint("BOTTOM", 25, 18)
@@ -183,9 +188,6 @@ pfUI:RegisterSkin("Auctionhouse", "vanilla", function ()
           HandleIcon(_G["AuctionsButton"..i.."Item"], _G["AuctionsButton"..i.."ItemIconTexture"])
         end
       end, 1)
-
-      SkinArrowButton(AuctionsPrevPageButton, "left", 18)
-      SkinArrowButton(AuctionsNextPageButton, "right", 18)
 
       SkinButton(AuctionsItemButton)
       hooksecurefunc("AuctionSellItemButton_OnEvent", function()

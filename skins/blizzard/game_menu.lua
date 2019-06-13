@@ -3,8 +3,12 @@ pfUI:RegisterSkin("Game Menu", "vanilla:tbc", function ()
   CreateBackdrop(GameMenuFrame, nil, true, .75)
   CreateBackdropShadow(GameMenuFrame)
 
-  GameMenuFrame:SetHeight(GameMenuFrame:GetHeight() + 2)
   GameMenuFrame:SetWidth(GameMenuFrame:GetWidth() - 30)
+  if pfUI.expansion == 'tbc' then
+    GameMenuFrame:SetHeight(GameMenuFrame:GetHeight() + 10)
+  elseif pfUI.expansion == 'vanilla' then
+    GameMenuFrame:SetHeight(GameMenuFrame:GetHeight() + 6)
+  end
 
   local title = GetNoNameObject(GameMenuFrame, "FontString", "ARTWORK", MAIN_MENU)
   title:SetTextColor(1,1,1,1)

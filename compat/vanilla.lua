@@ -18,7 +18,6 @@ NAMEPLATE_OBJECTORDER = { "border", "glow", "name", "level", "levelicon", "raidi
 NAMEPLATE_FRAMETYPE = "Button"
 
 MINIMAP_TRACKING_FRAME = _G.MiniMapTrackingFrame
-UI_OPTIONS_FRAME = _G.UIOptionsFrame
 
 FRIENDS_NAME_LOCATION = "ButtonTextNameLocation"
 

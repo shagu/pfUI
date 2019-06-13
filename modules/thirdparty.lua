@@ -636,7 +636,7 @@ pfUI:RegisterModule("thirdparty", "vanilla", function ()
       return pfUI.chat:HandleLink(text)
     end
 
-		-- replace wim class colors with pfUI ones
+    -- replace wim class colors with pfUI ones
     hooksecurefunc("WIM_InitClassProps", function()
       for class in pairs(RAID_CLASS_COLORS) do
         local wimclass = _G[format("WIM_LOCALIZED_%s",class)]

@@ -1,4 +1,4 @@
-pfUI:RegisterSkin("Profession", "vanilla", function ()
+pfUI:RegisterSkin("Profession", "vanilla:tbc", function ()
   local border = tonumber(pfUI_config.appearance.border.default)
   local bpad = border > 1 and border - 1 or 1
 
@@ -17,8 +17,6 @@ pfUI:RegisterSkin("Profession", "vanilla", function ()
     local frame       = name .. "Frame"
 
     HookAddonOrVariable(addon, function()
-      _G[displayed] = 23
-
       local SetSelection = frame.."_SetSelection"
       local icon = _G[template.."Icon"]
       local seltitle = _G[template.."Name"]
@@ -45,12 +43,6 @@ pfUI:RegisterSkin("Profession", "vanilla", function ()
 
       local frame = _G[frame]
 
-      -- build remaining tradeskills
-      for i = 9, _G[displayed] do
-        local button = CreateFrame("Button", template..i, frame, template.."ButtonTemplate")
-        button:SetPoint("TOPLEFT", _G[template..i - 1], "BOTTOMLEFT")
-      end
-
       StripTextures(frame)
       CreateBackdrop(frame, nil, nil, .75)
       CreateBackdropShadow(frame)
@@ -74,10 +66,11 @@ pfUI:RegisterSkin("Profession", "vanilla", function ()
         scrollframe:SetWidth(300)
         scrollframe:SetHeight(365)
 
-        local backdrop = CreateFrame("Frame", nil, frame)
+        local backdrop = CreateFrame("Frame", scrollframe:GetName().."Backdrop", frame)
         CreateBackdrop(backdrop, nil, nil, .75)
-        backdrop.backdrop:SetPoint("TOPLEFT", scrollframe, "TOPLEFT", -5, 5)
-        backdrop.backdrop:SetPoint("BOTTOMRIGHT", scrollframe, "BOTTOMRIGHT", 26, -5)
+        scrollframe.backdrop = backdrop.backdrop
+        scrollframe.backdrop:SetPoint("TOPLEFT", scrollframe, "TOPLEFT", -5, 5)
+        scrollframe.backdrop:SetPoint("BOTTOMRIGHT", scrollframe, "BOTTOMRIGHT", 26, -5)
 
         _G[template..1]:ClearAllPoints()
         _G[template..1]:SetPoint("TOPLEFT", scrollframe, "TOPLEFT", 0, 0)
@@ -86,16 +79,12 @@ pfUI:RegisterSkin("Profession", "vanilla", function ()
         SkinCollapseButton(collapseall, true)
         collapseall:ClearAllPoints()
         collapseall:SetPoint("BOTTOMLEFT", scrollframe, "TOPLEFT", -5, 5)
-        for i = 1, _G[displayed] do SkinCollapseButton(_G[template..i]) end
 
         if invslotdropdown then
-          StripTextures(invslotdropdown)
           SkinDropDown(invslotdropdown)
-          invslotdropdown:SetHeight(10)
           invslotdropdown:ClearAllPoints()
-          invslotdropdown:SetPoint("BOTTOMRIGHT", backdrop.backdrop, "TOPRIGHT", 15, 0)
+          invslotdropdown:SetPoint("BOTTOMRIGHT", scrollframe.backdrop, "TOPRIGHT", 15, 0)
 
-          StripTextures(subclassdropdown)
           SkinDropDown(subclassdropdown)
           subclassdropdown:ClearAllPoints()
           subclassdropdown:SetPoint("RIGHT", invslotdropdown, "LEFT", 27, 0)
@@ -109,15 +98,17 @@ pfUI:RegisterSkin("Profession", "vanilla", function ()
 
         local backdrop = CreateFrame("Frame", nil, frame)
         CreateBackdrop(backdrop, nil, nil, .75)
-        backdrop.backdrop:SetPoint("TOPLEFT", detailscroll, "TOPLEFT", -5, 5)
-        backdrop.backdrop:SetPoint("BOTTOMRIGHT", detailscroll, "BOTTOMRIGHT", 26, -5)
+        detailscroll.backdrop = backdrop.backdrop
+
+        detailscroll.backdrop:SetPoint("TOPLEFT", detailscroll, "TOPLEFT", -5, 5)
+        detailscroll.backdrop:SetPoint("BOTTOMRIGHT", detailscroll, "BOTTOMRIGHT", 26, -5)
 
         StripTextures(_G[name.."RankFrameBorder"])
         CreateBackdrop(rankbar, nil, true)
         rankbar:SetStatusBarTexture(pfUI.media["img:bar"])
         rankbar:ClearAllPoints()
-        rankbar:SetPoint("TOPLEFT", backdrop.backdrop, "TOPLEFT", 0, 25)
-        rankbar:SetPoint("BOTTOMRIGHT", backdrop.backdrop, "TOPRIGHT", 0, 6)
+        rankbar:SetPoint("TOPLEFT", detailscroll.backdrop, "TOPLEFT", 0, 25)
+        rankbar:SetPoint("BOTTOMRIGHT", detailscroll.backdrop, "TOPRIGHT", 0, 6)
 
         if decrease and increase then
           SkinArrowButton(decrease, "left", 18)
@@ -126,13 +117,14 @@ pfUI:RegisterSkin("Profession", "vanilla", function ()
 
         if inputbox then
           inputbox:DisableDrawLayer("BACKGROUND")
-          CreateBackdrop(inputbox, nil, true)
+          CreateBackdrop(inputbox)
+          SetAllPointsOffset(inputbox.backdrop, inputbox, .2)
           inputbox:SetWidth(36)
         end
 
         SkinButton(cancel)
         cancel:ClearAllPoints()
-        cancel:SetPoint("TOPRIGHT", backdrop.backdrop, "BOTTOMRIGHT", 0, -5)
+        cancel:SetPoint("TOPRIGHT", detailscroll.backdrop, "BOTTOMRIGHT", 0, -5)
 
         SkinButton(create)
         create:ClearAllPoints()
@@ -223,6 +215,46 @@ pfUI:RegisterSkin("Profession", "vanilla", function ()
           end
         end, true)
       end
+
+      -- Compatibility
+      if TradeSkillFrameEditBox or CraftFrameEditBox then -- tbc
+        _G[displayed] = 21
+        scrollframe:SetHeight(338)
+
+        local rank = _G[name.."RankFrameSkillRank"]
+        rank:ClearAllPoints()
+        rank:SetPoint("CENTER", rankbar, "CENTER", 0, 0)
+
+        local available = _G[frame:GetName().."AvailableFilterCheckButton"]
+        SkinCheckbox(available)
+        available:ClearAllPoints()
+        available:SetPoint("TOPLEFT", scrollframe.backdrop, "BOTTOMLEFT", -4, -5)
+
+        local search = TradeSkillFrameEditBox or CraftRankFrameEditBox
+        if search then
+          search:DisableDrawLayer("BACKGROUND")
+          CreateBackdrop(search, nil, nil, 1)
+          search.backdrop:SetAllPoints(search)
+          search:SetHeight(createall:GetHeight())
+          search:ClearAllPoints()
+          search:SetPoint("TOPRIGHT", scrollframe.backdrop, "BOTTOMRIGHT", 0, -5)
+        end
+
+        local craft_filter = CraftFrameFilterDropDown
+        if craft_filter then
+          SkinDropDown(craft_filter)
+          craft_filter:ClearAllPoints()
+          craft_filter:SetPoint("BOTTOMRIGHT", scrollframe.backdrop, "TOPRIGHT", 15, 0)
+        end
+      else -- vanilla
+        _G[displayed] = 23
+      end
+      -- build remaining tradeskills
+      for i = 9, _G[displayed] do
+        local button = CreateFrame("Button", template..i, frame, template.."ButtonTemplate")
+        button:SetPoint("TOPLEFT", _G[template..i - 1], "BOTTOMLEFT")
+      end
+      for i = 1, _G[displayed] do SkinCollapseButton(_G[template..i]) end
     end)
   end
 end)

@@ -1,4 +1,4 @@
-pfUI:RegisterSkin("Quest Log", "vanilla", function ()
+pfUI:RegisterSkin("Quest Log", "vanilla:tbc", function ()
   local border = tonumber(pfUI_config.appearance.border.default)
   local bpad = border > 1 and border - 1 or 1
 
@@ -6,6 +6,23 @@ pfUI:RegisterSkin("Quest Log", "vanilla", function ()
   _G.MAX_WATCHABLE_QUESTS = 20 -- TODO
 
   do -- quest log frame
+    -- Compatibility
+    local QUEST_COUNT
+    if QuestLogCount then -- tbc
+      QUEST_COUNT = QuestLogCount
+
+      StripTextures(QUEST_COUNT)
+      QUEST_COUNT:ClearAllPoints()
+      hooksecurefunc("QuestLogUpdateQuestCount", function(numQuests)
+        QUEST_COUNT:SetPoint("TOPRIGHT", -10, -30)
+      end)
+    else -- vanilla
+      QUEST_COUNT = QuestLogQuestCount
+
+      QUEST_COUNT:ClearAllPoints()
+      QUEST_COUNT:SetPoint("TOPRIGHT", -10, -30)
+    end
+
     hooksecurefunc("QuestLog_OnShow", function()
       QuestLogFrame:ClearAllPoints()
       QuestLogFrame:SetPoint("TOPLEFT", 10, -104)
@@ -38,14 +55,11 @@ pfUI:RegisterSkin("Quest Log", "vanilla", function ()
     SkinCheckbox(QuestLogFrameLevelsCheckButton, 23)
     QuestLogFrameLevelsCheckButtonText:SetText(T["Quest Levels"])
 
-    QuestLogQuestCount:ClearAllPoints()
-    QuestLogQuestCount:SetPoint("TOPRIGHT", -10, -30)
-
     CreateBackdrop(QuestLogTrack)
     QuestLogTrack:SetHeight(8)
     QuestLogTrack:SetWidth(8)
     QuestLogTrack:ClearAllPoints()
-    QuestLogTrack:SetPoint("RIGHT", QuestLogQuestCount, "LEFT", -5, 0)
+    QuestLogTrack:SetPoint("RIGHT", QUEST_COUNT, "LEFT", -5, 0)
 
     StripTextures(QuestLogTrack)
     QuestLogTrackTracking:SetTexture(.8,.8,.8,1)
@@ -158,7 +172,11 @@ pfUI:RegisterSkin("Quest Log", "vanilla", function ()
         if C.questlog.showQuestLevels == "1" then
           questIndex = i + FauxScrollFrame_GetOffset(QuestLogListScrollFrame)
           if questIndex <= numEntries then
-            text, level, questTag, isHeader = GetQuestLogTitle(questIndex)
+            if pfUI.expansion == 'vanilla' then
+              text, level, questTag, isHeader = GetQuestLogTitle(questIndex)
+            else
+              text, level, questTag, _, isHeader = GetQuestLogTitle(questIndex)
+            end
             if not isHeader then
               _G["QuestLogTitle"..i]:SetText("  ".."["..(questTag and level.."+" or level).."] "..text)
             end

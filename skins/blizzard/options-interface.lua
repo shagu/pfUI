@@ -1,3 +1,78 @@
+pfUI:RegisterSkin("Options - Interface", "tbc", function ()
+  local border = tonumber(pfUI_config.appearance.border.default)
+  local bpad = border > 1 and border - 1 or 1
+
+  StripTextures(InterfaceOptionsFrame)
+  CreateBackdrop(InterfaceOptionsFrame, nil, nil, .75)
+  CreateBackdropShadow(InterfaceOptionsFrame)
+
+  EnableMovable(InterfaceOptionsFrame)
+
+  InterfaceOptionsFrameHeaderText:ClearAllPoints()
+  InterfaceOptionsFrameHeaderText:SetPoint("TOP", InterfaceOptionsFrame.backdrop, "TOP", 0, -10)
+
+  StripTextures(InterfaceOptionsFrameCategories)
+  CreateBackdrop(InterfaceOptionsFrameCategories, nil, true, .75)
+  StripTextures(InterfaceOptionsFrameAddOns)
+  CreateBackdrop(InterfaceOptionsFrameAddOns, nil, true, .75)
+  CreateBackdrop(InterfaceOptionsFramePanelContainer, nil, true, .75)
+
+  SkinTab(InterfaceOptionsFrameTab1)
+  InterfaceOptionsFrameTab1:ClearAllPoints()
+  InterfaceOptionsFrameTab1:SetPoint("BOTTOMLEFT", InterfaceOptionsFrameCategories, "TOPLEFT", bpad, border + (border == 1 and 1 or 2))
+  SkinTab(InterfaceOptionsFrameTab2)
+  InterfaceOptionsFrameTab2:ClearAllPoints()
+  InterfaceOptionsFrameTab2:SetPoint("LEFT", InterfaceOptionsFrameTab1, "RIGHT", border*2 + 1, 0)
+
+  SkinButton(InterfaceOptionsFrameDefaults)
+  InterfaceOptionsFrameDefaults:ClearAllPoints()
+  InterfaceOptionsFrameDefaults:SetPoint("TOPLEFT", InterfaceOptionsFrameCategories, "BOTTOMLEFT", 0, -10)
+  SkinButton(InterfaceOptionsFrameCancel)
+  InterfaceOptionsFrameCancel:ClearAllPoints()
+  InterfaceOptionsFrameCancel:SetPoint("TOPRIGHT", InterfaceOptionsFramePanelContainer, "BOTTOMRIGHT", 0, -10)
+  SkinButton(InterfaceOptionsFrameOkay)
+  InterfaceOptionsFrameOkay:ClearAllPoints()
+  InterfaceOptionsFrameOkay:SetPoint("RIGHT", InterfaceOptionsFrameCancel, "LEFT", -2*bpad, 0)
+
+  -- universal code for handling any frames!
+  local function SkinAllObjects(frame)
+    for _,obj in ipairs({frame:GetChildren()}) do
+    local obj_type = obj:GetObjectType()
+      if obj_type == "CheckButton" then
+        local size = obj:GetHeight()
+        if size > 26 then size = 26 end
+        SkinCheckbox(obj, size)
+      elseif obj_type == "Button" then
+        SkinButton(obj)
+      elseif obj_type == "Slider" then
+        SkinSlider(obj)
+      elseif obj_type == "Frame" then
+        if _G[obj:GetName().."Button"] then
+          SkinDropDown(obj)
+        else
+          SkinAllObjects(obj)
+        end
+      end
+    end
+  end
+
+  local blizzardCategories = {
+    InterfaceOptionsControlsPanel, InterfaceOptionsCombatPanel, InterfaceOptionsDisplayPanel,
+    InterfaceOptionsQuestsPanel, InterfaceOptionsSocialPanel, InterfaceOptionsActionBarsPanel,
+    InterfaceOptionsNamesPanel, InterfaceOptionsCombatTextPanel, InterfaceOptionsStatusTextPanel,
+    InterfaceOptionsPartyRaidPanel, InterfaceOptionsCameraPanel, InterfaceOptionsMousePanel,
+    InterfaceOptionsHelpPanel, InterfaceOptionsLanguagesPanel
+  }
+  for _,frame in ipairs(blizzardCategories) do
+    SkinAllObjects(frame)
+  end
+
+  -- skin the option panel of any addon
+  for _,frame in pairs(INTERFACEOPTIONS_ADDONCATEGORIES) do
+    SkinAllObjects(frame)
+  end
+end)
+
 pfUI:RegisterSkin("Options - Interface", "vanilla", function ()
   local border = tonumber(pfUI_config.appearance.border.default)
   local bpad = border > 1 and border - 1 or 1
