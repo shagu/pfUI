@@ -218,18 +218,6 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     local start, duration, enable
     local castable, autocast, token
 
-    -- abort as early as possible on regular state update
-    if event == "ACTIONBAR_UPDATE_STATE" and not self.hide and self.bar ~= 11 and self.bar ~= 12 then
-      if IsCurrentAction(sid) then
-        self.backdrop:SetBackdropBorderColor(cr,cg,cb,1)
-        self.active:Show()
-      else
-        CreateBackdrop(self, border)
-        self.active:Hide()
-      end
-      return
-    end
-
     -- set the own ID for compatibility to some vanilla addons
     if pfUI.client <= 11200 then self:SetID(self.id) end
 
@@ -251,13 +239,25 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
       usable, oom = true, nil
       start, duration, enable = GetPetActionCooldown(sid)
     else
-      active = IsCurrentAction(sid)
+      active = IsCurrentAction(sid) or IsAutoRepeatAction(sid)
       texture = GetActionTexture(sid)
       bar = GetActiveBar()
       id = sid - ((self.bar == 1 and bar or self.bar)-1)*12
       usable, oom = IsUsableAction(sid)
       start, duration, enable = GetActionCooldown(sid)
     end
+
+    -- active border
+    if active then
+      self.backdrop:SetBackdropBorderColor(cr,cg,cb,1)
+      self.active:Show()
+    else
+      CreateBackdrop(self, border)
+      self.active:Hide()
+    end
+
+    -- abort as early as possible on regular state update
+    if event == "ACTIONBAR_UPDATE_STATE" then return end
 
     -- handle secure action button templates (tbc+)
     if self.SetAttribute then
@@ -351,15 +351,6 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
       else
         self.autocastable:Hide()
       end
-    end
-
-    -- active border
-    if active then
-      self.backdrop:SetBackdropBorderColor(cr,cg,cb,1)
-      self.active:Show()
-    else
-      CreateBackdrop(self, border)
-      self.active:Hide()
     end
 
     -- keybinds
