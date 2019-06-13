@@ -285,6 +285,18 @@ function pfUI.api.SkinButton(button, cr, cg, cb, icon, disableHighlight)
   b:SetHighlightTexture("")
   b:SetPushedTexture(nil)
   b:SetDisabledTexture(nil)
+  if b.SetCheckedTexture then
+    b:SetCheckedTexture(nil)
+    function b.SetChecked(self, checked)
+      if checked == 1 then
+        self.locked = true
+        self:SetBackdropBorderColor(1,1,1)
+        else
+        self.locked = false
+        self:SetBackdropBorderColor(GetStringColor(pfUI_config.appearance.border.color))
+      end
+    end
+  end
 
   if not disableHighlight then
     SetHighlight(b, cr, cg, cb)
@@ -514,7 +526,7 @@ function pfUI.api.SkinCheckbox(frame, size)
   SetAllPointsOffset(frame.backdrop, frame, 4)
 end
 
-function pfUI.api.SkinDropDown(frame, cr, cg, cb)
+function pfUI.api.SkinDropDown(frame, cr, cg, cb, useSmall)
   StripTextures(frame)
   CreateBackdrop(frame)
   frame.backdrop:SetPoint("TOPLEFT", 15, -1)
@@ -525,6 +537,7 @@ function pfUI.api.SkinDropDown(frame, cr, cg, cb)
   button:SetPushedTexture(nil)
   button:SetHighlightTexture(nil)
   button:SetDisabledTexture(nil)
+  button:SetAllPoints(frame.backdrop)
 
   CreateBackdrop(button)
 
@@ -549,11 +562,21 @@ function pfUI.api.SkinDropDown(frame, cr, cg, cb)
 
   SetHighlight(button, cr, cg, cb)
 
+  if not useSmall then
+    -- fix small width
+    button:Click() -- open list
+    local list_width = DropDownList1:GetWidth()
+    if frame:GetWidth() < list_width then
+      UIDropDownMenu_SetWidth(list_width, frame)
+    end
+    CloseDropDownMenus()
+  end
+
   local funcc = button:GetScript("OnClick")
   button:SetScript("OnClick", function()
     if funcc then funcc() end
     local DropDownListWidth = DropDownList1:GetWidth()
-    local DropDownFrameWidth = this:GetParent().backdrop:GetWidth()
+    local DropDownFrameWidth = frame.backdrop:GetWidth()
     if DropDownListWidth < DropDownFrameWidth then
       local diff = DropDownFrameWidth - DropDownListWidth
       DropDownList1:SetWidth(DropDownList1:GetWidth() + diff)
@@ -562,7 +585,7 @@ function pfUI.api.SkinDropDown(frame, cr, cg, cb)
       end
     end
 
-    CreateBackdrop(DropDownList1Backdrop, nil, true, .8)
+    DropDownList1:SetPoint("TOPLEFT", frame.backdrop, "BOTTOMLEFT", 0, -4)
   end)
 
   frame.button = button
