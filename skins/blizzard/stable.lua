@@ -1,4 +1,4 @@
-pfUI:RegisterSkin("Pet Stable Master", "vanilla", function ()
+pfUI:RegisterSkin("Pet Stable Master", "vanilla:tbc", function ()
   StripTextures(PetStableFrame)
   CreateBackdrop(PetStableFrame, nil, nil, .75)
   CreateBackdropShadow(PetStableFrame)

@@ -1,4 +1,4 @@
-pfUI:RegisterSkin("Stack Split", "vanilla", function ()
+pfUI:RegisterSkin("Stack Split", "vanilla:tbc", function ()
   StripTextures(StackSplitFrame)
   CreateBackdrop(StackSplitFrame, nil, nil, .75)
   CreateBackdropShadow(StackSplitFrame)
@@ -7,7 +7,7 @@ pfUI:RegisterSkin("Stack Split", "vanilla", function ()
   SkinButton(StackSplitCancelButton)
 end)
 
-pfUI:RegisterSkin("Coin Pickup", function ()
+pfUI:RegisterSkin("Coin Pickup", "vanilla:tbc", function ()
   StripTextures(CoinPickupFrame)
   CreateBackdrop(CoinPickupFrame, nil, nil, .75)
   CreateBackdropShadow(CoinPickupFrame)
@@ -16,7 +16,7 @@ pfUI:RegisterSkin("Coin Pickup", function ()
   SkinButton(CoinPickupCancelButton)
 end)
 
-pfUI:RegisterSkin("Color Picker", function ()
+pfUI:RegisterSkin("Color Picker", "vanilla:tbc", function ()
   CreateBackdrop(ColorPickerFrame)
   CreateBackdropShadow(ColorPickerFrame)
 
@@ -32,7 +32,7 @@ pfUI:RegisterSkin("Color Picker", function ()
   SkinSlider(OpacitySliderFrame)
 end)
 
-pfUI:RegisterSkin("Opacity", function ()
+pfUI:RegisterSkin("Opacity", "vanilla:tbc", function ()
   CreateBackdrop(OpacityFrame, nil, true, .75)
   CreateBackdropShadow(OpacityFrame)
 
@@ -41,7 +41,7 @@ pfUI:RegisterSkin("Opacity", function ()
   OpacityFrameSlider:SetPoint("CENTER", 0, 0)
 end)
 
-pfUI:RegisterSkin("Tutorial", function ()
+pfUI:RegisterSkin("Tutorial", "vanilla:tbc", function ()
   CreateBackdrop(TutorialFrame, nil, true, .75)
   CreateBackdropShadow(TutorialFrame)
 
@@ -49,7 +49,7 @@ pfUI:RegisterSkin("Tutorial", function ()
   SkinButton(TutorialFrameOkayButton)
 end)
 
-pfUI:RegisterSkin("Quest Timer", function ()
+pfUI:RegisterSkin("Quest Timer", "vanilla:tbc", function ()
   CreateBackdrop(QuestTimerFrame, nil, nil, .75)
   CreateBackdropShadow(QuestTimerFrame)
 

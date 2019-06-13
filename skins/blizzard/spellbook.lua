@@ -1,4 +1,4 @@
-pfUI:RegisterSkin("Spellbook", "vanilla", function ()
+pfUI:RegisterSkin("Spellbook", "vanilla:tbc", function ()
   local border = tonumber(pfUI_config.appearance.border.default)
   local bpad = border > 1 and border - 1 or 1
 

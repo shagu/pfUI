@@ -1,4 +1,4 @@
-pfUI:RegisterSkin("Books", "vanilla", function ()
+pfUI:RegisterSkin("Books", "vanilla:tbc", function ()
   StripTextures(ItemTextFrame)
   CreateBackdrop(ItemTextFrame, nil, nil, .75)
   CreateBackdropShadow(ItemTextFrame)
