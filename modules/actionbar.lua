@@ -449,7 +449,11 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
       if self.bar == 11 then
         CastShapeshiftForm(self.id)
       elseif grid == 1 then
-        PickupAction(self.id)
+        if self.bar == 12 then
+          PickupPetAction(self.id)
+        else
+          PickupAction(self.id)
+        end
       elseif self.bar == 12 then
         if arg1 == "LeftButton" then
           if IsPetAttackActive(self.id) then
