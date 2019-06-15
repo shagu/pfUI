@@ -397,8 +397,9 @@ pfUI:RegisterModule("panel", "vanilla:tbc", function()
 
     do -- Zone
       local widget = CreateFrame("Frame", "pfPanelWidgetZone", UIParent)
-      widget:RegisterEvent("PLAYER_ENTERING_WORLD")
-      widget:RegisterEvent("MINIMAP_ZONE_CHANGED")
+      for _,event in pairs(EVENTS_MINIMAP_ZONE_UPDATE) do
+        widget:RegisterEvent(event)
+      end
       widget.Tooltip = function()
         local real = GetRealZoneText()
         local sub = GetSubZoneText()

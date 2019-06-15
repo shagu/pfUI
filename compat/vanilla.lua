@@ -5,6 +5,7 @@ if pfUI.expansion ~= "vanilla" then return end
 -- [[ Constants ]]--
 CASTBAR_EVENT_CAST_DELAY = "SPELLCAST_DELAYED"
 CASTBAR_EVENT_CHANNEL_DELAY = "SPELLCAST_CHANNEL_UPDATE"
+EVENTS_MINIMAP_ZONE_UPDATE = {"PLAYER_ENTERING_WORLD", "MINIMAP_ZONE_CHANGED"}
 
 MICRO_BUTTONS = {
   'CharacterMicroButton', 'SpellbookMicroButton', 'TalentMicroButton',
