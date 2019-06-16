@@ -56,5 +56,35 @@ pfUI:RegisterModule("combopoints", "vanilla", function ()
     combo:SetScript("OnEvent", function()
       pfUI.combopoints:DisplayNum(GetComboPoints("target"))
     end)
+
+  -- reck
+  elseif class == "PALADIN" then
+    local reck = CreateFrame("Frame")
+    reck:RegisterEvent("CHARACTER_POINTS_CHANGED")
+    reck:RegisterEvent("PLAYER_DEAD")
+    reck:RegisterEvent("CHAT_MSG_COMBAT_SELF_HITS")
+    reck:RegisterEvent("CHAT_MSG_COMBAT_SELF_CRITS")
+    reck:RegisterEvent("CHAT_MSG_COMBAT_SELF_MISSES")
+    reck:RegisterEvent("CHAT_MSG_COMBAT_CREATURE_VS_SELF_HITS")
+    reck:RegisterEvent("CHAT_MSG_COMBAT_HOSTILEPLAYER_HITS")
+
+    local COMBATHITCRITOTHERSELF = SanitizePattern(COMBATHITCRITOTHERSELF)
+    local COMBATHITCRITSCHOOLOTHERSELF = SanitizePattern(COMBATHITCRITSCHOOLOTHERSELF)
+
+    reck:SetScript("OnEvent", function()
+      if not this.rank or event == "CHARACTER_POINTS_CHANGED" then
+        _,_,_,_,this.rank = GetTalentInfo(2,13)
+      end
+
+      if event == "PLAYER_DEAD" or event == "CHAT_MSG_COMBAT_SELF_HITS" or event == "CHAT_MSG_COMBAT_SELF_CRITS" or event == "CHAT_MSG_COMBAT_SELF_MISSES" then
+        this.stacks = 0
+        pfUI.combopoints:DisplayNum(0)
+      elseif arg1 and this.rank and this.rank == 5 and this.stacks and this.stacks < 4 then
+        if strfind(arg1, COMBATHITCRITOTHERSELF) or strfind(arg1, COMBATHITCRITSCHOOLOTHERSELF) then
+          this.stacks = this.stacks + 1
+          pfUI.combopoints:DisplayNum(this.stacks)
+        end
+      end
+    end)
   end
 end)
