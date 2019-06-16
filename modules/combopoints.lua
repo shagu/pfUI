@@ -3,6 +3,7 @@ pfUI:RegisterModule("combopoints", "vanilla", function ()
   ComboFrame:Hide()
   ComboFrame:UnregisterAllEvents()
 
+  local _, class = UnitClass("player")
   local combo_size = C["unitframes"]["combosize"]
   pfUI.combopoints = {}
 
@@ -11,6 +12,7 @@ pfUI:RegisterModule("combopoints", "vanilla", function ()
     pfUI.combopoints[point]:SetFrameStrata("HIGH")
     pfUI.combopoints[point]:SetWidth(combo_size)
     pfUI.combopoints[point]:SetHeight(combo_size)
+    pfUI.combopoints[point]:Hide()
 
     if pfUI.uf.target then
       pfUI.combopoints[point]:SetPoint("TOPLEFT", pfUI.uf.target, "TOPRIGHT", C.appearance.border.default*3, -(point - 1) * (combo_size + C.appearance.border.default*3))
@@ -45,12 +47,14 @@ pfUI:RegisterModule("combopoints", "vanilla", function ()
   end
 
   -- combo
-  local combo = CreateFrame("Frame")
-  combo:RegisterEvent("UNIT_COMBO_POINTS")
-  combo:RegisterEvent("PLAYER_COMBO_POINTS")
-  combo:RegisterEvent("PLAYER_TARGET_CHANGED")
-  combo:RegisterEvent("PLAYER_ENTERING_WORLD")
-  combo:SetScript("OnEvent", function()
-    pfUI.combopoints:DisplayNum(GetComboPoints("target"))
-  end)
+  if class == "DRUID" or class == "ROGUE" then
+    local combo = CreateFrame("Frame")
+    combo:RegisterEvent("UNIT_COMBO_POINTS")
+    combo:RegisterEvent("PLAYER_COMBO_POINTS")
+    combo:RegisterEvent("PLAYER_TARGET_CHANGED")
+    combo:RegisterEvent("PLAYER_ENTERING_WORLD")
+    combo:SetScript("OnEvent", function()
+      pfUI.combopoints:DisplayNum(GetComboPoints("target"))
+    end)
+  end
 end)
