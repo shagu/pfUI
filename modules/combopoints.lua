@@ -3,59 +3,54 @@ pfUI:RegisterModule("combopoints", "vanilla", function ()
   ComboFrame:Hide()
   ComboFrame:UnregisterAllEvents()
 
-  pfUI.combopoints = CreateFrame("Frame")
+  local combo_size = C["unitframes"]["combosize"]
+  pfUI.combopoints = {}
 
-  pfUI.combopoints:RegisterEvent("UNIT_COMBO_POINTS")
-  pfUI.combopoints:RegisterEvent("PLAYER_COMBO_POINTS")
-  pfUI.combopoints:RegisterEvent("UNIT_DISPLAYPOWER")
-  pfUI.combopoints:RegisterEvent("PLAYER_TARGET_CHANGED")
-  pfUI.combopoints:RegisterEvent('UNIT_ENERGY')
-  pfUI.combopoints:RegisterEvent("PLAYER_ENTERING_WORLD")
+  for point = 1, 5 do
+    pfUI.combopoints[point] = CreateFrame("Frame", "pfCombo" .. point, UIParent)
+    pfUI.combopoints[point]:SetFrameStrata("HIGH")
+    pfUI.combopoints[point]:SetWidth(combo_size)
+    pfUI.combopoints[point]:SetHeight(combo_size)
 
-  pfUI.combopoints:SetScript("OnEvent", function()
-      if event == "PLAYER_ENTERING_WORLD" then
-        local combo_size = C["unitframes"]["combosize"]
+    if pfUI.uf.target then
+      pfUI.combopoints[point]:SetPoint("TOPLEFT", pfUI.uf.target, "TOPRIGHT", C.appearance.border.default*3, -(point - 1) * (combo_size + C.appearance.border.default*3))
+    else
+      pfUI.combopoints[point]:SetPoint("CENTER", UIParent, "CENTER", (point - 3) * (combo_size + C.appearance.border.default*3), 10 )
+    end
 
-        for point=1, 5 do
-          if not pfUI.combopoints["combopoint" .. point] then
-            pfUI.combopoints["combopoint" .. point] = CreateFrame("Frame", "pfCombo" .. point, UIParent)
-            pfUI.combopoints["combopoint" .. point]:SetFrameStrata("HIGH")
-            pfUI.combopoints["combopoint" .. point]:SetWidth(combo_size)
-            pfUI.combopoints["combopoint" .. point]:SetHeight(combo_size)
-            CreateBackdrop(pfUI.combopoints["combopoint" .. point])
-            CreateBackdropShadow(pfUI.combopoints["combopoint" .. point])
+    pfUI.combopoints[point].tex = pfUI.combopoints[point]:CreateTexture("OVERLAY")
+    pfUI.combopoints[point].tex:SetAllPoints(pfUI.combopoints[point])
 
-            if pfUI.uf.target then
-              pfUI.combopoints["combopoint" .. point]:SetPoint("TOPLEFT", pfUI.uf.target, "TOPRIGHT", C.appearance.border.default*3, -(point - 1) * (combo_size + C.appearance.border.default*3))
-            else
-              pfUI.combopoints["combopoint" .. point]:SetPoint("CENTER", UIParent, "CENTER", (point - 3) * (combo_size + C.appearance.border.default*3), 10 )
-            end
-            UpdateMovable(pfUI.combopoints["combopoint" .. point])
-          end
+    if point < 3 then
+      pfUI.combopoints[point].tex:SetTexture(1, .3, .3, .75)
+    elseif point < 4 then
+      pfUI.combopoints[point].tex:SetTexture(1, 1, .3, .75)
+    else
+      pfUI.combopoints[point].tex:SetTexture(.3, 1, .3, .75)
+    end
 
-          if point < 3 then
-            local tex = pfUI.combopoints["combopoint" .. point]:CreateTexture("OVERLAY")
-            tex:SetAllPoints(pfUI.combopoints["combopoint" .. point])
-            tex:SetTexture(1, .3, .3, .75)
-          elseif point < 4 then
-            local tex = pfUI.combopoints["combopoint" .. point]:CreateTexture("OVERLAY")
-            tex:SetAllPoints(pfUI.combopoints["combopoint" .. point])
-            tex:SetTexture(1, 1, .3, .75)
-          else
-            local tex = pfUI.combopoints["combopoint" .. point]:CreateTexture("OVERLAY")
-            tex:SetAllPoints(pfUI.combopoints["combopoint" .. point])
-            tex:SetTexture(.3, 1, .3, .75)
-          end
-          pfUI.combopoints["combopoint" .. point]:Hide()
-        end
-      else
-        local combopoints = GetComboPoints("target")
-        for point=1, 5 do
-          pfUI.combopoints["combopoint" .. point]:Hide()
-        end
-        for point=1, combopoints do
-          pfUI.combopoints["combopoint" .. point]:Show()
-        end
-      end
-    end)
+    UpdateMovable(pfUI.combopoints[point])
+    CreateBackdrop(pfUI.combopoints[point])
+    CreateBackdropShadow(pfUI.combopoints[point])
+  end
+
+  function pfUI.combopoints:DisplayNum(num)
+    for point=1, num do
+      pfUI.combopoints[point]:Show()
+    end
+
+    for point=num+1, 5 do
+      pfUI.combopoints[point]:Hide()
+    end
+  end
+
+  -- combo
+  local combo = CreateFrame("Frame")
+  combo:RegisterEvent("UNIT_COMBO_POINTS")
+  combo:RegisterEvent("PLAYER_COMBO_POINTS")
+  combo:RegisterEvent("PLAYER_TARGET_CHANGED")
+  combo:RegisterEvent("PLAYER_ENTERING_WORLD")
+  combo:SetScript("OnEvent", function()
+    pfUI.combopoints:DisplayNum(GetComboPoints("target"))
+  end)
 end)
