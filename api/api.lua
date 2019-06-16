@@ -165,7 +165,7 @@ end
 -- 'pattern'    [string]         unformatted pattern
 -- returns:     [string]         simplified gfind compatible pattern
 local sanitize_cache = {}
-function pfUI.api.SanitizePattern(pattern, dbg)
+function pfUI.api.SanitizePattern(pattern)
   if not sanitize_cache[pattern] then
     local ret = pattern
     -- escape magic characters
