@@ -184,9 +184,6 @@ pfUI:RegisterModule("thirdparty", "vanilla", function ()
         if KLHTM_Gui.title then
           KLHTM_Gui.title.back:Hide()
         end
-        if KLHTM_Gui.frame then
-          KLHTM_SetGuiScale(ktm_scale)
-        end
         if KLHTM_Gui.raid then
           -- skin rows (raid)
           for i in pairs(KLHTM_Gui.raid.rows) do
@@ -275,6 +272,11 @@ pfUI:RegisterModule("thirdparty", "vanilla", function ()
       pfUI.thirdparty.meters.threat = true
 
       KLHTM_Frame:Hide()
+
+      -- adjust scale to match the dock
+      if KLHTM_Gui.frame then
+        KLHTM_SetGuiScale(ktm_scale)
+      end
 
       if pfUI.panel then
         pfUI.panel.right.hide:SetScript("OnClick", function()
