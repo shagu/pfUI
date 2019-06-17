@@ -106,8 +106,10 @@ pfUI:RegisterSkin("Options - Interface", "vanilla", function ()
   close:SetFrameLevel(8)
 
   SkinCloseButton(close, UIOptionsFrame.backdrop, -6, -6)
-  UIOptionsFrameTitle:ClearAllPoints()
-  UIOptionsFrameTitle:SetPoint("TOP", UIOptionsFrame.backdrop, "TOP", 0, -10)
+  if UIOptionsFrameTitle then
+    UIOptionsFrameTitle:ClearAllPoints()
+    UIOptionsFrameTitle:SetPoint("TOP", UIOptionsFrame.backdrop, "TOP", 0, -10)
+  end
 
   SkinTab(UIOptionsFrameTab1)
   UIOptionsFrameTab1:ClearAllPoints()
