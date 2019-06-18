@@ -111,8 +111,8 @@ pfUI:RegisterSkin("Mailbox", "vanilla:tbc", function ()
 
       hooksecurefunc("InboxFrame_OnClick", function(index)
         local name = GetInboxItem(index)
-        if name then
-          local link = GetItemLinkByName(name)
+        local link = name and GetItemLinkByName(name)
+        if link then
           local _,_,linkstr = string.find(link, "(item:%d+:%d+:%d+:%d+)")
           local _,_,quality = GetItemInfo(linkstr)
           local r,g,b = GetItemQualityColor(quality)
