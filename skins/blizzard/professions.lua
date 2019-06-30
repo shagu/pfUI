@@ -235,7 +235,7 @@ pfUI:RegisterSkin("Profession", "vanilla:tbc", function ()
           search:DisableDrawLayer("BACKGROUND")
           CreateBackdrop(search, nil, nil, 1)
           search.backdrop:SetAllPoints(search)
-          search:SetHeight(createall:GetHeight())
+          search:SetHeight(22)
           search:ClearAllPoints()
           search:SetPoint("TOPRIGHT", scrollframe.backdrop, "BOTTOMRIGHT", 0, -5)
         end
