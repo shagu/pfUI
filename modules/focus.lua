@@ -17,6 +17,7 @@ SLASH_PFCLEARFOCUS1, SLASH_PFCLEARFOCUS2 = '/clearfocus', '/pfclearfocus'
 function SlashCmdList.PFCLEARFOCUS(msg)
   if pfUI.uf and pfUI.uf.focus then
     pfUI.uf.focus:Hide()
+    pfUI.uf.focus.unitname = nil
   end
 end
 
