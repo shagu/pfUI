@@ -10,6 +10,7 @@ function SlashCmdList.PFFOCUS(msg)
     pfUI.uf.focus:Show()
   else
     pfUI.uf.focus:Hide()
+    pfUI.uf.focus.unitname = nil
   end
 end
 
