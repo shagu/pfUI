@@ -1359,6 +1359,7 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
             _G["pfUI_config"] = {}
             _G["pfUI_playerDB"] = {}
             _G["pfUI_profiles"] = {}
+            _G["pfUI_cache"] = {}
             pfUI:LoadConfig()
             this:GetParent():Hide()
             pfUI.gui:Reload()
@@ -1380,6 +1381,7 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
         CreateQuestionDialog(T["Do you really want to reset the Cache?"],
           function()
             _G["pfUI_playerDB"] = {}
+            _G["pfUI_cache"] = {}
             this:GetParent():Hide()
             pfUI.gui:Reload()
           end)
