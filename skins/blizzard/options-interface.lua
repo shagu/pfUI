@@ -47,7 +47,8 @@ pfUI:RegisterSkin("Options - Interface", "tbc", function ()
       elseif obj_type == "Slider" then
         SkinSlider(obj)
       elseif obj_type == "Frame" then
-        if _G[obj:GetName().."Button"] then
+        local name = obj.GetName and obj:GetName()
+        if name and _G[name.."Button"] then
           SkinDropDown(obj)
         else
           SkinAllObjects(obj)
