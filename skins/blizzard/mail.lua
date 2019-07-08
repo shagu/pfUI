@@ -189,6 +189,7 @@ pfUI:RegisterSkin("Mailbox", "vanilla:tbc", function ()
 
     SkinMoneyInputFrame(SendMailMoney)
 
+    StationeryBackgroundLeft:SetDrawLayer("BORDER")
     StationeryBackgroundLeft:SetAllPoints()
     StationeryBackgroundRight:Hide()
   end
