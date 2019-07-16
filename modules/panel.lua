@@ -311,13 +311,13 @@ pfUI:RegisterModule("panel", "vanilla:tbc", function()
       widget:RegisterEvent("PLAYER_GUILD_UPDATE")
       widget.Click = function() ToggleFriendsFrame(3) end
       widget:SetScript("OnEvent", function()
-        local count = 0
-        for i = 1, GetNumGuildMembers() do
-          local _, _, _, _, _, _, _, _, online = GetGuildRosterInfo(i)
-          if online then count = count + 1 end
-        end
-
         if GetGuildInfo("player") then
+          local count = 0
+          for i = 1, GetNumGuildMembers() do
+            local _, _, _, _, _, _, _, _, online = GetGuildRosterInfo(i)
+            if online then count = count + 1 end
+          end
+
           pfUI.panel:OutputPanel("guild", GUILD .. ": " .. count, nil, widget.Click)
         else
           pfUI.panel:OutputPanel("guild", GUILD .. ": " .. NOT_APPLICABLE, nil, widget.Click)
@@ -326,7 +326,7 @@ pfUI:RegisterModule("panel", "vanilla:tbc", function()
 
       widget:SetScript("OnUpdate",function()
         if ( this.tick or 10) > GetTime() then return else this.tick = GetTime() + 10 end
-        GuildRoster()
+        if GetGuildInfo("player") then GuildRoster() end
       end)
     end
 
