@@ -1182,6 +1182,8 @@ function pfUI.uf:RefreshUnit(unit, component)
   -- Buffs
   if unit.buffs and ( component == "all" or component == "aura" ) then
     for i=1, unit.config.bufflimit do
+      if not unit.buffs[i] then break end
+
       local texture, stacks
       if unit.label == "player" then
        stacks = GetPlayerBuffApplications(GetPlayerBuff(PLAYER_BUFF_START_ID+i,"HELPFUL"))
@@ -1212,6 +1214,8 @@ function pfUI.uf:RefreshUnit(unit, component)
   -- Debuffs
   if unit.debuffs and ( component == "all" or component == "aura" ) then
     for i=1, unit.config.debufflimit do
+      if not unit.debuffs[i] then break end
+
       local perrow = unit.config.debuffperrow
       local bperrow = unit.config.buffperrow
 
