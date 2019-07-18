@@ -866,6 +866,9 @@ end
 -- Creates a pfUI compatible frame as shadow element
 -- 'f'          [frame]         the frame which should get a backdrop.
 function pfUI.api.CreateBackdropShadow(f)
+  -- exit if now frame was given
+  if not f then return end
+
   if f.backdrop_shadow or pfUI_config.appearance.border.shadow ~= "1" then
     return
   end
