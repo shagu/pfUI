@@ -1135,6 +1135,10 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
 
     -- update to the current page
     bars[1]:SetAttribute("state", bars[1]:GetAttribute("state-page"))
+
+    -- set state driver for pet bars
+    bars[12]:SetAttribute("unit", "pet")
+    RegisterStateDriver(bars[12], 'visibility', "[pet] show; hide")
   end
 
   -- handle drag-drop grid
