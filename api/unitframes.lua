@@ -207,47 +207,49 @@ function pfUI.uf:UpdateVisibility()
   end
 
   local unitstr = string.format("%s%s", self.label or "", self.id or "")
-  if UnitExists(unitstr) or (pfUI.unlock and pfUI.unlock:IsShown()) then
+  if pfUI.unlock and pfUI.unlock:IsShown() then
     self:Show()
-  else
-    --keep focus and named frames visible
-    if self.unitname and self.unitname ~= "focus" then
-      self:Show()
+    return
 
-    -- only update visibility state for existing units
-    elseif UnitName(unitstr) then
-      -- hide group while in raid and option is set
-      if C["unitframes"]["group"]["hide_in_raid"] == "1" and strsub(self.label,0,5) == "party" and UnitInRaid("player") then
-        self:Hide()
-        return
+  --keep focus and named frames visible
+  elseif self.unitname and self.unitname ~= "focus" then
+    self:Show()
+    return
 
-      -- hide existing but too far away pet and pets of old group members
-      elseif self.label == "partypet" then
-        if not UnitIsVisible(unitstr) or not UnitExists("party" .. self.id) then
-          self:Hide()
-          return
-        end
-
-      elseif self.label == "pettarget" then
-        if not UnitIsVisible(unitstr) or not UnitExists("pet") then
-          self.frame:Hide()
-          return
-        end
-
-      -- hide self in group if solo or hide in raid is set
-      elseif self.fname == "Group0" or self.fname == "PartyPet0" or self.fname == "Party0Target" then
-        if GetNumPartyMembers() <= 0 or ( C["unitframes"]["group"]["hide_in_raid"] == "1" and UnitInRaid("player") ) then
-          self:Hide()
-          return
-        end
-      end
-
-      self:Show()
-    else
-      self.lastUnit = nil
+  -- only update visibility state for existing units
+  elseif UnitName(unitstr) then
+    -- hide group while in raid and option is set
+    if C["unitframes"]["group"]["hide_in_raid"] == "1" and strsub(self.label,0,5) == "party" and UnitInRaid("player") then
       self:Hide()
       return
+
+    -- hide existing but too far away pet and pets of old group members
+    elseif self.label == "partypet" then
+      if not UnitIsVisible(unitstr) or not UnitExists("party" .. self.id) then
+        self:Hide()
+        return
+      end
+
+    elseif self.label == "pettarget" then
+      if not UnitIsVisible(unitstr) or not UnitExists("pet") then
+        self.frame:Hide()
+        return
+      end
+
+    -- hide self in group if solo or hide in raid is set
+    elseif self.fname == "Group0" or self.fname == "PartyPet0" or self.fname == "Party0Target" then
+      if GetNumPartyMembers() <= 0 or ( C["unitframes"]["group"]["hide_in_raid"] == "1" and UnitInRaid("player") ) then
+        self:Hide()
+        return
+      end
     end
+
+    -- show everything else that has a name
+    self:Show()
+  else
+    self.lastUnit = nil
+    self:Hide()
+    return
   end
 end
 

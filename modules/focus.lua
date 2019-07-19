@@ -4,21 +4,19 @@ function SlashCmdList.PFFOCUS(msg)
 
   if msg ~= "" then
     pfUI.uf.focus.unitname = strlower(msg)
-    pfUI.uf.focus:Show()
   elseif UnitName("target") then
     pfUI.uf.focus.unitname = strlower(UnitName("target"))
-    pfUI.uf.focus:Show()
   else
-    pfUI.uf.focus:Hide()
     pfUI.uf.focus.unitname = nil
+    pfUI.uf.focus.label = nil
   end
 end
 
 SLASH_PFCLEARFOCUS1, SLASH_PFCLEARFOCUS2 = '/clearfocus', '/pfclearfocus'
 function SlashCmdList.PFCLEARFOCUS(msg)
   if pfUI.uf and pfUI.uf.focus then
-    pfUI.uf.focus:Hide()
     pfUI.uf.focus.unitname = nil
+    pfUI.uf.focus.label = nil
   end
 end
 
@@ -75,7 +73,6 @@ function SlashCmdList.PFSWAPFOCUS(msg)
   if oldunit and pfUI.uf.focus.unitname then
     TargetByName(pfUI.uf.focus.unitname)
     pfUI.uf.focus.unitname = oldunit
-    pfUI.uf.focus:Show()
   end
 end
 
