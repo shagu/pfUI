@@ -126,6 +126,12 @@ local function DebuffOnClick()
   end
 end
 
+local function UpdateVisibilityScanner(self)
+  local self = self or this
+  if ( self.limit or 1) > GetTime() then return else self.limit = GetTime() + .2 end
+  self.frame:UpdateVisibility()
+end
+
 local aggrodata = { }
 function pfUI.api.UnitHasAggro(unit)
   if aggrodata[unit] and GetTime() < aggrodata[unit].check + 1 then
@@ -170,6 +176,72 @@ pfUI.uf.glow.val = 0
 
 function pfUI.uf.glow.UpdateGlowAnimation()
   this:SetAlpha(pfUI.uf.glow.val)
+end
+
+function pfUI.uf:UpdateVisibility()
+  local self = self or this
+
+  if InCombatLockdown and InCombatLockdown() then return end
+  if self.config.visible == "0" then return end
+
+  if InCombatLockdown and not InCombatLockdown() then
+    if pfUI.unlock and pfUI.unlock:IsShown() then
+      if self.visible then
+        UnregisterStateDriver(self, "visibility")
+        self.visible = nil
+      end
+    elseif not self.visible then
+      RegisterStateDriver(self, "visibility", self.visibilitycondition)
+      self.visible = true
+    end
+    return
+  elseif InCombatLockdown and InCombatLockdown() then
+    return
+  end
+
+  local unitstr = string.format("%s%s", self.label or "", self.id or "")
+  if UnitExists(unitstr) or (pfUI.unlock and pfUI.unlock:IsShown()) then
+    self:Show()
+  else
+    --keep focus and named frames visible
+    if self.unitname and self.unitname ~= "focus" then
+      self:Show()
+
+    -- only update visibility state for existing units
+    elseif UnitName(unitstr) then
+      -- hide group while in raid and option is set
+      if C["unitframes"]["group"]["hide_in_raid"] == "1" and strsub(self.label,0,5) == "party" and UnitInRaid("player") then
+        self:Hide()
+        return
+
+      -- hide existing but too far away pet and pets of old group members
+      elseif self.label == "partypet" then
+        if not UnitIsVisible(unitstr) or not UnitExists("party" .. self.id) then
+          self:Hide()
+          return
+        end
+
+      elseif self.label == "pettarget" then
+        if not UnitIsVisible(unitstr) or not UnitExists("pet") then
+          self.frame:Hide()
+          return
+        end
+
+      -- hide self in group if solo or hide in raid is set
+      elseif self.fname == "Group0" or self.fname == "PartyPet0" or self.fname == "Party0Target" then
+        if GetNumPartyMembers() <= 0 or ( C["unitframes"]["group"]["hide_in_raid"] == "1" and UnitInRaid("player") ) then
+          self:Hide()
+          return
+        end
+      end
+
+      self:Show()
+    else
+      self.lastUnit = nil
+      self:Hide()
+      return
+    end
+  end
 end
 
 function pfUI.uf:UpdateFrameSize()
@@ -774,7 +846,8 @@ function pfUI.uf:EnableScripts()
     f:SetAttribute("unit", f.label .. f.id)
     f:SetAttribute("type1", "target")
     f:SetAttribute("type2", "showmenu")
-    RegisterStateDriver(f, 'visibility', string.format("[target=%s%s,exists] show; hide", f.label, f.id))
+    f.visibilitycondition = string.format("[target=%s%s,exists] show; hide", f.label, f.id)
+    RegisterStateDriver(f, 'visibility', f.visibilitycondition)
   else
     f:SetScript("OnClick", pfUI.uf.OnClick)
   end
@@ -784,6 +857,9 @@ function pfUI.uf:EnableScripts()
   f:SetScript("OnUpdate", pfUI.uf.OnUpdate)
   f:SetScript("OnEnter", pfUI.uf.OnEnter)
   f:SetScript("OnLeave", pfUI.uf.OnLeave)
+
+  -- add generic visibility handler
+  f.visibility:SetScript("OnUpdate", UpdateVisibilityScanner)
 end
 
 function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
@@ -811,11 +887,12 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
   local f = CreateFrame("Button", "pf" .. fname, UIParent, UNITFRAME_SECURE_TEMPLATE)
 
   -- add unitframe functions
-  f.UpdateFrameSize = pfUI.uf.UpdateFrameSize
-  f.UpdateConfig    = pfUI.uf.UpdateConfig
-  f.EnableScripts   = pfUI.uf.EnableScripts
-  f.EnableEvents    = pfUI.uf.EnableEvents
-  f.GetColor        = pfUI.uf.GetColor
+  f.UpdateFrameSize  = pfUI.uf.UpdateFrameSize
+  f.UpdateVisibility = pfUI.uf.UpdateVisibility
+  f.UpdateConfig     = pfUI.uf.UpdateConfig
+  f.EnableScripts    = pfUI.uf.EnableScripts
+  f.EnableEvents     = pfUI.uf.EnableEvents
+  f.GetColor         = pfUI.uf.GetColor
 
   -- cache values to the frame
   f.label = unit
@@ -873,6 +950,9 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
   f.portrait.model = CreateFrame("PlayerModel", "pfPortraitModel" .. f.label .. f.id, f.portrait)
   f.portrait.model.next = CreateFrame("PlayerModel", nil, nil)
   f.feedbackText = f:CreateFontString("pfHitIndicator" .. f.label .. f.id, "OVERLAY", "NumberFontNormalHuge")
+
+  f.visibility = f.visibility or CreateFrame("Frame", nil, pfUI)
+  f.visibility.frame = f
 
   f:Hide()
   f:UpdateConfig()
@@ -1130,52 +1210,11 @@ function pfUI.uf:RefreshUnit(unit, component)
     default_border = C.appearance.border.unitframes
   end
 
-  -- hide and return early on unused frames
-  if not ( pfUI.unlock and pfUI.unlock:IsShown() ) then
-
-    --keep focus and named frames visible
-    if unit.unitname and unit.unitname ~= "focus" then
-      unit:Show()
-
-
-    -- only update visibility state for existing units
-    elseif UnitName(unitstr) then
-
-      -- hide group while in raid and option is set
-      if C["unitframes"]["group"]["hide_in_raid"] == "1" and strsub(unit.label,0,5) == "party" and UnitInRaid("player") then
-        unit:Hide()
-        return
-
-      -- hide existing but too far away pet and pets of old group members
-      elseif unit.label == "partypet" then
-        if not UnitIsVisible(unitstr) or not UnitExists("party" .. unit.id) then
-          unit:Hide()
-          return
-        end
-
-      elseif unit.label == "pettarget" then
-        if not UnitIsVisible(unitstr) or not UnitExists("pet") then
-          unit:Hide()
-          return
-        end
-
-      -- hide self in group if solo or hide in raid is set
-      elseif unit.fname == "Group0" or unit.fname == "PartyPet0" or unit.fname == "Party0Target" then
-        if GetNumPartyMembers() <= 0 or ( C["unitframes"]["group"]["hide_in_raid"] == "1" and UnitInRaid("player") ) then
-          unit:Hide()
-          return
-        end
-      end
-
-      unit:Show()
-    else
-      unit:Hide()
-      return
-    end
-  end
-
   -- create required fields
   if not unit.cache then unit.cache = {} end
+
+  -- hide unused and invalid frames
+  unit:UpdateVisibility()
 
   if not unit:IsShown() then return end
 

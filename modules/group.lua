@@ -2,21 +2,6 @@ pfUI:RegisterModule("group", "vanilla:tbc", function ()
   -- do not go further on disabled UFs
   if C.unitframes.disable == "1" then return end
 
-  -- scan for group targets
-  pfUI.uf.groupscanner = CreateFrame("Frame", nil, UIParent)
-  pfUI.uf.groupscanner:Hide()
-  pfUI.uf.groupscanner:SetScript("OnUpdate", function()
-    if ( this.limit or 1) > GetTime() then return else this.limit = GetTime() + .2 end
-
-    for i=1, 4 do
-      if (UnitExists("party" .. i) and UnitExists("party" .. i .. "target")) or (pfUI.unlock and pfUI.unlock:IsShown()) then
-        pfUI.uf.group[i].target:Show()
-      else
-        pfUI.uf.group[i].target:Hide()
-      end
-    end
-  end)
-
   -- hide blizzard group frames
   for i=1, 4 do
     if _G["PartyMemberFrame" .. i] then
@@ -55,9 +40,7 @@ pfUI:RegisterModule("group", "vanilla:tbc", function ()
         pfUI.uf.group[i].target:SetPoint("TOPLEFT", pfUI.uf.group[i], "TOPRIGHT", 3*default_border, 0)
         pfUI.uf.group[i].target:UpdateConfig()
         UpdateMovable(pfUI.uf.group[i].target)
-        pfUI.uf.groupscanner:Show()
       elseif pfUI.uf.group[i] and pfUI.uf.group[i].target then
-        pfUI.uf.groupscanner:Hide()
         pfUI.uf.group[i].target:UpdateConfig()
         RemoveMovable(pfUI.uf.group[i].target)
       end
