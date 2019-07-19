@@ -518,7 +518,7 @@ pfUI:RegisterModule("chat", "vanilla:tbc", function ()
         updateAllButtons = 1
       end
       local dockRegion
-      for index, value in DOCKED_CHAT_FRAMES do
+      for index, value in pairs(DOCKED_CHAT_FRAMES) do
         if ( updateAllButtons ) then
           FCF_UpdateButtonSide(value)
         end
