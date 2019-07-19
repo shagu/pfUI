@@ -672,9 +672,11 @@ pfUI:RegisterModule("chat", "vanilla:tbc", function ()
           if C.chat.text.classcolor == "1" then
 
             for name in gfind(text, "|Hplayer:(.-)|h") do
+              local real, _ = strsplit(":", name)
               local color = unknowncolorhex
               local match = false
-              local class = GetUnitData(name)
+              local class = GetUnitData(real)
+
               if class then
                 if class ~= UNKNOWN then
                   color = rgbhex(RAID_CLASS_COLORS[class])
@@ -683,8 +685,8 @@ pfUI:RegisterModule("chat", "vanilla:tbc", function ()
               end
 
               if C.chat.text.tintunknown == "1" or match then
-                text = string.gsub(text, "|Hplayer:"..name.."|h%["..name.."%]|h(.-:-)",
-                    left..color.."|Hplayer:"..name.."|h" .. name .. "|h|r"..right.."%1")
+                text = string.gsub(text, "|Hplayer:"..name.."|h%["..real.."%]|h(.-:-)",
+                    left..color.."|Hplayer:"..name.."|h" .. color .. real .. "|h|r"..right.."%1")
               end
             end
           end
