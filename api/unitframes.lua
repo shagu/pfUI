@@ -182,7 +182,16 @@ function pfUI.uf:UpdateVisibility()
   local self = self or this
 
   if InCombatLockdown and InCombatLockdown() then return end
-  if self.config.visible == "0" then return end
+
+  if self.config.visible == "0" then
+    if UnregisterStateDriver then
+      UnregisterStateDriver(self, "visibility")
+      self.visible = nil
+    end
+
+    self:Hide()
+    return
+  end
 
   if InCombatLockdown and not InCombatLockdown() then
     if pfUI.unlock and pfUI.unlock:IsShown() then
@@ -194,8 +203,6 @@ function pfUI.uf:UpdateVisibility()
       RegisterStateDriver(self, "visibility", self.visibilitycondition)
       self.visible = true
     end
-    return
-  elseif InCombatLockdown and InCombatLockdown() then
     return
   end
 
@@ -1171,11 +1178,6 @@ function pfUI.uf:RefreshUnit(unit, component)
   if not unit.id then unit.id = "" end
   local component = component or ""
 
-  if unit.config.visible ~= "1" then
-    unit:Hide()
-    return
-  end
-
   -- don't update scanner activity
   if unit.label == "target" or unit.label == "targettarget" then
     if pfScanActive == true then return end
@@ -1203,20 +1205,19 @@ function pfUI.uf:RefreshUnit(unit, component)
     end
   end
 
-  local unitstr = unit.label..unit.id
+  -- hide unused and invalid frames
+  unit:UpdateVisibility()
 
+  -- return on invisible unit frames
+  if not unit:IsShown() then return end
+
+  -- create required fields
+  if not unit.cache then unit.cache = {} end
+  local unitstr = unit.label..unit.id
   local default_border = C.appearance.border.default
   if C.appearance.border.unitframes ~= "-1" then
     default_border = C.appearance.border.unitframes
   end
-
-  -- create required fields
-  if not unit.cache then unit.cache = {} end
-
-  -- hide unused and invalid frames
-  unit:UpdateVisibility()
-
-  if not unit:IsShown() then return end
 
   -- Buffs
   if unit.buffs and ( component == "all" or component == "aura" ) then
