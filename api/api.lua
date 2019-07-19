@@ -825,7 +825,7 @@ function pfUI.api.CreateBackdrop(f, inset, legacy, transp, backdropSetting)
     f:SetBackdropBorderColor(er, eg, eb , ea)
   else
     -- increase clickable area if available
-    if f.SetHitRectInsets then
+    if f.SetHitRectInsets and ( not InCombatLockdown or not InCombatLockdown()) then
       f:SetHitRectInsets(-border,-border,-border,-border)
     end
 
