@@ -260,7 +260,7 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     if event == "ACTIONBAR_UPDATE_STATE" then return end
 
     -- handle secure action button templates (tbc+)
-    if self.SetAttribute then
+    if self.SetAttribute and InCombatLockdown and not InCombatLockdown() then
       if self.bar == 11 then
         self:SetAttribute("type", "spell")
         self:SetAttribute('spell', select(2, GetShapeshiftFormInfo(id)))
