@@ -205,7 +205,7 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
   local function SwitchBar(bar)
     if _G.CURRENT_ACTIONBAR_PAGE ~= bar then
       _G.CURRENT_ACTIONBAR_PAGE = bar
-      ChangeActionBarPage()
+      ChangeActionBarPage(bar)
     end
   end
 
