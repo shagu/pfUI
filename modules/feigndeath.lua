@@ -19,7 +19,7 @@ pfUI:RegisterModule("feigndeath", "vanilla:tbc", function ()
   end)
 
   local oldUnitHealth = UnitHealth
-  function _G.UnitHealth(arg)
+  function UnitHealth(arg)
     if UnitIsDead(arg) and cache[UnitName(arg)] then
       return cache[UnitName(arg)]
     else
