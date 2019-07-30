@@ -336,8 +336,8 @@ pfUI:RegisterModule("unlock", "vanilla:tbc", function ()
       frame.drag.backdrop:SetBackdropBorderColor(.2,1,.8,1)
     end
 
-    local _, _, _, xpos, ypos = frame:GetPoint()
-    frame.oldPos = { xpos, ypos }
+    local anchor, _, _, xpos, ypos = frame:GetPoint()
+    frame.oldPos = { xpos, ypos, anchor }
     frame:StartMoving()
 
     if frame.OnMove then frame:OnMove() end
@@ -353,9 +353,10 @@ pfUI:RegisterModule("unlock", "vanilla:tbc", function ()
     frame:StopMovingOrSizing()
 
     -- calculate and move selection offsets
-    local anchor, _, _, xpos, ypos = frame:GetPoint()
+    local anchor, xpos, ypos = ConvertFrameAnchor(frame, frame.oldPos[3])
     local diffxpos = frame.oldPos[1] - xpos
     local diffypos = frame.oldPos[2] - ypos
+
     for id, frame in pairs(pfUI.unlock.selection) do
       if frame:GetName() ~= name then
         local anchor, _, _, xpos, ypos = frame:GetPoint()
