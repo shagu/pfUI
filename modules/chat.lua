@@ -490,53 +490,20 @@ pfUI:RegisterModule("chat", "vanilla:tbc", function ()
     _G["ChatFrame" .. i .. "BottomButton"].Show = function() return end
   end
 
-  -- orig. function but removed flashing
-  function _G.FCF_OnUpdate(elapsed)
-    -- Need to draw the dock regions for a frame to define their rects
-    if ( not ChatFrame1.init ) then
-      for i=1, NUM_CHAT_WINDOWS do
-        _G["ChatFrame"..i.."TabDockRegion"]:Show()
-        FCF_UpdateButtonSide(_G["ChatFrame"..i])
-      end
-      ChatFrame1.init = 1
-      return
-    elseif ( ChatFrame1.init == 1 ) then
-      for i=1, NUM_CHAT_WINDOWS do
-        _G["ChatFrame"..i.."TabDockRegion"]:Hide()
-      end
-      ChatFrame1.init = 2
-    end
-
-    -- Detect if mouse is over any chat frames and if so show their tabs, if not hide them
+  hooksecurefunc("FCF_OnUpdate", function()
     local chatFrame, chatTab
+    for j=1, NUM_CHAT_WINDOWS do
+      chatFrame = getglobal("ChatFrame"..j)
+      chatTab = getglobal("ChatFrame"..j.."Tab")
 
-    if ( MOVING_CHATFRAME ) then
-      -- Set buttons to the left or right side of the frame
-      -- If the the side of the buttons changes and the frame is the default frame, then set every docked frames buttons to the same side
-      local updateAllButtons = nil
-      if (FCF_UpdateButtonSide(MOVING_CHATFRAME) and MOVING_CHATFRAME == DEFAULT_CHAT_FRAME ) then
-        updateAllButtons = 1
-      end
-      local dockRegion
-      for index, value in pairs(DOCKED_CHAT_FRAMES) do
-        if ( updateAllButtons ) then
-          FCF_UpdateButtonSide(value)
-        end
-
-        dockRegion = _G[value:GetName().."TabDockRegion"]
-        if ( MouseIsOver(dockRegion) and MOVING_CHATFRAME ~= DEFAULT_CHAT_FRAME ) then
-          dockRegion:Show()
-        else
-          dockRegion:Hide()
-        end
+      if FCF_IsValidChatFrame(chatFrame) then
+        chatFrame.hover = 1
+        chatFrame.hoverTime = 0
+        chatFrame.hasBeenFaded = nil
+        chatTab.hasBeenFaded = nil
       end
     end
-
-    -- If the default chat frame is resizing, then resize the dock
-    if ( DEFAULT_CHAT_FRAME.resizing ) then
-      FCF_DockUpdate()
-    end
-  end
+  end)
 
   pfUI.chat.editbox = CreateFrame("Frame", "pfChatInputBox", UIParent)
   pfUI.chat.editbox:SetFrameStrata("DIALOG")
