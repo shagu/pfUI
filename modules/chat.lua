@@ -481,6 +481,15 @@ pfUI:RegisterModule("chat", "vanilla:tbc", function ()
     end
   end)
 
+  local function SkipFading(self, alpha)
+    UIFrameFadeRemoveFrame(self)
+    if SELECTED_CHAT_FRAME:GetID() == self:GetID() then
+      self:_SetAlpha(1)
+    else
+      self:_SetAlpha(0.5)
+    end
+  end
+
   for i=1, NUM_CHAT_WINDOWS do
     _G["ChatFrame" .. i .. "UpButton"]:Hide()
     _G["ChatFrame" .. i .. "UpButton"].Show = function() return end
@@ -488,26 +497,9 @@ pfUI:RegisterModule("chat", "vanilla:tbc", function ()
     _G["ChatFrame" .. i .. "DownButton"].Show = function() return end
     _G["ChatFrame" .. i .. "BottomButton"]:Hide()
     _G["ChatFrame" .. i .. "BottomButton"].Show = function() return end
+    _G["ChatFrame" .. i .. "Tab"]._SetAlpha = _G["ChatFrame" .. i .. "Tab"].SetAlpha
+    _G["ChatFrame" .. i .. "Tab"].SetAlpha = SkipFading
   end
-
-  hooksecurefunc("FCF_OnUpdate", function()
-    local chatFrame, chatTab
-    for j=1, NUM_CHAT_WINDOWS do
-      chatFrame = getglobal("ChatFrame"..j)
-      chatTab = getglobal("ChatFrame"..j.."Tab")
-
-      if FCF_IsValidChatFrame(chatFrame) then
-        chatFrame.hover = 1
-        chatFrame.hoverTime = 0
-        chatFrame.hasBeenFaded = nil
-        chatTab.hasBeenFaded = nil
-        chatTab.needsHide = nil
-        if chatTab.oldAlpha then
-          chatTab:SetAlpha(chatTab.oldAlpha)
-        end
-      end
-    end
-  end)
 
   pfUI.chat.editbox = CreateFrame("Frame", "pfChatInputBox", UIParent)
   pfUI.chat.editbox:SetFrameStrata("DIALOG")
