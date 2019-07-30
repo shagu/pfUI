@@ -501,6 +501,10 @@ pfUI:RegisterModule("chat", "vanilla:tbc", function ()
         chatFrame.hoverTime = 0
         chatFrame.hasBeenFaded = nil
         chatTab.hasBeenFaded = nil
+        chatTab.needsHide = nil
+        if chatTab.oldAlpha then
+          chatTab:SetAlpha(chatTab.oldAlpha)
+        end
       end
     end
   end)
