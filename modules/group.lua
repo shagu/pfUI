@@ -3,10 +3,13 @@ pfUI:RegisterModule("group", "vanilla:tbc", function ()
   if C.unitframes.disable == "1" then return end
 
   -- hide blizzard group frames
+  local frame
   for i=1, 4 do
-    if _G["PartyMemberFrame" .. i] then
-      _G["PartyMemberFrame" .. i]:Hide()
-      _G["PartyMemberFrame" .. i].Show = function () return end
+    frame = _G[string.format("PartyMemberFrame%d", i)]
+    if frame then
+      frame:Hide()
+      frame:UnregisterAllEvents()
+      frame.Show = function () return end
     end
   end
 
