@@ -475,6 +475,14 @@ pfUI:RegisterModule("unlock", "vanilla:tbc", function ()
   end)
 
   pfUI.unlock:SetScript("OnShow", function()
+    if this.skip then this.skip = nil return end
+    if InCombatLockdown and InCombatLockdown() then
+      DEFAULT_CHAT_FRAME:AddMessage(ERR_NOT_IN_COMBAT, 1, .2, .2)
+      this.skip = true
+      this:Hide()
+      return
+    end
+
     this.grid = this.grid or DrawGrid()
 
     for name, frame in pairs(pfUI.movables) do
@@ -493,6 +501,13 @@ pfUI:RegisterModule("unlock", "vanilla:tbc", function ()
   end)
 
   pfUI.unlock:SetScript("OnHide", function()
+    if this.skip then this.skip = nil return end
+    if InCombatLockdown and InCombatLockdown() then
+      this.skip = true
+      this:Show()
+      return
+    end
+
     for name, frame in pairs(pfUI.movables) do
       local frame = frame or _G[name]
 
