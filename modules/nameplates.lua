@@ -463,14 +463,14 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     end
 
     -- target indicator
-    if UnitExists("target") and healthbar:GetAlpha() == 1 and C.nameplates.targethighlight == "1" then
+    if UnitExists("target") and this:GetAlpha() == 1 and C.nameplates.targethighlight == "1" then
       healthbar.bgtarget:Show()
     else
       healthbar.bgtarget:Hide()
     end
 
     -- glow target indicator
-    if UnitExists("target") and healthbar:GetAlpha() == 1 and C.nameplates.targetglow == "1" then
+    if UnitExists("target") and this:GetAlpha() == 1 and C.nameplates.targetglow == "1" then
       healthbar.glowtarget:Show()
     else
       healthbar.glowtarget:Hide()
