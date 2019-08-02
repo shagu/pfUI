@@ -69,18 +69,21 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     end
 
     -- init
-    if C.nameplates["legacy"] == "0" and pfUI.expansion == "vanilla" then
-      this:SetFrameLevel(0)
-      this:EnableMouse(false)
-    end
+    -- skip modern handlers and overlapping for modern gameclients
+    if pfUI.client < 20000 then
+      if C.nameplates["legacy"] == "0" then
+        this:SetFrameLevel(0)
+        this:EnableMouse(false)
+      end
 
-    -- enable plate overlap
-    if C.nameplates.overlap == "1" and C.nameplates["legacy"] == "0" then
-      this:SetWidth(1)
-      this:SetHeight(1)
-    elseif pfUI.expansion == "vanilla" then
-      this:SetWidth(plate_width * UIParent:GetScale())
-      this:SetHeight(plate_height * UIParent:GetScale())
+      -- enable plate overlap
+      if C.nameplates.overlap == "1" and C.nameplates["legacy"] == "0" then
+        this:SetWidth(1)
+        this:SetHeight(1)
+      else
+        this:SetWidth(plate_width * UIParent:GetScale())
+        this:SetHeight(plate_height * UIParent:GetScale())
+      end
     end
 
     -- set dimensions
