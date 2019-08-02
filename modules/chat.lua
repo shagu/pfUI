@@ -689,6 +689,7 @@ pfUI:RegisterModule("chat", "vanilla:tbc", function ()
       if ( strsub(link, 1, 6) == "player" ) then
         local name = strsub(link, 8)
         if ( name and (strlen(name) > 0) ) then
+          local name, _ = strsplit(":", name)
           name = gsub(name, "([^%s]*)%s+([^%s]*)%s+([^%s]*)", "%3");
           name = gsub(name, "([^%s]*)%s+([^%s]*)", "%2");
           if IsShiftKeyDown() and ChatFrameEditBox:IsVisible() then
