@@ -25,12 +25,11 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
         if nameplate:GetObjectType() == NAMEPLATE_FRAMETYPE then
           regions = nameplate:GetRegions()
           if regions and regions:GetObjectType() == "Texture" and regions:GetTexture() == "Interface\\Tooltips\\Nameplate-Border" then
-            local visible = nameplate:IsVisible()
-            nameplate:Hide()
+            local visible = nameplate:GetAlpha()
+            nameplate:SetAlpha(0)
             nameplate:SetScript("OnShow", pfUI.nameplates.OnShow)
             nameplate:SetScript("OnUpdate", pfUI.nameplates.OnUpdate)
-            nameplate:SetAlpha(1)
-            if visible then nameplate:Show() end
+            nameplate:SetAlpha(visible)
           end
         end
       end
