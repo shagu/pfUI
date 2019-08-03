@@ -104,7 +104,7 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
         this.nameplate:EnableMouse(false)
       end
 
-      if C.nameplates["rightclick"] == "1" then
+      if C.nameplates["rightclick"] == "1" and pfUI.client < 20000 then
         local plate = C.nameplates["legacy"] == "0" and this.nameplate or this
         plate:SetScript("OnMouseDown", function()
           if arg1 and arg1 == "RightButton" then
