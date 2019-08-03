@@ -1,5 +1,6 @@
 pfUI:RegisterModule("minimap", "vanilla:tbc", function ()
   local border = tonumber(pfUI_config.appearance.border.default)
+  if MiniMapWorldMapButton then MiniMapWorldMapButton:Hide() end
   MinimapToggleButton:Hide()
   MinimapBorderTop:Hide()
   MinimapZoneTextButton:Hide()
