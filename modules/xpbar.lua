@@ -4,11 +4,13 @@ pfUI:RegisterModule("xpbar", "vanilla:tbc", function ()
   local xp_width = C.panel.xp.xp_width
   local xp_height = C.panel.xp.xp_height
   local xp_mode = C.panel.xp.xp_mode
+  local xp_always = C.panel.xp.xp_always == "1" and true or nil
 
   local rep_timeout = tonumber(C.panel.xp.rep_timeout)
   local rep_width = C.panel.xp.rep_width
   local rep_height = C.panel.xp.rep_height
   local rep_mode = C.panel.xp.rep_mode
+  local rep_always = C.panel.xp.rep_always == "1" and true or nil
 
   pfUI.xp = CreateFrame("Frame", "pfExperienceBar", UIParent)
   pfUI.xp:SetWidth(xp_width)
@@ -60,7 +62,7 @@ pfUI:RegisterModule("xpbar", "vanilla:tbc", function ()
   end)
 
   pfUI.xp:SetScript("OnUpdate",function()
-      if C.panel.xp.xp_always == "1" then return end
+      if xp_always then return end
       if pfUI.xp:GetAlpha() == 0 or pfUI.xp.mouseover == true then return end
       if not pfUI.xp.tick then
         pfUI.xp.tick = GetTime() + 0.01
@@ -177,7 +179,7 @@ pfUI:RegisterModule("xpbar", "vanilla:tbc", function ()
     end)
 
   pfUI.rep:SetScript("OnUpdate",function()
-      if C.panel.xp.rep_always == "1" then return end
+      if rep_always then return end
       if pfUI.rep:GetAlpha() == 0 or pfUI.rep.mouseover == true then return end
       if not pfUI.rep.tick then
         pfUI.rep.tick = GetTime() + 0.01
