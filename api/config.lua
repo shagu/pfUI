@@ -301,7 +301,7 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("unitframes", "ptarget",     "txthpcenter",      "name")
   pfUI:UpdateConfig("unitframes", "ptarget",     "txthpright",       "none")
   pfUI:UpdateConfig("unitframes", "ptarget",     "overhealperc",     "10")
-  
+
   local ufs = { "player", "target", "focus", "group", "grouptarget", "grouppet", "raid", "ttarget", "pet", "ptarget", "fallback" }
   for _, unit in pairs(ufs) do
     pfUI:UpdateConfig("unitframes", unit,      "visible",          "1")
@@ -921,9 +921,10 @@ function pfUI:MigrateConfig()
   end
 
   -- migrate xp-showalways (> 4.0.2)
-  if checkversion(4, 0, 2) then
+  if checkversion(4, 0, 2) and pfUI_config.panel.xp.showalways then
     pfUI_config.panel.xp.xp_always = pfUI_config.panel.xp.showalways
     pfUI_config.panel.xp.rep_always = pfUI_config.panel.xp.showalways
+    pfUI_config.panel.xp.showalways = nil
   end
 
   pfUI_config.version = pfUI.version.string
