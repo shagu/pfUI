@@ -298,7 +298,7 @@ pfUI:RegisterModule("chat", "vanilla:tbc", function ()
 
       if i == 3 and C.chat.right.enable == "1" then
         -- Loot & Spam
-        local bottompadding = pfUI.panel and not pfUI_config.position["pfPanelRight"] and panelheight or default_border
+        local bottompadding = pfUI.panel and pfUI.panel.right:IsShown() and not pfUI_config.position["pfPanelRight"] and panelheight or default_border
         tab:SetParent(pfUI.chat.right.panelTop)
         frame:SetParent(pfUI.chat.right)
         frame:ClearAllPoints()
@@ -311,7 +311,7 @@ pfUI:RegisterModule("chat", "vanilla:tbc", function ()
         FCF_Close(frame)
       elseif frame.isDocked then
         -- Left Chat
-        local bottompadding = pfUI.panel and not pfUI_config.position["pfPanelLeft"] and panelheight or default_border
+        local bottompadding = pfUI.panel and pfUI.panel.left:IsShown() and not pfUI_config.position["pfPanelLeft"] and panelheight or default_border
         FCF_DockFrame(frame)
         tab:SetParent(pfUI.chat.left.panelTop)
         frame:SetParent(pfUI.chat.left)
