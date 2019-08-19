@@ -1,4 +1,4 @@
-pfUI:RegisterModule("combopoints", "vanilla", function ()
+pfUI:RegisterModule("combopoints", "vanilla:tbc", function ()
   -- Hide Blizzard combo point frame and unregister all events to prevent it from popping up again
   ComboFrame:Hide()
   ComboFrame:UnregisterAllEvents()
