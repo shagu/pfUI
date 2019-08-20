@@ -803,9 +803,9 @@ function pfUI.uf:RightClickAction(unit)
     ToggleDropDownMenu(1, nil, TargetFrameDropDown, "cursor")
   elseif unit == "pet" then
     ToggleDropDownMenu(1, nil, PetFrameDropDown, "cursor")
-  elseif unit == "party" then
+  elseif unit == "party" or strfind(unit, "party%d") then
     ToggleDropDownMenu(1, nil, getglobal("PartyMemberFrame" .. this.id .. "DropDown"), "cursor")
-  elseif unit == "raid" then
+  elseif unit == "raid" or strfind(unit, "raid%d") then
     local name = this.lastUnit
     local unitstr = this.label .. this.id
     FriendsDropDown.displayMode = "MENU"
