@@ -1213,7 +1213,7 @@ function pfUI.uf:RefreshUnit(unit, component)
   unit:UpdateVisibility()
 
   -- return on invisible unit frames
-  if not unit:IsShown() then return end
+  if not unit:IsShown() and not unit.visible then return end
 
   -- create required fields
   if not unit.cache then unit.cache = {} end
