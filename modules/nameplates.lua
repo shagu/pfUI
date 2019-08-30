@@ -356,6 +356,7 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     local border, glow, name, level, levelicon , raidicon, combopoints = this.border, this.glow, this.name, this.level, this.levelicon , this.raidicon, this.combopoints
     local unitname = name:GetText()
     local uclass, ulevel, uelite, uplayer = GetUnitData(unitname, true)
+    local target = UnitExists("target") and this:GetAlpha() == 1
 
     if unitname == UNKNOWN then
       this.needClassColorUpdate = true
@@ -466,14 +467,14 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     end
 
     -- target indicator
-    if UnitExists("target") and this:GetAlpha() == 1 and C.nameplates.targethighlight == "1" then
+    if target and C.nameplates.targethighlight == "1" then
       healthbar.bgtarget:Show()
     else
       healthbar.bgtarget:Hide()
     end
 
     -- glow target indicator
-    if UnitExists("target") and this:GetAlpha() == 1 and C.nameplates.targetglow == "1" then
+    if target and C.nameplates.targetglow == "1" then
       healthbar.glowtarget:Show()
     else
       healthbar.glowtarget:Hide()
@@ -481,7 +482,7 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
 
     -- target zoom
     local w, h = healthbar:GetWidth(), healthbar:GetHeight()
-    if UnitExists("target") and healthbar:GetAlpha() == 1 and C.nameplates.targetzoom == "1" then
+    if target and C.nameplates.targetzoom == "1" then
       local wc = tonumber(C.nameplates.width)*1.4
       local hc = tonumber(C.nameplates.heighthealth)*1.3
       local animation = false
@@ -558,7 +559,7 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
       end
 
       local cp = GetComboPoints("target")
-      if GetUnitName("target") == unitname and healthbar:GetAlpha() == 1 and cp > 0 then
+      if target and cp > 0 then
         for point=1, cp do
           combopoints["combopoint" .. point]:Show()
         end
@@ -603,7 +604,7 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
 
     -- update debuffs
     if this.debuffs and pfUI.nameplates.debuffs and C.nameplates["showdebuffs"] == "1" then
-      if UnitExists("target") and healthbar:GetAlpha() == 1 then
+      if target then
         local j = 1
         local k = 1
         for j, e in ipairs(pfUI.nameplates.debuffs) do
