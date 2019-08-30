@@ -51,7 +51,7 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     if not this.nameplate then
       this.nameplate = CreateFrame("Button", nil, this)
       this.nameplate.parent = this
-      this.healthbar = this:GetChildren()
+      this.healthbar, this.castbar = this:GetChildren()
       this.healthbar:SetScript("OnEnter", function() return nil end)
       for i, frame in pairs({this:GetRegions()}) do
         if NAMEPLATE_OBJECTORDER[i] == "_" then
@@ -271,8 +271,10 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
         this.healthbar.castbar:SetStatusBarColor(.9,.8,0,1)
 
         plate.healthbar.castbar:SetScript("OnShow", function()
-          plate:SetHeight(plate_height_cast * UIParent:GetScale())
-          plate.nameplate:SetHeight(plate_height_cast)
+          if not InCombatLockdown or not InCombatLockdown() then
+            plate:SetHeight(plate_height_cast * UIParent:GetScale())
+            plate.nameplate:SetHeight(plate_height_cast)
+          end
 
           if plate.debuffs then
             plate.debuffs[1]:SetPoint("TOPLEFT", plate.healthbar.castbar, "BOTTOMLEFT", 0, -3)
@@ -280,8 +282,10 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
         end)
 
         this.healthbar.castbar:SetScript("OnHide", function()
-          plate:SetHeight(plate_height * UIParent:GetScale())
-          plate.nameplate:SetHeight(plate_height)
+          if not InCombatLockdown or not InCombatLockdown() then
+            plate:SetHeight(plate_height * UIParent:GetScale())
+            plate.nameplate:SetHeight(plate_height)
+          end
 
           if plate.debuffs then
             plate.debuffs[1]:SetPoint("TOPLEFT", plate.healthbar, "BOTTOMLEFT", 0, -3)
@@ -568,7 +572,7 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
 
     -- show castbar
     if healthbar.castbar and pfUI.castbar and C.nameplates["showcastbar"] == "1" then
-      local cast, nameSubtext, text, texture, startTime, endTime, isTradeSkill = UnitCastingInfo(unitname)
+      local cast, nameSubtext, text, texture, startTime, endTime, isTradeSkill = UnitCastingInfo(target and "target" or unitname)
 
       if not cast then
         healthbar.castbar:Hide()
@@ -587,7 +591,7 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
           this.debuffs[1]:SetPoint("TOPLEFT", healthbar.castbar, "BOTTOMLEFT", 0, -3)
         end
 
-        if icon then
+        if texture then
           healthbar.castbar.icon:SetTexture(texture)
           healthbar.castbar.icon:SetTexCoord(.1,.9,.1,.9)
         end
