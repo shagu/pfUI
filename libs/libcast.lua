@@ -51,6 +51,9 @@ local libcast = CreateFrame("Frame", "pfEnemyCast")
 local player = UnitName("player")
 
 UnitChannelInfo = _G.UnitChannelInfo or function(unit)
+  -- convert to name if unitstring was given
+  unit = pfValidUnits[unit] and UnitName(unit) or unit
+
   local cast, nameSubtext, text, texture, startTime, endTime, isTradeSkill
   local db = libcast.db[unit]
 
@@ -77,6 +80,9 @@ UnitChannelInfo = _G.UnitChannelInfo or function(unit)
 end
 
 UnitCastingInfo = _G.UnitCastingInfo or function(unit)
+  -- convert to name if unitstring was given
+  unit = pfValidUnits[unit] and UnitName(unit) or unit
+
   local cast, nameSubtext, text, texture, startTime, endTime, isTradeSkill
   local db = libcast.db[unit]
 

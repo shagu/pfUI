@@ -92,10 +92,10 @@ pfUI:RegisterModule("castbar", "vanilla:tbc", function ()
       local name = this.unitstr and UnitName(this.unitstr) or this.unitname
       if not name then return end
 
-      local cast, nameSubtext, text, texture, startTime, endTime, isTradeSkill = UnitCastingInfo(name)
+      local cast, nameSubtext, text, texture, startTime, endTime, isTradeSkill = UnitCastingInfo(this.unitstr or this.unitname)
       if not cast then
         -- scan for channel spells if no cast was found
-        cast, nameSubtext, text, texture, startTime, endTime, isTradeSkill = UnitChannelInfo(name)
+        cast, nameSubtext, text, texture, startTime, endTime, isTradeSkill = UnitChannelInfo(this.unitstr or this.unitname)
       end
 
       if cast then
@@ -167,13 +167,11 @@ pfUI:RegisterModule("castbar", "vanilla:tbc", function ()
       if this.unitstr and not UnitIsUnit(this.unitstr, "player") then return end
 
       if event == CASTBAR_EVENT_CAST_DELAY then
-        local name = this.unitstr and UnitName(this.unitstr) or this.unitname
-        local isCast, nameSubtext, text, texture, startTime, endTime, isTradeSkill = UnitCastingInfo(name)
+        local isCast, nameSubtext, text, texture, startTime, endTime, isTradeSkill = UnitCastingInfo(this.unitstr or this.unitname)
         if not isCast then return end
         this.delay = this.delay + (endTime - this.endTime) / 1000
       elseif event == CASTBAR_EVENT_CHANNEL_DELAY then
-        local name = this.unitstr and UnitName(this.unitstr) or this.unitname
-        local isChannel, _, _, _, startTime, endTime = UnitChannelInfo(name)
+        local isChannel, _, _, _, startTime, endTime = UnitChannelInfo(this.unitstr or this.unitname)
         if not isChannel then return end
         this.delay = ( this.delay or 0 ) + this.bar:GetValue() - (endTime/1000 - GetTime())
       end
