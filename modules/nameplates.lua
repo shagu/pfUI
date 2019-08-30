@@ -5,6 +5,9 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
   local glowr, glowg, glowb, glowa = GetStringColor(C.nameplates.glowcolor)
   local hptexture = pfUI.media[C.nameplates.healthtexture]
 
+  -- disable original castbars
+  pcall(SetCVar, "ShowVKeyCastbar", 0)
+
   pfUI.nameplates = CreateFrame("Frame", nil, UIParent)
 
   -- catch all nameplates
