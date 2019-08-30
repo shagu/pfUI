@@ -13,7 +13,7 @@ MICRO_BUTTONS = {
   'MainMenuMicroButton', 'HelpMicroButton',
 }
 
-NAMEPLATE_OBJECTORDER = { "border", "_", "_", "glow", "name", "level", "levelicon", "raidicon" }
+NAMEPLATE_OBJECTORDER = { "border", "castborder", "casticon", "glow", "name", "level", "levelicon", "raidicon" }
 
 NAMEPLATE_FRAMETYPE = "Frame"
 
