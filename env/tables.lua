@@ -45,6 +45,29 @@ pfGridmath = {
   [12] = {{12,1},{6,2},{4,3},{3,4},{2,6},{1,12}}
 }
 
+-- list of valid unitstrings
+pfValidUnits = {}
+pfValidUnits["pet"] = true
+pfValidUnits["player"] = true
+pfValidUnits["target"] = true
+pfValidUnits["mouseover"] = true
+
+pfValidUnits["pettarget"] = true
+pfValidUnits["playertarget"] = true
+pfValidUnits["targettarget"] = true
+pfValidUnits["mouseovertarget"] = true
+pfValidUnits["targettargettarget"] = true
+
+for i=1,4 do pfValidUnits["party" .. i] = true end
+for i=1,4 do pfValidUnits["partypet" .. i] = true end
+for i=1,40 do pfValidUnits["raid" .. i] = true end
+for i=1,40 do pfValidUnits["raidpet" .. i] = true end
+
+for i=1,4 do pfValidUnits["party" .. i .. "target"] = true end
+for i=1,4 do pfValidUnits["partypet" .. i .. "target"] = true end
+for i=1,40 do pfValidUnits["raid" .. i .. "target"] = true end
+for i=1,40 do pfValidUnits["raidpet" .. i .. "target"] = true end
+
 -- itemid = "sell,buy"
 pfSellData = {
   [25]="7,35", [35]="9,47", [36]="7,38", [37]="7,38", [38]="1,1", [39]="1,5",

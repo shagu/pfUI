@@ -4,26 +4,6 @@ pfUI.uf.frames = {}
 -- load pfUI environment
 setfenv(1, pfUI:GetEnvironment())
 
-local pfValidUnits = {}
-pfValidUnits["player"] = true
-pfValidUnits["target"] = true
-pfValidUnits["pet"] = true
-pfValidUnits["mouseover"] = true
-
-pfValidUnits["player" .. "target"] = true
-pfValidUnits["target" .. "target"] = true
-pfValidUnits["pet" .. "target"] = true
-
-for i=1,4 do pfValidUnits["party" .. i] = true end
-for i=1,4 do pfValidUnits["partypet" .. i] = true end
-for i=1,40 do pfValidUnits["raid" .. i] = true end
-for i=1,40 do pfValidUnits["raidpet" .. i] = true end
-
-for i=1,4 do pfValidUnits["party" .. i .. "target"] = true end
-for i=1,4 do pfValidUnits["partypet" .. i .. "target"] = true end
-for i=1,40 do pfValidUnits["raid" .. i .. "target"] = true end
-for i=1,40 do pfValidUnits["raidpet" .. i .. "target"] = true end
-
 local glow = {
   edgeFile = pfUI.media["img:glow"], edgeSize = 8,
   insets = {left = 0, right = 0, top = 0, bottom = 0},
