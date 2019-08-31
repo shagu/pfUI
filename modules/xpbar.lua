@@ -1,5 +1,4 @@
 pfUI:RegisterModule("xpbar", "vanilla:tbc", function ()
-
   local xp_timeout = tonumber(C.panel.xp.xp_timeout)
   local xp_width = C.panel.xp.xp_width
   local xp_height = C.panel.xp.xp_height
@@ -12,10 +11,198 @@ pfUI:RegisterModule("xpbar", "vanilla:tbc", function ()
   local rep_mode = C.panel.xp.rep_mode
   local rep_always = C.panel.xp.rep_always == "1" and true or nil
 
-  pfUI.xp = CreateFrame("Frame", "pfExperienceBar", UIParent)
-  pfUI.xp:SetWidth(xp_width)
-  pfUI.xp:SetHeight(xp_height)
+  local parse_faction = SanitizePattern(FACTION_STANDING_INCREASED)
 
+  local function CreateBar(t)
+    local t = t
+    local width = t == "XP" and xp_width or rep_width
+    local height = t == "XP" and xp_height or rep_height
+    local mode = t == "XP" and xp_mode or rep_mode
+    local timeout = t == "XP" and xp_timeout or rep_timeout
+    local always = t == "XP" and xp_always or rep_always
+
+    local name = t == "XP" and "pfExperienceBar" or "pfReputationBar"
+
+    local b = CreateFrame("Frame", name, UIParent)
+    b:SetWidth(width)
+    b:SetHeight(height)
+    b:SetFrameStrata("BACKGROUND")
+
+    CreateBackdrop(b)
+    CreateBackdropShadow(b)
+    UpdateMovable(b)
+
+    b.bar = CreateFrame("StatusBar", nil, b)
+    b.bar:SetStatusBarTexture(pfUI.media["img:bar"])
+    b.bar:ClearAllPoints()
+    b.bar:SetAllPoints(b)
+    b.bar:SetFrameStrata("LOW")
+    b.bar:SetStatusBarColor(.25,.25,1,1)
+    b.bar:SetMinMaxValues(0, 100)
+    b.bar:SetOrientation(mode)
+    b.bar:SetValue(0)
+
+    b.restedbar = CreateFrame("StatusBar", nil, b)
+    b.restedbar:SetStatusBarTexture(pfUI.media["img:bar"])
+    b.restedbar:ClearAllPoints()
+    b.restedbar:SetAllPoints(b)
+    b.restedbar:SetFrameStrata("MEDIUM")
+    b.restedbar:SetStatusBarColor(1,.25,1,.5)
+    b.restedbar:SetMinMaxValues(0, 100)
+    b.restedbar:SetOrientation(mode)
+    b.restedbar:SetValue(0)
+
+    -- auto hide
+    b:EnableMouse(true)
+    b:SetScript("OnLeave", function()
+      this.tick = GetTime() + 3.00
+      GameTooltip:Hide()
+    end)
+
+    b:SetScript("OnUpdate",function()
+      if always then return end
+      if this:GetAlpha() == 0 or MouseIsOver(this) then return end
+      if ( this.tick or 1) > GetTime() then return else this.tick = GetTime() + .01 end
+      this:SetAlpha(this:GetAlpha() - .05)
+    end)
+
+    b:RegisterEvent("CHAT_MSG_COMBAT_FACTION_CHANGE")
+    b:RegisterEvent("PLAYER_ENTERING_WORLD")
+    b:RegisterEvent("PLAYER_XP_UPDATE")
+    b:RegisterEvent("PLAYER_LEVEL_UP")
+    b:RegisterEvent("UPDATE_FACTION")
+    b:SetScript("OnEvent", function()
+      -- set either experience, reputation or flex-rep handler
+      local mode = ( t == "XP" and UnitLevel("player") < MAX_LEVEL ) and "XP" or t == "REP" and "REP" or "FLEX"
+
+      -- skip on events of no interest
+      if mode == "XP" and ( event == "CHAT_MSG_COMBAT_FACTION_CHANGE" or event == "UPDATE_FACTION" ) then return end
+      if ( mode == "REP" or mode == "FLEX" ) and event == "PLAYER_XP_UPDATE" then return end
+
+      if mode == "XP" then
+        this.enabled = true
+        if event == "PLAYER_ENTERING_WORLD" then
+          this.starttime = GetTime()
+          this.startxp = UnitXP("player")
+        elseif event == "PLAYER_LEVEL_UP" then
+          -- add previously gained experience to the session
+          this.startxp = this.startxp - UnitXPMax("player")
+        end
+
+        this.bar:SetMinMaxValues(0, UnitXPMax("player"))
+        this.bar:SetValue(UnitXP("player"))
+        if GetXPExhaustion() then
+          this.restedbar:Show()
+          this.restedbar:SetMinMaxValues(0, UnitXPMax("player"))
+          this.restedbar:SetValue(UnitXP("player") + GetXPExhaustion())
+        else
+          this.restedbar:Hide()
+        end
+        this.tick = GetTime() + timeout
+        this:SetAlpha(1)
+      else
+        this.restedbar:Hide()
+
+        if mode == "FLEX" and event == "CHAT_MSG_COMBAT_FACTION_CHANGE" then
+          local _,_, faction, amount = string.find(arg1, parse_faction)
+          this.faction = faction or this.faction
+        end
+
+        for i=1, 99 do
+          local name, description, standingID, barMin, barMax, barValue, atWarWith, canToggleAtWar, isHeader, isCollapsed, isWatched = GetFactionInfo(i)
+          if ( mode == "REP" and isWatched ) or ( mode == "FLEX" and this.faction and name == this.faction) then
+            this.enabled = true
+
+            barMax = barMax - barMin
+            barValue = barValue - barMin
+            barMin = 0
+
+            this.bar:SetMinMaxValues(barMin, barMax)
+            this.bar:SetValue(barValue)
+            local color = FACTION_BAR_COLORS[standingID]
+            this.bar:SetStatusBarColor((color.r + .5) * .5, (color.g + .5) * .5, (color.b + .5) * .5, 1)
+
+            this.tick = GetTime() + rep_timeout
+            this:SetAlpha(1)
+            break
+          end
+        end
+      end
+    end)
+
+    b:SetScript("OnEnter", function()
+      if not this.enabled then return end
+
+      -- set either experience, reputation or flex-rep handler
+      local mode = ( t == "XP" and UnitLevel("player") < MAX_LEVEL ) and "XP" or t == "REP" and "REP" or "FLEX"
+      local lines = {}
+
+      this:SetAlpha(1)
+
+      if mode == "XP" then
+        local xp, xpmax, exh = UnitXP("player"), UnitXPMax("player"), GetXPExhaustion()
+        local xp_perc = round(xp / xpmax * 100)
+        local remaining = xpmax - xp
+        local remaining_perc = round(remaining / xpmax * 100)
+        local exh_perc = GetXPExhaustion() and round(GetXPExhaustion() / xpmax * 100) or 0
+        local xp_persec = ((xp - this.startxp)/(GetTime() - this.starttime))
+        local session = UnitXP("player") - this.startxp
+        local avg_hour = floor(((UnitXP("player") - this.startxp) / (GetTime() - this.starttime)) * 60 * 60)
+        local time_remaining = xp_persec > 0 and SecondsToTime(remaining/xp_persec) or 0
+
+        -- fill gametooltip data
+        table.insert(lines, { "|cff555555" .. T["Experience"], "" })
+        table.insert(lines, { T["XP"], "|cffffffff" .. xp .. " / " .. xpmax .. " (" .. xp_perc .. "%)" })
+        table.insert(lines, { T["Remaining"], "|cffffffff" .. remaining .. " (" .. remaining_perc .. "%)" })
+        if IsResting() then
+          table.insert(lines, { T["Status"], "|cffffffff" .. T["Resting"] })
+        end
+        if GetXPExhaustion() then
+          table.insert(lines, { T["Rested"], "|cff5555ff+" .. exh .. " (" .. exh_perc .. "%)" })
+        end
+        table.insert(lines, { "" })
+        table.insert(lines, { T["This Session"], "|cffffffff" .. session })
+        table.insert(lines, { T["Average Per Hour"], "|cffffffff" .. avg_hour })
+        table.insert(lines, { T["Time Remaining"], "|cffffffff" .. time_remaining })
+      else
+        for i=1, 99 do
+          local name, description, standingID, barMin, barMax, barValue, atWarWith, canToggleAtWar, isHeader, isCollapsed, isWatched = GetFactionInfo(i)
+          if ( mode == "REP" and isWatched ) or ( mode == "FLEX" and this.faction and name == this.faction) then
+            barMax = barMax - barMin
+            barValue = barValue - barMin
+            barMin = 0
+
+            local color = FACTION_BAR_COLORS[standingID]
+            if not color then color = 1,1,1 end
+
+            local color = rgbhex(color.r + .3, color.g + .3, color.b + .3)
+            table.insert(lines, { "|cff555555" .. T["Reputation"], "" })
+            table.insert(lines, { color .. name .. " (" .. GetText("FACTION_STANDING_LABEL"..standingID, gender) .. ")"})
+            table.insert(lines, { barValue .. " / " .. barMax .. " (" .. round(barValue / barMax * 100) .. "%)" })
+            break
+          end
+        end
+      end
+
+      -- draw tooltip
+      GameTooltip:ClearLines()
+      GameTooltip_SetDefaultAnchor(GameTooltip, this)
+      GameTooltip:SetOwner(this, "ANCHOR_CURSOR")
+
+      for id, data in pairs(lines) do
+        if data[2] then
+          GameTooltip:AddDoubleLine(data[1], data[2])
+        else
+          GameTooltip:AddLine(data[1])
+        end
+      end
+      GameTooltip:Show()
+    end)
+
+    return b
+  end
+
+  pfUI.xp = CreateBar("XP")
   if pfUI.chat then
     pfUI.xp:SetPoint("TOPLEFT", pfUI.chat.left, "TOPRIGHT", C.appearance.border.default*2, 0)
     pfUI.xp:SetPoint("BOTTOMLEFT", pfUI.chat.left, "BOTTOMRIGHT", C.appearance.border.default*2, 0)
@@ -23,119 +210,8 @@ pfUI:RegisterModule("xpbar", "vanilla:tbc", function ()
     pfUI.xp:SetPoint("TOPLEFT", UIParent, "TOPLEFT", 0, 0)
     pfUI.xp:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", 0, 0)
   end
-  pfUI.xp:SetFrameStrata("BACKGROUND")
-  CreateBackdrop(pfUI.xp)
-  CreateBackdropShadow(pfUI.xp)
-  UpdateMovable(pfUI.xp)
 
-  pfUI.xp:RegisterEvent("PLAYER_LEVEL_UP")
-  pfUI.xp:RegisterEvent("PLAYER_XP_UPDATE")
-  pfUI.xp:RegisterEvent("PLAYER_ENTERING_WORLD")
-
-  pfUI.xp:SetScript("OnEvent", function()
-    if event == "PLAYER_ENTERING_WORLD" then
-      pfUI.xp.starttime = GetTime()
-      pfUI.xp.startxp = UnitXP("player")
-    end
-
-    if event == "PLAYER_LEVEL_UP" then
-      -- add previously gained experience to the session
-      pfUI.xp.startxp = pfUI.xp.startxp - UnitXPMax("player")
-    end
-
-    if UnitXPMax("player") ~= 0 then
-      pfUI.xp.bar:SetMinMaxValues(0, UnitXPMax("player"))
-      pfUI.xp.bar:SetValue(UnitXP("player"))
-      if GetXPExhaustion() then
-        pfUI.xp.restedbar:Show()
-        pfUI.xp.restedbar:SetMinMaxValues(0, UnitXPMax("player"))
-        pfUI.xp.restedbar:SetValue(UnitXP("player") + GetXPExhaustion())
-      else
-        pfUI.xp.restedbar:Hide()
-      end
-      pfUI.xp:SetAlpha(1)
-      pfUI.xp.tick = GetTime() + xp_timeout
-
-    else
-      pfUI.xp:Hide(0)
-    end
-  end)
-
-  pfUI.xp:SetScript("OnUpdate",function()
-      if xp_always then return end
-      if pfUI.xp:GetAlpha() == 0 or pfUI.xp.mouseover == true then return end
-      if not pfUI.xp.tick then
-        pfUI.xp.tick = GetTime() + 0.01
-      end
-
-      if GetTime() >= pfUI.xp.tick then
-        pfUI.xp.tick = nil
-        pfUI.xp:SetAlpha(pfUI.xp:GetAlpha() - .05)
-      end
-    end)
-
-  pfUI.xp:EnableMouse()
-  pfUI.xp:SetScript("OnEnter", function()
-      pfUI.xp.mouseover = true
-      pfUI.xp:SetAlpha(1)
-      local xp, xpmax, exh = UnitXP("player"), UnitXPMax("player"), GetXPExhaustion()
-      local xp_perc = round(xp / xpmax * 100)
-      local remaining = xpmax - xp
-      local remaining_perc = round(remaining / xpmax * 100)
-      local exh_perc = 0
-      local xp_persec = ((xp - pfUI.xp.startxp)/(GetTime() - pfUI.xp.starttime))
-      if GetXPExhaustion() then
-        exh_perc = round(GetXPExhaustion() / xpmax * 100)
-      end
-
-      GameTooltip:ClearLines()
-      GameTooltip_SetDefaultAnchor(GameTooltip, this)
-      GameTooltip:SetOwner(this, "ANCHOR_CURSOR")
-      GameTooltip:AddDoubleLine("|cff555555" .. T["Experience"])
-      GameTooltip:AddDoubleLine(T["XP"], "|cffffffff" .. xp .. " / " .. xpmax .. " (" .. xp_perc .. "%)")
-      GameTooltip:AddDoubleLine(T["Remaining"], "|cffffffff" .. remaining .. " (" .. remaining_perc .. "%)")
-      if IsResting() then
-        GameTooltip:AddDoubleLine(T["Status"], "|cffffffff" .. T["Resting"])
-      end
-      if GetXPExhaustion() then
-        GameTooltip:AddDoubleLine(T["Rested"], "|cff5555ff+" .. exh .. " (" .. exh_perc .. "%)")
-      end
-
-      GameTooltip:AddLine(" ")
-      GameTooltip:AddDoubleLine(T["This Session"], "|cffffffff" .. UnitXP("player") - pfUI.xp.startxp)
-      GameTooltip:AddDoubleLine(T["Average Per Hour"], "|cffffffff" .. floor(((UnitXP("player") - pfUI.xp.startxp) / (GetTime() - pfUI.xp.starttime)) * 60 * 60))
-      GameTooltip:AddDoubleLine(T["Time Remaining"], "|cffffffff" .. (xp_persec > 0 and SecondsToTime(remaining/xp_persec) or 0))
-      GameTooltip:Show()
-    end)
-
-  pfUI.xp:SetScript("OnLeave", function()
-      pfUI.xp.mouseover = false
-      pfUI.xp.tick = GetTime() + 3.00
-      GameTooltip:Hide()
-    end)
-
-  pfUI.xp.bar = CreateFrame("StatusBar", nil, pfUI.xp)
-  pfUI.xp.bar:SetStatusBarTexture(pfUI.media["img:bar"])
-  pfUI.xp.bar:ClearAllPoints()
-  pfUI.xp.bar:SetAllPoints(pfUI.xp)
-  pfUI.xp.bar:SetFrameStrata("LOW")
-  pfUI.xp.bar:SetStatusBarColor(.25,.25,1,1)
-  pfUI.xp.bar:SetMinMaxValues(0, 100)
-  pfUI.xp.bar:SetOrientation(xp_mode)
-  pfUI.xp.bar:SetValue(59)
-
-  pfUI.xp.restedbar = CreateFrame("StatusBar", nil, pfUI.xp)
-  pfUI.xp.restedbar:SetStatusBarTexture(pfUI.media["img:bar"])
-  pfUI.xp.restedbar:ClearAllPoints()
-  pfUI.xp.restedbar:SetAllPoints(pfUI.xp)
-  pfUI.xp.restedbar:SetFrameStrata("MEDIUM")
-  pfUI.xp.restedbar:SetStatusBarColor(1,.25,1,.5)
-  pfUI.xp.restedbar:SetMinMaxValues(0, 100)
-  pfUI.xp.restedbar:SetOrientation(xp_mode)
-
-  pfUI.rep = CreateFrame("Frame","pfReputationBar", UIParent)
-  pfUI.rep:SetWidth(rep_width)
-  pfUI.rep:SetHeight(rep_height)
+  pfUI.rep = CreateBar("REP")
   if pfUI.chat then
     pfUI.rep:SetPoint("TOPRIGHT",pfUI.chat.right,"TOPLEFT", -C.appearance.border.default*2, 0)
     pfUI.rep:SetPoint("BOTTOMRIGHT",pfUI.chat.right,"BOTTOMLEFT",-C.appearance.border.default*2, 0)
@@ -143,83 +219,4 @@ pfUI:RegisterModule("xpbar", "vanilla:tbc", function ()
     pfUI.rep:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", 0, 0)
     pfUI.rep:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", 0, 0)
   end
-  pfUI.rep:SetFrameStrata("BACKGROUND")
-  CreateBackdrop(pfUI.rep)
-  CreateBackdropShadow(pfUI.rep)
-  UpdateMovable(pfUI.rep)
-
-  pfUI.rep.bar = CreateFrame("StatusBar", nil, pfUI.rep)
-  pfUI.rep.bar:SetStatusBarTexture(pfUI.media["img:bar"])
-  pfUI.rep.bar:ClearAllPoints()
-  pfUI.rep.bar:SetAllPoints(pfUI.rep)
-  pfUI.rep.bar:SetMinMaxValues(0, 100)
-  pfUI.rep.bar:SetOrientation(rep_mode)
-  pfUI.rep.bar:SetValue(59)
-
-  pfUI.rep:RegisterEvent("UPDATE_FACTION")
-  pfUI.rep:RegisterEvent("PLAYER_ENTERING_WORLD")
-
-  pfUI.rep:SetScript("OnEvent", function()
-      pfUI.rep:SetAlpha(0)
-      for i=1, GetNumFactions() do
-        local name, description, standingID, barMin, barMax, barValue, atWarWith, canToggleAtWar, isHeader, isCollapsed, isWatched = GetFactionInfo(i)
-        if isWatched then
-          barMax = barMax - barMin
-          barValue = barValue - barMin
-          barMin = 0
-
-          pfUI.rep.bar:SetMinMaxValues(barMin, barMax)
-          pfUI.rep.bar:SetValue(barValue)
-          local color = FACTION_BAR_COLORS[standingID]
-          pfUI.rep.bar:SetStatusBarColor((color.r + .5) * .5, (color.g + .5) * .5, (color.b + .5) * .5, 1)
-          pfUI.rep:SetAlpha(1)
-          pfUI.rep.tick = GetTime() + rep_timeout
-        end
-      end
-    end)
-
-  pfUI.rep:SetScript("OnUpdate",function()
-      if rep_always then return end
-      if pfUI.rep:GetAlpha() == 0 or pfUI.rep.mouseover == true then return end
-      if not pfUI.rep.tick then
-        pfUI.rep.tick = GetTime() + 0.01
-      end
-
-      if GetTime() >= pfUI.rep.tick then
-        pfUI.rep.tick = nil
-        pfUI.rep:SetAlpha(pfUI.rep:GetAlpha() - .05)
-      end
-    end)
-
-  pfUI.rep:EnableMouse()
-  pfUI.rep:SetScript("OnEnter", function()
-      for i=1, GetNumFactions() do
-        local name, description, standingID, barMin, barMax, barValue, atWarWith, canToggleAtWar, isHeader, isCollapsed, isWatched = GetFactionInfo(i)
-        if isWatched then
-          barMax = barMax - barMin
-          barValue = barValue - barMin
-          barMin = 0
-
-          local color = FACTION_BAR_COLORS[standingID]
-          if not color then color = 1,1,1 end
-
-          GameTooltip:ClearLines()
-          GameTooltip_SetDefaultAnchor(GameTooltip, this)
-          GameTooltip:SetOwner(this, "ANCHOR_CURSOR")
-          GameTooltip:AddLine("|cff555555" .. T["Reputation"])
-          GameTooltip:AddLine(name .. " (" .. GetText("FACTION_STANDING_LABEL"..standingID, gender) .. ")", color.r + .3, color.g + .3, color.b + .3)
-          GameTooltip:AddLine(barValue .. " / " .. barMax .. " (" .. round(barValue / barMax * 100) .. "%)",1,1,1)
-          GameTooltip:Show()
-
-          pfUI.rep.mouseover = true
-          pfUI.rep:SetAlpha(1)
-        end
-      end
-    end)
-
-  pfUI.rep:SetScript("OnLeave", function()
-      pfUI.rep.mouseover = false
-      pfUI.rep.tick = GetTime() + 3.00
-      GameTooltip:Hide()
-    end)
 end)
