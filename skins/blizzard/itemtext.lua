@@ -24,10 +24,30 @@ pfUI:RegisterSkin("Books", "vanilla:tbc", function ()
   ItemTextScrollFrame:ClearAllPoints()
   ItemTextScrollFrame:SetPoint("TOPRIGHT", -66, -46)
 
-  local bg = ItemTextScrollFrame:CreateTexture(nil, "LOW")
+  -- add new background
+  local bg = ItemTextScrollFrame:CreateTexture(nil, "BORDER")
   bg:SetAllPoints()
   bg:SetTexCoord(.1,1,0,1)
   bg:SetTexture("Interface\\Stationery\\StationeryTest1")
+
+  -- assign material backgrounds to the default one
+  ItemTextMaterialTopLeft.SetTexture = function(self, texture)
+    bg:SetTexture(texture)
+  end
+
+  ItemTextMaterialTopLeft.Hide = function()
+    bg:SetTexture("Interface\\Stationery\\StationeryTest1")
+  end
+
+  -- disable meterial backgrounds
+  ItemTextMaterialTopLeft.Show = function() return end
+  ItemTextMaterialTopRight.Show = function() return end
+  ItemTextMaterialBotLeft.Show = function() return end
+  ItemTextMaterialBotRight.Show = function() return end
+  ItemTextMaterialTopLeft:Hide()
+  ItemTextMaterialTopRight:Hide()
+  ItemTextMaterialBotLeft:Hide()
+  ItemTextMaterialBotRight:Hide()
 
   ItemTextCurrentPage:ClearAllPoints()
   ItemTextCurrentPage:SetPoint("TOP", ItemTextScrollFrame, "BOTTOM", 0, -10)
