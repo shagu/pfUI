@@ -1,4 +1,4 @@
-pfUI:RegisterModule("buffwatch", "vanilla", function ()
+pfUI:RegisterModule("buffwatch", "vanilla:tbc", function ()
   local border = C.appearance.border.default
   local scanner = libtipscan:GetScanner("buffwatch")
 
