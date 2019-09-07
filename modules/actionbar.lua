@@ -202,13 +202,6 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     end
   end
 
-  local function SwitchBar(bar)
-    if _G.CURRENT_ACTIONBAR_PAGE ~= bar then
-      _G.CURRENT_ACTIONBAR_PAGE = bar
-      ChangeActionBarPage(bar)
-    end
-  end
-
   local function ButtonRefresh(self)
     local self = self or this
     local id, bar, active, texture
@@ -964,19 +957,6 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     bars[bar][button].forceupdate = true
   end
 
-  -- custom pagings
-  local function pagelimits()
-    local min, max = 10, 1
-    for i=1, 10 do
-      if C.bars["bar"..i] and C.bars["bar"..i].pageable == "1" then
-        min = min > i and i or min
-        max = max < i and i or max
-      end
-    end
-
-    return min, max
-  end
-
   -- Localize custom keybinds for additional actionbars (see Bindings.xml)
   local names = {
     ["PAGING"] = T["Paging Actionbar"],
@@ -1012,34 +992,28 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     end
   end
 
-  function _G.ActionBar_PageUp() -- TODO TBC
-    local min, max = pagelimits()
-    local bar = _G.CURRENT_ACTIONBAR_PAGE + 1
-    if bar > max then bar = min end
-
-    for newbar=bar, 10, 1 do
-      if C.bars["bar"..newbar] and C.bars["bar"..newbar].pageable == "1" then
-        SwitchBar(newbar)
-        return
-      end
-    end
-  end
-
-  function _G.ActionBar_PageDown() -- TODO TBC
-    local min, max = pagelimits()
-    local bar = _G.CURRENT_ACTIONBAR_PAGE - 1
-    if bar < min then bar = max end
-
-    for newbar=bar, 1, -1 do
-      if C.bars["bar"..newbar] and C.bars["bar"..newbar].pageable == "1" then
-        SwitchBar(newbar)
-        return
-      end
-    end
-  end
-
-
   if pfUI.client <= 11200 then
+    -- enable paging on the first actionbar
+    local pager = CreateFrame("Frame")
+    pager:RegisterEvent("PLAYER_ENTERING_WORLD")
+    pager:RegisterEvent("UPDATE_BONUS_ACTIONBAR")
+    pager:RegisterEvent("ACTIONBAR_PAGE_CHANGED")
+    pager:SetScript("OnEvent", function()
+      -- reload pageable bars
+      for i=1, 10 do
+        local pageable = C.bars["bar"..i] and C.bars["bar"..i].pageable == "1" and true or nil
+        _G.VIEWABLE_ACTION_BAR_PAGES[i] = pageable
+      end
+
+      -- set first actionbar to page
+      local bar = GetActiveBar()
+      for i=1,12 do
+        local id = i + (bar-1)*12
+        bars[1][i].id = id
+        bars[1][i].forceupdate = true
+      end
+    end)
+
     -- In order to be able to reuse already defined keybinds, we need to remap
     -- existing button functions to pfUI. We need to get rid of the blizzard calls
     -- to avoid having them call texture changes and errors due to missing buttons
@@ -1050,21 +1024,6 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     _G.MultiActionButtonDown = function(bar, slot, slf) pfActionButton(slot, slf, bar) end
     _G.MultiActionButtonUp = function(bar, slot, slf) pfActionButton(slot, slf, bar) end
     _G.ShapeshiftBar_ChangeForm = function(slot) pfActionButton(slot, nil, "ShapeShiftBar") end
-
-    -- enable paging on the first actionbar
-    local pager = CreateFrame("Frame")
-    pager:RegisterEvent("PLAYER_ENTERING_WORLD")
-    pager:RegisterEvent("UPDATE_BONUS_ACTIONBAR")
-    pager:RegisterEvent("ACTIONBAR_PAGE_CHANGED")
-    pager:SetScript("OnEvent", function()
-      local bar = GetActiveBar()
-
-      for i=1,12 do
-        local id = i + (bar-1)*12
-        bars[1][i].id = id
-        bars[1][i].forceupdate = true
-      end
-    end)
   else
     local bindwraps = {
       ["ACTIONBUTTON%d"] = 1,
@@ -1231,6 +1190,13 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     local buttons = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "+", "=", "´" }
     local shift, ctrl, alt, default = 6, 5, 3, 1
     local current = CURRENT_ACTIONBAR_PAGE
+
+    local function SwitchBar(bar)
+      if _G.CURRENT_ACTIONBAR_PAGE ~= bar then
+        _G.CURRENT_ACTIONBAR_PAGE = bar
+        ChangeActionBarPage(bar)
+      end
+    end
 
     local pagemaster = CreateFrame("Frame", "pfPageMaster", UIParent)
     pagemaster:RegisterEvent("PLAYER_ENTERING_WORLD")
