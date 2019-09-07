@@ -1085,7 +1085,15 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
       bars[1][i]:SetAttribute("useparent-statebutton", true)
     end
 
-    local filter = "[bonusbar: 5] 11; [actionbar: 2] 2; [actionbar:3] 3; [actionbar:4] 4; [actionbar:5] 5; [actionbar:6] 6; [bonusbar:1,nostealth] 7; [bonusbar:1,stealth] 7; [bonusbar:2] 10; [bonusbar:3] 9; [bonusbar:4] 10; 1"
+    local filter = "[bonusbar: 5] 11;"
+    for i=1, 6 do
+      local enabled = C.bars["bar"..i] and C.bars["bar"..i].pageable == "1" and 1 or nil
+      if enabled then
+        filter = string.format("%s[actionbar: %s] %s;",filter,i,i)
+      end
+    end
+    filter = string.format("%s[bonusbar:1,nostealth] 7;[bonusbar:1,stealth] 7;[bonusbar:2] 10;[bonusbar:3] 9;[bonusbar:4] 10;", filter)
+
     RegisterStateDriver(bars[1], "page", filter)
     bars[1]:SetAttribute("statemap-page", "$input")
     bars[1]:SetAttribute("statebutton", "0:S0;1:S1;2:S2;3:S3;4:S4;5:S5;6:S6;7:S7;8:S8;9:S9;10:S10;11:S11;")
