@@ -1086,13 +1086,13 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     end
 
     local filter = "[bonusbar: 5] 11;"
-    for i=1, 6 do
+    for i=2, 6 do
       local enabled = C.bars["bar"..i] and C.bars["bar"..i].pageable == "1" and 1 or nil
       if enabled then
-        filter = string.format("%s[actionbar: %s] %s;",filter,i,i)
+        filter = string.format("%s[actionbar: %s] %s; ",filter,i,i)
       end
     end
-    filter = string.format("%s[bonusbar:1,nostealth] 7;[bonusbar:1,stealth] 7;[bonusbar:2] 10;[bonusbar:3] 9;[bonusbar:4] 10;", filter)
+    filter = string.format("%s[bonusbar:1,nostealth] 7; [bonusbar:1,stealth] 7; [bonusbar:2] 10; [bonusbar:3] 9; [bonusbar:4] 10; 1", filter)
 
     RegisterStateDriver(bars[1], "page", filter)
     bars[1]:SetAttribute("statemap-page", "$input")
