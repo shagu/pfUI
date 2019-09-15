@@ -39,24 +39,41 @@ pfUI:RegisterModule("raid", "vanilla:tbc", function ()
     end
   end
 
+
+  local function SetRaidIndex(frame, id)
+    frame.id = id
+
+    if frame.SetAttribute and RegisterStateDriver then
+      frame:SetAttribute("unit", UnitName("raid" .. id))
+      frame.visibilitycondition = string.format("[target=%s,exists] show; hide", id > 0 and UnitName("raid" .. id) or "__NONE__")
+      RegisterStateDriver(frame, 'visibility', frame.visibilitycondition)
+    else
+      if id > 0 then frame:Show() else frame:Hide() end
+      pfUI.uf:RefreshUnit(frame, "all")
+    end
+  end
+
   -- add units to the beginning of their groups
   function pfUI.uf.raid:AddUnitToGroup(index, group)
     for subindex = 1, 5 do
       local ids = subindex + 5*(group-1)
       if pfUI.uf.raid[ids].id == 0 and pfUI.uf.raid[ids].config.visible == "1" then
-        pfUI.uf.raid[ids].id = index
-        pfUI.uf.raid[ids]:Show()
-        pfUI.uf:RefreshUnit(pfUI.uf.raid[ids], "all")
-        break
+        SetRaidIndex(pfUI.uf.raid[ids], index)
+        return
       end
     end
   end
 
-  function pfUI.uf.raid:RaidSetup()
-    for i=1, 40 do
-      pfUI.uf.raid[i].id = 0
-      pfUI.uf.raid[i]:Hide()
-    end
+  pfUI.uf.raid:Hide()
+  pfUI.uf.raid:RegisterEvent("RAID_ROSTER_UPDATE")
+  pfUI.uf.raid:RegisterEvent("VARIABLES_LOADED")
+  pfUI.uf.raid:SetScript("OnEvent", function() this:Show() end)
+  pfUI.uf.raid:SetScript("OnUpdate", function()
+    -- skip during combat
+    if InCombatLockdown and InCombatLockdown() then return end
+
+    -- clear all existing frames
+    for i=1, 40 do SetRaidIndex(pfUI.uf.raid[i], 0) end
 
     -- sort tanks into their groups
     for i=1, GetNumRaidMembers() do
@@ -73,12 +90,9 @@ pfUI:RegisterModule("raid", "vanilla:tbc", function ()
         pfUI.uf.raid:AddUnitToGroup(i, subgroup)
       end
     end
-  end
 
-  pfUI.uf.raid:Hide()
-  pfUI.uf.raid:RegisterEvent("RAID_ROSTER_UPDATE")
-  pfUI.uf.raid:RegisterEvent("VARIABLES_LOADED")
-  pfUI.uf.raid:SetScript("OnEvent", function() pfUI.uf.raid:RaidSetup() end)
+    this:Hide()
+  end)
 
   -- raid popup option to toggle tank role
   local iupm = table.getn(UnitPopupMenus["RAID"])
@@ -95,7 +109,7 @@ pfUI:RegisterModule("raid", "vanilla:tbc", function ()
 
     if button and pfUI.uf.raid.tanksfirst[button] and name then
       pfUI.uf.raid.tankrole[name] = not pfUI.uf.raid.tankrole[name]
-      pfUI.uf.raid:RaidSetup()
+      pfUI.uf.raid:Show()
     end
   end)
 end)
