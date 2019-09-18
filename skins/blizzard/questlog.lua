@@ -14,7 +14,8 @@ pfUI:RegisterSkin("Quest Log", "vanilla:tbc", function ()
       StripTextures(QUEST_COUNT)
       QUEST_COUNT:ClearAllPoints()
       hooksecurefunc("QuestLogUpdateQuestCount", function(numQuests)
-        QUEST_COUNT:SetPoint("TOPRIGHT", -10, -30)
+        QUEST_COUNT:ClearAllPoints()
+        QUEST_COUNT:SetPoint("BOTTOMRIGHT", QuestLogFrame, "TOPRIGHT", 0, -50)
       end)
     else -- vanilla
       QUEST_COUNT = QuestLogQuestCount
