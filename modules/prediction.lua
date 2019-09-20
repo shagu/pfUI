@@ -1,4 +1,4 @@
-pfUI:RegisterModule("prediction", "vanilla", function ()
+pfUI:RegisterModule("prediction", "vanilla:tbc", function ()
   local heals = {}
   local ress = {}
   local events = {}
@@ -36,39 +36,86 @@ pfUI:RegisterModule("prediction", "vanilla", function ()
     end
   end)
 
-  function pfUI.prediction:ParseChatMessage(sender, msg)
+  local function ParseComm(sender, msg)
+    local msgtype, target, heal, time
+
     if msg == "Healstop" or msg == "GrpHealstop" then
-      pfUI.prediction:HealStop(sender)
-      return
+      msgtype = "Stop"
     elseif msg == "Resurrection/stop/" then
-      pfUI.prediction:RessStop(sender)
-      return
-    end
+      msgtype = "RessStop"
+    else
+      local msgobj = {strsplit("/", msg)}
 
-    local message = {strsplit("/", msg)}
+      if msgobj and msgobj[1] and msgobj[2] then -- legacy healcomm object
+        if msgobj[1] == "GrpHealdelay" or msgobj[1] == "Healdelay" then
+          msgtype, time = "Delay", msgobj[2]
+        end
 
-    if message[1] and ( message[1] == "GrpHealdelay" or message[1] == "Healdelay" ) then
-      pfUI.prediction:HealDelay(sender, message[2])
-      return
-    end
+        if msgobj[1] and msgobj[1] == "Resurrection" and msgobj[2] then
+          msgtype, target = "Ress", msgobj[2]
+        end
 
-    if message[1] and message[1] == "Heal" and message[2] then
-      pfUI.prediction:Heal(sender, message[2], message[3], message[4])
-      return
-    end
+        if msgobj[1] == "Heal" and msgobj[2] then
+          msgtype, target, heal, time = "Heal", msgobj[2], msgobj[3], msgobj[4]
+        end
 
-    if message[1] and message[1] == "GrpHeal" and message[2] then
-      for i=4,8 do
-        if message[i] then
-          pfUI.prediction:Heal(sender, message[i], message[2], message[3])
+        if msgobj[1] == "GrpHeal" and msgobj[2] then
+          msgtype, target, heal, time = "Heal", {}, msgobj[2], msgobj[3]
+          for i=4,8 do
+            if msgobj[i] then table.insert(target, msgobj[i]) end
+          end
+        end
+      elseif select and UnitCastingInfo then -- latest healcomm
+        msgtype = tonumber(string.sub(msg, 1, 3))
+        if not msgtype then return end
+
+        if msgtype == 0 then
+          msgtype = "Heal"
+          heal = tonumber(string.sub(msg, 4, 8))
+          target = string.sub(msg,9, -1)
+
+          local starttime = select(5, UnitCastingInfo(sender))
+          local endtime = select(6, UnitCastingInfo(sender))
+          if not starttime or not endtime then return end
+          time = endtime - starttime
+        elseif msgtype == 1 then
+          msgtype = "Stop"
+        elseif msgtype == 2 then
+          msgtype = "Heal"
+          heal = tonumber(string.sub(msg,4, 8))
+          target = {strsplit(":", string.sub(msg,9, -1))}
+          local starttime = select(5, UnitCastingInfo(sender))
+          local endtime = select(6, UnitCastingInfo(sender))
+          if not starttime or not endtime then return end
+          time = endtime - starttime
         end
       end
-      return
     end
 
-    if message[1] and message[1] == "Resurrection" and message[2] then
-      pfUI.prediction:Ress(sender, message[2])
+    return msgtype, target, heal, time
+  end
+
+  function pfUI.prediction:ParseChatMessage(sender, msg)
+    local msgtype, target, heal, time = ParseComm(sender, msg)
+
+    if msgtype == "Stop" and sender then
+      pfUI.prediction:HealStop(sender)
       return
+    elseif msg == "RessStop" and sender then
+      pfUI.prediction:RessStop(sender)
+      return
+    elseif msgtype == "Delay" and time then
+      pfUI.prediction:HealDelay(sender, time)
+    elseif msgtype == "Heal" and target and heal and time then
+      if type(target) == "table" then
+        for _, name in pairs(target) do
+          pfUI.prediction:Heal(sender, name, heal, time)
+        end
+      else
+        pfUI.prediction:Heal(sender, target, heal, time)
+      end
+    elseif msgtype == "Ress" then
+      pfUI.prediction:Ress(sender, target)
     end
   end
 
@@ -264,72 +311,105 @@ pfUI:RegisterModule("prediction", "vanilla", function ()
     SendAddonMessage("HealComm", msg, "BATTLEGROUND")
   end
 
+  -- tbc
+  pfUI.prediction.sender:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
+  pfUI.prediction.sender:RegisterEvent("UNIT_SPELLCAST_START")
+  pfUI.prediction.sender:RegisterEvent("UNIT_SPELLCAST_START")
+  pfUI.prediction.sender:RegisterEvent("UNIT_SPELLCAST_STOP")
+  pfUI.prediction.sender:RegisterEvent("UNIT_SPELLCAST_FAILED")
+  pfUI.prediction.sender:RegisterEvent("UNIT_SPELLCAST_INTERRUPTED")
+  pfUI.prediction.sender:RegisterEvent("UNIT_SPELLCAST_DELAYED")
+
+  -- vanilla
   pfUI.prediction.sender:RegisterEvent("CHAT_MSG_SPELL_SELF_BUFF")
   pfUI.prediction.sender:RegisterEvent("SPELLCAST_START")
   pfUI.prediction.sender:RegisterEvent("SPELLCAST_STOP")
   pfUI.prediction.sender:RegisterEvent("SPELLCAST_FAILED")
   pfUI.prediction.sender:RegisterEvent("SPELLCAST_INTERRUPTED")
   pfUI.prediction.sender:RegisterEvent("SPELLCAST_DELAYED")
+
   pfUI.prediction.sender:SetScript("OnEvent", function()
-    if event == "CHAT_MSG_SPELL_SELF_BUFF" then
-      -- "Your %s heals %s for %d.";
-      local spell, _, heal = cmatch(arg1, HEALEDSELFOTHER)
+    if event == "CHAT_MSG_SPELL_SELF_BUFF" then -- vanilla
+      local spell, _, heal = cmatch(arg1, HEALEDSELFOTHER) -- "Your %s heals %s for %d.";
       if spell and heal then
         if spell == spell_queue[1] then cache[spell_queue[2]] = tonumber(heal) end
         return
       end
 
-      -- "Your %s heals you for %d."
-      local spell, heal = cmatch(arg1, HEALEDSELFSELF)
+      local spell, heal = cmatch(arg1, HEALEDSELFSELF) -- "Your %s heals you for %d."
       if spell and heal then
         if spell == spell_queue[1] then cache[spell_queue[2]] = tonumber(heal) end
         return
       end
 
-      -- "Your %s critically heals %s for %d."
-      local spell, heal = cmatch(arg1, HEALEDCRITSELFOTHER)
+      local spell, heal = cmatch(arg1, HEALEDCRITSELFOTHER) -- "Your %s critically heals %s for %d."
       if spell and heal then
         if spell == spell_queue[1] and not cache[spell_queue[2]] then cache[spell_queue[2]] = tonumber(heal)*2/3 end
         return
       end
 
-      -- "Your %s critically heals you for %d."
-      local spell, _, heal = cmatch(arg1, HEALEDCRITSELFSELF)
+      local spell, _, heal = cmatch(arg1, HEALEDCRITSELFSELF) -- "Your %s critically heals you for %d."
       if spell and heal then
         if spell == spell_queue[1] and not cache[spell_queue[2]] then cache[spell_queue[2]] = tonumber(heal)*2/3 end
         return
       end
-    elseif event == "SPELLCAST_START" then
-      if spell_queue[1] == arg1 and cache[spell_queue[2]] then
+    elseif event == "COMBAT_LOG_EVENT_UNFILTERED" and arg2 == "SPELL_HEAL" and arg4 == player then -- tbc
+      local spell, heal, crit = arg10, arg12, arg13
+      if spell and heal and crit then
+        if spell == spell_queue[1] and not cache[spell_queue[2]] then cache[spell_queue[2]] = tonumber(heal)*2/3 end
+      elseif spell and heal then
+        if spell == spell_queue[1] then cache[spell_queue[2]] = tonumber(heal) end
+      end
+    elseif strfind(event, "SPELLCAST_START", 1) then
+      local spell, time = arg1, arg2
+
+      if strfind(event, "UNIT_", 1) then -- tbc
+        if arg1 ~= "player" then return end
+        local spellname, _, _, _, starttime, endtime = UnitCastingInfo("player")
+        spell, time = spellname, endtime - starttime
+      end
+
+      if spell_queue[1] == spell and cache[spell_queue[2]] then
         local sender = player
         local target = spell_queue[3]
         local amount = cache[spell_queue[2]]
-        local casttime = arg2
+        local casttime = time
 
         pfUI.prediction:Heal(player, target, amount, casttime)
-        pfUI.prediction.sender:SendHealCommMsg("Heal/" .. target .. "/" .. amount .. "/" .. casttime .. "/")
+        if pfUI.client < 20000 then -- vanilla
+          pfUI.prediction.sender:SendHealCommMsg("Heal/" .. target .. "/" .. amount .. "/" .. casttime .. "/")
+        else -- tbc
+          pfUI.prediction.sender:SendHealCommMsg(string.format("002%05d%s", math.min(amount, 99999), target))
+        end
         pfUI.prediction.sender.healing = true
-      elseif spell_queue[1] == arg1 and L["resurrections"][arg1] then
+      elseif spell_queue[1] == spell and L["resurrections"][spell] then
         pfUI.prediction:Ress(player, spell_queue[3])
         pfUI.prediction.sender:SendHealCommMsg("Resurrection/" .. spell_queue[3] .. "/start/")
         pfUI.prediction.sender.resurrecting = true
       end
-    elseif event == "SPELLCAST_FAILED" or event == "SPELLCAST_INTERRUPTED" then
+    elseif strfind(event, "SPELLCAST_FAILED", 1) or strfind(event, "SPELLCAST_INTERRUPTED", 1) then
+      if strfind(event, "UNIT_", 1) and arg1 ~= "player" then return end
       if pfUI.prediction.sender.healing then
         pfUI.prediction:HealStop(player)
-        pfUI.prediction.sender:SendHealCommMsg("HealStop")
+        if pfUI.client < 20000 then -- vanilla
+          pfUI.prediction.sender:SendHealCommMsg("HealStop")
+        else -- tbc
+          pfUI.prediction.sender:SendHealCommMsg("001F")
+        end
         pfUI.prediction.sender.healing = nil
       elseif pfUI.prediction.sender.resurrecting then
         pfUI.prediction:RessStop(player)
         pfUI.prediction.sender:SendHealCommMsg("Resurrection/stop/")
         pfUI.prediction.sender.resurrecting = nil
       end
-    elseif event =="SPELLCAST_DELAYED" then
+    elseif strfind(event, "SPELLCAST_DELAYED", 1) then
+      if strfind(event, "UNIT_", 1) and arg1 ~= "player" then return end
       if pfUI.prediction.sender.healing then
         pfUI.prediction:HealDelay(player, arg1)
         pfUI.prediction.sender:SendHealCommMsg("Healdelay/" .. arg1 .. "/")
       end
-    elseif event == "SPELLCAST_STOP" then
+    elseif strfind(event, "SPELLCAST_STOP", 1) then
+      if strfind(event, "UNIT_", 1) and arg1 ~= "player" then return end
       pfUI.prediction:HealStop(player)
     end
   end)
