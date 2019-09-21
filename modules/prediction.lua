@@ -318,7 +318,6 @@ pfUI:RegisterModule("prediction", "vanilla:tbc", function ()
   pfUI.prediction.sender:RegisterEvent("UNIT_SPELLCAST_STOP")
   pfUI.prediction.sender:RegisterEvent("UNIT_SPELLCAST_FAILED")
   pfUI.prediction.sender:RegisterEvent("UNIT_SPELLCAST_INTERRUPTED")
-  pfUI.prediction.sender:RegisterEvent("UNIT_SPELLCAST_DELAYED")
 
   -- vanilla
   pfUI.prediction.sender:RegisterEvent("CHAT_MSG_SPELL_SELF_BUFF")
@@ -402,8 +401,7 @@ pfUI:RegisterModule("prediction", "vanilla:tbc", function ()
         pfUI.prediction.sender:SendHealCommMsg("Resurrection/stop/")
         pfUI.prediction.sender.resurrecting = nil
       end
-    elseif strfind(event, "SPELLCAST_DELAYED", 1) then
-      if strfind(event, "UNIT_", 1) and arg1 ~= "player" then return end
+    elseif event == "SPELLCAST_DELAYED" then
       if pfUI.prediction.sender.healing then
         pfUI.prediction:HealDelay(player, arg1)
         pfUI.prediction.sender:SendHealCommMsg("Healdelay/" .. arg1 .. "/")
