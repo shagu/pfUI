@@ -449,7 +449,7 @@ pfUI:RegisterModule("chat", "vanilla:tbc", function ()
     ChatFrame_RemoveAllChannels(ChatFrame2)
     ChatFrame_RemoveAllChannels(ChatFrame3)
 
-    local normalg = {"SYSTEM", "SAY", "YELL", "WHISPER", "PARTY", "GUILD", "CREATURE", "CHANNEL"}
+    local normalg = { "SYSTEM", "SAY", "YELL", "WHISPER", "PARTY", "GUILD", "GUILD_OFFICER", "CREATURE", "CHANNEL", "EMOTE", "RAID", "RAID_LEADER", "RAID_WARNING", "BATTLEGROUND", "BATTLEGROUND_LEADER", "MONSTER_SAY", "MONSTER_EMOTE", "MONSTER_YELL", "MONSTER_WHISPER", "MONSTER_BOSS_EMOTE", "MONSTER_BOSS_WHISPER" }
     for _,group in pairs(normalg) do
       ChatFrame_AddMessageGroup(ChatFrame1, group)
     end
