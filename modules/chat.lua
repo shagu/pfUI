@@ -623,7 +623,9 @@ pfUI:RegisterModule("chat", "vanilla:tbc", function ()
         if text then
           -- Remove prat's CLINK itemlinks.
           text = gsub(text, '%{CLINK:(%x%x%x%x%x%x%x%x):(%d*):(%d*):(%d*):(%d*):(.-)%}', function(color, id, enchant, suffix, uuid, name)
-            return format('|c%s|Hitem:%s:%s:%s:%s|h[%s]|h|r', color, id, enchant, suffix, uuid, name)
+            local itemname
+            for id, name in pairs({strsplit(":", name)}) do itemname = name end
+            return format('|c%s|Hitem:%s:%s:%s:%s|h[%s]|h|r', color, id, enchant, suffix, uuid, itemname)
           end)
 
           -- detect urls
