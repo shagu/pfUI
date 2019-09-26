@@ -903,8 +903,10 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
 
   f.hp = CreateFrame("Frame",nil, f)
   f.hp.bar = CreateFrame("StatusBar", nil, f.hp)
+  f.hp.bar:SetFrameLevel(8)
   f.power = CreateFrame("Frame",nil, f)
   f.power.bar = CreateFrame("StatusBar", nil, f.power)
+  f.hp.bar:SetFrameLevel(4)
   f.glow = CreateFrame("Frame", nil, f)
 
   f.hpLeftText = f:CreateFontString("Status", "OVERLAY", "GameFontNormalSmall")
