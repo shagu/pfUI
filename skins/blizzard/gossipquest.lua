@@ -92,7 +92,8 @@ pfUI:RegisterSkin("Gossip and Quest", "vanilla:tbc", function ()
       local panel = v
       if frameName == 'Gossip' and panel ~= 'Greeting' then break end
 
-      StripTextures(_G[frame:GetName()..panel.."Panel"])
+      local fname = frame:GetName()..panel.."Panel"
+      StripTextures(_G[fname])
 
       local scroll = _G[frameName..panel.."ScrollFrame"]
       scroll:SetHeight(330)
@@ -103,6 +104,25 @@ pfUI:RegisterSkin("Gossip and Quest", "vanilla:tbc", function ()
       bg:SetAllPoints()
       bg:SetTexCoord(.1,1,0,1)
       bg:SetTexture("Interface\\Stationery\\StationeryTest1")
+
+      -- assign material backgrounds to the default one
+      _G[fname.."MaterialTopLeft"].SetTexture = function(self, texture)
+        bg:SetTexture(texture)
+      end
+
+      _G[fname.."MaterialTopLeft"].Hide = function()
+        bg:SetTexture("Interface\\Stationery\\StationeryTest1")
+      end
+
+      -- disable meterial backgrounds
+      _G[fname.."MaterialTopLeft"].Show = function() return end
+      _G[fname.."MaterialTopRight"].Show = function() return end
+      _G[fname.."MaterialBotLeft"].Show = function() return end
+      _G[fname.."MaterialBotRight"].Show = function() return end
+      _G[fname.."MaterialTopLeft"]:Hide()
+      _G[fname.."MaterialTopRight"]:Hide()
+      _G[fname.."MaterialBotLeft"]:Hide()
+      _G[fname.."MaterialBotRight"]:Hide()
 
       if panel ~= 'Greeting' then
         local num_items, hook_func
