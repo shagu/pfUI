@@ -190,7 +190,13 @@ pfUI:RegisterModule("buff", "vanilla:tbc", function ()
     end)
 
     buff:SetScript("OnClick", function()
-      CancelPlayerBuff(this.bid)
+      if CancelItemTempEnchantment and this.mode and this.mode == "MAINHAND" then
+        CancelItemTempEnchantment(1)
+      elseif CancelItemTempEnchantment and this.mode and this.mode == "OFFHAND" then
+        CancelItemTempEnchantment(2)
+      else
+        CancelPlayerBuff(this.bid)
+      end
     end)
 
     CreateBackdrop(buff)
