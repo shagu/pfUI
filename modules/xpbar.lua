@@ -83,7 +83,7 @@ pfUI:RegisterModule("xpbar", "vanilla:tbc", function ()
         this.enabled = true
         if event == "PLAYER_ENTERING_WORLD" then
           this.starttime = GetTime()
-          this.startxp = UnitXP("player")
+          this.startxp = UnitXP("player") or 0
         elseif event == "PLAYER_LEVEL_UP" then
           -- add previously gained experience to the session
           this.startxp = this.startxp - UnitXPMax("player")
