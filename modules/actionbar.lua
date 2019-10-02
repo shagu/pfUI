@@ -1098,7 +1098,7 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     bars[1]:SetAttribute("statemap-page", "$input")
     bars[1]:SetAttribute("statebutton", "0:S0;1:S1;2:S2;3:S3;4:S4;5:S5;6:S6;7:S7;8:S8;9:S9;10:S10;11:S11;")
     bars[1]:SetAttribute("statebutton2", "0:S0Right;1:S1Right;2:S2Right;3:S3Right;4:S4Right;5:S5Right;6:S6Right;7:S7Right;8:S8Right;9:S9Right;10:S10Right;11:S11Right;")
-    SecureStateHeader_Refresh(bars[1])
+    --SecureStateHeader_Refresh(bars[1])
 
     -- update to the current page
     bars[1]:SetAttribute("state", bars[1]:GetAttribute("state-page"))
