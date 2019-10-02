@@ -1,4 +1,4 @@
-pfUI:RegisterModule("chat", "vanilla:tbc", function ()
+pfUI:RegisterModule("chat", "vanilla:tbc:wotlk", function ()
   local panelfont = C.panel.use_unitfonts == "1" and pfUI.font_unit or pfUI.font_default
   local panelfont_size = C.panel.use_unitfonts == "1" and C.global.font_unit_size or C.global.font_size
 
@@ -330,7 +330,7 @@ pfUI:RegisterModule("chat", "vanilla:tbc", function ()
         v:SetHeight(C.global.font_size+default_border*2)
       end
 
-      _G["ChatFrame" .. i .. "ResizeBottom"]:Hide()
+      --_G["ChatFrame" .. i .. "ResizeBottom"]:Hide()
       _G["ChatFrame" .. i .. "TabText"]:SetJustifyV("CENTER")
       _G["ChatFrame" .. i .. "TabText"]:SetHeight(C.global.font_size+default_border*2)
       _G["ChatFrame" .. i .. "TabText"]:SetPoint("BOTTOM", 0, default_border)
@@ -490,13 +490,17 @@ pfUI:RegisterModule("chat", "vanilla:tbc", function ()
     end
   end
 
+  local function kill(frame)
+    if not frame then return end
+    frame:UnregisterAllEvents()
+    frame:Hide()
+    frame.Show = function() return end
+  end
+
   for i=1, NUM_CHAT_WINDOWS do
-    _G["ChatFrame" .. i .. "UpButton"]:Hide()
-    _G["ChatFrame" .. i .. "UpButton"].Show = function() return end
-    _G["ChatFrame" .. i .. "DownButton"]:Hide()
-    _G["ChatFrame" .. i .. "DownButton"].Show = function() return end
-    _G["ChatFrame" .. i .. "BottomButton"]:Hide()
-    _G["ChatFrame" .. i .. "BottomButton"].Show = function() return end
+    kill(_G["ChatFrame" .. i .. "UpButton"])
+    kill(_G["ChatFrame" .. i .. "DownButton"])
+    kill(_G["ChatFrame" .. i .. "BottomButton"])
     _G["ChatFrame" .. i .. "Tab"]._SetAlpha = _G["ChatFrame" .. i .. "Tab"].SetAlpha
     _G["ChatFrame" .. i .. "Tab"].SetAlpha = SkipFading
   end
@@ -547,7 +551,7 @@ pfUI:RegisterModule("chat", "vanilla:tbc", function ()
     UpdateMovable(pfUI.chat.editbox)
   end)
 
-
+  ChatFrameEditBox = ChatFrameEditBox or ChatFrame1EditBox
   ChatFrameEditBox:SetParent(pfUI.chat.editbox)
   ChatFrameEditBox:SetAllPoints(pfUI.chat.editbox)
   CreateBackdrop(ChatFrameEditBox, default_border)
