@@ -338,6 +338,7 @@ function pfUI.uf:UpdateConfig()
     -- place portrait below fonts
     f.portrait:SetFrameStrata("BACKGROUND")
     f.portrait.model:SetFrameStrata("BACKGROUND")
+    f.portrait.model:SetFrameLevel(3)
 
     f.portrait:Show()
   elseif f.config.portrait == "left" then
@@ -353,6 +354,7 @@ function pfUI.uf:UpdateConfig()
     -- make sure incHeal is above
     f.portrait:SetFrameStrata("BACKGROUND")
     f.portrait.model:SetFrameStrata("BACKGROUND")
+    f.portrait.model:SetFrameLevel(1)
 
     pfUI.api.CreateBackdrop(f.portrait, default_border)
     f.portrait.backdrop:Show()
@@ -370,6 +372,7 @@ function pfUI.uf:UpdateConfig()
     -- make sure incHeal is above
     f.portrait:SetFrameStrata("BACKGROUND")
     f.portrait.model:SetFrameStrata("BACKGROUND")
+    f.portrait.model:SetFrameLevel(1)
 
     pfUI.api.CreateBackdrop(f.portrait, default_border)
     f.portrait.backdrop:Show()
@@ -445,7 +448,7 @@ function pfUI.uf:UpdateConfig()
   f.powerCenterText:SetPoint("TOPLEFT",f.power.bar, "TOPLEFT", 2*default_border, 1)
   f.powerCenterText:SetPoint("BOTTOMRIGHT",f.power.bar, "BOTTOMRIGHT", -2*default_border, 0)
 
-  f.incHeal:SetFrameLevel(10)
+  f.incHeal:SetFrameLevel(2)
   f.incHeal:SetHeight(f.config.height)
   f.incHeal:SetWidth(f.config.width)
   f.incHeal:SetStatusBarTexture(pfUI.media["img:bar"])
@@ -899,14 +902,10 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
   CreateBackdropShadow(f)
 
   f.hp = CreateFrame("Frame",nil, f)
-  f.hp:SetFrameLevel(8)
   f.hp.bar = CreateFrame("StatusBar", nil, f.hp)
-  f.hp.bar:SetFrameLevel(12)
 
   f.power = CreateFrame("Frame",nil, f)
-  f.power:SetFrameLevel(2)
   f.power.bar = CreateFrame("StatusBar", nil, f.power)
-  f.power.bar:SetFrameLevel(4)
   f.glow = CreateFrame("Frame", nil, f)
 
   f.hpLeftText = f:CreateFontString("Status", "OVERLAY", "GameFontNormalSmall")
