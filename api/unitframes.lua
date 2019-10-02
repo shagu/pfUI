@@ -910,7 +910,7 @@ end
 
 function pfUI.uf.OnUpdate()
   -- update combat feedback
-  if this.feedbackText then CombatFeedback_OnUpdate(arg1) end
+  if this.feedbackText then CombatFeedback_OnUpdate(this, arg1) end
 
   -- process indicator update events
   if this.update_indicators then
