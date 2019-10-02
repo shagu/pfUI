@@ -214,7 +214,7 @@ function pfUI:RegisterModule(name, a2, a3)
   local func, version = hasv and a3 or a2, hasv and a2 or "vanilla:tbc:wotlk"
 
   -- check for client compatibility
-  if not strfind(version, pfUI.expansion) then return end
+  --if not strfind(version, pfUI.expansion) then return end
 
   pfUI.module[name] = func
   table.insert(pfUI.modules, name)
