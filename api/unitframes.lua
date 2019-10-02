@@ -705,7 +705,7 @@ function pfUI.uf.OnUpdate()
   local unitname = ( this.label and UnitName(this.label) ) or ""
 
   -- update combat feedback
-  if this.feedbackText then CombatFeedback_OnUpdate(arg1) end
+  if this.feedbackText then CombatFeedback_OnUpdate(this, arg1) end
 
   -- focus unit detection
   if this.unitname and this.unitname ~= strlower(unitname) then
