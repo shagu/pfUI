@@ -156,7 +156,7 @@ function pfUI:UpdateFonts()
   UNIT_NAME_FONT     = default
 
   -- change default game font objects
-  SystemFont:SetFont(default, 15)
+  --SystemFont:SetFont(default, 15)
   GameFontNormal:SetFont(default, 12)
   GameFontBlack:SetFont(default, 12)
   GameFontNormalSmall:SetFont(default, 11)
@@ -175,7 +175,7 @@ function pfUI:UpdateFonts()
   DialogButtonNormalText:SetFont(default, 16)
   ZoneTextFont:SetFont(default, 34, "OUTLINE")
   SubZoneTextFont:SetFont(default, 24, "OUTLINE")
-  TextStatusBarTextSmall:SetFont(default, 12, "NORMAL")
+  --TextStatusBarTextSmall:SetFont(default, 12, "NORMAL")
   GameTooltipText:SetFont(default, 12)
   GameTooltipTextSmall:SetFont(default, 12)
   GameTooltipHeaderText:SetFont(default, 13)
