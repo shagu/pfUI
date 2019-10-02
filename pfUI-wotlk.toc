@@ -1,0 +1,16 @@
+## Interface: 30300
+## Title: |cff33ffccpf|cffffffffUI |cffaa5555[incomplete]
+## Author: Shagu
+## Notes: A complete user interface replacement.
+## Version: 4.2.0
+## SavedVariables: pfUI_profiles, pfUI_addon_profiles, pfUI_cache
+## SavedVariablesPerCharacter: pfUI_config, pfUI_init, pfUI_playerDB
+
+pfUI.lua
+
+init\env.xml
+init\compat.xml
+init\api.xml
+init\libs.xml
+init\skins.xml
+init\modules.xml
