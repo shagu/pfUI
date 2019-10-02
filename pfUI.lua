@@ -93,6 +93,7 @@ end
 setmetatable(pfUI.env, {__index = getfenv(0)})
 
 function pfUI:UpdateColors()
+  ManaBarColor = ManaBarColor or {}
   ManaBarColor[0] = { r = 0.00, g = 0.00, b = 1.00, prefix = TEXT(MANA) };
   ManaBarColor[1] = { r = 1.00, g = 0.00, b = 0.00, prefix = TEXT(RAGE_POINTS) };
   ManaBarColor[2] = { r = 1.00, g = 0.50, b = 0.25, prefix = TEXT(FOCUS_POINTS) };
