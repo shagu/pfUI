@@ -1,5 +1,5 @@
 ## Interface: 20400
-## Title: |cff33ffccpf|cffffffffUI |cffaa5555[incomplete]
+## Title: |cff33ffccpf|cffffffffUI |cffaaaaaa[beta]
 ## Author: Shagu
 ## Notes: A complete user interface replacement.
 ## Version: 4.2.0

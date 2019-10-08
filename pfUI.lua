@@ -256,7 +256,7 @@ pfUI:SetScript("OnEvent", function()
 
   if arg1 == pfUI.name then
     -- read pfUI version from .toc file
-    local major, minor, fix = pfUI.api.strsplit(".", tostring(GetAddOnMetadata("pfUI", "Version")))
+    local major, minor, fix = pfUI.api.strsplit(".", tostring(GetAddOnMetadata(pfUI.name, "Version")))
     pfUI.version.major = tonumber(major) or 1
     pfUI.version.minor = tonumber(minor) or 2
     pfUI.version.fix   = tonumber(fix)   or 0
