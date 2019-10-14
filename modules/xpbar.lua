@@ -28,6 +28,17 @@ pfUI:RegisterModule("xpbar", "vanilla:tbc", function ()
     b:SetHeight(height)
     b:SetFrameStrata("BACKGROUND")
 
+    if t == "XP" and pfUI.chat then
+      b:SetPoint("TOPLEFT", pfUI.chat.left, "TOPRIGHT", C.appearance.border.default*2, 0)
+      b:SetPoint("BOTTOMLEFT", pfUI.chat.left, "BOTTOMRIGHT", C.appearance.border.default*2, 0)
+    elseif t == "REP" and pfUI.chat then
+      b:SetPoint("TOPRIGHT",pfUI.chat.right,"TOPLEFT", -C.appearance.border.default*2, 0)
+      b:SetPoint("BOTTOMRIGHT",pfUI.chat.right,"BOTTOMLEFT",-C.appearance.border.default*2, 0)
+    else
+      b:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", 0, 0)
+      b:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", 0, 0)
+    end
+
     CreateBackdrop(b)
     CreateBackdropShadow(b)
     UpdateMovable(b)
@@ -203,20 +214,5 @@ pfUI:RegisterModule("xpbar", "vanilla:tbc", function ()
   end
 
   pfUI.xp = CreateBar("XP")
-  if pfUI.chat then
-    pfUI.xp:SetPoint("TOPLEFT", pfUI.chat.left, "TOPRIGHT", C.appearance.border.default*2, 0)
-    pfUI.xp:SetPoint("BOTTOMLEFT", pfUI.chat.left, "BOTTOMRIGHT", C.appearance.border.default*2, 0)
-  else
-    pfUI.xp:SetPoint("TOPLEFT", UIParent, "TOPLEFT", 0, 0)
-    pfUI.xp:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", 0, 0)
-  end
-
   pfUI.rep = CreateBar("REP")
-  if pfUI.chat then
-    pfUI.rep:SetPoint("TOPRIGHT",pfUI.chat.right,"TOPLEFT", -C.appearance.border.default*2, 0)
-    pfUI.rep:SetPoint("BOTTOMRIGHT",pfUI.chat.right,"BOTTOMLEFT",-C.appearance.border.default*2, 0)
-  else
-    pfUI.rep:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", 0, 0)
-    pfUI.rep:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", 0, 0)
-  end
 end)
