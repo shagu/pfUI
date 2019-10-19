@@ -20,7 +20,11 @@ pfUI:RegisterModule("player", "vanilla:tbc", function ()
 
   -- Replace default's RESET_INSTANCES button with an always working one
   UnitPopupButtons["RESET_INSTANCES_FIX"] = { text = RESET_INSTANCES, dist = 0 };
-  UnitPopupMenus["SELF"] = { "LOOT_METHOD", "LOOT_THRESHOLD", "LOOT_PROMOTE", "LEAVE", "RESET_INSTANCES_FIX", "RAID_TARGET_ICON", "CANCEL" };
+  for id, text in pairs(UnitPopupMenus["SELF"]) do
+    if text == "RESET_INSTANCES" then
+      UnitPopupMenus["SELF"][id] = "RESET_INSTANCES_FIX"
+    end
+  end
 
   hooksecurefunc("UnitPopup_OnClick", function()
     local button = this.value
