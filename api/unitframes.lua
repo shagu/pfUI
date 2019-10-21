@@ -321,6 +321,7 @@ function pfUI.uf:UpdateConfig()
   pfUI.api.CreateBackdrop(f.power, default_border)
   f.power.bar:SetStatusBarTexture(pfUI.media[f.config.bartexture])
   f.power.bar:SetAllPoints(f.power)
+  f.power.bar:SetFrameStrata("LOW")
 
   f.portrait:SetFrameStrata("LOW")
   f.portrait.tex:SetAllPoints(f.portrait)
