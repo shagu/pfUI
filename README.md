@@ -4,7 +4,7 @@ An AddOn for World of Warcraft (1.12.1), mostly known as "Vanilla", which aims t
 
 This is **not** an addon-pack like [ShaguUI](http://shagu.org/ShaguUI/), however, there is support for external addons like MobHealth3, DPSMate and others, but they will never be shipped within the package.
 
-**Please do not re-upload or distribute outdated versions of this project. However, you are more than welcome to fork or link to the official gitlab page.**
+**Please do not re-upload or distribute outdated versions of this project. However, you are more than welcome to fork or link to the official github page.**
 
 ## Screenshots
 
@@ -14,7 +14,7 @@ This is **not** an addon-pack like [ShaguUI](http://shagu.org/ShaguUI/), however
 <img src="https://raw.githubusercontent.com/shagu/ShaguAddons/master/_img/pfUI/maraudon.jpg" width="48.87%">
 
 ## Installation
-1. Download **[Latest Version](https://gitlab.com/shagu/pfUI/-/archive/master/pfUI-master.zip)**
+1. Download **[Latest Version](https://github.com/shagu/pfUI/archive/master.zip)**
 2. Unpack the Zip file
 3. Rename the folder "pfUI-master" to "pfUI"
 4. Copy "pfUI" into Wow-Directory\Interface\AddOns
@@ -67,18 +67,18 @@ Yes there is one: [Discord Invite](https://discord.gg/QTRKanu)
 You can't. I'm doing this for fun. Enjoy!
 
 **How do I report a Bug?**  
-Please provide as much information as possible in the [Bugtracker](https://gitlab.com/shagu/pfUI/issues).
+Please provide as much information as possible in the [Bugtracker](https://github.com/shagu/pfUI/issues).
 If there is an error message, provide the full content of it. Just telling that "there is an error" won't help any of us.
 Please consider adding additional information such as: since when did you got the error,
 does it still happen using a clean configuration, what other addons are loaded and which version you're running.
 When playing with a non-english client, the language might be relevant too. If possible, explain how people can reproduce the issue.
 
 **How can I contribute?**  
-Report Errors, Issues and Feature Requests in the [Bugtracker](https://gitlab.com/shagu/pfUI/issues).
+Report Errors, Issues and Feature Requests in the [Bugtracker](https://github.com/shagu/pfUI/issues).
 Please make sure to have the latest version installed and check for conflicting addons beforehand.
 
 **Can I use Clique with pfUI?**  
-A pfUI compatible version of Clique can be found [Here](https://gitlab.com/shagu/Clique/-/archive/master/Clique-master.zip). If you want to keep your current version of Clique, you'll have to apply this [Patch](https://gitlab.com/shagu/Clique/commit/a5ee56c3f803afbdda07bae9cd330e0d4a75d75a).
+A pfUI compatible version of Clique can be found [Here](https://github.com/shagu/Clique/archive/master.zip). If you want to keep your current version of Clique, you'll have to apply this [Patch](https://github.com/shagu/Clique/commit/a5ee56c3f803afbdda07bae9cd330e0d4a75d75a).
 
 **How do I show the Damage- and Threatmeter Dock?**  
 If you enabled the "dock"-feature for your external (third-party) meters such as DPSMate or KTM, then you'll be able to toggle between them and the Right Chat by clicking on the ">" symbol on the bottom-right panel.
