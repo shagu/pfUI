@@ -621,12 +621,15 @@ pfUI:RegisterModule("chat", "vanilla:tbc", function ()
       _G["ChatFrame"..i].HookAddMessage = _G["ChatFrame"..i].AddMessage
       _G["ChatFrame"..i].AddMessage = function(frame, text, a1, a2, a3, a4, a5)
         if text then
-          -- Remove prat's CLINK itemlinks.
-          text = gsub(text, '%{CLINK:(%x%x%x%x%x%x%x%x):(%d*):(%d*):(%d*):(%d*):(.-)%}', function(color, id, enchant, suffix, uuid, name)
-            local itemname
-            for id, name in pairs({strsplit(":", name)}) do itemname = name end
-            return format('|c%s|Hitem:%s:%s:%s:%s|h[%s]|h|r', color, id, enchant, suffix, uuid, itemname)
-          end)
+          -- Remove prat CLINKs
+          text = gsub(text, "{CLINK:(%x+):([%d-]-:[%d-]-:[%d-]-:[%d-]-):([^}]-)}", "|c%1|Hitem:%2|h[%3]|h|r") -- vanilla
+          text = gsub(text, "{CLINK:(%x+):([%d-]-:[%d-]-:[%d-]-:[%d-]-:[%d-]-:[%d-]-:[%d-]-:[%d-]-):([^}]-)}", "|c%1|Hitem:%2|h[%3]|h|r") -- tbc
+
+          -- Remove chatter CLINKs
+          text = gsub(text, "{CLINK:item:(%x+):([%d-]-:[%d-]-:[%d-]-:[%d-]-:[%d-]-:[%d-]-:[%d-]-:[%d-]-):([^}]-)}", "|c%1|Hitem:%2|h[%3]|h|r")
+          text = gsub(text, "{CLINK:enchant:(%x+):([%d-]-):([^}]-)}", "|c%1|Henchant:%2|h[%3]|h|r")
+          text = gsub(text, "{CLINK:spell:(%x+):([%d-]-):([^}]-)}", "|c%1|Hspell:%2|h[%3]|h|r")
+          text = gsub(text, "{CLINK:quest:(%x+):([%d-]-):([%d-]-):([^}]-)}", "|c%1|Hquest:%2:%3|h[%4]|h|r")
 
           -- detect urls
           if C.chat.text.detecturl == "1" then
