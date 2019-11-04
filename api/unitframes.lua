@@ -730,6 +730,14 @@ function pfUI.uf.OnUpdate()
 
   pfUI.uf:RefreshUnitAnimation(this)
 
+  -- update portrait on first visible frame
+  if this.portrait and this.portrait.model and this.portrait.model.update then
+    this.portrait.model.lastUnit = UnitName(this.portrait.model.update)
+    this.portrait.model:SetUnit(this.portrait.model.update)
+    this.portrait.model:SetCamera(0)
+    this.portrait.model.update = nil
+  end
+
   -- trigger eventless actions (online/offline/range)
   if not this.lastTick then this.lastTick = GetTime() + (this.tick or .2) end
   if this.lastTick and this.lastTick < GetTime() then
@@ -1496,13 +1504,10 @@ function pfUI.uf:RefreshUnit(unit, component)
         if unit.tick then
           unit.portrait.model.next:SetUnit(unitstr)
           if unit.portrait.model.lastUnit ~= UnitName(unitstr) or unit.portrait.model:GetModel() ~= unit.portrait.model.next:GetModel() then
-            unit.portrait.model:SetUnit(unitstr)
-            unit.portrait.model.lastUnit = UnitName(unitstr)
-            unit.portrait.model:SetCamera(0)
+            unit.portrait.model.update = unitstr
           end
         else
-          unit.portrait.model:SetUnit(unitstr)
-          unit.portrait.model:SetCamera(0)
+          unit.portrait.model.update = unitstr
         end
       end
     end
