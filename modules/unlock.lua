@@ -209,10 +209,12 @@ pfUI:RegisterModule("unlock", "vanilla:tbc", function ()
 
   local function OpenConfigDialog(category, view)
     pfUI.gui:Show()
+
+    if not pfUI.gui.frames[category] then return end
     pfUI.gui.frames[category]:Click()
-    if view then
-      pfUI.gui.frames[category][view]:Click()
-    end
+
+    if not view or not pfUI.gui.frames[category][view] then return end
+    pfUI.gui.frames[category][view]:Click()
   end
 
   local function UpdateDockValues()
