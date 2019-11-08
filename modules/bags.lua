@@ -442,7 +442,7 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
     local position = "RIGHT"
 
     if frame == pfUI.bag.left then
-      min, max = 1, math.min(MAX_BANK_SLOTS, (GetNumBankSlots() or 0))
+      min, max = 1, math.min(NUM_BANKBAGSLOTS, (GetNumBankSlots() or 0))
       tpl = "BankItemButtonBagTemplate"
       name, append = "pfUIBankBBag", ""
       position = "LEFT"
@@ -452,14 +452,12 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
     CreateBackdrop(frame.bagslots, default_border)
     CreateBackdropShadow(frame.bagslots)
 
-    local extra = 0
-    if frame == pfUI.bag.left and GetNumBankSlots() < MAX_BANK_SLOTS then extra = 1 end
+    local extra = frame == pfUI.bag.left and GetNumBankSlots() < NUM_BANKBAGSLOTS and 1 or 0
     local width = (frame.button_size/5*4 + default_border*2) * (max-min+1+extra)
     local height = default_border + (frame.button_size/5*4 + default_border)
 
     frame.bagslots:SetWidth(width)
     frame.bagslots:SetHeight(height)
-
     for slot=min, max do
       if not frame.bagslots.slots[slot] then
         frame.bagslots.slots[slot] = {}
@@ -516,7 +514,7 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
     end
 
     if frame == pfUI.bag.left then
-      if GetNumBankSlots() < MAX_BANK_SLOTS then
+      if GetNumBankSlots() < NUM_BANKBAGSLOTS then
         if not frame.bagslots.buy then
           frame.bagslots.buy = CreateFrame("Button", "pfBagSlotBuy", frame.bagslots)
         end
