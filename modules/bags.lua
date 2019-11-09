@@ -493,6 +493,17 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
           pfUI.bag:UpdateBag(this.slot + 1)
           SlotLeave()
         end)
+
+        -- On TBC, the OnEvent function of the template scans for framenames,
+        -- and obviously doesn't know the pf-Names. Therefore, triggering
+        -- the update function on each frame manually
+        if frame == pfUI.bag.left and BankFrameItemButton_Update then
+          local SlotUpdate = frame.bagslots.slots[slot].frame:GetScript("OnUpdate")
+          frame.bagslots.slots[slot].frame:SetScript("OnUpdate", function()
+            if SlotUpdate then SlotUpdate(this) end
+            BankFrameItemButton_Update(this)
+          end)
+        end
       end
 
       local left = (slot-min)*(frame.button_size/5*4+default_border*2) + default_border
