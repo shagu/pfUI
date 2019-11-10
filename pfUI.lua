@@ -313,6 +313,7 @@ end
 print = message
 
 error = function(msg)
+  if PF_DEBUG_MODE then message(debugstack()) end
   DEFAULT_CHAT_FRAME:AddMessage("|cffcc3333ERROR: |cffff5555".. (msg or "nil" ))
 end
 seterrorhandler(error)
