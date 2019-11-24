@@ -15,9 +15,17 @@ local glow2 = {
 }
 
 local function BuffOnUpdate()
-  if ( this.tick or 1) > GetTime() then return else this.tick = GetTime() + .4 end
   local timeleft = GetPlayerBuffTimeLeft(GetPlayerBuff(PLAYER_BUFF_START_ID+this.id,"HELPFUL"))
   CooldownFrame_SetTimer(this.cd, GetTime(), timeleft, 1)
+end
+
+local function TargetBuffOnUpdate()
+  local name, rank, icon, count, duration, timeleft = _G.UnitBuff("target", this.id)
+  if duration and timeleft then
+    CooldownFrame_SetTimer(this.cd, GetTime() + timeleft - duration, duration, 1)
+  else
+    CooldownFrame_SetTimer(this.cd, 0, 0, 0)
+  end
 end
 
 local function BuffOnEnter()
@@ -587,6 +595,8 @@ function pfUI.uf:UpdateConfig()
 
       if f:GetName() == "pfPlayer" then
         f.buffs[i]:SetScript("OnUpdate", BuffOnUpdate)
+      elseif f:GetName() == "pfTarget" and pfUI.expansion == "tbc" then
+        f.buffs[i]:SetScript("OnUpdate", TargetBuffOnUpdate)
       end
 
       f.buffs[i]:SetScript("OnEnter", BuffOnEnter)
