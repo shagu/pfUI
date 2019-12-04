@@ -46,13 +46,13 @@ pfUI:RegisterModule("skin", "vanilla:tbc", function ()
 
   if C.appearance.cd.blizzard == "1" then
     hooksecurefunc("PaperDollItemSlotButton_Update", function()
-        local cooldown = _G[this:GetName().."Cooldown"]
-        if cooldown then cooldown.pfCooldownType = "ALL" end
+      local cooldown = _G[this:GetName().."Cooldown"]
+      if cooldown then cooldown.pfCooldownType = "BLIZZARD" end
     end)
 
     hooksecurefunc("SpellButton_UpdateButton", function()
       local cooldown = _G[this:GetName().."Cooldown"]
-      if cooldown then cooldown.pfCooldownType = "ALL" end
+      if cooldown then cooldown.pfCooldownType = "BLIZZARD" end
     end)
   end
 

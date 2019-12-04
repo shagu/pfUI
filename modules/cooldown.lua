@@ -37,9 +37,15 @@ pfUI:RegisterModule("cooldown", "vanilla:tbc", function ()
     cooldown.cd:SetFrameLevel(cooldown.cd:GetFrameLevel() + 1)
 
     cooldown.cd.text = cooldown.cd:CreateFontString("pfCooldownFrameText", "OVERLAY")
-    cooldown.cd.text:SetFont(pfUI.font_unit, C.appearance.cd.font_size, "OUTLINE")
-    cooldown.cd.text:SetPoint("CENTER", cooldown.cd, "CENTER", 0, 0)
+    if not cooldown.pfCooldownType then
+      cooldown.cd.text:SetFont(pfUI.font_unit, C.appearance.cd.font_size_foreign, "OUTLINE")
+    elseif cooldown.pfCooldownType == "BLIZZARD" then
+      cooldown.cd.text:SetFont(pfUI.font_unit, C.appearance.cd.font_size_blizz, "OUTLINE")
+    else
+      cooldown.cd.text:SetFont(pfUI.font_unit, C.appearance.cd.font_size, "OUTLINE")
+    end
 
+    cooldown.cd.text:SetPoint("CENTER", cooldown.cd, "CENTER", 0, 0)
     cooldown.cd:SetScript("OnUpdate", pfCooldownOnUpdate)
   end
 
