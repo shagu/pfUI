@@ -162,7 +162,15 @@ pfUI:RegisterModule("tooltip", "vanilla:tbc", function ()
 
   function pfUI.tooltip:Update()
       local unit = pfUI.tooltip:GetUnit()
-      if unit == "none" then return end
+      if unit == "none" then
+        -- process item tooltips
+        if C.tooltip.itemid == "1" and libtooltip:GetItemID() then
+          GameTooltip:AddLine(T["ItemID"] .. ": " .. libtooltip:GetItemID(), .25,.5,1)
+          GameTooltip:Show()
+        end
+
+        return
+      end
 
       local pvpname = UnitPVPName(unit)
       local name = UnitName(unit)
