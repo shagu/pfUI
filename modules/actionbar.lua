@@ -42,7 +42,41 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     kill(f, true)
   end
 
-  local bars = { }
+  local global_events = {
+    -- slot/button updates
+    ["PLAYER_ENTERING_WORLD"] = true,
+    ["ACTIONBAR_SLOT_CHANGED"] = true,
+    ["UPDATE_BINDINGS"] = true,
+    ["ACTIONBAR_PAGE_CHANGED"] = true,
+    ["ACTIONBAR_UPDATE_STATE"] = true,
+    ["UPDATE_BONUS_ACTIONBAR"] = true,
+    ["CRAFT_SHOW"] = true,
+    ["CRAFT_CLOSE"] = true,
+    ["TRADE_SKILL_SHOW"] = true,
+    ["TRADE_SKILL_CLOSE"] = true,
+    ["PLAYER_ENTER_COMBAT"] = true,
+    ["PLAYER_LEAVE_COMBAT"] = true,
+    -- cooldown updates
+    ["ACTIONBAR_UPDATE_USABLE"] = true,
+    ["UPDATE_INVENTORY_ALERTS"] = true,
+    ["ACTIONBAR_UPDATE_COOLDOWN"] = true,
+    ["UNIT_INVENTORY_CHANGED"] = true,
+  }
+  local aura_events = {
+    ["PLAYER_AURAS_CHANGED"] = true,
+    ["UPDATE_SHAPESHIFT_FORMS"] = true,
+  }
+  local pet_events = {
+    ["PLAYER_CONTROL_LOST"] = true,
+    ["PLAYER_CONTROL_GAINED"] = true,
+    ["PLAYER_FARSIGHT_FOCUS_CHANGED"] = true,
+    ["UNIT_PET"] = true,
+    ["UNIT_FLAGS"] = true,
+    ["UNIT_AURA"] = true,
+    ["PET_BAR_UPDATE"] = true,
+    ["PET_BAR_UPDATE_COOLDOWN"] = true,
+  }
+
   local buttontypes = {
     -- blizzard keybinds
     [3] = "MULTIACTIONBAR3BUTTON",
@@ -202,14 +236,14 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     end
   end
 
+  local usable, oom, start, duration, enable, castable, autocast, token
+  local id, bar, active, texture
   local function ButtonRefresh(self)
     local self = self or this
-    local id, bar, active, texture
     local sid = self.id -- 1 to 120
 
-    local usable, oom
-    local start, duration, enable
-    local castable, autocast, token
+    -- reset shared variables
+    oom, castable, autocast, token = nil, nil, nil, nil
 
     -- set the own ID for compatibility to some vanilla addons
     if pfUI.client <= 11200 then self:SetID(self.id) end
@@ -221,7 +255,6 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
       bar = self.bar
       id = sid
       texture, _, active, usable = GetShapeshiftFormInfo(id)
-      oom = nil
       start, duration, enable = GetShapeshiftFormCooldown(sid)
     elseif self.bar == 12 then
       -- pet button
@@ -229,7 +262,7 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
       id = sid
       _, _, texture, token, active, castable, autocast = GetPetActionInfo(id)
       texture = token and _G[texture] or texture
-      usable, oom = true, nil
+      usable = true
       start, duration, enable = GetPetActionCooldown(sid)
     else
       active = IsCurrentAction(sid) or IsAutoRepeatAction(sid)
@@ -359,19 +392,14 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
   local function ButtonUpdate(self)
     local self = self or this
 
-    -- trigger update
+    -- trigger forced updates
     if self.forceupdate then
       self.forceupdate = nil
-      self:GetScript("OnEvent")()
+      ButtonRefresh(self)
     end
 
-    -- throttle to run once per .1 seconds
-    if ( self.tick or 1) > GetTime() then return else self.tick = GetTime() + .1 end
-
-    local sid = self.id
-
     -- update range display
-    if C.bars.glowrange == "1" and self.bar ~= 11 and self.bar ~= 12 and HasAction(sid) and ActionHasRange(sid) and IsActionInRange(sid) == 0 then
+    if C.bars.glowrange == "1" and self.bar ~= 11 and self.bar ~= 12 and HasAction(self.id) and ActionHasRange(self.id) and IsActionInRange(self.id) == 0 then
       if not self.outofrange then
         self.outofrange = true
         self.forceupdate = true
@@ -497,6 +525,60 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     GameTooltip:Hide()
   end
 
+  -- create the main event and update handler for pfUI actionbars
+  local bars = CreateFrame("Frame", "pfActionBar", UIParent)
+  for event in pairs(global_events) do bars:RegisterEvent(event) end
+  for event in pairs(aura_events) do bars:RegisterEvent(event) end
+  for event in pairs(pet_events) do bars:RegisterEvent(event) end
+
+  -- refresh actionbar buttons on event
+  bars:SetScript("OnEvent", function()
+    local self = self or this
+
+    -- handle aura events
+    if aura_events[event] then
+      for j=1,12 do
+        if self[11][j] then ButtonRefresh(self[11][j]) end
+      end
+      return
+    end
+
+    -- handle pet events
+    if pet_events[event] then
+      for j=1,12 do
+        if self[12][j] then ButtonRefresh(self[12][j]) end
+      end
+      return
+    end
+
+    -- handle global events
+    for j=1,12 do
+      for i=1,10 do
+        if self[i][j] then ButtonRefresh(self[i][j]) end
+      end
+    end
+  end)
+
+  -- update actionbar buttons
+  local button
+  bars:SetScript("OnUpdate", function()
+    local self = self or this
+
+    -- calculate 0.1 second ticks in order to refresh range updates
+    self.tick = self.tick or GetTime()
+    if self.tick + .1 < GetTime() then self.tick = nil end
+    local tick = not self.tick
+
+    for j=1,12 do
+      for i=1,10 do
+        button = self[i][j]
+        if button and button:IsShown() and (tick or button.forceupdate ) then
+          ButtonUpdate(button)
+        end
+      end
+    end
+  end)
+
   local function CreateActionButton(parent, bar, button)
     -- load config
     local size = C.bars["bar"..bar].icon_size
@@ -532,25 +614,11 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
       -- no button available, create a new one
       f:RegisterForClicks("LeftButtonUp", "RightButtonUp")
 
-      -- slot/button updates
-      f:RegisterEvent("PLAYER_ENTERING_WORLD")
-      f:RegisterEvent("ACTIONBAR_SLOT_CHANGED")
-      f:RegisterEvent("UPDATE_BINDINGS")
-      f:RegisterEvent("ACTIONBAR_PAGE_CHANGED")
-      f:RegisterEvent("ACTIONBAR_UPDATE_STATE")
-      f:RegisterEvent("UPDATE_BONUS_ACTIONBAR")
-      f:RegisterEvent("CRAFT_SHOW")
-      f:RegisterEvent("CRAFT_CLOSE")
-      f:RegisterEvent("TRADE_SKILL_SHOW")
-      f:RegisterEvent("TRADE_SKILL_CLOSE")
-      f:RegisterEvent("PLAYER_ENTER_COMBAT")
-      f:RegisterEvent("PLAYER_LEAVE_COMBAT")
-
-      -- cooldown updates
-      f:RegisterEvent("ACTIONBAR_UPDATE_USABLE")
-      f:RegisterEvent("UPDATE_INVENTORY_ALERTS")
-      f:RegisterEvent("ACTIONBAR_UPDATE_COOLDOWN")
-      f:RegisterEvent("UNIT_INVENTORY_CHANGED")
+      -- prepare the button for vanilla
+      if not f.HookScript then
+        f.HookScript = HookScript
+        f:SetScript("OnClick", ButtonClick)
+      end
 
       if bar ~= 11 then
         f:RegisterForDrag("LeftButton", "RightButton")
@@ -558,32 +626,9 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
         f:SetScript("OnReceiveDrag", ButtonDragStop)
       end
 
-      if bar == 11 then
-        f:RegisterEvent("PLAYER_AURAS_CHANGED")
-        f:RegisterEvent("UPDATE_SHAPESHIFT_FORMS")
-      end
-
-      if bar == 12 then
-        f:RegisterEvent("PLAYER_CONTROL_LOST")
-        f:RegisterEvent("PLAYER_CONTROL_GAINED")
-        f:RegisterEvent("PLAYER_FARSIGHT_FOCUS_CHANGED")
-        f:RegisterEvent("UNIT_PET")
-        f:RegisterEvent("UNIT_FLAGS")
-        f:RegisterEvent("UNIT_AURA")
-        f:RegisterEvent("PET_BAR_UPDATE")
-        f:RegisterEvent("PET_BAR_UPDATE_COOLDOWN")
-      end
-
-      -- prepare the button for vanilla
-      if not f.HookScript then
-        f.HookScript = HookScript
-        f:SetScript("OnClick", ButtonClick)
-      end
-
-      f:SetScript("OnEvent", ButtonRefresh)
+      -- add mouseovers
       f:SetScript("OnEnter", ButtonEnter)
       f:SetScript("OnLeave", ButtonLeave)
-      f:SetScript("OnUpdate", ButtonUpdate)
 
       -- add click animation handler
       f:HookScript("OnClick", ButtonAnimate)
