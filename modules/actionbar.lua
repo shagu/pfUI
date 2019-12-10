@@ -1178,68 +1178,70 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
   end)
 
   -- reagent counter
-  local reagent_slots = { }
-  local reagent_counts = { }
-  local reagent_textureslots = { }
-  local reagent_capture = SPELL_REAGENTS.."(.+)"
-  local scanner = libtipscan:GetScanner("actionbar")
-  local reagentcounter = CreateFrame("Frame", "pfReagentCounter", UIParent)
-  reagentcounter:RegisterEvent("PLAYER_ENTERING_WORLD")
-  reagentcounter:RegisterEvent("ACTIONBAR_SLOT_CHANGED")
-  reagentcounter:RegisterEvent("BAG_UPDATE")
-  reagentcounter:SetScript("OnEvent", function()
-    if event == "BAG_UPDATE" then
-      this.event = true
-    else
-      for slot = 1, 120 do
-        local texture = GetActionTexture(slot)
+  if C.bars.reagents == "1" then
+    local reagent_slots = { }
+    local reagent_counts = { }
+    local reagent_textureslots = { }
+    local reagent_capture = SPELL_REAGENTS.."(.+)"
+    local scanner = libtipscan:GetScanner("actionbar")
+    local reagentcounter = CreateFrame("Frame", "pfReagentCounter", UIParent)
+    reagentcounter:RegisterEvent("PLAYER_ENTERING_WORLD")
+    reagentcounter:RegisterEvent("ACTIONBAR_SLOT_CHANGED")
+    reagentcounter:RegisterEvent("BAG_UPDATE")
+    reagentcounter:SetScript("OnEvent", function()
+      if event == "BAG_UPDATE" then
+        this.event = true
+      else
+        for slot = 1, 120 do
+          local texture = GetActionTexture(slot)
 
-        -- update buttons that previously had an reagent
-        if reagent_slots[slot] and not texture then
-          reagent_textureslots[slot] = nil
-          reagent_slots[slot] = nil
-          RefreshSlot(slot)
-        end
+          -- update buttons that previously had an reagent
+          if reagent_slots[slot] and not texture then
+            reagent_textureslots[slot] = nil
+            reagent_slots[slot] = nil
+            RefreshSlot(slot)
+          end
 
-        -- search for reagents on buttons with different icon
-        if reagent_textureslots[slot] ~= texture then
-          if HasAction(slot) then
-            reagent_textureslots[slot] = texture
-            scanner:SetAction(slot)
-            local _, reagents = scanner:Find(reagent_capture)
-            if reagents then
-              reagent_slots[slot] = reagents
-              reagent_counts[reagents] = reagent_counts[reagents] or 0
-              RefreshSlot(slot)
+          -- search for reagents on buttons with different icon
+          if reagent_textureslots[slot] ~= texture then
+            if HasAction(slot) then
+              reagent_textureslots[slot] = texture
+              scanner:SetAction(slot)
+              local _, reagents = scanner:Find(reagent_capture)
+              if reagents then
+                reagent_slots[slot] = reagents
+                reagent_counts[reagents] = reagent_counts[reagents] or 0
+                RefreshSlot(slot)
+              end
             end
           end
         end
       end
-    end
-  end)
+    end)
 
-  -- limit bag events to one per second
-  reagentcounter:SetScript("OnUpdate", function()
-    if ( this.tick or 1) > GetTime() then return else this.tick = GetTime() + 1 end
+    -- limit bag events to one per second
+    reagentcounter:SetScript("OnUpdate", function()
+      if ( this.tick or 1) > GetTime() then return else this.tick = GetTime() + 1 end
 
-    if this.event then
-      for item in pairs(reagent_counts) do
-        reagent_counts[item] = GetItemCount(item)
+      if this.event then
+        for item in pairs(reagent_counts) do
+          reagent_counts[item] = GetItemCount(item)
+        end
+        for slot in pairs(reagent_slots) do
+          RefreshSlot(slot)
+        end
+
+        this.event = nil
       end
-      for slot in pairs(reagent_slots) do
-        RefreshSlot(slot)
-      end
+    end)
 
-      this.event = nil
+    function IsReagentAction(slot)
+      return reagent_slots[slot] and true or nil
     end
-  end)
 
-  function IsReagentAction(slot)
-    return reagent_slots[slot] and true or nil
-  end
-
-  function GetReagentCount(slot)
-    return reagent_counts[reagent_slots[slot]]
+    function GetReagentCount(slot)
+      return reagent_counts[reagent_slots[slot]]
+    end
   end
 
   -- pagemaster / meta page switch
