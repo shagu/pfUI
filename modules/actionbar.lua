@@ -791,6 +791,7 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     local realsize = size+border*2
 
     -- create frame
+    local init = not bars[i]
     bars[i] = bars[i] or CreateFrame("Frame", "pfActionBar" .. barnames[i], UIParent, ACTIONBAR_SECURE_TEMPLATE_BAR)
     bars[i]:SetID(i)
 
@@ -813,17 +814,19 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
         end
 
         -- show/hide petbar on petbar updates
-        bars[i]:RegisterEvent("PET_BAR_UPDATE")
-        bars[i]:SetScript("OnEvent", function()
-          -- hide obsolete buttons
-          for i=1, NUM_PET_ACTION_SLOTS do
-           if not PetHasActionBar() and bars[12][i] then
-             bars[12][i]:Hide()
-           end
-          end
-          -- refresh layout
-          CreateActionBar(12)
-        end)
+        if init then
+          bars[i]:RegisterEvent("PET_BAR_UPDATE")
+          bars[i]:SetScript("OnEvent", function()
+            -- hide obsolete buttons
+            for i=1, NUM_PET_ACTION_SLOTS do
+             if not PetHasActionBar() and bars[12][i] then
+               bars[12][i]:Hide()
+             end
+            end
+            -- refresh layout
+            CreateActionBar(12)
+          end)
+        end
 
       -- handle shapeshift bar
       elseif i == 11 then
@@ -835,25 +838,27 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
         end
 
         -- update shapeshift bar when amount of spells changes
-        bars[i]:RegisterEvent("PLAYER_ENTERING_WORLD")
-        bars[i]:RegisterEvent("UPDATE_BONUS_ACTIONBAR")
-        bars[i]:RegisterEvent("UPDATE_SHAPESHIFT_FORMS")
-        bars[i]:SetScript("OnEvent", function()
-          local count = GetNumShapeshiftForms()
-          if count ~= this.lastCount then
-            this.lastCount = count
+        if init then
+          bars[i]:RegisterEvent("PLAYER_ENTERING_WORLD")
+          bars[i]:RegisterEvent("UPDATE_BONUS_ACTIONBAR")
+          bars[i]:RegisterEvent("UPDATE_SHAPESHIFT_FORMS")
+          bars[i]:SetScript("OnEvent", function()
+            local count = GetNumShapeshiftForms()
+            if count ~= this.lastCount then
+              this.lastCount = count
 
-            -- hide obsolete buttons
-            for i=1, NUM_SHAPESHIFT_SLOTS do
-              if i > GetNumShapeshiftForms() and bars[11][i] then
-                bars[11][i]:Hide()
+              -- hide obsolete buttons
+              for i=1, NUM_SHAPESHIFT_SLOTS do
+                if i > GetNumShapeshiftForms() and bars[11][i] then
+                  bars[11][i]:Hide()
+                end
               end
-            end
 
-            -- create new buttons and refresh layout
-            CreateActionBar(11)
-          end
-        end)
+              -- create new buttons and refresh layout
+              CreateActionBar(11)
+            end
+          end)
+        end
 
       -- regular bars
       else
