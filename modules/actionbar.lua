@@ -513,47 +513,6 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     GameTooltip:Hide()
   end
 
-  -- create the main event and update handler for pfUI actionbars
-  local bars = CreateFrame("Frame", "pfActionBar", UIParent)
-  for event in pairs(global_events) do bars:RegisterEvent(event) end
-  for event in pairs(aura_events) do bars:RegisterEvent(event) end
-  for event in pairs(pet_events) do bars:RegisterEvent(event) end
-  bars.eventcache = { }
-
-  -- refresh actionbar buttons on event
-  bars:SetScript("OnEvent", function()
-    local self = self or this
-
-    -- cache events that are triggered way to often
-    if event == "ACTIONBAR_UPDATE_COOLDOWN" or event == "ACTIONBAR_UPDATE_STATE" then
-      self.eventcache[event] = true
-      return
-    end
-
-    -- handle aura events
-    if aura_events[event] then
-      for j=1,12 do
-        if self[11][j] then ButtonRefresh(self[11][j]) end
-      end
-      return
-    end
-
-    -- handle pet events
-    if pet_events[event] then
-      for j=1,12 do
-        if self[12][j] then ButtonRefresh(self[12][j]) end
-      end
-      return
-    end
-
-    -- handle global events
-    for j=1,12 do
-      for i=1,10 do
-        if self[i][j] then ButtonRefresh(self[i][j]) end
-      end
-    end
-  end)
-
   local function ButtonUpdateCooldown(button)
     if not button then return end
     local start, duration, enable
@@ -591,10 +550,42 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     end
   end
 
-  -- update actionbar buttons
-  local button
-  bars:SetScript("OnUpdate", function()
+  local function BarsEvent(self)
     local self = self or this
+
+    -- cache events that are triggered way to often
+    if event == "ACTIONBAR_UPDATE_COOLDOWN" or event == "ACTIONBAR_UPDATE_STATE" then
+      self.eventcache[event] = true
+      return
+    end
+
+    -- handle aura events
+    if aura_events[event] then
+      for j=1,12 do
+        if self[11][j] then ButtonRefresh(self[11][j]) end
+      end
+      return
+    end
+
+    -- handle pet events
+    if pet_events[event] then
+      for j=1,12 do
+        if self[12][j] then ButtonRefresh(self[12][j]) end
+      end
+      return
+    end
+
+    -- handle global events
+    for j=1,12 do
+      for i=1,10 do
+        if self[i][j] then ButtonRefresh(self[i][j]) end
+      end
+    end
+  end
+
+  local function BarsUpdate(self)
+    local self = self or this
+    local button
 
     -- run cached cooldown events
     if self.eventcache["ACTIONBAR_UPDATE_COOLDOWN"] then
@@ -629,7 +620,20 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
         end
       end
     end
-  end)
+  end
+
+  -- create the main event and update handler for pfUI actionbars
+  local bars = CreateFrame("Frame", "pfActionBar", UIParent)
+  for event in pairs(global_events) do bars:RegisterEvent(event) end
+  for event in pairs(aura_events) do bars:RegisterEvent(event) end
+  for event in pairs(pet_events) do bars:RegisterEvent(event) end
+  bars.eventcache = { }
+
+  -- refresh actionbar buttons on event
+  bars:SetScript("OnEvent", BarsEvent)
+
+  -- update actionbar buttons
+  bars:SetScript("OnUpdate", BarsUpdate)
 
   local function CreateActionButton(parent, bar, button)
     -- load config
