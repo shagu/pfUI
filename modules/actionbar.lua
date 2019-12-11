@@ -255,7 +255,6 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
       bar = self.bar
       id = sid
       texture, _, active, usable = GetShapeshiftFormInfo(id)
-      start, duration, enable = GetShapeshiftFormCooldown(sid)
     elseif self.bar == 12 then
       -- pet button
       bar = self.bar
@@ -263,14 +262,20 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
       _, _, texture, token, active, castable, autocast = GetPetActionInfo(id)
       texture = token and _G[texture] or texture
       usable = true
-      start, duration, enable = GetPetActionCooldown(sid)
     else
       active = IsCurrentAction(sid) or IsAutoRepeatAction(sid)
       texture = GetActionTexture(sid)
       bar = GetActiveBar()
       id = sid - ((self.bar == 1 and bar or self.bar)-1)*12
       usable, oom = IsUsableAction(sid)
-      start, duration, enable = GetActionCooldown(sid)
+    end
+
+    if not self.showempty and self.backdrop and not texture and grid == 0 then
+      self.backdrop:Hide()
+      self.hide = true
+    else
+      self.backdrop:Show()
+      self.hide = nil
     end
 
     -- active border
@@ -281,9 +286,6 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
       CreateBackdrop(self, border)
       self.active:Hide()
     end
-
-    -- abort as early as possible on regular state update
-    if event == "ACTIONBAR_UPDATE_STATE" then return end
 
     -- handle secure action button templates (tbc+)
     if self.SetAttribute and InCombatLockdown and not InCombatLockdown() then
@@ -300,20 +302,6 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
         self:SetAttribute("action", self.id)
       end
     end
-
-    if not self.showempty and self.backdrop and not texture and grid == 0 then
-      self.backdrop:Hide()
-      self.hide = true
-    else
-      self.backdrop:Show()
-      self.hide = nil
-    end
-
-    -- update cooldown
-    CooldownFrame_SetTimer(self.cd, start, duration, enable)
-
-    -- don't go further on those events
-    if event == "ACTIONBAR_UPDATE_COOLDOWN" then return end
 
     if self.bar ~= 11 and self.bar ~= 12 then
       -- update consumables
@@ -530,10 +518,17 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
   for event in pairs(global_events) do bars:RegisterEvent(event) end
   for event in pairs(aura_events) do bars:RegisterEvent(event) end
   for event in pairs(pet_events) do bars:RegisterEvent(event) end
+  bars.eventcache = { }
 
   -- refresh actionbar buttons on event
   bars:SetScript("OnEvent", function()
     local self = self or this
+
+    -- cache events that are triggered way to often
+    if event == "ACTIONBAR_UPDATE_COOLDOWN" or event == "ACTIONBAR_UPDATE_STATE" then
+      self.eventcache[event] = true
+      return
+    end
 
     -- handle aura events
     if aura_events[event] then
@@ -559,10 +554,67 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     end
   end)
 
+  local function ButtonUpdateCooldown(button)
+    if not button then return end
+    local start, duration, enable
+
+    if button.bar == 11 then
+      start, duration, enable = GetShapeshiftFormCooldown(button.id)
+    elseif button.bar == 12 then
+      start, duration, enable = GetPetActionCooldown(button.id)
+    else
+      start, duration, enable = GetActionCooldown(button.id)
+    end
+
+    CooldownFrame_SetTimer(button.cd, start, duration, enable)
+  end
+
+  local function ButtonUpdateActive(button)
+    if not button then return end
+    local _, active
+
+    if button.bar == 11 then
+      _, _, active, _ = GetShapeshiftFormInfo(button.id)
+    elseif button.bar == 12 then
+      _, _, _, _, active, _, _ = GetPetActionInfo(button.id)
+    else
+      active = IsCurrentAction(button.id) or IsAutoRepeatAction(button.id)
+    end
+
+    -- active border
+    if active then
+      button.backdrop:SetBackdropBorderColor(cr,cg,cb,1)
+      button.active:Show()
+    else
+      CreateBackdrop(button, border)
+      button.active:Hide()
+    end
+  end
+
   -- update actionbar buttons
   local button
   bars:SetScript("OnUpdate", function()
     local self = self or this
+
+    -- run cached cooldown events
+    if self.eventcache["ACTIONBAR_UPDATE_COOLDOWN"] then
+      self.eventcache["ACTIONBAR_UPDATE_COOLDOWN"] = nil
+      for j=1,12 do
+        for i=1,10 do
+          ButtonUpdateCooldown(self[i][j])
+        end
+      end
+    end
+
+    -- run cached button state events
+    if self.eventcache["ACTIONBAR_UPDATE_STATE"] then
+      self.eventcache["ACTIONBAR_UPDATE_STATE"] = nil
+      for j=1,12 do
+        for i=1,10 do
+          ButtonUpdateActive(self[i][j])
+        end
+      end
+    end
 
     -- calculate 0.1 second ticks in order to refresh range updates
     self.tick = self.tick or GetTime()
