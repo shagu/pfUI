@@ -2,7 +2,7 @@
 ## Title: |cff33ffccpf|cffffffffUI |cffaaaaaa[beta]
 ## Author: Shagu
 ## Notes: A complete user interface replacement.
-## Version: 4.3.2
+## Version: 4.3.3
 ## SavedVariables: pfUI_profiles, pfUI_addon_profiles, pfUI_cache
 ## SavedVariablesPerCharacter: pfUI_config, pfUI_init, pfUI_playerDB
 

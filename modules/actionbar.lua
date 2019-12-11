@@ -13,6 +13,10 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
   end
   local bpad = border > 1 and border - 1 or 1
 
+  local eventcache = { } -- contains a list of events that shall be processed later
+  local updatecache = { } -- contains a list of buttons that shall be refreshed later
+  local buttoncache = { } -- contains a list of all buttons ever created
+
   -- hide blizzard bars
   local function kill(f, killshow)
     if f.Show and killshow then f.Show = function() return end end
@@ -377,24 +381,18 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     end
   end
 
-  local function ButtonUpdate(self)
+  local function ButtonRangeUpdate(self)
     local self = self or this
-
-    -- trigger forced updates
-    if self.forceupdate then
-      self.forceupdate = nil
-      ButtonRefresh(self)
-    end
 
     -- update range display
     if C.bars.glowrange == "1" and self.bar ~= 11 and self.bar ~= 12 and HasAction(self.id) and ActionHasRange(self.id) and IsActionInRange(self.id) == 0 then
       if not self.outofrange then
         self.outofrange = true
-        self.forceupdate = true
+        table.insert(updatecache, self)
       end
     elseif self.outofrange then
       self.outofrange = nil
-      self.forceupdate = true
+      table.insert(updatecache, self)
     end
   end
 
@@ -555,7 +553,7 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
 
     -- cache events that are triggered way to often
     if event == "ACTIONBAR_UPDATE_COOLDOWN" or event == "ACTIONBAR_UPDATE_STATE" then
-      self.eventcache[event] = true
+      eventcache[event] = true
       return
     end
 
@@ -576,10 +574,8 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     end
 
     -- handle global events
-    for j=1,12 do
-      for i=1,10 do
-        if self[i][j] then ButtonRefresh(self[i][j]) end
-      end
+    for id, button in pairs(buttoncache) do
+      ButtonRefresh(button)
     end
   end
 
@@ -588,37 +584,30 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     local button
 
     -- run cached cooldown events
-    if self.eventcache["ACTIONBAR_UPDATE_COOLDOWN"] then
-      self.eventcache["ACTIONBAR_UPDATE_COOLDOWN"] = nil
-      for j=1,12 do
-        for i=1,10 do
-          ButtonUpdateCooldown(self[i][j])
-        end
+    if eventcache["ACTIONBAR_UPDATE_COOLDOWN"] then
+      eventcache["ACTIONBAR_UPDATE_COOLDOWN"] = nil
+      for id, button in pairs(buttoncache) do
+        ButtonUpdateCooldown(button)
       end
     end
 
     -- run cached button state events
-    if self.eventcache["ACTIONBAR_UPDATE_STATE"] then
-      self.eventcache["ACTIONBAR_UPDATE_STATE"] = nil
-      for j=1,12 do
-        for i=1,10 do
-          ButtonUpdateActive(self[i][j])
-        end
+    if eventcache["ACTIONBAR_UPDATE_STATE"] then
+      eventcache["ACTIONBAR_UPDATE_STATE"] = nil
+      for id, button in pairs(buttoncache) do
+        ButtonUpdateActive(button)
       end
     end
 
-    -- calculate 0.1 second ticks in order to refresh range updates
-    self.tick = self.tick or GetTime()
-    if self.tick + .1 < GetTime() then self.tick = nil end
-    local tick = not self.tick
+    for id, button in pairs(updatecache) do
+      ButtonRefresh(button)
+      updatecache[id] = nil
+    end
 
-    for j=1,12 do
-      for i=1,10 do
-        button = self[i][j]
-        if button and button:IsShown() and (tick or button.forceupdate ) then
-          ButtonUpdate(button)
-        end
-      end
+    if ( this.tick or .2) > GetTime() then return else this.tick = GetTime() + .2 end
+
+    for id, button in pairs(buttoncache) do
+      if button:IsShown() then ButtonRangeUpdate(button) end
     end
   end
 
@@ -627,7 +616,6 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
   for event in pairs(global_events) do bars:RegisterEvent(event) end
   for event in pairs(aura_events) do bars:RegisterEvent(event) end
   for event in pairs(pet_events) do bars:RegisterEvent(event) end
-  bars.eventcache = { }
 
   -- refresh actionbar buttons on event
   bars:SetScript("OnEvent", BarsEvent)
@@ -749,6 +737,9 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
       f.active:SetBackdropBorderColor(1,1,.5,1)
       f.active:SetAllPoints()
       f.active:Hide()
+
+      -- add to buttoncache
+      table.insert(buttoncache, f)
     end
 
     -- set animation
@@ -942,7 +933,7 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
       end
 
       -- refresh button
-      bars[i][j].forceupdate = true
+      table.insert(updatecache, bars[i][j])
     end
 
     for j=buttons+1,12 do
@@ -1033,17 +1024,13 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     if not typ then
       showgrid = state
 
-      for j=1,12 do
-        for i=1,10 do
-          if pfUI.bars[i][j] then
-            pfUI.bars[i][j].forceupdate = true
-          end
-        end
+      for id, button in pairs(buttoncache) do
+        table.insert(updatecache, button)
       end
     elseif typ == "PET" then
       showgrid_pet = state
       for j=1,10 do
-        pfUI.bars[12][j].forceupdate = true
+        table.insert(updatecache, bars[12][j])
       end
     end
   end
@@ -1060,7 +1047,7 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
   local function RefreshSlot(slot)
     local bar, button = ceil(slot/12), mod(slot, 12)
     button = button == 0 and 12 or button
-    bars[bar][button].forceupdate = true
+    table.insert(updatecache, bars[bar][button])
   end
 
   -- Localize custom keybinds for additional actionbars (see Bindings.xml)
@@ -1116,7 +1103,7 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
       for i=1,12 do
         local id = i + (bar-1)*12
         bars[1][i].id = id
-        bars[1][i].forceupdate = true
+        table.insert(updatecache, bars[1][i])
       end
     end)
 
@@ -1167,7 +1154,7 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
         local action = SecureButton_GetModifiedAttribute(self, "action", SecureStateChild_GetEffectiveButton(self)) or 0
         if self.id ~= action then
           self.id = action
-          self.forceupdate = true
+          table.insert(updatecache, self)
         end
       end
     end
