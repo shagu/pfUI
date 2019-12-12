@@ -11,6 +11,7 @@ setfenv(1, pfUI:GetEnvironment())
 -- return instantly when another librange is already active
 if pfUI.api.librange then return end
 
+local _, class = UnitClass("player")
 local librange = CreateFrame("Frame", "pfRangecheck", UIParent)
 
 -- table of 40y spells per class
@@ -38,7 +39,38 @@ local spells = {
   },
 }
 
-local _, class = UnitClass("player")
+-- use native IsSpellInRange checker for tbc and skip
+-- the whole targeting approach that is required for vanilla
+if pfUI.expansion == "tbc" then
+  local spell
+  librange:RegisterEvent("LEARNED_SPELL_IN_TAB")
+  librange:RegisterEvent("PLAYER_ENTERING_WORLD")
+  librange:SetScript("OnEvent", function()
+    for i = 1, GetNumSpellTabs() do
+      local _, _, offset, num = GetSpellTabInfo(i)
+      for id = offset + 1, offset + num do
+        local name, rank = GetSpellName(id, BOOKTYPE_SPELL)
+        local texture = GetSpellTexture(name)
+
+        for _, tex in pairs(spells[class]) do
+          if tex == texture then
+            spell = name
+            return
+          end
+        end
+      end
+    end
+  end)
+
+  function librange:UnitInSpellRange(unit)
+    if not spell then return nil end
+    return IsSpellInRange(spell, unit) == 1 and true or nil
+  end
+
+  -- add librange to pfUI API
+  pfUI.api.librange = librange
+  return
+end
 
 -- units that should be scanned
 local units = {}
