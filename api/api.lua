@@ -795,6 +795,21 @@ function pfUI.api.rgbhex(r, g, b, a)
   return hexcolor_cache[key] or ""
 end
 
+-- [ GetPerfectPixel ]
+-- Returns a number that equals a real pixel on regular scaled frames.
+-- Respects the current UI-scale and calculates a real pixel based on
+-- the screen resolution and the 768px sized drawlayer.
+local ppixel
+function pfUI.api.GetPerfectPixel()
+  if ppixel then return ppixel end
+
+  local scale = GetCVar("uiScale")
+  local resolution = GetCVar("gxResolution")
+  local _, _, screenwidth, screenheight = strfind(resolution, "(.+)x(.+)")
+  ppixel = 768 / screenheight / scale
+  return ppixel
+end
+
 -- [ Create Backdrop ]
 -- Creates a pfUI compatible frame as backdrop element
 -- 'f'          [frame]         the frame which should get a backdrop.
