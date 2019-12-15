@@ -540,6 +540,7 @@ pfUI_translation["ruRU"] = {
   ["Show PvP-Flag"] = "Показать PvP иконку",
   ["Show PvP Icon"] = "Показать PvP иконку",
   ["Show Raid Mark"] = "Показать иконку рейда",
+  ["Show Reagent Count"] = nil,
   ["Show Resting"] = "Показать иконку отдыха",
   ["Show Self In Group Frames"] = "Показать себя в окне группы",
   ["Show Spell Icon"] = "Показать иконку заклинания",

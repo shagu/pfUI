@@ -540,6 +540,7 @@ pfUI_translation["koKR"] = {
   ["Show PvP-Flag"] = nil,
   ["Show PvP Icon"] = "PvP아이콘 표시",
   ["Show Raid Mark"] = nil,
+  ["Show Reagent Count"] = nil,
   ["Show Resting"] = nil,
   ["Show Self In Group Frames"] = nil,
   ["Show Spell Icon"] = nil,

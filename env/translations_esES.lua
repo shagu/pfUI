@@ -540,6 +540,7 @@ pfUI_translation["esES"] = {
   ["Show PvP-Flag"] = "Mostrar bandera de JcJ",
   ["Show PvP Icon"] = "Mostrar icono de JcJ",
   ["Show Raid Mark"] = "Mostrar marco de banda",
+  ["Show Reagent Count"] = nil,
   ["Show Resting"] = "Mostrar descanso",
   ["Show Self In Group Frames"] = "Mostrar a sí mismo en marcos de grupo",
   ["Show Spell Icon"] = "Mostrar icono de hechizo",

@@ -540,6 +540,7 @@ pfUI_translation["zhTW"] = {
   ["Show PvP-Flag"] = "顯示PvP指示器",
   ["Show PvP Icon"] = "顯示PVP圖示",
   ["Show Raid Mark"] = nil,
+  ["Show Reagent Count"] = nil,
   ["Show Resting"] = nil,
   ["Show Self In Group Frames"] = nil,
   ["Show Spell Icon"] = nil,

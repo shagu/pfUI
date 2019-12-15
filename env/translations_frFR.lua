@@ -540,6 +540,7 @@ pfUI_translation["frFR"] = {
   ["Show PvP-Flag"] = nil,
   ["Show PvP Icon"] = "Afficher l'icône JcJ",
   ["Show Raid Mark"] = nil,
+  ["Show Reagent Count"] = nil,
   ["Show Resting"] = nil,
   ["Show Self In Group Frames"] = nil,
   ["Show Spell Icon"] = nil,
