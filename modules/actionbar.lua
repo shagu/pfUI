@@ -62,7 +62,6 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     ["PLAYER_LEAVE_COMBAT"] = true,
     -- cooldown updates
     ["ACTIONBAR_UPDATE_USABLE"] = true,
-    ["UPDATE_INVENTORY_ALERTS"] = true,
     ["ACTIONBAR_UPDATE_COOLDOWN"] = true,
     ["UNIT_INVENTORY_CHANGED"] = true,
   }
@@ -247,14 +246,14 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     table.insert(updatecache, pfUI.bars[bar][button])
   end
 
-  local usable, oom, start, duration, enable, castable, autocast, token
-  local id, bar, active, texture
+  local start, duration, enable, castable, autocast, token
+  local id, bar, active, texture, _
   local function ButtonRefresh(self)
     local self = self or this
     local sid = self.id -- 1 to 120
 
     -- reset shared variables
-    oom, castable, autocast, token = nil, nil, nil, nil
+    castable, autocast, token = nil, nil, nil
 
     -- set the own ID for compatibility to some vanilla addons
     if pfUI.client <= 11200 then self:SetID(self.id) end
@@ -265,20 +264,18 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
       -- stance button
       bar = self.bar
       id = sid
-      texture, _, active, usable = GetShapeshiftFormInfo(id)
+      texture, _, active = GetShapeshiftFormInfo(id)
     elseif self.bar == 12 then
       -- pet button
       bar = self.bar
       id = sid
       _, _, texture, token, active, castable, autocast = GetPetActionInfo(id)
       texture = token and _G[texture] or texture
-      usable = true
     else
       active = IsCurrentAction(sid) or IsAutoRepeatAction(sid)
       texture = GetActionTexture(sid)
       bar = GetActiveBar()
       id = sid - ((self.bar == 1 and bar or self.bar)-1)*12
-      usable, oom = IsUsableAction(sid)
     end
 
     if not self.showempty and self.backdrop and not texture and grid == 0 then
@@ -338,20 +335,6 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
         self.macro:SetText("")
       end
     end
-
-    -- update usable
-    if self.outofrange and C.bars.glowrange == "1" then
-      self.icon:SetVertexColor(self.rangeColor[1], self.rangeColor[2], self.rangeColor[3], self.rangeColor[4])
-    elseif oom and C.bars.showoom == "1" then
-      self.icon:SetVertexColor(self.oomColor[1], self.oomColor[2], self.oomColor[3], self.oomColor[4])
-    elseif not usable and C.bars.showna == "1" then
-      self.icon:SetVertexColor(self.naColor[1], self.naColor[2], self.naColor[3], self.naColor[4])
-    else
-      self.icon:SetVertexColor(1, 1, 1, 1)
-    end
-
-    -- don't go further on those events
-    if event == "ACTIONBAR_UPDATE_USABLE" or event == "UPDATE_INVENTORY_ALERTS" then return end
 
     -- icon
     if texture ~= self.texture then
@@ -518,6 +501,32 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     GameTooltip:Hide()
   end
 
+  local function ButtonUpdateUsable(self)
+    local self = self or this
+    local sid = self.id -- 1 to 120
+
+    local usable, oom, _
+
+    if self.bar == 11 then
+      _, _, _, usable = GetShapeshiftFormInfo(sid)
+    elseif self.bar == 12 then
+      usable = true
+    else
+      usable, oom = IsUsableAction(sid)
+    end
+
+    -- update usable
+    if self.outofrange and C.bars.glowrange == "1" then
+      self.icon:SetVertexColor(self.rangeColor[1], self.rangeColor[2], self.rangeColor[3], self.rangeColor[4])
+    elseif oom and C.bars.showoom == "1" then
+      self.icon:SetVertexColor(self.oomColor[1], self.oomColor[2], self.oomColor[3], self.oomColor[4])
+    elseif not usable and C.bars.showna == "1" then
+      self.icon:SetVertexColor(self.naColor[1], self.naColor[2], self.naColor[3], self.naColor[4])
+    else
+      self.icon:SetVertexColor(1, 1, 1, 1)
+    end
+  end
+
   local function ButtonUpdateCooldown(button)
     if not button then return end
     local start, duration, enable
@@ -583,6 +592,14 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     -- refresh only specific slots
     if event == "ACTIONBAR_SLOT_CHANGED" and arg1 and arg1 ~= 0 then
       RefreshSlot(arg1)
+      return
+    end
+
+    -- update usable actions
+    if event == "ACTIONBAR_UPDATE_USABLE" then
+      for id, button in pairs(buttoncache) do
+        ButtonUpdateUsable(button)
+      end
       return
     end
 
