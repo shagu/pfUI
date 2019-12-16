@@ -240,6 +240,13 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     end
   end
 
+  -- helper function to update by slot
+  local function RefreshSlot(slot)
+    local bar, button = ceil(slot/12), mod(slot, 12)
+    button = button == 0 and 12 or button
+    table.insert(updatecache, pfUI.bars[bar][button])
+  end
+
   local usable, oom, start, duration, enable, castable, autocast, token
   local id, bar, active, texture
   local function ButtonRefresh(self)
@@ -570,6 +577,12 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
       for j=1,12 do
         if self[12][j] then ButtonRefresh(self[12][j]) end
       end
+      return
+    end
+
+    -- refresh only specific slots
+    if event == "ACTIONBAR_SLOT_CHANGED" and arg1 and arg1 ~= 0 then
+      RefreshSlot(arg1)
       return
     end
 
@@ -1042,13 +1055,6 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
   end
 
   pfUI.bars:UpdateConfig()
-
-  -- helper function to update by slot
-  local function RefreshSlot(slot)
-    local bar, button = ceil(slot/12), mod(slot, 12)
-    button = button == 0 and 12 or button
-    table.insert(updatecache, bars[bar][button])
-  end
 
   -- Localize custom keybinds for additional actionbars (see Bindings.xml)
   local names = {
