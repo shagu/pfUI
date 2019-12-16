@@ -46,6 +46,9 @@ if pfUI.expansion == "tbc" then
   librange:RegisterEvent("LEARNED_SPELL_IN_TAB")
   librange:RegisterEvent("PLAYER_ENTERING_WORLD")
   librange:SetScript("OnEvent", function()
+    -- abort on non healing classes
+    if not spells[class] then return end
+
     for i = 1, GetNumSpellTabs() do
       local _, _, offset, num = GetSpellTabInfo(i)
       for id = offset + 1, offset + num do
