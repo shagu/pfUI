@@ -13,9 +13,9 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
   end
   local bpad = border > 1 and border - 1 or 1
 
-  local eventcache = { } -- contains a list of events that shall be processed later
-  local updatecache = { } -- contains a list of buttons that shall be refreshed later
-  local buttoncache = { } -- contains a list of all buttons ever created
+  local eventcache = { } -- contains a list of events that shall be processed later -> [event] = true
+  local updatecache = { } -- contains a list of buttons slots that shall be refreshed later -> [slot] = true
+  local buttoncache = { } -- contains a list of all buttons ever created -> [slot] = frame
 
   -- hide blizzard bars
   local function kill(f, killshow)
@@ -46,13 +46,20 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     kill(f, true)
   end
 
+  -- events that provide special updater functions
+  local special_events = {
+    ["ACTIONBAR_UPDATE_COOLDOWN"] = true,
+    ["ACTIONBAR_UPDATE_STATE"] = true,
+    ["ACTIONBAR_UPDATE_USABLE"] = true,
+  }
+
+  -- events that are shared across all buttons
   local global_events = {
     -- slot/button updates
     ["PLAYER_ENTERING_WORLD"] = true,
     ["ACTIONBAR_SLOT_CHANGED"] = true,
     ["UPDATE_BINDINGS"] = true,
     ["ACTIONBAR_PAGE_CHANGED"] = true,
-    ["ACTIONBAR_UPDATE_STATE"] = true,
     ["UPDATE_BONUS_ACTIONBAR"] = true,
     ["CRAFT_SHOW"] = true,
     ["CRAFT_CLOSE"] = true,
@@ -61,21 +68,21 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     ["PLAYER_ENTER_COMBAT"] = true,
     ["PLAYER_LEAVE_COMBAT"] = true,
     -- cooldown updates
-    ["ACTIONBAR_UPDATE_USABLE"] = true,
-    ["ACTIONBAR_UPDATE_COOLDOWN"] = true,
     ["UNIT_INVENTORY_CHANGED"] = true,
   }
+
+  -- events that are used for the aura/shapeshift bar
   local aura_events = {
-    ["PLAYER_AURAS_CHANGED"] = true,
     ["UPDATE_SHAPESHIFT_FORMS"] = true,
+    ["PLAYER_AURAS_CHANGED"] = true,
   }
+
+  -- events that are used for the pet bar
   local pet_events = {
     ["PLAYER_CONTROL_LOST"] = true,
     ["PLAYER_CONTROL_GAINED"] = true,
     ["PLAYER_FARSIGHT_FOCUS_CHANGED"] = true,
     ["UNIT_PET"] = true,
-    ["UNIT_FLAGS"] = true,
-    ["UNIT_AURA"] = true,
     ["PET_BAR_UPDATE"] = true,
     ["PET_BAR_UPDATE_COOLDOWN"] = true,
   }
@@ -239,16 +246,10 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     end
   end
 
-  -- helper function to update by slot
-  local function RefreshSlot(slot)
-    local bar, button = ceil(slot/12), mod(slot, 12)
-    button = button == 0 and 12 or button
-    table.insert(updatecache, pfUI.bars[bar][button])
-  end
-
   local start, duration, enable, castable, autocast, token
   local id, bar, active, texture, _
   local function ButtonRefresh(self)
+    if not self then return end
     local self = self or this
     local sid = self.id -- 1 to 120
 
@@ -378,11 +379,11 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     if C.bars.glowrange == "1" and self.bar ~= 11 and self.bar ~= 12 and HasAction(self.id) and ActionHasRange(self.id) and IsActionInRange(self.id) == 0 then
       if not self.outofrange then
         self.outofrange = true
-        table.insert(updatecache, self)
+        updatecache[self.slot] = true
       end
     elseif self.outofrange then
       self.outofrange = nil
-      table.insert(updatecache, self)
+      updatecache[self.slot] = true
     end
   end
 
@@ -567,8 +568,14 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
   local function BarsEvent(self)
     local self = self or this
 
-    -- cache events that are triggered way to often
-    if event == "ACTIONBAR_UPDATE_COOLDOWN" or event == "ACTIONBAR_UPDATE_STATE" then
+    -- refresh only specific slots
+    if event == "ACTIONBAR_SLOT_CHANGED" and arg1 and arg1 ~= 0 then
+      updatecache[arg1] = true
+      return
+    end
+
+    -- run special refresh functions on next update
+    if special_events[event] then
       eventcache[event] = true
       return
     end
@@ -576,7 +583,9 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     -- handle aura events
     if aura_events[event] then
       for j=1,12 do
-        if self[11][j] then ButtonRefresh(self[11][j]) end
+        if self[11][j] then
+          updatecache[self[11][j].slot] = true
+        end
       end
       return
     end
@@ -584,34 +593,30 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     -- handle pet events
     if pet_events[event] then
       for j=1,12 do
-        if self[12][j] then ButtonRefresh(self[12][j]) end
-      end
-      return
-    end
-
-    -- refresh only specific slots
-    if event == "ACTIONBAR_SLOT_CHANGED" and arg1 and arg1 ~= 0 then
-      RefreshSlot(arg1)
-      return
-    end
-
-    -- update usable actions
-    if event == "ACTIONBAR_UPDATE_USABLE" then
-      for id, button in pairs(buttoncache) do
-        ButtonUpdateUsable(button)
+        if self[12][j] then
+          updatecache[self[12][j].slot] = true
+        end
       end
       return
     end
 
     -- handle global events
-    for id, button in pairs(buttoncache) do
-      ButtonRefresh(button)
+    for id in pairs(buttoncache) do
+      updatecache[id] = true
     end
   end
 
   local function BarsUpdate(self)
     local self = self or this
     local button
+
+    -- run cached usable usable actions
+    if eventcache["ACTIONBAR_UPDATE_USABLE"] then
+      eventcache["ACTIONBAR_UPDATE_USABLE"] = nil
+      for id, button in pairs(buttoncache) do
+        ButtonUpdateUsable(button)
+      end
+    end
 
     -- run cached cooldown events
     if eventcache["ACTIONBAR_UPDATE_COOLDOWN"] then
@@ -629,8 +634,8 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
       end
     end
 
-    for id, button in pairs(updatecache) do
-      ButtonRefresh(button)
+    for id in pairs(updatecache) do
+      ButtonRefresh(buttoncache[id])
       updatecache[id] = nil
     end
 
@@ -643,6 +648,7 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
 
   -- create the main event and update handler for pfUI actionbars
   local bars = CreateFrame("Frame", "pfActionBar", UIParent)
+  for event in pairs(special_events) do bars:RegisterEvent(event) end
   for event in pairs(global_events) do bars:RegisterEvent(event) end
   for event in pairs(aura_events) do bars:RegisterEvent(event) end
   for event in pairs(pet_events) do bars:RegisterEvent(event) end
@@ -708,6 +714,9 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
       f:HookScript("OnClick", ButtonAnimate)
       f.id = id
 
+      -- set a static slot
+      f.slot = id
+
       -- cooldown
       f.cd = CreateFrame(COOLDOWN_FRAME_TYPE, f:GetName() .. "Cooldown", f, "CooldownFrameTemplate")
       f.cd.pfCooldownType = "NOGCD"
@@ -769,7 +778,7 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
       f.active:Hide()
 
       -- add to buttoncache
-      table.insert(buttoncache, f)
+      buttoncache[id] = f
     end
 
     -- set animation
@@ -963,7 +972,7 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
       end
 
       -- refresh button
-      table.insert(updatecache, bars[i][j])
+      updatecache[bars[i][j].slot] = true
     end
 
     for j=buttons+1,12 do
@@ -1054,13 +1063,13 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     if not typ then
       showgrid = state
 
-      for id, button in pairs(buttoncache) do
-        table.insert(updatecache, button)
+      for id in pairs(buttoncache) do
+        updatecache[id] = true
       end
     elseif typ == "PET" then
       showgrid_pet = state
-      for j=1,10 do
-        table.insert(updatecache, bars[12][j])
+      for slot=133,142 do
+        updatecache[slot] = true
       end
     end
   end
@@ -1126,7 +1135,7 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
       for i=1,12 do
         local id = i + (bar-1)*12
         bars[1][i].id = id
-        table.insert(updatecache, bars[1][i])
+        updatecache[i] = true
       end
     end)
 
@@ -1177,7 +1186,7 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
         local action = SecureButton_GetModifiedAttribute(self, "action", SecureStateChild_GetEffectiveButton(self)) or 0
         if self.id ~= action then
           self.id = action
-          table.insert(updatecache, self)
+          updatecache[self.slot] = true
         end
       end
     end
@@ -1265,7 +1274,7 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
           if reagent_slots[slot] and not texture then
             reagent_textureslots[slot] = nil
             reagent_slots[slot] = nil
-            RefreshSlot(slot)
+            updatecache[slot] = true
           end
 
           -- search for reagents on buttons with different icon
@@ -1277,7 +1286,7 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
               if reagents then
                 reagent_slots[slot] = reagents
                 reagent_counts[reagents] = reagent_counts[reagents] or 0
-                RefreshSlot(slot)
+                updatecache[slot] = true
               end
             end
           end
@@ -1294,7 +1303,7 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
           reagent_counts[item] = GetItemCount(item)
         end
         for slot in pairs(reagent_slots) do
-          RefreshSlot(slot)
+          updatecache[slot] = true
         end
 
         this.event = nil
