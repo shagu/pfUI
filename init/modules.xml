@@ -61,4 +61,5 @@
   <Include file="..\modules\afkcam.lua"/>
   <Include file="..\modules\screenshot.lua"/>
   <Include file="..\modules\addoncompat.lua"/>
+  <Include file="..\modules\combatlogfix.lua"/>
 </Ui>
