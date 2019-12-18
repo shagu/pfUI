@@ -1402,6 +1402,9 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
       CreateConfig(nil, T["Enable Frame Shadow"], C.appearance.border, "shadow", "checkbox")
       CreateConfig(nil, T["Frame Shadow Intensity"], C.appearance.border, "shadow_intensity", "dropdown", pfUI.gui.dropdowns.uf_debuff_indicator_size)
       CreateConfig(nil) -- spacer
+      CreateConfig(nil, T["Enable Pixel Perfect Borders"], C.appearance.border, "pixelperfect", "checkbox")
+      CreateConfig(nil, T["Scale Border On HiDPI Displays"], C.appearance.border, "hidpi", "checkbox")
+      CreateConfig(nil) -- spacer
       CreateConfig(nil, T["Global Border Size"], C.appearance.border, "default")
       CreateConfig(nil, T["Action Bar Border Size"], C.appearance.border, "actionbars")
       CreateConfig(nil, T["Unit Frame Border Size"], C.appearance.border, "unitframes")
