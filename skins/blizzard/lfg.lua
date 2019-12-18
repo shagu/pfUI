@@ -1,6 +1,6 @@
 pfUI:RegisterSkin("Looking for group", "tbc", function ()
-  local border = tonumber(pfUI_config.appearance.border.default)
-  local bpad = border > 1 and border - 1 or 1
+  local rawborder, border = GetBorderSize()
+  local bpad = rawborder > 1 and border - GetPerfectPixel() or GetPerfectPixel()
 
   CreateBackdrop(LFGParentFrame, nil, nil, .75)
   CreateBackdropShadow(LFGParentFrame)

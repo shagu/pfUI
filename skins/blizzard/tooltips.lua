@@ -1,5 +1,5 @@
 pfUI:RegisterSkin("Tooltips", "vanilla:tbc", function ()
-  local border = tonumber(C.appearance.border.default)
+  local rawborder, border = GetBorderSize()
   local alpha = tonumber(C.tooltip.alpha)
 
   for _, tooltip in pairs({GameTooltip, ItemRefTooltip, ShoppingTooltip1, ShoppingTooltip2}) do

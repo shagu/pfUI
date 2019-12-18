@@ -1,6 +1,6 @@
 pfUI:RegisterSkin("Options - Interface", "tbc", function ()
-  local border = tonumber(pfUI_config.appearance.border.default)
-  local bpad = border > 1 and border - 1 or 1
+  local rawborder, border = GetBorderSize()
+  local bpad = rawborder > 1 and border - GetPerfectPixel() or GetPerfectPixel()
 
   StripTextures(InterfaceOptionsFrame)
   CreateBackdrop(InterfaceOptionsFrame, nil, nil, .75)
@@ -75,8 +75,8 @@ pfUI:RegisterSkin("Options - Interface", "tbc", function ()
 end)
 
 pfUI:RegisterSkin("Options - Interface", "vanilla", function ()
-  local border = tonumber(pfUI_config.appearance.border.default)
-  local bpad = border > 1 and border - 1 or 1
+  local rawborder, border = GetBorderSize()
+  local bpad = rawborder > 1 and border - GetPerfectPixel() or GetPerfectPixel()
 
   UIOptionsFrame:SetParent(UIParent)
   UIOptionsFrame:SetWidth(1024)

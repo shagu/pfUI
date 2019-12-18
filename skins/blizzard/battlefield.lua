@@ -1,6 +1,6 @@
 pfUI:RegisterSkin("Battlefield", "vanilla:tbc", function ()
-  local border = tonumber(pfUI_config.appearance.border.default)
-  local bpad = border > 1 and border - 1 or 1
+  local rawborder, border = GetBorderSize()
+  local bpad = rawborder > 1 and border - GetPerfectPixel() or GetPerfectPixel()
 
   StripTextures(BattlefieldFrame)
   CreateBackdrop(BattlefieldFrame, nil, nil, .75)
@@ -31,7 +31,7 @@ pfUI:RegisterSkin("Battlefield", "vanilla:tbc", function ()
   BattlefieldFrame.tex2:SetHeight(240)
 
   BattlefieldListScrollFrame.maxsize = CreateFrame("Frame", "BattlefieldListScrollFrameMaxSize", BattlefieldFrame)
-  local offset = 2*(tonumber(pfUI_config.appearance.border.default) + 1) + BattlefieldListScrollFrameScrollBar:GetWidth()
+  local offset = 2*(border + GetPerfectPixel()) + BattlefieldListScrollFrameScrollBar:GetWidth()
   BattlefieldListScrollFrame.maxsize:SetPoint("TOPLEFT", BattlefieldListScrollFrame, "TOPLEFT", 0, 0)
   BattlefieldListScrollFrame.maxsize:SetPoint("BOTTOMRIGHT", BattlefieldListScrollFrame, "BOTTOMRIGHT", offset, 0)
   CreateBackdrop(BattlefieldListScrollFrame.maxsize, nil, nil, .7)
