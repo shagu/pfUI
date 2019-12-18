@@ -832,8 +832,13 @@ function pfUI.api.GetPerfectPixel()
     local _, _, screenwidth, screenheight = strfind(resolution, "(.+)x(.+)")
 
     pfUI.pixel = 768 / screenheight / scale
+
+    -- autodetect and zoom for HiDPI displays
+    if pfUI_config.appearance.border.hidpi == "1" then
+      pfUI.pixel = pfUI.pixel < .5 and pfUI.pixel * 2 or pfUI.pixel
+    end
   else
-    pfUI.pixel = 1
+    pfUI.pixel = .7
   end
 
   pfUI.backdrop = {
@@ -896,12 +901,7 @@ function pfUI.api.CreateBackdrop(f, inset, legacy, transp, backdropSetting)
       local b = CreateFrame("Frame", nil, f)
       b:SetPoint("TOPLEFT", f, "TOPLEFT", -border, border)
       b:SetPoint("BOTTOMRIGHT", f, "BOTTOMRIGHT", border, -border)
-
-      if rawborder > 1 then
-        b:SetBackdrop(pfUI.backdrop)
-      else
-        b:SetBackdrop(pfUI.backdrop_thin)
-      end
+      b:SetBackdrop(rawborder > 1 and pfUI.backdrop or pfUI.backdrop_thin)
 
       local level = f:GetFrameLevel()
       if level < 1 then
