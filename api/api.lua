@@ -799,15 +799,34 @@ end
 -- Returns a number that equals a real pixel on regular scaled frames.
 -- Respects the current UI-scale and calculates a real pixel based on
 -- the screen resolution and the 768px sized drawlayer.
-local ppixel
 function pfUI.api.GetPerfectPixel()
-  if ppixel then return ppixel end
+  if pfUI.pixel then return pfUI.pixel end
 
-  local scale = GetCVar("uiScale")
-  local resolution = GetCVar("gxResolution")
-  local _, _, screenwidth, screenheight = strfind(resolution, "(.+)x(.+)")
-  ppixel = 768 / screenheight / scale
-  return ppixel
+  if pfUI_config.appearance.border.pixelperfect == "1" then
+    local scale = GetCVar("uiScale")
+    local resolution = GetCVar("gxResolution")
+    local _, _, screenwidth, screenheight = strfind(resolution, "(.+)x(.+)")
+
+    pfUI.pixel = 768 / screenheight / scale
+  else
+    pfUI.pixel = 1
+  end
+
+  pfUI.border = tonumber(pfUI_config.appearance.border.default) * pfUI.pixel
+
+  pfUI.backdrop = {
+    bgFile = "Interface\\BUTTONS\\WHITE8X8", tile = false, tileSize = 0,
+    edgeFile = "Interface\\BUTTONS\\WHITE8X8", edgeSize = pfUI.pixel,
+    insets = {left = -pfUI.pixel, right = -pfUI.pixel, top = -pfUI.pixel, bottom = -pfUI.pixel},
+  }
+
+  pfUI.backdrop_thin = {
+    bgFile = "Interface\\BUTTONS\\WHITE8X8", tile = false, tileSize = 0,
+    edgeFile = "Interface\\BUTTONS\\WHITE8X8", edgeSize = pfUI.pixel,
+    insets = {left = 0, right = 0, top = 0, bottom = 0},
+  }
+
+  return pfUI.pixel
 end
 
 -- [ Create Backdrop ]
@@ -820,12 +839,11 @@ function pfUI.api.CreateBackdrop(f, inset, legacy, transp, backdropSetting)
   -- exit if now frame was given
   if not f then return end
 
-  -- use default inset if nothing is given
-  local border = inset
-  if not border then
-    border = tonumber(pfUI_config.appearance.border.default)
-  end
+  -- load raw and pixel perfect scaled border
+  local rawborder = inset or tonumber(pfUI_config.appearance.border.default)
+  local border = rawborder * GetPerfectPixel()
 
+  -- get the color settings
   local br, bg, bb, ba = pfUI.api.GetStringColor(pfUI_config.appearance.border.background)
   local er, eg, eb, ea = pfUI.api.GetStringColor(pfUI_config.appearance.border.color)
 
@@ -833,7 +851,7 @@ function pfUI.api.CreateBackdrop(f, inset, legacy, transp, backdropSetting)
 
   -- use legacy backdrop handling
   if legacy then
-    local backdrop = border == 1 and pfUI.backdrop_thin or pfUI.backdrop
+    local backdrop = rawborder == 1 and pfUI.backdrop_thin or pfUI.backdrop
     if backdropSetting then f:SetBackdrop(backdropSetting) end
     f:SetBackdrop(backdrop)
     f:SetBackdropColor(br, bg, bb, ba)
