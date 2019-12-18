@@ -4,6 +4,7 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
   local inactive_alpha = tonumber(C.nameplates.notargalpha)
   local glowr, glowg, glowb, glowa = GetStringColor(C.nameplates.glowcolor)
   local hptexture = pfUI.media[C.nameplates.healthtexture]
+  local rawborder, default_border = GetBorderSize()
 
   -- disable original castbars
   pcall(SetCVar, "ShowVKeyCastbar", 0)
@@ -221,7 +222,7 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     -- combopoints
     if C.nameplates.cpdisplay == "1" then
       local combo_size = 5
-      local offset = 5 + C.nameplates.heightcast + C.nameplates.heighthealth + C.appearance.border.default*2
+      local offset = 5 + C.nameplates.heightcast + C.nameplates.heighthealth + default_border*2
 
       if not this.combopoints then
         this.combopoints = CreateFrame("Frame", nil, this.nameplate)
@@ -234,7 +235,7 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
           end
 
           CreateBackdrop(this.combopoints["combopoint" .. point])
-          this.combopoints["combopoint" .. point]:SetPoint("BOTTOMRIGHT", this.nameplate, "BOTTOMRIGHT", -(point - 1) * (combo_size + C.appearance.border.default*3) - offset, -C.appearance.border.default*3)
+          this.combopoints["combopoint" .. point]:SetPoint("BOTTOMRIGHT", this.nameplate, "BOTTOMRIGHT", -(point - 1) * (combo_size + default_border*3) - offset, -default_border*3)
 
           if point < 3 then
             local tex = this.combopoints["combopoint" .. point]:CreateTexture("OVERLAY")

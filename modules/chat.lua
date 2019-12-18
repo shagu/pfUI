@@ -1,14 +1,9 @@
 pfUI:RegisterModule("chat", "vanilla:tbc", function ()
   local panelfont = C.panel.use_unitfonts == "1" and pfUI.font_unit or pfUI.font_default
   local panelfont_size = C.panel.use_unitfonts == "1" and C.global.font_unit_size or C.global.font_size
-
-  local default_border = C.appearance.border.default
-  if C.appearance.border.chat ~= "-1" then
-    default_border = C.appearance.border.chat
-  end
+  local rawborder, default_border = GetBorderSize("chat")
 
   _G.CHAT_FONT_HEIGHTS = { 8, 10, 12, 14, 16, 18, 20 }
-
 
   -- add dropdown menu button to ignore player
   UnitPopupButtons["IGNORE_PLAYER"] = { text = IGNORE_PLAYER, dist = 0 }

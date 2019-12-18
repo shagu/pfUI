@@ -2,10 +2,7 @@ pfUI:RegisterModule("raid", "vanilla:tbc", function ()
   -- do not go further on disabled UFs
   if C.unitframes.disable == "1" then return end
 
-  local default_border = C.appearance.border.default
-  if C.appearance.border.unitframes ~= "-1" then
-    default_border = C.appearance.border.unitframes
-  end
+  local rawborder, default_border = GetBorderSize("unitframes")
 
   pfUI.uf.raid = CreateFrame("Button","pfRaid",UIParent)
 

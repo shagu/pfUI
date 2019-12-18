@@ -49,6 +49,8 @@ pfUI:RegisterModule("thirdparty", "vanilla", function ()
   function pfUI.thirdparty.meters:Resize()
     if pfUI.chat and pfUI.panel then
 
+      local rawborder, default_border = GetBorderSize()
+
       if DPSMate_DPSMate and C.thirdparty.dpsmate.dock == "1" then
         -- DPSMate Single View
         if pfUI.thirdparty.meters.damage and not pfUI.thirdparty.meters.threat then
@@ -114,7 +116,7 @@ pfUI:RegisterModule("thirdparty", "vanilla", function ()
           RefreshKtmWidth()
           KLHTM_Frame:ClearAllPoints()
           KLHTM_Frame:SetPoint("TOPLEFT", pfUI.chat.right, "TOPLEFT", 0, 0)
-          KLHTM_Frame:SetPoint("BOTTOMRIGHT", pfUI.chat.right, "BOTTOM", -C.appearance.border.default, pfUI.panel.right:GetHeight())
+          KLHTM_Frame:SetPoint("BOTTOMRIGHT", pfUI.chat.right, "BOTTOM", -default_border, pfUI.panel.right:GetHeight())
           KLHTM_Frame.backdrop:SetPoint("BOTTOMRIGHT", KLHTM_Frame, "BOTTOMRIGHT", 0, -(KLHTM_Frame:GetBottom() - pfUI.chat.right:GetBottom()))
         end
       end
@@ -915,10 +917,7 @@ pfUI:RegisterModule("thirdparty", "vanilla", function ()
       -- make sure the bag module is enabled
       if not pfUI.bag or not pfUI.bag.right then return end
 
-      local default_border = C.appearance.border.default
-      if C.appearance.border.bags ~= "-1" then
-        default_border = C.appearance.border.bags
-      end
+      local rawborder, default_border = GetBorderSize("bags")
 
       -- draw the button
       if not pfUI.bag.right.sort then
@@ -1024,10 +1023,7 @@ pfUI:RegisterModule("thirdparty", "vanilla", function ()
       -- make sure the bag module is enabled
       if not pfUI.bag or not pfUI.bag.right then return end
 
-      local default_border = C.appearance.border.default
-      if C.appearance.border.bags ~= "-1" then
-        default_border = C.appearance.border.bags
-      end
+      local rawborder, default_border = GetBorderSize("bags")
 
       -- draw the button
       if not pfUI.bag.right.sort then

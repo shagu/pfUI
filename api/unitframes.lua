@@ -242,12 +242,8 @@ function pfUI.uf:UpdateVisibility()
 end
 
 function pfUI.uf:UpdateFrameSize()
-  local default_border = pfUI_config.appearance.border.default
-  if pfUI_config.appearance.border.unitframes ~= "-1" then
-    default_border = pfUI_config.appearance.border.unitframes
-  end
-
-  local spacing = self.config.pspace
+  local rawborder, default_border = GetBorderSize("unitframes")
+  local spacing = self.config.pspace * GetPerfectPixel()
   local width = self.config.width
   local height = self.config.height
   local pheight = self.config.pheight
@@ -271,10 +267,7 @@ end
 function pfUI.uf:UpdateConfig()
   local f = self
   local C = pfUI_config
-  local default_border = C.appearance.border.default
-  if C.appearance.border.unitframes ~= "-1" then
-    default_border = C.appearance.border.unitframes
-  end
+  local rawborder, default_border = GetBorderSize("unitframes")
 
   local relative_point = "BOTTOM"
   if f.config.panchor == "TOPLEFT" then
@@ -321,7 +314,7 @@ function pfUI.uf:UpdateConfig()
   end
 
   f.power:ClearAllPoints()
-  f.power:SetPoint(f.config.panchor, f.hp, relative_point, 0, -2*default_border - f.config.pspace)
+  f.power:SetPoint(f.config.panchor, f.hp, relative_point, 0, -2*default_border - f.config.pspace * GetPerfectPixel())
   f.power:SetWidth((f.config.pwidth ~= "-1" and f.config.pwidth or f.config.width))
   f.power:SetHeight(f.config.pheight)
   if tonumber(f.config.pheight) < 0 then f.power:Hide() end
@@ -1218,10 +1211,7 @@ function pfUI.uf:RefreshUnit(unit, component)
   -- create required fields
   if not unit.cache then unit.cache = {} end
   local unitstr = unit.label..unit.id
-  local default_border = C.appearance.border.default
-  if C.appearance.border.unitframes ~= "-1" then
-    default_border = C.appearance.border.unitframes
-  end
+  local rawborder, default_border = GetBorderSize("unitframes")
 
   -- Buffs
   if unit.buffs and ( component == "all" or component == "aura" ) then

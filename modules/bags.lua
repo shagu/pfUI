@@ -1,8 +1,5 @@
 pfUI:RegisterModule("bags", "vanilla:tbc", function ()
-  local default_border = C.appearance.border.default
-  if C.appearance.border.bags ~= "-1" then
-    default_border = C.appearance.border.bags
-  end
+  local rawborder, default_border = GetBorderSize("bags")
 
   local knownInventorySpellTextures = {
     Spell_Holy_RemoveCurse = {frame="disenchant"},

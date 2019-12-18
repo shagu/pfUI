@@ -1,4 +1,6 @@
 pfUI:RegisterModule("unlock", "vanilla:tbc", function ()
+  local rawborder, default_border = GetBorderSize()
+
   -- grouped frames
   local clusters = {
     -- Name            Shift  Ctrl
@@ -225,7 +227,7 @@ pfUI:RegisterModule("unlock", "vanilla:tbc", function ()
     local frame = drag.frame
 
     -- update dock position
-    SetAutoPoint(dock, drag, tonumber(pfUI_config.appearance.border.default)*2+2)
+    SetAutoPoint(dock, drag, default_border*2+2)
 
     -- update dock entries
     dock.title:SetText(drag.label)

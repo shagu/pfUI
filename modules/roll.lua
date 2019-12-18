@@ -74,7 +74,7 @@ pfUI:RegisterModule("roll", "vanilla:tbc", function ()
 
   function pfUI.roll:CreateLootRoll(id)
     local size = 24
-    local border = tonumber(C.appearance.border.default)
+    local rawborder, border = GetBorderSize()
     local esize = size - border*2
     local f = CreateFrame("Frame", "pfLootRollFrame" .. id, UIParent)
 

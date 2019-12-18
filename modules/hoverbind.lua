@@ -1,5 +1,4 @@
 pfUI:RegisterModule("hoverbind", "vanilla", function ()
-  local default_border = C.appearance.border.default
   local keymap = {
     -- buttons to binding association
     ["pfActionBarMainButton"]     = "ACTIONBUTTON",

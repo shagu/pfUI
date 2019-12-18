@@ -127,7 +127,7 @@ pfUI:RegisterModule("eqcompare", "vanilla", function ()
     pfUI.eqcompare.tooltip = this
 
     if not IsShiftKeyDown() and C.tooltip.compare.showalways ~= "1" then return end
-    local border = tonumber(C.appearance.border.default)
+    local rawborder, border = GetBorderSize()
 
     for i=1,this:NumLines() do
       local tmpText = _G[this:GetName() .. "TextLeft"..i]

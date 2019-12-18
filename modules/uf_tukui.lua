@@ -8,11 +8,7 @@ pfUI:RegisterModule("uf_tukui", "vanilla:tbc", function ()
     hookUpdateConfigPlayer(pfUI.uf.player)
 
     -- load configs
-    local default_border = C.appearance.border.default
-    if C.appearance.border.unitframes ~= "-1" then
-      default_border = C.appearance.border.unitframes
-    end
-
+    local rawborder, default_border = GetBorderSize("unitframes")
     local pspacing = C.unitframes.player.pspace
     local tspacing = C.unitframes.target.pspace
 
@@ -50,11 +46,7 @@ pfUI:RegisterModule("uf_tukui", "vanilla:tbc", function ()
     hookUpdateConfigTarget(pfUI.uf.target)
 
     -- load configs
-    local default_border = C.appearance.border.default
-    if C.appearance.border.unitframes ~= "-1" then
-      default_border = C.appearance.border.unitframes
-    end
-
+    local rawborder, default_border = GetBorderSize("unitframes")
     local pspacing = C.unitframes.player.pspace
     local tspacing = C.unitframes.target.pspace
 

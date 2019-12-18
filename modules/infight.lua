@@ -1,9 +1,4 @@
 pfUI:RegisterModule("infight", "vanilla:tbc", function ()
-  local default_border = C.appearance.border.default
-  if C.appearance.border.unitframes ~= "-1" then
-    default_border = C.appearance.border.unitframes
-  end
-
   -- build the frame
   pfUI.infight = CreateFrame("Frame", "pfUICombat", UIParent)
 

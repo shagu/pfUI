@@ -1,4 +1,6 @@
 pfUI:RegisterModule("combopoints", "vanilla:tbc", function ()
+  local rawborder, border = GetBorderSize()
+
   -- Hide Blizzard combo point frame and unregister all events to prevent it from popping up again
   ComboFrame:Hide()
   ComboFrame:UnregisterAllEvents()
@@ -15,9 +17,9 @@ pfUI:RegisterModule("combopoints", "vanilla:tbc", function ()
     pfUI.combopoints[point]:Hide()
 
     if pfUI.uf.target then
-      pfUI.combopoints[point]:SetPoint("TOPLEFT", pfUI.uf.target, "TOPRIGHT", C.appearance.border.default*3, -(point - 1) * (combo_size + C.appearance.border.default*3))
+      pfUI.combopoints[point]:SetPoint("TOPLEFT", pfUI.uf.target, "TOPRIGHT", border*3, -(point - 1) * (combo_size + border*3))
     else
-      pfUI.combopoints[point]:SetPoint("CENTER", UIParent, "CENTER", (point - 3) * (combo_size + C.appearance.border.default*3), 10 )
+      pfUI.combopoints[point]:SetPoint("CENTER", UIParent, "CENTER", (point - 3) * (combo_size + border*3), 10 )
     end
 
     pfUI.combopoints[point].tex = pfUI.combopoints[point]:CreateTexture("OVERLAY")

@@ -6,12 +6,8 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
   local backdrop_highlight = { edgeFile = pfUI.media["img:glow"], edgeSize = 8 }
   local showgrid = 0
   local showgrid_pet = 0
-
-  local border = tonumber(C.appearance.border.default)
-  if C.appearance.border.actionbars ~= "-1" then
-    border = tonumber(C.appearance.border.actionbars)
-  end
-  local bpad = border > 1 and border - 1 or 1
+  local rawborder, border = GetBorderSize("actionbars")
+  local bpad = rawborder > 1 and border - GetPerfectPixel() or GetPerfectPixel()
 
   local eventcache = { } -- contains a list of events that shall be processed later -> [event] = true
   local updatecache = { } -- contains a list of buttons slots that shall be refreshed later -> [slot] = true

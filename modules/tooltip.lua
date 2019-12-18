@@ -1,4 +1,5 @@
 pfUI:RegisterModule("tooltip", "vanilla:tbc", function ()
+  local rawborder, default_border = GetBorderSize()
 
   pfUI.tooltip = CreateFrame('Frame', "pfTooltip", GameTooltip)
   pfUI.tooltip.anchorframe = CreateFrame('Frame', "pfTooltipAnchor", UIParent)
@@ -89,7 +90,7 @@ pfUI:RegisterModule("tooltip", "vanilla:tbc", function ()
         GameTooltip:ClearAllPoints()
         if C.tooltip.position == "bottom" then
           if pfUI.panel then
-            GameTooltip:SetPoint("BOTTOMRIGHT", pfUI.panel.right, "TOPRIGHT", 0, C.appearance.border.default*2)
+            GameTooltip:SetPoint("BOTTOMRIGHT", pfUI.panel.right, "TOPRIGHT", 0, default_border*2)
           else
             GameTooltip:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", -5, 5)
           end
@@ -109,7 +110,7 @@ pfUI:RegisterModule("tooltip", "vanilla:tbc", function ()
           end
 
           if anchor then
-            GameTooltip:SetPoint("BOTTOMRIGHT", anchor, "TOPRIGHT", 0, C.appearance.border.default*2)
+            GameTooltip:SetPoint("BOTTOMRIGHT", anchor, "TOPRIGHT", 0, default_border*2)
           else
             GameTooltip:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", -5, 5)
           end

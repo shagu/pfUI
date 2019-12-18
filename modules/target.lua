@@ -2,13 +2,6 @@ pfUI:RegisterModule("target", "vanilla:tbc", function ()
   -- do not go further on disabled UFs
   if C.unitframes.disable == "1" then return end
 
-  local default_border = C.appearance.border.default
-  if C.appearance.border.unitframes ~= "-1" then
-    default_border = C.appearance.border.unitframes
-  end
-
-  local spacing = C.unitframes.target.pspace
-
   -- Hide Blizzard target frame and unregister all events to prevent it from popping up again
   TargetFrame:Hide()
   TargetFrame:UnregisterAllEvents()

@@ -1,5 +1,5 @@
 pfUI:RegisterModule("buffwatch", "vanilla:tbc", function ()
-  local border = C.appearance.border.default
+  local rawborder, border = GetBorderSize("panels")
   local scanner = libtipscan:GetScanner("buffwatch")
 
   local fcache = {}

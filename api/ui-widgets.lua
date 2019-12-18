@@ -676,7 +676,7 @@ function pfUI.api.CreateQuestionDialog(text, yes, no, editbox, onclose)
 
   if not text then text = "Are you sure?" end
 
-  local border = tonumber(pfUI_config.appearance.border.default)
+  local rawborder, border = GetBorderSize()
   local padding = 15
 
   -- frame

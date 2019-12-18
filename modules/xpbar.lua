@@ -1,4 +1,6 @@
 pfUI:RegisterModule("xpbar", "vanilla:tbc", function ()
+  local rawborder, default_border = GetBorderSize()
+
   local xp_timeout = tonumber(C.panel.xp.xp_timeout)
   local xp_width = C.panel.xp.xp_width
   local xp_height = C.panel.xp.xp_height
@@ -29,11 +31,11 @@ pfUI:RegisterModule("xpbar", "vanilla:tbc", function ()
     b:SetFrameStrata("BACKGROUND")
 
     if t == "XP" and pfUI.chat then
-      b:SetPoint("TOPLEFT", pfUI.chat.left, "TOPRIGHT", C.appearance.border.default*2, 0)
-      b:SetPoint("BOTTOMLEFT", pfUI.chat.left, "BOTTOMRIGHT", C.appearance.border.default*2, 0)
+      b:SetPoint("TOPLEFT", pfUI.chat.left, "TOPRIGHT", default_border*2, 0)
+      b:SetPoint("BOTTOMLEFT", pfUI.chat.left, "BOTTOMRIGHT", default_border*2, 0)
     elseif t == "REP" and pfUI.chat then
-      b:SetPoint("TOPRIGHT",pfUI.chat.right,"TOPLEFT", -C.appearance.border.default*2, 0)
-      b:SetPoint("BOTTOMRIGHT",pfUI.chat.right,"BOTTOMLEFT",-C.appearance.border.default*2, 0)
+      b:SetPoint("TOPRIGHT",pfUI.chat.right,"TOPLEFT", -default_border*2, 0)
+      b:SetPoint("BOTTOMRIGHT",pfUI.chat.right,"BOTTOMLEFT",-default_border*2, 0)
     else
       b:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", 0, 0)
       b:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", 0, 0)

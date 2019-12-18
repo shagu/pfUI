@@ -1,4 +1,6 @@
 pfUI:RegisterModule("addons", "vanilla:tbc", function ()
+  local rawborder, border = GetBorderSize()
+
   -- add main menu button
   local pfUIAddonButton = CreateFrame("Button", "GameMenuButtonPFUIAddOns", GameMenuFrame, "GameMenuButtonTemplate")
   pfUIAddonButton:SetPoint("TOP", 0, -32)
@@ -47,7 +49,7 @@ pfUI:RegisterModule("addons", "vanilla:tbc", function ()
   pfUI.addons.caption:SetText(T["Addon List"])
 
   pfUI.addons.close = CreateFrame("Button", "pfBagClose", pfUI.addons)
-  pfUI.addons.close:SetPoint("TOPRIGHT", -C.appearance.border.default*2,-C.appearance.border.default*2 )
+  pfUI.addons.close:SetPoint("TOPRIGHT", -border*2,-border*2 )
   CreateBackdrop(pfUI.addons.close)
   pfUI.addons.close:SetHeight(15)
   pfUI.addons.close:SetWidth(15)

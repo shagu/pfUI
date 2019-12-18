@@ -1,4 +1,6 @@
 pfUI:RegisterModule("loot", "vanilla:tbc", function ()
+  local rawborder, border = GetBorderSize()
+
   pfUI.loot = CreateFrame("Frame", "pfLootFrame", UIParent)
   pfUI.loot:Hide()
   pfUI.loot:SetFrameStrata("DIALOG")
@@ -9,10 +11,10 @@ pfUI:RegisterModule("loot", "vanilla:tbc", function ()
   pfUI.loot:RegisterEvent("UPDATE_MASTER_LOOT_LIST")
   pfUI.loot:RegisterEvent("LOOT_BIND_CONFIRM")
 
-  pfUI.loot:SetWidth(160+C.appearance.border.default*2)
+  pfUI.loot:SetWidth(160+border*2)
 
   if C.loot.mousecursor == "0" then
-    pfUI.loot:SetHeight(160+C.appearance.border.default*2)
+    pfUI.loot:SetHeight(160+border*2)
     pfUI.loot:SetPoint("TOP", UIParent, "CENTER", 0, 0)
     UpdateMovable(pfUI.loot)
   end
@@ -499,8 +501,8 @@ pfUI:RegisterModule("loot", "vanilla:tbc", function ()
         CreateBackdropShadow(pfUI.loot)
         pfUI.loot.backdrop:SetBackdropBorderColor(color.r, color.g, color.b, 1)
       end
-      pfUI.loot:SetHeight(math.max((real*22)+4*C.appearance.border.default), 20)
-      pfUI.loot:SetWidth(maxwidth + 22 + 8*C.appearance.border.default )
+      pfUI.loot:SetHeight(math.max((real*22)+4*border), 20)
+      pfUI.loot:SetWidth(maxwidth + 22 + 8*border)
     end
   end
 
@@ -522,10 +524,10 @@ pfUI:RegisterModule("loot", "vanilla:tbc", function ()
   function pfUI.loot:CreateSlot(id)
     local frame = CreateFrame(LOOT_BUTTON_FRAME_TYPE, 'pfLootButton'..id, pfUI.loot)
     frame:RegisterForClicks('LeftButtonUp', 'RightButtonUp')
-    frame:SetPoint("LEFT", C.appearance.border.default*2, 0)
-    frame:SetPoint("RIGHT", -C.appearance.border.default*2, 0)
+    frame:SetPoint("LEFT", border*2, 0)
+    frame:SetPoint("RIGHT", -border*2, 0)
     frame:SetHeight(22)
-    frame:SetPoint("TOP", pfUI.loot, "TOP", 4, (-C.appearance.border.default*2+22)-(id*22))
+    frame:SetPoint("TOP", pfUI.loot, "TOP", 4, (-border*2+22)-(id*22))
 
     frame:SetScript("OnClick", function()
       if ( IsControlKeyDown() ) then
@@ -579,8 +581,8 @@ pfUI:RegisterModule("loot", "vanilla:tbc", function ()
     end
 
     frame.ficon = CreateFrame("Frame", "pfLootButtonIcon", frame)
-    frame.ficon:SetHeight(frame:GetHeight() - 2*C.appearance.border.default)
-    frame.ficon:SetWidth(frame:GetHeight() - 2*C.appearance.border.default)
+    frame.ficon:SetHeight(frame:GetHeight() - 2*border)
+    frame.ficon:SetWidth(frame:GetHeight() - 2*border)
     frame.ficon:ClearAllPoints()
     frame.ficon:SetPoint("RIGHT", frame)
     CreateBackdrop(frame.ficon)

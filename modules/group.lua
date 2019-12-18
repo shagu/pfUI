@@ -18,10 +18,7 @@ pfUI:RegisterModule("group", "vanilla:tbc", function ()
   function pfUI.uf.group:UpdateConfig()
     local startid = C.unitframes.selfingroup == "1" and 0 or 1
     local spacing = C.unitframes.group.pspace
-    local default_border = C.appearance.border.default
-    if C.appearance.border.unitframes ~= "-1" then
-      default_border = C.appearance.border.unitframes
-    end
+    local rawborder, default_border = GetBorderSize("unitframes")
 
     for i=0, 4 do
       local active = i >= 1 or startid == 0

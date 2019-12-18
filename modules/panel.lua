@@ -4,11 +4,7 @@ pfUI:RegisterModule("panel", "vanilla:tbc", function()
 
   local font = C.panel.use_unitfonts == "1" and pfUI.font_unit or pfUI.font_default
   local font_size = C.panel.use_unitfonts == "1" and C.global.font_unit_size or C.global.font_size
-
-  local default_border = C.appearance.border.default
-  if C.appearance.border.panels ~= "-1" then
-    default_border = C.appearance.border.panels
-  end
+  local rawborder, default_border = GetBorderSize("panels")
 
   do -- Widgets
     do -- Clock & Timer
