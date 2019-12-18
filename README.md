@@ -1,6 +1,6 @@
 # pfUI
 
-An AddOn for World of Warcraft (1.12.1), mostly known as "Vanilla", which aims to be a full replacement for the original interface. The design is inspired by several screenshots I've seen from TukUI, ElvUI and others. This addon delivers modern features and a minimalistic style that's easy to use right from the start. It is entirely written from scratch without any inclusion of third-party addons or libraries.
+An AddOn for World of Warcraft: Vanilla (1.12.1) and The Burning Crusade (2.4.3), which aims to be a full replacement for the original interface. The design is inspired by several screenshots I've seen from TukUI, ElvUI and others. This addon delivers modern features and a minimalistic style that's easy to use right from the start. It is entirely written from scratch without any inclusion of third-party addons or libraries.
 
 This is **not** an addon-pack like [ShaguUI](http://shagu.org/ShaguUI/), however, there is support for external addons like MobHealth3, DPSMate and others, but they will never be shipped within the package.
 
@@ -13,11 +13,18 @@ This is **not** an addon-pack like [ShaguUI](http://shagu.org/ShaguUI/), however
 <img src="https://raw.githubusercontent.com/shagu/ShaguAddons/master/_img/pfUI/contrib.jpg" align="right" width="48.8%">
 <img src="https://raw.githubusercontent.com/shagu/ShaguAddons/master/_img/pfUI/maraudon.jpg" width="48.8%">
 
-## Installation
+## Installation (Vanilla)
 1. Download **[Latest Version](https://github.com/shagu/pfUI/archive/master.zip)**
 2. Unpack the Zip file
 3. Rename the folder "pfUI-master" to "pfUI"
 4. Copy "pfUI" into Wow-Directory\Interface\AddOns
+5. Restart Wow
+
+## Installation (The Burning Crusade)
+1. Download **[Latest Version](https://github.com/shagu/pfUI/archive/master.zip)**
+2. Unpack the Zip file
+3. Rename the folder "pfUI-master" to "pfUI-tbc"
+4. Copy "pfUI-tbc" into Wow-Directory\Interface\AddOns
 5. Restart Wow
 
 ## Commands
