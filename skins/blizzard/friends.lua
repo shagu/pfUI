@@ -1,6 +1,7 @@
-pfUI:RegisterSkin("Friends", "vanilla", function ()
+pfUI:RegisterSkin("Friends", "vanilla:tbc", function ()
   local border = tonumber(pfUI_config.appearance.border.default)
   local bpad = border > 1 and border - 1 or 1
+  local maxtab = pfUI.expansion == "vanilla" and 4 or 5
 
   StripTextures(FriendsFrame, true)
   CreateBackdrop(FriendsFrame, nil, nil, .75)
@@ -18,7 +19,7 @@ pfUI:RegisterSkin("Friends", "vanilla", function ()
 
   FriendsFrameTab1:ClearAllPoints()
   FriendsFrameTab1:SetPoint("TOPLEFT", FriendsFrame.backdrop, "BOTTOMLEFT", bpad, -(border + (border == 1 and 1 or 2)))
-  for i = 1, 4 do
+  for i = 1, maxtab do
     local tab = _G["FriendsFrameTab"..i]
     local lastTab = _G["FriendsFrameTab"..(i-1)]
     if lastTab then
@@ -361,6 +362,46 @@ pfUI:RegisterSkin("Friends", "vanilla", function ()
     GuildControlPopupAcceptButton:SetPoint("RIGHT", GuildControlPopupFrameCancelButton, "LEFT", -2*bpad, 0)
   end
 
+  if ChannelFrameVerticalBar then -- Channel Tab (TBC+)
+    StripTextures(ChannelFrameVerticalBar)
+    SkinButton(ChannelFrameNewButton)
+    ChannelFrameNewButton:SetPoint("BOTTOMRIGHT", -15, 82)
+
+    StripTextures(ChannelListScrollFrame)
+    SkinScrollbar(ChannelListScrollFrameScrollBar)
+
+    for i = 1, MAX_DISPLAY_CHANNEL_BUTTONS do
+      StripTextures(_G["ChannelButton"..i])
+      SkinButton(_G["ChannelButton"..i])
+    end
+
+    for i = 1, 22 do
+      StripTextures(_G["ChannelMemberButton"..i])
+    end
+
+    CreateBackdrop(ChannelMemberButton1)
+    ChannelMemberButton1.backdrop:SetPoint("BOTTOMRIGHT", ChannelMemberButton22, "BOTTOMRIGHT", -1, 0)
+
+    StripTextures(ChannelRosterScrollFrame)
+    SkinScrollbar(ChannelRosterScrollFrameScrollBar)
+
+    StripTextures(ChannelFrameDaughterFrame)
+    CreateBackdrop(ChannelFrameDaughterFrame)
+
+    StripTextures(ChannelFrameDaughterFrameChannelName)
+    CreateBackdrop(ChannelFrameDaughterFrameChannelName, nil, true)
+    ChannelFrameDaughterFrameChannelName:SetTextInsets(5,5,5,5)
+
+    StripTextures(ChannelFrameDaughterFrameChannelPassword)
+    CreateBackdrop(ChannelFrameDaughterFrameChannelPassword, nil, true)
+    ChannelFrameDaughterFrameChannelPassword:SetTextInsets(5,5,5,5)
+
+    SkinCloseButton(ChannelFrameDaughterFrameDetailCloseButton)
+
+    SkinButton(ChannelFrameDaughterFrameCancelButton)
+    SkinButton(ChannelFrameDaughterFrameOkayButton)
+  end
+
   do -- Raid Tab
     StripTextures(RaidInfoFrame)
     CreateBackdrop(RaidInfoFrame, nil, true, .75)
@@ -379,7 +420,9 @@ pfUI:RegisterSkin("Friends", "vanilla", function ()
     RaidInfoIDLabel:SetPoint("TOPRIGHT", RaidInfoSubheader, "BOTTOMRIGHT", 24, -6)
 
     for i=1, 10 do
-      _G["RaidInfoInstance"..i.."Name"]:SetPoint("TOPLEFT", 2, -2)
+      if _G["RaidInfoInstance"..i.."Name"] then
+        _G["RaidInfoInstance"..i.."Name"]:SetPoint("TOPLEFT", 2, -2)
+      end
     end
 
     SkinButton(RaidFrameRaidInfoButton)
