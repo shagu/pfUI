@@ -795,6 +795,30 @@ function pfUI.api.rgbhex(r, g, b, a)
   return hexcolor_cache[key] or ""
 end
 
+-- [ GetBorderSize ]
+-- Returns the configure value of a border and its pixel scaled version.
+-- 'pref' allows to specifiy a custom border (i.e unitframes, panel)
+function pfUI.api.GetBorderSize(pref)
+  if not pfUI.borders then pfUI.borders = {} end
+
+  -- set to default border if accessing a wrong border type
+  if not pref or not pfUI_config.appearance.border[pref] or pfUI_config.appearance.border[pref] == "-1" then
+    pref = "default"
+  end
+
+  if pfUI.borders[pref] then
+    -- return already cached values
+    return pfUI.borders[pref][1], pfUI.borders[pref][2]
+  else
+    -- add new borders to the pfUI tree
+    local raw = tonumber(pfUI_config.appearance.border[pref])
+    local scaled = raw * GetPerfectPixel()
+    pfUI.borders = { raw, scaled }
+
+    return raw, scaled
+  end
+end
+
 -- [ GetPerfectPixel ]
 -- Returns a number that equals a real pixel on regular scaled frames.
 -- Respects the current UI-scale and calculates a real pixel based on
@@ -811,8 +835,6 @@ function pfUI.api.GetPerfectPixel()
   else
     pfUI.pixel = 1
   end
-
-  pfUI.border = tonumber(pfUI_config.appearance.border.default) * pfUI.pixel
 
   pfUI.backdrop = {
     bgFile = "Interface\\BUTTONS\\WHITE8X8", tile = false, tileSize = 0,
@@ -840,8 +862,13 @@ function pfUI.api.CreateBackdrop(f, inset, legacy, transp, backdropSetting)
   if not f then return end
 
   -- load raw and pixel perfect scaled border
-  local rawborder = inset or tonumber(pfUI_config.appearance.border.default)
-  local border = rawborder * GetPerfectPixel()
+  local rawborder, border = GetBorderSize()
+
+  -- load custom border if existing
+  if inset then
+    rawborder = inset
+    border = inset * GetPerfectPixel()
+  end
 
   -- get the color settings
   local br, bg, bb, ba = pfUI.api.GetStringColor(pfUI_config.appearance.border.background)
