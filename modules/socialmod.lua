@@ -1,4 +1,4 @@
-pfUI:RegisterModule("socialmod", "vanilla", function ()
+pfUI:RegisterModule("socialmod", "vanilla:tbc", function ()
   local playerdb = _G.pfUI_playerDB
   pfUI.socialmod = CreateFrame("Frame", "pfSocialMod", UIParent)
   pfUI.socialmod:RegisterEvent("CHAT_MSG_SYSTEM")
@@ -79,33 +79,43 @@ pfUI:RegisterModule("socialmod", "vanilla", function ()
       for i=1, FRIENDS_TO_DISPLAY do
         local name, level, class, zone, connected, status = GetFriendInfo(off + i)
         if not name or name == _G.UNKNOWN then break end
-        local friendNameLoc = _G["FriendsFrameFriendButton"..i..FRIENDS_NAME_LOCATION]
+        local friendName = _G["FriendsFrameFriendButton"..i.."ButtonTextName"]
+        local friendLoc = _G["FriendsFrameFriendButton"..i..FRIENDS_NAME_LOCATION]
         local friendInfo = _G["FriendsFrameFriendButton"..i.."ButtonTextInfo"]
+        local caption = friendName or friendLoc
+
         if connected then
           if not class or class == _G.UNKNOWN then break end
           local ccolor = RAID_CLASS_COLORS[L["class"][class]] or { 1, 1, 1 }
           local lcolor = GetDifficultyColor(tonumber(level)) or { 1, 1, 1 }
 
-          zone = ( zone == playerzone and "|cffffffff" or "|cffaaaaaa" ) .. zone .. "|r"
+          zone = ( zone == playerzone and "|cffffffff" or "|cffcccccc" ) .. zone .. "|r"
           local cname = rgbhex(ccolor) .. name .. "|r"
           if playerdb[name] then
             playerdb[name].lastseen = date("%a %d-%b-%Y")
             playerdb[name].cname = cname
           end
 
-          friendNameLoc:SetText(format(TEXT(FRIENDS_LIST_TEMPLATE), cname, zone, status))
+          if friendName then
+            friendName:SetText(cname)
+            friendLoc:SetText(format(TEXT(FRIENDS_LIST_TEMPLATE), zone, status))
+          else
+            friendLoc:SetText(format(TEXT(FRIENDS_LIST_TEMPLATE), cname, zone, status))
+          end
+
           friendInfo:SetText(format(TEXT(FRIENDS_LEVEL_TEMPLATE), level, class))
-          friendNameLoc:SetVertexColor(1,1,1,.9)
+          caption:SetVertexColor(1,1,1,.9)
           friendInfo:SetVertexColor(1,1,1,.9)
         else
           if playerdb[name] and playerdb[name].cname and playerdb[name].level and playerdb[name].lastseen then
-            friendNameLoc:SetText(format(TEXT(FRIENDS_LIST_OFFLINE_TEMPLATE), playerdb[name].cname))
+            caption:SetText(format(TEXT(FRIENDS_LIST_OFFLINE_TEMPLATE), playerdb[name].cname))
             friendInfo:SetText(format(TEXT(FRIENDS_LEVEL_TEMPLATE), playerdb[name].level, playerdb[name].lastseen))
           else
-            friendNameLoc:SetText(format(TEXT(FRIENDS_LIST_OFFLINE_TEMPLATE), name.."|r"))
+            caption:SetText(format(TEXT(FRIENDS_LIST_OFFLINE_TEMPLATE), name.."|r"))
             friendInfo:SetText(TEXT(UNKNOWN))
           end
-          friendNameLoc:SetVertexColor(1,1,1,.4)
+
+          caption:SetVertexColor(1,1,1,.4)
           friendInfo:SetVertexColor(1,1,1,.4)
         end
       end
