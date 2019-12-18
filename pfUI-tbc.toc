@@ -1,8 +1,8 @@
 ## Interface: 20400
-## Title: |cff33ffccpf|cffffffffUI |cffaaaaaa[beta]
+## Title: |cff33ffccpf|cffffffffUI
 ## Author: Shagu
 ## Notes: A complete user interface replacement.
-## Version: 4.3.3
+## Version: 4.4.0
 ## SavedVariables: pfUI_profiles, pfUI_addon_profiles, pfUI_cache
 ## SavedVariablesPerCharacter: pfUI_config, pfUI_init, pfUI_playerDB
 
