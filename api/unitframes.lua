@@ -324,6 +324,17 @@ function pfUI.uf:UpdateConfig()
   f.power.bar:SetAllPoints(f.power)
   f.power.bar:SetFrameStrata("LOW")
 
+  local custompbg = f.config.defcolor == "0" and f.config.custompbg or C.unitframes.custompbg
+  local custompbgcolor = f.config.defcolor == "0" and f.config.custompbgcolor or C.unitframes.custompbgcolor
+
+  if custompbg == "1" then
+    local cr, cg, cb, ca = pfUI.api.strsplit(",", custompbgcolor)
+    cr, cg, cb, ca = tonumber(cr), tonumber(cg), tonumber(cb), tonumber(ca)
+    f.power.bar.texture = f.power.bar.texture or f.hp:CreateTexture(nil,"BACKGROUND")
+    f.power.bar.texture:SetTexture(cr,cg,cb,ca)
+    f.power.bar.texture:SetAllPoints(f.power.bar)
+  end
+
   f.portrait:SetFrameStrata("LOW")
   f.portrait.tex:SetAllPoints(f.portrait)
   f.portrait.tex:SetTexCoord(.1, .9, .1, .9)
