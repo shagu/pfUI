@@ -2,7 +2,7 @@ pfUI:RegisterModule("addonbuttons", "vanilla", function ()
   if not pfUI.minimap then return end
   if C.abuttons.enable == "0" then return end
 
-  local rawborder, border = GetBorderSize("panels")
+  local rawborder, default_border = GetBorderSize("panels")
 
   pfUI_cache["abuttons"] = pfUI_cache["abuttons"] or {}
   pfUI_cache["abuttons"]["add"] = pfUI_cache["abuttons"]["add"] or {}
