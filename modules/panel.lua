@@ -334,13 +334,7 @@ pfUI:RegisterModule("panel", "vanilla:tbc", function()
       widget:RegisterEvent("PLAYER_DEAD")
       widget:RegisterEvent("PLAYER_UNGHOST")
       widget:RegisterEvent("UNIT_INVENTORY_CHANGED")
-
-      -- The following event is disabled as most servers flood this event
-      -- even on other peoples durability changes. Therefore the event
-      -- would run about 50 times per minute (depending on the population)
-      -- while being in AFK in a capital city. We hopefully might be able
-      -- to bring that back, once the most popular servers accept the fix.
-      -- widget:RegisterEvent("UPDATE_INVENTORY_ALERTS")
+      widget:RegisterEvent("UPDATE_INVENTORY_DURABILITY")
 
       widget.itemLines = {}
       widget.durability_slots = { 1, 3, 5, 6, 7, 8, 9, 10, 16, 17, 18 }
