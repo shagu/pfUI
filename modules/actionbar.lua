@@ -631,6 +631,8 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     end
 
     for id in pairs(updatecache) do
+      ButtonUpdateCooldown(buttoncache[id])
+      ButtonUpdateActive(buttoncache[id])
       ButtonRefresh(buttoncache[id])
       updatecache[id] = nil
     end
