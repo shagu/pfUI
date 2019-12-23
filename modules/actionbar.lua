@@ -368,21 +368,6 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     end
   end
 
-  local function ButtonRangeUpdate(self)
-    local self = self or this
-
-    -- update range display
-    if C.bars.glowrange == "1" and self.bar ~= 11 and self.bar ~= 12 and HasAction(self.id) and ActionHasRange(self.id) and IsActionInRange(self.id) == 0 then
-      if not self.outofrange then
-        self.outofrange = true
-        updatecache[self.slot] = true
-      end
-    elseif self.outofrange then
-      self.outofrange = nil
-      updatecache[self.slot] = true
-    end
-  end
-
   local function ButtonDrag(self)
     local self = self or this
 
@@ -521,6 +506,21 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
       self.icon:SetVertexColor(self.naColor[1], self.naColor[2], self.naColor[3], self.naColor[4])
     else
       self.icon:SetVertexColor(1, 1, 1, 1)
+    end
+  end
+
+  local function ButtonRangeUpdate(self)
+    local self = self or this
+
+    -- update range display
+    if C.bars.glowrange == "1" and self.bar ~= 11 and self.bar ~= 12 and HasAction(self.id) and ActionHasRange(self.id) and IsActionInRange(self.id) == 0 then
+      if not self.outofrange then
+        self.outofrange = true
+        ButtonUpdateUsable(self)
+      end
+    elseif self.outofrange then
+      self.outofrange = nil
+      ButtonUpdateUsable(self)
     end
   end
 
