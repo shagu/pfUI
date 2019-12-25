@@ -1505,9 +1505,10 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
         [1] = { "player",   T["Player"] },
         [2] = { "target",   T["Target"] },
         [3] = { "ttarget",  T["Target-Target"]},
-        [4] = { "pet",      T["Pet"] },
-        [5] = { "ptarget",  T["Pet-Target"]},
-        [6] = { "focus",    T["Focus"] },
+        [4] = { "tttarget", T["Target-Target-Target"]},
+        [5] = { "pet",      T["Pet"] },
+        [6] = { "ptarget",  T["Pet-Target"]},
+        [7] = { "focus",    T["Focus"] },
       },
 
       ["gf"] = {
@@ -1527,6 +1528,7 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
         CreateGUIEntry(label == "uf" and T["Unit Frames"] or T["Group Frames"], t, function()
           -- link Update tables
           U.ttarget     = U["targettarget"]
+          U.tttarget    = U["targettargettarget"]
           U.ptarget     = U["pettarget"]
           U.grouptarget = U["group"]
           U.grouppet    = U["group"]

@@ -285,6 +285,19 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("unitframes", "ttarget",     "txthpright",       "none")
   pfUI:UpdateConfig("unitframes", "ttarget",     "overhealperc",     "10")
 
+  pfUI:UpdateConfig("unitframes", "tttarget",    "visible",          "0")
+  pfUI:UpdateConfig("unitframes", "tttarget",    "width",            "100")
+  pfUI:UpdateConfig("unitframes", "tttarget",    "height",           "17")
+  pfUI:UpdateConfig("unitframes", "tttarget",    "pheight",          "3")
+  pfUI:UpdateConfig("unitframes", "tttarget",    "buffs",            "off")
+  pfUI:UpdateConfig("unitframes", "tttarget",    "buffsize",         "16")
+  pfUI:UpdateConfig("unitframes", "tttarget",    "debuffs",          "off")
+  pfUI:UpdateConfig("unitframes", "tttarget",    "debuffsize",       "16")
+  pfUI:UpdateConfig("unitframes", "tttarget",    "txthpleft",        "none")
+  pfUI:UpdateConfig("unitframes", "tttarget",    "txthpcenter",      "name")
+  pfUI:UpdateConfig("unitframes", "tttarget",    "txthpright",       "none")
+  pfUI:UpdateConfig("unitframes", "tttarget",    "overhealperc",     "10")
+
   pfUI:UpdateConfig("unitframes", "pet",         "happinessicon",    "0")
   pfUI:UpdateConfig("unitframes", "pet",         "width",            "100")
   pfUI:UpdateConfig("unitframes", "pet",         "height",           "14")
@@ -308,7 +321,7 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("unitframes", "ptarget",     "txthpright",       "none")
   pfUI:UpdateConfig("unitframes", "ptarget",     "overhealperc",     "10")
 
-  local ufs = { "player", "target", "focus", "group", "grouptarget", "grouppet", "raid", "ttarget", "pet", "ptarget", "fallback" }
+  local ufs = { "player", "target", "focus", "group", "grouptarget", "grouppet", "raid", "ttarget", "pet", "ptarget", "fallback", "tttarget" }
   for _, unit in pairs(ufs) do
     pfUI:UpdateConfig("unitframes", unit,      "visible",          "1")
     pfUI:UpdateConfig("unitframes", unit,      "showPVP",          "0")
@@ -757,7 +770,7 @@ function pfUI:MigrateConfig()
 
   -- migrating glow settings (> 3.5.1)
   if checkversion(3, 5, 0) then
-    local common = { "player", "target", "ttarget", "pet", "ptarget"}
+    local common = { "player", "target", "ttarget", "pet", "ptarget", "tttarget"}
     for _, unitframe in pairs(common) do
       if pfUI_config.appearance.infight.group == "1" then
         pfUI_config.unitframes[unitframe].glowcombat = "1"

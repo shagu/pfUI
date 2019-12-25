@@ -21,12 +21,13 @@ pfUI:RegisterModule("unlock", "vanilla:tbc", function ()
   -- frame labels and their config section relation
   local frame_configs = {
     -- unitframes
-    ["Player"]        = { T["Unit Frames"], T["Player"] },
-    ["Target"]        = { T["Unit Frames"], T["Target"] },
-    ["TargetTarget"]  = { T["Unit Frames"], T["Target-Target"] },
-    ["Pet"]           = { T["Unit Frames"], T["Pet"] },
-    ["PetTarget"]     = { T["Unit Frames"], T["Pet-Target"] },
-    ["Focus"]         = { T["Unit Frames"], T["Focus"] },
+    ["Player"]             = { T["Unit Frames"], T["Player"] },
+    ["Target"]             = { T["Unit Frames"], T["Target"] },
+    ["TargetTarget"]       = { T["Unit Frames"], T["Target-Target"] },
+    ["TargetTargetTarget"] = { T["Unit Frames"], T["Target-Target-Target"] },
+    ["Pet"]                = { T["Unit Frames"], T["Pet"] },
+    ["PetTarget"]          = { T["Unit Frames"], T["Pet-Target"] },
+    ["Focus"]              = { T["Unit Frames"], T["Focus"] },
 
     -- combopoints
     ["Combo%d"]       = { T["Unit Frames"], T["General"] },
