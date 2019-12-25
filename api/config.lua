@@ -712,7 +712,7 @@ function pfUI:MigrateConfig()
 
   -- migrating old to new unitframe texts (> 3.0.0)
   if checkversion(3, 0, 0) then
-    local unitframes = { "player", "target", "focus", "group", "grouptarget", "grouppet", "raid", "ttarget", "pet", "ptarget", "fallback", "tttarget" }
+    local unitframes = { "player", "target", "focus", "group", "grouptarget", "grouppet", "raid", "ttarget", "pet", "ptarget", "fallback" }
 
     for _, unitframe in pairs(unitframes) do
       if pfUI_config.unitframes[unitframe].txtleft then
@@ -758,7 +758,7 @@ function pfUI:MigrateConfig()
 
   -- migrating legacy buff/debuff naming (> 3.5.0)
   if checkversion(3, 5, 0) then
-    local unitframes = { "player", "target", "focus", "group", "grouptarget", "grouppet", "raid", "ttarget", "pet", "ptarget", "fallback", "tttarget" }
+    local unitframes = { "player", "target", "focus", "group", "grouptarget", "grouppet", "raid", "ttarget", "pet", "ptarget", "fallback" }
 
     for _, unitframe in pairs(unitframes) do
       local entry = pfUI_config.unitframes[unitframe]
@@ -810,7 +810,7 @@ function pfUI:MigrateConfig()
 
   -- migrate buff/debuff position settings (> 3.19)
   if checkversion(3, 19, 0) then
-    local unitframes = { "player", "target", "focus", "group", "grouptarget", "grouppet", "raid", "ttarget", "pet", "ptarget", "fallback", "tttarget" }
+    local unitframes = { "player", "target", "focus", "group", "grouptarget", "grouppet", "raid", "ttarget", "pet", "ptarget", "fallback" }
 
     for _, unitframe in pairs(unitframes) do
       local entry = pfUI_config.unitframes[unitframe]
