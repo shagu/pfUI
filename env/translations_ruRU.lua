@@ -577,6 +577,7 @@ pfUI_translation["ruRU"] = {
   ["Target Castbar"] = "Панель применения цели",
   ["Target Debuff Bar"] = "Панель дебаффов цели",
   ["Target-Target"] = "Цель цели",
+  ["Target-Target-Target"] = nil,
   ["Text Color"] = "Цвет текста",
   ["Text Colors"] = "Цвета текста",
   ["The addon \"|cff33ffcc%s|r\" doesn't work with pfUI and has been disabled."] = "Аддон \"|cff33ffcc%s|r\" не работает совместно с pfUI и был отключен.",

@@ -577,6 +577,7 @@ pfUI_translation["esES"] = {
   ["Target Castbar"] = "Barra de lanzamiento del objetivo",
   ["Target Debuff Bar"] = "Barra de debuffs del objetivo",
   ["Target-Target"] = "Objetivo-Objetivo",
+  ["Target-Target-Target"] = nil,
   ["Text Color"] = "Color del texto",
   ["Text Colors"] = "Colores del texto",
   ["The addon \"|cff33ffcc%s|r\" doesn't work with pfUI and has been disabled."] = "El addon \"|cff33ffcc%s|r\" no funciona con pfUI y fue desactivado.",

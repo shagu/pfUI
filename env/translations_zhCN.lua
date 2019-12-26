@@ -577,6 +577,7 @@ pfUI_translation["zhCN"] = {
   ["Target Castbar"] = nil,
   ["Target Debuff Bar"] = "目标Debuffs条",
   ["Target-Target"] = "目标的目标",
+  ["Target-Target-Target"] = nil,
   ["Text Color"] = "文体颜色",
   ["Text Colors"] = "文本颜色",
   ["The addon \"|cff33ffcc%s|r\" doesn't work with pfUI and has been disabled."] = nil,

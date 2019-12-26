@@ -577,6 +577,7 @@ pfUI_translation["frFR"] = {
   ["Target Castbar"] = nil,
   ["Target Debuff Bar"] = nil,
   ["Target-Target"] = "Cible de la cible",
+  ["Target-Target-Target"] = nil,
   ["Text Color"] = nil,
   ["Text Colors"] = nil,
   ["The addon \"|cff33ffcc%s|r\" doesn't work with pfUI and has been disabled."] = nil,
