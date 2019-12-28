@@ -1052,12 +1052,12 @@ end
 -- return        a colored string including a time unit (m/h/d)
 function pfUI.api.GetColoredTimeString(remaining)
   if not remaining then return "" end
-  if remaining > 99 * 60 * 60 then
+  if remaining > 356400 then -- 99 * 3600
     local r,g,b,a = pfUI.api.GetStringColor(C.appearance.cd.daycolor)
-    return pfUI.api.rgbhex(r,g,b) .. round(remaining / 60 / 60 / 24) .. "|rd"
-  elseif remaining > 99 * 60 then
+    return pfUI.api.rgbhex(r,g,b) .. round(remaining / 86400) .. "|rd"
+  elseif remaining > 5940 then -- 99 * 60
     local r,g,b,a = pfUI.api.GetStringColor(C.appearance.cd.hourcolor)
-    return pfUI.api.rgbhex(r,g,b) .. round(remaining / 60 / 60) .. "|rh"
+    return pfUI.api.rgbhex(r,g,b) .. round(remaining / 3600) .. "|rh"
   elseif remaining > 99 then
     local r,g,b,a = pfUI.api.GetStringColor(C.appearance.cd.minutecolor)
     return pfUI.api.rgbhex(r,g,b) .. round(remaining / 60) .. "|rm"
