@@ -45,13 +45,13 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
   -- events that provide special updater functions
   local special_events = {
     ["ACTIONBAR_UPDATE_COOLDOWN"] = true,
-    ["ACTIONBAR_UPDATE_STATE"] = true,
     ["ACTIONBAR_UPDATE_USABLE"] = true,
   }
 
   -- events that are shared across all buttons
   local global_events = {
     -- slot/button updates
+    ["ACTIONBAR_UPDATE_STATE"] = true,
     ["PLAYER_ENTERING_WORLD"] = true,
     ["ACTIONBAR_SLOT_CHANGED"] = true,
     ["UPDATE_BINDINGS"] = true,
@@ -242,9 +242,124 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     end
   end
 
+  local function ButtonDrag(self)
+    local self = self or this
+
+    if _G.LOCK_ACTIONBAR == "1" and not (pfUI_config.bars.shiftdrag == "1" and IsShiftKeyDown()) then return end
+
+    if self.bar == 12 then
+      PickupPetAction(self.id)
+    else
+      PickupAction(self.id)
+    end
+  end
+
+  local function ButtonDragStop(self)
+    local self = self or this
+
+    if MacroFrame_SaveMacro then
+      MacroFrame_SaveMacro()
+    end
+
+    if self.bar == 12 then
+      PickupPetAction(self.id)
+    else
+      PlaceAction(self.id)
+    end
+  end
+
+  local function ButtonAnimate(self)
+    local self = self or this
+    local mouse = arg1 and not keystate
+    local keystate = keystate
+
+    -- trigger action animation
+    if ( pfUI_config.bars.keydown == "1" and keystate == "down" ) or (pfUI_config.bars.keydown == "0" and keystate == "up" ) or self.bar == 11 or mouse then
+      if self:GetAlpha() > .1  or C.bars.animalways == "1" then
+        self.animation.active = 0
+        self.animation:Show()
+      end
+    end
+
+    -- handle button highlight
+    if keystate == "down" then
+      self.highlight:Show()
+    elseif not MouseIsOver(self) then
+      self.highlight:Hide()
+    end
+  end
+
+  local function ButtonClick(self)
+    local self = self or this
+
+    local grid = self.bar == 12 and showgrid_pet or showgrid
+    local mouse = arg1 and not keystate
+    local keystate = keystate
+    local slfcast = C.bars.altself == "1" and IsAltKeyDown() and true or self.slfcast
+    self.slfcast = nil
+
+    if ( pfUI_config.bars.keydown == "1" and keystate == "down" ) or (pfUI_config.bars.keydown == "0" and keystate == "up" ) or self.bar == 11 or mouse then
+      if self.bar == 11 then
+        CastShapeshiftForm(self.id)
+      elseif grid == 1 then
+        if self.bar == 12 then
+          PickupPetAction(self.id)
+        else
+          PickupAction(self.id)
+        end
+      elseif self.bar == 12 then
+        if arg1 == "LeftButton" then
+          if IsPetAttackActive(self.id) then
+            PetStopAttack()
+          else
+            CastPetAction(self.id)
+          end
+        else
+          TogglePetAutocast(self.id)
+        end
+      else
+        if MacroFrame_SaveMacro then
+          MacroFrame_SaveMacro()
+        end
+
+        UseAction(self.id, nil, slfcast)
+      end
+    end
+  end
+
+  local function ButtonEnter(self)
+    local self = self or this
+
+    GameTooltip:ClearLines()
+    GameTooltip_SetDefaultAnchor(GameTooltip, self)
+
+    if self.bar == 11 then
+      GameTooltip:SetShapeshift(self.id)
+    elseif self.bar == 12 then
+      local name, _, _, token = GetPetActionInfo(self.id)
+      if token then
+        GameTooltip:AddLine(_G[name])
+        GameTooltip:Show()
+      else
+        GameTooltip:SetPetAction(self.id)
+      end
+    else
+      GameTooltip:SetAction(self.id)
+    end
+
+    self.highlight:Show()
+  end
+
+  local function ButtonLeave(self)
+    local self = self or this
+
+    self.highlight:Hide()
+    GameTooltip:Hide()
+  end
+
   local start, duration, enable, castable, autocast, token
   local id, bar, active, texture, _
-  local function ButtonRefresh(self)
+  local function ButtonSlotUpdate(self)
     if not self then return end
     local self = self or this
     local sid = self.id -- 1 to 120
@@ -368,122 +483,7 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     end
   end
 
-  local function ButtonDrag(self)
-    local self = self or this
-
-    if _G.LOCK_ACTIONBAR == "1" and not (pfUI_config.bars.shiftdrag == "1" and IsShiftKeyDown()) then return end
-
-    if self.bar == 12 then
-      PickupPetAction(self.id)
-    else
-      PickupAction(self.id)
-    end
-  end
-
-  local function ButtonDragStop(self)
-    local self = self or this
-
-    if MacroFrame_SaveMacro then
-      MacroFrame_SaveMacro()
-    end
-
-    if self.bar == 12 then
-      PickupPetAction(self.id)
-    else
-      PlaceAction(self.id)
-    end
-  end
-
-  local function ButtonAnimate(self)
-    local self = self or this
-    local mouse = arg1 and not keystate
-    local keystate = keystate
-
-    -- trigger action animation
-    if ( pfUI_config.bars.keydown == "1" and keystate == "down" ) or (pfUI_config.bars.keydown == "0" and keystate == "up" ) or self.bar == 11 or mouse then
-      if self:GetAlpha() > .1  or C.bars.animalways == "1" then
-        self.animation.active = 0
-        self.animation:Show()
-      end
-    end
-
-    -- handle button highlight
-    if keystate == "down" then
-      self.highlight:Show()
-    elseif not MouseIsOver(self) then
-      self.highlight:Hide()
-    end
-  end
-
-  local function ButtonClick(self)
-    local self = self or this
-
-    local grid = self.bar == 12 and showgrid_pet or showgrid
-    local mouse = arg1 and not keystate
-    local keystate = keystate
-    local slfcast = C.bars.altself == "1" and IsAltKeyDown() and true or self.slfcast
-    self.slfcast = nil
-
-    if ( pfUI_config.bars.keydown == "1" and keystate == "down" ) or (pfUI_config.bars.keydown == "0" and keystate == "up" ) or self.bar == 11 or mouse then
-      if self.bar == 11 then
-        CastShapeshiftForm(self.id)
-      elseif grid == 1 then
-        if self.bar == 12 then
-          PickupPetAction(self.id)
-        else
-          PickupAction(self.id)
-        end
-      elseif self.bar == 12 then
-        if arg1 == "LeftButton" then
-          if IsPetAttackActive(self.id) then
-            PetStopAttack()
-          else
-            CastPetAction(self.id)
-          end
-        else
-          TogglePetAutocast(self.id)
-        end
-      else
-        if MacroFrame_SaveMacro then
-          MacroFrame_SaveMacro()
-        end
-
-        UseAction(self.id, nil, slfcast)
-      end
-    end
-  end
-
-  local function ButtonEnter(self)
-    local self = self or this
-
-    GameTooltip:ClearLines()
-    GameTooltip_SetDefaultAnchor(GameTooltip, self)
-
-    if self.bar == 11 then
-      GameTooltip:SetShapeshift(self.id)
-    elseif self.bar == 12 then
-      local name, _, _, token = GetPetActionInfo(self.id)
-      if token then
-        GameTooltip:AddLine(_G[name])
-        GameTooltip:Show()
-      else
-        GameTooltip:SetPetAction(self.id)
-      end
-    else
-      GameTooltip:SetAction(self.id)
-    end
-
-    self.highlight:Show()
-  end
-
-  local function ButtonLeave(self)
-    local self = self or this
-
-    self.highlight:Hide()
-    GameTooltip:Hide()
-  end
-
-  local function ButtonUpdateUsable(self)
+  local function ButtonUsableUpdate(self)
     local self = self or this
     local sid = self.id -- 1 to 120
 
@@ -516,15 +516,15 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     if C.bars.glowrange == "1" and self.bar ~= 11 and self.bar ~= 12 and HasAction(self.id) and ActionHasRange(self.id) and IsActionInRange(self.id) == 0 then
       if not self.outofrange then
         self.outofrange = true
-        ButtonUpdateUsable(self)
+        ButtonUsableUpdate(self)
       end
     elseif self.outofrange then
       self.outofrange = nil
-      ButtonUpdateUsable(self)
+      ButtonUsableUpdate(self)
     end
   end
 
-  local function ButtonUpdateCooldown(button)
+  local function ButtonCooldownUpdate(button)
     if not button then return end
     local start, duration, enable
 
@@ -539,7 +539,7 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     CooldownFrame_SetTimer(button.cd, start, duration, enable)
   end
 
-  local function ButtonUpdateActive(button)
+  local function ButtonIsActiveUpdate(button)
     if not button then return end
     local _, active
 
@@ -559,6 +559,17 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
       CreateBackdrop(button, border)
       button.active:Hide()
     end
+  end
+
+
+  local function ButtonFullUpdate(button)
+    if not button then return end
+
+    ButtonSlotUpdate(button)
+    ButtonRangeUpdate(button)
+    ButtonUsableUpdate(button)
+    ButtonCooldownUpdate(button)
+    ButtonIsActiveUpdate(button)
   end
 
   local function BarsEvent(self)
@@ -610,7 +621,7 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     if eventcache["ACTIONBAR_UPDATE_USABLE"] then
       eventcache["ACTIONBAR_UPDATE_USABLE"] = nil
       for id, button in pairs(buttoncache) do
-        ButtonUpdateUsable(button)
+        ButtonUsableUpdate(button)
       end
     end
 
@@ -618,22 +629,12 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     if eventcache["ACTIONBAR_UPDATE_COOLDOWN"] then
       eventcache["ACTIONBAR_UPDATE_COOLDOWN"] = nil
       for id, button in pairs(buttoncache) do
-        ButtonUpdateCooldown(button)
-      end
-    end
-
-    -- run cached button state events
-    if eventcache["ACTIONBAR_UPDATE_STATE"] then
-      eventcache["ACTIONBAR_UPDATE_STATE"] = nil
-      for id, button in pairs(buttoncache) do
-        ButtonUpdateActive(button)
+        ButtonCooldownUpdate(button)
       end
     end
 
     for id in pairs(updatecache) do
-      ButtonUpdateCooldown(buttoncache[id])
-      ButtonUpdateActive(buttoncache[id])
-      ButtonRefresh(buttoncache[id])
+      ButtonFullUpdate(buttoncache[id])
       updatecache[id] = nil
     end
 
