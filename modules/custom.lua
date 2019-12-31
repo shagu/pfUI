@@ -170,7 +170,6 @@ pfUI:RegisterModule("auctionhouse", function ()
     end
   end)
 
-  local cache = {}
   local columns = {
     { "icon", "", 20, nil, 3 },
     { "item", T["Item Name"], 146, "LEFT", 2 },
@@ -228,11 +227,79 @@ pfUI:RegisterModule("auctionhouse", function ()
     end
   end
 
+  local results = {}
+  local core = CreateFrame("Frame", "pfAuctionHouseCore")
+  core:RegisterEvent("AUCTION_ITEM_LIST_UPDATE")
+  core:SetScript("OnEvent", function()
+    local batch, max = GetNumAuctionItems("list")
+    this.wait = GetTime() + 1
+
+    if this.state == "PREPARE" then
+      this.state = "LOAD"
+      this.pages = ceil(max / 50)
+      this.page  = 1
+    end
+
+    if this.state == "LOAD" then
+      for i=1, batch do
+        local name, texture, count, quality, canUse, level, bid, minIncrement, buyout, bidAmount, highBidder, owner = GetAuctionItemInfo("list", i)
+        local timeleft = GetAuctionItemTimeLeft("list", i)
+        local link = GetAuctionItemLink("list", i)
+
+        -- request same page again when no owner was transmitted
+        if not owner then
+          this.page = this.page -1
+          this.state = "ASK"
+          return
+        end
+
+        local price = buyout and (count and buyout/count or buyout) or 0
+        results[(this.page-1)*50+i] = { texture, name, quality, count, timeleft, level, bid, buyout, price, owner, link }
+      end
+
+      if this.page >= this.pages then
+        this.state = nil
+      else
+        this.state = "ASK"
+      end
+    end
+
+    if this.callback then this.callback(this.state or "DONE", results, max, this.page, this.pages) end
+  end)
+
+  core:SetScript("OnUpdate", function()
+    if this.wait and this.wait > GetTime() then return end
+
+    if this.state == "ASK" then
+      this.state = "LOAD"
+      this.page = this.page + 1
+
+      this.query[7] = this.page - 1
+      QueryAuctionItems(unpack(this.query));
+    elseif this.state == "PREPARE" then
+      -- in case a new query was sent but didn't went through
+      QueryAuctionItems(unpack(this.query));
+    end
+  end)
+
+  core.Search = function(self, query, callback)
+    results = {}
+
+    -- reset page counter
+    self.state = "PREPARE"
+    self.query = query
+    self.callback = callback
+
+    -- trigger the initial search to obtain page numbers
+    QueryAuctionItems(unpack(query))
+
+    return results
+  end
+
   local gui = CreateFrame("Frame", "pfAuctionHouse", UIParent)
   tinsert(UISpecialFrames, 'pfAuctionHouse')
   gui:RegisterEvent("AUCTION_HOUSE_CLOSED")
   gui:RegisterEvent("AUCTION_HOUSE_SHOW")
-  gui:RegisterEvent("AUCTION_ITEM_LIST_UPDATE")
   gui:SetScript("OnEvent", function()
     if event == "AUCTION_HOUSE_SHOW" then
       AuctionFrame:UnregisterEvent('AUCTION_HOUSE_SHOW')
@@ -241,59 +308,6 @@ pfUI:RegisterModule("auctionhouse", function ()
       this:Show()
     elseif event == "AUCTION_HOUSE_CLOSED" then
       this:Hide()
-    elseif event == "AUCTION_ITEM_LIST_UPDATE" then
-      local batch, max = GetNumAuctionItems("list")
-      this.wait = GetTime() + 1
-
-      if this.state == "PREPARE" then
-        this.state = "LOAD"
-        this.pages = ceil(max / 50)
-        this.page  = 1
-        print("PREPARE: " .. this.query .. " [Pages: " .. this.pages .. "]") -- DEBUG
-      end
-
-      if this.state == "LOAD" then
-        gui.progress:SetText("Loading Page " .. this.page .. "/" .. this.pages .. " |cffaaaaaa -")
-        print("LOAD PAGE: " .. this.page .. " of " .. this.pages) -- DEBUG
-        for i=1, batch do
-          local name, texture, count, quality, canUse, level, bid, minIncrement, buyout, bidAmount, highBidder, owner = GetAuctionItemInfo("list", i)
-          local timeleft = GetAuctionItemTimeLeft("list", i)
-          local link = GetAuctionItemLink("list", i)
-
-          -- request same page again when no owner was transmitted
-          if not owner then
-            this.page = this.page -1
-            this.state = "ASK"
-            return
-          end
-
-          local price = buyout and (count and buyout/count or buyout) or 0
-
-          cache[(this.page-1)*50+i] = { texture, name, quality, count, timeleft, level, bid, buyout, price, owner, link }
-        end
-
-        if this.page >= this.pages then
-          this.progress:SetText("Found " .. max .. " Auctions on " .. this.pages .. " Pages.")
-          this.rows:Refresh(true)
-          this.state = nil
-        else
-          this.state = "ASK"
-        end
-      end
-    end
-  end)
-
-  gui:SetScript("OnUpdate", function()
-    if this.wait and this.wait > GetTime() then return end
-
-    if this.state == "ASK" then
-      this.state = "LOAD"
-      this.page = this.page + 1
-      gui.progress:SetText("Loading Page " .. this.page .. "/" .. this.pages .. " |cffaaaaaa |")
-      print("ASK PAGE: " .. this.page .. " of " .. this.pages) -- DEBUG
-
-      -- Uh.. wow.. looks like this guy counts pages from 0. consistency ftw.
-      QueryAuctionItems(this.query, minLevel, maxLevel, selectedInvtypeIndex, selectedClassIndex, selectedSubclassIndex, this.page - 1, IsUsable, rarity);
     end
   end)
 
@@ -316,33 +330,43 @@ pfUI:RegisterModule("auctionhouse", function ()
   EnableMovable(gui)
 
   gui.search = CreateTextBox("pfAuctionHouseSearch", gui)
-  gui.search:SetPoint("TOPLEFT", 20, -20)
+  gui.search:SetPoint("TOPLEFT", 10, -30)
   gui.search:SetWidth(200)
   gui.search:SetHeight(20)
   gui.search:SetTextColor(1,1,1,1)
   gui.search:SetScript("OnEnterPressed", function()
-    local name = this:GetText()
-    cache = {}
+    local query = {
+      [1] = this:GetText(), -- name
+      [2] = nil, -- minLevel
+      [3] = nil, -- maxLevel
+      [4] = nil, -- invtype
+      [5] = nil, -- class
+      [6] = nil, -- subclass
+      [7] = nil, -- page
+      [8] = nil, -- usable
+      [9] = nil, -- rarity
+    }
 
-    -- empty all rows
-    gui.rows:Refresh(true)
+    core:Search(query, function (state, results, auctions, page, pages)
+      if state == "DONE" then
+        gui.progress:SetText("Found " .. auctions .. " Auctions on " .. pages .. " Pages.")
+        gui.progress:SetTextColor(1,1,1,.8)
+      else
+        gui.progress:SetText("Loading Page " .. page .. " of " .. pages .. "...")
+        gui.progress:SetTextColor(.2,1,.8,1)
+      end
 
-    -- reset page counter
-    gui.state = "PREPARE"
-    gui.query = name
-
-    -- trigger the initial search to obtain page numbers
-    QueryAuctionItems(name, minLevel, maxLevel, selectedInvtypeIndex, selectedClassIndex, selectedSubclassIndex, nil, IsUsable, rarity)
+      gui.rows:Refresh(true, results)
+    end)
 
     this:ClearFocus()
   end)
 
-  gui.progress = gui:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-  gui.progress:SetJustifyH("LEFT")
-  gui.progress:SetPoint("TOPLEFT", gui.search, "BOTTOMLEFT", 2, -2)
-  gui.progress:SetPoint("TOPRIGHT", gui.search, "BOTTOMRIGHT", -2, 2)
-  gui.progress:SetTextColor(1,1,1,.8)
-  gui.progress:SetHeight(20)
+  gui.search.caption = gui.search:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+  gui.search.caption:SetJustifyH("LEFT")
+  gui.search.caption:SetPoint("BOTTOMLEFT", gui.search, "TOPLEFT", 0, 2)
+  gui.search.caption:SetTextColor(1,1,1,.8)
+  gui.search.caption:SetText(T["Name"])
 
   gui.blizzard = CreateFrame("Button", nil, gui)
   gui.blizzard:SetText("Blizzard")
@@ -353,7 +377,6 @@ pfUI:RegisterModule("auctionhouse", function ()
     ShowUIPanel(AuctionFrame)
   end)
   SkinButton(gui.blizzard)
-
 
   gui.filter = CreateFrame("Button", "pfAuctionHouseFilterBackground", gui)
   gui.filter:SetPoint("TOPLEFT", gui, "TOPLEFT", 10, -90)
@@ -492,7 +515,9 @@ pfUI:RegisterModule("auctionhouse", function ()
   CreateBackdrop(gui.rows)
   gui.rows.scroll = 0
 
-  gui.rows.Refresh = function(self, init)
+  gui.rows.Refresh = function(self, init, view)
+    self.view = view or self.view or {}
+
     if init then
       gui.rows.scroll = 0
       for id, data in pairs(columns) do
@@ -503,17 +528,17 @@ pfUI:RegisterModule("auctionhouse", function ()
         end
       end
 
-      table.sort(cache, sort.func)
+      table.sort(self.view, sort.func)
     end
 
     if gui.rows.scroll < 0 then gui.rows.scroll = 0 end
 
-    if gui.rows.scroll > max(0, table.getn(cache) - 20) then
-      gui.rows.scroll = max(0, table.getn(cache) - 20)
+    if gui.rows.scroll > max(0, table.getn(self.view) - 20) then
+      gui.rows.scroll = max(0, table.getn(self.view) - 20)
     end
 
     for i=1,22 do
-      local data = cache[i+self.scroll]
+      local data = self.view[i+self.scroll]
 
       if data and data[1] then
         -- { texture, name, quality, count, timeleft, level, bid, buyout, price, owner, link }
@@ -602,6 +627,11 @@ pfUI:RegisterModule("auctionhouse", function ()
       GameTooltip:Hide()
     end)
   end
+
+  gui.progress = gui:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+  gui.progress:SetJustifyH("LEFT")
+  gui.progress:SetPoint("TOPRIGHT", gui.rows, "BOTTOMRIGHT", 0, -7)
+  gui.progress:SetTextColor(1,1,1,1)
 
   gui:Hide()
 
