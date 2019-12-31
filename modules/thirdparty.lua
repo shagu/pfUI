@@ -1149,23 +1149,21 @@ pfUI:RegisterModule("thirdparty", "vanilla", function ()
     if C.thirdparty.supermacro.enable == "0" then return end
     if not pfUI.bars then return end
 
-    -- refresh super macro texture
-    local function SMRefresh()
-      local slot = this:GetID()
-      local text = GetActionText(slot)
+    -- hook events to include SuperMacro refreshs
+    local ButtonFullUpdate = pfUI.bars.ButtonFullUpdate
+    pfUI.bars.ButtonFullUpdate = function(button)
+      -- run the old function
+      ButtonFullUpdate(button)
+
+      -- update with SuperMacro textures
+      if not button then return end
+      local text = GetActionText(button:GetID())
 
       if text then
         if _G.SM_ACTION_SPELL and _G.SM_ACTION_SPELL["regular"] and _G.SM_ACTION_SPELL["regular"][text] then
-          this.icon:SetTexture(_G.SM_ACTION_SPELL["regular"][text].texture)
+          button.icon:SetTexture(_G.SM_ACTION_SPELL["regular"][text].texture)
         end
       end
-    end
-
-    -- hook events to include SuperMacro refreshs
-    local ButtonEvent = pfUI.bars[1][1]:GetScript("OnEvent")
-    local function NewButtonEvent()
-      ButtonEvent()
-      SMRefresh()
     end
 
     -- hook events to include SuperMacro refreshs
@@ -1185,11 +1183,7 @@ pfUI:RegisterModule("thirdparty", "vanilla", function ()
 
     -- trigger the event whenever SuperMacro got an update
     hooksecurefunc("SM_UpdateActionSpell", function()
-      for i=1,10 do
-        for j=1,12 do
-          pfUI.bars[i][j].forceupdate = true
-        end
-      end
+      for slot=1,120 do pfUI.bars.update[slot] = true end
     end)
   end)
 
