@@ -634,7 +634,7 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     end
 
     for id in pairs(updatecache) do
-      ButtonFullUpdate(buttoncache[id])
+      pfUI.bars.ButtonFullUpdate(buttoncache[id])
       updatecache[id] = nil
     end
 
@@ -1057,6 +1057,9 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
 
   -- create actionbars
   pfUI.bars = bars
+  pfUI.bars.update = updatecache
+  pfUI.bars.buttons = buttoncache
+  pfUI.bars.ButtonFullUpdate = ButtonFullUpdate
 
   pfUI.bars.UpdateGrid = function(self, state, typ)
     if not typ then
