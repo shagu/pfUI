@@ -229,6 +229,7 @@ pfUI:RegisterModule("auctionhouse", function ()
   end
 
   local gui = CreateFrame("Frame", "pfAuctionHouse", UIParent)
+  tinsert(UISpecialFrames, 'pfAuctionHouse')
   gui:RegisterEvent("AUCTION_HOUSE_CLOSED")
   gui:RegisterEvent("AUCTION_HOUSE_SHOW")
   gui:RegisterEvent("AUCTION_ITEM_LIST_UPDATE")
@@ -236,7 +237,7 @@ pfUI:RegisterModule("auctionhouse", function ()
     if event == "AUCTION_HOUSE_SHOW" then
       AuctionFrame:UnregisterEvent('AUCTION_HOUSE_SHOW')
       AuctionFrame:SetScript('OnHide', nil)
-      AuctionFrame:Hide()
+      HideUIPanel(AuctionFrame)
       this:Show()
     elseif event == "AUCTION_HOUSE_CLOSED" then
       this:Hide()
@@ -348,7 +349,9 @@ pfUI:RegisterModule("auctionhouse", function ()
   gui.blizzard:SetWidth(120)
   gui.blizzard:SetHeight(20)
   gui.blizzard:SetPoint("TOPRIGHT", -20, -20)
-  gui.blizzard:SetScript("OnClick", function() AuctionFrame:Show() end)
+  gui.blizzard:SetScript("OnClick", function()
+    ShowUIPanel(AuctionFrame)
+  end)
   SkinButton(gui.blizzard)
 
 
