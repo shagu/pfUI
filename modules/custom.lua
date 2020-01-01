@@ -172,14 +172,14 @@ pfUI:RegisterModule("auctionhouse", function ()
 
   local columns = {
     { "icon", "", 20, nil, 3 },
-    { "item", T["Item Name"], 146, "LEFT", 2 },
+    { "item", T["Item Name"], 186, "LEFT", 2 },
     { "level", T["Level"], 35, "CENTER", 6 },
     { "timeleft", T["Time"], 35, "CENTER", 5 },
     { "stack", T["Stack"], 35, "CENTER", 4 },
     { "bid", T["Bid"], 70, "RIGHT", 7 },
     { "buyout", T["Buyout"], 70, "RIGHT", 8 },
     { "price", T["Per Item"], 70, "RIGHT", 9 },
-    { "owner", T["Owner"], 100, "RIGHT", 10 },
+    { "owner", T["Owner"], 90, "RIGHT", 10 },
   }
 
   local sort = {}
@@ -312,6 +312,7 @@ pfUI:RegisterModule("auctionhouse", function ()
   end)
 
   gui:SetScript("OnShow", function()
+    this.rows:ResetScroll()
     this.rows:Refresh(true)
   end)
 
@@ -345,14 +346,16 @@ pfUI:RegisterModule("auctionhouse", function ()
     core:Search(query, function (state, results, auctions, page, pages)
       if state == "DONE" then
         gui.progress:SetText("Found " .. auctions .. " Auctions on " .. pages .. " Pages.")
-        gui.progress:SetTextColor(1,1,1,.8)
+        gui.progress:SetTextColor(1,1,1,1)
       else
         gui.progress:SetText("Loading Page " .. page .. " of " .. pages .. "...")
-        gui.progress:SetTextColor(.2,1,.8,1)
+        gui.progress:SetTextColor(1,.4,.2,1)
       end
 
       gui.rows:Refresh(true, results)
     end)
+
+    gui.rows:ResetScroll()
   end
 
   gui.search = CreateTextBox("pfAuctionHouseSearch", gui)
@@ -372,8 +375,8 @@ pfUI:RegisterModule("auctionhouse", function ()
   gui.search.caption:SetText(T["Name"])
 
   gui.blizzard = CreateFrame("Button", nil, gui)
-  gui.blizzard:SetText("Blizzard")
-  gui.blizzard:SetWidth(120)
+  gui.blizzard:SetText("|cff55aaffBlizzard")
+  gui.blizzard:SetWidth(100)
   gui.blizzard:SetHeight(20)
   gui.blizzard:SetPoint("TOPRIGHT", -20, -20)
   gui.blizzard:SetScript("OnClick", function()
@@ -382,14 +385,30 @@ pfUI:RegisterModule("auctionhouse", function ()
   SkinButton(gui.blizzard)
 
   gui.filter = CreateFrame("Button", "pfAuctionHouseFilterBackground", gui)
-  gui.filter:SetPoint("TOPLEFT", gui, "TOPLEFT", 10, -90)
-  gui.filter:SetPoint("BOTTOMRIGHT", gui, "TOPLEFT", 170, -572)
+  gui.filter:SetPoint("TOPLEFT", gui, "TOPLEFT", 10, -80)
+  gui.filter:SetPoint("BOTTOMRIGHT", gui, "TOPLEFT", 150, -562)
   gui.filter:EnableMouseWheel(1)
   gui.filter:SetScript("OnMouseWheel", function()
     this.scroll = arg1 > 0 and this.scroll - 1 or this.scroll + 1
     this:Refresh(this.class, this.subclass, this.invtype)
   end)
   gui.filter.scroll = 0
+
+  gui.filter.slider = CreateFrame("Slider", nil, gui.filter)
+  gui.filter.slider:SetOrientation('VERTICAL')
+  gui.filter.slider:SetPoint("TOPLEFT", gui.filter, "TOPRIGHT", 3, 0)
+  gui.filter.slider:SetPoint("BOTTOMRIGHT", 10, 0)
+  gui.filter.slider:SetThumbTexture(pfUI.media["img:col"])
+  CreateBackdrop(gui.filter.slider, nil, true)
+
+  gui.filter.slider.thumb = gui.filter.slider:GetThumbTexture()
+  gui.filter.slider.thumb:SetHeight(50)
+  gui.filter.slider.thumb:SetTexture(1,1,1,.3)
+
+  gui.filter.slider:SetScript("OnValueChanged", function()
+    gui.filter.scroll = round(this:GetValue())
+    gui.filter:Refresh(gui.filter.class, gui.filter.subclass, gui.filter.invtype)
+  end)
 
   gui.filter:SetScript("OnShow", function()
     this:Refresh()
@@ -430,10 +449,21 @@ pfUI:RegisterModule("auctionhouse", function ()
     end
 
     -- adjust scroll state
-    if self.scroll < 0 then self.scroll = 0 end
+    local max = max(0, table.getn(view) - 20)
+    self.scroll = self.scroll > max and max or self.scroll
+    self.scroll = self.scroll < 0   and 0   or self.scroll
 
-    if self.scroll > max(0, table.getn(view) - 20) then
-      self.scroll = max(0, table.getn(view) - 20)
+    self.slider:SetMinMaxValues(0, max)
+    self.slider:SetValue(self.scroll)
+
+    -- update slider size
+    local ratio = 23 / (table.getn(view) + 3) -- max 23 items + 3 overflow
+    if ratio < 1 then
+      local size = math.floor(23 * ratio)
+      self.slider.thumb:SetHeight(size * 20) -- 20 height per item
+      self.slider:Show()
+    else
+      self.slider:Hide()
     end
 
     for button=1,23 do
@@ -472,12 +502,12 @@ pfUI:RegisterModule("auctionhouse", function ()
     end
   end
 
-  CreateBackdrop(gui.filter)
+  CreateBackdrop(gui.filter, nil, true)
 
   for i=1,23 do
     gui.filter[i] = CreateFrame("Button", nil, gui.filter)
     gui.filter[i]:SetID(i)
-    gui.filter[i]:SetWidth(160)
+    gui.filter[i]:SetWidth(140)
     gui.filter[i]:SetHeight(20)
     gui.filter[i]:SetPoint("TOPLEFT", 0, -(i-1)*21)
     SkinButton(gui.filter[i])
@@ -512,21 +542,40 @@ pfUI:RegisterModule("auctionhouse", function ()
   end
 
   gui.rows = CreateFrame("Button", "pfAuctionHouseResultBackground", gui)
-  gui.rows:SetPoint("TOPLEFT", gui, "TOPLEFT", 200, -90)
-  gui.rows:SetPoint("BOTTOMRIGHT", gui, "TOPRIGHT", -20, -572)
+  gui.rows:SetPoint("TOPLEFT", gui, "TOPLEFT", 170, -80)
+  gui.rows:SetPoint("BOTTOMRIGHT", gui, "TOPRIGHT", -20, -562)
   gui.rows:EnableMouseWheel(1)
   gui.rows:SetScript("OnMouseWheel", function()
     this.scroll = arg1 > 0 and this.scroll - 1 or this.scroll + 1
     this:Refresh()
   end)
-  CreateBackdrop(gui.rows)
+  CreateBackdrop(gui.rows, nil, true)
   gui.rows.scroll = 0
+
+  gui.rows.slider = CreateFrame("Slider", nil, gui.rows)
+  gui.rows.slider:SetOrientation('VERTICAL')
+  gui.rows.slider:SetPoint("TOPLEFT", gui.rows, "TOPRIGHT", 3, 0)
+  gui.rows.slider:SetPoint("BOTTOMRIGHT", 10, 0)
+  gui.rows.slider:SetThumbTexture(pfUI.media["img:col"])
+  CreateBackdrop(gui.rows.slider, nil, true)
+
+  gui.rows.slider.thumb = gui.rows.slider:GetThumbTexture()
+  gui.rows.slider.thumb:SetHeight(50)
+  gui.rows.slider.thumb:SetTexture(1,1,1,.3)
+
+  gui.rows.slider:SetScript("OnValueChanged", function()
+    gui.rows.scroll = round(this:GetValue())
+    gui.rows:Refresh()
+  end)
+
+  gui.rows.ResetScroll = function(self)
+    self.scroll = 0
+  end
 
   gui.rows.Refresh = function(self, init, view)
     self.view = view or self.view or {}
 
     if init then
-      gui.rows.scroll = 0
       for id, data in pairs(columns) do
         if gui.rows.buttons[data[1]].sort == sort.prio then
           gui.rows.buttons[data[1]]:SetTextColor(.2,1,.8,1)
@@ -538,10 +587,22 @@ pfUI:RegisterModule("auctionhouse", function ()
       table.sort(self.view, sort.func)
     end
 
-    if gui.rows.scroll < 0 then gui.rows.scroll = 0 end
+    -- adjust scroll state
+    local max = max(0, table.getn(self.view) - 20)
+    self.scroll = self.scroll > max and max or self.scroll
+    self.scroll = self.scroll < 0   and 0   or self.scroll
 
-    if gui.rows.scroll > max(0, table.getn(self.view) - 20) then
-      gui.rows.scroll = max(0, table.getn(self.view) - 20)
+    self.slider:SetMinMaxValues(0, max)
+    self.slider:SetValue(self.scroll)
+
+    -- update slider size
+    local ratio = 23 / (table.getn(self.view) + 3) -- max 23 items + 3 overflow
+    if ratio < 1 then
+      local size = math.floor(23 * ratio)
+      self.slider.thumb:SetHeight(size * 20) -- 20 height per item
+      self.slider:Show()
+    else
+      self.slider:Hide()
     end
 
     for i=1,22 do
@@ -571,7 +632,7 @@ pfUI:RegisterModule("auctionhouse", function ()
   local function ColumnSort()
     sort.desc = not sort.desc
     sort.prio = this.sort
-    gui.rows.scroll = 0
+    gui.rows:ResetScroll()
     gui.rows:Refresh(true)
   end
 
@@ -637,8 +698,30 @@ pfUI:RegisterModule("auctionhouse", function ()
 
   gui.progress = gui:CreateFontString(nil, "OVERLAY", "GameFontNormal")
   gui.progress:SetJustifyH("LEFT")
-  gui.progress:SetPoint("TOPRIGHT", gui.rows, "BOTTOMRIGHT", 0, -7)
+  gui.progress:SetPoint("TOPLEFT", gui.rows, "BOTTOMLEFT", 0, -10)
   gui.progress:SetTextColor(1,1,1,1)
+
+  gui.buyout = CreateFrame("Button", nil, gui)
+  gui.buyout:SetText(BUYOUT)
+  gui.buyout:SetWidth(100)
+  gui.buyout:SetHeight(20)
+  gui.buyout:SetPoint("BOTTOMRIGHT", gui, "BOTTOMRIGHT", -10, 10)
+  gui.buyout:SetScript("OnClick", function()
+    -- TODO
+  end)
+  SkinButton(gui.buyout)
+
+  gui.bid = CreateFrame("Button", nil, gui)
+  gui.bid:SetText(BID)
+  gui.bid:SetWidth(100)
+  gui.bid:SetHeight(20)
+  gui.bid:SetPoint("RIGHT", gui.buyout, "LEFT", -5, 0)
+  gui.bid:SetScript("OnClick", function()
+    -- TODO
+  end)
+  SkinButton(gui.bid)
+
+
 
   gui:Hide()
 
