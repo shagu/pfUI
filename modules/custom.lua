@@ -179,7 +179,8 @@ pfUI:RegisterModule("auctionhouse", function ()
     { "bid", T["Bid"], 70, "RIGHT", 7 },
     { "buyout", T["Buyout"], 70, "RIGHT", 8 },
     { "price", T["Per Item"], 70, "RIGHT", 9 },
-    { "owner", T["Owner"], 90, "RIGHT", 10 },
+    { "owner", T["Owner"], 70, "RIGHT", 10 },
+    { "fav", "", 20, "CENTER", 10 },
   }
 
   local sort = {}
@@ -327,20 +328,20 @@ pfUI:RegisterModule("auctionhouse", function ()
   gui:SetWidth(800)
   gui:SetHeight(600)
 
-  CreateBackdrop(gui, nil, nil, .7)
+  CreateBackdrop(gui, nil, nil, .75)
   EnableMovable(gui)
 
   gui.TriggerSearch = function(self)
     local query = {
       gui.search:GetText(), -- name
-      nil, -- minLevel
-      nil, -- maxLevel
+      gui.minlevel:GetText(), -- minLevel
+      gui.maxlevel:GetText(), -- maxLevel
       gui.filter.invtype, -- invtype
       gui.filter.class, -- class
       gui.filter.subclass, -- subclass
       nil, -- page
-      nil, -- usable
-      nil, -- rarity
+      gui.usable.value, -- usable
+      gui.rarity.value, -- rarity
     }
 
     core:Search(query, function (state, results, auctions, page, pages)
@@ -359,34 +360,198 @@ pfUI:RegisterModule("auctionhouse", function ()
   end
 
   gui.search = CreateTextBox("pfAuctionHouseSearch", gui)
-  gui.search:SetPoint("TOPLEFT", 10, -30)
+  gui.search:AddHistoryLine("Foobar")
+  gui.search:SetPoint("TOPLEFT", 10, -45)
   gui.search:SetWidth(200)
-  gui.search:SetHeight(20)
+  gui.search:SetHeight(25)
   gui.search:SetTextColor(1,1,1,1)
   gui.search:SetScript("OnEnterPressed", function()
     gui:TriggerSearch()
     this:ClearFocus()
   end)
 
+  local suggestions = {
+    ["Adamantite Ore"] = true,
+  }
+
+  gui.search:SetScript("OnTextChanged", function()
+    local text = this:GetText()
+    local len = strlen(text)
+    if len < 3 then this.original = nil return end
+
+    this.suggest = nil
+    for k, v in pairs(suggestions) do
+      if strfind(k, text) then
+        this.suggest = k
+        break
+      end
+    end
+
+    if text == this.original then
+      this:SetText(string.sub(text, 1, -2))
+    elseif this.suggest and this.suggest ~= text then
+      this:SetText(this.suggest)
+      this:HighlightText(len, strlen(this.suggest))
+      this.original = text
+    end
+  end)
+
   gui.search.caption = gui.search:CreateFontString(nil, "OVERLAY", "GameFontNormal")
   gui.search.caption:SetJustifyH("LEFT")
-  gui.search.caption:SetPoint("BOTTOMLEFT", gui.search, "TOPLEFT", 0, 2)
+  gui.search.caption:SetPoint("BOTTOMLEFT", gui.search, "TOPLEFT", 0, 5)
   gui.search.caption:SetTextColor(1,1,1,.8)
-  gui.search.caption:SetText(T["Name"])
+  gui.search.caption:SetText(NAME)
+
+  gui.minlevel = CreateTextBox("pfAuctionHouseMinLevel", gui)
+  gui.minlevel:SetPoint("TOPLEFT", 220, -45)
+  gui.minlevel:SetWidth(30)
+  gui.minlevel:SetHeight(25)
+  gui.minlevel:SetTextColor(1,1,1,1)
+  gui.minlevel:SetScript("OnEnterPressed", function()
+    this:ClearFocus()
+    gui:TriggerSearch()
+  end)
+
+  gui.minlevel.caption = gui.minlevel:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+  gui.minlevel.caption:SetJustifyH("LEFT")
+  gui.minlevel.caption:SetPoint("BOTTOMLEFT", gui.minlevel, "TOPLEFT", 0, 5)
+  gui.minlevel.caption:SetTextColor(1,1,1,.8)
+  gui.minlevel.caption:SetText(LEVEL_RANGE)
+
+  gui.maxlevel = CreateTextBox("pfAuctionHouseMaxLevel", gui)
+  gui.maxlevel:SetPoint("TOPLEFT", 260, -45)
+  gui.maxlevel:SetWidth(30)
+  gui.maxlevel:SetHeight(25)
+  gui.maxlevel:SetTextColor(1,1,1,1)
+  gui.maxlevel:SetScript("OnEnterPressed", function()
+    this:ClearFocus()
+    gui:TriggerSearch()
+  end)
+
+  gui.maxlevel.caption = gui.maxlevel:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+  gui.maxlevel.caption:SetJustifyH("LEFT")
+  gui.maxlevel.caption:SetPoint("RIGHT", gui.maxlevel, "LEFT", -2, 0)
+  gui.maxlevel.caption:SetTextColor(1,1,1,.8)
+  gui.maxlevel.caption:SetText("-")
+
+  gui.rarity = CreateFrame("Frame", "pfAuctionHouseRarity", gui, "UIDropDownMenuTemplate")
+  gui.rarity:SetPoint("TOPLEFT", 285, -44)
+  gui.rarity.OnClick = function()
+    UIDropDownMenu_SetSelectedID(gui.rarity, this.value)
+    gui.rarity.value = this.value - 2
+    gui:TriggerSearch()
+  end
+
+  gui.rarity.OnInit = function()
+    local info = {}
+    info.text = ALL;
+    info.value = 1;
+    info.func = gui.rarity.OnClick
+    UIDropDownMenu_AddButton(info)
+
+    for i=0, getn(ITEM_QUALITY_COLORS)-1  do
+      local info = {}
+      local r, g, b = GetItemQualityColor(i)
+      info.text = rgbhex(r,g,b) .. _G["ITEM_QUALITY"..i.."_DESC"]
+      info.value = i + 2;
+      info.func = gui.rarity.OnClick;
+      info.checked = nil;
+      UIDropDownMenu_AddButton(info);
+    end
+  end
+
+  SkinDropDown(gui.rarity)
+  UIDropDownMenu_SetWidth(100, gui.rarity)
+  UIDropDownMenu_SetButtonWidth(100, gui.rarity)
+  UIDropDownMenu_Initialize(gui.rarity, gui.rarity.OnInit)
+  UIDropDownMenu_SetSelectedID(gui.rarity, 1)
+
+  gui.rarity.caption = gui.rarity:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+  gui.rarity.caption:SetJustifyH("LEFT")
+  gui.rarity.caption:SetPoint("BOTTOMLEFT", gui.rarity, "TOPLEFT", 17, 5)
+  gui.rarity.caption:SetTextColor(1,1,1,.8)
+  gui.rarity.caption:SetText(RARITY)
+
+  gui.usable = CreateFrame("CheckButton", nil, gui, "UICheckButtonTemplate")
+  gui.usable:SetPoint("TOPLEFT", 440, -50)
+  gui.usable:SetFrameLevel(3)
+  gui.usable:SetNormalTexture("")
+  gui.usable:SetPushedTexture("")
+  gui.usable:SetHighlightTexture("")
+  CreateBackdrop(gui.usable, nil, true)
+  gui.usable:SetWidth(16)
+  gui.usable:SetHeight(16)
+  gui.usable:SetScript("OnClick", function ()
+    this.value = this:GetChecked()
+    gui:TriggerSearch()
+  end)
+
+  gui.usable.caption = gui.usable:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+  gui.usable.caption:SetJustifyH("LEFT")
+  gui.usable.caption:SetPoint("BOTTOMLEFT", gui.usable, "TOPLEFT", 0, 10)
+  gui.usable.caption:SetTextColor(1,1,1,.8)
+  gui.usable.caption:SetText(T["Usable"])
 
   gui.blizzard = CreateFrame("Button", nil, gui)
-  gui.blizzard:SetText("|cff55aaffBlizzard")
-  gui.blizzard:SetWidth(100)
-  gui.blizzard:SetHeight(20)
-  gui.blizzard:SetPoint("TOPRIGHT", -20, -20)
-  gui.blizzard:SetScript("OnClick", function()
-    ShowUIPanel(AuctionFrame)
-  end)
   SkinButton(gui.blizzard)
+  gui.blizzard:SetPoint("TOPLEFT", 550, -45)
+  gui.blizzard:SetWidth(50)
+  gui.blizzard:SetHeight(25)
+  gui.blizzard.texture = gui.blizzard:CreateTexture(nil, "OVERLAY")
+  gui.blizzard.texture:SetTexture("Interface\\Icons\\Mail_GMIcon")
+  gui.blizzard.texture:SetTexCoord(.08, .92, .08, .92)
+  gui.blizzard.texture:SetPoint("TOPLEFT", 10, -5)
+  gui.blizzard.texture:SetPoint("BOTTOMRIGHT", -10, 5)
+  gui.blizzard.texture:SetBlendMode("ADD")
+  gui.blizzard:SetScript("OnClick", function()
+    if AuctionFrame:IsShown() then HideUIPanel(AuctionFrame) else ShowUIPanel(AuctionFrame) end
+  end)
+
+  gui.reset = CreateFrame("Button", nil, gui)
+  gui.reset:SetPoint("TOPLEFT", 610, -45)
+  gui.reset:SetText(RESET)
+  gui.reset:SetWidth(50)
+  gui.reset:SetHeight(25)
+  gui.reset:SetScript("OnClick", function()
+    -- TODO
+  end)
+  SkinButton(gui.reset)
+
+  gui.trigger = CreateFrame("Button", nil, gui)
+  gui.trigger:SetPoint("TOPRIGHT", -10, -45)
+  gui.trigger:SetText(SEARCH)
+  gui.trigger:SetWidth(100)
+  gui.trigger:SetHeight(25)
+  gui.trigger:SetScript("OnClick", function()
+    gui:TriggerSearch()
+  end)
+  SkinButton(gui.trigger)
+
+  gui.close = CreateFrame("Button", nil, gui)
+  gui.close:SetPoint("TOPRIGHT", -5, -5)
+  CreateBackdrop(gui.close)
+  gui.close:SetHeight(16)
+  gui.close:SetWidth(16)
+  gui.close.texture = gui.close:CreateTexture()
+  gui.close.texture:SetTexture(pfUI.media["img:close"])
+  gui.close.texture:ClearAllPoints()
+  gui.close.texture:SetAllPoints(gui.close)
+  gui.close.texture:SetVertexColor(1,.25,.25,1)
+  gui.close:SetScript("OnEnter", function ()
+    this.backdrop:SetBackdropBorderColor(1,.25,.25,1)
+  end)
+
+  gui.close:SetScript("OnLeave", function ()
+    pfUI.api.CreateBackdrop(this)
+  end)
+
+  gui.close:SetScript("OnClick", function()
+   this:GetParent():Hide()
+  end)
 
   gui.filter = CreateFrame("Button", "pfAuctionHouseFilterBackground", gui)
   gui.filter:SetPoint("TOPLEFT", gui, "TOPLEFT", 10, -80)
-  gui.filter:SetPoint("BOTTOMRIGHT", gui, "TOPLEFT", 150, -562)
+  gui.filter:SetPoint("BOTTOMRIGHT", gui, "TOPLEFT", 150, -563)
   gui.filter:EnableMouseWheel(1)
   gui.filter:SetScript("OnMouseWheel", function()
     this.scroll = arg1 > 0 and this.scroll - 1 or this.scroll + 1
@@ -461,9 +626,9 @@ pfUI:RegisterModule("auctionhouse", function ()
     if ratio < 1 then
       local size = math.floor(23 * ratio)
       self.slider.thumb:SetHeight(size * 20) -- 20 height per item
-      self.slider:Show()
+      self.slider.thumb:Show()
     else
-      self.slider:Hide()
+      self.slider.thumb:Hide()
     end
 
     for button=1,23 do
@@ -543,7 +708,7 @@ pfUI:RegisterModule("auctionhouse", function ()
 
   gui.rows = CreateFrame("Button", "pfAuctionHouseResultBackground", gui)
   gui.rows:SetPoint("TOPLEFT", gui, "TOPLEFT", 170, -80)
-  gui.rows:SetPoint("BOTTOMRIGHT", gui, "TOPRIGHT", -20, -562)
+  gui.rows:SetPoint("BOTTOMRIGHT", gui, "TOPRIGHT", -20, -563)
   gui.rows:EnableMouseWheel(1)
   gui.rows:SetScript("OnMouseWheel", function()
     this.scroll = arg1 > 0 and this.scroll - 1 or this.scroll + 1
@@ -600,9 +765,9 @@ pfUI:RegisterModule("auctionhouse", function ()
     if ratio < 1 then
       local size = math.floor(23 * ratio)
       self.slider.thumb:SetHeight(size * 20) -- 20 height per item
-      self.slider:Show()
+      self.slider.thumb:Show()
     else
-      self.slider:Hide()
+      self.slider.thumb:Hide()
     end
 
     for i=1,22 do
@@ -654,8 +819,8 @@ pfUI:RegisterModule("auctionhouse", function ()
 
   for i=1,22 do -- results
     gui.rows[i] = CreateFrame("Button", "pfAuctionHouseResult"..i, gui.rows)
-    gui.rows[i]:SetPoint("TOPLEFT", gui.rows, "TOPLEFT", 0, -22-(i-1)*21)
-    gui.rows[i]:SetPoint("BOTTOMRIGHT", gui.rows, "TOPRIGHT", 0, -22-i*21+1)
+    gui.rows[i]:SetPoint("TOPLEFT", gui.rows, "TOPLEFT", 2, -21-(i-1)*21)
+    gui.rows[i]:SetPoint("BOTTOMRIGHT", gui.rows, "TOPRIGHT", -2, -21-i*21+1)
 
     gui.rows[i].id = i
     gui.rows[i].color = 0.1 + math.mod(i,2)/50
@@ -686,7 +851,7 @@ pfUI:RegisterModule("auctionhouse", function ()
 
     gui.rows[i]:SetScript("OnEnter", function()
       this.bg:SetTexture(.2,.2,.2,1)
-      GameTooltip:SetOwner(this, "ANCHOR_LEFT", 10, -5)
+      GameTooltip:SetOwner(this, "ANCHOR_RIGHT", -10, -5)
       GameTooltip:SetHyperlink(this.link)
       GameTooltip:Show()
     end)
@@ -793,11 +958,11 @@ pfUI:RegisterModule("auctionhouse", function ()
     local text = GameTooltipTextLeft1:IsVisible() and GameTooltipTextLeft1:GetText() or nil
     local min, avg, days = GetPrice(text)
     if min then
-      GameTooltip:AddDoubleLine("Min:", CreateGoldString(min))
+      GameTooltip:AddDoubleLine("Lowest Price:", BeautifyGoldString(min), 1,.8,.2, 1,1,1)
     end
 
     if avg then
-      GameTooltip:AddDoubleLine("Average |cffffffff[" .. days .. " days]|r:", CreateGoldString(avg))
+      GameTooltip:AddDoubleLine("Lowest Average |cffffffff[" .. days .. " days]|r:", BeautifyGoldString(avg), 1,.8,.2, 1,1,1)
     end
 
     GameTooltip:Show()
