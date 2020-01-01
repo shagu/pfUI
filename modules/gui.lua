@@ -51,7 +51,10 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
       end
     end
 
-    function CreateConfig(ufunc, caption, category, config, widget, values, skip, named, type)
+    function CreateConfig(ufunc, caption, category, config, widget, values, skip, named, type, expansion)
+      local disabled = expansion and not strfind(expansion, pfUI.expansion)
+      if disabled and pfUI_config.gui.showdisabled == "0" then return end
+
       -- this object placement
       if this.objectCount == nil then
         this.objectCount = 0
@@ -116,6 +119,15 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
         frame.caption:SetPoint("LEFT", frame, "LEFT", 3, 1)
         frame.caption:SetJustifyH("LEFT")
         frame.caption:SetText(caption)
+      end
+
+      if disabled then
+        if frame.caption then
+          frame.caption:SetText(caption .. " |cffff5555[" .. T["Only"] .. " " .. string.gsub(expansion, ":", "&") .. "]")
+        end
+
+        frame:SetAlpha(.5)
+        return
       end
 
       if category == "CVAR" then
@@ -1349,6 +1361,7 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
       CreateConfig(nil, T["Enable Single Line UIErrors"], C.global, "errors_limit", "checkbox")
       CreateConfig(nil, T["Disable All UIErrors"], C.global, "errors_hide", "checkbox")
       CreateConfig(nil, T["Highlight Settings That Require Reload"], C.gui, "reloadmarker", "checkbox")
+      CreateConfig(nil, T["Show Incompatible Config Entries"], C.gui, "showdisabled", "checkbox")
 
       -- Delete / Reset
       CreateConfig(nil, T["Delete / Reset"], nil, nil, "header")
