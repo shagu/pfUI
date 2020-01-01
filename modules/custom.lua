@@ -275,10 +275,10 @@ pfUI:RegisterModule("auctionhouse", function ()
       this.page = this.page + 1
 
       this.query[7] = this.page - 1
-      QueryAuctionItems(unpack(this.query))
+      QueryAuctionItems(this.query[1], this.query[2], this.query[3], this.query[4], this.query[5], this.query[6], this.query[7], this.query[8], this.query[9])
     elseif this.state == "PREPARE" then
       -- in case a new query was sent but didn't went through
-      QueryAuctionItems(unpack(this.query))
+      QueryAuctionItems(this.query[1], this.query[2], this.query[3], this.query[4], this.query[5], this.query[6], this.query[7], this.query[8], this.query[9])
     end
   end)
 
@@ -291,7 +291,7 @@ pfUI:RegisterModule("auctionhouse", function ()
     self.callback = callback
 
     -- trigger the initial search to obtain page numbers
-    QueryAuctionItems(unpack(self.query))
+    QueryAuctionItems(query[1], query[2], query[3], query[4], query[5], query[6], query[7], query[8], query[9])
 
     return results
   end
@@ -417,9 +417,12 @@ pfUI:RegisterModule("auctionhouse", function ()
         if class and class == i then -- add to viewport
           table.insert(view, { caption = name, class = i, subclass = j, invtype = nil })
 
-          for k, name in pairs({GetAuctionInvTypes(i, j)}) do
-            if subclass and subclass == j and name ~= 1 then
-              table.insert(view, { caption = (_G[name] or name), class = i, subclass = j, invtype = k })
+          if subclass and subclass == j then
+            local invtypes = {GetAuctionInvTypes(i, j)}
+            for k=1,100,2 do
+              if invtypes[k+1] then
+                table.insert(view, { caption = (_G[invtypes[k]] or UNKNOWN), class = i, subclass = j, invtype = ceil(k/2) })
+              end
             end
           end
         end
@@ -688,7 +691,7 @@ pfUI:RegisterModule("auctionhouse", function ()
     for time in pairs(db[item]) do
       table.sort(db[item][time], pricesort)
       local id, data = next(db[item][time])
-      local dayprice = data[2]
+      local dayprice = data and data[2] or 0
       if dayprice > 0 then
         avgprice = avgprice + dayprice
       end
