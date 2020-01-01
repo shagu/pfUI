@@ -275,10 +275,10 @@ pfUI:RegisterModule("auctionhouse", function ()
       this.page = this.page + 1
 
       this.query[7] = this.page - 1
-      QueryAuctionItems(unpack(this.query));
+      QueryAuctionItems(unpack(this.query))
     elseif this.state == "PREPARE" then
       -- in case a new query was sent but didn't went through
-      QueryAuctionItems(unpack(this.query));
+      QueryAuctionItems(unpack(this.query))
     end
   end)
 
@@ -291,7 +291,7 @@ pfUI:RegisterModule("auctionhouse", function ()
     self.callback = callback
 
     -- trigger the initial search to obtain page numbers
-    QueryAuctionItems(unpack(query))
+    QueryAuctionItems(unpack(self.query))
 
     return results
   end
@@ -329,22 +329,17 @@ pfUI:RegisterModule("auctionhouse", function ()
   CreateBackdrop(gui, nil, nil, .7)
   EnableMovable(gui)
 
-  gui.search = CreateTextBox("pfAuctionHouseSearch", gui)
-  gui.search:SetPoint("TOPLEFT", 10, -30)
-  gui.search:SetWidth(200)
-  gui.search:SetHeight(20)
-  gui.search:SetTextColor(1,1,1,1)
-  gui.search:SetScript("OnEnterPressed", function()
+  gui.TriggerSearch = function(self)
     local query = {
-      [1] = this:GetText(), -- name
-      [2] = nil, -- minLevel
-      [3] = nil, -- maxLevel
-      [4] = nil, -- invtype
-      [5] = nil, -- class
-      [6] = nil, -- subclass
-      [7] = nil, -- page
-      [8] = nil, -- usable
-      [9] = nil, -- rarity
+      gui.search:GetText(), -- name
+      nil, -- minLevel
+      nil, -- maxLevel
+      gui.filter.invtype, -- invtype
+      gui.filter.class, -- class
+      gui.filter.subclass, -- subclass
+      nil, -- page
+      nil, -- usable
+      nil, -- rarity
     }
 
     core:Search(query, function (state, results, auctions, page, pages)
@@ -358,7 +353,15 @@ pfUI:RegisterModule("auctionhouse", function ()
 
       gui.rows:Refresh(true, results)
     end)
+  end
 
+  gui.search = CreateTextBox("pfAuctionHouseSearch", gui)
+  gui.search:SetPoint("TOPLEFT", 10, -30)
+  gui.search:SetWidth(200)
+  gui.search:SetHeight(20)
+  gui.search:SetTextColor(1,1,1,1)
+  gui.search:SetScript("OnEnterPressed", function()
+    gui:TriggerSearch()
     this:ClearFocus()
   end)
 
@@ -393,16 +396,17 @@ pfUI:RegisterModule("auctionhouse", function ()
   end)
 
   gui.filter.Refresh = function(self, class, subclass, invtype)
-    -- trigger search on changed filters
-    if self.class ~= class or self.subclass ~= subclass or self.invtype ~= invtype then
-
-    end
+    local trigger = self.class ~= class or self.subclass ~= subclass or self.invtype ~= invtype
 
     -- save latest search
     self.class = class
     self.subclass = subclass
     self.invtype = invtype
 
+    -- trigger search when filters changed
+    if trigger then
+      gui:TriggerSearch(true)
+    end
 
     -- generate viewport
     local view = {}
