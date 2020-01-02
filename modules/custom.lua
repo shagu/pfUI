@@ -255,7 +255,7 @@ pfUI:RegisterModule("auctionhouse", function ()
         end
 
         local price = buyout and (count and buyout/count or buyout) or 0
-        results[(this.page-1)*50+i] = { texture, name, quality, count, timeleft, level, bid, buyout, price, owner, link }
+        results[(this.page-1)*50+i] = { texture, name, quality, count, timeleft, level, bid, buyout, price, owner, link, minIncrement, bidAmount }
       end
 
       if this.page >= this.pages then
@@ -774,15 +774,21 @@ pfUI:RegisterModule("auctionhouse", function ()
       local data = self.view[i+self.scroll]
 
       if data and data[1] then
-        -- { texture, name, quality, count, timeleft, level, bid, buyout, price, owner, link }
+        local bid = data[7]
+        if data[12] and data[12] ~= 0 then
+          bid = data[12]
+        elseif data[13] and data[13] ~= 0 then
+          bid = data[13]
+        end
+
         gui.rows[i].icon:SetTexture(data[1])
         gui.rows[i].item:SetText(data[2])
         gui.rows[i].item:SetTextColor(GetItemQualityColor(data[3]))
         gui.rows[i].stack:SetText(data[4])
         gui.rows[i].timeleft:SetText(BeautifyTimeLeft(data[5]))
         gui.rows[i].level:SetText(data[6])
-        gui.rows[i].bid:SetText(BeautifyGoldString(round(data[7],2)))
-        gui.rows[i].buyout:SetText(BeautifyGoldString(round(data[8],2)))
+        gui.rows[i].bid:SetText(BeautifyGoldString(bid,2))
+        gui.rows[i].buyout:SetText(BeautifyGoldString(data[8],2))
         gui.rows[i].price:SetText(BeautifyGoldString(round(data[9],2)))
         gui.rows[i].owner:SetText(data[10])
         gui.rows[i].link = data[11]
