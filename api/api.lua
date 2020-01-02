@@ -443,7 +443,7 @@ function pfUI.api.CreateGoldString(money)
 
   local string = ""
   if gold > 0 then string = string .. "|cffffffff" .. gold .. "|cffffd700g" end
-  if silver > 0 then string = string .. "|cffffffff " .. silver .. "|cffc7c7cfs" end
+  if silver > 0 or gold > 0 then string = string .. "|cffffffff " .. silver .. "|cffc7c7cfs" end
   string = string .. "|cffffffff " .. copper .. "|cffeda55fc"
 
   return string
