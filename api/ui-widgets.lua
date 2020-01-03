@@ -193,6 +193,18 @@ function pfUI.api.CreateScrollChild(name, parent)
   return f
 end
 
+-- [ CreateTextBox ]
+-- Creates and returns a default pfUI skinned EditBox
+function pfUI.api.CreateTextBox(name, parent)
+  local f = CreateFrame("EditBox", name, parent)
+  f:SetScript("OnEscapePressed", function() this:ClearFocus() end)
+  f:SetAutoFocus(false)
+  f:SetTextInsets(5, 5, 5, 5)
+  f:SetFontObject(GameFontNormal)
+  CreateBackdrop(f, nil, true)
+  return f
+end
+
 -- [ EnableClickRotate ]
 -- Enables Modelframes to be rotated by click-drag
 -- 'frame'    [frame]         the modelframe that should be used
