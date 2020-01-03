@@ -234,6 +234,7 @@ pfUI:RegisterModule("auctionhouse", function ()
   core:SetScript("OnEvent", function()
     local batch, max = GetNumAuctionItems("list")
     this.wait = GetTime() + 1
+    this.safebuy = nil
 
     if this.state == "PREPARE" then
       this.state = "LOAD"
@@ -243,33 +244,41 @@ pfUI:RegisterModule("auctionhouse", function ()
 
     if this.state == "LOAD" then
       for i=1, batch do
-        local name, texture, count, quality, canUse, level, bid, minIncrement, buyout, bidAmount, highBidder, owner = GetAuctionItemInfo("list", i)
-        local timeleft = GetAuctionItemTimeLeft("list", i)
-        local link = GetAuctionItemLink("list", i)
+        local data = this:GetAuctionTable("list", i)
 
         -- request same page again when no owner was transmitted
-        if not owner then
+        if not data[10] or data[10] == "" then
           this.page = this.page -1
           this.state = "ASK"
           return
         end
 
-        local price = buyout and (count and buyout/count or buyout) or 0
-        results[(this.page-1)*50+i] = { texture, name, quality, count, timeleft, level, bid, buyout, price, owner, link, minIncrement, bidAmount }
+        results[(this.page-1)*50+i] = data
+
+        -- search for buyout or bid
+        if this.data and this:CompareAuctionData(this.data, data, 1, 13) then
+          this.state = "FOUND"
+          this.safebuy = { id = i, data = this.data }
+          break
+        end
       end
 
-      if this.page >= this.pages then
-        this.state = nil
+      if this.state == "FOUND" then
+        this.state = "FOUND"
+      elseif this.page >= this.pages then
+        this.state = this.search and "NOTFOUND" or "DONE"
       else
         this.state = "ASK"
       end
     end
 
-    if this.callback then this.callback(this.state or "DONE", results, max, this.page, this.pages) end
+    if this.callback then this.callback(this.state, results, max, this.page, this.pages) end
   end)
 
   core:SetScript("OnUpdate", function()
     if this.wait and this.wait > GetTime() then return end
+
+    local idle = this.state == "FOUND" or this.state == "NOTFOUND" or this.state == "DONE"
 
     if this.state == "ASK" then
       this.state = "LOAD"
@@ -280,16 +289,63 @@ pfUI:RegisterModule("auctionhouse", function ()
     elseif this.state == "PREPARE" then
       -- in case a new query was sent but didn't went through
       QueryAuctionItems(this.query[1], this.query[2], this.query[3], this.query[4], this.query[5], this.query[6], this.query[7], this.query[8], this.query[9])
+    elseif idle and this.data and not this.safebuy then
+      this.state = "PREPARE"
     end
   end)
+
+  core.GetAuctionTable = function(self, list, id)
+    local name, texture, count, quality, canUse, level, bid, minIncrement, buyout, bidAmount, highBidder, owner = GetAuctionItemInfo(list, id)
+    local timeleft = GetAuctionItemTimeLeft(list, id)
+    local link = GetAuctionItemLink(list, id)
+    local price = buyout and (count and buyout/count or buyout) or 0
+    return { texture, name, quality, count, timeleft, level, bid, buyout, price, owner, link, minIncrement, bidAmount }
+  end
+
+  core.CompareAuctionData = function(self, a, b, min, max)
+    if a and b then
+      for i=min,max do
+        if a[i] ~= b[i] then return nil end
+      end
+    else
+      return nil
+    end
+
+    return true
+  end
+
+  core.GetSafeBuyID = function(self, data)
+    if self.safebuy and self:CompareAuctionData(self.safebuy.data, data, 1, 13) then
+      return self.safebuy.id
+    else
+      return nil
+    end
+  end
 
   core.Search = function(self, query, callback)
     results = {}
 
-    -- reset page counter
     self.state = "PREPARE"
+    self.data = nil
     self.query = query
     self.callback = callback
+
+    -- trigger the initial search to obtain page numbers
+    QueryAuctionItems(query[1], query[2], query[3], query[4], query[5], query[6], query[7], query[8], query[9])
+
+    return results
+  end
+
+  core.PrepareSafeBuyID = function(self, data, callback)
+    results = {}
+
+    self.state = "PREPARE"
+    self.data = data
+    self.query = {}
+    self.callback = callback
+
+    local query = self.query
+    query[1] = data[2]
 
     -- trigger the initial search to obtain page numbers
     QueryAuctionItems(query[1], query[2], query[3], query[4], query[5], query[6], query[7], query[8], query[9])
@@ -409,7 +465,6 @@ pfUI:RegisterModule("auctionhouse", function ()
   gui.minlevel:SetTextColor(1,1,1,1)
   gui.minlevel:SetScript("OnEnterPressed", function()
     this:ClearFocus()
-    gui:TriggerSearch()
   end)
 
   gui.minlevel.caption = gui.minlevel:CreateFontString(nil, "OVERLAY", "GameFontNormal")
@@ -425,7 +480,6 @@ pfUI:RegisterModule("auctionhouse", function ()
   gui.maxlevel:SetTextColor(1,1,1,1)
   gui.maxlevel:SetScript("OnEnterPressed", function()
     this:ClearFocus()
-    gui:TriggerSearch()
   end)
 
   gui.maxlevel.caption = gui.maxlevel:CreateFontString(nil, "OVERLAY", "GameFontNormal")
@@ -439,7 +493,6 @@ pfUI:RegisterModule("auctionhouse", function ()
   gui.rarity.OnClick = function()
     UIDropDownMenu_SetSelectedID(gui.rarity, this.value)
     gui.rarity.value = this.value - 2
-    gui:TriggerSearch()
   end
 
   gui.rarity.OnInit = function()
@@ -483,7 +536,6 @@ pfUI:RegisterModule("auctionhouse", function ()
   gui.usable:SetHeight(16)
   gui.usable:SetScript("OnClick", function ()
     this.value = this:GetChecked()
-    gui:TriggerSearch()
   end)
 
   gui.usable.caption = gui.usable:CreateFontString(nil, "OVERLAY", "GameFontNormal")
@@ -580,17 +632,10 @@ pfUI:RegisterModule("auctionhouse", function ()
   end)
 
   gui.filter.Refresh = function(self, class, subclass, invtype)
-    local trigger = self.class ~= class or self.subclass ~= subclass or self.invtype ~= invtype
-
     -- save latest search
     self.class = class
     self.subclass = subclass
     self.invtype = invtype
-
-    -- trigger search when filters changed
-    if trigger then
-      gui:TriggerSearch(true)
-    end
 
     -- generate viewport
     local view = {}
@@ -737,6 +782,48 @@ pfUI:RegisterModule("auctionhouse", function ()
     self.scroll = 0
   end
 
+  gui.rows.SetSelection = function(self, buttonid)
+    self.view = self.view or {}
+    self.scroll = self.scroll or 0
+
+    for id, data in pairs(self.view) do
+      data.selected = id == self.scroll + buttonid and true or nil
+
+      -- prepare safe buy id for current selection
+      if data.selected then
+        core:PrepareSafeBuyID(data, function(state)
+          gui.buyout:Hide()
+          gui.bid:Hide()
+
+          if state == "FOUND" then
+            gui.buyout:SetTextColor(1,1,1,1)
+            gui.bid:SetTextColor(1,1,1,1)
+          else
+            gui.buyout:SetTextColor(1,.4,.2,1)
+            gui.bid:SetTextColor(1,.4,.2,1)
+          end
+
+          gui.buyout:Show()
+          gui.bid:Show()
+        end)
+      end
+    end
+
+    self:Refresh()
+  end
+
+  -- returns viewID, buttonID, viewData
+  gui.rows.GetSelection = function(self)
+    self.view = self.view or {}
+    self.scroll = self.scroll or 0
+
+    for id, data in pairs(self.view) do
+      if data.selected then
+        return id, id - self.scroll, data
+      end
+    end
+  end
+
   gui.rows.Refresh = function(self, init, view)
     self.view = view or self.view or {}
 
@@ -773,14 +860,14 @@ pfUI:RegisterModule("auctionhouse", function ()
     for i=1,22 do
       local data = self.view[i+self.scroll]
 
-      if data and data[1] then
-        local bid = data[7]
-        if data[12] and data[12] ~= 0 then
-          bid = data[12]
-        elseif data[13] and data[13] ~= 0 then
-          bid = data[13]
-        end
+      if data and data.selected then
+        gui.rows[i].bg:SetTexture(1,1,1,.5)
+      else
+        gui.rows[i].bg:SetTexture(gui.rows[i].color, gui.rows[i].color, gui.rows[i].color, 1)
+      end
 
+      if data and data[1] then
+        local bid = data[7] + data[12]
         gui.rows[i].icon:SetTexture(data[1])
         gui.rows[i].item:SetText(data[2])
         gui.rows[i].item:SetTextColor(GetItemQualityColor(data[3]))
@@ -792,9 +879,10 @@ pfUI:RegisterModule("auctionhouse", function ()
         gui.rows[i].price:SetText(BeautifyGoldString(round(data[9],2)))
         gui.rows[i].owner:SetText(data[10])
         gui.rows[i].link = data[11]
-
+        gui.rows[i].data = data
         gui.rows[i]:Show()
       else
+        gui.rows[i].data = nil
         gui.rows[i]:Hide()
       end
     end
@@ -855,15 +943,26 @@ pfUI:RegisterModule("auctionhouse", function ()
       end
     end
 
-    gui.rows[i]:SetScript("OnEnter", function()
-      this.bg:SetTexture(.2,.2,.2,1)
+    gui.rows[i]:SetScript("OnClick", function()
+      gui.rows:SetSelection(this.id)
+    end)
+
+    gui.rows[i]:SetScript("OnEnter", function(self)
       GameTooltip:SetOwner(this, "ANCHOR_RIGHT", -10, -5)
       GameTooltip:SetHyperlink(this.link)
       GameTooltip:Show()
+
+      local id, button, data = gui.rows:GetSelection()
+      if this.id == button then return end
+      this.bg:SetTexture(.2,.2,.2,1)
     end)
+
     gui.rows[i]:SetScript("OnLeave", function()
-      this.bg:SetTexture(this.color, this.color, this.color, 1)
       GameTooltip:Hide()
+
+      local id, button, data = gui.rows:GetSelection()
+      if this.id == button then return end
+      this.bg:SetTexture(this.color, this.color, this.color, 1)
     end)
   end
 
@@ -873,27 +972,43 @@ pfUI:RegisterModule("auctionhouse", function ()
   gui.progress:SetTextColor(1,1,1,1)
 
   gui.buyout = CreateFrame("Button", nil, gui)
-  gui.buyout:SetText(BUYOUT)
   gui.buyout:SetWidth(100)
   gui.buyout:SetHeight(20)
+  gui.buyout:SetText(BUYOUT)
   gui.buyout:SetPoint("BOTTOMRIGHT", gui, "BOTTOMRIGHT", -10, 10)
   gui.buyout:SetScript("OnClick", function()
-    -- TODO
+    -- { texture, name, quality, count, timeleft, level, bid, buyout, price, owner, link, minIncrement, bidAmount }
+    local id, button, data = gui.rows:GetSelection()
+    if not data then return end
+    if not data[8] or data[8] == 0 then return end
+
+    local bid = data[8]
+    local auctionid = core:GetSafeBuyID(data)
+    if auctionid then
+      PlaceAuctionBid("list", auctionid, bid)
+      table.remove(gui.rows.view, id)
+      gui.rows:Refresh(true)
+      gui.rows:SetSelection(button)
+    end
   end)
   SkinButton(gui.buyout)
 
   gui.bid = CreateFrame("Button", nil, gui)
-  gui.bid:SetText(BID)
   gui.bid:SetWidth(100)
   gui.bid:SetHeight(20)
+  gui.bid:SetText(BID)
   gui.bid:SetPoint("RIGHT", gui.buyout, "LEFT", -5, 0)
   gui.bid:SetScript("OnClick", function()
-    -- TODO
+    local id, button, data = gui.rows:GetSelection()
+    if not data then return end
+
+    local bid = data[7] + data[12]
+    local auctionid = core:GetSafeBuyID(data)
+    if auctionid then
+      PlaceAuctionBid("list", auctionid, bid)
+    end
   end)
   SkinButton(gui.bid)
-
-
-
   gui:Hide()
 
 
