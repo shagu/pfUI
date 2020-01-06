@@ -53,3 +53,11 @@ function hooksecurefunc(name, func, append)
 
   _G[name] = pfUI.hooks[tostring(func)]["function"]
 end
+
+do -- GetItemInfo
+  local name, link, rarity, minlevel, itype, isubtype, stack
+  function GetItemInfo(item)
+    name, link, rarity, minlevel, itype, isubtype, stack = _G.GetItemInfo(item)
+    return name, link, rarity, nil, minlevel, itype, isubtype, stack
+  end
+end

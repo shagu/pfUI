@@ -232,7 +232,7 @@ function pfUI.api.GetItemCount(itemName)
       if itemCount then
         local itemLink = GetContainerItemLink(bag,slot)
         local _, _, itemParse = strfind(itemLink, "(%d+):")
-        local queryName, _, _, _, _, _ = GetItemInfo(itemParse)
+        local queryName = GetItemInfo(itemParse)
         if queryName and queryName ~= "" then
           if queryName == itemName then
             count = count + itemCount;
@@ -257,23 +257,13 @@ function pfUI.api.GetBagFamily(bag)
 
   local _, _, id = strfind(GetInventoryItemLink("player", ContainerIDToInventoryID(bag)) or "", "item:(%d+)")
   if id then
-    local _, _, _, _, itemType, subType = GetItemInfo(id)
+    local _, _, _, _, _, itemType, subType = GetItemInfo(id)
     local bagsubtype = L["bagtypes"][subType]
 
     if bagsubtype == "DEFAULT" then return "BAG" end
     if bagsubtype == "SOULBAG" then return "SOULBAG" end
     if bagsubtype == "QUIVER" then return "QUIVER" end
-    if bagsubtype == nil and GetContainerNumFreeSlots then
-      -- handle new bag classes introduced in TBC
-      local _, subtype = GetContainerNumFreeSlots(bag)
-      if subtype and subtype > 0 then
-        return "SPECIAL"
-      else
-        return "BAG"
-      end
-    elseif bagsubtype == nil then
-      return "SPECIAL"
-    end
+    if bagsubtype == nil then return "SPECIAL" end
   end
 
   return nil
