@@ -579,7 +579,7 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
       local spellTexture = GetSpellTexture(spellIndex, BOOKTYPE_SPELL)
       -- scan for disenchant and pick lock
       for texture, widget in pairs(knownInventorySpellTextures) do
-        if strfind(spellTexture, texture) and pfUI.bag.right[widget.frame] then
+        if spellTexture and texture and strfind(spellTexture, texture) and pfUI.bag.right[widget.frame] then
           pfUI.bag.right[widget.frame]:SetID(spellIndex)
         end
       end
