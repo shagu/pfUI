@@ -1,58 +1,42 @@
-pfUI:RegisterModule("mirrortimers", "vanilla", function ()
+pfUI:RegisterModule("mirrortimers", "vanilla:tbc", function ()
+  local font = pfUI.font_default
+  local fontsize = tonumber(C.global.font_size)
+  local height = fontsize * 1.3
+
   for i = 1, MIRRORTIMER_NUMTIMERS do
-    local mirrorTimer = _G["MirrorTimer"..i]
-    local statusBar = _G["MirrorTimer"..i.."StatusBar"]
-    local text = _G["MirrorTimer"..i.."Text"]
-    local border = _G["MirrorTimer"..i.."Border"]
+    local frame = _G["MirrorTimer"..i]
+    frame:GetRegions():Hide()
+    frame:SetWidth(200)
+    frame:SetHeight(height)
+    frame:SetScript("OnUpdate", function()
+      if this.paused or not this.timer then return end
+      MirrorTimerFrame_OnUpdate(this, arg1)
 
-    text:Hide()
-    border:Hide()
-
-    mirrorTimer:GetRegions():Hide()
-    mirrorTimer.label = text
-    mirrorTimer.scale = 1
-    mirrorTimer.value = 0
-
-    statusBar:SetStatusBarTexture(pfUI.media["img:bar"])
-    statusBar:SetWidth(222)
-    statusBar:SetHeight(18)
-    statusBar:SetPoint("TOP", 0, 0)
-    CreateBackdrop(statusBar)
-    CreateBackdropShadow(statusBar)
-
-    mirrorTimer:SetWidth(statusBar:GetWidth())
-    mirrorTimer:SetHeight(statusBar:GetHeight())
-
-    if (i ~= 1) then
-      mirrorTimer:ClearAllPoints()
-      mirrorTimer:SetPoint("CENTER", _G["MirrorTimer"..(i-1)], "CENTER", 0, -26)
-    end
-
-    UpdateMovable(mirrorTimer)
-
-    local TimerText = mirrorTimer:CreateFontString(nil, "OVERLAY")
-    TimerText:SetFont(pfUI.font_default, 12, "OUTLINE")
-    TimerText:SetPoint("CENTER", statusBar, "CENTER", 0, 0)
-    mirrorTimer.TimerText = TimerText
-
-    hooksecurefunc("MirrorTimerFrame_OnUpdate", function(frame, elapsed)
-      if frame.paused then return end
-      if not frame.value then return end
-      if not frame.scale then return end
-
-      local minutes = frame.value / 60
-      local seconds = frame.value - math.floor(frame.value / 60) * 60
-      local text = frame.label:GetText()
-
-      if not text then return end
-
-      if not frame:IsShown() then frame:Show() end
-
-      if frame.value > 0 then
-        frame.TimerText:SetText(format("%s (%d:%02d)", text, minutes, seconds))
-      else
-        frame.TimerText:SetText(format("%s (0:00)", text))
+      local text = this.label:GetText()
+      if text and this.value then
+        this.text:SetText(format("%s (%d:%02d)", text, this.value/60, this.value - math.floor(this.value/60)*60))
       end
     end)
+
+    frame:ClearAllPoints()
+    frame:SetPoint("TOP", UIParent, "TOP", 0, -120-(i-1)*(height + 10))
+
+    CreateBackdrop(frame)
+    CreateBackdropShadow(frame)
+    UpdateMovable(frame)
+
+    frame.border = _G["MirrorTimer"..i.."Border"]
+    frame.border:Hide()
+
+    frame.label = _G["MirrorTimer"..i.."Text"]
+    frame.label:Hide()
+
+    frame.statusbar = _G["MirrorTimer"..i.."StatusBar"]
+    frame.statusbar:SetStatusBarTexture(pfUI.media["img:bar"])
+    frame.statusbar:SetAllPoints(frame)
+
+    frame.text = frame:CreateFontString(nil, "OVERLAY")
+    frame.text:SetFont(font, fontsize, "OUTLINE")
+    frame.text:SetPoint("CENTER", frame.statusbar, "CENTER", 0, 0)
   end
 end)
