@@ -101,10 +101,11 @@ pfUI:RegisterModule("castbar", "vanilla:tbc", function ()
 
         this:SetAlpha(1)
 
+        local rank = this.showrank and nameSubtext and nameSubtext ~= "" and string.format(" |cffaaffcc[%s]|r", nameSubtext) or ""
         if this.endTime ~= endTime then
           this.bar:SetStatusBarColor(strsplit(",", C.appearance.castbar[(channel and "channelcolor" or "castbarcolor")]))
           this.bar:SetMinMaxValues(0, duration / 1000)
-          this.bar.left:SetText(cast)
+          this.bar.left:SetText(cast .. rank)
           this.fadeout = nil
           this.endTime = endTime
 
@@ -189,6 +190,7 @@ pfUI:RegisterModule("castbar", "vanilla:tbc", function ()
     pfUI.castbar.player = CreateCastbar("pfPlayerCastbar", UIParent, "player")
     pfUI.castbar.player.showicon = C.castbar.player.showicon == "1" and true or nil
     pfUI.castbar.player.showlag = C.castbar.player.showlag == "1" and true or nil
+    pfUI.castbar.player.showrank = C.castbar.player.showrank == "1" and true or nil
 
     if pfUI.uf.player then
       local pspace = tonumber(C.unitframes.player.pspace)
@@ -213,6 +215,7 @@ pfUI:RegisterModule("castbar", "vanilla:tbc", function ()
     pfUI.castbar.target = CreateCastbar("pfTargetCastbar", UIParent, "target")
     pfUI.castbar.target.showicon = C.castbar.target.showicon == "1" and true or nil
     pfUI.castbar.target.showlag = C.castbar.target.showlag == "1" and true or nil
+    pfUI.castbar.target.showrank = C.castbar.target.showrank == "1" and true or nil
 
     if pfUI.uf.target then
       local pspace = tonumber(C.unitframes.target.pspace)
@@ -237,6 +240,7 @@ pfUI:RegisterModule("castbar", "vanilla:tbc", function ()
     pfUI.castbar.focus = CreateCastbar("pfFocusCastbar", UIParent)
     pfUI.castbar.focus.showicon = C.castbar.focus.showicon == "1" and true or nil
     pfUI.castbar.focus.showlag = C.castbar.focus.showlag == "1" and true or nil
+    pfUI.castbar.focus.showrank = C.castbar.focus.showrank == "1" and true or nil
 
     local pspace = tonumber(C.unitframes.focus.pspace)
     local width = C.castbar.focus.width ~= "-1" and C.castbar.focus.width or pfUI.uf.focus:GetWidth()
