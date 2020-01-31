@@ -2,6 +2,7 @@ pfUI:RegisterModule("prediction", "vanilla:tbc", function ()
   local heals = {}
   local ress = {}
   local events = {}
+  local senttarget
 
   pfUI.prediction = CreateFrame("Frame")
   pfUI.prediction:RegisterEvent("UNIT_HEALTH")
@@ -317,6 +318,7 @@ pfUI:RegisterModule("prediction", "vanilla:tbc", function ()
   pfUI.prediction.sender:RegisterEvent("UNIT_SPELLCAST_STOP")
   pfUI.prediction.sender:RegisterEvent("UNIT_SPELLCAST_FAILED")
   pfUI.prediction.sender:RegisterEvent("UNIT_SPELLCAST_INTERRUPTED")
+  pfUI.prediction.sender:RegisterEvent("UNIT_SPELLCAST_SENT")
 
   -- vanilla
   pfUI.prediction.sender:RegisterEvent("CHAT_MSG_SPELL_SELF_BUFF")
@@ -358,6 +360,8 @@ pfUI:RegisterModule("prediction", "vanilla:tbc", function ()
       elseif spell and heal then
         if spell == spell_queue[1] then cache[spell_queue[2]] = tonumber(heal) end
       end
+    elseif event == "UNIT_SPELLCAST_SENT" and arg4 then -- fix tbc mouseover macros
+        senttarget = arg4
     elseif strfind(event, "SPELLCAST_START", 1) then
       local spell, time = arg1, arg2
 
@@ -369,7 +373,7 @@ pfUI:RegisterModule("prediction", "vanilla:tbc", function ()
 
       if spell_queue[1] == spell and cache[spell_queue[2]] then
         local sender = player
-        local target = spell_queue[3]
+        local target = senttarget or spell_queue[3]
         local amount = cache[spell_queue[2]]
         local casttime = time
 
