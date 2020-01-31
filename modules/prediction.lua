@@ -314,7 +314,6 @@ pfUI:RegisterModule("prediction", "vanilla:tbc", function ()
   -- tbc
   pfUI.prediction.sender:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
   pfUI.prediction.sender:RegisterEvent("UNIT_SPELLCAST_START")
-  pfUI.prediction.sender:RegisterEvent("UNIT_SPELLCAST_START")
   pfUI.prediction.sender:RegisterEvent("UNIT_SPELLCAST_STOP")
   pfUI.prediction.sender:RegisterEvent("UNIT_SPELLCAST_FAILED")
   pfUI.prediction.sender:RegisterEvent("UNIT_SPELLCAST_INTERRUPTED")
