@@ -426,7 +426,6 @@ pfUI_translation["zhTW"] = {
   ["Only Count Bagspace On Regular Bags"] = "只統計常規背包空間",
   ["Only Show Chat Dock On Mouseover"] = "只在滑鼠懸停時顯示聊天視窗停靠欄",
   ["Only Show Indicators for Dispellable Debuffs"] = "只顯示可驅散的Debuff",
-  ["Open All"] = nil,
   ["Options"] = nil,
   ["Orientation"] = nil,
   ["Other Panel: Minimap"] = "小地圖面板",

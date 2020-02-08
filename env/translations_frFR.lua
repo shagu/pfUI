@@ -426,7 +426,6 @@ pfUI_translation["frFR"] = {
   ["Only Count Bagspace On Regular Bags"] = "Compter seulement les places libre des sacs généraux",
   ["Only Show Chat Dock On Mouseover"] = "Montrer le Chat seulement au passage Souris",
   ["Only Show Indicators for Dispellable Debuffs"] = "Afficher les indicateurs pour les affaiblissements dissipables uniquement",
-  ["Open All"] = nil,
   ["Options"] = nil,
   ["Orientation"] = nil,
   ["Other Panel: Minimap"] = "Autre panneau : Minicarte",

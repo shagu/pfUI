@@ -426,7 +426,6 @@ pfUI_translation["ruRU"] = {
   ["Only Count Bagspace On Regular Bags"] = "Подсчитывать только свободные места в сумках",
   ["Only Show Chat Dock On Mouseover"] = "Показывать панель чата только при наведении мыши",
   ["Only Show Indicators for Dispellable Debuffs"] = "Показывать индикаторы только для рассеиваемых дебаффов",
-  ["Open All"] = nil,
   ["Options"] = "Опции",
   ["Orientation"] = "Ориентация",
   ["Other Panel: Minimap"] = "Другая панель: миникарта",

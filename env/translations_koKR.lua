@@ -426,7 +426,6 @@ pfUI_translation["koKR"] = {
   ["Only Count Bagspace On Regular Bags"] = nil,
   ["Only Show Chat Dock On Mouseover"] = "마우스 오버시 채팅 독만 표시",
   ["Only Show Indicators for Dispellable Debuffs"] = "해체 가능한 디버프에 대한 표시만 보기",
-  ["Open All"] = nil,
   ["Options"] = nil,
   ["Orientation"] = nil,
   ["Other Panel: Minimap"] = "나머지 패널:미니맵",

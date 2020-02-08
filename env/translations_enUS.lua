@@ -426,7 +426,6 @@ pfUI_translation["enUS"] = {
   ["Only Count Bagspace On Regular Bags"] = nil,
   ["Only Show Chat Dock On Mouseover"] = nil,
   ["Only Show Indicators for Dispellable Debuffs"] = nil,
-  ["Open All"] = nil,
   ["Options"] = nil,
   ["Orientation"] = nil,
   ["Other Panel: Minimap"] = nil,
