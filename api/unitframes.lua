@@ -672,7 +672,9 @@ end
 
 function pfUI.uf.OnEvent()
   -- update regular frames
-  if this.label == "target" and event == "PLAYER_TARGET_CHANGED" then
+  if event == "PLAYER_ENTERING_WORLD" then
+    pfUI.uf:RefreshUnit(this, "all")
+  elseif this.label == "target" and event == "PLAYER_TARGET_CHANGED" then
     pfUI.uf:RefreshUnit(this, "all")
   elseif ( this.label == "raid" or this.label == "party" or this.label == "player" ) and event == "PARTY_MEMBERS_CHANGED" then
     pfUI.uf:RefreshUnit(this, "all")
@@ -684,9 +686,9 @@ function pfUI.uf.OnEvent()
     pfUI.uf:RefreshUnit(this, "all")
   elseif this.label == "player" and (event == "PLAYER_AURAS_CHANGED" or event == "UNIT_INVENTORY_CHANGED") then
     pfUI.uf:RefreshUnit(this, "aura")
-  elseif event == "PLAYER_ENTERING_WORLD" then
+  elseif this.label == "pet" and event == "UNIT_PET" then
     pfUI.uf:RefreshUnit(this, "all")
-  elseif ( event == "UNIT_HAPPINESS" or event == "UNIT_PET" ) and this.label == "pet" then
+  elseif this.label == "pet" and event == "UNIT_HAPPINESS" then
     pfUI.uf:RefreshUnit(this)
 
   -- UNIT_XXX Events
