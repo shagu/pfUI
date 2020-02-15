@@ -4,6 +4,21 @@ pfUI:RegisterModule("prediction", "vanilla:tbc", function ()
   local events = {}
   local senttarget
 
+  local PRAYER_OF_HEALING
+  do -- Prayer of Healing
+    local locales = {
+      ["deDE"] = "Gebet der Heilung",
+      ["enUS"] = "Prayer of Healing",
+      ["esES"] = "Rezo de curación",
+      ["frFR"] = "Prière de soins",
+      ["koKR"] = "치유의 기원",
+      ["ruRU"] = "Молитва исцеления",
+      ["zhCN"] = "治疗祷言",
+    }
+
+    PRAYER_OF_HEALING = locales[GetLocale()] or locales["enUS"]
+  end
+
   pfUI.prediction = CreateFrame("Frame")
   pfUI.prediction:RegisterEvent("UNIT_HEALTH")
   pfUI.prediction:RegisterEvent("CHAT_MSG_ADDON")
@@ -377,6 +392,22 @@ pfUI:RegisterModule("prediction", "vanilla:tbc", function ()
         local amount = cache[spell_queue[2]]
         local casttime = time
 
+        if spell == PRAYER_OF_HEALING then
+          target = sender
+
+          for i=1,4 do
+            if CheckInteractDistance("party"..i, 4) then
+              pfUI.prediction:Heal(player, UnitName("party"..i), amount, casttime)
+              if pfUI.client < 20000 then -- vanilla
+                pfUI.prediction.sender:SendHealCommMsg("Heal/" .. UnitName("party"..i) .. "/" .. amount .. "/" .. casttime .. "/")
+              else -- tbc
+                pfUI.prediction.sender:SendHealCommMsg(string.format("002%05d%s", math.min(amount, 99999), UnitName("party"..i)))
+              end
+              pfUI.prediction.sender.healing = true
+            end
+          end
+        end
+
         pfUI.prediction:Heal(player, target, amount, casttime)
         if pfUI.client < 20000 then -- vanilla
           pfUI.prediction.sender:SendHealCommMsg("Heal/" .. target .. "/" .. amount .. "/" .. casttime .. "/")
@@ -384,6 +415,7 @@ pfUI:RegisterModule("prediction", "vanilla:tbc", function ()
           pfUI.prediction.sender:SendHealCommMsg(string.format("002%05d%s", math.min(amount, 99999), target))
         end
         pfUI.prediction.sender.healing = true
+
       elseif spell_queue[1] == spell and L["resurrections"][spell] then
         pfUI.prediction:Ress(player, spell_queue[3])
         pfUI.prediction.sender:SendHealCommMsg("Resurrection/" .. spell_queue[3] .. "/start/")
