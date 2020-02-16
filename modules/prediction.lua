@@ -290,7 +290,56 @@ pfUI:RegisterModule("prediction", "vanilla:tbc", function ()
   pfUI_cache["prediction"][realm] = pfUI_cache["prediction"][realm] or {}
   pfUI_cache["prediction"][realm][player] = pfUI_cache["prediction"][realm][player] or {}
   pfUI_cache["prediction"][realm][player]["heals"] = pfUI_cache["prediction"][realm][player]["heals"] or {}
+
   local cache = pfUI_cache["prediction"][realm][player]["heals"]
+  local gear_string = ""
+  local resetcache = CreateFrame("Frame")
+
+  resetcache:RegisterEvent("SKILL_LINES_CHANGED")
+  resetcache:RegisterEvent("UNIT_INVENTORY_CHANGED")
+  resetcache:SetScript("OnEvent", function()
+    if event == "UNIT_INVENTORY_CHANGED" then
+      -- skip non-player events
+      if arg1 and arg1 ~= "player" then return end
+
+      local gear = ""
+      for id = 1, 18 do
+        gear = gear .. (GetInventoryItemLink("player",id) or "")
+      end
+
+      -- abort when inventory didn't change
+      if gear == gear_string then return end
+      gear_string = gear
+    end
+
+    -- flag all cached heals for renewal
+    for k in pairs(cache) do
+      if type(cache[k]) == "number" or type(cache[k]) == "string" then
+        -- migrate old data
+        local oldval = cache[k]
+        cache[k] = { [1] = oldval }
+      end
+
+      -- flag for reset
+      cache[k][2] = true
+    end
+  end)
+
+  local function UpdateCache(spell, heal, crit)
+    if not spell or not heal then return end
+    local heal = tonumber(heal)
+
+    if not cache[spell] or cache[spell][2] then
+      -- skills or equipment changed, save whatever is detected
+      cache[spell] = cache[spell] or {}
+      cache[spell][1] = crit and heal*2/3 or heal
+      cache[spell][2] = crit
+    elseif not crit and cache[spell][1] < heal then
+      -- safe the best heal we can get
+      cache[spell][1] = heal
+      cache[spell][2] = nil
+    end
+  end
 
   -- Gather Data by User Actions
   hooksecurefunc("CastSpell", function(id, bookType)
@@ -343,37 +392,41 @@ pfUI:RegisterModule("prediction", "vanilla:tbc", function ()
   pfUI.prediction.sender:RegisterEvent("SPELLCAST_INTERRUPTED")
   pfUI.prediction.sender:RegisterEvent("SPELLCAST_DELAYED")
 
+  -- force cache updates
+  pfUI.prediction.sender:RegisterEvent("UNIT_INVENTORY_CHANGED")
+  pfUI.prediction.sender:RegisterEvent("SKILL_LINES_CHANGED")
+
   pfUI.prediction.sender:SetScript("OnEvent", function()
     if event == "CHAT_MSG_SPELL_SELF_BUFF" then -- vanilla
       local spell, _, heal = cmatch(arg1, HEALEDSELFOTHER) -- "Your %s heals %s for %d.";
       if spell and heal then
-        if spell == spell_queue[1] then cache[spell_queue[2]] = tonumber(heal) end
+        if spell == spell_queue[1] then UpdateCache(spell_queue[2], heal) end
         return
       end
 
       local spell, heal = cmatch(arg1, HEALEDSELFSELF) -- "Your %s heals you for %d."
       if spell and heal then
-        if spell == spell_queue[1] then cache[spell_queue[2]] = tonumber(heal) end
+        if spell == spell_queue[1] then UpdateCache(spell_queue[2], heal) end
         return
       end
 
       local spell, heal = cmatch(arg1, HEALEDCRITSELFOTHER) -- "Your %s critically heals %s for %d."
       if spell and heal then
-        if spell == spell_queue[1] and not cache[spell_queue[2]] then cache[spell_queue[2]] = tonumber(heal)*2/3 end
+        if spell == spell_queue[1] then UpdateCache(spell_queue[2], heal, true) end
         return
       end
 
       local spell, _, heal = cmatch(arg1, HEALEDCRITSELFSELF) -- "Your %s critically heals you for %d."
       if spell and heal then
-        if spell == spell_queue[1] and not cache[spell_queue[2]] then cache[spell_queue[2]] = tonumber(heal)*2/3 end
+        if spell == spell_queue[1] then UpdateCache(spell_queue[2], heal, true) end
         return
       end
     elseif event == "COMBAT_LOG_EVENT_UNFILTERED" and arg2 == "SPELL_HEAL" and arg4 == player then -- tbc
       local spell, heal, crit = arg10, arg12, arg13
       if spell and heal and crit then
-        if spell == spell_queue[1] and not cache[spell_queue[2]] then cache[spell_queue[2]] = tonumber(heal)*2/3 end
+        if spell == spell_queue[1] then UpdateCache(spell_queue[2], heal, true) end
       elseif spell and heal then
-        if spell == spell_queue[1] then cache[spell_queue[2]] = tonumber(heal) end
+        if spell == spell_queue[1] then UpdateCache(spell_queue[2], heal) end
       end
     elseif event == "UNIT_SPELLCAST_SENT" and arg4 then -- fix tbc mouseover macros
         senttarget = arg4
@@ -389,7 +442,7 @@ pfUI:RegisterModule("prediction", "vanilla:tbc", function ()
       if spell_queue[1] == spell and cache[spell_queue[2]] then
         local sender = player
         local target = senttarget or spell_queue[3]
-        local amount = cache[spell_queue[2]]
+        local amount = cache[spell_queue[2]][1]
         local casttime = time
 
         if spell == PRAYER_OF_HEALING then
