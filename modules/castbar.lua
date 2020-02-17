@@ -237,10 +237,15 @@ pfUI:RegisterModule("castbar", "vanilla:tbc", function ()
 
   -- [[ pfFocusCastbar ]] --
   if C.castbar.focus.hide_pfui == "0" and pfUI.uf.focus then
-    pfUI.castbar.focus = CreateCastbar("pfFocusCastbar", UIParent)
+    pfUI.castbar.focus = CreateCastbar("pfFocusCastbar", UIParent, "focus")
     pfUI.castbar.focus.showicon = C.castbar.focus.showicon == "1" and true or nil
     pfUI.castbar.focus.showlag = C.castbar.focus.showlag == "1" and true or nil
     pfUI.castbar.focus.showrank = C.castbar.focus.showrank == "1" and true or nil
+
+    -- reset unitstr for vanilla focus frame emulation
+    if pfUI.client <= 11200 then
+      pfUI.castbar.focus.unitstr = nil
+    end
 
     local pspace = tonumber(C.unitframes.focus.pspace)
     local width = C.castbar.focus.width ~= "-1" and C.castbar.focus.width or pfUI.uf.focus:GetWidth()
