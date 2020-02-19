@@ -1859,8 +1859,10 @@ function pfUI.uf:SetupBuffFilter()
   if myclass == "WARRIOR" then
     -- Battle Shout
     table.insert(pfUI.uf.buffs, "interface\\icons\\ability_warrior_battleshout")
-  end
 
+    -- Commanding Shout (TBC)
+    table.insert(pfUI.uf.buffs, "interface\\icons\\ability_warrior_rallyingcry")
+  end
 
   -- [[ MAGE ]]
   if myclass == "MAGE" then
