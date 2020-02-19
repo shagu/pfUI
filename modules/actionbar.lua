@@ -387,7 +387,7 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
       active = IsCurrentAction(sid) or IsAutoRepeatAction(sid)
       texture = GetActionTexture(sid)
       bar = GetActiveBar()
-      id = sid - ((self.bar == 1 and bar or self.bar)-1)*12
+      id = self.bar == 1 and self.slot or sid-((self.bar)-1)*12
     end
 
     if not self.showempty and self.backdrop and not texture and grid == 0 then
