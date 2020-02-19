@@ -779,7 +779,11 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     end
 
     -- set keydown option
-    f:RegisterForClicks(C.bars.keydown == "1" and "AnyDown" or "AnyUp")
+    if C.bars.keydown == "1" then
+      f:RegisterForClicks("LeftButtonDown", "RightButtonDown")
+    else
+      f:RegisterForClicks("LeftButtonUp", "RightButtonUp")
+    end
 
     -- set animation
     f.animation:SetScript("OnUpdate", button_animations[C.bars.animation])
