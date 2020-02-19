@@ -689,10 +689,8 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     local exists = _G[button_name] and true or nil
     local f = _G[button_name] or CreateFrame("Button", button_name, parent, ACTIONBAR_SECURE_TEMPLATE_BUTTON)
 
+    -- no button available, create a new one
     if not exists then
-      -- no button available, create a new one
-      f:RegisterForClicks("LeftButtonUp", "RightButtonUp")
-
       -- prepare the button for vanilla
       if not f.HookScript then
         f.HookScript = HookScript
@@ -779,6 +777,9 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
       -- add to buttoncache
       buttoncache[id] = f
     end
+
+    -- set keydown option
+    f:RegisterForClicks(C.bars.keydown == "1" and "AnyDown" or "AnyUp")
 
     -- set animation
     f.animation:SetScript("OnUpdate", button_animations[C.bars.animation])
