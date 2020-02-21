@@ -35,16 +35,14 @@ pfUI:RegisterModule("hunterbar", "vanilla", function ()
     if not pfUI.hunterbar.melee or not pfUI.hunterbar.ranged then return end
 
     if IsActionInRange(pfUI.hunterbar.melee) == 1 and IsActionInRange(pfUI.hunterbar.ranged) == 0 then
-      if pfUI.hunterbar.current ~= 0 then
-        CURRENT_ACTIONBAR_PAGE = 9
+      if _G.CURRENT_ACTIONBAR_PAGE == 1 then
+        _G.CURRENT_ACTIONBAR_PAGE = 9
         ChangeActionBarPage()
-        pfUI.hunterbar.current = 0
       end
     else
-      if pfUI.hunterbar.current ~= 1 then
-        CURRENT_ACTIONBAR_PAGE = 1
+      if _G.CURRENT_ACTIONBAR_PAGE == 9 then
+        _G.CURRENT_ACTIONBAR_PAGE = 1
         ChangeActionBarPage()
-        pfUI.hunterbar.current = 1
       end
     end
   end)
