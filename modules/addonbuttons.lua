@@ -1,4 +1,4 @@
-pfUI:RegisterModule("addonbuttons", "vanilla", function ()
+pfUI:RegisterModule("addonbuttons", "vanilla:tbc", function ()
   if not pfUI.minimap then return end
   if C.abuttons.enable == "0" then return end
 
