@@ -26,6 +26,7 @@ pfUI:RegisterModule("addonbuttons", "vanilla", function ()
     "MiniNotePOI",
     "FWGMinimapPOI",
     "RecipeRadarMinimapIcon",
+    "MiniMapTracking",
   }
 
   pfUI.addonbuttons = CreateFrame("Frame", "pfMinimapButtons", UIParent)
