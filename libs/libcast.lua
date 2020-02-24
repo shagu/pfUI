@@ -359,6 +359,7 @@ libcast.customcast[strlower(multishot)] = function(begin)
 end
 
 local function CastCustom(spell)
+  if not spell then return end
   if not UnitCastingInfo(UnitName("player")) then
     for custom, func in pairs(libcast.customcast) do
       if strfind(strlower(spell), custom) or strlower(spell) == custom then
