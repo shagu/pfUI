@@ -345,6 +345,7 @@ pfUI:RegisterModule("prediction", "vanilla:tbc", function ()
   hooksecurefunc("CastSpell", function(id, bookType)
     if not pfUI.prediction.sender.enabled then return end
     local effect, rank = libspell.GetSpellInfo(id, bookType)
+    if not effect then return end
     spell_queue[1] = effect
     spell_queue[2] = effect.. ( rank or "" )
     spell_queue[3] = UnitName("target") and UnitCanAssist("player", "target") and UnitName("target") or UnitName("player")
@@ -353,6 +354,7 @@ pfUI:RegisterModule("prediction", "vanilla:tbc", function ()
   hooksecurefunc("CastSpellByName", function(effect, target)
     if not pfUI.prediction.sender.enabled then return end
     local effect, rank = libspell.GetSpellInfo(effect)
+    if not effect then return end
     spell_queue[1] = effect
     spell_queue[2] = effect.. ( rank or "" )
     spell_queue[3] = UnitName("target") and UnitCanAssist("player", "target") and UnitName("target") or UnitName("player")
@@ -364,6 +366,7 @@ pfUI:RegisterModule("prediction", "vanilla:tbc", function ()
     if GetActionText(slot) or not IsCurrentAction(slot) then return end
     scanner:SetAction(slot)
     local effect, rank = scanner:Line(1)
+    if not effect then return end
     spell_queue[1] = effect
     spell_queue[2] = effect.. ( rank or "" )
     spell_queue[3] = UnitName("target") and UnitCanAssist("player", "target") and UnitName("target") or UnitName("player")
