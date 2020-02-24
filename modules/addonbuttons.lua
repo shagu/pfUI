@@ -401,7 +401,7 @@ pfUI:RegisterModule("addonbuttons", "vanilla", function ()
     if ( this.tick or 1) > GetTime() then return else this.tick = GetTime() + 3 end
 
     pfUI.addonbuttons:ProcessButtons()
-    for k, v in pfUI.addonbuttons.overrides do
+    for k, v in pairs(pfUI.addonbuttons.overrides) do
       _G[k] = v
     end
   end)
