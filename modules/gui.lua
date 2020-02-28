@@ -890,6 +890,15 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
         "Interface\\AddOns\\pfUI\\fonts\\PT-Sans-Narrow-Bold.ttf:PT-Sans-Narrow-Bold",
         "Interface\\AddOns\\pfUI\\fonts\\PT-Sans-Narrow-Regular.ttf:PT-Sans-Narrow-Regular"
       },
+      ["border"] = {
+        "-1:" .. T["Default"],
+        "0:" .. T["None"],
+        "1:1 " .. T["Pixel"],
+        "2:2 " .. T["Pixel"],
+        "3:3 " .. T["Pixel"],
+        "4:4 " .. T["Pixel"],
+        "5:5 " .. T["Pixel"],
+      },
       ["scaling"] = {
         "0:" .. T["Off"],
         "4:" .. T["Huge (PixelPerfect)"],
@@ -1418,13 +1427,13 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
       CreateConfig(nil, T["Enable Pixel Perfect Borders"], C.appearance.border, "pixelperfect", "checkbox")
       CreateConfig(nil, T["Scale Border On HiDPI Displays"], C.appearance.border, "hidpi", "checkbox")
       CreateConfig(nil) -- spacer
-      CreateConfig(nil, T["Global Border Size"], C.appearance.border, "default")
-      CreateConfig(nil, T["Action Bar Border Size"], C.appearance.border, "actionbars")
-      CreateConfig(nil, T["Unit Frame Border Size"], C.appearance.border, "unitframes")
-      CreateConfig(nil, T["Panel Border Size"], C.appearance.border, "panels")
-      CreateConfig(nil, T["Chat Border Size"], C.appearance.border, "chat")
-      CreateConfig(nil, T["Bags Border Size"], C.appearance.border, "bags")
-      CreateConfig(U["nameplates"], T["Nameplate Border Size"], C.appearance.border, "nameplates")
+      CreateConfig(nil, T["Global Border Size"], C.appearance.border, "default", "dropdown", pfUI.gui.dropdowns.border)
+      CreateConfig(nil, T["Action Bar Border Size"], C.appearance.border, "actionbars", "dropdown", pfUI.gui.dropdowns.border)
+      CreateConfig(nil, T["Unit Frame Border Size"], C.appearance.border, "unitframes", "dropdown", pfUI.gui.dropdowns.border)
+      CreateConfig(nil, T["Panel Border Size"], C.appearance.border, "panels", "dropdown", pfUI.gui.dropdowns.border)
+      CreateConfig(nil, T["Chat Border Size"], C.appearance.border, "chat", "dropdown", pfUI.gui.dropdowns.border)
+      CreateConfig(nil, T["Bags Border Size"], C.appearance.border, "bags", "dropdown", pfUI.gui.dropdowns.border)
+      CreateConfig(U["nameplates"], T["Nameplate Border Size"], C.appearance.border, "nameplates", "dropdown", pfUI.gui.dropdowns.border)
       CreateConfig(nil) -- spacer
       CreateConfig(nil, T["Enable Combat Glow Effects On Screen Edges"], C.appearance.infight, "screen", "checkbox")
     end)
