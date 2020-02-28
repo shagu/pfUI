@@ -1,41 +1,109 @@
 pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
-  local function nilfunc() return nil end
-  local font = C.nameplates.use_unitfonts == "1" and pfUI.font_unit or pfUI.font_default
-  local font_size = C.nameplates.use_unitfonts == "1" and C.global.font_unit_size or C.global.font_size
-  local inactive_alpha = tonumber(C.nameplates.notargalpha)
-  local glowr, glowg, glowb, glowa = GetStringColor(C.nameplates.glowcolor)
-  local hptexture = pfUI.media[C.nameplates.healthtexture]
-  local rawborder, default_border = GetBorderSize()
-
   -- disable original castbars
   pcall(SetCVar, "ShowVKeyCastbar", 0)
 
-  pfUI.nameplates = CreateFrame("Frame", nil, UIParent)
+  local unitcolors = {
+    ["ENEMY_NPC"] = { .9, .2, .3, .8 },
+    ["NEUTRAL_NPC"] = { 1, 1, .3, .8 },
+    ["FRIENDLY_NPC"] = { .6, 1, 0, .8 },
+    ["ENEMY_PLAYER"] = { .9, .2, .3, .8 },
+    ["FRIENDLY_PLAYER"] = { .2, .6, 1, .8 }
+  }
+
+  local elitestrings = {
+    ["elite"] = "+",
+    ["rareelite"] = "R+",
+    ["rare"] = "R",
+    ["boss"] = "B"
+  }
 
   -- catch all nameplates
-  local childs
-  local regions
-  local nameplate
+  local childs, regions, plate
   local initialized = 0
   local parentCount = 0
+  local registry = {}
 
-  pfUI.nameplates.scanner = CreateFrame("Frame", "pfNameplateScanner", UIParent)
-  pfUI.nameplates.scanner:SetScript("OnUpdate", function()
+  local function IsNamePlate(frame)
+    if frame:GetObjectType() ~= NAMEPLATE_FRAMETYPE then return nil end
+    regions = plate:GetRegions()
+
+    if not regions then return nil end
+    if not regions.GetObjectType then return nil end
+    if not regions.GetTexture then return nil end
+
+    if regions:GetObjectType() ~= "Texture" then return nil end
+    return regions:GetTexture() == "Interface\\Tooltips\\Nameplate-Border" or nil
+  end
+
+  local function DisableObject(object)
+    if not object then return end
+    if not object.GetObjectType then return end
+
+    local otype = object:GetObjectType()
+
+    if otype == "Texture" then
+      object:SetTexture("")
+      object:SetTexCoord(0, 0, 0, 0)
+    elseif otype == "FontString" then
+      object:SetWidth(0.001)
+    elseif otype == "StatusBar" then
+      object:SetStatusBarTexture("")
+    end
+  end
+
+  local function HidePlate(unittype, name, fullhp, target)
+    -- keep some plates always visible according to config
+    if C.nameplates.fullhealth == "1" and not fullhp then return nil end
+    if C.nameplates.target == "1" and target then return nil end
+
+    -- return true when something needs to be hidden
+    if C.nameplates.enemynpc == "1" and unittype == "ENEMY_NPC" then
+      return true
+    elseif C.nameplates.enemyplayer == "1" and unittype == "ENEMY_PLAYER" then
+      return true
+    elseif C.nameplates.neutralnpc == "1" and unittype == "NEUTRAL_NPC" then
+      return true
+    elseif C.nameplates.friendlynpc == "1" and unittype == "FRIENDLY_NPC" then
+      return true
+    elseif C.nameplates.friendlyplayer == "1" and unittype == "FRIENDLY_PLAYER" then
+      return true
+    elseif C.nameplates.critters == "1" and unittype == "NEUTRAL_NPC" then
+      for i, critter in pairs(L["critters"]) do
+        if string.find(name, critter) then return true end
+      end
+    elseif C.nameplates.totems == "1" then
+      for totem in pairs(L["totems"]) do
+        if string.find(name, totem) then return true end
+      end
+    end
+
+    -- nothing to hide
+    return nil
+  end
+
+  local function GetUnitType(red, green, blue)
+    if red > .9 and green < .2 and blue < .2 then
+      return "ENEMY_NPC"
+    elseif red > .9 and green > .9 and blue < .2 then
+      return "NEUTRAL_NPC"
+    elseif red < .2 and green < .2 and blue > 0.9 then
+      return "FRIENDLY_PLAYER"
+    elseif red < .2 and green > .9 and blue < .2 then
+      return "FRIENDLY_NPC"
+    end
+  end
+
+  -- create nameplate core
+  local nameplates = CreateFrame("Frame", "pfNameplates", UIParent)
+  nameplates:SetScript("OnUpdate", function()
     parentCount = WorldFrame:GetNumChildren()
     if initialized < parentCount then
       childs = { WorldFrame:GetChildren() }
-
-      for i=initialized + 1, parentCount do
-        nameplate = childs[i]
-        if nameplate:GetObjectType() == NAMEPLATE_FRAMETYPE then
-          regions = nameplate:GetRegions()
-          if regions and regions:GetObjectType() == "Texture" and regions:GetTexture() == "Interface\\Tooltips\\Nameplate-Border" then
-            local visible = nameplate:GetAlpha()
-            nameplate:SetAlpha(0)
-            nameplate:SetScript("OnShow", pfUI.nameplates.OnShow)
-            nameplate:SetScript("OnUpdate", pfUI.nameplates.OnUpdate)
-            nameplate:SetAlpha(visible)
-          end
+      for i = initialized + 1, parentCount do
+        plate = childs[i]
+        if IsNamePlate(plate) and not registry[plate] then
+          nameplates.OnCreate(plate)
+          registry[plate] = plate
         end
       end
 
@@ -43,635 +111,11 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     end
   end)
 
-  local plate_width = C.nameplates.width + 50
-  local plate_height = C.nameplates.heighthealth + font_size + 5
-  local plate_height_cast = C.nameplates.heighthealth + font_size + 5 + C.nameplates.heightcast + 5
-
-  -- Create Nameplate
-  function pfUI.nameplates:OnShow()
-    -- initialize nameplate frames
-    if not this.nameplate then
-      this.nameplate = CreateFrame("Button", nil, this)
-      this.nameplate.parent = this
-      this.healthbar, this.castbar = this:GetChildren()
-      this.healthbar:SetScript("OnEnter", nilfunc)
-
-      for i, frame in pairs({this:GetRegions()}) do
-        if NAMEPLATE_OBJECTORDER[i] == "_" then
-          frame.Show = function() return end
-          frame:Hide()
-        elseif NAMEPLATE_OBJECTORDER[i] then
-          this[NAMEPLATE_OBJECTORDER[i]] = frame
-        end
-      end
-
-      this.healthbar:SetParent(this.nameplate)
-      this.border:SetParent(this.nameplate)
-      this.glow:SetParent(this.nameplate)
-      this.name:SetParent(this.nameplate)
-      this.level:SetParent(this.nameplate)
-      this.levelicon:SetParent(this.nameplate)
-      this.raidicon:SetParent(this.healthbar)
-    end
-
-    -- init
-    -- skip modern handlers and overlapping for modern gameclients
-    if pfUI.client < 20000 then
-      if C.nameplates["legacy"] == "0" then
-        this:SetFrameLevel(0)
-        this:EnableMouse(false)
-      end
-
-      -- enable plate overlap
-      if C.nameplates.overlap == "1" and C.nameplates["legacy"] == "0" then
-        this:SetWidth(1)
-        this:SetHeight(1)
-      else
-        this:SetWidth(plate_width * UIParent:GetScale())
-        this:SetHeight(plate_height * UIParent:GetScale())
-      end
-    end
-
-    -- set dimensions
-    this.nameplate:SetScale(UIParent:GetScale())
-    this.nameplate:SetWidth(plate_width)
-    this.nameplate:SetHeight(plate_height)
-    if C.nameplates["legacy"] == "0" then
-      this.nameplate:SetPoint("TOP", this, "TOP", 0, -tonumber(C.nameplates.vpos))
-    else
-      this.nameplate:SetPoint("TOP", this, "TOP", 0, 0)
-    end
-
-    -- add click handlers
-    if C.nameplates["clickthrough"] == "0" then
-      if C.nameplates["legacy"] == "0" and pfUI.client < 20000 then
-        this.nameplate:SetScript("OnClick", function() this.parent:Click() end)
-      else
-        this.nameplate:EnableMouse(false)
-      end
-
-      if C.nameplates["rightclick"] == "1" and pfUI.client < 20000 then
-        local plate = C.nameplates["legacy"] == "0" and this.nameplate or this
-        plate:SetScript("OnMouseDown", function()
-          if arg1 and arg1 == "RightButton" then
-            MouselookStart()
-
-            -- start detection of the rightclick emulation
-            pfUI.nameplates.emulateRightClick.time = GetTime()
-            pfUI.nameplates.emulateRightClick.frame = this
-            pfUI.nameplates.emulateRightClick:Show()
-          end
-        end)
-      end
-    else
-      this:EnableMouse(false)
-      this.nameplate:EnableMouse(false)
-    end
-
-    -- hide default plates
-    this.border:Hide()
-
-    -- remove glowing
-    this.glow:Hide()
-    this.glow:SetAlpha(0)
-    this.glow.Show = function() return end
-
-    -- name
-    this.name:SetFont(font, font_size, "OUTLINE")
-    this.name:ClearAllPoints()
-    this.name:SetPoint("TOP", this.nameplate, "TOP", 0, 0)
-
-    -- healthbar
-    this.healthbar:SetStatusBarTexture(hptexture)
-    this.healthbar:ClearAllPoints()
-    this.healthbar:SetPoint("TOP", this.name, "BOTTOM", 0, -3)
-    this.healthbar:SetWidth(C.nameplates.width)
-    this.healthbar:SetHeight(C.nameplates.heighthealth)
-
-    if not this.healthbar.bg then
-      this.healthbar.bg = this.healthbar:CreateTexture(nil, "BORDER")
-      this.healthbar.bg:SetTexture(0,0,0,0.90)
-      this.healthbar.bg:ClearAllPoints()
-      this.healthbar.bg:SetPoint("CENTER", this.healthbar, "CENTER", 0, 0)
-      this.healthbar.bg:SetWidth(this.healthbar:GetWidth() + 3)
-      this.healthbar.bg:SetHeight(this.healthbar:GetHeight() + 3)
-    end
-
-    if not this.healthbar.bgtarget then
-      this.healthbar.bgtarget = this.healthbar:CreateTexture(nil, "BACKGROUND")
-      this.healthbar.bgtarget:SetTexture(1,1,1,.8)
-      this.healthbar.bgtarget:ClearAllPoints()
-      this.healthbar.bgtarget:SetPoint("CENTER", this.healthbar, "CENTER", 0, 0)
-      this.healthbar.bgtarget:SetWidth(this.healthbar:GetWidth() + 5)
-      this.healthbar.bgtarget:SetHeight(this.healthbar:GetHeight() + 5)
-    end
-
-    if not this.healthbar.glowtarget then
-      this.healthbar.glowtarget = this.nameplate:CreateTexture(nil, "BACKGROUND")
-      this.healthbar.glowtarget:SetTexture(pfUI.media["img:dot"])
-      this.healthbar.glowtarget:ClearAllPoints()
-      this.healthbar.glowtarget:SetPoint("CENTER", this.healthbar, "CENTER", 0, 0)
-      this.healthbar.glowtarget:SetWidth(this.healthbar:GetWidth() + 50)
-      this.healthbar.glowtarget:SetHeight(this.healthbar:GetHeight() + 25)
-      this.healthbar.glowtarget:SetVertexColor(glowr, glowg, glowb, glowa)
-    end
-
-    this.healthbar.reaction = nil
-
-    -- level
-    this.level:SetFont(font, font_size, "OUTLINE")
-    this.level:ClearAllPoints()
-    this.level:SetPoint("RIGHT", this.healthbar, "LEFT", 0, 0)
-    this.level.needUpdate = true
-    this.healthbar.needReactionUpdate = true
-
-    -- adjust font
-    this.levelicon:ClearAllPoints()
-    this.levelicon:SetPoint("RIGHT", this.healthbar, "LEFT", -1, 0)
-
-    -- raidtarget
-    this.raidicon:ClearAllPoints()
-    this.raidicon:SetWidth(C.nameplates.raidiconsize)
-    this.raidicon:SetHeight(C.nameplates.raidiconsize)
-    this.raidicon:SetPoint("CENTER", this.healthbar, "CENTER", 0, -5)
-    this.raidicon:SetDrawLayer("OVERLAY")
-    this.raidicon:SetTexture(pfUI.media["img:raidicons"])
-
-    -- add debuff frames
-    if C.nameplates["showdebuffs"] == "1" then
-      if not this.debuffs then this.debuffs = {} end
-      for j=1, 16, 1 do
-        if this.debuffs[j] == nil then
-          this.debuffs[j] = CreateFrame("Frame", nil, this.nameplate)
-          this.debuffs[j]:ClearAllPoints()
-          this.debuffs[j]:SetWidth(18)
-          this.debuffs[j]:SetHeight(18)
-          if j == 1 then
-            this.debuffs[j]:SetPoint("TOPLEFT", this.healthbar, "BOTTOMLEFT", 0, -3)
-          elseif j <= 8 then
-            this.debuffs[j]:SetPoint("LEFT", this.debuffs[j-1], "RIGHT", 1, 0)
-          elseif j > 8 then
-            this.debuffs[j]:SetPoint("TOPLEFT", this.debuffs[j-8], "BOTTOMLEFT", 0, -1)
-          end
-
-          this.debuffs[j].icon = this.debuffs[j]:CreateTexture(nil, "BORDER")
-          this.debuffs[j].icon:SetTexture(0,0,0,0)
-          this.debuffs[j].icon:SetAllPoints(this.debuffs[j])
-        end
-      end
-    end
-
-    -- combopoints
-    if C.nameplates.cpdisplay == "1" then
-      local combo_size = 5
-      local offset = 5 + C.nameplates.heightcast + C.nameplates.heighthealth + default_border*2
-
-      if not this.combopoints then
-        this.combopoints = CreateFrame("Frame", nil, this.nameplate)
-        for point=1, 5 do
-          if not this.combopoints["combopoint" .. point] then
-            this.combopoints["combopoint" .. point] = CreateFrame("Frame", "pfNameplateCombo" .. point, this.nameplate)
-            this.combopoints["combopoint" .. point]:SetFrameStrata("HIGH")
-            this.combopoints["combopoint" .. point]:SetWidth(combo_size)
-            this.combopoints["combopoint" .. point]:SetHeight(combo_size)
-          end
-
-          CreateBackdrop(this.combopoints["combopoint" .. point])
-          this.combopoints["combopoint" .. point]:SetPoint("BOTTOMRIGHT", this.nameplate, "BOTTOMRIGHT", -(point - 1) * (combo_size + default_border*3) - offset, -default_border*3)
-
-          if point < 3 then
-            local tex = this.combopoints["combopoint" .. point]:CreateTexture("OVERLAY")
-            tex:SetAllPoints(this.combopoints["combopoint" .. point])
-            tex:SetTexture(1, .3, .3, .75)
-          elseif point < 4 then
-            local tex = this.combopoints["combopoint" .. point]:CreateTexture("OVERLAY")
-            tex:SetAllPoints(this.combopoints["combopoint" .. point])
-            tex:SetTexture(1, 1, .3, .75)
-          else
-            local tex = this.combopoints["combopoint" .. point]:CreateTexture("OVERLAY")
-            tex:SetAllPoints(this.combopoints["combopoint" .. point])
-            tex:SetTexture(.3, 1, .3, .75)
-          end
-          this.combopoints["combopoint" .. point]:Hide()
-        end
-      end
-    end
-
-    -- add castbar
-    if pfUI.castbar and C.nameplates["showcastbar"] == "1" then
-      local plate = this
-
-      if not this.healthbar.castbar then
-        this.healthbar.castbar = CreateFrame("StatusBar", nil, this.healthbar)
-        this.healthbar.castbar:Hide()
-        this.healthbar.castbar:SetHeight(C.nameplates.heightcast)
-        this.healthbar.castbar:SetPoint("TOPLEFT", this.healthbar, "BOTTOMLEFT", 0, -5)
-        this.healthbar.castbar:SetPoint("TOPRIGHT", this.healthbar, "BOTTOMRIGHT", 0, -5)
-        this.healthbar.castbar:SetBackdrop({  bgFile = [[Interface\Tooltips\UI-Tooltip-Background]],
-                                               insets = {left = -1, right = -1, top = -1, bottom = -1} })
-        this.healthbar.castbar:SetBackdropColor(0,0,0,1)
-        this.healthbar.castbar:SetStatusBarTexture(pfUI.media["img:bar"])
-        this.healthbar.castbar:SetStatusBarColor(.9,.8,0,1)
-
-        plate.healthbar.castbar:SetScript("OnShow", function()
-          if not InCombatLockdown or not InCombatLockdown() then
-            plate:SetHeight(plate_height_cast * UIParent:GetScale())
-            plate.nameplate:SetHeight(plate_height_cast)
-          end
-
-          if plate.debuffs then
-            plate.debuffs[1]:SetPoint("TOPLEFT", plate.healthbar.castbar, "BOTTOMLEFT", 0, -3)
-          end
-        end)
-
-        this.healthbar.castbar:SetScript("OnHide", function()
-          if not InCombatLockdown or not InCombatLockdown() then
-            plate:SetHeight(plate_height * UIParent:GetScale())
-            plate.nameplate:SetHeight(plate_height)
-          end
-
-          if plate.debuffs then
-            plate.debuffs[1]:SetPoint("TOPLEFT", plate.healthbar, "BOTTOMLEFT", 0, -3)
-          end
-        end)
-
-        this.healthbar.castbar.bg = this.healthbar.castbar:CreateTexture(nil, "BACKGROUND")
-        this.healthbar.castbar.bg:SetTexture(0,0,0,0.90)
-        this.healthbar.castbar.bg:ClearAllPoints()
-        this.healthbar.castbar.bg:SetPoint("CENTER", this.healthbar.castbar, "CENTER", 0, 0)
-        this.healthbar.castbar.bg:SetWidth(this.healthbar.castbar:GetWidth() + 3)
-        this.healthbar.castbar.bg:SetHeight(this.healthbar.castbar:GetHeight() + 3)
-
-        this.healthbar.castbar.text = this.healthbar.castbar:CreateFontString("Status", "DIALOG", "GameFontNormal")
-        this.healthbar.castbar.text:SetPoint("RIGHT", this.healthbar.castbar, "LEFT")
-        this.healthbar.castbar.text:SetNonSpaceWrap(false)
-        this.healthbar.castbar.text:SetFontObject(GameFontWhite)
-        this.healthbar.castbar.text:SetTextColor(1,1,1,.5)
-        this.healthbar.castbar.text:SetFont(font, font_size, "OUTLINE")
-
-        this.healthbar.castbar.spell = this.healthbar.castbar:CreateFontString("Status", "DIALOG", "GameFontNormal")
-        this.healthbar.castbar.spell:SetPoint("CENTER", this.healthbar.castbar, "CENTER")
-        this.healthbar.castbar.spell:SetNonSpaceWrap(false)
-        this.healthbar.castbar.spell:SetFontObject(GameFontWhite)
-        this.healthbar.castbar.spell:SetTextColor(1,1,1,1)
-        this.healthbar.castbar.spell:SetFont(font, font_size, "OUTLINE")
-
-        this.healthbar.castbar.icon = this.healthbar.castbar:CreateTexture(nil, "BORDER")
-        this.healthbar.castbar.icon:ClearAllPoints()
-        this.healthbar.castbar.icon:SetPoint("BOTTOMLEFT", this.healthbar.castbar, "BOTTOMRIGHT", 5, -1)
-        this.healthbar.castbar.icon:SetPoint("TOPLEFT", this.healthbar, "TOPRIGHT", 5, 1)
-        this.healthbar.castbar.icon:SetWidth(C.nameplates.heightcast + 8 + C.nameplates.heighthealth)
-
-        this.healthbar.castbar.icon.bg = this.healthbar.castbar:CreateTexture(nil, "BACKGROUND")
-        this.healthbar.castbar.icon.bg:SetTexture(0,0,0,0.90)
-        this.healthbar.castbar.icon.bg:ClearAllPoints()
-        this.healthbar.castbar.icon.bg:SetPoint("CENTER", this.healthbar.castbar.icon, "CENTER", 0, 0)
-        this.healthbar.castbar.icon.bg:SetWidth(this.healthbar.castbar.icon:GetWidth() + 3)
-        this.healthbar.castbar.icon.bg:SetHeight(this.healthbar.castbar.icon:GetHeight() + 3)
-      end
-    end
-
-    if C.nameplates.showhp == "1" and not this.healthbar.hptext then
-      this.healthbar.hptext = this.healthbar:CreateFontString("Status", "DIALOG", "GameFontNormal")
-      this.healthbar.hptext:SetPoint("RIGHT", this.healthbar, "RIGHT")
-      this.healthbar.hptext:SetNonSpaceWrap(false)
-      this.healthbar.hptext:SetFontObject(GameFontWhite)
-      this.healthbar.hptext:SetTextColor(1,1,1,1)
-      this.healthbar.hptext:SetFont(font, font_size)
-    end
-
-    if C.nameplates.players == "1" then
-      local _, _, _, uplayer = GetUnitData(this.name:GetText(), true)
-      if uplayer then this:Hide() end
-    end
-
-    this.needClassColorUpdate = true
-    this.needBasicColorUpdate = true
-    this.needEliteUpdate = true
-
-    this.setup = true
-  end
-
-  -- Nameplate OnUpdate
-  function pfUI.nameplates:OnUpdate()
-    if not this.setup then pfUI.nameplates:OnShow() return end
-
-    -- set nameplate alpha
-    if this:GetAlpha() < inactive_alpha then this:SetAlpha(inactive_alpha) end
-
-    local healthbar = this.healthbar
-    local border, glow, name, level, levelicon , raidicon, combopoints = this.border, this.glow, this.name, this.level, this.levelicon , this.raidicon, this.combopoints
-    local unitname = name:GetText()
-    local uclass, ulevel, uelite, uplayer = GetUnitData(unitname, true)
-    local target = UnitExists("target") and this:GetAlpha() == 1
-
-    if unitname == UNKNOWN then
-      this.needClassColorUpdate = true
-      this.needBasicColorUpdate = true
-      this.needEliteUpdate = true
-    end
-
-    -- hide non-player frames
-    if C.nameplates.players == "1" then
-      if uplayer then this:Hide() end
-    end
-
-    -- hide critters
-    if C.nameplates.critters == "1" then
-      local red, green, blue, _ = healthbar:GetStatusBarColor()
-      local name_val = unitname
-      for i, critter_val in pairs(L["critters"]) do
-        if red > 0.9 and green > 0.9 and blue < 0.2 and name_val == critter_val then
-          this:Hide()
-        end
-      end
-    end
-
-    -- hide totems
-    if C.nameplates.totems == "1" then
-      for totem in pairs(L["totems"]) do
-        if string.find(unitname, totem) then
-          this:Hide()
-        end
-      end
-    end
-
-    -- disable click events while spell is targeting
-    local mouseEnabled = this.nameplate:IsMouseEnabled()
-    if C.nameplates["clickthrough"] == "0" and C.nameplates["legacy"] == "0" and SpellIsTargeting() == mouseEnabled then
-      this.nameplate:EnableMouse(not mouseEnabled)
-    end
-
-    -- level elite indicator
-    if this.needEliteUpdate and uelite then
-      if level:GetText() ~= nil then
-        if uelite == "elite" then
-          level:SetText(level:GetText() .. "+")
-        elseif uelite == "rareelite" then
-          level:SetText(level:GetText() .. "R+")
-        elseif uelite == "rare" then
-          level:SetText(level:GetText() .. "R")
-        end
-      end
-      this.needEliteUpdate = nil
-    end
-
-    -- level colors
-    if this.needBasicColorUpdate then
-      local red, green, blue, _ = level:GetTextColor()
-      if red > 0.99 and green == 0 and blue == 0 then
-        level:SetTextColor(1,0.4,0.2,0.85)
-      elseif red > 0.99 and green > 0.81 and green < 0.82 and blue == 0 then
-        level:SetTextColor(1,1,1,0.85)
-      end
-
-      -- healthbar: update colors
-      local red, green, blue, _ = healthbar:GetStatusBarColor()
-      -- reaction: 0 enemy ; 1 neutral ; 2 player ; 3 npc
-      if red > 0.9 and green < 0.2 and blue < 0.2 then
-        healthbar.reaction = 0
-        healthbar.r, healthbar.g, healthbar.b, healthbar.a = .9, .2, .3, .8
-      elseif red > 0.9 and green > 0.9 and blue < 0.2 then
-        healthbar.reaction = 1
-        healthbar.r, healthbar.g, healthbar.b, healthbar.a = 1, 1, .3, .8
-      elseif ( blue > 0.9 and red == 0 and green == 0 ) then
-        healthbar.reaction = 2
-        healthbar.r, healthbar.g, healthbar.b, healthbar.a = .2, .6, 1, .8
-      elseif red == 0 and green > 0.99 and blue == 0 then
-        healthbar.reaction = 3
-        healthbar.r, healthbar.g, healthbar.b, healthbar.a = .6, 1, 0, .8
-      end
-
-      this.needBasicColorUpdate = nil
-    end
-
-    -- add class colors
-    if this.needClassColorUpdate and uplayer and uclass then
-      if healthbar.reaction == 0 then
-        if C.nameplates["enemyclassc"] == "1" and RAID_CLASS_COLORS[uclass] then
-          local color = RAID_CLASS_COLORS[uclass]
-          healthbar.r, healthbar.g, healthbar.b, healthbar.a = color.r, color.g, color.b, .9
-        end
-      elseif healthbar.reaction == 2 then
-        if C.nameplates["friendclassc"] == "1" and RAID_CLASS_COLORS[uclass] then
-          local color = RAID_CLASS_COLORS[uclass]
-          healthbar.r, healthbar.g, healthbar.b, healthbar.a = color.r, color.g, color.b, .9
-        end
-      end
-
-      this.needClassColorUpdate = nil
-    end
-
-    -- color changes are done within the C-API, we need to overwrite on each paint
-    healthbar:SetStatusBarColor(healthbar.r, healthbar.g, healthbar.b, healthbar.a)
-
-    -- name color
-    local red, green, blue, _ = name:GetTextColor()
-    if red > 0.99 and green == 0 and blue == 0 then
-      name:SetTextColor(1,0.4,0.2,0.85)
-    elseif red > 0.99 and green > 0.81 and green < 0.82 and blue == 0 then
-      name:SetTextColor(1,1,1,0.85)
-    end
-
-    -- target indicator
-    if target and C.nameplates.targethighlight == "1" then
-      healthbar.bgtarget:Show()
-    else
-      healthbar.bgtarget:Hide()
-    end
-
-    -- glow target indicator
-    if target and C.nameplates.targetglow == "1" then
-      healthbar.glowtarget:Show()
-    else
-      healthbar.glowtarget:Hide()
-    end
-
-    -- target zoom
-    local w, h = healthbar:GetWidth(), healthbar:GetHeight()
-    if target and C.nameplates.targetzoom == "1" then
-      local wc = tonumber(C.nameplates.width)*1.4
-      local hc = tonumber(C.nameplates.heighthealth)*1.3
-      local animation = false
-
-      if wc >= w then
-        wc = w*1.05
-        healthbar:SetWidth(wc)
-        healthbar.bg:SetWidth(wc + 3)
-        healthbar.bgtarget:SetWidth(wc + 5)
-        healthbar.zoomTransition = true
-        animation = true
-      end
-
-      if hc >= h then
-        hc = h*1.05
-        healthbar:SetHeight(hc)
-        healthbar.bg:SetHeight(hc + 3)
-        healthbar.bgtarget:SetHeight(hc + 5)
-        healthbar.zoomTransition = true
-        animation = true
-      end
-
-      if animation == false and not healthbar.zoomed then
-        healthbar:SetWidth(wc)
-        healthbar.bg:SetWidth(wc + 3)
-        healthbar.bgtarget:SetWidth(wc + 5)
-
-        healthbar:SetHeight(hc)
-        healthbar.bg:SetHeight(hc + 3)
-        healthbar.bgtarget:SetHeight(hc + 5)
-
-        healthbar.zoomTransition = nil
-        healthbar.zoomed = true
-      end
-    elseif healthbar.zoomed or healthbar.zoomTransition then
-      local wc = tonumber(C.nameplates.width)
-      local hc = tonumber(C.nameplates.heighthealth)
-      local animation = false
-
-      if wc <= w then
-        wc = w*.95
-        healthbar:SetWidth(wc)
-        healthbar.bg:SetWidth(wc + 3)
-        healthbar.bgtarget:SetWidth(wc + 5)
-        animation = true
-      end
-
-      if hc <= h then
-        hc = h*0.95
-        healthbar:SetHeight(hc)
-        healthbar.bg:SetHeight(hc + 3)
-        healthbar.bgtarget:SetHeight(hc + 5)
-        animation = true
-      end
-
-      if animation == false then
-        healthbar:SetWidth(wc)
-        healthbar.bg:SetWidth(wc + 3)
-        healthbar.bgtarget:SetWidth(wc + 5)
-
-        healthbar:SetHeight(hc)
-        healthbar.bg:SetHeight(hc + 3)
-        healthbar.bgtarget:SetHeight(hc + 5)
-
-        healthbar.zoomTransition = nil
-        healthbar.zoomed = nil
-      end
-    end
-
-    -- update combopoints
-    if combopoints and C.nameplates.cpdisplay == "1" then
-      for point=1, 5 do
-        combopoints["combopoint" .. point]:Hide()
-      end
-
-      local cp = GetComboPoints("target")
-      if target and cp > 0 then
-        for point=1, cp do
-          combopoints["combopoint" .. point]:Show()
-        end
-      end
-    end
-
-    -- show castbar
-    if healthbar.castbar and pfUI.castbar and C.nameplates["showcastbar"] == "1" then
-      local cast, nameSubtext, text, texture, startTime, endTime, isTradeSkill = UnitCastingInfo(target and "target" or unitname)
-
-      if not cast then
-        healthbar.castbar:Hide()
-      else
-        local duration = endTime - startTime
-        healthbar.castbar:SetMinMaxValues(0,  duration/1000)
-        healthbar.castbar:SetValue(GetTime() - startTime/1000)
-        healthbar.castbar.text:SetText(round(startTime/1000 + duration/1000 - GetTime(),1))
-        if C.nameplates.spellname == "1" and healthbar.castbar.spell then
-          healthbar.castbar.spell:SetText(cast)
-        else
-          healthbar.castbar.spell:SetText("")
-        end
-        healthbar.castbar:Show()
-        if this.debuffs then
-          this.debuffs[1]:SetPoint("TOPLEFT", healthbar.castbar, "BOTTOMLEFT", 0, -3)
-        end
-
-        if texture then
-          healthbar.castbar.icon:SetTexture(texture)
-          healthbar.castbar.icon:SetTexCoord(.1,.9,.1,.9)
-        end
-      end
-    else
-      if healthbar.castbar then
-        healthbar.castbar:Hide()
-      end
-
-      if this.debuffs then
-        this.debuffs[1]:SetPoint("TOPLEFT", healthbar, "BOTTOMLEFT", 0, -3)
-      end
-    end
-
-    -- update debuffs
-    if this.debuffs and pfUI.nameplates.debuffs and C.nameplates["showdebuffs"] == "1" then
-      if target then
-        local j = 1
-        local k = 1
-        for j, e in ipairs(pfUI.nameplates.debuffs) do
-          local icon, name = unpack(pfUI.nameplates.debuffs[j])
-          this.debuffs[j]:Show()
-          this.debuffs[j].icon:SetTexture(icon)
-          this.debuffs[j].icon:SetTexCoord(.078, .92, .079, .937)
-
-          if icon then
-            this.debuffs[j].cd = this.debuffs[j].cd or CreateFrame(COOLDOWN_FRAME_TYPE, nil, this.debuffs[j], "CooldownFrameTemplate")
-            this.debuffs[j].cd.pfCooldownType = "ALL"
-
-            local name, rank, texture, stacks, dtype, duration, timeleft = libdebuff:UnitDebuff("target", j)
-            if duration and timeleft then
-              this.debuffs[j].cd:SetAlpha(0)
-              CooldownFrame_SetTimer(this.debuffs[j].cd, GetTime() + timeleft - duration, duration, 1)
-            end
-          end
-
-          k = k + 1
-        end
-        for j = k, 16, 1 do
-          this.debuffs[j]:Hide()
-        end
-      elseif this.debuffs then
-        for j = 1, 16, 1 do
-          this.debuffs[j]:Hide()
-        end
-      end
-    end
-
-    -- show hp text
-    if C.nameplates.showhp == "1" and healthbar.hptext then
-      local min, max = healthbar:GetMinMaxValues()
-      local cur = healthbar:GetValue()
-      if (MobHealth3 or MobHealthFrame) and unitname == UnitName('target') and healthbar:GetAlpha() == 1 and MobHealth_GetTargetCurHP() then
-        cur, max = MobHealth_GetTargetCurHP(), MobHealth_GetTargetMaxHP()
-      end
-      healthbar.hptext:SetText(cur .. " / " .. max)
-    end
-  end
-
-  pfUI.nameplates:RegisterEvent("PLAYER_TARGET_CHANGED")
-  pfUI.nameplates:RegisterEvent("UNIT_AURA")
-  pfUI.nameplates:SetScript("OnEvent", function()
-    if not arg1 or arg1 == "target" then
-      pfUI.nameplates.debuffs = {}
-      for i = 1, 16 do
-        if not UnitDebuff("target", i) then return end
-        local name, _, texture = libdebuff:UnitDebuff("target", i)
-        pfUI.nameplates.debuffs[i] = { texture, name }
-      end
-    end
-  end)
-
   -- combat tracker
-  pfUI.nameplates.combat = CreateFrame("Frame")
-  pfUI.nameplates.combat:RegisterEvent("PLAYER_ENTER_COMBAT")
-  pfUI.nameplates.combat:RegisterEvent("PLAYER_LEAVE_COMBAT")
-  pfUI.nameplates.combat:SetScript("OnEvent", function()
+  nameplates.combat = CreateFrame("Frame")
+  nameplates.combat:RegisterEvent("PLAYER_ENTER_COMBAT")
+  nameplates.combat:RegisterEvent("PLAYER_LEAVE_COMBAT")
+  nameplates.combat:SetScript("OnEvent", function()
     if event == "PLAYER_ENTER_COMBAT" then
       this.inCombat = 1
       if PlayerFrame then PlayerFrame.inCombat = 1 end
@@ -681,29 +125,541 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     end
   end)
 
-  -- emulate fake rightclick
-  pfUI.nameplates.emulateRightClick = CreateFrame("Frame", nil, UIParent)
-  pfUI.nameplates.emulateRightClick.time = nil
-  pfUI.nameplates.emulateRightClick.frame = nil
-  pfUI.nameplates.emulateRightClick:SetScript("OnUpdate", function()
-    -- break here if nothing to do
-    if not pfUI.nameplates.emulateRightClick.time or not pfUI.nameplates.emulateRightClick.frame then
-      this:Hide()
-      return
+  nameplates.OnCreate = function(frame)
+    local parent = frame or this
+
+    -- create pfUI nameplate overlay
+    local nameplate = CreateFrame("Button", nil, parent)
+    nameplate:EnableMouse(0)
+    nameplate.parent = parent
+    nameplate.cache = {}
+
+    -- create shortcuts for all known elements and disable them
+    parent.healthbar, parent.castbar = parent:GetChildren()
+    DisableObject(parent.healthbar)
+    DisableObject(parent.castbar)
+
+    for i, object in pairs({parent:GetRegions()}) do
+      if NAMEPLATE_OBJECTORDER[i] and NAMEPLATE_OBJECTORDER[i] == "raidicon" then
+        nameplate[NAMEPLATE_OBJECTORDER[i]] = object
+      else
+        parent[NAMEPLATE_OBJECTORDER[i]] = object
+        DisableObject(object)
+      end
     end
 
-    -- if threshold is reached (0.5 second) no click action will follow
-    if not IsMouselooking() and pfUI.nameplates.emulateRightClick.time + tonumber(C.nameplates["clickthreshold"]) < GetTime() then
-      pfUI.nameplates.emulateRightClick:Hide()
-      return
+    HookScript(parent.healthbar, "OnValueChanged", nameplates.OnValueChanged)
+
+    -- adjust sizes and scaling of the nameplate
+    nameplate:SetScale(UIParent:GetScale())
+
+    nameplate.name = nameplate:CreateFontString(nil, "OVERLAY")
+    nameplate.name:SetPoint("TOP", nameplate, "TOP", 0, 0)
+
+    nameplate.health = CreateFrame("StatusBar", nil, nameplate)
+    nameplate.health:SetPoint("TOP", nameplate.name, "BOTTOM", 0, -3)
+    nameplate.health:SetFrameLevel(4) -- keep above glow
+    nameplate.health.text = nameplate.health:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+    nameplate.health.text:SetAllPoints()
+    nameplate.health.text:SetTextColor(1,1,1,1)
+
+    nameplate.glow = nameplate:CreateTexture(nil, "BACKGROUND")
+    nameplate.glow:SetPoint("CENTER", nameplate.health, "CENTER", 0, 0)
+    nameplate.glow:SetTexture(pfUI.media["img:dot"])
+    nameplate.glow:Hide()
+
+    nameplate.level = nameplate:CreateFontString(nil, "OVERLAY")
+    nameplate.level:SetPoint("RIGHT", nameplate.health, "LEFT", -3, 0)
+
+    nameplate.raidicon:SetParent(nameplate.health)
+    nameplate.raidicon:ClearAllPoints()
+    nameplate.raidicon:SetPoint("CENTER", nameplate.health, "CENTER", 0, -5)
+    nameplate.raidicon:SetDrawLayer("OVERLAY")
+    nameplate.raidicon:SetTexture(pfUI.media["img:raidicons"])
+
+    do -- debuffs
+      local debuffs = {}
+      for i=1, 16, 1 do
+        debuffs[i] = CreateFrame("Frame", nil, nameplate)
+        debuffs[i]:Hide()
+        debuffs[i]:SetFrameLevel(1)
+        if i == 1 then
+          debuffs[i]:SetPoint("TOPLEFT", nameplate.health, "BOTTOMLEFT", 0, -4)
+        elseif i <= 8 then
+          debuffs[i]:SetPoint("LEFT", debuffs[i-1], "RIGHT", 1, 0)
+        elseif i > 8 then
+          debuffs[i]:SetPoint("TOPLEFT", debuffs[i-8], "BOTTOMLEFT", 0, -1)
+        end
+
+        debuffs[i].icon = debuffs[i]:CreateTexture(nil, "BACKGROUND")
+        debuffs[i].icon:SetTexture(.3,1,.8,1)
+        debuffs[i].icon:SetAllPoints(debuffs[i])
+
+        debuffs[i].cd = CreateFrame(COOLDOWN_FRAME_TYPE, nil, debuffs[i], "CooldownFrameTemplate")
+        debuffs[i].cd.pfCooldownType = "ALL"
+      end
+      nameplate.debuffs = debuffs
     end
 
-    -- run a usual nameplate rightclick action
-    if not IsMouselooking() then
-      pfUI.nameplates.emulateRightClick.frame:Click("LeftButton")
-      if UnitCanAttack("player", "target") and not pfUI.nameplates.combat.inCombat then AttackTarget() end
-      pfUI.nameplates.emulateRightClick:Hide()
-      return
+    do -- combopoints
+      local combopoints = { }
+      for i = 1, 5 do
+        combopoints[i] = CreateFrame("Frame", nil, nameplate)
+        combopoints[i]:Hide()
+        combopoints[i]:SetFrameLevel(8)
+        combopoints[i].tex = combopoints[i]:CreateTexture("OVERLAY")
+        combopoints[i].tex:SetAllPoints()
+
+        if i < 3 then
+          combopoints[i].tex:SetTexture(1, .3, .3, .75)
+        elseif i < 4 then
+          combopoints[i].tex:SetTexture(1, 1, .3, .75)
+        else
+          combopoints[i].tex:SetTexture(.3, 1, .3, .75)
+        end
+      end
+      nameplate.combopoints = combopoints
     end
-  end)
+
+    do -- castbar
+      local castbar = CreateFrame("StatusBar", nil, nameplate.health)
+      castbar:Hide()
+
+      castbar:SetScript("OnShow", function()
+        nameplate.debuffs[1]:SetPoint("TOPLEFT", this, "BOTTOMLEFT", 0, -4)
+      end)
+
+      castbar:SetScript("OnHide", function()
+        nameplate.debuffs[1]:SetPoint("TOPLEFT", this:GetParent(), "BOTTOMLEFT", 0, -4)
+      end)
+
+      castbar.text = castbar:CreateFontString("Status", "DIALOG", "GameFontNormal")
+      castbar.text:SetPoint("RIGHT", castbar, "LEFT")
+      castbar.text:SetNonSpaceWrap(false)
+      castbar.text:SetTextColor(1,1,1,.5)
+
+      castbar.spell = castbar:CreateFontString("Status", "DIALOG", "GameFontNormal")
+      castbar.spell:SetPoint("CENTER", castbar, "CENTER")
+      castbar.spell:SetNonSpaceWrap(false)
+      castbar.spell:SetTextColor(1,1,1,1)
+
+      castbar.icon = CreateFrame("Frame", nil, castbar)
+      castbar.icon.tex = castbar.icon:CreateTexture(nil, "BORDER")
+      castbar.icon.tex:SetAllPoints()
+
+      nameplate.castbar = castbar
+    end
+
+    parent.nameplate = nameplate
+    parent:SetScript("OnShow", nameplates.OnShow)
+    parent:SetScript("OnUpdate", nameplates.OnUpdate)
+    parent:SetScript("OnEvent", nameplates.OnEvent)
+
+    parent:RegisterEvent("PLAYER_TARGET_CHANGED")
+    parent:RegisterEvent("UNIT_AURA")
+    parent:RegisterEvent("UNIT_COMBO_POINTS")
+    parent:RegisterEvent("PLAYER_COMBO_POINTS")
+
+    nameplates.OnConfigChange(parent)
+    nameplates.OnShow(parent)
+  end
+
+  nameplates.OnConfigChange = function(frame)
+    local parent = frame
+    local nameplate = frame.nameplate
+
+    local font = C.nameplates.use_unitfonts == "1" and pfUI.font_unit or pfUI.font_default
+    local font_size = C.nameplates.use_unitfonts == "1" and C.global.font_unit_size or C.global.font_size
+    local glowr, glowg, glowb, glowa = GetStringColor(C.nameplates.glowcolor)
+    local hptexture = pfUI.media[C.nameplates.healthtexture]
+    local rawborder, default_border = GetBorderSize("nameplates")
+
+    local plate_width = C.nameplates.width + 50
+    local plate_height = C.nameplates.heighthealth + font_size + 5
+    local plate_height_cast = C.nameplates.heighthealth + font_size + 5 + C.nameplates.heightcast + 5
+    local combo_size = 5
+
+    nameplate:SetWidth(plate_width)
+    nameplate:SetHeight(plate_height)
+    nameplate:SetPoint("TOP", parent, "TOP", 0, 0)
+
+    nameplate.name:SetFont(font, font_size, "OUTLINE")
+
+    nameplate.health:SetStatusBarTexture(hptexture)
+    nameplate.health:SetWidth(C.nameplates.width)
+    nameplate.health:SetHeight(C.nameplates.heighthealth)
+    CreateBackdrop(nameplate.health, default_border)
+
+    nameplate.health.text:SetFont(font, font_size - 2, "OUTLINE")
+    nameplate.health.text:SetJustifyH("RIGHT")
+
+    nameplate.glow:SetWidth(C.nameplates.width + 60)
+    nameplate.glow:SetHeight(C.nameplates.heighthealth + 30)
+    nameplate.glow:SetVertexColor(glowr, glowg, glowb, glowa)
+
+    nameplate.level:SetFont(font, font_size, "OUTLINE")
+    nameplate.raidicon:SetWidth(C.nameplates.raidiconsize)
+    nameplate.raidicon:SetHeight(C.nameplates.raidiconsize)
+
+    for i=1,16 do
+      nameplate.debuffs[i]:SetWidth(14)
+      nameplate.debuffs[i]:SetHeight(14)
+    end
+
+    for i=1,5 do
+      nameplate.combopoints[i]:SetWidth(combo_size)
+      nameplate.combopoints[i]:SetHeight(combo_size)
+      nameplate.combopoints[i]:SetPoint("TOPRIGHT", nameplate.health, "BOTTOMRIGHT", -(i-1)*(combo_size+default_border*3), -default_border*3)
+      CreateBackdrop(nameplate.combopoints[i], default_border)
+    end
+
+    nameplate.castbar:SetPoint("TOPLEFT", nameplate.health, "BOTTOMLEFT", 0, -default_border*3)
+    nameplate.castbar:SetPoint("TOPRIGHT", nameplate.health, "BOTTOMRIGHT", 0, -default_border*3)
+    nameplate.castbar:SetHeight(C.nameplates.heightcast)
+    nameplate.castbar:SetStatusBarTexture(pfUI.media["img:bar"])
+    nameplate.castbar:SetStatusBarColor(.9,.8,0,1)
+    CreateBackdrop(nameplate.castbar, default_border)
+
+    nameplate.castbar.text:SetFont(font, font_size, "OUTLINE")
+    nameplate.castbar.spell:SetFont(font, font_size, "OUTLINE")
+    nameplate.castbar.icon:SetPoint("BOTTOMLEFT", nameplate.castbar, "BOTTOMRIGHT", default_border*3, 0)
+    nameplate.castbar.icon:SetPoint("TOPLEFT", nameplate.health, "TOPRIGHT", default_border*3, 0)
+    nameplate.castbar.icon:SetWidth(C.nameplates.heightcast + default_border*3 + C.nameplates.heighthealth)
+    CreateBackdrop(nameplate.castbar.icon, default_border)
+
+    nameplates:OnDataChanged(nameplate)
+  end
+
+  nameplates.OnValueChanged = function(arg1)
+    nameplates:OnDataChanged(this:GetParent().nameplate)
+  end
+
+  nameplates.OnEvent = function(frame)
+    local frame = frame or this
+    nameplates:OnDataChanged(frame.nameplate)
+  end
+
+  nameplates.OnDataChanged = function(self, plate)
+    local hp = plate.parent.healthbar:GetValue()
+    local hpmin, hpmax = plate.parent.healthbar:GetMinMaxValues()
+    local name = plate.parent.name:GetText()
+    local level = plate.parent.level:GetObjectType() == "FontString" and tonumber(plate.parent.level:GetText()) or "??"
+    local class, _, elite, player = GetUnitData(name, true)
+    local target = plate.cache.istarget
+    local red, green, blue = plate.parent.healthbar:GetStatusBarColor()
+    local unittype = GetUnitType(red, green, blue)
+    if player and unittype == "ENEMY_NPC" then unittype = "ENEMY_PLAYER" end
+    elite = plate.parent.levelicon:IsShown() and "boss" or elite
+    if not class then plate.wait_for_scan = true end
+
+    if (MobHealth3 or MobHealthFrame) and target and name == UnitName('target') and MobHealth_GetTargetCurHP() then
+      hp, hpmax = MobHealth_GetTargetCurHP(), MobHealth_GetTargetMaxHP()
+    end
+
+    plate:Show()
+    plate:SetAlpha(1)
+
+    if target and C.nameplates.targetglow == "1" then
+      plate.glow:Show() else plate.glow:Hide()
+    end
+
+    -- target indicator
+    if target and C.nameplates.targethighlight == "1" then
+      plate.health.backdrop:SetBackdropBorderColor(1,1,1,1)
+    else
+      local rawborder, default_border = GetBorderSize("nameplates")
+      CreateBackdrop(plate.health, default_border)
+    end
+
+    -- hide frames according to the configuration
+    if HidePlate(unittype, name, (hpmax-hp == hpmin), target) then
+      plate.level:SetPoint("RIGHT", plate.name, "LEFT", -3, 0)
+      plate.health:Hide()
+    else
+      plate.level:SetPoint("RIGHT", plate.health, "LEFT", -3, 0)
+      plate.health:Show()
+    end
+
+    plate.name:SetText(name)
+    plate.level:SetText(string.format("%s%s", level, (elitestrings[elite] or "")))
+
+    plate.health:SetMinMaxValues(hpmin, hpmax)
+    plate.health:SetValue(hp)
+
+    if C.nameplates.showhp == "1" then
+      plate.health.text:SetText(string.format("%s / %s", hp, hpmax))
+    else
+      plate.health.text:SetText()
+    end
+
+    local r, g, b, a = unpack(unitcolors[unittype])
+
+    if unittype == "ENEMY_PLAYER" and C.nameplates["enemyclassc"] == "1" and class and RAID_CLASS_COLORS[class] then
+      r, g, b, a = RAID_CLASS_COLORS[class].r, RAID_CLASS_COLORS[class].g, RAID_CLASS_COLORS[class].b, 1
+    elseif unittype == "FRIENDLY_PLAYER" and C.nameplates["friendclassc"] == "1" and class and RAID_CLASS_COLORS[class] then
+      r, g, b, a = RAID_CLASS_COLORS[class].r, RAID_CLASS_COLORS[class].g, RAID_CLASS_COLORS[class].b, 1
+    end
+
+    if r ~= plate.cache.r or g ~= plate.cache.g or b ~= plate.cache.b then
+      plate.health:SetStatusBarColor(r, g, b, a)
+      plate.cache.r, plate.cache.g, plate.cache.b = r, g, b
+    end
+
+    -- update combopoints
+    for i=1, 5 do plate.combopoints[i]:Hide() end
+    if target and C.nameplates.cpdisplay == "1" then
+      for i=1, GetComboPoints("target") do plate.combopoints[i]:Show() end
+    end
+
+    -- update debuffs
+    for i = 1, 16 do
+      if target and C.nameplates["showdebuffs"] == "1" and UnitDebuff("target", i) then
+        local name, _, icon = libdebuff:UnitDebuff("target", i)
+        plate.debuffs[i]:Show()
+        plate.debuffs[i].icon:SetTexture(icon)
+        plate.debuffs[i].icon:SetTexCoord(.078, .92, .079, .937)
+
+        local name, rank, texture, stacks, dtype, duration, timeleft = libdebuff:UnitDebuff("target", i)
+        if duration and timeleft then
+          plate.debuffs[i].cd:SetAlpha(0)
+          plate.debuffs[i].cd:Show()
+          CooldownFrame_SetTimer(plate.debuffs[i].cd, GetTime() + timeleft - duration, duration, 1)
+        end
+      else
+        plate.debuffs[i]:Hide()
+      end
+    end
+  end
+
+  nameplates.OnShow = function(frame)
+    local frame = frame or this
+    local nameplate = frame.nameplate
+
+    nameplates:OnDataChanged(nameplate)
+  end
+
+  nameplates.OnUpdate = function(frame)
+    local frame = frame or this
+    local name = frame.name:GetText()
+
+    if frame:GetAlpha() < tonumber(C.nameplates.notargalpha) then frame:SetAlpha(tonumber(C.nameplates.notargalpha)) end
+
+    -- trigger update when target state changed
+    local target = UnitExists("target") and frame:GetAlpha() == 1 or nil
+    if target ~= frame.nameplate.cache.istarget then
+      frame.nameplate.cache.istarget = target
+      nameplates:OnDataChanged(frame.nameplate)
+    end
+
+    -- trigger update when unit was found
+    if frame.nameplate.wait_for_scan and GetUnitData(name, true) then
+      frame.nameplate.wait_for_scan = nil
+      nameplates:OnDataChanged(frame.nameplate)
+    end
+
+    -- trigger update when name color changed
+    local r, g, b = frame.name:GetTextColor()
+    if r + g + b ~= frame.nameplate.cache.namecolor then
+      frame.nameplate.cache.namecolor = r + g + b
+
+      if r > .9 and g < .2 and b < .2 then
+        frame.nameplate.name:SetTextColor(1,0.4,0.2,1) -- infight
+      else
+        frame.nameplate.name:SetTextColor(r,g,b,1)
+      end
+    end
+
+    -- trigger update when name color changed
+    local r, g, b = frame.level:GetTextColor()
+    r, g, b = r + .3, g + .3, b + .3
+    if r + g + b ~= frame.nameplate.cache.levelcolor then
+      frame.nameplate.cache.levelcolor = r + g + b
+      frame.nameplate.level:SetTextColor(r,g,b,1)
+      nameplates:OnDataChanged(frame.nameplate)
+    end
+
+    -- target zoom
+    local w, h = frame.nameplate.health:GetWidth(), frame.nameplate.health:GetHeight()
+    if target and C.nameplates.targetzoom == "1" then
+      local wc = tonumber(C.nameplates.width)*1.4
+      local hc = tonumber(C.nameplates.heighthealth)*1.3
+      local animation = false
+
+      if wc >= w then
+        wc = w*1.05
+        frame.nameplate.health:SetWidth(wc)
+        frame.nameplate.health.zoomTransition = true
+        animation = true
+      end
+
+      if hc >= h then
+        hc = h*1.05
+        frame.nameplate.health:SetHeight(hc)
+        frame.nameplate.health.zoomTransition = true
+        animation = true
+      end
+
+      if animation == false and not frame.nameplate.health.zoomed then
+        frame.nameplate.health:SetWidth(wc)
+        frame.nameplate.health:SetHeight(hc)
+        frame.nameplate.health.zoomTransition = nil
+        frame.nameplate.health.zoomed = true
+      end
+    elseif frame.nameplate.health.zoomed or frame.nameplate.health.zoomTransition then
+      local wc = tonumber(C.nameplates.width)
+      local hc = tonumber(C.nameplates.heighthealth)
+      local animation = false
+
+      if wc <= w then
+        wc = w*.95
+        frame.nameplate.health:SetWidth(wc)
+        animation = true
+      end
+
+      if hc <= h then
+        hc = h*0.95
+        frame.nameplate.health:SetHeight(hc)
+        animation = true
+      end
+
+      if animation == false then
+        frame.nameplate.health:SetWidth(wc)
+        frame.nameplate.health:SetHeight(hc)
+        frame.nameplate.health.zoomTransition = nil
+        frame.nameplate.health.zoomed = nil
+      end
+    end
+
+    -- castbar update
+    if C.nameplates["showcastbar"] == "1" then
+      local cast, nameSubtext, text, texture, startTime, endTime, isTradeSkill = UnitCastingInfo(target and "target" or name)
+
+      if not cast then
+        frame.nameplate.castbar:Hide()
+      elseif cast then
+        local duration = endTime - startTime
+        frame.nameplate.castbar:SetMinMaxValues(0,  duration/1000)
+        frame.nameplate.castbar:SetValue(GetTime() - startTime/1000)
+        frame.nameplate.castbar.text:SetText(round(startTime/1000 + duration/1000 - GetTime(),1))
+        if C.nameplates.spellname == "1" then
+          frame.nameplate.castbar.spell:SetText(cast)
+        else
+          frame.nameplate.castbar.spell:SetText("")
+        end
+        frame.nameplate.castbar:Show()
+
+        if texture then
+          frame.nameplate.castbar.icon.tex:SetTexture(texture)
+          frame.nameplate.castbar.icon.tex:SetTexCoord(.1,.9,.1,.9)
+        end
+      end
+    else
+      frame.nameplate.castbar:Hide()
+    end
+  end
+
+  nameplates.UpdateConfig = function()
+    for plate in pairs(registry) do
+      nameplates.OnConfigChange(plate)
+    end
+  end
+
+  if pfUI.client <= 11200 then
+    -- handle vanilla only settings
+    -- due to the secured lua api, those settings can't be applied to TBC and later.
+    local hookOnConfigChange = nameplates.OnConfigChange
+    nameplates.OnConfigChange = function(self)
+      hookOnConfigChange(self)
+
+      local parent = self
+      local nameplate = self.nameplate
+      local plate = (C.nameplates["overlap"] == "1" or C.nameplates["rightclick"] == "1") and nameplate or parent
+
+      -- replace clickhandler
+      if C.nameplates["overlap"] == "1" or C.nameplates["rightclick"] == "1" then
+        parent:SetFrameLevel(0)
+        nameplate:SetScript("OnClick", function() parent:Click() end)
+
+        parent:EnableMouse(false)
+        nameplate:EnableMouse(true)
+      else
+        parent:EnableMouse(true)
+        nameplate:EnableMouse(false)
+      end
+
+      -- enable mouselook on rightbutton down
+      if C.nameplates["rightclick"] == "1" then
+        plate:SetScript("OnMouseDown", nameplates.mouselook.OnMouseDown)
+      else
+        plate:SetScript("OnMouseDown", nil)
+      end
+
+      -- disable click event on frames
+      if C.nameplates["clickthrough"] == "1" then
+        plate:EnableMouse(false)
+      else
+        plate:EnableMouse(true)
+      end
+    end
+
+    -- disable click events while spell is targeting
+    local hookOnUpdate = nameplates.OnUpdate
+    nameplates.OnUpdate = function(self)
+      if C.nameplates["overlap"] == "1" then
+        -- set parent to 1 pixel to have them overlap each other
+        this:SetWidth(1)
+        this:SetHeight(1)
+      else
+        -- align parent plate to the actual size
+        this:SetWidth(this.nameplate:GetWidth() * UIParent:GetScale())
+        this:SetHeight(this.nameplate:GetHeight() * UIParent:GetScale())
+      end
+
+      local mouseEnabled = this.nameplate:IsMouseEnabled()
+      if C.nameplates["clickthrough"] == "0" and C.nameplates["legacy"] == "0" and SpellIsTargeting() == mouseEnabled then
+        this.nameplate:EnableMouse(not mouseEnabled)
+      end
+
+      hookOnUpdate(self)
+    end
+
+    -- enable mouselook on rightbutton down
+    nameplates.mouselook = CreateFrame("Frame", nil, UIParent)
+    nameplates.mouselook.time = nil
+    nameplates.mouselook.frame = nil
+    nameplates.mouselook.OnMouseDown = function()
+      if arg1 and arg1 == "RightButton" then
+        MouselookStart()
+
+        -- start detection of the rightclick emulation
+        nameplates.mouselook.time = GetTime()
+        nameplates.mouselook.frame = this
+        nameplates.mouselook:Show()
+      end
+    end
+
+    nameplates.mouselook:SetScript("OnUpdate", function()
+      -- break here if nothing to do
+      if not this.time or not this.frame then
+        this:Hide()
+        return
+      end
+
+      -- if threshold is reached (0.5 second) no click action will follow
+      if not IsMouselooking() and this.time + tonumber(C.nameplates["clickthreshold"]) < GetTime() then
+        this:Hide()
+        return
+      end
+
+      -- run a usual nameplate rightclick action
+      if not IsMouselooking() then
+        this.frame:Click("LeftButton")
+        if UnitCanAttack("player", "target") and not nameplates.combat.inCombat then AttackTarget() end
+        this:Hide()
+        return
+      end
+    end)
+  end
+
+  pfUI.nameplates = nameplates
 end)
