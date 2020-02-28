@@ -889,10 +889,6 @@ function pfUI.api.CreateBackdrop(f, inset, legacy, transp, backdropSetting)
       if f:GetBackdrop() then f:SetBackdrop(nil) end
 
       local b = CreateFrame("Frame", nil, f)
-      b:SetPoint("TOPLEFT", f, "TOPLEFT", -border, border)
-      b:SetPoint("BOTTOMRIGHT", f, "BOTTOMRIGHT", border, -border)
-      b:SetBackdrop(rawborder > 1 and pfUI.backdrop or pfUI.backdrop_thin)
-
       local level = f:GetFrameLevel()
       if level < 1 then
         b:SetFrameLevel(level)
@@ -904,6 +900,10 @@ function pfUI.api.CreateBackdrop(f, inset, legacy, transp, backdropSetting)
     end
 
     local b = f.backdrop
+    b:SetPoint("TOPLEFT", f, "TOPLEFT", -border, border)
+    b:SetPoint("BOTTOMRIGHT", f, "BOTTOMRIGHT", border, -border)
+    b:SetBackdrop(rawborder > 1 and pfUI.backdrop or pfUI.backdrop_thin)
+
     b:SetBackdropColor(br, bg, bb, ba)
     b:SetBackdropBorderColor(er, eg, eb , ea)
   end
