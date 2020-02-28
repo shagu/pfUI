@@ -802,6 +802,8 @@ function pfUI.api.GetBorderSize(pref)
   else
     -- add new borders to the pfUI tree
     local raw = tonumber(pfUI_config.appearance.border[pref])
+    if raw == -1 then raw = 3 end
+
     local scaled = raw * GetPerfectPixel()
     pfUI.borders = { raw, scaled }
 
