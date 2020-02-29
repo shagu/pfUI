@@ -318,11 +318,17 @@ pfUI:RegisterSkin("Friends", "vanilla:tbc", function ()
 
     SkinButton(GuildInfoSaveButton)
     GuildInfoSaveButton:ClearAllPoints()
-    GuildInfoSaveButton:SetPoint("BOTTOMRIGHT", GuildInfoFrame, "BOTTOM", -bpad, 8)
+    GuildInfoSaveButton:SetPoint("BOTTOMLEFT", GuildInfoFrame, "BOTTOMLEFT", 10, 8)
 
     SkinButton(GuildInfoCancelButton)
     GuildInfoCancelButton:ClearAllPoints()
-    GuildInfoCancelButton:SetPoint("BOTTOMLEFT", GuildInfoFrame, "BOTTOM", bpad, 8)
+    GuildInfoCancelButton:SetPoint("BOTTOMRIGHT", GuildInfoFrame, "BOTTOMRIGHT", -10, 8)
+
+    if GuildInfoGuildEventButton then -- log button (tbc+)
+      SkinButton(GuildInfoGuildEventButton)
+      GuildInfoGuildEventButton:ClearAllPoints()
+      GuildInfoGuildEventButton:SetPoint("BOTTOM", GuildInfoFrame, "BOTTOM", 0, 8)
+    end
 
     -- guild control
     StripTextures(GuildControlPopupFrame)
