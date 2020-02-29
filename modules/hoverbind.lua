@@ -1,4 +1,4 @@
-pfUI:RegisterModule("hoverbind", "vanilla", function ()
+pfUI:RegisterModule("hoverbind", "vanilla:tbc", function ()
   local keymap = {
     -- buttons to binding association
     ["pfActionBarMainButton"]     = "ACTIONBUTTON",
