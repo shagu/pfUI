@@ -330,6 +330,18 @@ pfUI:RegisterSkin("Friends", "vanilla:tbc", function ()
       GuildInfoGuildEventButton:SetPoint("BOTTOM", GuildInfoFrame, "BOTTOM", 0, 8)
     end
 
+    if GuildEventLogFrame then -- guild log frame (tbc+)
+      StripTextures(GuildEventFrame)
+      CreateBackdrop(GuildEventFrame, nil, true, .75)
+      StripTextures(GuildEventLogFrame)
+      CreateBackdrop(GuildEventLogFrame, nil, true, .75)
+      StripTextures(GuildEventLogScrollFrame)
+      SkinScrollbar(GuildEventLogScrollFrameScrollBar)
+      SkinCloseButton(GuildEventLogCloseButton)
+      GuildEventLogCancelButton:SetPoint("BOTTOMRIGHT", -9, 8)
+      SkinButton(GuildEventLogCancelButton)
+    end
+
     -- guild control
     StripTextures(GuildControlPopupFrame)
     CreateBackdrop(GuildControlPopupFrame, nil, true, .75)
