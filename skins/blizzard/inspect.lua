@@ -165,7 +165,7 @@ pfUI:RegisterSkin("Inspect", "vanilla", function ()
         local frame = _G["Inspect"..slot]
         StripTextures(frame)
         CreateBackdrop(frame)
-        SetAllPointsOffset(frame.backdrop, frame, 2)
+        SetAllPointsOffset(frame.backdrop, frame, 0)
 
         HandleIcon(frame.backdrop, _G["Inspect"..slot.."IconTexture"])
 
@@ -233,7 +233,7 @@ pfUI:RegisterSkin("Inspect", "vanilla", function ()
             retry = true
           else
             CreateBackdrop(slot)
-            SetAllPointsOffset(slot.backdrop, slot, 2)
+            SetAllPointsOffset(slot.backdrop, slot, 0)
             if slot.scoreText then
               slot.scoreText:SetText("")
             end
