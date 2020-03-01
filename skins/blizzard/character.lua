@@ -108,7 +108,7 @@ pfUI:RegisterSkin("Character", "vanilla:tbc", function ()
       local frame = _G["Character"..slot]
       StripTextures(frame)
       CreateBackdrop(frame)
-      SetAllPointsOffset(frame.backdrop, frame, 2)
+      SetAllPointsOffset(frame.backdrop, frame, 0)
 
       HandleIcon(frame.backdrop, _G["Character"..slot.."IconTexture"])
 
