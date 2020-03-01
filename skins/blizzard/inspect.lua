@@ -233,6 +233,7 @@ pfUI:RegisterSkin("Inspect", "vanilla", function ()
             retry = true
           else
             CreateBackdrop(slot)
+            SetAllPointsOffset(slot.backdrop, slot, 2)
             if slot.scoreText then
               slot.scoreText:SetText("")
             end
