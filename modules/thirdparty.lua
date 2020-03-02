@@ -1,185 +1,160 @@
-pfUI:RegisterModule("thirdparty", "vanilla", function ()
+pfUI:RegisterModule("thirdparty", "vanilla", function()
+  local rawborder, default_border = GetBorderSize()
+
   pfUI.thirdparty = {}
-  pfUI.thirdparty.meters = {}
-  pfUI.thirdparty.meters.damage = false
-  pfUI.thirdparty.meters.threat = false
-  pfUI.thirdparty.meters.state = false
   pfUI.thirdparty.bagsort = nil
 
-  local ktm_scale = 0.9
-
-  local showmeter = CreateFrame("Frame")
-  showmeter:SetScript("OnEvent", function()
-    pfUI.thirdparty.meters.state = false
+  pfUI.thirdparty.meters = CreateFrame("Frame")
+  pfUI.thirdparty.meters:SetScript("OnEvent", function()
+    pfUI.thirdparty.meters.state = nil
     pfUI.thirdparty.meters:Toggle()
     this:UnregisterAllEvents()
   end)
 
-  local function GetKtmWidthDiff(view, match_size)
-    local default_width = 0
-    for column, header in view.head do
-      if (header.vis()) then
-        default_width = default_width + header.width
-      else
-        default_width = default_width + 0.1
+  pfUI.thirdparty.meters.damage = nil
+  pfUI.thirdparty.meters.threat = nil
+  pfUI.thirdparty.meters.state = nil
+
+  function pfUI.thirdparty.meters:RegisterMeter(side, data)
+    -- abort when one addon is already register on the side
+    if pfUI.thirdparty.meters[side] then return end
+
+    -- load addon table
+    local config, addon, frame, single, dual, show, hide, once = unpack(data)
+
+    -- put addon into dockmode when enabled
+    if C.thirdparty[config] and C.thirdparty[config].dock == "1" then
+      pfUI.thirdparty.meters[side] = data
+
+      -- initialize and hide the frame in the beginning
+      if once then once() end
+      if hide then hide() end
+
+      -- enable toggle event on the panel button
+      if pfUI.panel then
+        pfUI.panel.right.hide:SetScript("OnClick", function()
+          pfUI.thirdparty.meters:Toggle()
+        end)
+      end
+
+      -- toggle meter by default if configured
+      if C.thirdparty.showmeter == "1" then
+        self:RegisterEvent("PLAYER_ENTERING_WORLD")
       end
     end
-    return match_size / (default_width + 12)
-  end
-
-  local function SetKtmWidth(view, diff_width)
-    for column, header in view.head do
-      header.width = round(round(header.width * diff_width) / ktm_scale)
-    end
-  end
-
-  local function RefreshKtmWidth(width)
-    local width = width or pfUI.chat.right:GetWidth()
-    if (pfUI.thirdparty.meters.damage and pfUI.thirdparty.meters.threat) then
-      width = width / 2
-    end
-    SetKtmWidth(KLHTM_Gui.raid, GetKtmWidthDiff(KLHTM_Gui.raid, width))
-    SetKtmWidth(KLHTM_Gui.self, GetKtmWidthDiff(KLHTM_Gui.self, width))
-    KLHTM_Redraw(true)
-    KLHTM_UpdateRaidFrame()
-    KLHTM_UpdateSelfFrame()
-    KLHTM_UpdateFrame()
   end
 
   function pfUI.thirdparty.meters:Resize()
-    if pfUI.chat and pfUI.panel then
+    if not pfUI.chat or not pfUI.panel then return end
 
-      local rawborder, default_border = GetBorderSize()
-
-      if DPSMate_DPSMate and C.thirdparty.dpsmate.dock == "1" then
-        -- DPSMate Single View
-        if pfUI.thirdparty.meters.damage and not pfUI.thirdparty.meters.threat then
-          DPSMate_DPSMate:ClearAllPoints()
-          DPSMate_DPSMate:SetAllPoints(pfUI.chat.right)
-          DPSMate_DPSMate:SetWidth(pfUI.chat.right:GetWidth())
-          DPSMate_DPSMate_ScrollFrame:ClearAllPoints()
-          DPSMate_DPSMate_ScrollFrame:SetWidth(pfUI.chat.right:GetWidth())
-          DPSMate_DPSMate_ScrollFrame:SetPoint("TOPLEFT", DPSMate_DPSMate_Head, "BOTTOMLEFT", 0, 0)
-          DPSMate_DPSMate_ScrollFrame:SetPoint("BOTTOMRIGHT", pfUI.chat.right, "BOTTOMRIGHT", 0, pfUI.panel.right:GetHeight())
-          DPSMate_DPSMate_ScrollFrame_Child:SetWidth(pfUI.chat.right:GetWidth())
-          DPSMate_DPSMate_Resize:Hide()
-        end
-
-        -- DPSMate Dual View
-        if pfUI.thirdparty.meters.damage and pfUI.thirdparty.meters.threat then
-          DPSMate_DPSMate:ClearAllPoints()
-          DPSMate_DPSMate:SetPoint("TOPLEFT", pfUI.chat.right, "TOP", 0, 0)
-          DPSMate_DPSMate:SetPoint("BOTTOMRIGHT", pfUI.chat.right, "BOTTOMRIGHT", 0, 0)
-          DPSMate_DPSMate:SetWidth(pfUI.chat.right:GetWidth() / 2)
-          DPSMate_DPSMate_ScrollFrame:ClearAllPoints()
-          DPSMate_DPSMate_ScrollFrame:SetWidth(pfUI.chat.right:GetWidth() / 2)
-          DPSMate_DPSMate_ScrollFrame:SetPoint("TOPLEFT", DPSMate_DPSMate_Head, "BOTTOMLEFT", 0, 0)
-          DPSMate_DPSMate_ScrollFrame:SetPoint("BOTTOMRIGHT", pfUI.chat.right, "BOTTOMRIGHT", 0, pfUI.panel.right:GetHeight())
-          DPSMate_DPSMate_ScrollFrame_Child:SetWidth(pfUI.chat.right:GetWidth() / 2)
-          DPSMate_DPSMate_Resize:Hide()
-        end
+    if self.damage then -- resize damage meter
+      local config, addon, frame, single, dual, show, hide = unpack(self.damage)
+      if frame and C.thirdparty[config].dock == "1" then
+        if not self.threat then single() else dual() end
       end
+    end
 
-      if SW_BarFrame1 and C.thirdparty.swstats.dock == "1" then
-        -- SWStats Single View
-        if pfUI.thirdparty.meters.damage and not pfUI.thirdparty.meters.threat then
-          SW_BarFrame1:SetWidth(pfUI.chat.right:GetWidth())
-          SW_BarFrame1:ClearAllPoints()
-          SW_BarFrame1:SetAllPoints(pfUI.chat.right)
-          SW_BarFrame1_Resizer:Hide()
-          SW_BarsLayout("SW_BarFrame1", true)
-        end
-
-        -- SWStats Dual View
-        if pfUI.thirdparty.meters.damage and pfUI.thirdparty.meters.threat then
-          SW_BarFrame1:SetWidth(pfUI.chat.right:GetWidth() / 2)
-          SW_BarFrame1:ClearAllPoints()
-          SW_BarFrame1:SetPoint("TOPLEFT", pfUI.chat.right, "TOP", 0, 0)
-          SW_BarFrame1:SetPoint("BOTTOMRIGHT", pfUI.chat.right, "BOTTOMRIGHT", 0 ,0)
-          SW_BarFrame1_Resizer:Hide()
-          SW_BarsLayout("SW_BarFrame1", true)
-        end
-      end
-
-      if KLHTM_Frame and C.thirdparty.ktm.dock == "1" then
-        -- KLHTM Single View
-        if not pfUI.thirdparty.meters.damage and pfUI.thirdparty.meters.threat then
-          RefreshKtmWidth()
-          KLHTM_Frame:ClearAllPoints()
-          KLHTM_Frame:SetPoint("TOPLEFT", pfUI.chat.right, "TOPLEFT", 0, 0)
-          KLHTM_Frame:SetPoint("BOTTOMRIGHT", pfUI.chat.right, "BOTTOMRIGHT", 0, pfUI.panel.right:GetHeight())
-          KLHTM_Frame.backdrop:SetPoint("BOTTOMRIGHT", KLHTM_Frame, "BOTTOMRIGHT", 0, -(KLHTM_Frame:GetBottom() - pfUI.chat.right:GetBottom()))
-        end
-
-        -- KLHTM Dual View
-        if pfUI.thirdparty.meters.damage and pfUI.thirdparty.meters.threat then
-          RefreshKtmWidth()
-          KLHTM_Frame:ClearAllPoints()
-          KLHTM_Frame:SetPoint("TOPLEFT", pfUI.chat.right, "TOPLEFT", 0, 0)
-          KLHTM_Frame:SetPoint("BOTTOMRIGHT", pfUI.chat.right, "BOTTOM", -default_border, pfUI.panel.right:GetHeight())
-          KLHTM_Frame.backdrop:SetPoint("BOTTOMRIGHT", KLHTM_Frame, "BOTTOMRIGHT", 0, -(KLHTM_Frame:GetBottom() - pfUI.chat.right:GetBottom()))
-        end
+    if self.threat then -- resize threat meter
+      local config, addon, frame, single, dual, show, hide = unpack(self.threat)
+      if frame and C.thirdparty[config].dock == "1" then
+        if not self.damage then single() else dual() end
       end
     end
   end
 
   function pfUI.thirdparty.meters:Toggle()
-    pfUI.thirdparty.meters:Resize()
+    self:Resize()
+
+    -- show/hide right chatframe
+    if pfUI.chat and C.chat.right.enable == "1" then
+      pfUI.chat.right:SetAlpha(self.state and 1 or 0)
+    end
+
+    -- show/hide damage meters
+    if self.damage then
+      local config, addon, frame, single, dual, show, hide = unpack(self.damage)
+      if not self.state then show() else hide() end
+    end
+
+    -- show/hide threat meters
+    if self.threat then
+      local config, addon, frame, single, dual, show, hide = unpack(self.threat)
+      if not self.state then show() else hide() end
+    end
 
     -- show meters
-    if pfUI.thirdparty.meters.state == false then
-      pfUI.thirdparty.meters.state = true
-
-      -- chat
-      if pfUI.chat and C.chat.right.enable == "1" then
-        pfUI.chat.right:SetAlpha(0)
-      end
-
-      -- ktm
-      if C.thirdparty.ktm.dock == "1" and KLHTM_Frame then
-        KLHTM_SetVisible(true)
-        KLHTM_Frame:Show()
-      end
-
-      -- dpsmate
-      if C.thirdparty.dpsmate.dock == "1" and DPSMate_DPSMate then
-        DPSMate_DPSMate:Show()
-      end
-
-      -- swstats
-      if C.thirdparty.swstats.dock == "1" and SW_BarFrame1 then
-        SW_BarFrame1:Show()
-        SW_OptKey(1)
-      end
-
-    -- hide meters
+    if not self.state then
+      self.state = true
     else
-      pfUI.thirdparty.meters.state = false
-
-      -- chat
-      if pfUI.chat and C.chat.right.enable == "1" then
-        pfUI.chat.right:SetAlpha(1)
-      end
-
-      -- ktm
-      if C.thirdparty.ktm.dock == "1" and KLHTM_Frame then
-        KLHTM_SetVisible(false)
-        KLHTM_Frame:Hide()
-      end
-
-      -- dpsmate
-      if C.thirdparty.dpsmate.dock == "1" and DPSMate_DPSMate then
-        DPSMate_DPSMate:Hide()
-      end
-
-      -- swstats
-      if C.thirdparty.swstats.dock == "1" and SW_BarFrame1 then
-        SW_BarFrame1:Hide()
-      end
+      self.state = nil
     end
   end
 
   HookAddonOrVariable("KLHThreatMeter", function()
+    local ktm_scale = 1
+    local function GetKtmWidthDiff(view, match_size)
+      local default_width = 0
+      for column, header in view.head do
+        if (header.vis()) then
+          default_width = default_width + header.width
+        else
+          default_width = default_width + 0.1
+        end
+      end
+      return match_size / (default_width + 12)
+    end
+
+    local function SetKtmWidth(view, diff_width)
+      for column, header in view.head do
+        header.width = round(round(header.width * diff_width) / ktm_scale)
+      end
+    end
+
+    local function RefreshKtmWidth(width)
+      local width = width or pfUI.chat.right:GetWidth()
+      if (pfUI.thirdparty.meters.damage and pfUI.thirdparty.meters.threat) then
+        width = width / 2
+      end
+      SetKtmWidth(KLHTM_Gui.raid, GetKtmWidthDiff(KLHTM_Gui.raid, width))
+      SetKtmWidth(KLHTM_Gui.self, GetKtmWidthDiff(KLHTM_Gui.self, width))
+      KLHTM_Redraw(true)
+      KLHTM_UpdateRaidFrame()
+      KLHTM_UpdateSelfFrame()
+      KLHTM_UpdateFrame()
+    end
+
+    local docktable = { "ktm", "TODO", "KLHTM_Frame",
+      function() -- single
+        RefreshKtmWidth()
+        KLHTM_Frame:ClearAllPoints()
+        KLHTM_Frame:SetPoint("TOPLEFT", pfUI.chat.right, "TOPLEFT", 0, 0)
+        KLHTM_Frame:SetPoint("BOTTOMRIGHT", pfUI.chat.right, "BOTTOMRIGHT", 0, pfUI.panel.right:GetHeight())
+        KLHTM_Frame.backdrop:SetPoint("BOTTOMRIGHT", KLHTM_Frame, "BOTTOMRIGHT", 0, -(KLHTM_Frame:GetBottom() - pfUI.chat.right:GetBottom())-default_border)
+      end,
+      function() -- dual
+        RefreshKtmWidth()
+        KLHTM_Frame:ClearAllPoints()
+        KLHTM_Frame:SetPoint("TOPLEFT", pfUI.chat.right, "TOPLEFT", 0, 0)
+        KLHTM_Frame:SetPoint("BOTTOMRIGHT", pfUI.chat.right, "BOTTOM", -default_border, pfUI.panel.right:GetHeight())
+        KLHTM_Frame.backdrop:SetPoint("BOTTOMRIGHT", KLHTM_Frame, "BOTTOMRIGHT", 0, -(KLHTM_Frame:GetBottom() - pfUI.chat.right:GetBottom())-default_border)
+      end,
+      function() -- show
+        KLHTM_SetVisible(true)
+        KLHTM_Frame:Show()
+      end,
+      function() -- hide
+        KLHTM_SetVisible(false)
+        KLHTM_Frame:Hide()
+      end,
+      function() -- once
+        if KLHTM_Gui.frame then
+          KLHTM_SetGuiScale(ktm_scale)
+        end
+      end
+    }
+
+    pfUI.thirdparty.meters:RegisterMeter("threat", docktable)
+
     if C.thirdparty.ktm.skin == "1" then
       -- remove titlebar
       if KLHTM_Gui then
@@ -269,31 +244,43 @@ pfUI:RegisterModule("thirdparty", "vanilla", function ()
       if KLHTM_SelfFrameLine then KLHTM_SelfFrameLine:Hide() end
       if KLHTM_SelfFrameBottomLine then KLHTM_SelfFrameBottomLine:Hide() end
     end
-
-    if C.thirdparty.ktm.dock == "1" then
-      pfUI.thirdparty.meters.threat = true
-
-      KLHTM_Frame:Hide()
-
-      -- adjust scale to match the dock
-      if KLHTM_Gui.frame then
-        KLHTM_SetGuiScale(ktm_scale)
-      end
-
-      if pfUI.panel then
-        pfUI.panel.right.hide:SetScript("OnClick", function()
-          pfUI.thirdparty.meters:Toggle()
-        end)
-      end
-
-      -- toggle meter by default if configured
-      if C.thirdparty.showmeter == "1" then
-        showmeter:RegisterEvent("PLAYER_ENTERING_WORLD")
-      end
-    end
   end)
 
   HookAddonOrVariable("DPSMate", function()
+    local docktable = { "dpsmate", "DPSMate", "DPSMate_DPSMate",
+      function() -- single
+        DPSMate_DPSMate:ClearAllPoints()
+        DPSMate_DPSMate:SetAllPoints(pfUI.chat.right)
+        DPSMate_DPSMate:SetWidth(pfUI.chat.right:GetWidth())
+        DPSMate_DPSMate_ScrollFrame:ClearAllPoints()
+        DPSMate_DPSMate_ScrollFrame:SetWidth(pfUI.chat.right:GetWidth())
+        DPSMate_DPSMate_ScrollFrame:SetPoint("TOPLEFT", DPSMate_DPSMate_Head, "BOTTOMLEFT", 0, 0)
+        DPSMate_DPSMate_ScrollFrame:SetPoint("BOTTOMRIGHT", pfUI.chat.right, "BOTTOMRIGHT", 0, pfUI.panel.right:GetHeight())
+        DPSMate_DPSMate_ScrollFrame_Child:SetWidth(pfUI.chat.right:GetWidth())
+        DPSMate_DPSMate_Resize:Hide()
+      end,
+      function() -- dual
+        DPSMate_DPSMate:ClearAllPoints()
+        DPSMate_DPSMate:SetPoint("TOPLEFT", pfUI.chat.right, "TOP", 0, 0)
+        DPSMate_DPSMate:SetPoint("BOTTOMRIGHT", pfUI.chat.right, "BOTTOMRIGHT", 0, 0)
+        DPSMate_DPSMate:SetWidth(pfUI.chat.right:GetWidth() / 2)
+        DPSMate_DPSMate_ScrollFrame:ClearAllPoints()
+        DPSMate_DPSMate_ScrollFrame:SetWidth(pfUI.chat.right:GetWidth() / 2)
+        DPSMate_DPSMate_ScrollFrame:SetPoint("TOPLEFT", DPSMate_DPSMate_Head, "BOTTOMLEFT", 0, 0)
+        DPSMate_DPSMate_ScrollFrame:SetPoint("BOTTOMRIGHT", pfUI.chat.right, "BOTTOMRIGHT", 0, pfUI.panel.right:GetHeight())
+        DPSMate_DPSMate_ScrollFrame_Child:SetWidth(pfUI.chat.right:GetWidth() / 2)
+        DPSMate_DPSMate_Resize:Hide()
+      end,
+      function() -- show
+        DPSMate_DPSMate:Show()
+      end,
+      function() -- hide
+        DPSMate_DPSMate:Hide()
+      end
+    }
+
+    pfUI.thirdparty.meters:RegisterMeter("damage", docktable)
+
     if C.thirdparty.dpsmate.skin == "1" then
       if DPSMateSettings then
         -- set DPSMate appearance to match pfUI
@@ -338,28 +325,55 @@ pfUI:RegisterModule("thirdparty", "vanilla", function ()
         end
       end
     end
-
-    if C.thirdparty.dpsmate.dock == "1" then
-      pfUI.thirdparty.meters.damage = true
-
-      if DPSMate_DPSMate then
-        DPSMate_DPSMate:Hide()
-      end
-
-      if pfUI.panel then
-        pfUI.panel.right.hide:SetScript("OnClick", function()
-          pfUI.thirdparty.meters:Toggle()
-        end)
-      end
-
-      -- toggle meter by default if configured
-      if C.thirdparty.showmeter == "1" then
-        showmeter:RegisterEvent("PLAYER_ENTERING_WORLD")
-      end
-    end
   end)
 
   HookAddonOrVariable("SW_Stats", function()
+    local docktable = { "swstats", "TODO", "SW_BarFrame1",
+      function() -- single
+        SW_BarFrame1:SetWidth(pfUI.chat.right:GetWidth())
+        SW_BarFrame1:ClearAllPoints()
+        SW_BarFrame1:SetAllPoints(pfUI.chat.right)
+        SW_BarFrame1_Resizer:Hide()
+        SW_BarsLayout("SW_BarFrame1", true)
+      end,
+      function() -- dual
+        SW_BarFrame1:SetWidth(pfUI.chat.right:GetWidth() / 2)
+        SW_BarFrame1:ClearAllPoints()
+        SW_BarFrame1:SetPoint("TOPLEFT", pfUI.chat.right, "TOP", 0, 0)
+        SW_BarFrame1:SetPoint("BOTTOMRIGHT", pfUI.chat.right, "BOTTOMRIGHT", 0 ,0)
+        SW_BarFrame1_Resizer:Hide()
+        SW_BarsLayout("SW_BarFrame1", true)
+      end,
+      function() -- show
+        SW_BarFrame1:Show()
+        SW_OptKey(1)
+      end,
+      function() -- hide
+        SW_BarFrame1:Hide()
+      end,
+      function() -- once
+        SW_Settings["SHOWMAIN"] = nil
+        SW_BarFrame1:Hide()
+
+        SW_OptChk_Running:ClearAllPoints()
+        SW_OptChk_Running:SetParent(SW_BarFrame1_Title)
+        SW_OptChk_Running:SetPoint("RIGHT", SW_BarFrame1_Title_TimeLine, "LEFT", -2, 0)
+        -- hide bottom panels
+        SW_BarFrame1_Selector:Hide()
+
+        -- let user select mode by clicking the title
+        HookScript(SW_BarFrame1_Title, "OnMouseUp", function()
+          local page = SW_Settings and SW_Settings.BarFrames and SW_Settings.BarFrames.SW_BarFrame1 and SW_Settings.BarFrames.SW_BarFrame1.Selected
+          if page then
+            local target = (arg1 == "LeftButton") and (page + 1) or (arg1 == "RightButton") and (page - 1)
+            SW_OptKey((target > SW_OPT_COUNT) and 1 or (target < 1) and SW_OPT_COUNT or target)
+          end
+        end)
+      end
+    }
+
+    pfUI.thirdparty.meters:RegisterMeter("damage", docktable)
+
     if C.thirdparty.swstats.skin == "1" then
       SW_Settings["OPT_ShowMainWinDPS"] = 1
       SW_Settings["Colors"] = SW_Settings["Colors"] or {}
@@ -596,39 +610,6 @@ pfUI:RegisterModule("thirdparty", "vanilla", function ()
       SW_FrameConsole_Text2_MsgUp:SetPoint("BOTTOMRIGHT", -5, 45)
       SW_FrameConsole_Text2_MsgDown:SetPoint("BOTTOMRIGHT", -5, 30)
       SW_FrameConsole_Text2_MsgBottom:SetPoint("BOTTOMRIGHT", -5, 12)
-    end
-
-    if C.thirdparty.swstats.dock == "1" then
-      pfUI.thirdparty.meters.damage = true
-
-      SW_Settings["SHOWMAIN"] = nil
-      SW_BarFrame1:Hide()
-
-      SW_OptChk_Running:ClearAllPoints()
-      SW_OptChk_Running:SetParent(SW_BarFrame1_Title)
-      SW_OptChk_Running:SetPoint("RIGHT", SW_BarFrame1_Title_TimeLine, "LEFT", -2, 0)
-      -- hide bottom panels
-      SW_BarFrame1_Selector:Hide()
-
-      -- let user select mode by clicking the title
-      HookScript(SW_BarFrame1_Title, "OnMouseUp", function()
-        local page = SW_Settings and SW_Settings.BarFrames and SW_Settings.BarFrames.SW_BarFrame1 and SW_Settings.BarFrames.SW_BarFrame1.Selected
-        if page then
-          local target = (arg1 == "LeftButton") and (page + 1) or (arg1 == "RightButton") and (page - 1)
-          SW_OptKey((target > SW_OPT_COUNT) and 1 or (target < 1) and SW_OPT_COUNT or target)
-        end
-      end)
-
-      if pfUI.panel then
-        pfUI.panel.right.hide:SetScript("OnClick", function()
-          pfUI.thirdparty.meters:Toggle()
-        end)
-      end
-
-      -- toggle meter by default if configured
-      if C.thirdparty.showmeter == "1" then
-        showmeter:RegisterEvent("PLAYER_ENTERING_WORLD")
-      end
     end
   end)
 
@@ -1256,30 +1237,6 @@ pfUI:RegisterModule("thirdparty", "vanilla", function ()
     UpdateMovable(DruidManaBar)
   end)
 
-  local EnableHealComm = function()
-    -- hook healcomm's addon message to parse single-player events
-    if AceLibrary and AceLibrary:HasInstance("HealComm-1.0") and pfUI.prediction then
-      local HealComm = AceLibrary("HealComm-1.0")
-
-      -- use pfUI frames to draw healComm predictions
-      local pfHookHealCommSendAddonMessage = HealComm.SendAddonMessage
-      function HealComm.SendAddonMessage(this, msg)
-        if not UnitInRaid("player") and GetNumPartyMembers() < 1 then
-          pfUI.prediction:ParseChatMessage(UnitName("player"), msg)
-        end
-        pfHookHealCommSendAddonMessage(this, msg)
-      end
-
-      -- disable pfUI predictions
-      pfUI.prediction.sender:UnregisterAllEvents()
-      pfUI.prediction.sender.enabled = nil
-    end
-  end
-
-  HookAddonOrVariable("HealComm", EnableHealComm)
-  HookAddonOrVariable("LunaUnitFrames", EnableHealComm)
-  HookAddonOrVariable("NotGrid", EnableHealComm)
-
   HookAddonOrVariable("NoteIt", function()
     if C.thirdparty.noteit.enable == "0" then return end
 
@@ -1367,7 +1324,28 @@ pfUI:RegisterModule("thirdparty", "vanilla", function ()
     NoteInputTextBackground:ClearAllPoints()
     NoteInputTextBackground:SetPoint("TOPLEFT", NoteInputNameChooseFrame, "BOTTOMLEFT", -2, -38)
     NoteInputTextBackground:SetPoint("TOPRIGHT", NoteInputNameChooseFrame, "BOTTOMRIGHT", 22, -38)
-
-
   end)
+
+  local EnableHealComm = function()
+    -- hook healcomm's addon message to parse single-player events
+    if AceLibrary and AceLibrary:HasInstance("HealComm-1.0") and pfUI.prediction then
+      local HealComm = AceLibrary("HealComm-1.0")
+
+      -- use pfUI frames to draw healComm predictions
+      local pfHookHealCommSendAddonMessage = HealComm.SendAddonMessage
+      function HealComm.SendAddonMessage(this, msg)
+        if not UnitInRaid("player") and GetNumPartyMembers() < 1 then
+          pfUI.prediction:ParseChatMessage(UnitName("player"), msg)
+        end
+        pfHookHealCommSendAddonMessage(this, msg)
+      end
+
+      -- disable pfUI predictions
+      pfUI.prediction.sender:UnregisterAllEvents()
+      pfUI.prediction.sender.enabled = nil
+    end
+  end
+  HookAddonOrVariable("HealComm", EnableHealComm)
+  HookAddonOrVariable("LunaUnitFrames", EnableHealComm)
+  HookAddonOrVariable("NotGrid", EnableHealComm)
 end)
