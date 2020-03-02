@@ -33,6 +33,8 @@
   <Include file="..\modules\cooldown.lua"/>
   <Include file="..\modules\tooltip.lua"/>
   <Include file="..\modules\thirdparty.lua"/>
+  <Include file="..\modules\thirdparty-vanilla.lua"/>
+  <Include file="..\modules\thirdparty-tbc.lua"/>
   <Include file="..\modules\buff.lua"/>
   <Include file="..\modules\buffwatch.lua"/>
   <Include file="..\modules\nameplates.lua"/>
