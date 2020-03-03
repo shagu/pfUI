@@ -3,6 +3,8 @@ pfUI:RegisterModule("chatcopy", "vanilla:tbc", function ()
   local f = CreateFrame("Frame")
   f:RegisterEvent("PLAYER_ENTERING_WORLD")
   f:SetScript("OnEvent", function()
+    if not pfUI.chat then return end
+
     local button = CreateFrame("Button", "pfChatCopyButton", pfUI.chat.left.panelTop)
     button:SetPoint("TOPRIGHT", 0, 0)
     button:RegisterForClicks("LeftButtonUp", "RightButtonUp")
