@@ -995,11 +995,11 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     elseif i == 3 then -- left
       bars[i]:SetPoint("BOTTOMLEFT", bars[1], "BOTTOMRIGHT", 3*border, 0)
     elseif i == 4 then -- vertical
-      bars[i]:SetPoint("RIGHT", -3*border, 0)
+      bars[i]:SetPoint("RIGHT", -2*border, 0)
     elseif i == 5 then -- right
       bars[i]:SetPoint("BOTTOMRIGHT", bars[1], "BOTTOMLEFT", -3*border, 0)
     elseif i == 6 then -- top
-      bars[i]:SetPoint("BOTTOM", bars[1], "TOP", 0, -1)
+      bars[i]:SetPoint("BOTTOM", bars[1], "TOP", 0, -spacing)
     elseif i == 11 then -- stances
       bars[i]:SetPoint("BOTTOM", bars[6], "TOP", 0, 3*border)
     elseif i == 12 then -- pet
