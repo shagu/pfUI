@@ -39,6 +39,7 @@ pfUI:RegisterModule("raid", "vanilla:tbc", function ()
 
   local function SetRaidIndex(frame, id)
     frame.id = id
+    frame.label = "raid"
 
     if frame.SetAttribute and RegisterStateDriver then
       frame:SetAttribute("unit", UnitName("raid" .. id))
@@ -66,8 +67,8 @@ pfUI:RegisterModule("raid", "vanilla:tbc", function ()
   pfUI.uf.raid:RegisterEvent("VARIABLES_LOADED")
   pfUI.uf.raid:SetScript("OnEvent", function() this:Show() end)
   pfUI.uf.raid:SetScript("OnUpdate", function()
-    -- skip during combat
-    if InCombatLockdown and InCombatLockdown() then return end
+    -- don't proceed without raid or during combat
+    if not UnitInRaid("player") or (InCombatLockdown and InCombatLockdown()) then return end
 
     -- clear all existing frames
     for i=1, 40 do SetRaidIndex(pfUI.uf.raid[i], 0) end
