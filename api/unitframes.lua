@@ -1204,6 +1204,7 @@ function pfUI.uf:RefreshUnit(unit, component)
   end
 
   local C = pfUI_config
+
   -- show groupframes as raid
   if strsub(unit:GetName(),0,6) == "pfRaid" then
     local id = tonumber(strsub(unit:GetName(),7,8))
@@ -1520,6 +1521,8 @@ function pfUI.uf:RefreshUnit(unit, component)
       else
         if unit.config.portrait == "bar" then
           unit.portrait:SetAlpha(C.unitframes.portraitalpha)
+        else
+          unit.portrait:SetAlpha(1)
         end
         unit.portrait.tex:Hide()
         unit.portrait.model:Show()
