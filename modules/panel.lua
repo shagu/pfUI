@@ -31,12 +31,23 @@ pfUI:RegisterModule("panel", "vanilla:tbc", function()
         GameTooltip:AddDoubleLine(T["Localtime"],  "|cffffffff" .. time)
         GameTooltip:AddDoubleLine(T["Servertime"], "|cffffffff".. servertime)
         GameTooltip:AddLine(" ")
-        GameTooltip:AddDoubleLine(T["Left Click"], "|cffffffff" .. T["Show/Hide Timer"])
-        GameTooltip:AddDoubleLine(T["Right Click"], "|cffffffff" .. T["Reset Timer"])
+        if TimeManagerFrame then
+          GameTooltip:AddDoubleLine(T["Left Click"], "|cffffffff" .. T["Show/Hide TimeManager"])
+        else
+          GameTooltip:AddDoubleLine(T["Left Click"], "|cffffffff" .. T["Show/Hide Timer"])
+          GameTooltip:AddDoubleLine(T["Right Click"], "|cffffffff" .. T["Reset Timer"])
+        end
         GameTooltip:Show()
       end
       widget.Click = function()
         this:RegisterForClicks("LeftButtonUp", "RightButtonUp")
+        if TimeManagerFrame then
+          if TimeManagerClockButton.alarmFiring then
+            TimeManager_TurnOffAlarm()
+          end
+          ToggleTimeManager()
+          return
+        end
         if arg1 == "LeftButton" then
           if widget.timerFrame:IsShown() then
             widget.timerFrame:Hide()
