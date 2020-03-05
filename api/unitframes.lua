@@ -1,8 +1,18 @@
-pfUI.uf = CreateFrame("Frame",nil,UIParent)
-pfUI.uf.frames = {}
-
 -- load pfUI environment
 setfenv(1, pfUI:GetEnvironment())
+
+pfUI.uf = CreateFrame("Frame", nil, UIParent)
+pfUI.uf:SetScript("OnUpdate", function()
+  if InCombatLockdown and not InCombatLockdown() then
+    for frame in pairs(pfUI.uf.delayed) do
+      frame:UpdateVisibility()
+      pfUI.uf.delayed[frame] = nil
+    end
+  end
+end)
+
+pfUI.uf.frames = {}
+pfUI.uf.delayed = {}
 
 local glow = {
   edgeFile = pfUI.media["img:glow"], edgeSize = 8,
