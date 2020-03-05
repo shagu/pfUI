@@ -863,8 +863,8 @@ function pfUI.api.CreateBackdrop(f, inset, legacy, transp, backdropSetting)
 
   -- load custom border if existing
   if inset then
-    rawborder = inset
-    border = inset * GetPerfectPixel()
+    rawborder = inset / GetPerfectPixel()
+    border = inset
   end
 
   -- get the color settings
