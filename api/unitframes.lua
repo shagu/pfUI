@@ -179,75 +179,100 @@ end
 function pfUI.uf:UpdateVisibility()
   local self = self or this
 
-  if InCombatLockdown and InCombatLockdown() then return end
-
-  if self.config.visible == "0" then
-    if UnregisterStateDriver then
-      UnregisterStateDriver(self, "visibility")
-      self.visible = nil
-    end
-
-    self:Hide()
+  -- we're infight, delay the update
+  if InCombatLockdown and InCombatLockdown() then
+    pfUI.uf.delayed[self] = true
     return
   end
 
-  if InCombatLockdown and not InCombatLockdown() then
-    if pfUI.unlock and pfUI.unlock:IsShown() then
-      if self.visible then
-        UnregisterStateDriver(self, "visibility")
-        self.visible = nil
+  -- show groupframes as raid
+  if strsub(self:GetName(),0,6) == "pfRaid" then
+    local id = tonumber(strsub(self:GetName(),7,8))
+
+    -- always show self in raidframes
+    if not UnitInRaid("player") and GetNumPartyMembers() == 0 and C.unitframes.selfinraid == "1" and id == 1 then
+      self.id = ""
+      self.label = "player"
+
+    -- use raidframes for groups
+    elseif not UnitInRaid("player") and GetNumPartyMembers() > 0 and C.unitframes.raidforgroup == "1" then
+      if id == 1 then
+        self.id = ""
+        self.label = "player"
+      elseif id <= 5 then
+        self.id = id - 1
+        self.label = "party"
       end
-    elseif not self.visible then
-      RegisterStateDriver(self, "visibility", self.visibilitycondition)
-      self.visible = true
+
+    -- reset to regular raid unitstrings
+    elseif self.label == "party" or self.label == "player" then
+      self.id = id
+      self.label = "raid"
     end
-    return
   end
 
   local unitstr = string.format("%s%s", self.label or "", self.id or "")
+  local visibility = string.format("[target=%s,exists] show; hide", unitstr)
+
   if pfUI.unlock and pfUI.unlock:IsShown() then
-    self:Show()
-    return
-
-  --keep focus and named frames visible
-  elseif self.unitname and self.unitname ~= "focus" then
-    self:Show()
-    return
-
-  -- only update visibility state for existing units
-  elseif UnitName(unitstr) then
+    -- display during unlock mode
+    visibility = "show"
+    self.visible = true
+  elseif self.config.visible == "0" then
+    -- frame shall not be visible
+    visibility = "hide"
+    self.visible = nil
+  elseif C["unitframes"]["group"]["hide_in_raid"] == "1" and self.label and strsub(self.label,0,5) == "party" and UnitInRaid("player") then
     -- hide group while in raid and option is set
-    if C["unitframes"]["group"]["hide_in_raid"] == "1" and strsub(self.label,0,5) == "party" and UnitInRaid("player") then
-      self:Hide()
-      return
+    visibility = "hide"
+    self.visible = nil
+  elseif ( self.fname == "Group0" or self.fname == "PartyPet0" or self.fname == "Party0Target" )
+  and (GetNumPartyMembers() <= 0 or (C["unitframes"]["group"]["hide_in_raid"] == "1" and UnitInRaid("player"))) then
+     -- hide self in group if solo or hide in raid is set
+     visibility = "hide"
+     self.visible = nil
+  end
 
-    -- hide existing but too far away pet and pets of old group members
-    elseif self.label == "partypet" then
-      if not UnitIsVisible(unitstr) or not UnitExists("party" .. self.id) then
-        self:Hide()
-        return
-      end
+  -- tbc visibility
+  if self.SetAttribute and RegisterStateDriver then
+    self:SetAttribute("unit", unitstr)
 
-    elseif self.label == "pettarget" then
-      if not UnitIsVisible(unitstr) or not UnitExists("pet") then
-        self.frame:Hide()
-        return
-      end
-
-    -- hide self in group if solo or hide in raid is set
-    elseif self.fname == "Group0" or self.fname == "PartyPet0" or self.fname == "Party0Target" then
-      if GetNumPartyMembers() <= 0 or ( C["unitframes"]["group"]["hide_in_raid"] == "1" and UnitInRaid("player") ) then
-        self:Hide()
-        return
-      end
+    -- update visibility condition on change
+    if self.visibilitycondition ~= visibility then
+      RegisterStateDriver(self, 'visibility', visibility)
+      self.visibilitycondition = visibility
+      self.visible = true
     end
 
-    -- show everything else that has a name
+    return
+  end
+
+  -- vanilla visibility
+  if self.unitname and self.unitname ~= "focus" then
+    self:Show()
+  elseif visibility == "hide" then
+    self:Hide()
+  elseif visibility == "show" then
     self:Show()
   else
-    self.lastUnit = nil
-    self:Hide()
-    return
+    if UnitName(unitstr) then
+      -- hide existing but too far away pet and pets of old group members
+      if self.label == "partypet" then
+        if not UnitIsVisible(unitstr) or not UnitExists("party" .. self.id) then
+          self:Hide()
+          return
+        end
+      elseif self.label == "pettarget" then
+        if not UnitIsVisible(unitstr) or not UnitExists("pet") then
+          self.frame:Hide()
+          return
+        end
+      end
+      self:Show()
+    else
+      self.lastUnit = nil
+      self:Hide()
+    end
   end
 end
 
@@ -1201,29 +1226,6 @@ function pfUI.uf:RefreshUnit(unit, component)
   -- don't update scanner activity
   if unit.label == "target" or unit.label == "targettarget" or unit.label == "targettargettarget" then
     if pfScanActive == true then return end
-  end
-
-  local C = pfUI_config
-
-  -- show groupframes as raid
-  if strsub(unit:GetName(),0,6) == "pfRaid" then
-    local id = tonumber(strsub(unit:GetName(),7,8))
-
-    if not UnitInRaid("player") and GetNumPartyMembers() == 0 and C.unitframes.selfinraid == "1" and id == 1 then
-      unit.id = ""
-      unit.label = "player"
-    elseif not UnitInRaid("player") and GetNumPartyMembers() > 0 and C.unitframes.raidforgroup == "1" then
-      if id == 1 then
-        unit.id = ""
-        unit.label = "player"
-      elseif id <= 5 then
-        unit.id = id - 1
-        unit.label = "party"
-      end
-    elseif unit.label == "party" or unit.label == "player" then
-      unit.id = id
-      unit.label = "raid"
-    end
   end
 
   -- hide unused and invalid frames
