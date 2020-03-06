@@ -534,6 +534,7 @@ pfUI_translation["ruRU"] = {
   ["Show Empty Buttons"] = "Показать пустые кнопки",
   ["Show Happiness Icon"] = "Показать иконку счастья",
   ["Show Health Points"] = "Показать здоровье",
+  ["Show/Hide TimeManager"] = nil,
   ["Show/Hide Timer"] = "Показать/Скрыть таймер",
   ["Show Hotkey Text"] = "Показать текст горячих клавиш",
   ["Show Hots as Buff Indicators"] = "Показать лечение со временем (HoT) как индикаторы баффов",

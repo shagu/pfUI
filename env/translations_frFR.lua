@@ -534,6 +534,7 @@ pfUI_translation["frFR"] = {
   ["Show Empty Buttons"] = nil,
   ["Show Happiness Icon"] = nil,
   ["Show Health Points"] = "Afficher les points de vie",
+  ["Show/Hide TimeManager"] = nil,
   ["Show/Hide Timer"] = "Montrer/Cacher le Timer",
   ["Show Hotkey Text"] = "Afficher les raccourcis",
   ["Show Hots as Buff Indicators"] = "Afficher les soins sur la durée en tant qu'indicateur d'amélioration",

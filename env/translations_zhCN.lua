@@ -534,6 +534,7 @@ pfUI_translation["zhCN"] = {
   ["Show Empty Buttons"] = "显示空按钮",
   ["Show Happiness Icon"] = nil,
   ["Show Health Points"] = "显示生命值",
+  ["Show/Hide TimeManager"] = nil,
   ["Show/Hide Timer"] = "显示/隐藏计时器",
   ["Show Hotkey Text"] = "显示快捷键文本",
   ["Show Hots as Buff Indicators"] = "在框架的Buff指示器显示Hot",

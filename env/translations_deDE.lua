@@ -534,6 +534,7 @@ pfUI_translation["deDE"] = {
   ["Show Empty Buttons"] = nil,
   ["Show Happiness Icon"] = nil,
   ["Show Health Points"] = nil,
+  ["Show/Hide TimeManager"] = nil,
   ["Show/Hide Timer"] = nil,
   ["Show Hotkey Text"] = nil,
   ["Show Hots as Buff Indicators"] = nil,

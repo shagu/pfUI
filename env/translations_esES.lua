@@ -534,6 +534,7 @@ pfUI_translation["esES"] = {
   ["Show Empty Buttons"] = "Mostrar botones vacíos",
   ["Show Happiness Icon"] = "Mostrar icono de felicidad",
   ["Show Health Points"] = "Mostrar puntos de salud",
+  ["Show/Hide TimeManager"] = nil,
   ["Show/Hide Timer"] = "Mostrar/ocultar temporizador",
   ["Show Hotkey Text"] = "Mostrar texto de atajo",
   ["Show Hots as Buff Indicators"] = "Mostrar sanaciones periódicas (HoTs) como buffs",

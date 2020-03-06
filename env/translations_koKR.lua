@@ -534,6 +534,7 @@ pfUI_translation["koKR"] = {
   ["Show Empty Buttons"] = nil,
   ["Show Happiness Icon"] = nil,
   ["Show Health Points"] = "체력 상태 표시",
+  ["Show/Hide TimeManager"] = nil,
   ["Show/Hide Timer"] = "타이머 보기/가리기",
   ["Show Hotkey Text"] = "단축키 텍스트보기",
   ["Show Hots as Buff Indicators"] = "핫버프 표시기 보기",
