@@ -969,6 +969,29 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
         ".75:75%",
         ".90:90%",
       },
+      ["percent_small"] = {
+        "0:0%",
+        ".05:5%",
+        ".10:10%",
+        ".15:15%",
+        ".20:20%",
+        ".25:25%",
+        ".30:30%",
+        ".35:35%",
+        ".40:40%",
+        ".45:45%",
+        ".50:50%",
+        ".55:55%",
+        ".60:60%",
+        ".65:65%",
+        ".70:70%",
+        ".75:75%",
+        ".80:80%",
+        ".85:85%",
+        ".90:90%",
+        ".95:95%",
+        "1:100%",
+      },
       ["uf_overheal"] = {
         "0:0%",
         "10:10%",
@@ -1560,6 +1583,9 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
           CreateConfig(U[c], T["Display Frame"] .. ": " .. t, C.unitframes[c], "visible", "checkbox")
           CreateConfig(U[c], T["Enable Mouseover Tooltip"], C.unitframes[c], "showtooltip", "checkbox")
           CreateConfig(U[c], T["Enable Clickcast"], C.unitframes[c], "clickcast", "checkbox")
+          CreateConfig(U[c], T["Default Transparency"], C.unitframes[c], "alpha_visible", "dropdown", pfUI.gui.dropdowns.percent_small)
+          CreateConfig(U[c], T["Out Of Range Transparency"], C.unitframes[c], "alpha_outrange", "dropdown", pfUI.gui.dropdowns.percent_small)
+          CreateConfig(U[c], T["Offline Transparency"], C.unitframes[c], "alpha_offline", "dropdown", pfUI.gui.dropdowns.percent_small)
           CreateConfig(U[c], T["Enable Range Fading"], C.unitframes[c], "faderange", "checkbox")
           CreateConfig(U[c], T["Enable Aggro Glow"], C.unitframes[c], "glowaggro", "checkbox")
           CreateConfig(U[c], T["Enable Combat Glow"], C.unitframes[c], "glowcombat", "checkbox")

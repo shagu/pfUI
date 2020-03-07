@@ -311,6 +311,10 @@ function pfUI.uf:UpdateConfig()
      relative_point = "BOTTOMRIGHT"
   end
 
+  f.alpha_visible = tonumber(f.config.alpha_visible)
+  f.alpha_outrange = tonumber(f.config.alpha_outrange)
+  f.alpha_offline = tonumber(f.config.alpha_offline)
+
   f:SetFrameStrata("BACKGROUND")
 
   f.glow:SetFrameStrata("BACKGROUND")
@@ -1087,18 +1091,18 @@ function pfUI.uf:RefreshUnitAnimation(unitframe)
 end
 
 function pfUI.uf:RefreshUnitState(unit)
-  local alpha = 1
+  local alpha = unit.alpha_visible
   local unlock = pfUI.unlock and pfUI.unlock:IsShown() or nil
 
   if not UnitIsConnected(unit.label .. unit.id) and not unlock then
     -- offline
-    alpha = .25
+    alpha = unit.alpha_offline
     unit.hp.bar:SetMinMaxValues(0, 100)
     unit.power.bar:SetMinMaxValues(0, 100)
     unit.hp.bar:SetValue(0)
     unit.power.bar:SetValue(0)
   elseif unit.config.faderange == "1" and not pfUI.api.UnitInRange(unit.label .. unit.id, 4) and not unlock then
-    alpha = .5
+    alpha = unit.alpha_outrange
   end
 
   -- skip if alpha is already correct
