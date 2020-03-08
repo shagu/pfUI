@@ -898,8 +898,31 @@ function pfUI.uf:EnableScripts()
   -- handle secure unit button templates (> vanilla)
   if f.SetAttribute then
     f.showmenu = pfUI.uf.RightClickAction
-    f:SetAttribute("type1", "target")
-    f:SetAttribute("type2", "showmenu")
+    f:SetAttribute("*type1", "target")
+    f:SetAttribute("*type2", "showmenu")
+
+    if f.config.clickcast == "1" then
+      -- clickcast: shift modifier
+      if pfUI_config.unitframes.clickcast_shift ~= "" then
+        f:SetAttribute("shift-type1", "spell")
+        f:SetAttribute("shift-spell1", pfUI_config.unitframes.clickcast_shift)
+      end
+      -- clickcast: alt modifier
+      if pfUI_config.unitframes.clickcast_alt ~= "" then
+        f:SetAttribute("alt-type1", "spell")
+        f:SetAttribute("alt-spell1", pfUI_config.unitframes.clickcast_alt)
+      end
+      -- clickcast: ctrl modifier
+      if pfUI_config.unitframes.clickcast_ctrl ~= "" then
+        f:SetAttribute("ctrl-type1", "spell")
+        f:SetAttribute("ctrl-spell1", pfUI_config.unitframes.clickcast_ctrl)
+      end
+      -- clickcast: default
+      if pfUI_config.unitframes.clickcast ~= "" then
+        f:SetAttribute("type1", "spell")
+        f:SetAttribute("spell1", pfUI_config.unitframes.clickcast)
+      end
+    end
   else
     f:SetScript("OnClick", pfUI.uf.OnClick)
   end
