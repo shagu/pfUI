@@ -210,6 +210,31 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("unitframes", nil,           "clickcast_alt",    "")
   pfUI:UpdateConfig("unitframes", nil,           "clickcast_ctrl",   "")
 
+  pfUI:UpdateConfig("unitframes", nil,           "clickcast",        "")
+  pfUI:UpdateConfig("unitframes", nil,           "clickcast_shift",  "")
+  pfUI:UpdateConfig("unitframes", nil,           "clickcast_alt",    "")
+  pfUI:UpdateConfig("unitframes", nil,           "clickcast_ctrl",   "")
+
+  pfUI:UpdateConfig("unitframes", nil,           "clickcast2",        "")
+  pfUI:UpdateConfig("unitframes", nil,           "clickcast2_shift",  "")
+  pfUI:UpdateConfig("unitframes", nil,           "clickcast2_alt",    "")
+  pfUI:UpdateConfig("unitframes", nil,           "clickcast2_ctrl",   "")
+
+  pfUI:UpdateConfig("unitframes", nil,           "clickcast3",        "")
+  pfUI:UpdateConfig("unitframes", nil,           "clickcast3_shift",  "")
+  pfUI:UpdateConfig("unitframes", nil,           "clickcast3_alt",    "")
+  pfUI:UpdateConfig("unitframes", nil,           "clickcast3_ctrl",   "")
+
+  pfUI:UpdateConfig("unitframes", nil,           "clickcast4",        "")
+  pfUI:UpdateConfig("unitframes", nil,           "clickcast4_shift",  "")
+  pfUI:UpdateConfig("unitframes", nil,           "clickcast4_alt",    "")
+  pfUI:UpdateConfig("unitframes", nil,           "clickcast4_ctrl",   "")
+
+  pfUI:UpdateConfig("unitframes", nil,           "clickcast5",        "")
+  pfUI:UpdateConfig("unitframes", nil,           "clickcast5_shift",  "")
+  pfUI:UpdateConfig("unitframes", nil,           "clickcast5_alt",    "")
+  pfUI:UpdateConfig("unitframes", nil,           "clickcast5_ctrl",   "")
+
   pfUI:UpdateConfig("unitframes", "player",      "showPVPMinimap",   "0")
   pfUI:UpdateConfig("unitframes", "player",      "showRest",         "0")
   pfUI:UpdateConfig("unitframes", "player",      "energy",           "1")
