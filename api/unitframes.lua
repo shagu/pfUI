@@ -900,29 +900,6 @@ function pfUI.uf:EnableScripts()
     f.showmenu = pfUI.uf.RightClickAction
     f:SetAttribute("*type1", "target")
     f:SetAttribute("*type2", "showmenu")
-
-    if f.config.clickcast == "1" then
-      -- clickcast: shift modifier
-      if pfUI_config.unitframes.clickcast_shift ~= "" then
-        f:SetAttribute("shift-type1", "spell")
-        f:SetAttribute("shift-spell1", pfUI_config.unitframes.clickcast_shift)
-      end
-      -- clickcast: alt modifier
-      if pfUI_config.unitframes.clickcast_alt ~= "" then
-        f:SetAttribute("alt-type1", "spell")
-        f:SetAttribute("alt-spell1", pfUI_config.unitframes.clickcast_alt)
-      end
-      -- clickcast: ctrl modifier
-      if pfUI_config.unitframes.clickcast_ctrl ~= "" then
-        f:SetAttribute("ctrl-type1", "spell")
-        f:SetAttribute("ctrl-spell1", pfUI_config.unitframes.clickcast_ctrl)
-      end
-      -- clickcast: default
-      if pfUI_config.unitframes.clickcast ~= "" then
-        f:SetAttribute("type1", "spell")
-        f:SetAttribute("spell1", pfUI_config.unitframes.clickcast)
-      end
-    end
   else
     f:SetScript("OnClick", pfUI.uf.OnClick)
   end
@@ -932,6 +909,7 @@ function pfUI.uf:EnableScripts()
   f:SetScript("OnUpdate", pfUI.uf.OnUpdate)
   f:SetScript("OnEnter", pfUI.uf.OnEnter)
   f:SetScript("OnLeave", pfUI.uf.OnLeave)
+  f:EnableClickCast()
 
   -- add generic visibility handler
   f.visibility:SetScript("OnUpdate", UpdateVisibilityScanner)
@@ -967,6 +945,7 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
   f.UpdateConfig     = pfUI.uf.UpdateConfig
   f.EnableScripts    = pfUI.uf.EnableScripts
   f.EnableEvents     = pfUI.uf.EnableEvents
+  f.EnableClickCast  = pfUI.uf.EnableClickCast
   f.GetColor         = pfUI.uf.GetColor
 
   -- cache values to the frame
@@ -1678,6 +1657,43 @@ function pfUI.uf:RefreshUnit(unit, component)
   pfUI.uf:RefreshUnitState(unit)
 end
 
+local buttons = {
+  [1] = "LeftButton",
+  [2] = "RightButton",
+  [3] = "MiddleButton",
+  [4] = "Button4",
+  [5] = "Button5",
+}
+
+local modifiers = {
+  [""] = "",
+  ["alt"] = "_alt",
+  ["ctrl"] = "_ctrl",
+  ["shift"] = "_shift",
+}
+
+function pfUI.uf:EnableClickCast()
+  if self.config.clickcast ~= "1" then return end
+  for bid, button in pairs(buttons) do
+    for modifier, mconf in pairs(modifiers) do
+      local bconf = bid == 1 and "" or bid
+      if pfUI_config.unitframes["clickcast"..bconf..mconf] ~= "" then
+        -- prepare click casting
+        if self.SetAttribute then
+          -- set attributes for tbc+
+          local prefix = modifier == "" and "" or modifier .. "-"
+          self:SetAttribute(prefix.."type"..bid, "spell")
+          self:SetAttribute(prefix.."spell"..bid, pfUI_config.unitframes["clickcast"..bconf..mconf])
+        else
+          -- fill clickaction table for vanillla
+          self.clickactions = self.clickactions or {}
+          self.clickactions[modifier..button] = pfUI_config.unitframes["clickcast"..bconf..mconf]
+        end
+      end
+    end
+  end
+end
+
 function pfUI.uf:ClickAction(button)
   local label = this.label or ""
   local id = this.id or ""
@@ -1694,6 +1710,20 @@ function pfUI.uf:ClickAction(button)
     DropItemOnUnit(unitstr)
   end
 
+  -- run click casting if enabled
+  local modstring = ""
+  modstring = IsAltKeyDown() and modstring.."alt" or modstring
+  modstring = IsControlKeyDown() and modstring.."ctrl" or modstring
+  modstring = IsShiftKeyDown() and modstring.."shift" or modstring
+  modstring = modstring..button
+  if this.clickactions and this.clickactions[modstring] then
+    local tswitch = UnitIsUnit(unitstr, "target")
+    TargetUnit(unitstr)
+    CastSpellByName(this.clickactions[modstring])
+    if not tswitch then TargetLastTarget() end
+    return
+  end
+
   -- dropdown menus
   if button == "RightButton" then
     pfUI.uf:RightClickAction(label)
@@ -1707,46 +1737,8 @@ function pfUI.uf:ClickAction(button)
       end
     end
 
-    -- prevent TargetLastTarget if target was target
-    local tswitch = UnitIsUnit(unitstr, "target")
-
     -- default click
     TargetUnit(unitstr)
-
-    if this.config.clickcast == "1" then
-      -- clickcast: shift modifier
-      if IsShiftKeyDown() then
-        if pfUI_config.unitframes.clickcast_shift ~= "" then
-          CastSpellByName(pfUI_config.unitframes.clickcast_shift)
-          if not tswitch then TargetLastTarget() end
-          return
-        end
-
-      -- clickcast: alt modifier
-      elseif IsAltKeyDown() then
-        if pfUI_config.unitframes.clickcast_alt ~= "" then
-          CastSpellByName(pfUI_config.unitframes.clickcast_alt)
-          if not tswitch then TargetLastTarget() end
-          return
-        end
-
-      -- clickcast: ctrl modifier
-      elseif IsControlKeyDown() then
-        if pfUI_config.unitframes.clickcast_ctrl ~= "" then
-          CastSpellByName(pfUI_config.unitframes.clickcast_ctrl)
-          if not tswitch then TargetLastTarget() end
-          return
-        end
-
-      -- clickcast: default
-      else
-        if pfUI_config.unitframes.clickcast ~= "" then
-          CastSpellByName(pfUI_config.unitframes.clickcast)
-          if not tswitch then TargetLastTarget() end
-          return
-        end
-      end
-    end
   end
 end
 
