@@ -1029,16 +1029,16 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
             and C.bars.bar1.buttons == C.bars.bar6.buttons
           then
             bars[1].backdrop:ClearAllPoints()
-            bars[1].backdrop:SetPoint("BOTTOMRIGHT", bars[1], "BOTTOMRIGHT", bpad, -bpad)
-            bars[1].backdrop:SetPoint("TOPLEFT", bars[6].backdrop, "TOPLEFT", 0, 0)
+            bars[1].backdrop:SetPoint("BOTTOMRIGHT", bars[1], "BOTTOMRIGHT", border, -border)
+            bars[1].backdrop:SetPoint("TOPLEFT", bars[6], "TOPLEFT", -border, border)
             bars[6].backdrop:Hide()
           else
             if C.bars.bar1.background == "1" then
               -- create/reset bar1 backdrop if required
               CreateBackdrop(bars[1], border)
               bars[1].backdrop:ClearAllPoints()
-              bars[1].backdrop:SetPoint("BOTTOMRIGHT", bars[1], "BOTTOMRIGHT", bpad, -bpad)
-              bars[1].backdrop:SetPoint("TOPLEFT", bars[1], "TOPLEFT", -bpad, bpad)
+              bars[1].backdrop:SetPoint("BOTTOMRIGHT", bars[1], "BOTTOMRIGHT", border, -border)
+              bars[1].backdrop:SetPoint("TOPLEFT", bars[1], "TOPLEFT", -border, border)
             end
 
             if C.bars.bar6.background == "1" then
