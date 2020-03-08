@@ -1,51 +1,67 @@
 pfUI:RegisterModule("xpbar", "vanilla:tbc", function ()
   local rawborder, default_border = GetBorderSize()
-
-  local xp_timeout = tonumber(C.panel.xp.xp_timeout)
-  local xp_width = C.panel.xp.xp_width
-  local xp_height = C.panel.xp.xp_height
-  local xp_mode = C.panel.xp.xp_mode
-  local xp_always = C.panel.xp.xp_always == "1" and true or nil
-
-  local rep_timeout = tonumber(C.panel.xp.rep_timeout)
-  local rep_width = C.panel.xp.rep_width
-  local rep_height = C.panel.xp.rep_height
-  local rep_mode = C.panel.xp.rep_mode
-  local rep_always = C.panel.xp.rep_always == "1" and true or nil
-
   local parse_faction = SanitizePattern(FACTION_STANDING_INCREASED)
 
+  local function AlignToPosition(frame, anchor, position)
+    local pixel = GetPerfectPixel()
+    frame:ClearAllPoints()
+    if position == "TOP" and anchor then
+      frame:SetPoint("BOTTOMLEFT", anchor, "TOPLEFT", 0, default_border*3)
+      frame:SetPoint("BOTTOMRIGHT", anchor, "TOPRIGHT", 0, default_border*3)
+    elseif position == "RIGHT" and anchor then
+      frame:SetPoint("TOPLEFT", anchor, "TOPRIGHT", default_border*3, 0)
+      frame:SetPoint("BOTTOMLEFT", anchor, "BOTTOMRIGHT", default_border*3, 0)
+    elseif position == "BOTTOM" and anchor then
+      frame:SetPoint("TOPLEFT", anchor, "BOTTOMLEFT", 0, -default_border*3)
+      frame:SetPoint("TOPRIGHT", anchor, "BOTTOMRIGHT", 0, -default_border*3)
+    elseif position == "LEFT" and anchor then
+      frame:SetPoint("TOPRIGHT", anchor, "TOPLEFT", -default_border*3, 0)
+      frame:SetPoint("BOTTOMRIGHT", anchor, "BOTTOMLEFT", -default_border*3, 0)
+    else
+      frame:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", 0, 0)
+      frame:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", 0, 0)
+    end
+    UpdateMovable(frame, true)
+  end
+
   local function CreateBar(t)
+    local xp_timeout = tonumber(C.panel.xp.xp_timeout)
+    local xp_width = C.panel.xp.xp_width
+    local xp_height = C.panel.xp.xp_height
+    local xp_mode = C.panel.xp.xp_mode
+    local xp_always = C.panel.xp.xp_always == "1" and true or nil
+    local xp_position = C.panel.xp.xp_position
+    local xp_anchor = C.panel.xp.xp_anchor
+
+
+    local rep_timeout = tonumber(C.panel.xp.rep_timeout)
+    local rep_width = C.panel.xp.rep_width
+    local rep_height = C.panel.xp.rep_height
+    local rep_mode = C.panel.xp.rep_mode
+    local rep_always = C.panel.xp.rep_always == "1" and true or nil
+    local rep_position = C.panel.xp.rep_position
+    local rep_anchor = C.panel.xp.rep_anchor
+
     local t = t
     local width = t == "XP" and xp_width or rep_width
     local height = t == "XP" and xp_height or rep_height
     local mode = t == "XP" and xp_mode or rep_mode
     local timeout = t == "XP" and xp_timeout or rep_timeout
     local always = t == "XP" and xp_always or rep_always
-
     local name = t == "XP" and "pfExperienceBar" or "pfReputationBar"
+    local anchor = t == "XP" and xp_anchor or rep_anchor
+    local position = t == "XP" and xp_position or rep_position
 
-    local b = CreateFrame("Frame", name, UIParent)
+    local b = _G[name] or CreateFrame("Frame", name, UIParent)
     b:SetWidth(width)
     b:SetHeight(height)
     b:SetFrameStrata("BACKGROUND")
 
-    if t == "XP" and pfUI.chat then
-      b:SetPoint("TOPLEFT", pfUI.chat.left, "TOPRIGHT", default_border*2, 0)
-      b:SetPoint("BOTTOMLEFT", pfUI.chat.left, "BOTTOMRIGHT", default_border*2, 0)
-    elseif t == "REP" and pfUI.chat then
-      b:SetPoint("TOPRIGHT",pfUI.chat.right,"TOPLEFT", -default_border*2, 0)
-      b:SetPoint("BOTTOMRIGHT",pfUI.chat.right,"BOTTOMLEFT",-default_border*2, 0)
-    else
-      b:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", 0, 0)
-      b:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", 0, 0)
-    end
-
+    AlignToPosition(b, _G[anchor], position)
     CreateBackdrop(b)
     CreateBackdropShadow(b)
-    UpdateMovable(b)
 
-    b.bar = CreateFrame("StatusBar", nil, b)
+    b.bar = b.bar or CreateFrame("StatusBar", nil, b)
     b.bar:SetStatusBarTexture(pfUI.media["img:bar"])
     b.bar:ClearAllPoints()
     b.bar:SetAllPoints(b)
@@ -55,7 +71,7 @@ pfUI:RegisterModule("xpbar", "vanilla:tbc", function ()
     b.bar:SetOrientation(mode)
     b.bar:SetValue(0)
 
-    b.restedbar = CreateFrame("StatusBar", nil, b)
+    b.restedbar = b.restedbar or CreateFrame("StatusBar", nil, b)
     b.restedbar:SetStatusBarTexture(pfUI.media["img:bar"])
     b.restedbar:ClearAllPoints()
     b.restedbar:SetAllPoints(b)
@@ -85,6 +101,9 @@ pfUI:RegisterModule("xpbar", "vanilla:tbc", function ()
     b:RegisterEvent("PLAYER_LEVEL_UP")
     b:RegisterEvent("UPDATE_FACTION")
     b:SetScript("OnEvent", function()
+      -- realign when entering world to ensure all frames got loaded
+      AlignToPosition(b, _G[anchor], position)
+
       -- set either experience, reputation or flex-rep handler
       local mode = ( t == "XP" and UnitLevel("player") < MAX_LEVEL ) and "XP" or t == "REP" and "REP" or "FLEX"
 
@@ -215,6 +234,10 @@ pfUI:RegisterModule("xpbar", "vanilla:tbc", function ()
     return b
   end
 
-  pfUI.xp = CreateBar("XP")
-  pfUI.rep = CreateBar("REP")
+  pfUI.xpbar = { ["UpdateConfig"] = function()
+    pfUI.xp = CreateBar("XP")
+    pfUI.rep = CreateBar("REP")
+  end}
+
+  pfUI.xpbar:UpdateConfig()
 end)

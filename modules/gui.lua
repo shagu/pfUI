@@ -919,6 +919,21 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
         "8:" .. T["Slow"],
         "13:" .. T["Very Slow"],
       },
+      ["xpanchors"] = {
+        "__NONONIL__:" .. T["No Anchor"],
+        "pfChatLeft:" .. T["Left Chat Frame"],
+        "pfChatRight:" .. T["Right Chat Frame"],
+        "pfActionBarMain:" .. T["Main Actionbar"],
+        "pfActionBarTop:" .. T["Top Actionbar"],
+        "pfActionBarLeft:" .. T["Left Actionbar"],
+        "pfActionBarRight:" .. T["Right Actionbar"],
+        "pfActionBarVertical:" .. T["Vertical Actionbar"],
+        "pfExperienceBar:" .. T["Experience Bar"],
+        "pfReputationBar:" .. T["Reputation Bar"],
+        "pfPlayer:" .. T["Player Unitframe"],
+        "pfMinimap:" .. T["Minimap"],
+        "pfPanelMinimap:" .. T["Minimap Panel"],
+      },
       ["uf_bartexture"] = {
         "Interface\\AddOns\\pfUI\\img\\bar:pfUI",
         "Interface\\AddOns\\pfUI\\img\\bar_tukui:TukUI",
@@ -1108,6 +1123,12 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
         "left:" .. T["Left"],
         "top:" .. T["Top"],
         "right:" .. T["Right"]
+      },
+      ["xp_position"] = {
+        "BOTTOM:" .. T["Bottom"],
+        "LEFT:" .. T["Left"],
+        "TOP:" .. T["Top"],
+        "RIGHT:" .. T["Right"]
       },
     }
 
@@ -1907,26 +1928,31 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
       CreateConfig(nil, T["Enable 24h Clock"], C.global, "twentyfour", "checkbox")
       CreateConfig(nil, T["Servertime"], C.global, "servertime", "checkbox")
 
-      CreateConfig(nil, T["Experience Bar"], nil, nil, "header")
-      CreateConfig(nil, T["Always Show"], C.panel.xp, "xp_always", "checkbox")
-      CreateConfig(nil, T["Hide Timeout"], C.panel.xp, "xp_timeout")
-      CreateConfig(nil, T["Width"], C.panel.xp, "xp_width")
-      CreateConfig(nil, T["Height"], C.panel.xp, "xp_height")
-      CreateConfig(nil, T["Orientation"], C.panel.xp, "xp_mode", "dropdown", pfUI.gui.dropdowns.orientation)
-
-      CreateConfig(nil, T["Reputation Bar"], nil, nil, "header")
-      CreateConfig(nil, T["Always Show"], C.panel.xp, "rep_always", "checkbox")
-      CreateConfig(nil, T["Hide Timeout"], C.panel.xp, "rep_timeout")
-      CreateConfig(nil, T["Width"], C.panel.xp, "rep_width")
-      CreateConfig(nil, T["Height"], C.panel.xp, "rep_height")
-      CreateConfig(nil, T["Orientation"], C.panel.xp, "rep_mode", "dropdown", pfUI.gui.dropdowns.orientation)
-    end)
-
-    CreateGUIEntry(T["Panel"], T["Auto Hide"], function()
+      CreateConfig(nil, T["Auto Hide"], nil, nil, "header")
       CreateConfig(nil, T["Enable Autohide For Left Chat Panel"], C.panel, "hide_leftchat", "checkbox")
       CreateConfig(nil, T["Enable Autohide For Right Chat Panel"], C.panel, "hide_rightchat", "checkbox")
       CreateConfig(nil, T["Enable Autohide For Minimap Panel"], C.panel, "hide_minimap", "checkbox")
       CreateConfig(nil, T["Enable Autohide For Microbar Panel"], C.panel, "hide_microbar", "checkbox")
+    end)
+
+    CreateGUIEntry(T["XP Bar"], T["Experience Bar"], function()
+      CreateConfig(U["xpbar"], T["Always Show"], C.panel.xp, "xp_always", "checkbox")
+      CreateConfig(U["xpbar"], T["Hide Timeout"], C.panel.xp, "xp_timeout")
+      CreateConfig(U["xpbar"], T["Width"], C.panel.xp, "xp_width")
+      CreateConfig(U["xpbar"], T["Height"], C.panel.xp, "xp_height")
+      CreateConfig(U["xpbar"], T["Orientation"], C.panel.xp, "xp_mode", "dropdown", pfUI.gui.dropdowns.orientation)
+      CreateConfig(U["xpbar"], T["Frame Anchor"], C.panel.xp, "xp_anchor", "dropdown", pfUI.gui.dropdowns.xpanchors)
+      CreateConfig(U["xpbar"], T["Aligned Position"], C.panel.xp, "xp_position", "dropdown", pfUI.gui.dropdowns.xp_position)
+    end)
+
+    CreateGUIEntry(T["XP Bar"], T["Reputation Bar"], function()
+      CreateConfig(U["xpbar"], T["Always Show"], C.panel.xp, "rep_always", "checkbox")
+      CreateConfig(U["xpbar"], T["Hide Timeout"], C.panel.xp, "rep_timeout")
+      CreateConfig(U["xpbar"], T["Width"], C.panel.xp, "rep_width")
+      CreateConfig(U["xpbar"], T["Height"], C.panel.xp, "rep_height")
+      CreateConfig(U["xpbar"], T["Orientation"], C.panel.xp, "rep_mode", "dropdown", pfUI.gui.dropdowns.orientation)
+      CreateConfig(U["xpbar"], T["Frame Anchor"], C.panel.xp, "rep_anchor", "dropdown", pfUI.gui.dropdowns.xpanchors)
+      CreateConfig(U["xpbar"], T["Aligned Position"], C.panel.xp, "rep_position", "dropdown", pfUI.gui.dropdowns.xp_position)
     end)
 
     CreateGUIEntry(T["Tooltip"], nil, function()
