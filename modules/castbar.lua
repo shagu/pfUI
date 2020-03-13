@@ -23,7 +23,6 @@ pfUI:RegisterModule("castbar", "vanilla:tbc", function ()
     cb.icon.texture:SetAllPoints()
     cb.icon.texture:SetTexCoord(.08, .92, .08, .92)
     CreateBackdrop(cb.icon, default_border)
-    CreateBackdropShadow(cb.icon)
 
     -- statusbar
     cb.bar = CreateFrame("StatusBar", nil, cb)
