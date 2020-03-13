@@ -9,8 +9,8 @@ pfUI:RegisterModule("uf_tukui", "vanilla:tbc", function ()
 
     -- load configs
     local rawborder, default_border = GetBorderSize("unitframes")
-    local pspacing = C.unitframes.player.pspace
-    local tspacing = C.unitframes.target.pspace
+    local pspacing = C.unitframes.player.pspace * GetPerfectPixel()
+    local tspacing = C.unitframes.target.pspace * GetPerfectPixel()
 
     -- adjust layout
     pfUI.uf.player:UpdateFrameSize()
