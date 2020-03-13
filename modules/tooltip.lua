@@ -155,7 +155,7 @@ pfUI:RegisterModule("tooltip", "vanilla:tbc", function ()
   GameTooltipStatusBar:SetPoint("BOTTOMLEFT", GameTooltip, "TOPLEFT", 0, default_border*3)
   GameTooltipStatusBar:SetPoint("BOTTOMRIGHT", GameTooltip, "TOPRIGHT", 0, default_border*3)
   GameTooltipStatusBar:SetStatusBarTexture(pfUI.media[C.tooltip.statusbar.texture])
-  CreateBackdrop(GameTooltipStatusBar)
+  CreateBackdrop(GameTooltipStatusBar, nil, nil, tonumber(C.tooltip.alpha))
   CreateBackdropShadow(GameTooltipStatusBar)
 
   GameTooltipStatusBar.SetStatusBarColor_orig = GameTooltipStatusBar.SetStatusBarColor
