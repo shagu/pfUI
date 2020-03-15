@@ -60,13 +60,6 @@ libdebuff = {
   end
 }
 
---[[ DEBUG ]]--
-function TargetByName()
-  message("|cffff5555You shouldn't be here!|r TargetByName is blacklisted")
-  message(debugstack())
-  return
-end
-
 -- map reveal positions
 pfMapOverlayData = {
  ["Teldrassil"] = { "RUTTHERANVILLAGE:128:100:494:548", "STARBREEZEVILLAGE:200:200:561:292", "GNARLPINEHOLD:185:128:368:443", "LAKEALAMETH:256:185:436:380", "WELLSPRINGLAKE:180:256:377:93", "THEORACLEGLADE:170:240:272:127", "BANETHILHOLLOW:160:210:382:281", "DOLANAAR:190:128:462:323", "SHADOWGLEN:225:225:491:153", "POOLSOFARLITHRIEN:128:190:335:313", "DARNASSUS:315:256:101:247", },
