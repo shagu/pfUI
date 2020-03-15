@@ -854,12 +854,13 @@ end
 -- 'inset'      [int]           backdrop inset, defaults to border size.
 -- 'legacy'     [bool]          use legacy backdrop instead of creating frames.
 -- 'transp'     [number]        set default transparency
+local backdrop, b, level, rawborder, border, br, bg, bb, ba, er, eg, eb, ea
 function pfUI.api.CreateBackdrop(f, inset, legacy, transp, backdropSetting)
   -- exit if now frame was given
   if not f then return end
 
   -- load raw and pixel perfect scaled border
-  local rawborder, border = GetBorderSize()
+  rawborder, border = GetBorderSize()
 
   -- load custom border if existing
   if inset then
@@ -868,14 +869,14 @@ function pfUI.api.CreateBackdrop(f, inset, legacy, transp, backdropSetting)
   end
 
   -- get the color settings
-  local br, bg, bb, ba = pfUI.api.GetStringColor(pfUI_config.appearance.border.background)
-  local er, eg, eb, ea = pfUI.api.GetStringColor(pfUI_config.appearance.border.color)
+  br, bg, bb, ba = pfUI.api.GetStringColor(pfUI_config.appearance.border.background)
+  er, eg, eb, ea = pfUI.api.GetStringColor(pfUI_config.appearance.border.color)
 
   if transp and transp < tonumber(ba) then ba = transp end
 
   -- use legacy backdrop handling
   if legacy then
-    local backdrop = rawborder == 1 and pfUI.backdrop_thin or pfUI.backdrop
+    backdrop = rawborder == 1 and pfUI.backdrop_thin or pfUI.backdrop
     if backdropSetting then f:SetBackdrop(backdropSetting) end
     f:SetBackdrop(backdrop)
     f:SetBackdropColor(br, bg, bb, ba)
@@ -891,7 +892,7 @@ function pfUI.api.CreateBackdrop(f, inset, legacy, transp, backdropSetting)
       if f:GetBackdrop() then f:SetBackdrop(nil) end
 
       local b = CreateFrame("Frame", nil, f)
-      local level = f:GetFrameLevel()
+      level = f:GetFrameLevel()
       if level < 1 then
         b:SetFrameLevel(level)
       else
@@ -901,13 +902,12 @@ function pfUI.api.CreateBackdrop(f, inset, legacy, transp, backdropSetting)
       f.backdrop = b
     end
 
-    local b = f.backdrop
-    b:SetPoint("TOPLEFT", f, "TOPLEFT", -border, border)
-    b:SetPoint("BOTTOMRIGHT", f, "BOTTOMRIGHT", border, -border)
-    b:SetBackdrop(rawborder > 1 and pfUI.backdrop or pfUI.backdrop_thin)
+    f.backdrop:SetPoint("TOPLEFT", f, "TOPLEFT", -border, border)
+    f.backdrop:SetPoint("BOTTOMRIGHT", f, "BOTTOMRIGHT", border, -border)
+    f.backdrop:SetBackdrop(rawborder > 1 and pfUI.backdrop or pfUI.backdrop_thin)
 
-    b:SetBackdropColor(br, bg, bb, ba)
-    b:SetBackdropBorderColor(er, eg, eb , ea)
+    f.backdrop:SetBackdropColor(br, bg, bb, ba)
+    f.backdrop:SetBackdropBorderColor(er, eg, eb , ea)
   end
 end
 
