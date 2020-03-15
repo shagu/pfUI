@@ -1,6 +1,105 @@
 -- load pfUI environment
 setfenv(1, pfUI:GetEnvironment())
 
+do -- statusbars
+  local animations = {}
+  local stepsize, val
+  local width, height, point
+
+  local animate = CreateFrame("Frame", "pfStatusBarAnimation", UIParent)
+  animate:SetScript("OnUpdate", function()
+    stepsize = tonumber(pfUI_config.unitframes.animation_speed)
+
+    for bar in pairs(animations) do
+      if not bar.val_ or abs(bar.val_ - bar.val) < stepsize or bar.instant then
+        bar:DisplayValue(bar.val)
+      elseif bar.val ~= bar.val_ then
+        bar:DisplayValue(bar.val_ + min((bar.val-bar.val_) / stepsize, max(bar.val-bar.val_, 30 / GetFramerate())))
+      end
+    end
+  end)
+
+  local handlers = {
+    ["DisplayValue"] = function(self, val)
+      val = val > self.max and self.max or val < self.min and self.min or val
+
+      if val == self.val_ then
+        animations[self] = nil
+      elseif self.mode == "vertical" then
+        height = self:GetHeight() / self:GetEffectiveScale()
+        point = height / (self.max - self.min) * (val - self.min)
+        self.bar:SetPoint("TOPLEFT", self, "TOPLEFT", 0, - height + point)
+        self.bg:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", 0, point)
+        self.val_ = val
+      else
+        width = self:GetWidth() / self:GetEffectiveScale()
+        point = width / (self.max - self.min) * (val - self.min)
+        self.bar:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", - width + point, 0)
+        self.bg:SetPoint("TOPLEFT", self, "TOPLEFT", point, 0)
+        self.val_ = val
+      end
+    end,
+
+    ["SetMinMaxValues"] = function(self, smin, smax, smooth)
+      -- smoothen the transition by keeping the value at the same percentage as before
+      if smooth and self.max and self.max > 0 and smax > 0 and self.max ~= smax then
+        self.val_ = (self.val_ or self.val) / self.max * smax
+      end
+
+      self.min, self.max = smin, smax
+      self:DisplayValue(self.val_ or self.val)
+    end,
+
+    ["SetValue"] = function(self, val)
+      self.val = val or 0
+      animations[self] = true
+    end,
+
+    ["SetStatusBarTexture"] = function(self, r, g, b, a)
+      self.bar:SetTexture(r, g, b, a)
+    end,
+
+    ["SetStatusBarColor"] = function(self, r, g, b, a)
+      self.bar:SetVertexColor(r, g, b, a)
+    end,
+
+    ["SetStatusBarBackgroundTexture"] = function(self, r, g, b, a)
+      self.bg:SetTexture(r, g, b, a)
+    end,
+
+    ["SetStatusBarBackgroundColor"] = function(self, r, g, b, a)
+      self.bg:SetVertexColor(r, g, b, a)
+    end,
+
+    ["SetOrientation"] = function(self, mode)
+      self.mode = strlower(mode)
+    end,
+  }
+
+  function pfUI.api.CreateStatusBar(name, parent)
+    local f = CreateFrame("Button", name, parent)
+    f:EnableMouse(nil)
+
+    f.bar = f:CreateTexture(nil, "NORMAL")
+    f.bar:SetPoint("TOPLEFT", f, "TOPLEFT", 0, 0)
+    f.bar:SetPoint("BOTTOMRIGHT", f, "BOTTOMRIGHT", 0, 0)
+
+    f.bg = f:CreateTexture(nil, "NORMAL")
+    f.bg:SetPoint("TOPLEFT", f, "TOPLEFT", 0, 0)
+    f.bg:SetPoint("BOTTOMRIGHT", f, "BOTTOMRIGHT", 0, 0)
+
+    -- set some default values
+    f.min, f.max, f.val = 0, 100, 0
+
+    -- add all handler functions to the object
+    for name, func in pairs(handlers) do
+      f[name] = func
+    end
+
+    return f
+  end
+end
+
 function pfUI.api.CreateTabChild(self, title, bwidth, bheight, bottom, static)
   -- create tab button
   local b = CreateFrame("Button", "pfConfig" .. title .. "Button", self, "UIPanelButtonTemplate")
