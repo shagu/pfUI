@@ -805,7 +805,7 @@ function pfUI.api.GetBorderSize(pref)
     if raw == -1 then raw = 3 end
 
     local scaled = raw * GetPerfectPixel()
-    pfUI.borders = { raw, scaled }
+    pfUI.borders[pref] = { raw, scaled }
 
     return raw, scaled
   end
