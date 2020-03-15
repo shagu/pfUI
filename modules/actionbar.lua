@@ -268,10 +268,10 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     end
   end
 
+  local mouse
   local function ButtonAnimate(self)
     local self = self or this
-    local mouse = arg1 and not keystate
-    local keystate = keystate
+    mouse = arg1 and not keystate
 
     -- trigger action animation
     if ( pfUI_config.bars.keydown == "1" and keystate == "down" ) or (pfUI_config.bars.keydown == "0" and keystate == "up" ) or self.bar == 11 or mouse then
@@ -358,11 +358,11 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
   end
 
   local start, duration, enable, castable, autocast, token
-  local id, bar, active, texture, _
+  local grid, sid, id, bar, active, texture, _
   local function ButtonSlotUpdate(self)
     if not self then return end
     local self = self or this
-    local sid = self.id -- 1 to 120
+    sid = self.id -- 1 to 120
 
     -- reset shared variables
     castable, autocast, token = nil, nil, nil
@@ -370,7 +370,7 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     -- set the own ID for compatibility to some vanilla addons
     if pfUI.client <= 11200 then self:SetID(self.id) end
 
-    local grid = self.bar == 12 and showgrid_pet or showgrid
+    grid = self.bar == 12 and showgrid_pet or showgrid
 
     if self.bar == 11 then
       -- stance button
@@ -483,11 +483,10 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     end
   end
 
+  local sid, usable, oom, _
   local function ButtonUsableUpdate(self)
     local self = self or this
-    local sid = self.id -- 1 to 120
-
-    local usable, oom, _
+    sid = self.id -- 1 to 120
 
     if self.bar == 11 then
       _, _, _, usable = GetShapeshiftFormInfo(sid)
@@ -524,9 +523,9 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     end
   end
 
+  local start, duration, enable
   local function ButtonCooldownUpdate(button)
     if not button then return end
-    local start, duration, enable
 
     if button.bar == 11 then
       start, duration, enable = GetShapeshiftFormCooldown(button.id)
@@ -539,9 +538,9 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     CooldownFrame_SetTimer(button.cd, start, duration, enable)
   end
 
+  local _, active
   local function ButtonIsActiveUpdate(button)
     if not button then return end
-    local _, active
 
     if button.bar == 11 then
       _, _, active, _ = GetShapeshiftFormInfo(button.id)
@@ -613,9 +612,9 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     end
   end
 
+  local self, button
   local function BarsUpdate(self)
-    local self = self or this
-    local button
+    self = self or this
 
     -- run cached usable usable actions
     if eventcache["ACTIONBAR_UPDATE_USABLE"] then
