@@ -105,8 +105,6 @@ pfUI:RegisterModule("minimap", "vanilla:tbc", function ()
     this.highlight:Show()
   end)
 
-  MINIMAP_TRACKING_FRAME:SetFrameStrata("LOW")
-
   -- Create coordinates text frame with location configurable
   pfUI.minimapCoordinates = CreateFrame("Frame", "pfMinimapCoord", pfUI.minimap)
 
