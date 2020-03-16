@@ -238,6 +238,7 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("unitframes", "player",      "showPVPMinimap",   "0")
   pfUI:UpdateConfig("unitframes", "player",      "showRest",         "0")
   pfUI:UpdateConfig("unitframes", "player",      "energy",           "1")
+  pfUI:UpdateConfig("unitframes", "player",      "manatick",         "0")
 
   pfUI:UpdateConfig("unitframes", "focus",       "width",            "120")
   pfUI:UpdateConfig("unitframes", "focus",       "height",           "34")

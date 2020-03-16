@@ -65,4 +65,5 @@
   <Include file="..\modules\screenshot.lua"/>
   <Include file="..\modules\addoncompat.lua"/>
   <Include file="..\modules\combatlogfix.lua"/>
+  <Include file="..\modules\energytick.lua"/>
 </Ui>
