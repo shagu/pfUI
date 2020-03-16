@@ -164,6 +164,7 @@ pfUI:RegisterModule("castbar", "vanilla:tbc", function ()
       if event == CASTBAR_EVENT_CAST_DELAY then
         local isCast, nameSubtext, text, texture, startTime, endTime, isTradeSkill = UnitCastingInfo(this.unitstr or this.unitname)
         if not isCast then return end
+        if not this.endTime then return end
         this.delay = this.delay + (endTime - this.endTime) / 1000
       elseif event == CASTBAR_EVENT_CHANNEL_DELAY then
         local isChannel, _, _, _, startTime, endTime = UnitChannelInfo(this.unitstr or this.unitname)
