@@ -237,6 +237,7 @@ pfUI_translation["enUS"] = {
   ["Enable \"Loot & Spam\" Chat Window"] = nil,
   ["Enable \"Loot & Spam\" Window"] = nil,
   ["Enable Loot Window On MouseCursor"] = nil,
+  ["Enable Mana Ticks"] = nil,
   ["Enable Micro Bar"] = nil,
   ["Enable Mouselook With Right Click"] = nil,
   ["Enable Mouseover Tooltip"] = nil,

@@ -237,6 +237,7 @@ pfUI_translation["esES"] = {
   ["Enable \"Loot & Spam\" Chat Window"] = "Activar ventana de chat \"Botín y spam\"",
   ["Enable \"Loot & Spam\" Window"] = "Activar ventana de \"Botín y spam\"",
   ["Enable Loot Window On MouseCursor"] = "Mostrar la ventana de botín junto al cursor",
+  ["Enable Mana Ticks"] = nil,
   ["Enable Micro Bar"] = "Activar microbarra",
   ["Enable Mouselook With Right Click"] = "Mirar usando el puntero con clic derecho",
   ["Enable Mouseover Tooltip"] = "Activar el tooltip al pasar el puntero",

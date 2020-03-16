@@ -237,6 +237,7 @@ pfUI_translation["zhCN"] = {
   ["Enable \"Loot & Spam\" Chat Window"] = "启用[拾取、综合]聊天窗口",
   ["Enable \"Loot & Spam\" Window"] = "启用\拾取&刷屏\窗口",
   ["Enable Loot Window On MouseCursor"] = "拾取窗口跟随鼠标",
+  ["Enable Mana Ticks"] = nil,
   ["Enable Micro Bar"] = "显示菜单栏",
   ["Enable Mouselook With Right Click"] = "启动右键移动镜头",
   ["Enable Mouseover Tooltip"] = "启用鼠标悬停工具提示",

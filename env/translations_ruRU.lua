@@ -237,6 +237,7 @@ pfUI_translation["ruRU"] = {
   ["Enable \"Loot & Spam\" Chat Window"] = "Включить окно чата \"Добыча & Спам\"",
   ["Enable \"Loot & Spam\" Window"] = "Включить окно \"Добыча & Спам\"",
   ["Enable Loot Window On MouseCursor"] = "Включить окно добычи на курсоре",
+  ["Enable Mana Ticks"] = nil,
   ["Enable Micro Bar"] = "Включить панель микро меню",
   ["Enable Mouselook With Right Click"] = "Включить нажатие правой кнопки мыши на индикаторе здоровья",
   ["Enable Mouseover Tooltip"] = "Включить подсказку при наведении мыши",

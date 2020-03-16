@@ -237,6 +237,7 @@ pfUI_translation["frFR"] = {
   ["Enable \"Loot & Spam\" Chat Window"] = "Activer la fenêtre de chat \"Butins & Spam\"",
   ["Enable \"Loot & Spam\" Window"] = nil,
   ["Enable Loot Window On MouseCursor"] = "Activer la fenêtre des loots sur le curseur",
+  ["Enable Mana Ticks"] = nil,
   ["Enable Micro Bar"] = "Activer la barre des menus miniature",
   ["Enable Mouselook With Right Click"] = "Activer le déplacement de la caméra avec le clic droit",
   ["Enable Mouseover Tooltip"] = nil,

@@ -237,6 +237,7 @@ pfUI_translation["koKR"] = {
   ["Enable \"Loot & Spam\" Chat Window"] = "\"루팅 & 스팜\"채팅 창 사용",
   ["Enable \"Loot & Spam\" Window"] = nil,
   ["Enable Loot Window On MouseCursor"] = "마우스커서에서 룻팅창 사용",
+  ["Enable Mana Ticks"] = nil,
   ["Enable Micro Bar"] = "미니바 보기(블리자드 마이크로바)",
   ["Enable Mouselook With Right Click"] = "오른쪽 클릭 Mouselook 사용",
   ["Enable Mouseover Tooltip"] = nil,
