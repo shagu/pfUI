@@ -26,13 +26,15 @@ do -- statusbars
       if val == self.val_ then
         animations[self] = nil
       elseif self.mode == "vertical" then
-        height = self:GetHeight() / self:GetEffectiveScale()
+        height = self:GetHeight()
+        if pfUI.expansion == "vanilla" then height = height / self:GetEffectiveScale() end
         point = height / (self.max - self.min) * (val - self.min)
         self.bar:SetPoint("TOPLEFT", self, "TOPLEFT", 0, - height + point)
         self.bg:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", 0, point)
         self.val_ = val
       else
-        width = self:GetWidth() / self:GetEffectiveScale()
+        width = self:GetWidth()
+        if pfUI.expansion == "vanilla" then width = width / self:GetEffectiveScale() end
         point = width / (self.max - self.min) * (val - self.min)
         self.bar:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", - width + point, 0)
         self.bg:SetPoint("TOPLEFT", self, "TOPLEFT", point, 0)
