@@ -213,7 +213,7 @@ pfUI:RegisterModule("addonbuttons", "vanilla:tbc", function ()
   end
 
   local function GetTopFrame(frame)
-    if frame:GetParent() == Minimap or frame:GetParent() == UIParent then
+    if frame:GetParent() == Minimap or frame:GetParent() == UIParent or not frame:GetParent() then
       return frame
     else
       return GetTopFrame(frame:GetParent())
@@ -385,7 +385,7 @@ pfUI:RegisterModule("addonbuttons", "vanilla:tbc", function ()
   function pfUI.addonbuttons:ProcessButtons()
     UpdatePanel()
     for i, button_name in ipairs(pfUI.addonbuttons.buttons) do
-      if _G[button_name] ~= nil then
+      if _G[button_name] then
         BackupButton(_G[button_name])
         MoveButton(i, _G[button_name])
       end
