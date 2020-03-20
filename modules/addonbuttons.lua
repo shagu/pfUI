@@ -221,6 +221,7 @@ pfUI:RegisterModule("addonbuttons", "vanilla:tbc", function ()
   end
 
   local function BackupButton(frame)
+    if not frame then return end
     if frame.backup == nil then
       frame.backup = {}
       frame.backup.top_frame_name = GetTopFrame(frame):GetName()
@@ -273,6 +274,7 @@ pfUI:RegisterModule("addonbuttons", "vanilla:tbc", function ()
   end
 
   local function MoveButton(index, frame)
+    if not frame then return end
     local top_frame, row_index, offsetX, offsetY, final_scale
     top_frame = GetTopFrame(frame)
     final_scale = GetScale() / pfUI.addonbuttons.effective_scale
