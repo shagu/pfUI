@@ -60,6 +60,14 @@ pfUI:RegisterModule("thirdparty-tbc", "tbc", function ()
           hookUpdateDisplay(self)
           pfUI.thirdparty.meters:Resize()
         end
+
+        Omen.UpdateVisible = function()
+          if pfUI.thirdparty.meters.state then
+            Omen.Anchor:Show()
+          else
+            Omen.Anchor:Hide()
+          end
+        end
       end,
     }
 
