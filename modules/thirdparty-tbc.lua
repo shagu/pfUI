@@ -7,20 +7,20 @@ pfUI:RegisterModule("thirdparty-tbc", "tbc", function ()
     local docktable = { "omen", "Omen", "OmenBarList",
       function() -- single
         OmenBarList:ClearAllPoints()
-        OmenBarList:SetPoint("TOPLEFT", pfUI.chat.right, "TOPLEFT", 0, 0)
-        OmenBarList:SetPoint("BOTTOMRIGHT", pfUI.chat.right, "BOTTOMRIGHT", 0, pfUI.panel.right:GetHeight())
+        OmenBarList:SetPoint("TOPLEFT", pfUI.chat.right, "TOPLEFT", -5, 5)
+        OmenBarList:SetPoint("BOTTOMRIGHT", pfUI.chat.right, "BOTTOMRIGHT", 5, pfUI.panel.right:GetHeight()-5)
         OmenBarList:SetWidth(pfUI.chat.right:GetWidth())
       end,
       function() -- dual
         OmenBarList:ClearAllPoints()
-        OmenBarList:SetPoint("TOPLEFT", pfUI.chat.right, "TOPLEFT", 0, 0)
-        OmenBarList:SetPoint("BOTTOMRIGHT", pfUI.chat.right, "BOTTOM", -default_border, pfUI.panel.right:GetHeight())
+        OmenBarList:SetPoint("TOPLEFT", pfUI.chat.right, "TOPLEFT", -5, 5)
+        OmenBarList:SetPoint("BOTTOMRIGHT", pfUI.chat.right, "BOTTOM", -default_border+5, pfUI.panel.right:GetHeight()-5)
+
         OmenBarList:SetWidth(pfUI.chat.right:GetWidth() / 2)
       end,
       function() -- show
-        Omen.ModuleList:SetPoint("BOTTOMLEFT", Omen.BarList, "TOPLEFT", 0, default_border*3)
-        Omen.ModuleList:SetPoint("BOTTOMRIGHT", Omen.BarList, "TOPRIGHT", 0, default_border*3)
-        Omen.ModuleList:SetHeight(30)
+        Omen.ModuleList:SetPoint("BOTTOMLEFT", Omen.BarList, "TOPLEFT", 5, default_border*3-5)
+        Omen.ModuleList:SetPoint("BOTTOMRIGHT", Omen.BarList, "TOPRIGHT", -5, default_border*3)
 
         -- fake sizes to retain proper button sizes
         Omen.ModuleList._GetHeight = Omen.ModuleList._GetHeight or Omen.ModuleList.GetHeight
@@ -31,7 +31,8 @@ pfUI:RegisterModule("thirdparty-tbc", "tbc", function ()
 
         -- backdrop adjustments
         if Omen.BarList.backdrop then
-          Omen.BarList.backdrop:SetPoint("BOTTOMRIGHT", default_border, -18-default_border)
+          Omen.BarList.backdrop:SetPoint("TOPLEFT", -default_border+5, default_border-5)
+          Omen.BarList.backdrop:SetPoint("BOTTOMRIGHT", default_border-5, -18-default_border+5)
         end
 
         OmenResizeGrip:Hide()
