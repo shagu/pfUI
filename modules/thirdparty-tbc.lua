@@ -75,6 +75,15 @@ pfUI:RegisterModule("thirdparty-tbc", "tbc", function ()
           end
         end
 
+        HookScript(Omen.Anchor, "OnShow", function()
+          for i, child in pairs({ OmenModuleButtons:GetChildren() }) do
+            if child and child:IsObjectType("Button") then
+              child:GetNormalTexture():SetTexCoord(.08, .92, .08, .92)
+              CreateBackdrop(child, nil, true)
+            end
+          end
+        end)
+
         Omen:UpdateDisplay()
       end
     end
