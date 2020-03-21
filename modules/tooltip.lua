@@ -220,7 +220,11 @@ pfUI:RegisterModule("tooltip", "vanilla:tbc", function ()
           GameTooltip:AddLine(target, color.r, color.g, color.b)
         elseif targetReaction then
           local color = UnitReactionColor[targetReaction]
-          GameTooltip:AddLine(target, color.r, color.g, color.b)
+          if color then
+            GameTooltip:AddLine(target, color.r, color.g, color.b)
+          else
+            GameTooltip:AddLine(target, .5, .5, .5)
+          end
         end
       end
 
