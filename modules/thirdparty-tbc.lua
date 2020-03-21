@@ -3,6 +3,75 @@ pfUI:RegisterModule("thirdparty-tbc", "tbc", function ()
   if not pfUI.thirdparty then return end
   local rawborder, default_border = GetBorderSize()
 
+  HookAddonOrVariable("Omen", function()
+    local docktable = { "omen", "Omen", "OmenBarList",
+      function() -- single
+        OmenBarList:ClearAllPoints()
+        OmenBarList:SetPoint("TOPLEFT", pfUI.chat.right, "TOPLEFT", 0, 0)
+        OmenBarList:SetPoint("BOTTOMRIGHT", pfUI.chat.right, "BOTTOMRIGHT", 0, 0)
+        OmenBarList:SetWidth(pfUI.chat.right:GetWidth())
+      end,
+      function() -- dual
+        OmenBarList:ClearAllPoints()
+        OmenBarList:SetPoint("TOPLEFT", pfUI.chat.right, "TOPLEFT", 0, 0)
+        OmenBarList:SetPoint("BOTTOMRIGHT", pfUI.chat.right, "BOTTOM", -default_border, pfUI.panel.right:GetHeight())
+        OmenBarList:SetWidth(pfUI.chat.right:GetWidth() / 2)
+      end,
+      function() -- show
+        Omen.ModuleList:SetPoint("BOTTOMLEFT", Omen.BarList, "TOPLEFT", 0, default_border*3)
+        Omen.ModuleList:SetPoint("BOTTOMRIGHT", Omen.BarList, "TOPRIGHT", 0, default_border*3)
+        Omen.ModuleList:SetHeight(30)
+
+        -- fake sizes to retain proper button sizes
+        Omen.ModuleList._GetHeight = Omen.ModuleList._GetHeight or Omen.ModuleList.GetHeight
+        Omen.ModuleList.GetHeight = function() return 30 end
+        Omen:LayoutModuleIcons()
+        Omen.ModuleList.GetHeight = Omen.ModuleList._GetHeight
+        Omen.ModuleList:SetHeight(20)
+
+        OmenResizeGrip:Hide()
+        Omen.Anchor:Show()
+      end,
+      function() -- hide
+        Omen.Anchor:Hide()
+      end,
+      function() -- once
+        OmenTitle:Hide()
+        OmenTitle.Show = function() return end
+        EnableAutohide(Omen.ModuleList, 1)
+      end,
+    }
+
+    pfUI.thirdparty.meters:RegisterMeter("threat", docktable)
+
+    if C.thirdparty.omen.skin == "1" then
+      if Omen.Anchor then
+        StripTextures(Omen.ModuleList)
+        CreateBackdrop(Omen.ModuleList, nil, nil, (C.thirdparty.chatbg == "1" and .8))
+        CreateBackdropShadow(Omen.ModuleList)
+
+        StripTextures(Omen.BarList)
+        CreateBackdrop(Omen.BarList, nil, nil, (C.thirdparty.chatbg == "1" and .8))
+        CreateBackdropShadow(Omen.BarList)
+
+        -- backdrop adjustments
+        if Omen.BarList.backdrop then
+          Omen.BarList.backdrop:SetPoint("BOTTOMRIGHT", default_border, -18-default_border)
+        end
+
+        if C.thirdparty.chatbg == "1" and C.chat.global.custombg == "1" then
+          local r, g, b, a = strsplit(",", C.chat.global.background)
+          Omen.BarList.backdrop:SetBackdropColor(tonumber(r), tonumber(g), tonumber(b), tonumber(a))
+          Omen.ModuleList.backdrop:SetBackdropColor(tonumber(r), tonumber(g), tonumber(b), tonumber(a))
+
+          local r, g, b, a = strsplit(",", C.chat.global.border)
+          Omen.BarList.backdrop:SetBackdropBorderColor(tonumber(r), tonumber(g), tonumber(b), tonumber(a))
+          Omen.ModuleList.backdrop:SetBackdropColor(tonumber(r), tonumber(g), tonumber(b), tonumber(a))
+        end
+      end
+    end
+  end)
+
   HookAddonOrVariable("Recount", function()
     local docktable = { "recount", "Recount", "Recount_MainWindow",
       function() -- single
