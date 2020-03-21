@@ -661,6 +661,8 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("thirdparty", "noteit",      "enable",           "1")
   pfUI:UpdateConfig("thirdparty", "recount",     "skin",             "1")
   pfUI:UpdateConfig("thirdparty", "recount",     "dock",             "1")
+  pfUI:UpdateConfig("thirdparty", "omen",        "skin",             "1")
+  pfUI:UpdateConfig("thirdparty", "omen",        "dock",             "1")
 
   pfUI:UpdateConfig("position",   nil,           nil,                nil)
   pfUI:UpdateConfig("disabled",   nil,           nil,                nil)
