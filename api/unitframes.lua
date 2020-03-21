@@ -1976,7 +1976,7 @@ function pfUI.uf:SetupBuffFilter()
       -- Prayer of Mending (TBC)
       table.insert(pfUI.uf.buffs, "interface\\icons\\spell_holy_prayerofmendingtga")
     end
-    if (pfUI_config.unitframes.all_hots == "1" or myclass == "DRUID")then
+    if (pfUI_config.unitframes.all_hots == "1" or myclass == "DRUID") then
       -- Regrowth
       table.insert(pfUI.uf.buffs, "interface\\icons\\spell_nature_resistnature")
 
