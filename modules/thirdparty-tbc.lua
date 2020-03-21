@@ -29,6 +29,11 @@ pfUI:RegisterModule("thirdparty-tbc", "tbc", function ()
         Omen.ModuleList.GetHeight = Omen.ModuleList._GetHeight
         Omen.ModuleList:SetHeight(20)
 
+        -- backdrop adjustments
+        if Omen.BarList.backdrop then
+          Omen.BarList.backdrop:SetPoint("BOTTOMRIGHT", default_border, -18-default_border)
+        end
+
         OmenResizeGrip:Hide()
         Omen.Anchor:Show()
       end,
@@ -51,6 +56,10 @@ pfUI:RegisterModule("thirdparty-tbc", "tbc", function ()
         Omen.UpdateDisplay = function(self)
           hookUpdateDisplay(self)
 
+          StripTextures(Omen.Title)
+          CreateBackdrop(Omen.Title, nil, nil, (C.thirdparty.chatbg == "1" and .8))
+          CreateBackdropShadow(Omen.Title)
+
           StripTextures(Omen.ModuleList)
           CreateBackdrop(Omen.ModuleList, nil, nil, (C.thirdparty.chatbg == "1" and .8))
           CreateBackdropShadow(Omen.ModuleList)
@@ -58,11 +67,6 @@ pfUI:RegisterModule("thirdparty-tbc", "tbc", function ()
           StripTextures(Omen.BarList)
           CreateBackdrop(Omen.BarList, nil, nil, (C.thirdparty.chatbg == "1" and .8))
           CreateBackdropShadow(Omen.BarList)
-
-          -- backdrop adjustments
-          if Omen.BarList.backdrop then
-            Omen.BarList.backdrop:SetPoint("BOTTOMRIGHT", default_border, -18-default_border)
-          end
 
           if C.thirdparty.chatbg == "1" and C.chat.global.custombg == "1" then
             local r, g, b, a = strsplit(",", C.chat.global.background)
