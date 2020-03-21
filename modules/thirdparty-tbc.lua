@@ -13,7 +13,7 @@ pfUI:RegisterModule("thirdparty-tbc", "tbc", function ()
       end,
       function() -- dual
         Recount.MainWindow:ClearAllPoints()
-        Recount.MainWindow:SetPoint("TOPLEFT", pfUI.chat.right, "TOP", 0, 10)
+        Recount.MainWindow:SetPoint("TOPLEFT", pfUI.chat.right, "TOP", default_border, 10)
         Recount.MainWindow:SetPoint("BOTTOMRIGHT", pfUI.chat.right, "BOTTOMRIGHT", 0, 18)
         Recount.MainWindow:SetWidth(pfUI.chat.right:GetWidth() / 2)
       end,
@@ -54,7 +54,7 @@ pfUI:RegisterModule("thirdparty-tbc", "tbc", function ()
         Recount.MainWindow.DragBottomRight:SetNormalTexture(nil)
 
         -- backdrop adjustments
-        Recount.MainWindow.backdrop:SetPoint("TOPLEFT", -default_border, -5-default_border)
+        Recount.MainWindow.backdrop:SetPoint("TOPLEFT", -default_border, -5-default_border-GetPerfectPixel())
         if C.thirdparty.chatbg == "1" and C.chat.global.custombg == "1" then
           local r, g, b, a = strsplit(",", C.chat.global.background)
           Recount.MainWindow.backdrop:SetBackdropColor(tonumber(r), tonumber(g), tonumber(b), tonumber(a))
