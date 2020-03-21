@@ -6,17 +6,16 @@ pfUI:RegisterModule("thirdparty-tbc", "tbc", function ()
   HookAddonOrVariable("Omen", function()
     local docktable = { "omen", "Omen", "OmenBarList",
       function() -- single
-        OmenBarList:ClearAllPoints()
-        OmenBarList:SetPoint("TOPLEFT", pfUI.chat.right, "TOPLEFT", -5, 5)
-        OmenBarList:SetPoint("BOTTOMRIGHT", pfUI.chat.right, "BOTTOMRIGHT", 5, pfUI.panel.right:GetHeight()-5)
-        OmenBarList:SetWidth(pfUI.chat.right:GetWidth())
+        Omen.BarList:ClearAllPoints()
+        Omen.BarList:SetPoint("TOPLEFT", pfUI.chat.right, "TOPLEFT", -5, 5)
+        Omen.BarList:SetPoint("BOTTOMRIGHT", pfUI.chat.right, "BOTTOMRIGHT", 5, pfUI.panel.right:GetHeight()-5)
+        Omen.BarList:SetWidth(pfUI.chat.right:GetWidth() + 7)
       end,
       function() -- dual
-        OmenBarList:ClearAllPoints()
-        OmenBarList:SetPoint("TOPLEFT", pfUI.chat.right, "TOPLEFT", -5, 5)
-        OmenBarList:SetPoint("BOTTOMRIGHT", pfUI.chat.right, "BOTTOM", -default_border+5, pfUI.panel.right:GetHeight()-5)
-
-        OmenBarList:SetWidth(pfUI.chat.right:GetWidth() / 2)
+        Omen.BarList:ClearAllPoints()
+        Omen.BarList:SetPoint("TOPLEFT", pfUI.chat.right, "TOPLEFT", -5, 5)
+        Omen.BarList:SetPoint("BOTTOMRIGHT", pfUI.chat.right, "BOTTOM", -default_border+5, pfUI.panel.right:GetHeight()-5)
+        Omen.BarList:SetWidth(pfUI.chat.right:GetWidth() / 2 + 7)
       end,
       function() -- show
         Omen.ModuleList:SetPoint("BOTTOMLEFT", Omen.BarList, "TOPLEFT", 5, default_border*3-5)
@@ -42,8 +41,8 @@ pfUI:RegisterModule("thirdparty-tbc", "tbc", function ()
         Omen.Anchor:Hide()
       end,
       function() -- once
-        OmenTitle:Hide()
-        OmenTitle.Show = function() return end
+        Omen.Title:Hide()
+        Omen.Title.Show = function() return end
         EnableAutohide(Omen.ModuleList, 1)
       end,
     }
