@@ -46,28 +46,36 @@ pfUI:RegisterModule("thirdparty-tbc", "tbc", function ()
 
     if C.thirdparty.omen.skin == "1" then
       if Omen.Anchor then
-        StripTextures(Omen.ModuleList)
-        CreateBackdrop(Omen.ModuleList, nil, nil, (C.thirdparty.chatbg == "1" and .8))
-        CreateBackdropShadow(Omen.ModuleList)
 
-        StripTextures(Omen.BarList)
-        CreateBackdrop(Omen.BarList, nil, nil, (C.thirdparty.chatbg == "1" and .8))
-        CreateBackdropShadow(Omen.BarList)
+        local hookUpdateDisplay = Omen.UpdateDisplay
+        Omen.UpdateDisplay = function(self)
+          hookUpdateDisplay(self)
 
-        -- backdrop adjustments
-        if Omen.BarList.backdrop then
-          Omen.BarList.backdrop:SetPoint("BOTTOMRIGHT", default_border, -18-default_border)
+          StripTextures(Omen.ModuleList)
+          CreateBackdrop(Omen.ModuleList, nil, nil, (C.thirdparty.chatbg == "1" and .8))
+          CreateBackdropShadow(Omen.ModuleList)
+
+          StripTextures(Omen.BarList)
+          CreateBackdrop(Omen.BarList, nil, nil, (C.thirdparty.chatbg == "1" and .8))
+          CreateBackdropShadow(Omen.BarList)
+
+          -- backdrop adjustments
+          if Omen.BarList.backdrop then
+            Omen.BarList.backdrop:SetPoint("BOTTOMRIGHT", default_border, -18-default_border)
+          end
+
+          if C.thirdparty.chatbg == "1" and C.chat.global.custombg == "1" then
+            local r, g, b, a = strsplit(",", C.chat.global.background)
+            Omen.BarList.backdrop:SetBackdropColor(tonumber(r), tonumber(g), tonumber(b), tonumber(a))
+            Omen.ModuleList.backdrop:SetBackdropColor(tonumber(r), tonumber(g), tonumber(b), tonumber(a))
+
+            local r, g, b, a = strsplit(",", C.chat.global.border)
+            Omen.BarList.backdrop:SetBackdropBorderColor(tonumber(r), tonumber(g), tonumber(b), tonumber(a))
+            Omen.ModuleList.backdrop:SetBackdropColor(tonumber(r), tonumber(g), tonumber(b), tonumber(a))
+          end
         end
 
-        if C.thirdparty.chatbg == "1" and C.chat.global.custombg == "1" then
-          local r, g, b, a = strsplit(",", C.chat.global.background)
-          Omen.BarList.backdrop:SetBackdropColor(tonumber(r), tonumber(g), tonumber(b), tonumber(a))
-          Omen.ModuleList.backdrop:SetBackdropColor(tonumber(r), tonumber(g), tonumber(b), tonumber(a))
-
-          local r, g, b, a = strsplit(",", C.chat.global.border)
-          Omen.BarList.backdrop:SetBackdropBorderColor(tonumber(r), tonumber(g), tonumber(b), tonumber(a))
-          Omen.ModuleList.backdrop:SetBackdropColor(tonumber(r), tonumber(g), tonumber(b), tonumber(a))
-        end
+        Omen:UpdateDisplay()
       end
     end
   end)
