@@ -10,14 +10,30 @@ pfUI:RegisterModule("thirdparty-tbc", "tbc", function ()
         Omen.BarList:SetPoint("TOPLEFT", pfUI.chat.right, "TOPLEFT", -5, 5)
         Omen.BarList:SetPoint("BOTTOMRIGHT", pfUI.chat.right, "BOTTOMRIGHT", 5, pfUI.panel.right:GetHeight()-5)
         Omen.BarList:SetWidth(pfUI.chat.right:GetWidth() + 7)
+
+        -- backdrop adjustments
+        if Omen.BarList.backdrop then
+          Omen.BarList.backdrop:SetPoint("TOPLEFT", -default_border+5, default_border-5)
+          Omen.BarList.backdrop:SetPoint("BOTTOMRIGHT", default_border-5, -18-default_border+5)
+        end
       end,
       function() -- dual
         Omen.BarList:ClearAllPoints()
         Omen.BarList:SetPoint("TOPLEFT", pfUI.chat.right, "TOPLEFT", -5, 5)
         Omen.BarList:SetPoint("BOTTOMRIGHT", pfUI.chat.right, "BOTTOM", -default_border+5, pfUI.panel.right:GetHeight()-5)
         Omen.BarList:SetWidth(pfUI.chat.right:GetWidth() / 2 + 7)
+
+        -- backdrop adjustments
+        if Omen.BarList.backdrop then
+          Omen.BarList.backdrop:SetPoint("TOPLEFT", -default_border+5, default_border-5)
+          Omen.BarList.backdrop:SetPoint("BOTTOMRIGHT", default_border-5, -18-default_border+5)
+        end
       end,
       function() -- show
+        Omen:UpdateDisplay()
+        Omen:EnableLastModule()
+        Omen:LayoutModuleIcons()
+
         Omen.ModuleList:SetPoint("BOTTOMLEFT", Omen.BarList, "TOPLEFT", 5, default_border*3-5)
         Omen.ModuleList:SetPoint("BOTTOMRIGHT", Omen.BarList, "TOPRIGHT", -5, default_border*3)
 
@@ -28,22 +44,22 @@ pfUI:RegisterModule("thirdparty-tbc", "tbc", function ()
         Omen.ModuleList.GetHeight = Omen.ModuleList._GetHeight
         Omen.ModuleList:SetHeight(20)
 
-        -- backdrop adjustments
-        if Omen.BarList.backdrop then
-          Omen.BarList.backdrop:SetPoint("TOPLEFT", -default_border+5, default_border-5)
-          Omen.BarList.backdrop:SetPoint("BOTTOMRIGHT", default_border-5, -18-default_border+5)
-        end
-
         OmenResizeGrip:Hide()
-        Omen.Anchor:Show()
+        Omen:Toggle(true)
       end,
       function() -- hide
-        Omen.Anchor:Hide()
+        Omen:Toggle(nil)
       end,
       function() -- once
         Omen.Title:Hide()
         Omen.Title.Show = function() return end
         EnableAutohide(Omen.ModuleList, 1)
+
+        local hookUpdateDisplay = Omen.UpdateDisplay
+        Omen.UpdateDisplay = function(self)
+          hookUpdateDisplay(self)
+          pfUI.thirdparty.meters:Resize()
+        end
       end,
     }
 
@@ -57,16 +73,19 @@ pfUI:RegisterModule("thirdparty-tbc", "tbc", function ()
           hookUpdateDisplay(self)
 
           StripTextures(Omen.Title)
-          CreateBackdrop(Omen.Title, nil, nil, (C.thirdparty.chatbg == "1" and .8))
-          CreateBackdropShadow(Omen.Title)
-
           StripTextures(Omen.ModuleList)
-          CreateBackdrop(Omen.ModuleList, nil, nil, (C.thirdparty.chatbg == "1" and .8))
-          CreateBackdropShadow(Omen.ModuleList)
-
           StripTextures(Omen.BarList)
-          CreateBackdrop(Omen.BarList, nil, nil, (C.thirdparty.chatbg == "1" and .8))
-          CreateBackdropShadow(Omen.BarList)
+
+          if not Omen.Title.backdrop or not Omen.ModuleList.backdrop or not Omen.BarList.backdrop then
+            CreateBackdrop(Omen.Title, nil, nil, (C.thirdparty.chatbg == "1" and .8))
+            CreateBackdropShadow(Omen.Title)
+
+            CreateBackdrop(Omen.ModuleList, nil, nil, (C.thirdparty.chatbg == "1" and .8))
+            CreateBackdropShadow(Omen.ModuleList)
+
+            CreateBackdrop(Omen.BarList, nil, nil, (C.thirdparty.chatbg == "1" and .8))
+            CreateBackdropShadow(Omen.BarList)
+          end
 
           if C.thirdparty.chatbg == "1" and C.chat.global.custombg == "1" then
             local r, g, b, a = strsplit(",", C.chat.global.background)
