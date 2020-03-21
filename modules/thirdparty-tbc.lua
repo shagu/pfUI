@@ -8,7 +8,7 @@ pfUI:RegisterModule("thirdparty-tbc", "tbc", function ()
       function() -- single
         OmenBarList:ClearAllPoints()
         OmenBarList:SetPoint("TOPLEFT", pfUI.chat.right, "TOPLEFT", 0, 0)
-        OmenBarList:SetPoint("BOTTOMRIGHT", pfUI.chat.right, "BOTTOMRIGHT", 0, 0)
+        OmenBarList:SetPoint("BOTTOMRIGHT", pfUI.chat.right, "BOTTOMRIGHT", 0, pfUI.panel.right:GetHeight())
         OmenBarList:SetWidth(pfUI.chat.right:GetWidth())
       end,
       function() -- dual
