@@ -1965,17 +1965,24 @@ function pfUI.uf:SetupBuffFilter()
   end
 
   -- HOTS
-  if (pfUI_config.unitframes.all_hots == "1" or myclass == "PRIEST") and pfUI_config.unitframes.show_hots == "1" then
-    -- Renew
-    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_holy_renew")
-  end
+  if pfUI_config.unitframes.show_hots == "1" then
+    if (pfUI_config.unitframes.all_hots == "1" or myclass == "PRIEST") then
+      -- Renew
+      table.insert(pfUI.uf.buffs, "interface\\icons\\spell_holy_renew")
 
-  if (pfUI_config.unitframes.all_hots == "1" or myclass == "DRUID") and pfUI_config.unitframes.show_hots == "1" then
-    -- Regrowth
-    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_nature_resistnature")
+      -- Power Word: Shield
+      table.insert(pfUI.uf.buffs, "interface\\icons\\spell_holy_powerwordshield")
 
-    -- Rejuvenation
-    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_nature_rejuvenation")
+      -- Prayer of Mending (TBC)
+      table.insert(pfUI.uf.buffs, "interface\\icons\\spell_holy_prayerofmendingtga")
+    end
+    if (pfUI_config.unitframes.all_hots == "1" or myclass == "DRUID")then
+      -- Regrowth
+      table.insert(pfUI.uf.buffs, "interface\\icons\\spell_nature_resistnature")
+
+      -- Rejuvenation
+      table.insert(pfUI.uf.buffs, "interface\\icons\\spell_nature_rejuvenation")
+    end
   end
 end
 
