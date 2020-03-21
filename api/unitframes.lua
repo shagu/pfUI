@@ -1913,7 +1913,6 @@ function pfUI.uf:SetupBuffFilter()
     -- Misdirection
     table.insert(pfUI.uf.buffs, "interface\\icons\\ability_hunter_misdirection")
   end
-  
   -- PROCS
   -- [[ SHAMAN ]]
   if (pfUI_config.unitframes.all_procs == "1" or myclass == "SHAMAN") and pfUI_config.unitframes.show_procs == "1" then
