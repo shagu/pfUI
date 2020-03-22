@@ -538,18 +538,20 @@ function pfUI.api.SkinArrowButton(button, dir, size)
   button.icon:SetTexture(pfUI.media["img:"..dir])
 
   if not button.pfScripted then
-    local enable = button.Enable
-    local disable = button.Disable
+    RunOOC(function()
+      local enable = button.Enable
+      local disable = button.Disable
 
-    button.Enable = function(self)
-      if enable then enable(self) end
-      self.icon:SetVertexColor(.8,.8,.8,1)
-    end
+      button.Enable = function(self)
+        if enable then enable(self) end
+        self.icon:SetVertexColor(.8,.8,.8,1)
+      end
 
-    button.Disable = function(self)
-      if disable then disable(self) end
-      self.icon:SetVertexColor(.2,.2,.2,1)
-    end
+      button.Disable = function(self)
+        if disable then disable(self) end
+        self.icon:SetVertexColor(.2,.2,.2,1)
+      end
+    end)
 
     button.pfScripted = true
   end
