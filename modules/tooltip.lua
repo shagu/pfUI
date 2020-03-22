@@ -190,8 +190,10 @@ pfUI:RegisterModule("tooltip", "vanilla:tbc", function ()
           local color = RAID_CLASS_COLORS[class]
           GameTooltipStatusBar:SetStatusBarColor_orig(color.r, color.g, color.b)
           GameTooltip:SetBackdropBorderColor(color.r, color.g, color.b)
-          if color.colorStr then
-            GameTooltipTextLeft1:SetText("|c" .. color.colorStr .. name)
+          if color and color.r then
+            GameTooltipTextLeft1:SetText(rgbhex(color.r, color.g, color.b, color.a) .. name)
+          else
+            GameTooltipTextLeft1:SetText("|cff999999" .. name)
           end
         elseif reaction then
           local color = UnitReactionColor[reaction]
