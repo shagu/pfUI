@@ -127,7 +127,7 @@ pfUI:RegisterModule("buffwatch", "vanilla:tbc", function ()
     this.bar:SetValue(remaining > 0 and remaining or 0)
 
     if ( this.tick or 1) > GetTime() then return else this.tick = GetTime() + .1 end
-    this.time:SetText(remaining > 0 and GetColoredTimeString(remaining) or "N/A")
+    this.time:SetText(remaining > 0 and GetColoredTimeString(remaining) or "")
   end
 
   local function StatusBarRefreshParent()
