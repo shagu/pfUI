@@ -213,7 +213,7 @@ pfUI:RegisterModule("buffwatch", "vanilla:tbc", function ()
     for i=1,32 do
       local timeleft, texture, name, stacks = GetBuffData(frame.unit, i, frame.type)
 
-      if texture and name and name ~= "" and BuffIsVisible(frame.config, name) and timeleft and timeleft ~= 0 then
+      if texture and name and name ~= "" and BuffIsVisible(frame.config, name) and timeleft then
         frame.buffs[i][1] = timeleft
         frame.buffs[i][2] = i
         frame.buffs[i][3] = name
@@ -233,7 +233,7 @@ pfUI:RegisterModule("buffwatch", "vanilla:tbc", function ()
     -- create a buff bar for each below threshold
     local bar = 1
     for id, data in pairs(frame.buffs) do
-      if data[1] and data[1] ~= 0 and data[1] < frame.threshold -- timeleft checks
+      if data[1] and ((data[1] ~= 0 and data[1] < frame.threshold) or frame.threshold == -1) -- timeleft checks
         and data[3] and data[3] ~= "" -- buff has a name
         and data[4] and data[4] ~= "" -- buff has a texture
       then
