@@ -58,6 +58,27 @@ function pfUI.api.UnitInRange(unit)
   end
 end
 
+-- [ RunOOC ]
+-- Runs a function once, as soon as the combat lockdown fades.
+-- func         [function]      The function that shall run ooc.
+-- return:      [bool]          true if the function was added,
+--                              nil if the function already exists in queue
+local queue, frame = {}
+function pfUI.api.RunOOC(func)
+  if not frame then
+    frame = CreateFrame("Frame")
+    frame:SetScript("OnUpdate", function()
+      if InCombatLockdown and InCombatLockdown() then return end
+      for key, func in pairs(queue) do func(); queue[key] = nil end
+    end)
+  end
+
+  if not queue[tostring(func)] then
+    queue[tostring(func)] = func
+    return true
+  end
+end
+
 -- [ UnitHasBuff ]
 -- Returns whether a unit has the given buff or not.
 -- unit         [string]        A unit to query (string, unitID)
