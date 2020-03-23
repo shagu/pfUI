@@ -417,6 +417,7 @@ function pfUI.api.SkinButton(button, cr, cg, cb, icon, disableHighlight)
 
   if icon then
     HandleIcon(b, icon)
+    b:SetPushedTexture(nil)
   end
 
   b:SetFont(pfUI.font_default, pfUI_config.global.font_size, "OUTLINE")

@@ -179,6 +179,7 @@ pfUI:RegisterSkin("Profession", "vanilla:tbc", function ()
         icon:ClearAllPoints()
         icon:SetPoint("TOPLEFT", 5, -5)
         SkinButton(icon, nil, nil, nil, nil, true)
+        icon:SetPushedTexture(nil)
 
         seltitle:SetJustifyV("TOP")
         seltitle:SetTextColor(.8,.8,.8,1)
