@@ -41,7 +41,6 @@ pfUI:RegisterModule("raid", "vanilla:tbc", function ()
     frame.id = id
     frame.label = "raid"
     frame:UpdateVisibility()
-    pfUI.uf:RefreshUnit(frame, "all")
   end
 
   -- add units to the beginning of their groups
