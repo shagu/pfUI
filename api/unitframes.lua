@@ -211,6 +211,16 @@ function pfUI.uf:UpdateVisibility()
     end
   end
 
+  -- display every unit as player while pfUI.uf.showall is set
+  if pfUI.uf.showall then
+    self._label = self._label or self.label
+    self._id = self._id or self.id
+    self.label, self.id = "player", ""
+  elseif not pfUI.uf.showall and self._label and self._id then
+    self.label, self.id = self._label, self._id
+    self._label, self._id = nil, nil
+  end
+
   local unitstr = string.format("%s%s", self.label or "", self.id or "")
   local visibility = string.format("[target=%s,exists] show; hide", unitstr)
 
