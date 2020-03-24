@@ -6,4 +6,5 @@
   <Include file="..\libs\librange.lua"/>
   <Include file="..\libs\libunitscan.lua"/>
   <Include file="..\libs\libtooltip.lua"/>
+  <Include file="..\libs\libhealth.lua"/>
 </Ui>
