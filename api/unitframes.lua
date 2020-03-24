@@ -357,9 +357,7 @@ function pfUI.uf:UpdateConfig()
   if custombg == "1" then
     local cr, cg, cb, ca = pfUI.api.strsplit(",", custombgcolor)
     cr, cg, cb, ca = tonumber(cr), tonumber(cg), tonumber(cb), tonumber(ca)
-    f.hp.bar.texture = f.hp.bar.texture or f.hp:CreateTexture(nil,"BACKGROUND")
-    f.hp.bar.texture:SetTexture(cr,cg,cb,ca)
-    f.hp.bar.texture:SetAllPoints(f.hp.bar)
+    f.hp.bar:SetStatusBarBackgroundTexture(cr,cg,cb,ca)
   end
 
   f.power:ClearAllPoints()
@@ -379,9 +377,7 @@ function pfUI.uf:UpdateConfig()
   if custompbg == "1" then
     local cr, cg, cb, ca = pfUI.api.strsplit(",", custompbgcolor)
     cr, cg, cb, ca = tonumber(cr), tonumber(cg), tonumber(cb), tonumber(ca)
-    f.power.bar.texture = f.power.bar.texture or f.hp:CreateTexture(nil,"BACKGROUND")
-    f.power.bar.texture:SetTexture(cr,cg,cb,ca)
-    f.power.bar.texture:SetAllPoints(f.power.bar)
+    f.power.bar:SetStatusBarBackgroundTexture(cr,cg,cb,ca)
   end
 
   f.portrait:SetFrameStrata("LOW")
@@ -510,11 +506,10 @@ function pfUI.uf:UpdateConfig()
   f.powerCenterText:SetPoint("TOPLEFT",f.power.bar, "TOPLEFT", 2*default_border, 1)
   f.powerCenterText:SetPoint("BOTTOMRIGHT",f.power.bar, "BOTTOMRIGHT", -2*default_border, 0)
 
-  f.incHeal:SetFrameLevel(2)
   f.incHeal:SetHeight(f.config.height)
   f.incHeal:SetWidth(f.config.width)
-  f.incHeal:SetStatusBarTexture(pfUI.media["img:bar"])
-  f.incHeal:SetStatusBarColor(0, 1, 0, 0.5)
+  f.incHeal.texture:SetTexture(pfUI.media["img:bar"])
+  f.incHeal.texture:SetVertexColor(0, 1, 0, 0.5)
   f.incHeal:Hide()
 
   f.incHeal:SetScript("OnShow", function()
@@ -793,8 +788,6 @@ function pfUI.uf.OnUpdate()
 
   if not this.label then return end
 
-  pfUI.uf:RefreshUnitAnimation(this)
-
   -- update portrait on first visible frame
   if this.portrait and this.portrait.model and this.portrait.model.update then
     this.portrait.model.lastUnit = UnitName(this.portrait.model.update)
@@ -975,10 +968,11 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
   CreateBackdropShadow(f)
 
   f.hp = CreateFrame("Frame",nil, f)
-  f.hp.bar = CreateFrame("StatusBar", nil, f.hp)
+  f.hp.bar = CreateStatusBar(nil, f.hp)
 
   f.power = CreateFrame("Frame",nil, f)
-  f.power.bar = CreateFrame("StatusBar", nil, f.power)
+  f.power.bar = CreateStatusBar(nil, f.power)
+
   f.glow = CreateFrame("Frame", nil, f)
 
   f.hpLeftText = f:CreateFontString("Status", "OVERLAY", "GameFontNormalSmall")
@@ -988,7 +982,10 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
   f.powerRightText = f:CreateFontString("Status", "OVERLAY", "GameFontNormalSmall")
   f.powerCenterText = f:CreateFontString("Status", "OVERLAY", "GameFontNormalSmall")
 
-  f.incHeal = CreateFrame("StatusBar", nil, f.hp)
+  f.incHeal = CreateFrame("Frame", nil, f.hp)
+  f.incHeal.texture = f.incHeal:CreateTexture(nil, "BACKGROUND")
+  f.incHeal.texture:SetAllPoints()
+
   f.ressIcon = CreateFrame("Frame", nil, f.hp.bar)
   f.ressIcon.texture = f.ressIcon:CreateTexture(nil,"BACKGROUND")
 
@@ -1039,69 +1036,6 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
   return f
 end
 
-function pfUI.uf:RefreshUnitAnimation(unitframe)
-  if not unitframe.cache then return end
-  if not unitframe.cache.hp or not unitframe.cache.power then return end
-  if not UnitIsConnected(unitframe.label .. unitframe.id) then return end
-
-  local hpDiff = abs(unitframe.cache.hp - unitframe.cache.hpdisplay)
-  local powerDiff = abs(unitframe.cache.power - unitframe.cache.powerdisplay)
-
-  if UnitName(unitframe.label .. unitframe.id) ~= ( unitframe.lastUnit or "" ) then
-    -- instant refresh on unit change (e.g. target)
-    unitframe.cache.hp = UnitHealth(unitframe.label .. unitframe.id)
-    unitframe.cache.hpmax = UnitHealthMax(unitframe.label .. unitframe.id)
-
-    if unitframe.config.invert_healthbar == "1" then
-      unitframe.cache.hp = unitframe.cache.hpmax - unitframe.cache.hp
-    end
-
-    unitframe.cache.hpdisplay = unitframe.cache.hp
-    unitframe.hp.bar:SetMinMaxValues(0, unitframe.cache.hpmax)
-    unitframe.hp.bar:SetValue(unitframe.cache.hp)
-
-    unitframe.cache.powermax = UnitManaMax(unitframe.label .. unitframe.id)
-    unitframe.cache.powerdisplay = unitframe.cache.power
-    unitframe.power.bar:SetMinMaxValues(0, unitframe.cache.powermax)
-    unitframe.power.bar:SetValue(unitframe.cache.power)
-
-    unitframe.lastUnit = UnitName(unitframe.label .. unitframe.id)
-  else
-    -- smoothen animation based on framerate
-    local fpsmod = GetFramerate() / 30
-
-    -- health animation active
-    if unitframe.cache.hpanimation then
-      if unitframe.cache.hpdisplay < unitframe.cache.hp then
-        unitframe.cache.hpdisplay = unitframe.cache.hpdisplay + ceil(hpDiff / (pfUI_config.unitframes.animation_speed * fpsmod))
-      elseif unitframe.cache.hpdisplay > unitframe.cache.hp then
-        unitframe.cache.hpdisplay = unitframe.cache.hpdisplay - ceil(hpDiff / (pfUI_config.unitframes.animation_speed * fpsmod))
-      else
-        unitframe.cache.hpdisplay = unitframe.cache.hp
-        unitframe.cache.hpanimation = nil
-      end
-
-      -- set statusbar
-      unitframe.hp.bar:SetValue(unitframe.cache.hpdisplay)
-    end
-
-    -- power animation active
-    if unitframe.cache.poweranimation then
-      if unitframe.cache.powerdisplay < unitframe.cache.power then
-        unitframe.cache.powerdisplay = unitframe.cache.powerdisplay + ceil(powerDiff / (pfUI_config.unitframes.animation_speed * fpsmod))
-      elseif unitframe.cache.powerdisplay > unitframe.cache.power then
-        unitframe.cache.powerdisplay = unitframe.cache.powerdisplay - ceil(powerDiff / (pfUI_config.unitframes.animation_speed * fpsmod))
-      else
-        unitframe.cache.powerdisplay = unitframe.cache.power
-        unitframe.cache.poweranimation = nil
-      end
-
-      -- set statusbar
-      unitframe.power.bar:SetValue(unitframe.cache.powerdisplay)
-    end
-  end
-end
-
 function pfUI.uf:RefreshUnitState(unit)
   local alpha = unit.alpha_visible
   local unlock = pfUI.unlock and pfUI.unlock:IsShown() or nil
@@ -1109,8 +1043,8 @@ function pfUI.uf:RefreshUnitState(unit)
   if not UnitIsConnected(unit.label .. unit.id) and not unlock then
     -- offline
     alpha = unit.alpha_offline
-    unit.hp.bar:SetMinMaxValues(0, 100)
-    unit.power.bar:SetMinMaxValues(0, 100)
+    unit.hp.bar:SetMinMaxValues(0, 100, true)
+    unit.power.bar:SetMinMaxValues(0, 100, true)
     unit.hp.bar:SetValue(0)
     unit.power.bar:SetValue(0)
   elseif unit.config.faderange == "1" and not pfUI.api.UnitInRange(unit.label .. unit.id, 4) and not unlock then
@@ -1248,7 +1182,6 @@ function pfUI.uf:RefreshUnit(unit, component)
   if not unit:IsShown() and not unit.visible then return end
 
   -- create required fields
-  if not unit.cache then unit.cache = {} end
   local unitstr = unit.label..unit.id
   local rawborder, default_border = GetBorderSize("unitframes")
 
@@ -1555,36 +1488,18 @@ function pfUI.uf:RefreshUnit(unit, component)
   end
 
   -- Unit HP/MP
-  unit.cache.hp = UnitHealth(unitstr)
-  unit.cache.hpmax = UnitHealthMax(unitstr)
-  unit.cache.hpdisplay = unit.hp.bar:GetValue()
-
-  unit.cache.power = UnitMana(unitstr)
-  unit.cache.powermax = UnitManaMax(unitstr)
-  unit.cache.powerdisplay = unit.power.bar:GetValue()
-
-  unit.hp.bar:SetMinMaxValues(0, unit.cache.hpmax)
-  unit.power.bar:SetMinMaxValues(0, unit.cache.powermax)
+  local hp, hpmax = UnitHealth(unitstr), UnitHealthMax(unitstr)
+  local power, powermax = UnitMana(unitstr), UnitManaMax(unitstr)
 
   if unit.config.invert_healthbar == "1" then
-    unit.cache.hp = unit.cache.hpmax - unit.cache.hp
+    hp = hpmax - hp
   end
 
-  if unit.cache.hpdisplay ~= unit.cache.hp then
-    if C.unitframes.animation_speed == "1" then
-      unit.hp.bar:SetValue(unit.cache.hp)
-    else
-      unit.cache.hpanimation = true
-    end
-  end
+  unit.hp.bar:SetMinMaxValues(0, hpmax, true)
+  unit.hp.bar:SetValue(hp)
 
-  if unit.cache.powerdisplay ~= unit.cache.power then
-    if C.unitframes.animation_speed == "1" then
-      unit.power.bar:SetValue(unit.cache.power)
-    else
-      unit.cache.poweranimation = true
-    end
-  end
+  unit.power.bar:SetMinMaxValues(0, powermax, true)
+  unit.power.bar:SetValue(power)
 
   -- set healthbar color
   local custom_active = nil
