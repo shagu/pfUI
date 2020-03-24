@@ -40,15 +40,8 @@ pfUI:RegisterModule("raid", "vanilla:tbc", function ()
   local function SetRaidIndex(frame, id)
     frame.id = id
     frame.label = "raid"
-
-    if frame.SetAttribute and RegisterStateDriver then
-      frame:SetAttribute("unit", UnitName("raid" .. id))
-      frame.visibilitycondition = string.format("[target=%s,exists] show; hide", id > 0 and UnitName("raid" .. id) or "__NONE__")
-      RegisterStateDriver(frame, 'visibility', frame.visibilitycondition)
-    else
-      if id > 0 then frame:Show() else frame:Hide() end
-      pfUI.uf:RefreshUnit(frame, "all")
-    end
+    frame:UpdateVisibility()
+    pfUI.uf:RefreshUnit(frame, "all")
   end
 
   -- add units to the beginning of their groups
