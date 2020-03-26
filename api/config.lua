@@ -50,6 +50,7 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("global",     nil,           "servertime",       "0")
   pfUI:UpdateConfig("global",     nil,           "autosell",         "0")
   pfUI:UpdateConfig("global",     nil,           "autorepair",       "0")
+  pfUI:UpdateConfig("global",     nil,           "libhealth",        "0")
 
   pfUI:UpdateConfig("gui",        nil,           "reloadmarker",     "0")
   pfUI:UpdateConfig("gui",        nil,           "showdisabled",     "0")

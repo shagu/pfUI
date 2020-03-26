@@ -1415,6 +1415,7 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
       CreateConfig(nil, T["Disable All UIErrors"], C.global, "errors_hide", "checkbox")
       CreateConfig(nil, T["Highlight Settings That Require Reload"], C.gui, "reloadmarker", "checkbox")
       CreateConfig(nil, T["Show Incompatible Config Entries"], C.gui, "showdisabled", "checkbox")
+      CreateConfig(nil, T["Estimate Enemy Health Points"], C.global, "libhealth", "checkbox")
 
       -- Delete / Reset
       CreateConfig(nil, T["Delete / Reset"], nil, nil, "header")
