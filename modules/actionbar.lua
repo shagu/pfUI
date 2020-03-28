@@ -895,26 +895,32 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     if enable == "1" then
       -- handle pet bar
       if i == 12 then
-        -- only show when pet actions exists
-        if PetHasActionBar() then
-          bars[i]:Show()
+        if bars[i].SetAttribute and RegisterStateDriver then
+          -- set state driver for pet bars
+          bars[i]:SetAttribute("unit", "pet")
+          RegisterStateDriver(bars[i], 'visibility', "[pet] show; hide")
         else
-          bars[i]:Hide()
-        end
+          -- only show when pet actions exists
+          if PetHasActionBar() then
+            bars[i]:Show()
+          else
+            bars[i]:Hide()
+          end
 
-        -- show/hide petbar on petbar updates
-        if init then
-          bars[i]:RegisterEvent("PET_BAR_UPDATE")
-          bars[i]:SetScript("OnEvent", function()
-            -- hide obsolete buttons
-            for i=1, NUM_PET_ACTION_SLOTS do
-             if not PetHasActionBar() and bars[12][i] then
-               bars[12][i]:Hide()
-             end
-            end
-            -- refresh layout
-            CreateActionBar(12)
-          end)
+          -- show/hide petbar on petbar updates
+          if init then
+            bars[i]:RegisterEvent("PET_BAR_UPDATE")
+            bars[i]:SetScript("OnEvent", function()
+              -- hide obsolete buttons
+              for i=1, NUM_PET_ACTION_SLOTS do
+               if not PetHasActionBar() and bars[12][i] then
+                 bars[12][i]:Hide()
+               end
+              end
+              -- refresh layout
+              CreateActionBar(12)
+            end)
+          end
         end
 
       -- handle shapeshift bar
