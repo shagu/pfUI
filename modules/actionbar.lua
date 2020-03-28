@@ -275,7 +275,7 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
 
     -- trigger action animation
     if ( pfUI_config.bars.keydown == "1" and keystate == "down" ) or (pfUI_config.bars.keydown == "0" and keystate == "up" ) or self.bar == 11 or mouse then
-      if self:GetAlpha() > .1  or C.bars.animalways == "1" then
+      if C.bars.animmode == "keypress" and ( self:GetAlpha() > .1  or C.bars.animalways == "1" ) then
         self.animation.active = 0
         self.animation:Show()
       end
@@ -401,6 +401,11 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
 
     -- active border
     if active then
+      if C.bars.animmode == "statechange" and not self.active:IsShown() then
+        self.animation.active = 0
+        self.animation:Show()
+      end
+
       self.backdrop:SetBackdropBorderColor(cr,cg,cb,1)
       self.active:Show()
     else

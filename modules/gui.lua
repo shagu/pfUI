@@ -1115,6 +1115,10 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
         "elasticzoom:" .. T["Elastic Zoom"],
         "wobblezoom:" .. T["Wobble Zoom"],
       },
+      ["animationmode"] = {
+        "keypress:" .. T["On Key Press"],
+        "statechange:" .. T["On State Change"]
+      },
       ["actionbarbuttons"] = {
         "1","2","3","4","5","6","7","8","9","10","11","12"
       },
@@ -1828,6 +1832,7 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
       CreateConfig(U["bars"], T["Self Cast: Alt Key"], C.bars, "altself", "checkbox")
       CreateConfig(U["bars"], T["Self Cast: Right Click"], C.bars, "rightself", "checkbox")
       CreateConfig(U["bars"], T["Button Animation"], C.bars, "animation", "dropdown", pfUI.gui.dropdowns.actionbuttonanimations)
+      CreateConfig(U["bars"], T["Button Animation Trigger"], C.bars, "animmode", "dropdown", pfUI.gui.dropdowns.animationmode)
       CreateConfig(U["bars"], T["Show Animation On Hidden Bars"], C.bars, "animalways", "checkbox")
       CreateConfig(U["bars"], T["Show Reagent Count"], C.bars, "reagents", "checkbox")
       CreateConfig(U["bars"], T["Highlight Equipped Items"], C.bars, "showequipped", "checkbox")
