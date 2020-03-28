@@ -1852,7 +1852,7 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
       CreateConfig(U["bars"], T["Keybind Text Color"], C.bars, "bind_color", "color")
 
       CreateConfig(nil, T["Auto Paging"], nil, nil, "header")
-      CreateConfig(nil, T["Switch Pages On Meta Key Press"], C.bars, "pagemaster", "checkbox")
+      CreateConfig(U["bars"], T["Switch Pages On Meta Key Press"], C.bars, "pagemaster", "checkbox")
       CreateConfig(nil, T["Range Based Hunter Paging"], C.bars, "hunterbar", "checkbox")
     end)
 

@@ -680,14 +680,67 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
       bar:SetAttribute("statemap-page", "$input")
       bar:SetAttribute("state", (bar:GetAttribute("state-page") or 1))
 
-      filter = "[bonusbar: 5] 11;"
+      bar.filter = "[bonusbar: 5] 11;"
       for i=2, 6 do
-        filter = (C.bars["bar"..i] and C.bars["bar"..i].pageable == "1" and 1 or nil) and string.format("%s[actionbar: %s] %s; ",filter,i,i) or filter
+        bar.filter = (C.bars["bar"..i] and C.bars["bar"..i].pageable == "1" and 1 or nil) and string.format("%s[actionbar: %s] %s; ", bar.filter, i, i) or bar.filter
       end
 
-      filter = string.format("%s[bonusbar:1,nostealth] 7; [bonusbar:1,stealth] 7; [bonusbar:2] 10; [bonusbar:3] 9; [bonusbar:4] 10; 1", filter)
-      RegisterStateDriver(bar, "page", filter)
+      bar.filter = string.format("%s[bonusbar:1,nostealth] 7; [bonusbar:1,stealth] 7; [bonusbar:2] 10; [bonusbar:3] 9; [bonusbar:4] 10; 1", bar.filter)
+      RegisterStateDriver(bar, "page", bar.filter)
       SecureStateHeader_Refresh(bar)
+    end
+  end
+
+  local function SwitchBar(bar)
+    if _G.CURRENT_ACTIONBAR_PAGE ~= bar then
+      _G.CURRENT_ACTIONBAR_PAGE = bar
+      ChangeActionBarPage(bar)
+    end
+  end
+
+  -- pagemaster / meta page switch
+  local function EnablePagemaster(bar)
+    if pfUI.expansion == "vanilla" then
+      -- perform manual page swapping on hotkeydetection for vanilla clients
+      if C.bars.pagemaster == "1" then
+        local modifier = { "ALT", "SHIFT", "CTRL" }
+        local buttons = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "+", "=", "´" }
+        local shift, ctrl, alt, default = 6, 5, 3, 1
+        local current = CURRENT_ACTIONBAR_PAGE
+        bar.pagemaster = bar.pagemaster or CreateFrame("Frame", "pfPageMaster", UIParent)
+        bar.pagemaster:RegisterEvent("PLAYER_ENTERING_WORLD")
+        bar.pagemaster:SetScript("OnEvent", function()
+          for _,mod in pairs(modifier) do
+            for _,but in pairs(buttons) do
+              SetBinding(mod.."-"..but)
+            end
+          end
+        end)
+
+        bar.pagemaster:SetScript("OnUpdate", function()
+          if IsShiftKeyDown() then
+            SwitchBar(shift)
+          elseif IsControlKeyDown() then
+            SwitchBar(ctrl)
+          elseif IsAltKeyDown() then
+            SwitchBar(alt)
+          else
+            SwitchBar(default)
+          end
+        end)
+      elseif bar.pagemaster and C.bars.pagemaster == "0" then
+        bar.pagemaster:SetScript("OnUpdate", nil)
+        bar.pagemaster:SetScript("OnEvent", nil)
+      end
+    else
+      -- use secureframe states for pagemaster implementation
+      if C.bars.pagemaster == "1" then
+        for mod, page in pairs({ ["shift"] = "6", ["ctrl"] = "5", ["alt"] = "3" }) do
+          bar.filter = string.format("[modifier:%s] %s;", mod, page) .. bar.filter
+        end
+        RegisterStateDriver(bar, "page", bar.filter)
+        SecureStateHeader_Refresh(bar)
+      end
     end
   end
 
@@ -1066,6 +1119,7 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     -- enable paging for the first actionbar
     if i == 1 then
       EnablePaging(bars[i])
+      EnablePagemaster(bars[i])
     end
 
     -- adjust actionbar size
@@ -1335,42 +1389,5 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     function GetReagentCount(slot)
       return reagent_counts[reagent_slots[slot]]
     end
-  end
-
-  -- pagemaster / meta page switch
-  if C.bars.pagemaster == "1" then
-    local modifier = { "ALT", "SHIFT", "CTRL" }
-    local buttons = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "+", "=", "´" }
-    local shift, ctrl, alt, default = 6, 5, 3, 1
-    local current = CURRENT_ACTIONBAR_PAGE
-
-    local function SwitchBar(bar)
-      if _G.CURRENT_ACTIONBAR_PAGE ~= bar then
-        _G.CURRENT_ACTIONBAR_PAGE = bar
-        ChangeActionBarPage(bar)
-      end
-    end
-
-    local pagemaster = CreateFrame("Frame", "pfPageMaster", UIParent)
-    pagemaster:RegisterEvent("PLAYER_ENTERING_WORLD")
-    pagemaster:SetScript("OnEvent", function()
-      for _,mod in pairs(modifier) do
-        for _,but in pairs(buttons) do
-          SetBinding(mod.."-"..but)
-        end
-      end
-    end)
-
-    pagemaster:SetScript("OnUpdate", function()
-      if IsShiftKeyDown() then
-        SwitchBar(shift)
-      elseif IsControlKeyDown() then
-        SwitchBar(ctrl)
-      elseif IsAltKeyDown() then
-        SwitchBar(alt)
-      else
-        SwitchBar(default)
-      end
-    end)
   end
 end)
