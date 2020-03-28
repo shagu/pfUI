@@ -361,7 +361,7 @@ pfUI:RegisterModule("prediction", "vanilla:tbc", function ()
   end, true)
 
   local scanner = libtipscan:GetScanner("prediction")
-  hooksecurefunc("UseAction", function(slot, target, button)
+  hooksecurefunc("UseAction", function(slot, target, selfcast)
     if not pfUI.prediction.sender.enabled then return end
     if GetActionText(slot) or not IsCurrentAction(slot) then return end
     scanner:SetAction(slot)
@@ -369,7 +369,7 @@ pfUI:RegisterModule("prediction", "vanilla:tbc", function ()
     if not effect then return end
     spell_queue[1] = effect
     spell_queue[2] = effect.. ( rank or "" )
-    spell_queue[3] = UnitName("target") and UnitCanAssist("player", "target") and UnitName("target") or UnitName("player")
+    spell_queue[3] = selfcast and UnitName("player") or UnitName("target") and UnitCanAssist("player", "target") and UnitName("target") or UnitName("player")
   end, true)
 
   pfUI.prediction.sender = CreateFrame("Frame", "pfPredictionSender", UIParent)
