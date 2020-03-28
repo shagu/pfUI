@@ -407,22 +407,6 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
       self.active:Hide()
     end
 
-    -- handle secure action button templates (tbc+)
-    if self.SetAttribute and InCombatLockdown and not InCombatLockdown() then
-      if self.bar == 11 then
-        self:SetAttribute("type", "spell")
-        self:SetAttribute('spell', select(2, GetShapeshiftFormInfo(id)))
-      elseif self.bar == 12 then
-        self:SetAttribute("type1", "pet")
-        self:SetAttribute("action1", id)
-        self:SetAttribute("type2", "macro")
-        self:SetAttribute("macrotext2", string.format("/petautocasttoggle %s", GetPetActionInfo(id) or ""))
-      else
-        self:SetAttribute("type", "action")
-        self:SetAttribute("action", self.id)
-      end
-    end
-
     if self.bar ~= 11 and self.bar ~= 12 then
       -- update consumables
       if IsConsumableAction(sid) then
@@ -657,6 +641,55 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
   -- update actionbar buttons
   bars:SetScript("OnUpdate", BarsUpdate)
 
+  -- enable bar paging via secure functions
+  local function ButtonSwitch(self, att, value)
+    if att == "state-parent" then
+      local action = SecureButton_GetModifiedAttribute(self, "action", SecureStateChild_GetEffectiveButton(self)) or self.id
+      if self.id == action then return end
+      updatecache[self.slot] = true
+      self.id = action
+    end
+  end
+
+  local function EnablePaging(bar)
+    if pfUI.client <= 11200 then
+      if not bar.pager then
+        bar.pager = CreateFrame("Frame")
+        bar.pager:RegisterEvent("PLAYER_ENTERING_WORLD")
+        bar.pager:RegisterEvent("UPDATE_BONUS_ACTIONBAR")
+        bar.pager:RegisterEvent("ACTIONBAR_PAGE_CHANGED")
+        bar.pager:SetScript("OnEvent", function()
+          for i=1, 10 do -- reload pageable bars
+            local pageable = C.bars["bar"..i] and C.bars["bar"..i].pageable == "1" and true or nil
+            _G.VIEWABLE_ACTION_BAR_PAGES[i] = pageable
+          end
+
+          local active = GetActiveBar()
+          for i=1,12 do
+            local id = i + (active-1)*12
+            bar[i].id = id
+            updatecache[i] = true
+          end
+        end)
+      end
+    else
+      -- append paging enabled bars to the filter list
+      for i=1,12 do bar[i]:SetScript("OnAttributeChanged", ButtonSwitch) end
+
+      bar:SetAttribute("statemap-page", "$input")
+      bar:SetAttribute("state", (bar:GetAttribute("state-page") or 1))
+
+      filter = "[bonusbar: 5] 11;"
+      for i=2, 6 do
+        filter = (C.bars["bar"..i] and C.bars["bar"..i].pageable == "1" and 1 or nil) and string.format("%s[actionbar: %s] %s; ",filter,i,i) or filter
+      end
+
+      filter = string.format("%s[bonusbar:1,nostealth] 7; [bonusbar:1,stealth] 7; [bonusbar:2] 10; [bonusbar:3] 9; [bonusbar:4] 10; 1", filter)
+      RegisterStateDriver(bar, "page", filter)
+      SecureStateHeader_Refresh(bar)
+    end
+  end
+
   local function CreateActionButton(parent, bar, button)
     -- load config
     local size = C.bars["bar"..bar].icon_size
@@ -775,6 +808,34 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
 
       -- add to buttoncache
       buttoncache[id] = f
+    end
+
+    -- set required attributes for regular tbc buttons
+    if f.SetAttribute then
+      if bar == 11 then
+        f:SetAttribute("type", "spell")
+        f:SetAttribute('spell', select(2, GetShapeshiftFormInfo(button)))
+      elseif bar == 12 then
+        f:SetAttribute("type1", "pet")
+        f:SetAttribute("action1", button)
+        f:SetAttribute("type2", "macro")
+        f:SetAttribute("macrotext2", string.format("/petautocasttoggle %s", GetPetActionInfo(button) or ""))
+      else
+        bars[bar]:SetAttribute("addchild", f)
+        f:SetAttribute("type", "action")
+        f:SetAttribute("action", id)
+        f:SetAttribute("checkselfcast", true)
+        f:SetAttribute("useparent-unit", true)
+        f:SetAttribute("useparent-statebutton", true)
+
+        for state = 0, 11 do -- add custom states
+          local action = ((state == 0 and bar or state)-1)*12+button
+          f:SetAttribute(("*type-S%d"):format(state), "action")
+          f:SetAttribute(("*type-S%dRight"):format(state), "action")
+          f:SetAttribute(("*action-S%d"):format(state), action)
+          f:SetAttribute(("*action-S%dRight"):format(state), action)
+        end
+      end
     end
 
     -- set keydown option
@@ -990,6 +1051,17 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
       end
     end
 
+    -- add up to 0-11 button parent states to each bar
+    if i <= 10 and bars[i].SetAttribute then
+      bars[i]:SetAttribute("statebutton", "0:S0;1:S1;2:S2;3:S3;4:S4;5:S5;6:S6;7:S7;8:S8;9:S9;10:S10;11:S11;")
+      bars[i]:SetAttribute("statebutton2", "0:S0Right;1:S1Right;2:S2Right;3:S3Right;4:S4Right;5:S5Right;6:S6Right;7:S7Right;8:S8Right;9:S9Right;10:S10Right;11:S11Right;")
+    end
+
+    -- enable paging for the first actionbar
+    if i == 1 then
+      EnablePaging(bars[i])
+    end
+
     -- adjust actionbar size
     BarLayoutSize(bars[i], buttons, formfactor, size, border, spacing)
     bars[i]:SetWidth(bars[i]._size[1])
@@ -1129,28 +1201,8 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     end
   end
 
+  -- Set keybinds to all actionbuttons
   if pfUI.client <= 11200 then
-    -- enable paging on the first actionbar
-    local pager = CreateFrame("Frame")
-    pager:RegisterEvent("PLAYER_ENTERING_WORLD")
-    pager:RegisterEvent("UPDATE_BONUS_ACTIONBAR")
-    pager:RegisterEvent("ACTIONBAR_PAGE_CHANGED")
-    pager:SetScript("OnEvent", function()
-      -- reload pageable bars
-      for i=1, 10 do
-        local pageable = C.bars["bar"..i] and C.bars["bar"..i].pageable == "1" and true or nil
-        _G.VIEWABLE_ACTION_BAR_PAGES[i] = pageable
-      end
-
-      -- set first actionbar to page
-      local bar = GetActiveBar()
-      for i=1,12 do
-        local id = i + (bar-1)*12
-        bars[1][i].id = id
-        updatecache[i] = true
-      end
-    end)
-
     -- In order to be able to reuse already defined keybinds, we need to remap
     -- existing button functions to pfUI. We need to get rid of the blizzard calls
     -- to avoid having them call texture changes and errors due to missing buttons
@@ -1191,58 +1243,6 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
         end
       end
     end)
-
-    -- enable bar paging via secure functions
-    local function ButtonSwitch(self, att, value)
-      if att == "state-parent" then
-        local action = SecureButton_GetModifiedAttribute(self, "action", SecureStateChild_GetEffectiveButton(self)) or 0
-        if self.id ~= action then
-          self.id = action
-          updatecache[self.slot] = true
-        end
-      end
-    end
-
-    local function SetState(self, state, action)
-      self:SetAttribute(("*type-S%d"):format(state), "action")
-      self:SetAttribute(("*type-S%dRight"):format(state), "action")
-      self:SetAttribute(("*action-S%d"):format(state), action)
-      self:SetAttribute(("*action-S%dRight"):format(state), action)
-    end
-
-    for i=1,12 do -- add events to all buttons
-      SetState(bars[1][i], 0, i)
-      for k = 1, 11 do SetState(bars[1][i], k, (k - 1) * 12 + i) end
-      bars[1][i]:SetScript("OnAttributeChanged", ButtonSwitch)
-      bars[1]:SetAttribute("addchild", bars[1][i])
-      bars[1][i]:SetAttribute("type", "action")
-      bars[1][i]:SetAttribute("action", i)
-      bars[1][i]:SetAttribute("checkselfcast", true)
-      bars[1][i]:SetAttribute("useparent-unit", true)
-      bars[1][i]:SetAttribute("useparent-statebutton", true)
-    end
-
-    local filter = "[bonusbar: 5] 11;"
-    for i=2, 6 do
-      local enabled = C.bars["bar"..i] and C.bars["bar"..i].pageable == "1" and 1 or nil
-      if enabled then
-        filter = string.format("%s[actionbar: %s] %s; ",filter,i,i)
-      end
-    end
-    filter = string.format("%s[bonusbar:1,nostealth] 7; [bonusbar:1,stealth] 7; [bonusbar:2] 10; [bonusbar:3] 9; [bonusbar:4] 10; 1", filter)
-
-    RegisterStateDriver(bars[1], "page", filter)
-    bars[1]:SetAttribute("statemap-page", "$input")
-    bars[1]:SetAttribute("statebutton", "0:S0;1:S1;2:S2;3:S3;4:S4;5:S5;6:S6;7:S7;8:S8;9:S9;10:S10;11:S11;")
-    bars[1]:SetAttribute("statebutton2", "0:S0Right;1:S1Right;2:S2Right;3:S3Right;4:S4Right;5:S5Right;6:S6Right;7:S7Right;8:S8Right;9:S9Right;10:S10Right;11:S11Right;")
-    SecureStateHeader_Refresh(bars[1])
-
-    -- update to the current page
-    bars[1]:SetAttribute("state", bars[1]:GetAttribute("state-page"))
-
-    -- set state driver for pet bars
-    bars[12]:SetAttribute("unit", "pet")
-    RegisterStateDriver(bars[12], 'visibility', "[pet] show; hide")
   end
 
   -- handle drag-drop grid
