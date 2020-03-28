@@ -457,6 +457,7 @@ function pfUI:LoadConfig()
 
   pfUI:UpdateConfig("bars",       nil,           "keydown",          "0")
   pfUI:UpdateConfig("bars",       nil,           "altself",          "0")
+  pfUI:UpdateConfig("bars",       nil,           "rightself",        "0")
   pfUI:UpdateConfig("bars",       nil,           "animation",        "zoomfade")
   pfUI:UpdateConfig("bars",       nil,           "animalways",       "0")
   pfUI:UpdateConfig("bars",       nil,           "reagents",         "1")

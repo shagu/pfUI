@@ -296,6 +296,7 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     local mouse = arg1 and not keystate
     local keystate = keystate
     local slfcast = C.bars.altself == "1" and IsAltKeyDown() and true or self.slfcast
+    slfcast = C.bars.rightself == "1" and arg1 and arg1 == "RightButton" and true or slfcast
     self.slfcast = nil
 
     if ( pfUI_config.bars.keydown == "1" and keystate == "down" ) or (pfUI_config.bars.keydown == "0" and keystate == "up" ) or self.bar == 11 or mouse then
@@ -834,6 +835,11 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
           f:SetAttribute(("*type-S%dRight"):format(state), "action")
           f:SetAttribute(("*action-S%d"):format(state), action)
           f:SetAttribute(("*action-S%dRight"):format(state), action)
+          if C.bars.rightself == "1" then
+            f:SetAttribute(("*unit-S%dRight"):format(state), "player")
+          else
+            f:SetAttribute(("*unit-S%dRight"):format(state), nil)
+          end
         end
       end
     end
