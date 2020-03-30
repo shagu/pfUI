@@ -178,7 +178,6 @@ function pfUI:UpdateFonts()
   DialogButtonNormalText:SetFont(default, 16)
   ZoneTextFont:SetFont(default, 34, "OUTLINE")
   SubZoneTextFont:SetFont(default, 24, "OUTLINE")
-  TextStatusBarTextSmall:SetFont(default, 12, "NORMAL")
   GameTooltipText:SetFont(default, 12)
   GameTooltipTextSmall:SetFont(default, 12)
   GameTooltipHeaderText:SetFont(default, 13)
@@ -187,6 +186,10 @@ function pfUI:UpdateFonts()
   InvoiceTextFontSmall:SetFont(default, 12)
   CombatTextFont:SetFont(combat, 25)
   ChatFontNormal:SetFont(default, 13, pfUI_config.chat.text.outline == "1" and "OUTLINE")
+
+  if TextStatusBarTextSmall then -- does not exist in koKR
+    TextStatusBarTextSmall:SetFont(default, 12, "NORMAL")
+  end
 end
 
 function pfUI:GetEnvironment()
