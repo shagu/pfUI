@@ -715,6 +715,20 @@ function pfUI.uf.OnShow()
 end
 
 function pfUI.uf.OnEvent()
+  -- update indicators
+  if event == "PARTY_LEADER_CHANGED" or
+     event == "PARTY_LOOT_METHOD_CHANGED" or
+     event == "PARTY_MEMBERS_CHANGED" or
+     event == "RAID_TARGET_UPDATE" or
+     event == "RAID_ROSTER_UPDATE" or
+     event == "PLAYER_UPDATE_RESTING"
+  then
+    pfUI.uf:RefreshIndicators(this)
+  end
+
+  -- abort on broken unitframes (e.g focus)
+  if not this.label then return end
+
   -- update regular frames
   if event == "PLAYER_ENTERING_WORLD" then
     pfUI.uf:RefreshUnit(this, "all")
@@ -734,7 +748,6 @@ function pfUI.uf.OnEvent()
     pfUI.uf:RefreshUnit(this, "all")
   elseif this.label == "pet" and event == "UNIT_HAPPINESS" then
     pfUI.uf:RefreshUnit(this)
-
   -- UNIT_XXX Events
   elseif arg1 and arg1 == this.label .. this.id then
     if event == "UNIT_PORTRAIT_UPDATE" or event == "UNIT_MODEL_CHANGED" then
@@ -748,17 +761,6 @@ function pfUI.uf.OnEvent()
     else
       pfUI.uf:RefreshUnit(this)
     end
-  end
-
-  -- update indicators
-  if event == "PARTY_LEADER_CHANGED" or
-     event == "PARTY_LOOT_METHOD_CHANGED" or
-     event == "PARTY_MEMBERS_CHANGED" or
-     event == "RAID_TARGET_UPDATE" or
-     event == "RAID_ROSTER_UPDATE" or
-     event == "PLAYER_UPDATE_RESTING"
-  then
-    pfUI.uf:RefreshIndicators(this)
   end
 end
 
