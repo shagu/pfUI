@@ -878,7 +878,7 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
         f:SetAttribute("type1", "pet")
         f:SetAttribute("action1", button)
         f:SetAttribute("type2", "macro")
-        f:SetAttribute("macrotext2", string.format("/petautocasttoggle %s", GetPetActionInfo(button) or ""))
+        f:SetAttribute("macrotext2", "/click PetActionButton".. button .. " RightButton")
       else
         bars[bar]:SetAttribute("addchild", f)
         f:SetAttribute("type", "action")
