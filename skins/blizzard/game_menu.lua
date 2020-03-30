@@ -34,12 +34,13 @@ pfUI:RegisterSkin("Game Menu", "vanilla:tbc", function ()
     GameMenuButtonUIOptions,
     GameMenuButtonKeybindings,
     GameMenuButtonMacros,
+    GameMenuButtonRatings,
     GameMenuButtonLogout,
     GameMenuButtonQuit,
-    GameMenuButtonContinue
+    GameMenuButtonContinue,
   }
 
   for _, button in pairs(buttons) do
-    SkinButton(button)
+    if button then SkinButton(button) end
   end
 end)
