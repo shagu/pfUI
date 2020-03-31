@@ -1609,8 +1609,18 @@ function pfUI.uf:EnableClickCast()
         if self.SetAttribute then
           -- set attributes for tbc+
           local prefix = modifier == "" and "" or modifier .. "-"
-          self:SetAttribute(prefix.."type"..bid, "spell")
-          self:SetAttribute(prefix.."spell"..bid, pfUI_config.unitframes["clickcast"..bconf..mconf])
+
+          -- check for "/" in the beginning of the string, to detect macros
+          if string.find(pfUI_config.unitframes["clickcast"..bconf..mconf], "^%/(.+)") then
+            self:SetAttribute(prefix.."type"..bid, "macro")
+            self:SetAttribute(prefix.."macrotext"..bid, pfUI_config.unitframes["clickcast"..bconf..mconf])
+            self:SetAttribute(prefix.."spell"..bid, nil)
+          else
+            self:SetAttribute(prefix.."type"..bid, "spell")
+            self:SetAttribute(prefix.."spell"..bid, pfUI_config.unitframes["clickcast"..bconf..mconf])
+            self:SetAttribute(prefix.."macro"..bid, nil)
+          end
+
         else
           -- fill clickaction table for vanillla
           self.clickactions = self.clickactions or {}
@@ -1646,7 +1656,13 @@ function pfUI.uf:ClickAction(button)
   if this.clickactions and this.clickactions[modstring] then
     local tswitch = UnitIsUnit(unitstr, "target")
     TargetUnit(unitstr)
-    CastSpellByName(this.clickactions[modstring])
+
+    if string.find(this.clickactions[modstring], "^%/(.+)") then
+      RunMacroText(this.clickactions[modstring])
+    else
+      CastSpellByName(this.clickactions[modstring])
+    end
+
     if not tswitch then TargetLastTarget() end
     return
   end
