@@ -61,3 +61,17 @@ do -- GetItemInfo
     return name, link, rarity, nil, minlevel, itype, isubtype, stack
   end
 end
+
+do -- RunMacroText
+  local obj = { ["GetText"] = function(self) return self.text end }
+  obj = setmetatable(obj, {__index = function(tab,key)
+    local value = function() return end
+    rawset(tab,key,value)
+    return value
+  end})
+
+  function RunMacroText(text)
+    obj.text = text
+    ChatEdit_ParseText(obj, 1)
+  end
+end
