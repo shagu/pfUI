@@ -2,15 +2,15 @@ pfUI:RegisterModule("raid", "vanilla:tbc", function ()
   -- do not go further on disabled UFs
   if C.unitframes.disable == "1" then return end
 
-  local rawborder, default_border = GetBorderSize("unitframes")
+  pfUI.uf.raid = CreateFrame("Frame", "pfRaidUpdater", UIParent)
 
-  pfUI.uf.raid = CreateFrame("Button", "pfRaidCluster", UIParent)
-  pfUI.uf.raid:SetWidth(120)
-  pfUI.uf.raid:SetHeight(10)
-  pfUI.uf.raid:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", default_border*2, C.chat.left.height + default_border*5)
-  pfUI.uf.raid:SetFrameLevel(20)
-  pfUI.uf.raid:Hide()
-  UpdateMovable(pfUI.uf.raid)
+  local rawborder, default_border = GetBorderSize("unitframes")
+  local cluster = CreateFrame("Frame", "pfRaidCluster", UIParent)
+  cluster:SetFrameLevel(20)
+  cluster:SetWidth(120)
+  cluster:SetHeight(10)
+  cluster:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", default_border*2, C.chat.left.height + default_border*5)
+  UpdateMovable(cluster)
 
   pfUI.uf.raid.tanksfirst = {
     ["PF_TANK_TOGGLE"] = { T["Toggle as Tank"], "toggleTank" }
@@ -24,7 +24,7 @@ pfUI:RegisterModule("raid", "vanilla:tbc", function ()
 
     for i=1,40 do
       pfUI.uf.raid[i] = pfUI.uf.raid[i] or pfUI.uf:CreateUnitFrame("Raid", i, C.unitframes.raid)
-      pfUI.uf.raid[i]:SetParent(pfUI.uf.raid)
+      pfUI.uf.raid[i]:SetParent(cluster)
       pfUI.uf.raid[i]:SetFrameLevel(5)
 
       pfUI.uf.raid[i]:UpdateConfig()
