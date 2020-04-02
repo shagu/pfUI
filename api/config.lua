@@ -303,6 +303,10 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("unitframes", "raid",        "txthpright",       "healthmiss")
   pfUI:UpdateConfig("unitframes", "raid",        "overhealperc",     "10")
 
+  pfUI:UpdateConfig("unitframes", "raid",         "raidlayout",       "8x5")
+  pfUI:UpdateConfig("unitframes", "raid",         "raidpadding",      "3")
+  pfUI:UpdateConfig("unitframes", "raid",         "raidfill",         "VERTICAL")
+
   pfUI:UpdateConfig("unitframes", "ttarget",     "width",            "100")
   pfUI:UpdateConfig("unitframes", "ttarget",     "height",           "17")
   pfUI:UpdateConfig("unitframes", "ttarget",     "pheight",          "3")

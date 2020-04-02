@@ -950,6 +950,16 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
         "8:" .. T["Slow"],
         "16:" .. T["Very Slow"],
       },
+      ["uf_raidlayout"] = {
+        "1x40:" .. T["1x40"],
+        "2x20:" .. T["2x20"],
+        "4x10:" .. T["4x10"],
+        "5x8:" ..  T["5x8"],
+        "8x5:" ..  T["8x5"],
+        "10x4:" .. T["10x4"],
+        "20x2:" .. T["20x2"],
+        "40x1:" .. T["40x1"],
+      },
       ["uf_powerbar_position"] = {
         "TOPLEFT:" .. T["Left"],
         "TOP:" .. T["Center"],
@@ -1653,6 +1663,13 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
         CreateConfig(U[c], T["Raid Mark Size"], C.unitframes[c], "raidiconsize")
         CreateConfig(U[c], T["Show Class Buff Indicators"], C.unitframes[c], "buff_indicator", "checkbox")
         CreateConfig(U[c], T["Display Overheal"], C.unitframes[c], "overhealperc", "dropdown", pfUI.gui.dropdowns.uf_overheal)
+
+        if c == "raid" then
+          CreateConfig(U[c], T["Layout"], nil, nil, "header")
+          CreateConfig(U["raid"], T["Raid Padding"], C.unitframes[c], "raidpadding")
+          CreateConfig(U["raid"], T["Raid Layout"], C.unitframes[c], "raidlayout", "dropdown", pfUI.gui.dropdowns.uf_raidlayout)
+          CreateConfig(U["raid"], T["Raid Fill Direction"], C.unitframes[c], "raidfill", "dropdown", pfUI.gui.dropdowns.orientation)
+        end
 
         CreateConfig(U[c], T["Healthbar"], nil, nil, "header")
         CreateConfig(U[c], T["Health Bar Width"], C.unitframes[c], "width")

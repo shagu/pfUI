@@ -4,7 +4,13 @@ pfUI:RegisterModule("raid", "vanilla:tbc", function ()
 
   local rawborder, default_border = GetBorderSize("unitframes")
 
-  pfUI.uf.raid = CreateFrame("Button","pfRaid",UIParent)
+  pfUI.uf.raid = CreateFrame("Button", "pfRaidCluster", UIParent)
+  pfUI.uf.raid:SetWidth(120)
+  pfUI.uf.raid:SetHeight(10)
+  pfUI.uf.raid:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", default_border*2, C.chat.left.height + default_border*5)
+  pfUI.uf.raid:SetFrameLevel(20)
+  pfUI.uf.raid:Hide()
+  UpdateMovable(pfUI.uf.raid)
 
   pfUI.uf.raid.tanksfirst = {
     ["PF_TANK_TOGGLE"] = { T["Toggle as Tank"], "toggleTank" }
@@ -14,28 +20,44 @@ pfUI:RegisterModule("raid", "vanilla:tbc", function ()
   pfUI.uf.raid.tankrole = { }
 
   function pfUI.uf.raid:UpdateConfig()
-    for i=1, 40 do
+    local rawborder, default_border = GetBorderSize("unitframes")
+
+    for i=1,40 do
+      pfUI.uf.raid[i] = pfUI.uf.raid[i] or pfUI.uf:CreateUnitFrame("Raid", i, C.unitframes.raid)
+      pfUI.uf.raid[i]:SetParent(pfUI.uf.raid)
+      pfUI.uf.raid[i]:SetFrameLevel(5)
+
       pfUI.uf.raid[i]:UpdateConfig()
-    end
-  end
-
-  for r=1, 8 do
-    for g=1, 5 do
-      local i = g + 5*(r-1)
-      pfUI.uf.raid[i] = pfUI.uf:CreateUnitFrame("Raid", i, C.unitframes.raid)
       pfUI.uf.raid[i]:UpdateFrameSize()
+    end
 
-      local spacing = pfUI.uf.raid[i].config.pspace
-      local width = pfUI.uf.raid[i].config.width
-      local height = pfUI.uf.raid[i].config.height
-      local pheight = pfUI.uf.raid[i].config.pheight
-      local real_height = height + spacing + pheight + 2*default_border
+    local i = 1
+    local width = pfUI.uf.raid[1]:GetWidth()+2*default_border
+    local height = pfUI.uf.raid[1]:GetHeight()+2*default_border
+    local layout = pfUI.uf.raid[1].config.raidlayout
+    local padding = tonumber(pfUI.uf.raid[1].config.raidpadding)*GetPerfectPixel()
+    local fill = pfUI.uf.raid[1].config.raidfill
+    local _, _, x, y = string.find(layout,"(.+)x(.+)")
+    x, y = tonumber(x), tonumber(y)
 
-      pfUI.uf.raid[i]:SetPoint("BOTTOMLEFT", (r-1) * (width+3*default_border) + 5, C.chat.left.height + default_border + 10 + (g-1)*(real_height+3*default_border))
-      UpdateMovable(pfUI.uf.raid[i])
+    if fill == "VERTICAL" then
+      for r=1, x do for g=1, y do
+        pfUI.uf.raid[i]:ClearAllPoints()
+        pfUI.uf.raid[i]:SetPoint("BOTTOMLEFT", (r-1)*(padding+width), (g-1)*(padding+height))
+        UpdateMovable(pfUI.uf.raid[i], true)
+        i = i + 1
+      end end
+    else
+      for g=1, y do for r=1, x do
+        pfUI.uf.raid[i]:ClearAllPoints()
+        pfUI.uf.raid[i]:SetPoint("BOTTOMLEFT", (r-1)*(padding+width), (g-1)*(padding+height))
+        UpdateMovable(pfUI.uf.raid[i], true)
+        i = i + 1
+      end end
     end
   end
 
+  pfUI.uf.raid:UpdateConfig()
 
   local function SetRaidIndex(frame, id)
     frame.id = id
