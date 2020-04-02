@@ -363,6 +363,7 @@ pfUI:RegisterModule("unlock", "vanilla:tbc", function ()
     local diffypos = frame.oldPos[2] - ypos
 
     for id, frame in pairs(pfUI.unlock.selection) do
+      frame:SetParent("UIParent")
       if frame:GetName() ~= name then
         local anchor, _, _, xpos, ypos = frame:GetPoint()
         frame:SetPoint(anchor or "TOPLEFT", xpos - diffxpos, ypos - diffypos)
