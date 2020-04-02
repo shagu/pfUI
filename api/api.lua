@@ -563,6 +563,12 @@ function pfUI.api.LoadMovable(frame, init)
   end
 
   if pfUI_config["position"][frame:GetName()] then
+    if pfUI_config["position"][frame:GetName()]["parent"] then
+      frame:SetParent(_G[pfUI_config["position"][frame:GetName()]["parent"]])
+    else
+      frame:SetParent(UIParent)
+    end
+
     if pfUI_config["position"][frame:GetName()]["scale"] then
       frame:SetScale(pfUI_config["position"][frame:GetName()].scale)
     end
@@ -591,6 +597,7 @@ function pfUI.api.SaveMovable(frame)
   C.position[frame:GetName()]["xpos"] = round(xpos)
   C.position[frame:GetName()]["ypos"] = round(ypos)
   C.position[frame:GetName()]["anchor"] = anchor
+  C.position[frame:GetName()]["parent"] = frame:GetParent():GetName()
 end
 
 -- [ Update Movable ]
