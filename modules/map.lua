@@ -10,6 +10,7 @@ pfUI:RegisterModule("map", "vanilla:tbc", function ()
   end
 
   C.position["WorldMapFrame"] = C.position["WorldMapFrame"] or { alpha = 1.0, scale = 0.7 }
+  C.position["WorldMapFrame"].parent = nil
   local alpha = C.position["WorldMapFrame"].alpha
   local scale = C.position["WorldMapFrame"].scale
 
