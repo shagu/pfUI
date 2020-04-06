@@ -1968,6 +1968,10 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
       CreateConfig(U["xpbar"], T["Orientation"], C.panel.xp, "xp_mode", "dropdown", pfUI.gui.dropdowns.orientation)
       CreateConfig(U["xpbar"], T["Frame Anchor"], C.panel.xp, "xp_anchor", "dropdown", pfUI.gui.dropdowns.xpanchors)
       CreateConfig(U["xpbar"], T["Aligned Position"], C.panel.xp, "xp_position", "dropdown", pfUI.gui.dropdowns.xp_position)
+
+      CreateConfig(nil, T["Colors"], nil, nil, "header")
+      CreateConfig(U["xpbar"], T["Experience Color"], C.panel.xp, "xp_color", "color")
+      CreateConfig(U["xpbar"], T["Rested Color"], C.panel.xp, "rest_color", "color")
     end)
 
     CreateGUIEntry(T["XP Bar"], T["Reputation Bar"], function()

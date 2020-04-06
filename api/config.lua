@@ -509,6 +509,8 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("panel",      "xp",          "xp_mode",          "VERTICAL")
   pfUI:UpdateConfig("panel",      "xp",          "xp_anchor",        "pfChatLeft")
   pfUI:UpdateConfig("panel",      "xp",          "xp_position",      "RIGHT")
+  pfUI:UpdateConfig("panel",      "xp",          "xp_color",         ".25,.25,1,1")
+  pfUI:UpdateConfig("panel",      "xp",          "rest_color",       "1,.25,1,.5")
 
   pfUI:UpdateConfig("panel",      "xp",          "rep_always",       "0")
   pfUI:UpdateConfig("panel",      "xp",          "rep_timeout",      "5")

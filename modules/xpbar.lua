@@ -32,7 +32,8 @@ pfUI:RegisterModule("xpbar", "vanilla:tbc", function ()
     local xp_always = C.panel.xp.xp_always == "1" and true or nil
     local xp_position = C.panel.xp.xp_position
     local xp_anchor = C.panel.xp.xp_anchor
-
+    local xp_color = C.panel.xp.xp_color
+    local rest_color = C.panel.xp.rest_color
 
     local rep_timeout = tonumber(C.panel.xp.rep_timeout)
     local rep_width = C.panel.xp.rep_width
@@ -66,7 +67,9 @@ pfUI:RegisterModule("xpbar", "vanilla:tbc", function ()
     b.bar:ClearAllPoints()
     b.bar:SetAllPoints(b)
     b.bar:SetFrameStrata("LOW")
-    b.bar:SetStatusBarColor(.25,.25,1,1)
+
+    local cr, cg, cb, ca = pfUI.api.GetStringColor(xp_color)
+    b.bar:SetStatusBarColor(cr,cg,cb,ca)
     b.bar:SetMinMaxValues(0, 100)
     b.bar:SetOrientation(mode)
     b.bar:SetValue(0)
@@ -76,7 +79,8 @@ pfUI:RegisterModule("xpbar", "vanilla:tbc", function ()
     b.restedbar:ClearAllPoints()
     b.restedbar:SetAllPoints(b)
     b.restedbar:SetFrameStrata("MEDIUM")
-    b.restedbar:SetStatusBarColor(1,.25,1,.5)
+    local cr, cg, cb, ca = pfUI.api.GetStringColor(rest_color)
+    b.restedbar:SetStatusBarColor(cr,cg,cb,ca)
     b.restedbar:SetMinMaxValues(0, 100)
     b.restedbar:SetOrientation(mode)
     b.restedbar:SetValue(0)
