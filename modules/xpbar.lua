@@ -70,9 +70,7 @@ pfUI:RegisterModule("xpbar", "vanilla:tbc", function ()
 
     local cr, cg, cb, ca = pfUI.api.GetStringColor(xp_color)
     b.bar:SetStatusBarColor(cr,cg,cb,ca)
-    b.bar:SetMinMaxValues(0, 100)
     b.bar:SetOrientation(mode)
-    b.bar:SetValue(0)
 
     b.restedbar = b.restedbar or CreateFrame("StatusBar", nil, b)
     b.restedbar:SetStatusBarTexture(pfUI.media["img:bar"])
@@ -81,9 +79,7 @@ pfUI:RegisterModule("xpbar", "vanilla:tbc", function ()
     b.restedbar:SetFrameStrata("MEDIUM")
     local cr, cg, cb, ca = pfUI.api.GetStringColor(rest_color)
     b.restedbar:SetStatusBarColor(cr,cg,cb,ca)
-    b.restedbar:SetMinMaxValues(0, 100)
     b.restedbar:SetOrientation(mode)
-    b.restedbar:SetValue(0)
 
     -- auto hide
     b:EnableMouse(true)
