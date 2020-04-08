@@ -138,29 +138,35 @@ pfUI:RegisterSkin("Friends", "vanilla:tbc", function ()
     WhoFrameDropDownButton:ClearAllPoints()
     WhoFrameDropDownButton:SetPoint("RIGHT", WhoFrameDropDown.backdrop, "RIGHT", 0, 0)
 
+    -- add class icon buttons
     for i = 1, WHOS_TO_DISPLAY do
-      local level = _G["WhoFrameButton"..i.."Level"]
-      level:ClearAllPoints()
-      level:SetPoint("TOPLEFT", 10, -3)
-
-      local class = _G["WhoFrameButton"..i.."Class"]
-      class:SetWidth(30)
-      class:ClearAllPoints()
-      class:SetPoint("LEFT", level, "RIGHT", 10, 0)
-
       local frame = _G["WhoFrameButton"..i]
       frame.classicon = frame.classicon or frame:CreateTexture(nil, "OVERLAY")
-      frame.classicon:SetPoint("CENTER", class, "CENTER", -4, 0)
+      frame.classicon:SetPoint("CENTER", _G["WhoFrameButton"..i.."Class"], "CENTER", -4, 0)
       frame.classicon:SetWidth(15)
       frame.classicon:SetHeight(15)
       frame.classicon:SetTexture(pfUI.media["img:classicons"])
       frame.classicon:Hide()
-
-      local name = _G["WhoFrameButton"..i.."Name"]
-      name:SetWidth(120)
-      name:ClearAllPoints()
-      name:SetPoint("LEFT", class, "RIGHT", 0, 0)
     end
+
+    -- set positions
+    hooksecurefunc("WhoList_Update", function()
+      for i = 1, WHOS_TO_DISPLAY do
+        local level = _G["WhoFrameButton"..i.."Level"]
+        level:ClearAllPoints()
+        level:SetPoint("TOPLEFT", 10, -3)
+
+        local class = _G["WhoFrameButton"..i.."Class"]
+        class:SetWidth(30)
+        class:ClearAllPoints()
+        class:SetPoint("LEFT", level, "RIGHT", 10, 0)
+
+        local name = _G["WhoFrameButton"..i.."Name"]
+        name:SetWidth(120)
+        name:ClearAllPoints()
+        name:SetPoint("LEFT", class, "RIGHT", 0, 0)
+      end
+    end)
 
     CreateBackdrop(WhoFrameEditBox, nil, true)
     WhoFrameEditBox:SetTextInsets(5,5,5,5)
@@ -213,29 +219,35 @@ pfUI:RegisterSkin("Friends", "vanilla:tbc", function ()
     CreateBackdrop(GuildListScrollFrame)
     SkinScrollbar(GuildListScrollFrameScrollBar, true)
 
+    -- add class icon buttons
     for i = 1, GUILDMEMBERS_TO_DISPLAY do
-      local level = _G["GuildFrameButton"..i.."Level"]
-      level:ClearAllPoints()
-      level:SetPoint("TOPLEFT", 10, -3)
-
-      local class = _G["GuildFrameButton"..i.."Class"]
-      class:SetWidth(30)
-      class:ClearAllPoints()
-      class:SetPoint("LEFT", level, "RIGHT", 5, 0)
-
       local frame = _G["GuildFrameButton"..i]
       frame.classicon = frame.classicon or frame:CreateTexture(nil, "OVERLAY")
-      frame.classicon:SetPoint("CENTER", class, "CENTER", -4, 0)
+      frame.classicon:SetPoint("CENTER", _G["GuildFrameButton"..i.."Class"], "CENTER", -4, 0)
       frame.classicon:SetWidth(15)
       frame.classicon:SetHeight(15)
       frame.classicon:SetTexture(pfUI.media["img:classicons"])
       frame.classicon:Hide()
-
-      local name = _G["GuildFrameButton"..i.."Name"]
-      name:SetWidth(120)
-      name:ClearAllPoints()
-      name:SetPoint("LEFT", class, "RIGHT", 0, 0)
     end
+
+    -- set positions
+    hooksecurefunc("GuildStatus_Update", function()
+      for i = 1, GUILDMEMBERS_TO_DISPLAY do
+        local level = _G["GuildFrameButton"..i.."Level"]
+        level:ClearAllPoints()
+        level:SetPoint("TOPLEFT", 10, -3)
+
+        local class = _G["GuildFrameButton"..i.."Class"]
+        class:SetWidth(30)
+        class:ClearAllPoints()
+        class:SetPoint("LEFT", level, "RIGHT", 5, 0)
+
+        local name = _G["GuildFrameButton"..i.."Name"]
+        name:SetWidth(120)
+        name:ClearAllPoints()
+        name:SetPoint("LEFT", class, "RIGHT", 0, 0)
+      end
+    end)
 
     SkinArrowButton(GuildFrameGuildListToggleButton, "right", 16)
     GuildFrameGuildListToggleButton:ClearAllPoints()
