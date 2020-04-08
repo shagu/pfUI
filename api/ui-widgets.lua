@@ -102,6 +102,203 @@ do -- statusbars
   end
 end
 
+do -- dropdown
+  local _, class = UnitClass("player")
+  local color = RAID_CLASS_COLORS[class]
+
+  local function OnEnter()
+    this.button:SetBackdropBorderColor(this.button.cr,this.button.cg,this.button.cb,1)
+  end
+
+  local function OnLeave()
+    this.button:SetBackdropBorderColor(this.button.rr,this.button.rg,this.button.rb,1)
+  end
+
+  local function OnListClick()
+    this:GetParent():Hide()
+    if this.func then this.func() end
+  end
+
+  local handlers = {
+    ["SetSelection"] = function(self, id)
+      if id and self.menu and self.menu[id] then
+        self.text:SetText(self.menu[id].text)
+        self.id = id
+      end
+    end,
+    ["GetSelection"] = function(self)
+      self:UpdateMenu()
+      if self.menu and self.menu[self.id] then
+        return self.id, self.menu[self.id].text, self.menu[self.id].func
+      end
+    end,
+    ["SetMenu"] = function(self, menu)
+      if type(menu) == "function" then
+        self.menu = menu()
+        self.menufunc = menu
+      else
+        self.menu = menu
+        self.menufunc = nil
+      end
+    end,
+    ["GetMenu"] = function(self)
+      self:UpdateMenu()
+      return self.menu
+    end,
+    ["ShowMenu"] = function(self)
+      self:UpdateMenu()
+      self.menuframe:SetFrameLevel(self:GetFrameLevel() + 8)
+      self.menuframe:SetHeight(table.getn(self.menu)*20+4)
+      self.menuframe:Show()
+    end,
+    ["HideMenu"] = function(self)
+      self.menuframe:Hide()
+    end,
+    ["ToggleMenu"] = function(self)
+      if self.menuframe:IsShown() then
+        self:HideMenu()
+      else
+        self:ShowMenu()
+      end
+    end,
+    ["UpdateMenu"] = function(self)
+      -- run/reload menu function if available
+      if self.menufunc then self.menu = self.menufunc() end
+      if not self.menu then return end
+
+      -- set caption to the current value
+      self.text:SetText(self.menu[self.id] and self.menu[self.id].text or "")
+
+      -- refresh menu buttons
+      for id, element in pairs(self.menuframe.elements) do
+        element:Hide()
+      end
+
+      for id, data in pairs(self.menu) do
+        self:CreateMenuEntry(id)
+      end
+    end,
+    ["CreateMenuEntry"] = function(self, id)
+      if not self.menu[id] then return end
+
+      local frame, entry
+      for count, existing in pairs(self.menuframe.elements) do
+        if not existing:IsShown() then
+          frame = existing
+          entry = count
+          break
+        end
+      end
+
+      if not frame and not entry then
+        entry = table.getn(self.menuframe.elements) + 1
+        frame = CreateFrame("Button", nil, self.menuframe)
+        frame:ClearAllPoints()
+        frame:SetPoint("TOPLEFT", self.menuframe, "TOPLEFT", 2, -(entry-1)*20-2)
+        frame:SetPoint("TOPRIGHT", self.menuframe, "TOPRIGHT", -2, -(entry-1)*20-2)
+        frame:SetHeight(20)
+        frame.parent = self
+
+        frame.icon = frame:CreateTexture(nil, "OVERLAY")
+        frame.icon:SetPoint("RIGHT", frame, "RIGHT", -2, 0)
+        frame.icon:SetHeight(16)
+        frame.icon:SetWidth(16)
+        frame.icon:SetTexture("Interface\\Buttons\\UI-CheckBox-Check")
+
+        frame.text = frame:CreateFontString(nil, "OVERLAY")
+        frame.text:SetFontObject(GameFontWhite)
+        frame.text:SetFont(pfUI.font_default, pfUI_config.global.font_size-1, "OUTLINE")
+        frame.text:SetJustifyH("RIGHT")
+        frame.text:SetPoint("LEFT", frame, "LEFT", 2, 0)
+        frame.text:SetPoint("RIGHT", frame.icon, "LEFT", -2, 0)
+
+        frame.hover = frame:CreateTexture(nil, "BACKGROUND")
+        frame.hover:SetAllPoints(frame)
+        frame.hover:SetTexture(.4,.4,.4,.4)
+        frame.hover:Hide()
+
+        table.insert(self.menuframe.elements, frame)
+      end
+
+      frame.id = id
+      frame.text:SetText(self.menu[id].text)
+      if self.id == id then
+        frame.icon:Show()
+      else
+        frame.icon:Hide()
+      end
+
+      frame:SetScript("OnClick", function()
+        this.parent:SetSelection(this.id)
+
+        if this.parent.mode == "MULTISELECT" then
+          this.parent:ShowMenu()
+        else
+          this.parent:HideMenu()
+        end
+
+        if this.parent.menu[id].func then
+          this.parent.menu[id].func()
+        end
+      end)
+      frame:SetScript("OnEnter", function() this.hover:Show() end)
+      frame:SetScript("OnLeave", function() this.hover:Hide() end)
+      frame:Show()
+    end,
+  }
+  function pfUI.api.CreateDropDownButton(name, parent)
+    local frame = CreateFrame("Button", name, parent)
+    frame:SetScript("OnEnter", OnEnter)
+    frame:SetScript("OnLeave", OnLeave)
+    frame:SetScript("OnClick", function()
+      this:ToggleMenu()
+    end)
+    frame:SetHeight(20)
+    frame.id = nil
+
+    CreateBackdrop(frame, nil, true)
+
+    local button = CreateFrame("Button", nil, frame)
+    button:SetPoint("RIGHT", frame, "RIGHT", -2, 0)
+    button:SetWidth(16)
+    button:SetHeight(16)
+    button:SetScript("OnClick", function()
+      this:GetParent():ToggleMenu()
+    end)
+    SkinArrowButton(button, "down")
+    button.icon:SetVertexColor(1,.9,.1)
+
+    local text = frame:CreateFontString(nil, "OVERLAY")
+    text:SetFontObject(GameFontWhite)
+    text:SetFont(pfUI.font_default, pfUI_config.global.font_size-1, "OUTLINE")
+    text:SetPoint("RIGHT", button, "LEFT", -4, 0)
+    text:SetJustifyH("RIGHT")
+
+    local menuframe = CreateFrame("Frame", tostring(frame).."menu", parent)
+    menuframe.button = frame
+    menuframe.elements = {}
+    menuframe:SetPoint("TOPLEFT", frame, "BOTTOMLEFT", 0, -2)
+    menuframe:SetPoint("TOPRIGHT", frame, "TOPRIGHT", 0, 2)
+    menuframe:Hide()
+    menuframe:SetScript("OnUpdate", function()
+      if not MouseIsOver(this, 100, -100, -100, 100) then
+        this.button:HideMenu()
+      end
+    end)
+    CreateBackdrop(menuframe, nil, true)
+
+    for name, func in pairs(handlers) do
+      frame[name] = func
+    end
+
+    frame.menuframe = menuframe
+    frame.button = button
+    frame.text = text
+
+    return frame
+  end
+end
+
 function pfUI.api.CreateTabChild(self, title, bwidth, bheight, bottom, static)
   -- create tab button
   local b = CreateFrame("Button", "pfConfig" .. title .. "Button", self, "UIPanelButtonTemplate")
