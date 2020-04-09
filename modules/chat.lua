@@ -268,6 +268,8 @@ pfUI:RegisterModule("chat", "vanilla:tbc", function ()
     CreateBackdrop(LanguageMenu)
     CreateBackdrop(VoiceMacroMenu)
 
+    local combatlogpanel = (CombatLogQuickButtonFrame_Custom and CombatLogQuickButtonFrame_Custom:GetHeight() or 0)
+
     for i=1, NUM_CHAT_WINDOWS do
       local frame = _G["ChatFrame"..i]
       local tab = _G["ChatFrame"..i.."Tab"]
@@ -317,7 +319,7 @@ pfUI:RegisterModule("chat", "vanilla:tbc", function ()
         frame:SetParent(pfUI.chat.left)
         frame:ClearAllPoints()
         if i == 2 then
-          frame:SetPoint("TOPLEFT", pfUI.chat.left ,"TOPLEFT", default_border, -panelheight - CombatLogQuickButtonFrame_Custom:GetHeight())
+          frame:SetPoint("TOPLEFT", pfUI.chat.left ,"TOPLEFT", default_border, -panelheight - combatlogpanel)
         else
           frame:SetPoint("TOPLEFT", pfUI.chat.left ,"TOPLEFT", default_border, -panelheight)
         end
