@@ -316,7 +316,11 @@ pfUI:RegisterModule("chat", "vanilla:tbc", function ()
         tab:SetParent(pfUI.chat.left.panelTop)
         frame:SetParent(pfUI.chat.left)
         frame:ClearAllPoints()
-        frame:SetPoint("TOPLEFT", pfUI.chat.left ,"TOPLEFT", default_border, -panelheight)
+        if i == 2 then
+          frame:SetPoint("TOPLEFT", pfUI.chat.left ,"TOPLEFT", default_border, -panelheight - CombatLogQuickButtonFrame_Custom:GetHeight())
+        else
+          frame:SetPoint("TOPLEFT", pfUI.chat.left ,"TOPLEFT", default_border, -panelheight)
+        end
         frame:SetPoint("BOTTOMRIGHT", pfUI.chat.left ,"BOTTOMRIGHT", -default_border, bottompadding)
       else
         FCF_UnDockFrame(frame)
