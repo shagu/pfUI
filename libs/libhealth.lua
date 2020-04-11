@@ -1,10 +1,13 @@
 -- load pfUI environment
 setfenv(1, pfUI:GetEnvironment())
 
-local mobdb, enabled = {}, true
+if pfUI.libhealth then return end
+
+local mobdb = {}
 local target, dmg, perc, diff = nil, 0, 0, 0, 0
 local UnitHealth, UnitHealthMax
 local libhealth = CreateFrame("Frame")
+libhealth.enabled = true
 libhealth:RegisterEvent("UNIT_HEALTH")
 libhealth:RegisterEvent("UNIT_COMBAT")
 libhealth:RegisterEvent("PLAYER_TARGET_CHANGED")
@@ -16,13 +19,11 @@ libhealth:SetScript("OnEvent", function()
     mobdb = pfUI_cache["libhealth"]
 
     -- load enable state and set functions
-    enabled = pfUI_config["global"]["libhealth"] == "1" and true or nil
-    pfUI.api.UnitHealth = enabled and UnitHealth or nil
-    pfUI.api.UnitHealthMax = enabled and UnitHealthMax or nil
+    libhealth.enabled = pfUI_config["global"]["libhealth"] == "1" and true or nil
   end
 
   -- return as we're not supposed to be here
-  if not enabled then this:UnregisterAllEvents() return end
+  if not libhealth.enabled then this:UnregisterAllEvents() return end
 
   -- try to estimate mob health based on combat and health events
   if event == "PLAYER_TARGET_CHANGED" then
@@ -48,7 +49,7 @@ end)
 
 -- core function to query the generated database
 local unit, level, cur, max, dbstring
-local function GetHealthPairs(unitstr)
+local function GetUnitHealth(self, unitstr)
   unit = UnitName(unitstr)
   level = UnitLevel(unitstr)
   cur = _G.UnitHealth(unitstr)
@@ -61,16 +62,18 @@ local function GetHealthPairs(unitstr)
     end
   end
 
-  return nil
+  return cur, max
 end
 
--- functions to overwrite the default health api with estimated values
-pfUI.api.UnitHealth = function(unitstr)
-  cur, max = GetHealthPairs(unitstr)
-  return cur or _G.UnitHealth(unitstr)
+local function GetDBHealth(self, dbstring)
+  if mobdb[dbstring] and mobdb[dbstring][1] and mobdb[dbstring][2] > 5 then
+    return mobdb[dbstring][1]/100, mobdb[dbstring][1]
+  end
+
+  return nil, nil
 end
 
-pfUI.api.UnitHealthMax = function(unitstr)
-  cur, max = GetHealthPairs(unitstr)
-  return max or _G.UnitHealthMax(unitstr)
-end
+-- add api calls to global tree
+pfUI.libhealth = libhealth
+pfUI.libhealth.GetUnitHealth = GetUnitHealth
+pfUI.libhealth.GetDBHealth = GetDBHealth
