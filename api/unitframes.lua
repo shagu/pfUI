@@ -1964,10 +1964,15 @@ function pfUI.uf:GetStatusValue(unit, pos)
     config = "unit"
   end
 
+
   local mp, mpmax = UnitMana(unitstr), UnitManaMax(unitstr)
   local hp, hpmax = UnitHealth(unitstr), UnitHealthMax(unitstr)
-  if unit.label == "target" and (MobHealth3 or MobHealthFrame) and MobHealth_GetTargetCurHP() then
-    hp, hpmax = MobHealth_GetTargetCurHP(), MobHealth_GetTargetMaxHP()
+  local rhp, rhpmax = hp, hpmax
+
+  if pfUI.libhealth and pfUI.libhealth.enabled then
+    rhp, rhpmax = pfUI.libhealth:GetUnitHealth(unitstr)
+  elseif unit.label == "target" and (MobHealth3 or MobHealthFrame) and MobHealth_GetTargetCurHP() then
+    rhp, rhpmax = MobHealth_GetTargetCurHP(), MobHealth_GetTargetMaxHP()
   end
 
   if config == "unit" then
@@ -1985,13 +1990,13 @@ function pfUI.uf:GetStatusValue(unit, pos)
 
   -- health
   elseif config == "health" then
-    return unit:GetColor("health") .. pfUI.api.Abbreviate(hp)
+    return unit:GetColor("health") .. pfUI.api.Abbreviate(rhp)
   elseif config == "healthmax" then
-    return unit:GetColor("health") .. pfUI.api.Abbreviate(hpmax)
+    return unit:GetColor("health") .. pfUI.api.Abbreviate(rhpmax)
   elseif config == "healthperc" then
     return unit:GetColor("health") .. ceil(hp / hpmax * 100)
   elseif config == "healthmiss" then
-    local health = ceil(hp - hpmax)
+    local health = ceil(rhp - rhpmax)
     if UnitIsDead(unitstr) then
       return unit:GetColor("health") .. DEAD
     elseif health == 0 then
@@ -2001,12 +2006,12 @@ function pfUI.uf:GetStatusValue(unit, pos)
     end
   elseif config == "healthdyn" then
     if hp ~= hpmax then
-      return unit:GetColor("health") .. pfUI.api.Abbreviate(hp) .. " - " .. ceil(hp / hpmax * 100) .. "%"
+      return unit:GetColor("health") .. pfUI.api.Abbreviate(rhp) .. " - " .. ceil(hp / hpmax * 100) .. "%"
     else
-      return unit:GetColor("health") .. pfUI.api.Abbreviate(hp)
+      return unit:GetColor("health") .. pfUI.api.Abbreviate(rhp)
     end
   elseif config == "namehealth" then
-    local health = ceil(hp - hpmax)
+    local health = ceil(rhp - rhpmax)
     if UnitIsDead(unitstr) then
       return unit:GetColor("health") .. DEAD
     elseif health == 0 then
@@ -2015,7 +2020,7 @@ function pfUI.uf:GetStatusValue(unit, pos)
       return unit:GetColor("health") .. pfUI.api.Abbreviate(health)
     end
   elseif config == "shortnamehealth" then
-    local health = ceil(hp - hpmax)
+    local health = ceil(rhp - rhpmax)
     if UnitIsDead(unitstr) then
       return unit:GetColor("health") .. DEAD
     elseif health == 0 then
@@ -2024,7 +2029,7 @@ function pfUI.uf:GetStatusValue(unit, pos)
       return unit:GetColor("health") .. pfUI.api.Abbreviate(health)
     end
   elseif config == "healthminmax" then
-    return unit:GetColor("health") .. pfUI.api.Abbreviate(hp) .. "/" .. pfUI.api.Abbreviate(hpmax)
+    return unit:GetColor("health") .. pfUI.api.Abbreviate(rhp) .. "/" .. pfUI.api.Abbreviate(rhpmax)
 
   -- mana/power/focus
   elseif config == "power" then
