@@ -124,28 +124,33 @@ pfUI:RegisterModule("tooltip", "vanilla:tbc", function ()
     end)
 
   pfUI.tooltipStatusBar = CreateFrame('Frame', nil, GameTooltipStatusBar)
+  pfUI.tooltipStatusBar:RegisterEvent("UPDATE_MOUSEOVER_UNIT")
+  pfUI.tooltipStatusBar:SetScript("OnEvent", function()
+    this.name = UnitName("mouseover")
+    this.level = UnitLevel("mouseover")
+  end)
+
   pfUI.tooltipStatusBar:SetScript("OnUpdate", function()
       local hp = GameTooltipStatusBar:GetValue()
       local _, hpm = GameTooltipStatusBar:GetMinMaxValues()
-
-      if MobHealthFrame then
-        local perc = UnitHealth("mouseover")
-        local name = UnitName("mouseover") or ""
-        local level = UnitLevel("mouseover") or ""
-        local index = name .. ":" .. level
-        local ppp = MobHealth_PPP(index)
-        if perc and ppp and ppp > 0 and not UnitIsUnit("mouseover", "pet") then
-          hp = round(perc * ppp)
-          hpm = round(100 * ppp)
-        end
-      end
-
+      local index = (this.name or "") .. ":" .. (this.level or "")
       if hp and hpm then
-        if hp >= 1000 then hp = round(hp / 1000, 1) .. "k" end
-        if hpm >= 1000 then hpm = round(hpm / 1000, 1) .. "k" end
+        local realhp, realhpmax
+        if pfUI.libhealth and pfUI.libhealth.enabled then
+          realhp, realhpmax = pfUI.libhealth:GetDBHealth(index)
+          if realhp then realhp = ceil(realhp*hp) end
+        elseif MobHealthFrame then
+          local ppp = MobHealth_PPP(index)
+          if perc and ppp and ppp > 0 and not UnitIsUnit("mouseover", "pet") then
+            realhp = round(hp * ppp)
+            realhpmax = round(100 * ppp)
+          end
+        end
 
+        local hptext = pfUI.api.Abbreviate(realhp or hp)
+        local hptextmax = pfUI.api.Abbreviate(realhpmax or hpm)
         if pfUI.tooltipStatusBar and pfUI.tooltipStatusBar.HP then
-          pfUI.tooltipStatusBar.HP:SetText(hp .. " / " .. hpm)
+          pfUI.tooltipStatusBar.HP:SetText(string.format("%s / %s", hptext, hptextmax))
         end
       end
   end)
