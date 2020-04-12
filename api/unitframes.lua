@@ -1939,6 +1939,9 @@ function pfUI.uf:SetupBuffFilter()
 
       -- Rejuvenation
       table.insert(pfUI.uf.buffs, "interface\\icons\\spell_nature_rejuvenation")
+
+      -- Lifebloom
+      table.insert(pfUI.uf.buffs, "interface\\icons\\inv_misc_herb_felblossom")
     end
   end
 end
