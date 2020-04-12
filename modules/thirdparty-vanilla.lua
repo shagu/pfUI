@@ -547,9 +547,12 @@ pfUI:RegisterModule("thirdparty-vanilla", "vanilla", function()
 
       -- wrap SkinCheckbox to fix issues with scrollframe breaking layers
       local SkinScrollchildCheckbox = function(f, s)
+        if not f then return end
         SkinCheckbox(f, s)
-        f.backdrop:SetParent(f:GetParent())
-        f:SetParent(f.backdrop)
+        if f:GetParent() ~= f.backdrop and f:GetParent() ~= f then
+          f.backdrop:SetParent(f:GetParent())
+          f:SetParent(f.backdrop)
+        end
       end
       do -- general tab
         SkinTab(WIM_OptionsOptionTab1)
