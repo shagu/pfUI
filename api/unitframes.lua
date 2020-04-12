@@ -1422,12 +1422,16 @@ function pfUI.uf:RefreshUnit(unit, component)
 
       for i=1,32 do
         local texture = UnitBuff(unitstr, i)
+        local timeleft, _
+        if pfUI.client > 11200 then
+          _, _, texture, _, _, timeleft = _G.UnitBuff(unitstr, i)
+        end
 
         if texture then
           -- match filter
           for _, filter in pairs(pfUI.uf.buffs) do
             if filter == string.lower(texture) then
-              table.insert(active, texture)
+              table.insert(active, { texture, timeleft })
               break
             end
           end
@@ -1435,8 +1439,8 @@ function pfUI.uf:RefreshUnit(unit, component)
       end
 
       -- add icons for every found buff
-      for pos, icon in pairs(active) do
-        pfUI.uf:AddIcon(unit, pos, icon)
+      for pos, data in pairs(active) do
+        pfUI.uf:AddIcon(unit, pos, data[1], data[2])
       end
 
       -- hide unused icon slots
@@ -1685,7 +1689,7 @@ function pfUI.uf:ClickAction(button)
   end
 end
 
-function pfUI.uf:AddIcon(frame, pos, icon)
+function pfUI.uf:AddIcon(frame, pos, icon, timeleft)
   local iconsize = C.unitframes.indicator_size
   if not frame.hp then return end
   local frame = frame.hp.bar
@@ -1699,14 +1703,18 @@ function pfUI.uf:AddIcon(frame, pos, icon)
       frame.icon[i]:SetPoint("TOPLEFT", frame, "TOPLEFT", (i-1)*iconsize, 0)
       frame.icon[i]:SetWidth(iconsize)
       frame.icon[i]:SetHeight(iconsize)
-      frame.icon[i]:SetAlpha(.7)
       frame.icon[i]:SetParent(frame)
       frame.icon[i].tex = frame.icon[i]:CreateTexture("OVERLAY")
       frame.icon[i].tex:SetAllPoints(frame.icon[i])
       frame.icon[i].tex:SetTexCoord(.08, .92, .08, .92)
+      frame.icon[i].tex:SetAlpha(.7)
+      frame.icon[i].cd = CreateFrame(COOLDOWN_FRAME_TYPE, nil, frame.icon[i])
+      frame.icon[i].cd.pfCooldownType = "ALL"
+      frame.icon[i].cd:SetAlpha(0)
     end
   end
   frame.icon[pos].tex:SetTexture(icon)
+  CooldownFrame_SetTimer(frame.icon[pos].cd, GetTime(), (timeleft or 0), 1)
   pfUI.api.CreateBackdrop(frame.icon[pos], nil, true)
   frame.icon[pos]:Show()
 end
