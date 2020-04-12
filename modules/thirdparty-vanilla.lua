@@ -478,7 +478,7 @@ pfUI:RegisterModule("thirdparty-vanilla", "vanilla", function()
         if not btn:IsShown() then return end
         local btn_txt = btn:GetText()
         local user = btn.theUser
-        local userclr = _G.WIM_PlayerCache[user] and _G.WIM_PlayerCache[user].class and _G.WIM_UserWithClassColor(user)
+        local userclr = _G.WIM_PlayerCache and _G.WIM_PlayerCache[user] and _G.WIM_PlayerCache[user].class and _G.WIM_UserWithClassColor(user)
         if userclr and user ~= userclr then
           btn_txt = gsub(btn_txt, user, format("|r%s",userclr))
           btn:SetText(btn_txt)
