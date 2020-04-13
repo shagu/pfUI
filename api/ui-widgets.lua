@@ -106,17 +106,56 @@ do -- dropdown
   local _, class = UnitClass("player")
   local color = RAID_CLASS_COLORS[class]
 
-  local function OnEnter()
+  local function ListEntryOnShow()
+    if this.parent.id == this.id then
+      this.icon:Show()
+    else
+      this.icon:Hide()
+    end
+  end
+
+  local function ListEntryOnClick()
+    this.parent:SetSelection(this.id)
+
+    if this.parent.mode == "MULTISELECT" then
+      this.parent:ShowMenu()
+    else
+      this.parent:HideMenu()
+    end
+
+    if this.parent.menu[this.id].func then
+      this.parent.menu[this.id].func()
+    end
+  end
+
+  local function ListEntryOnEnter()
+    this.hover:Show()
+  end
+
+  local function ListEntryOnLeave()
+    this.hover:Hide()
+  end
+
+  local function ListButtonOnClick()
+    if this.ToggleMenu then
+      this:ToggleMenu()
+    else
+      this:GetParent():ToggleMenu()
+    end
+  end
+
+  local function MenuOnUpdate()
+    if not MouseIsOver(this, 100, -100, -100, 100) then
+      this.button:HideMenu()
+    end
+  end
+
+  local function ListButtonOnEnter()
     this.button:SetBackdropBorderColor(this.button.cr,this.button.cg,this.button.cb,1)
   end
 
-  local function OnLeave()
+  local function ListButtonOnLeave()
     this.button:SetBackdropBorderColor(this.button.rr,this.button.rg,this.button.rb,1)
-  end
-
-  local function OnListClick()
-    this:GetParent():Hide()
-    if this.func then this.func() end
   end
 
   local handlers = {
@@ -223,39 +262,18 @@ do -- dropdown
       frame.id = id
       frame.text:SetText(self.menu[id].text)
 
-      frame:SetScript("OnShow", function()
-        if this.parent.id == this.id then
-          this.icon:Show()
-        else
-          this.icon:Hide()
-        end
-      end)
-
-      frame:SetScript("OnClick", function()
-        this.parent:SetSelection(this.id)
-
-        if this.parent.mode == "MULTISELECT" then
-          this.parent:ShowMenu()
-        else
-          this.parent:HideMenu()
-        end
-
-        if this.parent.menu[id].func then
-          this.parent.menu[id].func()
-        end
-      end)
-      frame:SetScript("OnEnter", function() this.hover:Show() end)
-      frame:SetScript("OnLeave", function() this.hover:Hide() end)
+      frame:SetScript("OnShow",  ListEntryOnShow)
+      frame:SetScript("OnClick", ListEntryOnClick)
+      frame:SetScript("OnEnter", ListEntryOnEnter)
+      frame:SetScript("OnLeave", ListEntryOnLeave)
       frame:Show()
     end,
   }
   function pfUI.api.CreateDropDownButton(name, parent)
     local frame = CreateFrame("Button", name, parent)
-    frame:SetScript("OnEnter", OnEnter)
-    frame:SetScript("OnLeave", OnLeave)
-    frame:SetScript("OnClick", function()
-      this:ToggleMenu()
-    end)
+    frame:SetScript("OnEnter", ListButtonOnEnter)
+    frame:SetScript("OnLeave", ListButtonOnLeave)
+    frame:SetScript("OnClick", ListButtonOnClick)
     frame:SetHeight(20)
     frame.id = nil
 
@@ -265,9 +283,7 @@ do -- dropdown
     button:SetPoint("RIGHT", frame, "RIGHT", -2, 0)
     button:SetWidth(16)
     button:SetHeight(16)
-    button:SetScript("OnClick", function()
-      this:GetParent():ToggleMenu()
-    end)
+    button:SetScript("OnClick", ListButtonOnClick)
     SkinArrowButton(button, "down")
     button.icon:SetVertexColor(1,.9,.1)
 
@@ -282,12 +298,8 @@ do -- dropdown
     menuframe.elements = {}
     menuframe:SetPoint("TOPLEFT", frame, "BOTTOMLEFT", 0, -2)
     menuframe:SetPoint("TOPRIGHT", frame, "TOPRIGHT", 0, 2)
+    menuframe:SetScript("OnUpdate", MenuOnUpdate)
     menuframe:Hide()
-    menuframe:SetScript("OnUpdate", function()
-      if not MouseIsOver(this, 100, -100, -100, 100) then
-        this.button:HideMenu()
-      end
-    end)
     CreateBackdrop(menuframe, nil, true)
 
     for name, func in pairs(handlers) do
