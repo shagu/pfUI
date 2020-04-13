@@ -1759,8 +1759,11 @@ function pfUI.uf:SetupBuffFilter()
 
   -- [[ DRUID ]]
   if myclass == "DRUID" then
-    -- Gift of the Wild
+    -- Mark of the Wild
     table.insert(pfUI.uf.buffs, "interface\\icons\\spell_nature_regeneration")
+
+    -- Gift of the Wild
+    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_nature_giftofthewild")
 
     -- Thorns
     table.insert(pfUI.uf.buffs, "interface\\icons\\spell_nature_thorns")
