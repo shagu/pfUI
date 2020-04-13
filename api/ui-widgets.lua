@@ -222,11 +222,14 @@ do -- dropdown
 
       frame.id = id
       frame.text:SetText(self.menu[id].text)
-      if self.id == id then
-        frame.icon:Show()
-      else
-        frame.icon:Hide()
-      end
+
+      frame:SetScript("OnShow", function()
+        if this.parent.id == this.id then
+          this.icon:Show()
+        else
+          this.icon:Hide()
+        end
+      end)
 
       frame:SetScript("OnClick", function()
         this.parent:SetSelection(this.id)
