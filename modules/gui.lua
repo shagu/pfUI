@@ -1,5 +1,5 @@
 pfUI:RegisterModule("gui", "vanilla:tbc", function ()
-  local Reload, U, PrepareDropDownButton, CreateConfig, CreateTabFrame, CreateArea, CreateGUIEntry, EntryUpdate
+  local Reload, U, CreateConfig, CreateTabFrame, CreateArea, CreateGUIEntry, EntryUpdate
 
   -- "searchDB" gets populated when CreateConfig is called. The table holds
   -- information about the title, its parent buttons and the frame itself:
@@ -29,19 +29,17 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
       end
     end})
 
-    function PrepareDropDownButton(index)
-      if index > _G.UIDROPDOWNMENU_MAXBUTTONS then
-        for i=1,3 do
-          local name = "DropDownList" .. i .. "Button" .. index
-          local parent = _G["DropDownList" .. i]
-          _G.UIDROPDOWNMENU_MAXBUTTONS = index
-          _G[name] = CreateFrame("Button", name, parent, "UIDropDownMenuButtonTemplate")
-          _G[name]:SetID(index)
-        end
-      end
-    end
-
     function EntryUpdate()
+      -- detect and skip during dropdowns
+      local focus = GetMouseFocus()
+      if focus and focus.parent and focus.parent.menu then
+        if this.over then
+          this.tex:Hide()
+          this.over = nil
+        end
+        return
+      end
+
       if MouseIsOver(this) and not this.over then
         this.tex:Show()
         this.over = true
@@ -336,140 +334,91 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
 
       -- use dropdown widget
       if widget == "dropdown" and values then
-        if not pfUI.gui.ddc then pfUI.gui.ddc = 1 else pfUI.gui.ddc = pfUI.gui.ddc + 1 end
-        local name = pfUI.gui.ddc
-        if named then name = named end
+        frame.input = CreateDropDownButton(nil, frame)
+        frame.input:SetBackdrop(nil)
+        frame.input.menuframe:SetParent(pfUI.gui)
 
-        frame.input = CreateFrame("Frame", "pfUIDropDownMenu" .. name, frame, "UIDropDownMenuTemplate")
-        frame.input:ClearAllPoints()
-        frame.input:SetPoint("RIGHT", 16, -3)
+        frame.input:SetPoint("RIGHT", frame, "RIGHT", 0, 0)
+        frame.input:SetWidth(180)
+        frame.input:SetMenu(function()
+          local menu = {}
 
-        UIDropDownMenu_SetWidth(160, frame.input)
-        UIDropDownMenu_SetButtonWidth(160, frame.input)
-        UIDropDownMenu_JustifyText("RIGHT", frame.input)
-        UIDropDownMenu_Initialize(frame.input, function()
-          local info = {}
-          frame.input.values = _G.type(values)=="function" and values() or values
-          for i, k in pairs(frame.input.values) do
-            -- create new dropdown buttons when we reach the limit
-            PrepareDropDownButton(i)
-
+          for i, k in pairs(_G.type(values) == "function" and values() or values) do
+            local entry = {}
             -- get human readable
             local value, text = strsplit(":", k)
             text = text or value
 
-            info.text = text
-            info.checked = false
-            info.func = function()
-              UIDropDownMenu_SetSelectedID(frame.input, this:GetID(), 0)
-              UIDropDownMenu_SetText(this:GetText(), frame.input)
+            entry.text = text
+            entry.func = function()
               if category[config] ~= value then
                 category[config] = value
                 if ufunc then ufunc() else pfUI.gui.settingChanged = true end
               end
             end
 
-            UIDropDownMenu_AddButton(info)
             if category[config] == value then
               frame.input.current = i
             end
+
+            table.insert(menu, entry)
           end
+
+          return menu
         end)
-        UIDropDownMenu_SetSelectedID(frame.input, frame.input.current)
 
-        SkinDropDown(frame.input)
-        frame.input.backdrop:Hide()
-        frame.input.button.icon:SetParent(frame.input.button.backdrop)
-
-        -- hide shadows on wrong stratas
-        if frame.input.backdrop_shadow then
-          frame.input.backdrop_shadow:Hide()
-          frame.input.button.backdrop_shadow:Hide()
-        end
+        frame.input:SetSelection(frame.input.current)
       end
 
       -- use list widget
       if widget == "list" then
-        if not pfUI.gui.ddc then pfUI.gui.ddc = 1 else pfUI.gui.ddc = pfUI.gui.ddc + 1 end
-        local name = pfUI.gui.ddc
-        if named then name = named end
-
-        frame.input = CreateFrame("Frame", "pfUIDropDownMenu" .. name, frame, "UIDropDownMenuTemplate")
-        frame.input:ClearAllPoints()
-        frame.input:SetPoint("RIGHT" , -22, -3)
-        frame.category = category
-        frame.config = config
-
-        frame.input.Refresh = function()
-          local function CreateValues()
-            for i, val in pairs({strsplit("#", category[config])}) do
-              -- create new dropdown buttons when we reach the limit
-              PrepareDropDownButton(i)
-
-              UIDropDownMenu_AddButton({
-                ["text"] = val,
-                ["checked"] = false,
-                ["func"] = function()
-                  UIDropDownMenu_SetSelectedID(frame.input, this:GetID(), 0)
-                end
-              })
-            end
-          end
-
-          UIDropDownMenu_Initialize(frame.input, CreateValues)
-          UIDropDownMenu_SetText("", frame.input)
-        end
-
-        frame.input:Refresh()
-
-        UIDropDownMenu_SetWidth(160, frame.input)
-        UIDropDownMenu_SetButtonWidth(160, frame.input)
-        UIDropDownMenu_JustifyText("RIGHT", frame.input)
-        UIDropDownMenu_SetSelectedID(frame.input, frame.input.current)
-
-        SkinDropDown(frame.input)
-        frame.input.backdrop:Hide()
-        frame.input.button.icon:SetParent(frame.input.button.backdrop)
-
-        frame.add = CreateFrame("Button", "pfUIDropDownMenu" .. name .. "Add", frame, "UIPanelButtonTemplate")
-        SkinButton(frame.add)
-        frame.add:SetWidth(18)
-        frame.add:SetHeight(18)
-        frame.add:SetPoint("RIGHT", -21, 0)
-        frame.add:GetFontString():SetPoint("CENTER", 1, 0)
-        frame.add:SetText("+")
-        frame.add:SetTextColor(.5,1,.5,1)
-        frame.add:SetScript("OnClick", function()
-          CreateQuestionDialog(T["New entry:"], function()
-              category[config] = category[config] .. "#" .. this:GetParent().input:GetText()
-            end, false, true)
-        end)
-
-        frame.del = CreateFrame("Button", "pfUIDropDownMenu" .. name .. "Del", frame, "UIPanelButtonTemplate")
+        frame.del = CreateFrame("Button", nil, frame, "UIPanelButtonTemplate")
         SkinButton(frame.del)
-        frame.del:SetWidth(18)
-        frame.del:SetHeight(18)
-        frame.del:SetPoint("RIGHT", -2, 0)
+        frame.del:SetWidth(16)
+        frame.del:SetHeight(16)
+        frame.del:SetPoint("RIGHT", -4, 0)
         frame.del:GetFontString():SetPoint("CENTER", 1, 0)
         frame.del:SetText("-")
         frame.del:SetTextColor(1,.5,.5,1)
         frame.del:SetScript("OnClick", function()
-          local sel = UIDropDownMenu_GetSelectedID(frame.input)
+          local sel = frame.input:GetSelection()
           local newconf = ""
           for id, val in pairs({strsplit("#", category[config])}) do
             if id ~= sel then newconf = newconf .. "#" .. val end
           end
           category[config] = newconf
-          frame.input:Refresh()
+          if ufunc then ufunc() else pfUI.gui.settingChanged = true end
+          frame.input:UpdateMenu()
         end)
 
-        -- hide shadows on wrong stratas
-        if frame.input.backdrop_shadow then
-          frame.input.backdrop_shadow:Hide()
-          frame.input.button.backdrop_shadow:Hide()
-          frame.add.backdrop_shadow:Hide()
-          frame.del.backdrop_shadow:Hide()
-        end
+        frame.add = CreateFrame("Button", nil, frame, "UIPanelButtonTemplate")
+        SkinButton(frame.add)
+        frame.add:SetWidth(16)
+        frame.add:SetHeight(16)
+        frame.add:SetPoint("RIGHT", frame.del, "LEFT", -4, 0)
+        frame.add:GetFontString():SetPoint("CENTER", 1, 0)
+        frame.add:SetText("+")
+        frame.add:SetTextColor(.5,1,.5,1)
+        frame.add:SetScript("OnClick", function()
+          CreateQuestionDialog(T["New entry:"], function()
+            category[config] = category[config] .. "#" .. this:GetParent().input:GetText()
+            if ufunc then ufunc() else pfUI.gui.settingChanged = true end
+            frame.input:UpdateMenu()
+          end, false, true)
+        end)
+
+        frame.input = CreateDropDownButton(nil, frame)
+        frame.input:SetBackdrop(nil)
+        frame.input.menuframe:SetParent(pfUI.gui)
+        frame.input:SetPoint("RIGHT", frame.add, "LEFT", -2, 0)
+        frame.input:SetWidth(140)
+        frame.input:SetMenu(function()
+          local menu = {}
+          for i, val in pairs({strsplit("#", category[config])}) do
+            table.insert(menu, { text = val })
+          end
+          return menu
+        end)
       end
 
       return frame
@@ -1335,30 +1284,11 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
       header:GetParent().objectCount = header:GetParent().objectCount - 1
       header:SetHeight(20)
 
-      local values = {}
-      for name, config in pairs(pfUI_profiles) do table.insert(values, name) end
-
-      local function ReloadProfiles()
-        local oldval = UIDropDownMenu_GetText(pfUIDropDownMenuProfile)
+      CreateConfig(function() return end, T["Select profile"], C.global, "profile", "dropdown", function()
         local values = {}
-        local exists
-
-        for name, config in pairs(pfUI_profiles) do
-          table.insert(values, name)
-          if name == oldval then
-            exists = true
-          end
-        end
-
-        if not exists then
-          UIDropDownMenu_SetText("", pfUIDropDownMenuProfile)
-          UIDropDownMenu_SetSelectedID(pfUIDropDownMenuProfile, 0, 0)
-        end
-
+        for name, config in pairs(pfUI_profiles) do table.insert(values, name) end
         return values
-      end
-
-      CreateConfig(function() return end, T["Select profile"], C.global, "profile", "dropdown", ReloadProfiles, false, "Profile")
+      end, false, "Profile")
 
       -- load profile
       CreateConfig(nil, T["Load profile"], C.global, "profile", "button", function()
@@ -1378,7 +1308,6 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
         if C.global.profile and pfUI_profiles[C.global.profile] then
           CreateQuestionDialog(T["Delete profile"] .. " '|cff33ffcc" .. C.global.profile .. "|r'?", function()
             pfUI_profiles[C.global.profile] = nil
-            ReloadProfiles()
             this:GetParent():Hide()
           end)
         end
@@ -1409,7 +1338,6 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
             if profile and profile ~= "" then
               pfUI_profiles[profile] = CopyTable(C)
               this:GetParent():Hide()
-              ReloadProfiles()
             end
           end
         end, false, true)
