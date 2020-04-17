@@ -889,14 +889,14 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
 
         for state = 0, 11 do -- add custom states
           local action = ((state == 0 and bar or state)-1)*12+button
-          f:SetAttribute(("*type-S%d"):format(state), "action")
-          f:SetAttribute(("*type-S%dRight"):format(state), "action")
-          f:SetAttribute(("*action-S%d"):format(state), action)
-          f:SetAttribute(("*action-S%dRight"):format(state), action)
+          f:SetAttribute(string.format("*type-S%d", state), "action")
+          f:SetAttribute(string.format("*type-S%dRight", state), "action")
+          f:SetAttribute(string.format("*action-S%d", state), action)
+          f:SetAttribute(string.format("*action-S%dRight", state), action)
           if C.bars.rightself == "1" then
-            f:SetAttribute(("*unit-S%dRight"):format(state), "player")
+            f:SetAttribute(string.format("*unit-S%dRight", state), "player")
           else
-            f:SetAttribute(("*unit-S%dRight"):format(state), nil)
+            f:SetAttribute(string.format("*unit-S%dRight", state), nil)
           end
         end
       end
