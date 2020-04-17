@@ -870,7 +870,7 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     end
 
     -- set required attributes for regular tbc buttons
-    if f.SetAttribute then
+    if pfUI.client > 11200 then
       if bar == 11 then
         f:SetAttribute("type", "spell")
         f:SetAttribute('spell', select(2, GetShapeshiftFormInfo(button)))
@@ -1020,7 +1020,7 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     if enable == "1" then
       -- handle pet bar
       if i == 12 then
-        if bars[i].SetAttribute and RegisterStateDriver then
+        if pfUI.client > 11200 then
           -- set state driver for pet bars
           bars[i]:SetAttribute("unit", "pet")
           RegisterStateDriver(bars[i], 'visibility', "[pet] show; hide")
@@ -1116,7 +1116,7 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     end
 
     -- add up to 0-11 button parent states to each bar
-    if i <= 10 and bars[i].SetAttribute then
+    if i <= 10 and pfUI.client > 11200 then
       bars[i]:SetAttribute("statebutton", "0:S0;1:S1;2:S2;3:S3;4:S4;5:S5;6:S6;7:S7;8:S8;9:S9;10:S10;11:S11;")
       bars[i]:SetAttribute("statebutton2", "0:S0Right;1:S1Right;2:S2Right;3:S3Right;4:S4Right;5:S5Right;6:S6Right;7:S7Right;8:S8Right;9:S9Right;10:S10Right;11:S11Right;")
     end
