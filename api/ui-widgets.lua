@@ -232,6 +232,7 @@ do -- dropdown
       if not frame and not entry then
         entry = table.getn(self.menuframe.elements) + 1
         frame = CreateFrame("Button", nil, self.menuframe)
+        frame:SetFrameStrata("FULLSCREEN")
         frame:ClearAllPoints()
         frame:SetPoint("TOPLEFT", self.menuframe, "TOPLEFT", 2, -(entry-1)*20-2)
         frame:SetPoint("TOPRIGHT", self.menuframe, "TOPRIGHT", -2, -(entry-1)*20-2)
