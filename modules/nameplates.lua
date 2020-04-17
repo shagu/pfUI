@@ -349,7 +349,7 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     local red, green, blue = plate.parent.healthbar:GetStatusBarColor()
     local unittype = GetUnitType(red, green, blue)
     if player and unittype == "ENEMY_NPC" then unittype = "ENEMY_PLAYER" end
-    elite = plate.parent.levelicon:IsShown() and "boss" or elite
+    elite = plate.parent.levelicon:IsShown() and not player and "boss" or elite
     if not class then plate.wait_for_scan = true end
 
     if (MobHealth3 or MobHealthFrame) and target and name == UnitName('target') and MobHealth_GetTargetCurHP() then
