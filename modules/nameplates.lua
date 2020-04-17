@@ -343,7 +343,7 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     local hp = plate.parent.healthbar:GetValue()
     local hpmin, hpmax = plate.parent.healthbar:GetMinMaxValues()
     local name = plate.parent.name:GetText()
-    local level = plate.parent.level:GetObjectType() == "FontString" and tonumber(plate.parent.level:GetText()) or "??"
+    local level = plate.parent.level:IsShown() and plate.parent.level:GetObjectType() == "FontString" and tonumber(plate.parent.level:GetText()) or "??"
     local class, _, elite, player = GetUnitData(name, true)
     local target = plate.cache.istarget
     local red, green, blue = plate.parent.healthbar:GetStatusBarColor()
