@@ -244,7 +244,7 @@ function pfUI.uf:UpdateVisibility()
   end
 
   -- tbc visibility
-  if self.SetAttribute and RegisterStateDriver then
+  if pfUI.client > 11200 then
     self:SetAttribute("unit", unitstr)
 
     -- update visibility condition on change
@@ -901,7 +901,7 @@ function pfUI.uf:EnableScripts()
   local f = self
 
   -- handle secure unit button templates (> vanilla)
-  if f.SetAttribute then
+  if pfUI.client > 11200 then
     f.showmenu = pfUI.uf.RightClickAction
     f:SetAttribute("*type1", "target")
     f:SetAttribute("*type2", "showmenu")
@@ -1610,7 +1610,7 @@ function pfUI.uf:EnableClickCast()
       local bconf = bid == 1 and "" or bid
       if pfUI_config.unitframes["clickcast"..bconf..mconf] ~= "" then
         -- prepare click casting
-        if self.SetAttribute then
+        if pfUI.client > 11200 then
           -- set attributes for tbc+
           local prefix = modifier == "" and "" or modifier .. "-"
 
