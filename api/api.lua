@@ -631,21 +631,21 @@ end
 -- 'anchor'     [frame]     the frame where it should be aligned to
 -- 'position'   [string]    where it should appear, takes the following:
 --                          "TOP", "RIGHT", "BOTTOM", "LEFT"
-function pfUI.api.AlignToPosition(frame, anchor, position)
+function pfUI.api.AlignToPosition(frame, anchor, position, spacing)
   local pixel = GetPerfectPixel()
   frame:ClearAllPoints()
   if position == "TOP" and anchor then
-    frame:SetPoint("BOTTOMLEFT", anchor, "TOPLEFT", 0, default_border*3)
-    frame:SetPoint("BOTTOMRIGHT", anchor, "TOPRIGHT", 0, default_border*3)
+    frame:SetPoint("BOTTOMLEFT", anchor, "TOPLEFT", 0, spacing)
+    frame:SetPoint("BOTTOMRIGHT", anchor, "TOPRIGHT", 0, spacing)
   elseif position == "RIGHT" and anchor then
-    frame:SetPoint("TOPLEFT", anchor, "TOPRIGHT", default_border*3, 0)
-    frame:SetPoint("BOTTOMLEFT", anchor, "BOTTOMRIGHT", default_border*3, 0)
+    frame:SetPoint("TOPLEFT", anchor, "TOPRIGHT", spacing, 0)
+    frame:SetPoint("BOTTOMLEFT", anchor, "BOTTOMRIGHT", spacing, 0)
   elseif position == "BOTTOM" and anchor then
-    frame:SetPoint("TOPLEFT", anchor, "BOTTOMLEFT", 0, -default_border*3)
-    frame:SetPoint("TOPRIGHT", anchor, "BOTTOMRIGHT", 0, -default_border*3)
+    frame:SetPoint("TOPLEFT", anchor, "BOTTOMLEFT", 0, -spacing)
+    frame:SetPoint("TOPRIGHT", anchor, "BOTTOMRIGHT", 0, -spacing)
   elseif position == "LEFT" and anchor then
-    frame:SetPoint("TOPRIGHT", anchor, "TOPLEFT", -default_border*3, 0)
-    frame:SetPoint("BOTTOMRIGHT", anchor, "BOTTOMLEFT", -default_border*3, 0)
+    frame:SetPoint("TOPRIGHT", anchor, "TOPLEFT", -spacing, 0)
+    frame:SetPoint("BOTTOMRIGHT", anchor, "BOTTOMLEFT", -spacing, 0)
   else
     frame:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", 0, 0)
     frame:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", 0, 0)
