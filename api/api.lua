@@ -625,6 +625,34 @@ function pfUI.api.RemoveMovable(frame)
   pfUI.movables[name] = nil
 end
 
+-- [ AlignToPosition ]
+-- Sets a movable frame to the selected anchor
+-- 'frame'      [frame]     the frame that should be aligned
+-- 'anchor'     [frame]     the frame where it should be aligned to
+-- 'position'   [string]    where it should appear, takes the following:
+--                          "TOP", "RIGHT", "BOTTOM", "LEFT"
+function pfUI.api.AlignToPosition(frame, anchor, position)
+  local pixel = GetPerfectPixel()
+  frame:ClearAllPoints()
+  if position == "TOP" and anchor then
+    frame:SetPoint("BOTTOMLEFT", anchor, "TOPLEFT", 0, default_border*3)
+    frame:SetPoint("BOTTOMRIGHT", anchor, "TOPRIGHT", 0, default_border*3)
+  elseif position == "RIGHT" and anchor then
+    frame:SetPoint("TOPLEFT", anchor, "TOPRIGHT", default_border*3, 0)
+    frame:SetPoint("BOTTOMLEFT", anchor, "BOTTOMRIGHT", default_border*3, 0)
+  elseif position == "BOTTOM" and anchor then
+    frame:SetPoint("TOPLEFT", anchor, "BOTTOMLEFT", 0, -default_border*3)
+    frame:SetPoint("TOPRIGHT", anchor, "BOTTOMRIGHT", 0, -default_border*3)
+  elseif position == "LEFT" and anchor then
+    frame:SetPoint("TOPRIGHT", anchor, "TOPLEFT", -default_border*3, 0)
+    frame:SetPoint("BOTTOMRIGHT", anchor, "BOTTOMLEFT", -default_border*3, 0)
+  else
+    frame:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", 0, 0)
+    frame:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", 0, 0)
+  end
+  UpdateMovable(frame, true)
+end
+
 -- [ SetAutoPoint ]
 -- Automatically places the frame according to screen position of the parent.
 -- 'frame'      [frame]        the frame that should be moved.

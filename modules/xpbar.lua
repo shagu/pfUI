@@ -2,28 +2,6 @@ pfUI:RegisterModule("xpbar", "vanilla:tbc", function ()
   local rawborder, default_border = GetBorderSize()
   local parse_faction = SanitizePattern(FACTION_STANDING_INCREASED)
 
-  local function AlignToPosition(frame, anchor, position)
-    local pixel = GetPerfectPixel()
-    frame:ClearAllPoints()
-    if position == "TOP" and anchor then
-      frame:SetPoint("BOTTOMLEFT", anchor, "TOPLEFT", 0, default_border*3)
-      frame:SetPoint("BOTTOMRIGHT", anchor, "TOPRIGHT", 0, default_border*3)
-    elseif position == "RIGHT" and anchor then
-      frame:SetPoint("TOPLEFT", anchor, "TOPRIGHT", default_border*3, 0)
-      frame:SetPoint("BOTTOMLEFT", anchor, "BOTTOMRIGHT", default_border*3, 0)
-    elseif position == "BOTTOM" and anchor then
-      frame:SetPoint("TOPLEFT", anchor, "BOTTOMLEFT", 0, -default_border*3)
-      frame:SetPoint("TOPRIGHT", anchor, "BOTTOMRIGHT", 0, -default_border*3)
-    elseif position == "LEFT" and anchor then
-      frame:SetPoint("TOPRIGHT", anchor, "TOPLEFT", -default_border*3, 0)
-      frame:SetPoint("BOTTOMRIGHT", anchor, "BOTTOMLEFT", -default_border*3, 0)
-    else
-      frame:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", 0, 0)
-      frame:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", 0, 0)
-    end
-    UpdateMovable(frame, true)
-  end
-
   local function CreateBar(t)
     local xp_timeout = tonumber(C.panel.xp.xp_timeout)
     local xp_width = C.panel.xp.xp_width
