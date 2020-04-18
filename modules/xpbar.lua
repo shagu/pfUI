@@ -36,7 +36,7 @@ pfUI:RegisterModule("xpbar", "vanilla:tbc", function ()
     b:SetHeight(height)
     b:SetFrameStrata("BACKGROUND")
 
-    AlignToPosition(b, _G[anchor], position)
+    AlignToPosition(b, _G[anchor], position, default_border*3)
     CreateBackdrop(b)
     CreateBackdropShadow(b)
 
@@ -80,7 +80,7 @@ pfUI:RegisterModule("xpbar", "vanilla:tbc", function ()
     b:RegisterEvent("UPDATE_FACTION")
     b:SetScript("OnEvent", function()
       -- realign when entering world to ensure all frames got loaded
-      AlignToPosition(b, _G[anchor], position)
+      AlignToPosition(b, _G[anchor], position, default_border*3)
 
       -- set either experience, reputation or flex-rep handler
       local mode = ( t == "XP" and UnitLevel("player") < MAX_LEVEL ) and "XP" or t == "REP" and "REP" or "FLEX"
