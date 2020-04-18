@@ -79,7 +79,7 @@ pfUI:RegisterSkin("Inspect", "tbc", function ()
         if link then
           local quality = select(3, GetItemInfo(link))
           button:SetBackdropBorderColor(GetItemQualityColor(quality))
-      else
+        else
           button:SetBackdropBorderColor(pfUI.cache.er, pfUI.cache.eg, pfUI.cache.eb, pfUI.cache.ea)
         end
       end)
@@ -116,7 +116,7 @@ pfUI:RegisterSkin("Inspect", "tbc", function ()
         tab:ClearAllPoints()
         if lastTab then
           tab:SetPoint("LEFT", lastTab, "RIGHT", border*2 + 1, 0)
-      else
+        else
           tab:SetPoint("TOPLEFT", 70, -50)
         end
         SkinTab(tab)
