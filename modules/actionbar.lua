@@ -1249,6 +1249,8 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
 
   -- Map Keybinds to button clicks
   function _G.pfActionButton(slot, slfcast, opt)
+    if ChatFrameEditBox:IsShown() then return end
+
     local bar, button = 1, slot
 
     -- determine the proper bar and button
