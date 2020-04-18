@@ -626,31 +626,29 @@ function pfUI.api.RemoveMovable(frame)
 end
 
 -- [ AlignToPosition ]
--- Sets a movable frame to the selected anchor
+-- Sets a frame to the selected anchor
 -- 'frame'      [frame]     the frame that should be aligned
 -- 'anchor'     [frame]     the frame where it should be aligned to
 -- 'position'   [string]    where it should appear, takes the following:
 --                          "TOP", "RIGHT", "BOTTOM", "LEFT"
 function pfUI.api.AlignToPosition(frame, anchor, position, spacing)
-  local pixel = GetPerfectPixel()
   frame:ClearAllPoints()
   if position == "TOP" and anchor then
-    frame:SetPoint("BOTTOMLEFT", anchor, "TOPLEFT", 0, spacing)
-    frame:SetPoint("BOTTOMRIGHT", anchor, "TOPRIGHT", 0, spacing)
+    frame:SetPoint("BOTTOMLEFT", anchor, "TOPLEFT", 0, (spacing or 0))
+    frame:SetPoint("BOTTOMRIGHT", anchor, "TOPRIGHT", 0, (spacing or 0))
   elseif position == "RIGHT" and anchor then
-    frame:SetPoint("TOPLEFT", anchor, "TOPRIGHT", spacing, 0)
-    frame:SetPoint("BOTTOMLEFT", anchor, "BOTTOMRIGHT", spacing, 0)
+    frame:SetPoint("TOPLEFT", anchor, "TOPRIGHT", (spacing or 0), 0)
+    frame:SetPoint("BOTTOMLEFT", anchor, "BOTTOMRIGHT", (spacing or 0), 0)
   elseif position == "BOTTOM" and anchor then
-    frame:SetPoint("TOPLEFT", anchor, "BOTTOMLEFT", 0, -spacing)
-    frame:SetPoint("TOPRIGHT", anchor, "BOTTOMRIGHT", 0, -spacing)
+    frame:SetPoint("TOPLEFT", anchor, "BOTTOMLEFT", 0, -(spacing or 0))
+    frame:SetPoint("TOPRIGHT", anchor, "BOTTOMRIGHT", 0, -(spacing or 0))
   elseif position == "LEFT" and anchor then
-    frame:SetPoint("TOPRIGHT", anchor, "TOPLEFT", -spacing, 0)
-    frame:SetPoint("BOTTOMRIGHT", anchor, "BOTTOMLEFT", -spacing, 0)
+    frame:SetPoint("TOPRIGHT", anchor, "TOPLEFT", -(spacing or 0), 0)
+    frame:SetPoint("BOTTOMRIGHT", anchor, "BOTTOMLEFT", -(spacing or 0), 0)
   else
     frame:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", 0, 0)
     frame:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", 0, 0)
   end
-  UpdateMovable(frame, true)
 end
 
 -- [ SetAutoPoint ]
