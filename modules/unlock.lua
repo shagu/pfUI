@@ -70,6 +70,7 @@ pfUI:RegisterModule("unlock", "vanilla:tbc", function ()
     -- castbar
     ["TargetCastbar"]  = { T["Castbar"], nil },
     ["PlayerCastbar"]  = { T["Castbar"], nil },
+    ["FocusCastbar"]   = { T["Castbar"], nil },
 
     -- minimap
     ["Minimap"]        = { T["Minimap"], T["Minimap"] },
