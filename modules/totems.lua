@@ -109,11 +109,11 @@ pfUI:RegisterModule("totems", "tbc", function ()
       SetAllPointsOffset(self.bar[i].icon, self.bar[i], 2,-2)
 
       self.bar[i].cdbg = self.bar[i].cdbg or CreateFrame("Frame", nil, self.bar[i])
-      SetAllPointsOffset(self.bar[i].cdbg, self.bar[i], 2,-2)
-
+      self.bar[i].cdbg:SetHeight(self.iconsize - 3)
+      self.bar[i].cdbg:SetWidth(self.iconsize - 3)
+      self.bar[i].cdbg:SetPoint("CENTER", self.bar[i], "CENTER", 0, 0)
       self.bar[i].cd = self.bar[i].cd or CreateFrame(COOLDOWN_FRAME_TYPE, "pfTotemsBar"..i.."Cooldown", self.bar[i].cdbg, "CooldownFrameTemplate")
       self.bar[i].cd.pfCooldownType = "ALL"
-      SetAllPointsOffset(self.bar[i].cd, self.bar[i], 2,-2)
 
       self.bar[i]:RegisterForClicks("LeftButtonUp", "RightButtonUp")
       self.bar[i]:SetScript("OnClick", self.OnClick)
