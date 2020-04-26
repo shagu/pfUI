@@ -488,6 +488,11 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("bars",       nil,           "bind_size",        "8")
   pfUI:UpdateConfig("bars",       nil,           "bind_color",       "1,1,0,1")
 
+  pfUI:UpdateConfig("totems",     nil,           "direction",        "HORIZONTAL")
+  pfUI:UpdateConfig("totems",     nil,           "iconsize",         "26")
+  pfUI:UpdateConfig("totems",     nil,           "spacing",          "3")
+  pfUI:UpdateConfig("totems",     nil,           "showbg",           "0")
+
   pfUI:UpdateConfig("panel",      nil,           "use_unitfonts",    "0")
   pfUI:UpdateConfig("panel",      nil,           "hide_leftchat",    "0")
   pfUI:UpdateConfig("panel",      nil,           "hide_rightchat",   "0")

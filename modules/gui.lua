@@ -848,6 +848,18 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
         "4:4 " .. T["Pixel"],
         "5:5 " .. T["Pixel"],
       },
+      ["spacing"] = {
+        "0:0" .. T["None"],
+        "1:1 " .. T["Pixel"],
+        "2:2 " .. T["Pixel"],
+        "3:3 " .. T["Pixel"],
+        "4:4 " .. T["Pixel"],
+        "5:5 " .. T["Pixel"],
+        "6:6 " .. T["Pixel"],
+        "7:7 " .. T["Pixel"],
+        "8:8 " .. T["Pixel"],
+        "9:9 " .. T["Pixel"],
+      },
       ["scaling"] = {
         "0:" .. T["Off"],
         "4:" .. T["Huge (PixelPerfect)"],
@@ -1713,6 +1725,13 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
       CreateConfig(U["buff"], T["Number Of Debuffs Per Row"], C.buffs, "debuffrowsize")
       CreateConfig(U["buff"], T["Show Duration Inside Buff"], C.buffs, "textinside", "checkbox")
       CreateConfig(U["buff"], T["Buff Font Size"], C.buffs, "fontsize")
+    end)
+
+    CreateGUIEntry(T["Buffs"], T["Totem Icons"], function()
+      CreateConfig(U["totems"], T["Totem Direction"], C.totems, "direction", "dropdown", pfUI.gui.dropdowns.orientation)
+      CreateConfig(U["totems"], T["Icon Size"], C.totems, "iconsize")
+      CreateConfig(U["totems"], T["Spacing"], C.totems, "spacing", "dropdown", pfUI.gui.dropdowns.spacing)
+      CreateConfig(U["totems"], T["Show Background"], C.totems, "showbg", "checkbox")
     end)
 
     CreateGUIEntry(T["Buffs"], T["Player Buff Bar"], function()
