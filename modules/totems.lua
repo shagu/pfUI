@@ -1,4 +1,6 @@
-pfUI:RegisterModule("totems", "tbc", function ()
+pfUI:RegisterModule("totems", "vanilla:tbc", function ()
+  local _, class = UnitClass("player")
+
   local slots = {
     [FIRE_TOTEM_SLOT]  = { r = .5, g = .2, b = .1 },
     [EARTH_TOTEM_SLOT] = { r = .2, g = .4, b = .1 },
@@ -13,13 +15,21 @@ pfUI:RegisterModule("totems", "tbc", function ()
     totems:RefreshList()
   end)
 
+  if pfUI.client <= 11200 and class == "SHAMAN" then
+    -- there's no totem event in vanilla using ticks instead
+    local eventemu = CreateFrame("Frame")
+    eventemu:SetScript("OnUpdate", function()
+      if ( this.tick or 1) > GetTime() then return else this.tick = GetTime() + .5 end
+      totems:RefreshList()
+    end)
+  end
+
   totems.OnEnter = function(self)
     if not this.id then return end
     local active, name, start, duration, icon = GetTotemInfo(this.id)
     local color = slots[this.id]
     GameTooltip:SetOwner(this, "ANCHOR_LEFT")
     GameTooltip:SetText(name, color.r+.2, color.g+.2, color.b+.2)
-    GameTooltip:AddLine(T["Right-Click to Destroy"], .5,.5,.5,.5)
     GameTooltip:Show()
   end
 
@@ -28,8 +38,14 @@ pfUI:RegisterModule("totems", "tbc", function ()
   end
 
   totems.OnClick = function(self)
-    if arg1 and arg1 == "LeftButton" then return end
-    if this.id then DestroyTotem(this.id) end
+    if pfUI.client <= 11200 and this.id and arg1 and arg1 == "LeftButton" then
+      -- Try to recast totem on left click in vanilla
+      local active, name, start, duration, icon = GetTotemInfo(this.id)
+      if name then CastSpellByName(name) end
+    elseif pfUI.client > 11200 and this.id and arg1 and arg1 == "RightButton" then
+      -- Try to cancel totem on right click in tbc+
+      DestroyTotem(this.id)
+    end
   end
 
   totems.RefreshList = function(self)
