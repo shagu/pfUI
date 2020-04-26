@@ -7,8 +7,8 @@ pfUI:RegisterModule("totems", "tbc", function ()
   }
 
   local totems = CreateFrame("Frame", "pfTotems", UIParent)
-  totems:RegisterEvent("PLAYER_TOTEM_UPDATE", "Update")
-  totems:RegisterEvent("PLAYER_ENTERING_WORLD", "Update")
+  totems:RegisterEvent("PLAYER_TOTEM_UPDATE")
+  totems:RegisterEvent("PLAYER_ENTERING_WORLD")
   totems:SetScript("OnEvent", function(self)
     totems:RefreshList()
   end)
