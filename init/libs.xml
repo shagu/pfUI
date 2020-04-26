@@ -7,4 +7,5 @@
   <Include file="..\libs\libunitscan.lua"/>
   <Include file="..\libs\libtooltip.lua"/>
   <Include file="..\libs\libhealth.lua"/>
+  <Include file="..\libs\libtotem.lua"/>
 </Ui>
