@@ -183,13 +183,6 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
         debuffs[i] = CreateFrame("Frame", nil, nameplate)
         debuffs[i]:Hide()
         debuffs[i]:SetFrameLevel(1)
-        if i == 1 then
-          debuffs[i]:SetPoint("TOPLEFT", nameplate.health, "BOTTOMLEFT", 0, -4)
-        elseif i <= 8 then
-          debuffs[i]:SetPoint("LEFT", debuffs[i-1], "RIGHT", 1, 0)
-        elseif i > 8 then
-          debuffs[i]:SetPoint("TOPLEFT", debuffs[i-8], "BOTTOMLEFT", 0, -1)
-        end
 
         debuffs[i].icon = debuffs[i]:CreateTexture(nil, "BACKGROUND")
         debuffs[i].icon:SetTexture(.3,1,.8,1)
@@ -279,6 +272,9 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     local plate_height_cast = C.nameplates.heighthealth + font_size + 5 + C.nameplates.heightcast + 5
     local combo_size = 5
 
+    local width = tonumber(C.nameplates.width)
+    local debuffsize = tonumber(C.nameplates.debuffsize)
+
     nameplate:SetWidth(plate_width)
     nameplate:SetHeight(plate_height)
     nameplate:SetPoint("TOP", parent, "TOP", 0, 0)
@@ -301,9 +297,20 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     nameplate.raidicon:SetWidth(C.nameplates.raidiconsize)
     nameplate.raidicon:SetHeight(C.nameplates.raidiconsize)
 
+    -- update debuff positions
+    local limit = floor(width / debuffsize)
     for i=1,16 do
-      nameplate.debuffs[i]:SetWidth(14)
-      nameplate.debuffs[i]:SetHeight(14)
+      nameplate.debuffs[i]:ClearAllPoints()
+      if i == 1 then
+        nameplate.debuffs[i]:SetPoint("TOPLEFT", nameplate.health, "BOTTOMLEFT", 0, -4)
+      elseif i <= limit then
+        nameplate.debuffs[i]:SetPoint("LEFT", nameplate.debuffs[i-1], "RIGHT", 1, 0)
+      elseif i > limit then
+        nameplate.debuffs[i]:SetPoint("TOPLEFT", nameplate.debuffs[i-limit], "BOTTOMLEFT", 0, -1)
+      end
+
+      nameplate.debuffs[i]:SetWidth(tonumber(C.nameplates.debuffsize))
+      nameplate.debuffs[i]:SetHeight(tonumber(C.nameplates.debuffsize))
     end
 
     for i=1,5 do
