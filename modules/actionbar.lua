@@ -690,7 +690,20 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
         bar.filter = (C.bars["bar"..i] and C.bars["bar"..i].pageable == "1" and 1 or nil) and string.format("%s[actionbar: %s] %s; ", bar.filter, i, i) or bar.filter
       end
 
-      bar.filter = string.format("%s[bonusbar:1,nostealth] 7; [bonusbar:1,stealth] 7; [bonusbar:2] 10; [bonusbar:3] 9; [bonusbar:4] 10; 1", bar.filter)
+      -- set bar 8 for druid stealth if enabled
+      local prowl = class == "DRUID" and C.bars["druidstealth"] == "1" and "8" or "7"
+
+      -- write page driver conditions
+      bar.filter = string.format("%s[bonusbar:1,nostealth] 7; [bonusbar:1,stealth] %s; [bonusbar:2] 10; [bonusbar:3] 9; [bonusbar:4] 10; 1", bar.filter, prowl)
+
+      -- prepend pagemaster states if enabled
+      if C.bars.pagemaster == "1" then
+        for mod, page in pairs({ ["shift"] = "6", ["ctrl"] = "5", ["alt"] = "3" }) do
+          bar.filter = string.format("[modifier:%s] %s;", mod, page) .. bar.filter
+        end
+      end
+
+      -- enable page driver conditions
       RegisterStateDriver(bar, "page", bar.filter)
       SecureStateHeader_Refresh(bar)
     end
@@ -703,50 +716,77 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     end
   end
 
-  -- pagemaster / meta page switch
-  local function EnablePagemaster(bar)
-    if pfUI.expansion == "vanilla" then
-      -- perform manual page swapping on hotkeydetection for vanilla clients
-      if C.bars.pagemaster == "1" then
-        local modifier = { "ALT", "SHIFT", "CTRL" }
-        local buttons = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "+", "=", "´" }
-        local shift, ctrl, alt, default = 6, 5, 3, 1
-        local current = CURRENT_ACTIONBAR_PAGE
-        bar.pagemaster = bar.pagemaster or CreateFrame("Frame", "pfPageMaster", UIParent)
-        bar.pagemaster:RegisterEvent("PLAYER_ENTERING_WORLD")
-        bar.pagemaster:SetScript("OnEvent", function()
-          for _,mod in pairs(modifier) do
-            for _,but in pairs(buttons) do
-              SetBinding(mod.."-"..but)
-            end
-          end
-        end)
+  local cat, stealth
+  local function IsCatStealth()
+    if class ~= "DRUID" then return nil end
+    cat, stealth = nil, nil
 
-        bar.pagemaster:SetScript("OnUpdate", function()
-          if IsShiftKeyDown() then
-            SwitchBar(shift)
-          elseif IsControlKeyDown() then
-            SwitchBar(ctrl)
-          elseif IsAltKeyDown() then
-            SwitchBar(alt)
-          else
-            SwitchBar(default)
-          end
-        end)
-      elseif bar.pagemaster and C.bars.pagemaster == "0" then
-        bar.pagemaster:SetScript("OnUpdate", nil)
-        bar.pagemaster:SetScript("OnEvent", nil)
+    for i = 0, 31 do
+      local texture = GetPlayerBuffTexture(i)
+      if not texture then break end
+
+      -- catform icon detected
+      if strfind(texture, "Ability_Druid_CatForm") then
+        if stealth then return true end
+        cat = true
       end
-    else
-      -- use secureframe states for pagemaster implementation
-      if C.bars.pagemaster == "1" then
-        for mod, page in pairs({ ["shift"] = "6", ["ctrl"] = "5", ["alt"] = "3" }) do
-          bar.filter = string.format("[modifier:%s] %s;", mod, page) .. bar.filter
-        end
-        RegisterStateDriver(bar, "page", bar.filter)
-        SecureStateHeader_Refresh(bar)
+
+      -- stealth icon detected
+      if strfind(texture, "Ability_Ambush") then
+        if cat then return true end
+        stealth = true
       end
     end
+    return nil
+  end
+
+  -- pagemaster / meta page switch
+  if pfUI.expansion == "vanilla" then
+    local prowl, shift, ctrl, alt, default = 8, 6, 5, 3, 1
+
+    -- set temporary pagemaster bindings keybinds
+    if C.bars.pagemaster == "1" then
+      local modifier = { "ALT", "SHIFT", "CTRL" }
+      local buttons = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "+", "=", "´" }
+      local current = CURRENT_ACTIONBAR_PAGE
+      bar.pagemaster = bar.pagemaster or CreateFrame("Frame", "pfPageMaster", UIParent)
+      bar.pagemaster:RegisterEvent("PLAYER_ENTERING_WORLD")
+      bar.pagemaster:SetScript("OnEvent", function()
+        for _,mod in pairs(modifier) do
+          for _,but in pairs(buttons) do
+            SetBinding(mod.."-"..but)
+          end
+        end
+      end)
+    end
+
+    -- setup page switch frame
+    local pageswitch = CreateFrame("Frame", "pfActionBarPageSwitch", UIParent)
+    pageswitch:SetScript("OnUpdate", function()
+      if C.bars.pagemaster == "1" then
+        if IsShiftKeyDown() then
+          SwitchBar(shift)
+          return
+        elseif IsControlKeyDown() then
+          SwitchBar(ctrl)
+          return
+        elseif IsAltKeyDown() then
+          SwitchBar(alt)
+          return
+        else
+          SwitchBar(default)
+        end
+      end
+
+      if C.bars.druidstealth == "1" then
+        local stealth = IsCatStealth()
+        if stealth and _G.CURRENT_ACTIONBAR_PAGE == 1 then
+          SwitchBar(prowl)
+        elseif not stealth and _G.CURRENT_ACTIONBAR_PAGE == 8 then
+          SwitchBar(default)
+        end
+      end
+    end)
   end
 
   local function CreateActionButton(parent, bar, button)
@@ -1124,7 +1164,6 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     -- enable paging for the first actionbar
     if i == 1 then
       EnablePaging(bars[i])
-      EnablePagemaster(bars[i])
     end
 
     -- adjust actionbar size
