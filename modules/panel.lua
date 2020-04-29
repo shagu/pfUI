@@ -170,9 +170,9 @@ pfUI:RegisterModule("panel", "vanilla:tbc", function()
         GameTooltip:Show()
       end
       widget.Click = function()
-        if pfUI.addons:IsShown() then
+        if pfUI.addons and pfUI.addons:IsShown() then
           pfUI.addons:Hide()
-        else
+        elseif pfUI.addons then
           pfUI.addons:Show()
         end
       end
