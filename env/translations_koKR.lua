@@ -149,6 +149,7 @@ pfUI_translation["koKR"] = {
   ["Custom Health Bar Color"] = "사용자 지정 체력바 색",
   ["Custom Power Bar Background Color"] = nil,
   ["Custom Transparency"] = "사용자 지정 투명도",
+  ["Debuff Icon Size"] = nil,
   ["Debuff Indicator Display"] = nil,
   ["Debuff Indicator Position"] = nil,
   ["Debuff Indicators"] = nil,

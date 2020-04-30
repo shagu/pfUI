@@ -149,6 +149,7 @@ pfUI_translation["ruRU"] = {
   ["Custom Health Bar Color"] = "Пользовательский цвет панели здоровья",
   ["Custom Power Bar Background Color"] = "Пользовательский цвет фона панели силы",
   ["Custom Transparency"] = "Пользовательская прозрачность",
+  ["Debuff Icon Size"] = nil,
   ["Debuff Indicator Display"] = "Отображение индикатора дебаффов",
   ["Debuff Indicator Position"] = "Расположение индикатора дебаффов",
   ["Debuff Indicators"] = "Индикаторы дебаффов",

@@ -149,6 +149,7 @@ pfUI_translation["zhCN"] = {
   ["Custom Health Bar Color"] = "血条颜色",
   ["Custom Power Bar Background Color"] = nil,
   ["Custom Transparency"] = "透明度",
+  ["Debuff Icon Size"] = nil,
   ["Debuff Indicator Display"] = "Debuff指示器显示",
   ["Debuff Indicator Position"] = "Debuff指示器位置",
   ["Debuff Indicators"] = "Debuff指示器",

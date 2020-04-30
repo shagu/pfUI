@@ -149,6 +149,7 @@ pfUI_translation["frFR"] = {
   ["Custom Health Bar Color"] = "Couleur de la barre de vie personnalisée",
   ["Custom Power Bar Background Color"] = nil,
   ["Custom Transparency"] = "Transparence personnalisée",
+  ["Debuff Icon Size"] = nil,
   ["Debuff Indicator Display"] = nil,
   ["Debuff Indicator Position"] = nil,
   ["Debuff Indicators"] = nil,
