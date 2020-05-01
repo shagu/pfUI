@@ -1421,7 +1421,7 @@ function pfUI.uf:RefreshUnit(unit, component)
       local active = {}
 
       for i=1,32 do
-        local texture = UnitBuff(unitstr, i)
+        local texture, count = UnitBuff(unitstr, i)
         local timeleft, _
         if pfUI.client > 11200 then
           _, _, texture, _, _, timeleft = _G.UnitBuff(unitstr, i)
@@ -1431,7 +1431,7 @@ function pfUI.uf:RefreshUnit(unit, component)
           -- match filter
           for _, filter in pairs(pfUI.uf.buffs) do
             if filter == string.lower(texture) then
-              table.insert(active, { texture, timeleft })
+              table.insert(active, { texture, timeleft, count })
               break
             end
           end
@@ -1440,7 +1440,7 @@ function pfUI.uf:RefreshUnit(unit, component)
 
       -- add icons for every found buff
       for pos, data in pairs(active) do
-        pfUI.uf:AddIcon(unit, pos, data[1], data[2])
+        pfUI.uf:AddIcon(unit, pos, data[1], data[2], data[3])
       end
 
       -- hide unused icon slots
@@ -1691,6 +1691,7 @@ end
 
 function pfUI.uf:AddIcon(frame, pos, icon, timeleft, stacks)
   local showtime = C.unitframes.indicator_time == "1" and true or nil
+  local showstacks = C.unitframes.indicator_stacks == "1" and true or nil
   local iconsize = tonumber(C.unitframes.indicator_size)
 
   if not frame.hp then return end
@@ -1710,6 +1711,11 @@ function pfUI.uf:AddIcon(frame, pos, icon, timeleft, stacks)
       frame.icon[i].tex:SetAllPoints(frame.icon[i])
       frame.icon[i].tex:SetTexCoord(.08, .92, .08, .92)
       frame.icon[i].tex:SetAlpha(.7)
+      frame.icon[i].stacks = frame.icon[i]:CreateFontString(nil, "OVERLAY")
+      frame.icon[i].stacks:SetFont(pfUI.font_unit, math.max(iconsize/3, 10), "OUTLINE")
+      frame.icon[i].stacks:SetPoint("BOTTOMRIGHT", 0, 0)
+      frame.icon[i].stacks:SetJustifyH("RIGHT")
+      frame.icon[i].stacks:SetJustifyV("BOTTOM")
       frame.icon[i].cd = CreateFrame(COOLDOWN_FRAME_TYPE, nil, frame.icon[i])
       frame.icon[i].cd.pfCooldownType = "ALL"
       frame.icon[i].cd:SetAlpha(0)
@@ -1723,6 +1729,13 @@ function pfUI.uf:AddIcon(frame, pos, icon, timeleft, stacks)
     CooldownFrame_SetTimer(frame.icon[pos].cd, GetTime(), timeleft, 1)
   else
     CooldownFrame_SetTimer(frame.icon[pos].cd, GetTime(), 0, 1)
+  end
+
+  -- show stacks if config is set
+  if showstacks and stacks and stacks > 1 and iconsize > 9 then
+    frame.icon[pos].stacks:SetText(stacks)
+  else
+    frame.icon[pos].stacks:SetText("")
   end
 
   frame.icon[pos]:Show()

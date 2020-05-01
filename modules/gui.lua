@@ -1500,6 +1500,7 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
       CreateConfig(nil, T["Show Totems as Buff Indicators"], C.unitframes, "show_totems", "checkbox")
       CreateConfig(nil, T["Show Procs of all Classes"], C.unitframes, "all_procs", "checkbox")
       CreateConfig(nil, T["Buff Indicator Show Time"], C.unitframes, "indicator_time", "checkbox")
+      CreateConfig(nil, T["Buff Indicator Show Stacks"], C.unitframes, "indicator_stacks", "checkbox")
       CreateConfig(nil, T["Buff Indicator Size"], C.unitframes, "indicator_size")
       CreateConfig(nil, T["Only Show Indicators for Dispellable Debuffs"], C.unitframes, "debuffs_class", "checkbox")
 
