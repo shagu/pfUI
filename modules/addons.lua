@@ -32,7 +32,6 @@ pfUI:RegisterModule("addons", "vanilla:tbc", function ()
   CreateBackdropShadow(pfUI.addons)
 
   pfUI.addons:SetScript("OnHide", function()
-    UIDropDownMenu_ClearAll(this.profile.dropdown)
     if this.hasChanged then
       pfUI.gui:Reload()
       this.hasChanged = nil
@@ -84,12 +83,13 @@ pfUI:RegisterModule("addons", "vanilla:tbc", function ()
   end
 
   local function SetAddonProfile(profile)
-    UIDropDownMenu_SetText(profile, pfUI.addons.profile.dropdown)
-
     -- create new profile if not existing
     if not pfUI_addon_profiles[profile] then
       pfUI_addon_profiles[profile] = GetSelectedAddonsList()
     end
+
+    -- set dropdown to profile
+    pfUI.addons.profile.dropdown:SetSelectionByText(profile)
 
     -- load profile
     local selected_list = pfUI_addon_profiles[profile]
@@ -120,7 +120,7 @@ pfUI:RegisterModule("addons", "vanilla:tbc", function ()
   pfUI.addons.profile = CreateFrame("Frame", "pfAddonListProfile", pfUI.addons)
   pfUI.addons.profile:SetScript("OnShow", function()
     pfUI_addon_profiles[T["Current"]] = GetSelectedAddonsList()
-    UIDropDownMenu_SetText(T["Current"], pfUI.addons.profile.dropdown)
+    SetAddonProfile(T["Current"])
   end)
 
   pfUI.addons.profile:SetPoint("TOP", pfUI.addons, "TOP", 0, -34)
@@ -132,40 +132,37 @@ pfUI:RegisterModule("addons", "vanilla:tbc", function ()
   pfUI.addons.profile.caption = pfUI.addons.profile:CreateFontString("Status", "LOW", "GameFontNormal")
   pfUI.addons.profile.caption:SetFontObject(GameFontWhite)
   pfUI.addons.profile.caption:SetFont(pfUI.font_default, C.global.font_size, "OUTLINE")
-  pfUI.addons.profile.caption:SetPoint("TOPLEFT", 10, -12)
+  pfUI.addons.profile.caption:SetPoint("LEFT", 10, 0)
   pfUI.addons.profile.caption:SetText(T["Addon Profile"])
 
-  -- addon profile: dropdown
-  pfUI.addons.profile.dropdown = CreateFrame("Frame", "pfAddonListProfileList", pfUI.addons.profile, "UIDropDownMenuTemplate")
-  pfUI.addons.profile.dropdown:ClearAllPoints()
-  pfUI.addons.profile.dropdown:SetPoint("TOPRIGHT", -51, -5)
-  SkinDropDown(pfUI.addons.profile.dropdown)
-  UIDropDownMenu_SetWidth(220, pfUI.addons.profile.dropdown)
-  UIDropDownMenu_SetButtonWidth(220, pfUI.addons.profile.dropdown)
-  UIDropDownMenu_Initialize(pfUI.addons.profile.dropdown, function()
-    local info = {}
-    for name, list in pairs(pfUI_addon_profiles) do
-      info.text = name
-      info.checked = false
-      info.func = function()
-        UIDropDownMenu_SetSelectedID(pfUI.addons.profile.dropdown, this:GetID(), 0)
-        SetAddonProfile(this:GetText())
-      end
-      UIDropDownMenu_AddButton(info)
-    end
+  -- addon profile: delete
+  pfUI.addons.profile.del = CreateFrame("Button", nil, pfUI.addons.profile, "UIPanelButtonTemplate")
+  SkinButton(pfUI.addons.profile.del)
+  pfUI.addons.profile.del:SetWidth(16)
+  pfUI.addons.profile.del:SetHeight(16)
+  pfUI.addons.profile.del:SetPoint("RIGHT", -10, 0)
+  pfUI.addons.profile.del:GetFontString():SetPoint("CENTER", 1, 0)
+  pfUI.addons.profile.del:SetText("-")
+  pfUI.addons.profile.del:SetTextColor(1,.5,.5,1)
+  pfUI.addons.profile.del:SetScript("OnClick", function() -- TODO
+    local id, name = pfUI.addons.profile.dropdown:GetSelection()
+    if not name then return end
+    CreateQuestionDialog(T["Delete profile"] .. " '|cff33ffcc" .. name .. "|r'?", function()
+      pfUI_addon_profiles[name] = nil
+      SetAddonProfile(T["Current"])
+    end)
   end)
 
   -- addon profile: create
-  pfUI.addons.profile.create = CreateFrame("Button", "pfAddonListProfileCreate", pfUI.addons.profile, "UIPanelButtonTemplate")
-  CreateBackdrop(pfUI.addons.profile.create, nil, true)
-  SkinButton(pfUI.addons.profile.create)
-  pfUI.addons.profile.create:SetWidth(25)
-  pfUI.addons.profile.create:SetHeight(25)
-  pfUI.addons.profile.create:SetPoint("LEFT", pfUI.addons.profile.dropdown.backdrop, "RIGHT", 35, 0)
-  pfUI.addons.profile.create:GetFontString():SetPoint("CENTER", 1, 0)
-  pfUI.addons.profile.create:SetText("+")
-  pfUI.addons.profile.create:SetTextColor(.5,1,.5,1)
-  pfUI.addons.profile.create:SetScript("OnClick", function()
+  pfUI.addons.profile.add = CreateFrame("Button", nil, pfUI.addons.profile, "UIPanelButtonTemplate")
+  SkinButton(pfUI.addons.profile.add)
+  pfUI.addons.profile.add:SetWidth(16)
+  pfUI.addons.profile.add:SetHeight(16)
+  pfUI.addons.profile.add:SetPoint("RIGHT", pfUI.addons.profile.del, "LEFT", -4, 0)
+  pfUI.addons.profile.add:GetFontString():SetPoint("CENTER", 1, 0)
+  pfUI.addons.profile.add:SetText("+")
+  pfUI.addons.profile.add:SetTextColor(.5,1,.5,1)
+  pfUI.addons.profile.add:SetScript("OnClick", function()
     CreateQuestionDialog(T["Please enter a name for the new profile."],
     function()
       local profile_name = this:GetParent().input:GetText()
@@ -178,24 +175,26 @@ pfUI:RegisterModule("addons", "vanilla:tbc", function ()
     end, false, true)
   end)
 
-  -- addon profile: delete
-  pfUI.addons.profile.delete = CreateFrame("Button", "pfAddonListProfileDelete", pfUI.addons.profile, "UIPanelButtonTemplate")
-  CreateBackdrop(pfUI.addons.profile.delete, nil, true)
-  SkinButton(pfUI.addons.profile.delete)
-  pfUI.addons.profile.delete:SetWidth(25)
-  pfUI.addons.profile.delete:SetHeight(25)
-  pfUI.addons.profile.delete:SetPoint("LEFT", pfUI.addons.profile.dropdown.backdrop, "RIGHT", 5, 0)
-  pfUI.addons.profile.delete:GetFontString():SetPoint("CENTER", 0, 0)
-  pfUI.addons.profile.delete:SetText("-")
-  pfUI.addons.profile.delete:SetTextColor(1,.5,.5,1)
-  pfUI.addons.profile.delete:SetScript("OnClick", function()
-    local profile_name = UIDropDownMenu_GetText(pfUI.addons.profile.dropdown)
-    if profile_name then
-      CreateQuestionDialog(T["Delete profile"] .. " '|cff33ffcc" .. profile_name .. "|r'?", function()
-        pfUI_addon_profiles[profile_name] = nil
-        SetAddonProfile(T["Current"])
-      end)
+  -- addon profile: dropdown
+  pfUI.addons.profile.dropdown = CreateDropDownButton("pfAddonListProfileList", pfUI.addons.profile)
+  pfUI.addons.profile.dropdown:SetBackdrop(nil)
+  pfUI.addons.profile.dropdown:ClearAllPoints()
+  pfUI.addons.profile.dropdown:SetPoint("RIGHT", pfUI.addons.profile.add, "LEFT", -2, 0)
+  pfUI.addons.profile.dropdown:SetWidth(220)
+  pfUI.addons.profile.dropdown:SetMenu(function()
+    local menu = {}
+
+    for name, list in pairs(pfUI_addon_profiles) do
+      local entry = {}
+      entry.text = name
+      entry.checked = false
+      entry.func = function()
+        SetAddonProfile(name)
+      end
+      table.insert(menu, entry)
     end
+
+    return menu
   end)
 
   -- addon list: scroll frame
@@ -273,8 +272,10 @@ pfUI:RegisterModule("addons", "vanilla:tbc", function ()
             DisableAddOn(this:GetID())
           end
           pfUI.addons.hasChanged = true
-          local profile_name = UIDropDownMenu_GetText(pfUI.addons.profile.dropdown) or T["Current"]
-          pfUI_addon_profiles[profile_name] = GetSelectedAddonsList()
+
+          local id, name = pfUI.addons.profile.dropdown:GetSelection()
+          name = name or T["Current"]
+          pfUI_addon_profiles[name] = GetSelectedAddonsList()
         end)
       end
 
