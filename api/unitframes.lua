@@ -1689,8 +1689,10 @@ function pfUI.uf:ClickAction(button)
   end
 end
 
-function pfUI.uf:AddIcon(frame, pos, icon, timeleft)
+function pfUI.uf:AddIcon(frame, pos, icon, timeleft, stacks)
+  local showtime = C.unitframes.indicator_time == "1" and true or nil
   local iconsize = tonumber(C.unitframes.indicator_size)
+
   if not frame.hp then return end
   local frame = frame.hp.bar
   if pos > 6 or pos > ceil(frame:GetWidth() / iconsize) then return end
@@ -1711,11 +1713,18 @@ function pfUI.uf:AddIcon(frame, pos, icon, timeleft)
       frame.icon[i].cd = CreateFrame(COOLDOWN_FRAME_TYPE, nil, frame.icon[i])
       frame.icon[i].cd.pfCooldownType = "ALL"
       frame.icon[i].cd:SetAlpha(0)
+      CreateBackdrop(frame.icon[i], nil, true)
     end
   end
   frame.icon[pos].tex:SetTexture(icon)
-  CooldownFrame_SetTimer(frame.icon[pos].cd, GetTime(), (timeleft and timeleft < 100 and iconsize > 9 and timeleft or 0), 1)
-  pfUI.api.CreateBackdrop(frame.icon[pos], nil, true)
+
+  -- show remaining time if config is set
+  if showtime and timeleft and timeleft < 100 and iconsize > 9 then
+    CooldownFrame_SetTimer(frame.icon[pos].cd, GetTime(), timeleft, 1)
+  else
+    CooldownFrame_SetTimer(frame.icon[pos].cd, GetTime(), 0, 1)
+  end
+
   frame.icon[pos]:Show()
 end
 
