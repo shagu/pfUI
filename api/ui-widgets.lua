@@ -165,6 +165,18 @@ do -- dropdown
         self.id = id
       end
     end,
+    ["SetSelectionByText"] = function(self, name)
+      self:UpdateMenu()
+      for id, entry in pairs(self.menu) do
+        if entry.text == name then
+          self:SetSelection(id)
+          return true
+        end
+      end
+
+      self.text:SetText(name)
+      return nil
+    end,
     ["GetSelection"] = function(self)
       self:UpdateMenu()
       if self.menu and self.menu[self.id] then
