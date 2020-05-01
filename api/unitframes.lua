@@ -1421,7 +1421,7 @@ function pfUI.uf:RefreshUnit(unit, component)
 
     pfUI.uf:SetupBuffFilter()
     if table.getn(pfUI.uf.buffs) > 0 and unit.config.buff_indicator == "1" then
-      local active = {}
+      local pos = 1
 
       for i=1,32 do
         local texture, count = UnitBuff(unitstr, i)
@@ -1434,20 +1434,16 @@ function pfUI.uf:RefreshUnit(unit, component)
           -- match filter
           for _, filter in pairs(pfUI.uf.buffs) do
             if filter == string.lower(texture) then
-              table.insert(active, { texture, timeleft, count })
+              pfUI.uf:AddIcon(unit, pos, texture, timeleft, count)
+              pos = pos + 1
               break
             end
           end
         end
       end
 
-      -- add icons for every found buff
-      for pos, data in pairs(active) do
-        pfUI.uf:AddIcon(unit, pos, data[1], data[2], data[3])
-      end
-
       -- hide unused icon slots
-      for pos=table.getn(active)+1, 6 do
+      for pos=pos, 6 do
         pfUI.uf:HideIcon(unit, pos)
       end
     end
