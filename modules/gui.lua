@@ -1642,7 +1642,7 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
 
         CreateConfig(U[c], T["Dispel Indicators"], nil, nil, "header")
         CreateConfig(U[c], T["Show Dispel Indicators"], C.unitframes[c], "debuff_indicator", "dropdown", pfUI.gui.dropdowns.uf_debuff_indicator)
-        CreateConfig(nil,  T["Only Class Dispellable"], C.unitframes[c], "debuff_ind_class", "checkbox")
+        CreateConfig(U[c], T["Only Class Dispellable"], C.unitframes[c], "debuff_ind_class", "checkbox")
         CreateConfig(U[c], T["Indicator Position"], C.unitframes[c], "debuff_ind_pos", "dropdown", pfUI.gui.dropdowns.positions)
         CreateConfig(U[c], T["Indicator Size"], C.unitframes[c], "debuff_ind_size", "dropdown", pfUI.gui.dropdowns.uf_debuff_indicator_size)
 

@@ -321,6 +321,8 @@ function pfUI.uf:UpdateConfig()
      relative_point = "BOTTOMRIGHT"
   end
 
+  f.dispellable = nil
+
   f.alpha_visible = tonumber(f.config.alpha_visible)
   f.alpha_outrange = tonumber(f.config.alpha_outrange)
   f.alpha_offline = tonumber(f.config.alpha_offline)
