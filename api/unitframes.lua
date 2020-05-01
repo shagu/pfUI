@@ -322,6 +322,7 @@ function pfUI.uf:UpdateConfig()
   end
 
   f.dispellable = nil
+  f.indicators = nil
 
   f.alpha_visible = tonumber(f.config.alpha_visible)
   f.alpha_outrange = tonumber(f.config.alpha_outrange)
@@ -1307,7 +1308,7 @@ function pfUI.uf:RefreshUnit(unit, component)
   end
 
   -- indicators
-  if component == "all" or component == "aura" then
+  if component == "all" or ( component == "all" or component == "aura" ) then
     unit.dispellable = unit.dispellable or pfUI.uf:SetupDebuffFilter((unit.config.debuff_ind_class == "0" and true or nil))
 
     if table.getn(unit.dispellable) > 0 and unit.config.debuff_indicator ~= "0" then
@@ -1419,8 +1420,8 @@ function pfUI.uf:RefreshUnit(unit, component)
       unit.hp.bar.debuffindicators:Hide()
     end
 
-    pfUI.uf:SetupBuffFilter()
-    if table.getn(pfUI.uf.buffs) > 0 and unit.config.buff_indicator == "1" then
+    unit.indicators = unit.indicators or pfUI.uf:SetupBuffIndicators(unit.config)
+    if table.getn(unit.indicators) > 0 and unit.config.buff_indicator == "1" then
       local pos = 1
 
       for i=1,32 do
@@ -1432,7 +1433,7 @@ function pfUI.uf:RefreshUnit(unit, component)
 
         if texture then
           -- match filter
-          for _, filter in pairs(pfUI.uf.buffs) do
+          for _, filter in pairs(unit.indicators) do
             if filter == string.lower(texture) then
               pfUI.uf:AddIcon(unit, pos, texture, timeleft, count)
               pos = pos + 1
@@ -1689,9 +1690,9 @@ function pfUI.uf:ClickAction(button)
 end
 
 function pfUI.uf:AddIcon(frame, pos, icon, timeleft, stacks)
-  local showtime = C.unitframes.indicator_time == "1" and true or nil
-  local showstacks = C.unitframes.indicator_stacks == "1" and true or nil
-  local iconsize = tonumber(C.unitframes.indicator_size)
+  local showtime = frame.config.indicator_time == "1" and true or nil
+  local showstacks = frame.config.indicator_stacks == "1" and true or nil
+  local iconsize = tonumber(frame.config.indicator_size)
 
   if not frame.hp then return end
   local frame = frame.hp.bar
@@ -1772,203 +1773,160 @@ function pfUI.uf:SetupDebuffFilter(allclasses)
   return debuffs
 end
 
-function pfUI.uf:SetupBuffFilter()
-  if pfUI.uf.buffs then return end
-
+function pfUI.uf:SetupBuffIndicators(config)
   local _, myclass = UnitClass("player")
+  local indicators = {}
 
-  pfUI.uf.buffs = {}
+  if config.show_buffs == "1" then -- buffs
+    if myclass == "DRUID" then
+      -- Mark of the Wild
+      table.insert(indicators, "interface\\icons\\spell_nature_regeneration")
+      -- Gift of the Wild
+      table.insert(indicators, "interface\\icons\\spell_nature_giftofthewild")
+      -- Thorns
+      table.insert(indicators, "interface\\icons\\spell_nature_thorns")
+    end
 
-  -- [[ DRUID ]]
-  if myclass == "DRUID" then
-    -- Mark of the Wild
-    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_nature_regeneration")
+    if myclass == "PRIEST" then
+      -- Prayer Of Fortitude"
+      table.insert(indicators, "interface\\icons\\spell_holy_wordfortitude")
+      table.insert(indicators, "interface\\icons\\spell_holy_prayeroffortitude")
+      -- Prayer of Spirit
+      table.insert(indicators, "interface\\icons\\spell_holy_divinespirit")
+      table.insert(indicators, "interface\\icons\\spell_holy_prayerofspirit")
+      -- Shadow Protection
+      table.insert(indicators, "interface\\icons\\spell_shadow_antishadow")
+      table.insert(indicators, "interface\\icons\\spell_holy_prayerofshadowprotection")
+      -- Fear Ward
+      table.insert(indicators, "interface\\icons\\spell_holy_excorcism")
+    end
 
-    -- Gift of the Wild
-    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_nature_giftofthewild")
+    if myclass == "PALADIN" then
+      -- Blessing of Salvation
+      table.insert(indicators, "interface\\icons\\spell_holy_greaterblessingofsalvation")
+      table.insert(indicators, "interface\\icons\\spell_holy_sealofsalvation")
+      -- Blessing of Wisdom
+      table.insert(indicators, "interface\\icons\\spell_holy_sealofwisdom")
+      table.insert(indicators, "interface\\icons\\spell_holy_greaterblessingofwisdom")
+      -- Blessing of Sanctuary
+      table.insert(indicators, "interface\\icons\\spell_nature_lightningshield")
+      table.insert(indicators, "interface\\icons\\spell_holy_greaterblessingofsanctuary")
+      -- Blessing of Kings
+      table.insert(indicators, "interface\\icons\\spell_magic_magearmor")
+      table.insert(indicators, "interface\\icons\\spell_magic_greaterblessingofkings")
+      -- Blessing of Might
+      table.insert(indicators, "interface\\icons\\spell_holy_fistofjustice")
+      table.insert(indicators, "interface\\icons\\spell_holy_greaterblessingofkings")
+      -- Blessing of Light
+      table.insert(indicators, "interface\\icons\\spell_holy_prayerofhealing02")
+      table.insert(indicators, "interface\\icons\\spell_holy_greaterblessingoflight")
+    end
 
-    -- Thorns
-    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_nature_thorns")
+    if myclass == "WARLOCK" then
+      -- Fire Shield
+      table.insert(indicators, "interface\\icons\\spell_fire_firearmor")
+      -- Blood Pact
+      table.insert(indicators, "interface\\icons\\spell_shadow_bloodboil")
+      -- Soulstone
+      table.insert(indicators, "interface\\icons\\spell_shadow_soulgem")
+      -- Unending Breath
+      table.insert(indicators, "interface\\icons\\spell_shadow_demonbreath")
+      -- Detect Greater Invisibility or Detect Invisibility
+      table.insert(indicators, "interface\\icons\\spell_shadow_detectinvisibility")
+      -- Detect Lesser Invisibility
+      table.insert(indicators, "interface\\icons\\spell_shadow_detectlesserinvisibility")
+      -- Paranoia
+      table.insert(indicators, "interface\\icons\\Spell_Shadow_AuraOfDarkness")
+    end
+
+    if myclass == "WARRIOR" then
+      -- Battle Shout
+      table.insert(indicators, "interface\\icons\\ability_warrior_battleshout")
+      -- Commanding Shout (TBC)
+      table.insert(indicators, "interface\\icons\\ability_warrior_rallyingcry")
+    end
+
+    if myclass == "MAGE" then
+      -- Arcane Intellect
+      table.insert(indicators, "interface\\icons\\spell_holy_magicalsentry")
+      table.insert(indicators, "interface\\icons\\spell_holy_arcaneintellect")
+      -- Dampen Magic
+      table.insert(indicators, "interface\\icons\\spell_nature_abolishmagic")
+      -- Amplify Magic
+      table.insert(indicators, "interface\\icons\\spell_holy_flashheal")
+    end
+
+    if myclass == "HUNTER" then
+      -- Misdirection (TBC)
+      table.insert(indicators, "interface\\icons\\ability_hunter_misdirection")
+    end
   end
 
-  -- [[ PRIEST ]]
-  if myclass == "PRIEST" then
-    -- Prayer Of Fortitude"
-    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_holy_wordfortitude")
-    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_holy_prayeroffortitude")
+  if config.show_procs == "1" then -- procs
+    if myclass == "SHAMAN" or config.all_procs == "1" then
+      -- Ancestral Fortitude
+      table.insert(indicators, "interface\\icons\\spell_nature_undyingstrength")
+      -- Healing Way
+      table.insert(indicators, "interface\\icons\\spell_nature_healingway")
+      -- Totemic Power (known issue: one conflicts with Blessed Sunfruit buff)
+      table.insert(indicators, "interface\\icons\\spell_holy_spiritualguidence")
+      table.insert(indicators, "interface\\icons\\spell_holy_devotion")
+      table.insert(indicators, "interface\\icons\\spell_holy_holynova")
+      table.insert(indicators, "interface\\icons\\spell_magic_magearmor")
+    end
 
-    -- Prayer of Spirit
-    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_holy_divinespirit")
-    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_holy_prayerofspirit")
-
-    -- Shadow Protection
-    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_shadow_antishadow")
-    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_holy_prayerofshadowprotection")
-
-    -- Fear Ward
-    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_holy_excorcism")
+    if myclass == "PRIEST" or config.all_procs == "1" then
+      -- Inspiration
+      table.insert(indicators, "interface\\icons\\inv_shield_06")
+    end
   end
 
-  -- [[ PALADIN ]]
-  if myclass == "PALADIN" then
-    -- Blessing of Salvation
-    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_holy_greaterblessingofsalvation")
-    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_holy_sealofsalvation")
-
-    -- Blessing of Wisdom
-    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_holy_sealofwisdom")
-    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_holy_greaterblessingofwisdom")
-
-    -- Blessing of Sanctuary
-    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_nature_lightningshield")
-    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_holy_greaterblessingofsanctuary")
-
-    -- Blessing of Kings
-    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_magic_magearmor")
-    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_magic_greaterblessingofkings")
-
-    -- Blessing of Might
-    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_holy_fistofjustice")
-    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_holy_greaterblessingofkings")
-
-    -- Blessing of Light
-    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_holy_prayerofhealing02")
-    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_holy_greaterblessingoflight")
-  end
-
-
-  -- [[ WARLOCK ]]
-  if myclass == "WARLOCK" then
-    -- Fire Shield
-    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_fire_firearmor")
-
-    -- Blood Pact
-    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_shadow_bloodboil")
-
-    -- Soulstone
-    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_shadow_soulgem")
-
-    -- Unending Breath
-    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_shadow_demonbreath")
-
-    -- Detect Greater Invisibility or Detect Invisibility
-    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_shadow_detectinvisibility")
-
-    -- Detect Lesser Invisibility
-    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_shadow_detectlesserinvisibility")
-
-    -- Paranoia
-    table.insert(pfUI.uf.buffs, "interface\\icons\\Spell_Shadow_AuraOfDarkness")
-  end
-
-
-  -- [[ WARRIOR ]]
-  if myclass == "WARRIOR" then
-    -- Battle Shout
-    table.insert(pfUI.uf.buffs, "interface\\icons\\ability_warrior_battleshout")
-
-    -- Commanding Shout (TBC)
-    table.insert(pfUI.uf.buffs, "interface\\icons\\ability_warrior_rallyingcry")
-  end
-
-  -- [[ MAGE ]]
-  if myclass == "MAGE" then
-    -- Arcane Intellect
-    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_holy_magicalsentry")
-    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_holy_arcaneintellect")
-
-    -- Dampen Magic
-    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_nature_abolishmagic")
-
-    -- Amplify Magic
-    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_holy_flashheal")
-  end
-
-   -- [[ HUNTER ]]
-  if myclass == "HUNTER" then
-    -- Misdirection (TBC)
-    table.insert(pfUI.uf.buffs, "interface\\icons\\ability_hunter_misdirection")
-  end
-
-  -- PROCS
-  -- [[ SHAMAN ]]
-  if (pfUI_config.unitframes.all_procs == "1" or myclass == "SHAMAN") and pfUI_config.unitframes.show_procs == "1" then
-    -- Ancestral Fortitude
-    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_nature_undyingstrength")
-
-    -- Healing Way
-    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_nature_healingway")
-
-    -- Totemic Power (known issue: one conflicts with Blessed Sunfruit buff)
-    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_holy_spiritualguidence")
-    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_holy_devotion")
-    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_holy_holynova")
-    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_magic_magearmor")
-  end
-
-  if (pfUI_config.unitframes.all_procs == "1" or myclass == "SHAMAN") and pfUI_config.unitframes.show_totems == "1" then
-    -- Strength of Earth Totem
-    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_nature_earthbindtotem")
-
-    -- Stoneskin Totem
-    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_nature_stoneskintotem")
-
-    -- Mana Spring Totem
-    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_nature_manaregentotem")
-
-    -- Mana Tide Totem
-    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_frost_summonwaterelemental")
-
-    -- Healing Spring Totem
-    table.insert(pfUI.uf.buffs, "interface\\icons\\inv_spear_04")
-
-    -- Tranquil Air Totem
-    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_nature_brilliance")
-
-    -- Grace of Air Totem
-    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_nature_invisibilitytotem")
-
-    -- Grounding Totem
-    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_nature_groundingtotem")
-
-    -- Nature Resistance Totem
-    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_nature_natureresistancetotem")
-
-    -- Fire Resistance Totem
-    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_fireresistancetotem_01")
-
-    -- Frost Resistance Totem
-    table.insert(pfUI.uf.buffs, "interface\\icons\\spell_frostresistancetotem_01")
-  end
-
-  if (pfUI_config.unitframes.all_procs == "1" or myclass == "PRIEST") and pfUI_config.unitframes.show_procs == "1" then
-    -- Inspiration
-    table.insert(pfUI.uf.buffs, "interface\\icons\\inv_shield_06")
-  end
-
-  -- HOTS
-  if pfUI_config.unitframes.show_hots == "1" then
-    if (pfUI_config.unitframes.all_hots == "1" or myclass == "PRIEST") then
+  if config.show_hots == "1" then -- hots
+    if myclass == "PRIEST" or config.all_hots == "1" then
       -- Renew
-      table.insert(pfUI.uf.buffs, "interface\\icons\\spell_holy_renew")
-
+      table.insert(indicators, "interface\\icons\\spell_holy_renew")
       -- Power Word: Shield
-      table.insert(pfUI.uf.buffs, "interface\\icons\\spell_holy_powerwordshield")
-
+      table.insert(indicators, "interface\\icons\\spell_holy_powerwordshield")
       -- Prayer of Mending (TBC)
-      table.insert(pfUI.uf.buffs, "interface\\icons\\spell_holy_prayerofmendingtga")
+      table.insert(indicators, "interface\\icons\\spell_holy_prayerofmendingtga")
     end
-    if (pfUI_config.unitframes.all_hots == "1" or myclass == "DRUID") then
+
+    if myclass == "DRUID" or config.all_hots == "1" then
       -- Regrowth
-      table.insert(pfUI.uf.buffs, "interface\\icons\\spell_nature_resistnature")
-
+      table.insert(indicators, "interface\\icons\\spell_nature_resistnature")
       -- Rejuvenation
-      table.insert(pfUI.uf.buffs, "interface\\icons\\spell_nature_rejuvenation")
-
+      table.insert(indicators, "interface\\icons\\spell_nature_rejuvenation")
       -- Lifebloom
-      table.insert(pfUI.uf.buffs, "interface\\icons\\inv_misc_herb_felblossom")
+      table.insert(indicators, "interface\\icons\\inv_misc_herb_felblossom")
     end
   end
+
+  if config.show_totems == "1" and myclass == "SHAMAN" then -- totems
+    -- Strength of Earth Totem
+    table.insert(indicators, "interface\\icons\\spell_nature_earthbindtotem")
+    -- Stoneskin Totem
+    table.insert(indicators, "interface\\icons\\spell_nature_stoneskintotem")
+    -- Mana Spring Totem
+    table.insert(indicators, "interface\\icons\\spell_nature_manaregentotem")
+    -- Mana Tide Totem
+    table.insert(indicators, "interface\\icons\\spell_frost_summonwaterelemental")
+    -- Healing Spring Totem
+    table.insert(indicators, "interface\\icons\\inv_spear_04")
+    -- Tranquil Air Totem
+    table.insert(indicators, "interface\\icons\\spell_nature_brilliance")
+    -- Grace of Air Totem
+    table.insert(indicators, "interface\\icons\\spell_nature_invisibilitytotem")
+    -- Grounding Totem
+    table.insert(indicators, "interface\\icons\\spell_nature_groundingtotem")
+    -- Nature Resistance Totem
+    table.insert(indicators, "interface\\icons\\spell_nature_natureresistancetotem")
+    -- Fire Resistance Totem
+    table.insert(indicators, "interface\\icons\\spell_fireresistancetotem_01")
+    -- Frost Resistance Totem
+    table.insert(indicators, "interface\\icons\\spell_frostresistancetotem_01")
+  end
+
+  return indicators
 end
 
 function pfUI.uf:GetLevelString(unitstr)

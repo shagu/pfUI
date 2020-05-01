@@ -198,14 +198,6 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("unitframes", nil,           "selfingroup",      "0")
   pfUI:UpdateConfig("unitframes", nil,           "selfinraid",       "0")
   pfUI:UpdateConfig("unitframes", nil,           "raidforgroup",     "0")
-  pfUI:UpdateConfig("unitframes", nil,           "show_hots",        "0")
-  pfUI:UpdateConfig("unitframes", nil,           "all_hots",         "0")
-  pfUI:UpdateConfig("unitframes", nil,           "show_procs",       "0")
-  pfUI:UpdateConfig("unitframes", nil,           "show_totems",      "0")
-  pfUI:UpdateConfig("unitframes", nil,           "all_procs",        "0")
-  pfUI:UpdateConfig("unitframes", nil,           "indicator_time",   "1")
-  pfUI:UpdateConfig("unitframes", nil,           "indicator_stacks",   "1")
-  pfUI:UpdateConfig("unitframes", nil,           "indicator_size",   "10")
 
   pfUI:UpdateConfig("unitframes", nil,           "clickcast",        "")
   pfUI:UpdateConfig("unitframes", nil,           "clickcast_shift",  "")
@@ -387,6 +379,17 @@ function pfUI:LoadConfig()
     pfUI:UpdateConfig("unitframes", unit,      "debuff_ind_pos",   "CENTER")
     pfUI:UpdateConfig("unitframes", unit,      "debuff_ind_size",  ".65")
     pfUI:UpdateConfig("unitframes", unit,      "debuff_ind_class", "1")
+
+    pfUI:UpdateConfig("unitframes", unit,      "show_buffs",       "1")
+    pfUI:UpdateConfig("unitframes", unit,      "show_hots",        "0")
+    pfUI:UpdateConfig("unitframes", unit,      "all_hots",         "0")
+    pfUI:UpdateConfig("unitframes", unit,      "show_procs",       "0")
+    pfUI:UpdateConfig("unitframes", unit,      "show_totems",      "0")
+    pfUI:UpdateConfig("unitframes", unit,      "all_procs",        "0")
+    pfUI:UpdateConfig("unitframes", unit,      "indicator_time",   "1")
+    pfUI:UpdateConfig("unitframes", unit,      "indicator_stacks", "1")
+    pfUI:UpdateConfig("unitframes", unit,      "indicator_size",   "10")
+
     pfUI:UpdateConfig("unitframes", unit,      "clickcast",        "0")
     pfUI:UpdateConfig("unitframes", unit,      "faderange",        "0")
     pfUI:UpdateConfig("unitframes", unit,      "alpha_visible",    "1")
@@ -1030,6 +1033,22 @@ function pfUI:MigrateConfig()
       pfUI_config.unitframes[unitframe].debuff_ind_class = pfUI_config.unitframes.debuffs_class
     end
     pfUI_config.unitframes.debuffs_class = nil
+  end
+
+  -- migrate buff indicators into seperate options (> 4.6.2)
+  if checkversion(4, 6, 2) and pfUI_config.unitframes.show_hots then
+    local unitframes = { "player", "target", "focus", "group", "grouptarget", "grouppet", "raid", "ttarget", "pet", "ptarget", "fallback", "tttarget" }
+    local options = { "show_hots", "all_hots", "show_procs", "show_totems", "all_procs", "indicator_time", "indicator_stacks", "indicator_size" }
+
+    for _, unitframe in pairs(unitframes) do
+      for _, option in pairs(options) do
+        pfUI_config.unitframes[unitframe][option] = pfUI_config.unitframes[option]
+      end
+    end
+
+    for _, option in pairs(options) do
+      pfUI_config.unitframes[option] = nil
+    end
   end
 
   pfUI_config.version = pfUI.version.string
