@@ -1309,9 +1309,13 @@ function pfUI.uf:RefreshUnit(unit, component)
 
   -- indicators
   if component == "all" or ( component == "all" or component == "aura" ) then
-    unit.dispellable = unit.dispellable or pfUI.uf:SetupDebuffFilter((unit.config.debuff_ind_class == "0" and true or nil))
+    if not unit.dispellable and unit.config.debuff_indicator == "1" then
+      unit.dispellable = pfUI.uf:SetupDebuffFilter((unit.config.debuff_ind_class == "0" and true or nil))
+    elseif not unit.dispellable then
+      unit.dispellable = {}
+    end
 
-    if table.getn(unit.dispellable) > 0 and unit.config.debuff_indicator ~= "0" then
+    if table.getn(unit.dispellable) > 0 then
       unit.hp.bar.debuffindicators = unit.hp.bar.debuffindicators or CreateFrame("Frame", nil, unit.hp.bar)
 
       -- 0 = OFF, 1 = Legacy, 2 = Glow, 3 = Square, 4 = Icons
@@ -1420,10 +1424,14 @@ function pfUI.uf:RefreshUnit(unit, component)
       unit.hp.bar.debuffindicators:Hide()
     end
 
-    unit.indicators = unit.indicators or pfUI.uf:SetupBuffIndicators(unit.config)
-    if table.getn(unit.indicators) > 0 and unit.config.buff_indicator == "1" then
-      local pos = 1
+    if not unit.indicators and unit.config.buff_indicator == "1" then
+      unit.indicators = pfUI.uf:SetupBuffIndicators(unit.config)
+    elseif not unit.indicators then
+      unit.indicators = {}
+    end
 
+    local pos = 1
+    if table.getn(unit.indicators) > 0 then
       for i=1,32 do
         local texture, count = UnitBuff(unitstr, i)
         local timeleft, _
@@ -1442,12 +1450,10 @@ function pfUI.uf:RefreshUnit(unit, component)
           end
         end
       end
-
-      -- hide unused icon slots
-      for pos=pos, 6 do
-        pfUI.uf:HideIcon(unit, pos)
-      end
     end
+
+    -- hide unused icon slots
+    for pos=pos, 6 do pfUI.uf:HideIcon(unit, pos) end
   end
 
   -- portrait
