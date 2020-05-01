@@ -19,7 +19,7 @@ pfUI:RegisterModule("addons", "vanilla:tbc", function ()
   pfUI.addons = CreateFrame("Frame", "pfAddons", UIParent)
   pfUI.addons:SetFrameStrata("DIALOG")
   pfUI.addons:SetHeight(490)
-  pfUI.addons:SetWidth(420)
+  pfUI.addons:SetWidth(380)
   pfUI.addons:SetPoint("CENTER", 0,0)
   pfUI.addons:EnableMouseWheel(1)
   pfUI.addons:SetMovable(true)
@@ -123,9 +123,9 @@ pfUI:RegisterModule("addons", "vanilla:tbc", function ()
     SetAddonProfile(T["Current"])
   end)
 
-  pfUI.addons.profile:SetPoint("TOP", pfUI.addons, "TOP", 0, -34)
-  pfUI.addons.profile:SetHeight(37)
-  pfUI.addons.profile:SetWidth(410)
+  pfUI.addons.profile:SetPoint("TOP", pfUI.addons, "TOP", 0, -30)
+  pfUI.addons.profile:SetHeight(30)
+  pfUI.addons.profile:SetWidth(370)
   CreateBackdrop(pfUI.addons.profile, nil, true)
 
   -- addon profile: title
@@ -199,8 +199,8 @@ pfUI:RegisterModule("addons", "vanilla:tbc", function ()
 
   -- addon list: scroll frame
   pfUI.addons.scroll = CreateScrollFrame("pfAddonListScroll", pfUI.addons)
-  pfUI.addons.scroll:SetHeight(400)
-  pfUI.addons.scroll:SetWidth(400)
+  pfUI.addons.scroll:SetWidth(360)
+  pfUI.addons.scroll:SetHeight(410)
   pfUI.addons.scroll:SetPoint("BOTTOM", 0, 10)
 
   pfUI.addons.scroll.backdrop = CreateFrame("Frame", nil, pfUI.addons.scroll)
@@ -225,9 +225,9 @@ pfUI:RegisterModule("addons", "vanilla:tbc", function ()
         local frame = pfUI.addons.list[i]
         frame.aname = aname
 
-        frame:SetWidth(350)
+        frame:SetWidth(340)
         frame:SetHeight(25)
-        frame:SetPoint("TOPLEFT", 25, i * -25)
+        frame:SetPoint("TOPLEFT", 5, i * -25 + 20)
 
         frame:SetBackdrop(pfUI.backdrop_hover)
         frame:SetBackdropBorderColor(1,1,1,.04)
@@ -291,7 +291,7 @@ pfUI:RegisterModule("addons", "vanilla:tbc", function ()
   -- show only frames in visible range
   function pfUI.addons.scroll:ShowVisibleRange()
     local top_index, bottom_index, range
-    range = floor(pfUI.addons.scroll:GetHeight() / 25)
+    range = floor(pfUI.addons.scroll:GetHeight() / 25) + 1
     top_index = floor(pfUI.addons.scroll:GetVerticalScroll() / 25) > 0 and floor(pfUI.addons.scroll:GetVerticalScroll() / 25) or 1
     bottom_index = top_index + range
     for i=1, GetNumAddOns() do
