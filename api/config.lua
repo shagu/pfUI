@@ -203,7 +203,6 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("unitframes", nil,           "show_procs",       "0")
   pfUI:UpdateConfig("unitframes", nil,           "show_totems",      "0")
   pfUI:UpdateConfig("unitframes", nil,           "all_procs",        "0")
-  pfUI:UpdateConfig("unitframes", nil,           "debuffs_class",    "0")
   pfUI:UpdateConfig("unitframes", nil,           "indicator_time",   "1")
   pfUI:UpdateConfig("unitframes", nil,           "indicator_stacks",   "1")
   pfUI:UpdateConfig("unitframes", nil,           "indicator_size",   "10")
@@ -387,6 +386,7 @@ function pfUI:LoadConfig()
     pfUI:UpdateConfig("unitframes", unit,      "debuff_indicator", "0")
     pfUI:UpdateConfig("unitframes", unit,      "debuff_ind_pos",   "CENTER")
     pfUI:UpdateConfig("unitframes", unit,      "debuff_ind_size",  ".65")
+    pfUI:UpdateConfig("unitframes", unit,      "debuff_ind_class", "1")
     pfUI:UpdateConfig("unitframes", unit,      "clickcast",        "0")
     pfUI:UpdateConfig("unitframes", unit,      "faderange",        "0")
     pfUI:UpdateConfig("unitframes", unit,      "alpha_visible",    "1")
@@ -1021,6 +1021,15 @@ function pfUI:MigrateConfig()
     pfUI_config.panel.xp.xp_always = pfUI_config.panel.xp.showalways
     pfUI_config.panel.xp.rep_always = pfUI_config.panel.xp.showalways
     pfUI_config.panel.xp.showalways = nil
+  end
+
+  -- migrate dispell indicators into seperate options (> 4.6.1)
+  if checkversion(4, 6, 1) and pfUI_config.unitframes.debuffs_class then
+    local unitframes = { "player", "target", "focus", "group", "grouptarget", "grouppet", "raid", "ttarget", "pet", "ptarget", "fallback", "tttarget" }
+    for _, unitframe in pairs(unitframes) do
+      pfUI_config.unitframes[unitframe].debuff_ind_class = pfUI_config.unitframes.debuffs_class
+    end
+    pfUI_config.unitframes.debuffs_class = nil
   end
 
   pfUI_config.version = pfUI.version.string

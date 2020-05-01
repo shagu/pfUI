@@ -1306,8 +1306,9 @@ function pfUI.uf:RefreshUnit(unit, component)
 
   -- indicators
   if component == "all" or component == "aura" then
-    pfUI.uf:SetupDebuffFilter()
-    if table.getn(pfUI.uf.debuffs) > 0 and unit.config.debuff_indicator ~= "0" then
+    unit.dispellable = unit.dispellable or pfUI.uf:SetupDebuffFilter((unit.config.debuff_ind_class == "0" and true or nil))
+
+    if table.getn(unit.dispellable) > 0 and unit.config.debuff_indicator ~= "0" then
       unit.hp.bar.debuffindicators = unit.hp.bar.debuffindicators or CreateFrame("Frame", nil, unit.hp.bar)
 
       -- 0 = OFF, 1 = Legacy, 2 = Glow, 3 = Square, 4 = Icons
@@ -1339,7 +1340,7 @@ function pfUI.uf:RefreshUnit(unit, component)
         end
       end
 
-      for _, debuff in pairs(pfUI.uf.debuffs) do
+      for _, debuff in pairs(unit.dispellable) do
         indicator[debuff] = indicator[debuff] or CreateFrame("Frame", nil, indicator)
         indicator[debuff]:SetParent(indicator)
         indicator[debuff].tex = indicator[debuff].tex or indicator[debuff]:CreateTexture(nil)
@@ -1750,26 +1751,27 @@ function pfUI.uf:HideIcon(frame, pos)
   end
 end
 
-function pfUI.uf:SetupDebuffFilter()
-  if pfUI.uf.debuffs then return end
-
+function pfUI.uf:SetupDebuffFilter(allclasses)
   local _, myclass = UnitClass("player")
-  pfUI.uf.debuffs = {}
-  if myclass == "PALADIN" or myclass == "PRIEST" or myclass == "WARLOCK" or pfUI_config.unitframes.debuffs_class == "0" then
-    table.insert(pfUI.uf.debuffs, "Magic")
+  local debuffs = {}
+
+  if myclass == "PALADIN" or myclass == "PRIEST" or myclass == "WARLOCK" or allclasses then
+    table.insert(debuffs, "Magic")
   end
 
-  if myclass == "DRUID" or myclass == "PALADIN" or myclass == "SHAMAN" or pfUI_config.unitframes.debuffs_class == "0" then
-    table.insert(pfUI.uf.debuffs, "Poison")
+  if myclass == "DRUID" or myclass == "PALADIN" or myclass == "SHAMAN" or allclasses then
+    table.insert(debuffs, "Poison")
   end
 
-  if myclass == "PRIEST" or myclass == "PALADIN" or myclass == "SHAMAN" or pfUI_config.unitframes.debuffs_class == "0" then
-    table.insert(pfUI.uf.debuffs, "Disease")
+  if myclass == "PRIEST" or myclass == "PALADIN" or myclass == "SHAMAN" or allclasses then
+    table.insert(debuffs, "Disease")
   end
 
-  if myclass == "DRUID" or myclass == "MAGE" or pfUI_config.unitframes.debuffs_class == "0" then
-    table.insert(pfUI.uf.debuffs, "Curse")
+  if myclass == "DRUID" or myclass == "MAGE" or allclasses then
+    table.insert(debuffs, "Curse")
   end
+
+  return debuffs
 end
 
 function pfUI.uf:SetupBuffFilter()
