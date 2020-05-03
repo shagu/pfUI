@@ -38,6 +38,7 @@ libhealth:SetScript("OnEvent", function()
       target = nil
     end
   elseif target and event == "UNIT_COMBAT" and arg1 == "target" then
+    if arg2 and arg2 == "HEAL" then return end
     dmg = dmg + arg4
   elseif target and event == "UNIT_HEALTH" and arg1 == "target" then
     diff = perc-_G.UnitHealth("target")
