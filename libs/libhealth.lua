@@ -82,16 +82,7 @@ local function GetUnitHealthByName(self, unit, level, cur, max)
   return cur, max
 end
 
-local function GetDBHealth(self, dbstring)
-  if mobdb[dbstring] and mobdb[dbstring][1] and mobdb[dbstring][2] > libhealth.reqdmg and mobdb[dbstring][3] > libhealth.reqhit then
-    return mobdb[dbstring][1]/100, mobdb[dbstring][1]
-  end
-
-  return nil, nil
-end
-
 -- add api calls to global tree
 pfUI.libhealth = libhealth
 pfUI.libhealth.GetUnitHealth = GetUnitHealth
 pfUI.libhealth.GetUnitHealthByName = GetUnitHealthByName
-pfUI.libhealth.GetDBHealth = GetDBHealth
