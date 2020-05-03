@@ -63,7 +63,7 @@ local function GetUnitHealth(self, unitstr)
 
   if unit and level and max == 100 then
     dbstring = string.format("%s:%s", unit, level)
-    if mobdb[dbstring] and mobdb[dbstring][1] and cur <= 100 and mobdb[dbstring][2] > libhealth.reqdmg and mobdb[dbstring][3] > libhealth.reqhit then
+    if mobdb[dbstring] and mobdb[dbstring][1] and cur <= 100 and mobdb[dbstring][2] > libhealth.reqdmg and (not mobdb[dbstring][3] or mobdb[dbstring][3] > libhealth.reqhit) then
       return ceil(mobdb[dbstring][1]/100*cur), mobdb[dbstring][1], true
     end
   end
@@ -74,7 +74,7 @@ end
 local function GetUnitHealthByName(self, unit, level, cur, max)
   if max == 100 then
     dbstring = string.format("%s:%s", unit, (level or 0))
-    if mobdb[dbstring] and mobdb[dbstring][1] and cur <= 100 and mobdb[dbstring][2] > libhealth.reqdmg and mobdb[dbstring][3] > libhealth.reqhit then
+    if mobdb[dbstring] and mobdb[dbstring][1] and cur <= 100 and mobdb[dbstring][2] > libhealth.reqdmg and (not mobdb[dbstring][3] or mobdb[dbstring][3] > libhealth.reqhit) then
       return ceil(mobdb[dbstring][1]/100*cur), mobdb[dbstring][1], true
     end
   end
