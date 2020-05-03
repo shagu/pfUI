@@ -394,11 +394,18 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     plate.health:SetValue(hp)
 
     if C.nameplates.showhp == "1" then
-      local realhp, realhpmax
-      if pfUI.libhealth and pfUI.libhealth.enabled then
-        realhp, realhpmax = pfUI.libhealth:GetDBHealth(name .. ":" .. level)
+      local rhp, rhpmax, estimated
+      if hpmax > 100 then
+        rhp, rhpmax = hp, hpmax
+      elseif pfUI.libhealth and pfUI.libhealth.enabled then
+        rhp, rhpmax, estimated = pfUI.libhealth:GetUnitHealthByName(name,level,tonumber(hp),tonumber(hpmax))
       end
-      plate.health.text:SetText(string.format("%s / %s", realhp and ceil(realhp*hp) or hp, realhpmax or hpmax))
+
+      if estimated or hpmax > 100 then
+        plate.health.text:SetText(string.format("%s / %s", Abbreviate(rhp), Abbreviate(rhpmax)))
+      else
+        plate.health.text:SetText(string.format("%s%%", hp))
+      end
     else
       plate.health.text:SetText()
     end
