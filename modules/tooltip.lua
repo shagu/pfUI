@@ -135,7 +135,7 @@ pfUI:RegisterModule("tooltip", "vanilla:tbc", function ()
     local _, hpmax = GameTooltipStatusBar:GetMinMaxValues()
     local rhp, rhpmax, estimated
 
-    if hpmax > 100 then
+    if hpmax > 100 or (round(hpmax/100*hp) ~= hp) then
       rhp, rhpmax = hp, hpmax
     elseif pfUI.libhealth and pfUI.libhealth.enabled then
       rhp, rhpmax, estimated = pfUI.libhealth:GetUnitHealthByName(this.name, this.level, tonumber(hp), tonumber(hpmax))
@@ -149,7 +149,7 @@ pfUI:RegisterModule("tooltip", "vanilla:tbc", function ()
       end
     end
 
-    if C.tooltip.alwaysperc == "0" and ( estimated or hpmax > 100 ) then
+    if C.tooltip.alwaysperc == "0" and ( estimated or hpmax > 100 or (round(hpmax/100*hp) ~= hp) ) then
       pfUI.tooltipStatusBar.HP:SetText(string.format("%s / %s", Abbreviate(rhp), Abbreviate(rhpmax)))
     else
       pfUI.tooltipStatusBar.HP:SetText(string.format("%s%%", hp))
