@@ -628,6 +628,7 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("nameplates", nil,           "totems",           "1")
 
   pfUI:UpdateConfig("nameplates", nil,           "showhp",           "0")
+  pfUI:UpdateConfig("nameplates", nil,           "alwaysperc",       "0")
   pfUI:UpdateConfig("nameplates", nil,           "vpos",             "-10")
   pfUI:UpdateConfig("nameplates", nil,           "width",            "120")
   pfUI:UpdateConfig("nameplates", nil,           "debuffsize",       "14")

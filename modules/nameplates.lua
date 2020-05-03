@@ -401,7 +401,7 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
         rhp, rhpmax, estimated = pfUI.libhealth:GetUnitHealthByName(name,level,tonumber(hp),tonumber(hpmax))
       end
 
-      if estimated or hpmax > 100 then
+      if C.nameplates.alwaysperc == "0" and ( estimated or hpmax > 100 ) then
         plate.health.text:SetText(string.format("%s / %s", Abbreviate(rhp), Abbreviate(rhpmax)))
       else
         plate.health.text:SetText(string.format("%s%%", hp))
