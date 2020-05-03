@@ -131,28 +131,29 @@ pfUI:RegisterModule("tooltip", "vanilla:tbc", function ()
   end)
 
   pfUI.tooltipStatusBar:SetScript("OnUpdate", function()
-      local hp = GameTooltipStatusBar:GetValue()
-      local _, hpm = GameTooltipStatusBar:GetMinMaxValues()
-      local index = (this.name or "") .. ":" .. (this.level or "")
-      if hp and hpm then
-        local realhp, realhpmax
-        if pfUI.libhealth and pfUI.libhealth.enabled then
-          realhp, realhpmax = pfUI.libhealth:GetDBHealth(index)
-          if realhp then realhp = ceil(realhp*hp) end
-        elseif MobHealthFrame then
-          local ppp = MobHealth_PPP(index)
-          if perc and ppp and ppp > 0 and not UnitIsUnit("mouseover", "pet") then
-            realhp = round(hp * ppp)
-            realhpmax = round(100 * ppp)
-          end
-        end
+    local hp = GameTooltipStatusBar:GetValue()
+    local _, hpmax = GameTooltipStatusBar:GetMinMaxValues()
+    local rhp, rhpmax, estimated
 
-        local hptext = pfUI.api.Abbreviate(realhp or hp)
-        local hptextmax = pfUI.api.Abbreviate(realhpmax or hpm)
-        if pfUI.tooltipStatusBar and pfUI.tooltipStatusBar.HP then
-          pfUI.tooltipStatusBar.HP:SetText(string.format("%s / %s", hptext, hptextmax))
-        end
+    if hpmax > 100 then
+      rhp, rhpmax = hp, hpmax
+    elseif pfUI.libhealth and pfUI.libhealth.enabled then
+      rhp, rhpmax, estimated = pfUI.libhealth:GetUnitHealthByName(this.name, this.level, tonumber(hp), tonumber(hpmax))
+    elseif MobHealthFrame then
+      local index = (this.name or "") .. ":" .. (this.level or "")
+      local ppp = MobHealth_PPP(index)
+      if perc and ppp and ppp > 0 and not UnitIsUnit("mouseover", "pet") then
+        rhp = round(hp * ppp)
+        rhpmax = round(100 * ppp)
+        estimated = true
       end
+    end
+
+    if estimated or hpmax > 100 then
+      pfUI.tooltipStatusBar.HP:SetText(string.format("%s / %s", Abbreviate(rhp), Abbreviate(rhpmax)))
+    else
+      pfUI.tooltipStatusBar.HP:SetText(string.format("%s%%", hp))
+    end
   end)
 
   GameTooltipStatusBar:SetHeight(6)
