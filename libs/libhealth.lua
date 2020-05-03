@@ -8,6 +8,8 @@ local target, dmg, perc, diff = nil, 0, 0, 0, 0
 local UnitHealth, UnitHealthMax
 local libhealth = CreateFrame("Frame")
 libhealth.enabled = true
+libhealth.reqhit = 4
+libhealth.reqdmg = 5
 libhealth:RegisterEvent("UNIT_HEALTH")
 libhealth:RegisterEvent("UNIT_COMBAT")
 libhealth:RegisterEvent("PLAYER_TARGET_CHANGED")
@@ -20,6 +22,8 @@ libhealth:SetScript("OnEvent", function()
 
     -- load enable state and set functions
     libhealth.enabled = pfUI_config["global"]["libhealth"] == "1" and true or nil
+    libhealth.reqhit = tonumber(pfUI_config["global"]["libhealth_hit"])
+    libhealth.reqdmg = tonumber(pfUI_config["global"]["libhealth_dmg"]) * 100
   end
 
   -- return as we're not supposed to be here
@@ -42,6 +46,7 @@ libhealth:SetScript("OnEvent", function()
       if not mobdb[target][2] or diff > mobdb[target][2] then
         mobdb[target][1] = ceil(dmg / diff * 100)
         mobdb[target][2] = diff
+        mobdb[target][3] = mobdb[target][3] and mobdb[target][3] + 1 or 1
       end
     end
   end
@@ -57,7 +62,7 @@ local function GetUnitHealth(self, unitstr)
 
   if unit and level and max == 100 then
     dbstring = string.format("%s:%s", unit, level)
-    if mobdb[dbstring] and mobdb[dbstring][1] and mobdb[dbstring][2] > 5 then
+    if mobdb[dbstring] and mobdb[dbstring][1] and mobdb[dbstring][2] > libhealth.reqdmg and mobdb[dbstring][3] > libhealth.reqhit then
       return ceil(mobdb[dbstring][1]/100*cur), mobdb[dbstring][1]
     end
   end
@@ -66,7 +71,7 @@ local function GetUnitHealth(self, unitstr)
 end
 
 local function GetDBHealth(self, dbstring)
-  if mobdb[dbstring] and mobdb[dbstring][1] and mobdb[dbstring][2] > 5 then
+  if mobdb[dbstring] and mobdb[dbstring][1] and mobdb[dbstring][2] > libhealth.reqdmg and mobdb[dbstring][3] > libhealth.reqhit then
     return mobdb[dbstring][1]/100, mobdb[dbstring][1]
   end
 
