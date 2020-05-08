@@ -185,9 +185,18 @@ function pfUI.uf:UpdateVisibility()
     return
   end
 
+  -- cache result of strsub to avoid repeating calls
+  if not self.cache_raid then
+    if strsub(self:GetName(),0,6) == "pfRaid" then
+      self.cache_raid = tonumber(strsub(self:GetName(),7,8))
+    else
+      self.cache_raid = 0
+    end
+  end
+
   -- show groupframes as raid
-  if strsub(self:GetName(),0,6) == "pfRaid" then
-    local id = tonumber(strsub(self:GetName(),7,8))
+  if self.cache_raid > 0 then
+    local id = self.cache_raid
 
     -- always show self in raidframes
     if not UnitInRaid("player") and GetNumPartyMembers() == 0 and C.unitframes.selfinraid == "1" and id == 1 then
