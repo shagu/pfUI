@@ -1309,7 +1309,7 @@ function pfUI.uf:RefreshUnit(unit, component)
 
   -- indicators
   if component == "all" or ( component == "all" or component == "aura" ) then
-    if not unit.dispellable and unit.config.debuff_indicator == "1" then
+    if not unit.dispellable and unit.config.debuff_indicator ~= "0" then
       unit.dispellable = pfUI.uf:SetupDebuffFilter((unit.config.debuff_ind_class == "0" and true or nil))
     elseif not unit.dispellable then
       unit.dispellable = {}
