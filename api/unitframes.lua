@@ -980,7 +980,7 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
   -- disable events for unknown unitstrings
   if not pfValidUnits[unit .. id] then
     f.unitname = unit
-    f.label, f.id = "mouseover", ""
+    f.label, f.id = "", ""
     f.RegisterEvent = function() return end
   end
 
