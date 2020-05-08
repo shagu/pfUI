@@ -782,6 +782,11 @@ function pfUI.uf.OnUpdate()
   -- update combat feedback
   if this.feedbackText then CombatFeedback_OnUpdate(arg1) end
 
+  -- early return on unset focus frames
+  if this.unitname and this.unitname == "focus" then
+    return
+  end
+
   -- focus unit detection
   if this.unitname and this.unitname ~= strlower(unitname) then
     -- invalid focus frame
