@@ -296,10 +296,13 @@ end
 -- 'returns:    [string]           the abbreviated value
 function pfUI.api.Abbreviate(number)
   if pfUI_config.unitframes.abbrevnum == "1" then
+    local sign = number < 0 and -1 or 1
+    number = math.abs(number)
+
     if number > 1000000 then
-      return pfUI.api.round(number/1000000,2) .. "m"
+      return pfUI.api.round(number/1000000*sign,2) .. "m"
     elseif number > 1000 then
-      return pfUI.api.round(number/1000,2) .. "k"
+      return pfUI.api.round(number/1000*sign,2) .. "k"
     end
   end
 
