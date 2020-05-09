@@ -218,12 +218,18 @@ pfUI:RegisterModule("addons", "vanilla:tbc", function ()
   pfUI.addons.list:SetScript("OnEvent", function()
     for i=1, GetNumAddOns() do
       local aname, atitle, anote = GetAddOnInfo(i)
+      local aauthor = GetAddOnMetadata(aname, "Author")
+      local aversion = GetAddOnMetadata(aname, "Version")
 
       -- basic frame
       if not pfUI.addons.list[i] then
         pfUI.addons.list[i] = CreateFrame("Button", nil, pfUI.addons.list)
         local frame = pfUI.addons.list[i]
         frame.aname = aname
+        frame.atitle = atitle
+        frame.anote = anote
+        frame.aauthor = aauthor
+        frame.aversion = aversion
 
         frame:SetWidth(340)
         frame:SetHeight(25)
@@ -235,10 +241,25 @@ pfUI:RegisterModule("addons", "vanilla:tbc", function ()
         frame:EnableMouse(1)
         frame:SetScript("OnEnter", function()
           this:SetBackdropBorderColor(1,1,1,.08)
+
+          GameTooltip:SetOwner(this, "ANCHOR_RIGHT")
+          GameTooltip:SetText(this.atitle)
+          if this.aversion then
+            GameTooltip:AddDoubleLine(T["Version"], this.aversion, 1,1,1, .2,1,.8)
+          end
+
+          if this.aauthor then
+            GameTooltip:AddDoubleLine(T["Author"], this.aauthor, 1,1,1, .2,1,.8)
+          end
+
+          GameTooltip:AddLine(this.anote, .75,.75,.75,1)
+          GameTooltip:SetWidth(180)
+          GameTooltip:Show()
         end)
 
         frame:SetScript("OnLeave", function()
           this:SetBackdropBorderColor(1,1,1,.04)
+          GameTooltip:Hide()
         end)
 
         frame:SetScript("OnClick", function()
