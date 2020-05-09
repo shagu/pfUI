@@ -25,7 +25,9 @@ do -- statusbars
 
       if val == self.val_ then
         animations[self] = nil
-      elseif self.mode == "vertical" then
+      end
+
+      if self.mode == "vertical" then
         height = self:GetHeight()
         if pfUI.expansion == "vanilla" then height = height / self:GetEffectiveScale() end
         point = height / (self.max - self.min) * (val - self.min)
