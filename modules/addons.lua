@@ -215,6 +215,46 @@ pfUI:RegisterModule("addons", "vanilla:tbc", function ()
   pfUI.addons.list:RegisterEvent("PLAYER_ENTERING_WORLD")
   pfUI.addons.list:SetHeight(GetNumAddOns() * 25 + 26)
 
+  local function AddonOnEnter()
+    this:SetBackdropBorderColor(1,1,1,.08)
+
+    GameTooltip:SetOwner(this, "ANCHOR_RIGHT")
+    GameTooltip:SetText(this.atitle)
+    if this.aversion then
+      GameTooltip:AddDoubleLine(T["Version"], this.aversion, 1,1,1, .2,1,.8)
+    end
+
+    if this.aauthor then
+      GameTooltip:AddDoubleLine(T["Author"], this.aauthor, 1,1,1, .2,1,.8)
+    end
+
+    GameTooltip:AddLine(this.anote, .75,.75,.75,1)
+    GameTooltip:SetWidth(180)
+    GameTooltip:Show()
+  end
+
+  local function AddonOnLeave()
+    this:SetBackdropBorderColor(1,1,1,.04)
+    GameTooltip:Hide()
+  end
+
+  local function AddonOnClick()
+    this.input:Click()
+  end
+
+  local function InputOnClick()
+    if this:GetChecked() then
+      EnableAddOn(this:GetID())
+    else
+      DisableAddOn(this:GetID())
+    end
+    pfUI.addons.hasChanged = true
+
+    local id, name = pfUI.addons.profile.dropdown:GetSelection()
+    name = name or T["Current"]
+    pfUI_addon_profiles[name] = GetSelectedAddonsList()
+  end
+
   pfUI.addons.list:SetScript("OnEvent", function()
     for i=1, GetNumAddOns() do
       local aname, atitle, anote = GetAddOnInfo(i)
@@ -239,32 +279,9 @@ pfUI:RegisterModule("addons", "vanilla:tbc", function ()
         frame:SetBackdropBorderColor(1,1,1,.04)
 
         frame:EnableMouse(1)
-        frame:SetScript("OnEnter", function()
-          this:SetBackdropBorderColor(1,1,1,.08)
-
-          GameTooltip:SetOwner(this, "ANCHOR_RIGHT")
-          GameTooltip:SetText(this.atitle)
-          if this.aversion then
-            GameTooltip:AddDoubleLine(T["Version"], this.aversion, 1,1,1, .2,1,.8)
-          end
-
-          if this.aauthor then
-            GameTooltip:AddDoubleLine(T["Author"], this.aauthor, 1,1,1, .2,1,.8)
-          end
-
-          GameTooltip:AddLine(this.anote, .75,.75,.75,1)
-          GameTooltip:SetWidth(180)
-          GameTooltip:Show()
-        end)
-
-        frame:SetScript("OnLeave", function()
-          this:SetBackdropBorderColor(1,1,1,.04)
-          GameTooltip:Hide()
-        end)
-
-        frame:SetScript("OnClick", function()
-          this.input:Click()
-        end)
+        frame:SetScript("OnEnter", AddonOnEnter)
+        frame:SetScript("OnLeave", AddonOnLeave)
+        frame:SetScript("OnClick", AddonOnClick)
 
         -- caption
         frame.caption = frame:CreateFontString("Status", "LOW", "GameFontNormal")
@@ -286,18 +303,7 @@ pfUI:RegisterModule("addons", "vanilla:tbc", function ()
         frame.input:SetHeight(14)
         frame.input:SetPoint("RIGHT" , -5, 1)
         frame.input:SetID(i)
-        frame.input:SetScript("OnClick", function ()
-          if this:GetChecked() then
-            EnableAddOn(this:GetID())
-          else
-            DisableAddOn(this:GetID())
-          end
-          pfUI.addons.hasChanged = true
-
-          local id, name = pfUI.addons.profile.dropdown:GetSelection()
-          name = name or T["Current"]
-          pfUI_addon_profiles[name] = GetSelectedAddonsList()
-        end)
+        frame.input:SetScript("OnClick", InputOnClick)
       end
 
       if IsAddOnLoaded(i) then
