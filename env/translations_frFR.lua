@@ -32,6 +32,7 @@ pfUI_translation["frFR"] = {
   ["A new version is available"] = nil,
   ["Appearance"] = "Apparence",
   ["Ascending"] = nil,
+  ["Author"] = nil,
   ["Auto-Castable Action Indicator"] = nil,
   ["Auto Hide"] = nil,
   ["Autohide Timeout"] = nil,

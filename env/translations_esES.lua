@@ -32,6 +32,7 @@ pfUI_translation["esES"] = {
   ["A new version is available"] = "Una nueva versión está disponible",
   ["Appearance"] = "Apariencia",
   ["Ascending"] = "Ascendiendo",
+  ["Author"] = nil,
   ["Auto-Castable Action Indicator"] = "Indicador de acción que autolanzarse",
   ["Auto Hide"] = "Ocultar automáticamente",
   ["Autohide Timeout"] = "Ocultar automáticamente el temporizador",
