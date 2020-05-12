@@ -633,10 +633,9 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
       end
 
       -- disable click events while spell is targeting
-      if C.nameplates["clickthrough"] == "1" or SpellIsTargeting() then
-        this.nameplate:EnableMouse(false)
-      else
-        this.nameplate:EnableMouse(true)
+      local mouseEnabled = this.nameplate:IsMouseEnabled()
+      if C.nameplates["clickthrough"] == "0" and ( C.nameplates["overlap"] == "1" or C.nameplates["rightclick"] == "1" ) and SpellIsTargeting() == mouseEnabled then
+        this.nameplate:EnableMouse(not mouseEnabled)
       end
 
       hookOnUpdate(self)
