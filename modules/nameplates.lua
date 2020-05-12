@@ -591,10 +591,10 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
 
       local parent = self
       local nameplate = self.nameplate
-      local plate = (C.nameplates["overlap"] == "1" or C.nameplates["rightclick"] == "1") and nameplate or parent
+      local plate = C.nameplates["overlap"] == "1" and nameplate or parent
 
       -- replace clickhandler
-      if C.nameplates["overlap"] == "1" or C.nameplates["rightclick"] == "1" then
+      if C.nameplates["overlap"] == "1" then
         parent:SetFrameLevel(0)
         nameplate:SetScript("OnClick", function() parent:Click() end)
 
@@ -634,7 +634,7 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
 
       -- disable click events while spell is targeting
       local mouseEnabled = this.nameplate:IsMouseEnabled()
-      if C.nameplates["clickthrough"] == "0" and ( C.nameplates["overlap"] == "1" or C.nameplates["rightclick"] == "1" ) and SpellIsTargeting() == mouseEnabled then
+      if C.nameplates["clickthrough"] == "0" and C.nameplates["overlap"] == "1" and SpellIsTargeting() == mouseEnabled then
         this.nameplate:EnableMouse(not mouseEnabled)
       end
 
