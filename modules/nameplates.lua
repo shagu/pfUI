@@ -620,7 +620,6 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
       end
     end
 
-    -- disable click events while spell is targeting
     local hookOnUpdate = nameplates.OnUpdate
     nameplates.OnUpdate = function(self)
       if C.nameplates["overlap"] == "1" then
@@ -633,9 +632,11 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
         this:SetHeight(this.nameplate:GetHeight() * UIParent:GetScale())
       end
 
-      local mouseEnabled = this.nameplate:IsMouseEnabled()
-      if C.nameplates["clickthrough"] == "0" and C.nameplates["legacy"] == "0" and SpellIsTargeting() == mouseEnabled then
-        this.nameplate:EnableMouse(not mouseEnabled)
+      -- disable click events while spell is targeting
+      if C.nameplates["clickthrough"] == "1" or SpellIsTargeting() then
+        this.nameplate:EnableMouse(false)
+      else
+        this.nameplate:EnableMouse(true)
       end
 
       hookOnUpdate(self)
