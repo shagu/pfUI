@@ -93,20 +93,28 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     end
   end
 
-  local function PlateCacheDebuffs(self, unitstr)
+  local function PlateCacheDebuffs(self, unitstr, verify)
     if not self.debuffcache then self.debuffcache = {} end
 
     for id = 1, 16 do
       local effect, _, texture, stacks, _, duration, timeleft = libdebuff:UnitDebuff(unitstr, id)
-      self.debuffcache[id] = self.debuffcache[id] or {}
-      self.debuffcache[id].effect = effect
-      self.debuffcache[id].texture = texture
-      self.debuffcache[id].stacks = stacks
-      self.debuffcache[id].duration = duration or 0
-
-      self.debuffcache[id].start = GetTime() - ( (duration or 0) - ( timeleft or 0) )
-      self.debuffcache[id].stop = GetTime() + ( timeleft or 0 )
+      if effect and timeleft then
+        local start = GetTime() - ( (duration or 0) - ( timeleft or 0) )
+        local stop = GetTime() + ( timeleft or 0 )
+        self.debuffcache[id] = self.debuffcache[id] or {}
+        self.debuffcache[id].effect = effect
+        self.debuffcache[id].texture = texture
+        self.debuffcache[id].stacks = stacks
+        self.debuffcache[id].duration = duration or 0
+        self.debuffcache[id].start = start
+        self.debuffcache[id].stop = stop
+      elseif self.debuffcache[id] then
+        self.debuffcache[id] = nil
+        table.remove(self.debuffcache, id)
+      end
     end
+
+    self.verify = verify
   end
 
   local function PlateUnitDebuff(self, id)
@@ -464,29 +472,11 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
 
     -- update debuffs
     if C.nameplates["showdebuffs"] == "1" then
+      local verify = string.format("%s:%s", (name or ""), (level or ""))
 
       -- update cached debuffs
-      if C.nameplates["guessdebuffs"] == "1" then
-        local verify = string.format("%s:%s", (name or ""), (level or ""))
-
-        if unitstr then
-          -- cache all debuffs
-          plate:CacheDebuffs(unitstr)
-          plate.debuffcache.valid = verify
-        elseif plate.debuffcache and plate.debuffcache.valid == verify then
-          -- delete timed out caches
-          for id = 1, 16 do
-            if plate.debuffcache[id].stop and plate.debuffcache[id].stop < GetTime() then
-              table.remove(plate.debuffcache, id)
-            end
-          end
-        elseif plate.debuffcache then
-          -- nameplate changed, invalidating cache
-          for id = 1, 16 do
-            plate.debuffcache[id] = plate.debuffcache[id] or {}
-            plate.debuffcache[id].effect = nil
-          end
-        end
+      if C.nameplates["guessdebuffs"] == "1" and unitstr then
+        plate:CacheDebuffs(unitstr, verify)
       end
 
       -- update all debuff icons
@@ -494,7 +484,7 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
         local effect, rank, texture, stacks, dtype, duration, timeleft
         if unitstr then
           effect, rank, texture, stacks, dtype, duration, timeleft = libdebuff:UnitDebuff(unitstr, i)
-        else
+        elseif plate.verify == verify then
           effect, rank, texture, stacks, dtype, duration, timeleft = plate:UnitDebuff(i)
         end
 
@@ -572,6 +562,32 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
       frame.nameplate.cache.levelcolor = r + g + b
       frame.nameplate.level:SetTextColor(r,g,b,1)
       update = true
+    end
+
+    -- scan for debuff timeouts
+    if frame.nameplate.debuffcache then
+      local plate = frame.nameplate
+
+      -- delete timed out caches
+      for id, data in pairs(plate.debuffcache) do
+        if not data.stop or data.stop < GetTime() then
+          plate.debuffcache[id] = nil
+          trigger = true
+        end
+      end
+
+      -- remove nil keys whenever a value was removed
+      if trigger then
+        local count = 1
+        for id, data in pairs(plate.debuffcache) do
+          if id ~= count then
+            plate.debuffcache[count] = plate.debuffcache[id]
+            plate.debuffcache[id] = nil
+          end
+          count = count + 1
+        end
+        update = true
+      end
     end
 
     -- run full updates if required
