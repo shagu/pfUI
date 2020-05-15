@@ -93,6 +93,31 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     end
   end
 
+  local function PlateCacheDebuffs(self, unitstr)
+    if not self.debuffcache then self.debuffcache = {} end
+
+    for id = 1, 16 do
+      local effect, _, texture, stacks, _, duration, timeleft = libdebuff:UnitDebuff(unitstr, id)
+      self.debuffcache[id] = self.debuffcache[id] or {}
+      self.debuffcache[id].effect = effect
+      self.debuffcache[id].texture = texture
+      self.debuffcache[id].stacks = stacks
+      self.debuffcache[id].duration = duration or 0
+
+      self.debuffcache[id].start = GetTime() - ( (duration or 0) - ( timeleft or 0) )
+      self.debuffcache[id].stop = GetTime() + ( timeleft or 0 )
+    end
+  end
+
+  local function PlateUnitDebuff(self, id)
+    if not self.debuffcache then return end
+    if not self.debuffcache[id] then return end
+    if not self.debuffcache[id].stop then return end
+
+    local c = self.debuffcache[id]
+    return c.effect, c.rank, c.texture, c.stacks, c.dtype, c.duration, (c.stop - GetTime())
+  end
+
   -- create nameplate core
   local nameplates = CreateFrame("Frame", "pfNameplates", UIParent)
   nameplates:SetScript("OnUpdate", function()
@@ -133,6 +158,8 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     nameplate:EnableMouse(0)
     nameplate.parent = parent
     nameplate.cache = {}
+    nameplate.UnitDebuff = PlateUnitDebuff
+    nameplate.CacheDebuffs = PlateCacheDebuffs
 
     -- create shortcuts for all known elements and disable them
     parent.healthbar, parent.castbar = parent:GetChildren()
@@ -436,20 +463,54 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     end
 
     -- update debuffs
-    for i = 1, 16 do
-      if target and C.nameplates["showdebuffs"] == "1" and UnitDebuff("target", i) then
-        local name, _, icon = libdebuff:UnitDebuff("target", i)
-        plate.debuffs[i]:Show()
-        plate.debuffs[i].icon:SetTexture(icon)
-        plate.debuffs[i].icon:SetTexCoord(.078, .92, .079, .937)
+    if C.nameplates["showdebuffs"] == "1" then
+      -- update debuff caches
+      local verify = string.format("%s:%s", (name or ""), (level or ""))
 
-        local name, rank, texture, stacks, dtype, duration, timeleft = libdebuff:UnitDebuff("target", i)
-        if duration and timeleft then
-          plate.debuffs[i].cd:SetAlpha(0)
-          plate.debuffs[i].cd:Show()
-          CooldownFrame_SetTimer(plate.debuffs[i].cd, GetTime() + timeleft - duration, duration, 1)
+      if unitstr then
+        -- cache all debuffs
+        plate:CacheDebuffs(unitstr)
+        plate.debuffcache.valid = verify
+      elseif plate.debuffcache and plate.debuffcache.valid == verify then
+        -- delete timed out caches
+        for id, data in pairs(plate.debuffcache) do
+          if data.stop and data.stop < GetTime() then
+            table.remove(plate.debuffcache, id)
+          end
         end
-      else
+      elseif plate.debuffcache then
+        -- nameplate changed, invalidating cache
+        for id = 1, 16 do
+          plate.debuffcache[id] = plate.debuffcache[id] or {}
+          plate.debuffcache[id].effect = nil
+        end
+      end
+
+      -- update all debuff icons
+      for i = 1, 16 do
+        local effect, rank, texture, stacks, dtype, duration, timeleft
+        if unitstr then
+          effect, rank, texture, stacks, dtype, duration, timeleft = libdebuff:UnitDebuff(unitstr, i)
+        else
+          effect, rank, texture, stacks, dtype, duration, timeleft = plate:UnitDebuff(i)
+        end
+
+        if effect and texture then
+          plate.debuffs[i]:Show()
+          plate.debuffs[i].icon:SetTexture(texture)
+          plate.debuffs[i].icon:SetTexCoord(.078, .92, .079, .937)
+
+          if duration and timeleft then
+            plate.debuffs[i].cd:SetAlpha(0)
+            plate.debuffs[i].cd:Show()
+            CooldownFrame_SetTimer(plate.debuffs[i].cd, GetTime() + timeleft - duration, duration, 1)
+          end
+        else
+          plate.debuffs[i]:Hide()
+        end
+      end
+    else
+      for i = 1, 16 do
         plate.debuffs[i]:Hide()
       end
     end
