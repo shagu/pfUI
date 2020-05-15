@@ -463,34 +463,42 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
   end
 
   nameplates.OnUpdate = function(frame)
+    local update
     local frame = frame or this
     local name = frame.name:GetText()
+    local target = UnitExists("target") and frame:GetAlpha() == 1 or nil
+    local mouseover = UnitExists("mouseover") and frame.glow:IsShown() or nil
 
     if frame:GetAlpha() < tonumber(C.nameplates.notargalpha) then frame:SetAlpha(tonumber(C.nameplates.notargalpha)) end
 
-    -- trigger update when target state changed
-    local target = UnitExists("target") and frame:GetAlpha() == 1 or nil
-    if target ~= frame.nameplate.cache.istarget then
-      frame.nameplate.cache.istarget = target
-      nameplates:OnDataChanged(frame.nameplate)
+    -- queue update on visual target update
+    if frame.nameplate.cache.target ~= target then
+      frame.nameplate.cache.target = target
+      update = true
+    end
+
+    -- queue update on visual mouseover update
+    if frame.nameplate.cache.mouseover ~= mouseover then
+      frame.nameplate.cache.mouseover = mouseover
+      update = true
     end
 
     -- trigger update when unit was found
     if frame.nameplate.wait_for_scan and GetUnitData(name, true) then
       frame.nameplate.wait_for_scan = nil
-      nameplates:OnDataChanged(frame.nameplate)
+      update = true
     end
 
     -- trigger update when name color changed
     local r, g, b = frame.name:GetTextColor()
     if r + g + b ~= frame.nameplate.cache.namecolor then
       frame.nameplate.cache.namecolor = r + g + b
-
       if r > .9 and g < .2 and b < .2 then
         frame.nameplate.name:SetTextColor(1,0.4,0.2,1) -- infight
       else
         frame.nameplate.name:SetTextColor(r,g,b,1)
       end
+      update = true
     end
 
     -- trigger update when name color changed
@@ -499,6 +507,11 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     if r + g + b ~= frame.nameplate.cache.levelcolor then
       frame.nameplate.cache.levelcolor = r + g + b
       frame.nameplate.level:SetTextColor(r,g,b,1)
+      update = true
+    end
+
+    -- run full updates if required
+    if update then
       nameplates:OnDataChanged(frame.nameplate)
     end
 
