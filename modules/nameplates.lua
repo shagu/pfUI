@@ -352,12 +352,18 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     local name = plate.parent.name:GetText()
     local level = plate.parent.level:IsShown() and plate.parent.level:GetObjectType() == "FontString" and tonumber(plate.parent.level:GetText()) or "??"
     local class, _, elite, player = GetUnitData(name, true)
-    local target = plate.cache.istarget
+    local target = UnitExists("target") and plate.parent:GetAlpha() == 1 or nil
+    local mouseover = UnitExists("mouseover") and plate.parent.glow:IsShown() or nil
+    local unitstr = target and "target" or mouseover and "mouseover" or nil
     local red, green, blue = plate.parent.healthbar:GetStatusBarColor()
     local unittype = GetUnitType(red, green, blue)
     if player and unittype == "ENEMY_NPC" then unittype = "ENEMY_PLAYER" end
     elite = plate.parent.levelicon:IsShown() and not player and "boss" or elite
     if not class then plate.wait_for_scan = true end
+
+    -- target event sometimes fires too quickly, where nameplate identifiers are not
+    -- yet updated. So while being inside this event, we cannot trust the unitstr.
+    if event == "PLAYER_TARGET_CHANGED" then unitstr = nil end
 
     if (MobHealth3 or MobHealthFrame) and target and name == UnitName('target') and MobHealth_GetTargetCurHP() then
       hp, hpmax = MobHealth_GetTargetCurHP(), MobHealth_GetTargetMaxHP()
