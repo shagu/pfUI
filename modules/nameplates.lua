@@ -464,25 +464,28 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
 
     -- update debuffs
     if C.nameplates["showdebuffs"] == "1" then
-      -- update debuff caches
-      local verify = string.format("%s:%s", (name or ""), (level or ""))
 
-      if unitstr then
-        -- cache all debuffs
-        plate:CacheDebuffs(unitstr)
-        plate.debuffcache.valid = verify
-      elseif plate.debuffcache and plate.debuffcache.valid == verify then
-        -- delete timed out caches
-        for id, data in pairs(plate.debuffcache) do
-          if data.stop and data.stop < GetTime() then
-            table.remove(plate.debuffcache, id)
+      -- update cached debuffs
+      if C.nameplates["guessdebuffs"] == "1" then
+        local verify = string.format("%s:%s", (name or ""), (level or ""))
+
+        if unitstr then
+          -- cache all debuffs
+          plate:CacheDebuffs(unitstr)
+          plate.debuffcache.valid = verify
+        elseif plate.debuffcache and plate.debuffcache.valid == verify then
+          -- delete timed out caches
+          for id, data in pairs(plate.debuffcache) do
+            if data.stop and data.stop < GetTime() then
+              table.remove(plate.debuffcache, id)
+            end
           end
-        end
-      elseif plate.debuffcache then
-        -- nameplate changed, invalidating cache
-        for id = 1, 16 do
-          plate.debuffcache[id] = plate.debuffcache[id] or {}
-          plate.debuffcache[id].effect = nil
+        elseif plate.debuffcache then
+          -- nameplate changed, invalidating cache
+          for id = 1, 16 do
+            plate.debuffcache[id] = plate.debuffcache[id] or {}
+            plate.debuffcache[id].effect = nil
+          end
         end
       end
 
