@@ -475,8 +475,8 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
           plate.debuffcache.valid = verify
         elseif plate.debuffcache and plate.debuffcache.valid == verify then
           -- delete timed out caches
-          for id, data in pairs(plate.debuffcache) do
-            if data.stop and data.stop < GetTime() then
+          for id = 1, 16 do
+            if plate.debuffcache[id].stop and plate.debuffcache[id].stop < GetTime() then
               table.remove(plate.debuffcache, id)
             end
           end
