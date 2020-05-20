@@ -168,22 +168,23 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     nameplate.cache = {}
     nameplate.UnitDebuff = PlateUnitDebuff
     nameplate.CacheDebuffs = PlateCacheDebuffs
+    nameplate.original = {}
 
     -- create shortcuts for all known elements and disable them
-    parent.healthbar, parent.castbar = parent:GetChildren()
-    DisableObject(parent.healthbar)
-    DisableObject(parent.castbar)
+    nameplate.original.healthbar, nameplate.original.castbar = parent:GetChildren()
+    DisableObject(nameplate.original.healthbar)
+    DisableObject(nameplate.original.castbar)
 
     for i, object in pairs({parent:GetRegions()}) do
       if NAMEPLATE_OBJECTORDER[i] and NAMEPLATE_OBJECTORDER[i] == "raidicon" then
         nameplate[NAMEPLATE_OBJECTORDER[i]] = object
       else
-        parent[NAMEPLATE_OBJECTORDER[i]] = object
+        nameplate.original[NAMEPLATE_OBJECTORDER[i]] = object
         DisableObject(object)
       end
     end
 
-    HookScript(parent.healthbar, "OnValueChanged", nameplates.OnValueChanged)
+    HookScript(nameplate.original.healthbar, "OnValueChanged", nameplates.OnValueChanged)
 
     -- adjust sizes and scaling of the nameplate
     nameplate:SetScale(UIParent:GetScale())
@@ -382,18 +383,18 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
   end
 
   nameplates.OnDataChanged = function(self, plate)
-    local hp = plate.parent.healthbar:GetValue()
-    local hpmin, hpmax = plate.parent.healthbar:GetMinMaxValues()
-    local name = plate.parent.name:GetText()
-    local level = plate.parent.level:IsShown() and plate.parent.level:GetObjectType() == "FontString" and tonumber(plate.parent.level:GetText()) or "??"
+    local hp = plate.original.healthbar:GetValue()
+    local hpmin, hpmax = plate.original.healthbar:GetMinMaxValues()
+    local name = plate.original.name:GetText()
+    local level = plate.original.level:IsShown() and plate.original.level:GetObjectType() == "FontString" and tonumber(plate.original.level:GetText()) or "??"
     local class, _, elite, player = GetUnitData(name, true)
     local target = UnitExists("target") and plate.parent:GetAlpha() == 1 or nil
-    local mouseover = UnitExists("mouseover") and plate.parent.glow:IsShown() or nil
+    local mouseover = UnitExists("mouseover") and plate.original.glow:IsShown() or nil
     local unitstr = target and "target" or mouseover and "mouseover" or nil
-    local red, green, blue = plate.parent.healthbar:GetStatusBarColor()
+    local red, green, blue = plate.original.healthbar:GetStatusBarColor()
     local unittype = GetUnitType(red, green, blue)
     if player and unittype == "ENEMY_NPC" then unittype = "ENEMY_PLAYER" end
-    elite = plate.parent.levelicon:IsShown() and not player and "boss" or elite
+    elite = plate.original.levelicon:IsShown() and not player and "boss" or elite
     if not class then plate.wait_for_scan = true end
 
     -- target event sometimes fires too quickly, where nameplate identifiers are not
@@ -521,7 +522,7 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     local frame = frame or this
     local name = frame.name:GetText()
     local target = UnitExists("target") and frame:GetAlpha() == 1 or nil
-    local mouseover = UnitExists("mouseover") and frame.glow:IsShown() or nil
+    local mouseover = UnitExists("mouseover") and frame.nameplate.original.glow:IsShown() or nil
 
     if frame:GetAlpha() < tonumber(C.nameplates.notargalpha) then frame:SetAlpha(tonumber(C.nameplates.notargalpha)) end
 
