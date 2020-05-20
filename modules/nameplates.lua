@@ -393,7 +393,7 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     local mouseover = UnitExists("mouseover") and plate.original.glow:IsShown() or nil
     local unitstr = target and "target" or mouseover and "mouseover" or nil
     local red, green, blue = plate.original.healthbar:GetStatusBarColor()
-    local unittype = GetUnitType(red, green, blue)
+    local unittype = GetUnitType(red, green, blue) or "ENEMY_NPC"
     if player and unittype == "ENEMY_NPC" then unittype = "ENEMY_PLAYER" end
     elite = plate.original.levelicon:IsShown() and not player and "boss" or elite
     if not class then plate.wait_for_scan = true end
