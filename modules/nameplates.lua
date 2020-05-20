@@ -445,7 +445,7 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
       if C.nameplates.alwaysperc == "0" and ( estimated or hpmax > 100 or (round(hpmax/100*hp) ~= hp) ) then
         plate.health.text:SetText(string.format("%s / %s", Abbreviate(rhp), Abbreviate(rhpmax)))
       else
-        plate.health.text:SetText(string.format("%s%%", hp))
+        plate.health.text:SetText(string.format("%s%%", hp/hpmax*100))
       end
     else
       plate.health.text:SetText()
