@@ -93,6 +93,35 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     end
   end
 
+  local filter, list, cache
+  local function DebuffFilterPopulate()
+    -- initialize variables
+    filter = C.nameplates["debuffs"]["filter"]
+    if filter == "none" then return end
+    list = C.nameplates["debuffs"][filter]
+    cache = {}
+
+    -- populate list
+    for _, val in pairs({strsplit("#", list)}) do
+      cache[strlower(val)] = true
+    end
+  end
+
+  local function DebuffFilter(effect)
+    if filter == "none" then return true end
+    if not cache then DebuffFilterPopulate() end
+
+    if filter == "blacklist" and cache[strlower(effect)] then
+      return nil
+    elseif filter == "blacklist" then
+      return true
+    elseif filter == "whitelist" and cache[strlower(effect)] then
+      return true
+    elseif filter == "whitelist" then
+      return nil
+    end
+  end
+
   local function PlateCacheDebuffs(self, unitstr, verify)
     if not self.debuffcache then self.debuffcache = {} end
 
@@ -473,6 +502,8 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     end
 
     -- update debuffs
+    local index = 1
+
     if C.nameplates["showdebuffs"] == "1" then
       local verify = string.format("%s:%s", (name or ""), (level or ""))
 
@@ -490,24 +521,25 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
           effect, rank, texture, stacks, dtype, duration, timeleft = plate:UnitDebuff(i)
         end
 
-        if effect and texture then
-          plate.debuffs[i]:Show()
-          plate.debuffs[i].icon:SetTexture(texture)
-          plate.debuffs[i].icon:SetTexCoord(.078, .92, .079, .937)
+        if effect and texture and DebuffFilter(effect) then
+          plate.debuffs[index]:Show()
+          plate.debuffs[index].icon:SetTexture(texture)
+          plate.debuffs[index].icon:SetTexCoord(.078, .92, .079, .937)
 
           if duration and timeleft then
-            plate.debuffs[i].cd:SetAlpha(0)
-            plate.debuffs[i].cd:Show()
-            CooldownFrame_SetTimer(plate.debuffs[i].cd, GetTime() + timeleft - duration, duration, 1)
+            plate.debuffs[index].cd:SetAlpha(0)
+            plate.debuffs[index].cd:Show()
+            CooldownFrame_SetTimer(plate.debuffs[index].cd, GetTime() + timeleft - duration, duration, 1)
           end
-        else
-          plate.debuffs[i]:Hide()
+
+          index = index + 1
         end
       end
-    else
-      for i = 1, 16 do
-        plate.debuffs[i]:Hide()
-      end
+    end
+
+    -- hide remaining debuffs
+    for i = index, 16 do
+      plate.debuffs[i]:Hide()
     end
   end
 
@@ -701,6 +733,9 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
   nameplates:SetGameVariables()
 
   nameplates.UpdateConfig = function()
+    -- update debuff filters
+    DebuffFilterPopulate()
+
     -- update nameplate visibility
     nameplates:SetGameVariables()
 
