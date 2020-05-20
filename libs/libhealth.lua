@@ -61,24 +61,44 @@ local function GetUnitHealth(self, unitstr)
   cur = _G.UnitHealth(unitstr)
   max = _G.UnitHealthMax(unitstr)
 
-  if unit and level and max == 100 then
-    dbstring = string.format("%s:%s", unit, level)
-    if mobdb[dbstring] and mobdb[dbstring][1] and cur <= 100 and mobdb[dbstring][2] > libhealth.reqdmg and (not mobdb[dbstring][3] or mobdb[dbstring][3] > libhealth.reqhit) then
-      return ceil(mobdb[dbstring][1]/100*cur), mobdb[dbstring][1], true
-    end
+  -- return raw values if another addon is replacing global API calls
+  if cur > 100 or max > 100 or max < 100 then
+    return cur, max, true
   end
 
+  -- return raw values if no unit data could be found (unlikely but happened...)
+  if not unit or not level then
+    return cur, max
+  end
+
+  -- query the database for known values
+  dbstring = string.format("%s:%s", unit, level)
+  if mobdb[dbstring] and mobdb[dbstring][1] and mobdb[dbstring][2] > libhealth.reqdmg and (not mobdb[dbstring][3] or mobdb[dbstring][3] > libhealth.reqhit) then
+    return ceil(mobdb[dbstring][1]/100*cur), mobdb[dbstring][1], true
+  end
+
+  -- return raw values as fallback
   return cur, max
 end
 
 local function GetUnitHealthByName(self, unit, level, cur, max)
-  if max == 100 then
-    dbstring = string.format("%s:%s", unit, (level or 0))
-    if mobdb[dbstring] and mobdb[dbstring][1] and cur <= 100 and mobdb[dbstring][2] > libhealth.reqdmg and (not mobdb[dbstring][3] or mobdb[dbstring][3] > libhealth.reqhit) then
-      return ceil(mobdb[dbstring][1]/100*cur), mobdb[dbstring][1], true
-    end
+  -- return raw values if another addon is replacing global API calls
+  if cur > 100 or max > 100 or max < 100 then
+    return cur, max, true
   end
 
+  -- return raw values if no unit data could be found (unlikely but happened...)
+  if not unit or not level then
+    return cur, max
+  end
+
+  -- query the database for known values
+  dbstring = string.format("%s:%s", unit, level)
+  if mobdb[dbstring] and mobdb[dbstring][1] and mobdb[dbstring][2] > libhealth.reqdmg and (not mobdb[dbstring][3] or mobdb[dbstring][3] > libhealth.reqhit) then
+    return ceil(mobdb[dbstring][1]/100*cur), mobdb[dbstring][1], true
+  end
+
+  -- return raw values as fallback
   return cur, max
 end
 
