@@ -520,59 +520,59 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
   nameplates.OnUpdate = function(frame)
     local update
     local frame = frame or this
-    local name = frame.name:GetText()
+    local nameplate = frame.nameplate
+    local original = nameplate.original
+    local name = original.name:GetText()
     local target = UnitExists("target") and frame:GetAlpha() == 1 or nil
-    local mouseover = UnitExists("mouseover") and frame.nameplate.original.glow:IsShown() or nil
+    local mouseover = UnitExists("mouseover") and original.glow:IsShown() or nil
 
     if frame:GetAlpha() < tonumber(C.nameplates.notargalpha) then frame:SetAlpha(tonumber(C.nameplates.notargalpha)) end
 
     -- queue update on visual target update
-    if frame.nameplate.cache.target ~= target then
-      frame.nameplate.cache.target = target
+    if nameplate.cache.target ~= target then
+      nameplate.cache.target = target
       update = true
     end
 
     -- queue update on visual mouseover update
-    if frame.nameplate.cache.mouseover ~= mouseover then
-      frame.nameplate.cache.mouseover = mouseover
+    if nameplate.cache.mouseover ~= mouseover then
+      nameplate.cache.mouseover = mouseover
       update = true
     end
 
     -- trigger update when unit was found
-    if frame.nameplate.wait_for_scan and GetUnitData(name, true) then
-      frame.nameplate.wait_for_scan = nil
+    if nameplate.wait_for_scan and GetUnitData(name, true) then
+      nameplate.wait_for_scan = nil
       update = true
     end
 
     -- trigger update when name color changed
-    local r, g, b = frame.name:GetTextColor()
-    if r + g + b ~= frame.nameplate.cache.namecolor then
-      frame.nameplate.cache.namecolor = r + g + b
+    local r, g, b = original.name:GetTextColor()
+    if r + g + b ~= nameplate.cache.namecolor then
+      nameplate.cache.namecolor = r + g + b
       if r > .9 and g < .2 and b < .2 then
-        frame.nameplate.name:SetTextColor(1,0.4,0.2,1) -- infight
+        nameplate.name:SetTextColor(1,0.4,0.2,1) -- infight
       else
-        frame.nameplate.name:SetTextColor(r,g,b,1)
+        nameplate.name:SetTextColor(r,g,b,1)
       end
       update = true
     end
 
     -- trigger update when name color changed
-    local r, g, b = frame.level:GetTextColor()
+    local r, g, b = original.level:GetTextColor()
     r, g, b = r + .3, g + .3, b + .3
-    if r + g + b ~= frame.nameplate.cache.levelcolor then
-      frame.nameplate.cache.levelcolor = r + g + b
-      frame.nameplate.level:SetTextColor(r,g,b,1)
+    if r + g + b ~= nameplate.cache.levelcolor then
+      nameplate.cache.levelcolor = r + g + b
+      nameplate.level:SetTextColor(r,g,b,1)
       update = true
     end
 
     -- scan for debuff timeouts
-    if frame.nameplate.debuffcache then
-      local plate = frame.nameplate
-
+    if nameplate.debuffcache then
       -- delete timed out caches
-      for id, data in pairs(plate.debuffcache) do
+      for id, data in pairs(nameplate.debuffcache) do
         if not data.stop or data.stop < GetTime() then
-          plate.debuffcache[id] = nil
+          nameplate.debuffcache[id] = nil
           trigger = true
         end
       end
@@ -580,10 +580,10 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
       -- remove nil keys whenever a value was removed
       if trigger then
         local count = 1
-        for id, data in pairs(plate.debuffcache) do
+        for id, data in pairs(nameplate.debuffcache) do
           if id ~= count then
-            plate.debuffcache[count] = plate.debuffcache[id]
-            plate.debuffcache[id] = nil
+            nameplate.debuffcache[count] = nameplate.debuffcache[id]
+            nameplate.debuffcache[id] = nil
           end
           count = count + 1
         end
@@ -593,11 +593,11 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
 
     -- run full updates if required
     if update then
-      nameplates:OnDataChanged(frame.nameplate)
+      nameplates:OnDataChanged(nameplate)
     end
 
     -- target zoom
-    local w, h = frame.nameplate.health:GetWidth(), frame.nameplate.health:GetHeight()
+    local w, h = nameplate.health:GetWidth(), nameplate.health:GetHeight()
     if target and C.nameplates.targetzoom == "1" then
       local wc = tonumber(C.nameplates.width)*1.4
       local hc = tonumber(C.nameplates.heighthealth)*1.3
@@ -605,46 +605,46 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
 
       if wc >= w then
         wc = w*1.05
-        frame.nameplate.health:SetWidth(wc)
-        frame.nameplate.health.zoomTransition = true
+        nameplate.health:SetWidth(wc)
+        nameplate.health.zoomTransition = true
         animation = true
       end
 
       if hc >= h then
         hc = h*1.05
-        frame.nameplate.health:SetHeight(hc)
-        frame.nameplate.health.zoomTransition = true
+        nameplate.health:SetHeight(hc)
+        nameplate.health.zoomTransition = true
         animation = true
       end
 
-      if animation == false and not frame.nameplate.health.zoomed then
-        frame.nameplate.health:SetWidth(wc)
-        frame.nameplate.health:SetHeight(hc)
-        frame.nameplate.health.zoomTransition = nil
-        frame.nameplate.health.zoomed = true
+      if animation == false and not nameplate.health.zoomed then
+        nameplate.health:SetWidth(wc)
+        nameplate.health:SetHeight(hc)
+        nameplate.health.zoomTransition = nil
+        nameplate.health.zoomed = true
       end
-    elseif frame.nameplate.health.zoomed or frame.nameplate.health.zoomTransition then
+    elseif nameplate.health.zoomed or nameplate.health.zoomTransition then
       local wc = tonumber(C.nameplates.width)
       local hc = tonumber(C.nameplates.heighthealth)
       local animation = false
 
       if wc <= w then
         wc = w*.95
-        frame.nameplate.health:SetWidth(wc)
+        nameplate.health:SetWidth(wc)
         animation = true
       end
 
       if hc <= h then
         hc = h*0.95
-        frame.nameplate.health:SetHeight(hc)
+        nameplate.health:SetHeight(hc)
         animation = true
       end
 
       if animation == false then
-        frame.nameplate.health:SetWidth(wc)
-        frame.nameplate.health:SetHeight(hc)
-        frame.nameplate.health.zoomTransition = nil
-        frame.nameplate.health.zoomed = nil
+        nameplate.health:SetWidth(wc)
+        nameplate.health:SetHeight(hc)
+        nameplate.health.zoomTransition = nil
+        nameplate.health.zoomed = nil
       end
     end
 
@@ -653,26 +653,26 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
       local cast, nameSubtext, text, texture, startTime, endTime, isTradeSkill = UnitCastingInfo(target and "target" or name)
 
       if not cast then
-        frame.nameplate.castbar:Hide()
+        nameplate.castbar:Hide()
       elseif cast then
         local duration = endTime - startTime
-        frame.nameplate.castbar:SetMinMaxValues(0,  duration/1000)
-        frame.nameplate.castbar:SetValue(GetTime() - startTime/1000)
-        frame.nameplate.castbar.text:SetText(round(startTime/1000 + duration/1000 - GetTime(),1))
+        nameplate.castbar:SetMinMaxValues(0,  duration/1000)
+        nameplate.castbar:SetValue(GetTime() - startTime/1000)
+        nameplate.castbar.text:SetText(round(startTime/1000 + duration/1000 - GetTime(),1))
         if C.nameplates.spellname == "1" then
-          frame.nameplate.castbar.spell:SetText(cast)
+          nameplate.castbar.spell:SetText(cast)
         else
-          frame.nameplate.castbar.spell:SetText("")
+          nameplate.castbar.spell:SetText("")
         end
-        frame.nameplate.castbar:Show()
+        nameplate.castbar:Show()
 
         if texture then
-          frame.nameplate.castbar.icon.tex:SetTexture(texture)
-          frame.nameplate.castbar.icon.tex:SetTexCoord(.1,.9,.1,.9)
+          nameplate.castbar.icon.tex:SetTexture(texture)
+          nameplate.castbar.icon.tex:SetTexCoord(.1,.9,.1,.9)
         end
       end
     else
-      frame.nameplate.castbar:Hide()
+      nameplate.castbar:Hide()
     end
   end
 
