@@ -1893,7 +1893,7 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
       end)
     end
 
-    CreateGUIEntry(T["Panel"], T["General"], function()
+    CreateGUIEntry(T["Panel"], nil, function()
       CreateConfig(nil, T["Use Unit Fonts"], C.panel, "use_unitfonts", "checkbox")
       CreateConfig(nil, T["Left Panel: Left"], C.panel.left, "left", "dropdown", pfUI.gui.dropdowns.panel_values)
       CreateConfig(nil, T["Left Panel: Center"], C.panel.left, "center", "dropdown", pfUI.gui.dropdowns.panel_values)
