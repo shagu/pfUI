@@ -2070,7 +2070,7 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
       CreateConfig(U["nameplates"], T["Always Show On Target Units"], C.nameplates, "target", "checkbox")
     end)
 
-    CreateGUIEntry(T["Thirdparty"], T["Integrations"], function()
+    CreateGUIEntry(T["Thirdparty"], nil, function()
       CreateConfig(nil, T["Show Meters By Default"], C.thirdparty, "showmeter", "checkbox")
       CreateConfig(nil, T["Use Chat Colors for Meters"], C.thirdparty, "chatbg", "checkbox")
       CreateConfig(nil, "DPSMate (" .. T["Skin"] .. ")", C.thirdparty.dpsmate, "skin", "checkbox")
