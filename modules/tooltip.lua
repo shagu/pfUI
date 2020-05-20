@@ -152,7 +152,7 @@ pfUI:RegisterModule("tooltip", "vanilla:tbc", function ()
     if C.tooltip.alwaysperc == "0" and ( estimated or hpmax > 100 or (round(hpmax/100*hp) ~= hp) ) then
       pfUI.tooltipStatusBar.HP:SetText(string.format("%s / %s", Abbreviate(rhp), Abbreviate(rhpmax)))
     else
-      pfUI.tooltipStatusBar.HP:SetText(string.format("%s%%", hp))
+      pfUI.tooltipStatusBar.HP:SetText(string.format("%s%%", hp/hpmax*100))
     end
   end)
 
