@@ -603,6 +603,8 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("chat",       "global",      "scrollspeed",      "1")
   pfUI:UpdateConfig("chat",       "bubbles",     "alpha",            ".75")
 
+  pfUI:UpdateConfig("nameplates", nil,           "showhostile",      "1")
+  pfUI:UpdateConfig("nameplates", nil,           "showfriendly",     "0")
   pfUI:UpdateConfig("nameplates", nil,           "use_unitfonts",    "0")
   pfUI:UpdateConfig("nameplates", nil,           "legacy",           "0")
   pfUI:UpdateConfig("nameplates", nil,           "overlap",          "0")

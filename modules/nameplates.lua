@@ -675,7 +675,34 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     end
   end
 
+  -- set nameplate game settings
+  nameplates.SetGameVariables = function()
+    -- update visibility (hostile)
+    if C.nameplates["showhostile"] == "1" then
+      _G.NAMEPLATES_ON = true
+      ShowNameplates()
+    else
+      _G.NAMEPLATES_ON = nil
+      HideNameplates()
+    end
+
+    -- update visibility (hostile)
+    if C.nameplates["showfriendly"] == "1" then
+      _G.FRIENDNAMEPLATES_ON = true
+      ShowFriendNameplates()
+    else
+      _G.FRIENDNAMEPLATES_ON = nil
+      HideFriendNameplates()
+    end
+  end
+
+  nameplates:SetGameVariables()
+
   nameplates.UpdateConfig = function()
+    -- update nameplate visibility
+    nameplates:SetGameVariables()
+
+    -- apply all config changes
     for plate in pairs(registry) do
       nameplates.OnConfigChange(plate)
     end
