@@ -280,14 +280,15 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     end
 
     parent.nameplate = nameplate
-    parent:SetScript("OnShow", nameplates.OnShow)
-    parent:SetScript("OnUpdate", nameplates.OnUpdate)
-    parent:SetScript("OnEvent", nameplates.OnEvent)
+    HookScript(parent, "OnShow", nameplates.OnShow)
+    HookScript(parent, "OnUpdate", nameplates.OnUpdate)
 
-    parent:RegisterEvent("PLAYER_TARGET_CHANGED")
-    parent:RegisterEvent("UNIT_AURA")
-    parent:RegisterEvent("UNIT_COMBO_POINTS")
-    parent:RegisterEvent("PLAYER_COMBO_POINTS")
+
+    nameplate:RegisterEvent("PLAYER_TARGET_CHANGED")
+    nameplate:RegisterEvent("UNIT_AURA")
+    nameplate:RegisterEvent("UNIT_COMBO_POINTS")
+    nameplate:RegisterEvent("PLAYER_COMBO_POINTS")
+    nameplate:SetScript("OnEvent", nameplates.OnEvent)
 
     nameplates.OnConfigChange(parent)
     nameplates.OnShow(parent)
@@ -379,7 +380,7 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
 
   nameplates.OnEvent = function(frame)
     local frame = frame or this
-    nameplates:OnDataChanged(frame.nameplate)
+    nameplates:OnDataChanged(frame)
   end
 
   nameplates.OnDataChanged = function(self, plate)
