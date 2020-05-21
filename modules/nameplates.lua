@@ -569,6 +569,12 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     local target = UnitExists("target") and frame:GetAlpha() == 1 or nil
     local mouseover = UnitExists("mouseover") and original.glow:IsShown() or nil
 
+    -- use timer based updates
+    if not nameplate.tick or nameplate.tick < GetTime() then
+      nameplate.tick = GetTime() + .2
+      update = true
+    end
+
     -- queue update on visual target update
     if nameplate.cache.target ~= target then
       nameplate.cache.target = target
