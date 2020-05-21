@@ -2049,7 +2049,7 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
       CreateConfig(U["nameplates"], T["Enable Mouselook With Right Click"], C.nameplates, "rightclick", "checkbox", nil, nil, nil, nil, "vanilla")
       CreateConfig(U["nameplates"], T["Right Click Auto Attack Threshold"], C.nameplates, "clickthreshold", nil, nil, nil, nil, nil, "vanilla")
       CreateConfig(U["nameplates"], T["Use Unit Fonts"], C.nameplates, "use_unitfonts", "checkbox")
-      CreateConfig(U["nameplates"], T["Name Font Style"], C.nameplates.name, "fontstyle", "dropdown", pfUI.gui.dropdowns.fontstyle)
+      CreateConfig(U["nameplates"], T["Font Style"], C.nameplates.name, "fontstyle", "dropdown", pfUI.gui.dropdowns.fontstyle)
 
       CreateConfig(nil, T["Castbar"], nil, nil, "header")
       CreateConfig(U["nameplates"], T["Enable Castbars"], C.nameplates, "showcastbar", "checkbox")
