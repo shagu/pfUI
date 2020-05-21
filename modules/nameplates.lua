@@ -435,8 +435,15 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
       hp, hpmax = MobHealth_GetTargetCurHP(), MobHealth_GetTargetMaxHP()
     end
 
+    -- always make sure to keep plate visible
     plate:Show()
-    plate:SetAlpha(1)
+
+    -- set plate alpha
+    if target then
+      plate:SetAlpha(1)
+    else
+      plate:SetAlpha(tonumber(C.nameplates.notargalpha))
+    end
 
     if target and C.nameplates.targetglow == "1" then
       plate.glow:Show() else plate.glow:Hide()
@@ -558,8 +565,6 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     local name = original.name:GetText()
     local target = UnitExists("target") and frame:GetAlpha() == 1 or nil
     local mouseover = UnitExists("mouseover") and original.glow:IsShown() or nil
-
-    if frame:GetAlpha() < tonumber(C.nameplates.notargalpha) then frame:SetAlpha(tonumber(C.nameplates.notargalpha)) end
 
     -- queue update on visual target update
     if nameplate.cache.target ~= target then
