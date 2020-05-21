@@ -329,6 +329,7 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
 
     local font = C.nameplates.use_unitfonts == "1" and pfUI.font_unit or pfUI.font_default
     local font_size = C.nameplates.use_unitfonts == "1" and C.global.font_unit_size or C.global.font_size
+    local font_style = C.nameplates.name.fontstyle
     local glowr, glowg, glowb, glowa = GetStringColor(C.nameplates.glowcolor)
     local hptexture = pfUI.media[C.nameplates.healthtexture]
     local rawborder, default_border = GetBorderSize("nameplates")
@@ -345,7 +346,7 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     nameplate:SetHeight(plate_height)
     nameplate:SetPoint("TOP", parent, "TOP", 0, 0)
 
-    nameplate.name:SetFont(font, font_size, "OUTLINE")
+    nameplate.name:SetFont(font, font_size, font_style)
 
     nameplate.health:SetStatusBarTexture(hptexture)
     nameplate.health:SetWidth(C.nameplates.width)
