@@ -2065,6 +2065,7 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
       CreateConfig(U["nameplates"], T["Whitelist"], C.nameplates.debuffs, "whitelist", "list")
 
       CreateConfig(nil, T["Healthbar"], nil, nil, "header")
+      CreateConfig(U["nameplates"], T["Healthbar Vertical Offset"], C.nameplates.health, "offset")
       CreateConfig(U["nameplates"], T["Healthbar Height"], C.nameplates, "heighthealth")
       CreateConfig(U["nameplates"], T["Healthbar Texture"], C.nameplates, "healthtexture", "dropdown", pfUI.gui.dropdowns.uf_bartexture)
       CreateConfig(U["nameplates"], T["Show Health Points"], C.nameplates, "showhp", "checkbox")
