@@ -431,6 +431,9 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     -- yet updated. So while being inside this event, we cannot trust the unitstr.
     if event == "PLAYER_TARGET_CHANGED" then unitstr = nil end
 
+    -- remove unitstr on unit name mismatch
+    if unitstr and UnitName(unitstr) ~= name then unitstr = nil end
+
     if (MobHealth3 or MobHealthFrame) and target and name == UnitName('target') and MobHealth_GetTargetCurHP() then
       hp, hpmax = MobHealth_GetTargetCurHP(), MobHealth_GetTargetMaxHP()
     end
