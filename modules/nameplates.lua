@@ -218,15 +218,14 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     -- adjust sizes and scaling of the nameplate
     nameplate:SetScale(UIParent:GetScale())
 
-    nameplate.name = nameplate:CreateFontString(nil, "OVERLAY")
-    nameplate.name:SetPoint("TOP", nameplate, "TOP", 0, 0)
-
     nameplate.health = CreateFrame("StatusBar", nil, nameplate)
-    nameplate.health:SetPoint("TOP", nameplate.name, "BOTTOM", 0, -3)
     nameplate.health:SetFrameLevel(4) -- keep above glow
     nameplate.health.text = nameplate.health:CreateFontString(nil, "OVERLAY", "GameFontNormal")
     nameplate.health.text:SetAllPoints()
     nameplate.health.text:SetTextColor(1,1,1,1)
+
+    nameplate.name = nameplate.health:CreateFontString(nil, "OVERLAY")
+    nameplate.name:SetPoint("TOP", nameplate, "TOP", 0, nameoffset)
 
     nameplate.glow = nameplate:CreateTexture(nil, "BACKGROUND")
     nameplate.glow:SetPoint("CENTER", nameplate.health, "CENTER", 0, 0)
