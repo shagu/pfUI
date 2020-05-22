@@ -130,6 +130,12 @@ pfUI:RegisterModule("tooltip", "vanilla:tbc", function ()
     this.level = UnitLevel("mouseover")
   end)
 
+  pfUI.tooltipStatusBar.HP = GameTooltipStatusBar:CreateFontString("Status", "DIALOG", "GameFontNormal")
+  pfUI.tooltipStatusBar.HP:SetPoint("TOP", 0,8)
+  pfUI.tooltipStatusBar.HP:SetNonSpaceWrap(false)
+  pfUI.tooltipStatusBar.HP:SetFontObject(GameFontWhite)
+  pfUI.tooltipStatusBar.HP:SetFont(pfUI.font_default, C.global.font_size + 2, "OUTLINE")
+
   pfUI.tooltipStatusBar:SetScript("OnUpdate", function()
     local hp = GameTooltipStatusBar:GetValue()
     local _, hpmax = GameTooltipStatusBar:GetMinMaxValues()
@@ -234,14 +240,6 @@ pfUI:RegisterModule("tooltip", "vanilla:tbc", function ()
             GameTooltip:AddLine(target, .5, .5, .5)
           end
         end
-      end
-
-      if pfUI.tooltipStatusBar.HP == nil then
-        pfUI.tooltipStatusBar.HP = GameTooltipStatusBar:CreateFontString("Status", "DIALOG", "GameFontNormal")
-        pfUI.tooltipStatusBar.HP:SetPoint("TOP", 0,8)
-        pfUI.tooltipStatusBar.HP:SetNonSpaceWrap(false)
-        pfUI.tooltipStatusBar.HP:SetFontObject(GameFontWhite)
-        pfUI.tooltipStatusBar.HP:SetFont(pfUI.font_default, C.global.font_size + 2, "OUTLINE")
       end
 
       if hp and hpm then
