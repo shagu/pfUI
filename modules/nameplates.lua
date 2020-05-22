@@ -443,13 +443,6 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     -- always make sure to keep plate visible
     plate:Show()
 
-    -- set plate alpha
-    if target then
-      plate:SetAlpha(1)
-    else
-      plate:SetAlpha(tonumber(C.nameplates.notargalpha))
-    end
-
     if target and C.nameplates.targetglow == "1" then
       plate.glow:Show() else plate.glow:Hide()
     end
@@ -572,6 +565,14 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     local name = original.name:GetText()
     local target = UnitExists("target") and frame:GetAlpha() == 1 or nil
     local mouseover = UnitExists("mouseover") and original.glow:IsShown() or nil
+
+    -- set non-target plate alpha
+    if target then
+      nameplate:SetAlpha(1)
+    else
+      frame:SetAlpha(.95)
+      nameplate:SetAlpha(tonumber(C.nameplates.notargalpha))
+    end
 
     -- use timer based updates
     if not nameplate.tick or nameplate.tick < GetTime() then
