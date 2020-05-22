@@ -224,7 +224,7 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     nameplate.health.text:SetAllPoints()
     nameplate.health.text:SetTextColor(1,1,1,1)
 
-    nameplate.name = nameplate.health:CreateFontString(nil, "OVERLAY")
+    nameplate.name = nameplate:CreateFontString(nil, "OVERLAY")
     nameplate.name:SetPoint("TOP", nameplate, "TOP", 0, nameoffset)
 
     nameplate.glow = nameplate:CreateTexture(nil, "BACKGROUND")
@@ -465,9 +465,11 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     -- hide frames according to the configuration
     if HidePlate(unittype, name, (hpmax-hp == hpmin), target) then
       plate.level:SetPoint("RIGHT", plate.name, "LEFT", -3, 0)
+      plate.name:SetParent(plate)
       plate.health:Hide()
     else
       plate.level:SetPoint("RIGHT", plate.health, "LEFT", -3, 0)
+      plate.name:SetParent(plate.health)
       plate.health:Show()
     end
 
