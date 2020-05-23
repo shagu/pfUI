@@ -1880,6 +1880,11 @@ function pfUI.uf:SetupBuffIndicators(config)
       -- Misdirection (TBC)
       table.insert(indicators, "interface\\icons\\ability_hunter_misdirection")
     end
+
+    if myclass == "SHAMAN" then
+      -- Earth Shield (TBC)
+      table.insert(indicators, "interface\\icons\\spell_nature_skinofearth")
+    end
   end
 
   if config.show_procs == "1" then -- procs
