@@ -43,17 +43,35 @@ pfUI:RegisterModule("buffwatch", "vanilla:tbc", function ()
     return unpack(rgbcache[text])
   end
 
+
+  local function GetSafeTop(frame)
+    if frame and frame.IsShown and frame:IsShown() and frame:IsVisible() then
+      return frame:GetTop(), frame
+    end
+
+    return 0
+  end
+
   -- iterate over given tables and return the first frame that is shown
-  local function FirstOneShown(anchors)
+  local function GetTopAnchor(anchors)
+    local top, anchor = 0, anchors[1]
+
     for _, tbl in pairs(anchors) do
+
+      -- in case of multiple anchor elements, iterate over each one
       for i=32, 1, -1 do
-        if tbl and tbl[i] and tbl[i]:IsShown() and tbl[i]:IsVisible() then
-          return tbl[i]
+        if GetSafeTop(tbl[i]) > top then
+          top, anchor = GetSafeTop(tbl[i])
         end
+      end
+
+      -- check top of regular anchor elements
+      if GetSafeTop(tbl) > top then
+        top, anchor = GetSafeTop(tbl)
       end
     end
 
-    return anchors[1]
+    return anchor
   end
 
   local function GetBuffData(unit, id, type, skipTooltip)
@@ -347,7 +365,7 @@ pfUI:RegisterModule("buffwatch", "vanilla:tbc", function ()
     if pfUI.unlock and pfUI.unlock:IsShown() then return end
 
     if not pfUI_config["position"][self:GetName()] then
-      local anchor = FirstOneShown(self.anchors)
+      local anchor = GetTopAnchor(self.anchors)
 
       if not self.lastanchor or self.lastanchor ~= anchor then
         self:ClearAllPoints()
