@@ -879,6 +879,7 @@ function pfUI.api.GetPerfectPixel()
     local _, _, screenwidth, screenheight = strfind(resolution, "(.+)x(.+)")
 
     pfUI.pixel = 768 / screenheight / scale
+    pfUI.pixel = pfUI.pixel > 1 and 1
 
     -- autodetect and zoom for HiDPI displays
     if pfUI_config.appearance.border.hidpi == "1" then
