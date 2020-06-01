@@ -2,6 +2,7 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
   local _, class = UnitClass("player")
   local color = RAID_CLASS_COLORS[class]
   local cr, cg, cb = color.r , color.g, color.b
+  local er, eg, eb, ea = GetStringColor(pfUI_config.appearance.border.color)
 
   local backdrop_highlight = { edgeFile = pfUI.media["img:glow"], edgeSize = 8 }
   local showgrid = 0
@@ -409,7 +410,7 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
       self.backdrop:SetBackdropBorderColor(cr,cg,cb,1)
       self.active:Show()
     else
-      CreateBackdrop(self, border)
+      self.backdrop:SetBackdropBorderColor(er,eg,eb,ea)
       self.active:Hide()
     end
 
@@ -545,7 +546,7 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
       button.backdrop:SetBackdropBorderColor(cr,cg,cb,1)
       button.active:Show()
     else
-      CreateBackdrop(button, border)
+      button.backdrop:SetBackdropBorderColor(er,eg,eb,ea)
       button.active:Hide()
     end
   end
