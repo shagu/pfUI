@@ -1105,6 +1105,13 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
         "top:" .. T["Top"],
         "right:" .. T["Right"]
       },
+      ["xp_display"] = {
+        "XPFLEX:" .. T["Automatic"],
+        "XP:" .. T["Experience"],
+        "REP:" .. T["Tracked Reputation"],
+        "FLEX:" .. T["Last Reputation"],
+        "DISABLED:" .. T["Disabled"],
+      },
       ["xp_position"] = {
         "BOTTOM:" .. T["Bottom"],
         "LEFT:" .. T["Left"],
@@ -1922,6 +1929,7 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
 
     CreateGUIEntry(T["XP Bar"], T["Experience Bar"], function()
       CreateConfig(U["xpbar"], T["Always Show"], C.panel.xp, "xp_always", "checkbox")
+      CreateConfig(U["xpbar"], T["Display Mode"], C.panel.xp, "xp_display", "dropdown", pfUI.gui.dropdowns.xp_display)
       CreateConfig(U["xpbar"], T["Hide Timeout"], C.panel.xp, "xp_timeout")
       CreateConfig(U["xpbar"], T["Width"], C.panel.xp, "xp_width")
       CreateConfig(U["xpbar"], T["Height"], C.panel.xp, "xp_height")
@@ -1936,6 +1944,7 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
 
     CreateGUIEntry(T["XP Bar"], T["Reputation Bar"], function()
       CreateConfig(U["xpbar"], T["Always Show"], C.panel.xp, "rep_always", "checkbox")
+      CreateConfig(U["xpbar"], T["Display Mode"], C.panel.xp, "rep_display", "dropdown", pfUI.gui.dropdowns.xp_display)
       CreateConfig(U["xpbar"], T["Hide Timeout"], C.panel.xp, "rep_timeout")
       CreateConfig(U["xpbar"], T["Width"], C.panel.xp, "rep_width")
       CreateConfig(U["xpbar"], T["Height"], C.panel.xp, "rep_height")
