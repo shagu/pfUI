@@ -47,12 +47,12 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
   local special_events = {
     ["ACTIONBAR_UPDATE_COOLDOWN"] = true,
     ["ACTIONBAR_UPDATE_USABLE"] = true,
+    ["ACTIONBAR_UPDATE_STATE"] = true,
   }
 
   -- events that are shared across all buttons
   local global_events = {
     -- slot/button updates
-    ["ACTIONBAR_UPDATE_STATE"] = true,
     ["PLAYER_ENTERING_WORLD"] = true,
     ["ACTIONBAR_SLOT_CHANGED"] = true,
     ["UPDATE_BINDINGS"] = true,
@@ -620,6 +620,14 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
       eventcache["ACTIONBAR_UPDATE_COOLDOWN"] = nil
       for id, button in pairs(buttoncache) do
         ButtonCooldownUpdate(button)
+      end
+    end
+
+    -- run cached action state events
+    if eventcache["ACTIONBAR_UPDATE_STATE"] then
+      eventcache["ACTIONBAR_UPDATE_STATE"] = nil
+      for id, button in pairs(buttoncache) do
+        ButtonIsActiveUpdate(button)
       end
     end
 
