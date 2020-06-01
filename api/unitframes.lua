@@ -777,31 +777,33 @@ function pfUI.uf.OnEvent()
 end
 
 function pfUI.uf.OnUpdate()
-  local unitname = ( this.label and UnitName(this.label) ) or ""
-
   -- update combat feedback
   if this.feedbackText then CombatFeedback_OnUpdate(arg1) end
 
   -- early return on unset focus frames
-  if this.unitname and this.unitname == "focus" then
-    return
-  end
+  if this.unitname then
+    local unitname = ( this.label and UnitName(this.label) ) or ""
 
-  -- focus unit detection
-  if this.unitname and this.unitname ~= strlower(unitname) then
-    -- invalid focus frame
-    for unit, bool in pairs(pfValidUnits) do
-      local scan = UnitName(unit) or ""
-      if this.unitname == strlower(scan) then
-        this.label = unit
-        if this.portrait then this.portrait.model.lastUnit = nil end
+    if this.unitname == "focus" then
+      return
+    end
+
+    -- focus unit detection
+    if this.unitname ~= strlower(unitname) then
+      -- invalid focus frame
+      for unit, bool in pairs(pfValidUnits) do
+        local scan = UnitName(unit) or ""
+        if this.unitname == strlower(scan) then
+          this.label = unit
+          if this.portrait then this.portrait.model.lastUnit = nil end
+          this.instantRefresh = true
+          pfUI.uf:RefreshUnit(this, "all")
+          return
+        end
+        this.label = nil
         this.instantRefresh = true
-        pfUI.uf:RefreshUnit(this, "all")
-        return
+        this.hp.bar:SetStatusBarColor(.2,.2,.2)
       end
-      this.label = nil
-      this.instantRefresh = true
-      this.hp.bar:SetStatusBarColor(.2,.2,.2)
     end
   end
 
