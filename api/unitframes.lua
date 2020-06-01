@@ -698,6 +698,9 @@ function pfUI.uf:UpdateConfig()
       f.debuffs[i].cd:SetAlpha(0)
       f.debuffs[i].id = i
 
+      CreateBackdrop(f.debuffs[i], default_border)
+      CreateBackdropShadow(f.debuffs[i])
+
       f.debuffs[i]:RegisterForClicks("RightButtonUp")
       f.debuffs[i]:ClearAllPoints()
       f.debuffs[i]:SetWidth(f.config.debuffsize)
@@ -1284,12 +1287,9 @@ function pfUI.uf:RefreshUnit(unit, component)
         texture = GetPlayerBuffTexture(GetPlayerBuff(PLAYER_BUFF_START_ID+i, "HARMFUL"))
         stacks = GetPlayerBuffApplications(GetPlayerBuff(PLAYER_BUFF_START_ID+i, "HARMFUL"))
         dtype = GetPlayerBuffDispelType(GetPlayerBuff(PLAYER_BUFF_START_ID+i, "HARMFUL"))
-     else
-       texture, stacks, dtype = UnitDebuff(unitstr, i)
-     end
-
-      CreateBackdrop(unit.debuffs[i], default_border)
-      CreateBackdropShadow(unit.debuffs[i])
+      else
+        texture, stacks, dtype = UnitDebuff(unitstr, i)
+      end
 
       unit.debuffs[i].texture:SetTexture(texture)
 
