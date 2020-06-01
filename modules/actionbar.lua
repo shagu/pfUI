@@ -487,15 +487,27 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
       usable, oom = IsUsableAction(sid)
     end
 
-    -- update usable
+    -- update usable [out-of-range = 1, oom = 2, not-usable = 3, default = 0]
     if self.outofrange and C.bars.glowrange == "1" then
-      self.icon:SetVertexColor(self.rangeColor[1], self.rangeColor[2], self.rangeColor[3], self.rangeColor[4])
+      if self.vertexstate ~= 1 then
+        self.icon:SetVertexColor(self.rangeColor[1], self.rangeColor[2], self.rangeColor[3], self.rangeColor[4])
+        self.vertexstate = 1
+      end
     elseif oom and C.bars.showoom == "1" then
-      self.icon:SetVertexColor(self.oomColor[1], self.oomColor[2], self.oomColor[3], self.oomColor[4])
+      if self.vertexstate ~= 2 then
+        self.icon:SetVertexColor(self.oomColor[1], self.oomColor[2], self.oomColor[3], self.oomColor[4])
+        self.vertexstate = 2
+      end
     elseif not usable and C.bars.showna == "1" then
-      self.icon:SetVertexColor(self.naColor[1], self.naColor[2], self.naColor[3], self.naColor[4])
+      if self.vertexstate ~= 3 then
+        self.icon:SetVertexColor(self.naColor[1], self.naColor[2], self.naColor[3], self.naColor[4])
+        self.vertexstate = 3
+      end
     else
-      self.icon:SetVertexColor(1, 1, 1, 1)
+      if self.vertexstate ~= 0 then
+        self.icon:SetVertexColor(1, 1, 1, 1)
+        self.vertexstate = 0
+      end
     end
   end
 
