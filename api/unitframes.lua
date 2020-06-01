@@ -624,6 +624,9 @@ function pfUI.uf:UpdateConfig()
       f.buffs[i].cd:SetAlpha(0)
       f.buffs[i].id = i
 
+      CreateBackdrop(f.buffs[i], default_border)
+      CreateBackdropShadow(f.buffs[i])
+
       f.buffs[i]:RegisterForClicks("RightButtonUp")
       f.buffs[i]:ClearAllPoints()
 
@@ -1218,9 +1221,6 @@ function pfUI.uf:RefreshUnit(unit, component)
       else
        texture, stacks = UnitBuff(unitstr, i)
       end
-
-      CreateBackdrop(unit.buffs[i], default_border)
-      CreateBackdropShadow(unit.buffs[i])
 
       unit.buffs[i].texture:SetTexture(texture)
 
