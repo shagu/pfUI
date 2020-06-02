@@ -23,6 +23,9 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
   local parentCount = 0
   local registry = {}
 
+  -- cache default border color
+  local er, eg, eb, ea = GetStringColor(pfUI_config.appearance.border.color)
+
   local function IsNamePlate(frame)
     if frame:GetObjectType() ~= NAMEPLATE_FRAMETYPE then return nil end
     regions = plate:GetRegions()
@@ -451,8 +454,7 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     if target and C.nameplates.targethighlight == "1" then
       plate.health.backdrop:SetBackdropBorderColor(1,1,1,1)
     else
-      local rawborder, default_border = GetBorderSize("nameplates")
-      CreateBackdrop(plate.health, default_border)
+      plate.health.backdrop:SetBackdropBorderColor(er,eg,eb,ea)
     end
 
     -- hide frames according to the configuration
