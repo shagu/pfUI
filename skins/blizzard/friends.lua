@@ -456,13 +456,7 @@ pfUI:RegisterSkin("Friends", "vanilla:tbc", function ()
     end
 
     SkinButton(RaidFrameRaidInfoButton)
-    RaidFrameRaidInfoButton:ClearAllPoints()
-    RaidFrameRaidInfoButton:SetPoint("TOPRIGHT", -70, -37)
-    RaidFrameRaidInfoButton.SetPoint = function() end
-
     SkinButton(RaidFrameConvertToRaidButton)
-    RaidFrameConvertToRaidButton:ClearAllPoints()
-    RaidFrameConvertToRaidButton:SetPoint("RIGHT", RaidFrameRaidInfoButton, "LEFT", -2*bpad, 0)
 
     HookAddonOrVariable("Blizzard_RaidUI", function()
       for i = 1, MAX_RAID_MEMBERS do
@@ -485,11 +479,7 @@ pfUI:RegisterSkin("Friends", "vanilla:tbc", function ()
       end
 
       SkinButton(RaidFrameReadyCheckButton)
-      RaidFrameReadyCheckButton:ClearAllPoints()
-      RaidFrameReadyCheckButton:SetPoint("RIGHT", RaidFrameRaidInfoButton, "LEFT", -2*bpad, 0)
       SkinButton(RaidFrameAddMemberButton)
-      RaidFrameAddMemberButton:ClearAllPoints()
-      RaidFrameAddMemberButton:SetPoint("RIGHT", RaidFrameReadyCheckButton, "LEFT", -2*bpad, 0)
     end)
   end
 end)
