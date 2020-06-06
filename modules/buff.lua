@@ -52,6 +52,11 @@ pfUI:RegisterModule("buff", "vanilla:tbc", function ()
       buff.mode = buff.btype
       buff.texture:SetTexture(GetPlayerBuffTexture(buff.bid))
 
+      if not buff.backdrop then
+        CreateBackdrop(buff)
+        CreateBackdropShadow(buff)
+      end
+
       if buff.btype == "HARMFUL" then
         local dtype = GetPlayerBuffDispelType(buff.bid)
         if dtype == "Magic" then
@@ -291,9 +296,6 @@ pfUI:RegisterModule("buff", "vanilla:tbc", function ()
     buff:SetHeight(tonumber(C.buffs.size))
     buff:ClearAllPoints()
     buff:SetPoint("TOPRIGHT", relFrame, "TOPRIGHT",offsetX, offsetY)
-
-    CreateBackdrop(buff)
-    CreateBackdropShadow(buff)
 
     buff.timer:SetFont(pfUI.font_default, fontsize, "OUTLINE")
     buff.stacks:SetFont(pfUI.font_default, fontsize+1, "OUTLINE")
