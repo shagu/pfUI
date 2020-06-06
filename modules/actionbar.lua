@@ -710,16 +710,30 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
       -- append paging enabled bars to the filter list
       for i=1,12 do bar[i]:SetScript("OnAttributeChanged", ButtonSwitch) end
 
+      -- fill all possible page states
+      local page, pages = nil, {}
+      while not pages[6] do
+        for i=1, 6 do
+          page = i == 1 and 1 or C.bars["bar"..i] and C.bars["bar"..i].pageable == "1" and i
+          if page then table.insert(pages, page) end
+        end
+      end
+
       bar:SetAttribute("statemap-page", "$input")
       bar:SetAttribute("state", (bar:GetAttribute("state-page") or 1))
 
+      -- prio posses bar
       bar.filter = "[bonusbar: 5] 11;"
-      for i=2, 6 do
-        bar.filter = (C.bars["bar"..i] and C.bars["bar"..i].pageable == "1" and 1 or nil) and string.format("%s[actionbar: %s] %s; ", bar.filter, i, i) or bar.filter
-      end
 
       -- set bar 8 for druid stealth if enabled
       local prowl = class == "DRUID" and C.bars["druidstealth"] == "1" and "8" or "7"
+
+      -- write default pages
+      for state, page in pairs(pages) do
+        if page ~= 1 then -- skip page 1 as it is supposed to stay dynamic for stances
+          bar.filter = string.format("%s[actionbar: %s] %s; ", bar.filter, state, page)
+        end
+      end
 
       -- write page driver conditions
       bar.filter = string.format("%s[bonusbar:1,nostealth] 7; [bonusbar:1,stealth] %s; [bonusbar:2] 10; [bonusbar:3] 9; [bonusbar:4] 10; 1", bar.filter, prowl)
