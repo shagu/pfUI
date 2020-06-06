@@ -43,6 +43,13 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     kill(f, true)
   end
 
+  -- enable all possible actionbar pages
+  SetActionBarToggles(0, 0, 0, 0)
+  _G.SHOW_MULTI_ACTIONBAR_1 = nil
+  _G.SHOW_MULTI_ACTIONBAR_2 = nil
+  _G.SHOW_MULTI_ACTIONBAR_3 = nil
+  _G.SHOW_MULTI_ACTIONBAR_4 = nil
+
   -- events that provide special updater functions
   local special_events = {
     ["ACTIONBAR_UPDATE_COOLDOWN"] = true,
