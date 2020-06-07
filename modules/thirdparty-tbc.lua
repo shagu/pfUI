@@ -182,4 +182,30 @@ pfUI:RegisterModule("thirdparty-tbc", "tbc", function ()
       end
     end
   end)
+
+  HookAddonOrVariable("DruidBarFrame", function()
+    if C.thirdparty.druidbar.enable == "0" then return end
+    local p = ManaBarColor[0]
+    local pr, pg, pb = 0, 0, 0
+    if p then pr, pg, pb = p.r + .5, p.g +.5, p.b +.5 end
+    DruidBarKey.color = { pr, pg, pb, 1 }
+    DruidBarKey.bordercolor = {1,1,1,0}
+    DruidBarKey.bgcolor = {0,0,0,0}
+    DruidBarKey.manatexture = pfUI.media["img:bar"]
+    DruidBarKey.bordertexture = ""
+
+    hooksecurefunc("DruidBar_MainGraphics", function()
+      local f = pfUI.uf.player
+      DruidBarFrame:SetWidth((f.config.pwidth ~= "-1" and f.config.pwidth or f.config.width))
+      DruidBarFrame:SetHeight(f.config.pheight)
+      DruidBarMana:SetAllPoints(DruidBarFrame)
+
+      DruidBarText:SetFont(pfUI.font_unit, C.global.font_unit_size, "OUTLINE")
+      DruidBarText1:SetFont(pfUI.font_unit, C.global.font_unit_size, "OUTLINE")
+
+      StripTextures(DruidBarFrame)
+      CreateBackdrop(DruidBarFrame)
+      CreateBackdropShadow(DruidBarFrame)
+    end)
+  end)
 end)
