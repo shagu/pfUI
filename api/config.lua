@@ -328,6 +328,7 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("unitframes", "tttarget",    "overhealperc",     "10")
 
   pfUI:UpdateConfig("unitframes", "pet",         "happinessicon",    "0")
+  pfUI:UpdateConfig("unitframes", "pet",         "happinesssize",    "12")
   pfUI:UpdateConfig("unitframes", "pet",         "width",            "100")
   pfUI:UpdateConfig("unitframes", "pet",         "height",           "14")
   pfUI:UpdateConfig("unitframes", "pet",         "pheight",          "4")

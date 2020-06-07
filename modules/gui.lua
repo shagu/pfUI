@@ -1605,6 +1605,7 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
         CreateConfig(U[c], T["Show Leader Icon"], C.unitframes[c], "leadericon", "checkbox")
         if c == "pet" then
           CreateConfig(U[c], T["Show Happiness Icon"], C.unitframes[c], "happinessicon", "checkbox")
+          CreateConfig(U[c], T["Happiness Icon Size"], C.unitframes[c], "happinesssize")
         end
         CreateConfig(U[c], T["Show Raid Mark"], C.unitframes[c], "raidicon", "checkbox")
         CreateConfig(U[c], T["Raid Mark Size"], C.unitframes[c], "raidiconsize")
