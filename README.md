@@ -84,8 +84,20 @@ When playing with a non-english client, the language might be relevant too. If p
 Report Errors, Issues and Feature Requests in the [Bugtracker](https://github.com/shagu/pfUI/issues).
 Please make sure to have the latest version installed and check for conflicting addons beforehand.
 
+**Where is the happiness indicator for pets?**  
+The pet happiness is shown as the color of your pet's frame. Depending on your skin, this can either be the text or the background color of your pet's healthbar:
+
+- Green = Happy
+- Yellow = Content
+- Red = Unhappy
+
+Since version 4.0.7 there is also an additional icon that can be enabled from the pet unit frame options.
+
 **Can I use Clique with pfUI?**  
 This addon already includes support for clickcasting. If you still want to make use of clique, a pfUI compatible version can be found [Here](https://github.com/shagu/Clique/archive/master.zip). If you want to keep your current version of Clique, you'll have to apply this [Patch](https://github.com/shagu/Clique/commit/a5ee56c3f803afbdda07bae9cd330e0d4a75d75a).
+
+**Where is the Experience Bar?**  
+The experience bar shows up on mouseover and whenever you gain experience, next to left chatframe by default. There's also an option to make it stay visible all the time.
 
 **How do I show the Damage- and Threatmeter Dock?**  
 If you enabled the "dock"-feature for your external (third-party) meters such as DPSMate or KTM, then you'll be able to toggle between them and the Right Chat by clicking on the ">" symbol on the bottom-right panel.
@@ -94,7 +106,10 @@ If you enabled the "dock"-feature for your external (third-party) meters such as
 You need to disable the "Simple Chat" in blizzards interface settings (Advanced Options). Then relog and reset/run the firstrun wizard again.
 
 **How can I enable mouseover cast?**  
-Create a macro with "/pfcast SPELLNAME". If you also want to see the cooldown, You might want to add "/run if nil then CastSpellByName("SPELLNAME") end" on top of the macro.
+On Vanilla, create a macro with "/pfcast SPELLNAME". If you also want to see the cooldown, You might want to add "/run if nil then CastSpellByName("SPELLNAME") end" on top of the macro. For The Burning Crusade, just use the regular mouseover macros.
+
+**Will there be pfUI for Activision's "Classic" remakes?**  
+No, it would require an entire rewrite of the AddOn since the game is now a different one. The AddOn-API has evolved during the last 15 years and the new "Classic" versions are based on a current retail gameclient. I don't plan to play any of those new versions, so I won't be porting any of my addons to it.
 
 **Everything from scratch?! Are you insane?**  
 Most probably, yes.
