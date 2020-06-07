@@ -17,6 +17,11 @@ pfUI:RegisterModule("buff", "vanilla:tbc", function ()
     end
     buff.bid = GetPlayerBuff(PLAYER_BUFF_START_ID+buff.id, buff.btype)
 
+    if not buff.backdrop then
+      CreateBackdrop(buff)
+      CreateBackdropShadow(buff)
+    end
+
     --detect weapon buffs
     if buff.btype == "HELPFUL" and ((C.buffs.separateweapons == "0" and buff.gid <= pfUI.buff.wepbuffs.count) or (pfUI.buff.wepbuffs.count > 0 and buff.weapon ~= nil)) then
         local mh, mhtime, mhcharge, oh, ohtime, ohcharge = GetWeaponEnchantInfo()
@@ -51,11 +56,6 @@ pfUI:RegisterModule("buff", "vanilla:tbc", function ()
       -- Set Buff Texture and Border
       buff.mode = buff.btype
       buff.texture:SetTexture(GetPlayerBuffTexture(buff.bid))
-
-      if not buff.backdrop then
-        CreateBackdrop(buff)
-        CreateBackdropShadow(buff)
-      end
 
       if buff.btype == "HARMFUL" then
         local dtype = GetPlayerBuffDispelType(buff.bid)
