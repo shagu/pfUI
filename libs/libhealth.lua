@@ -22,8 +22,8 @@ libhealth:SetScript("OnEvent", function()
 
     -- load enable state and set functions
     libhealth.enabled = pfUI_config["global"]["libhealth"] == "1" and true or nil
-    libhealth.reqhit = tonumber(pfUI_config["global"]["libhealth_hit"])
-    libhealth.reqdmg = tonumber(pfUI_config["global"]["libhealth_dmg"]) * 100
+    libhealth.reqhit = (tonumber(pfUI_config["global"]["libhealth_hit"]) or 4)
+    libhealth.reqdmg = (tonumber(pfUI_config["global"]["libhealth_dmg"]) or 0.5) * 100
   end
 
   -- return as we're not supposed to be here
