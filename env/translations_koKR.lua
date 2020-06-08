@@ -306,6 +306,7 @@ pfUI_translation["koKR"] = {
   ["Group-Pet"] = "파티-팻",
   ["Group-Target"] = "파티-타켓",
   ["Guild Online"] = "접속중인 길드원",
+  ["Happiness Icon Size"] = nil,
   ["Health"] = nil,
   ["Health - Auto"] = "체력-자동",
   ["Healthbar"] = nil,

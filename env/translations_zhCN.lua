@@ -306,6 +306,7 @@ pfUI_translation["zhCN"] = {
   ["Group-Pet"] = "小队宠物",
   ["Group-Target"] = "小队目标",
   ["Guild Online"] = "公会在线",
+  ["Happiness Icon Size"] = nil,
   ["Health"] = nil,
   ["Health - Auto"] = "动态生命值和百分比",
   ["Healthbar"] = "生命条",

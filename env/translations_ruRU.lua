@@ -306,6 +306,7 @@ pfUI_translation["ruRU"] = {
   ["Group-Pet"] = "Группа-питомец",
   ["Group-Target"] = "Группа-цель",
   ["Guild Online"] = "Члены гильдии в сети",
+  ["Happiness Icon Size"] = nil,
   ["Health"] = "Здоровье",
   ["Health - Auto"] = "Здоровье - автоматически",
   ["Healthbar"] = "Панель здоровья",

@@ -306,6 +306,7 @@ pfUI_translation["frFR"] = {
   ["Group-Pet"] = "Groupe des familiers",
   ["Group-Target"] = "Groupe des cibles",
   ["Guild Online"] = "Membres de guilde connectés",
+  ["Happiness Icon Size"] = nil,
   ["Health"] = nil,
   ["Health - Auto"] = "Points de vie - Automatique",
   ["Healthbar"] = nil,

@@ -306,6 +306,7 @@ pfUI_translation["deDE"] = {
   ["Group-Pet"] = nil,
   ["Group-Target"] = nil,
   ["Guild Online"] = nil,
+  ["Happiness Icon Size"] = nil,
   ["Health"] = nil,
   ["Health - Auto"] = nil,
   ["Healthbar"] = nil,

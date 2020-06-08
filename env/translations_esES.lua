@@ -306,6 +306,7 @@ pfUI_translation["esES"] = {
   ["Group-Pet"] = "Mascota-Grupo",
   ["Group-Target"] = "Objetivo-Grupo",
   ["Guild Online"] = "Conectados en hermandad",
+  ["Happiness Icon Size"] = nil,
   ["Health"] = "Salud",
   ["Health - Auto"] = "Salud - Auto",
   ["Healthbar"] = "Barra de salud",
