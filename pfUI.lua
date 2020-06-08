@@ -262,8 +262,11 @@ end
 pfUI:SetScript("OnEvent", function()
   -- some addons overwrite color and font settings
   -- need to enforce pfUI's selection every time
-  pfUI:UpdateFonts()
-  pfUI:UpdateColors()
+  -- as soon as pfUI's config got initialized
+  if not pfUI.bootup then
+    pfUI:UpdateFonts()
+    pfUI:UpdateColors()
+  end
 
   if arg1 == pfUI.name then
     -- read pfUI version from .toc file
