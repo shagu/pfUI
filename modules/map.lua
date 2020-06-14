@@ -20,7 +20,7 @@ pfUI:RegisterModule("map", "vanilla:tbc", function ()
     -- do not load if other map addon is loaded
     if Cartographer then return end
     if METAMAP_TITLE then return end
-
+    if WorldMapFrame then return end
     UIPanelWindows["WorldMapFrame"] = { area = "center" }
 
     WorldMapFrame:SetScript("OnShow", function()
