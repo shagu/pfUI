@@ -46,6 +46,8 @@ pfUI:RegisterModule("map", "vanilla:tbc", function ()
         scale = clamp(WorldMapFrame:GetScale() + arg1/10, 0.1, 2.0)
         WorldMapFrame:SetScale(scale)
       end
+
+      SaveMovable(this, true)
     end)
 
     WorldMapFrame:SetScript("OnMouseDown",function()
@@ -54,7 +56,7 @@ pfUI:RegisterModule("map", "vanilla:tbc", function ()
 
     WorldMapFrame:SetScript("OnMouseUp",function()
       WorldMapFrame:StopMovingOrSizing()
-      SaveMovable(this)
+      SaveMovable(this, true)
     end)
 
     WorldMapFrame:SetMovable(true)
