@@ -592,13 +592,16 @@ end
 -- [ Save Movable ]
 -- Save the positions of a Frame.
 -- 'frame'      [frame]        the frame that should be saved.
-function pfUI.api.SaveMovable(frame)
+function pfUI.api.SaveMovable(frame, scale)
   local anchor, _, _, xpos, ypos = frame:GetPoint()
   C.position[frame:GetName()] = C.position[frame:GetName()] or {}
   C.position[frame:GetName()]["xpos"] = round(xpos)
   C.position[frame:GetName()]["ypos"] = round(ypos)
   C.position[frame:GetName()]["anchor"] = anchor
   C.position[frame:GetName()]["parent"] = frame:GetParent() and frame:GetParent():GetName() or nil
+  if scale then
+    C.position[frame:GetName()]["scale"] = frame:GetScale()
+  end
 end
 
 -- [ Update Movable ]
