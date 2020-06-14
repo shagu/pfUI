@@ -379,6 +379,8 @@ function pfUI:LoadConfig()
     pfUI:UpdateConfig("unitframes", unit,      "verticalbar",      "0")
     pfUI:UpdateConfig("unitframes", unit,      "buff_indicator",   "0")
     pfUI:UpdateConfig("unitframes", unit,      "debuff_indicator", "0")
+    pfUI:UpdateConfig("unitframes", unit,      "custom_indicator", "")
+
     pfUI:UpdateConfig("unitframes", unit,      "debuff_ind_pos",   "CENTER")
     pfUI:UpdateConfig("unitframes", unit,      "debuff_ind_size",  ".65")
     pfUI:UpdateConfig("unitframes", unit,      "debuff_ind_class", "1")

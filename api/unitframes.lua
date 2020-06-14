@@ -14,6 +14,7 @@ end)
 pfUI.uf.frames = {}
 pfUI.uf.delayed = {}
 
+local scanner
 local glow = {
   edgeFile = pfUI.media["img:glow"], edgeSize = 8,
   insets = {left = 0, right = 0, top = 0, bottom = 0},
@@ -332,6 +333,7 @@ function pfUI.uf:UpdateConfig()
 
   f.dispellable = nil
   f.indicators = nil
+  f.indicator_custom = nil
 
   f.alpha_visible = tonumber(f.config.alpha_visible)
   f.alpha_outrange = tonumber(f.config.alpha_outrange)
@@ -1446,6 +1448,15 @@ function pfUI.uf:RefreshUnit(unit, component)
       unit.indicators = {}
     end
 
+    if not unit.indicator_custom and unit.config.buff_indicator == "1" then
+      unit.indicator_custom = {}
+      for k, v in pairs({strsplit("#", unit.config.custom_indicator)}) do
+        unit.indicator_custom[k] = string.lower(v)
+      end
+    elseif not unit.indicator_custom then
+      unit.indicator_custom = {}
+    end
+
     local pos = 1
     if table.getn(unit.indicators) > 0 then
       for i=1,32 do
@@ -1459,6 +1470,54 @@ function pfUI.uf:RefreshUnit(unit, component)
           -- match filter
           for _, filter in pairs(unit.indicators) do
             if filter == string.lower(texture) then
+              pfUI.uf:AddIcon(unit, pos, texture, timeleft, count)
+              pos = pos + 1
+              break
+            end
+          end
+        end
+      end
+    end
+
+    if table.getn(unit.indicator_custom) > 0 then
+      scanner = scanner or libtipscan:GetScanner("unitframes")
+
+      for i=1,32 do -- scan for custom buffs
+        local texture, count = UnitBuff(unitstr, i)
+        if texture then
+          local timeleft, name, _
+          if pfUI.client > 11200 then
+            name, _, texture, _, _, timeleft = _G.UnitBuff(unitstr, i)
+          else
+            scanner:SetUnitBuff(unitstr, i)
+            name = scanner:Line(1) or ""
+          end
+
+          -- match filter
+          for _, filter in pairs(unit.indicator_custom) do
+            if filter == string.lower(name) then
+              pfUI.uf:AddIcon(unit, pos, texture, timeleft, count)
+              pos = pos + 1
+              break
+            end
+          end
+        end
+      end
+
+      for i=1,32 do -- scan for custom debuffs
+        local texture, count = UnitDebuff(unitstr, i)
+        if texture then
+          local timeleft, name, _
+          if libdebuff then
+            name, _, texture, _, _, _, timeleft = libdebuff:UnitDebuff(unitstr, i)
+          else
+            scanner:SetUnitDebuff(unitstr, i)
+            name = scanner:Line(1) or ""
+          end
+
+          -- match filter
+          for _, filter in pairs(unit.indicator_custom) do
+            if filter == string.lower(name) then
               pfUI.uf:AddIcon(unit, pos, texture, timeleft, count)
               pos = pos + 1
               break
