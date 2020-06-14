@@ -44,6 +44,7 @@
   <Include file="..\modules\sellvalue.lua"/>
   <Include file="..\modules\eqcompare.lua"/>
   <Include file="..\modules\map.lua"/>
+  <Include file="..\modules\mapcolors.lua"/>
   <Include file="..\modules\uf_tukui.lua"/>
   <Include file="..\modules\custom.lua"/>
   <Include file="..\modules\gm.lua"/>
