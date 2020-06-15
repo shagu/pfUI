@@ -29,8 +29,7 @@ pfUI:RegisterModule("infight", "vanilla:tbc", function ()
   pfUI.infight = CreateFrame("Frame", "pfUICombat", UIParent)
   pfUI.infight:SetScript("OnUpdate", OnUpdate)
 
-  pfUI.infight.screen = CreateFrame("Frame", "pfUICombatScreen", UIParent)
-  pfUI.infight.screen:SetFrameStrata("BACKGROUND")
+  pfUI.infight.screen = CreateFrame("Frame", "pfUICombatScreen", WorldFrame)
   pfUI.infight.screen:SetAllPoints(WorldFrame)
   pfUI.infight.screen:Hide()
 
