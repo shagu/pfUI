@@ -32,16 +32,18 @@ pfUI:RegisterModule("infight", "vanilla:tbc", function ()
   pfUI.infight.screen = CreateFrame("Frame", "pfUICombatScreen", UIParent)
   pfUI.infight.screen:SetFrameStrata("BACKGROUND")
   pfUI.infight.screen:SetAllPoints(WorldFrame)
-  pfUI.infight.screen:SetBackdrop({
-    edgeFile = pfUI.media["img:glow"], edgeSize = 8,
-    insets = {left = 0, right = 0, top = 0, bottom = 0},
-  })
   pfUI.infight.screen:Hide()
 
   pfUI.infight.UpdateConfig = function(self)
     pfUI.infight.infight = C.appearance.infight.screen == "1" and true or nil
     pfUI.infight.aggro = C.appearance.infight.aggro == "1" and true or nil
     pfUI.infight.health = C.appearance.infight.health == "1" and true or nil
+
+    pfUI.infight.screen:SetBackdrop({
+      edgeFile = pfUI.media["img:glow"], edgeSize = tonumber(C.appearance.infight.intensity),
+      insets = {left = 0, right = 0, top = 0, bottom = 0},
+    })
+
     pfUI.infight.screen:Hide()
   end
 

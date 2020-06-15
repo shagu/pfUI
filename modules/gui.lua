@@ -1118,6 +1118,13 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
         "TOP:" .. T["Top"],
         "RIGHT:" .. T["Right"]
       },
+      ["glowintensity"] = {
+        "8:" .. T["Tiny"],
+        "16:" .. T["Small"],
+        "32:" .. T["Medium"],
+        "64:" .. T["Large"],
+        "128:" .. T["Huge"],
+      },
     }
 
     -- add locale dependent client fonts to the list
@@ -1454,6 +1461,7 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
       CreateConfig(U["infight"], T["Enable Combat Glow Effects On Screen Edges"], C.appearance.infight, "screen", "checkbox")
       CreateConfig(U["infight"], T["Enable Aggro Glow Effects On Screen Edges"], C.appearance.infight, "aggro", "checkbox")
       CreateConfig(U["infight"], T["Enable Low Health Glow Effects On Screen Edges"], C.appearance.infight, "health", "checkbox")
+      CreateConfig(U["infight"], T["Screen Edge Glow Intensity"], C.appearance.infight, "intensity", "dropdown", pfUI.gui.dropdowns.glowintensity)
     end)
 
     CreateGUIEntry(T["Settings"], T["Cooldown"], function()
