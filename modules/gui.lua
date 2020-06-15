@@ -1451,7 +1451,7 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
       CreateConfig(nil, T["Bags Border Size"], C.appearance.border, "bags", "dropdown", pfUI.gui.dropdowns.border)
       CreateConfig(U["nameplates"], T["Nameplate Border Size"], C.appearance.border, "nameplates", "dropdown", pfUI.gui.dropdowns.border)
       CreateConfig(nil) -- spacer
-      CreateConfig(nil, T["Enable Combat Glow Effects On Screen Edges"], C.appearance.infight, "screen", "checkbox")
+      CreateConfig(U["infight"], T["Enable Combat Glow Effects On Screen Edges"], C.appearance.infight, "screen", "checkbox")
     end)
 
     CreateGUIEntry(T["Settings"], T["Cooldown"], function()
