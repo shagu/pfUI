@@ -1,6 +1,6 @@
 pfUI:RegisterModule("infight", "vanilla:tbc", function ()
   local function OnUpdate()
-    if this.mode == 0 then return end
+    if not this.infight and not this.aggro and not this.health then return end
     if ( this.tick or 1) > GetTime() then return else this.tick = GetTime() + .1 end
 
     if not this.fadeValue then  this.fadeValue = 1 end
@@ -12,13 +12,17 @@ pfUI:RegisterModule("infight", "vanilla:tbc", function ()
     end
     this.fadeValue = this.fadeValue + this.fadeModifier
 
-    if C.appearance.infight.screen == "1" and this.screen then
-      if UnitAffectingCombat("player") then
-        this.screen:Show()
-        this.screen:SetBackdropBorderColor(1,0.2+this.fadeValue, this.fadeValue, 1-this.fadeValue);
-      else
-        this.screen:Hide()
-      end
+    local visible = nil
+    if this.infight and UnitAffectingCombat("player") then visible = true end
+    if this.aggro and UnitHasAggro("player") > 0 then visible = true end
+    if this.health and UnitHealth("player")/UnitHealthMax("player")*100 <= 25 then visible = true end
+    if UnitIsDeadOrGhost("player") then visible = nil end
+
+    if visible then
+      this.screen:Show()
+      this.screen:SetBackdropBorderColor(1,0.2+this.fadeValue, this.fadeValue, 1-this.fadeValue)
+    else
+      this.screen:Hide()
     end
   end
 
@@ -35,7 +39,10 @@ pfUI:RegisterModule("infight", "vanilla:tbc", function ()
   pfUI.infight.screen:Hide()
 
   pfUI.infight.UpdateConfig = function(self)
-    pfUI.infight.mode = tonumber(C.appearance.infight.screen)
+    pfUI.infight.infight = C.appearance.infight.screen == "1" and true or nil
+    pfUI.infight.aggro = C.appearance.infight.aggro == "1" and true or nil
+    pfUI.infight.health = C.appearance.infight.health == "1" and true or nil
+    pfUI.infight.screen:Hide()
   end
 
   pfUI.infight.UpdateConfig()
