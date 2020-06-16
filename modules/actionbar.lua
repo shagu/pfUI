@@ -589,6 +589,8 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
       start, duration, enable = GetShapeshiftFormCooldown(button.id)
     elseif button.bar == 12 then
       start, duration, enable = GetPetActionCooldown(button.id)
+    elseif button.spellslot and button.booktype then
+      start, duration, enabled = GetSpellCooldown(button.spellslot, button.booktype)
     else
       start, duration, enable = GetActionCooldown(button.id)
     end
