@@ -336,6 +336,47 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     end
   end
 
+  local function ButtonMacroScan(self)
+    local macro = GetActionText(self.id)
+    self.spellslot = nil
+    self.booktype = nil
+
+    if macro then
+      local name, body, _
+      for slot = 1, 36 do
+        name, _, body = GetMacroInfo(slot)
+        if name == macro then break end
+      end
+
+      if name and body then
+        local match
+
+        for line in gfind(body, "[^%\n]+") do
+          _, _, match = string.find(line, '^/cast (.+)')
+
+          if not match then
+            _, _, match = string.find(line, '^/pfcast (.+)')
+          end
+
+          if not match then
+            _, _, match = string.find(line, '^/pfmouse (.+)')
+          end
+
+          if not match then
+            _, _, match = string.find(line, 'CastSpellByName%((.+)%)')
+          end
+
+          if match then
+            local _, _, spell, rank = string.find(match, '(.+)%((.+)%)')
+            spell = spell or match
+            self.spellslot, self.booktype = libspell.GetSpellIndex(spell, rank)
+            return
+          end
+        end
+      end
+    end
+  end
+
   local function ButtonEnter(self)
     local self = self or this
 
@@ -579,6 +620,7 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     ButtonUsableUpdate(button)
     ButtonCooldownUpdate(button)
     ButtonIsActiveUpdate(button)
+    ButtonMacroScan(button)
   end
 
   local function BarsEvent(self)
