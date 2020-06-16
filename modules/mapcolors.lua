@@ -1,7 +1,7 @@
 -- adds class colored circles on world and battlefield map
 pfUI:RegisterModule("mapcolors", function ()
-  local mapcolors = CreateFrame("Frame", nil, UIParent)
-  mapcolors:SetScript("OnUpdate", function()
+  pfUI.mapcolors = CreateFrame("Frame", nil, UIParent)
+  pfUI.mapcolors:SetScript("OnUpdate", function()
     -- throttle to to one item per .1 second
     if ( this.tick or 1) > GetTime() then return else this.tick = GetTime() + .1 end
 
@@ -44,7 +44,7 @@ pfUI:RegisterModule("mapcolors", function ()
         -- create icon if not yet existing
         if not frame.pfIcon then
           frame.pfIcon = frame:CreateTexture(nil, "OVERLAY")
-          SetAllPointsOffset(frame.pfIcon, frame, 3, -3)
+          SetAllPointsOffset(frame.pfIcon, frame, this.size, -this.size)
         end
 
         -- check if unit is in same group
@@ -75,4 +75,19 @@ pfUI:RegisterModule("mapcolors", function ()
       end
     end
   end)
+
+  pfUI.mapcolors.UpdateConfig = function()
+    pfUI.mapcolors.size = tonumber(C.appearance.worldmap.groupcircles)
+
+    if not pfUI.mapcolors.buttons then return end
+    for name, unitstr in pairs(pfUI.mapcolors.buttons) do
+      frame = _G[name]
+
+      if frame and frame.pfIcon then
+        SetAllPointsOffset(frame.pfIcon, frame, pfUI.mapcolors.size, -pfUI.mapcolors.size)
+      end
+    end
+  end
+
+  pfUI.mapcolors:UpdateConfig()
 end)

@@ -1125,6 +1125,13 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
         "64:" .. T["Large"],
         "128:" .. T["Huge"],
       },
+      ["mapcircle"] = {
+        "5:" .. T["Tiny"],
+        "3:" .. T["Small"],
+        "1:" .. T["Medium"],
+        "-1:" .. T["Large"],
+        "-3:" .. T["Huge"],
+      },
     }
 
     -- add locale dependent client fonts to the list
@@ -1443,6 +1450,7 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
       CreateConfig(nil, T["Background Color"], C.appearance.border, "background", "color")
       CreateConfig(nil, T["Border Color"], C.appearance.border, "color", "color")
       CreateConfig(U["mapreveal"], T["Map Reveal Color"], C.appearance.worldmap, "mapreveal_color", "color")
+      CreateConfig(U["mapcolors"], T["Map Group/Raid Circle Size"], C.appearance.worldmap, "groupcircles", "dropdown", pfUI.gui.dropdowns.mapcircle)
       CreateConfig(nil) -- spacer
       CreateConfig(nil, T["Enable Frame Shadow"], C.appearance.border, "shadow", "checkbox")
       CreateConfig(nil, T["Frame Shadow Intensity"], C.appearance.border, "shadow_intensity", "dropdown", pfUI.gui.dropdowns.uf_debuff_indicator_size)
