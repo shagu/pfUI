@@ -393,6 +393,8 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
       else
         GameTooltip:SetPetAction(self.id)
       end
+    elseif self.spellslot and self.booktype then
+      GameTooltip:SetSpell(self.spellslot, self.booktype)
     else
       GameTooltip:SetAction(self.id)
     end
