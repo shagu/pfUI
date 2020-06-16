@@ -415,6 +415,7 @@ pfUI_translation["esES"] = {
   ["Mana - Min/Max"] = "Maná - Min/Máx",
   ["Mana - Missing"] = "Maná - Falta",
   ["Mana - Percentage"] = "Maná - Porcentaje",
+  ["Map Group/Raid Circle Size"] = nil,
   ["Map Reveal Color"] = "Color de revelación del mapa",
   ["Medium"] = "Medio",
   ["Memory Usage"] = "Uso de memoria",

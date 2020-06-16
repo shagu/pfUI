@@ -415,6 +415,7 @@ pfUI_translation["enUS"] = {
   ["Mana - Min/Max"] = nil,
   ["Mana - Missing"] = nil,
   ["Mana - Percentage"] = nil,
+  ["Map Group/Raid Circle Size"] = nil,
   ["Map Reveal Color"] = nil,
   ["Medium"] = nil,
   ["Memory Usage"] = nil,

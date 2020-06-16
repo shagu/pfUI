@@ -415,6 +415,7 @@ pfUI_translation["koKR"] = {
   ["Mana - Min/Max"] = "마나-최소/최대",
   ["Mana - Missing"] = "마나-손실",
   ["Mana - Percentage"] = "마나-퍼센트",
+  ["Map Group/Raid Circle Size"] = nil,
   ["Map Reveal Color"] = nil,
   ["Medium"] = "평균",
   ["Memory Usage"] = "메모리 사용",

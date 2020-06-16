@@ -415,6 +415,7 @@ pfUI_translation["ruRU"] = {
   ["Mana - Min/Max"] = "Мана - мин/макс",
   ["Mana - Missing"] = "Мана - отсутствует",
   ["Mana - Percentage"] = "Мана - проценты",
+  ["Map Group/Raid Circle Size"] = nil,
   ["Map Reveal Color"] = "Цвет неисследованных областей на карте мира",
   ["Medium"] = "Средне",
   ["Memory Usage"] = "Использование памяти",

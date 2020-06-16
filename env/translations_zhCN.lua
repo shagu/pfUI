@@ -415,6 +415,7 @@ pfUI_translation["zhCN"] = {
   ["Mana - Min/Max"] = "当前/最大法力值",
   ["Mana - Missing"] = "失去的法力值",
   ["Mana - Percentage"] = "法力值百分比",
+  ["Map Group/Raid Circle Size"] = nil,
   ["Map Reveal Color"] = "未勘探地图颜色",
   ["Medium"] = "中等速度",
   ["Memory Usage"] = "内存使用情况",

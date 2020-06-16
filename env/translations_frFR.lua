@@ -415,6 +415,7 @@ pfUI_translation["frFR"] = {
   ["Mana - Min/Max"] = "Mana - Min/Max",
   ["Mana - Missing"] = "Points de Mana - Manquants",
   ["Mana - Percentage"] = "Points de Mana - Pourcentage",
+  ["Map Group/Raid Circle Size"] = nil,
   ["Map Reveal Color"] = "Couleur la carte révélée",
   ["Medium"] = "Moyen",
   ["Memory Usage"] = "Utilisation Mémoire",
