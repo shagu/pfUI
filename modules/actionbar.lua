@@ -442,6 +442,11 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
       id = self.bar == 1 and self.slot or sid-((self.bar)-1)*12
     end
 
+    -- overwrite with spell macro texture where possible
+    if self.spellslot and self.booktype then
+      texture = GetSpellTexture(self.spellslot, self.booktype)
+    end
+
     if not self.showempty and self.backdrop and not texture and grid == 0 then
       self.backdrop:Hide()
       self.hide = true
