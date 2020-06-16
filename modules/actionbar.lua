@@ -617,12 +617,12 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
   local function ButtonFullUpdate(button)
     if not button then return end
 
+    ButtonMacroScan(button)
     ButtonSlotUpdate(button)
     ButtonRangeUpdate(button)
     ButtonUsableUpdate(button)
     ButtonCooldownUpdate(button)
     ButtonIsActiveUpdate(button)
-    ButtonMacroScan(button)
   end
 
   local function BarsEvent(self)
