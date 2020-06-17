@@ -193,9 +193,11 @@ end
 function librange:GetRangeSlot()
   for i=1,120 do
     local texture = GetActionTexture(i)
-    for _, check in pairs(spells[class]) do
-      if check == texture then
-        return i
+    if texture and not GetMacroInfo(i) then
+      for _, check in pairs(spells[class]) do
+        if check == texture then
+          return i
+        end
       end
     end
   end
