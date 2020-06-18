@@ -57,6 +57,19 @@ pfUI:RegisterModule("messenger", function ()
         SetWhoToUI(1)
         SendWho(name)
       end
+
+      -- without any whois-data, try to at least
+      -- obtain the class via the GetUnitData api
+      local class = GetUnitData(name)
+      local lclass = UNKNOWN
+      for loc, raw in pairs(L["class"]) do
+        if raw == class then
+          lclass = loc
+          break
+        end
+      end
+
+      return nil, nil, nil, lclass, nil
     end
   end
 
