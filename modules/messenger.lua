@@ -20,18 +20,92 @@ pfUI:RegisterModule("messenger", function ()
   - Button-List of all Whispers
   ]]--
 
-  local filter = ChatFrame_MessageEventHandler
-  _G.ChatFrame_MessageEventHandler = function(event)
-    if strfind(event, "CHAT_MSG_WHISPER", 1) then
-      return
-    else
-      filter(event)
+  local players
+  do -- players info database
+    local HookFriendsFrame_OnEvent = FriendsFrame_OnEvent
+    local Nothing = function() return end
+    players = CreateFrame("Frame", "pfUIMessengerWhoDB", UIParent)
+    players:RegisterEvent("WHO_LIST_UPDATE")
+    players:SetScript("OnEvent", function()
+      local count = GetNumWhoResults()
+      if count > 0 then
+        for i=1, count do
+          local name, guild, level, race, class, zone = GetWhoInfo(i)
+          this.db = this.db or {}
+          this.db[name] = this.db[name] or {}
+          this.db[name].guild = guild
+          this.db[name].level = level
+          this.db[name].race = race
+          this.db[name].class = class
+          this.db[name].zone = zone
+        end
+      end
+
+      if this.pending then
+        _G.FriendsFrame_OnEvent = HookFriendsFrame_OnEvent
+        this.pending = nil
+        SetWhoToUI(0)
+      end
+    end)
+
+    players.GetData = function(self, name, forced)
+      if self.db and self.db[name] and not forced then
+        return self.db[name].guild, self.db[name].level, self.db[name].race, self.db[name].class, self.db[name].zone
+      elseif not self.pending then
+        _G.FriendsFrame_OnEvent = Nothing
+        self.pending = true
+        SetWhoToUI(1)
+        SendWho(name)
+      end
+    end
+  end
+
+  do -- hide whispers in chatframe
+    local chatframe_eventfuncs = { "ChatFrame_MessageEventHandler", "ChatFrame_OnEvent" }
+    for _, eventfunc in pairs(chatframe_eventfuncs) do
+      if _G[eventfunc] then -- tbc
+        local original = _G[eventfunc]
+        _G[eventfunc] = function(event)
+
+          if strfind(event, "CHAT_MSG_WHISPER", 1) then
+            return
+          else
+            original(event)
+          end
+        end
+      end
     end
   end
 
   local function CreateChatWindow(name)
     local frame = CreateFrame("Frame", "pfMessenger" .. name, UIParent)
     table.insert(UISpecialFrames, "pfMessenger" .. name)
+
+    frame.UpdateText = function(self, forced)
+      local name = self.data.name
+      local guild, level, race, lclass, zone = players:GetData(name, forced)
+
+      if lclass and level then
+        local class = L["class"][lclass]
+
+        local color = rgbhex(.3,1.8)
+        if RAID_CLASS_COLORS[class] then
+          color = rgbhex(RAID_CLASS_COLORS[class])
+        end
+
+        local icon = CLASS_ICON_TCOORDS[class]
+        if icon then
+          self.classicon:SetTexCoord(unpack(icon))
+        else
+          self.classicon:SetTexCoord(0,1,0,1)
+        end
+
+        self.name:SetText(color .. name .. "|r")
+        self.info:SetText(level .. " " .. lclass)
+      end
+    end
+
+
     frame:SetMovable(true)
     frame:EnableMouse(true)
     frame:SetScript("OnMouseDown",function()
@@ -43,33 +117,13 @@ pfUI:RegisterModule("messenger", function ()
     end)
 
     frame:SetScript("OnUpdate", function()
-      if this.data.class then return end
-      local class, level = GetUnitData(this.data.name)
-      if class and level then
-        this.data.class = class
-        this.data.level = level
-        this.data.color = rgbhex(.3,1.8)
-        if RAID_CLASS_COLORS[this.data.class] then
-          this.data.color = rgbhex(RAID_CLASS_COLORS[this.data.class])
-        end
+      if not this.data.name then return end
 
-        this.data.icon = CLASS_ICON_TCOORDS[frame.data.class]
-        if this.data.icon then
-          frame.classicon:SetTexCoord(unpack(this.data.icon))
-        else
-          frame.classicon:SetTexCoord(0,1,0,1)
-        end
+      this:UpdateText()
 
-        local localized = UNKNOWN
-        for loc, raw in pairs(L["class"]) do
-          if raw == this.data.class then
-            localized = loc
-            break
-          end
-        end
-
-        frame.name:SetText(this.data.color .. this.data.name .. "|r")
-        frame.info:SetText(this.data.level .. " " .. localized)
+      if not this.tick or this.tick < GetTime() then
+        players:GetData(this.data.name, true)
+        this.tick = GetTime() + 120
       end
     end)
 
