@@ -1,23 +1,17 @@
 pfUI:RegisterModule("messenger", function ()
+  local rawborder, default_border = GetBorderSize()
+
   --[[
   TODO:
-  - Hide messages from chat
-
-
   FrameXML/ChatFrame.lua:function ChatFrame_ReplyTell(chatFrame)
   FrameXML/ChatFrame.lua:function ChatFrame_ReplyTell2(chatFrame)
   FrameXML/ChatFrame.lua:	ChatFrame_ReplyTell(this:GetParent().chatFrame);
 
-
   - History
-  - WHOIS-Query
   - Item-Paste
-  - Tabs (?)
   - Shade Windows
   - Add to Playerdropdown: (Ignore, Friend, Guild-Invite)
   - Queue Popup when infight
-  - Class portraits
-  - Button-List of all Whispers
   ]]--
 
   local players
@@ -256,11 +250,34 @@ pfUI:RegisterModule("messenger", function ()
     pfUI.messenger.windows[name].text:AddMessage(str)
   end
 
-  pfUI.messenger = CreateFrame("Frame", "pfMessenger", UIParent)
+  pfUI.messenger = CreateFrame("Button", "pfMessenger", UIParent)
+  pfUI.messenger:SetHeight(20)
+  pfUI.messenger:Hide()
+
+  CreateBackdrop(pfUI.messenger)
+
+  pfUI.messenger.UpdateText = function(self)
+    self.count = 0
+
+    for name in pairs(self.windows) do
+      self.count = self.count + 1
+    end
+
+    self.dropdown.text:SetText(self.count .. " " .. T["Conversations"])
+    self.dropdown.id = id
+  end
+
   pfUI.messenger.windows = { }
 
   pfUI.messenger:RegisterEvent("CHAT_MSG_WHISPER")
   pfUI.messenger:RegisterEvent("CHAT_MSG_WHISPER_INFORM")
+  pfUI.messenger:SetScript("OnShow", function()
+    local anchor = pfUI.panel and pfUI.panel.minimap or pfUI.minimap
+    if not anchor then return end
+
+    this:SetPoint("TOPLEFT", anchor, "BOTTOMLEFT", 0, -default_border*3)
+    this:SetPoint("TOPRIGHT", anchor, "BOTTOMRIGHT", 0, -default_border*3)
+  end)
 
   pfUI.messenger:SetScript("OnEvent", function()
     local text, name = arg1, arg2
@@ -272,6 +289,47 @@ pfUI:RegisterModule("messenger", function ()
 
     NewMessage(text, name, outgoing)
     pfUI.messenger.windows[name]:Show()
+    pfUI.messenger:UpdateText()
+    pfUI.messenger:Show()
   end)
 
+  pfUI.messenger.dropdown = CreateDropDownButton("pfMessengerMenu", pfUI.messenger)
+  pfUI.messenger.dropdown:SetBackdrop(nil)
+  pfUI.messenger.dropdown:ClearAllPoints()
+  pfUI.messenger.dropdown:SetAllPoints(pfUI.messenger)
+  pfUI.messenger.dropdown:SetWidth(220)
+  pfUI.messenger.dropdown:SetMenu(function()
+    local menu = {}
+
+    for name in pairs(pfUI.messenger.windows) do
+      local name = name
+      local color = rgbhex(.3,1.8)
+      local _, _, _, lclass = players:GetData(name)
+
+      if lclass then
+        local class = L["class"][lclass]
+        if RAID_CLASS_COLORS[class] then
+          color = rgbhex(RAID_CLASS_COLORS[class])
+        end
+      end
+
+      local entry = {}
+      entry.text = color..name
+      entry.checked = false
+      entry.func = function()
+        pfUI.messenger.windows[name]:Show()
+        pfUI.messenger:UpdateText()
+      end
+      table.insert(menu, entry)
+    end
+
+    return menu
+  end)
+
+  -- always keep the proper message in the text field
+  local OriginalToggleMenu = pfUI.messenger.dropdown.ToggleMenu
+  pfUI.messenger.dropdown.ToggleMenu = function(self)
+    OriginalToggleMenu(self)
+    pfUI.messenger:UpdateText()
+  end
 end)
