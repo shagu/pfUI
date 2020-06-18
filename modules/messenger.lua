@@ -241,10 +241,13 @@ pfUI:RegisterModule("messenger", function ()
   local function NewMessage(message, name, outgoing)
     local time = date("%H:%M")
     local displayname = outgoing and UnitName("player") or name
-    local class = GetUnitData(name)
+
+    local guild, level, race, lclass, zone = players:GetData(name, forced)
+    lclass = outgoing and UnitClass("player") or lclass
+
     local color = rgbhex(1,1,1)
-    if RAID_CLASS_COLORS[class] then
-      color = rgbhex(RAID_CLASS_COLORS[class])
+    if RAID_CLASS_COLORS[L["class"][lclass]] then
+      color = rgbhex(RAID_CLASS_COLORS[L["class"][lclass]])
     end
 
     local player = color .. "|Hplayer:".. displayname .."|h".. displayname .."|h|r"
