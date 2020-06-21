@@ -1858,6 +1858,7 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
       CreateConfig(U["bars"], T["Item Count Text Color"], C.bars, "count_color", "color")
       CreateConfig(U["bars"], T["Keybind Text Size"], C.bars, "bind_size")
       CreateConfig(U["bars"], T["Keybind Text Color"], C.bars, "bind_color", "color")
+      CreateConfig(nil, T["Cooldown Text Size"], C.bars, "cd_size")
 
       CreateConfig(nil, T["Auto Paging"], nil, nil, "header")
       CreateConfig(U["bars"], T["Switch Pages On Meta Key Press"], C.bars, "pagemaster", "checkbox")

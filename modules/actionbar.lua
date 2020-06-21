@@ -897,6 +897,8 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     local bind_size = tonumber(C.bars.bind_size)
     local bind_color = { strsplit(",", C.bars.bind_color) }
 
+    local cd_size = tonumber(C.bars.cd_size)
+
     local showempty = C.bars["bar"..bar].showempty
     local showmacro = C.bars["bar"..bar].showmacro
     local showkybind = C.bars["bar"..bar].showkeybind
@@ -906,6 +908,7 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     if macro_size == 0 then macro_size = 1 end
     if count_size == 0 then macro_size = 1 end
     if bind_size == 0 then macro_size = 1 end
+    if cd_size == 0 then cd_size = nil end
 
     local button_name = "pfActionBar" .. barnames[bar] .. "Button" .. button
 
@@ -941,6 +944,7 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
       -- cooldown
       f.cd = CreateFrame(COOLDOWN_FRAME_TYPE, f:GetName() .. "Cooldown", f, "CooldownFrameTemplate")
       f.cd.pfCooldownType = "NOGCD"
+      f.cd.pfCooldownSize = cd_size
 
       -- icon
       f.icon = f:CreateTexture(button_name .. "Icon", "BACKGROUND")

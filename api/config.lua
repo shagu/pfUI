@@ -502,6 +502,7 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("bars",       nil,           "count_color",      ".2,1,.8,1")
   pfUI:UpdateConfig("bars",       nil,           "bind_size",        "8")
   pfUI:UpdateConfig("bars",       nil,           "bind_color",       "1,1,0,1")
+  pfUI:UpdateConfig("bars",       nil,           "cd_size",          "12")
 
   pfUI:UpdateConfig("totems",     nil,           "direction",        "HORIZONTAL")
   pfUI:UpdateConfig("totems",     nil,           "iconsize",         "26")
