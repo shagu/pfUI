@@ -1560,7 +1560,7 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
 
     CreateGUIEntry(T["Unit Frames"], T["Click Casting"], function()
       for id, data in ipairs(unitframeSettings) do
-        CreateConfig(U[data[1]], T["Enable"] .. " " .. data[2] .. " " .. T["Clickcasting"], C.unitframes[data[1]], "clickcast", "checkbox")
+        CreateConfig(U[data[1]], T["Enable"] .. " " .. data[2] .. " " .. T["Click Casting"], C.unitframes[data[1]], "clickcast", "checkbox")
       end
 
       CreateConfig(nil, T["Left Mouse Button"], nil, nil, "header")
