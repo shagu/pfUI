@@ -41,6 +41,8 @@ pfUI:RegisterModule("cooldown", "vanilla:tbc", function ()
       cooldown.cd.text:SetFont(pfUI.font_unit, C.appearance.cd.font_size_foreign, "OUTLINE")
     elseif cooldown.pfCooldownType == "BLIZZARD" then
       cooldown.cd.text:SetFont(pfUI.font_unit, C.appearance.cd.font_size_blizz, "OUTLINE")
+    elseif cooldown.pfCooldownSize then
+      cooldown.cd.text:SetFont(pfUI.font_unit, cooldown.pfCooldownSize, "OUTLINE")
     else
       cooldown.cd.text:SetFont(pfUI.font_unit, C.appearance.cd.font_size, "OUTLINE")
     end
