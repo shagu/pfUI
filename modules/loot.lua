@@ -266,9 +266,12 @@ pfUI:RegisterModule("loot", "vanilla:tbc", function ()
         if (lclass) then
           info = wipe(info)
           info.text = lclass
-          info.textR = RAID_CLASS_COLORS[class].r
-          info.textG = RAID_CLASS_COLORS[class].g
-          info.textB = RAID_CLASS_COLORS[class].b
+          info.textR, info.textG, info.textB = .7,.7,.7
+          if class and RAID_CLASS_COLORS[class] then
+            info.textR = RAID_CLASS_COLORS[class].r
+            info.textG = RAID_CLASS_COLORS[class].g
+            info.textB = RAID_CLASS_COLORS[class].b
+          end
           info.textHeight = 12
           info.hasArrow = 1
           info.notCheckable = 1
@@ -286,9 +289,12 @@ pfUI:RegisterModule("loot", "vanilla:tbc", function ()
         for _, candidate in ipairs(players) do
           info = wipe(info)
           info.text = candidate
-          info.textR = RAID_CLASS_COLORS[UIDROPDOWNMENU_MENU_VALUE].r
-          info.textG = RAID_CLASS_COLORS[UIDROPDOWNMENU_MENU_VALUE].g
-          info.textB = RAID_CLASS_COLORS[UIDROPDOWNMENU_MENU_VALUE].b
+          info.textR, info.textG, info.textB = .7,.7,.7
+          if UIDROPDOWNMENU_MENU_VALUE and RAID_CLASS_COLORS[UIDROPDOWNMENU_MENU_VALUE] then
+            info.textR = RAID_CLASS_COLORS[UIDROPDOWNMENU_MENU_VALUE].r
+            info.textG = RAID_CLASS_COLORS[UIDROPDOWNMENU_MENU_VALUE].g
+            info.textB = RAID_CLASS_COLORS[UIDROPDOWNMENU_MENU_VALUE].b
+          end
           info.textHeight = 12
           info.value = name_to_index[candidate]
           info.func = GroupLootDropDown_GiveLoot
@@ -307,9 +313,12 @@ pfUI:RegisterModule("loot", "vanilla:tbc", function ()
           info = wipe(info)
           local unit = GroupInfoByName(candidate,"party")
           info.text = candidate
-          info.textR = RAID_CLASS_COLORS[unit.class].r
-          info.textG = RAID_CLASS_COLORS[unit.class].g
-          info.textB = RAID_CLASS_COLORS[unit.class].b
+          info.textR, info.textG, info.textB = .7,.7,.7
+          if unit.class and RAID_CLASS_COLORS[unit.class] then
+            info.textR = RAID_CLASS_COLORS[unit.class].r
+            info.textG = RAID_CLASS_COLORS[unit.class].g
+            info.textB = RAID_CLASS_COLORS[unit.class].b
+          end
           info.textHeight = 12
           info.value = i
           info.func = GroupLootDropDown_GiveLoot
