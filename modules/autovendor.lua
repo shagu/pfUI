@@ -70,6 +70,9 @@ pfUI:RegisterModule("autovendor", "vanilla:tbc", function ()
       this.count = this.count + 1
     end
 
+    -- abort if the merchant window disappeared
+    if not this.merchant then return end
+
     -- clear cursor and sell the item
     ClearCursor()
     UseContainerItem(bag, slot)
@@ -82,11 +85,16 @@ pfUI:RegisterModule("autovendor", "vanilla:tbc", function ()
   end)
 
   autovendor:RegisterEvent("MERCHANT_SHOW")
+  autovendor:RegisterEvent("MERCHANT_CLOSED")
   autovendor:RegisterEvent("MERCHANT_UPDATE")
   autovendor:SetScript("OnEvent", function()
     autovendor.button:Update()
 
-    if event == "MERCHANT_SHOW" then
+    if event == "MERCHANT_CLOSED" then
+      autovendor.merchant = nil
+      autovendor:Hide()
+    elseif event == "MERCHANT_SHOW" then
+      autovendor.merchant = true
       if C["global"]["autorepair"] == "1" then
         RepairItems()
       end
