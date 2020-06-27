@@ -1785,14 +1785,10 @@ function pfUI.uf:AddIcon(frame, pos, icon, timeleft, stacks)
   if not frame.icon[pos] then
     frame.icon[pos] = CreateFrame("Frame", frame.icon)
     frame.icon[pos]:SetParent(frame)
-    frame.icon[pos]:SetWidth(iconsize)
-    frame.icon[pos]:SetHeight(iconsize)
-    frame.icon[pos]:SetPoint("TOPLEFT", frame.icon, "TOPLEFT", (pos-1)*iconsize, 0)
     frame.icon[pos].tex = frame.icon[pos]:CreateTexture("OVERLAY")
     frame.icon[pos].tex:SetAllPoints(frame.icon[pos])
     frame.icon[pos].tex:SetTexCoord(.08, .92, .08, .92)
     frame.icon[pos].stacks = frame.icon[pos]:CreateFontString(nil, "OVERLAY")
-    frame.icon[pos].stacks:SetFont(pfUI.font_unit, math.max(iconsize/3, 10), "OUTLINE")
     frame.icon[pos].stacks:SetPoint("BOTTOMRIGHT", 0, 0)
     frame.icon[pos].stacks:SetJustifyH("RIGHT")
     frame.icon[pos].stacks:SetJustifyV("BOTTOM")
@@ -1801,7 +1797,20 @@ function pfUI.uf:AddIcon(frame, pos, icon, timeleft, stacks)
     frame.icon[pos].cd:SetAlpha(0)
   end
 
-  frame.icon[pos].tex:SetTexture(icon)
+  -- update icon configuration
+  if frame.icon[pos].iconsize ~= iconsize then
+    frame.icon[pos]:SetWidth(iconsize)
+    frame.icon[pos]:SetHeight(iconsize)
+    frame.icon[pos]:SetPoint("TOPLEFT", frame.icon, "TOPLEFT", (pos-1)*iconsize, 0)
+    frame.icon[pos].stacks:SetFont(pfUI.font_unit, math.max(iconsize/3, 10), "OUTLINE")
+    frame.icon[pos].iconsize = iconsize
+  end
+
+  -- update icon
+  if frame.icon[pos].icon ~= icon then
+    frame.icon[pos].tex:SetTexture(icon)
+    frame.icon[pos].icon = icon
+  end
 
   -- show remaining time if config is set
   if showtime and timeleft and timeleft < 100 and iconsize > 9 then
@@ -1817,12 +1826,21 @@ function pfUI.uf:AddIcon(frame, pos, icon, timeleft, stacks)
     frame.icon[pos].stacks:SetText("")
   end
 
+  -- update parent icon size
+  if frame.icon.iconsize ~= iconsize then
+    frame.icon:SetHeight(iconsize)
+    frame.icon.iconsize = iconsize
+  end
+
+  -- update parent position
+  if frame.icon.position ~= position then
+    frame.icon:ClearAllPoints()
+    frame.icon:SetPoint(position, frame, position, 0, 0)
+    frame.icon.position = position
+  end
+
   frame.icon[pos]:Show()
   frame.icon:SetWidth(pos*iconsize)
-  frame.icon:SetHeight(iconsize)
-
-  frame.icon:ClearAllPoints()
-  frame.icon:SetPoint(position, frame, position, 0, 0)
 end
 
 function pfUI.uf:HideIcon(frame, pos)
