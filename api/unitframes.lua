@@ -1773,36 +1773,34 @@ end
 function pfUI.uf:AddIcon(frame, pos, icon, timeleft, stacks)
   local showtime = frame.config.indicator_time == "1" and true or nil
   local showstacks = frame.config.indicator_stacks == "1" and true or nil
+  local position = frame.config.indicator_pos or "TOPLEFT"
   local iconsize = tonumber(frame.config.indicator_size)
 
   if not frame.hp then return end
   local frame = frame.hp.bar
   if pos > 6 or pos > ceil(frame:GetWidth() / iconsize) then return end
 
-  if not frame.icon then frame.icon = {} end
+  frame.icon = frame.icon or CreateFrame("Frame", nil, frame)
 
-  for i=1,6 do
-    if not frame.icon[i] then
-      frame.icon[i] = CreateFrame("Frame", frame)
-      frame.icon[i]:SetPoint("TOPLEFT", frame, "TOPLEFT", (i-1)*iconsize, 0)
-      frame.icon[i]:SetWidth(iconsize)
-      frame.icon[i]:SetHeight(iconsize)
-      frame.icon[i]:SetParent(frame)
-      frame.icon[i].tex = frame.icon[i]:CreateTexture("OVERLAY")
-      frame.icon[i].tex:SetAllPoints(frame.icon[i])
-      frame.icon[i].tex:SetTexCoord(.08, .92, .08, .92)
-      frame.icon[i].tex:SetAlpha(.7)
-      frame.icon[i].stacks = frame.icon[i]:CreateFontString(nil, "OVERLAY")
-      frame.icon[i].stacks:SetFont(pfUI.font_unit, math.max(iconsize/3, 10), "OUTLINE")
-      frame.icon[i].stacks:SetPoint("BOTTOMRIGHT", 0, 0)
-      frame.icon[i].stacks:SetJustifyH("RIGHT")
-      frame.icon[i].stacks:SetJustifyV("BOTTOM")
-      frame.icon[i].cd = CreateFrame(COOLDOWN_FRAME_TYPE, nil, frame.icon[i])
-      frame.icon[i].cd.pfCooldownType = "ALL"
-      frame.icon[i].cd:SetAlpha(0)
-      CreateBackdrop(frame.icon[i], nil, true)
-    end
+  if not frame.icon[pos] then
+    frame.icon[pos] = CreateFrame("Frame", frame.icon)
+    frame.icon[pos]:SetParent(frame)
+    frame.icon[pos]:SetWidth(iconsize)
+    frame.icon[pos]:SetHeight(iconsize)
+    frame.icon[pos]:SetPoint("TOPLEFT", frame.icon, "TOPLEFT", (pos-1)*iconsize, 0)
+    frame.icon[pos].tex = frame.icon[pos]:CreateTexture("OVERLAY")
+    frame.icon[pos].tex:SetAllPoints(frame.icon[pos])
+    frame.icon[pos].tex:SetTexCoord(.08, .92, .08, .92)
+    frame.icon[pos].stacks = frame.icon[pos]:CreateFontString(nil, "OVERLAY")
+    frame.icon[pos].stacks:SetFont(pfUI.font_unit, math.max(iconsize/3, 10), "OUTLINE")
+    frame.icon[pos].stacks:SetPoint("BOTTOMRIGHT", 0, 0)
+    frame.icon[pos].stacks:SetJustifyH("RIGHT")
+    frame.icon[pos].stacks:SetJustifyV("BOTTOM")
+    frame.icon[pos].cd = CreateFrame(COOLDOWN_FRAME_TYPE, nil, frame.icon[pos])
+    frame.icon[pos].cd.pfCooldownType = "ALL"
+    frame.icon[pos].cd:SetAlpha(0)
   end
+
   frame.icon[pos].tex:SetTexture(icon)
 
   -- show remaining time if config is set
@@ -1820,6 +1818,11 @@ function pfUI.uf:AddIcon(frame, pos, icon, timeleft, stacks)
   end
 
   frame.icon[pos]:Show()
+  frame.icon:SetWidth(pos*iconsize)
+  frame.icon:SetHeight(iconsize)
+
+  frame.icon:ClearAllPoints()
+  frame.icon:SetPoint(position, frame, position, 0, 0)
 end
 
 function pfUI.uf:HideIcon(frame, pos)
