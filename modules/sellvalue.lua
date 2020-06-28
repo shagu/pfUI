@@ -37,25 +37,12 @@ pfUI:RegisterModule("sellvalue", "vanilla:tbc", function ()
     end
   end)
 
-  local hook = SetItemRef
+  local HookSetItemRef = SetItemRef
   _G.SetItemRef = function(link, text, button)
     local item, _, id = string.find(link, "item:(%d+):.*")
-    ItemRefTooltip.item = item and id or nil
-    ItemRefTooltip.link = link
-    hook(link, text, button)
-  end
-
-  local function OnUpdate()
-    if this.item then
-      this:ClearLines()
-      this:SetHyperlink(this.link)
-      AddVendorPrices(ItemRefTooltip, tonumber(ItemRefTooltip.item), 1)
+    HookSetItemRef(link, text, button)
+    if not IsAltKeyDown() and not IsShiftKeyDown() and not IsControlKeyDown() and item then
+      AddVendorPrices(ItemRefTooltip, tonumber(id), 1)
     end
-  end
-
-  if ItemRefTooltip:GetScript("OnUpdate") then
-    HookScript("OnUpdate", ItemRefTooltip, OnUpdate)
-  else
-    ItemRefTooltip:SetScript("OnUpdate", OnUpdate)
   end
 end)
