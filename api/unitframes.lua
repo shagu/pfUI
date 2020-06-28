@@ -625,6 +625,7 @@ function pfUI.uf:UpdateConfig()
       f.buffs[i].cd.pfCooldownType = "ALL"
       f.buffs[i].cd:SetAlpha(0)
       f.buffs[i].id = i
+      f.buffs[i]:Hide()
 
       CreateBackdrop(f.buffs[i], default_border)
       CreateBackdropShadow(f.buffs[i])
@@ -699,6 +700,7 @@ function pfUI.uf:UpdateConfig()
       f.debuffs[i].cd.pfCooldownType = "ALL"
       f.debuffs[i].cd:SetAlpha(0)
       f.debuffs[i].id = i
+      f.debuffs[i]:Hide()
 
       CreateBackdrop(f.debuffs[i], default_border)
       CreateBackdropShadow(f.debuffs[i])
