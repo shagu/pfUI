@@ -36,8 +36,10 @@ pfUI:RegisterModule("uf_tukui", "vanilla:tbc", function ()
 
     pfUI.castbar.player:SetAllPoints(pfUI.uf.player.caption)
     UpdateMovable(pfUI.castbar.player, true)
-    pfUI.castbar.player.bar.backdrop_shadow:Hide()
     CreateBackdrop(pfUI.uf.player.caption, default_border)
+    if pfUI.castbar.player.bar.backdrop_shadow then
+      pfUI.castbar.player.bar.backdrop_shadow:Hide()
+    end
   end
 
   -- update target layout
@@ -75,8 +77,10 @@ pfUI:RegisterModule("uf_tukui", "vanilla:tbc", function ()
 
     pfUI.castbar.target:SetAllPoints(pfUI.uf.target.caption)
     UpdateMovable(pfUI.castbar.target, true)
-    pfUI.castbar.target.bar.backdrop_shadow:Hide()
     CreateBackdrop(pfUI.uf.target.caption, default_border)
+    if pfUI.castbar.target.bar.backdrop_shadow then
+      pfUI.castbar.target.bar.backdrop_shadow:Hide()
+    end
   end
 
   -- trigger updates
