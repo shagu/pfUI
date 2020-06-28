@@ -1700,12 +1700,19 @@ function pfUI.uf:EnableClickCast()
             self:SetAttribute(prefix.."type"..bid, "macro")
             self:SetAttribute(prefix.."macrotext"..bid, pfUI_config.unitframes["clickcast"..bconf..mconf])
             self:SetAttribute(prefix.."spell"..bid, nil)
+          elseif string.find(pfUI_config.unitframes["clickcast"..bconf..mconf], "^target") then
+            self:SetAttribute(prefix.."type"..bid, "target")
+            self:SetAttribute(prefix.."macrotext"..bid, nil)
+            self:SetAttribute(prefix.."spell"..bid, nil)
+          elseif string.find(pfUI_config.unitframes["clickcast"..bconf..mconf], "^menu") then
+            self:SetAttribute(prefix.."type"..bid, "showmenu")
+            self:SetAttribute(prefix.."macrotext"..bid, nil)
+            self:SetAttribute(prefix.."spell"..bid, nil)
           else
             self:SetAttribute(prefix.."type"..bid, "spell")
             self:SetAttribute(prefix.."spell"..bid, pfUI_config.unitframes["clickcast"..bconf..mconf])
             self:SetAttribute(prefix.."macro"..bid, nil)
           end
-
         else
           -- fill clickaction table for vanillla
           self.clickactions = self.clickactions or {}
@@ -1720,7 +1727,7 @@ function pfUI.uf:ClickAction(button)
   local label = this.label or ""
   local id = this.id or ""
   local unitstr = label .. id
-
+  local showmenu = button == "RightButton" and true or nil
   if SpellIsTargeting() and button == "RightButton" then
     SpellStopTargeting()
     return
@@ -1739,35 +1746,45 @@ function pfUI.uf:ClickAction(button)
   modstring = IsShiftKeyDown() and modstring.."shift" or modstring
   modstring = modstring..button
   if this.clickactions and this.clickactions[modstring] then
-    local tswitch = UnitIsUnit(unitstr, "target")
-    TargetUnit(unitstr)
-
-    if string.find(this.clickactions[modstring], "^%/(.+)") then
-      RunMacroText(this.clickactions[modstring])
+    if string.find(this.clickactions[modstring], "^menu") then
+      -- show menu
+      showmenu = true
+    elseif string.find(this.clickactions[modstring], "^target") then
+      -- target unit
+      showmenu = nil
     else
-      CastSpellByName(this.clickactions[modstring])
-    end
+      -- run click cast action
+      local tswitch = UnitIsUnit(unitstr, "target")
+      TargetUnit(unitstr)
 
-    if not tswitch then TargetLastTarget() end
-    return
+      if string.find(this.clickactions[modstring], "^%/(.+)") then
+        RunMacroText(this.clickactions[modstring])
+      else
+        CastSpellByName(this.clickactions[modstring])
+      end
+
+      if not tswitch then TargetLastTarget() end
+      return
+    end
   end
 
   -- dropdown menus
-  if button == "RightButton" then
+  if showmenu then
     pfUI.uf:RightClickAction(label)
-  else
-    -- drop food on petframe
-    if label == "pet" and CursorHasItem() then
-      local _, playerClass = UnitClass("player")
-      if playerClass == "HUNTER" then
-        DropItemOnUnit("pet")
-        return
-      end
-    end
-
-    -- default click
-    TargetUnit(unitstr)
+    return
   end
+
+  -- drop food on petframe
+  if label == "pet" and CursorHasItem() then
+    local _, playerClass = UnitClass("player")
+    if playerClass == "HUNTER" then
+      DropItemOnUnit("pet")
+      return
+    end
+  end
+
+  -- default click
+  TargetUnit(unitstr)
 end
 
 function pfUI.uf:AddIcon(frame, pos, icon, timeleft, stacks)
