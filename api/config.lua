@@ -39,6 +39,7 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("global",     nil,           "font_size",        "12")
   pfUI:UpdateConfig("global",     nil,           "font_unit",        "Interface\\AddOns\\pfUI\\fonts\\BigNoodleTitling.ttf")
   pfUI:UpdateConfig("global",     nil,           "font_unit_size",   "12")
+  pfUI:UpdateConfig("global",     nil,           "font_unit_style",  "OUTLINE")
   pfUI:UpdateConfig("global",     nil,           "font_combat",      "Interface\\AddOns\\pfUI\\fonts\\Continuum.ttf")
 
   pfUI:UpdateConfig("global",     nil,           "force_region",     "1")
