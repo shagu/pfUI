@@ -337,10 +337,11 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
   end
 
   local function ButtonMacroScan(self)
+    if self.bar > 10 then return end
+
     local macro = GetActionText(self.id)
     self.spellslot = nil
     self.booktype = nil
-
     if macro then
       local name, body, _
       for slot = 1, 36 do
