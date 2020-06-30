@@ -138,6 +138,7 @@ pfUI:RegisterModule("panel", "vanilla:tbc", function()
 
     do -- FPS & Lag
       local widget = CreateFrame("Frame", "pfPanelWidgetLag", UIParent)
+      local lag, fps, laghex, fpshex, _
       widget.Tooltip = function()
         local active = 0
         GameTooltip:ClearLines()
@@ -179,8 +180,17 @@ pfUI:RegisterModule("panel", "vanilla:tbc", function()
       widget:SetScript("OnUpdate",function()
         if ( this.tick or 1) > GetTime() then return else this.tick = GetTime() + 1 end
 
-        local _, _, lag = GetNetStats()
-        pfUI.panel:OutputPanel("fps", floor(GetFramerate()) .. " " .. T["fps"] .. " & " .. lag .. " " .. T["ms"], widget.Tooltip, widget.Click)
+        fps = floor(GetFramerate())
+        _, _, lag = GetNetStats()
+
+        if C.panel.fpscolors == "1" then
+          _, _, _, fpshex = GetColorGradient(fps/60)
+          _, _, _, laghex = GetColorGradient(60/lag)
+          fps = fpshex .. fps .. "|r"
+          lag = laghex .. lag .. "|r"
+        end
+
+        pfUI.panel:OutputPanel("fps", fps .. " " .. T["fps"] .. " & " .. lag .. " " .. T["ms"], widget.Tooltip, widget.Click)
       end)
     end
 

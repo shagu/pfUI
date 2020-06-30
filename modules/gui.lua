@@ -1945,6 +1945,7 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
       CreateConfig(nil, T["Enable Micro Bar"], C.panel.micro, "enable", "checkbox")
       CreateConfig(nil, T["Enable 24h Clock"], C.global, "twentyfour", "checkbox")
       CreateConfig(nil, T["Servertime"], C.global, "servertime", "checkbox")
+      CreateConfig(U["panel"], T["Show FPS and Latency Colors"], C.panel, "fpscolors", "checkbox")
 
       CreateConfig(nil, T["Auto Hide"], nil, nil, "header")
       CreateConfig(nil, T["Enable Autohide For Left Chat Panel"], C.panel, "hide_leftchat", "checkbox")
