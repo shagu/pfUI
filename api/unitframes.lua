@@ -1794,6 +1794,7 @@ function pfUI.uf:AddIcon(frame, pos, icon, timeleft, stacks)
   local showstacks = frame.config.indicator_stacks == "1" and true or nil
   local position = frame.config.indicator_pos or "TOPLEFT"
   local iconsize = tonumber(frame.config.indicator_size)
+  local spacing = tonumber(frame.config.indicator_spacing)
 
   if not frame.hp then return end
   local frame = frame.hp.bar
@@ -1817,12 +1818,13 @@ function pfUI.uf:AddIcon(frame, pos, icon, timeleft, stacks)
   end
 
   -- update icon configuration
-  if frame.icon[pos].iconsize ~= iconsize then
+  if frame.icon[pos].iconsize ~= iconsize or frame.icon[pos].spacing ~= spacing then
     frame.icon[pos]:SetWidth(iconsize)
     frame.icon[pos]:SetHeight(iconsize)
-    frame.icon[pos]:SetPoint("TOPLEFT", frame.icon, "TOPLEFT", (pos-1)*iconsize, 0)
+    frame.icon[pos]:SetPoint("TOPLEFT", frame.icon, "TOPLEFT", (pos-1)*(iconsize + spacing), 0)
     frame.icon[pos].stacks:SetFont(pfUI.font_unit, math.max(iconsize/3, 10), "OUTLINE")
     frame.icon[pos].iconsize = iconsize
+    frame.icon[pos].spacing = spacing
   end
 
   -- update icon
@@ -1859,7 +1861,7 @@ function pfUI.uf:AddIcon(frame, pos, icon, timeleft, stacks)
   end
 
   frame.icon[pos]:Show()
-  frame.icon:SetWidth(pos*iconsize)
+  frame.icon:SetWidth((pos-1)*(iconsize+spacing)+iconsize)
 end
 
 function pfUI.uf:HideIcon(frame, pos)

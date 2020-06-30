@@ -394,6 +394,7 @@ function pfUI:LoadConfig()
     pfUI:UpdateConfig("unitframes", unit,      "indicator_time",   "1")
     pfUI:UpdateConfig("unitframes", unit,      "indicator_stacks", "1")
     pfUI:UpdateConfig("unitframes", unit,      "indicator_size",   "10")
+    pfUI:UpdateConfig("unitframes", unit,      "indicator_spacing","1")
     pfUI:UpdateConfig("unitframes", unit,      "indicator_pos",    "TOPLEFT")
 
     pfUI:UpdateConfig("unitframes", unit,      "clickcast",        "0")
