@@ -255,6 +255,12 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
         debuffs[i].icon:SetTexture(.3,1,.8,1)
         debuffs[i].icon:SetAllPoints(debuffs[i])
 
+        debuffs[i].stacks = debuffs[i]:CreateFontString(nil, "OVERLAY")
+        debuffs[i].stacks:SetAllPoints(debuffs[i])
+        debuffs[i].stacks:SetJustifyH("RIGHT")
+        debuffs[i].stacks:SetJustifyV("BOTTOM")
+        debuffs[i].stacks:SetTextColor(1,1,0)
+
         debuffs[i].cd = CreateFrame(COOLDOWN_FRAME_TYPE, nil, debuffs[i], "CooldownFrameTemplate")
         debuffs[i].cd.pfCooldownType = "ALL"
       end
@@ -371,6 +377,7 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     -- update debuff positions
     local limit = floor(width / debuffsize)
     for i=1,16 do
+      nameplate.debuffs[i].stacks:SetFont(font, font_size, font_style)
       nameplate.debuffs[i]:ClearAllPoints()
       if i == 1 then
         nameplate.debuffs[i]:SetPoint("TOPLEFT", nameplate.health, "BOTTOMLEFT", 0, -4)
@@ -534,6 +541,13 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
           plate.debuffs[index]:Show()
           plate.debuffs[index].icon:SetTexture(texture)
           plate.debuffs[index].icon:SetTexCoord(.078, .92, .079, .937)
+
+          if stacks and stacks > 1 and C.nameplates.debuffs["showstacks"] == "1" then
+            plate.debuffs[index].stacks:SetText(stacks)
+            plate.debuffs[index].stacks:Show()
+          else
+            plate.debuffs[index].stacks:Hide()
+          end
 
           if duration and timeleft then
             plate.debuffs[index].cd:SetAlpha(0)
