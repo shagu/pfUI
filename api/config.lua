@@ -206,6 +206,7 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("unitframes", nil,           "selfingroup",      "0")
   pfUI:UpdateConfig("unitframes", nil,           "selfinraid",       "0")
   pfUI:UpdateConfig("unitframes", nil,           "raidforgroup",     "0")
+  pfUI:UpdateConfig("unitframes", nil,           "maxraid",          "40")
 
   pfUI:UpdateConfig("unitframes", nil,           "clickcast",        "target")
   pfUI:UpdateConfig("unitframes", nil,           "clickcast_shift",  "")

@@ -866,6 +866,16 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
         "8:8 " .. T["Pixel"],
         "9:9 " .. T["Pixel"],
       },
+      ["maxraid"] = {
+        "5:5",
+        "10:10",
+        "15:15",
+        "20:20",
+        "25:25",
+        "30:30",
+        "35:35",
+        "40:40",
+      },
       ["scaling"] = {
         "0:" .. T["Off"],
         "4:" .. T["Huge (PixelPerfect)"],
@@ -1530,6 +1540,7 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
       CreateConfig(nil, T["Always Show Self In Raid Frames"], C.unitframes, "selfinraid", "checkbox")
       CreateConfig(nil, T["Show Self In Group Frames"], C.unitframes, "selfingroup", "checkbox")
       CreateConfig(nil, T["Hide Group Frames While In Raid"], C.unitframes.group, "hide_in_raid", "checkbox")
+      CreateConfig(nil, T["Max Amount Of Raid Frames"], C.unitframes, "maxraid", "dropdown", pfUI.gui.dropdowns.maxraid)
 
       CreateConfig(U[c], T["Colors"], nil, nil, "header")
       CreateConfig(nil, T["Enable Pastel Colors"], C.unitframes, "pastel", "checkbox")

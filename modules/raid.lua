@@ -4,6 +4,7 @@ pfUI:RegisterModule("raid", "vanilla:tbc", function ()
 
   pfUI.uf.raid = CreateFrame("Frame", "pfRaidUpdater", UIParent)
 
+  local maxraid = tonumber(C.unitframes.maxraid)
   local rawborder, default_border = GetBorderSize("unitframes")
   local cluster = CreateFrame("Frame", "pfRaidCluster", UIParent)
   cluster:SetFrameLevel(20)
@@ -21,8 +22,9 @@ pfUI:RegisterModule("raid", "vanilla:tbc", function ()
 
   function pfUI.uf.raid:UpdateConfig()
     local rawborder, default_border = GetBorderSize("unitframes")
+    maxraid = tonumber(C.unitframes.maxraid)
 
-    for i=1,40 do
+    for i=1,maxraid do
       pfUI.uf.raid[i] = pfUI.uf.raid[i] or pfUI.uf:CreateUnitFrame("Raid", i, C.unitframes.raid)
       pfUI.uf.raid[i]:SetParent(cluster)
       pfUI.uf.raid[i]:SetFrameLevel(5)
@@ -42,16 +44,20 @@ pfUI:RegisterModule("raid", "vanilla:tbc", function ()
 
     if fill == "VERTICAL" then
       for r=1, x do for g=1, y do
-        pfUI.uf.raid[i]:ClearAllPoints()
-        pfUI.uf.raid[i]:SetPoint("BOTTOMLEFT", (r-1)*(padding+width), (g-1)*(padding+height))
-        UpdateMovable(pfUI.uf.raid[i], true)
+        if pfUI.uf.raid[i] then
+          pfUI.uf.raid[i]:ClearAllPoints()
+          pfUI.uf.raid[i]:SetPoint("BOTTOMLEFT", (r-1)*(padding+width), (g-1)*(padding+height))
+          UpdateMovable(pfUI.uf.raid[i], true)
+        end
         i = i + 1
       end end
     else
       for g=1, y do for r=1, x do
-        pfUI.uf.raid[i]:ClearAllPoints()
-        pfUI.uf.raid[i]:SetPoint("BOTTOMLEFT", (r-1)*(padding+width), (g-1)*(padding+height))
-        UpdateMovable(pfUI.uf.raid[i], true)
+        if pfUI.uf.raid[i] then
+          pfUI.uf.raid[i]:ClearAllPoints()
+          pfUI.uf.raid[i]:SetPoint("BOTTOMLEFT", (r-1)*(padding+width), (g-1)*(padding+height))
+          UpdateMovable(pfUI.uf.raid[i], true)
+        end
         i = i + 1
       end end
     end
@@ -69,7 +75,7 @@ pfUI:RegisterModule("raid", "vanilla:tbc", function ()
   function pfUI.uf.raid:AddUnitToGroup(index, group)
     for subindex = 1, 5 do
       local ids = subindex + 5*(group-1)
-      if pfUI.uf.raid[ids].id == 0 and pfUI.uf.raid[ids].config.visible == "1" then
+      if pfUI.uf.raid[ids] and pfUI.uf.raid[ids].id == 0 and pfUI.uf.raid[ids].config.visible == "1" then
         SetRaidIndex(pfUI.uf.raid[ids], index)
         return
       end
@@ -85,7 +91,7 @@ pfUI:RegisterModule("raid", "vanilla:tbc", function ()
     if not UnitInRaid("player") or (InCombatLockdown and InCombatLockdown()) then return end
 
     -- clear all existing frames
-    for i=1, 40 do SetRaidIndex(pfUI.uf.raid[i], 0) end
+    for i=1, maxraid do SetRaidIndex(pfUI.uf.raid[i], 0) end
 
     -- sort tanks into their groups
     for i=1, GetNumRaidMembers() do
