@@ -579,6 +579,7 @@ pfUI_translation["ruRU"] = {
   ["Show Buff Indicators"] = "Показать индикаторы бафов",
   ["Show Combat Text"] = "Показать текст боя",
   ["Show Custom Indicators"] = nil,
+  ["Show Debuff Stacks"] = nil,
   ["Show Description"] = "Показать описание",
   ["Show Dispel Indicators"] = "Показать диспел индикаторы",
   ["Show Duration Inside Buff"] = "Показать продолжительность внутри баффа",

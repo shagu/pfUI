@@ -579,6 +579,7 @@ pfUI_translation["esES"] = {
   ["Show Buff Indicators"] = "Mostrar los indicadores de beneficios",
   ["Show Combat Text"] = "Mostrar texto de combate",
   ["Show Custom Indicators"] = "Mostrar indicadores personalizados",
+  ["Show Debuff Stacks"] = nil,
   ["Show Description"] = "Mostrar descripción",
   ["Show Dispel Indicators"] = "Mostrar indicadores para disipar",
   ["Show Duration Inside Buff"] = "Mostrar la duración dentro del beneficios",

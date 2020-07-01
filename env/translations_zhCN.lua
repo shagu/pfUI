@@ -579,6 +579,7 @@ pfUI_translation["zhCN"] = {
   ["Show Buff Indicators"] = nil,
   ["Show Combat Text"] = "显示战斗信息",
   ["Show Custom Indicators"] = nil,
+  ["Show Debuff Stacks"] = nil,
   ["Show Description"] = nil,
   ["Show Dispel Indicators"] = nil,
   ["Show Duration Inside Buff"] = "显示持续时间在Buff里面",

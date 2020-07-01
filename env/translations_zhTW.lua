@@ -579,6 +579,7 @@ pfUI_translation["zhTW"] = {
   ["Show Buff Indicators"] = nil,
   ["Show Combat Text"] = "顯示戰鬥訊息",
   ["Show Custom Indicators"] = nil,
+  ["Show Debuff Stacks"] = nil,
   ["Show Description"] = nil,
   ["Show Dispel Indicators"] = nil,
   ["Show Duration Inside Buff"] = "顯示持續時間在Buff裏面",

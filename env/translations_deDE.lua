@@ -579,6 +579,7 @@ pfUI_translation["deDE"] = {
   ["Show Buff Indicators"] = nil,
   ["Show Combat Text"] = nil,
   ["Show Custom Indicators"] = nil,
+  ["Show Debuff Stacks"] = nil,
   ["Show Description"] = nil,
   ["Show Dispel Indicators"] = nil,
   ["Show Duration Inside Buff"] = nil,
