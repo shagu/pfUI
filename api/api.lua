@@ -1112,9 +1112,12 @@ function pfUI.api.GetColoredTimeString(remaining)
   elseif remaining > 99 then
     local r,g,b,a = pfUI.api.GetStringColor(C.appearance.cd.minutecolor)
     return pfUI.api.rgbhex(r,g,b) .. round(remaining / 60) .. "|rm"
-  elseif remaining <= 5 then
+  elseif remaining <= 5 and pfUI_config.appearance.cd.milliseconds == "1" then
     local r,g,b,a = pfUI.api.GetStringColor(C.appearance.cd.lowcolor)
     return pfUI.api.rgbhex(r,g,b) .. string.format("%.1f", round(remaining,1))
+  elseif remaining <= 5 then
+    local r,g,b,a = pfUI.api.GetStringColor(C.appearance.cd.lowcolor)
+    return pfUI.api.rgbhex(r,g,b) .. round(remaining)
   elseif remaining >= 0 then
     local r, g, b, a = pfUI.api.GetStringColor(C.appearance.cd.normalcolor)
     return pfUI.api.rgbhex(r,g,b) .. round(remaining)
