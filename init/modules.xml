@@ -32,6 +32,7 @@
   <Include file="..\modules\itemclick.lua"/>
   <Include file="..\modules\cooldown.lua"/>
   <Include file="..\modules\tooltip.lua"/>
+  <Include file="..\modules\questitem.lua"/>
   <Include file="..\modules\thirdparty.lua"/>
   <Include file="..\modules\thirdparty-vanilla.lua"/>
   <Include file="..\modules\thirdparty-tbc.lua"/>

@@ -1,0 +1,126 @@
+pfUI:RegisterModule("questitem", function ()
+  local questlog = {}
+  local itemcache = {}
+
+  local function AddTooltip(frame, item)
+    -- check if we can replace the questitem string
+    local replace = nil
+    if frame and _G[frame:GetName().."TextLeft2"] then
+      if _G[frame:GetName().."TextLeft2"]:GetText() == ITEM_BIND_QUEST then
+        replace = true
+      end
+    end
+
+    -- set fallbacks for unidentified quests
+    local quest, level = UNKNOWN, 255
+
+    -- check cache for already existing values
+    if itemcache[item] and itemcache[item] == false then
+      -- not a quest item
+      return
+    elseif itemcache[item] then
+      -- read from caches
+      quest, level = GetQuestLogTitle(itemcache[item])
+    else
+      -- scan for quests
+      for id, text in pairs(questlog) do
+        if string.find(string.lower(text), string.lower(item), 1) then
+          quest, level = GetQuestLogTitle(id)
+          itemcache[item] = id
+          break
+        end
+      end
+    end
+
+    -- mark non quest items
+    if not itemcache[item] and not replace then
+      itemcache[item] = false
+      return
+    end
+
+    -- read difficulty color
+    local color = GetDifficultyColor(level)
+
+    -- add quest to quest item
+    if replace then
+      _G[frame:GetName().."TextLeft2"]:SetText("|cffffffff"..ITEM_BIND_QUEST..": |r" .. quest)
+      _G[frame:GetName().."TextLeft2"]:SetTextColor(color.r, color.g, color.b)
+    elseif quest ~= UNKNOWN then
+      frame:AddLine("|cffffffff"..ITEM_BIND_QUEST..": |r" .. quest, color.r, color.g, color.b)
+    end
+  end
+
+  -- initialize questlog scanner
+  pfUI.questitem = CreateFrame("Frame", "pfQuestItemScanner", UIParent)
+  pfUI.questitem:RegisterEvent("PLAYER_ENTERING_WORLD")
+  pfUI.questitem:RegisterEvent("QUEST_LOG_UPDATE")
+  pfUI.questitem:SetScript("OnEvent", function()
+    -- queue update events to run in .5 seconds
+    this.run = GetTime() + .5
+  end)
+
+  pfUI.questitem:SetScript("OnUpdate", function()
+    -- skip if nothing to do
+    if not this.run or GetTime() < this.run then return end
+
+    -- clear item caches
+    for name, quest in pairs(itemcache) do
+      itemcache[name] = nil
+    end
+
+    -- reload quests
+    local text, objective, objcount, objtext, header, _
+    local logid = GetQuestLogSelection()
+    for quest=1, 50 do
+      SelectQuestLogEntry(quest)
+
+      -- detect and ignore quest headers
+      if pfUI.client <= 11200 then -- vanilla
+        _, _, _, header = GetQuestLogTitle(quest)
+      elseif pfUI.client > 11200 then -- tbc
+        _, _, _, _, header = GetQuestLogTitle(quest)
+      end
+
+      if not header then
+        text, objective = GetQuestLogQuestText()
+        objcount = GetNumQuestLeaderBoards()
+        questlog[quest] = string.format("%s:%s", (text or ""), (objective or ""))
+
+        -- scan objectives
+        if objcount > 0 then
+          for i=1, objcount do
+            objtext = GetQuestLogLeaderBoard(i)
+            questlog[quest] = string.format("%s:%s", questlog[quest], (objtext or ""))
+          end
+        end
+      else
+        questlog[quest] = nil
+      end
+    end
+
+    -- restore questlog selection
+    SelectQuestLogEntry(logid)
+    this.run = nil
+  end)
+
+  -- add to regular tooltips
+  pfUI.questitem.tooltip = CreateFrame("Frame", "pfQuestItems", GameTooltip )
+  pfUI.questitem.tooltip:SetScript("OnShow", function()
+    if libtooltip:GetItemLink() then
+      local id = libtooltip:GetItemID()
+      local name = GetItemInfo(id)
+      AddTooltip(GameTooltip, name)
+    end
+  end)
+
+  -- add to itemref tooltips
+  local HookSetItemRef = SetItemRef
+  _G.SetItemRef = function(link, text, button)
+    HookSetItemRef(link, text, button)
+    local item, _, id = string.find(link, "item:(%d+):.*")
+    if not IsAltKeyDown() and not IsShiftKeyDown() and not IsControlKeyDown() and item then
+      local name = GetItemInfo(id)
+      AddTooltip(ItemRefTooltip, name)
+    end
+  end
+end)
