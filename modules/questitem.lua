@@ -41,6 +41,14 @@ pfUI:RegisterModule("questitem", function ()
     -- read difficulty color
     local color = GetDifficultyColor(level)
 
+    -- read item counts
+    if itemcache[item] and itemcache[item] ~= false then
+      local _, _, required = strfind(string.lower(questlog[itemcache[item]]), "_"..string.lower(item).."_(.-)_")
+      if required then
+        quest = string.format("%s |cffaaaaaa[%s/%s]", quest, (GetItemCount(item) or 0), required)
+      end
+    end
+
     -- add quest to quest item
     if replace then
       _G[frame:GetName().."TextLeft2"]:SetText("|cffffffff"..ITEM_BIND_QUEST..": |r" .. quest)
@@ -90,7 +98,12 @@ pfUI:RegisterModule("questitem", function ()
         if objcount > 0 then
           for i=1, objcount do
             objtext = GetQuestLogLeaderBoard(i)
-            questlog[quest] = string.format("%s:%s", questlog[quest], (objtext or ""))
+            local _, _, obj, cur, req = strfind((objtext or ""), "(.*):%s*([%d]+)%s*/%s*([%d]+)")
+            if obj and req then
+              questlog[quest] = string.format("%s:_%s_%s_", questlog[quest], obj, req)
+            else
+              questlog[quest] = string.format("%s:%s", questlog[quest], (objtext or ""))
+            end
           end
         end
       else
