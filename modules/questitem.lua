@@ -56,6 +56,8 @@ pfUI:RegisterModule("questitem", function ()
     elseif quest ~= UNKNOWN then
       frame:AddLine("|cffffffff"..ITEM_BIND_QUEST..": |r" .. quest, color.r, color.g, color.b)
     end
+
+    frame:Show()
   end
 
   -- initialize questlog scanner
