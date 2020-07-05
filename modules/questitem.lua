@@ -24,10 +24,10 @@ pfUI:RegisterModule("questitem", function ()
     elseif itemcache[item] then
       -- read from caches
       quest, level = GetQuestLogTitle(itemcache[item])
-    else
+    elseif item then
       -- scan for quests
       for id, text in pairs(questlog) do
-        if string.find(string.lower(text), string.lower(item), 1) then
+        if string.find(string.lower((text or "")), string.lower(item), 1) then
           quest, level = GetQuestLogTitle(id)
           itemcache[item] = id
           break
