@@ -576,6 +576,8 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("tooltip",    "compare",     "basestats",        "1")
   pfUI:UpdateConfig("tooltip",    "compare",     "showalways",       "0")
   pfUI:UpdateConfig("tooltip",    "vendor",      "showalways",       "0")
+  pfUI:UpdateConfig("tooltip",    "questitem",   "showquest",        "1")
+  pfUI:UpdateConfig("tooltip",    "questitem",   "showcount",        "0")
   pfUI:UpdateConfig("tooltip",    "statusbar",   "texture",          "Interface\\AddOns\\pfUI\\img\\bar")
 
   pfUI:UpdateConfig("chat",       "text",        "input_width",      "0")

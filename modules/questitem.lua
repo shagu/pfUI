@@ -3,6 +3,9 @@ pfUI:RegisterModule("questitem", function ()
   local itemcache = {}
 
   local function AddTooltip(frame, item)
+    -- abort if questitem is disabled
+    if C.tooltip.questitem.showquest ~= "1" then return end
+
     -- check if we can replace the questitem string
     local replace = nil
     if frame and _G[frame:GetName().."TextLeft2"] then
@@ -42,7 +45,7 @@ pfUI:RegisterModule("questitem", function ()
     local color = GetDifficultyColor(level)
 
     -- read item counts
-    if itemcache[item] and itemcache[item] ~= false then
+    if C.tooltip.questitem.showcount == "1" and itemcache[item] and itemcache[item] ~= false then
       local _, _, required = strfind(string.lower(questlog[itemcache[item]]), "_"..string.lower(item).."_(.-)_")
       if required then
         quest = string.format("%s |cffaaaaaa[%s/%s]", quest, (GetItemCount(item) or 0), required)
@@ -70,6 +73,8 @@ pfUI:RegisterModule("questitem", function ()
   end)
 
   pfUI.questitem:SetScript("OnUpdate", function()
+    if C.tooltip.questitem.showquest ~= "1" then return end
+
     -- skip if nothing to do
     if not this.run or GetTime() < this.run then return end
 
@@ -117,6 +122,11 @@ pfUI:RegisterModule("questitem", function ()
     SelectQuestLogEntry(logid)
     this.run = nil
   end)
+
+  -- reload quest entries on config change
+  pfUI.questitem.UpdateConfig = function()
+    pfUI.questitem.run = GetTime() + .5
+  end
 
   -- add to regular tooltips
   pfUI.questitem.tooltip = CreateFrame("Frame", "pfQuestItems", GameTooltip )

@@ -2004,6 +2004,8 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
       CreateConfig(nil, T["Compare Item Base Stats"], C.tooltip.compare, "basestats", "checkbox")
       CreateConfig(nil, T["Always Show Item Comparison"], C.tooltip.compare, "showalways", "checkbox")
       CreateConfig(nil, T["Always Show Extended Vendor Values"], C.tooltip.vendor, "showalways", "checkbox")
+      CreateConfig(U["questitem"], T["Show Related Quest On Questitems"], C.tooltip.questitem, "showquest", "checkbox")
+      CreateConfig(U["questitem"], T["Show Required Questitem Count"], C.tooltip.questitem, "showcount", "checkbox")
     end)
 
     CreateGUIEntry(T["Castbar"], nil, function()
