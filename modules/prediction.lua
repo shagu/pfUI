@@ -24,8 +24,8 @@ pfUI:RegisterModule("prediction", "vanilla:tbc", function ()
   pfUI.prediction:RegisterEvent("CHAT_MSG_ADDON")
   pfUI.prediction:RegisterEvent("PLAYER_TARGET_CHANGED")
   pfUI.prediction:SetScript("OnEvent", function()
-    if event == "CHAT_MSG_ADDON" and arg1 == "HealComm" then
-      this:ParseChatMessage(arg4, arg2)
+    if event == "CHAT_MSG_ADDON" and (arg1 == "HealComm" or arg1 == "CTRA") then
+      this:ParseChatMessage(arg4, arg2, arg1)
     elseif event == "UNIT_HEALTH" then
       local name = UnitName(arg1)
       if ress[name] and not UnitIsDeadOrGhost(arg1) then
@@ -111,13 +111,23 @@ pfUI:RegisterModule("prediction", "vanilla:tbc", function ()
     return msgtype, target, heal, time
   end
 
-  function pfUI.prediction:ParseChatMessage(sender, msg)
-    local msgtype, target, heal, time = ParseComm(sender, msg)
+  function pfUI.prediction:ParseChatMessage(sender, msg, comm)
+    local msgtype, target, heal, time
+
+    if comm == "HealComm" then
+      msgtype, target, heal, time = ParseComm(sender, msg)
+    elseif comm == "CTRA" then
+      local _, _, cmd, ctratarget = string.find(msg, "(%a+)%s?([^#]*)")
+      if cmd and ctratarget and cmd == "RES" and ctratarget ~= "" and ctratarget ~= UNKNOWN then
+        msgtype = "Ress"
+        target = ctratarget
+      end
+    end
 
     if msgtype == "Stop" and sender then
       pfUI.prediction:HealStop(sender)
       return
-    elseif msg == "RessStop" and sender then
+    elseif ( msg == "RessStop" or msg == "RESNO" ) and sender then
       pfUI.prediction:RessStop(sender)
       return
     elseif msgtype == "Delay" and time then
@@ -378,6 +388,10 @@ pfUI:RegisterModule("prediction", "vanilla:tbc", function ()
     SendAddonMessage("HealComm", msg, "RAID")
     SendAddonMessage("HealComm", msg, "BATTLEGROUND")
   end
+  pfUI.prediction.sender.SendResCommMsg = function(self, msg)
+    SendAddonMessage("CTRA", msg, "RAID")
+    SendAddonMessage("CTRA", msg, "BATTLEGROUND")
+  end
 
   -- tbc
   pfUI.prediction.sender:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
@@ -473,8 +487,10 @@ pfUI:RegisterModule("prediction", "vanilla:tbc", function ()
         pfUI.prediction.sender.healing = true
 
       elseif spell_queue[1] == spell and L["resurrections"][spell] then
-        pfUI.prediction:Ress(player, spell_queue[3])
-        pfUI.prediction.sender:SendHealCommMsg("Resurrection/" .. spell_queue[3] .. "/start/")
+        local target = senttarget or spell_queue[3]
+        pfUI.prediction:Ress(player, target)
+        pfUI.prediction.sender:SendHealCommMsg("Resurrection/" .. target .. "/start/")
+        pfUI.prediction.sender:SendResCommMsg("RES " .. target)
         pfUI.prediction.sender.resurrecting = true
       end
     elseif strfind(event, "SPELLCAST_FAILED", 1) or strfind(event, "SPELLCAST_INTERRUPTED", 1) then
@@ -488,8 +504,10 @@ pfUI:RegisterModule("prediction", "vanilla:tbc", function ()
         end
         pfUI.prediction.sender.healing = nil
       elseif pfUI.prediction.sender.resurrecting then
+        local target = senttarget or spell_queue[3]
         pfUI.prediction:RessStop(player)
         pfUI.prediction.sender:SendHealCommMsg("Resurrection/stop/")
+        pfUI.prediction.sender:SendResCommMsg("RESNO " .. target)
         pfUI.prediction.sender.resurrecting = nil
       end
     elseif event == "SPELLCAST_DELAYED" then
