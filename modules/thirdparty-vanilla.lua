@@ -867,6 +867,7 @@ pfUI:RegisterModule("thirdparty-vanilla", "vanilla", function()
 
       -- update with SuperMacro textures
       if not button then return end
+      if button.bar and button.bar > 10 then return end
       local text = GetActionText(button:GetID())
 
       if text then
