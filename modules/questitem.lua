@@ -3,6 +3,9 @@ pfUI:RegisterModule("questitem", function ()
   local itemcache = {}
 
   local function AddTooltip(frame, item)
+    -- abort when no item was given
+    if not item then return end
+
     -- abort if questitem is disabled
     if C.tooltip.questitem.showquest ~= "1" then return end
 
