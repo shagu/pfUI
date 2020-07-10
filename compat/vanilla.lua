@@ -57,6 +57,7 @@ end
 do -- GetItemInfo
   local name, link, rarity, minlevel, itype, isubtype, stack
   function GetItemInfo(item)
+    if not item then return end
     name, link, rarity, minlevel, itype, isubtype, stack = _G.GetItemInfo(item)
     return name, link, rarity, nil, minlevel, itype, isubtype, stack
   end
