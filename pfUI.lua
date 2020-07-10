@@ -260,12 +260,14 @@ function pfUI:LoadSkin(s)
 end
 
 pfUI:SetScript("OnEvent", function()
-  -- some addons overwrite color and font settings
-  -- need to enforce pfUI's selection every time
-  -- as soon as pfUI's config got initialized
+  -- enforce color updates on each event
+  pfUI:UpdateColors()
+
+  -- make sure to initialize and set our fonts
+  -- each time an addon got loaded but only
+  -- when the config is already accessible
   if not pfUI.bootup then
     pfUI:UpdateFonts()
-    pfUI:UpdateColors()
   end
 
   if arg1 == pfUI.name then
