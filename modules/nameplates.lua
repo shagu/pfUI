@@ -667,8 +667,9 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     -- target zoom
     local w, h = nameplate.health:GetWidth(), nameplate.health:GetHeight()
     if target and C.nameplates.targetzoom == "1" then
-      local wc = tonumber(C.nameplates.width)*1.4
-      local hc = tonumber(C.nameplates.heighthealth)*1.3
+      local zoomval = tonumber(C.nameplates.targetzoomval)+1
+      local wc = tonumber(C.nameplates.width)*zoomval
+      local hc = tonumber(C.nameplates.heighthealth)*(zoomval*.9)
       local animation = false
 
       if wc >= w then
