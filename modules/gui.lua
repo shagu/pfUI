@@ -1065,6 +1065,10 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
         "left:" .. T["Left"],
         "right:" .. T["Right"]
       },
+      ["debuffposition"] = {
+        "TOP:" .. T["Top"],
+        "BOTTOM:" .. T["Bottom"],
+      },
       ["gmserver_text"] = {
         "elysium:" .. T["Elysium Based Core"],
       },
@@ -2110,6 +2114,7 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
 
       CreateConfig(nil, T["Debuffs"], nil, nil, "header")
       CreateConfig(U["nameplates"], T["Enable Debuffs"], C.nameplates, "showdebuffs", "checkbox")
+      CreateConfig(U["nameplates"], T["Debuff Position"], C.nameplates.debuffs, "position", "dropdown", pfUI.gui.dropdowns.debuffposition)
       CreateConfig(U["nameplates"], T["Estimate Debuffs"], C.nameplates, "guessdebuffs", "checkbox")
       CreateConfig(U["nameplates"], T["Debuff Icon Size"], C.nameplates, "debuffsize")
       CreateConfig(U["nameplates"], T["Show Debuff Stacks"], C.nameplates.debuffs, "showstacks", "checkbox")

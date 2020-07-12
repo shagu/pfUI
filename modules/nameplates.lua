@@ -292,11 +292,15 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
       castbar:Hide()
 
       castbar:SetScript("OnShow", function()
-        nameplate.debuffs[1]:SetPoint("TOPLEFT", this, "BOTTOMLEFT", 0, -4)
+        if C.nameplates.debuffs["position"] == "BOTTOM" then
+          nameplate.debuffs[1]:SetPoint("TOPLEFT", this, "BOTTOMLEFT", 0, -4)
+        end
       end)
 
       castbar:SetScript("OnHide", function()
-        nameplate.debuffs[1]:SetPoint("TOPLEFT", this:GetParent(), "BOTTOMLEFT", 0, -4)
+        if C.nameplates.debuffs["position"] == "BOTTOM" then
+          nameplate.debuffs[1]:SetPoint("TOPLEFT", this, "BOTTOMLEFT", 0, -4)
+        end
       end)
 
       castbar.text = castbar:CreateFontString("Status", "DIALOG", "GameFontNormal")
@@ -378,15 +382,23 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
 
     -- update debuff positions
     local limit = floor(width / debuffsize)
+
+    local aligna, alignb, offs, space
+    if C.nameplates.debuffs["position"] == "BOTTOM" then
+      aligna, alignb, offs, space = "TOPLEFT", "BOTTOMLEFT", -4, -1
+    else
+      aligna, alignb, offs, space = "BOTTOMLEFT", "TOPLEFT", 20, 1
+    end
+
     for i=1,16 do
       nameplate.debuffs[i].stacks:SetFont(font, font_size, font_style)
       nameplate.debuffs[i]:ClearAllPoints()
       if i == 1 then
-        nameplate.debuffs[i]:SetPoint("TOPLEFT", nameplate.health, "BOTTOMLEFT", 0, -4)
+        nameplate.debuffs[i]:SetPoint(aligna, nameplate.health, alignb, 0, offs)
       elseif i <= limit then
         nameplate.debuffs[i]:SetPoint("LEFT", nameplate.debuffs[i-1], "RIGHT", 1, 0)
       elseif i > limit then
-        nameplate.debuffs[i]:SetPoint("TOPLEFT", nameplate.debuffs[i-limit], "BOTTOMLEFT", 0, -1)
+        nameplate.debuffs[i]:SetPoint(aligna, nameplate.debuffs[i-limit], alignb, 0, space)
       end
 
       nameplate.debuffs[i]:SetWidth(tonumber(C.nameplates.debuffsize))
