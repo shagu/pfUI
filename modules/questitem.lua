@@ -136,6 +136,8 @@ pfUI:RegisterModule("questitem", function ()
   pfUI.questitem.tooltip:SetScript("OnShow", function()
     if libtooltip:GetItemLink() then
       local id = libtooltip:GetItemID()
+      --fix-questitem-enchanting
+      if not id then return end
       local name = GetItemInfo(id)
       AddTooltip(GameTooltip, name)
     end
