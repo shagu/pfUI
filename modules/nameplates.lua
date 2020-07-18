@@ -299,7 +299,7 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
 
       castbar:SetScript("OnHide", function()
         if C.nameplates.debuffs["position"] == "BOTTOM" then
-          nameplate.debuffs[1]:SetPoint("TOPLEFT", this, "BOTTOMLEFT", 0, -4)
+          nameplate.debuffs[1]:SetPoint("TOPLEFT", this:GetParent(), "BOTTOMLEFT", 0, -4)
         end
       end)
 
