@@ -69,6 +69,8 @@ pfUI:RegisterModule("skin", "vanilla:tbc", function ()
   end
 
   if C.global.errors_hide == "1" then
-    UIErrorsFrame:Hide()
+    UIErrorsFrame:UnregisterEvent("UI_ERROR_MESSAGE")
+  else
+    UIErrorsFrame:RegisterEvent("UI_ERROR_MESSAGE")
   end
 end)
