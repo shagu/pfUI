@@ -43,6 +43,7 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("global",     nil,           "font_combat",      "Interface\\AddOns\\pfUI\\fonts\\Continuum.ttf")
 
   pfUI:UpdateConfig("global",     nil,           "force_region",     "1")
+  pfUI:UpdateConfig("global",     nil,           "errors",           "1")
   pfUI:UpdateConfig("global",     nil,           "errors_limit",     "1")
   pfUI:UpdateConfig("global",     nil,           "errors_hide",      "0")
   pfUI:UpdateConfig("global",     nil,           "hidebuff",         "0")

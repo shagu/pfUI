@@ -330,7 +330,11 @@ print = message
 
 error = function(msg)
   if PF_DEBUG_MODE then message(debugstack()) end
-  DEFAULT_CHAT_FRAME:AddMessage("|cffcc3333ERROR: |cffff5555".. (msg or "nil" ))
+  if string.find(msg, "AddOns\\pfUI") then
+    DEFAULT_CHAT_FRAME:AddMessage("|cffcc3333ERROR: |cffff5555".. (msg or "nil" ))
+  elseif not pfUI_config or (pfUI_config.global and pfUI_config.global.errors == "1") then
+    DEFAULT_CHAT_FRAME:AddMessage("|cffcc3333ERROR: |cffff5555".. (msg or "nil" ))
+  end
 end
 seterrorhandler(error)
 
