@@ -185,6 +185,7 @@ pfUI:RegisterModule("addons", "vanilla:tbc", function ()
     local menu = {}
 
     for name, list in pairs(pfUI_addon_profiles) do
+      local name = name
       local entry = {}
       entry.text = name
       entry.checked = false
