@@ -274,6 +274,11 @@ pfUI:RegisterModule("chat", "vanilla:tbc", function ()
       local frame = _G["ChatFrame"..i]
       local tab = _G["ChatFrame"..i.."Tab"]
 
+      for _, tex in pairs(CHAT_FRAME_TEXTURES) do
+        _G["ChatFrame"..i..tex]:SetTexture()
+        _G["ChatFrame"..i..tex]:Hide()
+      end
+
       if not frame.pfStartMoving then
         frame.pfStartMoving = frame.StartMoving
         frame.StartMoving = function(a1)
@@ -361,6 +366,7 @@ pfUI:RegisterModule("chat", "vanilla:tbc", function ()
       frame:EnableMouseWheel(true)
       frame:SetScript("OnMouseWheel", ChatOnMouseWheel)
     end
+
 
     -- update dock frame for all windows
     for index, value in pairs(DOCKED_CHAT_FRAMES) do
