@@ -353,7 +353,19 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
         local match
 
         for line in gfind(body, "[^%\n]+") do
-          _, _, match = string.find(line, '^/cast (.+)')
+          _, _, match = string.find(line, '^#showtooltip (.+)')
+
+          -- skip any further manual macro scanning on
+          -- gameclients with native macro spell detection
+          if pfUI.client >= 11200 and match then
+            self.spellslot = nil
+            self.booktype = nil
+            return
+          end
+
+          if not match then
+            _, _, match = string.find(line, '^/cast (.+)')
+          end
 
           if not match then
             _, _, match = string.find(line, '^/pfcast (.+)')
