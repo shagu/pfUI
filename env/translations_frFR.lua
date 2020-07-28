@@ -643,6 +643,7 @@ pfUI_translation["frFR"] = {
   ["Standard Text Font Size"] = "Taille de la police standard du texte",
   ["Status"] = "Statut",
   ["Status Bar Texture"] = "Texture de la barre d'état",
+  ["Don't overlap rested"] = nil,
   ["Switch Pages On Druid Stealth"] = "Changer de page sur le camouflage du Druide",
   ["Switch Pages On Meta Key Press"] = "Basculer les pages sur la touche Meta",
   ["Systeminfo"] = "Info Système",

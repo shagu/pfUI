@@ -643,6 +643,7 @@ pfUI_translation["zhCN"] = {
   ["Standard Text Font Size"] = "标准字体字号",
   ["Status"] = "当前状态",
   ["Status Bar Texture"] = "状态条纹理材质",
+  ["Don't overlap rested"] = nil,
   ["Switch Pages On Druid Stealth"] = nil,
   ["Switch Pages On Meta Key Press"] = "Ctrl/Alt/Shift 触发分页",
   ["Systeminfo"] = "系统信息",

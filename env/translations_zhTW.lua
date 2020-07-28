@@ -643,6 +643,7 @@ pfUI_translation["zhTW"] = {
   ["Standard Text Font Size"] = "標準字體字型大小",
   ["Status"] = "當前狀態",
   ["Status Bar Texture"] = "狀態條紋理材質",
+  ["Don't overlap rested"] = nil,
   ["Switch Pages On Druid Stealth"] = nil,
   ["Switch Pages On Meta Key Press"] = nil,
   ["Systeminfo"] = "系統資訊",

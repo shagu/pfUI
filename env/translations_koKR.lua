@@ -643,6 +643,7 @@ pfUI_translation["koKR"] = {
   ["Standard Text Font Size"] = "기본 텍스트 폰트크기",
   ["Status"] = "상태",
   ["Status Bar Texture"] = nil,
+  ["Don't overlap rested"] = nil,
   ["Switch Pages On Druid Stealth"] = nil,
   ["Switch Pages On Meta Key Press"] = nil,
   ["Systeminfo"] = "시스템 정보",

@@ -545,6 +545,7 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("panel",      "xp",          "rep_mode",         "VERTICAL")
   pfUI:UpdateConfig("panel",      "xp",          "rep_anchor",       "pfChatRight")
   pfUI:UpdateConfig("panel",      "xp",          "rep_position",     "LEFT")
+  pfUI:UpdateConfig("panel",      "xp",          "dont_overlap",     "0")
 
   pfUI:UpdateConfig("castbar",    "player",      "hide_blizz",       "1")
   pfUI:UpdateConfig("castbar",    "player",      "hide_pfui",        "0")

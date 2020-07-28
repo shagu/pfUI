@@ -643,6 +643,7 @@ pfUI_translation["ruRU"] = {
   ["Standard Text Font Size"] = "Размер шрифта стандартного текста",
   ["Status"] = "Статус",
   ["Status Bar Texture"] = "Текстура статус панели",
+  ["Don't overlap rested"] = nil,
   ["Switch Pages On Druid Stealth"] = "Перекл страниц при невидимости друида",
   ["Switch Pages On Meta Key Press"] = "Перекл страниц по нажатию мета-клавиш (Alt, Shift, Ctrl)",
   ["Systeminfo"] = "Системная информация",

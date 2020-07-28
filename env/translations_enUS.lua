@@ -643,6 +643,7 @@ pfUI_translation["enUS"] = {
   ["Standard Text Font Size"] = nil,
   ["Status"] = nil,
   ["Status Bar Texture"] = nil,
+  ["Don't overlap rested"] = nil,
   ["Switch Pages On Druid Stealth"] = nil,
   ["Switch Pages On Meta Key Press"] = nil,
   ["Systeminfo"] = nil,
