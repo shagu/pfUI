@@ -1882,6 +1882,8 @@ function pfUI.uf:SetupBuffIndicators(config)
       -- Misdirection (TBC)
       table.insert(indicators, "interface\\icons\\ability_hunter_misdirection")
       table.insert(indicators, "interface\\icons\\ability_mount_whitetiger")
+      table.insert(indicators, "interface\\icons\\spell_nature_protectionformnature")
+      
     end
 
     if myclass == "SHAMAN" then
