@@ -5,6 +5,8 @@ pfUI:RegisterModule("buff", "vanilla:tbc", function ()
   TemporaryEnchantFrame:Hide()
   TemporaryEnchantFrame:UnregisterAllEvents()
 
+  local br, bg, bb, ba = GetStringColor(pfUI_config.appearance.border.color)
+
   local function RefreshBuffButton(buff)
     if buff.btype == "HELPFUL" then
       if C.buffs.separateweapons == "1" then
@@ -70,6 +72,8 @@ pfUI:RegisterModule("buff", "vanilla:tbc", function ()
         else
           buff.backdrop:SetBackdropBorderColor(1,0,0,1)
         end
+      else
+        buff.backdrop:SetBackdropBorderColor(br,bg,bb,ba)
       end
     else
       buff:Hide()
