@@ -1980,6 +1980,12 @@ function pfUI.uf:SetupBuffIndicators(config)
     end
 
     if myclass == "HUNTER" then
+      -- Aspect of the Wild
+      table.insert(indicators, "interface\\icons\\spell_nature_protectionformnature")
+
+      -- Aspect of the Pack
+      table.insert(indicators, "interface\\icons\\ability_mount_whitetiger")
+
       -- Misdirection (TBC)
       table.insert(indicators, "interface\\icons\\ability_hunter_misdirection")
     end
