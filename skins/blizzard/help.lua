@@ -1,6 +1,18 @@
-pfUI:RegisterSkin("Help", "vanilla", function ()
+pfUI:RegisterSkin("Help", "vanilla:tbc", function ()
   local rawborder, border = GetBorderSize()
   local bpad = rawborder > 1 and border - GetPerfectPixel() or GetPerfectPixel()
+
+  -- not much here for tbc yet
+  if pfUI.client > 11200 then
+    local ticket, background = TicketStatusFrame:GetChildren()
+    CreateBackdrop(background, nil, true, .75)
+    TicketStatusFrame:SetHeight(40)
+    TicketStatusFrame:ClearAllPoints()
+    TicketStatusFrame:SetPoint("TOP", 0, -5)
+
+    UpdateMovable(TicketStatusFrame)
+    return
+  end
 
   StripTextures(HelpFrame)
   CreateBackdrop(HelpFrame, nil, nil, .75)
