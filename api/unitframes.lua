@@ -2114,7 +2114,11 @@ function pfUI.uf:GetStatusValue(unit, pos)
   elseif config == "level" then
     return unit:GetColor("level") .. pfUI.uf:GetLevelString(unitstr)
   elseif config == "class" then
-    return unit:GetColor("class") .. (UnitClass(unitstr) or UNKNOWN)
+    if UnitIsPlayer(unitstr) then
+      return unit:GetColor("class") .. (UnitClass(unitstr) or UNKNOWN)
+    else
+      return ""
+    end
 
   -- health
   elseif config == "health" then
