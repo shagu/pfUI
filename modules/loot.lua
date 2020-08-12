@@ -442,7 +442,9 @@ pfUI:RegisterModule("loot", "vanilla:tbc", function ()
     local maxrarity, maxwidth = 0, 0
 
     local items = GetNumLootItems()
-    if(items > 0) then
+    LootFrame.numLootItems = items
+
+    if items > 0 then
       local real = 0
       for i=1, items do
         local texture, item, quantity, quality, locked = GetLootSlotInfo(i)
@@ -450,7 +452,7 @@ pfUI:RegisterModule("loot", "vanilla:tbc", function ()
       end
 
       local slotid = 1
-      for id=0 ,GetNumLootItems() do
+      for id=0, items do
         if GetLootSlotInfo(id) then
           local slot = pfUI.loot.slots[slotid] or pfUI.loot:CreateSlot(slotid)
           local texture, item, quantity, quality, locked = GetLootSlotInfo(id)
