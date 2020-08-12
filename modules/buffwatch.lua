@@ -230,8 +230,9 @@ pfUI:RegisterModule("buffwatch", "vanilla:tbc", function ()
     -- reinitialize all active buffs
     for i=1,32 do
       local timeleft, texture, name, stacks = GetBuffData(frame.unit, i, frame.type)
+      timeleft = timeleft or 0
 
-      if texture and name and name ~= "" and BuffIsVisible(frame.config, name) and timeleft then
+      if texture and name and name ~= "" and BuffIsVisible(frame.config, name) then
         frame.buffs[i][1] = timeleft
         frame.buffs[i][2] = i
         frame.buffs[i][3] = name
