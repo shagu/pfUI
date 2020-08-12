@@ -183,6 +183,16 @@ pfUI:RegisterModule("thirdparty-tbc", "tbc", function ()
     end
   end)
 
+  HookAddonOrVariable("BCEPGP_LootFrame_Update", function()
+    if C.thirdparty.bcepgp.enable == "0" then return end
+
+    local hook = _G.BCEPGP_LootFrame_Update
+    _G.BCEPGP_LootFrame_Update = function(a,b,c,d,e,f)
+      LootFrame.numLootItems = GetNumLootItems()
+      hook(a,b,c,d,e,f)
+    end
+  end)
+
   HookAddonOrVariable("DruidBarFrame", function()
     if C.thirdparty.druidbar.enable == "0" then return end
     local p = ManaBarColor[0]
