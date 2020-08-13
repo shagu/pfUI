@@ -72,7 +72,7 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
       return true
     elseif C.nameplates.critters == "1" and unittype == "NEUTRAL_NPC" then
       for i, critter in pairs(L["critters"]) do
-        if string.find(name, critter) then return true end
+        if string.lower(name) == string.lower(critter) then return true end
       end
     elseif C.nameplates.totems == "1" then
       for totem in pairs(L["totems"]) do
