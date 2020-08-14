@@ -52,7 +52,7 @@ pfUI:RegisterModule("cooldown", "vanilla:tbc", function ()
   end
 
   -- hook
-  hooksecurefunc("CooldownFrame_SetTimer", function(this, start, duration, enable)
+  local function SetCooldown(this, start, duration, enable)
     -- abort on unknown frames
     if C.appearance.cd.foreign == "0" and not this.pfCooldownType then
       return
@@ -72,7 +72,7 @@ pfUI:RegisterModule("cooldown", "vanilla:tbc", function ()
     end
 
     -- print time as text on cooldown frames
-    if start > 0 and duration > 0 and enable > 0 then
+    if start > 0 and duration > 0 and (not enable or enable > 0) then
       if( not this.cd ) then
         pfCreateCoolDown(this, start, duration)
       end
@@ -82,5 +82,16 @@ pfUI:RegisterModule("cooldown", "vanilla:tbc", function ()
     elseif(this.cd) then
       this.cd:Hide();
     end
-  end)
+  end
+
+  if pfUI.expansion == "vanilla" then
+    -- vanilla does not have a cooldown frame type, so we hook the
+    -- regular SetTimer function that each one is calling.
+    hooksecurefunc("CooldownFrame_SetTimer", SetCooldown)
+  else
+    -- tbc and later expansion have a cooldown frametype, so we can
+    -- hook directly into the frame creation and add our function there.
+    local methods = getmetatable(CreateFrame('Cooldown', nil, nil, 'CooldownFrameTemplate')).__index
+    hooksecurefunc(methods, 'SetCooldown', SetCooldown)
+  end
 end)
