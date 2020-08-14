@@ -486,7 +486,7 @@ pfUI:RegisterModule("thirdparty-vanilla", "vanilla", function()
       end
     end, true)
 
-    do -- history frame
+    if WIM_HistoryFrame then -- history frame
       CreateBackdrop(WIM_HistoryFrame, nil, nil, .8)
       CreateBackdropShadow(WIM_HistoryFrame)
       WIM_HistoryFrame.backdrop:SetPoint("TOPLEFT", 10, -10)
@@ -501,7 +501,8 @@ pfUI:RegisterModule("thirdparty-vanilla", "vanilla", function()
       SkinArrowButton(WIM_HistoryFrameMessageListScrollDown, 'down', 18)
       WIM_HistoryFrameMessageListScrollDown:SetPoint("BOTTOMLEFT", WIM_HistoryFrameMessageListScrollingMessageFrame, "BOTTOMRIGHT", 10, 0)
     end
-    do -- options frame
+
+    if WIM_Options then -- options frame
       CreateBackdrop(WIM_Options, nil, nil, .8)
       CreateBackdropShadow(WIM_Options)
       WIM_Options.backdrop:SetPoint("TOPLEFT", 12, -10)
@@ -640,7 +641,8 @@ pfUI:RegisterModule("thirdparty-vanilla", "vanilla", function()
         SkinButton(WIM_OptionsTabbedFrameHistoryPanelViewHistory)
       end
     end
-    do -- help frame
+
+    if WIM_Help then -- help frame
       CreateBackdrop(WIM_Help, nil, nil, .8)
       WIM_HelpTitleBorder:SetTexture(nil)
       SkinCloseButton(WIM_HelpExitButton, WIM_Help.backdrop, -6, -6)
