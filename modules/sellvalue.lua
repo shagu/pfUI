@@ -13,15 +13,15 @@ pfUI:RegisterModule("sellvalue", "vanilla:tbc", function ()
         frame:AddLine(" ")
 
         if count > 1 then
-          frame:AddDoubleLine(T["Sell"] .. ":", CreateGoldString(sell) .. "|cff555555  //  " .. CreateGoldString(sell*count), 1, 1, 1);
+          frame:AddDoubleLine(T["Sell"] .. ":", CreateGoldString(sell) .. "|cff555555  //  " .. CreateGoldString(sell*count), 1, 1, 1)
         else
-          frame:AddDoubleLine(T["Sell"] .. ":", CreateGoldString(sell * count), 1, 1, 1);
+          frame:AddDoubleLine(T["Sell"] .. ":", CreateGoldString(sell * count), 1, 1, 1)
         end
 
         if count > 1 then
-          frame:AddDoubleLine(T["Buy"] .. ":", CreateGoldString(buy) .. "|cff555555  //  " .. CreateGoldString(buy*count), 1, 1, 1);
+          frame:AddDoubleLine(T["Buy"] .. ":", CreateGoldString(buy) .. "|cff555555  //  " .. CreateGoldString(buy*count), 1, 1, 1)
         else
-          frame:AddDoubleLine(T["Buy"] .. ":", CreateGoldString(buy), 1, 1, 1);
+          frame:AddDoubleLine(T["Buy"] .. ":", CreateGoldString(buy), 1, 1, 1)
         end
       end
       frame:Show()

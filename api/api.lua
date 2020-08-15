@@ -249,14 +249,14 @@ function pfUI.api.GetItemCount(itemName)
   local count = 0
   for bag = 4, 0, -1 do
     for slot = 1, GetContainerNumSlots(bag) do
-      local _, itemCount = GetContainerItemInfo(bag, slot);
+      local _, itemCount = GetContainerItemInfo(bag, slot)
       if itemCount then
         local itemLink = GetContainerItemLink(bag,slot)
         local _, _, itemParse = strfind(itemLink, "(%d+):")
         local queryName = GetItemInfo(itemParse)
         if queryName and queryName ~= "" then
           if queryName == itemName then
-            count = count + itemCount;
+            count = count + itemCount
           end
         end
       end

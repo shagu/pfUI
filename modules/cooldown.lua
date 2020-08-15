@@ -80,7 +80,7 @@ pfUI:RegisterModule("cooldown", "vanilla:tbc", function ()
       this.cd.duration = duration
       this.cd:Show()
     elseif(this.cd) then
-      this.cd:Hide();
+      this.cd:Hide()
     end
   end
 

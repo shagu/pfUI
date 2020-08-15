@@ -206,6 +206,6 @@ pfUI:RegisterModule("tracking", "vanilla", function ()
           end
         })
       end
-    end, "MENU");
+    end, "MENU")
   end
 end)

@@ -415,7 +415,7 @@ pfUI:RegisterModule("prediction", "vanilla:tbc", function ()
 
   pfUI.prediction.sender:SetScript("OnEvent", function()
     if event == "CHAT_MSG_SPELL_SELF_BUFF" then -- vanilla
-      local spell, _, heal = cmatch(arg1, HEALEDSELFOTHER) -- "Your %s heals %s for %d.";
+      local spell, _, heal = cmatch(arg1, HEALEDSELFOTHER) -- "Your %s heals %s for %d."
       if spell and heal then
         if spell == spell_queue[1] then UpdateCache(spell_queue[2], heal) end
         return

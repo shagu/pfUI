@@ -202,7 +202,7 @@ pfUI:RegisterSkin("Inspect", "vanilla", function ()
           local retry = false
 
           if link and slot.hasItem then
-            local _, _, link = string.find(link, "(item:%d+:%d+:%d+:%d+)");
+            local _, _, link = string.find(link, "(item:%d+:%d+:%d+:%d+)")
             local _, _, quality = GetItemInfo(link)
 
             if not quality then

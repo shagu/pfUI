@@ -124,13 +124,13 @@ pfUI:RegisterModule("autovendor", "vanilla:tbc", function ()
   autovendor.button.icon = autovendor.button:CreateTexture("ARTWORK")
   autovendor.button.icon:SetTexture("Interface\\Icons\\Spell_Shadow_SacrificialShield")
   autovendor.button:SetScript("OnEnter", function()
-    GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
-    GameTooltip:SetText(T["Sell Grey Items"]);
-    GameTooltip:Show();
+    GameTooltip:SetOwner(this, "ANCHOR_RIGHT")
+    GameTooltip:SetText(T["Sell Grey Items"])
+    GameTooltip:Show()
   end)
 
   autovendor.button:SetScript("OnLeave", function()
-    GameTooltip:Hide();
+    GameTooltip:Hide()
   end)
   SkinButton(autovendor.button, nil, nil, nil, autovendor.button.icon)
 

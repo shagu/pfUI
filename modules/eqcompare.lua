@@ -1,9 +1,9 @@
 pfUI:RegisterModule("eqcompare", "vanilla", function ()
   local loc = pfUI.cache["locale"]
   for key, value in pairs(L["itemtypes"]) do setglobal(key, value) end
-  INVTYPE_WEAPON_OTHER = INVTYPE_WEAPON.."_other";
-  INVTYPE_FINGER_OTHER = INVTYPE_FINGER.."_other";
-  INVTYPE_TRINKET_OTHER = INVTYPE_TRINKET.."_other";
+  INVTYPE_WEAPON_OTHER = INVTYPE_WEAPON.."_other"
+  INVTYPE_FINGER_OTHER = INVTYPE_FINGER.."_other"
+  INVTYPE_TRINKET_OTHER = INVTYPE_TRINKET.."_other"
 
   local slotTable = {
     [INVTYPE_2HWEAPON] = "MainHandSlot",
@@ -142,33 +142,33 @@ pfUI:RegisterModule("eqcompare", "vanilla", function ()
           if x > ltrigger then ltrigger = nil end
 
           -- first tooltip
-          ShoppingTooltip1:SetOwner(this, "ANCHOR_NONE");
-          ShoppingTooltip1:ClearAllPoints();
+          ShoppingTooltip1:SetOwner(this, "ANCHOR_NONE")
+          ShoppingTooltip1:ClearAllPoints()
 
           if ltrigger then
-            ShoppingTooltip1:SetPoint("BOTTOMLEFT", this, "BOTTOMRIGHT", 0, 0);
+            ShoppingTooltip1:SetPoint("BOTTOMLEFT", this, "BOTTOMRIGHT", 0, 0)
           else
-            ShoppingTooltip1:SetPoint("BOTTOMRIGHT", this, "BOTTOMLEFT", -border*2-1, 0);
+            ShoppingTooltip1:SetPoint("BOTTOMRIGHT", this, "BOTTOMLEFT", -border*2-1, 0)
           end
 
           ShoppingTooltip1:SetInventoryItem("player", slotID)
-          ShoppingTooltip1:Show();
+          ShoppingTooltip1:Show()
 
           -- second tooltip
           if slotTable[slotType .. "_other"] then
             local slotID_other = GetInventorySlotInfo(slotTable[slotType .. "_other"])
 
-            ShoppingTooltip2:SetOwner(this, "ANCHOR_NONE");
-            ShoppingTooltip2:ClearAllPoints();
+            ShoppingTooltip2:SetOwner(this, "ANCHOR_NONE")
+            ShoppingTooltip2:ClearAllPoints()
 
             if ltrigger then
-              ShoppingTooltip2:SetPoint("BOTTOMLEFT", ShoppingTooltip1, "BOTTOMRIGHT", 0, 0);
+              ShoppingTooltip2:SetPoint("BOTTOMLEFT", ShoppingTooltip1, "BOTTOMRIGHT", 0, 0)
             else
-              ShoppingTooltip2:SetPoint("BOTTOMRIGHT", ShoppingTooltip1, "BOTTOMLEFT", -border*2-1, 0);
+              ShoppingTooltip2:SetPoint("BOTTOMRIGHT", ShoppingTooltip1, "BOTTOMLEFT", -border*2-1, 0)
             end
 
             ShoppingTooltip2:SetInventoryItem("player", slotID_other)
-            ShoppingTooltip2:Show();
+            ShoppingTooltip2:Show()
           end
           return true
         end

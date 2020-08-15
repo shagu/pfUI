@@ -12,7 +12,7 @@ pfUI:RegisterModule("player", "vanilla:tbc", function ()
   UpdateMovable(pfUI.uf.player)
 
   -- Replace default's RESET_INSTANCES button with an always working one
-  UnitPopupButtons["RESET_INSTANCES_FIX"] = { text = RESET_INSTANCES, dist = 0 };
+  UnitPopupButtons["RESET_INSTANCES_FIX"] = { text = RESET_INSTANCES, dist = 0 }
   for id, text in pairs(UnitPopupMenus["SELF"]) do
     if text == "RESET_INSTANCES" then
       UnitPopupMenus["SELF"][id] = "RESET_INSTANCES_FIX"
