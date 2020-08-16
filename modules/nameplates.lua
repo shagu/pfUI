@@ -210,8 +210,10 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     for i, object in pairs({parent:GetRegions()}) do
       if NAMEPLATE_OBJECTORDER[i] and NAMEPLATE_OBJECTORDER[i] == "raidicon" then
         nameplate[NAMEPLATE_OBJECTORDER[i]] = object
-      else
+      elseif NAMEPLATE_OBJECTORDER[i] then
         nameplate.original[NAMEPLATE_OBJECTORDER[i]] = object
+        DisableObject(object)
+      else
         DisableObject(object)
       end
     end
