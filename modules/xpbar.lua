@@ -33,7 +33,7 @@ local function OnEnter(self)
   -- set either experience, reputation or flex-rep handler
   local mode = self.display
   if self.display == "XPFLEX" then
-    mode = UnitLevel("player") < MAX_LEVEL and "XP" or "REP"
+    mode = UnitLevel("player") < MAX_PLAYER_LEVEL and "XP" or "REP"
   elseif self.display == "FLEX" then
     mode = "REP"
   end
@@ -122,7 +122,7 @@ end
     local mode = self.display
     if self.display == "XPFLEX" then
       self.faction = data.faction or nil
-      mode = UnitLevel("player") < MAX_LEVEL and "XP" or "REP"
+      mode = UnitLevel("player") < MAX_PLAYER_LEVEL and "XP" or "REP"
     elseif self.display == "FLEX" then
       self.faction = data.faction or nil
       mode = "REP"
@@ -201,7 +201,7 @@ end
 
     local barStrata = "LOW"
     local restedStrata = "MEDIUM"
-    
+
     if C.panel.xp.dont_overlap == "1" then
       barStrata = "MEDIUM"
       restedStrata = "LOW"
