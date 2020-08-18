@@ -3,7 +3,7 @@
 ## Author: Shagu
 ## Notes: A complete user interface replacement.
 ## Notes-ruRU: Полная замена пользовательского интерфейса.
-## Version: 4.9.12
+## Version: 4.9.13
 ## SavedVariables: pfUI_profiles, pfUI_addon_profiles, pfUI_cache
 ## SavedVariablesPerCharacter: pfUI_config, pfUI_init, pfUI_playerDB
 
