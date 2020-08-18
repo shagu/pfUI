@@ -2181,7 +2181,7 @@ function pfUI.uf:GetStatusValue(unit, pos)
   elseif config == "powerdyn" then
     -- dont show percentage for rage/energy/focus
     if mpmax == 100 then
-      return unit:GetColor("power") .. "  " .. pfUI.api.Abbreviate(mp)
+      return unit:GetColor("power") .. pfUI.api.Abbreviate(mp)
     elseif mp ~= mpmax then
       return unit:GetColor("power") .. pfUI.api.Abbreviate(mp) .. " - " .. ceil(mp / mpmax * 100) .. "%"
     else
