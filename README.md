@@ -54,7 +54,6 @@ pfUI supports and contains language specific code for the following gameclients.
 ## Recommended Addons
 * [pfQuest](https://shagu.org/pfQuest) A simple database and quest helper
 * [WIM](http://addons.us.to/addon/wim), [WIM (continued)](https://github.com/shirsig/WIM) Give whispers an instant messenger feel
-* [MobHealth3](http://addons.us.to/addon/mobhealth) Estimates a mob's health
 
 ## Plugins
 * [pfUI-eliteoverlay](https://shagu.org/pfUI-eliteoverlay) Add elite dragons to unitframes
