@@ -446,7 +446,7 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     local name = plate.original.name:GetText()
     local level = plate.original.level:IsShown() and plate.original.level:GetObjectType() == "FontString" and tonumber(plate.original.level:GetText()) or "??"
     local class, _, elite, player = GetUnitData(name, true)
-    local target = UnitExists("target") and plate.parent:GetAlpha() == 1 or nil
+    local target = plate.istarget
     local mouseover = UnitExists("mouseover") and plate.original.glow:IsShown() or nil
     local unitstr = target and "target" or mouseover and "mouseover" or nil
     local red, green, blue = plate.original.healthbar:GetStatusBarColor()
@@ -598,8 +598,11 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     local target = UnitExists("target") and frame:GetAlpha() == 1 or nil
     local mouseover = UnitExists("mouseover") and original.glow:IsShown() or nil
 
+    -- cache target value
+    nameplate.istarget = target
+
     -- set non-target plate alpha
-    if target then
+    if target or not UnitExists("target") then
       nameplate:SetAlpha(1)
     else
       frame:SetAlpha(.95)
