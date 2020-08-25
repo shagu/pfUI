@@ -1133,6 +1133,7 @@ local gradientcolors = {}
 function pfUI.api.GetColorGradient(perc)
   perc = perc > 1 and 1 or perc
   perc = perc < 0 and 0 or perc
+  perc = floor(perc*100)/100
 
   local index = perc
   if not gradientcolors[index] then
