@@ -125,11 +125,12 @@ local function DebuffOnClick()
   end
 end
 
-local function UpdateVisibilityScanner(self)
-  local self = self or this
-  if ( self.limit or 1) > GetTime() then return else self.limit = GetTime() + .2 end
-  self.frame:UpdateVisibility()
-end
+local visibilityscan = CreateFrame("Frame", "pfUnitFrameVisibility", UIParent)
+visibilityscan.frames = {}
+visibilityscan:SetScript("OnUpdate", function()
+  if ( this.limit or 1) > GetTime() then return else this.limit = GetTime() + .2 end
+  for frame in pairs(this.frames) do frame:UpdateVisibility() end
+end)
 
 local aggrodata = { }
 function pfUI.api.UnitHasAggro(unit)
@@ -945,8 +946,8 @@ function pfUI.uf:EnableScripts()
   f:SetScript("OnLeave", pfUI.uf.OnLeave)
   f:EnableClickCast()
 
-  -- add generic visibility handler
-  f.visibility:SetScript("OnUpdate", UpdateVisibilityScanner)
+  -- add frame to visibility refresh handler
+  visibilityscan.frames[f] = true
 end
 
 function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
@@ -1043,9 +1044,6 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
   f.portrait.model = CreateFrame("PlayerModel", "pfPortraitModel" .. f.label .. f.id, f.portrait)
   f.portrait.model.next = CreateFrame("PlayerModel", nil, nil)
   f.feedbackText = f:CreateFontString("pfHitIndicator" .. f.label .. f.id, "OVERLAY", "NumberFontNormalHuge")
-
-  f.visibility = f.visibility or CreateFrame("Frame", nil, pfUI)
-  f.visibility.frame = f
 
   f:Hide()
   f:UpdateConfig()
