@@ -948,6 +948,11 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
         "right:" .. T["Right"],
         "off:" .. T["Disabled"]
       },
+      ["uf_happiness"] = {
+        "0:" .. T["Disabled"],
+        "1:" .. T["Face"],
+        "2:" .. T["Rank"]
+      },
       ["uf_buff_position"] = {
         "TOPLEFT:" .. T["Top Left"],
         "TOPRIGHT:" .. T["Top Right"],
@@ -1642,7 +1647,7 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
         CreateConfig(U[c], T["Show Loot Icon"], C.unitframes[c], "looticon", "checkbox")
         CreateConfig(U[c], T["Show Leader Icon"], C.unitframes[c], "leadericon", "checkbox")
         if c == "pet" then
-          CreateConfig(U[c], T["Show Happiness Icon"], C.unitframes[c], "happinessicon", "checkbox")
+          CreateConfig(U[c], T["Show Happiness Icon"], C.unitframes[c], "happinessicon", "dropdown", pfUI.gui.dropdowns.uf_happiness)
           CreateConfig(U[c], T["Happiness Icon Size"], C.unitframes[c], "happinesssize")
         end
         CreateConfig(U[c], T["Show Raid Mark"], C.unitframes[c], "raidicon", "checkbox")

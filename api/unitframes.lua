@@ -1157,13 +1157,13 @@ function pfUI.uf:RefreshIndicators(unit)
       if UnitIsVisible("pet") then
         local happiness = GetPetHappiness()
         if happiness == 1 then
-          unit.happinessIcon.texture:SetTexture(pfUI.media["img:sad"])
+          unit.happinessIcon.texture:SetTexture(pfUI.media["img:sad"..unit.config.happinessicon])
           unit.happinessIcon.texture:SetVertexColor(1, 0, 0, 1)
         elseif happiness == 2 then
-          unit.happinessIcon.texture:SetTexture(pfUI.media["img:neutral"])
+          unit.happinessIcon.texture:SetTexture(pfUI.media["img:neutral"..unit.config.happinessicon])
           unit.happinessIcon.texture:SetVertexColor(1, 1, 0, 1)
         else
-          unit.happinessIcon.texture:SetTexture(pfUI.media["img:happy"])
+          unit.happinessIcon.texture:SetTexture(pfUI.media["img:happy"..unit.config.happinessicon])
           unit.happinessIcon.texture:SetVertexColor(0, 1, 0, 1)
         end
         unit.happinessIcon:Show()
