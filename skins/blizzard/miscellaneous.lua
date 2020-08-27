@@ -52,6 +52,12 @@ end)
 pfUI:RegisterSkin("Quest Timer", "vanilla:tbc", function ()
   CreateBackdrop(QuestTimerFrame, nil, nil, .75)
   CreateBackdropShadow(QuestTimerFrame)
-
+  UpdateMovable(QuestTimerFrame, true)
   QuestTimerHeader:Hide()
+
+  -- UIParent_ManageFramePositions overwrites positions. Ignore those:
+  QuestTimerFrame._SetPoint = QuestTimerFrame.SetPoint
+  QuestTimerFrame.SetPoint = function(self, a, b, c, d, e, f)
+    if b ~= "MinimapCluster" then self:_SetPoint(a,b,c,d,e,f) end
+  end
 end)
