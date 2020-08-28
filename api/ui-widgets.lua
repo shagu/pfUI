@@ -512,10 +512,8 @@ function pfUI.api.CreateScrollChild(name, parent)
 
   parent:SetScrollChild(f)
 
-  -- OnShow is fired too early, postpone to the first frame draw
   f:SetScript("OnUpdate", function()
-    this:GetParent():Scroll()
-    this:SetScript("OnUpdate", nil)
+    this:GetParent():UpdateScrollState()
   end)
 
   return f
