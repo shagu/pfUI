@@ -266,6 +266,28 @@ function pfUI.api.GetItemCount(itemName)
   return count
 end
 
+-- [ FindItem ]
+-- Returns the bag and slot position of an item based on the name.
+-- 'item'       [string]         name of the item
+-- returns:     [int]            bag
+--              [int]            slot
+function pfUI.api.FindItem(item)
+  for bag = 4, 0, -1 do
+    for slot = 1, GetContainerNumSlots(bag) do
+      local itemLink = GetContainerItemLink(bag,slot)
+      if itemLink then
+        local _, _, parse = strfind(itemLink, "(%d+):")
+        local query = GetItemInfo(parse)
+        if query and query ~= "" and query == item then
+          return bag, slot
+        end
+      end
+    end
+  end
+
+  return nil
+end
+
 -- [ GetBagFamily ]
 -- Returns information about the type of a bag such as Soul Bags or Quivers.
 -- Available bagtypes are "BAG", "KEYRING", "SOULBAG", "QUIVER" and "SPECIAL"
