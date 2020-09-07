@@ -139,6 +139,7 @@ librange:SetScript("OnUpdate", function()
       if LootFrame and LootFrame:IsShown() then return nil end
       if InspectFrame and InspectFrame:IsShown() then return nil end
       if TradeFrame and TradeFrame:IsShown() then return nil end
+      if PlayerFrame and PlayerFrame.inCombat then return nil end
 
       pfScanActive = true
       TargetUnit(unit)
