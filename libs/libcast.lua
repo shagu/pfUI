@@ -321,7 +321,7 @@ libcast.customcast[strlower(aimedshot)] = function(begin)
     libcast.db[player].rank = lastrank
     libcast.db[player].start = start
     libcast.db[player].casttime = duration
-    libcast.db[player].icon = icon
+    libcast.db[player].icon = "Interface\\Icons\\Inv_spear_07"
     libcast.db[player].channel = nil
   else
     -- remove cast action to the database
@@ -345,7 +345,7 @@ libcast.customcast[strlower(multishot)] = function(begin)
     libcast.db[player].rank = lastrank
     libcast.db[player].start = start
     libcast.db[player].casttime = duration
-    libcast.db[player].icon = icon
+    libcast.db[player].icon = "Interface\\Icons\\Ability_upgrademoonglaive"
     libcast.db[player].channel = nil
   else
     -- remove cast action to the database
