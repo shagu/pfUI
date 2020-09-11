@@ -124,7 +124,7 @@ pfUI:RegisterModule("castbar", "vanilla:tbc", function ()
           if this.showlag then
             local _, _, lag = GetNetStats()
             local width = this:GetWidth() / (duration/1000) * (lag/1000)
-            this.bar.lag:SetWidth(width)
+            this.bar.lag:SetWidth(math.min(this:GetWidth(), width))
           else
             this.bar.lag:Hide()
           end
