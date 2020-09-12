@@ -1129,6 +1129,7 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
         "XP:" .. T["Experience"],
         "REP:" .. T["Tracked Reputation"],
         "FLEX:" .. T["Last Reputation"],
+        "PETXP:" .. T["Pet Experience"],
         "DISABLED:" .. T["Disabled"],
       },
       ["xp_position"] = {

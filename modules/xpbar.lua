@@ -65,6 +65,16 @@ local function OnEnter(self)
     table.insert(lines, { T["This Session"], "|cffffffff" .. session })
     table.insert(lines, { T["Average Per Hour"], "|cffffffff" .. avg_hour })
     table.insert(lines, { T["Time Remaining"], "|cffffffff" .. time_remaining })
+  elseif mode == "PETXP" then
+    local xp, xpmax = GetPetExperience()
+    local xp_perc = round(xp / xpmax * 100)
+    local remaining = xpmax - xp
+    local remaining_perc = round(remaining / xpmax * 100)
+
+    -- fill gametooltip data
+    table.insert(lines, { "|cff555555" .. T["Experience"], "" })
+    table.insert(lines, { T["XP"], "|cffffffff" .. xp .. " / " .. xpmax .. " (" .. xp_perc .. "%)" })
+    table.insert(lines, { T["Remaining"], "|cffffffff" .. remaining .. " (" .. remaining_perc .. "%)" })
   elseif mode == "REP" then
     for i=1, 99 do
       local name, description, standingID, barMin, barMax, barValue, atWarWith, canToggleAtWar, isHeader, isCollapsed, isWatched = GetFactionInfo(i)
@@ -150,6 +160,16 @@ end
         self.restedbar:Hide()
       end
 
+      self.tick = GetTime() + self.timeout
+      return
+    elseif mode == "PETXP" then
+      self.restedbar:Hide()
+      self.enabled = true
+      self:SetAlpha(1)
+
+      local currXP, nextXP = GetPetExperience()
+      self.bar:SetMinMaxValues(min(0, currXP), nextXP)
+      self.bar:SetValue(currXP)
       self.tick = GetTime() + self.timeout
       return
     elseif mode == "REP" then
@@ -247,6 +267,9 @@ end
     b:EnableMouse(true)
 
     b:RegisterEvent("CHAT_MSG_COMBAT_FACTION_CHANGE")
+    b:RegisterEvent("UNIT_PET")
+    b:RegisterEvent("UNIT_LEVEL")
+    b:RegisterEvent("UNIT_PET_EXPERIENCE")
     b:RegisterEvent("PLAYER_ENTERING_WORLD")
     b:RegisterEvent("PLAYER_XP_UPDATE")
     b:RegisterEvent("PLAYER_LEVEL_UP")
