@@ -160,6 +160,11 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
 
   -- create nameplate core
   local nameplates = CreateFrame("Frame", "pfNameplates", UIParent)
+  nameplates:RegisterEvent("PLAYER_ENTERING_WORLD")
+  nameplates:SetScript("OnEvent", function()
+    this:SetGameVariables()
+  end)
+
   nameplates:SetScript("OnUpdate", function()
     parentCount = WorldFrame:GetNumChildren()
     if initialized < parentCount then
