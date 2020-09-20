@@ -680,7 +680,6 @@ function pfUI.uf:UpdateConfig()
       f.buffs[i]:SetHeight(f.config.buffsize)
 
       if f:GetName() == "pfPlayer" then
-        f.buffs[i]:SetScript("OnShow", BuffOnUpdate)
         f.buffs[i]:SetScript("OnUpdate", BuffOnUpdate)
       elseif f:GetName() == "pfTarget" and pfUI.expansion == "tbc" then
         f.buffs[i]:SetScript("OnUpdate", TargetBuffOnUpdate)
@@ -1242,20 +1241,15 @@ function pfUI.uf:RefreshUnit(unit, component)
 
       local texture, stacks
       if unit.label == "player" then
-       stacks = GetPlayerBuffApplications(GetPlayerBuff(PLAYER_BUFF_START_ID+i,"HELPFUL"))
-       texture = GetPlayerBuffTexture(GetPlayerBuff(PLAYER_BUFF_START_ID+i,"HELPFUL"))
+        stacks = GetPlayerBuffApplications(GetPlayerBuff(PLAYER_BUFF_START_ID+i,"HELPFUL"))
+        texture = GetPlayerBuffTexture(GetPlayerBuff(PLAYER_BUFF_START_ID+i,"HELPFUL"))
       else
-       texture, stacks = UnitBuff(unitstr, i)
+        texture, stacks = UnitBuff(unitstr, i)
       end
 
       unit.buffs[i].texture:SetTexture(texture)
 
       if texture then
-        if unit.buffs[i].oldtexture ~= texture then
-          unit.buffs[i]:Hide()
-        end
-
-        unit.buffs[i].oldtexture = texture
         unit.buffs[i]:Show()
 
         if stacks > 1 then
