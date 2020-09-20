@@ -325,6 +325,9 @@ function pfUI.uf:UpdateConfig()
   local C = pfUI_config
   local rawborder, default_border = GetBorderSize("unitframes")
 
+  local cooldown_text = tonumber(f.config.cooldown_text)
+  local cooldown_anim = tonumber(f.config.cooldown_anim)
+
   local relative_point = "BOTTOM"
   if f.config.panchor == "TOPLEFT" then
      relative_point = "BOTTOMLEFT"
@@ -622,9 +625,11 @@ function pfUI.uf:UpdateConfig()
       f.buffs[i].stacks:SetShadowColor(0, 0, 0)
       f.buffs[i].stacks:SetShadowOffset(0.8, -0.8)
       f.buffs[i].stacks:SetTextColor(1,1,.5)
-      f.buffs[i].cd = f.buffs[i].cd or CreateFrame(COOLDOWN_FRAME_TYPE, nil, f.buffs[i])
+
+      f.buffs[i].cd = f.buffs[i].cd or CreateFrame(COOLDOWN_FRAME_TYPE, f.buffs[i]:GetName() .. "Cooldown", f.buffs[i], "CooldownFrameTemplate")
       f.buffs[i].cd.pfCooldownType = "ALL"
-      f.buffs[i].cd:SetAlpha(0)
+      f.buffs[i].cd.pfCooldownStyleText = cooldown_text
+      f.buffs[i].cd.pfCooldownStyleAnimation = cooldown_anim
       f.buffs[i].id = i
       f.buffs[i]:Hide()
 
@@ -697,9 +702,10 @@ function pfUI.uf:UpdateConfig()
       f.debuffs[i].stacks:SetShadowColor(0, 0, 0)
       f.debuffs[i].stacks:SetShadowOffset(0.8, -0.8)
       f.debuffs[i].stacks:SetTextColor(1,1,.5)
-      f.debuffs[i].cd = f.debuffs[i].cd or CreateFrame(COOLDOWN_FRAME_TYPE, nil, f.debuffs[i])
+      f.debuffs[i].cd = f.debuffs[i].cd or CreateFrame(COOLDOWN_FRAME_TYPE, f.debuffs[i]:GetName() .. "Cooldown", f.debuffs[i], "CooldownFrameTemplate")
       f.debuffs[i].cd.pfCooldownType = "ALL"
-      f.debuffs[i].cd:SetAlpha(0)
+      f.debuffs[i].cd.pfCooldownStyleText = cooldown_text
+      f.debuffs[i].cd.pfCooldownStyleAnimation = cooldown_anim
       f.debuffs[i].id = i
       f.debuffs[i]:Hide()
 
