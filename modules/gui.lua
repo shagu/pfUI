@@ -1690,6 +1690,10 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
         CreateConfig(U[c], T["Automatic Level Text Color"], C.unitframes[c], "levelcolor", "checkbox")
         CreateConfig(U[c], T["Automatic Class Text Color"], C.unitframes[c], "classcolor", "checkbox")
 
+        CreateConfig(U[c], T["Timer"], nil, nil, "header")
+        CreateConfig(U[c], T["Show Timer Text"], C.unitframes[c], "cooldown_text", "checkbox")
+        CreateConfig(U[c], T["Show Timer Animation"], C.unitframes[c], "cooldown_anim", "checkbox")
+
         CreateConfig(U[c], T["Indicators"], nil, nil, "header")
         CreateConfig(U[c], T["Enable Indicators"], C.unitframes[c], "buff_indicator", "checkbox")
         CreateConfig(U[c], T["Show Time Left"], C.unitframes[c], "indicator_time", "checkbox")
