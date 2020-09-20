@@ -28,6 +28,7 @@ local glow2 = {
 local function BuffOnUpdate()
   local timeleft = GetPlayerBuffTimeLeft(GetPlayerBuff(PLAYER_BUFF_START_ID+this.id,"HELPFUL"))
   CooldownFrame_SetTimer(this.cd, GetTime(), timeleft, 1)
+  if not pfUI.bootup then this:SetScript("OnUpdate", nil) end
 end
 
 local function TargetBuffOnUpdate()
@@ -667,6 +668,7 @@ function pfUI.uf:UpdateConfig()
 
       if f:GetName() == "pfPlayer" then
         f.buffs[i]:SetScript("OnShow", BuffOnUpdate)
+        f.buffs[i]:SetScript("OnUpdate", BuffOnUpdate)
       elseif f:GetName() == "pfTarget" and pfUI.expansion == "tbc" then
         f.buffs[i]:SetScript("OnUpdate", TargetBuffOnUpdate)
       end
