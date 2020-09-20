@@ -37,11 +37,10 @@ local function BuffOnUpdate()
     elseif maxdurations[texture] and maxdurations[texture] < timeleft then
       maxdurations[texture] = timeleft
     end
-
-    start = GetTime() - (maxdurations[texture] - timeleft)
+    start = GetTime() + timeleft - maxdurations[texture]
   end
 
-  CooldownFrame_SetTimer(this.cd, start, timeleft, timeleft > 0 and 1 or 0)
+  CooldownFrame_SetTimer(this.cd, start, maxdurations[texture], timeleft > 0 and 1 or 0)
 end
 
 local function TargetBuffOnUpdate()
