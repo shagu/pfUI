@@ -666,7 +666,7 @@ function pfUI.uf:UpdateConfig()
       f.buffs[i]:SetHeight(f.config.buffsize)
 
       if f:GetName() == "pfPlayer" then
-        f.buffs[i]:SetScript("OnUpdate", BuffOnUpdate)
+        f.buffs[i]:SetScript("OnShow", BuffOnUpdate)
       elseif f:GetName() == "pfTarget" and pfUI.expansion == "tbc" then
         f.buffs[i]:SetScript("OnUpdate", TargetBuffOnUpdate)
       end
