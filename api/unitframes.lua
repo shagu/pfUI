@@ -1236,6 +1236,11 @@ function pfUI.uf:RefreshUnit(unit, component)
       unit.buffs[i].texture:SetTexture(texture)
 
       if texture then
+        if unit.buffs[i].oldtexture ~= texture then
+          unit.buffs[i]:Hide()
+        end
+
+        unit.buffs[i].oldtexture = texture
         unit.buffs[i]:Show()
 
         if stacks > 1 then
