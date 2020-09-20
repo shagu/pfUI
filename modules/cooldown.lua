@@ -77,7 +77,7 @@ pfUI:RegisterModule("cooldown", "vanilla:tbc", function ()
     if this.pfCooldownStyleAnimation == 0 then
       this:SetAlpha(0)
     else
-      this:SetAlpha(1)
+      this:SetAlpha(this:GetParent():GetAlpha())
     end
 
     -- print time as text on cooldown frames
