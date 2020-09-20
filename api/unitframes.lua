@@ -25,10 +25,23 @@ local glow2 = {
   insets = {left = 0, right = 0, top = 0, bottom = 0},
 }
 
+local maxdurations = {}
 local function BuffOnUpdate()
   local timeleft = GetPlayerBuffTimeLeft(GetPlayerBuff(PLAYER_BUFF_START_ID+this.id,"HELPFUL"))
-  CooldownFrame_SetTimer(this.cd, GetTime(), timeleft, 1)
-  if not pfUI.bootup then this:SetScript("OnUpdate", nil) end
+  local texture = GetPlayerBuffTexture(GetPlayerBuff(PLAYER_BUFF_START_ID+this.id,"HELPFUL"))
+  local start = 0
+
+  if timeleft > 0 then
+    if not maxdurations[texture] then
+      maxdurations[texture] = timeleft
+    elseif maxdurations[texture] and maxdurations[texture] < timeleft then
+      maxdurations[texture] = timeleft
+    end
+
+    start = GetTime() - (maxdurations[texture] - timeleft)
+  end
+
+  CooldownFrame_SetTimer(this.cd, start, timeleft, timeleft > 0 and 1 or 0)
 end
 
 local function TargetBuffOnUpdate()
