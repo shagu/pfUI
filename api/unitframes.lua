@@ -27,6 +27,7 @@ local glow2 = {
 
 local maxdurations = {}
 local function BuffOnUpdate()
+  if ( this.tick or 1) > GetTime() then return else this.tick = GetTime() + .2 end
   local timeleft = GetPlayerBuffTimeLeft(GetPlayerBuff(PLAYER_BUFF_START_ID+this.id,"HELPFUL"))
   local texture = GetPlayerBuffTexture(GetPlayerBuff(PLAYER_BUFF_START_ID+this.id,"HELPFUL"))
   local start = 0
@@ -112,9 +113,21 @@ local function BuffOnClick()
 end
 
 local function DebuffOnUpdate()
-  if ( this.tick or 1) > GetTime() then return else this.tick = GetTime() + .4 end
+  if ( this.tick or 1) > GetTime() then return else this.tick = GetTime() + .2 end
   local timeleft = GetPlayerBuffTimeLeft(GetPlayerBuff(PLAYER_BUFF_START_ID+this.id,"HARMFUL"))
-  CooldownFrame_SetTimer(this.cd, GetTime(), timeleft, 1)
+  local texture = GetPlayerBuffTexture(GetPlayerBuff(PLAYER_BUFF_START_ID+this.id,"HARMFUL"))
+  local start = 0
+
+  if timeleft > 0 then
+    if not maxdurations[texture] then
+      maxdurations[texture] = timeleft
+    elseif maxdurations[texture] and maxdurations[texture] < timeleft then
+      maxdurations[texture] = timeleft
+    end
+    start = GetTime() + timeleft - maxdurations[texture]
+  end
+
+  CooldownFrame_SetTimer(this.cd, start, maxdurations[texture], timeleft > 0 and 1 or 0)
 end
 
 local function DebuffOnEnter()
