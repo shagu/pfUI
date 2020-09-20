@@ -12,8 +12,8 @@ pfUI:RegisterModule("cooldown", "vanilla:tbc", function ()
     if not parent then this:Hide() end
 
     -- avoid to set cooldowns on invalid frames
-    if this:GetParent() and this:GetParent():GetName() and _G[this:GetParent():GetName() .. "Cooldown"] then
-      if not _G[this:GetParent():GetName() .. "Cooldown"]:IsShown() then
+    if parent and parent:GetName() and _G[parent:GetName() .. "Cooldown"] then
+      if not _G[parent:GetName() .. "Cooldown"]:IsShown() then
         this:Hide()
       end
     end
