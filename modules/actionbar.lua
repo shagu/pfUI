@@ -715,7 +715,17 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     end
 
     for id in pairs(updatecache) do
+      -- run updates based on slot
       pfUI.bars.ButtonFullUpdate(buttoncache[id])
+
+      -- run updates on paging actionbar if required
+      for i=1,12 do
+        if pfUI.bars[1][i].id == id then
+          pfUI.bars.ButtonFullUpdate(pfUI.bars[1][i])
+        end
+      end
+
+      -- clear update cache
       updatecache[id] = nil
     end
 
