@@ -44,6 +44,9 @@ pfUI:RegisterModule("questitem", function ()
       return
     end
 
+    -- return on invalid/empty quest results
+    if not quest then return end
+
     -- read difficulty color
     local color = GetDifficultyColor(level)
 
