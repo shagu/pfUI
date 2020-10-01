@@ -212,11 +212,13 @@ pfUI:RegisterModule("addonbuttons", "vanilla:tbc", function ()
     SetupMainFrame()
   end
 
+  local parent
   local function GetTopFrame(frame)
-    if frame:GetParent() == Minimap or frame:GetParent() == UIParent or not frame:GetParent() then
+    parent = frame:GetParent()
+    if not parent or parent == Minimap or parent == MinimapBackdrop or parent == UIParent then
       return frame
     else
-      return GetTopFrame(frame:GetParent())
+      return GetTopFrame(parent)
     end
   end
 
