@@ -18,9 +18,9 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
 
     U = setmetatable({}, { __index = function(tab,key)
       local ufunc
-      if pfUI[key] and pfUI[key].UpdateConfig then
+      if type(pfUI[key]) == "table" and pfUI[key].UpdateConfig then
         ufunc = function() return pfUI[key]:UpdateConfig() end
-      elseif pfUI.uf and pfUI.uf[key] and pfUI.uf[key].UpdateConfig then
+      elseif pfUI.uf and type(pfUI.uf[key]) == "table" and pfUI.uf[key].UpdateConfig then
         ufunc = function() return pfUI.uf[key]:UpdateConfig() end
       end
       if ufunc then
