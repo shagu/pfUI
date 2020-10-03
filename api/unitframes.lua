@@ -1093,6 +1093,10 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
     f:Hide()
   end
 
+  -- register frame for clique
+  _G.ClickCastFrames = ClickCastFrames or {}
+  ClickCastFrames[f] = true
+
   table.insert(pfUI.uf.frames, f)
   return f
 end
