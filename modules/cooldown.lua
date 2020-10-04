@@ -60,6 +60,11 @@ pfUI:RegisterModule("cooldown", "vanilla:tbc", function ()
       return
     end
 
+    -- add support for omnicc's disable flag
+    if this.noCooldownCount then
+      return
+    end
+
     -- realign cooldown frames
     local parent = this.GetParent and this:GetParent()
     if parent and parent:GetWidth() / 36 > 0 then
