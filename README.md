@@ -93,7 +93,7 @@ The pet happiness is shown as the color of your pet's frame. Depending on your s
 Since version 4.0.7 there is also an additional icon that can be enabled from the pet unit frame options.
 
 **Can I use Clique with pfUI?**  
-This addon already includes support for clickcasting. If you still want to make use of clique, a pfUI compatible version can be found [Here](https://github.com/shagu/Clique/archive/master.zip). If you want to keep your current version of Clique, you'll have to apply this [Patch](https://github.com/shagu/Clique/commit/a5ee56c3f803afbdda07bae9cd330e0d4a75d75a).
+This addon already includes support for clickcasting. If you still want to make use of clique, all pfUI's unitframes are already compatible to Clique-TBC. For Vanilla, a pfUI compatible version can be found [Here](https://github.com/shagu/Clique/archive/master.zip). If you want to keep your current version of Clique, you'll have to apply this [Patch](https://github.com/shagu/Clique/commit/a5ee56c3f803afbdda07bae9cd330e0d4a75d75a).
 
 **Where is the Experience Bar?**  
 The experience bar shows up on mouseover and whenever you gain experience, next to left chatframe by default. There's also an option to make it stay visible all the time.
