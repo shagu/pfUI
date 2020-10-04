@@ -346,6 +346,7 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
         local name = "pfBag" .. bag .. "item" .. slot .. "Cooldown"
         bankslot.cd = CreateFrame(COOLDOWN_FRAME_TYPE, name, bankslot, "CooldownFrameTemplate")
         bankslot.cd:SetAllPoints(bankslot)
+        bankslot.cd.pfCooldownStyleAnimation = 1
         bankslot.cd.pfCooldownType = "ALL"
       else
         local bagslot = pfUI.bags[bag].slots[slot].frame
