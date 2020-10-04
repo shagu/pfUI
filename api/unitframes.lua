@@ -1847,6 +1847,7 @@ function pfUI.uf:AddIcon(frame, pos, icon, timeleft, stacks)
     frame.icon[pos].stacks:SetJustifyH("RIGHT")
     frame.icon[pos].stacks:SetJustifyV("BOTTOM")
     frame.icon[pos].cd = CreateFrame(COOLDOWN_FRAME_TYPE, nil, frame.icon[pos])
+    frame.icon[pos].cd.pfCooldownStyleAnimation = 0
     frame.icon[pos].cd.pfCooldownType = "ALL"
     frame.icon[pos].cd:SetAlpha(0)
   end
