@@ -129,6 +129,7 @@ pfUI:RegisterModule("totems", "vanilla:tbc", function ()
       self.bar[i].cdbg:SetWidth(self.iconsize - 3)
       self.bar[i].cdbg:SetPoint("CENTER", self.bar[i], "CENTER", 0, 0)
       self.bar[i].cd = self.bar[i].cd or CreateFrame(COOLDOWN_FRAME_TYPE, "pfTotemsBar"..i.."Cooldown", self.bar[i].cdbg, "CooldownFrameTemplate")
+      self.bar[i].cd.pfCooldownStyleAnimation = 1
       self.bar[i].cd.pfCooldownType = "ALL"
 
       self.bar[i]:RegisterForClicks("LeftButtonUp", "RightButtonUp")
