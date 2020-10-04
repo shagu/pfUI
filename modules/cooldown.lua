@@ -81,8 +81,8 @@ pfUI:RegisterModule("cooldown", "vanilla:tbc", function ()
     -- hide animation
     if this.pfCooldownStyleAnimation == 0 then
       this:SetAlpha(0)
-    else
-      this:SetAlpha(this:GetParent():GetAlpha())
+    elseif not this.pfCooldownStyleAnimation and C.appearance.cd.hideanim == "1" then
+      this:SetAlpha(0)
     end
 
     -- print time as text on cooldown frames
