@@ -33,22 +33,30 @@ pfUI:RegisterModule("cooldown", "vanilla:tbc", function ()
     end
   end
 
+  local height, size
   local function pfCreateCoolDown(cooldown, start, duration)
     cooldown.pfCooldownText = CreateFrame("Frame", "pfCooldownFrame", cooldown:GetParent())
     cooldown.pfCooldownText:SetAllPoints(cooldown)
     cooldown.pfCooldownText:SetFrameLevel(cooldown:GetParent():GetFrameLevel() + 1)
-
     cooldown.pfCooldownText.text = cooldown.pfCooldownText:CreateFontString("pfCooldownFrameText", "OVERLAY")
+
     if not cooldown.pfCooldownType then
-      cooldown.pfCooldownText.text:SetFont(pfUI.font_unit, C.appearance.cd.font_size_foreign, "OUTLINE")
+      size = tonumber(C.appearance.cd.font_size_foreign)
     elseif cooldown.pfCooldownType == "BLIZZARD" then
-      cooldown.pfCooldownText.text:SetFont(pfUI.font_unit, C.appearance.cd.font_size_blizz, "OUTLINE")
+      size = tonumber(C.appearance.cd.font_size_blizz)
     elseif cooldown.pfCooldownSize then
-      cooldown.pfCooldownText.text:SetFont(pfUI.font_unit, cooldown.pfCooldownSize, "OUTLINE")
+      size = tonumber(cooldown.pfCooldownSize)
     else
-      cooldown.pfCooldownText.text:SetFont(pfUI.font_unit, C.appearance.cd.font_size, "OUTLINE")
+      size = tonumber(C.appearance.cd.font_size)
     end
 
+    -- enforce dynamic font size
+    if C.appearance.cd.dynamicsize == "1" and cooldown.GetParent then
+      height = cooldown:GetParent() and cooldown:GetParent():GetHeight() or cooldown:GetHeight() or 0
+      size = math.max((height > 0 and height * .64 or 16), size)
+    end
+
+    cooldown.pfCooldownText.text:SetFont(pfUI.font_unit, size, "OUTLINE")
     cooldown.pfCooldownText.text:SetPoint("CENTER", cooldown.pfCooldownText, "CENTER", 0, 0)
     cooldown.pfCooldownText:SetScript("OnUpdate", pfCooldownOnUpdate)
   end
