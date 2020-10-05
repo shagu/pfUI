@@ -7,7 +7,6 @@ pfUI:RegisterModule("thirdparty", "vanilla:tbc", function()
   -- For expansion related code, see: thirdparty-vanilla and thirdparty-tbc.
 
   pfUI.thirdparty = {}
-  pfUI.thirdparty.bagsort = nil
 
   do -- addon dockframe
     pfUI.thirdparty.meters = CreateFrame("Frame")
@@ -97,26 +96,15 @@ pfUI:RegisterModule("thirdparty", "vanilla:tbc", function()
     end
   end
 
-  -- MrPlow Bag Sorting Addon.
-  -- Vanilla: https://www.wowace.com/projects/mr-plow/files/288059
-  -- TBC: https://www.wowace.com/projects/mr-plow/files/136162
-  HookAddonOrVariable("MrPlow", function()
-    if C.thirdparty.mrplow.enable == "0" then return end
 
-    local MrPlowL = AceLibrary and AceLibrary("AceLocale-2.2"):new("MrPlow")
-    if not (MrPlowL and MrPlowL["Bank"]) then return end
-    pfUI.thirdparty.bagsort = "mrplow" -- dont't check for sortbags, use mrplow as default
-
-    pfUI.thirdparty.mrplow = CreateFrame("Frame", nil)
-    pfUI.thirdparty.mrplow:RegisterEvent("PLAYER_ENTERING_WORLD")
-    pfUI.thirdparty.mrplow:SetScript("OnEvent", function()
-      pfUI.thirdparty.mrplow:UnregisterAllEvents()
-
-      -- don't do anything if another bagsorter was found
-      if pfUI.thirdparty.bagsort ~= "mrplow" then return end
-
-      -- make sure the bag module is enabled
+  do -- bag sort addon
+    pfUI.thirdparty.bagsort = nil
+    function pfUI.thirdparty.RegisterBagSort(name, bag, bagtooltip, bank, banktooltip)
+      -- skip on certain conditions
+      if pfUI.thirdparty.bagsort then return end
       if not pfUI.bag or not pfUI.bag.right then return end
+
+      pfUI.thirdparty.bagsort = name
 
       local rawborder, default_border = GetBorderSize("bags")
 
@@ -138,13 +126,12 @@ pfUI:RegisterModule("thirdparty", "vanilla:tbc", function()
         pfUI.bag.right.sort.texture:SetPoint("BOTTOMRIGHT", pfUI.bag.right.sort, "BOTTOMRIGHT", -2, 2)
         pfUI.bag.right.sort.texture:SetVertexColor(.25,.25,.25,1)
 
+        pfUI.bag.right.sort:SetScript("OnClick", bag)
+
         pfUI.bag.right.sort:SetScript("OnEnter", function ()
           pfUI.bag.right.sort.backdrop:SetBackdropBorderColor(1,1,.25,1)
           pfUI.bag.right.sort.texture:SetVertexColor(1,1,.25,1)
-          GameTooltip:SetOwner(this, "ANCHOR_RIGHT")
-          GameTooltip:SetText(MrPlowL["Mr Plow"])
-          GameTooltip:AddLine(MrPlowL["The Works"],1,1,1)
-          GameTooltip:Show()
+          if bagtooltip then bagtooltip() end
         end)
 
         pfUI.bag.right.sort:SetScript("OnLeave", function ()
@@ -153,10 +140,6 @@ pfUI:RegisterModule("thirdparty", "vanilla:tbc", function()
           if GameTooltip:IsOwned(this) then
             GameTooltip:Hide()
           end
-        end)
-
-        pfUI.bag.right.sort:SetScript("OnClick", function()
-          MrPlow:Works()
         end)
 
         pfUI.bag.right.search:ClearAllPoints()
@@ -182,13 +165,12 @@ pfUI:RegisterModule("thirdparty", "vanilla:tbc", function()
         pfUI.bag.left.sort.texture:SetPoint("BOTTOMRIGHT", pfUI.bag.left.sort, "BOTTOMRIGHT", -2, 2)
         pfUI.bag.left.sort.texture:SetVertexColor(.25,.25,.25,1)
 
+        pfUI.bag.left.sort:SetScript("OnClick", bank)
+
         pfUI.bag.left.sort:SetScript("OnEnter", function ()
           pfUI.bag.left.sort.backdrop:SetBackdropBorderColor(1,1,.25,1)
           pfUI.bag.left.sort.texture:SetVertexColor(1,1,.25,1)
-          GameTooltip:SetOwner(this, "ANCHOR_RIGHT")
-          GameTooltip:SetText(MrPlowL["Mr Plow"])
-          GameTooltip:AddLine(MrPlowL["Bank"],1,1,1)
-          GameTooltip:Show()
+          if banktooltip then banktooltip() end
         end)
 
         pfUI.bag.left.sort:SetScript("OnLeave", function ()
@@ -198,11 +180,43 @@ pfUI:RegisterModule("thirdparty", "vanilla:tbc", function()
             GameTooltip:Hide()
           end
         end)
-
-        pfUI.bag.left.sort:SetScript("OnClick", function()
-          MrPlow:Works(MrPlowL["Bank"])
-        end)
       end
+    end
+  end
+
+  -- MrPlow Bag Sorting Addon.
+  -- Vanilla: https://www.wowace.com/projects/mr-plow/files/288059
+  -- TBC: https://www.wowace.com/projects/mr-plow/files/136162
+  HookAddonOrVariable("MrPlow", function()
+    if C.thirdparty.mrplow.enable == "0" then return end
+
+    local sort = CreateFrame("Frame", nil)
+    sort:RegisterEvent("PLAYER_ENTERING_WORLD")
+    sort:SetScript("OnEvent", function()
+      this:UnregisterAllEvents()
+
+      local MrPlowL = AceLibrary and AceLibrary("AceLocale-2.2"):new("MrPlow")
+      if not (MrPlowL and MrPlowL["Bank"]) then return end
+
+      pfUI.thirdparty.RegisterBagSort("MrPlow",
+        function()
+          MrPlow:Works()
+        end,
+        function()
+          GameTooltip:SetOwner(this, "ANCHOR_RIGHT")
+          GameTooltip:SetText(MrPlowL["Mr Plow"])
+          GameTooltip:AddLine(MrPlowL["The Works"],1,1,1)
+          GameTooltip:Show()
+        end,
+        function()
+          MrPlow:Works(MrPlowL["Bank"])
+        end,
+        function()
+          GameTooltip:SetOwner(this, "ANCHOR_RIGHT")
+          GameTooltip:SetText(MrPlowL["Mr Plow"])
+          GameTooltip:AddLine(MrPlowL["Bank"],1,1,1)
+          GameTooltip:Show()
+        end)
     end)
   end)
 
