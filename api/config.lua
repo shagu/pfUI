@@ -649,6 +649,7 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("nameplates", nil,           "friendlyplayer",   "0")
   pfUI:UpdateConfig("nameplates", nil,           "critters",         "1")
   pfUI:UpdateConfig("nameplates", nil,           "totems",           "1")
+  pfUI:UpdateConfig("nameplates", nil,           "totemicons",       "0")
 
   pfUI:UpdateConfig("nameplates", nil,           "showhp",           "0")
   pfUI:UpdateConfig("nameplates", nil,           "alwaysperc",       "0")

@@ -54,6 +54,14 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     end
   end
 
+  local function TotemPlate(name)
+    if C.nameplates.totemicons == "1" then
+      for totem, icon in pairs(L["totems"]) do
+        if string.find(name, totem) then return icon end
+      end
+    end
+  end
+
   local function HidePlate(unittype, name, fullhp, target)
     -- keep some plates always visible according to config
     if C.nameplates.fullhealth == "1" and not fullhp then return nil end
@@ -250,6 +258,15 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     nameplate.raidicon:SetPoint("CENTER", nameplate.health, "CENTER", 0, -5)
     nameplate.raidicon:SetDrawLayer("OVERLAY")
     nameplate.raidicon:SetTexture(pfUI.media["img:raidicons"])
+
+    nameplate.totem = CreateFrame("Frame", nil, nameplate)
+    nameplate.totem:SetPoint("CENTER", nameplate, "CENTER", 0, 0)
+    nameplate.totem:SetHeight(32)
+    nameplate.totem:SetWidth(32)
+    nameplate.totem.icon = nameplate.totem:CreateTexture(nil, "OVERLAY")
+    nameplate.totem.icon:SetTexCoord(.078, .92, .079, .937)
+    nameplate.totem.icon:SetAllPoints()
+    CreateBackdrop(nameplate.totem)
 
     do -- debuffs
       local debuffs = {}
@@ -487,14 +504,33 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     end
 
     -- hide frames according to the configuration
-    if HidePlate(unittype, name, (hpmax-hp == hpmin), target) then
+    local TotemIcon = TotemPlate(name)
+
+    if TotemIcon then
+      -- create totem icon
+      plate.totem.icon:SetTexture("Interface\\Icons\\" .. TotemIcon)
+
+      plate.glow:Hide()
+      plate.level:Hide()
+      plate.name:Hide()
+      plate.health:Hide()
+      plate.totem:Show()
+    elseif HidePlate(unittype, name, (hpmax-hp == hpmin), target) then
       plate.level:SetPoint("RIGHT", plate.name, "LEFT", -3, 0)
       plate.name:SetParent(plate)
+
+      plate.level:Show()
+      plate.name:Show()
       plate.health:Hide()
+      plate.totem:Hide()
     else
       plate.level:SetPoint("RIGHT", plate.health, "LEFT", -3, 0)
       plate.name:SetParent(plate.health)
+
+      plate.level:Show()
+      plate.name:Show()
       plate.health:Show()
+      plate.totem:Hide()
     end
 
     plate.name:SetText(name)
