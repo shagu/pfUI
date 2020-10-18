@@ -818,12 +818,12 @@ end
 -- 'frame'           [frame] the frame that should be centered.
 -- 'relativeFrame'   [frame] frame that should be used for centering if not use ui parent.
 function pfUI.api.CenterFrame(frame, relativeFrame)
-    frame:ClearAllPoints()
-    if relativeFrame then
-        frame:SetPoint("CENTER", relativeFrame, "CENTER", 0, 0)
-    else
-        frame:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
-    end
+  frame:ClearAllPoints()
+  if relativeFrame then
+    frame:SetPoint("CENTER", relativeFrame, "CENTER", 0, 0)
+  else
+    frame:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
+  end
 end
 
 -- [ StripTextures ]
