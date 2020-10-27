@@ -857,6 +857,13 @@ function pfUI.api.rgbhex(r, g, b, a)
     end
   elseif tonumber(r) and g and b then
     a = a or 1
+
+    -- limit values to 0-1
+    r = r + 0 > 1 and 1 or r + 0
+    g = g + 0 > 1 and 1 or g + 0
+    b = b + 0 > 1 and 1 or b + 0
+    a = a + 0 > 1 and 1 or a + 0
+
     key = string.format("%s%s%s%s",r,g,b,a)
     if hexcolor_cache[key] == nil then
       hexcolor_cache[key] = string.format("|c%02x%02x%02x%02x", a*255, r*255, g*255, b*255)
