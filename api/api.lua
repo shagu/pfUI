@@ -834,42 +834,33 @@ end
 
 -- [ rgbhex ]
 -- Returns color format from color info
--- 'r'          [table or number]  color table or r color component
--- 'g'          [number] optional g color component
--- 'b'          [number] optional b color component
--- 'a'          [number] optional alpha component
--- returns color string in the form of '|caaxxyyzz'
-local hexcolor_cache = {}
+-- 'r'          [table | number]  color table or r color component
+-- 'g'          [number]          optional g color component
+-- 'b'          [number]          optional b color component
+-- 'a'          [number]          optional alpha component
+-- returns color string in the form of '|caarrggbb'
+local _r, _g, _b, _a
 function pfUI.api.rgbhex(r, g, b, a)
-  local key
-  if type(r)=="table" then
-    local _r,_g,_b,_a
+  if type(r) == "table" then
     if r.r then
-      _r,_g,_b,_a = r.r, r.g, r.b, r.a or 1
+      _r, _g, _b, _a = r.r, r.g, r.b, (r.a or 1)
     elseif table.getn(r) >= 3 then
-      _r,_g,_b,_a = r[1], r[2], r[3], r[4] or 1
+      _r, _g, _b, _a = r[1], r[2], r[3], (r[4] or 1)
     end
-    if _r and _g and _b and _a then
-      key = string.format("%s%s%s%s",_r,_g,_b,_a)
-      if hexcolor_cache[key] == nil then
-        hexcolor_cache[key] = string.format("|c%02x%02x%02x%02x", _a*255, _r*255, _g*255, _b*255)
-      end
-    end
-  elseif tonumber(r) and g and b then
-    a = a or 1
-
-    -- limit values to 0-1
-    r = r + 0 > 1 and 1 or r + 0
-    g = g + 0 > 1 and 1 or g + 0
-    b = b + 0 > 1 and 1 or b + 0
-    a = a + 0 > 1 and 1 or a + 0
-
-    key = string.format("%s%s%s%s",r,g,b,a)
-    if hexcolor_cache[key] == nil then
-      hexcolor_cache[key] = string.format("|c%02x%02x%02x%02x", a*255, r*255, g*255, b*255)
-    end
+  elseif tonumber(r) then
+    _r, _g, _b, _a = r, g, b, (a or 1)
   end
-  return hexcolor_cache[key] or ""
+
+  if _r and _g and _b and _a then
+    -- limit values to 0-1
+    _r = _r + 0 > 1 and 1 or _r + 0
+    _g = _g + 0 > 1 and 1 or _g + 0
+    _b = _b + 0 > 1 and 1 or _b + 0
+    _a = _a + 0 > 1 and 1 or _a + 0
+    return string.format("|c%02x%02x%02x%02x", _a*255, _r*255, _g*255, _b*255)
+  end
+
+  return ""
 end
 
 -- [ GetBorderSize ]
