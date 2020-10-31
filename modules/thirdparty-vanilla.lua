@@ -721,7 +721,7 @@ pfUI:RegisterModule("thirdparty-vanilla", "vanilla", function()
   end)
 
   HookAddonOrVariable("SortBags", function()
-    if C.thirdparty.mrplow.enable == "0" then return end
+    if C.thirdparty.sortbags.enable == "0" then return end
 
     local sort = CreateFrame("Frame", nil)
     sort:RegisterEvent("PLAYER_ENTERING_WORLD")
