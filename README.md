@@ -49,12 +49,13 @@ Shaman:
 - nothing yet
 
 
-Plans:
+Plans (to-do):
 
 - adding the custom V+ spells into the library that show the correct times then
 
 
 Known Issues:
+
 - for some reason Frostbolts first cast always shows the wrong duration (e.g. 6s debuff although it should be 7 seconds, subsequent casts show correctly), sometimes the debuff doesnt register at all
 
 
