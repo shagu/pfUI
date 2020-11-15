@@ -27,34 +27,122 @@ local _, class = UnitClass("player")
 local lastspell
 
 function libdebuff:GetDuration(effect, rank)
-  if L["debuffs"][effect] then
+  if L["debuffs"][effect]then
     local rank = rank and tonumber((string.gsub(rank, RANK .. " ", ""))) or 0
     local rank = L["debuffs"][effect][rank] and rank or libdebuff:GetMaxRank(effect)
     local duration = L["debuffs"][effect][rank]
-
-    if effect == L["dyndebuffs"]["Rupture"] then
-      -- Rupture: +2 sec per combo point
-      duration = duration + GetComboPoints()*2
-    elseif effect == L["dyndebuffs"]["Kidney Shot"] then
-      -- Kidney Shot: +1 sec per combo point
-      duration = duration + GetComboPoints()*1
-    elseif effect == L["dyndebuffs"]["Demoralizing Shout"] then
-      -- Booming Voice: 10% per talent
-      local _,_,_,_,count = GetTalentInfo(2,1)
-      if count and count > 0 then duration = duration + ( duration / 100 * (count*10)) end
-    elseif effect == L["dyndebuffs"]["Shadow Word: Pain"] then
-      -- Improved Shadow Word: Pain: +3s per talent
-      local _,_,_,_,count = GetTalentInfo(3,4)
-      if count and count > 0 then duration = duration + count * 3 end
-    elseif effect == L["dyndebuffs"]["Frostbolt"] then
-      -- Permafrost: +1s per talent
-      local _,_,_,_,count = GetTalentInfo(3,7)
-      if count and count > 0 then duration = duration + count end
-    elseif effect == L["dyndebuffs"]["Gouge"] then
-      -- Improved Gouge: +.5s per talent
-      local _,_,_,_,count = GetTalentInfo(2,1)
-      if count and count > 0 then duration = duration + (count*.5) end
-    end
+	local _, class = UnitClass("player")
+	
+    
+	
+	--ROGUE
+	
+    if class == "ROGUE" then
+	--  Total Control and Improved Gouge
+		if effect == L["dyndebuffs"]["Gouge"] then
+	       local _,_,_,_,countIG = GetTalentInfo(2,1)
+	       local _,_,_,_,countTC = GetTalentInfo(1,16)
+	       if (countIG and countIG == 0 and countTC and countTC > 0) then duration = duration + (countTC*.5)  end
+		   if (countIG and countIG > 0 and countTC and countTC == 0) then duration = duration + (countIG*.5)  end
+		   if (countIG and countIG > 0 and countTC and countTC > 0) then duration = duration + (countIG*.5) + (countTC*.5)  end
+	--  Rupture with Serrated Blades and Exhaustion
+		elseif effect == L["dyndebuffs"]["Rupture"] then
+		   local _,_,_,_,countSB = GetTalentInfo(3,13)
+		   local _,_,_,_,countEx = GetTalentInfo(1,6)
+		   if (countEx and countEx == 0 and  countSB and countSB == 0) then duration = (duration + GetComboPoints() * 2)  end
+		   if (countEx and countEx == 0 and  countSB and countSB > 0) then duration = (duration + GetComboPoints() * 2) + (countSB*2)  end
+		   if (countEx and countEx == 1 and  countSB and countSB == 0) then duration = (duration + GetComboPoints() * 2) * 1.25  end
+		   if (countEx and countEx == 1 and  countSB and countSB > 0) then duration = (duration + GetComboPoints() * 2) * 1.25 + (countSB*2) end
+		   if (countEx and countEx == 2 and  countSB and countSB == 0) then duration = (duration + GetComboPoints() * 2) * 1.5 end
+	--  Garotte with Serrated Blades 
+		elseif effect == L["dyndebuffs"]["Garrote"] then
+		   local _,_,_,_,countSB = GetTalentInfo(3,13)
+		   if countSB and countSB > 1 then duration = duration + 2*countSB end
+		   if (countEx and countEx == 2 and  countSB and countSB > 0) then duration = (duration + GetComboPoints() * 2) * 1.5 + (countSB*2)end
+	--  Total Control for Kidney Shot(1,16)
+		elseif effect == L["dyndebuffs"]["Kidney Shot"] then
+		   local _,_,_,_,countTC = GetTalentInfo(1,16)
+		   if countTC and countTC == 0 then duration = duration + GetComboPoints()*1 end
+		   if countTC and countTC > 0 then duration = duration + GetComboPoints()*1 + (countTC*.5) end
+	--  Expose Armor with Exhaustion (1,6)
+		elseif effect == L["dyndebuffs"]["Expose Armor"] then
+		   local _,_,_,_,countEx = GetTalentInfo(1,6)
+		   if countEx and countEx > 0 then duration = duration + ( duration / 100 * (countEx*25)) end
+	--  Total Control for Cheap Shot, Blind and Sap (1,16)
+		elseif effect == L["dyndebuffs"]["Cheap Shot"] or L["dyndebuffs"]["Blind"]or L["dyndebuffs"]["Sap"] then
+		   local _,_,_,_,countTC = GetTalentInfo(1,16)
+		   if countTC and countTC > 0 then duration = duration + (countTC*.5) end
+		end
+	--MAGE	
+	elseif class == "MAGE" then
+	--  Permafrost (3/3)
+		if effect == L["dyndebuffs"]["Frostbolt"] then
+		   local _,_,_,_,countIFB = GetTalentInfo(3,3)
+		   if countIFB and countIFB > 0 then duration = duration + countIFB end
+		end
+	--HUNTER	   
+	elseif class == "HUNTER" then
+	--  Improved Hunters Mark
+		if effect == L["dyndebuffs"]["Hunter\'s Mark"] then
+		   local _,_,_,_,countIHM = GetTalentInfo(2,1)
+		   if countIHM and countIHM > 0 then duration = duration + (60 * countIHM) end
+		end
+	--PRIEST	   
+	elseif class == "PRIEST" then
+	--  Improved Shadow Word: Pain 
+		if effect == L["dyndebuffs"]["Shadow Word: Pain"] then
+           local _,_,_,_,countSWP = GetTalentInfo(3,2)
+           if countSWP and countSWP > 0 then duration = duration + countSWP * 3 end
+		end
+	--WARLOCK
+	elseif class == "WARLOCK" then
+	--  Jinx with 4 Curses
+		if effect == L["dyndebuffs"]["Curse of Weakness"]or L["dyndebuffs"]["Curse of Recklessness"] or L["dyndebuffs"]["Curse of the Elements"]or L["dyndebuffs"]["Curse of Shadow"] then
+		   local _,_,_,_,countJ = GetTalentInfo(1,2)
+		   if countJ and countJ > 0 then duration = duration + (countJ * 30) end
+	--  Curse of Exhaustion with Jinx
+		elseif effect == L["dyndebuffs"]["Curse of Exhaustion"] then
+		   local _,_,_,_,countJ = GetTalentInfo(1,2)
+		   if countJ and countJ > 0 then duration = duration + (countJ * 3) end
+	--  Prolonged Misery
+		elseif effect == L["dyndebuffs"]["Curse of Agony"] or L["dyndebuffs"]["Immolate"] or L["dyndebuffs"]["Corruption"] then   
+		   local _,_,_,_,countPM = GetTalentInfo(1,8)
+		   if countPM and countPM > 0 then duration = duration + countPM * 3 end
+		end
+	--WARRIOR
+	elseif class == "WARRIOR" then
+	--  Booming Voice  
+		if effect == L["dyndebuffs"]["Demoralizing Shout"] or effect == L["dyndebuffs"]["Challenging Shout"]or effect == L["dyndebuffs"]["Intimidating Shout"] then 
+		   local _,_,_,_,countBV = GetTalentInfo(2,2)
+		   if countBV and countBV == 1 then duration = duration * 1.3 end
+		   if countBV and countBV == 2 then duration = duration * 1.5 end
+	--  Improved Hamstring
+		elseif effect == L["dyndebuffs"]["Hamstring"] then
+		   local _,_,_,_,countIHS = GetTalentInfo(1,7)
+		   if countIHS and countIHS > 0 then duration = duration + (3 * countIHS) end
+		end  
+	--DRUID
+	elseif class == "DRUID" then
+	--	Power of Nature
+		if effect == L["dyndebuffs"]["Moonfire"] or L["dyndebuffs"]["Insect Swarm"] or L["dyndebuffs"]["Soothe Animal"]or L["dyndebuffs"]["Faerie Fire"] or L["dyndebuffs"]["Hibernate"]then
+		   local _,_,_,_,countPON = GetTalentInfo(1,12)
+		   if countPON and countPON == 1 then duration = duration*1.25 end
+		   if countPON and countPON == 2 then duration = duration*1.5 end
+	--	Mighty Roots
+		elseif effect == L["dyndebuffs"]["Entangling Roots"] then
+			local _,_,_,_,countMR = GetTalentInfo(1,4)
+			if countMR and countMR == 1 then duration = duration*1.4 end
+			if countMR and countMR == 1 then duration = duration*1.7 end
+			if countMR and countMR == 1 then duration = duration*2.0 end
+		end 
+	--PALADIN
+	elseif class == "PALADIN" then
+	--	Improved Hammer of Justice
+		if effect == L["dyndebuffs"]["Hammer of Justice"] then
+		   local _,_,_,_,countHOJ = GetTalentInfo(2,6)
+		   if countHOJ and countHOJ > 0 then duration = duration + (countHOJ*.5) end
+		end
+	end
     return duration
   else
     return 0
