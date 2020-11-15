@@ -499,6 +499,14 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     -- target indicator
     if target and C.nameplates.targethighlight == "1" then
       plate.health.backdrop:SetBackdropBorderColor(plate.health.hlr, plate.health.hlg, plate.health.hlb, plate.health.hla)
+    elseif C.nameplates.outfriendlynpc == "1" and unittype == "FRIENDLY_NPC" then
+      plate.health.backdrop:SetBackdropBorderColor(.2,.7,.3,1)
+    elseif C.nameplates.outfriendly == "1" and unittype == "FRIENDLY_PLAYER" then
+      plate.health.backdrop:SetBackdropBorderColor(.2,.3,.7,1)
+    elseif C.nameplates.outneutral == "1" and strfind(unittype, "NEUTRAL") then
+      plate.health.backdrop:SetBackdropBorderColor(.7,.7,.2,1)
+    elseif C.nameplates.outenemy == "1" and strfind(unittype, "ENEMY") then
+      plate.health.backdrop:SetBackdropBorderColor(.7,.3,.2,1)
     else
       plate.health.backdrop:SetBackdropBorderColor(er,eg,eb,ea)
     end
