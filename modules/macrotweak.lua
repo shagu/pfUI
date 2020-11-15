@@ -17,4 +17,14 @@ pfUI:RegisterModule("macrotweak", "vanilla", function ()
       userinput = nil
     end)
   end
+
+  -- add /use and /equip to the macro api
+  _G.SLASH_PFUSE1, _G.SLASH_PFUSE2, _G.SLASH_PFUSE3, _G.SLASH_PFUSE4 = '/use', '/pfuse', '/equip', '/pfequip'
+  function _G.SlashCmdList.PFUSE(msg)
+    if not msg or msg == "" then return end
+    local bag, slot = FindItem(msg)
+    if bag and slot then
+      UseContainerItem(bag, slot)
+    end
+  end
 end)
