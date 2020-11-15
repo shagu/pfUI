@@ -506,7 +506,7 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     elseif C.nameplates.outneutral == "1" and strfind(unittype, "NEUTRAL") then
       plate.health.backdrop:SetBackdropBorderColor(.7,.7,.2,1)
     elseif C.nameplates.outenemy == "1" and strfind(unittype, "ENEMY") then
-      plate.health.backdrop:SetBackdropBorderColor(.7,.3,.2,1)
+      plate.health.backdrop:SetBackdropBorderColor(.7,.2,.3,1)
     else
       plate.health.backdrop:SetBackdropBorderColor(er,eg,eb,ea)
     end
