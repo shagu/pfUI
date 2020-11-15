@@ -9,6 +9,12 @@ With this modification extension I aim to make the ingame information display co
 modified code by simply reading into it and with lots of help and advice from Thirinena (hawaiisa) from the V+ server (thx a lot) and shagu (thx too).
 Not all the listed changes have been tested yet.
 
+
+Installation:
+
+Use the Green Code Button to the top right and download the zip file. Extrace the file into your wow/interface/addons folder and rename it to Pfui (remove the -master). If you already have PFui installed overwrite the existing folder, saved configuations wont be affected by this.
+
+
 Changelog (v.05)
 
 Hunter:
