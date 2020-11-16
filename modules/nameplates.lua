@@ -532,7 +532,7 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
       plate.health:Hide()
       plate.totem:Hide()
     else
-      plate.level:SetPoint("RIGHT", plate.health, "LEFT", -3, 0)
+      plate.level:SetPoint("RIGHT", plate.health, "LEFT", -5, 0)
       plate.name:SetParent(plate.health)
 
       plate.level:Show()
