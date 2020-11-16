@@ -1,8 +1,8 @@
 # pfUI for V+ Private Server (v.05)
 
-This is a modification for the popular pfUI addon for Vanilla WoW made by [Shagu](https://github.com/shagu/). For information on the excellent original mod visit [shagu/pfUI](https://github.com/shagu/pfUI).
+This is a modification for the popular pfUI addon for Vanilla WoW made by Shagu. For information on the excellent original mod visit [shagu/pfUI](https://github.com/shagu/pfUI).
 
-As the V+ Server adds lots of new skills and alters a lot of baseline skills along with their cast times, cooldowns, duration and adds talents
+As the [V+ Server](https://vanillaplus.org/) adds lots of new skills and alters a lot of baseline skills along with their cast times, cooldowns, duration and adds talents
 to change those, by default this mod unfortunately doesn't show the right info ingame.
 
 With this modification extension I aim to make the ingame information display correctly. Please note that I'm an amateur programer and mostly
