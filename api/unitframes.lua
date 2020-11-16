@@ -660,7 +660,6 @@ function pfUI.uf:UpdateConfig()
       f.buffs[i]:Hide()
 
       CreateBackdrop(f.buffs[i], default_border)
-      CreateBackdropShadow(f.buffs[i])
 
       f.buffs[i]:RegisterForClicks("RightButtonUp")
       f.buffs[i]:ClearAllPoints()
@@ -736,7 +735,6 @@ function pfUI.uf:UpdateConfig()
       f.debuffs[i]:Hide()
 
       CreateBackdrop(f.debuffs[i], default_border)
-      CreateBackdropShadow(f.debuffs[i])
 
       f.debuffs[i]:RegisterForClicks("RightButtonUp")
       f.debuffs[i]:ClearAllPoints()
