@@ -167,7 +167,7 @@ end
 -- [ GetSlashCommands ]
 -- Lists all registeres slash commands
 -- 'text'       [string]        optional, a specific command to find
--- return:      [list/bool]     if
+-- return:      [list]          a list of all matching slash commands
 function pfUI.api.GetSlashCommands(text)
   local cmds
   for k, v in pairs(_G) do
