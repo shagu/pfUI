@@ -18,12 +18,27 @@ pfUI:RegisterModule("macrotweak", "vanilla", function ()
     end)
   end
 
-  -- add /use and /equip to the macro api
+  -- add /use and /equip to the macro api:
+  -- https://wowwiki.fandom.com/wiki/Making_a_macro
+  -- supported arguments:
+  --   /use <itemname>
+  --   /use <inventory slot>
+  --   /use <bag> <slot>
   pfUI.api.RegisterSlashCommand("PFUSE", { "/equip" , "/use", "/pfequip", "/pfuse" }, function (msg)
     if not msg or msg == "" then return end
-    local bag, slot = FindItem(msg)
+    local bag, slot, _
+    if string.find(msg, "%d+%s+%d+") then
+      _, _, bag, slot = string.find(msg, "(%d+)%s+(%d+)")
+    elseif string.find(msg, "%d+") then
+      _, _, slot = string.find(msg, "(%d+)")
+    else
+      bag, slot = FindItem(msg)
+    end
+
     if bag and slot then
       UseContainerItem(bag, slot)
+    elseif not bag and slot then
+      UseInventoryItem(slot)
     end
   end)
 end)
