@@ -164,6 +164,22 @@ function pfUI.api.modf(f)
   return math.ceil(f), mod(f,1)
 end
 
+-- [ GetSlashCommands ]
+-- Lists all registeres slash commands
+-- 'text'       [string]        optional, a specific command to find
+-- return:      [list/bool]     if
+function pfUI.api.GetSlashCommands(text)
+  local cmds
+  for k, v in pairs(_G) do
+    if strfind(k, "^SLASH_") and (not text or v == text) then
+      cmds = cmds or {}
+      cmds[k] = v
+    end
+  end
+
+  return cmds
+end
+
 -- [ GetCaptures ]
 -- Returns the indexes of a given regex pattern
 -- 'pat'        [string]         unformatted pattern
