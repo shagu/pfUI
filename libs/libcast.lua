@@ -293,9 +293,9 @@ local aimedshot = L["customcast"]["AIMEDSHOT"]
 local multishot = L["customcast"]["MULTISHOT"]
 
 libcast.customcast = {}
-libcast.customcast[strlower(aimedshot)] = function(begin)
+libcast.customcast[strlower(aimedshot)] = function(begin, duration)
   if begin then
-    local duration = 3000
+    local duration = duration or 3000
 
     for i=1,32 do
       if UnitBuff("player", i) == "Interface\\Icons\\Racial_Troll_Berserk" then
@@ -334,9 +334,9 @@ libcast.customcast[strlower(aimedshot)] = function(begin)
   end
 end
 
-libcast.customcast[strlower(multishot)] = function(begin)
+libcast.customcast[strlower(multishot)] = function(begin, duration)
   if begin then
-    local duration = 500
+    local duration = duration or 500
     local _,_, lag = GetNetStats()
     local start = GetTime() + lag/1000
 
