@@ -83,6 +83,13 @@ When playing with a non-english client, the language might be relevant too. If p
 Report Errors, Issues and Feature Requests in the [Bugtracker](https://github.com/shagu/pfUI/issues).
 Please make sure to have the latest version installed and check for conflicting addons beforehand.
 
+**I have bad performance, what can I do?**  
+There's only one known performance issue: that is while using "Frame Shadows". Make sure to disable those
+in the pfUI settings (Settings -> Appearance -> Enable Frame Shadows). If you still have a low performance,
+it's most likely a combination with another addon. Disable all AddOns but pfUI and then enable one-by-one,
+till the performance problem occurs again. Make sure to report the identified AddOn and what you did to reproduce
+via the [Bugtracker](https://github.com/shagu/pfUI/issues).
+
 **Where is the happiness indicator for pets?**  
 The pet happiness is shown as the color of your pet's frame. Depending on your skin, this can either be the text or the background color of your pet's healthbar:
 
