@@ -13,6 +13,7 @@ Not all the listed changes have been tested yet.
 Installation:
 
 Use the Green Code Button to the top right and download the zip file. Extrace the file into your wow/interface/addons folder and rename it to Pfui (remove the -master). If you already have PFui installed overwrite the existing folder, saved configuations wont be affected by this.
+Note: at the moment the mod extension only works with the English Game Client.
 
 
 Changelog (v.05)
@@ -21,13 +22,14 @@ Hunter:
 - Aimed and Multi Shot show the correct cast times and are affected by the Snap Shot talent
 - Hunters Mark shows correct debuff time and is correctly affected by Improved Hunters Mark talent
 - Concussive and Scatter Shot show correct (new) duration
+- Scorpid Sting and improved Scorpid Sting show correct duratin
 
 Rogue:
 - Duration altering talents affecting debuffs should work correctly (Total Control, Improved Gouge, Exhaustion, Serrated Blades)
 
 Warrior:
--Hamstring duration corrected, talent interaction with Improved Hamstring added
--Booming Voice should correctly affect debuff times for Shouts
+- Hamstring duration corrected, talent interaction with Improved Hamstring added
+- Booming Voice should correctly affect debuff times for Shouts
 
 Warlock:
 - Prolonged Misery and Jinx should correctly increase the associated Curses duration, base Curse duration corrected
