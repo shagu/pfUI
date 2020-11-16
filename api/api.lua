@@ -314,7 +314,7 @@ function pfUI.api.FindItem(item)
       if itemLink then
         local _, _, parse = strfind(itemLink, "(%d+):")
         local query = GetItemInfo(parse)
-        if query and query ~= "" and query == item then
+        if query and query ~= "" and string.lower(query) == string.lower(item) then
           return bag, slot
         end
       end
