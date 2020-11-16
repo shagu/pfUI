@@ -180,6 +180,26 @@ function pfUI.api.GetSlashCommands(text)
   return cmds
 end
 
+-- [ RegisterSlashCommand ]
+-- Lists all registeres slash commands
+-- 'name'       [string]      name of the command
+-- 'cmds'       [table]       table containing all slash command strings
+-- 'func'       [function]    the function that should be assigned
+-- 'force'      [boolean]     force assign the command even if aleady provided
+--                            by another function/addon.
+function pfUI.api.RegisterSlashCommand(name, cmds, func, force)
+  local counter = 1
+
+  for _, cmd in pairs(cmds) do
+    if force or not pfUI.api.GetSlashCommands(cmd) then
+      _G["SLASH_"..name..counter] = cmd
+      counter = counter + 1
+    end
+  end
+
+  _G.SlashCmdList[name] = func
+end
+
 -- [ GetCaptures ]
 -- Returns the indexes of a given regex pattern
 -- 'pat'        [string]         unformatted pattern
