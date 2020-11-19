@@ -152,6 +152,9 @@ function pfUI:UpdateFonts()
   NAMEPLATE_FONT     = default
   UNIT_NAME_FONT     = default
 
+  -- set dropdown font to default size
+  UIDROPDOWNMENU_DEFAULT_TEXT_HEIGHT = 11
+
   -- change default game font objects
   SystemFont:SetFont(default, 15)
   GameFontNormal:SetFont(default, 12)
