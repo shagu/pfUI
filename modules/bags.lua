@@ -472,6 +472,9 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
         icon:SetPoint("BOTTOMRIGHT", -1, 1)
         border:SetTexture("")
 
+        local highlight = frame.bagslots.slots[slot].frame:GetHighlightTexture()
+        highlight:SetTexture(.5, .5, .5, .5)
+
         if frame == pfUI.bag.left then
           frame.bagslots.slots[slot].frame:SetID(slot + 4)
           frame.bagslots.slots[slot].frame.slot = slot + 3
