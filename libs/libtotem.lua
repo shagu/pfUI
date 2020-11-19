@@ -118,6 +118,8 @@ libtotem:SetScript("OnEvent", function()
   end
 end)
 
+libtotem.totems = totems
+
 libtotem.Clean = function(self, slot)
   active[slot].name = nil
   active[slot].start = nil
