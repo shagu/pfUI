@@ -337,6 +337,23 @@ end
 libcast.customcast[strlower(multishot)] = function(begin, duration)
   if begin then
     local duration = duration or 500
+
+    for i=1,32 do
+      if UnitBuff("player", i) == "Interface\\Icons\\Racial_Troll_Berserk" then
+        local berserk = 0.3
+        if((UnitHealth("player")/UnitHealthMax("player")) >= 0.40) then
+          berserk = (1.30 - (UnitHealth("player") / UnitHealthMax("player"))) / 3
+        end
+        duration = duration / (1 + berserk)
+      elseif UnitBuff("player", i) == "Interface\\Icons\\Ability_Hunter_RunningShot" then
+        duration = duration / 1.4
+      elseif UnitBuff("player", i) == "Interface\\Icons\\Ability_Warrior_InnerRage" then
+        duration = duration / 1.3
+      elseif UnitBuff("player", i) == "Interface\\Icons\\Inv_Trinket_Naxxramas04" then
+        duration = duration / 1.2
+      end
+    end
+
     local _,_, lag = GetNetStats()
     local start = GetTime() + lag/1000
 
