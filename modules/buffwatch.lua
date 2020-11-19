@@ -82,7 +82,7 @@ pfUI:RegisterModule("buffwatch", "vanilla:tbc", function ()
       local texture = GetPlayerBuffTexture(bid)
       local name
 
-      if not skipTooltip then
+      if not skipTooltip and texture then
         scanner:SetPlayerBuff(bid)
         name = scanner:Line(1)
       end
