@@ -414,12 +414,12 @@ end, true)
 
 hooksecurefunc("UseAction", function(slot, target, button)
   scanner:SetAction(slot)
-  _, lastrank = scanner:Line(1)
+  local spellName, rank = scanner:Line(1)
+
   lastcasttex = GetActionTexture(slot)
+  lastrank = rank
 
   if GetActionText(slot) or not IsCurrentAction(slot) then return end
-  scanner:SetAction(slot)
-  local spellName = scanner:Line(1)
   CastCustom(spellName)
 end, true)
 
