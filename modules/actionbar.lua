@@ -14,6 +14,8 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
   local updatecache = { } -- contains a list of buttons slots that shall be refreshed later -> [slot] = true
   local buttoncache = { } -- contains a list of all buttons ever created -> [slot] = frame
 
+  local petvisibility = "[pet] show; hide"
+
   -- hide blizzard bars
   local function kill(f, killshow)
     if f.Show and killshow then f.Show = function() return end end
@@ -686,9 +688,17 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     end
   end
 
-  local self, button
+  local self, button, unlock
   local function BarsUpdate(self)
     self = self or this
+
+    if pfUI.unlock then
+      -- update all bars when entering unlock
+      if pfUI.unlock:IsShown() ~= unlock then
+        pfUI.bars:UpdateConfig()
+        unlock = pfUI.unlock:IsShown()
+      end
+    end
 
     -- run cached usable usable actions
     if eventcache["ACTIONBAR_UPDATE_USABLE"] then
@@ -1182,12 +1192,20 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
       -- handle pet bar
       if i == 12 then
         if pfUI.client > 11200 then
-          -- set state driver for pet bars
-          bars[i]:SetAttribute("unit", "pet")
-          RegisterStateDriver(bars[i], 'visibility', "[pet] show; hide")
+          if InCombatLockdown and InCombatLockdown() then
+            -- don't process those events during combat
+          else
+            -- set state driver for pet bars
+            bars[i]:SetAttribute("unit", "pet")
+            local visibility = pfUI.unlock and pfUI.unlock:IsShown() and "show" or petvisibility
+            if bars[i].visibility ~= visibility then
+              RegisterStateDriver(bars[i], 'visibility', visibility)
+              bars[i].visibility = visibility
+            end
+          end
         else
           -- only show when pet actions exists
-          if PetHasActionBar() then
+          if PetHasActionBar() or pfUI.unlock and pfUI.unlock:IsShown() then
             bars[i]:Show()
           else
             bars[i]:Hide()
