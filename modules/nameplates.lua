@@ -329,7 +329,7 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
       end)
 
       castbar.text = castbar:CreateFontString("Status", "DIALOG", "GameFontNormal")
-      castbar.text:SetPoint("RIGHT", castbar, "LEFT")
+      castbar.text:SetPoint("RIGHT", castbar, "LEFT", -4, 0)
       castbar.text:SetNonSpaceWrap(false)
       castbar.text:SetTextColor(1,1,1,.5)
 
