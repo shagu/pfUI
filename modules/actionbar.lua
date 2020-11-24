@@ -16,6 +16,36 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
 
   local petvisibility = "[pet] show; hide"
 
+  -- try to assume based on the current mouse positions if a button drag
+  -- should happen even if action-on-key-down is used. By that replace the
+  -- cast events by reverting the active buttons to the old mouse-up state.
+  local drag_await
+  local drag_active
+  local function AssumeButtonDrag()
+    -- skip during combat
+    if InCombatLockdown and InCombatLockdown() then return end
+
+    -- skip if keydown press is not enabled
+    if C.bars.keydown ~= "1" then return end
+
+    -- skip if always shift-drag is not enabled
+    if C.bars.shiftdrag ~= "1" then return end
+
+    if IsShiftKeyDown() and drag_await and not drag_active then
+      drag_active = true
+      -- set all buttons to regular on release clicks
+      for id, button in pairs(buttoncache) do
+        button:RegisterForClicks("LeftButtonUp", "RightButtonUp")
+      end
+    elseif not IsShiftKeyDown() and drag_active then
+      drag_active = nil
+      -- set all buttons back to their defaults
+      for id, button in pairs(buttoncache) do
+        button:RegisterForClicks("LeftButtonDown", "RightButtonDown")
+      end
+    end
+  end
+
   -- hide blizzard bars
   local function kill(f, killshow)
     if f.Show and killshow then f.Show = function() return end end
@@ -309,7 +339,7 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     slfcast = C.bars.rightself == "1" and arg1 and arg1 == "RightButton" and true or slfcast
     self.slfcast = nil
 
-    if ( pfUI_config.bars.keydown == "1" and keystate == "down" ) or (pfUI_config.bars.keydown == "0" and keystate == "up" ) or self.bar == 11 or mouse then
+    if ( pfUI_config.bars.keydown == "1" and keystate == "down" and not drag_active ) or (pfUI_config.bars.keydown == "0" and keystate == "up" or drag_active ) or self.bar == 11 or mouse then
       if self.bar == 11 then
         CastShapeshiftForm(self.id)
       elseif grid == 1 then
@@ -395,6 +425,9 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
   local function ButtonEnter(self)
     local self = self or this
 
+    -- indicate that dragging could get enabled
+    drag_await = true
+
     GameTooltip:ClearLines()
     GameTooltip_SetDefaultAnchor(GameTooltip, self)
 
@@ -419,6 +452,9 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
 
   local function ButtonLeave(self)
     local self = self or this
+
+    -- no longer wait for a drag event
+    drag_await = nil
 
     self.highlight:Hide()
     GameTooltip:Hide()
@@ -691,6 +727,9 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
   local self, button, unlock
   local function BarsUpdate(self)
     self = self or this
+
+    -- update buttons whenever a button drag is assumed
+    AssumeButtonDrag()
 
     if pfUI.unlock then
       -- update all bars when entering unlock
