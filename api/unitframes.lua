@@ -784,21 +784,21 @@ function pfUI.uf.OnEvent()
 
   -- update regular frames
   if event == "PLAYER_ENTERING_WORLD" then
-    pfUI.uf:RefreshUnit(this, "all")
+    this.fullupdate = true
   elseif this.label == "target" and event == "PLAYER_TARGET_CHANGED" then
-    pfUI.uf:RefreshUnit(this, "all")
+    this.fullupdate = true
   elseif ( this.label == "raid" or this.label == "party" or this.label == "player" ) and event == "PARTY_MEMBERS_CHANGED" then
-    pfUI.uf:RefreshUnit(this, "all")
+    this.fullupdate = true
   elseif ( this.label == "raid" or this.label == "party" ) and event == "PARTY_MEMBER_ENABLE" then
-    pfUI.uf:RefreshUnit(this, "all")
+    this.fullupdate = true
   elseif ( this.label == "raid" or this.label == "party" ) and event == "PARTY_MEMBER_DISABLE" then
-    pfUI.uf:RefreshUnit(this, "all")
+    this.fullupdate = true
   elseif ( this.label == "raid" or this.label == "party" ) and event == "RAID_ROSTER_UPDATE" then
-    pfUI.uf:RefreshUnit(this, "all")
+    this.fullupdate = true
+  elseif this.label == "pet" and event == "UNIT_PET" then
+    this.fullupdate = true
   elseif this.label == "player" and (event == "PLAYER_AURAS_CHANGED" or event == "UNIT_INVENTORY_CHANGED") then
     pfUI.uf:RefreshUnit(this, "aura")
-  elseif this.label == "pet" and event == "UNIT_PET" then
-    pfUI.uf:RefreshUnit(this, "all")
   elseif this.label == "pet" and event == "UNIT_HAPPINESS" then
     pfUI.uf:RefreshUnit(this)
   -- UNIT_XXX Events
@@ -820,6 +820,12 @@ end
 function pfUI.uf.OnUpdate()
   -- update combat feedback
   if this.feedbackText then CombatFeedback_OnUpdate(arg1) end
+
+  -- process all queued unit full updates
+  if this.fullupdate then
+    pfUI.uf:RefreshUnit(this, "all")
+    this.fullupdate = nil
+  end
 
   -- early return on unset focus frames
   if this.unitname then
