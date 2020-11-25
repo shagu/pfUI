@@ -1256,10 +1256,11 @@ function pfUI.uf:RefreshUnit(unit, component)
 
   -- Buffs
   if unit.buffs and ( component == "all" or component == "aura" ) then
+    local texture, stacks
+
     for i=1, unit.config.bufflimit do
       if not unit.buffs[i] then break end
 
-      local texture, stacks
       if unit.label == "player" then
         stacks = GetPlayerBuffApplications(GetPlayerBuff(PLAYER_BUFF_START_ID+i,"HELPFUL"))
         texture = GetPlayerBuffTexture(GetPlayerBuff(PLAYER_BUFF_START_ID+i,"HELPFUL"))
@@ -1285,46 +1286,53 @@ function pfUI.uf:RefreshUnit(unit, component)
 
   -- Debuffs
   if unit.debuffs and ( component == "all" or component == "aura" ) then
+    local texture, stacks, dtype
+    local perrow = unit.config.debuffperrow
+    local bperrow = unit.config.buffperrow
+
+    local invert_h, invert_v, af
+    if unit.config.debuffs == "TOPLEFT" then
+      invert_h = 1
+      invert_v = 1
+      af = "BOTTOMLEFT"
+    elseif unit.config.debuffs == "BOTTOMLEFT" then
+      invert_h = -1
+      invert_v = 1
+      af = "TOPLEFT"
+    elseif unit.config.debuffs == "TOPRIGHT" then
+      invert_h = 1
+      invert_v = -1
+      af = "BOTTOMRIGHT"
+    elseif unit.config.debuffs == "BOTTOMRIGHT" then
+      invert_h = -1
+      invert_v = -1
+      af = "TOPRIGHT"
+    end
+
+    local buffrow, reposition = 0, nil
+    if unit.config.buffs == unit.config.debuffs then
+      if unit.buffs[0*bperrow+1] and unit.buffs[0*bperrow+1]:IsShown() then buffrow = buffrow + 1 end
+      if unit.buffs[1*bperrow+1] and unit.buffs[1*bperrow+1]:IsShown() then buffrow = buffrow + 1 end
+      if unit.buffs[2*bperrow+1] and unit.buffs[2*bperrow+1]:IsShown() then buffrow = buffrow + 1 end
+      if unit.buffs[3*bperrow+1] and unit.buffs[3*bperrow+1]:IsShown() then buffrow = buffrow + 1 end
+    end
+
+    if buffrow ~= unit.lastbuffrow then
+      unit.lastbuffrow = buffrow
+      reposition = true
+    end
+
     for i=1, unit.config.debufflimit do
       if not unit.debuffs[i] then break end
 
-      local perrow = unit.config.debuffperrow
-      local bperrow = unit.config.buffperrow
-
       local row = floor((i-1) / unit.config.debuffperrow)
-      local buffrow = 0
 
-      if unit.config.buffs == unit.config.debuffs then
-        if unit.buffs[0*bperrow+1] and unit.buffs[0*bperrow+1]:IsShown() then buffrow = buffrow + 1 end
-        if unit.buffs[1*bperrow+1] and unit.buffs[1*bperrow+1]:IsShown() then buffrow = buffrow + 1 end
-        if unit.buffs[2*bperrow+1] and unit.buffs[2*bperrow+1]:IsShown() then buffrow = buffrow + 1 end
-        if unit.buffs[3*bperrow+1] and unit.buffs[3*bperrow+1]:IsShown() then buffrow = buffrow + 1 end
+      if reposition then
+        unit.debuffs[i]:SetPoint(af, unit, unit.config.debuffs,
+        invert_v * (i-1-row*perrow)*(2*default_border + unit.config.debuffsize + 1),
+        invert_h * ((row+buffrow)*(2*default_border + unit.config.debuffsize + 1) + (2*default_border + 1)))
       end
 
-      local invert_h, invert_v, af
-      if unit.config.debuffs == "TOPLEFT" then
-        invert_h = 1
-        invert_v = 1
-        af = "BOTTOMLEFT"
-      elseif unit.config.debuffs == "BOTTOMLEFT" then
-        invert_h = -1
-        invert_v = 1
-        af = "TOPLEFT"
-      elseif unit.config.debuffs == "TOPRIGHT" then
-        invert_h = 1
-        invert_v = -1
-        af = "BOTTOMRIGHT"
-      elseif unit.config.debuffs == "BOTTOMRIGHT" then
-        invert_h = -1
-        invert_v = -1
-        af = "TOPRIGHT"
-      end
-
-      unit.debuffs[i]:SetPoint(af, unit, unit.config.debuffs,
-      invert_v * (i-1-row*perrow)*(2*default_border + unit.config.debuffsize + 1),
-      invert_h * ((row+buffrow)*(2*default_border + unit.config.debuffsize + 1) + (2*default_border + 1)))
-
-      local texture, stacks, dtype
       if unit.label == "player" then
         texture = GetPlayerBuffTexture(GetPlayerBuff(PLAYER_BUFF_START_ID+i, "HARMFUL"))
         stacks = GetPlayerBuffApplications(GetPlayerBuff(PLAYER_BUFF_START_ID+i, "HARMFUL"))
