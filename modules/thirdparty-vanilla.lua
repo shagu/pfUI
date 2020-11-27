@@ -987,21 +987,21 @@ pfUI:RegisterModule("thirdparty-vanilla", "vanilla", function()
 
   local EnableHealComm = function()
     -- hook healcomm's addon message to parse single-player events
-    if AceLibrary and AceLibrary:HasInstance("HealComm-1.0") and pfUI.prediction then
+    if AceLibrary and AceLibrary:HasInstance("HealComm-1.0") and pfUI.api.libpredict then
       local HealComm = AceLibrary("HealComm-1.0")
 
       -- use pfUI frames to draw healComm predictions
       local pfHookHealCommSendAddonMessage = HealComm.SendAddonMessage
       function HealComm.SendAddonMessage(this, msg)
         if not UnitInRaid("player") and GetNumPartyMembers() < 1 then
-          pfUI.prediction:ParseChatMessage(UnitName("player"), msg)
+          libpredict:ParseChatMessage(UnitName("player"), msg, "HealComm")
         end
         pfHookHealCommSendAddonMessage(this, msg)
       end
 
       -- disable pfUI predictions
-      pfUI.prediction.sender:UnregisterAllEvents()
-      pfUI.prediction.sender.enabled = nil
+      pfUI.api.libpredict.sender:UnregisterAllEvents()
+      pfUI.api.libpredict.sender.enabled = nil
     end
   end
   HookAddonOrVariable("HealComm", EnableHealComm)
