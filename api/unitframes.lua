@@ -556,12 +556,6 @@ function pfUI.uf:UpdateConfig()
   f.incHeal.texture:SetVertexColor(0, 1, 0, 0.5)
   f.incHeal:Hide()
 
-  f.incHeal:SetScript("OnShow", function()
-    if pfUI.prediction and f.label and f.id then
-      pfUI.prediction:TriggerUpdate(UnitName(f.label .. f.id))
-    end
-  end)
-
   if f.config.verticalbar == "0" then
     f.incHeal:ClearAllPoints()
     f.incHeal:SetPoint("TOPLEFT", f.hp.bar, "TOPLEFT", 0, 0)
@@ -862,6 +856,61 @@ function pfUI.uf.OnUpdate()
     this.portrait.model:SetUnit(this.portrait.model.update)
     this.portrait.model:SetCamera(0)
     this.portrait.model.update = nil
+  end
+
+  -- get incoming heals and resurections
+  if libpredict then
+    local unit = this.label .. this.id
+    local heal = libpredict:UnitGetIncomingHeals(unit)
+    local ress = libpredict:UnitHasIncomingResurrection(unit)
+
+    if heal ~= this.lastheal then
+      local overhealperc = tonumber(this.config.overhealperc)
+      local health, maxHealth = UnitHealth(unit), UnitHealthMax(unit)
+      this.lastheal = heal
+
+      if heal > 0 and (health < maxHealth or overhealperc > 0 ) then
+        local width = this.config.width
+        local height = this.config.height
+
+        if this.config.verticalbar == "0" then
+          local healthWidth = width * (health / maxHealth)
+          local incWidth = width * heal / maxHealth
+          if healthWidth + incWidth > width * (1+(overhealperc/100)) then
+            incWidth = width * (1+overhealperc/100) - healthWidth
+          end
+
+          if this.config.invert_healthbar == "1" then
+            this.incHeal:SetWidth(incWidth)
+          else
+            this.incHeal:SetWidth(incWidth + healthWidth)
+          end
+        else
+          local healthHeight = height * (health / maxHealth)
+          local incHeight = height * heal / maxHealth
+          if healthHeight + incHeight > height * (1+(overhealperc/100)) then
+            incHeight = height * (1+overhealperc/100) - healthHeight
+          end
+
+          if this.config.invert_healthbar == "1" then
+            this.incHeal:SetHeight(incHeight)
+          else
+            this.incHeal:SetHeight(incHeight + healthHeight)
+          end
+        end
+
+        this.incHeal:Show()
+      else
+        this.incHeal:Hide()
+      end
+    end
+
+    -- update ressurections
+    if ress and UnitIsDeadOrGhost(unit) then
+      this.ressIcon:Show()
+    else
+      this.ressIcon:Hide()
+    end
   end
 
   -- trigger eventless actions (online/offline/range)

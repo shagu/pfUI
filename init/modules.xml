@@ -12,7 +12,6 @@
   <Include file="..\modules\addons.lua"/>
   <Include file="..\modules\minimap.lua"/>
   <Include file="..\modules\panel.lua"/>
-  <Include file="..\modules\prediction.lua"/>
   <Include file="..\modules\player.lua"/>
   <Include file="..\modules\focus.lua"/>
   <Include file="..\modules\target.lua"/>

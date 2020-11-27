@@ -180,7 +180,6 @@ libcast:RegisterEvent("SPELLCAST_DELAYED")
 libcast:RegisterEvent("SPELLCAST_CHANNEL_START")
 libcast:RegisterEvent("SPELLCAST_CHANNEL_STOP")
 libcast:RegisterEvent("SPELLCAST_CHANNEL_UPDATE")
-libcast:RegisterEvent("PLAYER_TARGET_CHANGED")
 
 libcast:SetScript("OnEvent", function()
   -- Fill database with player casts

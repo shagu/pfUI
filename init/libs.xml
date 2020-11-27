@@ -8,4 +8,5 @@
   <Include file="..\libs\libtooltip.lua"/>
   <Include file="..\libs\libhealth.lua"/>
   <Include file="..\libs\libtotem.lua"/>
+  <Include file="..\libs\libpredict.lua"/>
 </Ui>
