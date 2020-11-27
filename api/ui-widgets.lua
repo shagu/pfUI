@@ -21,11 +21,16 @@ do -- statusbars
 
   local handlers = {
     ["DisplayValue"] = function(self, val)
-      val = val > self.max and self.max or val < self.min and self.min or val
+      val = val > self.max and self.max or val
+      val = val < self.min and self.min or val
 
+      -- remove animation queue
       if val == self.val_ then
         animations[self] = nil
       end
+
+      -- set current visible value
+      self.val_ = val
 
       if self.mode == "vertical" then
         height = self:GetHeight()
@@ -33,14 +38,12 @@ do -- statusbars
         point = height / (self.max - self.min) * (val - self.min)
         self.bar:SetPoint("TOPLEFT", self, "TOPLEFT", 0, - height + point)
         self.bg:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", 0, point)
-        self.val_ = val
       else
         width = self:GetWidth()
         if pfUI.expansion == "vanilla" then width = width / self:GetEffectiveScale() end
         point = width / (self.max - self.min) * (val - self.min)
         self.bar:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", - width + point, 0)
         self.bg:SetPoint("TOPLEFT", self, "TOPLEFT", point, 0)
-        self.val_ = val
       end
     end,
 
@@ -56,7 +59,11 @@ do -- statusbars
 
     ["SetValue"] = function(self, val)
       self.val = val or 0
-      animations[self] = true
+
+      -- start animation on difference
+      if self.val_ ~= self.val then
+        animations[self] = true
+      end
     end,
 
     ["SetStatusBarTexture"] = function(self, r, g, b, a)
