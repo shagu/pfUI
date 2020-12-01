@@ -349,6 +349,58 @@ pfUI:RegisterModule("panel", "vanilla:tbc", function()
       widget:RegisterEvent("PLAYER_ENTERING_WORLD")
       widget:RegisterEvent("GUILD_ROSTER_UPDATE")
       widget:RegisterEvent("PLAYER_GUILD_UPDATE")
+      widget.Tooltip = function()
+        -- skip without guild
+        if not GetGuildInfo("player") then return end
+
+        local raidparty = {}
+        for i=1,4 do -- detect people in group
+          if UnitExists("party"..i) then
+            raidparty[UnitName("party"..i)] = true
+          end
+        end
+        for i=1,40 do -- detect people in raid
+          if UnitExists("raid"..i) then
+            raidparty[UnitName("raid"..i)] = true
+          end
+        end
+
+        local all = GetNumGuildMembers()
+        local playerzone = GetRealZoneText()
+        local off = FauxScrollFrame_GetOffset(GuildListScrollFrame)
+        local left, field, init
+
+        for i=1, all do
+          local name, _, _, level, class, zone, _, _, online = GetGuildRosterInfo(off + i)
+          if online then
+            if not init then
+              GameTooltip_SetDefaultAnchor(GameTooltip, this)
+              GameTooltip:ClearLines()
+              GameTooltip:AddLine("|cff555555" .. T["Guild Online"])
+              init = true
+            end
+
+            local ccolor = RAID_CLASS_COLORS[L["class"][class]] or { 1, 1, 1 }
+            local lcolor = GetDifficultyColor(tonumber(level)) or { 1, 1, 1 }
+            local level = "|cff555555" .. "[" .. rgbhex(lcolor) .. level .. "|cff555555]"
+            local raid = raidparty[name] and "|cff555555[|cff33ffccG|cff555555]|r" or ""
+
+            if not left then
+              left =  level .. raid .. " " .. rgbhex(ccolor) .. name
+            else
+              field = rgbhex(ccolor) .. name .. " " .. raid .. level
+              GameTooltip:AddDoubleLine(left, field)
+              left = nil
+            end
+          end
+        end
+
+        if left then
+          GameTooltip:AddDoubleLine(left, "")
+        end
+
+        GameTooltip:Show()
+      end
       widget.Click = function() ToggleFriendsFrame(3) end
       widget:SetScript("OnEvent", function()
         if GetGuildInfo("player") then
@@ -358,9 +410,9 @@ pfUI:RegisterModule("panel", "vanilla:tbc", function()
             if online then count = count + 1 end
           end
 
-          pfUI.panel:OutputPanel("guild", GUILD .. ": " .. count, nil, widget.Click)
+          pfUI.panel:OutputPanel("guild", GUILD .. ": " .. count, widget.Tooltip, widget.Click)
         else
-          pfUI.panel:OutputPanel("guild", GUILD .. ": " .. NOT_APPLICABLE, nil, widget.Click)
+          pfUI.panel:OutputPanel("guild", GUILD .. ": " .. NOT_APPLICABLE, widget.Tooltip, widget.Click)
         end
       end)
 
