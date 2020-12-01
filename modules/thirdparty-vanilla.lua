@@ -842,6 +842,69 @@ pfUI:RegisterModule("thirdparty-vanilla", "vanilla", function()
     end
   end)
 
+  HookAddonOrVariable("crafty", function()
+    if C.thirdparty.crafty.enable == "0" then return end
+
+    local craftyskin = CreateFrame("Frame", nil, UIParent)
+    craftyskin:Hide()
+    craftyskin:RegisterEvent("TRADE_SKILL_SHOW")
+    craftyskin:RegisterEvent("CRAFT_SHOW")
+    craftyskin.Skin = function(self, frame)
+      -- skip on non-crafty frames
+      if not frame or not frame.SearchBox or not frame.MaterialsButton or not frame.LinkButton then
+        return
+      end
+
+      StripTextures(frame)
+      CreateBackdrop(frame)
+
+      SkinButton(frame.MaterialsButton)
+      frame.MaterialsButton:SetHeight(20)
+
+      SkinButton(frame.LinkButton)
+      frame.LinkButton:SetHeight(20)
+
+      CreateBackdrop(frame.SearchBox, nil, true)
+      for _,v in ipairs({frame.SearchBox:GetRegions()}) do
+        if v.GetTexture then
+          if v:GetTexture() == "Interface\\Common\\Common-Input-Border" then
+            v:Hide()
+          elseif v:GetTexture() == "Interface\\AddOns\\crafty\\UI-Searchbox-Icon" then
+            v:SetPoint('LEFT', 3, -1)
+          end
+        end
+      end
+
+      self.skinned = true
+    end
+
+    craftyskin:SetScript("OnEvent", function()
+      if this.skinned then return end
+      craftyskin:Show()
+    end)
+
+    craftyskin:SetScript("OnUpdate", function()
+      -- Try to identify a crafty frame. It can't be accessed directly
+      -- since everything is unnamed in the addon and hidden in its local space.
+
+      if CraftFrame then
+        local crafts = { CraftFrame:GetChildren() }
+        for id, frame in pairs(crafts) do
+          this:Skin(frame)
+        end
+      end
+
+      if TradeSkillFrame then
+        local trades = { TradeSkillFrame:GetChildren() }
+        for id, frame in pairs(trades) do
+          this:Skin(frame)
+        end
+      end
+
+      this:Hide()
+    end)
+  end)
+
   HookAddonOrVariable("BetterCharacterStats", function()
     if C.thirdparty.bcs.enable == "0" then return end
     StripTextures(BetterCharacterAttributesFrame)
