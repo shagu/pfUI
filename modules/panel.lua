@@ -307,16 +307,19 @@ pfUI:RegisterModule("panel", "vanilla:tbc", function()
       widget:RegisterEvent("PLAYER_ENTERING_WORLD")
       widget:RegisterEvent("FRIENDLIST_UPDATE")
       widget.Tooltip = function()
-        GameTooltip_SetDefaultAnchor(GameTooltip, this)
-        GameTooltip:ClearLines()
-        GameTooltip:AddLine("|cff555555" .. T["Friends Online"])
-
+        local init = nil
         local all = GetNumFriends()
         local playerzone  = GetRealZoneText()
 
         for friendIndex=1, all do
           local friend_name, friend_level, friend_class, friend_area, friend_connected = GetFriendInfo(friendIndex)
           if friend_connected and friend_class and friend_level then
+            if not init then
+              GameTooltip_SetDefaultAnchor(GameTooltip, this)
+              GameTooltip:ClearLines()
+              GameTooltip:AddLine("|cff555555" .. T["Friends Online"])
+              init = true
+            end
             local ccolor = RAID_CLASS_COLORS[L["class"][friend_class]] or { 1, 1, 1 }
             local lcolor = GetDifficultyColor(tonumber(friend_level)) or { 1, 1, 1 }
             local zcolor = friend_area == playerzone and "|cff33ffcc" or "|cffcccccc"
