@@ -379,6 +379,12 @@ function pfUI.uf:UpdateConfig()
   f.glow:SetScript("OnUpdate", pfUI.uf.glow.UpdateGlowAnimation)
   f.glow:Hide()
 
+  f.combat:SetWidth(tonumber(f.config.squaresize))
+  f.combat:SetHeight(tonumber(f.config.squaresize))
+  f.combat:ClearAllPoints()
+  f.combat:SetPoint(f.config.squarepos, 0, 0)
+  f.combat:Hide()
+
   f.hp:ClearAllPoints()
   f.hp:SetPoint("TOP", 0, 0)
 
@@ -929,8 +935,17 @@ function pfUI.uf.OnUpdate()
       this.glow:SetBackdropBorderColor(1,1,.2)
       this.glow:Show()
     else
-      this.glow:SetBackdropBorderColor(1,1,1)
       this.glow:Hide()
+    end
+
+    if this.config.squareaggro == "1" and pfUI.api.UnitHasAggro(this.label .. this.id) > 0 then
+      this.combat.tex:SetTexture(1,.2,0)
+      this.combat:Show()
+    elseif this.config.squarecombat == "1" and UnitAffectingCombat(this.label .. this.id) then
+      this.combat.tex:SetTexture(1,1,.2)
+      this.combat:Show()
+    else
+      this.combat:Hide()
     end
 
     -- update everything on eventless frames (targettarget, etc)
@@ -1091,6 +1106,9 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
   f.power.bar = CreateStatusBar(nil, f.power)
 
   f.glow = CreateFrame("Frame", nil, f)
+  f.combat = CreateFrame("Frame", nil, f.hp.bar)
+  f.combat.tex = f.combat:CreateTexture(nil, "OVERLAY")
+  f.combat.tex:SetAllPoints()
 
   f.hpLeftText = f:CreateFontString("Status", "OVERLAY", "GameFontNormalSmall")
   f.hpRightText = f:CreateFontString("Status", "OVERLAY", "GameFontNormalSmall")
