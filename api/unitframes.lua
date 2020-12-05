@@ -1376,7 +1376,7 @@ function pfUI.uf:RefreshUnit(unit, component)
       af = "TOPRIGHT"
     end
 
-    local buffrow, reposition = 0, nil
+    local buffrow, reposition = 0, ( component == "all" and true or nil )
     if unit.config.buffs == unit.config.debuffs then
       if unit.buffs[0*bperrow+1] and unit.buffs[0*bperrow+1]:IsShown() then buffrow = buffrow + 1 end
       if unit.buffs[1*bperrow+1] and unit.buffs[1*bperrow+1]:IsShown() then buffrow = buffrow + 1 end
