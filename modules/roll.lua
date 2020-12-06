@@ -105,6 +105,10 @@ pfUI:RegisterModule("roll", "vanilla:tbc", function ()
       CursorUpdate()
     end)
 
+    f.icon:SetScript("OnLeave", function()
+      GameTooltip:Hide()
+    end)
+
     f.icon:SetScript("OnClick", function()
       if IsControlKeyDown() then
         DressUpItemLink(GetLootRollItemLink(this:GetParent().rollID))
