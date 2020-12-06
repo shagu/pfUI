@@ -109,7 +109,9 @@ pfUI:RegisterModule("roll", "vanilla:tbc", function ()
       if IsControlKeyDown() then
         DressUpItemLink(GetLootRollItemLink(this:GetParent().rollID))
       elseif IsShiftKeyDown() then
-        if ChatFrameEditBox:IsVisible() then
+        if ChatEdit_InsertLink then
+          ChatEdit_InsertLink(GetLootRollItemLink(this:GetParent().rollID))
+        elseif ChatFrameEditBox:IsVisible() then
           ChatFrameEditBox:Insert(GetLootRollItemLink(this:GetParent().rollID))
         end
       end
