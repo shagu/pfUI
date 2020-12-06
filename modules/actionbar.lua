@@ -31,13 +31,13 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     -- skip if always shift-drag is not enabled
     if C.bars.shiftdrag ~= "1" then return end
 
-    if IsShiftKeyDown() and drag_await and not drag_active then
+    if drag_await and not drag_active and IsShiftKeyDown() then
       drag_active = true
       -- set all buttons to regular on release clicks
       for id, button in pairs(buttoncache) do
         button:RegisterForClicks("LeftButtonUp", "RightButtonUp")
       end
-    elseif not IsShiftKeyDown() and drag_active then
+    elseif drag_active and not IsShiftKeyDown() then
       drag_active = nil
       -- set all buttons back to their defaults
       for id, button in pairs(buttoncache) do
