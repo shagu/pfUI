@@ -541,10 +541,12 @@ pfUI:RegisterModule("loot", "vanilla:tbc", function ()
     frame:SetPoint("TOP", pfUI.loot, "TOP", 4, (-border*2+22)-(id*22))
 
     frame:SetScript("OnClick", function()
-      if ( IsControlKeyDown() ) then
+      if IsControlKeyDown() then
         DressUpItemLink(GetLootSlotLink(this:GetID()))
-      elseif ( IsShiftKeyDown() ) then
-        if ( ChatFrameEditBox:IsVisible() ) then
+      elseif IsShiftKeyDown() then
+        if ChatEdit_InsertLink then
+          ChatEdit_InsertLink(GetLootSlotLink(this:GetID()))
+        elseif ChatFrameEditBox:IsVisible() then
           ChatFrameEditBox:Insert(GetLootSlotLink(this:GetID()))
         end
       end
