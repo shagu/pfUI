@@ -343,6 +343,9 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
       local highlight = pfUI.bags[bag].slots[slot].frame:GetHighlightTexture()
       highlight:SetTexture(.5, .5, .5, .5)
 
+      local pushed = pfUI.bags[bag].slots[slot].frame:GetPushedTexture()
+      pushed:SetTexture(.5, .5, .5, .5)
+
       -- add cooldown frame to bankslots
       if tpl == "BankItemButtonGenericTemplate" then
         local bankslot = pfUI.bags[bag].slots[slot].frame
@@ -474,6 +477,9 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
 
         local highlight = frame.bagslots.slots[slot].frame:GetHighlightTexture()
         highlight:SetTexture(.5, .5, .5, .5)
+
+        local pushed = frame.bagslots.slots[slot].frame:GetPushedTexture()
+        pushed:SetTexture(.5, .5, .5, .5)
 
         if frame == pfUI.bag.left then
           frame.bagslots.slots[slot].frame:SetID(slot + 4)
