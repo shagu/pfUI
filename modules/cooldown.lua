@@ -86,6 +86,11 @@ pfUI:RegisterModule("cooldown", "vanilla:tbc", function ()
       return
     end
 
+    -- disable GCDs on non pfUI frames
+    if not this.pfCooldownType and duration < tonumber(C.appearance.cd.threshold) then
+      return
+    end
+
     -- hide animation
     if this.pfCooldownStyleAnimation == 0 then
       this:SetAlpha(0)
