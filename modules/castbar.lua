@@ -156,17 +156,19 @@ pfUI:RegisterModule("castbar", "vanilla:tbc", function ()
     end)
 
     -- register for spell delay
+    local playerarg = nil
     cb:RegisterEvent(CASTBAR_EVENT_CAST_DELAY)
     cb:RegisterEvent(CASTBAR_EVENT_CHANNEL_DELAY)
     cb:SetScript("OnEvent", function()
       if this.unitstr and not UnitIsUnit(this.unitstr, "player") then return end
+      playerarg = pfUI.client <= 11200 or arg1 == "player" and true or nil
 
-      if event == CASTBAR_EVENT_CAST_DELAY then
+      if event == CASTBAR_EVENT_CAST_DELAY and playerarg then
         local isCast, nameSubtext, text, texture, startTime, endTime, isTradeSkill = UnitCastingInfo(this.unitstr or this.unitname)
         if not isCast then return end
         if not this.endTime then return end
         this.delay = this.delay + (endTime - this.endTime) / 1000
-      elseif event == CASTBAR_EVENT_CHANNEL_DELAY then
+      elseif event == CASTBAR_EVENT_CHANNEL_DELAY and playerarg then
         local isChannel, _, _, _, startTime, endTime = UnitChannelInfo(this.unitstr or this.unitname)
         if not isChannel then return end
         this.delay = ( this.delay or 0 ) + this.bar:GetValue() - (endTime/1000 - GetTime())
