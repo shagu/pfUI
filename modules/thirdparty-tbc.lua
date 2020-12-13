@@ -223,6 +223,22 @@ pfUI:RegisterModule("thirdparty-tbc", "tbc", function ()
     end)
   end)
 
+  HookAddonOrVariable("AckisRecipeList", function()
+    if C.thirdparty.ackis.enable == "0" then return end
+    if AckisRecipeList.ShowScanButton then
+      local AckisRecipeListShowScanButton = AckisRecipeList.ShowScanButton
+      AckisRecipeList.ShowScanButton = function(a1,a2,a3,a4)
+        -- run the original function
+        AckisRecipeListShowScanButton(a1,a2,a3,a4)
+
+        -- apply skin and reposition the button
+        SkinButton(AckisRecipeList.ScanButton)
+        local a,b,c,d,e = AckisRecipeList.ScanButton:GetPoint()
+        AckisRecipeList.ScanButton:SetPoint(a,b,c,d-14,e-2)
+      end
+    end
+  end)
+
   HookAddonOrVariable("DruidBarFrame", function()
     if C.thirdparty.druidbar.enable == "0" then return end
     local p = ManaBarColor[0]
