@@ -670,8 +670,9 @@ pfUI:RegisterModule("loot", "vanilla:tbc", function ()
       pfUI.loot:UpdateLootFrame()
     end
 
-    if event == "LOOT_SLOT_CLEARED" then
-      if(not this:IsShown()) then return end
+    if event == "LOOT_SLOT_CLEARED" and arg1 then
+      if not this:IsShown() then return end
+      if not pfUI.loot.slots[arg1] then return end
       pfUI.loot.slots[arg1]:Hide()
     end
 
