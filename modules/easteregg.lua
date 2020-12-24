@@ -9,7 +9,7 @@ pfUI:RegisterModule("easteregg", "vanilla:tbc", function ()
 
     pvpking:RegisterEvent("CHAT_MSG_SYSTEM")
     pvpking:SetScript("OnEvent", function()
-      if strfind(arg1, _G.MARKED_AFK) or strfind(arg1, _G.MARKED_AFK_MESSAGE) then
+      if strfind(arg1, "You are now", 1) and strfind(arg1, "(AFK)", 1) then
         _G.CHAT_FLAG_AFK = title .. " "
         this.time = GetTime()
         this:Show()
@@ -23,9 +23,9 @@ pfUI:RegisterModule("easteregg", "vanilla:tbc", function ()
       end
     end)
 
-    _G.MARKED_AFK           = "|cff33ffccShagu|cffffffff wishes you a merry christmas. You are now |cff33ffcc" .. title .. "|cffffffff. Thanks for using |cff33ffccpf|cffffffffUI|cffffffff!|r"
-    _G.MARKED_AFK_MESSAGE   = "|cff33ffccShagu|cffffffff wishes you a merry christmas. You are now |cff33ffcc" .. title .. "|cffffffff. Thanks for using |cff33ffccpf|cffffffffUI|cffffffff!|r: %s"
-    _G.CLEARED_AFK          = "You are no longer |cff33ffcc" .. title .. "|r."
+    _G.MARKED_AFK           = "You are now |cff33ffcc" .. title .. "|r (AFK)."
+    _G.MARKED_AFK_MESSAGE   = "You are now |cff33ffcc" .. title .. "|r (AFK): %s"
+    _G.CLEARED_AFK          = "You are no longer |cff33ffcc" .. title .. "|r (AFK).\n|cff33ffccShagu|cffffffff wishes you a merry christmas. Thanks for using |cff33ffccpf|cffffffffUI|cffffffff!|r"
   end
 
   -- happy new year
