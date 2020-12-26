@@ -568,15 +568,12 @@ function pfUI.api.EnableClickRotate(frame)
   end)
 end
 
-
-local SetHighlightEnter = function()
-  if this.funce then this:funce() end
+local function SetHighlightEnter()
   if this.locked then return end
   (this.backdrop or this):SetBackdropBorderColor(this.cr,this.cg,this.cb,1)
 end
 
-local SetHighlightLeave = function()
-  if this.funcl then this:funcl() end
+local function SetHighlightLeave()
   if this.locked then return end
   (this.backdrop or this):SetBackdropBorderColor(this.rr,this.rg,this.rb,1)
 end
@@ -593,10 +590,8 @@ function pfUI.api.SetHighlight(frame, cr, cg, cb)
   frame.rr, frame.rg, frame.rb = GetStringColor(pfUI_config.appearance.border.color)
 
   if not frame.pfEnterLeave then
-    frame.funce = frame:GetScript("OnEnter")
-    frame.funcl = frame:GetScript("OnLeave")
-    frame:SetScript("OnEnter", SetHighlightEnter)
-    frame:SetScript("OnLeave", SetHighlightLeave)
+    HookScript(frame, "OnEnter", SetHighlightEnter)
+    HookScript(frame, "OnLeave", SetHighlightLeave)
     frame.pfEnterLeave = true
   end
 end
