@@ -250,6 +250,7 @@ pfUI:RegisterModule("thirdparty-tbc", "tbc", function ()
         icon:SetDrawLayer("BORDER")
 
         SkinButton(button, nil, nil, nil, icon)
+        SetAllPointsOffset(icon, button, 2)
 
         if _G[button:GetName().."Flash"] then
           SetAllPointsOffset(_G[button:GetName().."Flash"], button, 3)
@@ -268,7 +269,7 @@ pfUI:RegisterModule("thirdparty-tbc", "tbc", function ()
           icon2frame:SetFrameStrata("MEDIUM")
           icon2frame:SetWidth(icon2frame:GetWidth() + 1)
           button.icon2 = _G[button:GetName().."Icon2"]
-          SetAllPointsOffset(button.icon2, icon2frame, 3)
+          SetAllPointsOffset(button.icon2, icon2frame, 2)
 
           button.icon1Frame = CreateFrame("Frame", "TotemTimers_MainHandIcon1Frame", button)
           button.icon1Frame:SetWidth(16)
