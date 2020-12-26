@@ -239,6 +239,94 @@ pfUI:RegisterModule("thirdparty-tbc", "tbc", function ()
     end
   end)
 
+  HookAddonOrVariable("TotemTimers", function()
+    if C.thirdparty.totemtimers.enable == "0" then return end
+
+    local function skin(button, weapon)
+      if button and not button.pfskinned then
+        button.pfskinned = true
+
+        local icon = button.icon or _G[button:GetName().."Icon"]
+        icon:SetDrawLayer("BORDER")
+
+        SkinButton(button, nil, nil, nil, icon)
+
+        if _G[button:GetName().."Flash"] then
+          SetAllPointsOffset(_G[button:GetName().."Flash"], button, 3)
+          _G[button:GetName().."Flash"]:SetTexCoord(.08, .92, .08, .92)
+        end
+
+        if button.spellIcon then
+          button.spellIcon:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", -2, 2)
+          button.spellIcon:SetTexCoord(.08, .92, .08, .92)
+        end
+
+        if weapon then
+          -- weapon button skin workaround taken from ElvUI-TBC:
+          -- https://github.com/ElvUI-TBC/ElvUI_AddOnSkins/blob/master/ElvUI_AddOnSkins/Skins/Addons/totemTimers.lua#L92-L135
+          local icon2frame = _G[button:GetName().."Icon2Frame"]
+          icon2frame:SetFrameStrata("MEDIUM")
+          icon2frame:SetWidth(icon2frame:GetWidth() + 1)
+          button.icon2 = _G[button:GetName().."Icon2"]
+          SetAllPointsOffset(button.icon2, icon2frame, 3)
+
+          button.icon1Frame = CreateFrame("Frame", "TotemTimers_MainHandIcon1Frame", button)
+          button.icon1Frame:SetWidth(16)
+          button.icon1Frame:SetHeight(30)
+          button.icon1Frame:SetPoint("LEFT", 0, 0)
+
+          button.icon1 = button.icon1Frame:CreateTexture(nil, "MEDIUM")
+          SetAllPointsOffset(button.icon1, button.icon1Frame, 3)
+          button.icon1:SetTexture(icon:GetTexture())
+          button.icon1:SetAlpha(icon:GetAlpha())
+
+          _G[button:GetName().."Cooldown"]:SetFrameLevel(button.icon1Frame:GetFrameLevel() + 1)
+
+          icon:Hide()
+          hooksecurefunc(icon, "SetTexture", function(_, texture)
+            button.icon1:SetTexture(texture)
+          end)
+          hooksecurefunc(icon, "SetAlpha", function(_, alpha)
+            button.icon1:SetAlpha(alpha)
+          end)
+
+          if icon:GetTexCoordModifiesRect() then
+            button.icon1:SetTexCoord(.08, .5, .08, .92)
+          else
+            button.icon1:SetTexCoord(.08, .92, .08, .92)
+          end
+          button.icon2:SetTexCoord(.5, .92, .08, .92)
+
+          hooksecurefunc(icon, "SetTexCoord", function(self, arg1, arg2)
+            if arg2 == 0.5 and arg1 == 0 then
+              button.icon1:SetTexCoord(.08, .5, .08, .92)
+            elseif arg2 == 1 then
+              button.icon1:SetTexCoord(.08, .92, .08, .92)
+            end
+          end)
+          hooksecurefunc(button.icon2, "SetTexCoord", function(self, arg1, arg2)
+            if arg2 == 1 then self:SetTexCoord(.5, .92, .08, .92) end
+          end)
+        end
+      end
+    end
+
+    hooksecurefunc("TotemTimers_SetupGlobals", function()
+      for i=1,4 do -- skin main buttons
+        for j=1,10 do skin(_G[i.."SlaveButton"..j]) end
+        skin(_G["TotemTimers"..i])
+      end
+
+      for _, timer in pairs({ "EarthElemental", "FireElemental", "ManaTide", "ManaTrinket" }) do
+        skin(_G["TotemTimers_"..timer])
+      end
+
+      for i, tracker in pairs({ "Ankh", "Shield", "MainHand", "EarthShield" }) do
+        skin(_G["TotemTimers_"..tracker], i==3)
+      end
+    end)
+  end)
+
   HookAddonOrVariable("DruidBarFrame", function()
     if C.thirdparty.druidbar.enable == "0" then return end
     local p = ManaBarColor[0]
