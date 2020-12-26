@@ -730,6 +730,8 @@ end
 -- 'offsetX'     [integer]  offsets the button horizontally
 -- 'offsetY'     [integer]  offsets the button vertically
 function pfUI.api.SkinCloseButton(button, parentFrame, offsetX, offsetY)
+  if not button then return end
+
   SkinButton(button, 1, .25, .25)
 
   button:SetWidth(15)
@@ -748,6 +750,8 @@ function pfUI.api.SkinCloseButton(button, parentFrame, offsetX, offsetY)
 end
 
 function pfUI.api.SkinArrowButton(button, dir, size)
+  if not button then return end
+
   SkinButton(button)
 
   button:SetHitRectInsets(-3,-3,-3,-3)
