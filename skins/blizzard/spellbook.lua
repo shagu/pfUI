@@ -56,16 +56,6 @@ pfUI:RegisterSkin("Spellbook", "vanilla:tbc", function ()
       button:ClearAllPoints()
       button:SetPoint("TOP", lastbutton, "BOTTOM", 0, - (border + (border == 1 and 1 or 2) + bpad))
     end
-
-    function button.SetChecked(self, checked)
-      if checked then
-        self.locked = true
-        self:SetBackdropBorderColor(1,1,1)
-      else
-        self.locked = false
-        self:SetBackdropBorderColor(GetStringColor(pfUI_config.appearance.border.color))
-      end
-    end
   end
 
   SkinArrowButton(SpellBookPrevPageButton, "left", 18)
