@@ -625,17 +625,9 @@ function pfUI.api.SkinButton(button, cr, cg, cb, icon, disableHighlight)
   b:SetHighlightTexture("")
   b:SetPushedTexture("")
   b:SetDisabledTexture("")
+
   if b.SetCheckedTexture then
-    b:SetCheckedTexture(nil)
-    function b.SetChecked(self, checked)
-      if checked == 1 then
-        self.locked = true
-        self:SetBackdropBorderColor(1,1,1)
-        else
-        self.locked = false
-        self:SetBackdropBorderColor(GetStringColor(pfUI_config.appearance.border.color))
-      end
-    end
+    b:GetCheckedTexture():SetTexture(cr, cg, cb, .25)
   end
 
   if not disableHighlight then
