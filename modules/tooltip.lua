@@ -124,17 +124,27 @@ pfUI:RegisterModule("tooltip", "vanilla:tbc", function ()
     end)
 
   pfUI.tooltipStatusBar = CreateFrame('Frame', nil, GameTooltipStatusBar)
+  pfUI.tooltipStatusBar:SetPoint("TOPLEFT", 0, 8)
+  pfUI.tooltipStatusBar:SetPoint("TOPRIGHT", 0, 8)
+  pfUI.tooltipStatusBar:SetHeight(12)
   pfUI.tooltipStatusBar:RegisterEvent("UPDATE_MOUSEOVER_UNIT")
   pfUI.tooltipStatusBar:SetScript("OnEvent", function()
     this.name = UnitName("mouseover")
     this.level = UnitLevel("mouseover")
   end)
 
-  pfUI.tooltipStatusBar.HP = GameTooltipStatusBar:CreateFontString("Status", "DIALOG", "GameFontNormal")
-  pfUI.tooltipStatusBar.HP:SetPoint("TOP", 0,8)
+  pfUI.tooltipStatusBar.HP = pfUI.tooltipStatusBar:CreateFontString("Status", "DIALOG", "GameFontNormal")
+  pfUI.tooltipStatusBar.HP:SetAllPoints()
   pfUI.tooltipStatusBar.HP:SetNonSpaceWrap(false)
   pfUI.tooltipStatusBar.HP:SetFontObject(GameFontWhite)
   pfUI.tooltipStatusBar.HP:SetFont(pfUI.font_default, C.global.font_size + 2, "OUTLINE")
+
+  if GameTooltip.SetClampRectInsets then
+    GameTooltip:SetClampRectInsets(0, 0, 16, 0)
+  else
+    GameTooltipStatusBar:SetClampedToScreen(true)
+    pfUI.tooltipStatusBar:SetClampedToScreen(true)
+  end
 
   pfUI.tooltipStatusBar:SetScript("OnUpdate", function()
     local hp = GameTooltipStatusBar:GetValue()
