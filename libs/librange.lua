@@ -192,9 +192,11 @@ function librange:GetRealUnit(unit)
 end
 
 function librange:GetRangeSlot()
+  local texture
+
   for i=1,120 do
-    local texture = GetActionTexture(i)
-    if texture and not GetMacroInfo(i) then
+    texture = GetActionTexture(i)
+    if texture and not GetActionText(i) then
       for _, check in pairs(spells[class]) do
         if check == texture then
           return i
