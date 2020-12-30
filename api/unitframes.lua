@@ -785,7 +785,7 @@ function pfUI.uf.OnEvent()
   -- update regular frames
   if event == "PLAYER_ENTERING_WORLD" then
     this.fullupdate = true
-  elseif this.label == "target" and event == "PLAYER_TARGET_CHANGED" then
+  elseif this.label == "target" and event == "PLAYER_TARGET_CHANGED" and not pfScanActive == true then
     this.fullupdate = true
   elseif ( this.label == "raid" or this.label == "party" or this.label == "player" ) and event == "PARTY_MEMBERS_CHANGED" then
     this.fullupdate = true
