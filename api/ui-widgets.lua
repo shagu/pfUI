@@ -590,8 +590,9 @@ function pfUI.api.SetHighlight(frame, cr, cg, cb)
   frame.rr, frame.rg, frame.rb = GetStringColor(pfUI_config.appearance.border.color)
 
   if not frame.pfEnterLeave then
-    HookScript(frame, "OnEnter", SetHighlightEnter)
-    HookScript(frame, "OnLeave", SetHighlightLeave)
+    if not frame.HookScript then frame.HookScript = HookScript end
+    frame:HookScript("OnEnter", SetHighlightEnter)
+    frame:HookScript("OnLeave", SetHighlightLeave)
     frame.pfEnterLeave = true
   end
 end
@@ -645,6 +646,7 @@ function pfUI.api.SkinButton(button, cr, cg, cb, icon, disableHighlight)
     b:SetBackdropBorderColor(cr,cg,cb,1)
     b.locked = true
   end
+
   b.UnlockHighlight = function()
     if not MouseIsOver(b) then
       b:SetBackdropBorderColor(GetStringColor(pfUI_config.appearance.border.color))
