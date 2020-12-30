@@ -591,8 +591,20 @@ function pfUI.api.SetHighlight(frame, cr, cg, cb)
 
   if not frame.pfEnterLeave then
     if not frame.HookScript then frame.HookScript = HookScript end
-    frame:HookScript("OnEnter", SetHighlightEnter)
-    frame:HookScript("OnLeave", SetHighlightLeave)
+    local enter, leave = frame:GetScript("OnEnter"), frame:GetScript("OnLeave")
+
+    if enter then
+      frame:HookScript("OnEnter", SetHighlightEnter)
+    else
+      frame:SetScript("OnEnter", SetHighlightEnter)
+    end
+
+    if leave then
+      frame:HookScript("OnLeave", SetHighlightLeave)
+    else
+      frame:SetScript("OnLeave", SetHighlightLeave)
+    end
+
     frame.pfEnterLeave = true
   end
 end
