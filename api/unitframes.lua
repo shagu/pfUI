@@ -925,6 +925,20 @@ function pfUI.uf.OnUpdate()
     local unitstr = this.label .. this.id
 
     this.lastTick = GetTime() + (this.tick or .2)
+
+    -- target target has a huge delay, make sure to not tick during range checks
+    -- by waiting for a stable name over three ticks otherwise aborting the update.
+    if this.label == "targettarget" or this.label == "targettargettarget" then
+      local name = UnitName(this.label)
+      if name ~= this.namebuf1 then
+        this.namebuf1 = name
+        return
+      elseif name ~= this.namebuf2 then
+        this.namebuf2 = name
+        return
+      end
+    end
+
     pfUI.uf:RefreshUnitState(this)
     pfUI.uf:RefreshIndicators(this)
 
