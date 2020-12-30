@@ -639,7 +639,7 @@ function pfUI.api.SkinButton(button, cr, cg, cb, icon, disableHighlight)
   b:SetPushedTexture("")
   b:SetDisabledTexture("")
 
-  if b.SetCheckedTexture then
+  if b.SetCheckedTexture and b:GetCheckedTexture() then
     b:GetCheckedTexture():SetTexture(cr, cg, cb, .25)
   end
 
