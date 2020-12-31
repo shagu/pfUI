@@ -72,9 +72,10 @@ pfUI:RegisterModule("easteregg", "vanilla:tbc", function ()
 
     -- basic explosion animation
     local function animation()
-      this:SetWidth(this:GetWidth()+2)
-      this:SetHeight(this:GetHeight()+2)
-      this:SetAlpha(this:GetAlpha() - .05)
+      local fps = (60 / math.max(GetFramerate(), 1))
+      this:SetWidth(this:GetWidth()+fps)
+      this:SetHeight(this:GetHeight()+fps)
+      this:SetAlpha(this:GetAlpha()-fps*.01)
       if this:GetAlpha() <= 0 then
         this.free = true
         this:Hide()
