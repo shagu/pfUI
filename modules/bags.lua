@@ -888,10 +888,7 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
             local bagsize = GetContainerNumSlots(bag)
             if bag == -2 and pfUI.bag.showKeyring == true then bagsize = GetKeyRingSize() end
             for slot=1, bagsize do
-              local texture, itemCount, locked, quality, readable = GetContainerItemInfo(bag, slot)
-              if itemCount then
-                pfUI.bags[bag].slots[slot].frame:SetAlpha(1)
-              end
+              pfUI.bags[bag].slots[slot].frame:SetAlpha(1)
             end
           end
         end)
@@ -902,14 +899,13 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
             local bagsize = GetContainerNumSlots(bag)
             if bag == -2 and pfUI.bag.showKeyring == true then bagsize = GetKeyRingSize() end
             for slot=1, bagsize do
+              pfUI.bags[bag].slots[slot].frame:SetAlpha(.25)
               local texture, itemCount, locked, quality, readable = GetContainerItemInfo(bag, slot)
               if itemCount then
                 local itemLink = GetContainerItemLink(bag, slot)
                 local itemstring = string.sub(itemLink, string.find(itemLink, "%[")+1, string.find(itemLink, "%]")-1)
                 if strfind(strlower(itemstring), strlower(string.gsub(this:GetText(), "([^%w])", "%%%1"))) then
                   pfUI.bags[bag].slots[slot].frame:SetAlpha(1)
-                else
-                  pfUI.bags[bag].slots[slot].frame:SetAlpha(.25)
                 end
               end
             end
