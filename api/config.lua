@@ -667,6 +667,7 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("nameplates", nil,           "highlightcolor",   "1,1,1,1")
 
   pfUI:UpdateConfig("nameplates", nil,           "showhp",           "0")
+  pfUI:UpdateConfig("nameplates", nil,           "hptextpos",        "RIGHT")
   pfUI:UpdateConfig("nameplates", nil,           "alwaysperc",       "0")
   pfUI:UpdateConfig("nameplates", nil,           "vpos",             "-10")
   pfUI:UpdateConfig("nameplates", nil,           "width",            "120")

@@ -1152,6 +1152,11 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
         "-1:" .. T["Large"],
         "-3:" .. T["Huge"],
       },
+      ["textalign"] = {
+        "LEFT:" .. T["Left"],
+        "CENTER:" .. T["Center"],
+        "RIGHT:" .. T["Right"],
+      },
     }
 
     -- add locale dependent client fonts to the list
@@ -2159,6 +2164,7 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
       CreateConfig(U["nameplates"], T["Healthbar Height"], C.nameplates, "heighthealth")
       CreateConfig(U["nameplates"], T["Healthbar Texture"], C.nameplates, "healthtexture", "dropdown", pfUI.gui.dropdowns.uf_bartexture)
       CreateConfig(U["nameplates"], T["Show Health Points"], C.nameplates, "showhp", "checkbox")
+      CreateConfig(U["nameplates"], T["Health Text Position"], C.nameplates, "hptextpos", "dropdown", pfUI.gui.dropdowns.textalign)
       CreateConfig(U["nameplates"], T["Always Show Health In Percent"], C.nameplates, "alwaysperc", "checkbox")
       CreateConfig(U["nameplates"], T["Hide Healthbar On Enemy NPCs"], C.nameplates, "enemynpc", "checkbox")
       CreateConfig(U["nameplates"], T["Hide Healthbar On Enemy Players"], C.nameplates, "enemyplayer", "checkbox")

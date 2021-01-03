@@ -393,7 +393,7 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     CreateBackdrop(nameplate.health, default_border)
 
     nameplate.health.text:SetFont(font, font_size - 2, "OUTLINE")
-    nameplate.health.text:SetJustifyH("RIGHT")
+    nameplate.health.text:SetJustifyH(C.nameplates.hptextpos)
 
     nameplate.glow:SetWidth(C.nameplates.width + 60)
     nameplate.glow:SetHeight(C.nameplates.heighthealth + 30)
