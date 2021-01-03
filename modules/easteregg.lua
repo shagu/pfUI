@@ -53,7 +53,7 @@ pfUI:RegisterModule("easteregg", "vanilla:tbc", function ()
     fireworks.dtext = fireworks:CreateFontString("Status", "LOW", "GameFontWhite")
     fireworks.dtext:SetFont(STANDARD_TEXT_FONT, 14, "OUTLINE")
     fireworks.dtext:SetPoint("TOP", 0, -430)
-    fireworks.dtext:SetText("Another year with |cff33ffccpf|rUI has passed.\nThanks for keep using it!\n\n|cff444444<Click> or '/afk' to exit")
+    fireworks.dtext:SetText("Another year with |cff33ffccpf|rUI has passed.\nThanks for continuing to use it!\n\n|cff444444<Click> or '/afk' to exit")
 
     fireworks:SetScript("OnClick", function()
       this:Hide()
