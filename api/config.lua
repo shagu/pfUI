@@ -644,7 +644,9 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("nameplates", nil,           "enemyclassc",      "1")
   pfUI:UpdateConfig("nameplates", nil,           "friendclassc",     "1")
   pfUI:UpdateConfig("nameplates", nil,           "raidiconsize",     "16")
-
+  pfUI:UpdateConfig("nameplates", nil,           "raidiconpos",      "CENTER")
+  pfUI:UpdateConfig("nameplates", nil,           "raidiconoffx",     "0")
+  pfUI:UpdateConfig("nameplates", nil,           "raidiconoffy",     "-5")
   pfUI:UpdateConfig("nameplates", nil,           "fullhealth",       "1")
   pfUI:UpdateConfig("nameplates", nil,           "target",           "1")
 
