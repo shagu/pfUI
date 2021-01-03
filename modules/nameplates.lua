@@ -555,9 +555,24 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
         rhp, rhpmax, estimated = pfUI.libhealth:GetUnitHealthByName(name,level,tonumber(hp),tonumber(hpmax))
       end
 
-      if C.nameplates.alwaysperc == "0" and ( estimated or hpmax > 100 or (round(hpmax/100*hp) ~= hp) ) then
+      local setting = C.nameplates.hptextformat
+      local hasdata = ( estimated or hpmax > 100 or (round(hpmax/100*hp) ~= hp) )
+
+      if setting == "curperc" and hasdata then
+        plate.health.text:SetText(string.format("%s | %s%%", Abbreviate(rhp), ceil(hp/hpmax*100)))
+      elseif setting == "cur" and hasdata then
+        plate.health.text:SetText(string.format("%s", Abbreviate(rhp)))
+      elseif setting == "curmax" and hasdata then
+        plate.health.text:SetText(string.format("%s - %s", Abbreviate(rhp), Abbreviate(rhpmax)))
+      elseif setting == "curmaxs" and hasdata then
         plate.health.text:SetText(string.format("%s / %s", Abbreviate(rhp), Abbreviate(rhpmax)))
-      else
+      elseif setting == "curmaxperc" and hasdata then
+        plate.health.text:SetText(string.format("%s - %s | %s%%", Abbreviate(rhp), Abbreviate(rhpmax), ceil(hp/hpmax*100)))
+      elseif setting == "curmaxpercs" and hasdata then
+        plate.health.text:SetText(string.format("%s / %s | %s%%", Abbreviate(rhp), Abbreviate(rhpmax), ceil(hp/hpmax*100)))
+      elseif setting == "deficit" then
+        plate.health.text:SetText(string.format("-%s" .. (hasdata and "" or "%%"), Abbreviate(rhpmax) - Abbreviate(rhp)))
+      else -- "percent" as fallback
         plate.health.text:SetText(string.format("%s%%", ceil(hp/hpmax*100)))
       end
     else

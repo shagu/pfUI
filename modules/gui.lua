@@ -1043,6 +1043,16 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
         "powermiss:" .. T["Mana - Missing"],
         "powerminmax:" .. T["Mana - Min/Max"],
       },
+      ["hpformat"] = {
+        "percent:" .. T["Percent"],
+        "cur:" .. T["Current HP"],
+        "curperc:" .. T["Current HP | Percent"],
+        "curmax:" .. T["Current HP - Max HP"],
+        "curmaxs:" .. T["Current HP / Max HP"],
+        "curmaxperc:" .. T["Current HP - Max HP | Percent"],
+        "curmaxpercs:" .. T["Current HP / Max HP | Percent"],
+        "deficit:" .. T["Deficit"],
+      },
       ["panel_values"] = {
         "none:" .. T["Disable"],
         "time:" .. T["Clock"],
@@ -2165,7 +2175,7 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
       CreateConfig(U["nameplates"], T["Healthbar Texture"], C.nameplates, "healthtexture", "dropdown", pfUI.gui.dropdowns.uf_bartexture)
       CreateConfig(U["nameplates"], T["Show Health Points"], C.nameplates, "showhp", "checkbox")
       CreateConfig(U["nameplates"], T["Health Text Position"], C.nameplates, "hptextpos", "dropdown", pfUI.gui.dropdowns.textalign)
-      CreateConfig(U["nameplates"], T["Always Show Health In Percent"], C.nameplates, "alwaysperc", "checkbox")
+      CreateConfig(U["nameplates"], T["Health Text Format"], C.nameplates, "hptextformat", "dropdown", pfUI.gui.dropdowns.hpformat)
       CreateConfig(U["nameplates"], T["Hide Healthbar On Enemy NPCs"], C.nameplates, "enemynpc", "checkbox")
       CreateConfig(U["nameplates"], T["Hide Healthbar On Enemy Players"], C.nameplates, "enemyplayer", "checkbox")
       CreateConfig(U["nameplates"], T["Hide Healthbar On Neutral NPCs"], C.nameplates, "neutralnpc", "checkbox")
