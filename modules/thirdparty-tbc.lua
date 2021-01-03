@@ -193,6 +193,31 @@ pfUI:RegisterModule("thirdparty-tbc", "tbc", function ()
     end
   end)
 
+  -- Sheep Watch Continued
+  -- https://www.curseforge.com/wow/addons/sheep-watch-continued/files/225593
+  HookAddonOrVariable("SheepWatch", function()
+    if C.thirdparty.sheepwatch.enable == "0" then return end
+
+    StripTextures(SheepWatch)
+
+    if SheepWatchFrameStatusBar then
+      SheepWatchFrameStatusBar:SetStatusBarTexture(pfUI.media["img:bar"])
+      SheepWatchFrameStatusBar:SetHeight(14)
+      CreateBackdrop(SheepWatchFrameStatusBar)
+      CreateBackdropShadow(SheepWatchFrameStatusBar)
+    end
+
+    if SheepWatchText then
+      SheepWatchText:ClearAllPoints()
+      SheepWatchText:SetPoint("CENTER", 0, 4)
+    end
+
+    if SheepWatchCounterText then
+      SheepWatchCounterText:ClearAllPoints()
+      SheepWatchCounterText:SetPoint("RIGHT", 0, 4)
+    end
+  end)
+
   HookAddonOrVariable("Bag_Sort", function()
     if C.thirdparty.bag_sort.enable == "0" then return end
 
