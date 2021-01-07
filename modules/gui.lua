@@ -1751,6 +1751,12 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
         CreateConfig(U[c], T["Debuff Limit"], C.unitframes[c], "debufflimit")
         CreateConfig(U[c], T["Debuffs Per Row"], C.unitframes[c], "debuffperrow")
 
+        CreateConfig(U[c], T["Overwrite Fonts"], nil, nil, "header")
+        CreateConfig(U[c], T["Use Custom Font Settings"], C.unitframes[c], "customfont", "checkbox")
+        CreateConfig(U[c], T["Custom Font Name"], C.unitframes[c], "customfont_name", "dropdown", pfUI.gui.dropdowns.fonts)
+        CreateConfig(U[c], T["Custom Font Size"], C.unitframes[c], "customfont_size")
+        CreateConfig(U[c], T["Custom Font Style"], C.unitframes[c], "customfont_style", "dropdown", pfUI.gui.dropdowns.fontstyle)
+
         CreateConfig(U[c], T["Overwrite Colors"], nil, nil, "header")
         CreateConfig(U[c], T["Inherit Default Colors"], C.unitframes[c], "defcolor", "checkbox")
         CreateConfig(U[c], T["Health Bar Color"], C.unitframes[c], "custom", "dropdown", pfUI.gui.dropdowns.uf_color)

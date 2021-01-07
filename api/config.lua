@@ -445,6 +445,10 @@ function pfUI:LoadConfig()
     pfUI:UpdateConfig("unitframes", unit,      "focuscolor",       "1,1,.75,1")
     pfUI:UpdateConfig("unitframes", unit,      "healcolor",        "0,1,0,0.6")
     pfUI:UpdateConfig("unitframes", unit,      "overhealperc",     "20")
+    pfUI:UpdateConfig("unitframes", unit,      "customfont",       "0")
+    pfUI:UpdateConfig("unitframes", unit,      "customfont_name",  "Interface\\AddOns\\pfUI\\fonts\\BigNoodleTitling.ttf")
+    pfUI:UpdateConfig("unitframes", unit,      "customfont_size",  "12")
+    pfUI:UpdateConfig("unitframes", unit,      "customfont_style", "OUTLINE")
   end
 
   pfUI:UpdateConfig("bars",       "bar1",        "pageable",         "1")
