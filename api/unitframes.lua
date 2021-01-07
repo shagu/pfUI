@@ -559,7 +559,9 @@ function pfUI.uf:UpdateConfig()
   f.incHeal:SetHeight(f.config.height)
   f.incHeal:SetWidth(f.config.width)
   f.incHeal.texture:SetTexture(pfUI.media["img:bar"])
-  f.incHeal.texture:SetVertexColor(0, 1, 0, 0.5)
+  local cr, cg, cb, ca = pfUI.api.strsplit(",", f.config.healcolor)
+  cr, cg, cb, ca = tonumber(cr), tonumber(cg), tonumber(cb), tonumber(ca)
+  f.incHeal.texture:SetVertexColor(cr, cg, cb, ca)
   f.incHeal:Hide()
 
   if f.config.verticalbar == "0" then

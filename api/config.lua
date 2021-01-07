@@ -443,6 +443,7 @@ function pfUI:LoadConfig()
     pfUI:UpdateConfig("unitframes", unit,      "energycolor",      "1,1,.5,1")
     pfUI:UpdateConfig("unitframes", unit,      "ragecolor",        "1,.5,.5,1")
     pfUI:UpdateConfig("unitframes", unit,      "focuscolor",       "1,1,.75,1")
+    pfUI:UpdateConfig("unitframes", unit,      "healcolor",        "0,1,0,0.6")
     pfUI:UpdateConfig("unitframes", unit,      "overhealperc",     "20")
   end
 

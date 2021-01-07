@@ -1670,6 +1670,7 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
         end
         CreateConfig(U[c], T["Show Raid Mark"], C.unitframes[c], "raidicon", "checkbox")
         CreateConfig(U[c], T["Raid Mark Size"], C.unitframes[c], "raidiconsize")
+        CreateConfig(U[c], T["Heal Color"], C.unitframes[c], "healcolor", "color")
         CreateConfig(U[c], T["Display Overheal"], C.unitframes[c], "overhealperc", "dropdown", pfUI.gui.dropdowns.uf_overheal)
 
         if c == "raid" then
