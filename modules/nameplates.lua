@@ -20,7 +20,8 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
   -- catch all nameplates
   local childs, regions, plate
   local initialized = 0
-  local parentCount = 0
+  local parentcount = 0
+  local platecount = 0
   local registry = {}
 
   -- cache default border color
@@ -174,10 +175,10 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
   end)
 
   nameplates:SetScript("OnUpdate", function()
-    parentCount = WorldFrame:GetNumChildren()
-    if initialized < parentCount then
+    parentcount = WorldFrame:GetNumChildren()
+    if initialized < parentcount then
       childs = { WorldFrame:GetChildren() }
-      for i = initialized + 1, parentCount do
+      for i = initialized + 1, parentcount do
         plate = childs[i]
         if IsNamePlate(plate) and not registry[plate] then
           nameplates.OnCreate(plate)
@@ -185,7 +186,7 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
         end
       end
 
-      initialized = parentCount
+      initialized = parentcount
     end
   end)
 
@@ -205,9 +206,11 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
 
   nameplates.OnCreate = function(frame)
     local parent = frame or this
+    platecount = platecount + 1
+    platename = "pfNamePlate" .. platecount
 
     -- create pfUI nameplate overlay
-    local nameplate = CreateFrame("Button", nil, parent)
+    local nameplate = CreateFrame("Button", platename, parent)
     nameplate:EnableMouse(0)
     nameplate.parent = parent
     nameplate.cache = {}
@@ -269,7 +272,7 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     do -- debuffs
       local debuffs = {}
       for i=1, 16, 1 do
-        debuffs[i] = CreateFrame("Frame", nil, nameplate)
+        debuffs[i] = CreateFrame("Frame", platename.."Debuff"..i, nameplate)
         debuffs[i]:Hide()
         debuffs[i]:SetFrameLevel(1)
 
@@ -283,7 +286,7 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
         debuffs[i].stacks:SetJustifyV("BOTTOM")
         debuffs[i].stacks:SetTextColor(1,1,0)
 
-        debuffs[i].cd = CreateFrame(COOLDOWN_FRAME_TYPE, nil, debuffs[i], "CooldownFrameTemplate")
+        debuffs[i].cd = CreateFrame(COOLDOWN_FRAME_TYPE, platename.."Debuff"..i.."Cooldown", debuffs[i], "CooldownFrameTemplate")
         debuffs[i].cd.pfCooldownStyleAnimation = 0
         debuffs[i].cd.pfCooldownType = "ALL"
       end
