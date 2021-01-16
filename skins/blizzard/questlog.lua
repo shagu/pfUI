@@ -51,6 +51,13 @@ pfUI:RegisterSkin("Quest Log", "vanilla:tbc", function ()
     QuestLogFrameLevelsCheckButton:SetPoint("LEFT", QuestLogCollapseAllButton, "RIGHT", 0, 1)
     QuestLogFrameLevelsCheckButton:SetScript("OnClick", function()
       C.questlog.showQuestLevels = C.questlog.showQuestLevels == "1" and "0" or "1"
+
+      -- also update pfQuest's config
+      if pfQuest_config and pfQuestConfig and pfQuestConfig.UpdateConfigEntries then
+        pfQuest_config["questloglevel"] = C.questlog.showQuestLevels
+        pfQuestConfig:UpdateConfigEntries()
+      end
+
       QuestLog_Update()
     end)
     SkinCheckbox(QuestLogFrameLevelsCheckButton, 23)
@@ -179,7 +186,7 @@ pfUI:RegisterSkin("Quest Log", "vanilla:tbc", function ()
               text, level, questTag, _, isHeader = GetQuestLogTitle(questIndex)
             end
             if not isHeader then
-              _G["QuestLogTitle"..i]:SetText("  ".."["..(questTag and level.."+" or level).."] "..text)
+              _G["QuestLogTitle"..i]:SetText(" ".."["..(questTag and level.."+" or level).."] "..text)
             end
           end
         end
