@@ -628,74 +628,75 @@ pfUI:RegisterModule("chat", "vanilla:tbc", function ()
   local r,g,b = strsplit(",", C.chat.text.unknowncolor)
   local unknowncolorhex = rgbhex(r,g,b)
 
+  local function AddMessage(frame, text, a1, a2, a3, a4, a5)
+    if not text then return end
+
+    -- Remove prat CLINKs
+    text = gsub(text, "{CLINK:(%x+):([%d-]-:[%d-]-:[%d-]-:[%d-]-:[%d-]-:[%d-]-:[%d-]-:[%d-]-):([^}]-)}", "|c%1|Hitem:%2|h[%3]|h|r") -- tbc
+    text = gsub(text, "{CLINK:(%x+):([%d-]-:[%d-]-:[%d-]-:[%d-]-):([^}]-)}", "|c%1|Hitem:%2|h[%3]|h|r") -- vanilla
+
+    -- Remove chatter CLINKs
+    text = gsub(text, "{CLINK:item:(%x+):([%d-]-:[%d-]-:[%d-]-:[%d-]-:[%d-]-:[%d-]-:[%d-]-:[%d-]-):([^}]-)}", "|c%1|Hitem:%2|h[%3]|h|r")
+    text = gsub(text, "{CLINK:enchant:(%x+):([%d-]-):([^}]-)}", "|c%1|Henchant:%2|h[%3]|h|r")
+    text = gsub(text, "{CLINK:spell:(%x+):([%d-]-):([^}]-)}", "|c%1|Hspell:%2|h[%3]|h|r")
+    text = gsub(text, "{CLINK:quest:(%x+):([%d-]-):([%d-]-):([^}]-)}", "|c%1|Hquest:%2:%3|h[%4]|h|r")
+
+    -- detect urls
+    if C.chat.text.detecturl == "1" then
+      text = pfUI.chat:HandleLink(text)
+    end
+
+    -- display class colors if already indexed
+    if C.chat.text.classcolor == "1" then
+      for name in gfind(text, "|Hplayer:(.-)|h") do
+        local real, _ = strsplit(":", name)
+        local color = unknowncolorhex
+        local match = false
+        local class = GetUnitData(real)
+
+        if class then
+          if class ~= UNKNOWN then
+            color = rgbhex(RAID_CLASS_COLORS[class])
+            match = true
+          end
+        end
+
+        if C.chat.text.tintunknown == "1" or match then
+          text = string.gsub(text, "|Hplayer:"..name.."|h%["..real.."%]|h(.-:-)",
+            left..color.."|Hplayer:"..name.."|h" .. color .. real .. "|h|r"..right.."%1")
+        end
+      end
+    end
+
+    -- reduce channel name to number
+    if C.chat.text.channelnumonly == "1" then
+      local channel = string.gsub(text, ".*%[(.-)%]%s+(.*|Hplayer).+", "%1")
+      if string.find(channel, "%d+%. ") then
+        channel = string.gsub(channel, "(%d+)%..*", "channel%1")
+        channel = string.gsub(channel, "channel", "")
+        text = string.gsub(text, "%[%d+%..-%]%s+(.*|Hplayer)", left .. channel .. right .. " %1")
+      end
+    end
+
+    -- show timestamp in chat
+    if C.chat.text.time == "1" then
+      text = timecolorhex .. tleft .. date(C.chat.text.timeformat) .. tright .. "|r " .. text
+    end
+
+    if C.chat.global.whispermod == "1" then
+      -- patch incoming whisper string to match the colors
+      if string.find(text, wcol, 1) == 1 then
+        text = string.gsub(text, "|r", "|r" .. wcol)
+      end
+    end
+
+    frame:HookAddMessage(text, a1, a2, a3, a4, a5)
+  end
+
   for i=1,NUM_CHAT_WINDOWS do
     if not _G["ChatFrame"..i].HookAddMessage then
       _G["ChatFrame"..i].HookAddMessage = _G["ChatFrame"..i].AddMessage
-      _G["ChatFrame"..i].AddMessage = function(frame, text, a1, a2, a3, a4, a5)
-        if text then
-          -- Remove prat CLINKs
-          text = gsub(text, "{CLINK:(%x+):([%d-]-:[%d-]-:[%d-]-:[%d-]-:[%d-]-:[%d-]-:[%d-]-:[%d-]-):([^}]-)}", "|c%1|Hitem:%2|h[%3]|h|r") -- tbc
-          text = gsub(text, "{CLINK:(%x+):([%d-]-:[%d-]-:[%d-]-:[%d-]-):([^}]-)}", "|c%1|Hitem:%2|h[%3]|h|r") -- vanilla
-
-          -- Remove chatter CLINKs
-          text = gsub(text, "{CLINK:item:(%x+):([%d-]-:[%d-]-:[%d-]-:[%d-]-:[%d-]-:[%d-]-:[%d-]-:[%d-]-):([^}]-)}", "|c%1|Hitem:%2|h[%3]|h|r")
-          text = gsub(text, "{CLINK:enchant:(%x+):([%d-]-):([^}]-)}", "|c%1|Henchant:%2|h[%3]|h|r")
-          text = gsub(text, "{CLINK:spell:(%x+):([%d-]-):([^}]-)}", "|c%1|Hspell:%2|h[%3]|h|r")
-          text = gsub(text, "{CLINK:quest:(%x+):([%d-]-):([%d-]-):([^}]-)}", "|c%1|Hquest:%2:%3|h[%4]|h|r")
-
-          -- detect urls
-          if C.chat.text.detecturl == "1" then
-            text = pfUI.chat:HandleLink(text)
-          end
-
-          -- display class colors if already indexed
-          if C.chat.text.classcolor == "1" then
-
-            for name in gfind(text, "|Hplayer:(.-)|h") do
-              local real, _ = strsplit(":", name)
-              local color = unknowncolorhex
-              local match = false
-              local class = GetUnitData(real)
-
-              if class then
-                if class ~= UNKNOWN then
-                  color = rgbhex(RAID_CLASS_COLORS[class])
-                  match = true
-                end
-              end
-
-              if C.chat.text.tintunknown == "1" or match then
-                text = string.gsub(text, "|Hplayer:"..name.."|h%["..real.."%]|h(.-:-)",
-                    left..color.."|Hplayer:"..name.."|h" .. color .. real .. "|h|r"..right.."%1")
-              end
-            end
-          end
-
-          -- reduce channel name to number
-          if C.chat.text.channelnumonly == "1" then
-            local channel = string.gsub(text, ".*%[(.-)%]%s+(.*|Hplayer).+", "%1")
-            if string.find(channel, "%d+%. ") then
-              channel = string.gsub(channel, "(%d+)%..*", "channel%1")
-              channel = string.gsub(channel, "channel", "")
-              text = string.gsub(text, "%[%d+%..-%]%s+(.*|Hplayer)", left .. channel .. right .. " %1")
-            end
-          end
-
-          -- show timestamp in chat
-          if C.chat.text.time == "1" then
-            text = timecolorhex .. tleft .. date(C.chat.text.timeformat) .. tright .. "|r " .. text
-          end
-
-          if C.chat.global.whispermod == "1" then
-            -- patch incoming whisper string to match the colors
-            if string.find(text, wcol, 1) == 1 then
-              text = string.gsub(text, "|r", "|r" .. wcol)
-            end
-          end
-
-          _G["ChatFrame"..i].HookAddMessage(frame, text, a1, a2, a3, a4, a5)
-        end
-      end
+      _G["ChatFrame"..i].AddMessage = AddMessage
     end
   end
 
