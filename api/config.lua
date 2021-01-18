@@ -247,6 +247,16 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("unitframes", "focus",       "buffsize",         "12")
   pfUI:UpdateConfig("unitframes", "focus",       "debuffsize",       "12")
 
+  pfUI:UpdateConfig("unitframes", "focustarget", "visible",          "0")
+  pfUI:UpdateConfig("unitframes", "focustarget", "width",            "80")
+  pfUI:UpdateConfig("unitframes", "focustarget", "height",           "12")
+  pfUI:UpdateConfig("unitframes", "focustarget", "pheight",          "-1")
+  pfUI:UpdateConfig("unitframes", "focustarget", "buffs",            "off")
+  pfUI:UpdateConfig("unitframes", "focustarget", "debuffs",          "off")
+  pfUI:UpdateConfig("unitframes", "focustarget", "txthpleft",        "none")
+  pfUI:UpdateConfig("unitframes", "focustarget", "txthpcenter",      "name")
+  pfUI:UpdateConfig("unitframes", "focustarget", "txthpright",       "none")
+
   pfUI:UpdateConfig("unitframes", "group",       "portrait",         "off")
   pfUI:UpdateConfig("unitframes", "group",       "width",            "164")
   pfUI:UpdateConfig("unitframes", "group",       "height",           "32")
@@ -357,7 +367,7 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("unitframes", "ptarget",     "txthpright",       "none")
   pfUI:UpdateConfig("unitframes", "ptarget",     "overhealperc",     "10")
 
-  local ufs = { "player", "target", "focus", "group", "grouptarget", "grouppet", "raid", "ttarget", "pet", "ptarget", "fallback", "tttarget" }
+  local ufs = { "player", "target", "focus", "focustarget", "group", "grouptarget", "grouppet", "raid", "ttarget", "pet", "ptarget", "fallback", "tttarget" }
   for _, unit in pairs(ufs) do
     pfUI:UpdateConfig("unitframes", unit,      "visible",          "1")
     pfUI:UpdateConfig("unitframes", unit,      "showPVP",          "0")

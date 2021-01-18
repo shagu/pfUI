@@ -1595,10 +1595,11 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
       [5] = { "pet",         T["Pet"] },
       [6] = { "ptarget",     T["Pet-Target"]},
       [7] = { "focus",       T["Focus"] },
-      [8] = { "group",       T["Group"] },
-      [9] = { "grouptarget", T["Group-Target"]},
-      [10] = { "grouppet",   T["Group-Pet"] },
-      [11] = { "raid",       T["Raid"] },
+      [8] = { "focustarget", T["Focus-Target"] },
+      [9] = { "group",       T["Group"] },
+      [10] = { "grouptarget", T["Group-Target"]},
+      [11] = { "grouppet",   T["Group-Pet"] },
+      [12] = { "raid",       T["Raid"] },
     }
 
     CreateGUIEntry(T["Unit Frames"], T["Click Casting"], function()

@@ -295,7 +295,7 @@ function pfUI.uf:UpdateVisibility()
   end
 
   -- vanilla visibility
-  if self.unitname and self.unitname ~= "focus" then
+  if self.unitname and self.unitname ~= "focus" and self.unitname ~= "focustarget" then
     self:Show()
   elseif visibility == "hide" then
     self:Hide()
@@ -840,13 +840,22 @@ function pfUI.uf.OnUpdate()
     this.fullupdate = nil
   end
 
-  -- early return on unset focus frames
-  if this.unitname then
+  if this == pfFocus then -- handle pseudo focus frames
     local unitname = ( this.label and UnitName(this.label) ) or ""
 
-    if this.unitname == "focus" then
-      return
+    if pfFocusTarget then -- update focus target
+      pfFocusTarget.label = this.label and this.label .. "target" or nil
+      local focustargetname = pfFocusTarget.label and UnitName(pfFocusTarget.label) or nil
+
+      if pfFocusTarget.lastUnit ~= focustargetname then
+        pfFocusTarget.lastUnit = focustargetname
+        pfFocusTarget.instantRefresh = true
+        pfUI.uf:RefreshUnit(pfFocusTarget, "all")
+      end
     end
+
+    -- break here on unset focus frames
+    if not this.unitname or this.unitname == "focus" then return end
 
     -- focus unit detection
     if this.unitname ~= strlower(unitname) then

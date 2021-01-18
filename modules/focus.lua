@@ -7,6 +7,12 @@ pfUI:RegisterModule("focus", "vanilla:tbc", function ()
   pfUI.uf.focus:SetPoint("BOTTOMLEFT", UIParent, "BOTTOM", 220, 220)
   UpdateMovable(pfUI.uf.focus)
   pfUI.uf.focus:Hide()
+
+  pfUI.uf.focustarget = pfUI.uf:CreateUnitFrame("FocusTarget", nil, C.unitframes.focustarget, .2)
+  pfUI.uf.focustarget:UpdateFrameSize()
+  pfUI.uf.focustarget:SetPoint("BOTTOMLEFT", pfUI.uf.focus, "TOP", 0, 10)
+  UpdateMovable(pfUI.uf.focustarget)
+  pfUI.uf.focustarget:Hide()
 end)
 
 -- register focus emulation commands for vanilla
