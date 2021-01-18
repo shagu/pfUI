@@ -274,6 +274,19 @@ pfUI:RegisterModule("chat", "vanilla:tbc", function ()
       local frame = _G["ChatFrame"..i]
       local tab = _G["ChatFrame"..i.."Tab"]
 
+      local combat = 0
+      for _, msg in pairs(_G["ChatFrame"..i].messageTypeList) do
+        if strfind(msg, "SPELL", 1) or strfind(msg, "COMBAT", 1) then
+          combat = combat + 1
+        end
+      end
+
+      if combat > 5 then
+        frame.pfCombatLog = true
+      else
+        frame.pfCombatLog = nil
+      end
+
       for _, tex in pairs(CHAT_FRAME_TEXTURES) do
         _G["ChatFrame"..i..tex]:SetTexture()
         _G["ChatFrame"..i..tex]:Hide()
@@ -630,6 +643,11 @@ pfUI:RegisterModule("chat", "vanilla:tbc", function ()
 
   local function AddMessage(frame, text, a1, a2, a3, a4, a5)
     if not text then return end
+
+    -- skip chat parsing on combat log
+    if frame.pfCombatLog then
+      return frame:HookAddMessage(text, a1, a2, a3, a4, a5)
+    end
 
     -- Remove prat CLINKs
     text = gsub(text, "{CLINK:(%x+):([%d-]-:[%d-]-:[%d-]-:[%d-]-:[%d-]-:[%d-]-:[%d-]-:[%d-]-):([^}]-)}", "|c%1|Hitem:%2|h[%3]|h|r") -- tbc
