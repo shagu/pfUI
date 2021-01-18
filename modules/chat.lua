@@ -19,6 +19,39 @@ pfUI:RegisterModule("chat", "vanilla:tbc", function ()
     end
   end)
 
+  local realm = GetRealmName()
+  local player = UnitName("player")
+  local history
+  local function SaveChatHistory(id, msg, r, g, b)
+    -- create cache tables if not existing
+    pfUI_cache = pfUI_cache or {}
+    pfUI_cache["chathistory"] = pfUI_cache["chathistory"] or {}
+    pfUI_cache["chathistory"][realm] = pfUI_cache["chathistory"][realm] or {}
+    pfUI_cache["chathistory"][realm][player] = pfUI_cache["chathistory"][realm][player] or {}
+    pfUI_cache["chathistory"][realm][player][id] = pfUI_cache["chathistory"][realm][player][id] or {}
+
+    if r and g and b then
+      local color = rgbhex(r*.6, g*.6, b*.6)
+      msg = string.gsub(msg, "^", color)
+      msg = string.gsub(msg, "|r", "|r" .. color)
+    end
+
+    history = pfUI_cache["chathistory"][realm][player][id]
+    table.insert(history, 1, msg)
+    if history[30] then table.remove(history, 30) end
+  end
+
+  local function GetChatHistory(id)
+    -- create cache tables if not existing
+    pfUI_cache = pfUI_cache or {}
+    pfUI_cache["chathistory"] = pfUI_cache["chathistory"] or {}
+    pfUI_cache["chathistory"][realm] = pfUI_cache["chathistory"][realm] or {}
+    pfUI_cache["chathistory"][realm][player] = pfUI_cache["chathistory"][realm][player] or {}
+    pfUI_cache["chathistory"][realm][player][id] = pfUI_cache["chathistory"][realm][player][id] or {}
+
+    return pfUI_cache["chathistory"][realm][player][id]
+  end
+
   pfUI.chat = CreateFrame("Frame",nil,UIParent)
 
   pfUI.chat.left = CreateFrame("Frame", "pfChatLeft", UIParent)
@@ -701,6 +734,13 @@ pfUI:RegisterModule("chat", "vanilla:tbc", function ()
       text = timecolorhex .. tleft .. date(C.chat.text.timeformat) .. tright .. "|r " .. text
     end
 
+    -- save chat history
+    if C.chat.global.whispermod == "1" and string.find(text, wcol, 1) == 1 then
+      SaveChatHistory(frame:GetID(), string.gsub(text, wcol, ""), cr, cg, cb)
+    else
+      SaveChatHistory(frame:GetID(), text, a1, a2, a3)
+    end
+
     if C.chat.global.whispermod == "1" then
       -- patch incoming whisper string to match the colors
       if string.find(text, wcol, 1) == 1 then
@@ -713,6 +753,17 @@ pfUI:RegisterModule("chat", "vanilla:tbc", function ()
 
   for i=1,NUM_CHAT_WINDOWS do
     if not _G["ChatFrame"..i].HookAddMessage then
+      if C.chat.text.history == "1" then
+        -- write history to chat
+        local history = GetChatHistory(i)
+        for j=30,0,-1 do
+          if history[j] then
+            _G["ChatFrame"..i]:AddMessage(history[j], .6,.6,.6)
+          end
+        end
+      end
+
+      -- add chat parse and history hooks
       _G["ChatFrame"..i].HookAddMessage = _G["ChatFrame"..i].AddMessage
       _G["ChatFrame"..i].AddMessage = AddMessage
     end
