@@ -877,6 +877,14 @@ function pfUI.uf.OnUpdate()
     end
   end
 
+  -- handle pseudo focus target visibility
+  if this.unitname and this == pfFocusTarget then
+    if pfFocus and not pfFocus.label then
+      this.label = nil
+      return
+    end
+  end
+
   if not this.label then return end
 
   -- update portrait on first visible frame
