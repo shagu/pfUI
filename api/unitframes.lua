@@ -840,7 +840,8 @@ function pfUI.uf.OnUpdate()
     this.fullupdate = nil
   end
 
-  if this == pfFocus then -- handle pseudo focus frames
+  -- handle pseudo focus frames
+  if this.unitname and this == pfFocus then
     local unitname = ( this.label and UnitName(this.label) ) or ""
 
     if pfFocusTarget then -- update focus target
