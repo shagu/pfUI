@@ -879,7 +879,7 @@ function pfUI.uf.OnUpdate()
 
   -- handle pseudo focus target visibility
   if this.unitname and this == pfFocusTarget then
-    if pfFocus and not pfFocus.label then
+    if pfFocus and not pfFocus.label or pfFocus.label == "" then
       this.label = nil
       return
     end
