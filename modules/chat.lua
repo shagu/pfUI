@@ -31,7 +31,7 @@ pfUI:RegisterModule("chat", "vanilla:tbc", function ()
     pfUI_cache["chathistory"][realm][player][id] = pfUI_cache["chathistory"][realm][player][id] or {}
 
     if r and g and b then
-      local color = rgbhex(r*.6, g*.6, b*.6)
+      local color = rgbhex(r*.5+.2, g*.5+.2, b*.5+.2)
       msg = string.gsub(msg, "^", color)
       msg = string.gsub(msg, "|r", "|r" .. color)
     end
@@ -758,7 +758,7 @@ pfUI:RegisterModule("chat", "vanilla:tbc", function ()
         local history = GetChatHistory(i)
         for j=30,0,-1 do
           if history[j] then
-            _G["ChatFrame"..i]:AddMessage(history[j], .6,.6,.6)
+            _G["ChatFrame"..i]:AddMessage(history[j], .7,.7,.7)
           end
         end
       end
