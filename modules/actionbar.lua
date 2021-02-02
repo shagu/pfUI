@@ -283,6 +283,9 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
   end
 
   local function ButtonDrag(self)
+    -- skip during combat
+    if InCombatLockdown and InCombatLockdown() then return end
+
     local self = self or this
 
     if _G.LOCK_ACTIONBAR == "1" and not (pfUI_config.bars.shiftdrag == "1" and IsShiftKeyDown()) then return end
@@ -295,6 +298,9 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
   end
 
   local function ButtonDragStop(self)
+    -- skip during combat
+    if InCombatLockdown and InCombatLockdown() then return end
+
     local self = self or this
 
     if MacroFrame_SaveMacro then
