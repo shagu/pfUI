@@ -425,7 +425,7 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
         nameplate.debuffs[i]:SetPoint(aligna, nameplate.health, alignb, 0, offs)
       elseif i <= limit then
         nameplate.debuffs[i]:SetPoint("LEFT", nameplate.debuffs[i-1], "RIGHT", 1, 0)
-      elseif i > limit then
+      elseif i > limit and limit > 0 then
         nameplate.debuffs[i]:SetPoint(aligna, nameplate.debuffs[i-limit], alignb, 0, space)
       end
 
