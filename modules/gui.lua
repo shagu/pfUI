@@ -1162,6 +1162,19 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
         "-1:" .. T["Large"],
         "-3:" .. T["Huge"],
       },
+      ["maptooltip"] = {
+        ".10:10%",
+        ".20:20%",
+        ".30:30%",
+        ".40:40%",
+        ".50:50%",
+        ".60:60%",
+        ".70:70%",
+        ".80:80%",
+        ".90:90%",
+        "1:100%",
+        "0:" .. T["World Map Scale"],
+      },
       ["textalign"] = {
         "LEFT:" .. T["Left"],
         "CENTER:" .. T["Center"],
@@ -1485,6 +1498,7 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
       CreateConfig(nil, T["Border Color"], C.appearance.border, "color", "color")
       CreateConfig(U["mapreveal"], T["Map Reveal Color"], C.appearance.worldmap, "mapreveal_color", "color")
       CreateConfig(U["mapcolors"], T["Map Group/Raid Circle Size"], C.appearance.worldmap, "groupcircles", "dropdown", pfUI.gui.dropdowns.mapcircle)
+      CreateConfig(U["map"], T["Map Tooltip Scale"], C.appearance.worldmap, "tooltipsize", "dropdown", pfUI.gui.dropdowns.maptooltip)
       CreateConfig(nil) -- spacer
       CreateConfig(nil, T["Enable Frame Shadow"], C.appearance.border, "shadow", "checkbox")
       CreateConfig(nil, T["Frame Shadow Intensity"], C.appearance.border, "shadow_intensity", "dropdown", pfUI.gui.dropdowns.uf_debuff_indicator_size)

@@ -1,6 +1,22 @@
 pfUI:RegisterModule("map", "vanilla:tbc", function ()
   table.insert(UISpecialFrames, "WorldMapFrame")
 
+  local function UpdateTooltipScale()
+    -- load scale data
+    local tooltipscale = tonumber(C.appearance.worldmap.tooltipsize)
+    local scale = WorldMapFrame:GetScale()
+
+    -- apply tooltip scale
+    if tooltipscale > 0 then
+      WorldMapTooltip:SetScale(tooltipscale/scale)
+    else
+      WorldMapTooltip:SetScale(1)
+    end
+  end
+
+  -- register config update handler
+  pfUI.map = { UpdateConfig = UpdateTooltipScale }
+
   function _G.ToggleWorldMap()
     if WorldMapFrame:IsShown() then
       WorldMapFrame:Hide()
@@ -45,6 +61,7 @@ pfUI:RegisterModule("map", "vanilla:tbc", function ()
       if IsControlKeyDown() then
         scale = clamp(WorldMapFrame:GetScale() + arg1/10, 0.1, 2.0)
         WorldMapFrame:SetScale(scale)
+        UpdateTooltipScale()
       end
 
       SaveMovable(this, true)
@@ -64,6 +81,7 @@ pfUI:RegisterModule("map", "vanilla:tbc", function ()
 
     WorldMapFrame:SetAlpha(alpha)
     WorldMapFrame:SetScale(scale)
+    UpdateTooltipScale()
 
     WorldMapFrame:ClearAllPoints()
     WorldMapFrame:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
