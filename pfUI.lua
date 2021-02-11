@@ -189,19 +189,21 @@ function pfUI:UpdateFonts()
   end
 end
 
+local translations
 function pfUI:GetEnvironment()
   -- load api into environment
   for m, func in pairs(pfUI.api or {}) do
     pfUI.env[m] = func
   end
 
-  if pfUI_config and pfUI_config.global and pfUI_config.global.language and not pfUI.env.T then
+  if pfUI_config and pfUI_config.global and pfUI_config.global.language and not translations then
     local lang = pfUI_config and pfUI_config.global and pfUI_config.global.language and pfUI_translation[pfUI_config.global.language] and pfUI_config.global.language or GetLocale()
     pfUI.env.T = setmetatable(pfUI_translation[lang] or {}, { __index = function(tab,key)
       local value = tostring(key)
       rawset(tab,key,value)
       return value
     end})
+    translations = true
   end
 
   pfUI.env._G = getfenv(0)
