@@ -93,8 +93,6 @@ GetTotemInfo = function(id)
   return 1, active[id].name, active[id].start, active[id].duration, active[id].icon
 end
 
-pfUI.api.libtotem = libtotem
-
 if class ~= "SHAMAN" then return end
 
 libtotem = CreateFrame("Frame")
@@ -151,6 +149,9 @@ libtotem.CheckAddQueue = function(self, name, rank, icon)
 
   return nil
 end
+
+-- assign library to global space
+pfUI.api.libtotem = libtotem
 
 -- Check for totem spell casts
 hooksecurefunc("CastSpell", function(id, bookType)
