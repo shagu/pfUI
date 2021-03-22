@@ -597,11 +597,12 @@ pfUI:RegisterModule("unlock", "vanilla:tbc", function ()
   pfUI.unlock.dock.xcoord:SetFontObject(GameFontNormal)
   pfUI.unlock.dock.xcoord:SetAutoFocus(false)
 
-  pfUI.unlock.dock.xcoord:SetScript("OnEscapePressed", function(self)
-    if tonumber(this:GetText()) then
+  pfUI.unlock.dock.xcoord:SetScript("OnEnterPressed", function(self)
+    local newXPos = tonumber(this:GetText())
+    if newXPos then
       local frame = pfUI.unlock.dock.parent.frame
       local anchor, _, _, xpos, ypos = frame:GetPoint()
-      frame:SetPoint(anchor, xpos, ypos)
+      frame:SetPoint(anchor, newXPos, ypos)
       SavePosition(frame)
     else
       UpdateDockValues()
@@ -634,11 +635,12 @@ pfUI:RegisterModule("unlock", "vanilla:tbc", function ()
   pfUI.unlock.dock.ycoord:SetFontObject(GameFontNormal)
   pfUI.unlock.dock.ycoord:SetAutoFocus(false)
 
-  pfUI.unlock.dock.ycoord:SetScript("OnEscapePressed", function(self)
-    if tonumber(this:GetText()) then
+  pfUI.unlock.dock.ycoord:SetScript("OnEnterPressed", function(self)
+    local newYPos = tonumber(this:GetText())
+    if newYPos then
       local frame = pfUI.unlock.dock.parent.frame
       local anchor, _, _, xpos, ypos = frame:GetPoint()
-      frame:SetPoint(anchor, xpos, ypos)
+      frame:SetPoint(anchor, xpos, newYPos)
       SavePosition(frame)
     else
       UpdateDockValues()
