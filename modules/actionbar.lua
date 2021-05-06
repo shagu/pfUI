@@ -920,9 +920,9 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
       local modifier = { "ALT", "SHIFT", "CTRL" }
       local buttons = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "+", "=", "´" }
       local current = CURRENT_ACTIONBAR_PAGE
-      bar.pagemaster = bar.pagemaster or CreateFrame("Frame", "pfPageMaster", UIParent)
-      bar.pagemaster:RegisterEvent("PLAYER_ENTERING_WORLD")
-      bar.pagemaster:SetScript("OnEvent", function()
+      bars.pagemaster = bars.pagemaster or CreateFrame("Frame", "pfPageMaster", UIParent)
+      bars.pagemaster:RegisterEvent("PLAYER_ENTERING_WORLD")
+      bars.pagemaster:SetScript("OnEvent", function()
         for _,mod in pairs(modifier) do
           for _,but in pairs(buttons) do
             SetBinding(mod.."-"..but)
