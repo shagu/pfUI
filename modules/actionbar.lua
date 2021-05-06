@@ -707,7 +707,7 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     -- handle aura events
     if aura_events[event] then
       for j=1,12 do
-        if self[11][j] then
+        if self[11] and self[11][j] then
           updatecache[self[11][j].slot] = true
         end
       end
@@ -717,7 +717,7 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     -- handle pet events
     if pet_events[event] then
       for j=1,12 do
-        if self[12][j] then
+        if self[12] and self[12][j] then
           updatecache[self[12][j].slot] = true
         end
       end
