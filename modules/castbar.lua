@@ -187,6 +187,7 @@ pfUI:RegisterModule("castbar", "vanilla:tbc", function ()
 
   -- hide blizzard
   if C.castbar.player.hide_blizz == "1" then
+    CastingBarFrame:SetScript("OnShow", function() CastingBarFrame:Hide() end)
     CastingBarFrame:UnregisterAllEvents()
     CastingBarFrame:Hide()
   end
