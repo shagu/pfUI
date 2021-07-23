@@ -66,10 +66,11 @@ function libpredict:ParseComm(sender, msg)
     msgtype = "Stop"
   elseif msg == "Resurrection/stop/" then
     msgtype = "RessStop"
-  else
+  elseif msg then
     local msgobj = {strsplit("/", msg)}
 
-    if msgobj and msgobj[1] and msgobj[2] then -- legacy healcomm object
+    if msgobj and msgobj[1] and msgobj[2] then
+      -- legacy healcomm object
       if msgobj[1] == "GrpHealdelay" or msgobj[1] == "Healdelay" then
         msgtype, time = "Delay", msgobj[2]
       end
@@ -88,7 +89,8 @@ function libpredict:ParseComm(sender, msg)
           if msgobj[i] then table.insert(target, msgobj[i]) end
         end
       end
-    elseif select and UnitCastingInfo then -- latest healcomm
+    elseif select and UnitCastingInfo then
+      -- latest healcomm
       msgtype = tonumber(string.sub(msg, 1, 3))
       if not msgtype then return end
 
