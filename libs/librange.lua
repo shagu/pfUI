@@ -90,6 +90,10 @@ local unitcache = {}
 -- actual unit-range table
 local unitdata = { }
 
+-- setup sound function switches
+local SoundOn = PlaySound
+local SoundOff = function() return end
+
 librange.id = 1
 
 librange:Hide()
@@ -141,11 +145,16 @@ librange:SetScript("OnUpdate", function()
       if TradeFrame and TradeFrame:IsShown() then return nil end
       if PlayerFrame and PlayerFrame.inCombat then return nil end
 
+      _G.PlaySound = SoundOff
       pfScanActive = true
+
       TargetUnit(unit)
       unitdata[unit] = IsActionInRange(librange.slot)
       TargetLastTarget()
+
+      _G.PlaySound = SoundOn
       pfScanActive = false
+
       this:ReAttack()
     end
 
