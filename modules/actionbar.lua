@@ -647,7 +647,8 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     elseif button.bar == 12 then
       start, duration, enable = GetPetActionCooldown(button.id)
     elseif button.spellslot and button.booktype then
-      start, duration, enabled = GetSpellCooldown(button.spellslot, button.booktype)
+      start, duration = GetSpellCooldown(button.spellslot, button.booktype)
+      enable = 1
     else
       start, duration, enable = GetActionCooldown(button.id)
     end
