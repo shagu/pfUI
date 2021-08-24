@@ -188,8 +188,6 @@ pfUI:RegisterModule("socialmod", "vanilla:tbc", function ()
           else
             _G["WhoFrameButton"..i.."Class"]:SetTextColor(color.r,color.g,color.b,1)
           end
-        else
-          _G["WhoFrameButton"..i.."Class"]:Hide()
         end
 
         local color = GetDifficultyColor(level)
