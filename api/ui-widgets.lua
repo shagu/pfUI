@@ -91,7 +91,7 @@ do -- statusbars
     local f = CreateFrame("Button", name, parent)
     f:EnableMouse(nil)
 
-    f.bar = f:CreateTexture(nil, "HIGH")
+    f.bar = f:CreateTexture(nil, "BACKGROUND")
     f.bar:SetPoint("TOPLEFT", f, "TOPLEFT", 0, 0)
     f.bar:SetPoint("BOTTOMRIGHT", f, "BOTTOMRIGHT", 0, 0)
 
