@@ -983,6 +983,11 @@ function pfUI.api.CreateBackdrop(f, inset, legacy, transp, backdropSetting)
     border = inset
   end
 
+  -- detect if blizzard backdrops shall be used
+  local blizz = C.appearance.border.force_blizz == "1" and true or nil
+  backdrop = blizz and pfUI.backdrop_blizz_full or rawborder == 1 and pfUI.backdrop_thin or pfUI.backdrop
+  border = blizz and math.max(border, 3) or border
+
   -- get the color settings
   br, bg, bb, ba = pfUI.api.GetStringColor(pfUI_config.appearance.border.background)
   er, eg, eb, ea = pfUI.api.GetStringColor(pfUI_config.appearance.border.color)
@@ -991,7 +996,6 @@ function pfUI.api.CreateBackdrop(f, inset, legacy, transp, backdropSetting)
 
   -- use legacy backdrop handling
   if legacy then
-    backdrop = rawborder == 1 and pfUI.backdrop_thin or pfUI.backdrop
     if backdropSetting then f:SetBackdrop(backdropSetting) end
     f:SetBackdrop(backdrop)
     f:SetBackdropColor(br, bg, bb, ba)
@@ -1019,10 +1023,25 @@ function pfUI.api.CreateBackdrop(f, inset, legacy, transp, backdropSetting)
 
     f.backdrop:SetPoint("TOPLEFT", f, "TOPLEFT", -border, border)
     f.backdrop:SetPoint("BOTTOMRIGHT", f, "BOTTOMRIGHT", border, -border)
-    f.backdrop:SetBackdrop(rawborder > 1 and pfUI.backdrop or pfUI.backdrop_thin)
-
+    f.backdrop:SetBackdrop(backdrop)
     f.backdrop:SetBackdropColor(br, bg, bb, ba)
     f.backdrop:SetBackdropBorderColor(er, eg, eb , ea)
+
+    if blizz then
+      if not f.backdrop_border then
+        local border = CreateFrame("Frame", nil, f)
+        border:SetFrameLevel(level + 1)
+        f.backdrop_border = border
+      end
+
+      f.backdrop.SetBackdropBorderColor = function(self, r, g, b, a)
+        f.backdrop_border:SetBackdropBorderColor(r,g,b,a)
+      end
+
+      f.backdrop_border:SetAllPoints(f.backdrop)
+      f.backdrop_border:SetBackdrop(pfUI.backdrop_blizz_border)
+      f.backdrop_border:SetBackdropBorderColor(er, eg, eb , ea)
+    end
   end
 end
 

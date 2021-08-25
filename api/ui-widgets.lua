@@ -874,6 +874,11 @@ function pfUI.api.SkinCheckbox(frame, size)
   end
   CreateBackdrop(frame)
   SetAllPointsOffset(frame.backdrop, frame, 4)
+
+  if frame.backdrop_border then
+    -- make sure the blizzard border doesn't overlap the checkmark
+    frame.backdrop_border:SetFrameLevel(frame.backdrop:GetFrameLevel())
+  end
 end
 
 function pfUI.api.SkinDropDown(frame, cr, cg, cb, useSmall)
