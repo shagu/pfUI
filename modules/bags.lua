@@ -277,7 +277,7 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
     end
 
     if x > 0 then y = y + 1 end
-    if pfUI.panel then topspace = topspace + pfUI.panel.right:GetHeight() end
+    if pfUI.panel and pfUI.panel.right:IsShown() then topspace = topspace + pfUI.panel.right:GetHeight() end
     frame:SetHeight( default_border*2 + y*(frame.button_size+default_border*3) + topspace)
 
     local chat = pfUI.chat and ( object == "bank" and pfUI.chat.left or pfUI.chat.right) or nil
