@@ -89,7 +89,7 @@ pfUI:RegisterModule("tooltip", "vanilla:tbc", function ()
       if GameTooltip:GetAnchorType() == "ANCHOR_NONE" then
         GameTooltip:ClearAllPoints()
         if C.tooltip.position == "bottom" then
-          if pfUI.panel then
+          if pfUI.panel and pfUI.panel.right:IsShown() then
             GameTooltip:SetPoint("BOTTOMRIGHT", pfUI.panel.right, "TOPRIGHT", 0, default_border*2)
           else
             GameTooltip:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", -5, 5)
@@ -174,10 +174,10 @@ pfUI:RegisterModule("tooltip", "vanilla:tbc", function ()
     end
   end)
 
-  GameTooltipStatusBar:SetHeight(6)
+  GameTooltipStatusBar:SetHeight(8)
   GameTooltipStatusBar:ClearAllPoints()
-  GameTooltipStatusBar:SetPoint("BOTTOMLEFT", GameTooltip, "TOPLEFT", 0, default_border*3)
-  GameTooltipStatusBar:SetPoint("BOTTOMRIGHT", GameTooltip, "TOPRIGHT", 0, default_border*3)
+  GameTooltipStatusBar:SetPoint("BOTTOMLEFT", GameTooltip, "TOPLEFT", 0, default_border)
+  GameTooltipStatusBar:SetPoint("BOTTOMRIGHT", GameTooltip, "TOPRIGHT", 0, default_border)
   GameTooltipStatusBar:SetStatusBarTexture(pfUI.media[C.tooltip.statusbar.texture])
   CreateBackdrop(GameTooltipStatusBar, nil, nil, tonumber(C.tooltip.alpha))
   CreateBackdropShadow(GameTooltipStatusBar)
