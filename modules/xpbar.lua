@@ -219,12 +219,9 @@ end
     b.position = t == "XP" and C.panel.xp.xp_position or C.panel.xp.rep_position
     b.display = t == "XP" and C.panel.xp.xp_display or C.panel.xp.rep_display
 
-    local barStrata = "LOW"
-    local restedStrata = "MEDIUM"
-
+    local barLevel, restedLevel = 0, 1
     if C.panel.xp.dont_overlap == "1" then
-      barStrata = "MEDIUM"
-      restedStrata = "LOW"
+      barLevel, restedLevel = 1, 0
     end
 
     if t == "XP" and C.panel.xp.xp_always == "1" then
@@ -248,7 +245,7 @@ end
     b.bar:SetStatusBarTexture(pfUI.media["img:bar"])
     b.bar:ClearAllPoints()
     b.bar:SetAllPoints(b)
-    b.bar:SetFrameStrata(barStrata)
+    b.bar:SetFrameLevel(barLevel)
 
     local cr, cg, cb, ca = pfUI.api.GetStringColor(b.xp_color)
     b.bar:SetStatusBarColor(cr,cg,cb,ca)
@@ -258,7 +255,7 @@ end
     b.restedbar:SetStatusBarTexture(pfUI.media["img:bar"])
     b.restedbar:ClearAllPoints()
     b.restedbar:SetAllPoints(b)
-    b.restedbar:SetFrameStrata(restedStrata)
+    b.restedbar:SetFrameLevel(restedLevel)
     local cr, cg, cb, ca = pfUI.api.GetStringColor(b.rest_color)
     b.restedbar:SetStatusBarColor(cr,cg,cb,ca)
     b.restedbar:SetOrientation(b.mode)
