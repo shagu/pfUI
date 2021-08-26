@@ -757,6 +757,7 @@ pfUI_translation["ruRU"] = {
   ["Width"] = "Ширина",
   ["Wobble Zoom"] = "Подпрыгивание",
   ["Won"] = "Победа",
+  ["World Map Scale"] = "Масштаб карты мира",
   ["XP"] = "Опыт",
   ["XP Bar"] = "Полоса опыта",
   ["XP Percentage"] = "Процент опыта",
