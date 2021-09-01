@@ -365,6 +365,12 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
       pfUI.bags[bag].slots[slot].bag = bag
       pfUI.bags[bag].slots[slot].slot = slot
       pfUI.bags[bag].slots[slot].frame:SetID(slot)
+	  
+	  if ShaguScore then
+        pfUI.bags[bag].slots[slot].frame.scoreText = pfUI.bags[bag].slots[slot].frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+        pfUI.bags[bag].slots[slot].frame.scoreText:SetFont(pfUI.font_default, 12, "OUTLINE")
+        pfUI.bags[bag].slots[slot].frame.scoreText:SetPoint("BOTTOMRIGHT", 0, 0)
+	  end
     end
 
     local texture, count, locked, quality = GetContainerItemInfo(bag, slot)
@@ -431,14 +437,8 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
     end
 
     -- add shaguscore if we have it
-    if ShaguScore then
-      if not pfUI.bags[bag].slots[slot].frame.scoreText then
-        pfUI.bags[bag].slots[slot].frame.scoreText = pfUI.bags[bag].slots[slot].frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-        pfUI.bags[bag].slots[slot].frame.scoreText:SetFont(pfUI.font_default, 12, "OUTLINE")
-        pfUI.bags[bag].slots[slot].frame.scoreText:SetPoint("BOTTOMRIGHT", 0, 0)
-      end
-
-      if quality then
+    if ShaguScore and pfUI.bags[bag].slots[slot].frame.scoreText then
+      if quality and quality > 0 then
         local link = GetContainerItemLink(bag, slot)
         local r,g,b = GetItemQualityColor(quality)
         local _, _, itemID = string.find(link, "item:(%d+):%d+:%d+:%d+")
@@ -450,6 +450,8 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
         else
           pfUI.bags[bag].slots[slot].frame.scoreText:SetText("")
         end
+      else
+        pfUI.bags[bag].slots[slot].frame.scoreText:SetText("")
       end
     end
 
