@@ -366,11 +366,11 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
       pfUI.bags[bag].slots[slot].slot = slot
       pfUI.bags[bag].slots[slot].frame:SetID(slot)
 	  
-	  if ShaguScore then
+      if ShaguScore then
         pfUI.bags[bag].slots[slot].frame.scoreText = pfUI.bags[bag].slots[slot].frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
         pfUI.bags[bag].slots[slot].frame.scoreText:SetFont(pfUI.font_default, 12, "OUTLINE")
         pfUI.bags[bag].slots[slot].frame.scoreText:SetPoint("BOTTOMRIGHT", 0, 0)
-	  end
+      end
     end
 
     local texture, count, locked, quality = GetContainerItemInfo(bag, slot)
