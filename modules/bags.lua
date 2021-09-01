@@ -430,6 +430,29 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
       end
     end
 
+    -- add shaguscore if we have it
+    if ShaguScore then
+      if not pfUI.bags[bag].slots[slot].frame.scoreText then
+        pfUI.bags[bag].slots[slot].frame.scoreText = pfUI.bags[bag].slots[slot].frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+        pfUI.bags[bag].slots[slot].frame.scoreText:SetFont(pfUI.font_default, 12, "OUTLINE")
+        pfUI.bags[bag].slots[slot].frame.scoreText:SetPoint("BOTTOMRIGHT", 0, 0)
+      end
+
+      if quality then
+        local link = GetContainerItemLink(bag, slot)
+        local r,g,b = GetItemQualityColor(quality)
+        local _, _, itemID = string.find(link, "item:(%d+):%d+:%d+:%d+")
+        local itemLevel = ShaguScore.Database[tonumber(itemID)] or 0
+        local score = ShaguScore:Calculate(vslot, quality, itemLevel)
+        if score and score > 0 then
+          pfUI.bags[bag].slots[slot].frame.scoreText:SetText(score)
+          pfUI.bags[bag].slots[slot].frame.scoreText:SetTextColor(r, g, b)
+        else
+          pfUI.bags[bag].slots[slot].frame.scoreText:SetText("")
+        end
+      end
+    end
+
     pfUI.bags[bag].slots[slot].frame:Show()
   end
 
