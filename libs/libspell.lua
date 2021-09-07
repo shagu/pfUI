@@ -16,6 +16,7 @@ local spellmaxrank = {}
 function libspell.GetSpellMaxRank(name)
   local cache = spellmaxrank[name]
   if cache then return cache[1], cache[2] end
+  local name = string.lower(name)
 
   local rank = { 0, nil}
   for i = 1, GetNumSpellTabs() do
@@ -23,7 +24,7 @@ function libspell.GetSpellMaxRank(name)
     local bookType = BOOKTYPE_SPELL
     for id = offset + 1, offset + num do
       local spellName, spellRank = GetSpellName(id, bookType)
-      if spellName == name then
+      if name == string.lower(spellName) then
         if not rank[2] then rank[2] = spellRank end
 
         local _, _, numRank = string.find(spellRank, " (%d+)$")
