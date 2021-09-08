@@ -365,7 +365,7 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
       pfUI.bags[bag].slots[slot].bag = bag
       pfUI.bags[bag].slots[slot].slot = slot
       pfUI.bags[bag].slots[slot].frame:SetID(slot)
-	  
+
       if ShaguScore then
         pfUI.bags[bag].slots[slot].frame.scoreText = pfUI.bags[bag].slots[slot].frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
         pfUI.bags[bag].slots[slot].frame.scoreText:SetFont(pfUI.font_default, 12, "OUTLINE")
@@ -400,11 +400,11 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
 
     ContainerFrame_UpdateCooldown(bag, pfUI.bags[bag].slots[slot].frame)
 
-    local count = _G[pfUI.bags[bag].slots[slot].frame:GetName() .. "Count"]
-    count:SetFont(pfUI.font_unit, C.global.font_unit_size, "OUTLINE")
-    count:SetAllPoints()
-    count:SetJustifyH("RIGHT")
-    count:SetJustifyV("BOTTOM")
+    local countFrame = _G[pfUI.bags[bag].slots[slot].frame:GetName() .. "Count"]
+    countFrame:SetFont(pfUI.font_unit, C.global.font_unit_size, "OUTLINE")
+    countFrame:SetAllPoints()
+    countFrame:SetJustifyH("RIGHT")
+    countFrame:SetJustifyV("BOTTOM")
 
     local icon = _G[pfUI.bags[bag].slots[slot].frame:GetName() .. "IconTexture"]
     icon:SetTexCoord(.08, .92, .08, .92)
@@ -444,7 +444,7 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
         local _, _, itemID = string.find(link, "item:(%d+):%d+:%d+:%d+")
         local itemLevel = ShaguScore.Database[tonumber(itemID)] or 0
         local score = ShaguScore:Calculate(vslot, quality, itemLevel)
-        if score and score > 0 then
+        if score and score > 0 and count and count == 1 then
           pfUI.bags[bag].slots[slot].frame.scoreText:SetText(score)
           pfUI.bags[bag].slots[slot].frame.scoreText:SetTextColor(r, g, b)
         else
