@@ -68,11 +68,8 @@ The term "*pfui!*" is german and simply stands for "*pooh!*", because I'm not a
 big fan of creating configuration UI's, especially not via the Wow-API
 (you might have noticed that in ShaguUI).
 
-~~**Is there a discord channel?**~~  
-~~Yes there is one: [Discord Invite](https://discord.gg/QTRKanu)~~
-
 **How can I donate?**  
-You can't. I'm doing this for fun. Enjoy!
+You can donate via [GitHub](https://github.com/sponsors/shagu) or [Ko-fi](https://ko-fi.com/shagu)
 
 **How do I report a Bug?**  
 Please provide as much information as possible in the [Bugtracker](https://github.com/shagu/pfUI/issues).
