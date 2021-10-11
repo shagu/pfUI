@@ -1442,6 +1442,7 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
 
       CreateConfig(nil, T["Settings"], nil, nil, "header")
       CreateConfig(nil, T["Language"], C.global, "language", "dropdown", pfUI.gui.dropdowns.languages)
+      CreateConfig(nil, T["Use Original Game Fonts"], C.global, "font_blizzard", "checkbox")
       CreateConfig(nil, T["Enable Region Compatible Font"], C.global, "force_region", "checkbox")
       CreateConfig(nil, T["Standard Text Font"], C.global, "font_default", "dropdown", pfUI.gui.dropdowns.fonts)
       CreateConfig(nil, T["Standard Text Font Size"], C.global, "font_size")

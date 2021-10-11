@@ -35,6 +35,7 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("global",     nil,           "pixelperfect",     "0")
   pfUI:UpdateConfig("global",     nil,           "offscreen",        "0")
 
+  pfUI:UpdateConfig("global",     nil,           "font_blizzard",    "0")
   pfUI:UpdateConfig("global",     nil,           "font_default",     "Interface\\AddOns\\pfUI\\fonts\\Myriad-Pro.ttf")
   pfUI:UpdateConfig("global",     nil,           "font_size",        "12")
   pfUI:UpdateConfig("global",     nil,           "font_unit",        "Interface\\AddOns\\pfUI\\fonts\\BigNoodleTitling.ttf")

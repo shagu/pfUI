@@ -146,6 +146,11 @@ function pfUI:UpdateFonts()
   pfUI.font_combat = combat
   pfUI.font_unit = unit
 
+  -- skip setting fonts, keep blizzard defaults
+  if pfUI_config.global.font_blizzard == "1" then
+    return
+  end
+
   -- set game constants
   STANDARD_TEXT_FONT = default
   DAMAGE_TEXT_FONT   = combat
