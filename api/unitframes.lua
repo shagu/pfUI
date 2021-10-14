@@ -2283,7 +2283,7 @@ function pfUI.uf:GetStatusValue(unit, pos)
     if UnitIsPlayer(unitstr) then
       return ""
     else
-      return armor
+      return unit:GetColor("armor") .. armor
     end
 
   -- health
@@ -2411,6 +2411,9 @@ function pfUI.uf.GetColor(self, preset)
     r = GetDifficultyColor(UnitLevel(unitstr)).r
     g = GetDifficultyColor(UnitLevel(unitstr)).g
     b = GetDifficultyColor(UnitLevel(unitstr)).b
+
+  elseif preset == "armor" then
+    r, g, b = GetColorGradient(1.00 - UnitResistance(unitstr, 0) / (75 * UnitLevel(unitstr)))
   end
 
   -- pastel
