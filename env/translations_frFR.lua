@@ -31,6 +31,7 @@ pfUI_translation["frFR"] = {
   ["A new installation of |cff33ffccpf|rUI ships with 4 prebuilt design profiles. Click below if you wish to load one of these profiles."] = "Une nouvelle installation de |cff33ffccpf|rUI est livrée avec 4 profils de conception prédéfinis, Cliquez ci-dessous si vous souhaitez charger l'un de ces profils",
   ["A new version is available"] = "Une nouvelle version est disponible",
   ["Appearance"] = "Apparence",
+  ["Armor"] = nil,
   ["Ascending"] = "Ascendante",
   ["Author"] = "Auteur",
   ["Auto-Castable Action Indicator"] = "Indicateur d'action de lancer de sort automatique",

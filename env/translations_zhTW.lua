@@ -31,6 +31,7 @@ pfUI_translation["zhTW"] = {
   ["A new installation of |cff33ffccpf|rUI ships with 4 prebuilt design profiles. Click below if you wish to load one of these profiles."] = "pfUI的安裝內建有四種風格.點選以下讀取其一",
   ["A new version is available"] = nil,
   ["Appearance"] = "外觀設置",
+  ["Armor"] = nil,
   ["Ascending"] = "下移",
   ["Author"] = nil,
   ["Auto-Castable Action Indicator"] = nil,

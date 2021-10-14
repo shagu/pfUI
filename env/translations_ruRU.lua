@@ -31,6 +31,7 @@ pfUI_translation["ruRU"] = {
   ["A new installation of |cff33ffccpf|rUI ships with 4 prebuilt design profiles. Click below if you wish to load one of these profiles."] = "Новая установка |cff33ffccpf|rUI предлагает 4 предварительно созданных профиля дизайна. Нажмите ниже, если вы хотите загрузить один из этих профилей.",
   ["A new version is available"] = "Доступна новая версия",
   ["Appearance"] = "Внешность",
+  ["Armor"] = nil,
   ["Ascending"] = "По возрастанию",
   ["Author"] = "Автор",
   ["Auto-Castable Action Indicator"] = "Индикатор автоматически произносимых заклинаний",

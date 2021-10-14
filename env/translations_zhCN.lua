@@ -31,6 +31,7 @@ pfUI_translation["zhCN"] = {
   ["A new installation of |cff33ffccpf|rUI ships with 4 prebuilt design profiles. Click below if you wish to load one of these profiles."] = "pfUI的新安装自带4以下四种预设风格.点击下方可选择其一",
   ["A new version is available"] = "发现新版本!",
   ["Appearance"] = "外观设置",
+  ["Armor"] = nil,
   ["Ascending"] = "上移",
   ["Author"] = nil,
   ["Auto-Castable Action Indicator"] = "自动施放(宠物)技能指示器",

@@ -1028,6 +1028,7 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
         "nameshort:" .. T["Name (Short)"],
         "level:" .. T["Level"],
         "class:" .. T["Class"],
+        "armor:" .. T["Armor"],
         "namehealth:" .. T["Name | Health Missing"],
         "shortnamehealth:" .. T["Name (Short) | Health Missing"],
         "healthdyn:" .. T["Health - Auto"],

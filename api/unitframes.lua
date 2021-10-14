@@ -2254,6 +2254,7 @@ function pfUI.uf:GetStatusValue(unit, pos)
 
   local mp, mpmax = UnitMana(unitstr), UnitManaMax(unitstr)
   local hp, hpmax = UnitHealth(unitstr), UnitHealthMax(unitstr)
+  local armor = UnitResistance(unitstr, 0)
   local rhp, rhpmax = hp, hpmax
 
   if pfUI.libhealth and pfUI.libhealth.enabled then
@@ -2277,6 +2278,12 @@ function pfUI.uf:GetStatusValue(unit, pos)
       return unit:GetColor("class") .. (UnitClass(unitstr) or UNKNOWN)
     else
       return ""
+    end
+  elseif config == "armor" then
+    if UnitIsPlayer(unitstr) then
+      return ""
+    else
+      return armor
     end
 
   -- health
