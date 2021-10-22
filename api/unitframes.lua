@@ -336,10 +336,18 @@ function pfUI.uf:UpdateFrameSize()
   end
 
   local portrait = 0
+  local ptwidth = self.config.portraitwidth
+  local ptheight = self.config.portraitheight
+
   if self.config.portrait == "left" or self.config.portrait == "right" then
+    if self.config.portraitsize == "0" then
     self.portrait:SetWidth(real_height)
     self.portrait:SetHeight(real_height)
     portrait = real_height + spacing + 2*default_border
+    else
+    self.portrait:SetWidth(ptwidth)
+    self.portrait:SetHeight(ptheight)
+    end
   end
 
   self:SetWidth(width + portrait)
@@ -447,6 +455,7 @@ function pfUI.uf:UpdateConfig()
   f.portrait.model:SetFrameStrata("LOW")
   f.portrait.model:SetAllPoints(f.portrait)
 
+  local pspacing = self.config.portraitwidth
   if f.config.portrait == "bar" then
     f.portrait:SetParent(f.hp.bar)
     f.portrait:SetAllPoints(f.hp.bar)
@@ -463,7 +472,11 @@ function pfUI.uf:UpdateConfig()
   elseif f.config.portrait == "left" then
     f.portrait:SetParent(f)
     f.portrait:ClearAllPoints()
+    if self.config.portraitsize == "0" then
     f.portrait:SetPoint("TOPLEFT", f, "TOPLEFT", 0, 0)
+    else
+    f.portrait:SetPoint("LEFT", f, "LEFT", -pspacing, 0)
+    end
 
     f.hp:ClearAllPoints()
     f.hp:SetPoint("TOPRIGHT", f, "TOPRIGHT", 0, 0)
@@ -481,7 +494,11 @@ function pfUI.uf:UpdateConfig()
   elseif f.config.portrait == "right" then
     f.portrait:SetParent(f)
     f.portrait:ClearAllPoints()
+    if self.config.portraitsize == "0" then
     f.portrait:SetPoint("TOPRIGHT", f, "TOPRIGHT", 0, 0)
+    else
+    f.portrait:SetPoint("RIGHT", f, "RIGHT", pspacing, 0)
+    end
 
     f.hp:ClearAllPoints()
     f.hp:SetPoint("TOPLEFT", f, "TOPLEFT", 0, 0)
