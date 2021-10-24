@@ -361,6 +361,7 @@ function pfUI.uf:UpdateConfig()
   local f = self
   local C = pfUI_config
   local rawborder, default_border = GetBorderSize("unitframes")
+  local spacing = f.config.pspace * GetPerfectPixel()
 
   local cooldown_text = tonumber(f.config.cooldown_text)
   local cooldown_anim = tonumber(f.config.cooldown_anim)
@@ -477,7 +478,7 @@ function pfUI.uf:UpdateConfig()
     if f.config.portraitwidth == "-1" and f.config.portraitheight == "-1" then
       f.portrait:SetPoint("TOPLEFT", f, "TOPLEFT", 0, 0)
     else
-      f.portrait:SetPoint("LEFT", f, "LEFT", -f.config.portraitwidth, 0)
+      f.portrait:SetPoint("LEFT", f, "LEFT", -f.config.portraitwidth - 2*default_border - spacing, 0)
     end
 
     f.hp:ClearAllPoints()
@@ -499,7 +500,7 @@ function pfUI.uf:UpdateConfig()
     if f.config.portraitwidth == "-1" and f.config.portraitheight == "-1" then
       f.portrait:SetPoint("TOPRIGHT", f, "TOPRIGHT", 0, 0)
     else
-      f.portrait:SetPoint("RIGHT", f, "RIGHT", f.config.portraitwidth, 0)
+      f.portrait:SetPoint("RIGHT", f, "RIGHT", f.config.portraitwidth + 2*default_border + spacing, 0)
     end
 
     f.hp:ClearAllPoints()
