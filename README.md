@@ -8,10 +8,10 @@ This is **not** an addon-pack like [ShaguUI](http://shagu.org/ShaguUI/), however
 
 ## Screenshots
 
-<img src="https://raw.githubusercontent.com/shagu/ShaguAddons/master/_img/pfUI/config.jpg" align="right" width="48.8%">
-<img src="https://raw.githubusercontent.com/shagu/ShaguAddons/master/_img/pfUI/unlock.jpg" width="48.8%">
-<img src="https://raw.githubusercontent.com/shagu/ShaguAddons/master/_img/pfUI/contrib.jpg" align="right" width="48.8%">
-<img src="https://raw.githubusercontent.com/shagu/ShaguAddons/master/_img/pfUI/maraudon.jpg" width="48.8%">
+<img src="https://raw.githubusercontent.com/shagu/ShaguAddons/master/_img/pfUI/config.jpg" align="right" width="48.5%">
+<img src="https://raw.githubusercontent.com/shagu/ShaguAddons/master/_img/pfUI/unlock.jpg" width="48.5%">
+<img src="https://raw.githubusercontent.com/shagu/ShaguAddons/master/_img/pfUI/contrib.jpg" align="right" width="48.5%">
+<img src="https://raw.githubusercontent.com/shagu/ShaguAddons/master/_img/pfUI/maraudon.jpg" width="48.5%">
 
 ## Installation (Vanilla)
 1. Download **[Latest Version](https://github.com/shagu/pfUI/archive/master.zip)**
@@ -59,6 +59,7 @@ pfUI supports and contains language specific code for the following gameclients.
 * [pfUI-eliteoverlay](https://shagu.org/pfUI-eliteoverlay) Add elite dragons to unitframes
 * [pfUI-fonts](https://shagu.org/pfUI-fonts) Additional fonts for pfUI
 * [pfUI-CustomMedia](https://github.com/mrrosh/pfUI-CustomMedia) Additional textures for pfUI
+* [pfUI-Gryphons](https://github.com/mrrosh/pfUI-Gryphons) Add back the gryphons to your actionbars
 
 ## FAQ
 **What does "pfUI" stand for?**  
