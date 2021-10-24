@@ -96,6 +96,15 @@ local SoundOff = function() return end
 
 librange.id = 1
 
+-- Shooting with wands does not make the PlayerFrame inCombat attribute change.
+-- This frame makes wand attacks accesible via wandCombat on the PlayerFrame.
+local wand = CreateFrame("Frame", "pfWandShootDetect")
+wand:RegisterEvent("START_AUTOREPEAT_SPELL")
+wand:RegisterEvent("STOP_AUTOREPEAT_SPELL")
+wand:SetScript("OnEvent", function()
+  PlayerFrame.wandCombat = event == "START_AUTOREPEAT_SPELL" and true or nil
+end)
+
 librange:Hide()
 librange:RegisterEvent("ACTIONBAR_SLOT_CHANGED")
 librange:RegisterEvent("PLAYER_ENTERING_WORLD")
@@ -144,6 +153,7 @@ librange:SetScript("OnUpdate", function()
       if InspectFrame and InspectFrame:IsShown() then return nil end
       if TradeFrame and TradeFrame:IsShown() then return nil end
       if PlayerFrame and PlayerFrame.inCombat then return nil end
+      if PlayerFrame and PlayerFrame.wandCombat then return nil end
 
       _G.PlaySound = SoundOff
       pfScanActive = true
