@@ -525,7 +525,6 @@ pfUI_translation["ruRU"] = {
   ["Please enter a name of a character who should receive your whispers:"] = "Пожалуйста, введите имя персонажа, который должен получить ваш шепот:",
   ["Portrait Alpha"] = "Прозрачность портрета",
   ["Portrait Position"] = "Расположение портрета",
-  ["Enable Custom Portrait Size"] = "Включить нестандартный размер книжной ориентации",
   ["Portrait Height"] = "Рост портрета",
   ["Portrait Width"] = "Ширина портрета",
   ["Powerbar"] = "Панель силы (мана, ярость, энергия, фокус)",

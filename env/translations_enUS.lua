@@ -525,7 +525,6 @@ pfUI_translation["enUS"] = {
   ["Please enter a name of a character who should receive your whispers:"] = nil,
   ["Portrait Alpha"] = nil,
   ["Portrait Position"] = nil,
-  ["Enable Custom Portrait Size"] = nil,
   ["Portrait Height"] = nil,
   ["Portrait Width"] = nil,
   ["Powerbar"] = nil,

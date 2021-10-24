@@ -525,7 +525,6 @@ pfUI_translation["frFR"] = {
   ["Please enter a name of a character who should receive your whispers:"] = "Entrez un nom de joueur qui pourrait recevoir vos chuchotements :",
   ["Portrait Alpha"] = "Transparence du portrait",
   ["Portrait Position"] = "Position du portrait",
-  ["Enable Custom Portrait Size"] = "Activer la dimension de portrait personnalisée",
   ["Portrait Height"] = "Hauteur du portrait",
   ["Portrait Width"] = "Largeur du portrait",
   ["Powerbar"] = "Barre des ressources",

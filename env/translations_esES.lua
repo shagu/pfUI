@@ -525,7 +525,6 @@ pfUI_translation["esES"] = {
   ["Please enter a name of a character who should receive your whispers:"] = "Mete el nombre del personaje que debe recibir tus susurros",
   ["Portrait Alpha"] = "Transparencia del retrato",
   ["Portrait Position"] = "Posición del retrato",
-  ["Enable Custom Portrait Size"] = "Habilitar tamaño de retrato personalizado",
   ["Portrait Height"] = "Altura Retrato",
   ["Portrait Width"] = "Ancho Retrato",
   ["Powerbar"] = "Barra de poder",

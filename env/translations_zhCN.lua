@@ -525,7 +525,6 @@ pfUI_translation["zhCN"] = {
   ["Please enter a name of a character who should receive your whispers:"] = "请输入一个接收你的私聊的角色的名称:",
   ["Portrait Alpha"] = "人偶透明度",
   ["Portrait Position"] = "人偶头像位置",
-  ["Enable Custom Portrait Size"] = "启用自定义人像尺寸",
   ["Portrait Height"] = "纵向高度",
   ["Portrait Width"] = "纵向宽度",
   ["Powerbar"] = "能量(蓝)条",
