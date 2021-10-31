@@ -1440,13 +1440,17 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
         end, false, true)
       end, true)
 
+      -- add invisible font to disable combat messages
+      local combatfonts = CopyTable(pfUI.gui.dropdowns.fonts)
+      table.insert(combatfonts, "Interface\\AddOns\\pfUI\\fonts\\AdobeBlank.ttf:Invisible")
+
       CreateConfig(nil, T["Settings"], nil, nil, "header")
       CreateConfig(nil, T["Language"], C.global, "language", "dropdown", pfUI.gui.dropdowns.languages)
       CreateConfig(nil, T["Use Original Game Fonts"], C.global, "font_blizzard", "checkbox")
       CreateConfig(nil, T["Enable Region Compatible Font"], C.global, "force_region", "checkbox")
       CreateConfig(nil, T["Standard Text Font"], C.global, "font_default", "dropdown", pfUI.gui.dropdowns.fonts)
       CreateConfig(nil, T["Standard Text Font Size"], C.global, "font_size")
-      CreateConfig(nil, T["Scrolling Combat Text Font"], C.global, "font_combat", "dropdown", pfUI.gui.dropdowns.fonts)
+      CreateConfig(nil, T["Scrolling Combat Text Font"], C.global, "font_combat", "dropdown", combatfonts)
       CreateConfig(U["pixelperfect"], T["Enable UI-Scale"], C.global, "pixelperfect", "dropdown", pfUI.gui.dropdowns.scaling)
       CreateConfig(nil, T["Enable Offscreen Frame Positions"], C.global, "offscreen", "checkbox")
       CreateConfig(nil, T["Display Addon Errors In Chat"], C.global, "errors", "checkbox")
