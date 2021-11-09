@@ -145,7 +145,7 @@ end
 
     -- skip on events of no interest
     if mode == "XP" and ( event == "CHAT_MSG_COMBAT_FACTION_CHANGE" or event == "UPDATE_FACTION" ) then return end
-    if mode == "REP" and event == "PLAYER_XP_UPDATE" then return end
+    if mode == "REP" and ( event == "PLAYER_XP_UPDATE" or event == "UPDATE_EXHAUSTION" ) then return end
 
     if mode == "XP" then
       self.enabled = true
@@ -268,6 +268,7 @@ end
     b:RegisterEvent("UNIT_LEVEL")
     b:RegisterEvent("UNIT_PET_EXPERIENCE")
     b:RegisterEvent("PLAYER_ENTERING_WORLD")
+    b:RegisterEvent("UPDATE_EXHAUSTION")
     b:RegisterEvent("PLAYER_XP_UPDATE")
     b:RegisterEvent("PLAYER_LEVEL_UP")
     b:RegisterEvent("UPDATE_FACTION")
