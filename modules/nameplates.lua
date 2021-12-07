@@ -463,7 +463,7 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
 
   nameplates.OnEvent = function(frame)
     local frame = frame or this
-    nameplates:OnDataChanged(frame)
+    frame.eventcache = true
   end
 
   nameplates.OnDataChanged = function(self, plate)
@@ -665,6 +665,12 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     local name = original.name:GetText()
     local target = UnitExists("target") and frame:GetAlpha() == 1 or nil
     local mouseover = UnitExists("mouseover") and original.glow:IsShown() or nil
+
+    -- trigger queued event update
+    if nameplate.eventcache then
+      nameplates:OnDataChanged(nameplate)
+      nameplate.eventcache = nil
+    end
 
     -- cache target value
     nameplate.istarget = target
