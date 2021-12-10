@@ -488,8 +488,10 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     -- remove unitstr on unit name mismatch
     if unitstr and UnitName(unitstr) ~= name then unitstr = nil end
 
+    -- use mobhealth values if addon is running
     if (MobHealth3 or MobHealthFrame) and target and name == UnitName('target') and MobHealth_GetTargetCurHP() then
-      hp, hpmax = MobHealth_GetTargetCurHP(), MobHealth_GetTargetMaxHP()
+      hp = MobHealth_GetTargetCurHP() > 0 and MobHealth_GetTargetCurHP() or hp
+      hpmax = MobHealth_GetTargetMaxHP() > 0 and MobHealth_GetTargetMaxHP() or hpmax
     end
 
     -- always make sure to keep plate visible
