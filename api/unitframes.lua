@@ -2286,6 +2286,10 @@ function pfUI.uf:GetStatusValue(unit, pos)
     local name = unit:GetColor("unit") .. UnitName(unitstr)
     local level = unit:GetColor("level") .. pfUI.uf:GetLevelString(unitstr)
     return level .. "  " .. name
+  elseif config == "unitrev" then
+    local name = unit:GetColor("unit") .. UnitName(unitstr)
+    local level = unit:GetColor("level") .. pfUI.uf:GetLevelString(unitstr)
+    return name .. "  " .. level
   elseif config == "name" then
     return unit:GetColor("unit") .. UnitName(unitstr)
   elseif config == "nameshort" then

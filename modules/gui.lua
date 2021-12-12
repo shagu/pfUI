@@ -1024,6 +1024,7 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
       ["uf_texts"] = {
         "none:" .. T["Disable"],
         "unit:" .. T["Unit String"],
+        "unitrev:" .. T["Unit String (Reverse)"],
         "name:" .. T["Name"],
         "nameshort:" .. T["Name (Short)"],
         "level:" .. T["Level"],
