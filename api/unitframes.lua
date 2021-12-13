@@ -1842,7 +1842,7 @@ function pfUI.uf:RefreshUnit(unit, component)
 
   if customfade == "1" then
     -- fade custom color into default color
-    local perc = UnitHealth(unitstr) / UnitHealthMax(unitstr) * 2 - 1
+    local perc = UnitHealth(unitstr) / UnitHealthMax(unitstr)
     local cr, cg, cb, ca = pfUI.api.strsplit(",", customcolor)
 
     r = (cr*perc) + (r*(1-perc))
