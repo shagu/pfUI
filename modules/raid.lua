@@ -5,7 +5,7 @@ pfUI:RegisterModule("raid", "vanilla:tbc", function ()
   pfUI.uf.raid = CreateFrame("Frame", "pfRaidUpdater", UIParent)
 
   local maxraid = tonumber(C.unitframes.maxraid)
-  local rawborder, default_border = GetBorderSize("unitframes")
+  local rawborder, default_border = GetBorderSize("chat")
   local cluster = CreateFrame("Frame", "pfRaidCluster", UIParent)
   cluster:SetFrameLevel(20)
   cluster:SetWidth(120)
