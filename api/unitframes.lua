@@ -1800,6 +1800,7 @@ function pfUI.uf:RefreshUnit(unit, component)
   local custom_active = nil
   local customfullhp = unit.config.defcolor == "0" and unit.config.customfullhp or C.unitframes.customfullhp
   local customcolor = unit.config.defcolor == "0" and unit.config.customcolor or C.unitframes.customcolor
+  local customfade = unit.config.defcolor == "0" and unit.config.customfade or C.unitframes.customfade
   local custom = unit.config.defcolor == "0" and unit.config.custom or C.unitframes.custom
 
   local r, g, b, a = .2, .2, .2, 1
@@ -1837,6 +1838,16 @@ function pfUI.uf:RefreshUnit(unit, component)
 
   if C.unitframes.pastel == "1" and not custom_active then
     r, g, b = (r + .5) * .5, (g + .5) * .5, (b + .5) * .5
+  end
+
+  if customfade == "1" then
+    -- fade custom color into default color
+    local perc = UnitHealth(unitstr) / UnitHealthMax(unitstr) * 2 - 1
+    local cr, cg, cb, ca = pfUI.api.strsplit(",", customcolor)
+
+    r = (cr*perc) + (r*(1-perc))
+    g = (cr*perc) + (g*(1-perc))
+    b = (cr*perc) + (b*(1-perc))
   end
 
   unit.hp.bar:SetStatusBarColor(r, g, b, a)
