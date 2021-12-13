@@ -809,7 +809,7 @@ function pfUI.uf.OnEvent()
      event == "RAID_ROSTER_UPDATE" or
      event == "PLAYER_UPDATE_RESTING"
   then
-    pfUI.uf:RefreshIndicators(this)
+    this.update_indicators = true
   end
 
   -- abort on broken unitframes (e.g focus)
@@ -817,35 +817,35 @@ function pfUI.uf.OnEvent()
 
   -- update regular frames
   if event == "PLAYER_ENTERING_WORLD" then
-    this.fullupdate = true
+    this.update_full = true
   elseif this.label == "target" and event == "PLAYER_TARGET_CHANGED" and not pfScanActive == true then
-    this.fullupdate = true
+    this.update_full = true
   elseif ( this.label == "raid" or this.label == "party" or this.label == "player" ) and event == "PARTY_MEMBERS_CHANGED" then
-    this.fullupdate = true
+    this.update_full = true
   elseif ( this.label == "raid" or this.label == "party" ) and event == "PARTY_MEMBER_ENABLE" then
-    this.fullupdate = true
+    this.update_full = true
   elseif ( this.label == "raid" or this.label == "party" ) and event == "PARTY_MEMBER_DISABLE" then
-    this.fullupdate = true
+    this.update_full = true
   elseif ( this.label == "raid" or this.label == "party" ) and event == "RAID_ROSTER_UPDATE" then
-    this.fullupdate = true
+    this.update_full = true
   elseif this.label == "pet" and event == "UNIT_PET" then
-    this.fullupdate = true
+    this.update_full = true
   elseif this.label == "player" and (event == "PLAYER_AURAS_CHANGED" or event == "UNIT_INVENTORY_CHANGED") then
-    pfUI.uf:RefreshUnit(this, "aura")
+    this.update_aura = true
   elseif this.label == "pet" and event == "UNIT_HAPPINESS" then
-    pfUI.uf:RefreshUnit(this)
+    this.update_full = true
   -- UNIT_XXX Events
   elseif arg1 and arg1 == this.label .. this.id then
     if event == "UNIT_PORTRAIT_UPDATE" or event == "UNIT_MODEL_CHANGED" then
-      pfUI.uf:RefreshUnit(this, "portrait")
+      this.update_portrait = true
     elseif event == "UNIT_AURA" then
-      pfUI.uf:RefreshUnit(this, "aura")
+      this.update_aura = true
     elseif event == "UNIT_FACTION" then
-      pfUI.uf:RefreshUnit(this, "pvp")
+      this.update_pvp = true
     elseif event == "UNIT_COMBAT" then
       CombatFeedback_OnCombatEvent(arg2, arg3, arg4, arg5)
     else
-      pfUI.uf:RefreshUnit(this)
+      this.update_full = true
     end
   end
 end
@@ -854,10 +854,38 @@ function pfUI.uf.OnUpdate()
   -- update combat feedback
   if this.feedbackText then CombatFeedback_OnUpdate(arg1) end
 
-  -- process all queued unit full updates
-  if this.fullupdate then
+  -- process indicator update events
+  if this.update_indicators then
+    pfUI.uf:RefreshIndicators(this)
+    this.update_indicators = nil
+  end
+
+  -- process all queued unit events
+  if this.update_full then
+    -- process full updates
     pfUI.uf:RefreshUnit(this, "all")
-    this.fullupdate = nil
+
+    -- clear update caches
+    this.update_full = nil
+    this.update_aura = nil
+    this.update_portrait = nil
+    this.update_pvp = nil
+  else
+    -- process individual events
+    if this.update_aura then
+      pfUI.uf:RefreshUnit(this, "aura")
+      this.update_aura = nil
+    end
+
+    if this.update_portrait then
+      pfUI.uf:RefreshUnit(this, "portrait")
+      this.update_portrait = nil
+    end
+
+    if this.update_pvp then
+      pfUI.uf:RefreshUnit(this, "pvp")
+      this.update_pvp = nil
+    end
   end
 
   -- handle pseudo focus frames
