@@ -1030,6 +1030,7 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
         "level:" .. T["Level"],
         "class:" .. T["Class"],
         "namehealth:" .. T["Name | Health Missing"],
+        "namehealthbreak:" .. T["Name (Linebreak) -Health Missing"],
         "shortnamehealth:" .. T["Name (Short) | Health Missing"],
         "healthdyn:" .. T["Health - Auto"],
         "health:" .. T["Health - Current"],

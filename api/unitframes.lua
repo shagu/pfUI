@@ -2362,6 +2362,15 @@ function pfUI.uf:GetStatusValue(unit, pos)
     else
       return unit:GetColor("health") .. pfUI.api.Abbreviate(health)
     end
+  elseif config == "namehealthbreak" then
+    local health = ceil(rhp - rhpmax)
+    if UnitIsDead(unitstr) then
+      return unit:GetColor("health") .. DEAD
+    elseif health == 0 then
+      return unit:GetColor("unit") .. UnitName(unitstr)
+    else
+      return unit:GetColor("unit") .. UnitName(unitstr) .. "\n" .. unit:GetColor("health") .. pfUI.api.Abbreviate(-health)
+    end
   elseif config == "shortnamehealth" then
     local health = ceil(rhp - rhpmax)
     if UnitIsDead(unitstr) then
