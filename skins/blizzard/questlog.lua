@@ -154,7 +154,7 @@ pfUI:RegisterSkin("Quest Log", "vanilla:tbc", function ()
 
     -- add additional scroll entries
     for i = 7, QUESTS_DISPLAYED do
-      local b = CreateFrame("Button", "QuestLogTitle"..i, QuestLogFrame, "QuestLogTitleButtonTemplate")
+      local b = _G["QuestLogTitle"..i] or CreateFrame("Button", "QuestLogTitle"..i, QuestLogFrame, "QuestLogTitleButtonTemplate")
       b:SetID(i)
       b:SetPoint("TOPLEFT", _G["QuestLogTitle"..(i-1)], "BOTTOMLEFT", 0, 1)
       SkinCollapseButton(_G["QuestLogTitle"..i])
