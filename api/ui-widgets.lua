@@ -674,9 +674,10 @@ function pfUI.api.SkinCollapseButton(button, all)
   local b = _G[button]
   if not b then b = button end
   if not b then return end
-
-  b.icon = CreateFrame("Button", b:GetName().."CollapseButton", b)
+  local name = b:GetName() .. "CollapseButton"
   local size = 10
+
+  b.icon = _G[name] or CreateFrame("Button", name, b)
   if all then size = 14 end
   b.icon:SetWidth(size)
   b.icon:SetHeight(size)
