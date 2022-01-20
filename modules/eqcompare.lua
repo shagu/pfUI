@@ -114,8 +114,9 @@ pfUI:RegisterModule("eqcompare", "vanilla", function ()
     for _,target in pairs(targetData) do
       if target and not target.processed then
         -- we are an extra value
-        if not strfind(target.widget:GetText(), "|cff88ff88") and not strfind(target.widget:GetText(), "|cffff8888") then
-          target.widget:SetText(target.widget:GetText() .. "|cff88ff88 (+" .. target.value .. ")")
+        local text = target.widget:GetText()
+        if text and not strfind(text, "|cff88ff88") and not strfind(text, "|cffff8888") then
+          target.widget:SetText(text .. "|cff88ff88 (+" .. target.value .. ")")
         end
       end
     end
