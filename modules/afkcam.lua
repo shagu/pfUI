@@ -119,6 +119,7 @@ pfUI:RegisterModule("afkcam", "vanilla:tbc", function ()
   end)
 
   function afkcam:start()
+    if afkcam._spinning then return end
     afkcam._speed = GetCVar("cameraYawMoveSpeed")
     afkcam._ownname = GetCVar("UnitNameOwn")
     afkcam._ui_visible = UIParent:IsVisible()
