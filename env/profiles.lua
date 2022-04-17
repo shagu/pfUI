@@ -94,7 +94,6 @@ f:SetScript("OnEvent", function()
     },
     ["unitframes"] = {
       ["target"] = {
-        ["debuffs"] = "off",
         ["buffsize"] = "14",
         ["pheight"] = "6",
         ["height"] = "35",
@@ -109,8 +108,7 @@ f:SetScript("OnEvent", function()
         ["width"] = "125",
       },
       ["player"] = {
-        ["buffs"] = "off",
-        ["debuffs"] = "off",
+        ["buffsize"] = "14",
         ["txthpleft"] = "powerdyn",
         ["height"] = "35",
         ["showPVP"] = "1",
