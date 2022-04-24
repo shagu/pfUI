@@ -720,6 +720,8 @@ pfUI:RegisterModule("thirdparty-vanilla", "vanilla", function()
     end)
   end)
 
+  -- SortBags
+  -- Vanilla: https://github.com/shirsig/SortBags-vanilla
   HookAddonOrVariable("SortBags", function()
     if C.thirdparty.sortbags.enable == "0" then return end
 
