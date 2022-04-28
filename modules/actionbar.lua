@@ -395,7 +395,7 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
 
           -- skip any further manual macro scanning on
           -- gameclients with native macro spell detection
-          if pfUI.client >= 11200 and match then
+          if pfUI.client > 11200 and match then
             self.spellslot = nil
             self.booktype = nil
             return
