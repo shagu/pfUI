@@ -402,6 +402,12 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
           end
 
           if not match then
+            -- add support to specify custom tooltips via:
+            --  /run --showtooltip SPELLNAME
+            _, _, match = string.find(line, '%-%-showtooltip (.+)')
+          end
+
+          if not match then
             _, _, match = string.find(line, '^/cast (.+)')
           end
 
