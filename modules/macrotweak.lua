@@ -18,6 +18,13 @@ pfUI:RegisterModule("macrotweak", "vanilla", function ()
     end)
   end
 
+  -- make sure #showtooltip inside macros won't be sent
+  local hookSendChatMessage = SendChatMessage
+  function _G.SendChatMessage(msg, ...)
+    if msg and string.find(msg, "^#showtooltip ") then return end
+    hookSendChatMessage(msg, unpack(arg))
+  end
+
   -- add /use and /equip to the macro api:
   -- https://wowwiki.fandom.com/wiki/Making_a_macro
   -- supported arguments:
