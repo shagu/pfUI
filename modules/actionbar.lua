@@ -414,7 +414,7 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
           end
 
           if not match then
-            _, _, match = string.find(line, 'CastSpellByName%((.+)%)')
+            _, _, match = string.find(line, 'CastSpellByName%(%"(.+)%"%)')
           end
 
           if match then
