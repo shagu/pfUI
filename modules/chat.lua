@@ -175,11 +175,12 @@ pfUI:RegisterModule("chat", "vanilla:tbc", function ()
 
   pfUI.chat.urlcopy:SetMovable(true)
   pfUI.chat.urlcopy:EnableMouse(true)
-  pfUI.chat.urlcopy:SetScript("OnMouseDown",function()
+  pfUI.chat.urlcopy:RegisterForDrag("LeftButton")
+  pfUI.chat.urlcopy:SetScript("OnDragStart",function()
     this:StartMoving()
   end)
 
-  pfUI.chat.urlcopy:SetScript("OnMouseUp",function()
+  pfUI.chat.urlcopy:SetScript("OnDragStop",function()
     this:StopMovingOrSizing()
   end)
 

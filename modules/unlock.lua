@@ -322,16 +322,7 @@ pfUI:RegisterModule("unlock", "vanilla:tbc", function ()
     QueueFunction(UpdateDockValues)
   end
 
-  local function DraggerOnMouseDown()
-    if arg1 == "MiddleButton" then return end
-    if arg1 == "RightButton" then
-      if pfUI.unlock.dock.parent == this and pfUI.unlock.dock:IsShown() then
-        SetDockToFrame(nil)
-      else
-        SetDockToFrame(this)
-      end
-      return
-    end
+  local function DraggerOnDragStart()
     local frame = this.frame
 
     pfUI.unlock.selection = GetFrames()
@@ -349,10 +340,7 @@ pfUI:RegisterModule("unlock", "vanilla:tbc", function ()
     if frame.OnMove then frame:OnMove() end
   end
 
-  local function DraggerOnMouseUp()
-    if arg1 == "MiddleButton" then return end
-    if arg1 == "RightButton" then return end
-
+  local function DraggerOnDragStop()
     local frame = this.frame
     local name = this.fname
 
@@ -410,14 +398,25 @@ pfUI:RegisterModule("unlock", "vanilla:tbc", function ()
   end
 
   local function DraggerOnClick()
-    pfUI.unlock.selection = GetFrames()
-    for id, frame in pairs(pfUI.unlock.selection) do
-      pfUI_config["position"][frame:GetName()] = nil
-      UpdateMovable(frame)
+    if arg1 == "RightButton" then
+      -- add dockframe to the dragger to show advanced options
+      if pfUI.unlock.dock.parent == this and pfUI.unlock.dock:IsShown() then
+        SetDockToFrame(nil)
+      else
+        SetDockToFrame(this)
+      end
+      return
+    elseif arg1 == "MiddleButton" then
+      -- reset positions of dragger and all connected frames
+      pfUI.unlock.selection = GetFrames()
+      for id, frame in pairs(pfUI.unlock.selection) do
+        pfUI_config["position"][frame:GetName()] = nil
+        UpdateMovable(frame)
 
-      if frame.OnMove then frame:OnMove() end
+        if frame.OnMove then frame:OnMove() end
+      end
+      UpdateDockValues()
     end
-    UpdateDockValues()
   end
 
   local function DraggerOnEnter()
@@ -437,7 +436,8 @@ pfUI:RegisterModule("unlock", "vanilla:tbc", function ()
     local label = string.sub(fname, 1, 2) == "pf" and strsub(fname,3) or fname
 
     local d = CreateFrame("Button", fname .. "Drag", f)
-    d:RegisterForClicks("MiddleButtonUp")
+    d:RegisterForClicks("MiddleButtonUp", "RightButtonUp")
+    d:RegisterForDrag("LeftButton")
     d:SetAllPoints(f)
     d:SetFrameStrata("DIALOG")
     d:SetAlpha(1)
@@ -461,8 +461,8 @@ pfUI:RegisterModule("unlock", "vanilla:tbc", function ()
     d.text:SetText(label)
 
     d:SetScript("OnMouseWheel", DraggerOnMouseWheel)
-    d:SetScript("OnMouseDown", DraggerOnMouseDown)
-    d:SetScript("OnMouseUp", DraggerOnMouseUp)
+    d:SetScript("OnDragStart", DraggerOnDragStart)
+    d:SetScript("OnDragStop", DraggerOnDragStop)
     d:SetScript("OnClick", DraggerOnClick)
     d:SetScript("OnEnter", DraggerOnEnter)
     d:SetScript("OnLeave", DraggerOnLeave)

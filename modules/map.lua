@@ -39,6 +39,10 @@ pfUI:RegisterModule("map", "vanilla:tbc", function ()
 
     UIPanelWindows["WorldMapFrame"] = { area = "center" }
 
+    WorldMapFrame:SetMovable(true)
+    WorldMapFrame:EnableMouse(true)
+    WorldMapFrame:RegisterForDrag("LeftButton")
+
     WorldMapFrame:SetScript("OnShow", function()
       -- default events
       UpdateMicroButtons()
@@ -67,17 +71,14 @@ pfUI:RegisterModule("map", "vanilla:tbc", function ()
       SaveMovable(this, true)
     end)
 
-    WorldMapFrame:SetScript("OnMouseDown",function()
+    WorldMapFrame:SetScript("OnDragStart",function()
       WorldMapFrame:StartMoving()
     end)
 
-    WorldMapFrame:SetScript("OnMouseUp",function()
+    WorldMapFrame:SetScript("OnDragStop",function()
       WorldMapFrame:StopMovingOrSizing()
       SaveMovable(this, true)
     end)
-
-    WorldMapFrame:SetMovable(true)
-    WorldMapFrame:EnableMouse(true)
 
     WorldMapFrame:SetAlpha(alpha)
     WorldMapFrame:SetScale(scale)
