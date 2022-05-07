@@ -427,7 +427,8 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
             local _, _, spell, rank = string.find(match, '(.+)%((.+)%)')
             spell = spell or match
             self.spellslot, self.booktype = libspell.GetSpellIndex(spell, rank)
-            return
+
+            if self.spellslot and self.spellslot > 0 then return end
           end
         end
       end
