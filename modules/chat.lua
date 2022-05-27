@@ -433,6 +433,9 @@ pfUI:RegisterModule("chat", "vanilla:tbc", function ()
         pfUI.chat.left.panelTop:Show()
         FCF_DockUpdate()
       elseif MouseIsOver(pfUI.chat.right, 10, -10, -10, 10) then
+        -- disable while dock is active
+        if pfUI.chat.right:GetAlpha() == 0 then return end
+
         pfUI.chat.right.panelTop:Show()
         FCF_DockUpdate()
       else
