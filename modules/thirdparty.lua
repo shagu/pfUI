@@ -72,6 +72,14 @@ pfUI:RegisterModule("thirdparty", "vanilla:tbc", function()
 
       -- show/hide right chatframe
       if pfUI.chat and C.chat.right.enable == "1" then
+        -- make sure the panel header stays hidden
+        if self.state then
+          pfUI.chat.right.panelTop:Show()
+        else
+          pfUI.chat.right.panelTop:Hide()
+        end
+
+        -- set chat visibility
         pfUI.chat.right:SetAlpha(self.state and 1 or 0)
       end
 
