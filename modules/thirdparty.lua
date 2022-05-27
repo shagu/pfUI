@@ -228,6 +228,85 @@ pfUI:RegisterModule("thirdparty", "vanilla:tbc", function()
     end)
   end)
 
+  -- ShaguDPS Damage Meter
+  -- Vanilla: https://github.com/shagu/ShaguDPS
+  -- TBC: https://github.com/shagu/ShaguDPS
+  HookAddonOrVariable("ShaguDPS", function()
+
+    local hookRefresh = ShaguDPSWindow.Refresh
+    ShaguDPSWindow.Refresh = function(arg1, arg2)
+      hookRefresh(arg1, arg2)
+    end
+
+    local docktable = { "shagudps", "ShaguDPS", "ShaguDPSWindow",
+      function() -- single
+        ShaguDPSWindow:ClearAllPoints()
+        ShaguDPSWindow:SetAllPoints(pfUI.chat.right)
+        ShaguDPSWindow:SetWidth(pfUI.chat.right:GetWidth())
+      end,
+      function() -- dual
+        ShaguDPSWindow:ClearAllPoints()
+        ShaguDPSWindow:SetPoint("TOPLEFT", pfUI.chat.right, "TOP", 0, 0)
+        ShaguDPSWindow:SetPoint("BOTTOMRIGHT", pfUI.chat.right, "BOTTOMRIGHT", 0, 0)
+        ShaguDPSWindow:SetWidth(pfUI.chat.right:GetWidth() / 2)
+      end,
+      function() -- show
+        ShaguDPS_Config.visible = 1
+        ShaguDPSWindow.Refresh(true)
+      end,
+      function() -- hide
+        ShaguDPS_Config.visible = 0
+        ShaguDPSWindow.Refresh(true)
+      end
+    }
+
+    pfUI.thirdparty.meters:RegisterMeter("damage", docktable)
+
+    if C.thirdparty.shagudps.skin == "1" then
+      if ShaguDPSWindow then
+        local window = ShaguDPSWindow
+        window.btnDamage:SetHeight(14)
+        window.btnDamage:SetWidth(50)
+
+        window.btnDPS:SetHeight(14)
+        window.btnDPS:SetWidth(50)
+
+        window.btnAnnounce:SetHeight(14)
+        window.btnAnnounce:SetWidth(14)
+
+        window.btnReset:SetHeight(14)
+        window.btnReset:SetWidth(14)
+
+        window.title:Hide()
+        window.title:SetPoint("TOPLEFT", 1, -1)
+        window.title:SetPoint("TOPRIGHT", -1, -1)
+
+        CreateBackdrop(window.btnAnnounce, nil, true, .75)
+        CreateBackdrop(window.btnReset, nil, true, .75)
+        CreateBackdrop(window.btnDamage, nil, true, .75)
+        CreateBackdrop(window.btnDPS, nil, true, .75)
+        CreateBackdrop(window, nil, nil, (C.thirdparty.chatbg == "1" and .8))
+        CreateBackdropShadow(window)
+
+        if C.thirdparty.chatbg == "1" and C.chat.global.custombg == "1" then
+          local r, g, b, a = strsplit(",", C.chat.global.background)
+          window.backdrop:SetBackdropColor(tonumber(r), tonumber(g), tonumber(b), tonumber(a))
+
+          local r, g, b, a = strsplit(",", C.chat.global.border)
+          window.backdrop:SetBackdropBorderColor(tonumber(r), tonumber(g), tonumber(b), tonumber(a))
+        end
+
+        window.btnDamage:SetBackdropBorderColor(.4,.4,.4,1)
+        window.btnDPS:SetBackdropBorderColor(.4,.4,.4,1)
+
+        window.btnAnnounce:SetBackdropBorderColor(.4,.4,.4,1)
+        window.btnReset:SetBackdropBorderColor(.4,.4,.4,1)
+
+        window.border:Hide()
+      end
+    end
+  end)
+
   -- DPSMate Damage Meter
   -- Vanilla: https://github.com/Geigerkind/DPSMate
   -- TBC: https://github.com/Geigerkind/DPSMateTBC
