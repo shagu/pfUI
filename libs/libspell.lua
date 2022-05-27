@@ -135,5 +135,12 @@ function libspell.GetSpellInfo(index, bookType)
   return name, rank, icon, castingTime, minRange, maxRange
 end
 
+-- Reset all spell caches whenever new spells are learned/unlearned
+local resetcache = CreateFrame("Frame")
+resetcache:RegisterEvent("LEARNED_SPELL_IN_TAB")
+resetcache:SetScript("OnEvent", function()
+  spellmaxrank, spellindex, spellinfo = {}, {}, {}
+end)
+
 -- add libspell to pfUI API
 pfUI.api.libspell = libspell
