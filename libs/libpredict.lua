@@ -249,7 +249,8 @@ local player = UnitName("player")
 local cache, gear_string = {}, ""
 local resetcache = CreateFrame("Frame")
 resetcache:RegisterEvent("PLAYER_ENTERING_WORLD")
-resetcache:RegisterEvent("SKILL_LINES_CHANGED")
+resetcache:RegisterEvent("LEARNED_SPELL_IN_TAB")
+resetcache:RegisterEvent("CHARACTER_POINTS_CHANGED")
 resetcache:RegisterEvent("UNIT_INVENTORY_CHANGED")
 resetcache:SetScript("OnEvent", function()
   if event == "PLAYER_ENTERING_WORLD" then
