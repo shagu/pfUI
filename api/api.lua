@@ -1140,8 +1140,9 @@ end
 
 -- [ Enable Autohide ] --
 -- 'frame'  the frame that should be hidden
-function pfUI.api.EnableAutohide(frame, timeout)
+function pfUI.api.EnableAutohide(frame, timeout, combat)
   if not frame then return end
+  local timeout = timeout
 
   frame.hover = frame.hover or CreateFrame("Frame", frame:GetName() .. "Autohide", frame)
   frame.hover:SetParent(frame)
@@ -1149,8 +1150,22 @@ function pfUI.api.EnableAutohide(frame, timeout)
   frame.hover.parent = frame
   frame.hover:Show()
 
-  local timeout = timeout
+  if combat then
+    frame.hover:RegisterEvent("PLAYER_ENTER_COMBAT")
+    frame.hover:RegisterEvent("PLAYER_LEAVE_COMBAT")
+    frame.hover:SetScript("OnEvent", function()
+      if event == "PLAYER_ENTER_COMBAT" then
+        this.parent:SetAlpha(1)
+        this.activeTo = "keep"
+      elseif event == "PLAYER_LEAVE_COMBAT" then
+        this.activeTo = GetTime() + timeout
+      end
+    end)
+  end
+
   frame.hover:SetScript("OnUpdate", function()
+    if this.activeTo == "keep" then return end
+
     if MouseIsOver(this, 10, -10, -10, 10) then
       this.activeTo = GetTime() + timeout
       this.parent:SetAlpha(1)
