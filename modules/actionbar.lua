@@ -1200,6 +1200,7 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     local formfactor = C.bars["bar"..i].formfactor
     local autohide = C.bars["bar"..i].autohide
     local hide_time = C.bars["bar"..i].hide_time
+    local hide_combat = C.bars["bar"..i].hide_combat == "1" and true or nil
 
     local buttons = tonumber(C.bars["bar"..i].buttons) or 12
     if i == 11 and bars[i] then -- shapeshift buttons
@@ -1235,7 +1236,7 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
 
     -- autohide
     if autohide == "1" then
-      EnableAutohide(bars[i], tonumber(hide_time))
+      EnableAutohide(bars[i], tonumber(hide_time), hide_combat)
     else
       DisableAutohide(bars[i])
     end

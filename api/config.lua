@@ -503,6 +503,7 @@ function pfUI:LoadConfig()
     pfUI:UpdateConfig("bars",     "bar"..i,      "showcount",        "1")
     pfUI:UpdateConfig("bars",     "bar"..i,      "autohide",         "0")
     pfUI:UpdateConfig("bars",     "bar"..i,      "hide_time",        "3")
+    pfUI:UpdateConfig("bars",     "bar"..i,      "hide_combat",      "1")
     if i ~= 11 and i ~= 12 then
       pfUI:UpdateConfig("bars",     "bar"..i,      "buttons",           "12")
     end

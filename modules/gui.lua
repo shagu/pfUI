@@ -2025,6 +2025,7 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
 
         CreateConfig(U["bars"], T["Enable Autohide"], C.bars["bar"..id], "autohide", "checkbox")
         CreateConfig(U["bars"], T["Autohide Timeout"], C.bars["bar"..id], "hide_time")
+        CreateConfig(U["bars"], T["Show In Combat"], C.bars["bar"..id], "hide_combat", "checkbox")
       end)
     end
 
