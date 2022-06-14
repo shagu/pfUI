@@ -1151,13 +1151,13 @@ function pfUI.api.EnableAutohide(frame, timeout, combat)
   frame.hover:Show()
 
   if combat then
-    frame.hover:RegisterEvent("PLAYER_ENTER_COMBAT")
-    frame.hover:RegisterEvent("PLAYER_LEAVE_COMBAT")
+    frame.hover:RegisterEvent("PLAYER_REGEN_ENABLED")
+    frame.hover:RegisterEvent("PLAYER_REGEN_DISABLED")
     frame.hover:SetScript("OnEvent", function()
-      if event == "PLAYER_ENTER_COMBAT" then
+      if event == "PLAYER_REGEN_DISABLED" then
         this.parent:SetAlpha(1)
         this.activeTo = "keep"
-      elseif event == "PLAYER_LEAVE_COMBAT" then
+      elseif event == "PLAYER_REGEN_ENABLED" then
         this.activeTo = GetTime() + timeout
       end
     end)
