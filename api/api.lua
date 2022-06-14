@@ -1156,7 +1156,8 @@ function pfUI.api.EnableAutohide(frame, timeout)
       this.parent:SetAlpha(1)
     elseif this.activeTo then
       if this.activeTo < GetTime() and this.parent:GetAlpha() > 0 then
-        this.parent:SetAlpha(this.parent:GetAlpha() - 0.1)
+        local fps = (60 / math.max(GetFramerate(), 1))
+        this.parent:SetAlpha(this.parent:GetAlpha() - 0.05*fps)
       end
     else
       this.activeTo = GetTime() + timeout
