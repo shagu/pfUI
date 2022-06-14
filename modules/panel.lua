@@ -417,7 +417,7 @@ pfUI:RegisterModule("panel", "vanilla:tbc", function()
       end)
 
       widget:SetScript("OnUpdate",function()
-        if ( this.tick or 10) > GetTime() then return else this.tick = GetTime() + 10 end
+        if ( this.tick or 60) > GetTime() then return else this.tick = GetTime() + 60 end
         if GetGuildInfo("player") then GuildRoster() end
       end)
     end
