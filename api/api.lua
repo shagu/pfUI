@@ -1186,6 +1186,7 @@ function pfUI.api.DisableAutohide(frame)
   if not frame then return end
   if not frame.hover then return end
 
+  frame.hover:SetScript("OnEvent", nil)
   frame.hover:SetScript("OnUpdate", nil)
   frame.hover:Hide()
   frame:SetAlpha(1)
