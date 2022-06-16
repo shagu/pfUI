@@ -51,6 +51,11 @@ pfUI.api.libtooltip = libtooltip
 -- setup item hooks
 local pfHookSetBagItem = GameTooltip.SetBagItem
 function GameTooltip.SetBagItem(self, container, slot)
+  -- skip special/invalid calls to the function
+  if not container or not slot then
+    return pfHookSetBagItem(self, container, slot)
+  end
+
   libtooltip.itemLink = GetContainerItemLink(container, slot)
   _, libtooltip.itemCount = GetContainerItemInfo(container, slot)
   return pfHookSetBagItem(self, container, slot)
