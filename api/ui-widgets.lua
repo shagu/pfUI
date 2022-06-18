@@ -866,6 +866,7 @@ function pfUI.api.SetAllPointsOffset(frame, parent, offset)
 end
 
 function pfUI.api.SkinCheckbox(frame, size)
+  if not frame then return end
   frame:SetNormalTexture("")
   frame:SetPushedTexture("")
   frame:SetHighlightTexture("")
