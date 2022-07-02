@@ -25,11 +25,30 @@ pfUI:RegisterModule("cooldown", "vanilla:tbc", function ()
     -- fix own alpha value (should be inherited, but somehow isn't always)
     this:SetAlpha(parent:GetAlpha())
 
-    local remaining = this.duration - (GetTime() - this.start)
-    if remaining >= 0 then
-      this.text:SetText(GetColoredTimeString(remaining))
+    if this.start < GetTime() then
+      -- calculating remaining time as it should be
+      local remaining = this.duration - (GetTime() - this.start)
+      if remaining >= 0 then
+        this.text:SetText(GetColoredTimeString(remaining))
+      else
+        this:Hide()
+      end
     else
-      this:Hide()
+      -- I have absolutely no idea, but it works:
+      -- https://github.com/Stanzilla/WoWUIBugs/issues/47
+      local time = time()
+      local startupTime = time - GetTime()
+      -- just a simplification of: ((2^32) - (start * 1000)) / 1000
+      local cdTime = (2 ^ 32) / 1000 - this.start
+      local cdStartTime = startupTime - cdTime
+      local cdEndTime = cdStartTime + this.duration
+      local remaining = cdEndTime - time
+
+      if remaining >= 0 then
+        this.text:SetText(GetColoredTimeString(remaining))
+      else
+        this:Hide()
+      end
     end
   end
 
