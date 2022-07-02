@@ -23,6 +23,7 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
   local parentcount = 0
   local platecount = 0
   local registry = {}
+  local debuffdurations = C.appearance.cd.debuffs == "1" and true or nil
 
   -- cache default border color
   local er, eg, eb, ea = GetStringColor(pfUI_config.appearance.border.color)
@@ -635,7 +636,7 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
             plate.debuffs[index].stacks:Hide()
           end
 
-          if duration and timeleft then
+          if duration and timeleft and debuffdurations then
             plate.debuffs[index].cd:SetAlpha(0)
             plate.debuffs[index].cd:Show()
             CooldownFrame_SetTimer(plate.debuffs[index].cd, GetTime() + timeleft - duration, duration, 1)
