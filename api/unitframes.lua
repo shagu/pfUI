@@ -431,7 +431,6 @@ function pfUI.uf:UpdateConfig()
   pfUI.api.CreateBackdrop(f.power, default_border)
   f.power.bar:SetStatusBarTexture(pfUI.media[f.config.bartexture])
   f.power.bar:SetAllPoints(f.power)
-  f.power.bar:SetFrameStrata("LOW")
 
   local custompbg = f.config.defcolor == "0" and f.config.custompbg or C.unitframes.custompbg
   local custompbgcolor = f.config.defcolor == "0" and f.config.custompbgcolor or C.unitframes.custompbgcolor

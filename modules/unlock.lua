@@ -439,9 +439,10 @@ pfUI:RegisterModule("unlock", "vanilla:tbc", function ()
     d:RegisterForClicks("MiddleButtonUp", "RightButtonUp")
     d:RegisterForDrag("LeftButton")
     d:SetAllPoints(f)
-    d:SetFrameStrata("DIALOG")
     d:SetAlpha(1)
     d:EnableMouseWheel(1)
+
+    d:SetFrameLevel(128)
 
     d.text = d:CreateFontString("Status", "LOW", "GameFontNormal")
     d.text:SetFont(pfUI.font_default, C.global.font_size, "OUTLINE")
