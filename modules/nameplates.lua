@@ -468,6 +468,7 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
   end
 
   nameplates.OnDataChanged = function(self, plate)
+    local visible = plate:IsVisible()
     local hp = plate.original.healthbar:GetValue()
     local hpmin, hpmax = plate.original.healthbar:GetMinMaxValues()
     local name = plate.original.name:GetText()
@@ -481,6 +482,9 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     if player and unittype == "ENEMY_NPC" then unittype = "ENEMY_PLAYER" end
     elite = plate.original.levelicon:IsShown() and not player and "boss" or elite
     if not class then plate.wait_for_scan = true end
+
+    -- skip data updates on invisible frames
+    if not visible then return end
 
     -- target event sometimes fires too quickly, where nameplate identifiers are not
     -- yet updated. So while being inside this event, we cannot trust the unitstr.
