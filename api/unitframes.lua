@@ -2280,6 +2280,28 @@ function pfUI.uf:SetupBuffIndicators(config)
   return indicators
 end
 
+local function abbrevname(t)
+  return string.sub(t,1,1)..". "
+end
+
+function pfUI.uf:GetNameString(unitstr)
+  local name = UnitName(unitstr)
+  local abbrev = pfUI_config.unitframes.abbrevname == "1" or nil
+  local size = 20
+
+  -- first try to only abbreviate the first word
+  if abbrev and name and strlen(name) > size then
+    name = string.gsub(name, "^(%S+) ", abbrevname)
+  end
+
+  -- abbreviate all if it still doesn't fit
+  if abbrev and name and strlen(name) > size then
+    name = string.gsub(name, "(%S+) ", abbrevname)
+  end
+
+  return name
+end
+
 function pfUI.uf:GetLevelString(unitstr)
   local level = UnitLevel(unitstr)
   if level == -1 then level = "??" end
@@ -2321,15 +2343,17 @@ function pfUI.uf:GetStatusValue(unit, pos)
   end
 
   if config == "unit" then
-    local name = unit:GetColor("unit") .. UnitName(unitstr)
+    local name = unit:GetColor("unit") .. pfUI.uf:GetNameString(unitstr)
     local level = unit:GetColor("level") .. pfUI.uf:GetLevelString(unitstr)
+
     return level .. "  " .. name
   elseif config == "unitrev" then
-    local name = unit:GetColor("unit") .. UnitName(unitstr)
+    local name = unit:GetColor("unit") .. pfUI.uf:GetNameString(unitstr)
     local level = unit:GetColor("level") .. pfUI.uf:GetLevelString(unitstr)
+
     return name .. "  " .. level
   elseif config == "name" then
-    return unit:GetColor("unit") .. UnitName(unitstr)
+    return unit:GetColor("unit") .. pfUI.uf:GetNameString(unitstr)
   elseif config == "nameshort" then
     return unit:GetColor("unit") .. strsub(UnitName(unitstr), 0, 3)
   elseif config == "level" then
@@ -2368,7 +2392,7 @@ function pfUI.uf:GetStatusValue(unit, pos)
     if UnitIsDead(unitstr) then
       return unit:GetColor("health") .. DEAD
     elseif health == 0 then
-      return unit:GetColor("unit") .. UnitName(unitstr)
+      return unit:GetColor("unit") .. pfUI.uf:GetNameString(unitstr)
     else
       return unit:GetColor("health") .. pfUI.api.Abbreviate(health)
     end
@@ -2377,9 +2401,9 @@ function pfUI.uf:GetStatusValue(unit, pos)
     if UnitIsDead(unitstr) then
       return unit:GetColor("health") .. DEAD
     elseif health == 0 then
-      return unit:GetColor("unit") .. UnitName(unitstr)
+      return unit:GetColor("unit") .. pfUI.uf:GetNameString(unitstr)
     else
-      return unit:GetColor("unit") .. UnitName(unitstr) .. "\n" .. unit:GetColor("health") .. pfUI.api.Abbreviate(-health)
+      return unit:GetColor("unit") .. pfUI.uf:GetNameString(unitstr) .. "\n" .. unit:GetColor("health") .. pfUI.api.Abbreviate(-health)
     end
   elseif config == "shortnamehealth" then
     local health = ceil(rhp - rhpmax)

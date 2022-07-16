@@ -211,6 +211,7 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("unitframes", nil,           "rangechecki",      "4")
   pfUI:UpdateConfig("unitframes", nil,           "combosize",        "6")
   pfUI:UpdateConfig("unitframes", nil,           "abbrevnum",        "1")
+  pfUI:UpdateConfig("unitframes", nil,           "abbrevname",       "1")
 
   pfUI:UpdateConfig("unitframes", nil,           "selfingroup",      "0")
   pfUI:UpdateConfig("unitframes", nil,           "selfinraid",       "0")
