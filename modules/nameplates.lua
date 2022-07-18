@@ -481,7 +481,7 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     local unittype = GetUnitType(red, green, blue) or "ENEMY_NPC"
 
     -- ignore players with npc names if plate level is lower than player level
-    if ulevel and ulevel > (level == "??" and "-1" or level) then player = nil end
+    if ulevel and ulevel > (level == "??" and -1 or level) then player = nil end
 
     -- cache name and reset unittype on change
     if plate.cache.name ~= name then
