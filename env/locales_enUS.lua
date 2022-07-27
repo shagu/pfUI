@@ -34,6 +34,7 @@ pfUI_locale["enUS"]["hunterpaging"] = {
 pfUI_locale["enUS"]["customcast"] = {
   ["AIMEDSHOT"] = "Aimed Shot",
   ["MULTISHOT"] = "Multi-Shot",
+  ["TRUESHOT"] = "Trueshot",
 }
 
 pfUI_locale["enUS"]["critters"] = {
