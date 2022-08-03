@@ -30,7 +30,7 @@ pfUI:RegisterModule("autoshift", "vanilla", function ()
   pfUI.autoshift.buffs = { "spell_nature_swiftness", "_mount_", "_qirajicrystal_",
     "ability_racial_bearform", "ability_druid_catform", "ability_druid_travelform",
     "ability_druid_aquaticform", "spell_shadow_shadowform", "spell_nature_spiritwolf",
-    "ability_hunter_pet_turtle", "ability_bullrush", "inv_misc_head_dragon_black" }
+    "ability_hunter_pet_turtle", "ability_bullrush", "inv_misc_head_dragon_black", "spell_magic_polymorphchicken" }
 
   -- an agility buff exists which has the same icon as the moonkin form
   -- therefore only add the moonkin icon to the removable buffs if
