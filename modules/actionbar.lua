@@ -105,6 +105,9 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     ["PLAYER_LEAVE_COMBAT"] = true,
     -- cooldown updates
     ["UNIT_INVENTORY_CHANGED"] = true,
+    -- auto repeat action
+    ["START_AUTOREPEAT_SPELL"] = true,
+    ["STOP_AUTOREPEAT_SPELL"] = true,
   }
 
   -- events that are used for the aura/shapeshift bar
