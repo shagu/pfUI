@@ -1769,13 +1769,15 @@ function pfUI.uf:RefreshUnit(unit, component)
         unit.portrait.tex:Hide()
         unit.portrait.model:Show()
 
-        if unit.tick then
+        if component == "portrait" then
+          -- regular portrait update after event
+          unit.portrait.model.update = unitstr
+        else
+          -- detect portrait change without events
           unit.portrait.model.next:SetUnit(unitstr)
           if unit.portrait.model.lastUnit ~= UnitName(unitstr) or unit.portrait.model:GetModel() ~= unit.portrait.model.next:GetModel() then
             unit.portrait.model.update = unitstr
           end
-        else
-          unit.portrait.model.update = unitstr
         end
       end
     end
