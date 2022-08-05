@@ -429,7 +429,7 @@ function pfUI.uf:UpdateConfig()
   if tonumber(f.config.pheight) < 0 then f.power:Hide() end
 
   pfUI.api.CreateBackdrop(f.power, default_border)
-  f.power.bar:SetStatusBarTexture(pfUI.media[f.config.bartexture])
+  f.power.bar:SetStatusBarTexture(pfUI.media[f.config.pbartexture])
   f.power.bar:SetAllPoints(f.power)
 
   local custompbg = f.config.defcolor == "0" and f.config.custompbg or C.unitframes.custompbg
