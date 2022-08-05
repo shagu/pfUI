@@ -1140,5 +1140,13 @@ function pfUI:MigrateConfig()
     end
   end
 
+  -- use same powerbar texture as for health (> 5.2.10)
+  if checkversion(5, 2, 10) then
+    local unitframes = { "player", "target", "focus", "group", "grouptarget", "grouppet", "raid", "ttarget", "pet", "ptarget", "fallback", "tttarget" }
+    for _, unitframe in pairs(unitframes) do
+      pfUI_config.unitframes[unitframe].pbartexture = pfUI_config.unitframes[unitframe].bartexture
+    end
+  end
+
   pfUI_config.version = pfUI.version.string
 end
