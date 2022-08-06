@@ -797,6 +797,7 @@ end
 
 function pfUI.uf.OnShow()
   pfUI.uf:RefreshUnit(this)
+  pfUI.uf:RefreshUnit(this, "portrait")
 end
 
 function pfUI.uf.OnEvent()
