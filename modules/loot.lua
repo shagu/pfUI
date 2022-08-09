@@ -518,12 +518,6 @@ pfUI:RegisterModule("loot", "vanilla:tbc", function ()
   end
 
   local function AutoBind(arg1)
-    if GetNumPartyMembers() == 0 and GetNumRaidMembers() == 0 then
-      local dialog = StaticPopup_FindVisible("LOOT_BIND",arg1)
-      if dialog then
-        _G[dialog:GetName().."Button1"]:Click()
-      end
-    end
   end
 
   local function CloseOnClick()
@@ -715,8 +709,16 @@ pfUI:RegisterModule("loot", "vanilla:tbc", function ()
       end
     end
 
-    if C.loot.autopickup == "1" and event == "LOOT_BIND_CONFIRM" then
-      QueueFunction(AutoBind,arg1)
+    -- auto accept BoP loot in solo mode
+    if C.loot.autopickup == "1" and GetNumPartyMembers() == 0 and GetNumRaidMembers() == 0 then
+      if event == "LOOT_BIND_CONFIRM" then
+        LootSlot(arg1)
+        StaticPopup1Button1:Click()
+      elseif event == "LOOT_OPENED" then
+        for i=1,GetNumLootItems() do
+          LootSlot(i)
+        end
+      end
     end
   end)
 
