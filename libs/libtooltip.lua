@@ -99,12 +99,6 @@ function GameTooltip.SetLootRollItem(self, id)
   return pfHookSetLootRollItem(self, id)
 end
 
-local pfHookSetLootRollItem = GameTooltip.SetLootRollItem
-function GameTooltip.SetLootRollItem(self, id)
-  libtooltip.itemLink = GetLootRollItemLink(id)
-  return pfHookSetLootRollItem(self, id)
-end
-
 local pfHookSetMerchantItem = GameTooltip.SetMerchantItem
 function GameTooltip.SetMerchantItem(self, merchantIndex)
   libtooltip.itemLink = GetMerchantItemLink(merchantIndex)
