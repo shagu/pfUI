@@ -948,11 +948,11 @@ function pfUI.uf.OnUpdate()
     local unit = this.label .. this.id
     local heal = libpredict:UnitGetIncomingHeals(unit)
     local ress = libpredict:UnitHasIncomingResurrection(unit)
+    local health, maxHealth = UnitHealth(unit), UnitHealthMax(unit)
 
-    if heal ~= this.lastheal then
+    if heal - health - maxHealth ~= this.predictstate then
       local overhealperc = tonumber(this.config.overhealperc)
-      local health, maxHealth = UnitHealth(unit), UnitHealthMax(unit)
-      this.lastheal = heal
+      this.predictstate = heal - health - maxHealth
 
       if heal > 0 and (health < maxHealth or overhealperc > 0 ) then
         local width = this.config.width
