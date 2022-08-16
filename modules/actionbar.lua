@@ -1142,7 +1142,7 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     -- pet autocast
     if bar == 12 then
       f.autocast:SetScale(C.bars["bar"..bar].icon_size / 25)
-      f.autocast:SetAlpha(.05)
+      f.autocast:SetAlpha(.10)
     end
 
     -- macro options
