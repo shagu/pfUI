@@ -265,26 +265,11 @@ pfUI:RegisterModule("thirdparty", "vanilla:tbc", function()
     if C.thirdparty.shagudps.skin == "1" then
       if ShaguDPSWindow then
         local window = ShaguDPSWindow
-        window.btnDamage:SetHeight(14)
-        window.btnDamage:SetWidth(50)
-
-        window.btnDPS:SetHeight(14)
-        window.btnDPS:SetWidth(50)
-
-        window.btnAnnounce:SetHeight(14)
-        window.btnAnnounce:SetWidth(14)
-
-        window.btnReset:SetHeight(14)
-        window.btnReset:SetWidth(14)
 
         window.title:Hide()
         window.title:SetPoint("TOPLEFT", 1, -1)
         window.title:SetPoint("TOPRIGHT", -1, -1)
 
-        CreateBackdrop(window.btnAnnounce, nil, true, .75)
-        CreateBackdrop(window.btnReset, nil, true, .75)
-        CreateBackdrop(window.btnDamage, nil, true, .75)
-        CreateBackdrop(window.btnDPS, nil, true, .75)
         CreateBackdrop(window, nil, nil, (C.thirdparty.chatbg == "1" and .8))
         CreateBackdropShadow(window)
 
@@ -296,11 +281,22 @@ pfUI:RegisterModule("thirdparty", "vanilla:tbc", function()
           window.backdrop:SetBackdropBorderColor(tonumber(r), tonumber(g), tonumber(b), tonumber(a))
         end
 
-        window.btnDamage:SetBackdropBorderColor(.4,.4,.4,1)
-        window.btnDPS:SetBackdropBorderColor(.4,.4,.4,1)
+        -- skin buttons
+        window.btnAnnounce:SetWidth(14)
+        window.btnReset:SetWidth(14)
 
-        window.btnAnnounce:SetBackdropBorderColor(.4,.4,.4,1)
-        window.btnReset:SetBackdropBorderColor(.4,.4,.4,1)
+        local buttons = {
+          window.btnAnnounce, window.btnReset, window.btnSegment, window.btnMode,
+          window.btnDamage, window.btnDPS, window.btnCurrent, window.btnOverall
+        }
+
+        for _, button in pairs(buttons) do
+          if button then
+            button:SetHeight(14)
+            CreateBackdrop(button, nil, true, .75)
+            button:SetBackdropBorderColor(.4,.4,.4,1)
+          end
+        end
 
         window.border:Hide()
       end
