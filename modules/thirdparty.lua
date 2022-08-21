@@ -287,7 +287,8 @@ pfUI:RegisterModule("thirdparty", "vanilla:tbc", function()
 
         local buttons = {
           window.btnAnnounce, window.btnReset, window.btnSegment, window.btnMode,
-          window.btnDamage, window.btnDPS, window.btnCurrent, window.btnOverall
+          window.btnDamage, window.btnDPS, window.btnHeal, window.btnHPS,
+          window.btnCurrent, window.btnOverall,
         }
 
         for _, button in pairs(buttons) do
