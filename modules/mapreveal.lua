@@ -146,6 +146,8 @@ pfUI:RegisterModule("mapreveal", "vanilla:tbc", function ()
       if C.appearance.worldmap.mapexploration == "1" and not alreadyknown[textureName] then
         explore.tex:SetTexture("Interface\\WorldMap\\WorldMap-MagnifyingGlass")
         explore:Show()
+      else
+        explore:Hide()
       end
 
       if C.appearance.worldmap.mapreveal == "1" or alreadyknown[textureName] then
