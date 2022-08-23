@@ -143,8 +143,6 @@ function pfUI:UpdateFonts()
 
   -- write setting shortcuts
   pfUI.font_default = default
-  pfUI.font_tooltip = font_tooltip
-  pfUI.font_tooltip_size = font_tooltip_size
   pfUI.font_combat = combat
   pfUI.font_unit = unit
 
@@ -182,9 +180,9 @@ function pfUI:UpdateFonts()
   DialogButtonNormalText:SetFont(default, 16)
   ZoneTextFont:SetFont(default, 34, "OUTLINE")
   SubZoneTextFont:SetFont(default, 24, "OUTLINE")
-  GameTooltipText:SetFont(font_tooltip, font_tooltip_size)
-  GameTooltipTextSmall:SetFont(font_tooltip, font_tooltip_size)
-  GameTooltipHeaderText:SetFont(font_tooltip, font_tooltip_size + 1)
+  GameTooltipText:SetFont(pfUI_config.global.font_tooltip, pfUI_config.global.font_tooltip_size)
+  GameTooltipTextSmall:SetFont(pfUI_config.global.font_tooltip, pfUI_config.global.font_tooltip_size)
+  GameTooltipHeaderText:SetFont(pfUI_config.global.font_tooltip, pfUI_config.global.font_tooltip_size + 1)
   WorldMapTextFont:SetFont(default, 102, "THICK")
   InvoiceTextFontNormal:SetFont(default, 12)
   InvoiceTextFontSmall:SetFont(default, 12)
