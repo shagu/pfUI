@@ -361,7 +361,7 @@ pfUI:RegisterModule("thirdparty-tbc", "tbc", function ()
     DruidBarKey.color = { pr, pg, pb, 1 }
     DruidBarKey.bordercolor = {1,1,1,0}
     DruidBarKey.bgcolor = {0,0,0,0}
-    DruidBarKey.manatexture = pfUI.media["f.config.pbartexture"]
+    DruidBarKey.manatexture = pfUI.media[pfUI.uf.player.config.pbartexture]
     DruidBarKey.bordertexture = ""
 
     hooksecurefunc("DruidBar_MainGraphics", function()
