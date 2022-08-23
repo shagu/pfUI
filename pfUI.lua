@@ -143,6 +143,8 @@ function pfUI:UpdateFonts()
 
   -- write setting shortcuts
   pfUI.font_default = default
+  pfUI.font_tooltip = font_tooltip
+  pfUI.font_tooltip_size = font_tooltip_size
   pfUI.font_combat = combat
   pfUI.font_unit = unit
 
