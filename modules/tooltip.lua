@@ -137,7 +137,7 @@ pfUI:RegisterModule("tooltip", "vanilla:tbc", function ()
   pfUI.tooltipStatusBar.HP:SetAllPoints()
   pfUI.tooltipStatusBar.HP:SetNonSpaceWrap(false)
   pfUI.tooltipStatusBar.HP:SetFontObject(GameFontWhite)
-  pfUI.tooltipStatusBar.HP:SetFont(pfUI.font_default, C.global.font_size + 2, "OUTLINE")
+  pfUI.tooltipStatusBar.HP:SetFont(C.global.font_tooltip, C.global.font_tooltip_size + 2, "OUTLINE")
 
   if GameTooltip.SetClampRectInsets then
     GameTooltip:SetClampRectInsets(0, 0, 16, 0)
