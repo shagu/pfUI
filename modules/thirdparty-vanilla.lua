@@ -954,7 +954,7 @@ pfUI:RegisterModule("thirdparty-vanilla", "vanilla", function()
     local pr, pg, pb = 0, 0, 0
     if p then pr, pg, pb = p.r + .5, p.g +.5, p.b +.5 end
     DruidManaBar:SetStatusBarColor(pr, pg, pb)
-    DruidManaBar:SetStatusBarTexture(pfUI.media["img:bar"])
+    DruidManaBar:SetStatusBarTexture(pfUI.media[pfUI.uf.player.config.pbartexture])
 
     local f = pfUI.uf.player
     DruidManaBar:SetWidth((f.config.pwidth ~= "-1" and f.config.pwidth or f.config.width))
