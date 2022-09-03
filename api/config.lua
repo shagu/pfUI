@@ -1150,13 +1150,5 @@ function pfUI:MigrateConfig()
     end
   end
 
-  -- migrate font and font size for tooltip  (> 5.2.10)
-  if checkversion(5, 2, 10) then
-    pfUI.tooltipStatusBar.HP:SetFont(pfUI.font_default, C.global.font_size + 2, "OUTLINE")
-    GameTooltipText:SetFont(pfUI.font_default, 12)
-    GameTooltipTextSmall:SetFont(pfUI.font_default, 12)
-    GameTooltipHeaderText:SetFont(pfUI.font_default, 13)
-  end
-
   pfUI_config.version = pfUI.version.string
 end
