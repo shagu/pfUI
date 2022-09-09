@@ -2,6 +2,7 @@
 setfenv(1, pfUI:GetEnvironment())
 if pfUI.expansion ~= "wotlk" then return end
 
+-- [[ Core Overrides ]]--
 local baseSetupCVars = pfUI.SetupCVars
 function pfUI.SetupCVars()
   SetCVar("useUiScale", "1")
@@ -9,8 +10,9 @@ function pfUI.SetupCVars()
 end
 
 local baseCreateFrame = CreateFrame
-function CreateFrame(name, ...)
-  local frame = baseCreateFrame(name, ...)
+function CreateFrame(type, name, ...)
+  local frame = baseCreateFrame(type, name, ...)
+
   -- move some font functions onto the main object (required for wotlk)
   if not frame.SetFont and frame.SetNormalFontObject then
     frame.SetFont = function(self, fontName, fontSize, fontStyle)
@@ -21,7 +23,7 @@ function CreateFrame(name, ...)
       if font then
         font:SetTextColor(...)
       else
-        print(name.." attempted to set color with null font")
+        print(type.."#"..tostring(name).." attempted to set color with null font")
       end
     end
     frame.GetTextColor = function(self)
@@ -29,7 +31,7 @@ function CreateFrame(name, ...)
       if font then
         return font:GetTextColor()
       else
-        print(name.." attempted to get color with null font")
+        print(type.."#"..tostring(name).." attempted to get color with null font")
       end
       return nil
     end
@@ -83,6 +85,10 @@ end
 
 UIDropDownMenu_JustifyText = function(align, frame)
   return _G.UIDropDownMenu_JustifyText(frame, align)
+end
+
+function TutorialFrame_HideAllAlerts()
+  _G.TutorialFrame_HideAllAlerts()
 end
 
 function GetPlayerBuff(id, mode)
@@ -159,10 +165,6 @@ end
 
 function SetAutoLootDefault()
   return GetCVar("autoLootDefault")
-end
-
-function TutorialFrame_HideAllAlerts()
-
 end
 
 -- map libdebuff to the regular function
