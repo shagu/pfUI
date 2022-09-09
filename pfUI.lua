@@ -355,7 +355,9 @@ seterrorhandler(error)
 
 function pfUI.SetupCVars()
   ClearTutorials()
-  TutorialFrame_HideAllAlerts()
+  if TutorialFrame_HideAllAlerts then
+    TutorialFrame_HideAllAlerts()
+  end
 
   ConsoleExec("CameraDistanceMaxFactor 5")
 

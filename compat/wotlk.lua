@@ -2,10 +2,49 @@
 setfenv(1, pfUI:GetEnvironment())
 if pfUI.expansion ~= "wotlk" then return end
 
+local baseSetupCVars = pfUI.SetupCVars
+function pfUI.SetupCVars()
+  SetCVar("useUiScale", "1")
+  return baseSetupCVars()
+end
+
+local baseCreateFrame = CreateFrame
+function CreateFrame(name, ...)
+  local frame = baseCreateFrame(name, ...)
+  -- move some font functions onto the main object (required for wotlk)
+  if not frame.SetFont and frame.SetNormalFontObject then
+    frame.SetFont = function(self, fontName, fontSize, fontStyle)
+      self:SetNormalFontObject(CreateFont(fontName, fontSize, fontStyle))
+    end
+    frame.SetTextColor = function(self, ...)
+      local font = self:GetNormalFontObject()
+      if font then
+        font:SetTextColor(...)
+      else
+        print(name.." attempted to set color with null font")
+      end
+    end
+    frame.GetTextColor = function(self)
+      local font = self:GetNormalFontObject()
+      if font then
+        return font:GetTextColor()
+      else
+        print(name.." attempted to get color with null font")
+      end
+      return nil
+    end
+  end
+  return frame
+end
+
 -- [[ Constants ]]--
 MAX_LEVEL = 80
+
 CASTBAR_EVENT_CAST_DELAY = "UNIT_SPELLCAST_DELAYED"
 CASTBAR_EVENT_CHANNEL_DELAY = "UNIT_SPELLCAST_CHANNEL_UPDATE"
+CASTBAR_EVENT_CAST_START = "UNIT_SPELLCAST_START"
+CASTBAR_EVENT_CHANNEL_START = "UNIT_SPELLCAST_CHANNEL_START"
+
 EVENTS_MINIMAP_ZONE_UPDATE = {"PLAYER_ENTERING_WORLD", "ZONE_CHANGED_NEW_AREA", "ZONE_CHANGED"}
 
 MICRO_BUTTONS = {
@@ -30,6 +69,8 @@ PLAYER_BUFF_START_ID = 0
 ACTIONBAR_SECURE_TEMPLATE_BAR = "SecureHandlerBaseTemplate"
 ACTIONBAR_SECURE_TEMPLATE_BUTTON = "SecureActionButtonTemplate"
 UNITFRAME_SECURE_TEMPLATE = "SecureUnitButtonTemplate"
+
+_G.OptionsFrameSliders = {{}, {}, {}}
 
 --[[ WOTLK API Downgrade ]]--
 UIDropDownMenu_SetWidth = function(num, frame)
@@ -89,6 +130,39 @@ function GetContainerNumSlots(bag)
   else
     return _G.GetContainerNumSlots(bag)
   end
+end
+
+-- deprecated, replaced with http://www.iriel.org/wow/docs/SecureHeadersGuide%20-%20pre1.pdf
+function SecureStateHeader_Refresh(header)
+  --
+end
+
+function ShowNameplates()
+  --SetCVar("nameplateShowAll", "1")
+end
+
+function HideNameplates()
+  --SetCVar("nameplateShowAll", "0")
+end
+
+function ShowFriendNameplates()
+  --SetCVar("nameplateShowFriends", "1")
+end
+
+function HideFriendNameplates()
+  --SetCVar("nameplateShowFriends", "0")
+end
+
+function SetAutoLootDefault(auto)
+  SetCVar("autoLootDefault", auto)
+end
+
+function SetAutoLootDefault()
+  return GetCVar("autoLootDefault")
+end
+
+function TutorialFrame_HideAllAlerts()
+
 end
 
 -- map libdebuff to the regular function

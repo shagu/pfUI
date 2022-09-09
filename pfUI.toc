@@ -1,9 +1,8 @@
-## Interface: 11200
-## Title: |cff33ffccpf|cffffffffUI
+## Interface: 30300
+## Title: |cff33ffccpf|cffffffffUI |cffaa5555[incomplete]
 ## Author: Shagu
 ## Notes: A complete user interface replacement.
-## Notes-ruRU: Полная замена пользовательского интерфейса.
-## Version: 5.2.11
+## Version: 4.2.0
 ## SavedVariables: pfUI_profiles, pfUI_addon_profiles, pfUI_cache
 ## SavedVariablesPerCharacter: pfUI_config, pfUI_init, pfUI_playerDB
 

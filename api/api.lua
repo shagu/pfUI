@@ -935,7 +935,7 @@ function pfUI.api.GetPerfectPixel()
   if pfUI.pixel then return pfUI.pixel end
 
   if pfUI_config.appearance.border.pixelperfect == "1" then
-    local scale = GetCVar("uiScale")
+    local scale = GetCVar("uiScale") or 1.0
     local resolution = GetCVar("gxResolution")
     local _, _, screenwidth, screenheight = strfind(resolution, "(.+)x(.+)")
 

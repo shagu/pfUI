@@ -55,6 +55,14 @@ function GetContainerNumSlots(bag)
   end
 end
 
+function GetTextColor(self)
+  return self:GetTextColor()
+end
+
+function SetTextColor(self, ...)
+  self:SetTextColor(...)
+end
+
 -- map libdebuff to the regular function
 libdebuff = {
   ["UnitDebuff"] = function(self, a1, a2, a3)
