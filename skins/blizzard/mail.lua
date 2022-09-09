@@ -1,6 +1,6 @@
 pfUI:RegisterSkin("Mailbox", "vanilla:tbc", function ()
-  local border = tonumber(pfUI_config.appearance.border.default)
-  local bpad = border > 1 and border - 1 or 1
+  local rawborder, border = GetBorderSize()
+  local bpad = rawborder > 1 and border - GetPerfectPixel() or GetPerfectPixel()
 
   -- Compatibility
   local StationeryBackgroundLeft, StationeryBackgroundRight
@@ -163,8 +163,11 @@ pfUI:RegisterSkin("Mailbox", "vanilla:tbc", function ()
     InboxNextPageButton:ClearAllPoints()
     InboxNextPageButton:SetPoint("TOPRIGHT", InboxFrame.backdrop, "BOTTOMRIGHT", 0, -10)
 
-    SkinArrowButton(InboxPrevPageButton, "left", 18)
-    SkinArrowButton(InboxNextPageButton, "right", 18)
+    SkinArrowButton(InboxPrevPageButton, "left", 16)
+    SkinArrowButton(InboxNextPageButton, "right", 16)
+
+    InboxPrevPageButton:GetRegions():SetPoint("LEFT", InboxPrevPageButton, "RIGHT", 5, 0)
+    InboxNextPageButton:GetRegions():SetPoint("RIGHT", InboxNextPageButton, "LEFT", -5, 0)
   end
 
   do -- SendMailFrame

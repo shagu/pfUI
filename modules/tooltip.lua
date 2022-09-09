@@ -1,4 +1,5 @@
 pfUI:RegisterModule("tooltip", "vanilla:tbc", function ()
+  local rawborder, default_border = GetBorderSize()
 
   pfUI.tooltip = CreateFrame('Frame', "pfTooltip", GameTooltip)
   pfUI.tooltip.anchorframe = CreateFrame('Frame', "pfTooltipAnchor", UIParent)
@@ -88,8 +89,8 @@ pfUI:RegisterModule("tooltip", "vanilla:tbc", function ()
       if GameTooltip:GetAnchorType() == "ANCHOR_NONE" then
         GameTooltip:ClearAllPoints()
         if C.tooltip.position == "bottom" then
-          if pfUI.panel then
-            GameTooltip:SetPoint("BOTTOMRIGHT", pfUI.panel.right, "TOPRIGHT", 0, C.appearance.border.default*2)
+          if pfUI.panel and pfUI.panel.right:IsShown() then
+            GameTooltip:SetPoint("BOTTOMRIGHT", pfUI.panel.right, "TOPRIGHT", 0, default_border*2)
           else
             GameTooltip:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", -5, 5)
           end
@@ -109,7 +110,7 @@ pfUI:RegisterModule("tooltip", "vanilla:tbc", function ()
           end
 
           if anchor then
-            GameTooltip:SetPoint("BOTTOMRIGHT", anchor, "TOPRIGHT", 0, C.appearance.border.default*2)
+            GameTooltip:SetPoint("BOTTOMRIGHT", anchor, "TOPRIGHT", 0, default_border*3)
           else
             GameTooltip:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", -5, 5)
           end
@@ -123,38 +124,62 @@ pfUI:RegisterModule("tooltip", "vanilla:tbc", function ()
     end)
 
   pfUI.tooltipStatusBar = CreateFrame('Frame', nil, GameTooltipStatusBar)
-  pfUI.tooltipStatusBar:SetScript("OnUpdate", function()
-      local hp = GameTooltipStatusBar:GetValue()
-      local _, hpm = GameTooltipStatusBar:GetMinMaxValues()
-
-      if MobHealthFrame then
-        local perc = UnitHealth("mouseover")
-        local name = UnitName("mouseover") or ""
-        local level = UnitLevel("mouseover") or ""
-        local index = name .. ":" .. level
-        local ppp = MobHealth_PPP(index)
-        if perc and ppp and ppp > 0 and not UnitIsUnit("mouseover", "pet") then
-          hp = round(perc * ppp)
-          hpm = round(100 * ppp)
-        end
-      end
-
-      if hp and hpm then
-        if hp >= 1000 then hp = round(hp / 1000, 1) .. "k" end
-        if hpm >= 1000 then hpm = round(hpm / 1000, 1) .. "k" end
-
-        if pfUI.tooltipStatusBar and pfUI.tooltipStatusBar.HP then
-          pfUI.tooltipStatusBar.HP:SetText(hp .. " / " .. hpm)
-        end
-      end
+  pfUI.tooltipStatusBar:SetPoint("TOPLEFT", 0, 8)
+  pfUI.tooltipStatusBar:SetPoint("TOPRIGHT", 0, 8)
+  pfUI.tooltipStatusBar:SetHeight(12)
+  pfUI.tooltipStatusBar:RegisterEvent("UPDATE_MOUSEOVER_UNIT")
+  pfUI.tooltipStatusBar:SetScript("OnEvent", function()
+    this.name = UnitName("mouseover")
+    this.level = UnitLevel("mouseover")
   end)
 
-  GameTooltipStatusBar:SetHeight(6)
+  pfUI.tooltipStatusBar.HP = pfUI.tooltipStatusBar:CreateFontString("Status", "DIALOG", "GameFontNormal")
+  pfUI.tooltipStatusBar.HP:SetAllPoints()
+  pfUI.tooltipStatusBar.HP:SetNonSpaceWrap(false)
+  pfUI.tooltipStatusBar.HP:SetFontObject(GameFontWhite)
+  pfUI.tooltipStatusBar.HP:SetFont(pfUI.font_default, C.global.font_size + 2, "OUTLINE")
+
+  if GameTooltip.SetClampRectInsets then
+    GameTooltip:SetClampRectInsets(0, 0, 16, 0)
+  else
+    GameTooltipStatusBar:SetClampedToScreen(true)
+    pfUI.tooltipStatusBar:SetClampedToScreen(true)
+  end
+
+  pfUI.tooltipStatusBar:SetScript("OnUpdate", function()
+    local hp = GameTooltipStatusBar:GetValue()
+    local _, hpmax = GameTooltipStatusBar:GetMinMaxValues()
+    local rhp, rhpmax, estimated
+
+    if hpmax > 100 or (round(hpmax/100*hp) ~= hp) then
+      rhp, rhpmax = hp, hpmax
+    elseif pfUI.libhealth and pfUI.libhealth.enabled then
+      rhp, rhpmax, estimated = pfUI.libhealth:GetUnitHealthByName(this.name, this.level, tonumber(hp), tonumber(hpmax))
+    elseif MobHealthFrame then
+      local index = (this.name or "") .. ":" .. (this.level or "")
+      local ppp = MobHealth_PPP(index)
+      if perc and ppp and ppp > 0 and not UnitIsUnit("mouseover", "pet") then
+        rhp = round(hp * ppp)
+        rhpmax = round(100 * ppp)
+        estimated = true
+      end
+    end
+
+    if C.tooltip.alwaysperc == "0" and ( estimated or hpmax > 100 or round(hpmax/100*hp) ~= hp ) then
+      pfUI.tooltipStatusBar.HP:SetText(string.format("%s / %s", Abbreviate(rhp), Abbreviate(rhpmax)))
+    elseif hpmax > 0 then
+      pfUI.tooltipStatusBar.HP:SetText(string.format("%s%%", ceil(hp/hpmax*100)))
+    else
+      pfUI.tooltipStatusBar.HP:SetText("")
+    end
+  end)
+
+  GameTooltipStatusBar:SetHeight(8)
   GameTooltipStatusBar:ClearAllPoints()
-  GameTooltipStatusBar:SetPoint("BOTTOMLEFT", GameTooltip, "TOPLEFT", 0, 0)
-  GameTooltipStatusBar:SetPoint("BOTTOMRIGHT", GameTooltip, "TOPRIGHT", 0, 0)
-  GameTooltipStatusBar:SetStatusBarTexture(pfUI.media["img:bar"])
-  CreateBackdrop(GameTooltipStatusBar)
+  GameTooltipStatusBar:SetPoint("BOTTOMLEFT", GameTooltip, "TOPLEFT", 0, default_border)
+  GameTooltipStatusBar:SetPoint("BOTTOMRIGHT", GameTooltip, "TOPRIGHT", 0, default_border)
+  GameTooltipStatusBar:SetStatusBarTexture(pfUI.media[C.tooltip.statusbar.texture])
+  CreateBackdrop(GameTooltipStatusBar, nil, nil, tonumber(C.tooltip.alpha))
   CreateBackdropShadow(GameTooltipStatusBar)
 
   GameTooltipStatusBar.SetStatusBarColor_orig = GameTooltipStatusBar.SetStatusBarColor
@@ -162,7 +187,15 @@ pfUI:RegisterModule("tooltip", "vanilla:tbc", function ()
 
   function pfUI.tooltip:Update()
       local unit = pfUI.tooltip:GetUnit()
-      if unit == "none" then return end
+      if unit == "none" then
+        -- process item tooltips
+        if C.tooltip.itemid == "1" and libtooltip:GetItemID() then
+          GameTooltip:AddLine(T["ItemID"] .. ": " .. libtooltip:GetItemID(), .25,.5,1)
+          GameTooltip:Show()
+        end
+
+        return
+      end
 
       local pvpname = UnitPVPName(unit)
       local name = UnitName(unit)
@@ -181,8 +214,10 @@ pfUI:RegisterModule("tooltip", "vanilla:tbc", function ()
           local color = RAID_CLASS_COLORS[class]
           GameTooltipStatusBar:SetStatusBarColor_orig(color.r, color.g, color.b)
           GameTooltip:SetBackdropBorderColor(color.r, color.g, color.b)
-          if color.colorStr then
-            GameTooltipTextLeft1:SetText("|c" .. color.colorStr .. name)
+          if color and color.r then
+            GameTooltipTextLeft1:SetText(rgbhex(color.r, color.g, color.b, color.a) .. name)
+          else
+            GameTooltipTextLeft1:SetText("|cff999999" .. name)
           end
         elseif reaction then
           local color = UnitReactionColor[reaction]
@@ -211,16 +246,12 @@ pfUI:RegisterModule("tooltip", "vanilla:tbc", function ()
           GameTooltip:AddLine(target, color.r, color.g, color.b)
         elseif targetReaction then
           local color = UnitReactionColor[targetReaction]
-          GameTooltip:AddLine(target, color.r, color.g, color.b)
+          if color then
+            GameTooltip:AddLine(target, color.r, color.g, color.b)
+          else
+            GameTooltip:AddLine(target, .5, .5, .5)
+          end
         end
-      end
-
-      if pfUI.tooltipStatusBar.HP == nil then
-        pfUI.tooltipStatusBar.HP = GameTooltipStatusBar:CreateFontString("Status", "DIALOG", "GameFontNormal")
-        pfUI.tooltipStatusBar.HP:SetPoint("TOP", 0,8)
-        pfUI.tooltipStatusBar.HP:SetNonSpaceWrap(false)
-        pfUI.tooltipStatusBar.HP:SetFontObject(GameFontWhite)
-        pfUI.tooltipStatusBar.HP:SetFont(pfUI.font_default, C.global.font_size + 2, "OUTLINE")
       end
 
       if hp and hpm then

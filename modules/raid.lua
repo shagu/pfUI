@@ -2,12 +2,16 @@ pfUI:RegisterModule("raid", "vanilla:tbc", function ()
   -- do not go further on disabled UFs
   if C.unitframes.disable == "1" then return end
 
-  local default_border = C.appearance.border.default
-  if C.appearance.border.unitframes ~= "-1" then
-    default_border = C.appearance.border.unitframes
-  end
+  pfUI.uf.raid = CreateFrame("Frame", "pfRaidUpdater", UIParent)
 
-  pfUI.uf.raid = CreateFrame("Button","pfRaid",UIParent)
+  local maxraid = tonumber(C.unitframes.maxraid)
+  local rawborder, default_border = GetBorderSize("chat")
+  local cluster = CreateFrame("Frame", "pfRaidCluster", UIParent)
+  cluster:SetFrameLevel(20)
+  cluster:SetWidth(120)
+  cluster:SetHeight(10)
+  cluster:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", default_border*2, C.chat.left.height + default_border*5)
+  UpdateMovable(cluster)
 
   pfUI.uf.raid.tanksfirst = {
     ["PF_TANK_TOGGLE"] = { T["Toggle as Tank"], "toggleTank" }
@@ -17,47 +21,61 @@ pfUI:RegisterModule("raid", "vanilla:tbc", function ()
   pfUI.uf.raid.tankrole = { }
 
   function pfUI.uf.raid:UpdateConfig()
-    for i=1, 40 do
+    local rawborder, default_border = GetBorderSize("unitframes")
+    maxraid = tonumber(C.unitframes.maxraid)
+
+    for i=1,maxraid do
+      pfUI.uf.raid[i] = pfUI.uf.raid[i] or pfUI.uf:CreateUnitFrame("Raid", i, C.unitframes.raid)
+      pfUI.uf.raid[i]:SetParent(cluster)
+      pfUI.uf.raid[i]:SetFrameLevel(5)
+
       pfUI.uf.raid[i]:UpdateConfig()
-    end
-  end
-
-  for r=1, 8 do
-    for g=1, 5 do
-      local i = g + 5*(r-1)
-      pfUI.uf.raid[i] = pfUI.uf:CreateUnitFrame("Raid", i, C.unitframes.raid)
       pfUI.uf.raid[i]:UpdateFrameSize()
+    end
 
-      local spacing = pfUI.uf.raid[i].config.pspace
-      local width = pfUI.uf.raid[i].config.width
-      local height = pfUI.uf.raid[i].config.height
-      local pheight = pfUI.uf.raid[i].config.pheight
-      local real_height = height + spacing + pheight + 2*default_border
+    local i = 1
+    local width = pfUI.uf.raid[1]:GetWidth()+2*default_border
+    local height = pfUI.uf.raid[1]:GetHeight()+2*default_border
+    local layout = pfUI.uf.raid[1].config.raidlayout
+    local padding = tonumber(pfUI.uf.raid[1].config.raidpadding)*GetPerfectPixel()
+    local fill = pfUI.uf.raid[1].config.raidfill
+    local _, _, x, y = string.find(layout,"(.+)x(.+)")
+    x, y = tonumber(x), tonumber(y)
 
-      pfUI.uf.raid[i]:SetPoint("BOTTOMLEFT", (r-1) * (width+3*default_border) + 5, C.chat.left.height + default_border + 10 + (g-1)*(real_height+3*default_border))
-      UpdateMovable(pfUI.uf.raid[i])
+    if fill == "VERTICAL" then
+      for r=1, x do for g=1, y do
+        if pfUI.uf.raid[i] then
+          pfUI.uf.raid[i]:ClearAllPoints()
+          pfUI.uf.raid[i]:SetPoint("BOTTOMLEFT", (r-1)*(padding+width), (g-1)*(padding+height))
+          UpdateMovable(pfUI.uf.raid[i], true)
+        end
+        i = i + 1
+      end end
+    else
+      for g=1, y do for r=1, x do
+        if pfUI.uf.raid[i] then
+          pfUI.uf.raid[i]:ClearAllPoints()
+          pfUI.uf.raid[i]:SetPoint("BOTTOMLEFT", (r-1)*(padding+width), (g-1)*(padding+height))
+          UpdateMovable(pfUI.uf.raid[i], true)
+        end
+        i = i + 1
+      end end
     end
   end
 
+  pfUI.uf.raid:UpdateConfig()
 
   local function SetRaidIndex(frame, id)
     frame.id = id
-
-    if frame.SetAttribute and RegisterStateDriver then
-      frame:SetAttribute("unit", UnitName("raid" .. id))
-      frame.visibilitycondition = string.format("[target=%s,exists] show; hide", id > 0 and UnitName("raid" .. id) or "__NONE__")
-      RegisterStateDriver(frame, 'visibility', frame.visibilitycondition)
-    else
-      if id > 0 then frame:Show() else frame:Hide() end
-      pfUI.uf:RefreshUnit(frame, "all")
-    end
+    frame.label = "raid"
+    frame:UpdateVisibility()
   end
 
   -- add units to the beginning of their groups
   function pfUI.uf.raid:AddUnitToGroup(index, group)
     for subindex = 1, 5 do
       local ids = subindex + 5*(group-1)
-      if pfUI.uf.raid[ids].id == 0 and pfUI.uf.raid[ids].config.visible == "1" then
+      if pfUI.uf.raid[ids] and pfUI.uf.raid[ids].id == 0 and pfUI.uf.raid[ids].config.visible == "1" then
         SetRaidIndex(pfUI.uf.raid[ids], index)
         return
       end
@@ -69,11 +87,11 @@ pfUI:RegisterModule("raid", "vanilla:tbc", function ()
   pfUI.uf.raid:RegisterEvent("VARIABLES_LOADED")
   pfUI.uf.raid:SetScript("OnEvent", function() this:Show() end)
   pfUI.uf.raid:SetScript("OnUpdate", function()
-    -- skip during combat
-    if InCombatLockdown and InCombatLockdown() then return end
+    -- don't proceed without raid or during combat
+    if not UnitInRaid("player") or (InCombatLockdown and InCombatLockdown()) then return end
 
     -- clear all existing frames
-    for i=1, 40 do SetRaidIndex(pfUI.uf.raid[i], 0) end
+    for i=1, maxraid do SetRaidIndex(pfUI.uf.raid[i], 0) end
 
     -- sort tanks into their groups
     for i=1, GetNumRaidMembers() do

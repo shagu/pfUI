@@ -57,6 +57,8 @@ pfValidUnits["playertarget"] = true
 pfValidUnits["targettarget"] = true
 pfValidUnits["mouseovertarget"] = true
 pfValidUnits["targettargettarget"] = true
+pfValidUnits["focus"] = pfUI.client > 11200 or nil
+pfValidUnits["focustarget"] = pfUI.client > 11200 or nil
 
 for i=1,4 do pfValidUnits["party" .. i] = true end
 for i=1,4 do pfValidUnits["partypet" .. i] = true end

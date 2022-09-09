@@ -4,11 +4,7 @@ pfUI:RegisterModule("panel", "vanilla:tbc", function()
 
   local font = C.panel.use_unitfonts == "1" and pfUI.font_unit or pfUI.font_default
   local font_size = C.panel.use_unitfonts == "1" and C.global.font_unit_size or C.global.font_size
-
-  local default_border = C.appearance.border.default
-  if C.appearance.border.panels ~= "-1" then
-    default_border = C.appearance.border.panels
-  end
+  local rawborder, default_border = GetBorderSize("panels")
 
   do -- Widgets
     do -- Clock & Timer
@@ -35,12 +31,23 @@ pfUI:RegisterModule("panel", "vanilla:tbc", function()
         GameTooltip:AddDoubleLine(T["Localtime"],  "|cffffffff" .. time)
         GameTooltip:AddDoubleLine(T["Servertime"], "|cffffffff".. servertime)
         GameTooltip:AddLine(" ")
-        GameTooltip:AddDoubleLine(T["Left Click"], "|cffffffff" .. T["Show/Hide Timer"])
-        GameTooltip:AddDoubleLine(T["Right Click"], "|cffffffff" .. T["Reset Timer"])
+        if TimeManagerFrame then
+          GameTooltip:AddDoubleLine(T["Left Click"], "|cffffffff" .. T["Show/Hide TimeManager"])
+        else
+          GameTooltip:AddDoubleLine(T["Left Click"], "|cffffffff" .. T["Show/Hide Timer"])
+          GameTooltip:AddDoubleLine(T["Right Click"], "|cffffffff" .. T["Reset Timer"])
+        end
         GameTooltip:Show()
       end
       widget.Click = function()
         this:RegisterForClicks("LeftButtonUp", "RightButtonUp")
+        if TimeManagerFrame then
+          if TimeManagerClockButton.alarmFiring then
+            TimeManager_TurnOffAlarm()
+          end
+          ToggleTimeManager()
+          return
+        end
         if arg1 == "LeftButton" then
           if widget.timerFrame:IsShown() then
             widget.timerFrame:Hide()
@@ -131,6 +138,7 @@ pfUI:RegisterModule("panel", "vanilla:tbc", function()
 
     do -- FPS & Lag
       local widget = CreateFrame("Frame", "pfPanelWidgetLag", UIParent)
+      local lag, fps, laghex, fpshex, _
       widget.Tooltip = function()
         local active = 0
         GameTooltip:ClearLines()
@@ -163,17 +171,26 @@ pfUI:RegisterModule("panel", "vanilla:tbc", function()
         GameTooltip:Show()
       end
       widget.Click = function()
-        if pfUI.addons:IsShown() then
+        if pfUI.addons and pfUI.addons:IsShown() then
           pfUI.addons:Hide()
-        else
+        elseif pfUI.addons then
           pfUI.addons:Show()
         end
       end
       widget:SetScript("OnUpdate",function()
         if ( this.tick or 1) > GetTime() then return else this.tick = GetTime() + 1 end
 
-        local _, _, lag = GetNetStats()
-        pfUI.panel:OutputPanel("fps", floor(GetFramerate()) .. " " .. T["fps"] .. " & " .. lag .. " " .. T["ms"], widget.Tooltip, widget.Click)
+        fps = floor(GetFramerate())
+        _, _, lag = GetNetStats()
+
+        if C.panel.fpscolors == "1" then
+          _, _, _, fpshex = GetColorGradient(fps/60)
+          _, _, _, laghex = GetColorGradient(60/lag)
+          fps = fpshex .. fps .. "|r"
+          lag = laghex .. lag .. "|r"
+        end
+
+        pfUI.panel:OutputPanel("fps", fps .. " " .. T["fps"] .. " & " .. lag .. " " .. T["ms"], widget.Tooltip, widget.Click)
       end)
     end
 
@@ -289,6 +306,29 @@ pfUI:RegisterModule("panel", "vanilla:tbc", function()
       local widget = CreateFrame("Frame", "pfPanelWidgetFriends", UIParent)
       widget:RegisterEvent("PLAYER_ENTERING_WORLD")
       widget:RegisterEvent("FRIENDLIST_UPDATE")
+      widget.Tooltip = function()
+        local init = nil
+        local all = GetNumFriends()
+        local playerzone  = GetRealZoneText()
+
+        for friendIndex=1, all do
+          local friend_name, friend_level, friend_class, friend_area, friend_connected = GetFriendInfo(friendIndex)
+          if friend_connected and friend_class and friend_level then
+            if not init then
+              GameTooltip_SetDefaultAnchor(GameTooltip, this)
+              GameTooltip:ClearLines()
+              GameTooltip:AddLine("|cff555555" .. T["Friends Online"])
+              init = true
+            end
+            local ccolor = RAID_CLASS_COLORS[L["class"][friend_class]] or { 1, 1, 1 }
+            local lcolor = GetDifficultyColor(tonumber(friend_level)) or { 1, 1, 1 }
+            local zcolor = friend_area == playerzone and "|cff33ffcc" or "|cffcccccc"
+            GameTooltip:AddDoubleLine(rgbhex(ccolor) .. friend_name .. rgbhex(lcolor) .. " [" .. friend_level .. "]", zcolor .. friend_area)
+          end
+        end
+
+        GameTooltip:Show()
+      end
       widget.Click = function() ToggleFriendsFrame(1) end
       widget:SetScript("OnEvent", function()
         local online = 0
@@ -300,7 +340,7 @@ pfUI:RegisterModule("panel", "vanilla:tbc", function()
           end
         end
 
-        pfUI.panel:OutputPanel("friends", FRIENDS .. ": " .. online, nil, widget.Click)
+        pfUI.panel:OutputPanel("friends", FRIENDS .. ": " .. online, widget.Tooltip, widget.Click)
       end)
     end
 
@@ -309,6 +349,58 @@ pfUI:RegisterModule("panel", "vanilla:tbc", function()
       widget:RegisterEvent("PLAYER_ENTERING_WORLD")
       widget:RegisterEvent("GUILD_ROSTER_UPDATE")
       widget:RegisterEvent("PLAYER_GUILD_UPDATE")
+      widget.Tooltip = function()
+        -- skip without guild
+        if not GetGuildInfo("player") then return end
+
+        local raidparty = {}
+        for i=1,4 do -- detect people in group
+          if UnitExists("party"..i) then
+            raidparty[UnitName("party"..i)] = true
+          end
+        end
+        for i=1,40 do -- detect people in raid
+          if UnitExists("raid"..i) then
+            raidparty[UnitName("raid"..i)] = true
+          end
+        end
+
+        local all = GetNumGuildMembers()
+        local playerzone = GetRealZoneText()
+        local off = FauxScrollFrame_GetOffset(GuildListScrollFrame)
+        local left, field, init
+
+        for i=1, all do
+          local name, _, _, level, class, zone, _, _, online = GetGuildRosterInfo(off + i)
+          if online then
+            if not init then
+              GameTooltip_SetDefaultAnchor(GameTooltip, this)
+              GameTooltip:ClearLines()
+              GameTooltip:AddLine("|cff555555" .. T["Guild Online"])
+              init = true
+            end
+
+            local ccolor = RAID_CLASS_COLORS[L["class"][class]] or { 1, 1, 1 }
+            local lcolor = GetDifficultyColor(tonumber(level)) or { 1, 1, 1 }
+            local level = "|cff555555" .. "[" .. rgbhex(lcolor) .. level .. "|cff555555]"
+            local raid = raidparty[name] and "|cff555555[|cff33ffccG|cff555555]|r" or ""
+
+            if not left then
+              left =  level .. raid .. " " .. rgbhex(ccolor) .. name
+            else
+              field = rgbhex(ccolor) .. name .. " " .. raid .. level
+              GameTooltip:AddDoubleLine(left, field)
+              left = nil
+            end
+          end
+        end
+
+        if left then
+          GameTooltip:AddDoubleLine(left, "")
+        end
+
+        GameTooltip:Show()
+      end
       widget.Click = function() ToggleFriendsFrame(3) end
       widget:SetScript("OnEvent", function()
         if GetGuildInfo("player") then
@@ -318,14 +410,14 @@ pfUI:RegisterModule("panel", "vanilla:tbc", function()
             if online then count = count + 1 end
           end
 
-          pfUI.panel:OutputPanel("guild", GUILD .. ": " .. count, nil, widget.Click)
+          pfUI.panel:OutputPanel("guild", GUILD .. ": " .. count, widget.Tooltip, widget.Click)
         else
-          pfUI.panel:OutputPanel("guild", GUILD .. ": " .. NOT_APPLICABLE, nil, widget.Click)
+          pfUI.panel:OutputPanel("guild", GUILD .. ": " .. NOT_APPLICABLE, widget.Tooltip, widget.Click)
         end
       end)
 
       widget:SetScript("OnUpdate",function()
-        if ( this.tick or 10) > GetTime() then return else this.tick = GetTime() + 10 end
+        if ( this.tick or 60) > GetTime() then return else this.tick = GetTime() + 60 end
         if GetGuildInfo("player") then GuildRoster() end
       end)
     end
@@ -338,13 +430,7 @@ pfUI:RegisterModule("panel", "vanilla:tbc", function()
       widget:RegisterEvent("PLAYER_DEAD")
       widget:RegisterEvent("PLAYER_UNGHOST")
       widget:RegisterEvent("UNIT_INVENTORY_CHANGED")
-
-      -- The following event is disabled as most servers flood this event
-      -- even on other peoples durability changes. Therefore the event
-      -- would run about 50 times per minute (depending on the population)
-      -- while being in AFK in a capital city. We hopefully might be able
-      -- to bring that back, once the most popular servers accept the fix.
-      -- widget:RegisterEvent("UPDATE_INVENTORY_ALERTS")
+      widget:RegisterEvent("UPDATE_INVENTORY_DURABILITY")
 
       widget.itemLines = {}
       widget.durability_slots = { 1, 3, 5, 6, 7, 8, 9, 10, 16, 17, 18 }

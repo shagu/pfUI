@@ -11,6 +11,7 @@ setfenv(1, pfUI:GetEnvironment())
 -- return instantly when another librange is already active
 if pfUI.api.librange then return end
 
+local _, class = UnitClass("player")
 local librange = CreateFrame("Frame", "pfRangecheck", UIParent)
 
 -- table of 40y spells per class
@@ -38,7 +39,41 @@ local spells = {
   },
 }
 
-local _, class = UnitClass("player")
+-- use native IsSpellInRange checker for tbc and skip
+-- the whole targeting approach that is required for vanilla
+if pfUI.expansion == "tbc" then
+  local spell
+  librange:RegisterEvent("LEARNED_SPELL_IN_TAB")
+  librange:RegisterEvent("PLAYER_ENTERING_WORLD")
+  librange:SetScript("OnEvent", function()
+    -- abort on non healing classes
+    if not spells[class] then return end
+
+    for i = 1, GetNumSpellTabs() do
+      local _, _, offset, num = GetSpellTabInfo(i)
+      for id = offset + 1, offset + num do
+        local name, rank = GetSpellName(id, BOOKTYPE_SPELL)
+        local texture = GetSpellTexture(name)
+
+        for _, tex in pairs(spells[class]) do
+          if tex == texture then
+            spell = name
+            return
+          end
+        end
+      end
+    end
+  end)
+
+  function librange:UnitInSpellRange(unit)
+    if not spell then return nil end
+    return IsSpellInRange(spell, unit) == 1 and true or nil
+  end
+
+  -- add librange to pfUI API
+  pfUI.api.librange = librange
+  return
+end
 
 -- units that should be scanned
 local units = {}
@@ -55,7 +90,20 @@ local unitcache = {}
 -- actual unit-range table
 local unitdata = { }
 
+-- setup sound function switches
+local SoundOn = PlaySound
+local SoundOff = function() return end
+
 librange.id = 1
+
+-- Shooting with wands does not make the PlayerFrame inCombat attribute change.
+-- This frame makes wand attacks accesible via wandCombat on the PlayerFrame.
+local wand = CreateFrame("Frame", "pfWandShootDetect")
+wand:RegisterEvent("START_AUTOREPEAT_SPELL")
+wand:RegisterEvent("STOP_AUTOREPEAT_SPELL")
+wand:SetScript("OnEvent", function()
+  PlayerFrame.wandCombat = event == "START_AUTOREPEAT_SPELL" and true or nil
+end)
 
 librange:Hide()
 librange:RegisterEvent("ACTIONBAR_SLOT_CHANGED")
@@ -104,12 +152,19 @@ librange:SetScript("OnUpdate", function()
       if LootFrame and LootFrame:IsShown() then return nil end
       if InspectFrame and InspectFrame:IsShown() then return nil end
       if TradeFrame and TradeFrame:IsShown() then return nil end
+      if PlayerFrame and PlayerFrame.inCombat then return nil end
+      if PlayerFrame and PlayerFrame.wandCombat then return nil end
 
+      _G.PlaySound = SoundOff
       pfScanActive = true
+
       TargetUnit(unit)
       unitdata[unit] = IsActionInRange(librange.slot)
       TargetLastTarget()
+
+      _G.PlaySound = SoundOn
       pfScanActive = false
+
       this:ReAttack()
     end
 
@@ -156,11 +211,15 @@ function librange:GetRealUnit(unit)
 end
 
 function librange:GetRangeSlot()
+  local texture
+
   for i=1,120 do
-    local texture = GetActionTexture(i)
-    for _, check in pairs(spells[class]) do
-      if check == texture then
-        return i
+    texture = GetActionTexture(i)
+    if texture and not GetActionText(i) then
+      for _, check in pairs(spells[class]) do
+        if check == texture then
+          return i
+        end
       end
     end
   end

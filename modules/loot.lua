@@ -1,4 +1,6 @@
 pfUI:RegisterModule("loot", "vanilla:tbc", function ()
+  local rawborder, border = GetBorderSize()
+
   pfUI.loot = CreateFrame("Frame", "pfLootFrame", UIParent)
   pfUI.loot:Hide()
   pfUI.loot:SetFrameStrata("DIALOG")
@@ -9,10 +11,10 @@ pfUI:RegisterModule("loot", "vanilla:tbc", function ()
   pfUI.loot:RegisterEvent("UPDATE_MASTER_LOOT_LIST")
   pfUI.loot:RegisterEvent("LOOT_BIND_CONFIRM")
 
-  pfUI.loot:SetWidth(160+C.appearance.border.default*2)
+  pfUI.loot:SetWidth(160+border*2)
 
   if C.loot.mousecursor == "0" then
-    pfUI.loot:SetHeight(160+C.appearance.border.default*2)
+    pfUI.loot:SetHeight(160+border*2)
     pfUI.loot:SetPoint("TOP", UIParent, "CENTER", 0, 0)
     UpdateMovable(pfUI.loot)
   end
@@ -264,9 +266,12 @@ pfUI:RegisterModule("loot", "vanilla:tbc", function ()
         if (lclass) then
           info = wipe(info)
           info.text = lclass
-          info.textR = RAID_CLASS_COLORS[class].r
-          info.textG = RAID_CLASS_COLORS[class].g
-          info.textB = RAID_CLASS_COLORS[class].b
+          info.textR, info.textG, info.textB = .7,.7,.7
+          if class and RAID_CLASS_COLORS[class] then
+            info.textR = RAID_CLASS_COLORS[class].r
+            info.textG = RAID_CLASS_COLORS[class].g
+            info.textB = RAID_CLASS_COLORS[class].b
+          end
           info.textHeight = 12
           info.hasArrow = 1
           info.notCheckable = 1
@@ -284,9 +289,12 @@ pfUI:RegisterModule("loot", "vanilla:tbc", function ()
         for _, candidate in ipairs(players) do
           info = wipe(info)
           info.text = candidate
-          info.textR = RAID_CLASS_COLORS[UIDROPDOWNMENU_MENU_VALUE].r
-          info.textG = RAID_CLASS_COLORS[UIDROPDOWNMENU_MENU_VALUE].g
-          info.textB = RAID_CLASS_COLORS[UIDROPDOWNMENU_MENU_VALUE].b
+          info.textR, info.textG, info.textB = .7,.7,.7
+          if UIDROPDOWNMENU_MENU_VALUE and RAID_CLASS_COLORS[UIDROPDOWNMENU_MENU_VALUE] then
+            info.textR = RAID_CLASS_COLORS[UIDROPDOWNMENU_MENU_VALUE].r
+            info.textG = RAID_CLASS_COLORS[UIDROPDOWNMENU_MENU_VALUE].g
+            info.textB = RAID_CLASS_COLORS[UIDROPDOWNMENU_MENU_VALUE].b
+          end
           info.textHeight = 12
           info.value = name_to_index[candidate]
           info.func = GroupLootDropDown_GiveLoot
@@ -305,9 +313,12 @@ pfUI:RegisterModule("loot", "vanilla:tbc", function ()
           info = wipe(info)
           local unit = GroupInfoByName(candidate,"party")
           info.text = candidate
-          info.textR = RAID_CLASS_COLORS[unit.class].r
-          info.textG = RAID_CLASS_COLORS[unit.class].g
-          info.textB = RAID_CLASS_COLORS[unit.class].b
+          info.textR, info.textG, info.textB = .7,.7,.7
+          if unit.class and RAID_CLASS_COLORS[unit.class] then
+            info.textR = RAID_CLASS_COLORS[unit.class].r
+            info.textG = RAID_CLASS_COLORS[unit.class].g
+            info.textB = RAID_CLASS_COLORS[unit.class].b
+          end
           info.textHeight = 12
           info.value = i
           info.func = GroupLootDropDown_GiveLoot
@@ -431,7 +442,9 @@ pfUI:RegisterModule("loot", "vanilla:tbc", function ()
     local maxrarity, maxwidth = 0, 0
 
     local items = GetNumLootItems()
-    if(items > 0) then
+    LootFrame.numLootItems = items
+
+    if items > 0 then
       local real = 0
       for i=1, items do
         local texture, item, quantity, quality, locked = GetLootSlotInfo(i)
@@ -439,7 +452,7 @@ pfUI:RegisterModule("loot", "vanilla:tbc", function ()
       end
 
       local slotid = 1
-      for id=0 ,GetNumLootItems() do
+      for id=0, items do
         if GetLootSlotInfo(id) then
           local slot = pfUI.loot.slots[slotid] or pfUI.loot:CreateSlot(slotid)
           local texture, item, quantity, quality, locked = GetLootSlotInfo(id)
@@ -499,18 +512,12 @@ pfUI:RegisterModule("loot", "vanilla:tbc", function ()
         CreateBackdropShadow(pfUI.loot)
         pfUI.loot.backdrop:SetBackdropBorderColor(color.r, color.g, color.b, 1)
       end
-      pfUI.loot:SetHeight(math.max((real*22)+4*C.appearance.border.default), 20)
-      pfUI.loot:SetWidth(maxwidth + 22 + 8*C.appearance.border.default )
+      pfUI.loot:SetHeight(math.max((real*22)+4*border), 20)
+      pfUI.loot:SetWidth(maxwidth + 22 + 8*border)
     end
   end
 
   local function AutoBind(arg1)
-    if GetNumPartyMembers() == 0 and GetNumRaidMembers() == 0 then
-      local dialog = StaticPopup_FindVisible("LOOT_BIND",arg1)
-      if dialog then
-        _G[dialog:GetName().."Button1"]:Click()
-      end
-    end
   end
 
   local function CloseOnClick()
@@ -522,16 +529,18 @@ pfUI:RegisterModule("loot", "vanilla:tbc", function ()
   function pfUI.loot:CreateSlot(id)
     local frame = CreateFrame(LOOT_BUTTON_FRAME_TYPE, 'pfLootButton'..id, pfUI.loot)
     frame:RegisterForClicks('LeftButtonUp', 'RightButtonUp')
-    frame:SetPoint("LEFT", C.appearance.border.default*2, 0)
-    frame:SetPoint("RIGHT", -C.appearance.border.default*2, 0)
+    frame:SetPoint("LEFT", border*2, 0)
+    frame:SetPoint("RIGHT", -border*2, 0)
     frame:SetHeight(22)
-    frame:SetPoint("TOP", pfUI.loot, "TOP", 4, (-C.appearance.border.default*2+22)-(id*22))
+    frame:SetPoint("TOP", pfUI.loot, "TOP", 4, (-border*2+22)-(id*22))
 
     frame:SetScript("OnClick", function()
-      if ( IsControlKeyDown() ) then
+      if IsControlKeyDown() then
         DressUpItemLink(GetLootSlotLink(this:GetID()))
-      elseif ( IsShiftKeyDown() ) then
-        if ( ChatFrameEditBox:IsVisible() ) then
+      elseif IsShiftKeyDown() then
+        if ChatEdit_InsertLink then
+          ChatEdit_InsertLink(GetLootSlotLink(this:GetID()))
+        elseif ChatFrameEditBox:IsVisible() then
           ChatFrameEditBox:Insert(GetLootSlotLink(this:GetID()))
         end
       end
@@ -579,8 +588,8 @@ pfUI:RegisterModule("loot", "vanilla:tbc", function ()
     end
 
     frame.ficon = CreateFrame("Frame", "pfLootButtonIcon", frame)
-    frame.ficon:SetHeight(frame:GetHeight() - 2*C.appearance.border.default)
-    frame.ficon:SetWidth(frame:GetHeight() - 2*C.appearance.border.default)
+    frame.ficon:SetHeight(frame:GetHeight() - 2*border)
+    frame.ficon:SetWidth(frame:GetHeight() - 2*border)
     frame.ficon:ClearAllPoints()
     frame.ficon:SetPoint("RIGHT", frame)
     CreateBackdrop(frame.ficon)
@@ -655,8 +664,9 @@ pfUI:RegisterModule("loot", "vanilla:tbc", function ()
       pfUI.loot:UpdateLootFrame()
     end
 
-    if event == "LOOT_SLOT_CLEARED" then
-      if(not this:IsShown()) then return end
+    if event == "LOOT_SLOT_CLEARED" and arg1 then
+      if not this:IsShown() then return end
+      if not pfUI.loot.slots[arg1] then return end
       pfUI.loot.slots[arg1]:Hide()
     end
 
@@ -699,8 +709,16 @@ pfUI:RegisterModule("loot", "vanilla:tbc", function ()
       end
     end
 
-    if C.loot.autopickup == "1" and event == "LOOT_BIND_CONFIRM" then
-      QueueFunction(AutoBind,arg1)
+    -- auto accept BoP loot in solo mode
+    if C.loot.autopickup == "1" and GetNumPartyMembers() == 0 and GetNumRaidMembers() == 0 then
+      if event == "LOOT_BIND_CONFIRM" then
+        LootSlot(arg1)
+        StaticPopup1Button1:Click()
+      elseif event == "LOOT_OPENED" then
+        for i=1,GetNumLootItems() do
+          LootSlot(i)
+        end
+      end
     end
   end)
 

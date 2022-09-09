@@ -1,12 +1,14 @@
 pfUI:RegisterSkin("Time Manager", "tbc", function ()
-  local border = tonumber(pfUI_config.appearance.border.default)
-  local bpad = border > 1 and border - 1 or 1
+  local rawborder, border = GetBorderSize()
+  local bpad = rawborder > 1 and border - GetPerfectPixel() or GetPerfectPixel()
 
   HookAddonOrVariable("Blizzard_TimeManager", function()
     do -- TimeManagerFrame
       StripTextures(TimeManagerFrame)
       CreateBackdrop(TimeManagerFrame, nil, nil, .75)
       CreateBackdropShadow(TimeManagerFrame)
+      TimeManagerClockButton:Hide()
+      TimeManagerClockButton.Show = function() return end
 
       TimeManagerFrame.backdrop:SetPoint("TOPLEFT", 10, -10)
       TimeManagerFrame.backdrop:SetPoint("BOTTOMRIGHT", -48, 1)
@@ -115,22 +117,6 @@ pfUI:RegisterSkin("Time Manager", "tbc", function ()
       StopwatchTicker:SetWidth(70)
       StopwatchTicker:SetHeight(16)
       StopwatchTicker:SetPoint("RIGHT", StopwatchPlayPauseButton, "LEFT", -2*border + 1, 0)
-    end
-
-    hooksecurefunc("TimeManagerClockButton_UpdateTooltip", function()
-      GameTooltip:AddLine(" ")
-      GameTooltip:AddLine(TIMEMANAGER_TOOLTIP_TOGGLE_CLOCK_SETTINGS)
-      GameTooltip:Show()
-    end)
-
-    -- needed insecure hook
-    function _G.TimeManagerClockButton_OnClick(self)
-      if self.alarmFiring then
-        PlaySound("igMainMenuQuit")
-        TimeManager_TurnOffAlarm()
-      else
-        ToggleTimeManager()
-      end
     end
   end)
 end)

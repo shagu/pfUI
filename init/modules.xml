@@ -12,12 +12,12 @@
   <Include file="..\modules\addons.lua"/>
   <Include file="..\modules\minimap.lua"/>
   <Include file="..\modules\panel.lua"/>
-  <Include file="..\modules\prediction.lua"/>
   <Include file="..\modules\player.lua"/>
   <Include file="..\modules\focus.lua"/>
   <Include file="..\modules\target.lua"/>
   <Include file="..\modules\combopoints.lua"/>
   <Include file="..\modules\targettarget.lua"/>
+  <Include file="..\modules\targettargettarget.lua"/>
   <Include file="..\modules\pet.lua"/>
   <Include file="..\modules\group.lua"/>
   <Include file="..\modules\raid.lua"/>
@@ -31,7 +31,10 @@
   <Include file="..\modules\itemclick.lua"/>
   <Include file="..\modules\cooldown.lua"/>
   <Include file="..\modules\tooltip.lua"/>
+  <Include file="..\modules\questitem.lua"/>
   <Include file="..\modules\thirdparty.lua"/>
+  <Include file="..\modules\thirdparty-vanilla.lua"/>
+  <Include file="..\modules\thirdparty-tbc.lua"/>
   <Include file="..\modules\buff.lua"/>
   <Include file="..\modules\buffwatch.lua"/>
   <Include file="..\modules\nameplates.lua"/>
@@ -41,6 +44,7 @@
   <Include file="..\modules\sellvalue.lua"/>
   <Include file="..\modules\eqcompare.lua"/>
   <Include file="..\modules\map.lua"/>
+  <Include file="..\modules\mapcolors.lua"/>
   <Include file="..\modules\uf_tukui.lua"/>
   <Include file="..\modules\custom.lua"/>
   <Include file="..\modules\gm.lua"/>
@@ -61,4 +65,8 @@
   <Include file="..\modules\afkcam.lua"/>
   <Include file="..\modules\screenshot.lua"/>
   <Include file="..\modules\addoncompat.lua"/>
+  <Include file="..\modules\combatlogfix.lua"/>
+  <Include file="..\modules\energytick.lua"/>
+  <Include file="..\modules\totems.lua"/>
+  <Include file="..\modules\macrotweak.lua"/>
 </Ui>

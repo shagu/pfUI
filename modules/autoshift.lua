@@ -27,9 +27,29 @@ pfUI:RegisterModule("autoshift", "vanilla", function ()
     pfUI.autoshift:SwitchStance()
   end)
 
-  pfUI.autoshift.buffs = { "spell_nature_swiftness", "_mount_", "_qirajicrystal_",
+  pfUI.autoshift.mounts = {
+    -- deDE
+    "^Erhöht Tempo um (.+)%%",
+    -- enUS
+    "^Increases speed by (.+)%%",
+    -- esES
+    "^Aumenta la velocidad en un (.+)%%",
+    -- frFR
+    "^Augmente la vitesse de (.+)%%",
+    -- ruRU
+    "^Скорость увеличена на (.+)%%",
+    -- koKR
+    "^이동 속도 (.+)%%만큼 증가",
+    -- zhCN
+    "^速度提高(.+)%%",
+    -- turtle-wow
+    "speed based on", "Slow and steady...", "Riding"
+  }
+
+  pfUI.autoshift.shapeshifts = {
     "ability_racial_bearform", "ability_druid_catform", "ability_druid_travelform",
-    "ability_druid_aquaticform", "spell_shadow_shadowform", "spell_nature_spiritwolf" }
+    "ability_druid_aquaticform", "spell_shadow_shadowform", "spell_nature_spiritwolf",
+  }
 
   -- an agility buff exists which has the same icon as the moonkin form
   -- therefore only add the moonkin icon to the removable buffs if
@@ -43,7 +63,7 @@ pfUI:RegisterModule("autoshift", "vanilla", function ()
     if class == "DRUID" then
       local _,_,_,_,moonkin = GetTalentInfo(1,16)
       if moonkin == 1 then
-        table.insert(pfUI.autoshift.buffs, "spell_nature_forceofnature")
+        table.insert(pfUI.autoshift.shapeshifts, "spell_nature_forceofnature")
         moonkin_scan:UnregisterAllEvents()
       end
     else
@@ -57,6 +77,8 @@ pfUI:RegisterModule("autoshift", "vanilla", function ()
     ERR_NO_ITEMS_WHILE_SHAPESHIFTED, ERR_TAXIPLAYERSHAPESHIFTED,ERR_MOUNT_SHAPESHIFTED,
     ERR_EMBLEMERROR_NOTABARDGEOSET }
 
+  pfUI.autoshift.scanner = libtipscan:GetScanner("dismount")
+
   pfUI.autoshift:SetScript("OnEvent", function()
       pfUI.autoshift.lastError = arg1
       local CancelLater = nil
@@ -66,14 +88,26 @@ pfUI:RegisterModule("autoshift", "vanilla", function ()
         return
       end
 
+      -- scan through buffs and cancel shapeshift/mount
       for id, errorstring in pairs(pfUI.autoshift.errors) do
         if arg1 == errorstring then
           for i=0,31,1 do
-            local currBuffTex = GetPlayerBuffTexture(i)
-            if (currBuffTex) then
-              for id, bufftype in pairs(pfUI.autoshift.buffs) do
-                if string.find(string.lower(currBuffTex), bufftype, 1) then
-                  if string.find(string.lower(currBuffTex), "spell_shadow_shadowform", 1) then
+            -- detect mounts based on tooltip text
+            pfUI.autoshift.scanner:SetPlayerBuff(i)
+            for _, str in pairs(pfUI.autoshift.mounts) do
+              if pfUI.autoshift.scanner:Find(str) then
+                CancelPlayerBuff(i)
+                return
+              end
+            end
+
+            -- detect shapeshift based on texture
+            local buff = GetPlayerBuffTexture(i)
+            if buff then
+              for id, bufftype in pairs(pfUI.autoshift.shapeshifts) do
+                if string.find(string.lower(buff), bufftype, 1) then
+                  if string.find(string.lower(buff), "spell_shadow_shadowform", 1) then
+                    -- only cancel shadow form if no other buff was hindering casting
                     CancelLater = i
                   else
                     CancelPlayerBuff(i)
@@ -83,6 +117,8 @@ pfUI:RegisterModule("autoshift", "vanilla", function ()
               end
             end
           end
+
+          -- if nothing else was found, cancel shadowform
           if CancelLater then
             CancelPlayerBuff(CancelLater)
           end

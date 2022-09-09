@@ -2,11 +2,13 @@ pfUI:RegisterModule("roll", "vanilla:tbc", function ()
   pfUI.roll = CreateFrame("Frame", "pfLootRoll", UIParent)
   pfUI.roll.frames = {}
 
-  pfUI.roll.LOOT_ROLL_GREED = string.gsub(string.gsub(LOOT_ROLL_GREED, "%%s|Hitem:%%d:%%d:%%d:%%d|h%[%%s%]|h%%s", "(.+)"), "%%s", "(.+)")
-  pfUI.roll.LOOT_ROLL_NEED = string.gsub(string.gsub(LOOT_ROLL_NEED, "%%s|Hitem:%%d:%%d:%%d:%%d|h%[%%s%]|h%%s", "(.+)"), "%%s", "(.+)")
-  pfUI.roll.LOOT_ROLL_PASSED = string.gsub(string.gsub(LOOT_ROLL_PASSED, "%%s|Hitem:%%d:%%d:%%d:%%d|h%[%%s%]|h%%s", "(.+)"), "%%s", "(.+)")
+  -- squash vanilla item placeholders
+  local LOOT_ROLL_GREED = string.gsub(LOOT_ROLL_GREED, "%%s|Hitem:%%d:%%d:%%d:%%d|h%[%%s%]|h%%s", "%%s")
+  local LOOT_ROLL_NEED = string.gsub(LOOT_ROLL_NEED, "%%s|Hitem:%%d:%%d:%%d:%%d|h%[%%s%]|h%%s", "%%s")
+  local LOOT_ROLL_PASSED = string.gsub(LOOT_ROLL_PASSED, "%%s|Hitem:%%d:%%d:%%d:%%d|h%[%%s%]|h%%s", "%%s")
 
-  local _, _, everyone, _ = strfind(LOOT_ROLL_ALL_PASSED, pfUI.roll.LOOT_ROLL_PASSED);
+  -- try to detect the everyone string
+  local _, _, everyone, _ = strfind(LOOT_ROLL_ALL_PASSED, LOOT_ROLL_PASSED)
   pfUI.roll.blacklist = { YOU, everyone }
 
   pfUI.roll.cache = {}
@@ -14,19 +16,19 @@ pfUI:RegisterModule("roll", "vanilla:tbc", function ()
   pfUI.roll.scan = CreateFrame("Frame", "pfLootRollMonitor", UIParent)
   pfUI.roll.scan:RegisterEvent("CHAT_MSG_LOOT")
   pfUI.roll.scan:SetScript("OnEvent", function()
-    local _, _, player, item = strfind(arg1, pfUI.roll.LOOT_ROLL_GREED);
+    local player, item = cmatch(arg1, LOOT_ROLL_GREED)
     if player and item then
       pfUI.roll:AddCache(item, player, "GREED")
       return
     end
 
-    local _, _, player, item = strfind(arg1, pfUI.roll.LOOT_ROLL_NEED);
+    local player, item = cmatch(arg1, LOOT_ROLL_NEED)
     if player and item then
       pfUI.roll:AddCache(item, player, "NEED")
       return
     end
 
-    local _, _, player, item = strfind(arg1, pfUI.roll.LOOT_ROLL_PASSED);
+    local player, item = cmatch(arg1, LOOT_ROLL_PASSED)
     if player and item then
       pfUI.roll:AddCache(item, player, "PASS")
       return
@@ -39,7 +41,7 @@ pfUI:RegisterModule("roll", "vanilla:tbc", function ()
       if name == invalid then return end
     end
 
-    local _, _, itemLink = string.find(hyperlink, "(item:%d+:%d+:%d+:%d+)");
+    local _, _, itemLink = string.find(hyperlink, "(item:%d+:%d+:%d+:%d+)")
     local itemName = GetItemInfo(itemLink)
 
     -- delete obsolete tables
@@ -74,7 +76,7 @@ pfUI:RegisterModule("roll", "vanilla:tbc", function ()
 
   function pfUI.roll:CreateLootRoll(id)
     local size = 24
-    local border = tonumber(C.appearance.border.default)
+    local rawborder, border = GetBorderSize()
     local esize = size - border*2
     local f = CreateFrame("Frame", "pfLootRollFrame" .. id, UIParent)
 
@@ -103,12 +105,18 @@ pfUI:RegisterModule("roll", "vanilla:tbc", function ()
       CursorUpdate()
     end)
 
+    f.icon:SetScript("OnLeave", function()
+      GameTooltip:Hide()
+    end)
+
     f.icon:SetScript("OnClick", function()
       if IsControlKeyDown() then
         DressUpItemLink(GetLootRollItemLink(this:GetParent().rollID))
       elseif IsShiftKeyDown() then
-        if ChatFrameEditBox:IsVisible() then
-          ChatFrameEditBox:Insert(GetLootRollItemLink(this:GetParent().rollID));
+        if ChatEdit_InsertLink then
+          ChatEdit_InsertLink(GetLootRollItemLink(this:GetParent().rollID))
+        elseif ChatFrameEditBox:IsVisible() then
+          ChatFrameEditBox:Insert(GetLootRollItemLink(this:GetParent().rollID))
         end
       end
     end)
@@ -269,7 +277,7 @@ pfUI:RegisterModule("roll", "vanilla:tbc", function ()
   end
 
   function pfUI.roll:UpdateLootRoll(id)
-    local texture, name, count, quality, bop = GetLootRollItemInfo(pfUI.roll.frames[id].rollID);
+    local texture, name, count, quality, bop = GetLootRollItemInfo(pfUI.roll.frames[id].rollID)
     local color = ITEM_QUALITY_COLORS[quality]
 
     pfUI.roll.frames[id].itemname = name

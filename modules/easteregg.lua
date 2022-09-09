@@ -9,7 +9,7 @@ pfUI:RegisterModule("easteregg", "vanilla:tbc", function ()
 
     pvpking:RegisterEvent("CHAT_MSG_SYSTEM")
     pvpking:SetScript("OnEvent", function()
-      if strfind(arg1, _G.MARKED_AFK) or strfind(arg1, _G.MARKED_AFK_MESSAGE) then
+      if strfind(arg1, "You are now", 1) and strfind(arg1, "(AFK)", 1) then
         _G.CHAT_FLAG_AFK = title .. " "
         this.time = GetTime()
         this:Show()
@@ -23,9 +23,9 @@ pfUI:RegisterModule("easteregg", "vanilla:tbc", function ()
       end
     end)
 
-    _G.MARKED_AFK           = "|cff33ffccShagu|cffffffff wishes you a merry christmas. You are now |cff33ffcc" .. title .. "|cffffffff. Thanks for using |cff33ffccpf|cffffffffUI|cffffffff!|r"
-    _G.MARKED_AFK_MESSAGE   = "|cff33ffccShagu|cffffffff wishes you a merry christmas. You are now |cff33ffcc" .. title .. "|cffffffff. Thanks for using |cff33ffccpf|cffffffffUI|cffffffff!|r: %s"
-    _G.CLEARED_AFK          = "You are no longer |cff33ffcc" .. title .. "|r."
+    _G.MARKED_AFK           = "You are now |cff33ffcc" .. title .. "|r (AFK)."
+    _G.MARKED_AFK_MESSAGE   = "You are now |cff33ffcc" .. title .. "|r (AFK): %s"
+    _G.CLEARED_AFK          = "You are no longer |cff33ffcc" .. title .. "|r (AFK).\n|cff33ffccShagu|cffffffff wishes you a merry christmas. Thanks for using |cff33ffccpf|cffffffffUI|cffffffff!|r"
   end
 
   -- happy new year
@@ -53,7 +53,7 @@ pfUI:RegisterModule("easteregg", "vanilla:tbc", function ()
     fireworks.dtext = fireworks:CreateFontString("Status", "LOW", "GameFontWhite")
     fireworks.dtext:SetFont(STANDARD_TEXT_FONT, 14, "OUTLINE")
     fireworks.dtext:SetPoint("TOP", 0, -430)
-    fireworks.dtext:SetText("Another year with |cff33ffccpf|rUI has passed.\nThanks for keep using it!\n\n|cff444444<Click> or '/afk' to exit")
+    fireworks.dtext:SetText("Another year with |cff33ffccpf|rUI has passed.\nThanks for continuing to use it!\n\n|cff444444<Click> or '/afk' to exit")
 
     fireworks:SetScript("OnClick", function()
       this:Hide()
@@ -72,9 +72,10 @@ pfUI:RegisterModule("easteregg", "vanilla:tbc", function ()
 
     -- basic explosion animation
     local function animation()
-      this:SetWidth(this:GetWidth()+2)
-      this:SetHeight(this:GetHeight()+2)
-      this:SetAlpha(this:GetAlpha() - .05)
+      local fps = (60 / math.max(GetFramerate(), 1))
+      this:SetWidth(this:GetWidth()+fps)
+      this:SetHeight(this:GetHeight()+fps)
+      this:SetAlpha(this:GetAlpha()-fps*.01)
       if this:GetAlpha() <= 0 then
         this.free = true
         this:Hide()

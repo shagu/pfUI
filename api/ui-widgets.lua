@@ -1,6 +1,341 @@
 -- load pfUI environment
 setfenv(1, pfUI:GetEnvironment())
 
+do -- statusbars
+  local animations = {}
+  local stepsize, val
+  local width, height, point
+
+  local animate = CreateFrame("Frame", "pfStatusBarAnimation", UIParent)
+  animate:SetScript("OnUpdate", function()
+    stepsize = tonumber(pfUI_config.unitframes.animation_speed)
+
+    for bar in pairs(animations) do
+      if not bar.val_ or abs(bar.val_ - bar.val) < stepsize or bar.instant then
+        bar:DisplayValue(bar.val)
+      elseif bar.val ~= bar.val_ then
+        bar:DisplayValue(bar.val_ + min((bar.val-bar.val_) / stepsize, max(bar.val-bar.val_, 30 / GetFramerate())))
+      end
+    end
+  end)
+
+  local handlers = {
+    ["DisplayValue"] = function(self, val)
+      val = val > self.max and self.max or val
+      val = val < self.min and self.min or val
+
+      -- remove animation queue
+      if val == self.val_ then
+        animations[self] = nil
+      end
+
+      -- set current visible value
+      self.val_ = val
+
+      if self.mode == "vertical" then
+        height = self:GetHeight()
+        if pfUI.expansion == "vanilla" then height = height / self:GetEffectiveScale() end
+        point = height / (self.max - self.min) * (val - self.min)
+        self.bar:SetPoint("TOPLEFT", self, "TOPLEFT", 0, - height + point)
+        self.bg:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", 0, point)
+      else
+        width = self:GetWidth()
+        if pfUI.expansion == "vanilla" then width = width / self:GetEffectiveScale() end
+        point = width / (self.max - self.min) * (val - self.min)
+        self.bar:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", - width + point, 0)
+        self.bg:SetPoint("TOPLEFT", self, "TOPLEFT", point, 0)
+      end
+    end,
+
+    ["SetMinMaxValues"] = function(self, smin, smax, smooth)
+      -- smoothen the transition by keeping the value at the same percentage as before
+      if smooth and self.max and self.max > 0 and smax > 0 and self.max ~= smax then
+        self.val_ = (self.val_ or self.val) / self.max * smax
+      end
+
+      self.min, self.max = smin, smax
+      self:DisplayValue(self.val_ or self.val)
+    end,
+
+    ["SetValue"] = function(self, val)
+      self.val = val or 0
+
+      -- start animation on difference
+      if self.val_ ~= self.val then
+        animations[self] = true
+      end
+    end,
+
+    ["SetStatusBarTexture"] = function(self, r, g, b, a)
+      self.bar:SetTexture(r, g, b, a)
+    end,
+
+    ["SetStatusBarColor"] = function(self, r, g, b, a)
+      self.bar:SetVertexColor(r, g, b, a)
+    end,
+
+    ["SetStatusBarBackgroundTexture"] = function(self, r, g, b, a)
+      self.bg:SetTexture(r, g, b, a)
+    end,
+
+    ["SetStatusBarBackgroundColor"] = function(self, r, g, b, a)
+      self.bg:SetVertexColor(r, g, b, a)
+    end,
+
+    ["SetOrientation"] = function(self, mode)
+      self.mode = strlower(mode)
+    end,
+  }
+
+  function pfUI.api.CreateStatusBar(name, parent)
+    local f = CreateFrame("Button", name, parent)
+    f:EnableMouse(nil)
+
+    f.bar = f:CreateTexture(nil, "HIGH")
+    f.bar:SetPoint("TOPLEFT", f, "TOPLEFT", 0, 0)
+    f.bar:SetPoint("BOTTOMRIGHT", f, "BOTTOMRIGHT", 0, 0)
+
+    f.bg = f:CreateTexture(nil, "BACKGROUND")
+    f.bg:SetPoint("TOPLEFT", f, "TOPLEFT", 0, 0)
+    f.bg:SetPoint("BOTTOMRIGHT", f, "BOTTOMRIGHT", 0, 0)
+
+    -- set some default values
+    f.min, f.max, f.val = 0, 100, 0
+
+    -- add all handler functions to the object
+    for name, func in pairs(handlers) do
+      f[name] = func
+    end
+
+    return f
+  end
+end
+
+do -- dropdown
+  local _, class = UnitClass("player")
+  local color = RAID_CLASS_COLORS[class]
+
+  local function ListEntryOnShow()
+    if this.parent.id == this.id then
+      this.icon:Show()
+    else
+      this.icon:Hide()
+    end
+  end
+
+  local function ListEntryOnClick()
+    this.parent:SetSelection(this.id)
+
+    if this.parent.mode == "MULTISELECT" then
+      this.parent:ShowMenu()
+    else
+      this.parent:HideMenu()
+    end
+
+    if this.parent.menu[this.id].func then
+      this.parent.menu[this.id].func()
+    end
+  end
+
+  local function ListEntryOnEnter()
+    this.hover:Show()
+  end
+
+  local function ListEntryOnLeave()
+    this.hover:Hide()
+  end
+
+  local function ListButtonOnClick()
+    if this.ToggleMenu then
+      this:ToggleMenu()
+    else
+      this:GetParent():ToggleMenu()
+    end
+  end
+
+  local function MenuOnUpdate()
+    if not MouseIsOver(this, 100, -100, -100, 100) then
+      this.button:HideMenu()
+    end
+  end
+
+  local function ListButtonOnEnter()
+    this.button:SetBackdropBorderColor(this.button.cr,this.button.cg,this.button.cb,1)
+  end
+
+  local function ListButtonOnLeave()
+    this.button:SetBackdropBorderColor(this.button.rr,this.button.rg,this.button.rb,1)
+  end
+
+  local handlers = {
+    ["SetSelection"] = function(self, id)
+      if id and self.menu and self.menu[id] then
+        self.text:SetText(self.menu[id].text)
+        self.id = id
+      end
+    end,
+    ["SetSelectionByText"] = function(self, name)
+      self:UpdateMenu()
+      for id, entry in pairs(self.menu) do
+        if entry.text == name then
+          self:SetSelection(id)
+          return true
+        end
+      end
+
+      self.text:SetText(name)
+      return nil
+    end,
+    ["GetSelection"] = function(self)
+      self:UpdateMenu()
+      if self.menu and self.menu[self.id] then
+        return self.id, self.menu[self.id].text, self.menu[self.id].func
+      end
+    end,
+    ["SetMenu"] = function(self, menu)
+      if type(menu) == "function" then
+        self.menu = menu()
+        self.menufunc = menu
+      else
+        self.menu = menu
+        self.menufunc = nil
+      end
+    end,
+    ["GetMenu"] = function(self)
+      self:UpdateMenu()
+      return self.menu
+    end,
+    ["ShowMenu"] = function(self)
+      self:UpdateMenu()
+      self.menuframe:SetFrameLevel(self:GetFrameLevel() + 8)
+      self.menuframe:SetHeight(table.getn(self.menu)*20+4)
+      self.menuframe:Show()
+    end,
+    ["HideMenu"] = function(self)
+      self.menuframe:Hide()
+    end,
+    ["ToggleMenu"] = function(self)
+      if self.menuframe:IsShown() then
+        self:HideMenu()
+      else
+        self:ShowMenu()
+      end
+    end,
+    ["UpdateMenu"] = function(self)
+      -- run/reload menu function if available
+      if self.menufunc then self.menu = self.menufunc() end
+      if not self.menu then return end
+
+      -- set caption to the current value
+      self.text:SetText(self.menu[self.id] and self.menu[self.id].text or "")
+
+      -- refresh menu buttons
+      for id, element in pairs(self.menuframe.elements) do
+        element:Hide()
+      end
+
+      for id, data in pairs(self.menu) do
+        self:CreateMenuEntry(id)
+      end
+    end,
+    ["CreateMenuEntry"] = function(self, id)
+      if not self.menu[id] then return end
+
+      local frame, entry
+      for count, existing in pairs(self.menuframe.elements) do
+        if not existing:IsShown() then
+          frame = existing
+          entry = count
+          break
+        end
+      end
+
+      if not frame and not entry then
+        entry = table.getn(self.menuframe.elements) + 1
+        frame = CreateFrame("Button", nil, self.menuframe)
+        frame:SetFrameStrata("FULLSCREEN")
+        frame:ClearAllPoints()
+        frame:SetPoint("TOPLEFT", self.menuframe, "TOPLEFT", 2, -(entry-1)*20-2)
+        frame:SetPoint("TOPRIGHT", self.menuframe, "TOPRIGHT", -2, -(entry-1)*20-2)
+        frame:SetHeight(20)
+        frame.parent = self
+
+        frame.icon = frame:CreateTexture(nil, "OVERLAY")
+        frame.icon:SetPoint("RIGHT", frame, "RIGHT", -2, 0)
+        frame.icon:SetHeight(16)
+        frame.icon:SetWidth(16)
+        frame.icon:SetTexture("Interface\\Buttons\\UI-CheckBox-Check")
+
+        frame.text = frame:CreateFontString(nil, "OVERLAY")
+        frame.text:SetFontObject(GameFontWhite)
+        frame.text:SetFont(pfUI.font_default, pfUI_config.global.font_size-1, "OUTLINE")
+        frame.text:SetJustifyH("RIGHT")
+        frame.text:SetPoint("LEFT", frame, "LEFT", 2, 0)
+        frame.text:SetPoint("RIGHT", frame.icon, "LEFT", -2, 0)
+
+        frame.hover = frame:CreateTexture(nil, "BACKGROUND")
+        frame.hover:SetAllPoints(frame)
+        frame.hover:SetTexture(.4,.4,.4,.4)
+        frame.hover:Hide()
+
+        table.insert(self.menuframe.elements, frame)
+      end
+
+      frame.id = id
+      frame.text:SetText(self.menu[id].text)
+
+      frame:SetScript("OnShow",  ListEntryOnShow)
+      frame:SetScript("OnClick", ListEntryOnClick)
+      frame:SetScript("OnEnter", ListEntryOnEnter)
+      frame:SetScript("OnLeave", ListEntryOnLeave)
+      frame:Show()
+    end,
+  }
+  function pfUI.api.CreateDropDownButton(name, parent)
+    local frame = CreateFrame("Button", name, parent)
+    frame:SetScript("OnEnter", ListButtonOnEnter)
+    frame:SetScript("OnLeave", ListButtonOnLeave)
+    frame:SetScript("OnClick", ListButtonOnClick)
+    frame:SetHeight(20)
+    frame.id = nil
+
+    CreateBackdrop(frame, nil, true)
+
+    local button = CreateFrame("Button", nil, frame)
+    button:SetPoint("RIGHT", frame, "RIGHT", -2, 0)
+    button:SetWidth(16)
+    button:SetHeight(16)
+    button:SetScript("OnClick", ListButtonOnClick)
+    SkinArrowButton(button, "down")
+    button.icon:SetVertexColor(1,.9,.1)
+
+    local text = frame:CreateFontString(nil, "OVERLAY")
+    text:SetFontObject(GameFontWhite)
+    text:SetFont(pfUI.font_default, pfUI_config.global.font_size-1, "OUTLINE")
+    text:SetPoint("RIGHT", button, "LEFT", -4, 0)
+    text:SetJustifyH("RIGHT")
+
+    local menuframe = CreateFrame("Frame", tostring(frame).."menu", parent)
+    menuframe.button = frame
+    menuframe.elements = {}
+    menuframe:SetPoint("TOPLEFT", frame, "BOTTOMLEFT", 0, -2)
+    menuframe:SetPoint("TOPRIGHT", frame, "TOPRIGHT", 0, 2)
+    menuframe:SetScript("OnUpdate", MenuOnUpdate)
+    menuframe:Hide()
+    CreateBackdrop(menuframe, nil, true)
+
+    for name, func in pairs(handlers) do
+      frame[name] = func
+    end
+
+    frame.menuframe = menuframe
+    frame.button = button
+    frame.text = text
+
+    return frame
+  end
+end
+
 function pfUI.api.CreateTabChild(self, title, bwidth, bheight, bottom, static)
   -- create tab button
   local b = CreateFrame("Button", "pfConfig" .. title .. "Button", self, "UIPanelButtonTemplate")
@@ -184,12 +519,22 @@ function pfUI.api.CreateScrollChild(name, parent)
 
   parent:SetScrollChild(f)
 
-  -- OnShow is fired too early, postpone to the first frame draw
   f:SetScript("OnUpdate", function()
-    this:GetParent():Scroll()
-    this:SetScript("OnUpdate", nil)
+    this:GetParent():UpdateScrollState()
   end)
 
+  return f
+end
+
+-- [ CreateTextBox ]
+-- Creates and returns a default pfUI skinned EditBox
+function pfUI.api.CreateTextBox(name, parent)
+  local f = CreateFrame("EditBox", name, parent)
+  f:SetScript("OnEscapePressed", function() this:ClearFocus() end)
+  f:SetAutoFocus(false)
+  f:SetTextInsets(5, 5, 5, 5)
+  f:SetFontObject(GameFontNormal)
+  CreateBackdrop(f, nil, true)
   return f
 end
 
@@ -223,15 +568,12 @@ function pfUI.api.EnableClickRotate(frame)
   end)
 end
 
-
-local SetHighlightEnter = function()
-  if this.funce then this:funce() end
+local function SetHighlightEnter()
   if this.locked then return end
   (this.backdrop or this):SetBackdropBorderColor(this.cr,this.cg,this.cb,1)
 end
 
-local SetHighlightLeave = function()
-  if this.funcl then this:funcl() end
+local function SetHighlightLeave()
   if this.locked then return end
   (this.backdrop or this):SetBackdropBorderColor(this.rr,this.rg,this.rb,1)
 end
@@ -248,10 +590,21 @@ function pfUI.api.SetHighlight(frame, cr, cg, cb)
   frame.rr, frame.rg, frame.rb = GetStringColor(pfUI_config.appearance.border.color)
 
   if not frame.pfEnterLeave then
-    frame.funce = frame:GetScript("OnEnter")
-    frame.funcl = frame:GetScript("OnLeave")
-    frame:SetScript("OnEnter", SetHighlightEnter)
-    frame:SetScript("OnLeave", SetHighlightLeave)
+    if not frame.HookScript then frame.HookScript = HookScript end
+    local enter, leave = frame:GetScript("OnEnter"), frame:GetScript("OnLeave")
+
+    if enter then
+      frame:HookScript("OnEnter", SetHighlightEnter)
+    else
+      frame:SetScript("OnEnter", SetHighlightEnter)
+    end
+
+    if leave then
+      frame:HookScript("OnLeave", SetHighlightLeave)
+    else
+      frame:SetScript("OnLeave", SetHighlightLeave)
+    end
+
     frame.pfEnterLeave = true
   end
 end
@@ -283,19 +636,11 @@ function pfUI.api.SkinButton(button, cr, cg, cb, icon, disableHighlight)
   pfUI.api.CreateBackdrop(b, nil, true)
   b:SetNormalTexture("")
   b:SetHighlightTexture("")
-  b:SetPushedTexture(nil)
-  b:SetDisabledTexture(nil)
-  if b.SetCheckedTexture then
-    b:SetCheckedTexture(nil)
-    function b.SetChecked(self, checked)
-      if checked == 1 then
-        self.locked = true
-        self:SetBackdropBorderColor(1,1,1)
-        else
-        self.locked = false
-        self:SetBackdropBorderColor(GetStringColor(pfUI_config.appearance.border.color))
-      end
-    end
+  b:SetPushedTexture("")
+  b:SetDisabledTexture("")
+
+  if b.SetCheckedTexture and b:GetCheckedTexture() then
+    b:GetCheckedTexture():SetTexture(cr, cg, cb, .25)
   end
 
   if not disableHighlight then
@@ -304,6 +649,7 @@ function pfUI.api.SkinButton(button, cr, cg, cb, icon, disableHighlight)
 
   if icon then
     HandleIcon(b, icon)
+    b:SetPushedTexture(nil)
   end
 
   -- move some font functions onto the main object (required for wotlk)
@@ -321,6 +667,7 @@ function pfUI.api.SkinButton(button, cr, cg, cb, icon, disableHighlight)
     b:SetBackdropBorderColor(cr,cg,cb,1)
     b.locked = true
   end
+
   b.UnlockHighlight = function()
     if not MouseIsOver(b) then
       b:SetBackdropBorderColor(GetStringColor(pfUI_config.appearance.border.color))
@@ -336,9 +683,10 @@ function pfUI.api.SkinCollapseButton(button, all)
   local b = _G[button]
   if not b then b = button end
   if not b then return end
-
-  b.icon = CreateFrame("Button", b:GetName().."CollapseButton", b)
+  local name = b:GetName() .. "CollapseButton"
   local size = 10
+
+  b.icon = _G[name] or CreateFrame("Button", name, b)
   if all then size = 14 end
   b.icon:SetWidth(size)
   b.icon:SetHeight(size)
@@ -377,13 +725,13 @@ function pfUI.api.SkinRotateButton(button)
   button:SetWidth(button:GetWidth() - 18)
   button:SetHeight(button:GetHeight() - 18)
 
-  button:GetNormalTexture():SetTexCoord(0.3, 0.29, 0.3, 0.65, 0.69, 0.29, 0.69, 0.65);
-  button:GetPushedTexture():SetTexCoord(0.3, 0.29, 0.3, 0.65, 0.69, 0.29, 0.69, 0.65);
+  button:GetNormalTexture():SetTexCoord(0.3, 0.29, 0.3, 0.65, 0.69, 0.29, 0.69, 0.65)
+  button:GetPushedTexture():SetTexCoord(0.3, 0.29, 0.3, 0.65, 0.69, 0.29, 0.69, 0.65)
 
-  button:GetHighlightTexture():SetTexture(cr, cg, cb, .25);
+  button:GetHighlightTexture():SetTexture(cr, cg, cb, .25)
 
-  button:GetPushedTexture():SetAllPoints(button:GetNormalTexture());
-  button:GetHighlightTexture():SetAllPoints(button:GetNormalTexture());
+  button:GetPushedTexture():SetAllPoints(button:GetNormalTexture())
+  button:GetHighlightTexture():SetAllPoints(button:GetNormalTexture())
 end
 
 -- [ Skin Close Button ]
@@ -393,6 +741,8 @@ end
 -- 'offsetX'     [integer]  offsets the button horizontally
 -- 'offsetY'     [integer]  offsets the button vertically
 function pfUI.api.SkinCloseButton(button, parentFrame, offsetX, offsetY)
+  if not button then return end
+
   SkinButton(button, 1, .25, .25)
 
   button:SetWidth(15)
@@ -411,6 +761,8 @@ function pfUI.api.SkinCloseButton(button, parentFrame, offsetX, offsetY)
 end
 
 function pfUI.api.SkinArrowButton(button, dir, size)
+  if not button then return end
+
   SkinButton(button)
 
   button:SetHitRectInsets(-3,-3,-3,-3)
@@ -433,21 +785,19 @@ function pfUI.api.SkinArrowButton(button, dir, size)
 
   button.icon:SetTexture(pfUI.media["img:"..dir])
 
-  if not button.pfScripted then
-    local enable = button.Enable
-    local disable = button.Disable
+  if not button.pficonfade then
+    local button, state = button, nil
+    button.pficonfade = CreateFrame("Frame", nil, button)
+    button.pficonfade:SetScript("OnUpdate", function()
+      if state == button:IsEnabled() then return end
+      state = button:IsEnabled()
 
-    button.Enable = function(self)
-      if enable then enable(self) end
-      self.icon:SetVertexColor(.8,.8,.8,1)
-    end
-
-    button.Disable = function(self)
-      if disable then disable(self) end
-      self.icon:SetVertexColor(.2,.2,.2,1)
-    end
-
-    button.pfScripted = true
+      if state > 0 then
+        button.icon:SetVertexColor(.8,.8,.8,1)
+      else
+        button.icon:SetVertexColor(.2,.2,.2,1)
+      end
+    end)
   end
 end
 
@@ -478,9 +828,10 @@ function pfUI.api.SkinScrollbar(frame, always)
 
   -- always show parent frame
   if always then
-    parent:Show()
-    parent.Hide = function(self) frame.thumb:Hide() end
-    parent.Show = function(self) frame.thumb:Show() end
+    RunOOC(function()
+      if not parent.HookScript then parent.HookScript = HookScript end
+      parent:HookScript("OnHide", function() this:Show() end)
+    end)
   end
 end
 
@@ -489,12 +840,12 @@ end
 -- 'frame'           [frame] the frame that should be centered.
 -- 'relativeFrame'   [frame] frame that should be used for centering if not use ui parent.
 function pfUI.api.CenterFrame(frame, relativeFrame)
-    frame:ClearAllPoints()
-    if relativeFrame then
-        frame:SetPoint("CENTER", relativeFrame, "CENTER", 0, 0)
-    else
-        frame:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
-    end
+  frame:ClearAllPoints()
+  if relativeFrame then
+    frame:SetPoint("CENTER", relativeFrame, "CENTER", 0, 0)
+  else
+    frame:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
+  end
 end
 
 -- [ StripTextures ]
@@ -524,6 +875,7 @@ function pfUI.api.SetAllPointsOffset(frame, parent, offset)
 end
 
 function pfUI.api.SkinCheckbox(frame, size)
+  if not frame then return end
   frame:SetNormalTexture("")
   frame:SetPushedTexture("")
   frame:SetHighlightTexture("")
@@ -533,6 +885,11 @@ function pfUI.api.SkinCheckbox(frame, size)
   end
   CreateBackdrop(frame)
   SetAllPointsOffset(frame.backdrop, frame, 4)
+
+  if frame.backdrop_border then
+    -- make sure the blizzard border doesn't overlap the checkmark
+    frame.backdrop_border:SetFrameLevel(frame.backdrop:GetFrameLevel())
+  end
 end
 
 function pfUI.api.SkinDropDown(frame, cr, cg, cb, useSmall)
@@ -685,7 +1042,7 @@ function pfUI.api.CreateQuestionDialog(text, yes, no, editbox, onclose)
 
   if not text then text = "Are you sure?" end
 
-  local border = tonumber(pfUI_config.appearance.border.default)
+  local rawborder, border = GetBorderSize()
   local padding = 15
 
   -- frame
@@ -695,11 +1052,12 @@ function pfUI.api.CreateQuestionDialog(text, yes, no, editbox, onclose)
   question:SetFrameStrata("TOOLTIP")
   question:SetMovable(true)
   question:EnableMouse(true)
-  question:SetScript("OnMouseDown",function()
+  question:RegisterForDrag("LeftButton")
+  question:SetScript("OnDragStart",function()
     this:StartMoving()
   end)
 
-  question:SetScript("OnMouseUp",function()
+  question:SetScript("OnDragStop",function()
     this:StopMovingOrSizing()
   end)
 

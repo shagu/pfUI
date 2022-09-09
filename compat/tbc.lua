@@ -3,9 +3,11 @@ setfenv(1, pfUI:GetEnvironment())
 if pfUI.expansion ~= "tbc" then return end
 
 -- [[ Constants ]]--
-MAX_LEVEL = 70
 CASTBAR_EVENT_CAST_DELAY = "UNIT_SPELLCAST_DELAYED"
 CASTBAR_EVENT_CHANNEL_DELAY = "UNIT_SPELLCAST_CHANNEL_UPDATE"
+CASTBAR_EVENT_CAST_START = "UNIT_SPELLCAST_START"
+CASTBAR_EVENT_CHANNEL_START = "UNIT_SPELLCAST_CHANNEL_START"
+
 EVENTS_MINIMAP_ZONE_UPDATE = {"PLAYER_ENTERING_WORLD", "ZONE_CHANGED_NEW_AREA", "ZONE_CHANGED"}
 
 MICRO_BUTTONS = {
@@ -59,13 +61,6 @@ libdebuff = {
     return _G.UnitDebuff(a1,a2,a3)
   end
 }
-
---[[ DEBUG ]]--
-function TargetByName()
-  message("|cffff5555You shouldn't be here!|r TargetByName is blacklisted")
-  message(debugstack())
-  return
-end
 
 -- map reveal positions
 pfMapOverlayData = {

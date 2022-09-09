@@ -1,6 +1,22 @@
 pfUI:RegisterModule("map", "vanilla:tbc", function ()
   table.insert(UISpecialFrames, "WorldMapFrame")
 
+  local function UpdateTooltipScale()
+    -- load scale data
+    local tooltipscale = tonumber(C.appearance.worldmap.tooltipsize)
+    local scale = WorldMapFrame:GetScale()
+
+    -- apply tooltip scale
+    if tooltipscale > 0 then
+      WorldMapTooltip:SetScale(tooltipscale/scale)
+    else
+      WorldMapTooltip:SetScale(1)
+    end
+  end
+
+  -- register config update handler
+  pfUI.map = { UpdateConfig = UpdateTooltipScale }
+
   function _G.ToggleWorldMap()
     if WorldMapFrame:IsShown() then
       WorldMapFrame:Hide()
@@ -10,6 +26,7 @@ pfUI:RegisterModule("map", "vanilla:tbc", function ()
   end
 
   C.position["WorldMapFrame"] = C.position["WorldMapFrame"] or { alpha = 1.0, scale = 0.7 }
+  C.position["WorldMapFrame"].parent = nil
   local alpha = C.position["WorldMapFrame"].alpha
   local scale = C.position["WorldMapFrame"].scale
 
@@ -21,6 +38,10 @@ pfUI:RegisterModule("map", "vanilla:tbc", function ()
     if METAMAP_TITLE then return end
 
     UIPanelWindows["WorldMapFrame"] = { area = "center" }
+
+    WorldMapFrame:SetMovable(true)
+    WorldMapFrame:EnableMouse(true)
+    WorldMapFrame:RegisterForDrag("LeftButton")
 
     WorldMapFrame:SetScript("OnShow", function()
       -- default events
@@ -44,23 +65,24 @@ pfUI:RegisterModule("map", "vanilla:tbc", function ()
       if IsControlKeyDown() then
         scale = clamp(WorldMapFrame:GetScale() + arg1/10, 0.1, 2.0)
         WorldMapFrame:SetScale(scale)
+        UpdateTooltipScale()
       end
+
+      SaveMovable(this, true)
     end)
 
-    WorldMapFrame:SetScript("OnMouseDown",function()
+    WorldMapFrame:SetScript("OnDragStart",function()
       WorldMapFrame:StartMoving()
     end)
 
-    WorldMapFrame:SetScript("OnMouseUp",function()
+    WorldMapFrame:SetScript("OnDragStop",function()
       WorldMapFrame:StopMovingOrSizing()
-      SaveMovable(this)
+      SaveMovable(this, true)
     end)
-
-    WorldMapFrame:SetMovable(true)
-    WorldMapFrame:EnableMouse(true)
 
     WorldMapFrame:SetAlpha(alpha)
     WorldMapFrame:SetScale(scale)
+    UpdateTooltipScale()
 
     WorldMapFrame:ClearAllPoints()
     WorldMapFrame:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
@@ -80,6 +102,9 @@ pfUI:RegisterModule("map", "vanilla:tbc", function ()
     SkinCloseButton(WorldMapFrameCloseButton, WorldMapFrame, -3, -3)
     SkinDropDown(WorldMapContinentDropDown)
     SkinDropDown(WorldMapZoneDropDown)
+    if WorldMapZoneMinimapDropDown then
+      SkinDropDown(WorldMapZoneMinimapDropDown)
+    end
     local point, anchor, anchorPoint, x, y = WorldMapZoneDropDown:GetPoint()
     WorldMapZoneDropDown:ClearAllPoints()
     WorldMapZoneDropDown:SetPoint(point, anchor, anchorPoint, x+8, y)

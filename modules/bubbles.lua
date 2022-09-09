@@ -18,7 +18,7 @@ pfUI:RegisterModule("bubbles", "vanilla:tbc", function ()
   function pfUI.bubbles:IsBubble(f)
       if f:GetName() then return end
       if not f:GetRegions() then return end
-      return f:GetRegions():GetTexture() == "Interface\\Tooltips\\ChatBubble-Background"
+      return f:GetRegions().GetTexture and f:GetRegions():GetTexture() == "Interface\\Tooltips\\ChatBubble-Background"
   end
 
   function pfUI.bubbles:ProcessBubble(f)

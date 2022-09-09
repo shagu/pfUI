@@ -45,7 +45,8 @@ function GetUnitData(name, active)
 end
 
 local function AddData(db, name, class, level, elite)
-  if not name then return end
+  if not name or not db then return end
+  units[db] = units[db] or {}
   units[db][name] = units[db][name] or {}
   units[db][name].class = class or units[db][name].class
   units[db][name].level = level or units[db][name].level
@@ -140,15 +141,26 @@ end)
 -- since TargetByName can only be triggered within vanilla,
 -- we can't auto-scan targets on further expansions.
 if pfUI.client <= 11200 then
+  -- setup sound function switches
+  local SoundOn = PlaySound
+  local SoundOff = function() return end
+
   libunitscan:SetScript("OnUpdate", function()
     -- don't scan when another unit is in target
     if UnitExists("target") or UnitName("target") then return end
 
     local name = next(queue)
     if name then
+      -- disable sound
+      _G.PlaySound = SoundOff
+
       -- try to target the unknown unit
       TargetByName(name, true)
       ClearTarget()
+
+      -- enable sound again
+      _G.PlaySound = SoundOn
+
       queue[name] = nil
     end
 

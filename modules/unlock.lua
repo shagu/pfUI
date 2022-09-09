@@ -1,4 +1,6 @@
 pfUI:RegisterModule("unlock", "vanilla:tbc", function ()
+  local rawborder, default_border = GetBorderSize()
+
   -- grouped frames
   local clusters = {
     -- Name            Shift  Ctrl
@@ -19,12 +21,13 @@ pfUI:RegisterModule("unlock", "vanilla:tbc", function ()
   -- frame labels and their config section relation
   local frame_configs = {
     -- unitframes
-    ["Player"]        = { T["Unit Frames"], T["Player"] },
-    ["Target"]        = { T["Unit Frames"], T["Target"] },
-    ["TargetTarget"]  = { T["Unit Frames"], T["Target-Target"] },
-    ["Pet"]           = { T["Unit Frames"], T["Pet"] },
-    ["PetTarget"]     = { T["Unit Frames"], T["Pet-Target"] },
-    ["Focus"]         = { T["Unit Frames"], T["Focus"] },
+    ["Player"]             = { T["Unit Frames"], T["Player"] },
+    ["Target"]             = { T["Unit Frames"], T["Target"] },
+    ["TargetTarget"]       = { T["Unit Frames"], T["Target-Target"] },
+    ["TargetTargetTarget"] = { T["Unit Frames"], T["Target-Target-Target"] },
+    ["Pet"]                = { T["Unit Frames"], T["Pet"] },
+    ["PetTarget"]          = { T["Unit Frames"], T["Pet-Target"] },
+    ["Focus"]              = { T["Unit Frames"], T["Focus"] },
 
     -- combopoints
     ["Combo%d"]       = { T["Unit Frames"], T["General"] },
@@ -67,6 +70,7 @@ pfUI:RegisterModule("unlock", "vanilla:tbc", function ()
     -- castbar
     ["TargetCastbar"]  = { T["Castbar"], nil },
     ["PlayerCastbar"]  = { T["Castbar"], nil },
+    ["FocusCastbar"]   = { T["Castbar"], nil },
 
     -- minimap
     ["Minimap"]        = { T["Minimap"], T["Minimap"] },
@@ -209,10 +213,12 @@ pfUI:RegisterModule("unlock", "vanilla:tbc", function ()
 
   local function OpenConfigDialog(category, view)
     pfUI.gui:Show()
+
+    if not pfUI.gui.frames[category] then return end
     pfUI.gui.frames[category]:Click()
-    if view then
-      pfUI.gui.frames[category][view]:Click()
-    end
+
+    if not view or not pfUI.gui.frames[category][view] then return end
+    pfUI.gui.frames[category][view]:Click()
   end
 
   local function UpdateDockValues()
@@ -223,7 +229,7 @@ pfUI:RegisterModule("unlock", "vanilla:tbc", function ()
     local frame = drag.frame
 
     -- update dock position
-    SetAutoPoint(dock, drag, tonumber(pfUI_config.appearance.border.default)*2+2)
+    SetAutoPoint(dock, drag, default_border*2+2)
 
     -- update dock entries
     dock.title:SetText(drag.label)
@@ -316,16 +322,7 @@ pfUI:RegisterModule("unlock", "vanilla:tbc", function ()
     QueueFunction(UpdateDockValues)
   end
 
-  local function DraggerOnMouseDown()
-    if arg1 == "MiddleButton" then return end
-    if arg1 == "RightButton" then
-      if pfUI.unlock.dock.parent == this and pfUI.unlock.dock:IsShown() then
-        SetDockToFrame(nil)
-      else
-        SetDockToFrame(this)
-      end
-      return
-    end
+  local function DraggerOnDragStart()
     local frame = this.frame
 
     pfUI.unlock.selection = GetFrames()
@@ -343,10 +340,7 @@ pfUI:RegisterModule("unlock", "vanilla:tbc", function ()
     if frame.OnMove then frame:OnMove() end
   end
 
-  local function DraggerOnMouseUp()
-    if arg1 == "MiddleButton" then return end
-    if arg1 == "RightButton" then return end
-
+  local function DraggerOnDragStop()
     local frame = this.frame
     local name = this.fname
 
@@ -358,6 +352,7 @@ pfUI:RegisterModule("unlock", "vanilla:tbc", function ()
     local diffypos = frame.oldPos[2] - ypos
 
     for id, frame in pairs(pfUI.unlock.selection) do
+      frame:SetParent("UIParent")
       if frame:GetName() ~= name then
         local anchor, _, _, xpos, ypos = frame:GetPoint()
         frame:SetPoint(anchor or "TOPLEFT", xpos - diffxpos, ypos - diffypos)
@@ -403,14 +398,25 @@ pfUI:RegisterModule("unlock", "vanilla:tbc", function ()
   end
 
   local function DraggerOnClick()
-    pfUI.unlock.selection = GetFrames()
-    for id, frame in pairs(pfUI.unlock.selection) do
-      pfUI_config["position"][frame:GetName()] = nil
-      UpdateMovable(frame)
+    if arg1 == "RightButton" then
+      -- add dockframe to the dragger to show advanced options
+      if pfUI.unlock.dock.parent == this and pfUI.unlock.dock:IsShown() then
+        SetDockToFrame(nil)
+      else
+        SetDockToFrame(this)
+      end
+      return
+    elseif arg1 == "MiddleButton" then
+      -- reset positions of dragger and all connected frames
+      pfUI.unlock.selection = GetFrames()
+      for id, frame in pairs(pfUI.unlock.selection) do
+        pfUI_config["position"][frame:GetName()] = nil
+        UpdateMovable(frame)
 
-      if frame.OnMove then frame:OnMove() end
+        if frame.OnMove then frame:OnMove() end
+      end
+      UpdateDockValues()
     end
-    UpdateDockValues()
   end
 
   local function DraggerOnEnter()
@@ -430,11 +436,13 @@ pfUI:RegisterModule("unlock", "vanilla:tbc", function ()
     local label = string.sub(fname, 1, 2) == "pf" and strsub(fname,3) or fname
 
     local d = CreateFrame("Button", fname .. "Drag", f)
-    d:RegisterForClicks("MiddleButtonUp")
+    d:RegisterForClicks("MiddleButtonUp", "RightButtonUp")
+    d:RegisterForDrag("LeftButton")
     d:SetAllPoints(f)
-    d:SetFrameStrata("DIALOG")
     d:SetAlpha(1)
     d:EnableMouseWheel(1)
+
+    d:SetFrameLevel(128)
 
     d.text = d:CreateFontString("Status", "LOW", "GameFontNormal")
     d.text:SetFont(pfUI.font_default, C.global.font_size, "OUTLINE")
@@ -454,8 +462,8 @@ pfUI:RegisterModule("unlock", "vanilla:tbc", function ()
     d.text:SetText(label)
 
     d:SetScript("OnMouseWheel", DraggerOnMouseWheel)
-    d:SetScript("OnMouseDown", DraggerOnMouseDown)
-    d:SetScript("OnMouseUp", DraggerOnMouseUp)
+    d:SetScript("OnDragStart", DraggerOnDragStart)
+    d:SetScript("OnDragStop", DraggerOnDragStop)
     d:SetScript("OnClick", DraggerOnClick)
     d:SetScript("OnEnter", DraggerOnEnter)
     d:SetScript("OnLeave", DraggerOnLeave)
@@ -590,11 +598,12 @@ pfUI:RegisterModule("unlock", "vanilla:tbc", function ()
   pfUI.unlock.dock.xcoord:SetFontObject(GameFontNormal)
   pfUI.unlock.dock.xcoord:SetAutoFocus(false)
 
-  pfUI.unlock.dock.xcoord:SetScript("OnEscapePressed", function(self)
-    if tonumber(this:GetText()) then
+  pfUI.unlock.dock.xcoord:SetScript("OnEnterPressed", function(self)
+    local newXPos = tonumber(this:GetText())
+    if newXPos then
       local frame = pfUI.unlock.dock.parent.frame
       local anchor, _, _, xpos, ypos = frame:GetPoint()
-      frame:SetPoint(anchor, xpos, ypos)
+      frame:SetPoint(anchor, newXPos, ypos)
       SavePosition(frame)
     else
       UpdateDockValues()
@@ -627,11 +636,12 @@ pfUI:RegisterModule("unlock", "vanilla:tbc", function ()
   pfUI.unlock.dock.ycoord:SetFontObject(GameFontNormal)
   pfUI.unlock.dock.ycoord:SetAutoFocus(false)
 
-  pfUI.unlock.dock.ycoord:SetScript("OnEscapePressed", function(self)
-    if tonumber(this:GetText()) then
+  pfUI.unlock.dock.ycoord:SetScript("OnEnterPressed", function(self)
+    local newYPos = tonumber(this:GetText())
+    if newYPos then
       local frame = pfUI.unlock.dock.parent.frame
       local anchor, _, _, xpos, ypos = frame:GetPoint()
-      frame:SetPoint(anchor, xpos, ypos)
+      frame:SetPoint(anchor, xpos, newYPos)
       SavePosition(frame)
     else
       UpdateDockValues()

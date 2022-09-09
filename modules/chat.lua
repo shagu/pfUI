@@ -1,14 +1,9 @@
 pfUI:RegisterModule("chat", "vanilla:tbc:wotlk", function ()
   local panelfont = C.panel.use_unitfonts == "1" and pfUI.font_unit or pfUI.font_default
   local panelfont_size = C.panel.use_unitfonts == "1" and C.global.font_unit_size or C.global.font_size
-
-  local default_border = C.appearance.border.default
-  if C.appearance.border.chat ~= "-1" then
-    default_border = C.appearance.border.chat
-  end
+  local rawborder, default_border = GetBorderSize("chat")
 
   _G.CHAT_FONT_HEIGHTS = { 8, 10, 12, 14, 16, 18, 20 }
-
 
   -- add dropdown menu button to ignore player
   UnitPopupButtons["IGNORE_PLAYER"] = { text = IGNORE_PLAYER, dist = 0 }
@@ -24,6 +19,39 @@ pfUI:RegisterModule("chat", "vanilla:tbc:wotlk", function ()
     end
   end)
 
+  local realm = GetRealmName()
+  local player = UnitName("player")
+  local history
+  local function SaveChatHistory(id, msg, r, g, b)
+    -- create cache tables if not existing
+    pfUI_cache = pfUI_cache or {}
+    pfUI_cache["chathistory"] = pfUI_cache["chathistory"] or {}
+    pfUI_cache["chathistory"][realm] = pfUI_cache["chathistory"][realm] or {}
+    pfUI_cache["chathistory"][realm][player] = pfUI_cache["chathistory"][realm][player] or {}
+    pfUI_cache["chathistory"][realm][player][id] = pfUI_cache["chathistory"][realm][player][id] or {}
+
+    if r and g and b then
+      local color = rgbhex(r*.5+.2, g*.5+.2, b*.5+.2)
+      msg = string.gsub(msg, "^", color)
+      msg = string.gsub(msg, "|r", "|r" .. color)
+    end
+
+    history = pfUI_cache["chathistory"][realm][player][id]
+    table.insert(history, 1, msg)
+    if history[30] then table.remove(history, 30) end
+  end
+
+  local function GetChatHistory(id)
+    -- create cache tables if not existing
+    pfUI_cache = pfUI_cache or {}
+    pfUI_cache["chathistory"] = pfUI_cache["chathistory"] or {}
+    pfUI_cache["chathistory"][realm] = pfUI_cache["chathistory"][realm] or {}
+    pfUI_cache["chathistory"][realm][player] = pfUI_cache["chathistory"][realm][player] or {}
+    pfUI_cache["chathistory"][realm][player][id] = pfUI_cache["chathistory"][realm][player][id] or {}
+
+    return pfUI_cache["chathistory"][realm][player][id]
+  end
+
   pfUI.chat = CreateFrame("Frame",nil,UIParent)
 
   pfUI.chat.left = CreateFrame("Frame", "pfChatLeft", UIParent)
@@ -34,11 +62,13 @@ pfUI:RegisterModule("chat", "vanilla:tbc:wotlk", function ()
   pfUI.chat.left:SetFrameStrata("BACKGROUND")
   pfUI.chat.left:SetWidth(C.chat.left.width)
   pfUI.chat.left:SetHeight(C.chat.left.height)
-  pfUI.chat.left:SetPoint("BOTTOMLEFT", 5,5)
+  pfUI.chat.left:SetPoint("BOTTOMLEFT", 2*default_border,2*default_border)
   pfUI.chat.left:SetScript("OnShow", function() pfUI.chat:RefreshChat() end)
   UpdateMovable(pfUI.chat.left)
   CreateBackdrop(pfUI.chat.left, default_border, nil, .8)
-  CreateBackdropShadow(pfUI.chat.left)
+  if C.chat.global.frameshadow == "1" then
+    CreateBackdropShadow(pfUI.chat.left)
+  end
 
   if C.chat.global.custombg == "1" then
     local r, g, b, a = strsplit(",", C.chat.global.background)
@@ -145,11 +175,12 @@ pfUI:RegisterModule("chat", "vanilla:tbc:wotlk", function ()
 
   pfUI.chat.urlcopy:SetMovable(true)
   pfUI.chat.urlcopy:EnableMouse(true)
-  pfUI.chat.urlcopy:SetScript("OnMouseDown",function()
+  pfUI.chat.urlcopy:RegisterForDrag("LeftButton")
+  pfUI.chat.urlcopy:SetScript("OnDragStart",function()
     this:StartMoving()
   end)
 
-  pfUI.chat.urlcopy:SetScript("OnMouseUp",function()
+  pfUI.chat.urlcopy:SetScript("OnDragStop",function()
     this:StopMovingOrSizing()
   end)
 
@@ -206,11 +237,14 @@ pfUI:RegisterModule("chat", "vanilla:tbc:wotlk", function ()
   pfUI.chat.right:SetFrameStrata("BACKGROUND")
   pfUI.chat.right:SetWidth(C.chat.right.width)
   pfUI.chat.right:SetHeight(C.chat.right.height)
-  pfUI.chat.right:SetPoint("BOTTOMRIGHT", -5,5)
+  pfUI.chat.right:SetPoint("BOTTOMRIGHT", -2*default_border,2*default_border)
   pfUI.chat.right:SetScript("OnShow", function() pfUI.chat:RefreshChat() end)
   UpdateMovable(pfUI.chat.right)
   CreateBackdrop(pfUI.chat.right, default_border, nil, .8)
-  CreateBackdropShadow(pfUI.chat.right)
+  if C.chat.global.frameshadow == "1" then
+    CreateBackdropShadow(pfUI.chat.right)
+  end
+
   if C.chat.global.custombg == "1" then
     local r, g, b, a = strsplit(",", C.chat.global.background)
     pfUI.chat.right.backdrop:SetBackdropColor(tonumber(r), tonumber(g), tonumber(b), tonumber(a))
@@ -268,9 +302,29 @@ pfUI:RegisterModule("chat", "vanilla:tbc:wotlk", function ()
     CreateBackdrop(LanguageMenu)
     CreateBackdrop(VoiceMacroMenu)
 
+    local combatlogpanel = (CombatLogQuickButtonFrame_Custom and CombatLogQuickButtonFrame_Custom:GetHeight() or 0)
+
     for i=1, NUM_CHAT_WINDOWS do
       local frame = _G["ChatFrame"..i]
       local tab = _G["ChatFrame"..i.."Tab"]
+
+      local combat = 0
+      for _, msg in pairs(_G["ChatFrame"..i].messageTypeList) do
+        if strfind(msg, "SPELL", 1) or strfind(msg, "COMBAT", 1) then
+          combat = combat + 1
+        end
+      end
+
+      if combat > 5 then
+        frame.pfCombatLog = true
+      else
+        frame.pfCombatLog = nil
+      end
+
+      for _, tex in pairs(CHAT_FRAME_TEXTURES) do
+        _G["ChatFrame"..i..tex]:SetTexture()
+        _G["ChatFrame"..i..tex]:Hide()
+      end
 
       if not frame.pfStartMoving then
         frame.pfStartMoving = frame.StartMoving
@@ -316,7 +370,11 @@ pfUI:RegisterModule("chat", "vanilla:tbc:wotlk", function ()
         tab:SetParent(pfUI.chat.left.panelTop)
         frame:SetParent(pfUI.chat.left)
         frame:ClearAllPoints()
-        frame:SetPoint("TOPLEFT", pfUI.chat.left ,"TOPLEFT", default_border, -panelheight)
+        if i == 2 then
+          frame:SetPoint("TOPLEFT", pfUI.chat.left ,"TOPLEFT", default_border, -panelheight - combatlogpanel)
+        else
+          frame:SetPoint("TOPLEFT", pfUI.chat.left ,"TOPLEFT", default_border, -panelheight)
+        end
         frame:SetPoint("BOTTOMRIGHT", pfUI.chat.left ,"BOTTOMRIGHT", -default_border, bottompadding)
       else
         FCF_UnDockFrame(frame)
@@ -356,6 +414,7 @@ pfUI:RegisterModule("chat", "vanilla:tbc:wotlk", function ()
       frame:SetScript("OnMouseWheel", ChatOnMouseWheel)
     end
 
+
     -- update dock frame for all windows
     for index, value in pairs(DOCKED_CHAT_FRAMES) do
       FCF_UpdateButtonSide(value)
@@ -374,6 +433,9 @@ pfUI:RegisterModule("chat", "vanilla:tbc:wotlk", function ()
         pfUI.chat.left.panelTop:Show()
         FCF_DockUpdate()
       elseif MouseIsOver(pfUI.chat.right, 10, -10, -10, 10) then
+        -- disable while dock is active
+        if pfUI.chat.right:GetAlpha() == 0 then return end
+
         pfUI.chat.right.panelTop:Show()
         FCF_DockUpdate()
       else
@@ -620,71 +682,98 @@ pfUI:RegisterModule("chat", "vanilla:tbc:wotlk", function ()
   local r,g,b = strsplit(",", C.chat.text.unknowncolor)
   local unknowncolorhex = rgbhex(r,g,b)
 
-  for i=1,NUM_CHAT_WINDOWS do
-    if not _G["ChatFrame"..i].HookAddMessage then
-      _G["ChatFrame"..i].HookAddMessage = _G["ChatFrame"..i].AddMessage
-      _G["ChatFrame"..i].AddMessage = function(frame, text, a1, a2, a3, a4, a5)
-        if text then
-          -- Remove prat's CLINK itemlinks.
-          text = gsub(text, '%{CLINK:(%x%x%x%x%x%x%x%x):(%d*):(%d*):(%d*):(%d*):(.-)%}', function(color, id, enchant, suffix, uuid, name)
-            local itemname
-            for id, name in pairs({strsplit(":", name)}) do itemname = name end
-            return format('|c%s|Hitem:%s:%s:%s:%s|h[%s]|h|r', color, id, enchant, suffix, uuid, itemname)
-          end)
+  local function AddMessage(frame, text, a1, a2, a3, a4, a5)
+    if not text then return end
 
-          -- detect urls
-          if C.chat.text.detecturl == "1" then
-            text = pfUI.chat:HandleLink(text)
+    -- skip chat parsing on combat log
+    if frame.pfCombatLog then
+      return frame:HookAddMessage(text, a1, a2, a3, a4, a5)
+    end
+
+    -- Remove prat CLINKs
+    text = gsub(text, "{CLINK:(%x+):([%d-]-:[%d-]-:[%d-]-:[%d-]-:[%d-]-:[%d-]-:[%d-]-:[%d-]-):([^}]-)}", "|c%1|Hitem:%2|h[%3]|h|r") -- tbc
+    text = gsub(text, "{CLINK:(%x+):([%d-]-:[%d-]-:[%d-]-:[%d-]-):([^}]-)}", "|c%1|Hitem:%2|h[%3]|h|r") -- vanilla
+
+    -- Remove chatter CLINKs
+    text = gsub(text, "{CLINK:item:(%x+):([%d-]-:[%d-]-:[%d-]-:[%d-]-:[%d-]-:[%d-]-:[%d-]-:[%d-]-):([^}]-)}", "|c%1|Hitem:%2|h[%3]|h|r")
+    text = gsub(text, "{CLINK:enchant:(%x+):([%d-]-):([^}]-)}", "|c%1|Henchant:%2|h[%3]|h|r")
+    text = gsub(text, "{CLINK:spell:(%x+):([%d-]-):([^}]-)}", "|c%1|Hspell:%2|h[%3]|h|r")
+    text = gsub(text, "{CLINK:quest:(%x+):([%d-]-):([%d-]-):([^}]-)}", "|c%1|Hquest:%2:%3|h[%4]|h|r")
+
+    -- detect urls
+    if C.chat.text.detecturl == "1" then
+      text = pfUI.chat:HandleLink(text)
+    end
+
+    -- display class colors if already indexed
+    if C.chat.text.classcolor == "1" then
+      for name in gfind(text, "|Hplayer:(.-)|h") do
+        local real, _ = strsplit(":", name)
+        local color = unknowncolorhex
+        local match = false
+        local class = GetUnitData(real)
+
+        if class then
+          if class ~= UNKNOWN then
+            color = rgbhex(RAID_CLASS_COLORS[class])
+            match = true
           end
+        end
 
-          -- display class colors if already indexed
-          if C.chat.text.classcolor == "1" then
-
-            for name in gfind(text, "|Hplayer:(.-)|h") do
-              local real, _ = strsplit(":", name)
-              local color = unknowncolorhex
-              local match = false
-              local class = GetUnitData(real)
-
-              if class then
-                if class ~= UNKNOWN then
-                  color = rgbhex(RAID_CLASS_COLORS[class])
-                  match = true
-                end
-              end
-
-              if C.chat.text.tintunknown == "1" or match then
-                text = string.gsub(text, "|Hplayer:"..name.."|h%["..real.."%]|h(.-:-)",
-                    left..color.."|Hplayer:"..name.."|h" .. color .. real .. "|h|r"..right.."%1")
-              end
-            end
-          end
-
-          -- reduce channel name to number
-          if C.chat.text.channelnumonly == "1" then
-            local channel = string.gsub(text, ".*%[(.-)%]%s+(.*|Hplayer).+", "%1")
-            if string.find(channel, "%d+%. ") then
-              channel = string.gsub(channel, "(%d+)%..*", "channel%1")
-              channel = string.gsub(channel, "channel", "")
-              text = string.gsub(text, "%[%d+%..-%]%s+(.*|Hplayer)", left .. channel .. right .. " %1")
-            end
-          end
-
-          -- show timestamp in chat
-          if C.chat.text.time == "1" then
-            text = timecolorhex .. tleft .. date(C.chat.text.timeformat) .. tright .. "|r " .. text
-          end
-
-          if C.chat.global.whispermod == "1" then
-            -- patch incoming whisper string to match the colors
-            if string.find(text, wcol, 1) == 1 then
-              text = string.gsub(text, "|r", "|r" .. wcol)
-            end
-          end
-
-          _G["ChatFrame"..i].HookAddMessage(frame, text, a1, a2, a3, a4, a5)
+        if C.chat.text.tintunknown == "1" or match then
+          text = string.gsub(text, "|Hplayer:"..name.."|h%["..real.."%]|h(.-:-)",
+            left..color.."|Hplayer:"..name.."|h" .. color .. real .. "|h|r"..right.."%1")
         end
       end
+    end
+
+    -- reduce channel name to number
+    if C.chat.text.channelnumonly == "1" then
+      local channel = string.gsub(text, ".*%[(.-)%]%s+(.*|Hplayer).+", "%1")
+      if string.find(channel, "%d+%. ") then
+        channel = string.gsub(channel, "(%d+)%..*", "channel%1")
+        channel = string.gsub(channel, "channel", "")
+        text = string.gsub(text, "%[%d+%..-%]%s+(.*|Hplayer)", left .. channel .. right .. " %1")
+      end
+    end
+
+    -- show timestamp in chat
+    if C.chat.text.time == "1" then
+      text = timecolorhex .. tleft .. date(C.chat.text.timeformat) .. tright .. "|r " .. text
+    end
+
+    -- save chat history
+    if C.chat.global.whispermod == "1" and string.find(text, wcol, 1) == 1 then
+      SaveChatHistory(frame:GetID(), string.gsub(text, wcol, ""), cr, cg, cb)
+    else
+      SaveChatHistory(frame:GetID(), text, a1, a2, a3)
+    end
+
+    if C.chat.global.whispermod == "1" then
+      -- patch incoming whisper string to match the colors
+      if string.find(text, wcol, 1) == 1 then
+        text = string.gsub(text, "|r", "|r" .. wcol)
+      end
+    end
+
+    frame:HookAddMessage(text, a1, a2, a3, a4, a5)
+  end
+
+  for i=1,NUM_CHAT_WINDOWS do
+    if not _G["ChatFrame"..i].HookAddMessage then
+      if C.chat.text.history == "1" then
+        -- write history to chat
+        local history = GetChatHistory(i)
+        for j=30,0,-1 do
+          if history[j] then
+            _G["ChatFrame"..i]:AddMessage(history[j], .7,.7,.7)
+          end
+        end
+      end
+
+      -- add chat parse and history hooks
+      _G["ChatFrame"..i].HookAddMessage = _G["ChatFrame"..i].AddMessage
+      _G["ChatFrame"..i].AddMessage = AddMessage
     end
   end
 
@@ -696,8 +785,8 @@ pfUI:RegisterModule("chat", "vanilla:tbc:wotlk", function ()
         local name = strsub(link, 8)
         if ( name and (strlen(name) > 0) ) then
           local name, _ = strsplit(":", name)
-          name = gsub(name, "([^%s]*)%s+([^%s]*)%s+([^%s]*)", "%3");
-          name = gsub(name, "([^%s]*)%s+([^%s]*)", "%2");
+          name = gsub(name, "([^%s]*)%s+([^%s]*)%s+([^%s]*)", "%3")
+          name = gsub(name, "([^%s]*)%s+([^%s]*)", "%2")
           if IsShiftKeyDown() and ChatFrameEditBox:IsVisible() then
             ChatFrameEditBox:Insert("|cffffffff|Hplayer:"..name.."|h["..name.."]|h|r")
             return

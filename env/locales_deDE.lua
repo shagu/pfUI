@@ -196,7 +196,7 @@ pfUI_locale["deDE"]["resurrections"] = {
 }
 
 pfUI_locale["deDE"]["spells"] = {
-  [' Dämmerungstrickfalle']={t=1500,icon='Temp'},
+  ['Dämmerungstrickfalle']={t=1500,icon='Temp'},
   ['Aasskarabäus beschwören']={t=2000,icon='Spell_Shadow_CarrionSwarm'},
   ['Abbau-Schwarm']={t=3000,icon='Spell_Holy_Dizzy'},
   ['Ablagerungen sammeln']={t=4000,icon='Temp'},
@@ -2382,24 +2382,34 @@ pfUI_locale["deDE"]["debuffs"] = {
   ['Überraschungs-Angriff']={[0]=2.5,},
 }
 
+-- custom entries not detected by DBC extractor
+pfUI_locale["deDE"]["debuffs"]['Kältekegel']={[0]=8.0,} -- Cone of Cold
+
 pfUI_locale["deDE"]["totems"] = {
-  ["Totem der Krankheitsreinigung"] = true,
-  ["Totem der Erdbindung"] = true,
-  ["Totem der Feuernova"] = true,
-  ["Totem des Feuerwiderstands"] = true,
-  ["Totem der Flammenzunge"] = true,
-  ["Totem des Frostwiderstands"] = true,
-  ["Totem der Erdung"] = true,
-  ["Totem des heilenden Flusses"] = true,
-  ["Totem der glühenden Magma"] = true,
-  ["Totem der Manaquelle"] = true,
-  ["Totem der Manaflut"] = true,
-  ["Totem des Naturwiderstands"] = true,
-  ["Totem der Verbrennung"] = true,
-  ["Totem des Wachens"] = true,
-  ["Totem der Steinklaue"] = true,
-  ["Totem der Steinhaut"] = true,
-  ["Totem der Erdstärke"] = true,
-  ["Totem des Erdstoßes"] = true,
-  ["Totem des Windzorns"] = true,
+  ["Totem der Krankheitsreinigung"] = "spell_nature_diseasecleansingtotem",
+  ["Totem des Erdelementars"] = "spell_nature_earthelemental_totem",
+  ["Totem der Erdbindung"] = "spell_nature_strengthofearthtotem02",
+  ["Totem des Feuerelementars"] = "spell_fire_elemental_totem",
+  ["Totem der Feuernova"] = "spell_fire_sealoffire",
+  ["Totem des Feuerwiderstands"] = "spell_fireresistancetotem_01",
+  ["Totem der Flammenzunge"] = "spell_nature_guardianward",
+  ["Totem des Frostwiderstands"] = "spell_frostresistancetotem_01",
+  ["Totem der luftgleichen Anmut"] = "spell_nature_invisibilitytotem",
+  ["Totem der Erdung"] = "spell_nature_groundingtotem",
+  ["Totem des heilenden Flusses"] = "Inv_spear_04",
+  ["Totem des glühenden Magmas"] = "spell_fire_selfdestruct",
+  ["Totem der Manaquelle"] = "spell_nature_manaregentotem",
+  ["Totem der Manaflut"] = "spell_frost_summonwaterelemental",
+  ["Totem des Naturwiderstands"] = "spell_nature_natureresistancetotem",
+  ["Totem der Giftreinigung"] = "spell_nature_poisoncleansingtotem",
+  ["Totem der Verbrennung"] = "spell_fire_searingtotem",
+  ["Totem des Wachens"] = "spell_nature_removecurse",
+  ["Totem der Steinklaue"] = "spell_nature_stoneclawtotem",
+  ["Totem der Steinhaut"] = "spell_nature_stoneskintotem",
+  ["Totem der Erdstärke"] = "spell_nature_earthbindtotem",
+  ["Totem des Ingrimms"] = "spell_fire_totemofwrath",
+  ["Totem des Erdstoßes"] = "spell_nature_tremortotem",
+  ["Totem des Windzorns"] = "spell_nature_windfury",
+  ["Totem der Windmauer"] = "spell_nature_earthbind",
+  ["Totem des stürmischen Zorns"] = "spell_nature_slowingtotem",
 }

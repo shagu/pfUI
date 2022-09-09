@@ -1,6 +1,6 @@
 pfUI:RegisterSkin("Quest Log", "vanilla:tbc", function ()
-  local border = tonumber(pfUI_config.appearance.border.default)
-  local bpad = border > 1 and border - 1 or 1
+  local rawborder, border = GetBorderSize()
+  local bpad = rawborder > 1 and border - GetPerfectPixel() or GetPerfectPixel()
 
   _G.QUESTS_DISPLAYED = 23
   _G.MAX_WATCHABLE_QUESTS = 20 -- TODO
@@ -51,6 +51,13 @@ pfUI:RegisterSkin("Quest Log", "vanilla:tbc", function ()
     QuestLogFrameLevelsCheckButton:SetPoint("LEFT", QuestLogCollapseAllButton, "RIGHT", 0, 1)
     QuestLogFrameLevelsCheckButton:SetScript("OnClick", function()
       C.questlog.showQuestLevels = C.questlog.showQuestLevels == "1" and "0" or "1"
+
+      -- also update pfQuest's config
+      if pfQuest_config and pfQuestConfig and pfQuestConfig.UpdateConfigEntries then
+        pfQuest_config["questloglevel"] = C.questlog.showQuestLevels
+        pfQuestConfig:UpdateConfigEntries()
+      end
+
       QuestLog_Update()
     end)
     SkinCheckbox(QuestLogFrameLevelsCheckButton, 23)
@@ -147,7 +154,7 @@ pfUI:RegisterSkin("Quest Log", "vanilla:tbc", function ()
 
     -- add additional scroll entries
     for i = 7, QUESTS_DISPLAYED do
-      local b = CreateFrame("Button", "QuestLogTitle"..i, QuestLogFrame, "QuestLogTitleButtonTemplate")
+      local b = _G["QuestLogTitle"..i] or CreateFrame("Button", "QuestLogTitle"..i, QuestLogFrame, "QuestLogTitleButtonTemplate")
       b:SetID(i)
       b:SetPoint("TOPLEFT", _G["QuestLogTitle"..(i-1)], "BOTTOMLEFT", 0, 1)
       SkinCollapseButton(_G["QuestLogTitle"..i])
@@ -179,7 +186,7 @@ pfUI:RegisterSkin("Quest Log", "vanilla:tbc", function ()
               text, level, questTag, _, isHeader = GetQuestLogTitle(questIndex)
             end
             if not isHeader then
-              _G["QuestLogTitle"..i]:SetText("  ".."["..(questTag and level.."+" or level).."] "..text)
+              _G["QuestLogTitle"..i]:SetText(" ".."["..(questTag and level.."+" or level).."] "..text)
             end
           end
         end

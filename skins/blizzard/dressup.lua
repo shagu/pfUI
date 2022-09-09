@@ -1,6 +1,6 @@
 pfUI:RegisterSkin("Dress Up Frame", "vanilla:tbc", function ()
-  local border = tonumber(pfUI_config.appearance.border.default)
-  local bpad = border > 1 and border - 1 or 1
+  local rawborder, border = GetBorderSize()
+  local bpad = rawborder > 1 and border - GetPerfectPixel() or GetPerfectPixel()
 
   StripTextures(DressUpFrame, nil, "ARTWORK")
   CreateBackdrop(DressUpFrame, nil, nil, .75)

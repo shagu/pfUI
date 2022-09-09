@@ -58,6 +58,27 @@ function pfUI.api.UnitInRange(unit)
   end
 end
 
+-- [ RunOOC ]
+-- Runs a function once, as soon as the combat lockdown fades.
+-- func         [function]      The function that shall run ooc.
+-- return:      [bool]          true if the function was added,
+--                              nil if the function already exists in queue
+local queue, frame = {}
+function pfUI.api.RunOOC(func)
+  if not frame then
+    frame = CreateFrame("Frame")
+    frame:SetScript("OnUpdate", function()
+      if InCombatLockdown and InCombatLockdown() then return end
+      for key, func in pairs(queue) do func(); queue[key] = nil end
+    end)
+  end
+
+  if not queue[tostring(func)] then
+    queue[tostring(func)] = func
+    return true
+  end
+end
+
 -- [ UnitHasBuff ]
 -- Returns whether a unit has the given buff or not.
 -- unit         [string]        A unit to query (string, unitID)
@@ -141,6 +162,42 @@ function pfUI.api.modf(f)
     return math.floor(f), mod(f,1)
   end
   return math.ceil(f), mod(f,1)
+end
+
+-- [ GetSlashCommands ]
+-- Lists all registeres slash commands
+-- 'text'       [string]        optional, a specific command to find
+-- return:      [list]          a list of all matching slash commands
+function pfUI.api.GetSlashCommands(text)
+  local cmds
+  for k, v in pairs(_G) do
+    if strfind(k, "^SLASH_") and (not text or v == text) then
+      cmds = cmds or {}
+      cmds[k] = v
+    end
+  end
+
+  return cmds
+end
+
+-- [ RegisterSlashCommand ]
+-- Lists all registeres slash commands
+-- 'name'       [string]      name of the command
+-- 'cmds'       [table]       table containing all slash command strings
+-- 'func'       [function]    the function that should be assigned
+-- 'force'      [boolean]     force assign the command even if aleady provided
+--                            by another function/addon.
+function pfUI.api.RegisterSlashCommand(name, cmds, func, force)
+  local counter = 1
+
+  for _, cmd in pairs(cmds) do
+    if force or not pfUI.api.GetSlashCommands(cmd) then
+      _G["SLASH_"..name..counter] = cmd
+      counter = counter + 1
+    end
+  end
+
+  _G.SlashCmdList[name] = func
 end
 
 -- [ GetCaptures ]
@@ -228,14 +285,14 @@ function pfUI.api.GetItemCount(itemName)
   local count = 0
   for bag = 4, 0, -1 do
     for slot = 1, GetContainerNumSlots(bag) do
-      local _, itemCount = GetContainerItemInfo(bag, slot);
+      local _, itemCount = GetContainerItemInfo(bag, slot)
       if itemCount then
         local itemLink = GetContainerItemLink(bag,slot)
         local _, _, itemParse = strfind(itemLink, "(%d+):")
-        local queryName, _, _, _, _, _ = GetItemInfo(itemParse)
+        local queryName = GetItemInfo(itemParse)
         if queryName and queryName ~= "" then
           if queryName == itemName then
-            count = count + itemCount;
+            count = count + itemCount
           end
         end
       end
@@ -243,6 +300,28 @@ function pfUI.api.GetItemCount(itemName)
   end
 
   return count
+end
+
+-- [ FindItem ]
+-- Returns the bag and slot position of an item based on the name.
+-- 'item'       [string]         name of the item
+-- returns:     [int]            bag
+--              [int]            slot
+function pfUI.api.FindItem(item)
+  for bag = 4, 0, -1 do
+    for slot = 1, GetContainerNumSlots(bag) do
+      local itemLink = GetContainerItemLink(bag,slot)
+      if itemLink then
+        local _, _, parse = strfind(itemLink, "(%d+):")
+        local query = GetItemInfo(parse)
+        if query and query ~= "" and string.lower(query) == string.lower(item) then
+          return bag, slot
+        end
+      end
+    end
+  end
+
+  return nil
 end
 
 -- [ GetBagFamily ]
@@ -257,23 +336,13 @@ function pfUI.api.GetBagFamily(bag)
 
   local _, _, id = strfind(GetInventoryItemLink("player", ContainerIDToInventoryID(bag)) or "", "item:(%d+)")
   if id then
-    local _, _, _, _, itemType, subType = GetItemInfo(id)
+    local _, _, _, _, _, itemType, subType = GetItemInfo(id)
     local bagsubtype = L["bagtypes"][subType]
 
     if bagsubtype == "DEFAULT" then return "BAG" end
     if bagsubtype == "SOULBAG" then return "SOULBAG" end
     if bagsubtype == "QUIVER" then return "QUIVER" end
-    if bagsubtype == nil and GetContainerNumFreeSlots then
-      -- handle new bag classes introduced in TBC
-      local _, subtype = GetContainerNumFreeSlots(bag)
-      if subtype and subtype > 0 then
-        return "SPECIAL"
-      else
-        return "BAG"
-      end
-    elseif bagsubtype == nil then
-      return "SPECIAL"
-    end
+    if bagsubtype == nil then return "SPECIAL" end
   end
 
   return nil
@@ -285,10 +354,13 @@ end
 -- 'returns:    [string]           the abbreviated value
 function pfUI.api.Abbreviate(number)
   if pfUI_config.unitframes.abbrevnum == "1" then
+    local sign = number < 0 and -1 or 1
+    number = math.abs(number)
+
     if number > 1000000 then
-      return pfUI.api.round(number/1000000,2) .. "m"
+      return pfUI.api.round(number/1000000*sign,2) .. "m"
     elseif number > 1000 then
-      return pfUI.api.round(number/1000,2) .. "k"
+      return pfUI.api.round(number/1000*sign,2) .. "k"
     end
   end
 
@@ -368,9 +440,9 @@ end
 -- 'func'       [function]          the function that should be added
 function HookScript(f, script, func)
   local prev = f:GetScript(script)
-  f:SetScript(script, function()
-    if prev then prev() end
-    func()
+  f:SetScript(script, function(a1,a2,a3,a4,a5,a6,a7,a8,a9)
+    if prev then prev(a1,a2,a3,a4,a5,a6,a7,a8,a9) end
+    func(a1,a2,a3,a4,a5,a6,a7,a8,a9)
   end)
 end
 
@@ -443,7 +515,7 @@ function pfUI.api.CreateGoldString(money)
 
   local string = ""
   if gold > 0 then string = string .. "|cffffffff" .. gold .. "|cffffd700g" end
-  if silver > 0 then string = string .. "|cffffffff " .. silver .. "|cffc7c7cfs" end
+  if silver > 0 or gold > 0 then string = string .. "|cffffffff " .. silver .. "|cffc7c7cfs" end
   string = string .. "|cffffffff " .. copper .. "|cffeda55fc"
 
   return string
@@ -454,8 +526,8 @@ end
 -- 'name'       [frame/string]  Name of the Frame that should be movable
 -- 'addon'      [string]        Addon that must be loaded before being able to access the frame
 -- 'blacklist'  [table]         A list of frames that should be deactivated for mouse usage
-local function MoveMouseDown() this:StartMoving() end
-local function MoveMouseUp() this:StopMovingOrSizing() end
+local function OnDragStart() this:StartMoving() end
+local function OnDragStop() this:StopMovingOrSizing() end
 function pfUI.api.EnableMovable(name, addon, blacklist)
   if addon then
     local scan = CreateFrame("Frame")
@@ -472,8 +544,9 @@ function pfUI.api.EnableMovable(name, addon, blacklist)
 
         frame:SetMovable(true)
         frame:EnableMouse(true)
-        frame:SetScript("OnMouseDown", MoveMouseDown)
-        frame:SetScript("OnMouseUp", MoveMouseUp)
+        frame:RegisterForDrag("LeftButton")
+        frame:SetScript("OnDragStart", OnDragStart)
+        frame:SetScript("OnDragStop", OnDragStop)
 
         this:UnregisterAllEvents()
       end
@@ -489,8 +562,9 @@ function pfUI.api.EnableMovable(name, addon, blacklist)
     if type(name) == "string" then frame = _G[name] end
     frame:SetMovable(true)
     frame:EnableMouse(true)
-    frame:SetScript("OnMouseDown", MoveMouseDown)
-    frame:SetScript("OnMouseUp", MoveMouseUp)
+    frame:RegisterForDrag("LeftButton")
+    frame:SetScript("OnDragStart", OnDragStart)
+    frame:SetScript("OnDragStop", OnDragStop)
   end
 end
 
@@ -552,6 +626,10 @@ function pfUI.api.LoadMovable(frame, init)
   end
 
   if pfUI_config["position"][frame:GetName()] then
+    if pfUI_config["position"][frame:GetName()]["parent"] then
+      frame:SetParent(_G[pfUI_config["position"][frame:GetName()]["parent"]])
+    end
+
     if pfUI_config["position"][frame:GetName()]["scale"] then
       frame:SetScale(pfUI_config["position"][frame:GetName()].scale)
     end
@@ -574,12 +652,16 @@ end
 -- [ Save Movable ]
 -- Save the positions of a Frame.
 -- 'frame'      [frame]        the frame that should be saved.
-function pfUI.api.SaveMovable(frame)
+function pfUI.api.SaveMovable(frame, scale)
   local anchor, _, _, xpos, ypos = frame:GetPoint()
   C.position[frame:GetName()] = C.position[frame:GetName()] or {}
   C.position[frame:GetName()]["xpos"] = round(xpos)
   C.position[frame:GetName()]["ypos"] = round(ypos)
   C.position[frame:GetName()]["anchor"] = anchor
+  C.position[frame:GetName()]["parent"] = frame:GetParent() and frame:GetParent():GetName() or nil
+  if scale then
+    C.position[frame:GetName()]["scale"] = frame:GetScale()
+  end
 end
 
 -- [ Update Movable ]
@@ -607,6 +689,32 @@ end
 function pfUI.api.RemoveMovable(frame)
   local name = frame:GetName()
   pfUI.movables[name] = nil
+end
+
+-- [ AlignToPosition ]
+-- Sets a frame to the selected anchor
+-- 'frame'      [frame]     the frame that should be aligned
+-- 'anchor'     [frame]     the frame where it should be aligned to
+-- 'position'   [string]    where it should appear, takes the following:
+--                          "TOP", "RIGHT", "BOTTOM", "LEFT"
+function pfUI.api.AlignToPosition(frame, anchor, position, spacing)
+  frame:ClearAllPoints()
+  if position == "TOP" and anchor then
+    frame:SetPoint("BOTTOMLEFT", anchor, "TOPLEFT", 0, (spacing or 0))
+    frame:SetPoint("BOTTOMRIGHT", anchor, "TOPRIGHT", 0, (spacing or 0))
+  elseif position == "RIGHT" and anchor then
+    frame:SetPoint("TOPLEFT", anchor, "TOPRIGHT", (spacing or 0), 0)
+    frame:SetPoint("BOTTOMLEFT", anchor, "BOTTOMRIGHT", (spacing or 0), 0)
+  elseif position == "BOTTOM" and anchor then
+    frame:SetPoint("TOPLEFT", anchor, "BOTTOMLEFT", 0, -(spacing or 0))
+    frame:SetPoint("TOPRIGHT", anchor, "BOTTOMRIGHT", 0, -(spacing or 0))
+  elseif position == "LEFT" and anchor then
+    frame:SetPoint("TOPRIGHT", anchor, "TOPLEFT", -(spacing or 0), 0)
+    frame:SetPoint("BOTTOMRIGHT", anchor, "BOTTOMLEFT", -(spacing or 0), 0)
+  else
+    frame:SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", 0, 0)
+    frame:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", 0, 0)
+  end
 end
 
 -- [ SetAutoPoint ]
@@ -764,35 +872,97 @@ end
 
 -- [ rgbhex ]
 -- Returns color format from color info
--- 'r'          [table or number]  color table or r color component
--- 'g'          [number] optional g color component
--- 'b'          [number] optional b color component
--- 'a'          [number] optional alpha component
--- returns color string in the form of '|caaxxyyzz'
-local hexcolor_cache = {}
+-- 'r'          [table | number]  color table or r color component
+-- 'g'          [number]          optional g color component
+-- 'b'          [number]          optional b color component
+-- 'a'          [number]          optional alpha component
+-- returns color string in the form of '|caarrggbb'
+local _r, _g, _b, _a
 function pfUI.api.rgbhex(r, g, b, a)
-  local key
-  if type(r)=="table" then
-    local _r,_g,_b,_a
+  if type(r) == "table" then
     if r.r then
-      _r,_g,_b,_a = r.r, r.g, r.b, r.a or 1
+      _r, _g, _b, _a = r.r, r.g, r.b, (r.a or 1)
     elseif table.getn(r) >= 3 then
-      _r,_g,_b,_a = r[1], r[2], r[3], r[4] or 1
+      _r, _g, _b, _a = r[1], r[2], r[3], (r[4] or 1)
     end
-    if _r and _g and _b and _a then
-      key = string.format("%s%s%s%s",_r,_g,_b,_a)
-      if hexcolor_cache[key] == nil then
-        hexcolor_cache[key] = string.format("|c%02x%02x%02x%02x", _a*255, _r*255, _g*255, _b*255)
-      end
-    end
-  elseif tonumber(r) and g and b then
-    a = a or 1
-    key = string.format("%s%s%s%s",r,g,b,a)
-    if hexcolor_cache[key] == nil then
-      hexcolor_cache[key] = string.format("|c%02x%02x%02x%02x", a*255, r*255, g*255, b*255)
-    end
+  elseif tonumber(r) then
+    _r, _g, _b, _a = r, g, b, (a or 1)
   end
-  return hexcolor_cache[key] or ""
+
+  if _r and _g and _b and _a then
+    -- limit values to 0-1
+    _r = _r + 0 > 1 and 1 or _r + 0
+    _g = _g + 0 > 1 and 1 or _g + 0
+    _b = _b + 0 > 1 and 1 or _b + 0
+    _a = _a + 0 > 1 and 1 or _a + 0
+    return string.format("|c%02x%02x%02x%02x", _a*255, _r*255, _g*255, _b*255)
+  end
+
+  return ""
+end
+
+-- [ GetBorderSize ]
+-- Returns the configure value of a border and its pixel scaled version.
+-- 'pref' allows to specifiy a custom border (i.e unitframes, panel)
+function pfUI.api.GetBorderSize(pref)
+  if not pfUI.borders then pfUI.borders = {} end
+
+  -- set to default border if accessing a wrong border type
+  if not pref or not pfUI_config.appearance.border[pref] or pfUI_config.appearance.border[pref] == "-1" then
+    pref = "default"
+  end
+
+  if pfUI.borders[pref] then
+    -- return already cached values
+    return pfUI.borders[pref][1], pfUI.borders[pref][2]
+  else
+    -- add new borders to the pfUI tree
+    local raw = tonumber(pfUI_config.appearance.border[pref])
+    if raw == -1 then raw = 3 end
+
+    local scaled = raw * GetPerfectPixel()
+    pfUI.borders[pref] = { raw, scaled }
+
+    return raw, scaled
+  end
+end
+
+-- [ GetPerfectPixel ]
+-- Returns a number that equals a real pixel on regular scaled frames.
+-- Respects the current UI-scale and calculates a real pixel based on
+-- the screen resolution and the 768px sized drawlayer.
+function pfUI.api.GetPerfectPixel()
+  if pfUI.pixel then return pfUI.pixel end
+
+  if pfUI_config.appearance.border.pixelperfect == "1" then
+    local scale = GetCVar("uiScale")
+    local resolution = GetCVar("gxResolution")
+    local _, _, screenwidth, screenheight = strfind(resolution, "(.+)x(.+)")
+
+    pfUI.pixel = 768 / screenheight / scale
+    pfUI.pixel = pfUI.pixel > 1 and 1 or pfUI.pixel
+
+    -- autodetect and zoom for HiDPI displays
+    if pfUI_config.appearance.border.hidpi == "1" then
+      pfUI.pixel = pfUI.pixel < .5 and pfUI.pixel * 2 or pfUI.pixel
+    end
+  else
+    pfUI.pixel = .7
+  end
+
+  pfUI.backdrop = {
+    bgFile = "Interface\\BUTTONS\\WHITE8X8", tile = false, tileSize = 0,
+    edgeFile = "Interface\\BUTTONS\\WHITE8X8", edgeSize = pfUI.pixel,
+    insets = {left = -pfUI.pixel, right = -pfUI.pixel, top = -pfUI.pixel, bottom = -pfUI.pixel},
+  }
+
+  pfUI.backdrop_thin = {
+    bgFile = "Interface\\BUTTONS\\WHITE8X8", tile = false, tileSize = 0,
+    edgeFile = "Interface\\BUTTONS\\WHITE8X8", edgeSize = pfUI.pixel,
+    insets = {left = 0, right = 0, top = 0, bottom = 0},
+  }
+
+  return pfUI.pixel
 end
 
 -- [ Create Backdrop ]
@@ -801,24 +971,33 @@ end
 -- 'inset'      [int]           backdrop inset, defaults to border size.
 -- 'legacy'     [bool]          use legacy backdrop instead of creating frames.
 -- 'transp'     [number]        set default transparency
+local backdrop, b, level, rawborder, border, br, bg, bb, ba, er, eg, eb, ea
 function pfUI.api.CreateBackdrop(f, inset, legacy, transp, backdropSetting)
   -- exit if now frame was given
   if not f then return end
 
-  -- use default inset if nothing is given
-  local border = inset
-  if not border then
-    border = tonumber(pfUI_config.appearance.border.default)
+  -- load raw and pixel perfect scaled border
+  rawborder, border = GetBorderSize()
+
+  -- load custom border if existing
+  if inset then
+    rawborder = inset / GetPerfectPixel()
+    border = inset
   end
 
-  local br, bg, bb, ba = pfUI.api.GetStringColor(pfUI_config.appearance.border.background)
-  local er, eg, eb, ea = pfUI.api.GetStringColor(pfUI_config.appearance.border.color)
+  -- detect if blizzard backdrops shall be used
+  local blizz = C.appearance.border.force_blizz == "1" and true or nil
+  backdrop = blizz and pfUI.backdrop_blizz_full or rawborder == 1 and pfUI.backdrop_thin or pfUI.backdrop
+  border = blizz and math.max(border, 3) or border
+
+  -- get the color settings
+  br, bg, bb, ba = pfUI.api.GetStringColor(pfUI_config.appearance.border.background)
+  er, eg, eb, ea = pfUI.api.GetStringColor(pfUI_config.appearance.border.color)
 
   if transp and transp < tonumber(ba) then ba = transp end
 
   -- use legacy backdrop handling
   if legacy then
-    local backdrop = border == 1 and pfUI.backdrop_thin or pfUI.backdrop
     if backdropSetting then f:SetBackdrop(backdropSetting) end
     f:SetBackdrop(backdrop)
     f:SetBackdropColor(br, bg, bb, ba)
@@ -834,19 +1013,7 @@ function pfUI.api.CreateBackdrop(f, inset, legacy, transp, backdropSetting)
       if f:GetBackdrop() then f:SetBackdrop(nil) end
 
       local b = CreateFrame("Frame", nil, f)
-      if tonumber(border) > 1 then
-        local border = tonumber(border) - 1
-        b:SetPoint("TOPLEFT", f, "TOPLEFT", -border, border)
-        b:SetPoint("BOTTOMRIGHT", f, "BOTTOMRIGHT", border, -border)
-        b:SetBackdrop(pfUI.backdrop)
-      else
-        local border = tonumber(border)
-        b:SetPoint("TOPLEFT", f, "TOPLEFT", -border, border)
-        b:SetPoint("BOTTOMRIGHT", f, "BOTTOMRIGHT", border, -border)
-        b:SetBackdrop(pfUI.backdrop_thin)
-      end
-
-      local level = f:GetFrameLevel()
+      level = f:GetFrameLevel()
       if level < 1 then
         b:SetFrameLevel(level)
       else
@@ -856,9 +1023,27 @@ function pfUI.api.CreateBackdrop(f, inset, legacy, transp, backdropSetting)
       f.backdrop = b
     end
 
-    local b = f.backdrop
-    b:SetBackdropColor(br, bg, bb, ba)
-    b:SetBackdropBorderColor(er, eg, eb , ea)
+    f.backdrop:SetPoint("TOPLEFT", f, "TOPLEFT", -border, border)
+    f.backdrop:SetPoint("BOTTOMRIGHT", f, "BOTTOMRIGHT", border, -border)
+    f.backdrop:SetBackdrop(backdrop)
+    f.backdrop:SetBackdropColor(br, bg, bb, ba)
+    f.backdrop:SetBackdropBorderColor(er, eg, eb , ea)
+
+    if blizz then
+      if not f.backdrop_border then
+        local border = CreateFrame("Frame", nil, f)
+        border:SetFrameLevel(level + 1)
+        f.backdrop_border = border
+      end
+
+      f.backdrop.SetBackdropBorderColor = function(self, r, g, b, a)
+        f.backdrop_border:SetBackdropBorderColor(r,g,b,a)
+      end
+
+      f.backdrop_border:SetAllPoints(f.backdrop)
+      f.backdrop_border:SetBackdrop(pfUI.backdrop_blizz_border)
+      f.backdrop_border:SetBackdropBorderColor(er, eg, eb , ea)
+    end
   end
 end
 
@@ -955,8 +1140,9 @@ end
 
 -- [ Enable Autohide ] --
 -- 'frame'  the frame that should be hidden
-function pfUI.api.EnableAutohide(frame, timeout)
+function pfUI.api.EnableAutohide(frame, timeout, combat)
   if not frame then return end
+  local timeout = timeout
 
   frame.hover = frame.hover or CreateFrame("Frame", frame:GetName() .. "Autohide", frame)
   frame.hover:SetParent(frame)
@@ -964,14 +1150,29 @@ function pfUI.api.EnableAutohide(frame, timeout)
   frame.hover.parent = frame
   frame.hover:Show()
 
-  local timeout = timeout
+  if combat then
+    frame.hover:RegisterEvent("PLAYER_REGEN_ENABLED")
+    frame.hover:RegisterEvent("PLAYER_REGEN_DISABLED")
+    frame.hover:SetScript("OnEvent", function()
+      if event == "PLAYER_REGEN_DISABLED" then
+        this.parent:SetAlpha(1)
+        this.activeTo = "keep"
+      elseif event == "PLAYER_REGEN_ENABLED" then
+        this.activeTo = GetTime() + timeout
+      end
+    end)
+  end
+
   frame.hover:SetScript("OnUpdate", function()
+    if this.activeTo == "keep" then return end
+
     if MouseIsOver(this, 10, -10, -10, 10) then
       this.activeTo = GetTime() + timeout
       this.parent:SetAlpha(1)
     elseif this.activeTo then
       if this.activeTo < GetTime() and this.parent:GetAlpha() > 0 then
-        this.parent:SetAlpha(this.parent:GetAlpha() - 0.1)
+        local fps = (60 / math.max(GetFramerate(), 1))
+        this.parent:SetAlpha(this.parent:GetAlpha() - 0.05*fps)
       end
     else
       this.activeTo = GetTime() + timeout
@@ -985,6 +1186,7 @@ function pfUI.api.DisableAutohide(frame)
   if not frame then return end
   if not frame.hover then return end
 
+  frame.hover:SetScript("OnEvent", nil)
   frame.hover:SetScript("OnUpdate", nil)
   frame.hover:Hide()
   frame:SetAlpha(1)
@@ -995,18 +1197,21 @@ end
 -- return        a colored string including a time unit (m/h/d)
 function pfUI.api.GetColoredTimeString(remaining)
   if not remaining then return "" end
-  if remaining > 99 * 60 * 60 then
+  if remaining > 356400 then -- Show days if remaining is > 99 Hours (99 * 60 * 60)
     local r,g,b,a = pfUI.api.GetStringColor(C.appearance.cd.daycolor)
-    return pfUI.api.rgbhex(r,g,b) .. round(remaining / 60 / 60 / 24) .. "|rd"
-  elseif remaining > 99 * 60 then
+    return pfUI.api.rgbhex(r,g,b) .. round(remaining / 86400) .. "|rd"
+  elseif remaining > 5940 then -- Show hours if remaining is > 99 Minutes (99 * 60)
     local r,g,b,a = pfUI.api.GetStringColor(C.appearance.cd.hourcolor)
-    return pfUI.api.rgbhex(r,g,b) .. round(remaining / 60 / 60) .. "|rh"
-  elseif remaining > 99 then
+    return pfUI.api.rgbhex(r,g,b) .. round(remaining / 3600) .. "|rh"
+  elseif remaining > 99 then -- Show minutes if remaining is > 99 Seconds (99)
     local r,g,b,a = pfUI.api.GetStringColor(C.appearance.cd.minutecolor)
     return pfUI.api.rgbhex(r,g,b) .. round(remaining / 60) .. "|rm"
-  elseif remaining <= 5 then
+  elseif remaining <= 5 and pfUI_config.appearance.cd.milliseconds == "1" then
     local r,g,b,a = pfUI.api.GetStringColor(C.appearance.cd.lowcolor)
     return pfUI.api.rgbhex(r,g,b) .. string.format("%.1f", round(remaining,1))
+  elseif remaining <= 5 then
+    local r,g,b,a = pfUI.api.GetStringColor(C.appearance.cd.lowcolor)
+    return pfUI.api.rgbhex(r,g,b) .. round(remaining)
   elseif remaining >= 0 then
     local r, g, b, a = pfUI.api.GetStringColor(C.appearance.cd.normalcolor)
     return pfUI.api.rgbhex(r,g,b) .. round(remaining)
@@ -1022,6 +1227,7 @@ local gradientcolors = {}
 function pfUI.api.GetColorGradient(perc)
   perc = perc > 1 and 1 or perc
   perc = perc < 0 and 0 or perc
+  perc = floor(perc*100)/100
 
   local index = perc
   if not gradientcolors[index] then

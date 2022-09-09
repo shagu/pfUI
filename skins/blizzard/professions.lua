@@ -1,6 +1,6 @@
 pfUI:RegisterSkin("Profession", "vanilla:tbc", function ()
-  local border = tonumber(pfUI_config.appearance.border.default)
-  local bpad = border > 1 and border - 1 or 1
+  local rawborder, border = GetBorderSize()
+  local bpad = rawborder > 1 and border - GetPerfectPixel() or GetPerfectPixel()
 
   local frames = {
     ["TradeSkill"] = { "Blizzard_TradeSkillUI", "TRADE_SKILLS_DISPLAYED", "TradeSkillSkill", "MAX_TRADE_SKILL_REAGENTS" },
@@ -40,6 +40,7 @@ pfUI:RegisterSkin("Profession", "vanilla:tbc", function ()
       local title = _G[frame.."TitleText"]
       local points = _G[frame.."PointsText"]
       local requiretext = _G[name .. "RequirementText"]
+      local search = _G[name .. "FrameEditBox"]
 
       local frame = _G[frame]
 
@@ -178,6 +179,7 @@ pfUI:RegisterSkin("Profession", "vanilla:tbc", function ()
         icon:ClearAllPoints()
         icon:SetPoint("TOPLEFT", 5, -5)
         SkinButton(icon, nil, nil, nil, nil, true)
+        icon:SetPushedTexture(nil)
 
         seltitle:SetJustifyV("TOP")
         seltitle:SetTextColor(.8,.8,.8,1)
@@ -217,7 +219,7 @@ pfUI:RegisterSkin("Profession", "vanilla:tbc", function ()
       end
 
       -- Compatibility
-      if TradeSkillFrameEditBox or CraftFrameEditBox then -- tbc
+      if search then -- tbc
         _G[displayed] = 21
         scrollframe:SetHeight(338)
 
@@ -230,15 +232,13 @@ pfUI:RegisterSkin("Profession", "vanilla:tbc", function ()
         available:ClearAllPoints()
         available:SetPoint("TOPLEFT", scrollframe.backdrop, "BOTTOMLEFT", -4, -5)
 
-        local search = TradeSkillFrameEditBox or CraftRankFrameEditBox
-        if search then
-          search:DisableDrawLayer("BACKGROUND")
-          CreateBackdrop(search, nil, nil, 1)
-          search.backdrop:SetAllPoints(search)
-          search:SetHeight(22)
-          search:ClearAllPoints()
-          search:SetPoint("TOPRIGHT", scrollframe.backdrop, "BOTTOMRIGHT", 0, -5)
-        end
+        search:DisableDrawLayer("BACKGROUND")
+        CreateBackdrop(search, nil, nil, 1)
+        search.backdrop:SetAllPoints(search)
+        search:SetTextInsets(5, 5, 5, 5)
+        search:SetHeight(22)
+        search:ClearAllPoints()
+        search:SetPoint("TOPRIGHT", scrollframe.backdrop, "BOTTOMRIGHT", 0, -5)
 
         local craft_filter = CraftFrameFilterDropDown
         if craft_filter then

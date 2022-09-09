@@ -1,71 +1,9 @@
 pfUI:RegisterModule("chatcopy", "vanilla:tbc", function ()
-  -- temporary till the new API is merged
-  local function CreateScrollFrame(name, parent)
-    local f = CreateFrame("ScrollFrame", name, parent)
-    SetAllPointsOffset(f, parent, 2)
-
-    -- create slider
-    f.slider = CreateFrame("Slider", nil, f)
-    f.slider:SetOrientation('VERTICAL')
-    f.slider:SetPoint("TOPLEFT", f, "TOPRIGHT", -7, 0)
-    f.slider:SetPoint("BOTTOMRIGHT", 0, 0)
-    f.slider:SetThumbTexture(pfUI.media["img:col"])
-    f.slider.thumb = f.slider:GetThumbTexture()
-    f.slider.thumb:SetHeight(50)
-    f.slider.thumb:SetTexture(.3,1,.8,.5)
-
-    f.slider:SetScript("OnValueChanged", function()
-      f:SetVerticalScroll(this:GetValue())
-      f.UpdateScrollState()
-    end)
-
-    f.UpdateScrollState = function()
-      f.slider:SetMinMaxValues(0, f:GetVerticalScrollRange())
-      f.slider:SetValue(f:GetVerticalScroll())
-
-      local m = f:GetHeight()+f:GetVerticalScrollRange()
-      local v = f:GetHeight()
-      local ratio = v / m
-
-      if ratio < 1 then
-        local size = math.floor(v * ratio)
-        f.slider.thumb:SetHeight(size)
-        f.slider:Show()
-      else
-        f.slider:Hide()
-      end
-    end
-
-    f.Scroll = function(self, step)
-      local step = step or 0
-
-      local current = f:GetVerticalScroll()
-      local max = f:GetVerticalScrollRange()
-      local new = current - step
-
-      if new >= max then
-        f:SetVerticalScroll(max)
-      elseif new <= 0 then
-        f:SetVerticalScroll(0)
-      else
-        f:SetVerticalScroll(new)
-      end
-
-      f:UpdateScrollState()
-    end
-
-    f:EnableMouseWheel(1)
-    f:SetScript("OnMouseWheel", function()
-      this:Scroll(arg1*10)
-    end)
-
-    return f
-  end
-
   local limit = 100
   local f = CreateFrame("Frame")
   f:RegisterEvent("PLAYER_ENTERING_WORLD")
   f:SetScript("OnEvent", function()
+    if not pfUI.chat then return end
 
     local button = CreateFrame("Button", "pfChatCopyButton", pfUI.chat.left.panelTop)
     button:SetPoint("TOPRIGHT", 0, 0)

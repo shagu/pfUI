@@ -1,8 +1,5 @@
 pfUI:RegisterModule("bags", "vanilla:tbc", function ()
-  local default_border = C.appearance.border.default
-  if C.appearance.border.bags ~= "-1" then
-    default_border = C.appearance.border.bags
-  end
+  local rawborder, default_border = GetBorderSize("bags")
 
   local knownInventorySpellTextures = {
     Spell_Holy_RemoveCurse = {frame="disenchant"},
@@ -228,7 +225,10 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
       frame:EnableMouse(1)
       frame:SetMovable(1)
       frame:RegisterForDrag("LeftButton")
-      frame:SetScript("OnDragStart", function() this:StartMoving() end)
+      frame:SetScript("OnDragStart", function()
+        this:StartMoving()
+      end)
+
       frame:SetScript("OnDragStop",  function()
         this:StopMovingOrSizing()
         SaveMovable(this)
@@ -280,7 +280,7 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
     end
 
     if x > 0 then y = y + 1 end
-    if pfUI.panel then topspace = topspace + pfUI.panel.right:GetHeight() end
+    if pfUI.panel and pfUI.panel.right:IsShown() then topspace = topspace + pfUI.panel.right:GetHeight() end
     frame:SetHeight( default_border*2 + y*(frame.button_size+default_border*3) + topspace)
 
     local chat = pfUI.chat and ( object == "bank" and pfUI.chat.left or pfUI.chat.right) or nil
@@ -343,12 +343,19 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
       pfUI.bags[bag].slots[slot] = {}
       pfUI.bags[bag].slots[slot].frame = CreateFrame("Button", "pfBag" .. bag .. "item" .. slot,  pfUI.bags[bag], tpl)
 
+      local highlight = pfUI.bags[bag].slots[slot].frame:GetHighlightTexture()
+      highlight:SetTexture(.5, .5, .5, .5)
+
+      local pushed = pfUI.bags[bag].slots[slot].frame:GetPushedTexture()
+      pushed:SetTexture(.5, .5, .5, .5)
+
       -- add cooldown frame to bankslots
       if tpl == "BankItemButtonGenericTemplate" then
         local bankslot = pfUI.bags[bag].slots[slot].frame
         local name = "pfBag" .. bag .. "item" .. slot .. "Cooldown"
         bankslot.cd = CreateFrame(COOLDOWN_FRAME_TYPE, name, bankslot, "CooldownFrameTemplate")
         bankslot.cd:SetAllPoints(bankslot)
+        bankslot.cd.pfCooldownStyleAnimation = 1
         bankslot.cd.pfCooldownType = "ALL"
       else
         local bagslot = pfUI.bags[bag].slots[slot].frame
@@ -361,6 +368,12 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
       pfUI.bags[bag].slots[slot].bag = bag
       pfUI.bags[bag].slots[slot].slot = slot
       pfUI.bags[bag].slots[slot].frame:SetID(slot)
+
+      if ShaguScore then
+        pfUI.bags[bag].slots[slot].frame.scoreText = pfUI.bags[bag].slots[slot].frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+        pfUI.bags[bag].slots[slot].frame.scoreText:SetFont(pfUI.font_default, 12, "OUTLINE")
+        pfUI.bags[bag].slots[slot].frame.scoreText:SetPoint("BOTTOMRIGHT", 0, 0)
+      end
     end
 
     local texture, count, locked, quality = GetContainerItemInfo(bag, slot)
@@ -390,11 +403,11 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
 
     ContainerFrame_UpdateCooldown(bag, pfUI.bags[bag].slots[slot].frame)
 
-    local count = _G[pfUI.bags[bag].slots[slot].frame:GetName() .. "Count"]
-    count:SetFont(pfUI.font_unit, C.global.font_unit_size, "OUTLINE")
-    count:SetAllPoints()
-    count:SetJustifyH("RIGHT")
-    count:SetJustifyV("BOTTOM")
+    local countFrame = _G[pfUI.bags[bag].slots[slot].frame:GetName() .. "Count"]
+    countFrame:SetFont(pfUI.font_unit, C.global.font_unit_size, "OUTLINE")
+    countFrame:SetAllPoints()
+    countFrame:SetJustifyH("RIGHT")
+    countFrame:SetJustifyV("BOTTOM")
 
     local icon = _G[pfUI.bags[bag].slots[slot].frame:GetName() .. "IconTexture"]
     icon:SetTexCoord(.08, .92, .08, .92)
@@ -426,6 +439,25 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
       end
     end
 
+    -- add shaguscore if we have it
+    if ShaguScore and pfUI.bags[bag].slots[slot].frame.scoreText then
+      if quality and quality > 0 then
+        local link = GetContainerItemLink(bag, slot)
+        local r,g,b = GetItemQualityColor(quality)
+        local _, _, itemID = string.find(link, "item:(%d+):%d+:%d+:%d+")
+        local itemLevel = ShaguScore.Database[tonumber(itemID)] or 0
+        local score = ShaguScore:Calculate(vslot, quality, itemLevel)
+        if score and score > 0 and count and count == 1 then
+          pfUI.bags[bag].slots[slot].frame.scoreText:SetText(score)
+          pfUI.bags[bag].slots[slot].frame.scoreText:SetTextColor(r, g, b)
+        else
+          pfUI.bags[bag].slots[slot].frame.scoreText:SetText("")
+        end
+      else
+        pfUI.bags[bag].slots[slot].frame.scoreText:SetText("")
+      end
+    end
+
     pfUI.bags[bag].slots[slot].frame:Show()
   end
 
@@ -442,7 +474,7 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
     local position = "RIGHT"
 
     if frame == pfUI.bag.left then
-      min, max = 1, math.min(6, (GetNumBankSlots() or 0))
+      min, max = 1, math.min(NUM_BANKBAGSLOTS, (GetNumBankSlots() or 0))
       tpl = "BankItemButtonBagTemplate"
       name, append = "pfUIBankBBag", ""
       position = "LEFT"
@@ -452,14 +484,12 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
     CreateBackdrop(frame.bagslots, default_border)
     CreateBackdropShadow(frame.bagslots)
 
-    local extra = 0
-    if frame == pfUI.bag.left and GetNumBankSlots() < 6 then extra = 1 end
+    local extra = frame == pfUI.bag.left and GetNumBankSlots() < NUM_BANKBAGSLOTS and 1 or 0
     local width = (frame.button_size/5*4 + default_border*2) * (max-min+1+extra)
     local height = default_border + (frame.button_size/5*4 + default_border)
 
     frame.bagslots:SetWidth(width)
     frame.bagslots:SetHeight(height)
-
     for slot=min, max do
       if not frame.bagslots.slots[slot] then
         frame.bagslots.slots[slot] = {}
@@ -472,6 +502,12 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
         icon:SetPoint("TOPLEFT", 1, -1)
         icon:SetPoint("BOTTOMRIGHT", -1, 1)
         border:SetTexture("")
+
+        local highlight = frame.bagslots.slots[slot].frame:GetHighlightTexture()
+        highlight:SetTexture(.5, .5, .5, .5)
+
+        local pushed = frame.bagslots.slots[slot].frame:GetPushedTexture()
+        pushed:SetTexture(.5, .5, .5, .5)
 
         if frame == pfUI.bag.left then
           frame.bagslots.slots[slot].frame:SetID(slot + 4)
@@ -495,6 +531,17 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
           pfUI.bag:UpdateBag(this.slot + 1)
           SlotLeave()
         end)
+
+        -- On TBC, the OnEvent function of the template scans for framenames,
+        -- and obviously doesn't know the pf-Names. Therefore, triggering
+        -- the update function on each frame manually
+        if frame == pfUI.bag.left and BankFrameItemButton_Update then
+          local SlotUpdate = frame.bagslots.slots[slot].frame:GetScript("OnUpdate")
+          frame.bagslots.slots[slot].frame:SetScript("OnUpdate", function()
+            if SlotUpdate then SlotUpdate(this) end
+            BankFrameItemButton_Update(this)
+          end)
+        end
       end
 
       local left = (slot-min)*(frame.button_size/5*4+default_border*2) + default_border
@@ -505,12 +552,10 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
       frame.bagslots.slots[slot].frame:SetHeight(frame.button_size/5*4)
       frame.bagslots.slots[slot].frame:SetWidth(frame.button_size/5*4)
 
-      local id, texture = GetInventorySlotInfo("Bag" .. slot .. append)
       CreateBackdrop(frame.bagslots.slots[slot].frame, default_border)
       frame.bagslots.slots[slot].frame:Show()
 
-      local numSlots, full = GetNumBankSlots()
-      if ( slot <= numSlots ) then
+      if ( slot <= GetNumBankSlots() ) then
         frame.bagslots.slots[slot].frame.tooltipText = BANK_BAG
       else
         frame.bagslots.slots[slot].frame.tooltipText = BANK_BAG_PURCHASE
@@ -518,7 +563,7 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
     end
 
     if frame == pfUI.bag.left then
-      if GetNumBankSlots() < 6 then
+      if GetNumBankSlots() < NUM_BANKBAGSLOTS then
         if not frame.bagslots.buy then
           frame.bagslots.buy = CreateFrame("Button", "pfBagSlotBuy", frame.bagslots)
         end
@@ -575,7 +620,7 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
       local spellTexture = GetSpellTexture(spellIndex, BOOKTYPE_SPELL)
       -- scan for disenchant and pick lock
       for texture, widget in pairs(knownInventorySpellTextures) do
-        if strfind(spellTexture, texture) and pfUI.bag.right[widget.frame] then
+        if spellTexture and texture and strfind(spellTexture, texture) and pfUI.bag.right[widget.frame] then
           pfUI.bag.right[widget.frame]:SetID(spellIndex)
         end
       end
@@ -871,10 +916,7 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
             local bagsize = GetContainerNumSlots(bag)
             if bag == -2 and pfUI.bag.showKeyring == true then bagsize = GetKeyRingSize() end
             for slot=1, bagsize do
-              local texture, itemCount, locked, quality, readable = GetContainerItemInfo(bag, slot)
-              if itemCount then
-                pfUI.bags[bag].slots[slot].frame:SetAlpha(1)
-              end
+              pfUI.bags[bag].slots[slot].frame:SetAlpha(1)
             end
           end
         end)
@@ -885,14 +927,13 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
             local bagsize = GetContainerNumSlots(bag)
             if bag == -2 and pfUI.bag.showKeyring == true then bagsize = GetKeyRingSize() end
             for slot=1, bagsize do
+              pfUI.bags[bag].slots[slot].frame:SetAlpha(.25)
               local texture, itemCount, locked, quality, readable = GetContainerItemInfo(bag, slot)
               if itemCount then
                 local itemLink = GetContainerItemLink(bag, slot)
                 local itemstring = string.sub(itemLink, string.find(itemLink, "%[")+1, string.find(itemLink, "%]")-1)
-                if strfind(strlower(itemstring), strlower(this:GetText())) then
+                if strfind(strlower(itemstring), strlower(string.gsub(this:GetText(), "([^%w])", "%%%1"))) then
                   pfUI.bags[bag].slots[slot].frame:SetAlpha(1)
-                else
-                  pfUI.bags[bag].slots[slot].frame:SetAlpha(.25)
                 end
               end
             end

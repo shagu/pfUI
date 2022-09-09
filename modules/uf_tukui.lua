@@ -8,13 +8,9 @@ pfUI:RegisterModule("uf_tukui", "vanilla:tbc", function ()
     hookUpdateConfigPlayer(pfUI.uf.player)
 
     -- load configs
-    local default_border = C.appearance.border.default
-    if C.appearance.border.unitframes ~= "-1" then
-      default_border = C.appearance.border.unitframes
-    end
-
-    local pspacing = C.unitframes.player.pspace
-    local tspacing = C.unitframes.target.pspace
+    local rawborder, default_border = GetBorderSize("unitframes")
+    local pspacing = C.unitframes.player.pspace * GetPerfectPixel()
+    local tspacing = C.unitframes.target.pspace * GetPerfectPixel()
 
     -- adjust layout
     pfUI.uf.player:UpdateFrameSize()
@@ -41,6 +37,9 @@ pfUI:RegisterModule("uf_tukui", "vanilla:tbc", function ()
     pfUI.castbar.player:SetAllPoints(pfUI.uf.player.caption)
     UpdateMovable(pfUI.castbar.player, true)
     CreateBackdrop(pfUI.uf.player.caption, default_border)
+    if pfUI.castbar.player.bar.backdrop_shadow then
+      pfUI.castbar.player.bar.backdrop_shadow:Hide()
+    end
   end
 
   -- update target layout
@@ -50,11 +49,7 @@ pfUI:RegisterModule("uf_tukui", "vanilla:tbc", function ()
     hookUpdateConfigTarget(pfUI.uf.target)
 
     -- load configs
-    local default_border = C.appearance.border.default
-    if C.appearance.border.unitframes ~= "-1" then
-      default_border = C.appearance.border.unitframes
-    end
-
+    local rawborder, default_border = GetBorderSize("unitframes")
     local pspacing = C.unitframes.player.pspace
     local tspacing = C.unitframes.target.pspace
 
@@ -83,6 +78,9 @@ pfUI:RegisterModule("uf_tukui", "vanilla:tbc", function ()
     pfUI.castbar.target:SetAllPoints(pfUI.uf.target.caption)
     UpdateMovable(pfUI.castbar.target, true)
     CreateBackdrop(pfUI.uf.target.caption, default_border)
+    if pfUI.castbar.target.bar.backdrop_shadow then
+      pfUI.castbar.target.bar.backdrop_shadow:Hide()
+    end
   end
 
   -- trigger updates

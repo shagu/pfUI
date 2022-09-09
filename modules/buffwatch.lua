@@ -1,5 +1,5 @@
 pfUI:RegisterModule("buffwatch", "vanilla:tbc", function ()
-  local border = C.appearance.border.default
+  local rawborder, border = GetBorderSize("panels")
   local scanner = libtipscan:GetScanner("buffwatch")
 
   local fcache = {}
@@ -43,17 +43,35 @@ pfUI:RegisterModule("buffwatch", "vanilla:tbc", function ()
     return unpack(rgbcache[text])
   end
 
+
+  local function GetSafeTop(frame)
+    if frame and frame.IsShown and frame:IsShown() and frame:IsVisible() then
+      return frame:GetTop(), frame
+    end
+
+    return 0
+  end
+
   -- iterate over given tables and return the first frame that is shown
-  local function FirstOneShown(anchors)
+  local function GetTopAnchor(anchors)
+    local top, anchor = 0, anchors[1]
+
     for _, tbl in pairs(anchors) do
+
+      -- in case of multiple anchor elements, iterate over each one
       for i=32, 1, -1 do
-        if tbl and tbl[i] and tbl[i]:IsShown() and tbl[i]:IsVisible() then
-          return tbl[i]
+        if GetSafeTop(tbl[i]) > top then
+          top, anchor = GetSafeTop(tbl[i])
         end
+      end
+
+      -- check top of regular anchor elements
+      if GetSafeTop(tbl) > top then
+        top, anchor = GetSafeTop(tbl)
       end
     end
 
-    return anchors[1]
+    return anchor
   end
 
   local function GetBuffData(unit, id, type, skipTooltip)
@@ -64,7 +82,7 @@ pfUI:RegisterModule("buffwatch", "vanilla:tbc", function ()
       local texture = GetPlayerBuffTexture(bid)
       local name
 
-      if not skipTooltip then
+      if not skipTooltip and texture then
         scanner:SetPlayerBuff(bid)
         name = scanner:Line(1)
       end
@@ -127,7 +145,7 @@ pfUI:RegisterModule("buffwatch", "vanilla:tbc", function ()
     this.bar:SetValue(remaining > 0 and remaining or 0)
 
     if ( this.tick or 1) > GetTime() then return else this.tick = GetTime() + .1 end
-    this.time:SetText(remaining > 0 and GetColoredTimeString(remaining) or "N/A")
+    this.time:SetText(remaining > 0 and GetColoredTimeString(remaining) or "")
   end
 
   local function StatusBarRefreshParent()
@@ -212,8 +230,9 @@ pfUI:RegisterModule("buffwatch", "vanilla:tbc", function ()
     -- reinitialize all active buffs
     for i=1,32 do
       local timeleft, texture, name, stacks = GetBuffData(frame.unit, i, frame.type)
+      timeleft = timeleft or 0
 
-      if texture and name and name ~= "" and BuffIsVisible(frame.config, name) and timeleft and timeleft ~= 0 then
+      if texture and name and name ~= "" and BuffIsVisible(frame.config, name) then
         frame.buffs[i][1] = timeleft
         frame.buffs[i][2] = i
         frame.buffs[i][3] = name
@@ -233,7 +252,7 @@ pfUI:RegisterModule("buffwatch", "vanilla:tbc", function ()
     -- create a buff bar for each below threshold
     local bar = 1
     for id, data in pairs(frame.buffs) do
-      if data[1] and data[1] ~= 0 and data[1] < frame.threshold -- timeleft checks
+      if data[1] and ((data[1] ~= 0 and data[1] < frame.threshold) or frame.threshold == -1) -- timeleft checks
         and data[3] and data[3] ~= "" -- buff has a name
         and data[4] and data[4] ~= "" -- buff has a texture
       then
@@ -347,7 +366,7 @@ pfUI:RegisterModule("buffwatch", "vanilla:tbc", function ()
     if pfUI.unlock and pfUI.unlock:IsShown() then return end
 
     if not pfUI_config["position"][self:GetName()] then
-      local anchor = FirstOneShown(self.anchors)
+      local anchor = GetTopAnchor(self.anchors)
 
       if not self.lastanchor or self.lastanchor ~= anchor then
         self:ClearAllPoints()

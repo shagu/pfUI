@@ -1,8 +1,7 @@
 pfUI:RegisterModule("autovendor", "vanilla:tbc", function ()
-  local border = tonumber(pfUI_config.appearance.border.default)
-  local bpad = border > 1 and border - 1 or 1
-
-  local scanlist = {}
+  local rawborder, border = GetBorderSize()
+  local bpad = rawborder > 1 and border - GetPerfectPixel() or GetPerfectPixel()
+  local processed = {}
 
   local function RepairItems()
     local cost, possible = GetRepairAllCost()
@@ -12,34 +11,35 @@ pfUI:RegisterModule("autovendor", "vanilla:tbc", function ()
     end
   end
 
-  local function ScanGreyItems()
-    scanlist = {}
+  local function HasGreyItems()
     for bag = 0, 4, 1 do
       for slot = 1, GetContainerNumSlots(bag), 1 do
         local name = GetContainerItemLink(bag,slot)
-        if name and string.find(name,"ff9d9d9d") then
-          table.insert(scanlist, { bag, slot })
-        end
+        if name and string.find(name,"ff9d9d9d") then return true end
       end
     end
+    return nil
   end
 
   local function GetNextGreyItem()
-    if scanlist[1] then
-      local bag, slot = scanlist[1][1], scanlist[1][2]
-      table.remove(scanlist, 1)
-
-      return bag, slot
-    else
-      return nil, nil
+    for bag = 0, 4, 1 do
+      for slot = 1, GetContainerNumSlots(bag), 1 do
+        local name = GetContainerItemLink(bag,slot)
+        if name and string.find(name,"ff9d9d9d") and not processed[bag.."x"..slot] then
+          processed[bag.."x"..slot] = true
+          return bag, slot
+        end
+      end
     end
+
+    return nil, nil
   end
 
   local autovendor = CreateFrame("Frame", "pfMoneyUpdate", nil)
   autovendor:Hide()
 
   autovendor:SetScript("OnShow", function()
-    ScanGreyItems()
+    processed = {}
     this.count = 0
     this.price = 0
   end)
@@ -48,27 +48,34 @@ pfUI:RegisterModule("autovendor", "vanilla:tbc", function ()
     -- throttle to to one item per .1 second
     if ( this.tick or 1) > GetTime() then return else this.tick = GetTime() + .1 end
 
+    -- scan for the next grey item
     local bag, slot = GetNextGreyItem()
-
     if not bag or not slot then
       this:Hide()
       return
     end
 
-    local name = GetContainerItemLink(bag,slot)
-
     -- double check to only sell grey
-    if name and string.find(name,"ff9d9d9d") then
-      -- get value
-      local _, icount = GetContainerItemInfo(bag, slot)
-      local _, _, id = string.find(GetContainerItemLink(bag, slot), "item:(%d+):%d+:%d+:%d+")
-      if pfSellData[tonumber(id)] then
-        local _, _, sell, buy = strfind(pfSellData[tonumber(id)], "(.*),(.*)")
-        this.price = this.price + ( sell * ( icount or 1 ) )
-        this.count = this.count + 1
-      end
-      UseContainerItem(bag, slot)
+    local name = GetContainerItemLink(bag,slot)
+    if not name or not string.find(name,"ff9d9d9d") then
+      return
     end
+
+    -- get value
+    local _, icount = GetContainerItemInfo(bag, slot)
+    local _, _, id = string.find(GetContainerItemLink(bag, slot), "item:(%d+):%d+:%d+:%d+")
+    if pfSellData[tonumber(id)] then
+      local _, _, sell, buy = strfind(pfSellData[tonumber(id)], "(.*),(.*)")
+      this.price = this.price + ( sell * ( icount or 1 ) )
+      this.count = this.count + 1
+    end
+
+    -- abort if the merchant window disappeared
+    if not this.merchant then return end
+
+    -- clear cursor and sell the item
+    ClearCursor()
+    UseContainerItem(bag, slot)
   end)
 
   autovendor:SetScript("OnHide", function()
@@ -78,11 +85,16 @@ pfUI:RegisterModule("autovendor", "vanilla:tbc", function ()
   end)
 
   autovendor:RegisterEvent("MERCHANT_SHOW")
+  autovendor:RegisterEvent("MERCHANT_CLOSED")
   autovendor:RegisterEvent("MERCHANT_UPDATE")
   autovendor:SetScript("OnEvent", function()
     autovendor.button:Update()
 
-    if event == "MERCHANT_SHOW" then
+    if event == "MERCHANT_CLOSED" then
+      autovendor.merchant = nil
+      autovendor:Hide()
+    elseif event == "MERCHANT_SHOW" then
+      autovendor.merchant = true
       if C["global"]["autorepair"] == "1" then
         RepairItems()
       end
@@ -112,13 +124,13 @@ pfUI:RegisterModule("autovendor", "vanilla:tbc", function ()
   autovendor.button.icon = autovendor.button:CreateTexture("ARTWORK")
   autovendor.button.icon:SetTexture("Interface\\Icons\\Spell_Shadow_SacrificialShield")
   autovendor.button:SetScript("OnEnter", function()
-    GameTooltip:SetOwner(this, "ANCHOR_RIGHT");
-    GameTooltip:SetText(T["Sell Grey Items"]);
-    GameTooltip:Show();
+    GameTooltip:SetOwner(this, "ANCHOR_RIGHT")
+    GameTooltip:SetText(T["Sell Grey Items"])
+    GameTooltip:Show()
   end)
 
   autovendor.button:SetScript("OnLeave", function()
-    GameTooltip:Hide();
+    GameTooltip:Hide()
   end)
   SkinButton(autovendor.button, nil, nil, nil, autovendor.button.icon)
 
@@ -128,17 +140,13 @@ pfUI:RegisterModule("autovendor", "vanilla:tbc", function ()
 
   autovendor.button.Update = function()
     if not autovendor:IsVisible() then
-
-      ScanGreyItems()
-
-      if scanlist[1] then
+      if HasGreyItems() then
         autovendor.button:Enable()
         autovendor.button.icon:SetDesaturated(false)
       else
         autovendor.button:Disable()
         autovendor.button.icon:SetDesaturated(true)
       end
-
     else
       autovendor.button:Disable()
       autovendor.button.icon:SetDesaturated(true)

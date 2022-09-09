@@ -1,4 +1,4 @@
-pfUI:RegisterModule("pixelperfect", "vanilla", function ()
+pfUI:RegisterModule("pixelperfect", "vanilla:tbc", function ()
   -- pixel perfect
   local function pixelperfect()
     local conf = tonumber(C.global.pixelperfect)

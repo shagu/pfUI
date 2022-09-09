@@ -1,6 +1,6 @@
 pfUI:RegisterSkin("Character", "vanilla:tbc", function ()
-  local border = tonumber(pfUI_config.appearance.border.default)
-  local bpad = border > 1 and border - 1 or 1
+  local rawborder, border = GetBorderSize()
+  local bpad = rawborder > 1 and border - GetPerfectPixel() or GetPerfectPixel()
 
   -- Compatibility
   if PlayerTitleDropDown then -- tbc, wotlk
@@ -56,31 +56,8 @@ pfUI:RegisterSkin("Character", "vanilla:tbc", function ()
     end
     SkinTab(tab)
   end
-  hooksecurefunc("PetTab_Update", function()
-    CharacterFrameTab3:ClearAllPoints()
-    CharacterFrameTab3:SetPoint("LEFT", HasPetUI() and CharacterFrameTab2 or CharacterFrameTab1, "RIGHT", border*2 + 1, 0)
-  end, 1)
 
   do -- Character Tab
-    StripTextures(PaperDollFrame)
-    StripTextures(CharacterAttributesFrame)
-    StripTextures(CharacterResistanceFrame)
-
-    EnableClickRotate(CharacterModelFrame)
-    CharacterModelFrameRotateLeftButton:Hide()
-    CharacterModelFrameRotateRightButton:Hide()
-
-    for i,c in pairs(magicResTextureCords) do
-      local magicResFrame = _G["MagicResFrame"..i]
-      magicResFrame:SetWidth(26)
-      magicResFrame:SetHeight(26)
-      CreateBackdrop(magicResFrame)
-      SetAllPointsOffset(magicResFrame.backdrop, magicResFrame, 2)
-      local icon = GetNoNameObject(magicResFrame, "Texture", "BACKGROUND", "ResistanceIcons")
-      SetAllPointsOffset(icon, magicResFrame, 3)
-      icon:SetTexCoord(c[1], c[2], c[3], c[4])
-    end
-
     local slots = {
       "HeadSlot",
       "NeckSlot",
@@ -104,22 +81,12 @@ pfUI:RegisterSkin("Character", "vanilla:tbc", function ()
       "AmmoSlot"
     }
 
-    for i, slot in pairs(slots) do
-      local frame = _G["Character"..slot]
-      StripTextures(frame)
-      CreateBackdrop(frame)
-      SetAllPointsOffset(frame.backdrop, frame, 2)
-
-      HandleIcon(frame.backdrop, _G["Character"..slot.."IconTexture"])
-
-      if not frame.scoreText then
-        frame.scoreText = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-        frame.scoreText:SetFont(pfUI.font_default, 12, "OUTLINE")
-        frame.scoreText:SetPoint("BOTTOMRIGHT", 0, 0)
-      end
+    local function RefreshPetPosition()
+      CharacterFrameTab3:ClearAllPoints()
+      CharacterFrameTab3:SetPoint("LEFT", HasPetUI() and CharacterFrameTab2 or CharacterFrameTab1, "RIGHT", border*2 + 1, 0)
     end
 
-    hooksecurefunc("PaperDollItemSlotButton_Update", function()
+    local function RefreshCharacterSlots()
       for i, slot in pairs(slots) do
         local slotId, _, _ = GetInventorySlotInfo(slot)
         local quality = GetInventoryItemQuality("player", slotId)
@@ -135,7 +102,7 @@ pfUI:RegisterSkin("Character", "vanilla:tbc", function ()
           if ShaguScore and GetInventoryItemLink("player", slotId) and slot.scoreText then
             local _, _, itemID = string.find(GetInventoryItemLink("player", slotId), "item:(%d+):%d+:%d+:%d+")
             local itemLevel = ShaguScore.Database[tonumber(itemID)] or 0
-            local _, _, itemRarity, _, _, _, _, itemSlot, _ = GetItemInfo(itemID)
+            local _, _, itemRarity, _, _, _, _, _, itemSlot, _ = GetItemInfo(itemID)
             local r,g,b = GetItemQualityColor((itemRarity or 1))
             local score = ShaguScore:Calculate(itemSlot, itemRarity, itemLevel)
             if score and score > 0  then
@@ -153,7 +120,52 @@ pfUI:RegisterSkin("Character", "vanilla:tbc", function ()
           end
         end
       end
+    end
+
+    HookScript(CharacterFrame, "OnShow", function()
+      RefreshCharacterSlots()
+      RefreshPetPosition()
+
+      if not this.hooked then
+        hooksecurefunc("PaperDollItemSlotButton_Update", RefreshCharacterSlots)
+        hooksecurefunc("PetTab_Update", RefreshPetPosition, 1)
+        this.hooked = true
+      end
     end)
+
+    StripTextures(PaperDollFrame)
+    StripTextures(CharacterAttributesFrame)
+    StripTextures(CharacterResistanceFrame)
+
+    EnableClickRotate(CharacterModelFrame)
+    CharacterModelFrameRotateLeftButton:Hide()
+    CharacterModelFrameRotateRightButton:Hide()
+
+    for i,c in pairs(magicResTextureCords) do
+      local magicResFrame = _G["MagicResFrame"..i]
+      magicResFrame:SetWidth(26)
+      magicResFrame:SetHeight(26)
+      CreateBackdrop(magicResFrame)
+      SetAllPointsOffset(magicResFrame.backdrop, magicResFrame, 2)
+      local icon = GetNoNameObject(magicResFrame, "Texture", "BACKGROUND", "ResistanceIcons")
+      SetAllPointsOffset(icon, magicResFrame, 3)
+      icon:SetTexCoord(c[1], c[2], c[3], c[4])
+    end
+
+    for i, slot in pairs(slots) do
+      local frame = _G["Character"..slot]
+      StripTextures(frame)
+      CreateBackdrop(frame)
+      SetAllPointsOffset(frame.backdrop, frame, 0)
+
+      HandleIcon(frame.backdrop, _G["Character"..slot.."IconTexture"])
+
+      if not frame.scoreText then
+        frame.scoreText = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+        frame.scoreText:SetFont(pfUI.font_default, 12, "OUTLINE")
+        frame.scoreText:SetPoint("BOTTOMRIGHT", 0, 0)
+      end
+    end
   end
 
   do -- Pet Tab

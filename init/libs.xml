@@ -5,4 +5,8 @@
   <Include file="..\libs\libdebuff.lua"/>
   <Include file="..\libs\librange.lua"/>
   <Include file="..\libs\libunitscan.lua"/>
+  <Include file="..\libs\libtooltip.lua"/>
+  <Include file="..\libs\libhealth.lua"/>
+  <Include file="..\libs\libtotem.lua"/>
+  <Include file="..\libs\libpredict.lua"/>
 </Ui>

@@ -253,8 +253,9 @@ pfUI:RegisterModule("share", "vanilla:tbc", function ()
     f:SetHeight(420)
     f:SetMovable(true)
     f:EnableMouse(true)
-    f:SetScript("OnMouseDown", function() f:StartMoving() end)
-    f:SetScript("OnMouseUp", function() f:StopMovingOrSizing() end)
+    f:RegisterForDrag("LeftButton")
+    f:SetScript("OnDragStart", function() f:StartMoving() end)
+    f:SetScript("OnDragStop", function() f:StopMovingOrSizing() end)
 
     f:SetScript("OnShow", function()
       if pfUI.gui and pfUI.gui:IsShown() then

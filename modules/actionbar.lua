@@ -2,16 +2,49 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
   local _, class = UnitClass("player")
   local color = RAID_CLASS_COLORS[class]
   local cr, cg, cb = color.r , color.g, color.b
+  local er, eg, eb, ea = GetStringColor(pfUI_config.appearance.border.color)
 
   local backdrop_highlight = { edgeFile = pfUI.media["img:glow"], edgeSize = 8 }
   local showgrid = 0
   local showgrid_pet = 0
+  local rawborder, border = GetBorderSize("actionbars")
+  local bpad = rawborder > 1 and border - GetPerfectPixel() or GetPerfectPixel()
 
-  local border = tonumber(C.appearance.border.default)
-  if C.appearance.border.actionbars ~= "-1" then
-    border = tonumber(C.appearance.border.actionbars)
+  local eventcache = { } -- contains a list of events that shall be processed later -> [event] = true
+  local updatecache = { } -- contains a list of buttons slots that shall be refreshed later -> [slot] = true
+  local buttoncache = { } -- contains a list of all buttons ever created -> [slot] = frame
+
+  local petvisibility = "[pet] show; hide"
+
+  -- try to assume based on the current mouse positions if a button drag
+  -- should happen even if action-on-key-down is used. By that replace the
+  -- cast events by reverting the active buttons to the old mouse-up state.
+  local drag_await
+  local drag_active
+  local function AssumeButtonDrag()
+    -- skip during combat
+    if InCombatLockdown and InCombatLockdown() then return end
+
+    -- skip if keydown press is not enabled
+    if C.bars.keydown ~= "1" then return end
+
+    -- skip if always shift-drag is not enabled
+    if C.bars.shiftdrag ~= "1" then return end
+
+    if drag_await and not drag_active and IsShiftKeyDown() then
+      drag_active = true
+      -- set all buttons to regular on release clicks
+      for id, button in pairs(buttoncache) do
+        button:RegisterForClicks("LeftButtonUp", "RightButtonUp")
+      end
+    elseif drag_active and not IsShiftKeyDown() then
+      drag_active = nil
+      -- set all buttons back to their defaults
+      for id, button in pairs(buttoncache) do
+        button:RegisterForClicks("LeftButtonDown", "RightButtonDown")
+      end
+    end
   end
-  local bpad = border > 1 and border - 1 or 1
 
   -- hide blizzard bars
   local function kill(f, killshow)
@@ -42,7 +75,57 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     kill(f, true)
   end
 
-  local bars = { }
+  -- enable all possible actionbar pages
+  SetActionBarToggles(0, 0, 0, 0)
+  _G.SHOW_MULTI_ACTIONBAR_1 = nil
+  _G.SHOW_MULTI_ACTIONBAR_2 = nil
+  _G.SHOW_MULTI_ACTIONBAR_3 = nil
+  _G.SHOW_MULTI_ACTIONBAR_4 = nil
+
+  -- events that provide special updater functions
+  local special_events = {
+    ["ACTIONBAR_UPDATE_COOLDOWN"] = true,
+    ["ACTIONBAR_UPDATE_USABLE"] = true,
+    ["ACTIONBAR_UPDATE_STATE"] = true,
+  }
+
+  -- events that are shared across all buttons
+  local global_events = {
+    -- slot/button updates
+    ["PLAYER_ENTERING_WORLD"] = true,
+    ["ACTIONBAR_SLOT_CHANGED"] = true,
+    ["UPDATE_BINDINGS"] = true,
+    ["ACTIONBAR_PAGE_CHANGED"] = true,
+    ["UPDATE_BONUS_ACTIONBAR"] = true,
+    ["CRAFT_SHOW"] = true,
+    ["CRAFT_CLOSE"] = true,
+    ["TRADE_SKILL_SHOW"] = true,
+    ["TRADE_SKILL_CLOSE"] = true,
+    ["PLAYER_ENTER_COMBAT"] = true,
+    ["PLAYER_LEAVE_COMBAT"] = true,
+    -- cooldown updates
+    ["UNIT_INVENTORY_CHANGED"] = true,
+    -- auto repeat action
+    ["START_AUTOREPEAT_SPELL"] = true,
+    ["STOP_AUTOREPEAT_SPELL"] = true,
+  }
+
+  -- events that are used for the aura/shapeshift bar
+  local aura_events = {
+    ["UPDATE_SHAPESHIFT_FORMS"] = true,
+    ["PLAYER_AURAS_CHANGED"] = true,
+  }
+
+  -- events that are used for the pet bar
+  local pet_events = {
+    ["PLAYER_CONTROL_LOST"] = true,
+    ["PLAYER_CONTROL_GAINED"] = true,
+    ["PLAYER_FARSIGHT_FOCUS_CHANGED"] = true,
+    ["UNIT_PET"] = true,
+    ["PET_BAR_UPDATE"] = true,
+    ["PET_BAR_UPDATE_COOLDOWN"] = true,
+  }
+
   local buttontypes = {
     -- blizzard keybinds
     [3] = "MULTIACTIONBAR3BUTTON",
@@ -202,70 +285,233 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     end
   end
 
-  local function ButtonRefresh(self)
-    local self = self or this
-    local id, bar, active, texture
-    local sid = self.id -- 1 to 120
+  local function ButtonDrag(self)
+    -- skip during combat
+    if InCombatLockdown and InCombatLockdown() then return end
 
-    local usable, oom
-    local start, duration, enable
-    local castable, autocast, token
+    local self = self or this
+
+    if _G.LOCK_ACTIONBAR == "1" and not (pfUI_config.bars.shiftdrag == "1" and IsShiftKeyDown()) then return end
+
+    if self.bar == 12 then
+      PickupPetAction(self.id)
+    else
+      PickupAction(self.id)
+    end
+  end
+
+  local function ButtonDragStop(self)
+    -- skip during combat
+    if InCombatLockdown and InCombatLockdown() then return end
+
+    local self = self or this
+
+    if MacroFrame_SaveMacro then
+      MacroFrame_SaveMacro()
+    end
+
+    if self.bar == 12 then
+      PickupPetAction(self.id)
+    else
+      PlaceAction(self.id)
+    end
+  end
+
+  local mouse
+  local function ButtonAnimate(self)
+    local self = self or this
+    mouse = arg1 and not keystate
+
+    -- trigger action animation
+    if ( pfUI_config.bars.keydown == "1" and keystate == "down" ) or (pfUI_config.bars.keydown == "0" and keystate == "up" ) or self.bar == 11 or mouse then
+      if C.bars.animmode == "keypress" and ( self:GetAlpha() > .1  or C.bars.animalways == "1" ) then
+        self.animation.active = 0
+        self.animation:Show()
+      end
+    end
+
+    -- handle button highlight
+    if keystate == "down" then
+      self.highlight:Show()
+    elseif not MouseIsOver(self) then
+      self.highlight:Hide()
+    end
+  end
+
+  local function ButtonClick(self)
+    local self = self or this
+
+    local grid = self.bar == 12 and showgrid_pet or showgrid
+    local mouse = arg1 and not keystate
+    local keystate = keystate
+    local slfcast = C.bars.altself == "1" and IsAltKeyDown() and true or self.slfcast
+    slfcast = C.bars.rightself == "1" and arg1 and arg1 == "RightButton" and true or slfcast
+    self.slfcast = nil
+
+    if ( pfUI_config.bars.keydown == "1" and keystate == "down" and not drag_active ) or (pfUI_config.bars.keydown == "0" and keystate == "up" or drag_active ) or self.bar == 11 or mouse then
+      if self.bar == 11 then
+        CastShapeshiftForm(self.id)
+      elseif grid == 1 then
+        if self.bar == 12 then
+          PickupPetAction(self.id)
+        else
+          PickupAction(self.id)
+        end
+      elseif self.bar == 12 then
+        if arg1 == "LeftButton" then
+          if IsPetAttackActive(self.id) then
+            PetStopAttack()
+          else
+            CastPetAction(self.id)
+          end
+        else
+          TogglePetAutocast(self.id)
+        end
+      else
+        if MacroFrame_SaveMacro then
+          MacroFrame_SaveMacro()
+        end
+
+        UseAction(self.id, nil, slfcast)
+      end
+    end
+  end
+
+  local function ButtonMacroScan(self)
+    if self.bar > 10 then return end
+
+    local macro = GetActionText(self.id)
+    self.spellslot = nil
+    self.booktype = nil
+    if macro then
+      local name, body, _
+      for slot = 1, 36 do
+        name, _, body = GetMacroInfo(slot)
+        if name == macro then break end
+      end
+
+      if name and body then
+        local match
+
+        for line in gfind(body, "[^%\n]+") do
+          _, _, match = string.find(line, '^#showtooltip (.+)')
+
+          -- skip any further manual macro scanning on
+          -- gameclients with native macro spell detection
+          if pfUI.client > 11200 and match then
+            self.spellslot = nil
+            self.booktype = nil
+            return
+          end
+
+          if not match then
+            -- add support to specify custom tooltips via:
+            --  /run --showtooltip SPELLNAME
+            _, _, match = string.find(line, '%-%-showtooltip (.+)')
+          end
+
+          if not match then
+            _, _, match = string.find(line, '^/cast (.+)')
+          end
+
+          if not match then
+            _, _, match = string.find(line, '^/pfcast (.+)')
+          end
+
+          if not match then
+            _, _, match = string.find(line, '^/pfmouse (.+)')
+          end
+
+          if not match then
+            _, _, match = string.find(line, 'CastSpellByName%(%"(.+)%"%)')
+          end
+
+          if match then
+            local _, _, spell, rank = string.find(match, '(.+)%((.+)%)')
+            spell = spell or match
+            self.spellslot, self.booktype = libspell.GetSpellIndex(spell, rank)
+
+            if self.spellslot and self.spellslot > 0 then return end
+          end
+        end
+      end
+    end
+  end
+
+  local function ButtonEnter(self)
+    local self = self or this
+
+    -- indicate that dragging could get enabled
+    drag_await = true
+
+    GameTooltip:ClearLines()
+    GameTooltip_SetDefaultAnchor(GameTooltip, self)
+
+    if self.bar == 11 then
+      GameTooltip:SetShapeshift(self.id)
+    elseif self.bar == 12 then
+      local name, _, _, token = GetPetActionInfo(self.id)
+      if token then
+        GameTooltip:AddLine(_G[name])
+        GameTooltip:Show()
+      else
+        GameTooltip:SetPetAction(self.id)
+      end
+    elseif self.spellslot and self.booktype then
+      GameTooltip:SetSpell(self.spellslot, self.booktype)
+    else
+      GameTooltip:SetAction(self.id)
+    end
+
+    self.highlight:Show()
+  end
+
+  local function ButtonLeave(self)
+    local self = self or this
+
+    -- no longer wait for a drag event
+    drag_await = nil
+
+    self.highlight:Hide()
+    GameTooltip:Hide()
+  end
+
+  local start, duration, enable, castable, autocast, token
+  local grid, sid, id, bar, active, texture, _
+  local function ButtonSlotUpdate(self)
+    if not self then return end
+    local self = self or this
+    sid = self.id -- 1 to 120
+
+    -- reset shared variables
+    castable, autocast, token = nil, nil, nil
 
     -- set the own ID for compatibility to some vanilla addons
     if pfUI.client <= 11200 then self:SetID(self.id) end
 
-    local grid = self.bar == 12 and showgrid_pet or showgrid
+    grid = self.bar == 12 and showgrid_pet or showgrid
 
     if self.bar == 11 then
       -- stance button
       bar = self.bar
       id = sid
-      texture, _, active, usable = GetShapeshiftFormInfo(id)
-      oom = nil
-      start, duration, enable = GetShapeshiftFormCooldown(sid)
+      texture, _, active = GetShapeshiftFormInfo(id)
     elseif self.bar == 12 then
       -- pet button
       bar = self.bar
       id = sid
       _, _, texture, token, active, castable, autocast = GetPetActionInfo(id)
       texture = token and _G[texture] or texture
-      usable, oom = true, nil
-      start, duration, enable = GetPetActionCooldown(sid)
     else
       active = IsCurrentAction(sid) or IsAutoRepeatAction(sid)
       texture = GetActionTexture(sid)
       bar = GetActiveBar()
-      id = sid - ((self.bar == 1 and bar or self.bar)-1)*12
-      usable, oom = IsUsableAction(sid)
-      start, duration, enable = GetActionCooldown(sid)
+      id = self.bar == 1 and self.slot or sid-((self.bar)-1)*12
     end
 
-    -- active border
-    if active then
-      self.backdrop:SetBackdropBorderColor(cr,cg,cb,1)
-      self.active:Show()
-    else
-      CreateBackdrop(self, border)
-      self.active:Hide()
-    end
-
-    -- abort as early as possible on regular state update
-    if event == "ACTIONBAR_UPDATE_STATE" then return end
-
-    -- handle secure action button templates (tbc+)
-    if self.SetAttribute and InCombatLockdown and not InCombatLockdown() then
-      if self.bar == 11 then
-        self:SetAttribute("type", "spell")
-        self:SetAttribute('spell', select(2, GetShapeshiftFormInfo(id)))
-      elseif self.bar == 12 then
-        self:SetAttribute("type1", "pet")
-        self:SetAttribute("action1", id)
-        self:SetAttribute("type2", "macro")
-        self:SetAttribute("macrotext2", string.format("/petautocasttoggle %s", GetPetActionInfo(id) or ""))
-      else
-        self:SetAttribute("type", "action")
-        self:SetAttribute("action", self.id)
-      end
+    -- overwrite with spell macro texture where possible
+    if self.spellslot and self.booktype then
+      texture = GetSpellTexture(self.spellslot, self.booktype)
     end
 
     if not self.showempty and self.backdrop and not texture and grid == 0 then
@@ -276,11 +522,19 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
       self.hide = nil
     end
 
-    -- update cooldown
-    CooldownFrame_SetTimer(self.cd, start, duration, enable)
+    -- active border
+    if active then
+      if C.bars.animmode == "statechange" and not self.active:IsShown() then
+        self.animation.active = 0
+        self.animation:Show()
+      end
 
-    -- don't go further on those events
-    if event == "ACTIONBAR_UPDATE_COOLDOWN" then return end
+      self.backdrop:SetBackdropBorderColor(cr,cg,cb,1)
+      self.active:Show()
+    else
+      self.backdrop:SetBackdropBorderColor(er,eg,eb,ea)
+      self.active:Hide()
+    end
 
     if self.bar ~= 11 and self.bar ~= 12 then
       -- update consumables
@@ -306,20 +560,6 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
         self.macro:SetText("")
       end
     end
-
-    -- update usable
-    if self.outofrange and C.bars.glowrange == "1" then
-      self.icon:SetVertexColor(self.rangeColor[1], self.rangeColor[2], self.rangeColor[3], self.rangeColor[4])
-    elseif oom and C.bars.showoom == "1" then
-      self.icon:SetVertexColor(self.oomColor[1], self.oomColor[2], self.oomColor[3], self.oomColor[4])
-    elseif not usable and C.bars.showna == "1" then
-      self.icon:SetVertexColor(self.naColor[1], self.naColor[2], self.naColor[3], self.naColor[4])
-    else
-      self.icon:SetVertexColor(1, 1, 1, 1)
-    end
-
-    -- don't go further on those events
-    if event == "ACTIONBAR_UPDATE_USABLE" or event == "UPDATE_INVENTORY_ALERTS" then return end
 
     -- icon
     if texture ~= self.texture then
@@ -356,145 +596,379 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     end
   end
 
-  local function ButtonUpdate(self)
+  local sid, usable, oom, _
+  local function ButtonUsableUpdate(self)
     local self = self or this
+    sid = self.id -- 1 to 120
 
-    -- trigger update
-    if self.forceupdate then
-      self.forceupdate = nil
-      self:GetScript("OnEvent")()
+    if self.bar == 11 then
+      _, _, _, usable = GetShapeshiftFormInfo(sid)
+    elseif self.bar == 12 then
+      usable = true
+    else
+      usable, oom = IsUsableAction(sid)
     end
 
-    -- throttle to run once per .1 seconds
-    if ( self.tick or 1) > GetTime() then return else self.tick = GetTime() + .1 end
+    -- update usable [out-of-range = 1, oom = 2, not-usable = 3, default = 0]
+    if self.outofrange and C.bars.glowrange == "1" then
+      if self.vertexstate ~= 1 then
+        self.icon:SetVertexColor(self.rangeColor[1], self.rangeColor[2], self.rangeColor[3], self.rangeColor[4])
+        self.vertexstate = 1
+      end
+    elseif oom and C.bars.showoom == "1" then
+      if self.vertexstate ~= 2 then
+        self.icon:SetVertexColor(self.oomColor[1], self.oomColor[2], self.oomColor[3], self.oomColor[4])
+        self.vertexstate = 2
+      end
+    elseif not usable and C.bars.showna == "1" then
+      if self.vertexstate ~= 3 then
+        self.icon:SetVertexColor(self.naColor[1], self.naColor[2], self.naColor[3], self.naColor[4])
+        self.vertexstate = 3
+      end
+    else
+      if self.vertexstate ~= 0 then
+        self.icon:SetVertexColor(1, 1, 1, 1)
+        self.vertexstate = 0
+      end
+    end
+  end
 
-    local sid = self.id
+  local function ButtonRangeUpdate(self)
+    local self = self or this
 
     -- update range display
-    if C.bars.glowrange == "1" and self.bar ~= 11 and self.bar ~= 12 and HasAction(sid) and ActionHasRange(sid) and IsActionInRange(sid) == 0 then
+    if C.bars.glowrange == "1" and self.bar ~= 11 and self.bar ~= 12 and HasAction(self.id) and ActionHasRange(self.id) and IsActionInRange(self.id) == 0 then
       if not self.outofrange then
         self.outofrange = true
-        self.forceupdate = true
+        ButtonUsableUpdate(self)
       end
     elseif self.outofrange then
       self.outofrange = nil
-      self.forceupdate = true
+      ButtonUsableUpdate(self)
     end
   end
 
-  local function ButtonDrag(self)
-    local self = self or this
+  local start, duration, enable
+  local function ButtonCooldownUpdate(button)
+    if not button then return end
 
-    if _G.LOCK_ACTIONBAR == "1" and not (pfUI_config.bars.shiftdrag == "1" and IsShiftKeyDown()) then return end
-
-    if self.bar == 12 then
-      PickupPetAction(self.id)
+    if button.bar == 11 then
+      start, duration, enable = GetShapeshiftFormCooldown(button.id)
+    elseif button.bar == 12 then
+      start, duration, enable = GetPetActionCooldown(button.id)
+    elseif button.spellslot and button.booktype then
+      start, duration = GetSpellCooldown(button.spellslot, button.booktype)
+      enable = 1
     else
-      PickupAction(self.id)
+      start, duration, enable = GetActionCooldown(button.id)
     end
+
+    CooldownFrame_SetTimer(button.cd, start, duration, enable)
   end
 
-  local function ButtonDragStop(self)
-    local self = self or this
+  local _, active
+  local function ButtonIsActiveUpdate(button)
+    if not button then return end
 
-    if MacroFrame_SaveMacro then
-      MacroFrame_SaveMacro()
-    end
-
-    if self.bar == 12 then
-      PickupPetAction(self.id)
+    if button.bar == 11 then
+      _, _, active, _ = GetShapeshiftFormInfo(button.id)
+    elseif button.bar == 12 then
+      _, _, _, _, active, _, _ = GetPetActionInfo(button.id)
     else
-      PlaceAction(self.id)
+      active = IsCurrentAction(button.id) or IsAutoRepeatAction(button.id)
+    end
+
+    -- active border
+    if active then
+      button.backdrop:SetBackdropBorderColor(cr,cg,cb,1)
+      button.active:Show()
+    else
+      button.backdrop:SetBackdropBorderColor(er,eg,eb,ea)
+      button.active:Hide()
     end
   end
 
-  local function ButtonAnimate(self)
-    local self = self or this
-    local mouse = arg1 and not keystate
-    local keystate = keystate
 
-    -- trigger action animation
-    if ( pfUI_config.bars.keydown == "1" and keystate == "down" ) or (pfUI_config.bars.keydown == "0" and keystate == "up" ) or self.bar == 11 or mouse then
-      if self:GetAlpha() > .1  or C.bars.animalways == "1" then
-        self.animation.active = 0
-        self.animation:Show()
+  local function ButtonFullUpdate(button)
+    if not button then return end
+
+    ButtonMacroScan(button)
+    ButtonSlotUpdate(button)
+    ButtonRangeUpdate(button)
+    ButtonUsableUpdate(button)
+    ButtonCooldownUpdate(button)
+    ButtonIsActiveUpdate(button)
+  end
+
+  local function BarsEvent(self)
+    local self = self or this
+
+    -- refresh only specific slots
+    if event == "ACTIONBAR_SLOT_CHANGED" and arg1 and arg1 ~= 0 then
+      updatecache[arg1] = true
+      return
+    end
+
+    -- run special refresh functions on next update
+    if special_events[event] then
+      eventcache[event] = true
+      return
+    end
+
+    -- handle aura events
+    if aura_events[event] then
+      for j=1,12 do
+        if self[11] and self[11][j] then
+          updatecache[self[11][j].slot] = true
+        end
+      end
+      return
+    end
+
+    -- handle pet events
+    if pet_events[event] then
+      for j=1,12 do
+        if self[12] and self[12][j] then
+          updatecache[self[12][j].slot] = true
+        end
+      end
+      return
+    end
+
+    -- handle global events
+    for id in pairs(buttoncache) do
+      updatecache[id] = true
+    end
+  end
+
+  local self, button, unlock
+  local function BarsUpdate(self)
+    self = self or this
+
+    -- update buttons whenever a button drag is assumed
+    AssumeButtonDrag()
+
+    if pfUI.unlock then
+      -- update all bars when entering unlock
+      if pfUI.unlock:IsShown() ~= unlock then
+        pfUI.bars:UpdateConfig()
+        unlock = pfUI.unlock:IsShown()
       end
     end
 
-    -- handle button highlight
-    if keystate == "down" then
-      self.highlight:Show()
-    elseif not MouseIsOver(self) then
-      self.highlight:Hide()
+    -- run cached usable usable actions
+    if eventcache["ACTIONBAR_UPDATE_USABLE"] then
+      eventcache["ACTIONBAR_UPDATE_USABLE"] = nil
+      for id, button in pairs(buttoncache) do
+        ButtonUsableUpdate(button)
+      end
+    end
+
+    -- run cached cooldown events
+    if eventcache["ACTIONBAR_UPDATE_COOLDOWN"] then
+      eventcache["ACTIONBAR_UPDATE_COOLDOWN"] = nil
+      for id, button in pairs(buttoncache) do
+        ButtonCooldownUpdate(button)
+      end
+    end
+
+    -- run cached action state events
+    if eventcache["ACTIONBAR_UPDATE_STATE"] then
+      eventcache["ACTIONBAR_UPDATE_STATE"] = nil
+      for id, button in pairs(buttoncache) do
+        ButtonIsActiveUpdate(button)
+      end
+    end
+
+    for id in pairs(updatecache) do
+      -- run updates based on slot
+      pfUI.bars.ButtonFullUpdate(buttoncache[id])
+
+      -- run updates on paging actionbar if required
+      for i=1,12 do
+        if pfUI.bars[1][i].id == id then
+          pfUI.bars.ButtonFullUpdate(pfUI.bars[1][i])
+        end
+      end
+
+      -- clear update cache
+      updatecache[id] = nil
+    end
+
+    if ( this.tick or .2) > GetTime() then return else this.tick = GetTime() + .2 end
+
+    for id, button in pairs(buttoncache) do
+      if button:IsShown() then ButtonRangeUpdate(button) end
     end
   end
 
-  local function ButtonClick(self)
-    local self = self or this
+  -- create the main event and update handler for pfUI actionbars
+  local bars = CreateFrame("Frame", "pfActionBar", UIParent)
+  for event in pairs(special_events) do bars:RegisterEvent(event) end
+  for event in pairs(global_events) do bars:RegisterEvent(event) end
+  for event in pairs(aura_events) do bars:RegisterEvent(event) end
+  for event in pairs(pet_events) do bars:RegisterEvent(event) end
 
-    local grid = self.bar == 12 and showgrid_pet or showgrid
-    local mouse = arg1 and not keystate
-    local keystate = keystate
-    local slfcast = C.bars.altself == "1" and IsAltKeyDown() and true or self.slfcast
-    self.slfcast = nil
+  -- refresh actionbar buttons on event
+  bars:SetScript("OnEvent", BarsEvent)
 
-    if ( pfUI_config.bars.keydown == "1" and keystate == "down" ) or (pfUI_config.bars.keydown == "0" and keystate == "up" ) or self.bar == 11 or mouse then
-      if self.bar == 11 then
-        CastShapeshiftForm(self.id)
-      elseif grid == 1 then
-        if self.bar == 12 then
-          PickupPetAction(self.id)
-        else
-          PickupAction(self.id)
-        end
-      elseif self.bar == 12 then
-        if arg1 == "LeftButton" then
-          if IsPetAttackActive(self.id) then
-            PetStopAttack()
-          else
-            CastPetAction(self.id)
+  -- update actionbar buttons
+  bars:SetScript("OnUpdate", BarsUpdate)
+
+  -- enable bar paging via secure functions
+  local function ButtonSwitch(self, att, value)
+    if att == "state-parent" then
+      local action = SecureButton_GetModifiedAttribute(self, "action", SecureStateChild_GetEffectiveButton(self)) or self.id
+      if self.id == action then return end
+      updatecache[self.slot] = true
+      self.id = action
+    end
+  end
+
+  local function EnablePaging(bar)
+    if pfUI.client <= 11200 then
+      if not bar.pager then
+        bar.pager = CreateFrame("Frame")
+        bar.pager:RegisterEvent("PLAYER_ENTERING_WORLD")
+        bar.pager:RegisterEvent("UPDATE_BONUS_ACTIONBAR")
+        bar.pager:RegisterEvent("ACTIONBAR_PAGE_CHANGED")
+        bar.pager:SetScript("OnEvent", function()
+          for i=1, 10 do -- reload pageable bars
+            local pageable = C.bars["bar"..i] and C.bars["bar"..i].pageable == "1" and true or nil
+            _G.VIEWABLE_ACTION_BAR_PAGES[i] = pageable
           end
-        else
-          TogglePetAutocast(self.id)
-        end
-      else
-        if MacroFrame_SaveMacro then
-          MacroFrame_SaveMacro()
-        end
 
-        UseAction(self.id, nil, slfcast)
-      end
-    end
-  end
-
-  local function ButtonEnter(self)
-    local self = self or this
-
-    GameTooltip:ClearLines()
-    GameTooltip_SetDefaultAnchor(GameTooltip, self)
-
-    if self.bar == 11 then
-      GameTooltip:SetShapeshift(self.id)
-    elseif self.bar == 12 then
-      local name, _, _, token = GetPetActionInfo(self.id)
-      if token then
-        GameTooltip:AddLine(_G[name])
-        GameTooltip:Show()
-      else
-        GameTooltip:SetPetAction(self.id)
+          local active = GetActiveBar()
+          for i=1,12 do
+            local id = i + (active-1)*12
+            bar[i].id = id
+            updatecache[i] = true
+          end
+        end)
       end
     else
-      GameTooltip:SetAction(self.id)
-    end
+      -- append paging enabled bars to the filter list
+      for i=1,12 do bar[i]:SetScript("OnAttributeChanged", ButtonSwitch) end
 
-    self.highlight:Show()
+      -- fill all possible page states
+      local page, pages = nil, {}
+      while not pages[6] do
+        for i=1, 6 do
+          page = i == 1 and 1 or C.bars["bar"..i] and C.bars["bar"..i].pageable == "1" and i
+          if page then table.insert(pages, page) end
+        end
+      end
+
+      bar:SetAttribute("statemap-page", "$input")
+      bar:SetAttribute("state", (bar:GetAttribute("state-page") or 1))
+
+      -- prio posses bar
+      bar.filter = "[bonusbar: 5] 11;"
+
+      -- set bar 8 for druid stealth if enabled
+      local prowl = class == "DRUID" and C.bars["druidstealth"] == "1" and "8" or "7"
+
+      -- write default pages
+      for state, page in pairs(pages) do
+        if page ~= 1 then -- skip page 1 as it is supposed to stay dynamic for stances
+          bar.filter = string.format("%s[actionbar: %s] %s; ", bar.filter, state, page)
+        end
+      end
+
+      -- write page driver conditions
+      bar.filter = string.format("%s[bonusbar:1,nostealth] 7; [bonusbar:1,stealth] %s; [bonusbar:2] 10; [bonusbar:3] 9; [bonusbar:4] 10; 1", bar.filter, prowl)
+
+      -- prepend pagemaster states if enabled
+      if C.bars.pagemaster == "1" then
+        for mod, page in pairs({ ["shift"] = "6", ["ctrl"] = "5", ["alt"] = "3" }) do
+          bar.filter = string.format("[modifier:%s] %s;", mod, page) .. bar.filter
+        end
+      end
+
+      -- enable page driver conditions
+      RegisterStateDriver(bar, "page", bar.filter)
+      SecureStateHeader_Refresh(bar)
+    end
   end
 
-  local function ButtonLeave(self)
-    local self = self or this
+  local function SwitchBar(bar)
+    if _G.CURRENT_ACTIONBAR_PAGE ~= bar then
+      _G.CURRENT_ACTIONBAR_PAGE = bar
+      ChangeActionBarPage(bar)
+    end
+  end
 
-    self.highlight:Hide()
-    GameTooltip:Hide()
+  local cat, stealth
+  local function IsCatStealth()
+    if class ~= "DRUID" then return nil end
+    cat, stealth = nil, nil
+
+    for i = 0, 31 do
+      local texture = GetPlayerBuffTexture(i)
+      if not texture then break end
+
+      -- catform icon detected
+      if strfind(texture, "Ability_Druid_CatForm") then
+        if stealth then return true end
+        cat = true
+      end
+
+      -- stealth icon detected
+      if strfind(texture, "Ability_Ambush") then
+        if cat then return true end
+        stealth = true
+      end
+    end
+    return nil
+  end
+
+  -- pagemaster / meta page switch
+  if pfUI.expansion == "vanilla" then
+    local prowl, shift, ctrl, alt, default = 8, 6, 5, 3, 1
+
+    -- set temporary pagemaster bindings keybinds
+    if C.bars.pagemaster == "1" then
+      local modifier = { "ALT", "SHIFT", "CTRL" }
+      local buttons = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "+", "=", "´" }
+      local current = CURRENT_ACTIONBAR_PAGE
+      bars.pagemaster = bars.pagemaster or CreateFrame("Frame", "pfPageMaster", UIParent)
+      bars.pagemaster:RegisterEvent("PLAYER_ENTERING_WORLD")
+      bars.pagemaster:SetScript("OnEvent", function()
+        for _,mod in pairs(modifier) do
+          for _,but in pairs(buttons) do
+            SetBinding(mod.."-"..but)
+          end
+        end
+      end)
+    end
+
+    -- setup page switch frame
+    local pageswitch = CreateFrame("Frame", "pfActionBarPageSwitch", UIParent)
+    pageswitch:SetScript("OnUpdate", function()
+      if C.bars.pagemaster == "1" then
+        if IsShiftKeyDown() then
+          SwitchBar(shift)
+          return
+        elseif IsControlKeyDown() then
+          SwitchBar(ctrl)
+          return
+        elseif IsAltKeyDown() then
+          SwitchBar(alt)
+          return
+        else
+          SwitchBar(default)
+        end
+      end
+
+      if C.bars.druidstealth == "1" then
+        local stealth = IsCatStealth()
+        if stealth and _G.CURRENT_ACTIONBAR_PAGE == 1 then
+          SwitchBar(prowl)
+        elseif not stealth and _G.CURRENT_ACTIONBAR_PAGE == 8 then
+          SwitchBar(default)
+        end
+      end
+    end)
   end
 
   local function CreateActionButton(parent, bar, button)
@@ -512,6 +986,8 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     local bind_size = tonumber(C.bars.bind_size)
     local bind_color = { strsplit(",", C.bars.bind_color) }
 
+    local cd_size = tonumber(C.bars.cd_size)
+
     local showempty = C.bars["bar"..bar].showempty
     local showmacro = C.bars["bar"..bar].showmacro
     local showkybind = C.bars["bar"..bar].showkeybind
@@ -521,6 +997,7 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     if macro_size == 0 then macro_size = 1 end
     if count_size == 0 then macro_size = 1 end
     if bind_size == 0 then macro_size = 1 end
+    if cd_size == 0 then cd_size = nil end
 
     local button_name = "pfActionBar" .. barnames[bar] .. "Button" .. button
 
@@ -528,29 +1005,13 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     local exists = _G[button_name] and true or nil
     local f = _G[button_name] or CreateFrame("Button", button_name, parent, ACTIONBAR_SECURE_TEMPLATE_BUTTON)
 
+    -- no button available, create a new one
     if not exists then
-      -- no button available, create a new one
-      f:RegisterForClicks("LeftButtonUp", "RightButtonUp")
-
-      -- slot/button updates
-      f:RegisterEvent("PLAYER_ENTERING_WORLD")
-      f:RegisterEvent("ACTIONBAR_SLOT_CHANGED")
-      f:RegisterEvent("UPDATE_BINDINGS")
-      f:RegisterEvent("ACTIONBAR_PAGE_CHANGED")
-      f:RegisterEvent("ACTIONBAR_UPDATE_STATE")
-      f:RegisterEvent("UPDATE_BONUS_ACTIONBAR")
-      f:RegisterEvent("CRAFT_SHOW")
-      f:RegisterEvent("CRAFT_CLOSE")
-      f:RegisterEvent("TRADE_SKILL_SHOW")
-      f:RegisterEvent("TRADE_SKILL_CLOSE")
-      f:RegisterEvent("PLAYER_ENTER_COMBAT")
-      f:RegisterEvent("PLAYER_LEAVE_COMBAT")
-
-      -- cooldown updates
-      f:RegisterEvent("ACTIONBAR_UPDATE_USABLE")
-      f:RegisterEvent("UPDATE_INVENTORY_ALERTS")
-      f:RegisterEvent("ACTIONBAR_UPDATE_COOLDOWN")
-      f:RegisterEvent("UNIT_INVENTORY_CHANGED")
+      -- prepare the button for vanilla
+      if not f.HookScript then
+        f.HookScript = HookScript
+        f:SetScript("OnClick", ButtonClick)
+      end
 
       if bar ~= 11 then
         f:RegisterForDrag("LeftButton", "RightButton")
@@ -558,40 +1019,22 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
         f:SetScript("OnReceiveDrag", ButtonDragStop)
       end
 
-      if bar == 11 then
-        f:RegisterEvent("PLAYER_AURAS_CHANGED")
-        f:RegisterEvent("UPDATE_SHAPESHIFT_FORMS")
-      end
-
-      if bar == 12 then
-        f:RegisterEvent("PLAYER_CONTROL_LOST")
-        f:RegisterEvent("PLAYER_CONTROL_GAINED")
-        f:RegisterEvent("PLAYER_FARSIGHT_FOCUS_CHANGED")
-        f:RegisterEvent("UNIT_PET")
-        f:RegisterEvent("UNIT_FLAGS")
-        f:RegisterEvent("UNIT_AURA")
-        f:RegisterEvent("PET_BAR_UPDATE")
-        f:RegisterEvent("PET_BAR_UPDATE_COOLDOWN")
-      end
-
-      -- prepare the button for vanilla
-      if not f.HookScript then
-        f.HookScript = HookScript
-        f:SetScript("OnClick", ButtonClick)
-      end
-
-      f:SetScript("OnEvent", ButtonRefresh)
+      -- add mouseovers
       f:SetScript("OnEnter", ButtonEnter)
       f:SetScript("OnLeave", ButtonLeave)
-      f:SetScript("OnUpdate", ButtonUpdate)
 
       -- add click animation handler
       f:HookScript("OnClick", ButtonAnimate)
       f.id = id
 
+      -- set a static slot
+      f.slot = id
+
       -- cooldown
       f.cd = CreateFrame(COOLDOWN_FRAME_TYPE, f:GetName() .. "Cooldown", f, "CooldownFrameTemplate")
+      f.cd.pfCooldownStyleAnimation = 1
       f.cd.pfCooldownType = "NOGCD"
+      f.cd.pfCooldownSize = cd_size
 
       -- icon
       f.icon = f:CreateTexture(button_name .. "Icon", "BACKGROUND")
@@ -648,6 +1091,49 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
       f.active:SetBackdropBorderColor(1,1,.5,1)
       f.active:SetAllPoints()
       f.active:Hide()
+
+      -- add to buttoncache
+      buttoncache[id] = f
+    end
+
+    -- set required attributes for regular tbc buttons
+    if pfUI.client > 11200 then
+      if bar == 11 then
+        f:SetAttribute("type", "spell")
+        f:SetAttribute('spell', select(2, GetShapeshiftFormInfo(button)))
+      elseif bar == 12 then
+        f:SetAttribute("type1", "pet")
+        f:SetAttribute("action1", button)
+        f:SetAttribute("type2", "macro")
+        f:SetAttribute("macrotext2", "/click PetActionButton".. button .. " RightButton")
+      else
+        bars[bar]:SetAttribute("addchild", f)
+        f:SetAttribute("type", "action")
+        f:SetAttribute("action", id)
+        f:SetAttribute("checkselfcast", true)
+        f:SetAttribute("useparent-unit", true)
+        f:SetAttribute("useparent-statebutton", true)
+
+        for state = 0, 11 do -- add custom states
+          local action = ((state == 0 and bar or state)-1)*12+button
+          f:SetAttribute(string.format("*type-S%d", state), "action")
+          f:SetAttribute(string.format("*type-S%dRight", state), "action")
+          f:SetAttribute(string.format("*action-S%d", state), action)
+          f:SetAttribute(string.format("*action-S%dRight", state), action)
+          if C.bars.rightself == "1" then
+            f:SetAttribute(string.format("*unit-S%dRight", state), "player")
+          else
+            f:SetAttribute(string.format("*unit-S%dRight", state), nil)
+          end
+        end
+      end
+    end
+
+    -- set keydown option
+    if C.bars.keydown == "1" then
+      f:RegisterForClicks("LeftButtonDown", "RightButtonDown")
+    else
+      f:RegisterForClicks("LeftButtonUp", "RightButtonUp")
     end
 
     -- set animation
@@ -656,7 +1142,7 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     -- pet autocast
     if bar == 12 then
       f.autocast:SetScale(C.bars["bar"..bar].icon_size / 25)
-      f.autocast:SetAlpha(.05)
+      f.autocast:SetAlpha(.10)
     end
 
     -- macro options
@@ -717,6 +1203,7 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     local formfactor = C.bars["bar"..i].formfactor
     local autohide = C.bars["bar"..i].autohide
     local hide_time = C.bars["bar"..i].hide_time
+    local hide_combat = C.bars["bar"..i].hide_combat == "1" and true or nil
 
     local buttons = tonumber(C.bars["bar"..i].buttons) or 12
     if i == 11 and bars[i] then -- shapeshift buttons
@@ -746,12 +1233,13 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     local realsize = size+border*2
 
     -- create frame
+    local init = not bars[i]
     bars[i] = bars[i] or CreateFrame("Frame", "pfActionBar" .. barnames[i], UIParent, ACTIONBAR_SECURE_TEMPLATE_BAR)
     bars[i]:SetID(i)
 
     -- autohide
     if autohide == "1" then
-      EnableAutohide(bars[i], tonumber(hide_time))
+      EnableAutohide(bars[i], tonumber(hide_time), hide_combat)
     else
       DisableAutohide(bars[i])
     end
@@ -760,25 +1248,41 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     if enable == "1" then
       -- handle pet bar
       if i == 12 then
-        -- only show when pet actions exists
-        if PetHasActionBar() then
-          bars[i]:Show()
-        else
-          bars[i]:Hide()
-        end
-
-        -- show/hide petbar on petbar updates
-        bars[i]:RegisterEvent("PET_BAR_UPDATE")
-        bars[i]:SetScript("OnEvent", function()
-          -- hide obsolete buttons
-          for i=1, NUM_PET_ACTION_SLOTS do
-           if not PetHasActionBar() and bars[12][i] then
-             bars[12][i]:Hide()
-           end
+        if pfUI.client > 11200 then
+          if InCombatLockdown and InCombatLockdown() then
+            -- don't process those events during combat
+          else
+            -- set state driver for pet bars
+            bars[i]:SetAttribute("unit", "pet")
+            local visibility = pfUI.unlock and pfUI.unlock:IsShown() and "show" or petvisibility
+            if bars[i].visibility ~= visibility then
+              RegisterStateDriver(bars[i], 'visibility', visibility)
+              bars[i].visibility = visibility
+            end
           end
-          -- refresh layout
-          CreateActionBar(12)
-        end)
+        else
+          -- only show when pet actions exists
+          if PetHasActionBar() or pfUI.unlock and pfUI.unlock:IsShown() then
+            bars[i]:Show()
+          else
+            bars[i]:Hide()
+          end
+
+          -- show/hide petbar on petbar updates
+          if init then
+            bars[i]:RegisterEvent("PET_BAR_UPDATE")
+            bars[i]:SetScript("OnEvent", function()
+              -- hide obsolete buttons
+              for i=1, NUM_PET_ACTION_SLOTS do
+               if not PetHasActionBar() and bars[12][i] then
+                 bars[12][i]:Hide()
+               end
+              end
+              -- refresh layout
+              CreateActionBar(12)
+            end)
+          end
+        end
 
       -- handle shapeshift bar
       elseif i == 11 then
@@ -790,25 +1294,27 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
         end
 
         -- update shapeshift bar when amount of spells changes
-        bars[i]:RegisterEvent("PLAYER_ENTERING_WORLD")
-        bars[i]:RegisterEvent("UPDATE_BONUS_ACTIONBAR")
-        bars[i]:RegisterEvent("UPDATE_SHAPESHIFT_FORMS")
-        bars[i]:SetScript("OnEvent", function()
-          local count = GetNumShapeshiftForms()
-          if count ~= this.lastCount then
-            this.lastCount = count
+        if init then
+          bars[i]:RegisterEvent("PLAYER_ENTERING_WORLD")
+          bars[i]:RegisterEvent("UPDATE_BONUS_ACTIONBAR")
+          bars[i]:RegisterEvent("UPDATE_SHAPESHIFT_FORMS")
+          bars[i]:SetScript("OnEvent", function()
+            local count = GetNumShapeshiftForms()
+            if count ~= this.lastCount then
+              this.lastCount = count
 
-            -- hide obsolete buttons
-            for i=1, NUM_SHAPESHIFT_SLOTS do
-              if i > GetNumShapeshiftForms() and bars[11][i] then
-                bars[11][i]:Hide()
+              -- hide obsolete buttons
+              for i=1, NUM_SHAPESHIFT_SLOTS do
+                if i > GetNumShapeshiftForms() and bars[11][i] then
+                  bars[11][i]:Hide()
+                end
               end
-            end
 
-            -- create new buttons and refresh layout
-            CreateActionBar(11)
-          end
-        end)
+              -- create new buttons and refresh layout
+              CreateActionBar(11)
+            end
+          end)
+        end
 
       -- regular bars
       else
@@ -836,13 +1342,24 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
       end
 
       -- refresh button
-      bars[i][j].forceupdate = true
+      updatecache[bars[i][j].slot] = true
     end
 
     for j=buttons+1,12 do
       if bars[i][j] then
         bars[i][j]:Hide()
       end
+    end
+
+    -- add up to 0-11 button parent states to each bar
+    if i <= 10 and pfUI.client > 11200 then
+      bars[i]:SetAttribute("statebutton", "0:S0;1:S1;2:S2;3:S3;4:S4;5:S5;6:S6;7:S7;8:S8;9:S9;10:S10;11:S11;")
+      bars[i]:SetAttribute("statebutton2", "0:S0Right;1:S1Right;2:S2Right;3:S3Right;4:S4Right;5:S5Right;6:S6Right;7:S7Right;8:S8Right;9:S9Right;10:S10Right;11:S11Right;")
+    end
+
+    -- enable paging for the first actionbar
+    if i == 1 then
+      EnablePaging(bars[i])
     end
 
     -- adjust actionbar size
@@ -855,11 +1372,11 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     elseif i == 3 then -- left
       bars[i]:SetPoint("BOTTOMLEFT", bars[1], "BOTTOMRIGHT", 3*border, 0)
     elseif i == 4 then -- vertical
-      bars[i]:SetPoint("RIGHT", -3*border, 0)
+      bars[i]:SetPoint("RIGHT", -2*border, 0)
     elseif i == 5 then -- right
       bars[i]:SetPoint("BOTTOMRIGHT", bars[1], "BOTTOMLEFT", -3*border, 0)
     elseif i == 6 then -- top
-      bars[i]:SetPoint("BOTTOM", bars[1], "TOP", 0, -1)
+      bars[i]:SetPoint("BOTTOM", bars[1], "TOP", 0, -spacing)
     elseif i == 11 then -- stances
       bars[i]:SetPoint("BOTTOM", bars[6], "TOP", 0, 3*border)
     elseif i == 12 then -- pet
@@ -889,16 +1406,16 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
             and C.bars.bar1.buttons == C.bars.bar6.buttons
           then
             bars[1].backdrop:ClearAllPoints()
-            bars[1].backdrop:SetPoint("BOTTOMRIGHT", bars[1], "BOTTOMRIGHT", bpad, -bpad)
-            bars[1].backdrop:SetPoint("TOPLEFT", bars[6].backdrop, "TOPLEFT", 0, 0)
+            bars[1].backdrop:SetPoint("BOTTOMRIGHT", bars[1], "BOTTOMRIGHT", border, -border)
+            bars[1].backdrop:SetPoint("TOPLEFT", bars[6], "TOPLEFT", -border, border)
             bars[6].backdrop:Hide()
           else
             if C.bars.bar1.background == "1" then
               -- create/reset bar1 backdrop if required
               CreateBackdrop(bars[1], border)
               bars[1].backdrop:ClearAllPoints()
-              bars[1].backdrop:SetPoint("BOTTOMRIGHT", bars[1], "BOTTOMRIGHT", bpad, -bpad)
-              bars[1].backdrop:SetPoint("TOPLEFT", bars[1], "TOPLEFT", -bpad, bpad)
+              bars[1].backdrop:SetPoint("BOTTOMRIGHT", bars[1], "BOTTOMRIGHT", border, -border)
+              bars[1].backdrop:SetPoint("TOPLEFT", bars[1], "TOPLEFT", -border, border)
             end
 
             if C.bars.bar6.background == "1" then
@@ -922,22 +1439,21 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
 
   -- create actionbars
   pfUI.bars = bars
+  pfUI.bars.update = updatecache
+  pfUI.bars.buttons = buttoncache
+  pfUI.bars.ButtonFullUpdate = ButtonFullUpdate
 
   pfUI.bars.UpdateGrid = function(self, state, typ)
     if not typ then
       showgrid = state
 
-      for j=1,12 do
-        for i=1,10 do
-          if pfUI.bars[i][j] then
-            pfUI.bars[i][j].forceupdate = true
-          end
-        end
+      for id in pairs(buttoncache) do
+        updatecache[id] = true
       end
     elseif typ == "PET" then
       showgrid_pet = state
-      for j=1,10 do
-        pfUI.bars[12][j].forceupdate = true
+      for slot=133,142 do
+        updatecache[slot] = true
       end
     end
   end
@@ -949,13 +1465,6 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
   end
 
   pfUI.bars:UpdateConfig()
-
-  -- helper function to update by slot
-  local function RefreshSlot(slot)
-    local bar, button = ceil(slot/12), mod(slot, 12)
-    button = button == 0 and 12 or button
-    bars[bar][button].forceupdate = true
-  end
 
   -- Localize custom keybinds for additional actionbars (see Bindings.xml)
   local names = {
@@ -975,6 +1484,8 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
 
   -- Map Keybinds to button clicks
   function _G.pfActionButton(slot, slfcast, opt)
+    if ChatFrameEditBox:IsShown() then return end
+
     local bar, button = 1, slot
 
     -- determine the proper bar and button
@@ -992,28 +1503,8 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     end
   end
 
+  -- Set keybinds to all actionbuttons
   if pfUI.client <= 11200 then
-    -- enable paging on the first actionbar
-    local pager = CreateFrame("Frame")
-    pager:RegisterEvent("PLAYER_ENTERING_WORLD")
-    pager:RegisterEvent("UPDATE_BONUS_ACTIONBAR")
-    pager:RegisterEvent("ACTIONBAR_PAGE_CHANGED")
-    pager:SetScript("OnEvent", function()
-      -- reload pageable bars
-      for i=1, 10 do
-        local pageable = C.bars["bar"..i] and C.bars["bar"..i].pageable == "1" and true or nil
-        _G.VIEWABLE_ACTION_BAR_PAGES[i] = pageable
-      end
-
-      -- set first actionbar to page
-      local bar = GetActiveBar()
-      for i=1,12 do
-        local id = i + (bar-1)*12
-        bars[1][i].id = id
-        bars[1][i].forceupdate = true
-      end
-    end)
-
     -- In order to be able to reuse already defined keybinds, we need to remap
     -- existing button functions to pfUI. We need to get rid of the blizzard calls
     -- to avoid having them call texture changes and errors due to missing buttons
@@ -1054,58 +1545,6 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
         end
       end
     end)
-
-    -- enable bar paging via secure functions
-    local function ButtonSwitch(self, att, value)
-      if att == "state-parent" then
-        local action = SecureButton_GetModifiedAttribute(self, "action", SecureStateChild_GetEffectiveButton(self)) or 0
-        if self.id ~= action then
-          self.id = action
-          self.forceupdate = true
-        end
-      end
-    end
-
-    local function SetState(self, state, action)
-      self:SetAttribute(("*type-S%d"):format(state), "action")
-      self:SetAttribute(("*type-S%dRight"):format(state), "action")
-      self:SetAttribute(("*action-S%d"):format(state), action)
-      self:SetAttribute(("*action-S%dRight"):format(state), action)
-    end
-
-    for i=1,12 do -- add events to all buttons
-      SetState(bars[1][i], 0, i)
-      for k = 1, 11 do SetState(bars[1][i], k, (k - 1) * 12 + i) end
-      bars[1][i]:SetScript("OnAttributeChanged", ButtonSwitch)
-      bars[1]:SetAttribute("addchild", bars[1][i])
-      bars[1][i]:SetAttribute("type", "action")
-      bars[1][i]:SetAttribute("action", i)
-      bars[1][i]:SetAttribute("checkselfcast", true)
-      bars[1][i]:SetAttribute("useparent-unit", true)
-      bars[1][i]:SetAttribute("useparent-statebutton", true)
-    end
-
-    local filter = "[bonusbar: 5] 11;"
-    for i=2, 6 do
-      local enabled = C.bars["bar"..i] and C.bars["bar"..i].pageable == "1" and 1 or nil
-      if enabled then
-        filter = string.format("%s[actionbar: %s] %s; ",filter,i,i)
-      end
-    end
-    filter = string.format("%s[bonusbar:1,nostealth] 7; [bonusbar:1,stealth] 7; [bonusbar:2] 10; [bonusbar:3] 9; [bonusbar:4] 10; 1", filter)
-
-    RegisterStateDriver(bars[1], "page", filter)
-    bars[1]:SetAttribute("statemap-page", "$input")
-    bars[1]:SetAttribute("statebutton", "0:S0;1:S1;2:S2;3:S3;4:S4;5:S5;6:S6;7:S7;8:S8;9:S9;10:S10;11:S11;")
-    bars[1]:SetAttribute("statebutton2", "0:S0Right;1:S1Right;2:S2Right;3:S3Right;4:S4Right;5:S5Right;6:S6Right;7:S7Right;8:S8Right;9:S9Right;10:S10Right;11:S11Right;")
-    --SecureStateHeader_Refresh(bars[1])
-
-    -- update to the current page
-    bars[1]:SetAttribute("state", bars[1]:GetAttribute("state-page"))
-
-    -- set state driver for pet bars
-    bars[12]:SetAttribute("unit", "pet")
-    RegisterStateDriver(bars[12], 'visibility', "[pet] show; hide")
   end
 
   -- handle drag-drop grid
@@ -1128,104 +1567,69 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
   end)
 
   -- reagent counter
-  local reagent_slots = { }
-  local reagent_counts = { }
-  local reagent_textureslots = { }
-  local reagent_capture = SPELL_REAGENTS.."(.+)"
-  local scanner = libtipscan:GetScanner("actionbar")
-  local reagentcounter = CreateFrame("Frame", "pfReagentCounter", UIParent)
-  reagentcounter:RegisterEvent("PLAYER_ENTERING_WORLD")
-  reagentcounter:RegisterEvent("ACTIONBAR_SLOT_CHANGED")
-  reagentcounter:RegisterEvent("BAG_UPDATE")
-  reagentcounter:SetScript("OnEvent", function()
-    if event == "BAG_UPDATE" then
-      this.event = true
-    else
-      for slot = 1, 120 do
-        local texture = GetActionTexture(slot)
+  if C.bars.reagents == "1" then
+    local reagent_slots = { }
+    local reagent_counts = { }
+    local reagent_textureslots = { }
+    local reagent_capture = SPELL_REAGENTS.."(.+)"
+    local scanner = libtipscan:GetScanner("actionbar")
+    local reagentcounter = CreateFrame("Frame", "pfReagentCounter", UIParent)
+    reagentcounter:RegisterEvent("PLAYER_ENTERING_WORLD")
+    reagentcounter:RegisterEvent("ACTIONBAR_SLOT_CHANGED")
+    reagentcounter:RegisterEvent("BAG_UPDATE")
+    reagentcounter:SetScript("OnEvent", function()
+      if event == "BAG_UPDATE" then
+        this.event = true
+      else
+        for slot = 1, 120 do
+          local texture = GetActionTexture(slot)
 
-        -- update buttons that previously had an reagent
-        if reagent_slots[slot] and not texture then
-          reagent_textureslots[slot] = nil
-          reagent_slots[slot] = nil
-          RefreshSlot(slot)
-        end
+          -- update buttons that previously had an reagent
+          if reagent_slots[slot] and not texture then
+            reagent_textureslots[slot] = nil
+            reagent_slots[slot] = nil
+            updatecache[slot] = true
+          end
 
-        -- search for reagents on buttons with different icon
-        if reagent_textureslots[slot] ~= texture then
-          if HasAction(slot) then
-            reagent_textureslots[slot] = texture
-            scanner:SetAction(slot)
-            local _, reagents = scanner:Find(reagent_capture)
-            if reagents then
-              reagent_slots[slot] = reagents
-              reagent_counts[reagents] = reagent_counts[reagents] or 0
-              RefreshSlot(slot)
+          -- search for reagents on buttons with different icon
+          if reagent_textureslots[slot] ~= texture then
+            if HasAction(slot) then
+              reagent_textureslots[slot] = texture
+              scanner:SetAction(slot)
+              local _, reagents = scanner:Find(reagent_capture)
+              if reagents then
+                reagent_slots[slot] = reagents
+                reagent_counts[reagents] = reagent_counts[reagents] or 0
+                updatecache[slot] = true
+              end
             end
           end
         end
       end
-    end
-  end)
+    end)
 
-  -- limit bag events to one per second
-  reagentcounter:SetScript("OnUpdate", function()
-    if ( this.tick or 1) > GetTime() then return else this.tick = GetTime() + 1 end
+    -- limit bag events to one per second
+    reagentcounter:SetScript("OnUpdate", function()
+      if ( this.tick or 1) > GetTime() then return else this.tick = GetTime() + 1 end
 
-    if this.event then
-      for item in pairs(reagent_counts) do
-        reagent_counts[item] = GetItemCount(item)
-      end
-      for slot in pairs(reagent_slots) do
-        RefreshSlot(slot)
-      end
-
-      this.event = nil
-    end
-  end)
-
-  function IsReagentAction(slot)
-    return reagent_slots[slot] and true or nil
-  end
-
-  function GetReagentCount(slot)
-    return reagent_counts[reagent_slots[slot]]
-  end
-
-  -- pagemaster / meta page switch
-  if C.bars.pagemaster == "1" then
-    local modifier = { "ALT", "SHIFT", "CTRL" }
-    local buttons = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "+", "=", "´" }
-    local shift, ctrl, alt, default = 6, 5, 3, 1
-    local current = CURRENT_ACTIONBAR_PAGE
-
-    local function SwitchBar(bar)
-      if _G.CURRENT_ACTIONBAR_PAGE ~= bar then
-        _G.CURRENT_ACTIONBAR_PAGE = bar
-        ChangeActionBarPage(bar)
-      end
-    end
-
-    local pagemaster = CreateFrame("Frame", "pfPageMaster", UIParent)
-    pagemaster:RegisterEvent("PLAYER_ENTERING_WORLD")
-    pagemaster:SetScript("OnEvent", function()
-      for _,mod in pairs(modifier) do
-        for _,but in pairs(buttons) do
-          SetBinding(mod.."-"..but)
+      if this.event then
+        for item in pairs(reagent_counts) do
+          reagent_counts[item] = GetItemCount(item)
         end
+        for slot in pairs(reagent_slots) do
+          updatecache[slot] = true
+        end
+
+        this.event = nil
       end
     end)
 
-    pagemaster:SetScript("OnUpdate", function()
-      if IsShiftKeyDown() then
-        SwitchBar(shift)
-      elseif IsControlKeyDown() then
-        SwitchBar(ctrl)
-      elseif IsAltKeyDown() then
-        SwitchBar(alt)
-      else
-        SwitchBar(default)
-      end
-    end)
+    function IsReagentAction(slot)
+      return reagent_slots[slot] and true or nil
+    end
+
+    function GetReagentCount(slot)
+      return reagent_counts[reagent_slots[slot]]
+    end
   end
 end)

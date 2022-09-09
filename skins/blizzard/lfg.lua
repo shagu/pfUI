@@ -1,7 +1,8 @@
 pfUI:RegisterSkin("Looking for group", "tbc", function ()
-  local border = tonumber(pfUI_config.appearance.border.default)
-  local bpad = border > 1 and border - 1 or 1
+  local rawborder, border = GetBorderSize()
+  local bpad = rawborder > 1 and border - GetPerfectPixel() or GetPerfectPixel()
 
+  StripTextures(LFGParentFrame)
   CreateBackdrop(LFGParentFrame, nil, nil, .75)
   CreateBackdropShadow(LFGParentFrame)
 
@@ -23,48 +24,52 @@ pfUI:RegisterSkin("Looking for group", "tbc", function ()
   SkinTab(LFGParentFrameTab2)
   LFGParentFrameTab2:ClearAllPoints()
   LFGParentFrameTab2:SetPoint("LEFT", LFGParentFrameTab1, "RIGHT", border*2 + 1, 0)
-
   LFGParentFrameBackground:Hide()
 
-  do -- LFGWizardFrame
-    SkinButton(LFGWizardFrameLFGButton)
-    SkinButton(LFGWizardFrameLFMButton)
+  LFGFrameClearAllButton:ClearAllPoints()
+  LFGFrameClearAllButton:SetPoint("RIGHT", LFGFrameDoneButton, "LEFT", -2*bpad, 0)
+
+  StripTextures(AutoJoinBackground)
+  SkinCheckbox(AutoJoinCheckButton)
+
+  StripTextures(AddMemberBackground)
+  SkinCheckbox(AutoAddMembersCheckButton)
+
+  CreateBackdrop(LFGComment)
+
+  -- skin buttons
+  local buttons = {
+    "LFGWizardFrameLFGButton",
+    "LFGWizardFrameLFMButton",
+    "LFGFrameDoneButton",
+    "LFGFrameClearAllButton",
+    "LFMFrameGroupInviteButton",
+    "LFMFrameSendMessageButton",
+    "LFMFrameSearchButton",
+    "LFMFrameColumnHeader1",
+    "LFMFrameColumnHeader2",
+    "LFMFrameColumnHeader3",
+    "LFMFrameColumnHeader4",
+  }
+
+  for _, name in pairs(buttons) do
+    SkinButton(_G[name])
   end
 
-  do -- LFGFrame
-    StripTextures(AutoJoinBackground)
+  -- skin dropdowns
+  local dropdowns = {
+    "LFGFrameTypeDropDown1",
+    "LFGFrameNameDropDown1",
+    "LFGFrameTypeDropDown2",
+    "LFGFrameNameDropDown2",
+    "LFGFrameTypeDropDown3",
+    "LFGFrameNameDropDown3",
+  }
 
-    SkinCheckbox(AutoJoinCheckButton)
-
-    SkinDropDown(LFGFrameTypeDropDown1)
-    SkinDropDown(LFGFrameNameDropDown1)
-    SkinDropDown(LFGFrameTypeDropDown2)
-    SkinDropDown(LFGFrameNameDropDown2)
-    SkinDropDown(LFGFrameTypeDropDown3)
-    SkinDropDown(LFGFrameNameDropDown3)
-
-    SkinButton(LFGFrameDoneButton)
-    SkinButton(LFGFrameClearAllButton)
-    LFGFrameClearAllButton:ClearAllPoints()
-    LFGFrameClearAllButton:SetPoint("RIGHT", LFGFrameDoneButton, "LEFT", -2*bpad, 0)
-
-    CreateBackdrop(LFGComment)
+  for _, name in pairs(dropdowns) do
+    SkinDropDown(_G[name])
   end
 
-  do -- LFMFrame
-    StripTextures(AddMemberBackground)
-
-    SkinCheckbox(AutoAddMembersCheckButton)
-
-    SkinDropDown(LFMFrameTypeDropDown, nil, nil, nil, true)
-    SkinDropDown(LFMFrameNameDropDown, nil, nil, nil, true)
-
-    for i=1, 4 do
-      SkinButton(_G["LFMFrameColumnHeader"..i])
-    end
-
-    SkinButton(LFMFrameGroupInviteButton)
-    SkinButton(LFMFrameSendMessageButton)
-    SkinButton(LFMFrameSearchButton)
-  end
+  SkinDropDown(LFMFrameTypeDropDown, nil, nil, nil, true)
+  SkinDropDown(LFMFrameNameDropDown, nil, nil, nil, true)
 end)

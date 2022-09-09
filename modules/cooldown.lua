@@ -6,12 +6,14 @@ pfUI:RegisterModule("cooldown", "vanilla:tbc", function ()
   local hourcolor   = {strsplit(",", C.appearance.cd.hourcolor)}
   local daycolor    = {strsplit(",", C.appearance.cd.daycolor)}
 
+  local parent
   local function pfCooldownOnUpdate()
-    if not this:GetParent() then this:Hide()  end
+    parent = this:GetParent()
+    if not parent then this:Hide() end
 
     -- avoid to set cooldowns on invalid frames
-    if this:GetParent() and this:GetParent():GetName() and _G[this:GetParent():GetName() .. "Cooldown"] then
-      if not _G[this:GetParent():GetName() .. "Cooldown"]:IsShown() then
+    if parent and parent:GetName() and _G[parent:GetName() .. "Cooldown"] then
+      if not _G[parent:GetName() .. "Cooldown"]:IsShown() then
         this:Hide()
       end
     end
@@ -21,32 +23,72 @@ pfUI:RegisterModule("cooldown", "vanilla:tbc", function ()
     this.next = GetTime() + .1
 
     -- fix own alpha value (should be inherited, but somehow isn't always)
-    this:SetAlpha(this:GetParent():GetAlpha())
+    this:SetAlpha(parent:GetAlpha())
 
-    local remaining = this.duration - (GetTime() - this.start)
-    if remaining >= 0 then
-      this.text:SetText(GetColoredTimeString(remaining))
+    if this.start < GetTime() then
+      -- calculating remaining time as it should be
+      local remaining = this.duration - (GetTime() - this.start)
+      if remaining >= 0 then
+        this.text:SetText(GetColoredTimeString(remaining))
+      else
+        this:Hide()
+      end
     else
-      this:Hide()
+      -- I have absolutely no idea, but it works:
+      -- https://github.com/Stanzilla/WoWUIBugs/issues/47
+      local time = time()
+      local startupTime = time - GetTime()
+      -- just a simplification of: ((2^32) - (start * 1000)) / 1000
+      local cdTime = (2 ^ 32) / 1000 - this.start
+      local cdStartTime = startupTime - cdTime
+      local cdEndTime = cdStartTime + this.duration
+      local remaining = cdEndTime - time
+
+      if remaining >= 0 then
+        this.text:SetText(GetColoredTimeString(remaining))
+      else
+        this:Hide()
+      end
     end
   end
 
+  local height, size
   local function pfCreateCoolDown(cooldown, start, duration)
-    cooldown.cd = CreateFrame("Frame", "pfCooldownFrame", cooldown:GetParent())
-    cooldown.cd:SetAllPoints(cooldown:GetParent())
-    cooldown.cd:SetFrameLevel(cooldown.cd:GetFrameLevel() + 1)
+    cooldown.pfCooldownText = CreateFrame("Frame", "pfCooldownFrame", cooldown:GetParent())
+    cooldown.pfCooldownText:SetAllPoints(cooldown)
+    cooldown.pfCooldownText:SetFrameLevel(cooldown:GetParent():GetFrameLevel() + 1)
+    cooldown.pfCooldownText.text = cooldown.pfCooldownText:CreateFontString("pfCooldownFrameText", "OVERLAY")
 
-    cooldown.cd.text = cooldown.cd:CreateFontString("pfCooldownFrameText", "OVERLAY")
-    cooldown.cd.text:SetFont(pfUI.font_unit, C.appearance.cd.font_size, "OUTLINE")
-    cooldown.cd.text:SetPoint("CENTER", cooldown.cd, "CENTER", 0, 0)
+    if not cooldown.pfCooldownType then
+      size = tonumber(C.appearance.cd.font_size_foreign)
+    elseif cooldown.pfCooldownType == "BLIZZARD" then
+      size = tonumber(C.appearance.cd.font_size_blizz)
+    elseif cooldown.pfCooldownSize then
+      size = tonumber(cooldown.pfCooldownSize)
+    else
+      size = tonumber(C.appearance.cd.font_size)
+    end
 
-    cooldown.cd:SetScript("OnUpdate", pfCooldownOnUpdate)
+    -- enforce dynamic font size
+    if C.appearance.cd.dynamicsize == "1" and cooldown.GetParent then
+      height = cooldown:GetParent() and cooldown:GetParent():GetHeight() or cooldown:GetHeight() or 0
+      size = math.max((height > 0 and height * .64 or 16), size)
+    end
+
+    cooldown.pfCooldownText.text:SetFont(pfUI.font_unit, size, "OUTLINE")
+    cooldown.pfCooldownText.text:SetPoint("CENTER", cooldown.pfCooldownText, "CENTER", 0, 0)
+    cooldown.pfCooldownText:SetScript("OnUpdate", pfCooldownOnUpdate)
   end
 
   -- hook
-  hooksecurefunc("CooldownFrame_SetTimer", function(this, start, duration, enable)
+  local function SetCooldown(this, start, duration, enable)
     -- abort on unknown frames
     if C.appearance.cd.foreign == "0" and not this.pfCooldownType then
+      return
+    end
+
+    -- add support for omnicc's disable flag
+    if this.noCooldownCount then
       return
     end
 
@@ -63,16 +105,41 @@ pfUI:RegisterModule("cooldown", "vanilla:tbc", function ()
       return
     end
 
+    -- disable GCDs on non pfUI frames
+    if not this.pfCooldownType and duration < tonumber(C.appearance.cd.threshold) then
+      return
+    end
+
+    -- hide animation
+    if this.pfCooldownStyleAnimation == 0 then
+      this:SetAlpha(0)
+    elseif not this.pfCooldownStyleAnimation and C.appearance.cd.hideanim == "1" then
+      this:SetAlpha(0)
+    end
+
     -- print time as text on cooldown frames
-    if start > 0 and duration > 0 and enable > 0 then
-      if( not this.cd ) then
+    if ( not this.pfCooldownStyleText or this.pfCooldownStyleText == 1)
+    and start > 0 and duration > 0 and (not enable or enable > 0) then
+      if( not this.pfCooldownText ) then
         pfCreateCoolDown(this, start, duration)
       end
-      this.cd.start = start
-      this.cd.duration = duration
-      this.cd:Show()
-    elseif(this.cd) then
-      this.cd:Hide();
+
+      this.pfCooldownText.start = start
+      this.pfCooldownText.duration = duration
+      this.pfCooldownText:Show()
+    elseif(this.pfCooldownText) then
+      this.pfCooldownText:Hide()
     end
-  end)
+  end
+
+  if pfUI.expansion == "vanilla" then
+    -- vanilla does not have a cooldown frame type, so we hook the
+    -- regular SetTimer function that each one is calling.
+    hooksecurefunc("CooldownFrame_SetTimer", SetCooldown)
+  else
+    -- tbc and later expansion have a cooldown frametype, so we can
+    -- hook directly into the frame creation and add our function there.
+    local methods = getmetatable(CreateFrame('Cooldown', nil, nil, 'CooldownFrameTemplate')).__index
+    hooksecurefunc(methods, 'SetCooldown', SetCooldown)
+  end
 end)

@@ -1,6 +1,6 @@
 pfUI:RegisterSkin("Spellbook", "vanilla:tbc", function ()
-  local border = tonumber(pfUI_config.appearance.border.default)
-  local bpad = border > 1 and border - 1 or 1
+  local rawborder, border = GetBorderSize()
+  local bpad = rawborder > 1 and border - GetPerfectPixel() or GetPerfectPixel()
 
   StripTextures(SpellBookFrame)
   CreateBackdrop(SpellBookFrame, nil, nil, .75)
@@ -55,16 +55,6 @@ pfUI:RegisterSkin("Spellbook", "vanilla:tbc", function ()
     if lastbutton then
       button:ClearAllPoints()
       button:SetPoint("TOP", lastbutton, "BOTTOM", 0, - (border + (border == 1 and 1 or 2) + bpad))
-    end
-
-    function button.SetChecked(self, checked)
-      if checked then
-        self.locked = true
-        self:SetBackdropBorderColor(1,1,1)
-      else
-        self.locked = false
-        self:SetBackdropBorderColor(GetStringColor(pfUI_config.appearance.border.color))
-      end
     end
   end
 

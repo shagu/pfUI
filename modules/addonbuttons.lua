@@ -1,11 +1,8 @@
-pfUI:RegisterModule("addonbuttons", "vanilla", function ()
+pfUI:RegisterModule("addonbuttons", "vanilla:tbc", function ()
   if not pfUI.minimap then return end
   if C.abuttons.enable == "0" then return end
 
-  local default_border = C.appearance.border.default
-  if C.appearance.border.panels ~= "-1" then
-    default_border = C.appearance.border.panels
-  end
+  local rawborder, default_border = GetBorderSize("panels")
 
   pfUI_cache["abuttons"] = pfUI_cache["abuttons"] or {}
   pfUI_cache["abuttons"]["add"] = pfUI_cache["abuttons"]["add"] or {}
@@ -29,6 +26,8 @@ pfUI:RegisterModule("addonbuttons", "vanilla", function ()
     "MiniNotePOI",
     "FWGMinimapPOI",
     "RecipeRadarMinimapIcon",
+    "MiniMapTracking",
+    "CartographerNotesPOI"
   }
 
   pfUI.addonbuttons = CreateFrame("Frame", "pfMinimapButtons", UIParent)
@@ -214,15 +213,18 @@ pfUI:RegisterModule("addonbuttons", "vanilla", function ()
     SetupMainFrame()
   end
 
+  local parent
   local function GetTopFrame(frame)
-    if frame:GetParent() == Minimap or frame:GetParent() == UIParent then
+    parent = frame:GetParent()
+    if not parent or parent == Minimap or parent == MinimapBackdrop or parent == UIParent then
       return frame
     else
-      return GetTopFrame(frame:GetParent())
+      return GetTopFrame(parent)
     end
   end
 
   local function BackupButton(frame)
+    if not frame then return end
     if frame.backup == nil then
       frame.backup = {}
       frame.backup.top_frame_name = GetTopFrame(frame):GetName()
@@ -275,6 +277,7 @@ pfUI:RegisterModule("addonbuttons", "vanilla", function ()
   end
 
   local function MoveButton(index, frame)
+    if not frame then return end
     local top_frame, row_index, offsetX, offsetY, final_scale
     top_frame = GetTopFrame(frame)
     final_scale = GetScale() / pfUI.addonbuttons.effective_scale
@@ -385,7 +388,7 @@ pfUI:RegisterModule("addonbuttons", "vanilla", function ()
   function pfUI.addonbuttons:ProcessButtons()
     UpdatePanel()
     for i, button_name in ipairs(pfUI.addonbuttons.buttons) do
-      if _G[button_name] ~= nil then
+      if _G[button_name] then
         BackupButton(_G[button_name])
         MoveButton(i, _G[button_name])
       end
@@ -403,7 +406,7 @@ pfUI:RegisterModule("addonbuttons", "vanilla", function ()
     if ( this.tick or 1) > GetTime() then return else this.tick = GetTime() + 3 end
 
     pfUI.addonbuttons:ProcessButtons()
-    for k, v in pfUI.addonbuttons.overrides do
+    for k, v in pairs(pfUI.addonbuttons.overrides) do
       _G[k] = v
     end
   end)

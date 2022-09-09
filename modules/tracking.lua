@@ -10,11 +10,9 @@ pfUI:RegisterModule("tracking", "vanilla", function ()
     return nil
   end
 
-  local config = {
-      border = C.appearance.border.default,
-      size = tonumber(C.appearance.minimap.tracking_size),
-      pulse = C.appearance.minimap.tracking_pulse == "1"
-  }
+  local rawborder, border = GetBorderSize()
+  local size = tonumber(C.appearance.minimap.tracking_size)
+  local pulse = C.appearance.minimap.tracking_pulse == "1"
 
   local knownTrackingSpellTextures = {
     any = {
@@ -50,13 +48,13 @@ pfUI:RegisterModule("tracking", "vanilla", function ()
 
   pfUI.tracking = CreateFrame("Button", "pfUITracking", UIParent)
   pfUI.tracking:SetFrameStrata("LOW")
-  CreateBackdrop(pfUI.tracking, config.border)
+  CreateBackdrop(pfUI.tracking, border)
   CreateBackdropShadow(pfUI.tracking)
 
   pfUI.tracking:SetPoint("TOPLEFT", pfUI.minimap, -10, -10)
   UpdateMovable(pfUI.tracking)
-  pfUI.tracking:SetWidth(config.size)
-  pfUI.tracking:SetHeight(config.size)
+  pfUI.tracking:SetWidth(size)
+  pfUI.tracking:SetHeight(size)
 
   pfUI.tracking.icon = pfUI.tracking:CreateTexture("BACKGROUND")
   pfUI.tracking.icon:SetTexCoord(.08, .92, .08, .92)
@@ -84,7 +82,7 @@ pfUI:RegisterModule("tracking", "vanilla", function ()
     elseif not texture then
       state.texture = nil
 
-      if config.pulse and HasEntries(state.spells) then
+      if pulse and HasEntries(state.spells) then
         this.pulse = true
         this.icon:SetTexture("Interface\\Icons\\INV_Misc_QuestionMark")
         this.icon:SetVertexColor(1,1,1,1)
@@ -208,6 +206,6 @@ pfUI:RegisterModule("tracking", "vanilla", function ()
           end
         })
       end
-    end, "MENU");
+    end, "MENU")
   end
 end)

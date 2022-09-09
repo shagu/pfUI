@@ -1,5 +1,6 @@
 pfUI:RegisterModule("minimap", "vanilla:tbc", function ()
-  local border = tonumber(pfUI_config.appearance.border.default)
+  local rawborder, border = GetBorderSize()
+
   if MiniMapWorldMapButton then MiniMapWorldMapButton:Hide() end
   if MinimapToggleButton then MinimapToggleButton:Hide() end
   MinimapBorderTop:Hide()
@@ -13,7 +14,7 @@ pfUI:RegisterModule("minimap", "vanilla:tbc", function ()
   pfUI.minimap = CreateFrame("Frame","pfMinimap",UIParent)
   CreateBackdrop(pfUI.minimap)
   CreateBackdropShadow(pfUI.minimap)
-  pfUI.minimap:SetPoint("TOPRIGHT", UIParent, -5, -5)
+  pfUI.minimap:SetPoint("TOPRIGHT", UIParent, -border*2, -border*2)
   UpdateMovable(pfUI.minimap)
   pfUI.minimap:SetWidth(140)
   pfUI.minimap:SetHeight(140)
@@ -103,8 +104,6 @@ pfUI:RegisterModule("minimap", "vanilla:tbc", function ()
     this.highlight.count = 0
     this.highlight:Show()
   end)
-
-  MINIMAP_TRACKING_FRAME:SetFrameStrata("LOW")
 
   -- Create coordinates text frame with location configurable
   pfUI.minimapCoordinates = CreateFrame("Frame", "pfMinimapCoord", pfUI.minimap)

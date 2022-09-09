@@ -54,7 +54,7 @@ pfUI:RegisterModule("mapreveal", "vanilla:tbc", function ()
   end
 
   local function unpack_hash(prefix, hash)
-    local _, stored_prefix, textureName, textureWidth, textureHeight, offsetX, offsetY, mapPointX, mapPointY
+    local _, stored_prefix, textureName, textureWidth, textureHeight, offsetX, offsetY, mapPointX, mapPointY, oldName
     _, _, stored_prefix, textureName, textureWidth, textureHeight, offsetX, offsetY = string.find(hash, "^([|]?)([^:]+):([^:]+):([^:]+):([^:]+):([^:]+)")
     if (not textureName or not offsetY) then
       return
@@ -67,9 +67,38 @@ pfUI:RegisterModule("mapreveal", "vanilla:tbc", function ()
     end
     if (stored_prefix ~= "|") then
       textureName = string.format("%s%s",prefix,textureName)
+      oldName = textureName
     end
     -- coerce to number by addition; cheaper than tonumber()
-    return textureName, textureWidth + 0, textureHeight + 0, offsetX + 0, offsetY + 0, mapPointX + 0, mapPointY + 0
+    return textureName, textureWidth + 0, textureHeight + 0, offsetX + 0, offsetY + 0, mapPointX + 0, mapPointY + 0, oldName
+  end
+
+  local explores = {}
+  local explorecaches = {}
+
+  local exploreEnter = function()
+    GameTooltip:ClearLines()
+    GameTooltip:SetOwner(this, "ANCHOR_TOP")
+    GameTooltip:AddLine("Explore:", .3, 1, .8)
+    GameTooltip:AddLine(this.name, 1, 1, 1)
+    GameTooltip:Show()
+
+    if not explorecaches[this.name] then return end
+    if C.appearance.worldmap.mapreveal == "0" then return end
+    local r,g,b,a = GetStringColor(C.appearance.worldmap.mapreveal_color)
+    for texture in pairs(explorecaches[this.name]) do
+      texture:SetVertexColor(1,1,1,1)
+    end
+  end
+
+  local exploreLeave = function()
+    GameTooltip:Hide()
+    if not explorecaches[this.name] then return end
+    if C.appearance.worldmap.mapreveal == "0" then return end
+    local r,g,b,a = GetStringColor(C.appearance.worldmap.mapreveal_color)
+    for texture in pairs(explorecaches[this.name]) do
+      texture:SetVertexColor(r,g,b,a)
+    end
   end
 
   local function pfWorldMapFrame_Update()
@@ -88,11 +117,39 @@ pfUI:RegisterModule("mapreveal", "vanilla:tbc", function ()
       alreadyknown[textureName] = overlayHash
     end
 
+    -- hide all exploration points
+    for k, frame in pairs(explores) do
+      frame:Hide()
+    end
+
     local zoneData = overlayData[mapFileName]
     local textureCount = 0
     local texturePixelWidth, textureFileWidth, texturePixelHeight, textureFileHeight
     for i, hash in ipairs(zoneData) do
-      local textureName, textureWidth, textureHeight, offsetX, offsetY, mapPointX, mapPointY = unpack_hash(prefix, hash)
+      local textureName, textureWidth, textureHeight, offsetX, offsetY, mapPointX, mapPointY, name = unpack_hash(prefix, hash)
+
+      explores[i] = explores[i] or CreateFrame("Frame", nil, WorldMapDetailFrame)
+      local explore = explores[i]
+      explore:SetWidth(16)
+      explore:SetHeight(16)
+      explore:SetPoint("TOPLEFT", "WorldMapDetailFrame", "TOPLEFT", offsetX+textureWidth/2, -offsetY-textureHeight/2)
+      explore:SetScript("OnEnter", exploreEnter)
+      explore:SetScript("OnLeave", exploreLeave)
+      explore:EnableMouse(true)
+      explore:SetFrameLevel(255)
+      explore.name = name
+      explore.tex = explore.tex or explore:CreateTexture("", "OVERLAY")
+      explore.tex:SetBlendMode("ADD")
+      explore.tex:SetTexCoord(.08, .92, .08, .92)
+      explore.tex:SetAllPoints()
+
+      if C.appearance.worldmap.mapexploration == "1" and not alreadyknown[textureName] then
+        explore.tex:SetTexture("Interface\\WorldMap\\WorldMap-MagnifyingGlass")
+        explore:Show()
+      else
+        explore:Hide()
+      end
+
       if C.appearance.worldmap.mapreveal == "1" or alreadyknown[textureName] then
         if errata[textureName] and errata[textureName].offsetX and errata[textureName].offsetX[1] == offsetX then
           offsetX = errata[textureName].offsetX[2]
@@ -142,6 +199,9 @@ pfUI:RegisterModule("mapreveal", "vanilla:tbc", function ()
             texture:ClearAllPoints()
             texture:SetPoint("TOPLEFT", "WorldMapDetailFrame", "TOPLEFT", offsetX + (256 *(k - 1)), -(offsetY +(256 *(j - 1))))
             texture:SetTexture(string.format("%s%s",textureName,(((j - 1) * numTexturesHorz) + k)))
+
+            explorecaches[name] = explorecaches[name] or {}
+            explorecaches[name][texture] = true
 
             if not alreadyknown[textureName] then
               texture:SetVertexColor(r,g,b,a)

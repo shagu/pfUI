@@ -1,6 +1,6 @@
 pfUI:RegisterSkin("Auctionhouse", "vanilla:tbc", function ()
-  local border = tonumber(pfUI_config.appearance.border.default)
-  local bpad = border > 1 and border - 1 or 1
+  local rawborder, border = GetBorderSize()
+  local bpad = rawborder > 1 and border - GetPerfectPixel() or GetPerfectPixel()
   HookAddonOrVariable("Blizzard_AuctionUI", function()
     -- Compatibility
     if BrowseResetButton then -- tbc
@@ -58,15 +58,23 @@ pfUI:RegisterSkin("Auctionhouse", "vanilla:tbc", function ()
 
       for i = 1, NUM_BROWSE_TO_DISPLAY do
         local button = _G["BrowseButton"..i]
-        StripTextures(button, nil, "BACKGROUND")
-        CreateBackdrop(button, nil, true)
-        button:GetHighlightTexture():SetHeight(40)
+        if button then
+          StripTextures(button, nil, "BACKGROUND")
+          CreateBackdrop(button, nil, true)
+
+          local highlight = button:GetHighlightTexture()
+          if highlight then
+            highlight:SetHeight(40)
+          end
+        end
 
         local item = _G["BrowseButton"..i.."Item"]
-        StripTextures(item)
-        SkinButton(item, nil, nil, nil, nil, true)
-        item:ClearAllPoints()
-        item:SetPoint("LEFT", 2, 0)
+        if item then
+          StripTextures(item)
+          SkinButton(item, nil, nil, nil, nil, true)
+          item:ClearAllPoints()
+          item:SetPoint("LEFT", 2, 0)
+        end
       end
       hooksecurefunc("AuctionFrameBrowse_Update", function()
         for i = 1, NUM_BROWSE_TO_DISPLAY do

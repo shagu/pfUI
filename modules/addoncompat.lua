@@ -35,6 +35,7 @@ pfUI:RegisterModule("addoncompat", function ()
     ["ShaguPlates"] = { always },
     ["ShaguTooltips"] = { always },
     ["ShaguValue"] = { always },
+    ["ShaguTweaks"] = { always },
     ["ColorGuildFrame-1.0"] = { always },
     ["ColorSocialFrame"] = { always },
     ["DebuffTimers"] = { always },

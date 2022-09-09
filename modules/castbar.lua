@@ -1,12 +1,7 @@
 pfUI:RegisterModule("castbar", "vanilla:tbc", function ()
   local font = C.castbar.use_unitfonts == "1" and pfUI.font_unit or pfUI.font_default
   local font_size = C.castbar.use_unitfonts == "1" and C.global.font_unit_size or C.global.font_size
-
-  local default_border = C.appearance.border.default
-  if C.appearance.border.unitframes ~= "-1" then
-    default_border = C.appearance.border.unitframes
-  end
-
+  local rawborder, default_border = GetBorderSize("unitframes")
   local cbtexture = pfUI.media[C.appearance.castbar.texture]
 
   local function CreateCastbar(name, parent, unitstr, unitname)
@@ -28,7 +23,6 @@ pfUI:RegisterModule("castbar", "vanilla:tbc", function ()
     cb.icon.texture:SetAllPoints()
     cb.icon.texture:SetTexCoord(.08, .92, .08, .92)
     CreateBackdrop(cb.icon, default_border)
-    CreateBackdropShadow(cb.icon)
 
     -- statusbar
     cb.bar = CreateFrame("StatusBar", nil, cb)
@@ -106,10 +100,11 @@ pfUI:RegisterModule("castbar", "vanilla:tbc", function ()
 
         this:SetAlpha(1)
 
+        local rank = this.showrank and nameSubtext and nameSubtext ~= "" and string.format(" |cffaaffcc[%s]|r", nameSubtext) or ""
         if this.endTime ~= endTime then
           this.bar:SetStatusBarColor(strsplit(",", C.appearance.castbar[(channel and "channelcolor" or "castbarcolor")]))
           this.bar:SetMinMaxValues(0, duration / 1000)
-          this.bar.left:SetText(cast)
+          this.bar.left:SetText(cast .. rank)
           this.fadeout = nil
           this.endTime = endTime
 
@@ -120,7 +115,7 @@ pfUI:RegisterModule("castbar", "vanilla:tbc", function ()
             this.icon:SetHeight(size)
             this.icon:SetWidth(size)
             this.icon.texture:SetTexture(texture)
-            this.bar:SetPoint("TOPLEFT", this.icon, "TOPRIGHT", 3, 0)
+            this.bar:SetPoint("TOPLEFT", this.icon, "TOPRIGHT", this.spacing, 0)
           else
             this.bar:SetPoint("TOPLEFT", this, 0, 0)
             this.icon:Hide()
@@ -129,7 +124,7 @@ pfUI:RegisterModule("castbar", "vanilla:tbc", function ()
           if this.showlag then
             local _, _, lag = GetNetStats()
             local width = this:GetWidth() / (duration/1000) * (lag/1000)
-            this.bar.lag:SetWidth(width)
+            this.bar.lag:SetWidth(math.min(this:GetWidth(), width))
           else
             this.bar.lag:Hide()
           end
@@ -161,19 +156,26 @@ pfUI:RegisterModule("castbar", "vanilla:tbc", function ()
     end)
 
     -- register for spell delay
+    local playerarg = nil
     cb:RegisterEvent(CASTBAR_EVENT_CAST_DELAY)
     cb:RegisterEvent(CASTBAR_EVENT_CHANNEL_DELAY)
+    cb:RegisterEvent(CASTBAR_EVENT_CAST_START)
+    cb:RegisterEvent(CASTBAR_EVENT_CHANNEL_START)
     cb:SetScript("OnEvent", function()
       if this.unitstr and not UnitIsUnit(this.unitstr, "player") then return end
+      playerarg = pfUI.client <= 11200 or arg1 == "player" and true or nil
 
-      if event == CASTBAR_EVENT_CAST_DELAY then
+      if event == CASTBAR_EVENT_CAST_DELAY and playerarg then
         local isCast, nameSubtext, text, texture, startTime, endTime, isTradeSkill = UnitCastingInfo(this.unitstr or this.unitname)
         if not isCast then return end
+        if not this.endTime then return end
         this.delay = this.delay + (endTime - this.endTime) / 1000
-      elseif event == CASTBAR_EVENT_CHANNEL_DELAY then
+      elseif event == CASTBAR_EVENT_CHANNEL_DELAY and playerarg then
         local isChannel, _, _, _, startTime, endTime = UnitChannelInfo(this.unitstr or this.unitname)
         if not isChannel then return end
         this.delay = ( this.delay or 0 ) + this.bar:GetValue() - (endTime/1000 - GetTime())
+      elseif playerarg then
+        this.delay = 0
       end
     end)
 
@@ -185,6 +187,7 @@ pfUI:RegisterModule("castbar", "vanilla:tbc", function ()
 
   -- hide blizzard
   if C.castbar.player.hide_blizz == "1" then
+    CastingBarFrame:SetScript("OnShow", function() CastingBarFrame:Hide() end)
     CastingBarFrame:UnregisterAllEvents()
     CastingBarFrame:Hide()
   end
@@ -194,11 +197,12 @@ pfUI:RegisterModule("castbar", "vanilla:tbc", function ()
     pfUI.castbar.player = CreateCastbar("pfPlayerCastbar", UIParent, "player")
     pfUI.castbar.player.showicon = C.castbar.player.showicon == "1" and true or nil
     pfUI.castbar.player.showlag = C.castbar.player.showlag == "1" and true or nil
+    pfUI.castbar.player.showrank = C.castbar.player.showrank == "1" and true or nil
+    pfUI.castbar.player.spacing = default_border * 2 + tonumber(C.unitframes.player.pspace) * GetPerfectPixel()
 
     if pfUI.uf.player then
-      local pspace = tonumber(C.unitframes.player.pspace)
       local width = C.castbar.player.width ~= "-1" and C.castbar.player.width or pfUI.uf.player:GetWidth()
-      pfUI.castbar.player:SetPoint("TOPLEFT", pfUI.uf.player, "BOTTOMLEFT", 0, -default_border * 2 - pspace)
+      pfUI.castbar.player:SetPoint("TOPLEFT", pfUI.uf.player, "BOTTOMLEFT", 0, -pfUI.castbar.player.spacing)
       pfUI.castbar.player:SetWidth(width)
     else
       local width = C.castbar.player.width ~= "-1" and C.castbar.player.width or 200
@@ -218,11 +222,12 @@ pfUI:RegisterModule("castbar", "vanilla:tbc", function ()
     pfUI.castbar.target = CreateCastbar("pfTargetCastbar", UIParent, "target")
     pfUI.castbar.target.showicon = C.castbar.target.showicon == "1" and true or nil
     pfUI.castbar.target.showlag = C.castbar.target.showlag == "1" and true or nil
+    pfUI.castbar.target.showrank = C.castbar.target.showrank == "1" and true or nil
+    pfUI.castbar.target.spacing = default_border * 2 + tonumber(C.unitframes.target.pspace) * GetPerfectPixel()
 
     if pfUI.uf.target then
-      local pspace = tonumber(C.unitframes.target.pspace)
       local width = C.castbar.target.width ~= "-1" and C.castbar.target.width or pfUI.uf.target:GetWidth()
-      pfUI.castbar.target:SetPoint("TOPLEFT", pfUI.uf.target, "BOTTOMLEFT", 0, -default_border * 2 - pspace)
+      pfUI.castbar.target:SetPoint("TOPLEFT", pfUI.uf.target, "BOTTOMLEFT", 0, -pfUI.castbar.target.spacing)
       pfUI.castbar.target:SetWidth(width)
     else
       local width = C.castbar.target.width ~= "-1" and C.castbar.target.width or 200
@@ -239,13 +244,19 @@ pfUI:RegisterModule("castbar", "vanilla:tbc", function ()
 
   -- [[ pfFocusCastbar ]] --
   if C.castbar.focus.hide_pfui == "0" and pfUI.uf.focus then
-    pfUI.castbar.focus = CreateCastbar("pfFocusCastbar", UIParent)
+    pfUI.castbar.focus = CreateCastbar("pfFocusCastbar", UIParent, "focus")
     pfUI.castbar.focus.showicon = C.castbar.focus.showicon == "1" and true or nil
     pfUI.castbar.focus.showlag = C.castbar.focus.showlag == "1" and true or nil
+    pfUI.castbar.focus.showrank = C.castbar.focus.showrank == "1" and true or nil
+    pfUI.castbar.focus.spacing = default_border * 2 + tonumber(C.unitframes.focus.pspace) * GetPerfectPixel()
 
-    local pspace = tonumber(C.unitframes.focus.pspace)
+    -- reset unitstr for vanilla focus frame emulation
+    if pfUI.client <= 11200 then
+      pfUI.castbar.focus.unitstr = nil
+    end
+
     local width = C.castbar.focus.width ~= "-1" and C.castbar.focus.width or pfUI.uf.focus:GetWidth()
-    pfUI.castbar.focus:SetPoint("TOPLEFT", pfUI.uf.focus, "BOTTOMLEFT", 0, -default_border * 2 - pspace)
+    pfUI.castbar.focus:SetPoint("TOPLEFT", pfUI.uf.focus, "BOTTOMLEFT", 0, -pfUI.castbar.focus.spacing)
     pfUI.castbar.focus:SetWidth(width)
 
     if C.castbar.focus.height ~= "-1" then

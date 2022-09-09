@@ -70,7 +70,7 @@ function libdebuff:GetMaxRank(effect)
 end
 
 function libdebuff:UpdateUnits()
-  if not pfUI.uf.target then return end
+  if not pfUI.uf or not pfUI.uf.target then return end
   pfUI.uf:RefreshUnit(pfUI.uf.target, "aura")
 end
 

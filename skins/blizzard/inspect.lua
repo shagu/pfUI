@@ -21,8 +21,8 @@ local slots = {
 }
 
 pfUI:RegisterSkin("Inspect", "tbc", function ()
-  local border = tonumber(pfUI_config.appearance.border.default)
-  local bpad = border > 1 and border - 1 or 1
+  local rawborder, border = GetBorderSize()
+  local bpad = rawborder > 1 and border - GetPerfectPixel() or GetPerfectPixel()
 
   HookAddonOrVariable("Blizzard_InspectUI", function()
     CreateBackdrop(InspectFrame, nil, nil, .75)
@@ -79,7 +79,7 @@ pfUI:RegisterSkin("Inspect", "tbc", function ()
         if link then
           local quality = select(3, GetItemInfo(link))
           button:SetBackdropBorderColor(GetItemQualityColor(quality))
-      else
+        else
           button:SetBackdropBorderColor(pfUI.cache.er, pfUI.cache.eg, pfUI.cache.eb, pfUI.cache.ea)
         end
       end)
@@ -116,7 +116,7 @@ pfUI:RegisterSkin("Inspect", "tbc", function ()
         tab:ClearAllPoints()
         if lastTab then
           tab:SetPoint("LEFT", lastTab, "RIGHT", border*2 + 1, 0)
-      else
+        else
           tab:SetPoint("TOPLEFT", 70, -50)
         end
         SkinTab(tab)
@@ -126,8 +126,8 @@ pfUI:RegisterSkin("Inspect", "tbc", function ()
 end)
 
 pfUI:RegisterSkin("Inspect", "vanilla", function ()
-  local border = tonumber(pfUI_config.appearance.border.default)
-  local bpad = border > 1 and border - 1 or 1
+  local rawborder, border = GetBorderSize()
+  local bpad = rawborder > 1 and border - GetPerfectPixel() or GetPerfectPixel()
 
   HookAddonOrVariable("Blizzard_InspectUI", function()
     local cache = {}
@@ -165,7 +165,7 @@ pfUI:RegisterSkin("Inspect", "vanilla", function ()
         local frame = _G["Inspect"..slot]
         StripTextures(frame)
         CreateBackdrop(frame)
-        SetAllPointsOffset(frame.backdrop, frame, 2)
+        SetAllPointsOffset(frame.backdrop, frame, 0)
 
         HandleIcon(frame.backdrop, _G["Inspect"..slot.."IconTexture"])
 
@@ -202,7 +202,7 @@ pfUI:RegisterSkin("Inspect", "vanilla", function ()
           local retry = false
 
           if link and slot.hasItem then
-            local _, _, link = string.find(link, "(item:%d+:%d+:%d+:%d+)");
+            local _, _, link = string.find(link, "(item:%d+:%d+:%d+:%d+)")
             local _, _, quality = GetItemInfo(link)
 
             if not quality then
@@ -233,6 +233,7 @@ pfUI:RegisterSkin("Inspect", "vanilla", function ()
             retry = true
           else
             CreateBackdrop(slot)
+            SetAllPointsOffset(slot.backdrop, slot, 0)
             if slot.scoreText then
               slot.scoreText:SetText("")
             end

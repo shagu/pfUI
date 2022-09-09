@@ -5,6 +5,8 @@ pfUI:RegisterModule("buff", "vanilla:tbc", function ()
   TemporaryEnchantFrame:Hide()
   TemporaryEnchantFrame:UnregisterAllEvents()
 
+  local br, bg, bb, ba = GetStringColor(pfUI_config.appearance.border.color)
+
   local function RefreshBuffButton(buff)
     if buff.btype == "HELPFUL" then
       if C.buffs.separateweapons == "1" then
@@ -16,6 +18,11 @@ pfUI:RegisterModule("buff", "vanilla:tbc", function ()
       buff.id = buff.gid
     end
     buff.bid = GetPlayerBuff(PLAYER_BUFF_START_ID+buff.id, buff.btype)
+
+    if not buff.backdrop then
+      CreateBackdrop(buff)
+      CreateBackdropShadow(buff)
+    end
 
     --detect weapon buffs
     if buff.btype == "HELPFUL" and ((C.buffs.separateweapons == "0" and buff.gid <= pfUI.buff.wepbuffs.count) or (pfUI.buff.wepbuffs.count > 0 and buff.weapon ~= nil)) then
@@ -51,8 +58,6 @@ pfUI:RegisterModule("buff", "vanilla:tbc", function ()
       -- Set Buff Texture and Border
       buff.mode = buff.btype
       buff.texture:SetTexture(GetPlayerBuffTexture(buff.bid))
-      CreateBackdrop(buff)
-      CreateBackdropShadow(buff)
 
       if buff.btype == "HARMFUL" then
         local dtype = GetPlayerBuffDispelType(buff.bid)
@@ -67,6 +72,8 @@ pfUI:RegisterModule("buff", "vanilla:tbc", function ()
         else
           buff.backdrop:SetBackdropBorderColor(1,0,0,1)
         end
+      else
+        buff.backdrop:SetBackdropBorderColor(br,bg,bb,ba)
       end
     else
       buff:Hide()
@@ -199,8 +206,6 @@ pfUI:RegisterModule("buff", "vanilla:tbc", function ()
       end
     end)
 
-    CreateBackdrop(buff)
-    CreateBackdropShadow(buff)
     RefreshBuffButton(buff)
 
     return buff

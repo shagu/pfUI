@@ -93,28 +93,24 @@ end
 setmetatable(pfUI.env, {__index = getfenv(0)})
 
 function pfUI:UpdateColors()
-  ManaBarColor = ManaBarColor or {}
-  ManaBarColor[0] = { r = 0.00, g = 0.00, b = 1.00, prefix = TEXT(MANA) };
-  ManaBarColor[1] = { r = 1.00, g = 0.00, b = 0.00, prefix = TEXT(RAGE_POINTS) };
-  ManaBarColor[2] = { r = 1.00, g = 0.50, b = 0.25, prefix = TEXT(FOCUS_POINTS) };
-  ManaBarColor[3] = { r = 1.00, g = 1.00, b = 0.00, prefix = TEXT(ENERGY_POINTS) };
-  ManaBarColor[4] = { r = 0.00, g = 1.00, b = 1.00, prefix = TEXT(HAPPINESS_POINTS) };
+  if pfUI.expansion == "vanilla" then
+    -- update table to get unknown colors and blue shamans for vanilla
+    RAID_CLASS_COLORS = {
+      ["WARRIOR"] = { r = 0.78, g = 0.61, b = 0.43, colorStr = "ffc79c6e" },
+      ["MAGE"]    = { r = 0.41, g = 0.8,  b = 0.94, colorStr = "ff69ccf0" },
+      ["ROGUE"]   = { r = 1,    g = 0.96, b = 0.41, colorStr = "fffff569" },
+      ["DRUID"]   = { r = 1,    g = 0.49, b = 0.04, colorStr = "ffff7d0a" },
+      ["HUNTER"]  = { r = 0.67, g = 0.83, b = 0.45, colorStr = "ffabd473" },
+      ["SHAMAN"]  = { r = 0.14, g = 0.35, b = 1.0,  colorStr = "ff0070de" },
+      ["PRIEST"]  = { r = 1,    g = 1,    b = 1,    colorStr = "ffffffff" },
+      ["WARLOCK"] = { r = 0.58, g = 0.51, b = 0.79, colorStr = "ff9482c9" },
+      ["PALADIN"] = { r = 0.96, g = 0.55, b = 0.73, colorStr = "fff58cba" },
+    }
 
-  RAID_CLASS_COLORS = {
-    ["WARRIOR"] = { r = 0.78, g = 0.61, b = 0.43, colorStr = "ffc79c6e" },
-    ["MAGE"]    = { r = 0.41, g = 0.8,  b = 0.94, colorStr = "ff69ccf0" },
-    ["ROGUE"]   = { r = 1,    g = 0.96, b = 0.41, colorStr = "fffff569" },
-    ["DRUID"]   = { r = 1,    g = 0.49, b = 0.04, colorStr = "ffff7d0a" },
-    ["HUNTER"]  = { r = 0.67, g = 0.83, b = 0.45, colorStr = "ffabd473" },
-    ["SHAMAN"]  = { r = 0.14, g = 0.35, b = 1.0,  colorStr = "ff0070de" },
-    ["PRIEST"]  = { r = 1,    g = 1,    b = 1,    colorStr = "ffffffff" },
-    ["WARLOCK"] = { r = 0.58, g = 0.51, b = 0.79, colorStr = "ff9482c9" },
-    ["PALADIN"] = { r = 0.96, g = 0.55, b = 0.73, colorStr = "fff58cba" },
-  }
-
-  RAID_CLASS_COLORS = setmetatable(RAID_CLASS_COLORS, { __index = function(tab,key)
-    return { r = 0.6,  g = 0.6,  b = 0.6,  colorStr = "ff999999" }
-  end})
+    RAID_CLASS_COLORS = setmetatable(RAID_CLASS_COLORS, { __index = function(tab,key)
+      return { r = 0.6,  g = 0.6,  b = 0.6,  colorStr = "ff999999" }
+    end})
+  end
 end
 
 function pfUI:UpdateFonts()
@@ -123,11 +119,16 @@ function pfUI:UpdateFonts()
 
   -- load font configuration
   local default, unit, combat
-  if pfUI_config.global.force_region == "1" and GetLocale() == "zhCN" then
+  if pfUI_config.global.force_region == "1" and GetLocale() == "zhCN" and pfUI.expansion == "vanilla" then
     -- force locale compatible fonts
     default = "Fonts\\FZXHLJW.TTF"
     combat = "Fonts\\FZXHLJW.TTF"
     unit = "Fonts\\FZXHLJW.TTF"
+  elseif pfUI_config.global.force_region == "1" and GetLocale() == "zhCN" and pfUI.expansion == "tbc" then
+    -- force locale compatible fonts
+    default = "Fonts\\ZYHei.ttf"
+    combat = "Fonts\\ZYKai_C.ttf"
+    unit = "Fonts\\ZYKai_T.ttf"
   elseif pfUI_config.global.force_region == "1" and GetLocale() == "koKR" then
     -- force locale compatible fonts
     default = "Fonts\\2002.TTF"
@@ -145,15 +146,19 @@ function pfUI:UpdateFonts()
   pfUI.font_combat = combat
   pfUI.font_unit = unit
 
-  pfUI.font_default_size = default_size
-  pfUI.font_combat_size = combat_size
-  pfUI.font_unit_size = unit_size
+  -- skip setting fonts, keep blizzard defaults
+  if pfUI_config.global.font_blizzard == "1" then
+    return
+  end
 
   -- set game constants
   STANDARD_TEXT_FONT = default
   DAMAGE_TEXT_FONT   = combat
   NAMEPLATE_FONT     = default
   UNIT_NAME_FONT     = default
+
+  -- set dropdown font to default size
+  UIDROPDOWNMENU_DEFAULT_TEXT_HEIGHT = 11
 
   -- change default game font objects
   --SystemFont:SetFont(default, 15)
@@ -175,7 +180,6 @@ function pfUI:UpdateFonts()
   DialogButtonNormalText:SetFont(default, 16)
   ZoneTextFont:SetFont(default, 34, "OUTLINE")
   SubZoneTextFont:SetFont(default, 24, "OUTLINE")
-  --TextStatusBarTextSmall:SetFont(default, 12, "NORMAL")
   GameTooltipText:SetFont(default, 12)
   GameTooltipTextSmall:SetFont(default, 12)
   GameTooltipHeaderText:SetFont(default, 13)
@@ -184,21 +188,27 @@ function pfUI:UpdateFonts()
   InvoiceTextFontSmall:SetFont(default, 12)
   CombatTextFont:SetFont(combat, 25)
   ChatFontNormal:SetFont(default, 13, pfUI_config.chat.text.outline == "1" and "OUTLINE")
+
+  if TextStatusBarTextSmall then -- does not exist in koKR
+    TextStatusBarTextSmall:SetFont(default, 12, "NORMAL")
+  end
 end
 
+local translations
 function pfUI:GetEnvironment()
   -- load api into environment
   for m, func in pairs(pfUI.api or {}) do
     pfUI.env[m] = func
   end
 
-  if pfUI_config and pfUI_config.global and pfUI_config.global.language and not pfUI.env.T then
+  if pfUI_config and pfUI_config.global and pfUI_config.global.language and not translations then
     local lang = pfUI_config and pfUI_config.global and pfUI_config.global.language and pfUI_translation[pfUI_config.global.language] and pfUI_config.global.language or GetLocale()
     pfUI.env.T = setmetatable(pfUI_translation[lang] or {}, { __index = function(tab,key)
       local value = tostring(key)
       rawset(tab,key,value)
       return value
     end})
+    translations = true
   end
 
   pfUI.env._G = getfenv(0)
@@ -249,14 +259,19 @@ function pfUI:LoadSkin(s)
 end
 
 pfUI:SetScript("OnEvent", function()
-  -- some addons overwrite color and font settings
-  -- need to enforce pfUI's selection every time
-  pfUI:UpdateFonts()
+  -- enforce color updates on each event
   pfUI:UpdateColors()
+
+  -- make sure to initialize and set our fonts
+  -- each time an addon got loaded but only
+  -- when the config is already accessible
+  if not pfUI.bootup then
+    pfUI:UpdateFonts()
+  end
 
   if arg1 == pfUI.name then
     -- read pfUI version from .toc file
-    local major, minor, fix = pfUI.api.strsplit(".", tostring(GetAddOnMetadata("pfUI", "Version")))
+    local major, minor, fix = pfUI.api.strsplit(".", tostring(GetAddOnMetadata(pfUI.name, "Version")))
     pfUI.version.major = tonumber(major) or 1
     pfUI.version.minor = tonumber(minor) or 2
     pfUI.version.fix   = tonumber(fix)   or 0
@@ -307,13 +322,34 @@ pfUI.backdrop_shadow = {
   insets = {left = 0, right = 0, top = 0, bottom = 0},
 }
 
+pfUI.backdrop_blizz_bg = {
+  bgFile =  "Interface\\BUTTONS\\WHITE8X8", tile = true, tileSize = 8,
+  insets = { left = 3, right = 3, top = 3, bottom = 3 }
+}
+
+pfUI.backdrop_blizz_border = {
+  edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border", edgeSize = 12,
+  insets = { left = 3, right = 3, top = 3, bottom = 3 }
+}
+
+pfUI.backdrop_blizz_full = {
+  bgFile =  "Interface\\BUTTONS\\WHITE8X8", tile = true, tileSize = 8,
+  edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border", edgeSize = 12,
+  insets = { left = 3, right = 3, top = 3, bottom = 3 }
+}
+
 message = function(msg)
   DEFAULT_CHAT_FRAME:AddMessage("|cffcccc33INFO: |cffffff55" .. ( msg or "nil" ))
 end
 print = message
 
 error = function(msg)
-  DEFAULT_CHAT_FRAME:AddMessage("|cffcc3333ERROR: |cffff5555".. (msg or "nil" ))
+  if PF_DEBUG_MODE then message(debugstack()) end
+  if string.find(msg, "AddOns\\pfUI") then
+    DEFAULT_CHAT_FRAME:AddMessage("|cffcc3333ERROR: |cffff5555".. (msg or "nil" ))
+  elseif not pfUI_config or (pfUI_config.global and pfUI_config.global.errors == "1") then
+    DEFAULT_CHAT_FRAME:AddMessage("|cffcc3333ERROR: |cffff5555".. (msg or "nil" ))
+  end
 end
 seterrorhandler(error)
 

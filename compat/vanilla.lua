@@ -3,9 +3,11 @@ setfenv(1, pfUI:GetEnvironment())
 if pfUI.expansion ~= "vanilla" then return end
 
 -- [[ Constants ]]--
-MAX_LEVEL = 60
 CASTBAR_EVENT_CAST_DELAY = "SPELLCAST_DELAYED"
 CASTBAR_EVENT_CHANNEL_DELAY = "SPELLCAST_CHANNEL_UPDATE"
+CASTBAR_EVENT_CAST_START = "SPELLCAST_START"
+CASTBAR_EVENT_CHANNEL_START = "SPELLCAST_CHANNEL_START"
+
 EVENTS_MINIMAP_ZONE_UPDATE = {"PLAYER_ENTERING_WORLD", "MINIMAP_ZONE_CHANGED"}
 
 MICRO_BUTTONS = {
@@ -52,4 +54,27 @@ function hooksecurefunc(name, func, append)
   end
 
   _G[name] = pfUI.hooks[tostring(func)]["function"]
+end
+
+do -- GetItemInfo
+  local name, link, rarity, minlevel, itype, isubtype, stack
+  function GetItemInfo(item)
+    if not item then return end
+    name, link, rarity, minlevel, itype, isubtype, stack = _G.GetItemInfo(item)
+    return name, link, rarity, nil, minlevel, itype, isubtype, stack
+  end
+end
+
+do -- RunMacroText
+  local obj = { ["GetText"] = function(self) return self.text end }
+  obj = setmetatable(obj, {__index = function(tab,key)
+    local value = function() return end
+    rawset(tab,key,value)
+    return value
+  end})
+
+  function RunMacroText(text)
+    obj.text = text
+    ChatEdit_ParseText(obj, 1)
+  end
 end
