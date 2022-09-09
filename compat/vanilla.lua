@@ -78,11 +78,3 @@ do -- RunMacroText
     ChatEdit_ParseText(obj, 1)
   end
 end
-
-function GetTextColor(self)
-  return self:GetTextColor()
-end
-
-function SetTextColor(self, ...)
-  self:SetTextColor(...)
-end
