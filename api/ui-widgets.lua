@@ -672,7 +672,9 @@ function pfUI.api.SkinButton(button, cr, cg, cb, icon, disableHighlight)
     b:SetPushedTexture(nil)
   end
 
-  b:SetFont(pfUI.font_default, pfUI_config.global.font_size, "OUTLINE")
+  if b.SetFont then
+    b:SetFont(pfUI.font_default, pfUI_config.global.font_size, "OUTLINE")
+  end
 
   b.LockHighlight = function()
     b:SetBackdropBorderColor(cr,cg,cb,1)

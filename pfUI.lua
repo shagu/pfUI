@@ -161,7 +161,7 @@ function pfUI:UpdateFonts()
   UIDROPDOWNMENU_DEFAULT_TEXT_HEIGHT = 11
 
   -- change default game font objects
-  SystemFont:SetFont(default, 15)
+  --SystemFont:SetFont(default, 15)
   GameFontNormal:SetFont(default, 12)
   GameFontBlack:SetFont(default, 12)
   GameFontNormalSmall:SetFont(default, 11)
@@ -224,7 +224,7 @@ function pfUI:RegisterModule(name, a2, a3)
   local func, version = hasv and a3 or a2, hasv and a2 or "vanilla:tbc:wotlk"
 
   -- check for client compatibility
-  if not strfind(version, pfUI.expansion) then return end
+  --if not strfind(version, pfUI.expansion) then return end
 
   pfUI.module[name] = func
   table.insert(pfUI.modules, name)
