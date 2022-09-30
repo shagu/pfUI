@@ -538,7 +538,7 @@ pfUI:RegisterModule("chat", "vanilla:tbc", function ()
   pfUI.chat:SetScript("OnEvent", function()
     pfUI.chat:RefreshChat()
     FCF_DockUpdate()
-    if C.chat.right.enable == "0" and C.chat.right.alwaysshow == "0" then
+    if C.chat.right.enable == "0" then
       pfUI.chat.right:Hide()
     end
   end)
