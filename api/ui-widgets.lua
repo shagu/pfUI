@@ -41,6 +41,9 @@ do -- statusbars
         point = math.min(height, point)
         point = math.max(0, point)
 
+        -- set point to zero if value and max is zero
+        if val == 0 then point = 0 end
+
         -- set status bar position/size
         self.bar:SetPoint("TOPLEFT", self, "TOPLEFT", 0, - height + point)
         self.bar:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", 0, 0)
@@ -56,6 +59,9 @@ do -- statusbars
         -- keep values in limits
         point = math.min(width, point)
         point = math.max(0, point)
+
+        -- set point to zero if value and max is zero
+        if val == 0 then point = 0 end
 
         -- set status bar position/size
         self.bar:SetPoint("TOPLEFT", self, "TOPLEFT", 0, 0)
