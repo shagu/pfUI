@@ -372,7 +372,7 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
       if ShaguScore then
         pfUI.bags[bag].slots[slot].frame.scoreText = pfUI.bags[bag].slots[slot].frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
         pfUI.bags[bag].slots[slot].frame.scoreText:SetFont(pfUI.font_default, 12, "OUTLINE")
-        pfUI.bags[bag].slots[slot].frame.scoreText:SetPoint("BOTTOMRIGHT", 0, 0)
+        pfUI.bags[bag].slots[slot].frame.scoreText:SetPoint("TOPRIGHT", 0, 0)
       end
     end
 
