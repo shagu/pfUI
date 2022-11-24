@@ -812,7 +812,8 @@ pfUI:RegisterModule("thirdparty-vanilla", "vanilla", function()
     local ButtonEnter = pfUI.bars[1][1]:GetScript("OnEnter")
     local function NewButtonEnter()
       ButtonEnter()
-      SM_ActionButton_SetTooltip()
+      local actionid=ActionButton_GetPagedID(this);
+      SM_ActionButton_SetTooltip(actionid)
     end
 
     -- reassign the new event handler
