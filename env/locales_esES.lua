@@ -1862,7 +1862,7 @@ pfUI_locale["esES"]["debuffs"] = {
   ['Golpe del Cruzado']={[0]=30.0,},
   ['Golpe desequilibrante']={[0]=6.0,},
   ['Golpe doloroso']={[0]=5.0,},
-  ['Golpe en los riñones']={[0]=1.0,},
+  ['Golpe en los riñones']={[1]=0,[2]=1.0,},
   ['Golpe fantasma']={[0]=20.0,},
   ['Golpe fantasmal']={[0]=7.0,},
   ['Golpe marchito']={[0]=8.0,},
