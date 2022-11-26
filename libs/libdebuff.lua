@@ -28,7 +28,7 @@ local lastspell
 
 function libdebuff:GetDuration(effect, rank)
   if L["debuffs"][effect] then
-    local rank = rank and tonumber((string.gsub(rank, RANK .. " ", ""))) or 0
+    local rank = rank and tonumber((string.gsub(rank, RANK .. "", ""))) or 0
     local rank = L["debuffs"][effect][rank] and rank or libdebuff:GetMaxRank(effect)
     local duration = L["debuffs"][effect][rank]
 
@@ -37,7 +37,8 @@ function libdebuff:GetDuration(effect, rank)
       duration = duration + GetComboPoints()*2
     elseif effect == L["dyndebuffs"]["Kidney Shot"] then
       -- Kidney Shot: +1 sec per combo point
-      duration = duration + GetComboPoints()*1
+      if rank == 2 then duration = duration + GetComboPoints()*1
+      else duration = GetComboPoints()*1 end
     elseif effect == L["dyndebuffs"]["Demoralizing Shout"] then
       -- Booming Voice: 10% per talent
       local _,_,_,_,count = GetTalentInfo(2,1)
