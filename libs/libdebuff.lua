@@ -28,7 +28,7 @@ local lastspell
 
 function libdebuff:GetDuration(effect, rank)
   if L["debuffs"][effect] then
-    local rank = rank and tonumber((string.gsub(rank, RANK .. "", ""))) or 0
+    local rank = rank and tonumber((string.gsub(rank, RANK, ""))) or 0
     local rank = L["debuffs"][effect][rank] and rank or libdebuff:GetMaxRank(effect)
     local duration = L["debuffs"][effect][rank]
 
