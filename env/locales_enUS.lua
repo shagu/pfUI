@@ -1957,7 +1957,7 @@ pfUI_locale["enUS"]["debuffs"] = {
   ['Keg Trap']={[0]=2.0,},
   ['Kick']={[0]=5.0,},
   ['Kick - Silenced']={[0]=2.0,},
-  ['Kidney Shot']={[0]=1.0,},
+  ['Kidney Shot']={[1]=0,[2]=1.0,},
   ['Knockdown']={[0]=2.0,},
   ['Knockout']={[0]=6.0,},
   ['Kodo Stomp']={[0]=3.0,},

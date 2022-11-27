@@ -1469,7 +1469,7 @@ pfUI_locale["frFR"]["debuffs"] = {
   ['Agilité diminuée']={[0]=300.0,},
   ['Agressivité nulle']={[0]=1.7,},
   ['Aiguillon de diablosaure']={[0]=10.0,},
-  ['Aiguillon perfide']={[0]=1.0,},
+  ['Aiguillon perfide']={[1]=0,[2]=1.0,},
   ['Ailes du désespoir']={[0]=6.0,},
   ['Alambic ectoplasmique']={[0]=3.0,},
   ['Amollir']={[0]=10.0,},

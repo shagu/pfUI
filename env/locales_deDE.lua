@@ -1974,7 +1974,7 @@ pfUI_locale["deDE"]["debuffs"] = {
   ['Neutralisieren']={[0]=8.0,},
   ['Niederschlagen']={[0]=2.0,},
   ['Niedriger Prankenhieb']={[0]=12.0,},
-  ['Nierenhieb']={[0]=1.0,},
+  ['Nierenhieb']={[1]=0,[2]=1.0,},
   ['Offene Wunde']={[0]=8.0,},
   ['Ohrenbetäubendes Kreischen']={[0]=8.0,},
   ['Opfern']={[0]=8.0,},
