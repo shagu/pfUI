@@ -433,7 +433,7 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
     elseif texture then
       if itype == "Quest" then
         pfUI.bags[bag].slots[slot].frame.backdrop:SetBackdropBorderColor(1, .8, .2, .8)
-        pfUI.bags[bag].slots[slot].frame.qtext:SetText("!")
+        pfUI.bags[bag].slots[slot].frame.qtext:SetText("?")
       else
         pfUI.bags[bag].slots[slot].frame.backdrop:SetBackdropBorderColor(.5,.5,.5,1)
       end
