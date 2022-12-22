@@ -48,6 +48,12 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
     return
   end
 
+  local function LinkToStr(link)
+    if not link then return "" end
+    local _, _, linkstr = string.find(link, "(item:%d+:%d+:%d+:%d+)")
+    return linkstr or ""
+  end
+
   -- hide blizzard's bankframe
   BankFrame:SetScale(0.001)
   BankFrame:SetPoint("TOPLEFT", 0,0)
@@ -369,6 +375,11 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
       pfUI.bags[bag].slots[slot].slot = slot
       pfUI.bags[bag].slots[slot].frame:SetID(slot)
 
+      pfUI.bags[bag].slots[slot].frame.qtext = pfUI.bags[bag].slots[slot].frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+      pfUI.bags[bag].slots[slot].frame.qtext:SetFont(pfUI.font_default, 13, "THICKOUTLINE")
+      pfUI.bags[bag].slots[slot].frame.qtext:SetPoint("TOPLEFT", 0, 0)
+      pfUI.bags[bag].slots[slot].frame.qtext:SetTextColor(1, .8, .2, 1)
+
       if ShaguScore then
         pfUI.bags[bag].slots[slot].frame.scoreText = pfUI.bags[bag].slots[slot].frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
         pfUI.bags[bag].slots[slot].frame.scoreText:SetFont(pfUI.font_default, 12, "OUTLINE")
@@ -377,15 +388,12 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
     end
 
     local texture, count, locked, quality = GetContainerItemInfo(bag, slot)
+    local linkstr = LinkToStr(GetContainerItemLink(bag, slot))
+    local _, _, q, _, _, _, itype = GetItemInfo(linkstr)
 
     -- running advanced item color scan
     if C.appearance.bags.borderonlygear == "0" and texture and quality and quality < 1 then
-      local link = GetContainerItemLink(bag, slot)
-      if link then
-        local _, _, linkstr = string.find(link, "(item:%d+:%d+:%d+:%d+)")
-        local n, _, q = GetItemInfo(linkstr)
-        if quality then quality = q end
-      end
+      if quality then quality = q end
     end
 
     SetItemButtonTexture(pfUI.bags[bag].slots[slot].frame, texture)
@@ -417,12 +425,18 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
 
     local border = _G[pfUI.bags[bag].slots[slot].frame:GetName() .. "NormalTexture"]
     border:SetTexture("")
+    pfUI.bags[bag].slots[slot].frame.qtext:SetText("")
 
     -- detect backdrop border color
     if quality and quality > tonumber(C.appearance.bags.borderlimit) then
       pfUI.bags[bag].slots[slot].frame.backdrop:SetBackdropBorderColor(GetItemQualityColor(quality))
     elseif texture then
-      pfUI.bags[bag].slots[slot].frame.backdrop:SetBackdropBorderColor(.5,.5,.5,1)
+      if itype == "Quest" then
+        pfUI.bags[bag].slots[slot].frame.backdrop:SetBackdropBorderColor(1, .8, .2, .8)
+        pfUI.bags[bag].slots[slot].frame.qtext:SetText("!")
+      else
+        pfUI.bags[bag].slots[slot].frame.backdrop:SetBackdropBorderColor(.5,.5,.5,1)
+      end
     else
       local bagtype = GetBagFamily(bag)
 
