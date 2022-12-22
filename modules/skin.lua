@@ -4,12 +4,15 @@ pfUI:RegisterModule("skin", "vanilla:tbc", function ()
   pfUI.panelalign:SetScript("OnUpdate", function()
     local left = UIParent.left
     local center = UIParent.center
+    local rbpos, ropos
 
     -- detect outer frame backdrops
     if left and not left.rightObj then
       left.rightObj = left.backdrop or left
       for _, frame in pairs({left:GetChildren()}) do
-        if frame.backdrop and frame.backdrop.GetRight and frame.backdrop:GetRight() > left.rightObj:GetRight() then
+        rbpos = frame.backdrop and frame.backdrop.GetRight and frame.backdrop:GetRight()
+        ropos = left.rightObj  and left.rightObj.GetRight  and left.rightObj:GetRight()
+        if rbpos and ropos and rbpos > ropos then
           left.rightObj = frame.backdrop
         end
       end
