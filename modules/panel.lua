@@ -639,6 +639,8 @@ pfUI:RegisterModule("panel", "vanilla:tbc", function()
     if pfUI.chat.left:IsShown() then pfUI.chat.left:Hide() else pfUI.chat.left:Show() end
   end)
 
+  if not pfUI.chat then pfUI.panel.left.hide:Hide() end
+
   SkinButton(pfUI.panel.left.hide)
   pfUI.panel.left.hide:SetBackdropColor(0,0,0,0)
 
@@ -723,6 +725,8 @@ pfUI:RegisterModule("panel", "vanilla:tbc", function()
   pfUI.panel.right.hide:SetScript("OnClick", function()
     if pfUI.chat.right:IsShown() then pfUI.chat.right:Hide() else pfUI.chat.right:Show() end
   end)
+
+  if not pfUI.chat then pfUI.panel.right.hide:Hide() end
 
   SkinButton(pfUI.panel.right.hide)
   pfUI.panel.right.hide:SetBackdropColor(0,0,0,0)
