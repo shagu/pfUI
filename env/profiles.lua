@@ -168,6 +168,7 @@ f:SetScript("OnEvent", function()
     ["castbar"] = {
       ["player"] = {
         ["showname"] = "1",
+        ["showtimer"] = "1",
         ["showrank"] = "1",
         ["height"] = "12",
         ["showlag"] = "1",
