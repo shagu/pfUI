@@ -104,7 +104,7 @@ pfUI:RegisterModule("castbar", "vanilla:tbc", function ()
         if this.endTime ~= endTime then
           this.bar:SetStatusBarColor(strsplit(",", C.appearance.castbar[(channel and "channelcolor" or "castbarcolor")]))
           this.bar:SetMinMaxValues(0, duration / 1000)
-          this.bar.left:SetText(cast .. rank)
+          this.bar.left:SetText(this.showname and cast or "" .. rank)
           this.fadeout = nil
           this.endTime = endTime
 
@@ -196,6 +196,7 @@ pfUI:RegisterModule("castbar", "vanilla:tbc", function ()
   if C.castbar.player.hide_pfui == "0" then
     pfUI.castbar.player = CreateCastbar("pfPlayerCastbar", UIParent, "player")
     pfUI.castbar.player.showicon = C.castbar.player.showicon == "1" and true or nil
+    pfUI.castbar.player.showname = C.castbar.player.showname == "1" and true or nil
     pfUI.castbar.player.showlag = C.castbar.player.showlag == "1" and true or nil
     pfUI.castbar.player.showrank = C.castbar.player.showrank == "1" and true or nil
     pfUI.castbar.player.spacing = default_border * 2 + tonumber(C.unitframes.player.pspace) * GetPerfectPixel()
@@ -221,6 +222,7 @@ pfUI:RegisterModule("castbar", "vanilla:tbc", function ()
   if C.castbar.target.hide_pfui == "0" then
     pfUI.castbar.target = CreateCastbar("pfTargetCastbar", UIParent, "target")
     pfUI.castbar.target.showicon = C.castbar.target.showicon == "1" and true or nil
+    pfUI.castbar.target.showname = C.castbar.target.showname == "1" and true or nil
     pfUI.castbar.target.showlag = C.castbar.target.showlag == "1" and true or nil
     pfUI.castbar.target.showrank = C.castbar.target.showrank == "1" and true or nil
     pfUI.castbar.target.spacing = default_border * 2 + tonumber(C.unitframes.target.pspace) * GetPerfectPixel()
@@ -246,6 +248,7 @@ pfUI:RegisterModule("castbar", "vanilla:tbc", function ()
   if C.castbar.focus.hide_pfui == "0" and pfUI.uf.focus then
     pfUI.castbar.focus = CreateCastbar("pfFocusCastbar", UIParent, "focus")
     pfUI.castbar.focus.showicon = C.castbar.focus.showicon == "1" and true or nil
+    pfUI.castbar.focus.showname = C.castbar.focus.showname == "1" and true or nil
     pfUI.castbar.focus.showlag = C.castbar.focus.showlag == "1" and true or nil
     pfUI.castbar.focus.showrank = C.castbar.focus.showrank == "1" and true or nil
     pfUI.castbar.focus.spacing = default_border * 2 + tonumber(C.unitframes.focus.pspace) * GetPerfectPixel()
