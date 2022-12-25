@@ -403,7 +403,7 @@ pfUI:RegisterModule("chat", "vanilla:tbc", function ()
       end
 
       local _, class = UnitClass("player")
-      _G["ChatFrame" .. i .. "TabText"]:SetTextColor(RAID_CLASS_COLORS[class].r + .3 * .5, RAID_CLASS_COLORS[class].g + .3 * .5, RAID_CLASS_COLORS[class].b + .3 * .5, 1)
+      _G["ChatFrame" .. i .. "TabText"]:SetTextColor((RAID_CLASS_COLORS[class].r + .3) * .5, (RAID_CLASS_COLORS[class].g + .3) * .5, (RAID_CLASS_COLORS[class].b + .3) * .5, 1)
       _G["ChatFrame" .. i .. "TabText"]:SetFont(panelfont,panelfont_size, "OUTLINE")
 
       if _G["ChatFrame" .. i].isDocked or _G["ChatFrame" .. i]:IsVisible() then
