@@ -2166,6 +2166,7 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
       CreateConfig(nil, T["Mousewheel Scroll Speed"], C.chat.global, "scrollspeed")
       CreateConfig(nil, T["Enable Chat Bubbles"], "CVAR", "chatBubbles", "checkbox")
       CreateConfig(nil, T["Enable Party Chat Bubbles"], "CVAR", "chatBubblesParty", "checkbox")
+      CreateConfig(nil, T["Enable Chat Bubble Borders"], C.chat.bubbles, "borders", "checkbox")
       CreateConfig(nil, T["Chat Bubble Transparency"], C.chat.bubbles, "alpha")
     end)
 

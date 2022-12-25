@@ -653,6 +653,7 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("chat",       "global",      "fadeout",          "0")
   pfUI:UpdateConfig("chat",       "global",      "fadetime",         "300")
   pfUI:UpdateConfig("chat",       "global",      "scrollspeed",      "1")
+  pfUI:UpdateConfig("chat",       "bubbles",     "borders",          "1")
   pfUI:UpdateConfig("chat",       "bubbles",     "alpha",            ".75")
 
   pfUI:UpdateConfig("nameplates", nil,           "showhostile",      "1")
