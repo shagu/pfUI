@@ -714,7 +714,7 @@ pfUI:RegisterModule("loot", "vanilla:tbc", function ()
       if event == "LOOT_BIND_CONFIRM" then
         LootSlot(arg1)
         StaticPopup1Button1:Click()
-      elseif event == "LOOT_OPENED" then
+      elseif event == "LOOT_OPENED" and pfUI.client <= 11200 then
         for i=1,GetNumLootItems() do
           LootSlot(i)
         end
