@@ -2163,6 +2163,12 @@ function pfUI.uf:SetupBuffIndicators(config)
       -- Blessing of Light
       table.insert(indicators, "interface\\icons\\spell_holy_prayerofhealing02")
       table.insert(indicators, "interface\\icons\\spell_holy_greaterblessingoflight")
+      -- Blessing of Sacrifice
+      table.insert(indicators, "interface\\icons\\spell_holy_sealofsacrifice")
+      -- Blessing of Freedom
+      table.insert(indicators, "interface\\icons\\spell_holy_sealofvalor")
+      -- Blessing of Protection
+      table.insert(indicators, "interface\\icons\\spell_holy_sealofprotection")
     end
 
     if myclass == "WARLOCK" then
