@@ -225,7 +225,7 @@ function pfUI.uf:DetectBuff(name, id)
   -- check the regular way
   detect_icon = UnitBuff(name, id)
   if detect_icon then
-    if not pfUI_cache.buff_icons[detect_icon] then
+    if not L["icons"][detect_name] and not pfUI_cache.buff_icons[detect_icon] then
       -- read buff name and cache it
       scanner:SetUnitBuff(name, id)
       detect_name = scanner:Line(1)
@@ -244,7 +244,12 @@ function pfUI.uf:DetectBuff(name, id)
   detect_name = scanner:Line(1)
 
   if detect_name then
-    -- return icon if name was already cached
+    -- try to find the spell icon in locales
+    if L["icons"][detect_name] then
+      return "Interface\\Icons\\" .. L["icons"][detect_name], 1
+    end
+
+    -- try to find the spell icon in caches
     for icon, name in pairs(pfUI_cache.buff_icons) do
       if name == detect_name then return icon, 1 end
     end
