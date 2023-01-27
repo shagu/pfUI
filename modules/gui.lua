@@ -1591,6 +1591,7 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
       CreateConfig(nil, T["Enable Energy Ticks"], C.unitframes.player, "energy", "checkbox")
       CreateConfig(nil, T["Enable Mana Ticks"], C.unitframes.player, "manatick", "checkbox")
       CreateConfig(nil, T["Abbreviate Unit Names"], C.unitframes, "abbrevname", "checkbox")
+      CreateConfig(nil, T["Detect Enemy Buffs"], C.unitframes, "buffdetect", "checkbox", nil, nil, nil, nil, "vanilla" )
 
       CreateConfig(U[c], T["Font Options"], nil, nil, "header")
       CreateConfig(nil, T["Unit Frame Text Font"], C.global, "font_unit", "dropdown", pfUI.gui.dropdowns.fonts)

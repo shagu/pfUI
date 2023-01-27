@@ -204,6 +204,59 @@ function pfUI.uf.glow.UpdateGlowAnimation()
   this:SetAlpha(pfUI.uf.glow.val)
 end
 
+local detect_icon, detect_name
+function pfUI.uf:DetectBuff(name, id)
+  if not name or not id then return end
+
+  -- skip here if disabled
+  if pfUI_config.unitframes.buffdetect == "0" then
+    return UnitBuff(name, id)
+  end
+
+  -- clear previously assigned
+  detect_icon, detect_name = nil, nil
+
+  -- register tooltip scanner
+  scanner = scanner or libtipscan:GetScanner("unitframes")
+
+  -- make sure the icon cache exists
+  pfUI_cache.buff_icons = pfUI_cache.buff_icons or {}
+
+  -- check the regular way
+  detect_icon = UnitBuff(name, id)
+  if detect_icon then
+    if not pfUI_cache.buff_icons[detect_icon] then
+      -- read buff name and cache it
+      scanner:SetUnitBuff(name, id)
+      detect_name = scanner:Line(1)
+
+      if detect_name then
+        pfUI_cache.buff_icons[detect_icon] = detect_name
+      end
+    end
+
+    -- return the regular function
+    return UnitBuff(name, id)
+  end
+
+  -- try to guess the buff based on tooltips and icon caches
+  scanner:SetUnitBuff(name, id)
+  detect_name = scanner:Line(1)
+
+  if detect_name then
+    -- return icon if name was already cached
+    for icon, name in pairs(pfUI_cache.buff_icons) do
+      if name == detect_name then return icon, 1 end
+    end
+
+    -- return fallback image
+    return "interface\\icons\\inv_misc_questionmark", 1
+  end
+
+  -- nothing found
+  return nil
+end
+
 function pfUI.uf:UpdateVisibility()
   local self = self or this
 
@@ -1425,7 +1478,7 @@ function pfUI.uf:RefreshUnit(unit, component)
         stacks = GetPlayerBuffApplications(GetPlayerBuff(PLAYER_BUFF_START_ID+i,"HELPFUL"))
         texture = GetPlayerBuffTexture(GetPlayerBuff(PLAYER_BUFF_START_ID+i,"HELPFUL"))
       else
-        texture, stacks = UnitBuff(unitstr, i)
+        texture, stacks = pfUI.uf:DetectBuff(unitstr, i)
       end
 
       unit.buffs[i].texture:SetTexture(texture)
