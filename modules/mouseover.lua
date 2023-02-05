@@ -19,9 +19,14 @@ pfUI:RegisterModule("mouseover", "vanilla", function ()
       end
     end
 
-    if UnitIsUnit("target", unit) then oldt = nil end
-
-    TargetUnit(unit)
+    if UnitIsUnit("target", unit) then
+      oldt = nil
+    elseif not func and UnitIsUnit("player", unit) then
+      SpellTargetUnit("player")
+      oldt = nil
+    else
+      TargetUnit(unit)
+    end
 
     if func then
       func()
