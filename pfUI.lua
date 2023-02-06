@@ -124,16 +124,19 @@ function pfUI:UpdateFonts()
     default = "Fonts\\FZXHLJW.TTF"
     combat = "Fonts\\FZXHLJW.TTF"
     unit = "Fonts\\FZXHLJW.TTF"
+    unit_name = "Fonts\\FZXHLJW.TTF"
   elseif pfUI_config.global.force_region == "1" and GetLocale() == "zhCN" and pfUI.expansion == "tbc" then
     -- force locale compatible fonts
     default = "Fonts\\ZYHei.ttf"
     combat = "Fonts\\ZYKai_C.ttf"
     unit = "Fonts\\ZYKai_T.ttf"
+    unit_name = "Fonts\\ZYHei.ttf"
   elseif pfUI_config.global.force_region == "1" and GetLocale() == "koKR" then
     -- force locale compatible fonts
     default = "Fonts\\2002.TTF"
     combat = "Fonts\\2002.TTF"
     unit = "Fonts\\2002.TTF"
+    unit_name = "Fonts\\2002.TTF"
   else
     -- use default entries
     default = pfUI.media[pfUI_config.global.font_default]
