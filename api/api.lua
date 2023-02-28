@@ -644,7 +644,8 @@ function pfUI.api.LoadMovable(frame, init)
     frame:SetScale(frame.posdata.scale)
 
     for id, point in pairs(frame.posdata.pos) do
-      frame:SetPoint(unpack(point))
+      local a, b, c, d, e = unpack(point)
+      if a and b then frame:SetPoint(a,b,c,d,e) end
     end
   end
 end
