@@ -70,7 +70,7 @@ pfUI:RegisterModule("mouseover", "vanilla", function ()
       func()
     else
       -- write temporary unit name
-      pfUI.uf.mouseover.name = UnitName(unit)
+      pfUI.uf.mouseover.unit = unit
 
       -- cast without self cast cvar setting
       -- to allow spells to use spelltarget
@@ -83,7 +83,7 @@ pfUI:RegisterModule("mouseover", "vanilla", function ()
       if SpellIsTargeting() then SpellStopTargeting() end
 
       -- remove temporary mouseover unit
-      pfUI.uf.mouseover.name = nil
+      pfUI.uf.mouseover.unit = nil
     end
 
     if restore_target then
