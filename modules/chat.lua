@@ -678,14 +678,33 @@ pfUI:RegisterModule("chat", "vanilla:tbc", function ()
   local r,g,b = strsplit(",", C.chat.text.unknowncolor)
   local unknowncolorhex = rgbhex(r,g,b)
 
-  local WHO_RESULTS_TOTAL_PATTERN = "%d+ player[s]? total"
-  local whoTimestamp = 0
-  local whoName = ""
+  local nothing = function() return end
+  local original = FriendsFrame_OnEvent
+
+  local who_query = CreateFrame("Frame")
+  who_query:RegisterEvent("WHO_LIST_UPDATE")
+  who_query:SetScript("OnEvent", function()
+    if this.pending then
+      -- restore everything once a query is received
+      _G.FriendsFrame_OnEvent = original
+      this.pending = nil
+      SetWhoToUI(0)
+    end
+  end)
+
+  local function ScanWhoName(name)
+    -- abort if another query is ongoing
+    if who_query.pending then return end
+    who_query.pending = true
+
+    -- prepare and send the who query
+    _G.FriendsFrame_OnEvent = nothing
+    SetWhoToUI(1)
+    SendWho("n-"..name)
+  end
 
   local function AddMessage(frame, text, a1, a2, a3, a4, a5)
     if not text then return end
-    -- Surpress who results and messages with player name for a few miliseconds if we recently searched
-    if (C.chat.text.whosearchunknown == "1" and (GetTime() - whoTimestamp) < 3 and (string.find(text, WHO_RESULTS_LEVEL_PATTERN) or string.find(text, whoName))) then return end
 
     -- skip chat parsing on combat log
     if frame.pfCombatLog then
@@ -720,12 +739,8 @@ pfUI:RegisterModule("chat", "vanilla:tbc", function ()
             color = rgbhex(RAID_CLASS_COLORS[class])
             match = true
           end
-          whoTimestamp = 0
-          whoName = ""
         elseif C.chat.text.whosearchunknown == "1" then
-          whoTimestamp = GetTime()
-          whoName = name
-          SendWho("n-" .. name)
+          ScanWhoName(name)
         end
 
         if C.chat.text.tintunknown == "1" or match then
