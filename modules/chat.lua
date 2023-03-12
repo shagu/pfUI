@@ -684,8 +684,8 @@ pfUI:RegisterModule("chat", "vanilla:tbc", function ()
 
   local function AddMessage(frame, text, a1, a2, a3, a4, a5)
     if not text then return end
-	-- Surpress who results and messages with player name for a few miliseconds if we recently searched
-	if ((GetTime() - whoTimestamp) < 3 and (string.find(text, WHO_RESULTS_LEVEL_PATTERN) or string.find(text, whoName))) then return end
+    -- Surpress who results and messages with player name for a few miliseconds if we recently searched
+    if (C.chat.text.whosearchunknown == "1" and (GetTime() - whoTimestamp) < 3 and (string.find(text, WHO_RESULTS_LEVEL_PATTERN) or string.find(text, whoName))) then return end
 
     -- skip chat parsing on combat log
     if frame.pfCombatLog then
@@ -722,7 +722,7 @@ pfUI:RegisterModule("chat", "vanilla:tbc", function ()
           end
           whoTimestamp = 0
           whoName = ""
-        else
+        elseif C.chat.text.whosearchunknown == "1" then
           whoTimestamp = GetTime()
           whoName = name
           SendWho("n-" .. name)

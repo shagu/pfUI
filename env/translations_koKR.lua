@@ -769,6 +769,7 @@ pfUI_translation["koKR"] = {
   ["Website"] = nil,
   ["Welcome to |cff33ffccpf|cffffffffUI|r!\n\nI'm the first run wizard that will guide you through some basic configuration. If you're lazy, feel free to hit the \"Defaults\" button. If you wish to run this dialog again, go to the settings and hit the \"Reset Firstrun\" button.\n\nVisit |cff33ffcchttp://shagu.org|r to check for the latest version."] = "|cff33ffccpf|cffffffffUI|r에 |cff33ffcc오신걸 환영합니다.|r \n\n저는 몇 가지 기본 구성을 안내 할 첫 번째 실행 위자드입니다. 모든 단계를 건너 뛰고 싶으시면 \"기본값 사용\" 버튼을 누르십시오. 이 대화 상자를 다시 실행하려면 추후 설정으로 이동하여 \"첫단계로 재설정\" 버튼을 누르십시오.\n\n최신버전 다운로드 사이트: |cff33ffcchttp://shagu.org|r",
   ["Whitelist"] = nil,
+  ["Who Search Unknown Classes"] = nil,
   ["Width"] = nil,
   ["Wobble Zoom"] = nil,
   ["Won"] = nil,

@@ -769,6 +769,7 @@ pfUI_translation["ruRU"] = {
   ["Website"] = "Веб-сайт",
   ["Welcome to |cff33ffccpf|cffffffffUI|r!\n\nI'm the first run wizard that will guide you through some basic configuration. If you're lazy, feel free to hit the \"Defaults\" button. If you wish to run this dialog again, go to the settings and hit the \"Reset Firstrun\" button.\n\nVisit |cff33ffcchttp://shagu.org|r to check for the latest version."] = "Добро пожаловать в |cff33ffccpf|cffffffffUI|r!\n\nЯ мастер первого запуска, который проведет вас через некоторую базовую конфигурацию. Если вы ленитесь, не стесняйтесь нажать кнопку \"По умолчанию\". Если вы хотите снова запустить этот диалог, перейдите к настройкам и нажмите кнопку \"Первый запуск\".\n\nПосетите |cff33ffcchttp://shagu.org|r, чтобы проверить последнюю версию.",
   ["Whitelist"] = "\"Белый\" список",
+  ["Who Search Unknown Classes"] = nil,
   ["Width"] = "Ширина",
   ["Wobble Zoom"] = "Подпрыгивание",
   ["Won"] = "Победа",
