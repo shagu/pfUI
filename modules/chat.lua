@@ -678,8 +678,14 @@ pfUI:RegisterModule("chat", "vanilla:tbc", function ()
   local r,g,b = strsplit(",", C.chat.text.unknowncolor)
   local unknowncolorhex = rgbhex(r,g,b)
 
+  local WHO_RESULTS_TOTAL_PATTERN = "%d+ player[s]? total"
+  local whoTimestamp = 0
+  local whoName = ""
+
   local function AddMessage(frame, text, a1, a2, a3, a4, a5)
     if not text then return end
+	-- Surpress who results and messages with player name for a few miliseconds if we recently searched
+	if ((GetTime() - whoTimestamp) < 3 and (string.find(text, WHO_RESULTS_LEVEL_PATTERN) or string.find(text, whoName))) then return end
 
     -- skip chat parsing on combat log
     if frame.pfCombatLog then
@@ -714,6 +720,12 @@ pfUI:RegisterModule("chat", "vanilla:tbc", function ()
             color = rgbhex(RAID_CLASS_COLORS[class])
             match = true
           end
+          whoTimestamp = 0
+          whoName = ""
+        else
+          whoTimestamp = GetTime()
+          whoName = name
+          SendWho("n-" .. name)
         end
 
         if C.chat.text.tintunknown == "1" or match then
