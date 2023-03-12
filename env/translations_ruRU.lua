@@ -244,6 +244,7 @@ pfUI_translation["ruRU"] = {
   ["Enable Class Colors"] = "Включить цвета классов",
   ["Enable Class Colors On Enemies"] = "Включить цвета классов на врагах",
   ["Enable Class Colors On Friends"] = "Включить цвета классов на друзьях",
+  ["Enable Class Colors On Friends Name"] = nil,
   ["Enable Clickthrough"] = "Включить порог нажатия", --?
   ["Enable Combat Glow"] = "Включить свечение боя",
   ["Enable Combat Glow Effects On Screen Edges"] = "Включить эффект свечения боя по краю экрана",

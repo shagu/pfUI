@@ -634,6 +634,11 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
       plate.cache.r, plate.cache.g, plate.cache.b = r, g, b
     end
 
+    if r + g + b ~= plate.cache.namecolor and unittype == "FRIENDLY_PLAYER" and C.nameplates["friendclassnamec"] == "1" and class and RAID_CLASS_COLORS[class] then
+      plate.name:SetTextColor(r, g, b, a)
+      plate.cache.namecolor = r + g + b
+    end
+
     -- update combopoints
     for i=1, 5 do plate.combopoints[i]:Hide() end
     if target and C.nameplates.cpdisplay == "1" then

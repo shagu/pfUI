@@ -244,6 +244,7 @@ pfUI_translation["enUS"] = {
   ["Enable Class Colors"] = nil,
   ["Enable Class Colors On Enemies"] = nil,
   ["Enable Class Colors On Friends"] = nil,
+  ["Enable Class Colors On Friends Name"] = nil,
   ["Enable Clickthrough"] = nil,
   ["Enable Combat Glow"] = nil,
   ["Enable Combat Glow Effects On Screen Edges"] = nil,

@@ -244,6 +244,7 @@ pfUI_translation["koKR"] = {
   ["Enable Class Colors"] = "클래스(직업) 색상 활성화",
   ["Enable Class Colors On Enemies"] = "적대적 클래스(직업)색상 활성화",
   ["Enable Class Colors On Friends"] = "우호적 클래스(직업)색상 활성화",
+  ["Enable Class Colors On Friends Name"] = nil,
   ["Enable Clickthrough"] = "Clickthrough 활성화",
   ["Enable Combat Glow"] = nil,
   ["Enable Combat Glow Effects On Screen Edges"] = "전투시 화면 가장자리에 글로우효과 사용",

@@ -244,6 +244,7 @@ pfUI_translation["zhCN"] = {
   ["Enable Class Colors"] = "使用职业颜色",
   ["Enable Class Colors On Enemies"] = "显示敌军职业颜色",
   ["Enable Class Colors On Friends"] = "显示友军职业颜色",
+  ["Enable Class Colors On Friends Name"] = nil,
   ["Enable Clickthrough"] = "启用点击",
   ["Enable Combat Glow"] = "启用战斗闪光",
   ["Enable Combat Glow Effects On Screen Edges"] = "全屏显示战斗报警",

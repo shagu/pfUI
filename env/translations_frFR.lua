@@ -244,6 +244,7 @@ pfUI_translation["frFR"] = {
   ["Enable Class Colors"] = "Activer la couleur en fonction de la classe",
   ["Enable Class Colors On Enemies"] = "Activer la couleur de la classe sur les cibles ennemies",
   ["Enable Class Colors On Friends"] = "Activer la couleur de la classe sur les cibles alliées",
+  ["Enable Class Colors On Friends Name"] = nil,
   ["Enable Clickthrough"] = "Activer le clic au travers de l'interface",
   ["Enable Combat Glow"] = "Activer la lueur de combat",
   ["Enable Combat Glow Effects On Screen Edges"] = "Activer la lueur de combat sur les bords de l'écran",
