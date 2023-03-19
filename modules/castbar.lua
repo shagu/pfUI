@@ -98,11 +98,13 @@ pfUI:RegisterModule("castbar", "vanilla:tbc", function ()
 
         this:SetAlpha(1)
 
-        local rank = this.showrank and nameSubtext and nameSubtext ~= "" and string.format(" |cffaaffcc[%s]|r", nameSubtext) or ""
+        local spellname = this.showname and cast and cast .. " " or ""
+        local rank = this.showrank and nameSubtext and nameSubtext ~= "" and string.format("|cffaaffcc[%s]|r", nameSubtext) or ""
+
         if this.endTime ~= endTime then
           this.bar:SetStatusBarColor(strsplit(",", C.appearance.castbar[(channel and "channelcolor" or "castbarcolor")]))
           this.bar:SetMinMaxValues(0, duration / 1000)
-          this.bar.left:SetText(this.showname and cast or "" .. rank)
+          this.bar.left:SetText(spellname .. rank)
           this.fadeout = nil
           this.endTime = endTime
 
