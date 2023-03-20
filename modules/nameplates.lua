@@ -571,7 +571,6 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
       plate.name:Hide()
       plate.health:Hide()
       plate.guild:Hide()
-      plate.glow:SetPoint("CENTER", plate.name, "CENTER", 0, 0)
       plate.totem:Show()
     elseif HidePlate(unittype, name, (hpmax-hp == hpmin), target) then
       plate.level:SetPoint("RIGHT", plate.name, "LEFT", -3, 0)
@@ -584,7 +583,7 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
       if guild and C.nameplates.showguildname == "1" then
         plate.glow:SetPoint("CENTER", plate.name, "CENTER", 0, -(font_size / 2) - 2)
       else
-        plate.glow:SetPoint("CENTER", plate.health, "CENTER", 0, 0)
+        plate.glow:SetPoint("CENTER", plate.name, "CENTER", 0, 0)
       end
       plate.totem:Hide()
     else
