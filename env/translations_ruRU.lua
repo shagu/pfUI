@@ -633,6 +633,7 @@ pfUI_translation["ruRU"] = {
   ["Show Duration Inside Buff"] = "Показать продолжительность внутри баффа",
   ["Show Empty Buttons"] = "Показать пустые кнопки",
   ["Show FPS and Latency Colors"] = "Показать частоту кадров и задержку в цвете",
+  ["Show Guild Name"] = nil,
   ["Show Happiness Icon"] = "Показать иконку счастья",
   ["Show Health Points"] = "Показать здоровье",
   ["Show/Hide TimeManager"] = "Показать/Скрыть менеджер времени",
