@@ -70,6 +70,7 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
   pfUI.bag:RegisterEvent("BANKFRAME_OPENED")
   pfUI.bag:RegisterEvent("ITEM_LOCK_CHANGED")
   pfUI.bag:RegisterEvent("SPELLS_CHANGED")
+  pfUI.bag:RegisterEvent("MERCHANT_CLOSED")
 
   pfUI.bag:SetScript("OnEvent", function()
     if event == "PLAYER_ENTERING_WORLD" then
@@ -140,6 +141,12 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
 
     if event == "BANKFRAME_CLOSED" then
       pfUI.bag.left:Hide()
+    end
+
+    if event == "MERCHANT_CLOSED" then
+      if not ContainerFrame1.backpackWasOpen then
+        pfUI.bag.right:Hide()
+      end
     end
   end)
 
