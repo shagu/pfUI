@@ -304,6 +304,7 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
         chat:Hide()
       end
       pfUI.bag:CreateBags(object)
+      PlaySound("INTERFACESOUND_BACKPACKOPEN")
     end)
 
     frame:SetScript("OnHide", function()
@@ -312,6 +313,7 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
         frame.chatWasOpen = false
       end
       pfUI.bag:CreateBags(object)
+      PlaySound("INTERFACESOUND_BACKPACKCLOSE")
     end)
   end
 
