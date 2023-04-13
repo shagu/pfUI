@@ -536,6 +536,10 @@ pfUI:RegisterModule("chat", "vanilla:tbc", function ()
   end
 
   pfUI.chat:SetScript("OnEvent", function()
+    -- set the default chat
+    FCF_SelectDockFrame(SELECTED_CHAT_FRAME)
+
+    -- update all chat settings
     pfUI.chat:RefreshChat()
     FCF_DockUpdate()
     if C.chat.right.enable == "0" then
