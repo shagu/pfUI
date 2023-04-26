@@ -1094,6 +1094,10 @@ pfUI:RegisterModule("thirdparty-vanilla", "vanilla", function()
   HookAddonOrVariable("MCP", function()
     SkinButton(GameMenuButtonAddOns)
   end)
+    
+  HookAddonOrVariable("HardcoreDeath", function()
+    SkinButton(GameMenuButtonHardcoreDeathLogGUI)
+  end)
 
   HookAddonOrVariable("MacroExtender", function()
     -- Macro Extender moves the character dialog from frame-stata "dialog"
