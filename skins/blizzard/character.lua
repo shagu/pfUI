@@ -163,7 +163,7 @@ pfUI:RegisterSkin("Character", "vanilla:tbc", function ()
       if not frame.scoreText then
         frame.scoreText = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
         frame.scoreText:SetFont(pfUI.font_default, 12, "OUTLINE")
-        frame.scoreText:SetPoint("BOTTOMRIGHT", 0, 0)
+        frame.scoreText:SetPoint("TOPRIGHT", 0, 0)
       end
     end
   end

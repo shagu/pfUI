@@ -812,7 +812,8 @@ pfUI:RegisterModule("thirdparty-vanilla", "vanilla", function()
     local ButtonEnter = pfUI.bars[1][1]:GetScript("OnEnter")
     local function NewButtonEnter()
       ButtonEnter()
-      SM_ActionButton_SetTooltip()
+      local actionid = ActionButton_GetPagedID(this)
+      SM_ActionButton_SetTooltip(actionid)
     end
 
     -- reassign the new event handler
@@ -1089,7 +1090,28 @@ pfUI:RegisterModule("thirdparty-vanilla", "vanilla", function()
   HookAddonOrVariable("MoveAnything", function()
     SkinButton(GameMenuButtonMoveAnything)
   end)
+
   HookAddonOrVariable("MCP", function()
     SkinButton(GameMenuButtonAddOns)
+  end)
+
+  HookAddonOrVariable("MacroExtender", function()
+    -- Macro Extender moves the character dialog from frame-stata "dialog"
+    -- to "low" and by that moves the frame below backgrounds, quest-trackers,
+    -- and what not... it does this because the buttons it attempts to add, are
+    -- added to the wrong parent frames. (This also causes them to stay visible on
+    -- other pages of the paperdoll frame aswell)
+    --
+    -- Using its own global variables and settings to disable that "feature",
+    -- because it only attempts to add rarity borders which pfUI already does.
+
+    -- make sure strata won't get touched again
+    PaperDollHook = function() return end
+
+    -- restore original frame strata
+    PaperDollFrame:SetFrameStrata("DIALOG")
+
+    -- disable macro extenders setting
+    MacroExtender_Options.Inventory = nil
   end)
 end)

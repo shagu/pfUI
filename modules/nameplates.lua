@@ -564,6 +564,7 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
       plate.level:Hide()
       plate.name:Hide()
       plate.health:Hide()
+      plate.glow:SetPoint("CENTER", plate.health, "CENTER", 0, 16)
       plate.totem:Show()
     elseif HidePlate(unittype, name, (hpmax-hp == hpmin), target) then
       plate.level:SetPoint("RIGHT", plate.name, "LEFT", -3, 0)
@@ -572,6 +573,7 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
       plate.level:Show()
       plate.name:Show()
       plate.health:Hide()
+      plate.glow:SetPoint("CENTER", plate.health, "CENTER", 0, 16)
       plate.totem:Hide()
     else
       plate.level:SetPoint("RIGHT", plate.health, "LEFT", -5, 0)
@@ -580,6 +582,7 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
       plate.level:Show()
       plate.name:Show()
       plate.health:Show()
+      plate.glow:SetPoint("CENTER", plate.health, "CENTER", 0, 0)
       plate.totem:Hide()
     end
 
@@ -632,6 +635,11 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     if r ~= plate.cache.r or g ~= plate.cache.g or b ~= plate.cache.b then
       plate.health:SetStatusBarColor(r, g, b, a)
       plate.cache.r, plate.cache.g, plate.cache.b = r, g, b
+    end
+
+    if r + g + b ~= plate.cache.namecolor and unittype == "FRIENDLY_PLAYER" and C.nameplates["friendclassnamec"] == "1" and class and RAID_CLASS_COLORS[class] then
+      plate.name:SetTextColor(r, g, b, a)
+      plate.cache.namecolor = r + g + b
     end
 
     -- update combopoints

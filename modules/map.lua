@@ -43,42 +43,43 @@ pfUI:RegisterModule("map", "vanilla:tbc", function ()
     WorldMapFrame:EnableMouse(true)
     WorldMapFrame:RegisterForDrag("LeftButton")
 
-    WorldMapFrame:SetScript("OnShow", function()
-      -- default events
-      UpdateMicroButtons()
-      PlaySound("igQuestLogOpen")
-      CloseDropDownMenus()
-      SetMapToCurrentZone()
-      WorldMapFrame_PingPlayerPosition()
+    -- make sure the hooks get only applied once
+    if not this.hooked then
+      this.hooked = true
 
-      -- customize
-      this:EnableKeyboard(false)
-      this:EnableMouseWheel(1)
-    end)
+      HookScript(WorldMapFrame, "OnShow", function()
+        -- customize
+        this:EnableKeyboard(false)
+        this:EnableMouseWheel(1)
 
-    WorldMapFrame:SetScript("OnMouseWheel", function()
-      if IsShiftKeyDown() then
-        alpha = clamp(WorldMapFrame:GetAlpha() + arg1/10, 0.1, 1.0)
-        WorldMapFrame:SetAlpha(alpha)
-      end
+        -- set back to default scale
+        WorldMapFrame:SetScale(scale or .85)
+      end)
 
-      if IsControlKeyDown() then
-        scale = clamp(WorldMapFrame:GetScale() + arg1/10, 0.1, 2.0)
-        WorldMapFrame:SetScale(scale)
-        UpdateTooltipScale()
-      end
+      HookScript(WorldMapFrame, "OnMouseWheel", function()
+        if IsShiftKeyDown() then
+          alpha = clamp(WorldMapFrame:GetAlpha() + arg1/10, 0.1, 1.0)
+          WorldMapFrame:SetAlpha(alpha)
+        end
 
-      SaveMovable(this, true)
-    end)
+        if IsControlKeyDown() then
+          scale = clamp(WorldMapFrame:GetScale() + arg1/10, 0.1, 2.0)
+          WorldMapFrame:SetScale(scale)
+          UpdateTooltipScale()
+        end
 
-    WorldMapFrame:SetScript("OnDragStart",function()
-      WorldMapFrame:StartMoving()
-    end)
+        SaveMovable(this, true)
+      end)
 
-    WorldMapFrame:SetScript("OnDragStop",function()
-      WorldMapFrame:StopMovingOrSizing()
-      SaveMovable(this, true)
-    end)
+      HookScript(WorldMapFrame, "OnDragStart", function()
+        WorldMapFrame:StartMoving()
+      end)
+
+      HookScript(WorldMapFrame, "OnDragStop",function()
+        WorldMapFrame:StopMovingOrSizing()
+        SaveMovable(this, true)
+      end)
+    end
 
     WorldMapFrame:SetAlpha(alpha)
     WorldMapFrame:SetScale(scale)

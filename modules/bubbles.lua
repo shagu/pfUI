@@ -27,7 +27,8 @@ pfUI:RegisterModule("bubbles", "vanilla:tbc", function ()
     local r,g,b,a = f.text:GetTextColor()
     f.frame.text:SetText(f.text:GetText())
     f.frame.text:SetTextColor(r,g,b,a)
-    f.frame.backdrop:SetBackdropBorderColor(r,g,b,a)
+    local border_alpha = C.chat.bubbles.borders == "1" and a or 0
+    f.frame.backdrop:SetBackdropBorderColor(r,g,b,border_alpha)
   end
 
   function pfUI.bubbles:ScanBubbles()

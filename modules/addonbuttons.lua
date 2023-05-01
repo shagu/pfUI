@@ -53,7 +53,6 @@ pfUI:RegisterModule("addonbuttons", "vanilla:tbc", function ()
   pfUI.addonbuttons.overrides = {}
   pfUI.addonbuttons.last_updated = 0
   pfUI.addonbuttons.rows = 1
-  pfUI.addonbuttons.effective_scale = Minimap:GetEffectiveScale()
   pfUI.addonbuttons.max_button_size = 40
 
   pfUI.addonbuttons:RegisterEvent("PLAYER_LOGIN")
@@ -280,7 +279,7 @@ pfUI:RegisterModule("addonbuttons", "vanilla:tbc", function ()
     if not frame then return end
     local top_frame, row_index, offsetX, offsetY, final_scale
     top_frame = GetTopFrame(frame)
-    final_scale = GetScale() / pfUI.addonbuttons.effective_scale
+    final_scale = GetScale()
     row_index = floor((index-1)/tonumber(C.abuttons.rowsize))
     frame:SetFrameStrata("HIGH")
     frame:SetClampedToScreen(true)

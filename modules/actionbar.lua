@@ -379,6 +379,7 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
 
   local function ButtonMacroScan(self)
     if self.bar > 10 then return end
+    if not self.scanmacro then return end
 
     local macro = GetActionText(self.id)
     self.spellslot = nil
@@ -401,6 +402,11 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
           if pfUI.client > 11200 and match then
             self.spellslot = nil
             self.booktype = nil
+            return
+          end
+
+          -- allow the user to disable the scan
+          if match and strfind(match, "disable") then
             return
           end
 
@@ -1169,6 +1175,13 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     f.count:SetTextColor(unpack(count_color))
     f.count:SetJustifyH("RIGHT")
     f.count:SetJustifyV("BOTTOM")
+
+    -- macro spell scan
+    if C.bars.macroscan == "0" then
+      f.scanmacro, f.spellslot, f.booktype = nil, nil, nil
+    else
+      f.scanmacro = true
+    end
 
     -- range glow color
     f.rangeColor = { strsplit(",", C.bars.rangecolor) }

@@ -214,7 +214,7 @@ pfUI:RegisterSkin("Inspect", "vanilla", function ()
                 if not slot.scoreText then
                   slot.scoreText = slot:CreateFontString(nil, "OVERLAY", "GameFontNormal")
                   slot.scoreText:SetFont(pfUI.font_default, 12, "OUTLINE")
-                  slot.scoreText:SetPoint("BOTTOMRIGHT", 0, 0)
+                  slot.scoreText:SetPoint("TOPRIGHT", 0, 0)
                 end
 
                 local r,g,b = GetItemQualityColor(quality)

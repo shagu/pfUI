@@ -188,7 +188,6 @@ pfUI:RegisterSkin("Mailbox", "vanilla:tbc", function ()
     StripTextures(SendMailScrollFrame)
     CreateBackdrop(SendMailScrollFrame, nil, true)
     SkinScrollbar(SendMailScrollFrameScrollBar)
-    SendMailBodyEditBox:SetMaxLetters(2000)
 
     SkinMoneyInputFrame(SendMailMoney)
 
