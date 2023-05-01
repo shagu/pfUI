@@ -24,7 +24,7 @@ pfUI:RegisterModule("skin", "vanilla:tbc", function ()
       return
     elseif center and center:IsShown() and left and left:IsShown() then
       local width = left.rightObj:GetRight()
-      if width ~= UIParent.pfLeftAligned then
+      if width and width ~= UIParent.pfLeftAligned then
         center:SetPoint("TOPLEFT", "UIParent", "TOPLEFT", width + 10, -104)
         UIParent.pfLeftAligned = width
       end
