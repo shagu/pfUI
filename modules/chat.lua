@@ -403,7 +403,7 @@ pfUI:RegisterModule("chat", "vanilla:tbc", function ()
       end
 
       local _, class = UnitClass("player")
-      _G["ChatFrame" .. i .. "TabText"]:SetTextColor(RAID_CLASS_COLORS[class].r + .3 * .5, RAID_CLASS_COLORS[class].g + .3 * .5, RAID_CLASS_COLORS[class].b + .3 * .5, 1)
+      _G["ChatFrame" .. i .. "TabText"]:SetTextColor((RAID_CLASS_COLORS[class].r + .3) * .5, (RAID_CLASS_COLORS[class].g + .3) * .5, (RAID_CLASS_COLORS[class].b + .3) * .5, 1)
       _G["ChatFrame" .. i .. "TabText"]:SetFont(panelfont,panelfont_size, "OUTLINE")
 
       if _G["ChatFrame" .. i].isDocked or _G["ChatFrame" .. i]:IsVisible() then
@@ -536,9 +536,13 @@ pfUI:RegisterModule("chat", "vanilla:tbc", function ()
   end
 
   pfUI.chat:SetScript("OnEvent", function()
+    -- set the default chat
+    FCF_SelectDockFrame(SELECTED_CHAT_FRAME)
+
+    -- update all chat settings
     pfUI.chat:RefreshChat()
     FCF_DockUpdate()
-    if C.chat.right.enable == "0" and C.chat.right.alwaysshow == "0" then
+    if C.chat.right.enable == "0" then
       pfUI.chat.right:Hide()
     end
   end)

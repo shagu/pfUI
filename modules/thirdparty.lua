@@ -236,6 +236,12 @@ pfUI:RegisterModule("thirdparty", "vanilla:tbc", function()
     local hookRefresh = ShaguDPSWindow.Refresh
     ShaguDPSWindow.Refresh = function(arg1, arg2)
       hookRefresh(arg1, arg2)
+
+      -- keep backdrop hidden
+      if C.thirdparty.shagudps.skin == "1" then
+        ShaguDPSWindow:SetBackdrop(nil)
+        ShaguDPSWindow.border:SetBackdrop(nil)
+      end
     end
 
     local docktable = { "shagudps", "ShaguDPS", "ShaguDPSWindow",

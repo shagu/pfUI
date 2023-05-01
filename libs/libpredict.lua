@@ -320,9 +320,14 @@ hooksecurefunc("CastSpellByName", function(effect, target)
   if not libpredict.sender.enabled then return end
   local effect, rank = libspell.GetSpellInfo(effect)
   if not effect then return end
+  local mouseover = pfUI and pfUI.uf and pfUI.uf.mouseover and pfUI.uf.mouseover.unit
+  mouseover = mouseover and UnitCanAssist("player", mouseover) and UnitName(mouseover)
+
+  local default = UnitName("target") and UnitCanAssist("player", "target") and UnitName("target") or UnitName("player")
+
   spell_queue[1] = effect
   spell_queue[2] = effect.. ( rank or "" )
-  spell_queue[3] = UnitName("target") and UnitCanAssist("player", "target") and UnitName("target") or UnitName("player")
+  spell_queue[3] = mouseover or default
 end, true)
 
 local scanner = libtipscan:GetScanner("prediction")

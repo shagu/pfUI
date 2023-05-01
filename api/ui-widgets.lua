@@ -36,13 +36,39 @@ do -- statusbars
         height = self:GetHeight()
         if pfUI.expansion == "vanilla" then height = height / self:GetEffectiveScale() end
         point = height / (self.max - self.min) * (val - self.min)
+
+        -- keep values in limits
+        point = math.min(height, point)
+        point = math.max(0, point)
+
+        -- set point to zero if value and max is zero
+        if val == 0 then point = 0 end
+
+        -- set status bar position/size
         self.bar:SetPoint("TOPLEFT", self, "TOPLEFT", 0, - height + point)
+        self.bar:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", 0, 0)
+
+        -- set background bar position/size
+        self.bg:SetPoint("TOPLEFT", self, "TOPLEFT", 0, 0)
         self.bg:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", 0, point)
       else
         width = self:GetWidth()
         if pfUI.expansion == "vanilla" then width = width / self:GetEffectiveScale() end
         point = width / (self.max - self.min) * (val - self.min)
+
+        -- keep values in limits
+        point = math.min(width, point)
+        point = math.max(0, point)
+
+        -- set point to zero if value and max is zero
+        if val == 0 then point = 0 end
+
+        -- set status bar position/size
+        self.bar:SetPoint("TOPLEFT", self, "TOPLEFT", 0, 0)
         self.bar:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", - width + point, 0)
+
+        -- set background bar position/size
+        self.bg:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", 0, 0)
         self.bg:SetPoint("TOPLEFT", self, "TOPLEFT", point, 0)
       end
     end,

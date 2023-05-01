@@ -118,33 +118,38 @@ function pfUI:UpdateFonts()
   if not pfUI_config or not pfUI_config.global then return end
 
   -- load font configuration
-  local default, unit, combat
+  local default, unit, unit_name, combat
   if pfUI_config.global.force_region == "1" and GetLocale() == "zhCN" and pfUI.expansion == "vanilla" then
     -- force locale compatible fonts
     default = "Fonts\\FZXHLJW.TTF"
     combat = "Fonts\\FZXHLJW.TTF"
     unit = "Fonts\\FZXHLJW.TTF"
+    unit_name = "Fonts\\FZXHLJW.TTF"
   elseif pfUI_config.global.force_region == "1" and GetLocale() == "zhCN" and pfUI.expansion == "tbc" then
     -- force locale compatible fonts
     default = "Fonts\\ZYHei.ttf"
     combat = "Fonts\\ZYKai_C.ttf"
     unit = "Fonts\\ZYKai_T.ttf"
+    unit_name = "Fonts\\ZYHei.ttf"
   elseif pfUI_config.global.force_region == "1" and GetLocale() == "koKR" then
     -- force locale compatible fonts
     default = "Fonts\\2002.TTF"
     combat = "Fonts\\2002.TTF"
     unit = "Fonts\\2002.TTF"
+    unit_name = "Fonts\\2002.TTF"
   else
     -- use default entries
     default = pfUI.media[pfUI_config.global.font_default]
     combat = pfUI.media[pfUI_config.global.font_combat]
     unit = pfUI.media[pfUI_config.global.font_unit]
+    unit_name = pfUI.media[pfUI_config.global.font_unit_name]
   end
 
   -- write setting shortcuts
   pfUI.font_default = default
   pfUI.font_combat = combat
   pfUI.font_unit = unit
+  pfUI.font_unit_name = unit_name
 
   -- skip setting fonts, keep blizzard defaults
   if pfUI_config.global.font_blizzard == "1" then
@@ -155,7 +160,7 @@ function pfUI:UpdateFonts()
   STANDARD_TEXT_FONT = default
   DAMAGE_TEXT_FONT   = combat
   NAMEPLATE_FONT     = default
-  UNIT_NAME_FONT     = default
+  UNIT_NAME_FONT     = unit_name
 
   -- set dropdown font to default size
   UIDROPDOWNMENU_DEFAULT_TEXT_HEIGHT = 11

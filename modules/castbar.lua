@@ -45,7 +45,6 @@ pfUI:RegisterModule("castbar", "vanilla:tbc", function ()
     cb.bar.left:SetFontObject(GameFontWhite)
     cb.bar.left:SetTextColor(1,1,1,1)
     cb.bar.left:SetFont(font, font_size, "OUTLINE")
-    cb.bar.left:SetText("left")
     cb.bar.left:SetJustifyH("left")
 
     -- text right
@@ -57,7 +56,6 @@ pfUI:RegisterModule("castbar", "vanilla:tbc", function ()
     cb.bar.right:SetFontObject(GameFontWhite)
     cb.bar.right:SetTextColor(1,1,1,1)
     cb.bar.right:SetFont(font, font_size, "OUTLINE")
-    cb.bar.right:SetText("right")
     cb.bar.right:SetJustifyH("right")
 
     cb.bar.lag = cb.bar:CreateTexture(nil, "OVERLAY")
@@ -100,11 +98,13 @@ pfUI:RegisterModule("castbar", "vanilla:tbc", function ()
 
         this:SetAlpha(1)
 
-        local rank = this.showrank and nameSubtext and nameSubtext ~= "" and string.format(" |cffaaffcc[%s]|r", nameSubtext) or ""
+        local spellname = this.showname and cast and cast .. " " or ""
+        local rank = this.showrank and nameSubtext and nameSubtext ~= "" and string.format("|cffaaffcc[%s]|r", nameSubtext) or ""
+
         if this.endTime ~= endTime then
           this.bar:SetStatusBarColor(strsplit(",", C.appearance.castbar[(channel and "channelcolor" or "castbarcolor")]))
           this.bar:SetMinMaxValues(0, duration / 1000)
-          this.bar.left:SetText(cast .. rank)
+          this.bar.left:SetText(spellname .. rank)
           this.fadeout = nil
           this.endTime = endTime
 
@@ -139,11 +139,13 @@ pfUI:RegisterModule("castbar", "vanilla:tbc", function ()
 
         this.bar:SetValue(cur)
 
-        if this.delay and this.delay > 0 then
-          local delay = "|cffffaaaa" .. (channel and "-" or "+") .. round(this.delay,1) .. " |r "
-          this.bar.right:SetText(delay .. string.format("%.1f",cur) .. " / " .. round(max,1))
-        else
-          this.bar.right:SetText(string.format("%.1f",cur) .. " / " .. round(max,1))
+        if this.showtimer then
+          if this.delay and this.delay > 0 then
+            local delay = "|cffffaaaa" .. (channel and "-" or "+") .. round(this.delay,1) .. " |r "
+            this.bar.right:SetText(delay .. string.format("%.1f",cur) .. " / " .. round(max,1))
+          else
+            this.bar.right:SetText(string.format("%.1f",cur) .. " / " .. round(max,1))
+          end
         end
 
         this.fadeout = nil
@@ -196,6 +198,8 @@ pfUI:RegisterModule("castbar", "vanilla:tbc", function ()
   if C.castbar.player.hide_pfui == "0" then
     pfUI.castbar.player = CreateCastbar("pfPlayerCastbar", UIParent, "player")
     pfUI.castbar.player.showicon = C.castbar.player.showicon == "1" and true or nil
+    pfUI.castbar.player.showname = C.castbar.player.showname == "1" and true or nil
+    pfUI.castbar.player.showtimer = C.castbar.player.showtimer == "1" and true or nil
     pfUI.castbar.player.showlag = C.castbar.player.showlag == "1" and true or nil
     pfUI.castbar.player.showrank = C.castbar.player.showrank == "1" and true or nil
     pfUI.castbar.player.spacing = default_border * 2 + tonumber(C.unitframes.player.pspace) * GetPerfectPixel()
@@ -221,6 +225,8 @@ pfUI:RegisterModule("castbar", "vanilla:tbc", function ()
   if C.castbar.target.hide_pfui == "0" then
     pfUI.castbar.target = CreateCastbar("pfTargetCastbar", UIParent, "target")
     pfUI.castbar.target.showicon = C.castbar.target.showicon == "1" and true or nil
+    pfUI.castbar.target.showname = C.castbar.target.showname == "1" and true or nil
+    pfUI.castbar.target.showtimer = C.castbar.target.showtimer == "1" and true or nil
     pfUI.castbar.target.showlag = C.castbar.target.showlag == "1" and true or nil
     pfUI.castbar.target.showrank = C.castbar.target.showrank == "1" and true or nil
     pfUI.castbar.target.spacing = default_border * 2 + tonumber(C.unitframes.target.pspace) * GetPerfectPixel()
@@ -246,6 +252,8 @@ pfUI:RegisterModule("castbar", "vanilla:tbc", function ()
   if C.castbar.focus.hide_pfui == "0" and pfUI.uf.focus then
     pfUI.castbar.focus = CreateCastbar("pfFocusCastbar", UIParent, "focus")
     pfUI.castbar.focus.showicon = C.castbar.focus.showicon == "1" and true or nil
+    pfUI.castbar.focus.showname = C.castbar.focus.showname == "1" and true or nil
+    pfUI.castbar.focus.showtimer = C.castbar.focus.showtimer == "1" and true or nil
     pfUI.castbar.focus.showlag = C.castbar.focus.showlag == "1" and true or nil
     pfUI.castbar.focus.showrank = C.castbar.focus.showrank == "1" and true or nil
     pfUI.castbar.focus.spacing = default_border * 2 + tonumber(C.unitframes.focus.pspace) * GetPerfectPixel()
