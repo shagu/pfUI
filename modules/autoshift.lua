@@ -91,6 +91,11 @@ pfUI:RegisterModule("autoshift", "vanilla", function ()
       -- scan through buffs and cancel shapeshift/mount
       for id, errorstring in pairs(pfUI.autoshift.errors) do
         if arg1 == errorstring then
+          -- dont's cancel form when clicking on npcs while in combat
+          if arg1 == ERR_CANT_INTERACT_SHAPESHIFTED and UnitAffectingCombat("player") then
+            return
+          end
+
           for i=0,31,1 do
             -- detect mounts based on tooltip text
             pfUI.autoshift.scanner:SetPlayerBuff(i)
