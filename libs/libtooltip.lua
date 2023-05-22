@@ -49,6 +49,18 @@ end
 pfUI.api.libtooltip = libtooltip
 
 -- setup item hooks
+local pfHookSetHyperlink = GameTooltip.SetHyperlink
+function GameTooltip.SetHyperlink(self, arg1)
+  if arg1 then
+    local _, _, linktype = string.find(arg1, "^(.-):(.+)$")
+    if linktype == "item" then
+      libtooltip.itemLink = arg1
+    end
+  end
+
+  return pfHookSetHyperlink(self, arg1)
+end
+
 local pfHookSetBagItem = GameTooltip.SetBagItem
 function GameTooltip.SetBagItem(self, container, slot)
   -- skip special/invalid calls to the function
