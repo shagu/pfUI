@@ -107,6 +107,17 @@ pfUI:RegisterModule("minimap", "vanilla:tbc", function ()
 
   -- Create coordinates text frame with location configurable
   pfUI.minimapCoordinates = CreateFrame("Frame", "pfMinimapCoord", pfUI.minimap)
+  pfUI.minimapCoordinates:SetScript("OnUpdate", function()
+    -- update coords every 0.1 seconds
+    if ( this.tick or .1) > GetTime() then return else this.tick = GetTime() + .1 end
+
+    this.posX, this.posY = GetPlayerMapPosition("player")
+    if this.posX ~= 0 and this.posY ~= 0 then
+      this.text:SetText(string.format("%.1f, %.1f", round(this.posX * 100, 1), round(this.posY * 100, 1)))
+    else
+      this.text:SetText("|cffffaaaaN/A")
+    end
+  end)
 
   if C.appearance.minimap.coordsloc == "topleft" then
     pfUI.minimapCoordinates:SetPoint("TOPLEFT", 3, -3)
@@ -151,12 +162,6 @@ pfUI:RegisterModule("minimap", "vanilla:tbc", function ()
   Minimap:SetScript("OnEnter", function()
     SetMapToCurrentZone()
     if C.appearance.minimap.coordsloc ~= "off" then
-      local posX, posY = GetPlayerMapPosition("player")
-      if posX ~= 0 and posY ~= 0 then
-        pfUI.minimapCoordinates.text:SetText(round(posX * 100, 1) .. ", " .. round(posY * 100, 1))
-      else
-        pfUI.minimapCoordinates.text:SetText("|cffffaaaaN/A")
-      end
       pfUI.minimapCoordinates:Show()
     end
 
