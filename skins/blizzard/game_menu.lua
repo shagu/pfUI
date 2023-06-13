@@ -7,7 +7,7 @@ pfUI:RegisterSkin("Game Menu", "vanilla:tbc", function ()
   if pfUI.expansion == 'tbc' then
     GameMenuFrame:SetHeight(GameMenuFrame:GetHeight() + 10)
   elseif pfUI.expansion == 'vanilla' then
-    GameMenuFrame:SetHeight(GameMenuFrame:GetHeight() + 6)
+    GameMenuFrame:SetHeight(GameMenuFrame:GetHeight() + 26)
   end
 
   local title = GetNoNameObject(GameMenuFrame, "FontString", "ARTWORK", MAIN_MENU)
