@@ -1095,6 +1095,15 @@ pfUI:RegisterModule("thirdparty-vanilla", "vanilla", function()
     SkinButton(GameMenuButtonAddOns)
   end)
 
+  HookAddonOrVariable("HardcoreDeath", function()
+    SkinButton(GameMenuButtonHardcoreDeathLogGUI)
+  end)
+  
+  HookAddonOrVariable("SuperMacro", function()
+    SkinButton(GameMenuButtonSuperMacro)
+  end)
+  
+
   HookAddonOrVariable("MacroExtender", function()
     -- Macro Extender moves the character dialog from frame-stata "dialog"
     -- to "low" and by that moves the frame below backgrounds, quest-trackers,
