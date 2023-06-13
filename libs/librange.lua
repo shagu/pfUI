@@ -132,6 +132,9 @@ librange:SetScript("OnEvent", function()
   end
 end)
 
+local target_event = TargetFrame_OnEvent
+local target_nop = function() return end
+
 librange:SetScript("OnUpdate", function()
   if ( this.tick or 1) > GetTime() then
     return
@@ -158,9 +161,16 @@ librange:SetScript("OnUpdate", function()
       _G.PlaySound = SoundOff
       pfScanActive = true
 
+      -- save and disable target frame events
+      target_event = TargetFrame_OnEvent
+      _G.TargetFrame_OnEvent = target_nop
+
       TargetUnit(unit)
       unitdata[unit] = IsActionInRange(librange.slot)
       TargetLastTarget()
+
+      -- restore target events
+      _G.TargetFrame_OnEvent = target_event
 
       _G.PlaySound = SoundOn
       pfScanActive = false
