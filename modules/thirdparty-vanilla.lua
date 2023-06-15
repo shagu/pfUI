@@ -790,6 +790,9 @@ pfUI:RegisterModule("thirdparty-vanilla", "vanilla", function()
     if C.thirdparty.supermacro.enable == "0" then return end
     if not pfUI.bars then return end
 
+    -- skin game menu button
+    SkinButton(GameMenuButtonSuperMacro)
+
     -- hook events to include SuperMacro refreshs
     local ButtonFullUpdate = pfUI.bars.ButtonFullUpdate
     pfUI.bars.ButtonFullUpdate = function(button)
