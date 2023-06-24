@@ -313,7 +313,7 @@ pfUI:RegisterModule("thirdparty", "vanilla:tbc", function()
   -- DPSMate Damage Meter
   -- Vanilla: https://github.com/Geigerkind/DPSMate
   -- TBC: https://github.com/Geigerkind/DPSMateTBC
-  HookAddonOrVariable("DPSMate", function()
+  HookAddonOrVariable("DPSMate_DPSMate", function()
     local docktable = { "dpsmate", "DPSMate", "DPSMate_DPSMate",
       function() -- single
         DPSMate_DPSMate:ClearAllPoints()
