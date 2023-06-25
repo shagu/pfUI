@@ -120,19 +120,31 @@ function pfUI:UpdateFonts()
   -- load font configuration
   local default, unit, unit_name, combat
   if pfUI_config.global.force_region == "1" and GetLocale() == "zhCN" and pfUI.expansion == "vanilla" then
-    -- force locale compatible fonts
+    -- force locale compatible fonts (zhCN 1.12)
     default = "Fonts\\FZXHLJW.TTF"
     combat = "Fonts\\FZXHLJW.TTF"
     unit = "Fonts\\FZXHLJW.TTF"
     unit_name = "Fonts\\FZXHLJW.TTF"
   elseif pfUI_config.global.force_region == "1" and GetLocale() == "zhCN" and pfUI.expansion == "tbc" then
-    -- force locale compatible fonts
+    -- force locale compatible fonts (zhCN 2.4.3)
     default = "Fonts\\ZYHei.ttf"
     combat = "Fonts\\ZYKai_C.ttf"
     unit = "Fonts\\ZYKai_T.ttf"
     unit_name = "Fonts\\ZYHei.ttf"
+  elseif pfUI_config.global.force_region == "1" and GetLocale() == "zhTW" and pfUI.expansion == "vanilla" then
+    -- force locale compatible fonts (zhTW 1.12)
+    default = "Fonts\\FZXHLJW.ttf"
+    combat = "Fonts\\FZXHLJW.ttf"
+    unit = "Fonts\\FZXHLJW.ttf"
+    unit_name = "Fonts\\FZXHLJW.ttf"
+  elseif pfUI_config.global.force_region == "1" and GetLocale() == "zhTW" and pfUI.expansion == "tbc" then
+    -- force locale compatible fonts (zhTW 2.4.3)
+    default = "Fonts\\bHEI01B.ttf"
+    combat = "Fonts\\bHEI01B.ttf"
+    unit = "Fonts\\bHEI01B.ttf"
+    unit_name = "Fonts\\bHEI01B.ttf"
   elseif pfUI_config.global.force_region == "1" and GetLocale() == "koKR" then
-    -- force locale compatible fonts
+    -- force locale compatible fonts (koKR)
     default = "Fonts\\2002.TTF"
     combat = "Fonts\\2002.TTF"
     unit = "Fonts\\2002.TTF"
