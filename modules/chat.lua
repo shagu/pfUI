@@ -3,6 +3,19 @@ pfUI:RegisterModule("chat", "vanilla:tbc", function ()
   local panelfont_size = C.panel.use_unitfonts == "1" and C.global.font_unit_size or C.global.font_size
   local rawborder, default_border = GetBorderSize("chat")
 
+  if pfUI.client <= 11200 then
+    -- The 'GetChatWindowInfo' function returns shown as 'false' while the UIParent is hidden (Alt+Z).
+    -- Based on that return value, the 'FloatingChatFrame_Update' would remove every chat frame,
+    -- that isn't tabbed while the interface is hidden. With this hook we prevent the original
+    -- 'FloatingChatFrame_Update' function from being called during that time.
+
+    local HookFloatingChatFrame_Update = _G.FloatingChatFrame_Update
+    _G.FloatingChatFrame_Update = function(id, onUpdateEvent)
+      if not UIParent:IsShown() then return end
+      HookFloatingChatFrame_Update(id, onUpdateEvent)
+    end
+  end
+
   _G.CHAT_FONT_HEIGHTS = { 8, 10, 12, 14, 16, 18, 20 }
 
   -- add dropdown menu button to ignore player
