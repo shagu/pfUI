@@ -865,7 +865,7 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     end
 
     -- castbar update
-    if C.nameplates["showcastbar"] == "1" then
+    if C.nameplates["showcastbar"] == "1" and ( C.nameplates["targetcastbar"] == "0" or target ) then
       local cast, nameSubtext, text, texture, startTime, endTime, isTradeSkill = UnitCastingInfo(target and "target" or name)
 
       if not cast then
