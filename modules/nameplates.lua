@@ -632,6 +632,14 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
       r, g, b, a = RAID_CLASS_COLORS[class].r, RAID_CLASS_COLORS[class].g, RAID_CLASS_COLORS[class].b, 1
     end
 
+    if ( C.nameplates["lowhealthc"] == "1" ) and ( (hp / hpmax) <= 0.2 ) then
+      if unittype == ("FRIENDLY_NPC" or "FRIENDLY_PLAYER") then
+        r, g, b, a = 0/255, 204/255, 255/255, 1
+      else
+        r, g, b, a = 255/255, 128/255, 0/255, 1
+      end
+    end
+
     if r ~= plate.cache.r or g ~= plate.cache.g or b ~= plate.cache.b then
       plate.health:SetStatusBarColor(r, g, b, a)
       plate.cache.r, plate.cache.g, plate.cache.b = r, g, b
@@ -761,16 +769,23 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
       update = true
     end
 
-    -- trigger update when name color changed
-    local r, g, b = original.name:GetTextColor()
-    if r + g + b ~= nameplate.cache.namecolor then
-      nameplate.cache.namecolor = r + g + b
-      if r > .9 and g < .2 and b < .2 then
-        nameplate.name:SetTextColor(1,0.4,0.2,1) -- infight
-      else
-        nameplate.name:SetTextColor(r,g,b,1)
+    if ( C.nameplates["namereactionc"] == "1" ) then
+      local red, green, blue = original.healthbar:GetStatusBarColor()
+      local unittype = GetUnitType(red, green, blue) or "ENEMY_NPC"
+      red, green, blue = unpack(unitcolors[unittype])
+      nameplate.name:SetTextColor(red,green,blue,1)
+    else
+      -- trigger update when name color changed
+      local r, g, b = original.name:GetTextColor()
+      if r + g + b ~= nameplate.cache.namecolor then
+        nameplate.cache.namecolor = r + g + b
+        if r > .9 and g < .2 and b < .2 then
+          nameplate.name:SetTextColor(1,0.4,0.2,1) -- infight
+        else
+          nameplate.name:SetTextColor(r,g,b,1)
+        end
+        update = true
       end
-      update = true
     end
 
     -- trigger update when name color changed
