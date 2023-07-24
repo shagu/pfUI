@@ -2085,6 +2085,8 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
 
     CreateGUIEntry(T["Tooltip"], nil, function()
       CreateConfig(nil, T["Tooltip Position"], C.tooltip, "position", "dropdown", pfUI.gui.dropdowns.tooltip_position)
+      CreateConfig(nil, T["Tooltip Text Font"], C.tooltip, "font_tooltip", "dropdown", pfUI.gui.dropdowns.fonts)
+      CreateConfig(nil, T["Tooltip Text Font Size"], C.tooltip, "font_tooltip_size")
       CreateConfig(nil, T["Cursor Tooltip Align"], C.tooltip, "cursoralign", "dropdown", pfUI.gui.dropdowns.tooltip_align)
       CreateConfig(nil, T["Cursor Tooltip Offset"], C.tooltip, "cursoroffset")
       CreateConfig(nil, T["Enable Extended Guild Information"], C.tooltip, "extguild", "checkbox")
