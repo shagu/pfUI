@@ -770,6 +770,7 @@ pfUI_translation["frFR"] = {
   ["Website"] = "Site web",
   ["Welcome to |cff33ffccpf|cffffffffUI|r!\n\nI'm the first run wizard that will guide you through some basic configuration. If you're lazy, feel free to hit the \"Defaults\" button. If you wish to run this dialog again, go to the settings and hit the \"Reset Firstrun\" button.\n\nVisit |cff33ffcchttp://shagu.org|r to check for the latest version."] = "Bienvenue sur l'assistant d'installation de l'interface |cff33ffccpf|cffffffffUI|r!\n\nNous allons effectuer quelques configurations de base. Si vous n'avez pas la patience, cliquer sur le bouton \"Paramètres par défaut\". Si vous souhaitez relancer cette fenêtre de dialogue, allez dans les options et cliquez sur le bouton\"Réinitialiser l'assistant d'installation\" .\n\nAllez sur |cff33ffcchttp://shagu.org|r pour télécharger la dernière version.",
   ["Whitelist"] = "List blanche",
+  ["Who Search Unknown Classes"] = nil,
   ["Width"] = "Largeur",
   ["Wobble Zoom"] = "Zoom oscillant",
   ["Won"] = "A gagné",

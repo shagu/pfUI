@@ -770,6 +770,7 @@ pfUI_translation["zhCN"] = {
   ["Website"] = "网站",
   ["Welcome to |cff33ffccpf|cffffffffUI|r!\n\nI'm the first run wizard that will guide you through some basic configuration. If you're lazy, feel free to hit the \"Defaults\" button. If you wish to run this dialog again, go to the settings and hit the \"Reset Firstrun\" button.\n\nVisit |cff33ffcchttp://shagu.org|r to check for the latest version."] = "欢迎使用 |cff33ffccpf|cffffffffUI|r! \n\n这是第一次运行向导，将引导您完成一些基本配置。 如果你想跳过所有步骤\"使用默认\"按钮。 如果您再次运行此对话框，请转到设置并点击 \"Reset Firstrun\" 按钮。\n\n访问 |cff33ffcchttp://shagu.org|r 检查最新版本。",
   ["Whitelist"] = "白名单",
+  ["Who Search Unknown Classes"] = nil,
   ["Width"] = nil,
   ["Wobble Zoom"] = "摆动变焦",
   ["Won"] = nil,

@@ -695,6 +695,31 @@ pfUI:RegisterModule("chat", "vanilla:tbc", function ()
   local r,g,b = strsplit(",", C.chat.text.unknowncolor)
   local unknowncolorhex = rgbhex(r,g,b)
 
+  local nothing = function() return end
+  local original = FriendsFrame_OnEvent
+
+  local who_query = CreateFrame("Frame")
+  who_query:RegisterEvent("WHO_LIST_UPDATE")
+  who_query:SetScript("OnEvent", function()
+    if this.pending then
+      -- restore everything once a query is received
+      _G.FriendsFrame_OnEvent = original
+      this.pending = nil
+      SetWhoToUI(0)
+    end
+  end)
+
+  local function ScanWhoName(name)
+    -- abort if another query is ongoing
+    if who_query.pending then return end
+    who_query.pending = true
+
+    -- prepare and send the who query
+    _G.FriendsFrame_OnEvent = nothing
+    SetWhoToUI(1)
+    SendWho("n-"..name)
+  end
+
   local function AddMessage(frame, text, a1, a2, a3, a4, a5)
     if not text then return end
 
@@ -731,6 +756,8 @@ pfUI:RegisterModule("chat", "vanilla:tbc", function ()
             color = rgbhex(RAID_CLASS_COLORS[class])
             match = true
           end
+        elseif C.chat.text.whosearchunknown == "1" then
+          ScanWhoName(name)
         end
 
         if C.chat.text.tintunknown == "1" or match then
