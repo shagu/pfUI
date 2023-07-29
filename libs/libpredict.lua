@@ -291,8 +291,8 @@ resetcache:SetScript("OnEvent", function()
 end)
 
 local function UpdateCache(spell, heal, crit)
+  local heal = heal and tonumber(heal)
   if not spell or not heal then return end
-  local heal = tonumber(heal)
 
   if not cache[spell] or cache[spell][2] then
     -- skills or equipment changed, save whatever is detected
