@@ -232,7 +232,6 @@ pfUI:RegisterModule("thirdparty", "vanilla:tbc", function()
   -- Vanilla: https://github.com/shagu/ShaguDPS
   -- TBC: https://github.com/shagu/ShaguDPS
   HookAddonOrVariable("ShaguDPS", function()
-
     local hookRefresh = ShaguDPSWindow.Refresh
     ShaguDPSWindow.Refresh = function(arg1, arg2)
       hookRefresh(arg1, arg2)
@@ -257,11 +256,11 @@ pfUI:RegisterModule("thirdparty", "vanilla:tbc", function()
         ShaguDPSWindow:SetWidth(pfUI.chat.right:GetWidth() / 2)
       end,
       function() -- show
-        ShaguDPS_Config.visible = 1
+        ShaguDPS.config.visible = 1
         ShaguDPSWindow.Refresh(true)
       end,
       function() -- hide
-        ShaguDPS_Config.visible = 0
+        ShaguDPS.config.visible = 0
         ShaguDPSWindow.Refresh(true)
       end
     }
