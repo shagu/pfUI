@@ -487,9 +487,13 @@ function pfUI.api.CreateScrollFrame(name, parent)
   f.slider.thumb:SetHeight(50)
   f.slider.thumb:SetTexture(.3,1,.8,.5)
 
+  local selfevent = false
   f.slider:SetScript("OnValueChanged", function()
+    if selfevent then return end
+    selfevent = true
     f:SetVerticalScroll(this:GetValue())
     f.UpdateScrollState()
+    selfevent = false
   end)
 
   f.UpdateScrollState = function()
@@ -550,6 +554,40 @@ function pfUI.api.CreateScrollChild(name, parent)
   end)
 
   return f
+end
+
+-- [ SetButtonFont ] --
+-- Set the font and size of a button template in a client agnostic way
+function pfUI.api.SetButtonFont(button, font, size, flags)
+ if button.SetFont then
+    -- vanilla + tbc
+    button:SetFont(font, size, flags)
+  else
+    -- wotlk
+    local buttonText = button:GetFontString()
+    if buttonText then
+      buttonText:SetFont(font, size, flags)
+    else
+      -- create new font string if not existing
+      buttonText = button:CreateFontString(nil, "OVERLAY")
+      buttonText:SetFont(font, size, flags)
+      buttonText:SetPoint("CENTER", button, "CENTER")
+      button:SetFontString(buttonText)
+    end
+  end
+end
+
+-- [ SetButtonFontColor ] --
+-- Set the text color of a button template in a client agnostic way
+function pfUI.api.SetButtonFontColor(button, r, g, b, a)
+  if button.SetTextColor then
+    -- vanilla + tbc
+    button:SetTextColor(r, g, b, a)
+  else
+    -- wotlk
+    local buttonText = button:GetFontString()
+    if buttonText then buttonText:SetTextColor(r, g, b, a) end
+  end
 end
 
 -- [ CreateTextBox ]
@@ -685,9 +723,7 @@ function pfUI.api.SkinButton(button, cr, cg, cb, icon, disableHighlight)
     b.SetTextColor = function(self, ...) self.text:SetTextColor(...) end
   end
 
-  if b.SetFont then
-    b:SetFont(pfUI.font_default, pfUI_config.global.font_size, "OUTLINE")
-  end
+  pfUI.api.SetButtonFont(b, pfUI.font_default, pfUI_config.global.font_size, "OUTLINE")
 
   b.LockHighlight = function()
     b:SetBackdropBorderColor(cr,cg,cb,1)

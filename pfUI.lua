@@ -184,7 +184,16 @@ function pfUI:UpdateFonts()
   UIDROPDOWNMENU_DEFAULT_TEXT_HEIGHT = 11
 
   -- change default game font objects
-  SystemFont:SetFont(default, 15)
+  if SystemFont then
+    -- does not exist in wotlk
+    SystemFont:SetFont(default, 15)
+  end
+
+  if TextStatusBarTextSmall then
+    -- does not exist in wotlk and koKR clients
+    TextStatusBarTextSmall:SetFont(default, 12, "NORMAL")
+  end
+
   GameFontNormal:SetFont(default, 12)
   GameFontBlack:SetFont(default, 12)
   GameFontNormalSmall:SetFont(default, 11)
@@ -211,10 +220,6 @@ function pfUI:UpdateFonts()
   InvoiceTextFontSmall:SetFont(default, 12)
   CombatTextFont:SetFont(combat, 25)
   ChatFontNormal:SetFont(default, 13, pfUI_config.chat.text.outline == "1" and "OUTLINE")
-
-  if TextStatusBarTextSmall then -- does not exist in koKR
-    TextStatusBarTextSmall:SetFont(default, 12, "NORMAL")
-  end
 end
 
 local translations

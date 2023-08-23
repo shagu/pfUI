@@ -894,22 +894,20 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
 
   -- set nameplate game settings
   nameplates.SetGameVariables = function()
-    -- update visibility (hostile)
-    if C.nameplates["showhostile"] == "1" then
-      _G.NAMEPLATES_ON = true
-      ShowNameplates()
-    else
-      _G.NAMEPLATES_ON = nil
-      HideNameplates()
-    end
+    local enemy = C.nameplates["showhostile"] == "1"
+    local friend = C.nameplates["showfriendly"] == "1"
 
-    -- update visibility (hostile)
-    if C.nameplates["showfriendly"] == "1" then
-      _G.FRIENDNAMEPLATES_ON = true
-      ShowFriendNameplates()
+    if pfUI.client >= 30300 then
+      -- wotlk
+      SetCVar("nameplateShowEnemies", enemy and 1 or 0)
+      SetCVar("nameplateShowFriends", friend and 1 or 0)
     else
-      _G.FRIENDNAMEPLATES_ON = nil
-      HideFriendNameplates()
+      -- vanilla and tbc
+      _G.NAMEPLATES_ON = enemy
+      _G.FRIENDNAMEPLATES_ON = friend
+
+      if enemy then ShowNameplates() else HideNameplates() end
+      if friend then ShowFriendNameplates() else HideFriendNameplates() end
     end
   end
 

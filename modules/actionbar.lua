@@ -893,7 +893,9 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
 
       -- enable page driver conditions
       RegisterStateDriver(bar, "page", bar.filter)
-      SecureStateHeader_Refresh(bar)
+
+      -- refresh secure states on tbc (not wotlk)
+      if SecureStateHeader_Refresh then SecureStateHeader_Refresh(bar) end
     end
   end
 
