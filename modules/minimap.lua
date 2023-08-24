@@ -1,4 +1,4 @@
-pfUI:RegisterModule("minimap", "vanilla:tbc", function ()
+pfUI:RegisterModule("minimap", "vanilla:tbc:wotlk", function ()
   local rawborder, border = GetBorderSize()
 
   if MiniMapWorldMapButton then MiniMapWorldMapButton:Hide() end

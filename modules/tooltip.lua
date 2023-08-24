@@ -1,4 +1,4 @@
-pfUI:RegisterModule("tooltip", "vanilla:tbc", function ()
+pfUI:RegisterModule("tooltip", "vanilla:tbc:wotlk", function ()
   local rawborder, default_border = GetBorderSize()
 
   pfUI.tooltip = CreateFrame('Frame', "pfTooltip", GameTooltip)
@@ -137,7 +137,7 @@ pfUI:RegisterModule("tooltip", "vanilla:tbc", function ()
   pfUI.tooltipStatusBar.HP:SetAllPoints()
   pfUI.tooltipStatusBar.HP:SetNonSpaceWrap(false)
   pfUI.tooltipStatusBar.HP:SetFontObject(GameFontWhite)
-  pfUI.tooltipStatusBar.HP:SetFont(C.tooltip.font_tooltip, C.tooltip.font_tooltip_size + 2, "OUTLINE")
+  pfUI.tooltipStatusBar.HP:SetFont(pfUI.media[C.tooltip.font_tooltip], C.tooltip.font_tooltip_size + 2, "OUTLINE")
 
   if GameTooltip.SetClampRectInsets then
     GameTooltip:SetClampRectInsets(0, 0, 16, 0)

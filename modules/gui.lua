@@ -1,4 +1,4 @@
-pfUI:RegisterModule("gui", "vanilla:tbc", function ()
+pfUI:RegisterModule("gui", "vanilla:tbc:wotlk", function ()
   local Reload, U, CreateConfig, CreateTabFrame, CreateArea, CreateGUIEntry, EntryUpdate
 
   -- "searchDB" gets populated when CreateConfig is called. The table holds
