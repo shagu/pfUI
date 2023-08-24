@@ -110,6 +110,13 @@ function pfUI:UpdateColors()
     RAID_CLASS_COLORS = setmetatable(RAID_CLASS_COLORS, { __index = function(tab,key)
       return { r = 0.6,  g = 0.6,  b = 0.6,  colorStr = "ff999999" }
     end})
+  elseif pfUI.expansion == "wotlk" then
+    ManaBarColor = {}
+    ManaBarColor[0] = { r = 0.00, g = 0.00, b = 1.00, prefix = TEXT(MANA) }
+    ManaBarColor[1] = { r = 1.00, g = 0.00, b = 0.00, prefix = TEXT(RAGE_POINTS) }
+    ManaBarColor[2] = { r = 1.00, g = 0.50, b = 0.25, prefix = TEXT(FOCUS_POINTS) }
+    ManaBarColor[3] = { r = 1.00, g = 1.00, b = 0.00, prefix = TEXT(ENERGY_POINTS) }
+    ManaBarColor[4] = { r = 0.00, g = 1.00, b = 1.00, prefix = TEXT(HAPPINESS_POINTS) }
   end
 end
 
@@ -252,7 +259,7 @@ function pfUI:RegisterModule(name, a2, a3)
   local func, version = hasv and a3 or a2, hasv and a2 or "vanilla:tbc:wotlk"
 
   -- check for client compatibility
-  --if not strfind(version, pfUI.expansion) then return end
+  if not strfind(version, pfUI.expansion) then return end
 
   pfUI.module[name] = func
   table.insert(pfUI.modules, name)
@@ -383,7 +390,10 @@ seterrorhandler(error)
 
 function pfUI.SetupCVars()
   ClearTutorials()
-  TutorialFrame_HideAllAlerts()
+
+  if client < 30300 then
+    TutorialFrame_HideAllAlerts()
+  end
 
   ConsoleExec("CameraDistanceMaxFactor 5")
 
