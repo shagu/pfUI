@@ -35,6 +35,14 @@ ACTIONBAR_SECURE_TEMPLATE_BUTTON = "SecureActionButtonTemplate"
 UNITFRAME_SECURE_TEMPLATE = "SecureUnitButtonTemplate"
 
 --[[ WOTLK API Downgrade ]]--
+FCF_SetChatWindowFontSize = function(frame, size)
+  return _G.FCF_SetChatWindowFontSize(nil, frame, size)
+end
+
+UIDropDownMenu_SetText = function(text, frame)
+  return _G.UIDropDownMenu_SetText(frame, text)
+end
+
 UIDropDownMenu_SetWidth = function(num, frame)
   return _G.UIDropDownMenu_SetWidth(frame, num)
 end
