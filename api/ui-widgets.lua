@@ -716,8 +716,8 @@ function pfUI.api.SkinButton(button, cr, cg, cb, icon, disableHighlight)
     b:SetPushedTexture(nil)
   end
 
-  -- move some font functions onto the main object (required for wotlk)
-  if not b.SetFont and b:GetFontString() then
+  -- move some font functions onto the main object
+  if pfUI.client >= 30300 and not b.SetFont and b:GetFontString() then
     b.text = b:GetFontString()
     b.SetFont = function(self, ...) self.text:SetFont(...) end
     b.SetTextColor = function(self, ...) self.text:SetTextColor(...) end
