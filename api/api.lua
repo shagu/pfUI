@@ -921,7 +921,7 @@ function pfUI.api.GetBorderSize(pref)
     local raw = tonumber(pfUI_config.appearance.border[pref])
     if raw == -1 then raw = 3 end
 
-    local scaled = raw * GetPerfectPixel()
+    local scaled = raw * pfUI.api.GetPerfectPixel()
     pfUI.borders[pref] = { raw, scaled }
 
     return raw, scaled
@@ -936,7 +936,7 @@ function pfUI.api.GetPerfectPixel()
   if pfUI.pixel then return pfUI.pixel end
 
   if pfUI_config.appearance.border.pixelperfect == "1" then
-    local scale = GetCVar("uiScale")
+    local scale = GetCVar("uiScale") or 1
     local resolution = GetCVar("gxResolution")
     local _, _, screenwidth, screenheight = strfind(resolution, "(.+)x(.+)")
 
@@ -978,11 +978,11 @@ function pfUI.api.CreateBackdrop(f, inset, legacy, transp, backdropSetting)
   if not f then return end
 
   -- load raw and pixel perfect scaled border
-  rawborder, border = GetBorderSize()
+  rawborder, border = pfUI.api.GetBorderSize()
 
   -- load custom border if existing
   if inset then
-    rawborder = inset / GetPerfectPixel()
+    rawborder = inset / pfUI.api.GetPerfectPixel()
     border = inset
   end
 
