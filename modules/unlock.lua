@@ -1,4 +1,4 @@
-pfUI:RegisterModule("unlock", "vanilla:tbc", function ()
+pfUI:RegisterModule("unlock", "vanilla:tbc:wotlk", function ()
   local rawborder, default_border = GetBorderSize()
 
   -- grouped frames
