@@ -1,4 +1,4 @@
-pfUI:RegisterModule("addonbuttons", "vanilla:tbc", function ()
+pfUI:RegisterModule("addonbuttons", "vanilla:tbc:wotlk", function ()
   if not pfUI.minimap then return end
   if C.abuttons.enable == "0" then return end
 
@@ -98,10 +98,15 @@ pfUI:RegisterModule("addonbuttons", "vanilla:tbc", function ()
     return false
   end
 
+  local function IsFrameType(frame, type)
+    if frame.IsFrameType then return frame:IsFrameType(type) end -- vanilla/tbc
+    if frame.IsObjectType then return frame:IsObjectType(type) end -- wotlk
+  end
+
   local function IsButtonValid(frame)
     if frame:GetName() ~= nil then
       if frame:IsVisible() then
-        if frame:IsFrameType("Button") then
+        if IsFrameType(frame, "Button") then
           if frame:GetScript("OnClick") ~= nil or frame:GetScript("OnMouseDown") ~= nil or frame:GetScript("OnMouseUp") ~= nil then
             if frame:GetHeight() < pfUI.addonbuttons.max_button_size and frame:GetWidth() < pfUI.addonbuttons.max_button_size then
               if not TablePartialMatch(ignored_icons, frame:GetName()) then
@@ -109,7 +114,7 @@ pfUI:RegisterModule("addonbuttons", "vanilla:tbc", function ()
               end
             end
           end
-        elseif frame:IsFrameType("Frame") and (strfind(strlower(frame:GetName()), "icon") or strfind(strlower(frame:GetName()), "button")) then
+        elseif IsFrameType(frame, "Frame") and (strfind(strlower(frame:GetName()), "icon") or strfind(strlower(frame:GetName()), "button")) then
           if frame:GetScript("OnMouseDown") ~= nil or frame:GetScript("OnMouseUp") ~= nil then
             if frame:GetHeight() < pfUI.addonbuttons.max_button_size and frame:GetWidth() < pfUI.addonbuttons.max_button_size then
               if not TablePartialMatch(ignored_icons, frame:GetName()) then
