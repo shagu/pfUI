@@ -1,4 +1,4 @@
-pfUI:RegisterModule("targettarget", "vanilla:tbc", function ()
+pfUI:RegisterModule("targettarget", "vanilla:tbc:wotlk", function ()
   -- do not go further on disabled UFs
   if C.unitframes.disable == "1" then return end
 
