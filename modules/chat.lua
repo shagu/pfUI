@@ -75,7 +75,7 @@ pfUI:RegisterModule("chat", "vanilla:tbc:wotlk", function ()
   pfUI.chat.left:SetFrameStrata("BACKGROUND")
   pfUI.chat.left:SetWidth(C.chat.left.width)
   pfUI.chat.left:SetHeight(C.chat.left.height)
-  pfUI.chat.left:SetPoint("BOTTOMLEFT", 2*default_border,2*default_border)
+  pfUI.chat.left:SetPoint("BOTTOMLEFT", 2*default_border, 2*default_border)
   pfUI.chat.left:SetScript("OnShow", function() pfUI.chat:RefreshChat() end)
   UpdateMovable(pfUI.chat.left)
   CreateBackdrop(pfUI.chat.left, default_border, nil, .8)
@@ -321,6 +321,12 @@ pfUI:RegisterModule("chat", "vanilla:tbc:wotlk", function ()
       local frame = _G["ChatFrame"..i]
       local tab = _G["ChatFrame"..i.."Tab"]
 
+      if pfUI.client >= 30300 then
+        frame:SetClampRectInsets(0,0,0,0)
+        frame:SetClampedToScreen(false)
+        frame:SetFading(false)
+      end
+
       local combat = 0
       for _, msg in pairs(_G["ChatFrame"..i].messageTypeList) do
         if strfind(msg, "SPELL", 1) or strfind(msg, "COMBAT", 1) then
@@ -435,6 +441,8 @@ pfUI:RegisterModule("chat", "vanilla:tbc:wotlk", function ()
   end
 
   hooksecurefunc("FCF_SaveDock", pfUI.chat.RefreshChat)
+  hooksecurefunc("FCF_RestorePositionAndDimensions", pfUI.chat.RefreshChat)
+  hooksecurefunc("FCF_SavePositionAndDimensions", pfUI.chat.RefreshChat)
 
   if C.chat.global.tabmouse == "1" then
     pfUI.chat.mouseovertab = CreateFrame("Frame")
@@ -604,6 +612,39 @@ pfUI:RegisterModule("chat", "vanilla:tbc:wotlk", function ()
     end
   end
 
+  for i = 1, NUM_CHAT_WINDOWS do
+    if _G["ChatFrame" .. i .. "EditBox"] or i == 1 then
+      id = _G["ChatFrame" .. i .. "EditBox"] and i or ""
+      local editbox = _G["ChatFrame" .. id .. "EditBox"]
+
+      editbox:SetParent(pfUI.chat.editbox)
+      editbox:SetAllPoints(pfUI.chat.editbox)
+      CreateBackdrop(editbox, default_border)
+
+      for i, v in ipairs({editbox:GetRegions()}) do
+        if i==6 or i==7 or i==8 then v:Hide() end
+        if v.SetFont then
+          v:SetFont(pfUI.font_default, C.global.font_size + 1, "OUTLINE")
+        end
+      end
+      editbox:SetAltArrowKeyMode(false)
+
+      if pfUI.client >= 30300 then
+        -- wotlk: hide editbox and its border instead of fading
+        _G["ChatFrame"..id.."Tab"]:HookScript("OnClick", function() editbox:Hide() end)
+        HookScript(editbox, "OnEditFocusGained", function(self) self:Show() end)
+        HookScript(editbox, "OnEditFocusLost", function(self) self:Hide() end)
+        StripTextures(editbox)
+        editbox:Hide()
+
+        -- Hide textures
+        for j = 1, table.getn(CHAT_FRAME_TEXTURES) do
+          _G["ChatFrame"..id..CHAT_FRAME_TEXTURES[j]]:SetTexture(nil)
+        end
+      end
+    end
+  end
+
   -- to make sure the bars are set up properly, we need to wait.
   local pfChatArrangeFrame = CreateFrame("Frame", "pfChatArrange", UIParent)
   pfChatArrangeFrame:RegisterEvent("CVAR_UPDATE")
@@ -629,19 +670,6 @@ pfUI:RegisterModule("chat", "vanilla:tbc:wotlk", function ()
 
     UpdateMovable(pfUI.chat.editbox)
   end)
-
-  ChatFrameEditBox = ChatFrameEditBox or ChatFrame1EditBox
-  ChatFrameEditBox:SetParent(pfUI.chat.editbox)
-  ChatFrameEditBox:SetAllPoints(pfUI.chat.editbox)
-  CreateBackdrop(ChatFrameEditBox, default_border)
-
-  for i,v in ipairs({ChatFrameEditBox:GetRegions()}) do
-    if i==6 or i==7 or i==8 then v:Hide() end
-    if v.SetFont then
-      v:SetFont(pfUI.font_default, C.global.font_size + 1, "OUTLINE")
-    end
-  end
-  ChatFrameEditBox:SetAltArrowKeyMode(false)
 
   if C.chat.text.mouseover == "1" then
     for i=1, NUM_CHAT_WINDOWS do
