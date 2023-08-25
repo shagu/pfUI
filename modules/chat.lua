@@ -441,8 +441,11 @@ pfUI:RegisterModule("chat", "vanilla:tbc:wotlk", function ()
   end
 
   hooksecurefunc("FCF_SaveDock", pfUI.chat.RefreshChat)
-  hooksecurefunc("FCF_RestorePositionAndDimensions", pfUI.chat.RefreshChat)
-  hooksecurefunc("FCF_SavePositionAndDimensions", pfUI.chat.RefreshChat)
+
+  if pfUI.client >= 30300 then
+    hooksecurefunc("FCF_RestorePositionAndDimensions", pfUI.chat.RefreshChat)
+    hooksecurefunc("FCF_SavePositionAndDimensions", pfUI.chat.RefreshChat)
+  end
 
   if C.chat.global.tabmouse == "1" then
     pfUI.chat.mouseovertab = CreateFrame("Frame")
