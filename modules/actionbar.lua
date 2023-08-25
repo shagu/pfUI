@@ -1,4 +1,4 @@
-pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
+pfUI:RegisterModule("actionbar", "vanilla:tbc:wotlk", function ()
   local _, class = UnitClass("player")
   local color = RAID_CLASS_COLORS[class]
   local cr, cg, cb = color.r , color.g, color.b
@@ -823,8 +823,9 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
 
   -- enable bar paging via secure functions
   local function ButtonSwitch(self, att, value)
-    if att == "state-parent" then
-      local action = SecureButton_GetModifiedAttribute(self, "action", SecureStateChild_GetEffectiveButton(self)) or self.id
+    -- state-parent: tbc / actionpage: wotlk
+    if att == "actionpage" or att == "state-parent" then
+      local action = ActionButton_CalculateAction(self)
       if self.id == action then return end
       updatecache[self.slot] = true
       self.id = action
@@ -894,8 +895,25 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
       -- enable page driver conditions
       RegisterStateDriver(bar, "page", bar.filter)
 
-      -- refresh secure states on tbc (not wotlk)
-      if SecureStateHeader_Refresh then SecureStateHeader_Refresh(bar) end
+      if pfUI.client >= 30300 then
+        -- save a list of all buttons in secure environment
+        for i=1,12 do bar:SetFrameRef("ActionButton"..i, bar[i]) end
+        bar:Execute([[
+          buttons = table.new()
+          for i = 1, 12 do
+            table.insert(buttons, self:GetFrameRef("ActionButton"..i))
+          end
+        ]])
+
+        -- update action page on all child buttons
+        bar:SetAttribute('_onstate-page', [[
+          for i, button in next, buttons do
+            button:SetAttribute("actionpage", newstate);
+          end
+        ]])
+      else
+        SecureStateHeader_Refresh(bar)
+      end
     end
   end
 
@@ -1117,7 +1135,13 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
       else
         bars[bar]:SetAttribute("addchild", f)
         f:SetAttribute("type", "action")
-        f:SetAttribute("action", id)
+
+        if pfUI.client >= 30300 and bar == 1 then
+          f:SetID(id)
+        else
+          f:SetAttribute("action", id)
+        end
+
         f:SetAttribute("checkselfcast", true)
         f:SetAttribute("useparent-unit", true)
         f:SetAttribute("useparent-statebutton", true)
