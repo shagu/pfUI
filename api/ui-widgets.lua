@@ -719,8 +719,8 @@ function pfUI.api.SkinButton(button, cr, cg, cb, icon, disableHighlight)
   -- move some font functions onto the main object
   if pfUI.client >= 30300 and not b.SetFont and b:GetFontString() then
     b.text = b:GetFontString()
-    b.SetFont = function(self, ...) self.text:SetFont(...) end
-    b.SetTextColor = function(self, ...) self.text:SetTextColor(...) end
+    b.SetFont = function(self, font, size, flags) self.text:SetFont(font, size, flags) end
+    b.SetTextColor = function(self, r, g, b, a) self.text:SetTextColor(r, g, b, a) end
   end
 
   pfUI.api.SetButtonFont(b, pfUI.font_default, pfUI_config.global.font_size, "OUTLINE")
