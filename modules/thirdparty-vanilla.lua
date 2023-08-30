@@ -448,9 +448,12 @@ pfUI:RegisterModule("thirdparty-vanilla", "vanilla", function()
   HookAddonOrVariable("WIM", function()
     if C.thirdparty.wim.enable == "0" then return end
 
-    _G.WIM_isLinkURL = function() return false end
-    _G.WIM_ConvertURLtoLinks = function(text) -- use pfUI link handler (it is more correct)
-      return pfUI.chat:HandleLink(text)
+    -- use pfUI link handler if available
+    if pfUI.chat then
+      _G.WIM_isLinkURL = function() return false end
+      _G.WIM_ConvertURLtoLinks = function(text)
+        return pfUI.chat:HandleLink(text)
+      end
     end
 
     -- replace wim class colors with pfUI ones
