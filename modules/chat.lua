@@ -334,6 +334,18 @@ pfUI:RegisterModule("chat", "vanilla:tbc", function ()
         frame.pfCombatLog = nil
       end
 
+      for _, tex in pairs(CHAT_FRAME_TEXTURES) do
+        local texture = _G["ChatFrame"..i..tex]
+        texture.oldTexture = texture.oldTexture or texture:GetTexture()
+
+        if i == 3 or frame.isDocked then
+          texture:SetTexture()
+          texture:Hide()
+        else
+          texture:SetTexture(texture.oldTexture)
+        end
+      end
+
       if not frame.pfStartMoving then
         frame.pfStartMoving = frame.StartMoving
         frame.StartMoving = function(a1)
