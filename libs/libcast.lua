@@ -181,10 +181,11 @@ libcast:RegisterEvent("SPELLCAST_CHANNEL_START")
 libcast:RegisterEvent("SPELLCAST_CHANNEL_STOP")
 libcast:RegisterEvent("SPELLCAST_CHANNEL_UPDATE")
 
+local mob, spell, icon, _
 libcast:SetScript("OnEvent", function()
   -- Fill database with player casts
   if event == "SPELLCAST_START" then
-    local icon = L["spells"][arg1] and L["spells"][arg1].icon and string.format("%s%s", "Interface\\Icons\\", L["spells"][arg1].icon) or lastcasttex
+    icon = L["spells"][arg1] and L["spells"][arg1].icon and string.format("%s%s", "Interface\\Icons\\", L["spells"][arg1].icon) or lastcasttex
     -- add cast action to the database
     this.db[player].cast = arg1
     this.db[player].rank = lastrank
@@ -240,8 +241,6 @@ libcast:SetScript("OnEvent", function()
     end
   -- Fill database with environmental casts
   elseif arg1 then
-    local mob, spell, _
-
     -- (.+) begins to cast (.+).
     mob, spell = cmatch(arg1, SPELLCASTOTHERSTART)
     if libcast:AddAction(mob, spell) then return end
