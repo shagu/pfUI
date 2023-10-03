@@ -1,4 +1,4 @@
--- Skip module initialization on every other client than TurtleWoW.
+-- skip module initialization on every other client than turtle-wow
 if not TargetHPText or not TargetHPPercText then return end
 
 pfUI:RegisterModule("turtle-wow", "vanilla", function ()
@@ -6,7 +6,7 @@ pfUI:RegisterModule("turtle-wow", "vanilla", function ()
   delay:SetScript("OnUpdate", function()
     this:Hide()
 
-    -- while pfUI map is loaded, disable turtle wows window-implementation
+    -- disable turtle wow's map window implementation
     if pfUI.map then
       _G.WorldMapFrame_Maximize()
       pfUI.map.loader:GetScript("OnEvent")()
@@ -24,7 +24,7 @@ pfUI:RegisterModule("turtle-wow", "vanilla", function ()
       WorldMapFrameTitle:Hide()
     end
 
-    -- add turtle wow custom trueshot cast to castbars recognition.
+    -- add Trueshot recognition to to custom castbars.
     if not libcast.customcast["trueshot"] then
       -- add trueshot to pfUI's custom casts
       local player = UnitName("player")
@@ -70,5 +70,31 @@ pfUI:RegisterModule("turtle-wow", "vanilla", function ()
         end
       end
     end
+
+    -- refresh paladin judgements on holy strike
+    -- taken from: https://github.com/doorknob6/pfUI-turtle/blob/master/modules/debuffs.lua
+    HookScript(libdebuff, "OnEvent", function()
+      if event == "CHAT_MSG_SPELL_SELF_DAMAGE" then
+        local spell = string.find(string.sub(arg1,6,17), "Holy Strike")
+
+        --arg2 is holy dmg when it hits, nil when it misses
+        if spell and arg2 then
+          for seal in L["judgements"] do
+            local name = UnitName("target")
+            local level = UnitLevel("target")
+            if name and libdebuff.objects[name] then
+              if level and
+                libdebuff.objects[name][level] and
+                libdebuff.objects[name][level][seal] then
+                libdebuff:AddEffect(name, level, seal)
+              elseif libdebuff.objects[name][0] and
+                libdebuff.objects[name][0][seal] then
+                libdebuff:AddEffect(name, 0, seal)
+              end
+            end
+          end
+        end
+      end
+    end)
   end)
 end)
