@@ -247,18 +247,20 @@ end
 -- 'str'        [string]         input string that should be matched
 -- 'pat'        [string]         unformatted pattern
 -- returns:     [strings]        matched string in capture order
+local a, b, c, d, e
+local _, va, vb, vc, vd, ve
+local ra, rb, rc, rd, re
 function pfUI.api.cmatch(str, pat)
   -- read capture indexes
-  local a,b,c,d,e = GetCaptures(pat)
-  local _, _, va, vb, vc, vd, ve = string.find(str, pfUI.api.SanitizePattern(pat))
+  a, b, c, d, e = GetCaptures(pat)
+  _, _, va, vb, vc, vd, ve = string.find(str, pfUI.api.SanitizePattern(pat))
 
   -- put entries into the proper return values
-  local ra, rb, rc, rd, re
-  ra = e == "1" and ve or d == "1" and vd or c == "1" and vc or b == "1" and vb or va
-  rb = e == "2" and ve or d == "2" and vd or c == "2" and vc or a == "2" and va or vb
-  rc = e == "3" and ve or d == "3" and vd or a == "3" and va or b == "3" and vb or vc
-  rd = e == "4" and ve or a == "4" and va or c == "4" and vc or b == "4" and vb or vd
-  re = a == "5" and va or d == "5" and vd or c == "5" and vc or b == "5" and vb or ve
+  ra = e == 1 and ve or d == 1 and vd or c == 1 and vc or b == 1 and vb or va
+  rb = e == 2 and ve or d == 2 and vd or c == 2 and vc or a == 2 and va or vb
+  rc = e == 3 and ve or d == 3 and vd or a == 3 and va or b == 3 and vb or vc
+  rd = e == 4 and ve or a == 4 and va or c == 4 and vc or b == 4 and vb or vd
+  re = a == 5 and va or d == 5 and vd or c == 5 and vc or b == 5 and vb or ve
 
   return ra, rb, rc, rd, re
 end
