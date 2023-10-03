@@ -334,17 +334,6 @@ pfUI:RegisterModule("chat", "vanilla:tbc", function ()
         frame.pfCombatLog = nil
       end
 
-      for _, tex in pairs(CHAT_FRAME_TEXTURES) do
-        local texture = _G["ChatFrame"..i..tex]
-        texture.oldTexture = texture.oldTexture or texture:GetTexture()
-
-        if i == 3 or frame.isDocked then
-          texture:SetTexture()
-          texture:Hide()
-        else
-          texture:SetTexture(texture.oldTexture)
-        end
-      end
 
       if not frame.pfStartMoving then
         frame.pfStartMoving = frame.StartMoving
@@ -406,6 +395,24 @@ pfUI:RegisterModule("chat", "vanilla:tbc", function ()
       for j,v in ipairs({tab:GetRegions()}) do
         if j==5 then v:SetTexture(0,0,0,0) end
         v:SetHeight(C.global.font_size+default_border*2)
+      end
+
+      -- remove background on docked frames
+      for _, tex in pairs(CHAT_FRAME_TEXTURES) do
+        local texture = _G["ChatFrame"..i..tex]
+        if tex == "Background" then
+          texture.oldTexture = texture.oldTexture or texture:GetTexture()
+          if frame:GetParent() == pfUI.chat.left or frame:GetParent() == pfUI.chat.right then
+            texture:SetTexture()
+            texture:Hide()
+          else
+            texture:SetTexture(texture.oldTexture)
+            texture:Show()
+          end
+        else
+          texture:SetTexture()
+          texture:Hide()
+        end
       end
 
       _G["ChatFrame" .. i .. "ResizeBottom"]:Hide()
