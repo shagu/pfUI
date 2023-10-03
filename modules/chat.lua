@@ -334,11 +334,6 @@ pfUI:RegisterModule("chat", "vanilla:tbc", function ()
         frame.pfCombatLog = nil
       end
 
-      for _, tex in pairs(CHAT_FRAME_TEXTURES) do
-        _G["ChatFrame"..i..tex]:SetTexture()
-        _G["ChatFrame"..i..tex]:Hide()
-      end
-
       if not frame.pfStartMoving then
         frame.pfStartMoving = frame.StartMoving
         frame.StartMoving = function(a1)
