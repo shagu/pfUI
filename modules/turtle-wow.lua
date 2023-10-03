@@ -7,7 +7,7 @@ pfUI:RegisterModule("turtle-wow", "vanilla", function ()
     this:Hide()
 
     -- disable turtle wow's map window implementation
-    if pfUI.map then
+    if pfUI.map and not Cartographer and not METAMAP_TITLE then
       _G.WorldMapFrame_Maximize()
       pfUI.map.loader:GetScript("OnEvent")()
 
