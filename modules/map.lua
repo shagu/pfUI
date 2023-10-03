@@ -137,4 +137,6 @@ pfUI:RegisterModule("map", "vanilla:tbc", function ()
       end)
     end
   end)
+
+  pfUI.map.loader = pfMapLoader
 end)
