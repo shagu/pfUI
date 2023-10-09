@@ -1906,8 +1906,8 @@ function pfUI.uf:RefreshUnit(unit, component)
     local cr, cg, cb, ca = pfUI.api.strsplit(",", customcolor)
 
     r = (cr*perc) + (r*(1-perc))
-    g = (cr*perc) + (g*(1-perc))
-    b = (cr*perc) + (b*(1-perc))
+    g = (cg*perc) + (g*(1-perc))
+    b = (cb*perc) + (b*(1-perc))
   end
 
   unit.hp.bar:SetStatusBarColor(r, g, b, a)
