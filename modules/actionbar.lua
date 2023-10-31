@@ -380,6 +380,7 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
   local function ButtonMacroScan(self)
     if self.bar > 10 then return end
     if not self.scanmacro then return end
+    if pfUI.bars.skip_macro then return end
 
     local macro = GetActionText(self.id)
     self.spellslot = nil
