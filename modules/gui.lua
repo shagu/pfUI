@@ -1474,7 +1474,7 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
         CreateQuestionDialog(T["Do you really want to reset |cffffaaaaEVERYTHING|r?\n\nThis will reset:\n - Current Configuration\n - Current Frame Positions\n - Firstrun Wizard\n - Addon Cache\n - Saved Profiles"],
           function()
             _G["pfUI_init"] = {}
-            _G["pfUI_config"] = {}
+            _G["pfUI_config"] = pfUI.api.CopyTable(pfUI_profiles["Modern"])
             _G["pfUI_playerDB"] = {}
             _G["pfUI_profiles"] = {}
             _G["pfUI_cache"] = {}
@@ -1487,7 +1487,7 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
       CreateConfig(nil, T["Configuration"], C.global, "profile", "button", function()
         CreateQuestionDialog(T["Do you really want to reset your configuration?\nThis also includes frame positions"],
           function()
-            _G["pfUI_config"] = {}
+            _G["pfUI_config"] = pfUI.api.CopyTable(pfUI_profiles["Modern"])
             _G["pfUI_init"] = {}
             pfUI:LoadConfig()
             this:GetParent():Hide()
