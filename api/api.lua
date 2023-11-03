@@ -21,6 +21,18 @@ function pfUI.api.strsplit(delimiter, subject)
   return unpack(fields)
 end
 
+-- [ isempty ]
+-- Returns true if a table is empty or not existing, otherwise false.
+-- 'tbl'         [table]        the table that shall be checked
+-- return:      [boolean]       result of the check.
+function pfUI.api.isempty(tbl)
+  if not tbl then return true end
+  for k, v in pairs(tbl) do
+    return false
+  end
+  return true
+end
+
 -- [ checkversion ]
 -- Compares a given version (major,minor,fix) and compares it to the current
 -- 'chkmajor'   [number]        the major number to check
