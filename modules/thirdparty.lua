@@ -270,12 +270,13 @@ pfUI:RegisterModule("thirdparty", "vanilla:tbc", function()
     if C.thirdparty.shagudps.skin == "1" then
       if ShaguDPSWindow then
         local window = ShaguDPSWindow
+        local _, chat_border = GetBorderSize("chat")
 
         window.title:Hide()
         window.title:SetPoint("TOPLEFT", 1, -1)
         window.title:SetPoint("TOPRIGHT", -1, -1)
 
-        CreateBackdrop(window, nil, nil, (C.thirdparty.chatbg == "1" and .8))
+        CreateBackdrop(window, chat_border, nil, (C.thirdparty.chatbg == "1" and .8))
         CreateBackdropShadow(window)
 
         if C.thirdparty.chatbg == "1" and C.chat.global.custombg == "1" then
