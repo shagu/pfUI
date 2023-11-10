@@ -870,6 +870,7 @@ end
 -- 'frame'     [frame]   the frame that should be stripped.
 -- 'layer'     [string]  texture layer.
 function pfUI.api.StripTextures(frame, hide, layer)
+  if not frame then return end
   for _,v in ipairs({frame:GetRegions()}) do
     if v.SetTexture then
       local check = true
