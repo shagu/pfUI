@@ -754,7 +754,7 @@ function pfUI:LoadConfig()
 
   pfUI:UpdateConfig("questlog",   nil,           "showQuestLevels",  "0")
   pfUI:UpdateConfig("thirdparty", nil,           "chatbg",           "1")
-  pfUI:UpdateConfig("thirdparty", nil,           "showmeter",        "1")
+  pfUI:UpdateConfig("thirdparty", nil,           "showmeter",        "0")
   pfUI:UpdateConfig("thirdparty", "dpsmate",     "skin",             "1")
   pfUI:UpdateConfig("thirdparty", "dpsmate",     "dock",             "1")
   pfUI:UpdateConfig("thirdparty", "shagudps",    "skin",             "1")
