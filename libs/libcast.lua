@@ -289,6 +289,7 @@ end)
 ]]--
 local aimedshot = L["customcast"]["AIMEDSHOT"]
 local multishot = L["customcast"]["MULTISHOT"]
+local trueshot = L["customcast"]["TRUESHOT"]
 
 libcast.customcast = {}
 libcast.customcast[strlower(aimedshot)] = function(begin, duration)
@@ -361,6 +362,46 @@ libcast.customcast[strlower(multishot)] = function(begin, duration)
     libcast.db[player].start = start
     libcast.db[player].casttime = duration
     libcast.db[player].icon = "Interface\\Icons\\Ability_upgrademoonglaive"
+    libcast.db[player].channel = nil
+  else
+    -- remove cast action to the database
+    libcast.db[player].cast = nil
+    libcast.db[player].rank = nil
+    libcast.db[player].start = nil
+    libcast.db[player].casttime = nil
+    libcast.db[player].icon = nil
+    libcast.db[player].channel = nil
+  end
+end
+libcast.customcast[strlower(trueshot)] = function(begin, duration)
+  if begin then
+    local duration = duration or 1000
+
+    for i=1,32 do
+      if UnitBuff("player", i) == "Interface\\Icons\\Racial_Troll_Berserk" then
+        local berserk = 0.3
+        if((UnitHealth("player")/UnitHealthMax("player")) >= 0.40) then
+          berserk = (1.30 - (UnitHealth("player") / UnitHealthMax("player"))) / 3
+        end
+        duration = duration / (1 + berserk)
+      elseif UnitBuff("player", i) == "Interface\\Icons\\Ability_Hunter_RunningShot" then
+        duration = duration / 1.4
+      elseif UnitBuff("player", i) == "Interface\\Icons\\Ability_Warrior_InnerRage" then
+        duration = duration / 1.3
+      elseif UnitBuff("player", i) == "Interface\\Icons\\Inv_Trinket_Naxxramas04" then
+        duration = duration / 1.2
+      end
+    end
+
+    local _,_, lag = GetNetStats()
+    local start = GetTime() + lag/1000
+
+    -- add cast action to the database
+    libcast.db[player].cast = trueshot
+    libcast.db[player].rank = lastrank
+    libcast.db[player].start = start
+    libcast.db[player].casttime = duration
+    libcast.db[player].icon = "Interface\\Icons\\Ability_Hunter_SteadyShot"
     libcast.db[player].channel = nil
   else
     -- remove cast action to the database
