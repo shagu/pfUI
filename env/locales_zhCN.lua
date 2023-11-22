@@ -34,6 +34,7 @@ pfUI_locale["zhCN"]["hunterpaging"] = {
 pfUI_locale["zhCN"]["customcast"] = {
   ["AIMEDSHOT"] = "瞄准射击",
   ["MULTISHOT"] = "多重射击",
+  ["TRUESHOT"] = "稳固射击",
 }
 
 pfUI_locale["zhCN"]["critters"] = {
