@@ -63,4 +63,22 @@ pfUI:RegisterSkin("Spellbook", "vanilla:tbc", function ()
 
   SkinCloseButton(SpellBookCloseButton, SpellBookFrame.backdrop, -6, -6)
   SpellBookPageText:SetTextColor(1, 1, 1)
+  
+  --Spellbook page mouse scrolling feature function
+  function MouseScrollCapability()
+    if (arg1 > 0) then
+      if (SpellBookPrevPageButton:IsShown() and SpellBookPrevPageButton:IsEnabled() == 1) then
+        PrevPageButton_OnClick()
+      end
+    elseif (arg1 < 0) then
+      if (SpellBookNextPageButton:IsShown() and SpellBookNextPageButton:IsEnabled() == 1) then
+        NextPageButton_OnClick()
+      end
+    end
+  end
+  
+  --Enable mouse scrolling for spellbook page switch
+  SpellBookFrame:EnableMouseWheel(true)
+  SpellBookFrame:SetScript("OnMouseWheel", MouseScrollCapability)
+    
 end)
