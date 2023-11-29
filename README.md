@@ -77,8 +77,8 @@ Please consider adding additional information such as: since when did you got th
 does it still happen using a clean configuration, what other addons are loaded and which version you're running.
 When playing with a non-english client, the language might be relevant too. If possible, explain how people can reproduce the issue.
 
-**How can I contribute?**  
-Report Errors, Issues and Feature Requests in the [Bugtracker](https://github.com/shagu/pfUI/issues).
+**How can I contribute?**
+Report errors and issues in the [Bugtracker](https://github.com/shagu/pfUI/issues).
 Please make sure to have the latest version installed and check for conflicting addons beforehand.
 
 **I have bad performance, what can I do?**  
