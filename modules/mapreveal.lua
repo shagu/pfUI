@@ -31,12 +31,6 @@ pfUI:RegisterModule("mapreveal", "vanilla:tbc", function ()
     pfUI.mapreveal:UpdateConfig()
   end)
 
-  local overlayData = setmetatable(pfMapOverlayData, {__index = function(t,k)
-    local v = {}
-    rawset(t,k,v)
-    return v
-  end})
-
   local errata = {
     ["Interface\\WorldMap\\Tirisfal\\BRIGHTWATERLAKE"] = {offsetX={587,584}},
     ["Interface\\WorldMap\\Silverpine\\BERENSPERIL"] = {offsetY={417,415}},
@@ -102,6 +96,13 @@ pfUI:RegisterModule("mapreveal", "vanilla:tbc", function ()
   end
 
   local function pfWorldMapFrame_Update()
+    -- create metatable if not yet created
+    this.overlayData = this.overlayData or setmetatable(pfMapOverlayData, {__index = function(t,k)
+      local v = {}
+      rawset(t,k,v)
+      return v
+    end})
+
     local r,g,b,a = GetStringColor(C.appearance.worldmap.mapreveal_color)
     local mapFileName, textureHeight, textureWidth = GetMapInfo()
 
@@ -122,7 +123,7 @@ pfUI:RegisterModule("mapreveal", "vanilla:tbc", function ()
       frame:Hide()
     end
 
-    local zoneData = overlayData[mapFileName]
+    local zoneData = this.overlayData[mapFileName]
     local textureCount = 0
     local texturePixelWidth, textureFileWidth, texturePixelHeight, textureFileHeight
     for i, hash in ipairs(zoneData) do
