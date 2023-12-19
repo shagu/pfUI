@@ -215,10 +215,20 @@ pfUI:RegisterModule("mapreveal", "vanilla:tbc", function ()
         end
       end
     end
-    for i = textureCount + 1, NUM_WORLDMAP_OVERLAYS do
-      _G[string.format("%s%s","WorldMapOverlay",i)]:Hide()
-    end
   end
 
-  hooksecurefunc("WorldMapFrame_Update", pfWorldMapFrame_Update, true)
+  -- hook map reveal functions before and after the actual call
+  local pfHookWorldMapFrame_Update = _G.WorldMapFrame_Update
+  _G.WorldMapFrame_Update = function(self)
+    -- hide all previously set textures
+    for i = 1, NUM_WORLDMAP_OVERLAYS do
+      _G[string.format("%s%s","WorldMapOverlay",i)]:Hide()
+    end
+
+    -- let the game put its explored tiles on the map
+    pfHookWorldMapFrame_Update(self)
+
+    -- let the addon extend it with its own data
+    pfWorldMapFrame_Update()
+  end
 end)
