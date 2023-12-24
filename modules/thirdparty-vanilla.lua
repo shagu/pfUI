@@ -159,6 +159,79 @@ pfUI:RegisterModule("thirdparty-vanilla", "vanilla", function()
     end
   end)
 
+  HookAddonOrVariable("TWThreat", function()
+    local docktable = { "twt", "TODO", "TWTMain",
+      function() -- single
+        TWTMain:ClearAllPoints()
+        TWTMain:SetPoint("TOPLEFT", pfUI.chat.right, "TOPLEFT", 0, 0)
+        local width = pfUI.chat.right:GetWidth()
+        TWTMain:SetScale(width / TWTMain:GetWidth())
+        TWTMainSettingsFrameHeightSlider:SetMinMaxValues(15, 30)
+        TWTMainSettingsFrameHeightSlider:SetValue(15)
+        TWT_CONFIG.windowScale = width / TWTMain:GetWidth()
+        TWTMain:SetHeight(pfUI.chat.right:GetHeight() / TWT_CONFIG.windowScale - TWT_CONFIG.barHeight)
+        TWTMainMainWindow_Resized()
+      end,
+      function() -- dual
+        TWTMain:ClearAllPoints()
+        TWTMain:SetPoint("TOPLEFT", pfUI.chat.right, "TOPLEFT", 0, 0)
+        local width = pfUI.chat.right:GetWidth() / 2
+        TWTMain:SetScale(width / TWTMain:GetWidth())
+        TWT_CONFIG.windowScale = width / TWTMain:GetWidth()
+        TWTMain:SetHeight(pfUI.chat.right:GetHeight() / TWT_CONFIG.windowScale - TWT_CONFIG.barHeight)
+        TWTMainMainWindow_Resized()
+      end,
+      function() -- show
+        TWTMain:Show()
+      end,
+      function() -- hide
+        TWTMain:Hide()
+      end,
+      function() -- once
+        return
+      end
+    }
+
+    pfUI.thirdparty.meters:RegisterMeter("threat", docktable)
+
+    if C.thirdparty.twt.skin == "1" then
+      CreateBackdrop(TWTMain, nil, nil, (C.thirdparty.chatbg == "1" and .8))
+      CreateBackdropShadow(TWTMain)
+
+      if C.thirdparty.chatbg == "1" and C.chat.global.custombg == "1" then
+        local r, g, b, a = strsplit(",", C.chat.global.background)
+        TWTMain.backdrop:SetBackdropColor(tonumber(r), tonumber(g), tonumber(b), tonumber(a))
+
+        local r, g, b, a = strsplit(",", C.chat.global.border)
+        TWTMain.backdrop:SetBackdropBorderColor(tonumber(r), tonumber(g), tonumber(b), tonumber(a))
+      end
+
+      TWTMainTitleBG:Hide()
+      TWTMainBarsBG:Hide()
+
+      -- theme buttons
+      local buttons = { "TWTMainSettingsButton", "TWTMainLockButton", "TWTMainCloseButton" }
+
+      for i, button in pairs(buttons) do
+        local b = _G[button]
+        if not b then return end
+        SkinButton(b)
+
+
+        local p,rt,rp,xo,yo = b:GetPoint()
+        if not b.pfSet then
+          b:SetPoint(p,rt,rp,xo - 5,yo)
+          b.pfSet = true
+        end
+      end
+
+      -- buttons
+      TWTMainSettingsButton:SetText("O")
+      TWTMainLockButton:SetText("L")
+      TWTMainCloseButton:SetText("X")
+    end
+  end)
+
   HookAddonOrVariable("SW_Stats", function()
     local docktable = { "swstats", "TODO", "SW_BarFrame1",
       function() -- single
