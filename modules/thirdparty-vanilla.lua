@@ -164,7 +164,7 @@ pfUI:RegisterModule("thirdparty-vanilla", "vanilla", function()
       function() -- single
         TWTMain:ClearAllPoints()
         TWTMain:SetPoint("TOPLEFT", pfUI.chat.right, "TOPLEFT", 0, 0)
-        local width = pfUI.chat.right:GetWidth()
+        local width = pfUI.chat.right:GetWidth() - 3
         TWTMain:SetScale(width / TWTMain:GetWidth())
         TWTMainSettingsFrameHeightSlider:SetMinMaxValues(15, 30)
         TWTMainSettingsFrameHeightSlider:SetValue(15)
@@ -175,7 +175,7 @@ pfUI:RegisterModule("thirdparty-vanilla", "vanilla", function()
       function() -- dual
         TWTMain:ClearAllPoints()
         TWTMain:SetPoint("TOPLEFT", pfUI.chat.right, "TOPLEFT", 0, 0)
-        local width = pfUI.chat.right:GetWidth() / 2
+        local width = (pfUI.chat.right:GetWidth() - 3) / 2
         TWTMain:SetScale(width / TWTMain:GetWidth())
         TWT_CONFIG.windowScale = width / TWTMain:GetWidth()
         TWTMain:SetHeight(pfUI.chat.right:GetHeight() / TWT_CONFIG.windowScale - TWT_CONFIG.barHeight)
