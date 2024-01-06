@@ -1049,10 +1049,12 @@ function pfUI.api.CreateBackdrop(f, inset, legacy, transp, backdropSetting)
         local border = CreateFrame("Frame", nil, f)
         border:SetFrameLevel(level + 1)
         f.backdrop_border = border
-      end
 
-      f.backdrop.SetBackdropBorderColor = function(self, r, g, b, a)
-        f.backdrop_border:SetBackdropBorderColor(r,g,b,a)
+        local hookSetBackdropBorderColor = f.backdrop.SetBackdropBorderColor
+        f.backdrop.SetBackdropBorderColor = function(self, r, g, b, a)
+          f.backdrop_border:SetBackdropBorderColor(r, g, b, a)
+          hookSetBackdropBorderColor(f.backdrop, r, g, b, a)
+        end
       end
 
       f.backdrop_border:SetAllPoints(f.backdrop)
