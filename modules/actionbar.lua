@@ -687,10 +687,18 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
 
     -- active border
     if active then
-      button.backdrop:SetBackdropBorderColor(cr,cg,cb,1)
+      if not button.border_active then
+        button.backdrop:SetBackdropBorderColor(cr,cg,cb,1)
+        button.border_active = true
+      end
+
       button.active:Show()
     else
-      button.backdrop:SetBackdropBorderColor(er,eg,eb,ea)
+      if button.border_active then
+        button.backdrop:SetBackdropBorderColor(er,eg,eb,ea)
+        button.border_active = nil
+      end
+
       button.active:Hide()
     end
   end
