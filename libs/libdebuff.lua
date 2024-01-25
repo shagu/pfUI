@@ -109,6 +109,7 @@ end
 
 function libdebuff:AddEffect(unit, unitlevel, effect, duration)
   if not unit or not effect then return end
+  effect = string.gsub(effect, " %(%d+%)", "") -- remove stack indication from effect name in order to display correct expiration time for things like Fire Vulnerability
   unitlevel = unitlevel or 0
   if not libdebuff.objects[unit] then libdebuff.objects[unit] = {} end
   if not libdebuff.objects[unit][unitlevel] then libdebuff.objects[unit][unitlevel] = {} end
