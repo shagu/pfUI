@@ -131,6 +131,8 @@ libdebuff:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_HOSTILEPLAYER_DAMAGE")
 libdebuff:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_CREATURE_DAMAGE")
 libdebuff:RegisterEvent("CHAT_MSG_SPELL_FAILED_LOCALPLAYER")
 libdebuff:RegisterEvent("CHAT_MSG_SPELL_SELF_DAMAGE")
+libdebuff:RegisterEvent("CHAT_MSG_SPELL_PARTY_DAMAGE")
+libdebuff:RegisterEvent("CHAT_MSG_SPELL_FRIENDLYPLAYER_DAMAGE")
 libdebuff:RegisterEvent("PLAYER_TARGET_CHANGED")
 libdebuff:RegisterEvent("SPELLCAST_STOP")
 libdebuff:RegisterEvent("UNIT_AURA")
@@ -199,6 +201,20 @@ libdebuff:SetScript("OnEvent", function()
 
   -- Update Pending Spells
   elseif event == "CHAT_MSG_SPELL_FAILED_LOCALPLAYER" or event == "CHAT_MSG_SPELL_SELF_DAMAGE" then
+    -- update fire vulnerability
+    if arg1 then
+      spell, unit = cmatch(arg1, SPELLLOGSELFOTHER)
+
+      if not unit then
+        spell, unit = cmatch(arg1, SPELLLOGCRITSELFOTHER)
+      end
+
+      if unit and spell == "Scorch" then
+        local unitlevel = UnitName("target") == unit and UnitLevel("target") or 0
+        libdebuff:AddEffect(unit, unitlevel, "Fire Vulnerability")
+      end
+    end
+      
     -- Remove pending spell
     for _, msg in pairs(libdebuff.rp) do
       local effect = cmatch(arg1, msg)
@@ -210,6 +226,20 @@ libdebuff:SetScript("OnEvent", function()
         -- late removal of debuffs (e.g hunter arrows as they hit late)
         libdebuff:RevertLastAction()
         return
+      end
+    end
+  elseif event == "CHAT_MSG_SPELL_FRIENDLYPLAYER_DAMAGE" or event == "CHAT_MSG_SPELL_PARTY_DAMAGE" then
+    -- update fire vulnerability
+    if arg1 then
+      _, spell, unit = cmatch(arg1, SPELLLOGOTHEROTHER)
+
+      if not unit then
+        _, spell, unit = cmatch(arg1, SPELLLOGCRITOTHEROTHER)
+      end
+
+      if unit and spell == "Scorch" then
+        local unitlevel = UnitName("target") == unit and UnitLevel("target") or 0
+        libdebuff:AddEffect(unit, unitlevel, "Fire Vulnerability")
       end
     end
   elseif event == "SPELLCAST_STOP" then
