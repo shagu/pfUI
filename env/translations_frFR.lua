@@ -119,6 +119,7 @@ pfUI_translation["frFR"] = {
   ["Close"] = "Fermer",
   ["Color Buff Stacks"] = "Couleur des l'empilements des Améliorations",
   ["Color Debuff Stacks"] = "Couleur de l'empilements de Affaiblissements",
+  ["Colorize player name on WorldMap and BattlefieldMinimap"] = nil,
   ["Colorize Unknown Classes"] = "Colorie les classes inconnues",
   ["Colors"] = "Couleurs",
   ["Combat"] = "Combat",
