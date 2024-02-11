@@ -87,36 +87,40 @@ pfUI:RegisterSkin("Character", "vanilla:tbc", function ()
     end
 
     local function RefreshCharacterSlots()
-      for i, slot in pairs(slots) do
-        local slotId, _, _ = GetInventorySlotInfo(slot)
-        local quality = GetInventoryItemQuality("player", slotId)
-        slot = _G["Character"..slot]
-
+      for i, slotName in pairs(slots) do
+        local slotId = GetInventorySlotInfo(slotName)
+        slot = _G["Character"..slotName]
+        local link = GetInventoryItemLink("player", slotId)
         if slot and slot.backdrop then
-          if quality and quality > 0 then
-            slot.backdrop:SetBackdropBorderColor(GetItemQualityColor(quality))
-            else
+          if link then
+            local isBroken = GetInventoryItemBroken("player", slotId)
+            local quality = GetInventoryItemQuality("player", slotId)
+            local r, g, b = GetItemQualityColor(quality)
+            if isBroken then
+              slot.backdrop:SetBackdropBorderColor(0.9, 0, 0, 1)
+            elseif quality > 0 then
+              slot.backdrop:SetBackdropBorderColor(r, g, b, 1)
+            end
+          else
             slot.backdrop:SetBackdropBorderColor(pfUI.cache.er, pfUI.cache.eg, pfUI.cache.eb, pfUI.cache.ea)
           end
 
-          if ShaguScore and GetInventoryItemLink("player", slotId) and slot.scoreText then
+          if ShaguScore and link then
             local _, _, itemID = string.find(GetInventoryItemLink("player", slotId), "item:(%d+):%d+:%d+:%d+")
             local itemLevel = ShaguScore.Database[tonumber(itemID)] or 0
-            local _, _, itemRarity, _, _, _, _, _, itemSlot, _ = GetItemInfo(itemID)
-            local r,g,b = GetItemQualityColor((itemRarity or 1))
-            local score = ShaguScore:Calculate(itemSlot, itemRarity, itemLevel)
-            if score and score > 0  then
-              if quality and quality > 0 then
-                slot.scoreText:SetText(score)
-                slot.scoreText:SetTextColor(r, g, b, 1)
-                else
-                slot.scoreText:SetText("")
-              end
-              else
-              if slot.scoreText then slot.scoreText:SetText("") end
-            end
+            local _, _, quality, _, _, _, _, _, itemSlot, _ = GetItemInfo(itemID)
+            local score = ShaguScore:Calculate(itemSlot, quality, itemLevel)
+            if score > 0 and quality > 0 then
+              local r,g,b = GetItemQualityColor(quality)
+              slot.scoreText:SetText(score)
+              slot.scoreText:SetTextColor(r, g, b, 1)
             else
-            if slot.scoreText then slot.scoreText:SetText("") end
+              slot.scoreText:SetText("")
+              slot.scoreText:SetTextColor(1, 1, 1, 1)
+            end
+          else
+            slot.scoreText:SetText("")
+            slot.scoreText:SetTextColor(1, 1, 1, 1)
           end
         end
       end
