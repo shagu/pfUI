@@ -105,6 +105,18 @@ wand:SetScript("OnEvent", function()
   PlayerFrame.wandCombat = event == "START_AUTOREPEAT_SPELL" and true or nil
 end)
 
+--Dont update when player hase combo points 
+local combo = CreateFrame("Frame", "pfComboPointsDetect")
+combo:RegisterEvent("PLAYER_COMBO_POINTS")
+combo:SetScript("OnEvent", function()
+  local combopoints = GetComboPoints()
+    if combopoints > 0 then
+      PlayerFrame.combopoints = true
+    else
+      PlayerFrame.combopoints = false
+    end
+end)
+
 librange:Hide()
 librange:RegisterEvent("ACTIONBAR_SLOT_CHANGED")
 librange:RegisterEvent("PLAYER_ENTERING_WORLD")
@@ -157,6 +169,7 @@ librange:SetScript("OnUpdate", function()
       if TradeFrame and TradeFrame:IsShown() then return nil end
       if PlayerFrame and PlayerFrame.inCombat then return nil end
       if PlayerFrame and PlayerFrame.wandCombat then return nil end
+      if PlayerFrame and PlayerFrame.combopoints then return nil end
 
       _G.PlaySound = SoundOff
       pfScanActive = true
