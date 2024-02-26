@@ -364,12 +364,12 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
       if bag == -1 then tpl = "BankItemButtonGenericTemplate" end
       pfUI.bags[bag].slots[slot] = {}
       pfUI.bags[bag].slots[slot].frame = CreateFrame("Button", "pfBag" .. bag .. "item" .. slot,  pfUI.bags[bag], tpl)
+      pfUI.bags[bag].slots[slot].frame.qtext = pfUI.bags[bag].slots[slot].frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
 
-      local highlight = pfUI.bags[bag].slots[slot].frame:GetHighlightTexture()
-      highlight:SetTexture(.5, .5, .5, .5)
-
-      local pushed = pfUI.bags[bag].slots[slot].frame:GetPushedTexture()
-      pushed:SetTexture(.5, .5, .5, .5)
+      pfUI.bags[bag].slots[slot].frame:SetNormalTexture("")
+      pfUI.bags[bag].slots[slot].bag = bag
+      pfUI.bags[bag].slots[slot].slot = slot
+      pfUI.bags[bag].slots[slot].frame:SetID(slot)
 
       -- add cooldown frame to bankslots
       if tpl == "BankItemButtonGenericTemplate" then
@@ -386,15 +386,32 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
       end
 
       CreateBackdrop(pfUI.bags[bag].slots[slot].frame, default_border)
-      pfUI.bags[bag].slots[slot].frame:SetNormalTexture("")
-      pfUI.bags[bag].slots[slot].bag = bag
-      pfUI.bags[bag].slots[slot].slot = slot
-      pfUI.bags[bag].slots[slot].frame:SetID(slot)
 
-      pfUI.bags[bag].slots[slot].frame.qtext = pfUI.bags[bag].slots[slot].frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-      pfUI.bags[bag].slots[slot].frame.qtext:SetFont(pfUI.font_default, 13, "THICKOUTLINE")
-      pfUI.bags[bag].slots[slot].frame.qtext:SetPoint("TOPLEFT", 0, 0)
-      pfUI.bags[bag].slots[slot].frame.qtext:SetTextColor(1, .8, .2, 1)
+      local highlight = pfUI.bags[bag].slots[slot].frame:GetHighlightTexture()
+      highlight:SetTexture(.5, .5, .5, .5)
+
+      local pushed = pfUI.bags[bag].slots[slot].frame:GetPushedTexture()
+      pushed:SetTexture(.5, .5, .5, .5)
+
+      local questText = pfUI.bags[bag].slots[slot].frame.qtext
+      questText:SetFont(pfUI.font_default, 13, "THICKOUTLINE")
+      questText:SetPoint("TOPLEFT", 0, 0)
+      questText:SetTextColor(1, .8, .2, 1)
+
+      local countFrame = _G[pfUI.bags[bag].slots[slot].frame:GetName() .. "Count"]
+      countFrame:SetFont(pfUI.font_unit, C.global.font_unit_size, "OUTLINE")
+      countFrame:SetAllPoints()
+      countFrame:SetJustifyH("RIGHT")
+      countFrame:SetJustifyV("BOTTOM")
+
+      local icon = _G[pfUI.bags[bag].slots[slot].frame:GetName() .. "IconTexture"]
+      icon:SetTexCoord(.08, .92, .08, .92)
+      icon:ClearAllPoints()
+      icon:SetPoint("TOPLEFT", 1, -1)
+      icon:SetPoint("BOTTOMRIGHT", -1, 1)
+
+      local border = _G[pfUI.bags[bag].slots[slot].frame:GetName() .. "NormalTexture"]
+      border:SetTexture("")
 
       if ShaguScore then
         pfUI.bags[bag].slots[slot].frame.scoreText = pfUI.bags[bag].slots[slot].frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
@@ -422,26 +439,13 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
     else
       hasItem = nil
     end
+
     pfUI.bags[bag].slots[slot].frame.hasItem = hasItem
+    pfUI.bags[bag].slots[slot].frame.qtext:SetText("")
+
     pfUI.bag:Openable(bag, slot, hasItem)
 
     ContainerFrame_UpdateCooldown(bag, pfUI.bags[bag].slots[slot].frame)
-
-    local countFrame = _G[pfUI.bags[bag].slots[slot].frame:GetName() .. "Count"]
-    countFrame:SetFont(pfUI.font_unit, C.global.font_unit_size, "OUTLINE")
-    countFrame:SetAllPoints()
-    countFrame:SetJustifyH("RIGHT")
-    countFrame:SetJustifyV("BOTTOM")
-
-    local icon = _G[pfUI.bags[bag].slots[slot].frame:GetName() .. "IconTexture"]
-    icon:SetTexCoord(.08, .92, .08, .92)
-    icon:ClearAllPoints()
-    icon:SetPoint("TOPLEFT", 1, -1)
-    icon:SetPoint("BOTTOMRIGHT", -1, 1)
-
-    local border = _G[pfUI.bags[bag].slots[slot].frame:GetName() .. "NormalTexture"]
-    border:SetTexture("")
-    pfUI.bags[bag].slots[slot].frame.qtext:SetText("")
 
     -- detect backdrop border color
     if quality and quality > tonumber(C.appearance.bags.borderlimit) then
