@@ -323,6 +323,15 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     nameplate.totem.icon:SetAllPoints()
     CreateBackdrop(nameplate.totem)
 
+    -- combat icon
+    nameplate.combaticon = nameplate:CreateTexture(nil, "OVERLAY")
+    nameplate.combaticon:SetHeight(18)
+    nameplate.combaticon:SetWidth(18)
+    nameplate.combaticon:SetTexture("Interface\\CharacterFrame\\UI-StateIcon")
+    nameplate.combaticon:SetTexCoord(0.50, 1.0, 0.0, 0.49)
+    nameplate.combaticon:SetPoint("RIGHT", nameplate.health, "LEFT", -3, 0)
+    nameplate.combaticon:Hide()
+
     do -- debuffs
       nameplate.debuffs = {}
       CreateDebuffIcon(nameplate, 1)
@@ -648,7 +657,7 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     if r + g + b ~= plate.cache.namecolor and unittype == "FRIENDLY_PLAYER" and C.nameplates["friendclassnamec"] == "1" and class and RAID_CLASS_COLORS[class] then
       plate.name:SetTextColor(r, g, b, a)
       plate.cache.namecolor = r + g + b
-    end
+    end    
 
     -- update combopoints
     for i=1, 5 do plate.combopoints[i]:Hide() end
@@ -727,6 +736,7 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     local name = original.name:GetText()
     local target = UnitExists("target") and frame:GetAlpha() == 1 or nil
     local mouseover = UnitExists("mouseover") and original.glow:IsShown() or nil
+    local infight
 
     -- trigger queued event update
     if nameplate.eventcache then
@@ -767,26 +777,32 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     if nameplate.wait_for_scan and GetUnitData(name, true) then
       nameplate.wait_for_scan = nil
       update = true
-    end
-
-    if ( C.nameplates["namereactionc"] == "1" ) then
-      local red, green, blue = original.healthbar:GetStatusBarColor()
-      local unittype = GetUnitType(red, green, blue) or "ENEMY_NPC"
-      red, green, blue = unpack(unitcolors[unittype])
-      nameplate.name:SetTextColor(red,green,blue,1)
-    else
-      -- trigger update when name color changed
-      local r, g, b = original.name:GetTextColor()
-      if r + g + b ~= nameplate.cache.namecolor then
-        nameplate.cache.namecolor = r + g + b
-        if r > .9 and g < .2 and b < .2 then
-          nameplate.name:SetTextColor(1,0.4,0.2,1) -- infight
-        else
-          nameplate.name:SetTextColor(r,g,b,1)
-        end
-        update = true
+    end   
+ 
+    -- trigger update when name color changed
+    local r, g, b = original.name:GetTextColor()
+    if r + g + b ~= nameplate.cache.namecolor then
+      nameplate.cache.namecolor = r + g + b
+      if r > .9 and g < .2 and b < .2 then
+        infight = true
+        nameplate.name:SetTextColor(1,0.4,0.2,1) -- infight
+      else
+        nameplate.name:SetTextColor(r,g,b,1)
       end
-    end
+
+      if infight then
+        if ( C.nameplates["combaticon"] == "1" ) then 
+          nameplate.combaticon:Show()
+          nameplate.level:SetTextColor(1,1,1,0)
+        end
+      else
+        if ( C.nameplates["combaticon"] == "1" ) then
+          nameplate.combaticon:Hide()
+        end
+      end
+
+      update = true
+    end    
 
     -- trigger update when name color changed
     local r, g, b = original.level:GetTextColor()
@@ -795,6 +811,13 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
       nameplate.cache.levelcolor = r + g + b
       nameplate.level:SetTextColor(r,g,b,1)
       update = true
+    end    
+
+    if ( C.nameplates["namereactionc"] == "1" ) then
+      local red, green, blue = original.healthbar:GetStatusBarColor()
+      local unittype = GetUnitType(red, green, blue) or "ENEMY_NPC"
+      red, green, blue = unpack(unitcolors[unittype])
+      nameplate.name:SetTextColor(red,green,blue,1)
     end
 
     -- scan for debuff timeouts
