@@ -205,7 +205,7 @@ pfUI:RegisterModule("tooltip", "vanilla:tbc", function ()
       local _, class = UnitClass(unit)
       local guild, rankstr, rankid = GetGuildInfo(unit)
       local reaction = UnitReaction(unit, "player")
-      local pvptitle = gsub(pvpname or name," "..name, "", 1)
+      local pvptitle = gsub(gsub(pvpname or name, name, "", 1), "^%s*(.-)%s*$", "%1")
       local hp = UnitHealth(unit)
       local hpm = UnitHealthMax(unit)
 
@@ -224,7 +224,7 @@ pfUI:RegisterModule("tooltip", "vanilla:tbc", function ()
           GameTooltipStatusBar:SetStatusBarColor_orig(color.r, color.g, color.b)
           GameTooltip:SetBackdropBorderColor(color.r, color.g, color.b)
         end
-        if pvptitle ~= name then
+        if pvptitle ~= name and pvptitle ~= "" then
           GameTooltip:AppendText(" |cff666666["..pvptitle.."]|r")
         end
       end
