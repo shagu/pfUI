@@ -6,6 +6,9 @@ pfUI:RegisterModule("turtle-wow", "vanilla", function ()
   delay:SetScript("OnUpdate", function()
     this:Hide()
 
+    -- custom debuff durations
+    pfUI_locale["enUS"]["debuffs"]["Hand of Reckoning"] = { [0] = 3.0 }
+
     -- disable turtle wow's map window implementation
     if pfUI.map and not Cartographer and not METAMAP_TITLE then
       _G.WorldMapFrame_Maximize()
