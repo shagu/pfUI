@@ -40,16 +40,16 @@ pfUI:RegisterModule("thirdparty-vanilla", "vanilla", function()
       function() -- single
         RefreshKtmWidth()
         KLHTM_Frame:ClearAllPoints()
-        KLHTM_Frame:SetPoint("TOPLEFT", pfUI.chat.right, "TOPLEFT", 0, 0)
+        KLHTM_Frame:SetPoint("TOPLEFT", pfUI.chat.right, "TOPLEFT", -.8, .5)
         KLHTM_Frame:SetPoint("BOTTOMRIGHT", pfUI.chat.right, "BOTTOMRIGHT", 0, pfUI.panel.right:GetHeight())
-        KLHTM_Frame.backdrop:SetPoint("BOTTOMRIGHT", KLHTM_Frame, "BOTTOMRIGHT", 0, -(KLHTM_Frame:GetBottom() - pfUI.chat.right:GetBottom())-default_border)
+        KLHTM_Frame.backdrop:SetPoint("BOTTOMRIGHT", KLHTM_Frame, "BOTTOMRIGHT", 0, -(KLHTM_Frame:GetBottom() - pfUI.chat.right:GetBottom())-default_border-.5)
       end,
       function() -- dual
         RefreshKtmWidth()
         KLHTM_Frame:ClearAllPoints()
-        KLHTM_Frame:SetPoint("TOPLEFT", pfUI.chat.right, "TOPLEFT", 0, 0)
+        KLHTM_Frame:SetPoint("TOPLEFT", pfUI.chat.right, "TOPLEFT", -.8, .5)
         KLHTM_Frame:SetPoint("BOTTOMRIGHT", pfUI.chat.right, "BOTTOM", -default_border, pfUI.panel.right:GetHeight())
-        KLHTM_Frame.backdrop:SetPoint("BOTTOMRIGHT", KLHTM_Frame, "BOTTOMRIGHT", 0, -(KLHTM_Frame:GetBottom() - pfUI.chat.right:GetBottom())-default_border)
+        KLHTM_Frame.backdrop:SetPoint("BOTTOMRIGHT", KLHTM_Frame, "BOTTOMRIGHT", 0, -(KLHTM_Frame:GetBottom() - pfUI.chat.right:GetBottom())-default_border-.5)
       end,
       function() -- show
         KLHTM_SetVisible(true)
