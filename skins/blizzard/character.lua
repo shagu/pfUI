@@ -86,39 +86,46 @@ pfUI:RegisterSkin("Character", "vanilla:tbc", function ()
       CharacterFrameTab3:SetPoint("LEFT", HasPetUI() and CharacterFrameTab2 or CharacterFrameTab1, "RIGHT", border*2 + 1, 0)
     end
 
-    local function RefreshCharacterSlots()
-      for i, slot in pairs(slots) do
-        local slotId, _, _ = GetInventorySlotInfo(slot)
-        local quality = GetInventoryItemQuality("player", slotId)
-        slot = _G["Character"..slot]
-
-        if slot and slot.backdrop then
-          if quality and quality > 0 then
-            slot.backdrop:SetBackdropBorderColor(GetItemQualityColor(quality))
-            else
-            slot.backdrop:SetBackdropBorderColor(pfUI.cache.er, pfUI.cache.eg, pfUI.cache.eb, pfUI.cache.ea)
+    local function RefreshCharacterSlot(slot)
+      local slotId = slot:GetID()
+      local link = GetInventoryItemLink("player", slotId)
+      if slot and slot.backdrop then
+        if link then
+          local isBroken = GetInventoryItemBroken("player", slotId)
+          local quality = GetInventoryItemQuality("player", slotId)
+          local r, g, b = GetItemQualityColor(quality)
+          if isBroken then
+            slot.backdrop:SetBackdropBorderColor(0.9, 0, 0, 1)
+          elseif quality > 0 then
+            slot.backdrop:SetBackdropBorderColor(r, g, b, 1)
           end
-
-          if ShaguScore and GetInventoryItemLink("player", slotId) and slot.scoreText then
-            local _, _, itemID = string.find(GetInventoryItemLink("player", slotId), "item:(%d+):%d+:%d+:%d+")
-            local itemLevel = ShaguScore.Database[tonumber(itemID)] or 0
-            local _, _, itemRarity, _, _, _, _, _, itemSlot, _ = GetItemInfo(itemID)
-            local r,g,b = GetItemQualityColor((itemRarity or 1))
-            local score = ShaguScore:Calculate(itemSlot, itemRarity, itemLevel)
-            if score and score > 0  then
-              if quality and quality > 0 then
-                slot.scoreText:SetText(score)
-                slot.scoreText:SetTextColor(r, g, b, 1)
-                else
-                slot.scoreText:SetText("")
-              end
-              else
-              if slot.scoreText then slot.scoreText:SetText("") end
-            end
-            else
-            if slot.scoreText then slot.scoreText:SetText("") end
-          end
+        else
+          slot.backdrop:SetBackdropBorderColor(pfUI.cache.er, pfUI.cache.eg, pfUI.cache.eb, pfUI.cache.ea)
         end
+
+        if ShaguScore and link then
+          local _, _, itemID = string.find(GetInventoryItemLink("player", slotId), "item:(%d+):%d+:%d+:%d+")
+          local itemLevel = ShaguScore.Database[tonumber(itemID)] or 0
+          local _, _, quality, _, _, _, _, _, itemSlot, _ = GetItemInfo(itemID)
+          local score = ShaguScore:Calculate(itemSlot, quality, itemLevel)
+          if score > 0 and quality > 0 then
+            local r,g,b = GetItemQualityColor(quality)
+            slot.scoreText:SetText(score)
+            slot.scoreText:SetTextColor(r, g, b, 1)
+          else
+            slot.scoreText:SetText("")
+            slot.scoreText:SetTextColor(1, 1, 1, 1)
+          end
+        else
+          slot.scoreText:SetText("")
+          slot.scoreText:SetTextColor(1, 1, 1, 1)
+        end
+      end
+    end
+    local function RefreshCharacterSlots()
+      for _, slotName in pairs(slots) do
+        local slot = _G["Character"..slotName]
+        RefreshCharacterSlot(slot)
       end
     end
 
@@ -127,7 +134,12 @@ pfUI:RegisterSkin("Character", "vanilla:tbc", function ()
       RefreshPetPosition()
 
       if not this.hooked then
-        hooksecurefunc("PaperDollItemSlotButton_Update", RefreshCharacterSlots)
+        hooksecurefunc("PaperDollItemSlotButton_Update", function()
+          -- update only character slots!
+          if string.find(this:GetName(), "^Character.-Slot$") then
+            RefreshCharacterSlot(this)
+          end
+        end)
         hooksecurefunc("PetTab_Update", RefreshPetPosition, 1)
         this.hooked = true
       end
@@ -152,13 +164,13 @@ pfUI:RegisterSkin("Character", "vanilla:tbc", function ()
       icon:SetTexCoord(c[1], c[2], c[3], c[4])
     end
 
-    for i, slot in pairs(slots) do
-      local frame = _G["Character"..slot]
+    for _, slotName in pairs(slots) do
+      local frame = _G["Character"..slotName]
       StripTextures(frame)
       CreateBackdrop(frame)
       SetAllPointsOffset(frame.backdrop, frame, 0)
 
-      HandleIcon(frame.backdrop, _G["Character"..slot.."IconTexture"])
+      HandleIcon(frame.backdrop, _G["Character"..slotName.."IconTexture"])
 
       if not frame.scoreText then
         frame.scoreText = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
