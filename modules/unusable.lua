@@ -55,17 +55,6 @@ pfUI:RegisterModule("unusable", "vanilla:tbc", function ()
     end
   end
 
-  function pfUI.unusable:DumpCache()
-    local self = self or pfUI.unusable
-    for bag,slots in pairs(self.cache) do
-      for slot, status in pairs(slots) do
-        if status then
-          print(string.format("bag:%s, slot:%s",bag,slot))
-        end
-      end
-    end
-  end
-
   pfUI.unusable:SetScript("OnEvent", function()
     -- update all caches
     if event == "PLAYERBANKSLOTS_CHANGED" or event == "BANKFRAME_OPENED" then
