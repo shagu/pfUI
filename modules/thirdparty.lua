@@ -232,7 +232,6 @@ pfUI:RegisterModule("thirdparty", "vanilla:tbc", function()
   -- Vanilla: https://github.com/shagu/ShaguDPS
   -- TBC: https://github.com/shagu/ShaguDPS
   HookAddonOrVariable("ShaguDPS", function()
-
     local hookRefresh = ShaguDPSWindow.Refresh
     ShaguDPSWindow.Refresh = function(arg1, arg2)
       hookRefresh(arg1, arg2)
@@ -257,11 +256,11 @@ pfUI:RegisterModule("thirdparty", "vanilla:tbc", function()
         ShaguDPSWindow:SetWidth(pfUI.chat.right:GetWidth() / 2)
       end,
       function() -- show
-        ShaguDPS_Config.visible = 1
+        ShaguDPS.config.visible = 1
         ShaguDPSWindow.Refresh(true)
       end,
       function() -- hide
-        ShaguDPS_Config.visible = 0
+        ShaguDPS.config.visible = 0
         ShaguDPSWindow.Refresh(true)
       end
     }
@@ -271,12 +270,13 @@ pfUI:RegisterModule("thirdparty", "vanilla:tbc", function()
     if C.thirdparty.shagudps.skin == "1" then
       if ShaguDPSWindow then
         local window = ShaguDPSWindow
+        local _, chat_border = GetBorderSize("chat")
 
         window.title:Hide()
         window.title:SetPoint("TOPLEFT", 1, -1)
         window.title:SetPoint("TOPRIGHT", -1, -1)
 
-        CreateBackdrop(window, nil, nil, (C.thirdparty.chatbg == "1" and .8))
+        CreateBackdrop(window, chat_border, nil, (C.thirdparty.chatbg == "1" and .8))
         CreateBackdropShadow(window)
 
         if C.thirdparty.chatbg == "1" and C.chat.global.custombg == "1" then
@@ -313,7 +313,7 @@ pfUI:RegisterModule("thirdparty", "vanilla:tbc", function()
   -- DPSMate Damage Meter
   -- Vanilla: https://github.com/Geigerkind/DPSMate
   -- TBC: https://github.com/Geigerkind/DPSMateTBC
-  HookAddonOrVariable("DPSMate", function()
+  HookAddonOrVariable("DPSMate_DPSMate", function()
     local docktable = { "dpsmate", "DPSMate", "DPSMate_DPSMate",
       function() -- single
         DPSMate_DPSMate:ClearAllPoints()

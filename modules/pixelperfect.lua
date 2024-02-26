@@ -36,10 +36,7 @@ pfUI:RegisterModule("pixelperfect", "vanilla:tbc", function ()
     pixelperfect()
   end
 
-  pfUI.pixelperfect = {}
-  function pfUI.pixelperfect:UpdateConfig()
-    pixelperfect()
-  end
-
-  pfUI.pixelperfect:UpdateConfig()
+  pfUI.pixelperfect = {
+    UpdateConfig = pixelperfect
+  }
 end)

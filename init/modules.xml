@@ -69,4 +69,5 @@
   <Include file="..\modules\energytick.lua"/>
   <Include file="..\modules\totems.lua"/>
   <Include file="..\modules\macrotweak.lua"/>
+  <Include file="..\modules\turtle-wow.lua"/>
 </Ui>

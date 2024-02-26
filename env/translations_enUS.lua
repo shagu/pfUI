@@ -771,6 +771,7 @@ pfUI_translation["enUS"] = {
   ["Website"] = nil,
   ["Welcome to |cff33ffccpf|cffffffffUI|r!\n\nI'm the first run wizard that will guide you through some basic configuration. If you're lazy, feel free to hit the \"Defaults\" button. If you wish to run this dialog again, go to the settings and hit the \"Reset Firstrun\" button.\n\nVisit |cff33ffcchttp://shagu.org|r to check for the latest version."] = nil,
   ["Whitelist"] = nil,
+  ["Who Search Unknown Classes"] = nil,
   ["Width"] = nil,
   ["Wobble Zoom"] = nil,
   ["Won"] = nil,

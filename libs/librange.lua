@@ -105,6 +105,15 @@ wand:SetScript("OnEvent", function()
   PlayerFrame.wandCombat = event == "START_AUTOREPEAT_SPELL" and true or nil
 end)
 
+--Players with combo points aren't necessarily auto attacking, meaning we can't use inCombat.
+--This allows us to avoid rangechecking when the player has combo points to avoid losing them.
+local hascombopoints
+local combo = CreateFrame("Frame", "pfComboPointsDetect")
+combo:RegisterEvent("PLAYER_COMBO_POINTS")
+combo:SetScript("OnEvent", function()
+  hascombopoints = GetComboPoints() > 0
+end)
+
 librange:Hide()
 librange:RegisterEvent("ACTIONBAR_SLOT_CHANGED")
 librange:RegisterEvent("PLAYER_ENTERING_WORLD")
@@ -132,6 +141,9 @@ librange:SetScript("OnEvent", function()
   end
 end)
 
+local target_event = TargetFrame_OnEvent
+local target_nop = function() return end
+
 librange:SetScript("OnUpdate", function()
   if ( this.tick or 1) > GetTime() then
     return
@@ -154,13 +166,21 @@ librange:SetScript("OnUpdate", function()
       if TradeFrame and TradeFrame:IsShown() then return nil end
       if PlayerFrame and PlayerFrame.inCombat then return nil end
       if PlayerFrame and PlayerFrame.wandCombat then return nil end
+      if hascombopoints then return nil end
 
       _G.PlaySound = SoundOff
       pfScanActive = true
 
+      -- save and disable target frame events
+      target_event = TargetFrame_OnEvent
+      _G.TargetFrame_OnEvent = target_nop
+
       TargetUnit(unit)
       unitdata[unit] = IsActionInRange(librange.slot)
       TargetLastTarget()
+
+      -- restore target events
+      _G.TargetFrame_OnEvent = target_event
 
       _G.PlaySound = SoundOn
       pfScanActive = false

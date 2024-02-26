@@ -77,8 +77,8 @@ Please consider adding additional information such as: since when did you got th
 does it still happen using a clean configuration, what other addons are loaded and which version you're running.
 When playing with a non-english client, the language might be relevant too. If possible, explain how people can reproduce the issue.
 
-**How can I contribute?**  
-Report Errors, Issues and Feature Requests in the [Bugtracker](https://github.com/shagu/pfUI/issues).
+**How can I contribute?**
+Report errors and issues in the [Bugtracker](https://github.com/shagu/pfUI/issues).
 Please make sure to have the latest version installed and check for conflicting addons beforehand.
 
 **I have bad performance, what can I do?**  
@@ -107,7 +107,8 @@ The experience bar shows up on mouseover and whenever you gain experience, next 
 If you enabled the "dock"-feature for your external (third-party) meters such as DPSMate or KTM, then you'll be able to toggle between them and the Right Chat by clicking on the ">" symbol on the bottom-right panel.
 
 **Why is my chat always resetting to only 3 lines of text?**  
-You need to disable the "Simple Chat" in blizzards interface settings (Advanced Options). Then relog and reset/run the firstrun wizard again.
+This happens if "Simple Chat" is enabled in blizzards interface settings (Advanced Options).
+Paste the following command into your chat to disable that option: `/run SIMPLE_CHAT="0"; pfUI.chat.SetupPositions(); ReloadUI()`
 
 **How can I enable mouseover cast?**  
 On Vanilla, create a macro with "/pfcast SPELLNAME". If you also want to see the cooldown, You might want to add "/run if nil then CastSpellByName("SPELLNAME") end" on top of the macro. For The Burning Crusade, just use the regular mouseover macros.

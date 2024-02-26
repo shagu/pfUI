@@ -43,7 +43,8 @@ pfUI:RegisterModule("autoshift", "vanilla", function ()
     -- zhCN
     "^速度提高(.+)%%",
     -- turtle-wow
-    "speed based on", "Slow and steady...", "Riding"
+    "speed based on", "Slow and steady...", "Riding",
+    "根据骑术技能提高速度。", "又慢又稳......",
   }
 
   pfUI.autoshift.shapeshifts = {
@@ -91,6 +92,11 @@ pfUI:RegisterModule("autoshift", "vanilla", function ()
       -- scan through buffs and cancel shapeshift/mount
       for id, errorstring in pairs(pfUI.autoshift.errors) do
         if arg1 == errorstring then
+          -- dont's cancel form when clicking on npcs while in combat
+          if arg1 == ERR_CANT_INTERACT_SHAPESHIFTED and UnitAffectingCombat("player") then
+            return
+          end
+
           for i=0,31,1 do
             -- detect mounts based on tooltip text
             pfUI.autoshift.scanner:SetPlayerBuff(i)

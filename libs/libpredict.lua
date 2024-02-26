@@ -291,8 +291,8 @@ resetcache:SetScript("OnEvent", function()
 end)
 
 local function UpdateCache(spell, heal, crit)
+  local heal = heal and tonumber(heal)
   if not spell or not heal then return end
-  local heal = tonumber(heal)
 
   if not cache[spell] or cache[spell][2] then
     -- skills or equipment changed, save whatever is detected
@@ -320,7 +320,7 @@ hooksecurefunc("CastSpellByName", function(effect, target)
   if not libpredict.sender.enabled then return end
   local effect, rank = libspell.GetSpellInfo(effect)
   if not effect then return end
-  local mouseover = pfUI and pfUI.uf and pfUI.uf.mouseover.unit
+  local mouseover = pfUI and pfUI.uf and pfUI.uf.mouseover and pfUI.uf.mouseover.unit
   mouseover = mouseover and UnitCanAssist("player", mouseover) and UnitName(mouseover)
 
   local default = UnitName("target") and UnitCanAssist("player", "target") and UnitName("target") or UnitName("player")

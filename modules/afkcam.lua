@@ -159,7 +159,7 @@ pfUI:RegisterModule("afkcam", "vanilla:tbc", function ()
 
   delay:RegisterEvent("AUCTION_ITEM_LIST_UPDATE")
   delay:SetScript("OnEvent", function()
-    this.delay = GetTime() + 5
+    this.delay = GetTime() + 10
   end)
 
   delay:SetScript("OnUpdate", function()
@@ -171,7 +171,7 @@ pfUI:RegisterModule("afkcam", "vanilla:tbc", function ()
     if not this.delay then this.delay = 0 end
 
     if cast then
-      this.delay = GetTime() + 5
+      this.delay = GetTime() + 10
     end
 
     if this.delay < GetTime() then

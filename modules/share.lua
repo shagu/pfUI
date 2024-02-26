@@ -363,7 +363,6 @@ pfUI:RegisterModule("share", "vanilla:tbc", function ()
       f.ignorePosition:SetWidth(14)
       f.ignorePosition:SetHeight(14)
       f.ignorePosition:SetPoint("BOTTOMLEFT", 10, 10)
-      f.ignorePosition:SetChecked()
 
       f.ignorePositionCaption = f.ignorePosition:CreateFontString("Status", "LOW", "GameFontNormal")
       f.ignorePositionCaption:SetFont(pfUI.font_default, C.global.font_size + 2, "OUTLINE")

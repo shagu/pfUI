@@ -118,28 +118,46 @@ function pfUI:UpdateFonts()
   if not pfUI_config or not pfUI_config.global then return end
 
   -- load font configuration
-  local default, unit, unit_name, combat
+  local default, tooltip, unit, unit_name, combat
   if pfUI_config.global.force_region == "1" and GetLocale() == "zhCN" and pfUI.expansion == "vanilla" then
-    -- force locale compatible fonts
+    -- force locale compatible fonts (zhCN 1.12)
     default = "Fonts\\FZXHLJW.TTF"
+    tooltip = "Fonts\\FZXHLJW.TTF"
     combat = "Fonts\\FZXHLJW.TTF"
     unit = "Fonts\\FZXHLJW.TTF"
     unit_name = "Fonts\\FZXHLJW.TTF"
   elseif pfUI_config.global.force_region == "1" and GetLocale() == "zhCN" and pfUI.expansion == "tbc" then
-    -- force locale compatible fonts
+    -- force locale compatible fonts (zhCN 2.4.3)
     default = "Fonts\\ZYHei.ttf"
+    tooltip = "Fonts\\ZYHei.ttf"
     combat = "Fonts\\ZYKai_C.ttf"
     unit = "Fonts\\ZYKai_T.ttf"
     unit_name = "Fonts\\ZYHei.ttf"
+  elseif pfUI_config.global.force_region == "1" and GetLocale() == "zhTW" and pfUI.expansion == "vanilla" then
+    -- force locale compatible fonts (zhTW 1.12)
+    default = "Fonts\\FZXHLJW.ttf"
+    tooltip = "Fonts\\FZXHLJW.ttf"
+    combat = "Fonts\\FZXHLJW.ttf"
+    unit = "Fonts\\FZXHLJW.ttf"
+    unit_name = "Fonts\\FZXHLJW.ttf"
+  elseif pfUI_config.global.force_region == "1" and GetLocale() == "zhTW" and pfUI.expansion == "tbc" then
+    -- force locale compatible fonts (zhTW 2.4.3)
+    default = "Fonts\\bHEI01B.ttf"
+    tooltip = "Fonts\\bHEI01B.ttf"
+    combat = "Fonts\\bHEI01B.ttf"
+    unit = "Fonts\\bHEI01B.ttf"
+    unit_name = "Fonts\\bHEI01B.ttf"
   elseif pfUI_config.global.force_region == "1" and GetLocale() == "koKR" then
-    -- force locale compatible fonts
+    -- force locale compatible fonts (koKR)
     default = "Fonts\\2002.TTF"
+    tooltip = "Fonts\\2002.TTF"
     combat = "Fonts\\2002.TTF"
     unit = "Fonts\\2002.TTF"
     unit_name = "Fonts\\2002.TTF"
   else
     -- use default entries
     default = pfUI.media[pfUI_config.global.font_default]
+    tooltip = pfUI.media[pfUI_config.tooltip.font_tooltip]
     combat = pfUI.media[pfUI_config.global.font_combat]
     unit = pfUI.media[pfUI_config.global.font_unit]
     unit_name = pfUI.media[pfUI_config.global.font_unit_name]
@@ -185,9 +203,9 @@ function pfUI:UpdateFonts()
   DialogButtonNormalText:SetFont(default, 16)
   ZoneTextFont:SetFont(default, 34, "OUTLINE")
   SubZoneTextFont:SetFont(default, 24, "OUTLINE")
-  GameTooltipText:SetFont(default, 12)
-  GameTooltipTextSmall:SetFont(default, 12)
-  GameTooltipHeaderText:SetFont(default, 13)
+  GameTooltipText:SetFont(tooltip, pfUI_config.tooltip.font_tooltip_size)
+  GameTooltipTextSmall:SetFont(tooltip, pfUI_config.tooltip.font_tooltip_size)
+  GameTooltipHeaderText:SetFont(tooltip, pfUI_config.tooltip.font_tooltip_size + 1)
   WorldMapTextFont:SetFont(default, 102, "THICK")
   InvoiceTextFontNormal:SetFont(default, 12)
   InvoiceTextFontSmall:SetFont(default, 12)
@@ -282,6 +300,11 @@ pfUI:SetScript("OnEvent", function()
     pfUI.version.fix   = tonumber(fix)   or 0
     pfUI.version.string = pfUI.version.major .. "." .. pfUI.version.minor .. "." .. pfUI.version.fix
 
+    -- use "Modern" as default profile on a fresh install
+    if pfUI.api.isempty(pfUI_init) and pfUI.api.isempty(pfUI_config) then
+      pfUI_config = pfUI.api.CopyTable(pfUI_profiles["Modern"])
+    end
+
     pfUI:LoadConfig()
     pfUI:MigrateConfig()
     pfUI:UpdateFonts()
@@ -373,6 +396,7 @@ function pfUI.SetupCVars()
   SHOW_BUFF_DURATIONS = "1"
   QUEST_FADING_DISABLE = "1"
   NAMEPLATES_ON = "1"
+  SIMPLE_CHAT = "0"
 
   SHOW_COMBAT_TEXT = "1"
   COMBAT_TEXT_SHOW_LOW_HEALTH_MANA = "1"

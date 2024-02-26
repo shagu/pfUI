@@ -71,6 +71,38 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
   pfUI.bag:RegisterEvent("ITEM_LOCK_CHANGED")
   pfUI.bag:RegisterEvent("SPELLS_CHANGED")
 
+  pfUI.bag.delay = { UpdateBag = {} }
+
+  pfUI.bag:SetScript("OnUpdate", function()
+    -- update delayed ones every 0.1s
+    if ( this.tick or 1) > GetTime() then return else this.tick = GetTime() + .1 end
+
+    if this.delay.RefreshSpells then
+      this.delay.RefreshSpells = nil
+      pfUI.bag:RefreshSpells()
+    end
+
+    if this.delay.CheckFullUpdate then
+      this.delay.CheckFullUpdate = nil
+      pfUI.bag:CheckFullUpdate()
+    end
+
+    if this.delay.UpdateCooldowns then
+      this.delay.UpdateCooldowns = nil
+      pfUI.bag:UpdateCooldowns()
+    end
+
+    if this.delay.UpdateItemLock then
+      this.delay.UpdateItemLock = nil
+      pfUI.bag:UpdateItemLock()
+    end
+
+    for bag in pairs(this.delay.UpdateBag) do
+      this.delay.UpdateBag[bag] = nil
+      pfUI.bag:UpdateBag(bag)
+    end
+  end)
+
   pfUI.bag:SetScript("OnEvent", function()
     if event == "PLAYER_ENTERING_WORLD" then
       pfUI.bag:CreateBags()
@@ -85,48 +117,29 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
     end
 
     if event == "SPELLS_CHANGED" then
-      pfUI.bag:RefreshSpells()
+      this.delay.RefreshSpells = true
     end
 
     if event == "BAG_CLOSED" or event == "PLAYERBANKSLOTS_CHANGED" or
        event == "PLAYERBANKBAGSLOTS_CHANGED" or event == "BAG_UPDATE" or
        event == "BANKFRAME_OPENED" or event == "BANKFRAME_CLOSED" then
-      pfUI.bag:CheckFullUpdate()
+      this.delay.CheckFullUpdate = true
     end
 
     if event == "BAG_UPDATE_COOLDOWN" then
-      for bag=-2, 11 do
-        local bagsize = GetContainerNumSlots(bag)
-        if bag == -2 and pfUI.bag.showKeyring == true then bagsize = GetKeyRingSize() end
-        for slot=1, bagsize do
-          if pfUI.bags[bag].slots[slot].frame.hasItem then
-            if _G[pfUI.bags[bag].slots[slot].frame:GetName() .. "Cooldown"] then
-              ContainerFrame_UpdateCooldown(bag, pfUI.bags[bag].slots[slot].frame)
-            end
-          end
-        end
-      end
+      this.delay.UpdateCooldowns = true
     end
 
     if event == "ITEM_LOCK_CHANGED" then
-      for bag=-2, 11 do
-        local bagsize = GetContainerNumSlots(bag)
-        if bag == -2 and pfUI.bag.showKeyring == true then bagsize = GetKeyRingSize() end
-        for slot=1, bagsize do
-          if pfUI.bags[bag] and pfUI.bags[bag].slots[slot] and pfUI.bags[bag].slots[slot].frame:IsShown() then
-            local _, _, locked, _ = GetContainerItemInfo(bag, slot)
-            SetItemButtonDesaturated(pfUI.bags[bag].slots[slot].frame, locked, 0.5, 0.5, 0.5)
-          end
-        end
-      end
+      this.delay.UpdateItemLock = true
     end
 
     if event == "PLAYERBANKSLOTS_CHANGED" then
-      pfUI.bag:UpdateBag(-1)
+      this.delay.UpdateBag[-1] = true
     end
 
     if event == "BAG_UPDATE" then
-      pfUI.bag:UpdateBag(arg1)
+      this.delay.UpdateBag[arg1] = true
     end
 
     if event == "PLAYERBANKBAGSLOTS_CHANGED" then
@@ -202,6 +215,14 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
       frame = pfUI.bag.right
     end
 
+    if not frame.init then
+      pfUI.bag:CreateAdditions(frame)
+      frame:SetFrameStrata("HIGH")
+      CreateBackdrop(frame, default_border)
+      CreateBackdropShadow(frame)
+      frame.init = true
+    end
+
     if pfUI.chat and C.appearance.bags.icon_size == "-1" then
       -- align bags to chat if no custom size is set
       frame:SetWidth(cwidth * anchor[2]:GetScale())
@@ -248,11 +269,6 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
     else
       frame.button_size = (frame:GetWidth() - 2*default_border - (rowlength-1)*default_border*3)/ rowlength
     end
-
-    pfUI.bag:CreateAdditions(frame)
-    frame:SetFrameStrata("HIGH")
-    CreateBackdrop(frame, default_border)
-    CreateBackdropShadow(frame)
 
     local topspace = pfUI.bag.right.close:GetHeight() + default_border * 2
 
@@ -348,12 +364,12 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
       if bag == -1 then tpl = "BankItemButtonGenericTemplate" end
       pfUI.bags[bag].slots[slot] = {}
       pfUI.bags[bag].slots[slot].frame = CreateFrame("Button", "pfBag" .. bag .. "item" .. slot,  pfUI.bags[bag], tpl)
+      pfUI.bags[bag].slots[slot].frame.qtext = pfUI.bags[bag].slots[slot].frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
 
-      local highlight = pfUI.bags[bag].slots[slot].frame:GetHighlightTexture()
-      highlight:SetTexture(.5, .5, .5, .5)
-
-      local pushed = pfUI.bags[bag].slots[slot].frame:GetPushedTexture()
-      pushed:SetTexture(.5, .5, .5, .5)
+      pfUI.bags[bag].slots[slot].frame:SetNormalTexture("")
+      pfUI.bags[bag].slots[slot].bag = bag
+      pfUI.bags[bag].slots[slot].slot = slot
+      pfUI.bags[bag].slots[slot].frame:SetID(slot)
 
       -- add cooldown frame to bankslots
       if tpl == "BankItemButtonGenericTemplate" then
@@ -370,15 +386,32 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
       end
 
       CreateBackdrop(pfUI.bags[bag].slots[slot].frame, default_border)
-      pfUI.bags[bag].slots[slot].frame:SetNormalTexture("")
-      pfUI.bags[bag].slots[slot].bag = bag
-      pfUI.bags[bag].slots[slot].slot = slot
-      pfUI.bags[bag].slots[slot].frame:SetID(slot)
 
-      pfUI.bags[bag].slots[slot].frame.qtext = pfUI.bags[bag].slots[slot].frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-      pfUI.bags[bag].slots[slot].frame.qtext:SetFont(pfUI.font_default, 13, "THICKOUTLINE")
-      pfUI.bags[bag].slots[slot].frame.qtext:SetPoint("TOPLEFT", 0, 0)
-      pfUI.bags[bag].slots[slot].frame.qtext:SetTextColor(1, .8, .2, 1)
+      local highlight = pfUI.bags[bag].slots[slot].frame:GetHighlightTexture()
+      highlight:SetTexture(.5, .5, .5, .5)
+
+      local pushed = pfUI.bags[bag].slots[slot].frame:GetPushedTexture()
+      pushed:SetTexture(.5, .5, .5, .5)
+
+      local questText = pfUI.bags[bag].slots[slot].frame.qtext
+      questText:SetFont(pfUI.font_default, 13, "THICKOUTLINE")
+      questText:SetPoint("TOPLEFT", 0, 0)
+      questText:SetTextColor(1, .8, .2, 1)
+
+      local countFrame = _G[pfUI.bags[bag].slots[slot].frame:GetName() .. "Count"]
+      countFrame:SetFont(pfUI.font_unit, C.global.font_unit_size, "OUTLINE")
+      countFrame:SetAllPoints()
+      countFrame:SetJustifyH("RIGHT")
+      countFrame:SetJustifyV("BOTTOM")
+
+      local icon = _G[pfUI.bags[bag].slots[slot].frame:GetName() .. "IconTexture"]
+      icon:SetTexCoord(.08, .92, .08, .92)
+      icon:ClearAllPoints()
+      icon:SetPoint("TOPLEFT", 1, -1)
+      icon:SetPoint("BOTTOMRIGHT", -1, 1)
+
+      local border = _G[pfUI.bags[bag].slots[slot].frame:GetName() .. "NormalTexture"]
+      border:SetTexture("")
 
       if ShaguScore then
         pfUI.bags[bag].slots[slot].frame.scoreText = pfUI.bags[bag].slots[slot].frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
@@ -406,26 +439,13 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
     else
       hasItem = nil
     end
+
     pfUI.bags[bag].slots[slot].frame.hasItem = hasItem
+    pfUI.bags[bag].slots[slot].frame.qtext:SetText("")
+
     pfUI.bag:Openable(bag, slot, hasItem)
 
     ContainerFrame_UpdateCooldown(bag, pfUI.bags[bag].slots[slot].frame)
-
-    local countFrame = _G[pfUI.bags[bag].slots[slot].frame:GetName() .. "Count"]
-    countFrame:SetFont(pfUI.font_unit, C.global.font_unit_size, "OUTLINE")
-    countFrame:SetAllPoints()
-    countFrame:SetJustifyH("RIGHT")
-    countFrame:SetJustifyV("BOTTOM")
-
-    local icon = _G[pfUI.bags[bag].slots[slot].frame:GetName() .. "IconTexture"]
-    icon:SetTexCoord(.08, .92, .08, .92)
-    icon:ClearAllPoints()
-    icon:SetPoint("TOPLEFT", 1, -1)
-    icon:SetPoint("BOTTOMRIGHT", -1, 1)
-
-    local border = _G[pfUI.bags[bag].slots[slot].frame:GetName() .. "NormalTexture"]
-    border:SetTexture("")
-    pfUI.bags[bag].slots[slot].frame.qtext:SetText("")
 
     -- detect backdrop border color
     if quality and quality > tonumber(C.appearance.bags.borderlimit) then
@@ -470,6 +490,11 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
       else
         pfUI.bags[bag].slots[slot].frame.scoreText:SetText("")
       end
+    end
+
+    -- update red color on unusable items
+    if pfUI.unusable then
+      pfUI.unusable:UpdateSlot(bag, slot)
     end
 
     pfUI.bags[bag].slots[slot].frame:Show()
@@ -624,6 +649,34 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
     else
       frame.picklock:Show()
       frame.keys:SetPoint("TOPRIGHT", frame.picklock, "TOPLEFT", -default_border*3, 0)
+    end
+  end
+
+  function pfUI.bag:UpdateCooldowns()
+    for bag=-2, 11 do
+      local bagsize = GetContainerNumSlots(bag)
+      if bag == -2 and pfUI.bag.showKeyring == true then bagsize = GetKeyRingSize() end
+      for slot=1, bagsize do
+        if pfUI.bags[bag].slots[slot].frame.hasItem then
+          if _G[pfUI.bags[bag].slots[slot].frame:GetName() .. "Cooldown"] then
+            ContainerFrame_UpdateCooldown(bag, pfUI.bags[bag].slots[slot].frame)
+          end
+        end
+      end
+    end
+  end
+
+  function pfUI.bag:UpdateItemLock()
+    for bag=-2, 11 do
+      local bagsize = GetContainerNumSlots(bag)
+      if bag == -2 and pfUI.bag.showKeyring == true then bagsize = GetKeyRingSize() end
+      for slot=1, bagsize do
+        if pfUI.bags[bag] and pfUI.bags[bag].slots[slot] and pfUI.bags[bag].slots[slot].frame:IsShown() then
+          local _, _, locked, _ = GetContainerItemInfo(bag, slot)
+          SetItemButtonDesaturated(pfUI.bags[bag].slots[slot].frame, locked, 0.5, 0.5, 0.5)
+          if pfUI.unusable then pfUI.unusable:UpdateSlot(bag, slot) end
+        end
+      end
     end
   end
 

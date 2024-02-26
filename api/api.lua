@@ -21,6 +21,18 @@ function pfUI.api.strsplit(delimiter, subject)
   return unpack(fields)
 end
 
+-- [ isempty ]
+-- Returns true if a table is empty or not existing, otherwise false.
+-- 'tbl'         [table]        the table that shall be checked
+-- return:      [boolean]       result of the check.
+function pfUI.api.isempty(tbl)
+  if not tbl then return true end
+  for k, v in pairs(tbl) do
+    return false
+  end
+  return true
+end
+
 -- [ checkversion ]
 -- Compares a given version (major,minor,fix) and compares it to the current
 -- 'chkmajor'   [number]        the major number to check
@@ -247,18 +259,20 @@ end
 -- 'str'        [string]         input string that should be matched
 -- 'pat'        [string]         unformatted pattern
 -- returns:     [strings]        matched string in capture order
+local a, b, c, d, e
+local _, va, vb, vc, vd, ve
+local ra, rb, rc, rd, re
 function pfUI.api.cmatch(str, pat)
   -- read capture indexes
-  local a,b,c,d,e = GetCaptures(pat)
-  local _, _, va, vb, vc, vd, ve = string.find(str, pfUI.api.SanitizePattern(pat))
+  a, b, c, d, e = GetCaptures(pat)
+  _, _, va, vb, vc, vd, ve = string.find(str, pfUI.api.SanitizePattern(pat))
 
   -- put entries into the proper return values
-  local ra, rb, rc, rd, re
-  ra = e == "1" and ve or d == "1" and vd or c == "1" and vc or b == "1" and vb or va
-  rb = e == "2" and ve or d == "2" and vd or c == "2" and vc or a == "2" and va or vb
-  rc = e == "3" and ve or d == "3" and vd or a == "3" and va or b == "3" and vb or vc
-  rd = e == "4" and ve or a == "4" and va or c == "4" and vc or b == "4" and vb or vd
-  re = a == "5" and va or d == "5" and vd or c == "5" and vc or b == "5" and vb or ve
+  ra = e == 1 and ve or d == 1 and vd or c == 1 and vc or b == 1 and vb or va
+  rb = e == 2 and ve or d == 2 and vd or c == 2 and vc or a == 2 and va or vb
+  rc = e == 3 and ve or d == 3 and vd or a == 3 and va or b == 3 and vb or vc
+  rd = e == 4 and ve or a == 4 and va or c == 4 and vc or b == 4 and vb or vd
+  re = a == 5 and va or d == 5 and vd or c == 5 and vc or b == 5 and vb or ve
 
   return ra, rb, rc, rd, re
 end
@@ -1035,10 +1049,12 @@ function pfUI.api.CreateBackdrop(f, inset, legacy, transp, backdropSetting)
         local border = CreateFrame("Frame", nil, f)
         border:SetFrameLevel(level + 1)
         f.backdrop_border = border
-      end
 
-      f.backdrop.SetBackdropBorderColor = function(self, r, g, b, a)
-        f.backdrop_border:SetBackdropBorderColor(r,g,b,a)
+        local hookSetBackdropBorderColor = f.backdrop.SetBackdropBorderColor
+        f.backdrop.SetBackdropBorderColor = function(self, r, g, b, a)
+          f.backdrop_border:SetBackdropBorderColor(r, g, b, a)
+          hookSetBackdropBorderColor(f.backdrop, r, g, b, a)
+        end
       end
 
       f.backdrop_border:SetAllPoints(f.backdrop)

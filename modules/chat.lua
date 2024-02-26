@@ -3,6 +3,19 @@ pfUI:RegisterModule("chat", "vanilla:tbc", function ()
   local panelfont_size = C.panel.use_unitfonts == "1" and C.global.font_unit_size or C.global.font_size
   local rawborder, default_border = GetBorderSize("chat")
 
+  if pfUI.client <= 11200 then
+    -- The 'GetChatWindowInfo' function returns shown as 'false' while the UIParent is hidden (Alt+Z).
+    -- Based on that return value, the 'FloatingChatFrame_Update' would remove every chat frame,
+    -- that isn't tabbed while the interface is hidden. With this hook we prevent the original
+    -- 'FloatingChatFrame_Update' function from being called during that time.
+
+    local HookFloatingChatFrame_Update = _G.FloatingChatFrame_Update
+    _G.FloatingChatFrame_Update = function(id, onUpdateEvent)
+      if not UIParent:IsShown() then return end
+      HookFloatingChatFrame_Update(id, onUpdateEvent)
+    end
+  end
+
   _G.CHAT_FONT_HEIGHTS = { 8, 10, 12, 14, 16, 18, 20 }
 
   -- add dropdown menu button to ignore player
@@ -321,10 +334,6 @@ pfUI:RegisterModule("chat", "vanilla:tbc", function ()
         frame.pfCombatLog = nil
       end
 
-      for _, tex in pairs(CHAT_FRAME_TEXTURES) do
-        _G["ChatFrame"..i..tex]:SetTexture()
-        _G["ChatFrame"..i..tex]:Hide()
-      end
 
       if not frame.pfStartMoving then
         frame.pfStartMoving = frame.StartMoving
@@ -386,6 +395,24 @@ pfUI:RegisterModule("chat", "vanilla:tbc", function ()
       for j,v in ipairs({tab:GetRegions()}) do
         if j==5 then v:SetTexture(0,0,0,0) end
         v:SetHeight(C.global.font_size+default_border*2)
+      end
+
+      -- remove background on docked frames
+      for _, tex in pairs(CHAT_FRAME_TEXTURES) do
+        local texture = _G["ChatFrame"..i..tex]
+        if tex == "Background" then
+          texture.oldTexture = texture.oldTexture or texture:GetTexture()
+          if frame:GetParent() == pfUI.chat.left or frame:GetParent() == pfUI.chat.right then
+            texture:SetTexture()
+            texture:Hide()
+          else
+            texture:SetTexture(texture.oldTexture)
+            texture:Show()
+          end
+        else
+          texture:SetTexture()
+          texture:Hide()
+        end
       end
 
       _G["ChatFrame" .. i .. "ResizeBottom"]:Hide()
@@ -536,6 +563,10 @@ pfUI:RegisterModule("chat", "vanilla:tbc", function ()
   end
 
   pfUI.chat:SetScript("OnEvent", function()
+    -- set the default chat
+    FCF_SelectDockFrame(SELECTED_CHAT_FRAME)
+
+    -- update all chat settings
     pfUI.chat:RefreshChat()
     FCF_DockUpdate()
     if C.chat.right.enable == "0" then
@@ -678,6 +709,31 @@ pfUI:RegisterModule("chat", "vanilla:tbc", function ()
   local r,g,b = strsplit(",", C.chat.text.unknowncolor)
   local unknowncolorhex = rgbhex(r,g,b)
 
+  local nothing = function() return end
+  local original = FriendsFrame_OnEvent
+
+  local who_query = CreateFrame("Frame")
+  who_query:RegisterEvent("WHO_LIST_UPDATE")
+  who_query:SetScript("OnEvent", function()
+    if this.pending then
+      -- restore everything once a query is received
+      _G.FriendsFrame_OnEvent = original
+      this.pending = nil
+      SetWhoToUI(0)
+    end
+  end)
+
+  local function ScanWhoName(name)
+    -- abort if another query is ongoing
+    if who_query.pending then return end
+    who_query.pending = true
+
+    -- prepare and send the who query
+    _G.FriendsFrame_OnEvent = nothing
+    SetWhoToUI(1)
+    SendWho("n-"..name)
+  end
+
   local function AddMessage(frame, text, a1, a2, a3, a4, a5)
     if not text then return end
 
@@ -714,6 +770,8 @@ pfUI:RegisterModule("chat", "vanilla:tbc", function ()
             color = rgbhex(RAID_CLASS_COLORS[class])
             match = true
           end
+        elseif C.chat.text.whosearchunknown == "1" then
+          ScanWhoName(name)
         end
 
         if C.chat.text.tintunknown == "1" or match then

@@ -40,16 +40,16 @@ pfUI:RegisterModule("thirdparty-vanilla", "vanilla", function()
       function() -- single
         RefreshKtmWidth()
         KLHTM_Frame:ClearAllPoints()
-        KLHTM_Frame:SetPoint("TOPLEFT", pfUI.chat.right, "TOPLEFT", 0, 0)
+        KLHTM_Frame:SetPoint("TOPLEFT", pfUI.chat.right, "TOPLEFT", -.8, .5)
         KLHTM_Frame:SetPoint("BOTTOMRIGHT", pfUI.chat.right, "BOTTOMRIGHT", 0, pfUI.panel.right:GetHeight())
-        KLHTM_Frame.backdrop:SetPoint("BOTTOMRIGHT", KLHTM_Frame, "BOTTOMRIGHT", 0, -(KLHTM_Frame:GetBottom() - pfUI.chat.right:GetBottom())-default_border)
+        KLHTM_Frame.backdrop:SetPoint("BOTTOMRIGHT", KLHTM_Frame, "BOTTOMRIGHT", 0, -(KLHTM_Frame:GetBottom() - pfUI.chat.right:GetBottom())-default_border-.5)
       end,
       function() -- dual
         RefreshKtmWidth()
         KLHTM_Frame:ClearAllPoints()
-        KLHTM_Frame:SetPoint("TOPLEFT", pfUI.chat.right, "TOPLEFT", 0, 0)
+        KLHTM_Frame:SetPoint("TOPLEFT", pfUI.chat.right, "TOPLEFT", -.8, .5)
         KLHTM_Frame:SetPoint("BOTTOMRIGHT", pfUI.chat.right, "BOTTOM", -default_border, pfUI.panel.right:GetHeight())
-        KLHTM_Frame.backdrop:SetPoint("BOTTOMRIGHT", KLHTM_Frame, "BOTTOMRIGHT", 0, -(KLHTM_Frame:GetBottom() - pfUI.chat.right:GetBottom())-default_border)
+        KLHTM_Frame.backdrop:SetPoint("BOTTOMRIGHT", KLHTM_Frame, "BOTTOMRIGHT", 0, -(KLHTM_Frame:GetBottom() - pfUI.chat.right:GetBottom())-default_border-.5)
       end,
       function() -- show
         KLHTM_SetVisible(true)
@@ -448,9 +448,12 @@ pfUI:RegisterModule("thirdparty-vanilla", "vanilla", function()
   HookAddonOrVariable("WIM", function()
     if C.thirdparty.wim.enable == "0" then return end
 
-    _G.WIM_isLinkURL = function() return false end
-    _G.WIM_ConvertURLtoLinks = function(text) -- use pfUI link handler (it is more correct)
-      return pfUI.chat:HandleLink(text)
+    -- use pfUI link handler if available
+    if pfUI.chat then
+      _G.WIM_isLinkURL = function() return false end
+      _G.WIM_ConvertURLtoLinks = function(text)
+        return pfUI.chat:HandleLink(text)
+      end
     end
 
     -- replace wim class colors with pfUI ones
@@ -790,6 +793,9 @@ pfUI:RegisterModule("thirdparty-vanilla", "vanilla", function()
     if C.thirdparty.supermacro.enable == "0" then return end
     if not pfUI.bars then return end
 
+    -- skin game menu button
+    SkinButton(GameMenuButtonSuperMacro)
+
     -- hook events to include SuperMacro refreshs
     local ButtonFullUpdate = pfUI.bars.ButtonFullUpdate
     pfUI.bars.ButtonFullUpdate = function(button)
@@ -827,6 +833,24 @@ pfUI:RegisterModule("thirdparty-vanilla", "vanilla", function()
     -- trigger the event whenever SuperMacro got an update
     hooksecurefunc("SM_UpdateActionSpell", function()
       for slot=1,120 do pfUI.bars.update[slot] = true end
+    end)
+  end)
+
+  -- CleverMacro
+  -- https://github.com/DanielAdolfsson/CleverMacro
+  HookAddonOrVariable("CleverMacro", function()
+    if C.thirdparty.clevermacro.enable == "0" then return end
+
+    -- get pfUI actionbar event handler
+    local events = pfUI.bars and pfUI.bars:GetScript("OnEvent")
+    if not events then return end
+
+    -- disable pfUI macro scanning
+    pfUI.bars.skip_macro = true
+
+    -- send clevermacro events to pfUI actionbars
+    hooksecurefunc("ActionButton_OnEvent", function(event)
+      events(this, event)
     end)
   end)
 
@@ -1093,6 +1117,11 @@ pfUI:RegisterModule("thirdparty-vanilla", "vanilla", function()
 
   HookAddonOrVariable("MCP", function()
     SkinButton(GameMenuButtonAddOns)
+  end)
+
+  HookAddonOrVariable("HardcoreDeath", function()
+    SkinButton(GameMenuButtonHardcoreDeathLogGUI)
+    GameMenuFrame:SetHeight(GameMenuFrame:GetHeight() + 20)
   end)
 
   HookAddonOrVariable("MacroExtender", function()
