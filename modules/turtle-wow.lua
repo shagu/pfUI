@@ -29,7 +29,12 @@ pfUI:RegisterModule("turtle-wow", "vanilla", function ()
       -- add trueshot to pfUI's custom casts
       local player = UnitName("player")
 
-      libcast.customcast["trueshot"] = function(begin, duration)
+      -- add locales
+      pfUI_locale["enUS"]["customcast"]["TRUESHOT"] = "Trueshot"
+      pfUI_locale["zhCN"]["customcast"]["TRUESHOT"] = "稳固射击"
+      local trueshot = L["customcast"]["TRUESHOT"]
+
+      libcast.customcast[strlower(trueshot)] = function(begin, duration)
         if begin then
           local duration = duration or 1000
 
@@ -53,7 +58,7 @@ pfUI:RegisterModule("turtle-wow", "vanilla", function ()
           local start = GetTime() + lag/1000
 
           -- add cast action to the database
-          libcast.db[player].cast = "Trueshot"
+          libcast.db[player].cast = trueshot
           libcast.db[player].rank = lastrank
           libcast.db[player].start = start
           libcast.db[player].casttime = duration
