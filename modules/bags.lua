@@ -71,6 +71,38 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
   pfUI.bag:RegisterEvent("ITEM_LOCK_CHANGED")
   pfUI.bag:RegisterEvent("SPELLS_CHANGED")
 
+  pfUI.bag.delay = { UpdateBag = {} }
+
+  pfUI.bag:SetScript("OnUpdate", function()
+    -- update delayed ones every 0.1s
+    if ( this.tick or 1) > GetTime() then return else this.tick = GetTime() + .1 end
+
+    if this.delay.RefreshSpells then
+      this.delay.RefreshSpells = nil
+      pfUI.bag:RefreshSpells()
+    end
+
+    if this.delay.CheckFullUpdate then
+      this.delay.CheckFullUpdate = nil
+      pfUI.bag:CheckFullUpdate()
+    end
+
+    if this.delay.UpdateCooldowns then
+      this.delay.UpdateCooldowns = nil
+      pfUI.bag:UpdateCooldowns()
+    end
+
+    if this.delay.UpdateItemLock then
+      this.delay.UpdateItemLock = nil
+      pfUI.bag:UpdateItemLock()
+    end
+
+    for bag in pairs(this.delay.UpdateBag) do
+      this.delay.UpdateBag[bag] = nil
+      pfUI.bag:UpdateBag(bag)
+    end
+  end)
+
   pfUI.bag:SetScript("OnEvent", function()
     if event == "PLAYER_ENTERING_WORLD" then
       pfUI.bag:CreateBags()
@@ -85,48 +117,29 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
     end
 
     if event == "SPELLS_CHANGED" then
-      pfUI.bag:RefreshSpells()
+      this.delay.RefreshSpells = true
     end
 
     if event == "BAG_CLOSED" or event == "PLAYERBANKSLOTS_CHANGED" or
        event == "PLAYERBANKBAGSLOTS_CHANGED" or event == "BAG_UPDATE" or
        event == "BANKFRAME_OPENED" or event == "BANKFRAME_CLOSED" then
-      pfUI.bag:CheckFullUpdate()
+      this.delay.CheckFullUpdate = true
     end
 
     if event == "BAG_UPDATE_COOLDOWN" then
-      for bag=-2, 11 do
-        local bagsize = GetContainerNumSlots(bag)
-        if bag == -2 and pfUI.bag.showKeyring == true then bagsize = GetKeyRingSize() end
-        for slot=1, bagsize do
-          if pfUI.bags[bag].slots[slot].frame.hasItem then
-            if _G[pfUI.bags[bag].slots[slot].frame:GetName() .. "Cooldown"] then
-              ContainerFrame_UpdateCooldown(bag, pfUI.bags[bag].slots[slot].frame)
-            end
-          end
-        end
-      end
+      this.delay.UpdateCooldowns = true
     end
 
     if event == "ITEM_LOCK_CHANGED" then
-      for bag=-2, 11 do
-        local bagsize = GetContainerNumSlots(bag)
-        if bag == -2 and pfUI.bag.showKeyring == true then bagsize = GetKeyRingSize() end
-        for slot=1, bagsize do
-          if pfUI.bags[bag] and pfUI.bags[bag].slots[slot] and pfUI.bags[bag].slots[slot].frame:IsShown() then
-            local _, _, locked, _ = GetContainerItemInfo(bag, slot)
-            SetItemButtonDesaturated(pfUI.bags[bag].slots[slot].frame, locked, 0.5, 0.5, 0.5)
-          end
-        end
-      end
+      this.delay.UpdateItemLock = true
     end
 
     if event == "PLAYERBANKSLOTS_CHANGED" then
-      pfUI.bag:UpdateBag(-1)
+      this.delay.UpdateBag[-1] = true
     end
 
     if event == "BAG_UPDATE" then
-      pfUI.bag:UpdateBag(arg1)
+      this.delay.UpdateBag[arg1] = true
     end
 
     if event == "PLAYERBANKBAGSLOTS_CHANGED" then
@@ -624,6 +637,34 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
     else
       frame.picklock:Show()
       frame.keys:SetPoint("TOPRIGHT", frame.picklock, "TOPLEFT", -default_border*3, 0)
+    end
+  end
+
+  function pfUI.bag:UpdateCooldowns()
+    for bag=-2, 11 do
+      local bagsize = GetContainerNumSlots(bag)
+      if bag == -2 and pfUI.bag.showKeyring == true then bagsize = GetKeyRingSize() end
+      for slot=1, bagsize do
+        if pfUI.bags[bag].slots[slot].frame.hasItem then
+          if _G[pfUI.bags[bag].slots[slot].frame:GetName() .. "Cooldown"] then
+            ContainerFrame_UpdateCooldown(bag, pfUI.bags[bag].slots[slot].frame)
+          end
+        end
+      end
+    end
+  end
+
+  function pfUI.bag:UpdateItemLock()
+    for bag=-2, 11 do
+      local bagsize = GetContainerNumSlots(bag)
+      if bag == -2 and pfUI.bag.showKeyring == true then bagsize = GetKeyRingSize() end
+      for slot=1, bagsize do
+        if pfUI.bags[bag] and pfUI.bags[bag].slots[slot] and pfUI.bags[bag].slots[slot].frame:IsShown() then
+          local _, _, locked, _ = GetContainerItemInfo(bag, slot)
+          SetItemButtonDesaturated(pfUI.bags[bag].slots[slot].frame, locked, 0.5, 0.5, 0.5)
+          if pfUI.unusable then pfUI.unusable:UpdateSlot(bag, slot) end
+        end
+      end
     end
   end
 
