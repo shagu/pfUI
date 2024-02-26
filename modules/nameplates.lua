@@ -307,6 +307,9 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     nameplate.glow:SetTexture(pfUI.media["img:dot"])
     nameplate.glow:Hide()
 
+    nameplate.guild = nameplate:CreateFontString(nil, "OVERLAY")
+    nameplate.guild:SetPoint("BOTTOM", nameplate.health, "BOTTOM", 0, 0)
+
     nameplate.level = nameplate:CreateFontString(nil, "OVERLAY")
     nameplate.level:SetPoint("RIGHT", nameplate.health, "LEFT", -3, 0)
 
@@ -433,6 +436,8 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     nameplate.health.text:SetFont(font, font_size - 2, "OUTLINE")
     nameplate.health.text:SetJustifyH(C.nameplates.hptextpos)
 
+    nameplate.guild:SetFont(font, font_size, font_style)
+
     nameplate.glow:SetWidth(C.nameplates.width + 60)
     nameplate.glow:SetHeight(C.nameplates.heighthealth + 30)
     nameplate.glow:SetVertexColor(glowr, glowg, glowb, glowa)
@@ -486,12 +491,13 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     local hpmin, hpmax = plate.original.healthbar:GetMinMaxValues()
     local name = plate.original.name:GetText()
     local level = plate.original.level:IsShown() and plate.original.level:GetObjectType() == "FontString" and tonumber(plate.original.level:GetText()) or "??"
-    local class, ulevel, elite, player = GetUnitData(name, true)
+    local class, ulevel, elite, player, guild = GetUnitData(name, true)
     local target = plate.istarget
     local mouseover = UnitExists("mouseover") and plate.original.glow:IsShown() or nil
     local unitstr = target and "target" or mouseover and "mouseover" or nil
     local red, green, blue = plate.original.healthbar:GetStatusBarColor()
     local unittype = GetUnitType(red, green, blue) or "ENEMY_NPC"
+    local font_size = C.nameplates.use_unitfonts == "1" and C.global.font_unit_size or C.global.font_size
 
     -- ignore players with npc names if plate level is lower than player level
     if ulevel and ulevel > (level == "??" and -1 or level) then player = nil end
@@ -564,20 +570,26 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
       plate.level:Hide()
       plate.name:Hide()
       plate.health:Hide()
-      plate.glow:SetPoint("CENTER", plate.health, "CENTER", 0, 16)
+      plate.guild:Hide()
       plate.totem:Show()
     elseif HidePlate(unittype, name, (hpmax-hp == hpmin), target) then
       plate.level:SetPoint("RIGHT", plate.name, "LEFT", -3, 0)
       plate.name:SetParent(plate)
+      plate.guild:SetPoint("BOTTOM", plate.name, "BOTTOM", -2, -(font_size + 2))
 
       plate.level:Show()
       plate.name:Show()
       plate.health:Hide()
-      plate.glow:SetPoint("CENTER", plate.health, "CENTER", 0, 16)
+      if guild and C.nameplates.showguildname == "1" then
+        plate.glow:SetPoint("CENTER", plate.name, "CENTER", 0, -(font_size / 2) - 2)
+      else
+        plate.glow:SetPoint("CENTER", plate.name, "CENTER", 0, 0)
+      end
       plate.totem:Hide()
     else
       plate.level:SetPoint("RIGHT", plate.health, "LEFT", -5, 0)
       plate.name:SetParent(plate.health)
+      plate.guild:SetPoint("BOTTOM", plate.health, "BOTTOM", 0, -(font_size + 4))
 
       plate.level:Show()
       plate.name:Show()
@@ -588,6 +600,18 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
 
     plate.name:SetText(name)
     plate.level:SetText(string.format("%s%s", level, (elitestrings[elite] or "")))
+
+    if guild and C.nameplates.showguildname == "1" then
+      plate.guild:SetText(guild)
+      if guild == GetGuildInfo("player") then
+        plate.guild:SetTextColor(0, 0.9, 0, 1)
+      else
+        plate.guild:SetTextColor(0.8, 0.8, 0.8, 1)
+      end
+      plate.guild:Show()
+    else
+      plate.guild:Hide()
+    end
 
     plate.health:SetMinMaxValues(hpmin, hpmax)
     plate.health:SetValue(hp)

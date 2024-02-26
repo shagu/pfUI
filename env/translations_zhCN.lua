@@ -634,6 +634,7 @@ pfUI_translation["zhCN"] = {
   ["Show Dispel Indicators"] = "显示驱散指示器",
   ["Show Duration Inside Buff"] = "显示持续时间在Buff里面",
   ["Show Empty Buttons"] = "显示空按钮",
+  ["Show Guild Name"] = nil,
   ["Show FPS and Latency Colors"] = "显示帧数以及延迟颜色",
   ["Show Happiness Icon"] = "显示高兴值图标",
   ["Show Health Points"] = "显示生命值",

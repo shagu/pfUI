@@ -633,6 +633,7 @@ pfUI_translation["zhTW"] = {
   ["Show Duration Inside Buff"] = "顯示持續時間在Buff裏面",
   ["Show Empty Buttons"] = nil,
   ["Show FPS and Latency Colors"] = nil,
+  ["Show Guild Name"] = nil,
   ["Show Happiness Icon"] = nil,
   ["Show Health Points"] = "顯示生命值",
   ["Show/Hide TimeManager"] = nil,

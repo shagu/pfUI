@@ -19,6 +19,7 @@ setfenv(1, pfUI:GetEnvironment())
 --     level[Number] - The level of the unit
 --     elite[String] - The elite state of the unit (See UnitClassification())
 --     player[Boolean] - Returns true if unit is a player
+--     guild[String] - Returns guild name of unit is a player
 --
 -- Internal functions:
 --   libunitscan:AddData(db, name, class, level, elite)
@@ -34,23 +35,24 @@ local queue = { }
 function GetUnitData(name, active)
   if units["players"][name] then
     local ret = units["players"][name]
-    return ret.class, ret.level, ret.elite, true
+    return ret.class, ret.level, ret.elite, true, ret.guild
   elseif units["mobs"][name] then
     local ret = units["mobs"][name]
-    return ret.class, ret.level, ret.elite, nil
+    return ret.class, ret.level, ret.elite, nil, nil
   elseif active then
     queue[name] = true
     libunitscan:Show()
   end
 end
 
-local function AddData(db, name, class, level, elite)
+local function AddData(db, name, class, level, elite, guild)
   if not name or not db then return end
   units[db] = units[db] or {}
   units[db][name] = units[db][name] or {}
   units[db][name].class = class or units[db][name].class
   units[db][name].level = level or units[db][name].level
   units[db][name].elite = elite or units[db][name].elite
+  units[db][name].guild = guild or units[db][name].guild
   queue[name] = nil
 end
 
@@ -74,7 +76,8 @@ libunitscan:SetScript("OnEvent", function()
     local name = UnitName("player")
     local _, class = UnitClass("player")
     local level = UnitLevel("player")
-    AddData("players", name, class, level)
+    local guild = GetGuildInfo("player")
+    AddData("players", name, class, level, nil, guild)
 
   elseif event == "FRIENDLIST_UPDATE" then
     local name, class, level
@@ -87,11 +90,12 @@ libunitscan:SetScript("OnEvent", function()
     end
 
   elseif event == "GUILD_ROSTER_UPDATE" then
-    local name, class, level, _
+    local name, class, level, _, guild
     for i = 1, GetNumGuildMembers() do
       name, _, _, level, class = GetGuildRosterInfo(i)
+      guild = GetGuildInfo("player")
       class = L["class"][class] or nil
-      AddData("players", name, class, level)
+      AddData("players", name, class, level, nil, guild)
     end
 
   elseif event == "RAID_ROSTER_UPDATE" then
@@ -103,21 +107,22 @@ libunitscan:SetScript("OnEvent", function()
     end
 
   elseif event == "PARTY_MEMBERS_CHANGED" then
-    local name, class, level, unit, _
+    local name, class, level, unit, _, guild
     for i = 1, GetNumPartyMembers() do
       unit = "party" .. i
       _, class = UnitClass(unit)
       name = UnitName(unit)
       level = UnitLevel(unit)
-      AddData("players", name, class, level)
+      guild = GetGuildInfo(unit)
+      AddData("players", name, class, level, nil, guild)
     end
 
   elseif event == "WHO_LIST_UPDATE" or event == "CHAT_MSG_SYSTEM" then
     local name, class, level, _
     for i = 1, GetNumWhoResults() do
-      name, _, level, _, class, _ = GetWhoInfo(i)
+      name, guild, level, _, class, _ = GetWhoInfo(i)
       class = L["class"][class] or nil
-      AddData("players", name, class, level)
+      AddData("players", name, class, level, nil, guild)
     end
 
   elseif event == "UPDATE_MOUSEOVER_UNIT" or event == "PLAYER_TARGET_CHANGED" then
@@ -127,7 +132,8 @@ libunitscan:SetScript("OnEvent", function()
       _, class = UnitClass(scan)
       level = UnitLevel(scan)
       name = UnitName(scan)
-      AddData("players", name, class, level)
+      guild = GetGuildInfo(scan)
+      AddData("players", name, class, level, nil, guild)
     else
       _, class = UnitClass(scan)
       elite = UnitClassification(scan)
