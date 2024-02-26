@@ -640,7 +640,7 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
       elseif setting == "curmaxpercs" and hasdata then
         plate.health.text:SetText(string.format("%s / %s | %s%%", Abbreviate(rhp), Abbreviate(rhpmax), ceil(hp/hpmax*100)))
       elseif setting == "deficit" then
-        plate.health.text:SetText(string.format("-%s" .. (hasdata and "" or "%%"), Abbreviate(rhpmax) - Abbreviate(rhp)))
+        plate.health.text:SetText(string.format("-%s" .. (hasdata and "" or "%%"), Abbreviate(rhpmax - rhp)))
       else -- "percent" as fallback
         plate.health.text:SetText(string.format("%s%%", ceil(hp/hpmax*100)))
       end
