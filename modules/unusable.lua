@@ -67,18 +67,13 @@ pfUI:RegisterModule("unusable", "vanilla:tbc", function ()
   end
 
   pfUI.unusable:SetScript("OnEvent", function()
+    -- update all caches
     if event == "PLAYERBANKSLOTS_CHANGED" or event == "BANKFRAME_OPENED" then
-      QueueFunction(this.UpdateCache,this) -- BankFrameItemButton_OnUpdate fires after UpdateSlot overriding changes
+      -- BankFrameItemButton_OnUpdate fires after UpdateSlot overriding changes
+      QueueFunction(this.UpdateCache,this)
     else
+      -- regular update
       this:UpdateCache()
     end
   end)
-
-  -- manual post hook update slot, hooksecurefunc won't work; _G[] doesn't like keys with periods.
-  local bagUpdateSlot = pfUI.bag.UpdateSlot
-  pfUI.bag.UpdateSlot = function(_, bag, slot)
-    bagUpdateSlot(pfUI.bag, bag, slot)
-    pfUI.unusable:UpdateSlot(bag, slot)
-  end
-
 end)
