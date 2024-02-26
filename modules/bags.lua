@@ -70,6 +70,7 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
   pfUI.bag:RegisterEvent("BANKFRAME_OPENED")
   pfUI.bag:RegisterEvent("ITEM_LOCK_CHANGED")
   pfUI.bag:RegisterEvent("SPELLS_CHANGED")
+  pfUI.bag:RegisterEvent("MERCHANT_CLOSED")
 
   pfUI.bag.delay = { UpdateBag = {} }
 
@@ -153,6 +154,12 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
 
     if event == "BANKFRAME_CLOSED" then
       pfUI.bag.left:Hide()
+    end
+
+    if event == "MERCHANT_CLOSED" then
+      if not ContainerFrame1.backpackWasOpen then
+        pfUI.bag.right:Hide()
+      end
     end
   end)
 
@@ -313,6 +320,7 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
         chat:Hide()
       end
       pfUI.bag:CreateBags(object)
+      PlaySound("INTERFACESOUND_BACKPACKOPEN")
     end)
 
     frame:SetScript("OnHide", function()
@@ -321,6 +329,7 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
         frame.chatWasOpen = false
       end
       pfUI.bag:CreateBags(object)
+      PlaySound("INTERFACESOUND_BACKPACKCLOSE")
     end)
   end
 
