@@ -215,6 +215,14 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
       frame = pfUI.bag.right
     end
 
+    if not frame.init then
+      pfUI.bag:CreateAdditions(frame)
+      frame:SetFrameStrata("HIGH")
+      CreateBackdrop(frame, default_border)
+      CreateBackdropShadow(frame)
+      frame.init = true
+    end
+
     if pfUI.chat and C.appearance.bags.icon_size == "-1" then
       -- align bags to chat if no custom size is set
       frame:SetWidth(cwidth * anchor[2]:GetScale())
@@ -261,11 +269,6 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
     else
       frame.button_size = (frame:GetWidth() - 2*default_border - (rowlength-1)*default_border*3)/ rowlength
     end
-
-    pfUI.bag:CreateAdditions(frame)
-    frame:SetFrameStrata("HIGH")
-    CreateBackdrop(frame, default_border)
-    CreateBackdropShadow(frame)
 
     local topspace = pfUI.bag.right.close:GetHeight() + default_border * 2
 
