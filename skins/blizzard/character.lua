@@ -93,11 +93,13 @@ pfUI:RegisterSkin("Character", "vanilla:tbc", function ()
         if link then
           local isBroken = GetInventoryItemBroken("player", slotId)
           local quality = GetInventoryItemQuality("player", slotId)
-          local r, g, b = GetItemQualityColor(quality)
           if isBroken then
             slot.backdrop:SetBackdropBorderColor(0.9, 0, 0, 1)
-          elseif quality > 0 then
+          elseif quality and quality > 0 then
+            local r, g, b = GetItemQualityColor(quality)
             slot.backdrop:SetBackdropBorderColor(r, g, b, 1)
+          else
+            slot.backdrop:SetBackdropBorderColor(pfUI.cache.er, pfUI.cache.eg, pfUI.cache.eb, pfUI.cache.ea)
           end
         else
           slot.backdrop:SetBackdropBorderColor(pfUI.cache.er, pfUI.cache.eg, pfUI.cache.eb, pfUI.cache.ea)
