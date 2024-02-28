@@ -369,7 +369,7 @@ pfUI.backdrop_blizz_full = {
 message = function(msg)
   DEFAULT_CHAT_FRAME:AddMessage("|cffcccc33INFO: |cffffff55" .. ( msg or "nil" ))
 end
-print = message
+print = print or message
 
 error = function(msg)
   if PF_DEBUG_MODE then message(debugstack()) end
