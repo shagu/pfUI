@@ -9,6 +9,9 @@ pfUI:RegisterModule("turtle-wow", "vanilla", function ()
     -- custom debuff durations
     pfUI_locale["enUS"]["debuffs"]["Hand of Reckoning"] = { [0] = 3.0 }
 
+    -- add tree of life druid form to autoshift
+    table.insert(pfUI.autoshift.shapeshifts, "ability_druid_treeoflife")
+
     -- disable turtle wow's map window implementation
     if pfUI.map and not Cartographer and not METAMAP_TITLE then
       _G.WorldMapFrame_Maximize()
