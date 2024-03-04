@@ -44,7 +44,8 @@ pfUI:RegisterModule("turtle-wow", "vanilla", function ()
 
       libcast.customcast[strlower(trueshot)] = function(begin, duration)
         if begin then
-          local duration = duration or 1000
+          -- cast time is 1sec, however it takes 1.4sec to fire in average
+          local duration = duration or 1400
 
           for i=1,32 do
             if UnitBuff("player", i) == "Interface\\Icons\\Racial_Troll_Berserk" then
