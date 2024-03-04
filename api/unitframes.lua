@@ -534,8 +534,12 @@ function pfUI.uf:UpdateConfig()
     f.portrait:ClearAllPoints()
     if f.config.portraitwidth == "-1" and f.config.portraitheight == "-1" then
       f.portrait:SetPoint("TOPLEFT", f, "TOPLEFT", 0, 0)
-    else
+    elseif f.config.portraitalign == "TOP" then
+      f.portrait:SetPoint("BOTTOMLEFT", f, "BOTTOMLEFT", -f.config.portraitwidth - 2*default_border - spacing, 0)
+    elseif f.config.portraitalign == "CENTER" then
       f.portrait:SetPoint("LEFT", f, "LEFT", -f.config.portraitwidth - 2*default_border - spacing, 0)
+    elseif f.config.portraitalign == "BOTTOM" then
+      f.portrait:SetPoint("TOPLEFT", f, "TOPLEFT", -f.config.portraitwidth - 2*default_border - spacing, 0)
     end
 
     f.hp:ClearAllPoints()
@@ -556,8 +560,12 @@ function pfUI.uf:UpdateConfig()
     f.portrait:ClearAllPoints()
     if f.config.portraitwidth == "-1" and f.config.portraitheight == "-1" then
       f.portrait:SetPoint("TOPRIGHT", f, "TOPRIGHT", 0, 0)
-    else
+    elseif f.config.portraitalign == "TOP" then
+      f.portrait:SetPoint("BOTTOMRIGHT", f, "BOTTOMRIGHT", f.config.portraitwidth + 2*default_border + spacing, 0)
+    elseif f.config.portraitalign == "CENTER" then
       f.portrait:SetPoint("RIGHT", f, "RIGHT", f.config.portraitwidth + 2*default_border + spacing, 0)
+    elseif f.config.portraitalign == "BOTTOM" then
+      f.portrait:SetPoint("TOPRIGHT", f, "TOPRIGHT", f.config.portraitwidth + 2*default_border + spacing, 0)
     end
 
     f.hp:ClearAllPoints()
