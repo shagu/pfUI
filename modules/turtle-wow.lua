@@ -71,7 +71,7 @@ pfUI:RegisterModule("turtle-wow", "vanilla", function ()
           libcast.db[player].rank = lastrank
           libcast.db[player].start = start
           libcast.db[player].casttime = duration
-          libcast.db[player].icon = "Interface\\Icons\\Inv_spear_07"
+          libcast.db[player].icon = "Interface\\Icons\\Ability_hunter_steadyshot"
           libcast.db[player].channel = nil
         else
           -- remove cast action to the database
