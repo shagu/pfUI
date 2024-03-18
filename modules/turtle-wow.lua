@@ -6,6 +6,14 @@ pfUI:RegisterModule("turtle-wow", "vanilla", function ()
   delay:SetScript("OnUpdate", function()
     this:Hide()
 
+    -- custom debuff durations
+    pfUI_locale["enUS"]["debuffs"]["Hand of Reckoning"] = { [0] = 3.0 }
+
+    -- add tree of life druid form to autoshift
+    if pfUI.autoshift then
+      table.insert(pfUI.autoshift.shapeshifts, "ability_druid_treeoflife")
+    end
+
     -- disable turtle wow's map window implementation
     if pfUI.map and not Cartographer and not METAMAP_TITLE then
       _G.WorldMapFrame_Maximize()
@@ -29,9 +37,15 @@ pfUI:RegisterModule("turtle-wow", "vanilla", function ()
       -- add trueshot to pfUI's custom casts
       local player = UnitName("player")
 
-      libcast.customcast["trueshot"] = function(begin, duration)
+      -- add locales
+      pfUI_locale["enUS"]["customcast"]["TRUESHOT"] = "Trueshot"
+      pfUI_locale["zhCN"]["customcast"]["TRUESHOT"] = "稳固射击"
+      local trueshot = L["customcast"]["TRUESHOT"]
+
+      libcast.customcast[strlower(trueshot)] = function(begin, duration)
         if begin then
-          local duration = duration or 1000
+          -- cast time is 1sec, however it takes 1.4sec to fire in average
+          local duration = duration or 1400
 
           for i=1,32 do
             if UnitBuff("player", i) == "Interface\\Icons\\Racial_Troll_Berserk" then
@@ -53,11 +67,11 @@ pfUI:RegisterModule("turtle-wow", "vanilla", function ()
           local start = GetTime() + lag/1000
 
           -- add cast action to the database
-          libcast.db[player].cast = "Trueshot"
+          libcast.db[player].cast = trueshot
           libcast.db[player].rank = lastrank
           libcast.db[player].start = start
           libcast.db[player].casttime = duration
-          libcast.db[player].icon = "Interface\\Icons\\Inv_spear_07"
+          libcast.db[player].icon = "Interface\\Icons\\Ability_hunter_steadyshot"
           libcast.db[player].channel = nil
         else
           -- remove cast action to the database

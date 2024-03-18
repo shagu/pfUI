@@ -633,6 +633,7 @@ pfUI_translation["esES"] = {
   ["Show Duration Inside Buff"] = "Mostrar la duración dentro del beneficios",
   ["Show Empty Buttons"] = "Mostrar botones vacíos",
   ["Show FPS and Latency Colors"] = "Mostrar FPS y colores de latencia",
+  ["Show Guild Name"] = nil,
   ["Show Happiness Icon"] = "Mostrar icono de felicidad",
   ["Show Health Points"] = "Mostrar puntos de salud",
   ["Show/Hide TimeManager"] = "Mostrar/Ocultar el gestor de tiempo",

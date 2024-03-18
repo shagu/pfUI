@@ -40,16 +40,16 @@ pfUI:RegisterModule("thirdparty-vanilla", "vanilla", function()
       function() -- single
         RefreshKtmWidth()
         KLHTM_Frame:ClearAllPoints()
-        KLHTM_Frame:SetPoint("TOPLEFT", pfUI.chat.right, "TOPLEFT", 0, 0)
+        KLHTM_Frame:SetPoint("TOPLEFT", pfUI.chat.right, "TOPLEFT", -.8, .5)
         KLHTM_Frame:SetPoint("BOTTOMRIGHT", pfUI.chat.right, "BOTTOMRIGHT", 0, pfUI.panel.right:GetHeight())
-        KLHTM_Frame.backdrop:SetPoint("BOTTOMRIGHT", KLHTM_Frame, "BOTTOMRIGHT", 0, -(KLHTM_Frame:GetBottom() - pfUI.chat.right:GetBottom())-default_border)
+        KLHTM_Frame.backdrop:SetPoint("BOTTOMRIGHT", KLHTM_Frame, "BOTTOMRIGHT", 0, -(KLHTM_Frame:GetBottom() - pfUI.chat.right:GetBottom())-default_border-.5)
       end,
       function() -- dual
         RefreshKtmWidth()
         KLHTM_Frame:ClearAllPoints()
-        KLHTM_Frame:SetPoint("TOPLEFT", pfUI.chat.right, "TOPLEFT", 0, 0)
+        KLHTM_Frame:SetPoint("TOPLEFT", pfUI.chat.right, "TOPLEFT", -.8, .5)
         KLHTM_Frame:SetPoint("BOTTOMRIGHT", pfUI.chat.right, "BOTTOM", -default_border, pfUI.panel.right:GetHeight())
-        KLHTM_Frame.backdrop:SetPoint("BOTTOMRIGHT", KLHTM_Frame, "BOTTOMRIGHT", 0, -(KLHTM_Frame:GetBottom() - pfUI.chat.right:GetBottom())-default_border)
+        KLHTM_Frame.backdrop:SetPoint("BOTTOMRIGHT", KLHTM_Frame, "BOTTOMRIGHT", 0, -(KLHTM_Frame:GetBottom() - pfUI.chat.right:GetBottom())-default_border-.5)
       end,
       function() -- show
         KLHTM_SetVisible(true)
@@ -156,6 +156,79 @@ pfUI:RegisterModule("thirdparty-vanilla", "vanilla", function()
       if KLHTM_RaidFrameBottomLine then KLHTM_RaidFrameBottomLine:Hide() end
       if KLHTM_SelfFrameLine then KLHTM_SelfFrameLine:Hide() end
       if KLHTM_SelfFrameBottomLine then KLHTM_SelfFrameBottomLine:Hide() end
+    end
+  end)
+
+  HookAddonOrVariable("TWThreat", function()
+    local docktable = { "twt", "TODO", "TWTMain",
+      function() -- single
+        TWTMain:ClearAllPoints()
+        TWTMain:SetPoint("TOPLEFT", pfUI.chat.right, "TOPLEFT", 0, 0)
+        local width = pfUI.chat.right:GetWidth() - 3
+        TWTMain:SetScale(width / TWTMain:GetWidth())
+        TWTMainSettingsFrameHeightSlider:SetMinMaxValues(15, 30)
+        TWTMainSettingsFrameHeightSlider:SetValue(15)
+        TWT_CONFIG.windowScale = width / TWTMain:GetWidth()
+        TWTMain:SetHeight(pfUI.chat.right:GetHeight() / TWT_CONFIG.windowScale - TWT_CONFIG.barHeight)
+        TWTMainMainWindow_Resized()
+      end,
+      function() -- dual
+        TWTMain:ClearAllPoints()
+        TWTMain:SetPoint("TOPLEFT", pfUI.chat.right, "TOPLEFT", 0, 0)
+        local width = (pfUI.chat.right:GetWidth() - 3) / 2
+        TWTMain:SetScale(width / TWTMain:GetWidth())
+        TWT_CONFIG.windowScale = width / TWTMain:GetWidth()
+        TWTMain:SetHeight(pfUI.chat.right:GetHeight() / TWT_CONFIG.windowScale - TWT_CONFIG.barHeight)
+        TWTMainMainWindow_Resized()
+      end,
+      function() -- show
+        TWTMain:Show()
+      end,
+      function() -- hide
+        TWTMain:Hide()
+      end,
+      function() -- once
+        return
+      end
+    }
+
+    pfUI.thirdparty.meters:RegisterMeter("threat", docktable)
+
+    if C.thirdparty.twt.skin == "1" then
+      CreateBackdrop(TWTMain, nil, nil, (C.thirdparty.chatbg == "1" and .8))
+      CreateBackdropShadow(TWTMain)
+
+      if C.thirdparty.chatbg == "1" and C.chat.global.custombg == "1" then
+        local r, g, b, a = strsplit(",", C.chat.global.background)
+        TWTMain.backdrop:SetBackdropColor(tonumber(r), tonumber(g), tonumber(b), tonumber(a))
+
+        local r, g, b, a = strsplit(",", C.chat.global.border)
+        TWTMain.backdrop:SetBackdropBorderColor(tonumber(r), tonumber(g), tonumber(b), tonumber(a))
+      end
+
+      TWTMainTitleBG:Hide()
+      TWTMainBarsBG:Hide()
+
+      -- theme buttons
+      local buttons = { "TWTMainSettingsButton", "TWTMainLockButton", "TWTMainCloseButton" }
+
+      for i, button in pairs(buttons) do
+        local b = _G[button]
+        if not b then return end
+        SkinButton(b)
+
+
+        local p,rt,rp,xo,yo = b:GetPoint()
+        if not b.pfSet then
+          b:SetPoint(p,rt,rp,xo - 5,yo)
+          b.pfSet = true
+        end
+      end
+
+      -- buttons
+      TWTMainSettingsButton:SetText("O")
+      TWTMainLockButton:SetText("L")
+      TWTMainCloseButton:SetText("X")
     end
   end)
 
