@@ -125,12 +125,12 @@ pfUI:RegisterModule("hoverbind", "vanilla:tbc", function ()
           frame:EnableKeyboard(true)
           frame:EnableMouse(true)
           frame:EnableMouseWheel(true)
-          frame:Hide();
+          frame:Hide()
 
           -- Store the actionbar button on the overlaying hoverbind frame so we can reference 
           -- them in the hoverbind handler to create the key/mouse binding. We need this
           -- because the hoverbind frames "steal" the mouse focus from the actual buttons.
-          frame.button = button;
+          frame.button = button
 
           local function GetHoverbindHandler(map)
             return function()
