@@ -17,11 +17,28 @@ pfUI:RegisterModule("hoverbind", "vanilla:tbc", function ()
     ["pfActionBarStanceBar4Button"] = "PFSTANCEFOUR",
   }
 
+  local mousebuttonmap = {
+    ["LeftButton"]   = "BUTTON1",
+    ["RightButton"]  = "BUTTON2",
+    ["MiddleButton"] = "BUTTON3",
+    ["Button4"]      = "BUTTON4",
+    ["Button5"]      = "BUTTON5",
+  }
+
+  local mousewheelmap = {
+    [1]  = "MOUSEWHEELUP",
+    [-1] = "MOUSEWHEELDOWN",
+  }
+
   local modifiers = {
     ["ALT"]   = "ALT-",
     ["CTRL"]  = "CTRL-",
     ["SHIFT"] = "SHIFT-"
   }
+
+  -- TODO: Do we even need this? Can't we just always blindly save the bindings, even 
+  -- if there are no changes, or would that cause any (e.g. performance) issues?
+  local need_save = false
 
   pfUI.hoverbind = CreateFrame("Frame","pfKeyBindingFrame",UIParent)
   pfUI.hoverbind:Hide()
@@ -46,8 +63,16 @@ pfUI:RegisterModule("hoverbind", "vanilla:tbc", function ()
       pfUI.bars:UpdateGrid(1)
       pfUI.bars:UpdateGrid(1, "PET")
     end
+
+    -- Initialize hoverbind frames on first show. We can't do this before because the action 
+    -- bars might not exist yet when this module is loaded.
+    if not pfUI.hoverbind.frames then
+      pfUI.hoverbind.frames = pfUI.hoverbind:CreateHoverbindFrames()
+    end
+
     pfUI.gui:Hide()
     pfUI.hoverbind.edit:Show()
+    pfUI.hoverbind:ShowHoverbindFrames()
 
     local txt = T["|cff33ffccKeybind Mode|r\nThis mode allows you to bind keyboard shortcuts to your actionbars.\nBy hovering a button with your cursor and pressing a key, the key will be assigned to that button.\nHit Escape on a button to remove bindings.\n\nPress Escape or click on an empty area to leave the keybind mode."]
     CreateInfoBox(txt, 30,  pfUI.hoverbind.edit)
@@ -58,36 +83,9 @@ pfUI:RegisterModule("hoverbind", "vanilla:tbc", function ()
       pfUI.bars:UpdateGrid(0)
       pfUI.bars:UpdateGrid(0, "PET")
     end
+    pfUI.hoverbind:HideHoverbindFrames()
     pfUI.hoverbind.edit:Hide()
     pfUI.gui:Show()
-  end)
-
-  pfUI.hoverbind:EnableKeyboard(true)
-  pfUI.hoverbind:SetScript("OnKeyUp",function(...)
-    if modifiers[arg1] then return end -- ignore single modifier keyup
-    local need_save = false
-    local frame = GetMouseFocus()
-    local hovername = (frame and frame.GetName) and (frame:GetName()) or ""
-    local binding = pfUI.hoverbind:GetBinding(hovername)
-    if arg1 == "ESCAPE" and not binding then pfUI.hoverbind:Hide() return end
-    if binding then
-      if arg1 == "ESCAPE" then
-        local key = (GetBindingKey(binding))
-        if (key) then
-          SetBinding(key)
-          need_save = true
-        end
-      else
-        if (SetBinding(pfUI.hoverbind:GetPrefix()..arg1,binding)) then
-          need_save = true
-        end
-      end
-    end
-    -- if we set or cleared a binding save to the selected set
-    if need_save then
-      need_save = false
-      SaveBindings(GetCurrentBindingSet())
-    end
   end)
 
   function pfUI.hoverbind:GetBinding(button_name)
@@ -110,6 +108,103 @@ pfUI:RegisterModule("hoverbind", "vanilla:tbc", function ()
       (IsAltKeyDown() and modifiers.ALT or ""),
       (IsControlKeyDown() and modifiers.CTRL or ""),
       (IsShiftKeyDown() and modifiers.SHIFT or ""))
+  end
+
+  -- Loops over all actionbar buttons and creates an invisible overlapping hoverbind frame
+  -- for each of them. These hoverbind frames receive all key, mouse and mouse wheel events
+  -- so we can bind the respective key, mouse button or mouse wheel direction to the underlying
+  -- actionbar button. They should only be shown when hoverbind is active, otherwise the
+  -- underlying actionbar buttons can't be clicked anymore.
+  function pfUI.hoverbind:CreateHoverbindFrames()
+    if not pfUI.bars then return end
+
+    local frames = {}
+
+    for i=1,12 do
+      for j=1,12 do
+        local button = pfUI.bars[i][j]
+        if button then
+          local frame = CreateFrame("Frame", button:GetName() .. "HoverbindFrame", button)
+          frame:SetAllPoints(button)
+          frame:EnableKeyboard(true)
+          frame:EnableMouse(true)
+          frame:EnableMouseWheel(true)
+          frame:Hide();
+
+          -- Store the actionbar button on the overlaying hoverbind frame so we can reference 
+          -- them in the hoverbind handler to create the key/mouse binding. We need this
+          -- because the hoverbind frames "steal" the mouse focus from the actual buttons.
+          frame.button = button;
+
+          local function GetHoverbindHandler(map)
+            return function()
+              if modifiers[arg1] then return end -- ignore single modifier keyup
+              local frame = GetMouseFocus()
+              local hovername = (frame and frame.button and frame.button.GetName) and frame.button:GetName() or ""
+              local binding = pfUI.hoverbind:GetBinding(hovername)
+              if arg1 == "ESCAPE" and not binding then pfUI.hoverbind:Hide() return end
+              if binding then
+                if arg1 == "ESCAPE" then 
+                  -- Remove existing binding
+                  local key = (GetBindingKey(binding))
+                  if (key) then
+                    SetBinding(key)
+                    need_save = true
+                  end
+                else 
+                  -- Create new binding
+                  local key = map and map[arg1] or arg1
+                  if (SetBinding(pfUI.hoverbind:GetPrefix() .. key, binding)) then
+                    need_save = true
+                  end
+                end
+              end
+              pfUI.hoverbind:SaveIfNeeded()
+            end
+          end
+          frame:SetScript("OnKeyUp", GetHoverbindHandler())
+          frame:SetScript("OnMouseUp", GetHoverbindHandler(mousebuttonmap))
+          frame:SetScript("OnMouseWheel", GetHoverbindHandler(mousewheelmap))
+
+          -- Explicitly call the corresponding button's onEnter/onLeave handlers to show/hide
+          -- its highlight and tooltip. This is necessary because the actual buttons don't
+          -- receive any mouse events in hoverbind mode since those are swallowed by the
+          -- overlapping hoverbind frames.
+          frame:SetScript("OnEnter", function()
+            pfUI.bars.ButtonEnter(button)
+          end)
+          frame:SetScript("OnLeave", function()
+            pfUI.bars.ButtonLeave(button)
+          end)
+
+          table.insert(frames, frame)
+        end
+      end
+    end
+
+    return frames
+  end
+
+  -- if we set or cleared a binding save to the selected set
+  function pfUI.hoverbind:SaveIfNeeded()
+    if need_save then
+      need_save = false
+      SaveBindings(GetCurrentBindingSet())
+    end
+  end
+
+  function pfUI.hoverbind:ShowHoverbindFrames()
+    if not pfUI.hoverbind.frames then return end
+    for _, frame in ipairs(pfUI.hoverbind.frames) do
+      frame:Show()
+    end
+  end
+
+  function pfUI.hoverbind:HideHoverbindFrames()
+    if not pfUI.hoverbind.frames then return end
+    for _, frame in ipairs(pfUI.hoverbind.frames) do
+      frame:Hide()
+    end
   end
 
   pfUI.hoverbind:SetScript("OnEvent",function()
