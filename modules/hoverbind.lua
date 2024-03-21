@@ -36,8 +36,6 @@ pfUI:RegisterModule("hoverbind", "vanilla:tbc", function ()
     ["SHIFT"] = "SHIFT-"
   }
 
-  local need_save = false
-
   pfUI.hoverbind = CreateFrame("Frame","pfKeyBindingFrame",UIParent)
   pfUI.hoverbind:Hide()
   pfUI.hoverbind:RegisterEvent("PLAYER_REGEN_DISABLED")
@@ -147,17 +145,16 @@ pfUI:RegisterModule("hoverbind", "vanilla:tbc", function ()
                   local key = (GetBindingKey(binding))
                   if (key) then
                     SetBinding(key)
-                    need_save = true
+                    SaveBindings(GetCurrentBindingSet())
                   end
                 else 
                   -- Create new binding
                   local key = map and map[arg1] or arg1
                   if (SetBinding(pfUI.hoverbind:GetPrefix() .. key, binding)) then
-                    need_save = true
+                    SaveBindings(GetCurrentBindingSet())
                   end
                 end
               end
-              pfUI.hoverbind:SaveIfNeeded()
             end
           end
           frame:SetScript("OnKeyUp", GetHoverbindHandler())
@@ -181,14 +178,6 @@ pfUI:RegisterModule("hoverbind", "vanilla:tbc", function ()
     end
 
     return frames
-  end
-
-  -- if we set or cleared a binding save to the selected set
-  function pfUI.hoverbind:SaveIfNeeded()
-    if need_save then
-      need_save = false
-      SaveBindings(GetCurrentBindingSet())
-    end
   end
 
   function pfUI.hoverbind:ShowHoverbindFrames()
