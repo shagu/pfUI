@@ -36,8 +36,6 @@ pfUI:RegisterModule("hoverbind", "vanilla:tbc", function ()
     ["SHIFT"] = "SHIFT-"
   }
 
-  -- TODO: Do we even need this? Can't we just always blindly save the bindings, even 
-  -- if there are no changes, or would that cause any (e.g. performance) issues?
   local need_save = false
 
   pfUI.hoverbind = CreateFrame("Frame","pfKeyBindingFrame",UIParent)
