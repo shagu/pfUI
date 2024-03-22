@@ -36,6 +36,12 @@ pfUI:RegisterModule("hoverbind", "vanilla:tbc", function ()
     ["SHIFT"] = "SHIFT-"
   }
 
+  -- We don't allow binding these keys without any modifiers
+  local blockedKeys = {
+    "LeftButton",
+    "RightButton",
+  }
+
   pfUI.hoverbind = CreateFrame("Frame","pfKeyBindingFrame",UIParent)
   pfUI.hoverbind:Hide()
   pfUI.hoverbind:RegisterEvent("PLAYER_REGEN_DISABLED")
@@ -135,7 +141,15 @@ pfUI:RegisterModule("hoverbind", "vanilla:tbc", function ()
           local function GetHoverbindHandler(map)
             return function()
               if modifiers[arg1] then return end -- ignore single modifier keyup
-              if arg1 == "LeftButton" then return end -- Don't allow binding left mouse button
+
+              local prefix = pfUI.hoverbind:GetPrefix()
+
+              -- Don't allow binding certain buttons without modifiers
+              if not prefix or prefix == "" then
+                for _, blockedKey in ipairs(blockedKeys) do
+                  if arg1 == blockedKey then return end
+                end
+              end
 
               local frame = GetMouseFocus()
               local hovername = (frame and frame.button and frame.button.GetName) and frame.button:GetName() or ""
@@ -152,7 +166,7 @@ pfUI:RegisterModule("hoverbind", "vanilla:tbc", function ()
                 else 
                   -- Create new binding
                   local key = map and map[arg1] or arg1
-                  if (SetBinding(pfUI.hoverbind:GetPrefix() .. key, binding)) then
+                  if (SetBinding(prefix..key, binding)) then
                     SaveBindings(GetCurrentBindingSet())
                   end
                 end
