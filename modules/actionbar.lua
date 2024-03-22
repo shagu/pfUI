@@ -1464,6 +1464,8 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
   pfUI.bars.update = updatecache
   pfUI.bars.buttons = buttoncache
   pfUI.bars.ButtonFullUpdate = ButtonFullUpdate
+  pfUI.bars.ButtonEnter = ButtonEnter
+  pfUI.bars.ButtonLeave = ButtonLeave
 
   pfUI.bars.UpdateGrid = function(self, state, typ)
     if not typ then
