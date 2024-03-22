@@ -135,6 +135,8 @@ pfUI:RegisterModule("hoverbind", "vanilla:tbc", function ()
           local function GetHoverbindHandler(map)
             return function()
               if modifiers[arg1] then return end -- ignore single modifier keyup
+              if arg1 == "LeftButton" then return end -- Don't allow binding left mouse button
+
               local frame = GetMouseFocus()
               local hovername = (frame and frame.button and frame.button.GetName) and frame.button:GetName() or ""
               local binding = pfUI.hoverbind:GetBinding(hovername)
