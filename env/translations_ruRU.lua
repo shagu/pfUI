@@ -119,6 +119,7 @@ pfUI_translation["ruRU"] = {
   ["Close"] = "Закрыть",
   ["Color Buff Stacks"] = "Цвет стаков баффа",
   ["Color Debuff Stacks"] = "Цвет стаков дебаффа",
+  ["Colorize player name on WorldMap and BattlefieldMinimap"] = "Раскрасить имена игроков на карте мира и миникарте поля боя",
   ["Colorize Unknown Classes"] = "Раскрасить неизвестные классы",
   ["Colors"] = "Цвета по умолчанию",
   ["Combat"] = "Бой",

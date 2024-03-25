@@ -1,93 +1,107 @@
 -- adds class colored circles on world and battlefield map
 pfUI:RegisterModule("mapcolors", function ()
-  pfUI.mapcolors = CreateFrame("Frame", nil, UIParent)
-  pfUI.mapcolors:SetScript("OnUpdate", function()
-    -- throttle to to one item per .1 second
-    if ( this.tick or 1) > GetTime() then return else this.tick = GetTime() + .1 end
-
-    local frame, icon
-
-    -- initialize all button names
-    if not this.buttons then
-      this.buttons = {}
-
-      for i = 1, 4 do
-        icon = string.format("WorldMapParty%d", i)
-        this.buttons[icon] = string.format("party%d", i)
-      end
-
-      for i = 1, 4 do
-        icon = string.format("BattlefieldMinimapParty%d", i)
-        this.buttons[icon] = string.format("party%d", i)
-      end
-
-      for i = 1, 40 do
-        icon = string.format("BattlefieldMinimapRaid%d", i)
-        this.buttons[icon] = string.format("raid%d", i)
-      end
-
-      for i = 1, 40 do
-        icon = string.format("WorldMapRaid%d", i)
-        this.buttons[icon] = string.format("raid%d", i)
-      end
+  local function Initialize(unit_button_name)
+    local texture_size = tonumber(C.appearance.worldmap.groupcircles)
+    for i=1, MAX_PARTY_MEMBERS do
+      local frame = _G[unit_button_name.."Party"..i]
+      frame.icon = _G[unit_button_name.."Party"..i.."Icon"]
+      frame.icon:SetTexture(pfUI.media["img:circleparty"])
+      frame.icon:SetVertexColor(.5, 1, .5)
+      SetAllPointsOffset(frame.icon, frame, texture_size, -texture_size)
     end
-
-    -- update all available buttons
-    local ingroup
-    for name, unitstr in pairs(this.buttons) do
-      frame = _G[name]
-
-      if frame and UnitExists(unitstr) then
-        icon = _G[name.."Icon"]
-        icon:SetTexture()
-
-        -- create icon if not yet existing
-        if not frame.pfIcon then
-          frame.pfIcon = frame:CreateTexture(nil, "OVERLAY")
-          SetAllPointsOffset(frame.pfIcon, frame, this.size, -this.size)
-        end
-
-        -- check if unit is in same group
-        ingroup = nil
-        for i=1,5 do -- check if unit is in group
-          if UnitName(string.format("party%d", i)) == UnitName(unitstr) then
-            ingroup = true
-          end
-        end
-
-        -- update texture according to raid/group state
-        if ingroup and frame.pfIcon.ingroup ~= "PARTY" then
-          frame.pfIcon:SetTexture(pfUI.media["img:circleparty"])
-          frame.pfIcon.ingroup = "PARTY"
-        elseif not ingroup and frame.pfIcon.ingroup ~= "RAID" then
-          frame.pfIcon:SetTexture(pfUI.media["img:circleraid"])
-          frame.pfIcon.ingroup = "RAID"
-        end
-
-        -- detect unit class and set color
-        local _, class = UnitClass(unitstr)
-        local color = RAID_CLASS_COLORS[class]
-        if color then
-          frame.pfIcon:SetVertexColor(color.r, color.g, color.b)
-        else
-          frame.pfIcon:SetVertexColor(.5,1,.5)
-        end
-      end
+    for i=1, MAX_RAID_MEMBERS do
+      local frame = _G[unit_button_name.."Raid"..i]
+      frame.icon = _G[unit_button_name.."Raid"..i.."Icon"]
+      frame.icon:SetTexture(pfUI.media["img:circleraid"])
+      frame.icon:SetVertexColor(.5, 1, .5)
+      SetAllPointsOffset(frame.icon, frame, texture_size, -texture_size)
     end
-  end)
-
-  pfUI.mapcolors.UpdateConfig = function()
-    pfUI.mapcolors.size = tonumber(C.appearance.worldmap.groupcircles)
-
-    if not pfUI.mapcolors.buttons then return end
-    for name, unitstr in pairs(pfUI.mapcolors.buttons) do
-      frame = _G[name]
-
-      if frame and frame.pfIcon then
-        SetAllPointsOffset(frame.pfIcon, frame, pfUI.mapcolors.size, -pfUI.mapcolors.size)
+  end
+  local function UpdateTexture(frame)
+    if UnitInParty(frame.unit) then
+      frame.icon:SetTexture(pfUI.media["img:circleparty"])
+    else
+      frame.icon:SetTexture(pfUI.media["img:circleraid"])
+    end
+  end
+  local function UpdateTextureColor(frame)
+    if UnitExists(frame.unit) then
+      local _, class = UnitClass(frame.unit)
+      local color = RAID_CLASS_COLORS[class]
+      frame.icon:SetVertexColor(color.r, color.g, color.b)
+    else
+      frame.icon:SetVertexColor(.5, 1, .5)
+    end
+  end
+  local function UpdateUnitFrames(unit_button_name)
+    if GetNumRaidMembers() > 0 then
+      for i=1, MAX_RAID_MEMBERS do
+        local frame = _G[unit_button_name.."Raid"..i]
+        UpdateTexture(frame)
+        UpdateTextureColor(frame)
+      end
+    elseif GetNumPartyMembers() > 0 then
+      for i=1, MAX_PARTY_MEMBERS do
+        local frame = _G[unit_button_name.."Party"..i]
+        UpdateTextureColor(frame)
       end
     end
   end
+  local function ColorizeName(frame)
+    local _, class = UnitClass(frame.unit)
+    local color = RAID_CLASS_COLORS[class]
+    frame.name = frame.name or UnitName(frame.unit)
+    frame.name = '|c'..color.colorStr..frame.name..'|r'
+  end
+  local function UpdateUnitColors(unit_button_name, tooltip)
+    local tooltipText = ""
+    if unit_button_name == 'WorldMap' then
+      -- Check player
+      if MouseIsOver(WorldMapPlayer) then
+        ColorizeName(WorldMapPlayer)
+        tooltipText = WorldMapPlayer.name
+      end
+    end
+    -- Check party
+    for i=1, MAX_PARTY_MEMBERS do
+      local frame = _G[unit_button_name.."Party"..i]
+      if frame:IsVisible() and MouseIsOver(frame) then
+        ColorizeName(frame)
+        tooltipText = tooltipText.."\n"..frame.name
+      end
+    end
+    --Check Raid
+    for i=1, MAX_RAID_MEMBERS do
+      local frame = _G[unit_button_name.."Raid"..i]
+      if frame:IsVisible() and MouseIsOver(frame) then
+        ColorizeName(frame)
+        tooltipText = tooltipText.."\n"..frame.name
+      end
+    end
+    tooltip:SetText(tooltipText)
+    tooltip:Show()
+  end
 
-  pfUI.mapcolors:UpdateConfig()
+  -- WorldMap
+  Initialize('WorldMap')
+  hooksecurefunc('WorldMapButton_OnUpdate', function()
+    UpdateUnitFrames('WorldMap')
+  end)
+  if C.appearance.worldmap.colornames == "1" then
+    hooksecurefunc('WorldMapUnit_OnEnter', function()
+      UpdateUnitColors('WorldMap', WorldMapTooltip)
+    end)
+  end
+  -- BattlefieldMinimap
+  HookAddonOrVariable("Blizzard_BattlefieldMinimap", function()
+    Initialize('BattlefieldMinimap')
+    hooksecurefunc('BattlefieldMinimap_OnUpdate', function()
+      UpdateUnitFrames('BattlefieldMinimap')
+    end)
+    if C.appearance.worldmap.colornames == "1" then
+      hooksecurefunc('BattlefieldMinimapUnit_OnEnter', function()
+        UpdateUnitColors('BattlefieldMinimap', GameTooltip)
+      end)
+    end
+  end)
 end)

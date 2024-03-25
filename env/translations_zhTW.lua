@@ -119,6 +119,7 @@ pfUI_translation["zhTW"] = {
   ["Close"] = "關閉",
   ["Color Buff Stacks"] = nil,
   ["Color Debuff Stacks"] = nil,
+  ["Colorize player name on WorldMap and BattlefieldMinimap"] = nil,
   ["Colorize Unknown Classes"] = "未知職業色彩",
   ["Colors"] = nil,
   ["Combat"] = "戰鬥報警",
