@@ -10,70 +10,62 @@ pfUI:RegisterModule("unusable", "vanilla:tbc", function ()
   pfUI.unusable:RegisterEvent("ACTIONBAR_HIDEGRID")
   pfUI.unusable:RegisterEvent("PLAYERBANKSLOTS_CHANGED")
   pfUI.unusable:RegisterEvent("BANKFRAME_OPENED")
-  pfUI.unusable.frames = {}
+  pfUI.unusable.cache = {}
 
   local scanner = libtipscan:GetScanner("unusable")
   local durability = string.gsub(DURABILITY_TEMPLATE, "%%[^%s]+", "(.+)")
   local r, g, b, a = strsplit(",", C.appearance.bags.unusable_color)
 
   function pfUI.unusable:UpdateSlot(bag, slot)
-    local self = self or pfUI.unusable
+    -- create bag cache and clear slot cache
+    self.cache[bag] = self.cache[bag] or {}
+    self.cache[bag][slot] = nil
 
     local frame = pfUI.bags[bag].slots[slot].frame
     local name = frame:GetName()
 
-    -- clear previous item slot caches if existing
-    if self.frames[bag] and self.frames[bag][slot] then
-      self.frames[bag][slot] = nil
+    -- return on empty buttons
+    if not frame.hasItem then return end
+
+    -- set the proper tooltip method
+    if bag == BANK_CONTAINER then
+      scanner:SetInventoryItem("player", 39+slot)
+    else
+      scanner:SetBagItem(bag, slot)
     end
 
-    if frame.hasItem then
-      -- write current item frame to cache
-      self.frames[bag] = self.frames[bag] or {}
-      self.frames[bag][slot] = frame
+    -- check for red color in tooltip
+    local red = scanner:Color(RED_FONT_COLOR)
+    if not red then return end
 
-      -- read item tooltip
-      if bag == BANK_CONTAINER then
-        -- scanner:SetOwner(WorldFrame,"ANCHOR_NONE")
-        scanner:SetInventoryItem("player", 39+slot)
-      else
-        -- scanner:SetOwner(WorldFrame,"ANCHOR_NONE")
-        scanner:SetBagItem(bag, slot)
-      end
+    -- check for broken items
+    local left = scanner:Line(red)
+    local _, _, broken = string.find(left, durability, 1)
+    if broken then return end
 
-      -- check item tooltip
-      local red = scanner:Color(RED_FONT_COLOR)
-      if not red then return end
-
-      local left = scanner:Line(red)
-
-      -- ignore broken equipment
-      local _, _, is_broken = string.find(left, durability, 1)
-      if is_broken then return end
-
-      _G.SetItemButtonTextureVertexColor(_G[name], r, g, b, a)
-    end
+    -- update button vertex color
+    _G.SetItemButtonTextureVertexColor(frame, r, g, b, a)
   end
 
-  function pfUI.unusable:UpdateFrames()
+  function pfUI.unusable:UpdateCache()
     local self = self or pfUI.unusable
 
-    -- update all known item frames
-    for bag, slots in pairs(self.frames) do
-      for slot, frame in pairs(slots) do
+    -- iterate through all known caches
+    for bag, slots in pairs(self.cache) do
+      for slot, state in pairs(slots) do
         pfUI.bag:UpdateSlot(bag, slot)
       end
     end
   end
 
   pfUI.unusable:SetScript("OnEvent", function()
-    -- update all caches
+    -- update all cached buttons
     if event == "PLAYERBANKSLOTS_CHANGED" or event == "BANKFRAME_OPENED" then
       -- BankFrameItemButton_OnUpdate fires after UpdateSlot overriding changes
-      QueueFunction(this.UpdateFrames, this)
+      QueueFunction(this.UpdateCache, this)
     else
-      -- regular update
-      this:UpdateFrames()
+      -- regular button update
+      this:UpdateCache()
     end
   end)
 end)
