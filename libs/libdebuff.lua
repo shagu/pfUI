@@ -26,10 +26,13 @@ local scanner = libtipscan:GetScanner("libdebuff")
 local _, class = UnitClass("player")
 local lastspell
 
+libdebuff.objects = {}
+libdebuff.pending = {}
+
 function libdebuff:GetDuration(effect, rank)
   if L["debuffs"][effect] then
-    local rank = rank and tonumber((string.gsub(rank, RANK, ""))) or 0
-    local rank = L["debuffs"][effect][rank] and rank or libdebuff:GetMaxRank(effect)
+    rank = rank and tonumber((string.gsub(rank, RANK, ""))) or 0
+    rank = L["debuffs"][effect][rank] and rank or libdebuff:GetMaxRank(effect)
     local duration = L["debuffs"][effect][rank]
 
     if effect == L["dyndebuffs"]["Rupture"] then
@@ -147,9 +150,6 @@ libdebuff.rp = { SPELLIMMUNESELFOTHER, IMMUNEDAMAGECLASSSELFOTHER,
   SPELLMISSSELFOTHER, SPELLRESISTSELFOTHER, SPELLEVADEDSELFOTHER,
   SPELLDODGEDSELFOTHER, SPELLDEFLECTEDSELFOTHER, SPELLREFLECTSELFOTHER,
   SPELLPARRIEDSELFOTHER, SPELLLOGABSORBSELFOTHER }
-
-libdebuff.objects = {}
-libdebuff.pending = {}
 
 -- Gather Data by Events
 libdebuff:SetScript("OnEvent", function()
