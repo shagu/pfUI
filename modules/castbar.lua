@@ -90,6 +90,12 @@ pfUI:RegisterModule("castbar", "vanilla:tbc", function ()
         cast, nameSubtext, text, texture, startTime, endTime, isTradeSkill = UnitChannelInfo(this.unitstr or this.unitname)
       end
 
+      -- read enemy casts from SuperWoW if enabled
+      if superwow_active and this.unitstr and not UnitIsUnit(this.unitstr, 'player') then
+        local _, guid = UnitExists(this.unitstr)
+        cast, nameSubtext, text, texture, startTime, endTime, isTradeSkill = UnitCastingInfo(guid)
+      end
+
       if cast then
         local duration = endTime - startTime
         local max = duration / 1000
