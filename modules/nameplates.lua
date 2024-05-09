@@ -892,6 +892,11 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     if C.nameplates["showcastbar"] == "1" and ( C.nameplates["targetcastbar"] == "0" or target ) then
       local cast, nameSubtext, text, texture, startTime, endTime, isTradeSkill = UnitCastingInfo(target and "target" or name)
 
+      -- read enemy casts from SuperWoW if enabled
+      if superwow_active then
+        cast, nameSubtext, text, texture, startTime, endTime, isTradeSkill = UnitCastingInfo(nameplate.parent:GetName(1))
+      end
+
       if not cast then
         nameplate.castbar:Hide()
       elseif cast then

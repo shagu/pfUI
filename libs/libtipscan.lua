@@ -167,6 +167,7 @@ libtipscan._registry = setmetatable({},{__index = function(t,k)
     local old = v[method]
     v[method] = function(v, a1,a2,a3,a4,a5,a6,a7,a8,a9,a10)
       v:ClearLines()
+      v:SetOwner(WorldFrame, "ANCHOR_NONE")
       return old(v, a1,a2,a3,a4,a5,a6,a7,a8,a9,a10)
     end
   end

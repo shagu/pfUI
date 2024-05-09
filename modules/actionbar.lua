@@ -1594,9 +1594,32 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
   if C.bars.reagents == "1" then
     local reagent_slots = { }
     local reagent_counts = { }
-    local reagent_textureslots = { }
     local reagent_capture = SPELL_REAGENTS.."(.+)"
     local scanner = libtipscan:GetScanner("actionbar")
+
+    local UpdateSlot = function(slot)
+      local texture = GetActionTexture(slot)
+
+      -- update buttons that previously had an reagent
+      if reagent_slots[slot] and not HasAction(slot) then
+        reagent_slots[slot] = nil
+        updatecache[slot] = true
+      end
+
+      -- search for reagent requirements
+      if HasAction(slot) then
+        scanner:SetAction(slot)
+        local _, reagents = scanner:Find(reagent_capture)
+
+        -- update on reagent requirement changes
+        if reagent_slots[slot] ~= reagents then
+          reagent_counts[reagents] = reagent_counts[reagents] or 0
+          reagent_slots[slot] = reagents
+          updatecache[slot] = true
+        end
+      end
+    end
+
     local reagentcounter = CreateFrame("Frame", "pfReagentCounter", UIParent)
     reagentcounter:RegisterEvent("PLAYER_ENTERING_WORLD")
     reagentcounter:RegisterEvent("ACTIONBAR_SLOT_CHANGED")
@@ -1605,47 +1628,40 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
       if event == "BAG_UPDATE" then
         this.event = true
       else
-        for slot = 1, 120 do
-          local texture = GetActionTexture(slot)
-
-          -- update buttons that previously had an reagent
-          if reagent_slots[slot] and not texture then
-            reagent_textureslots[slot] = nil
-            reagent_slots[slot] = nil
-            updatecache[slot] = true
-          end
-
-          -- search for reagents on buttons with different icon
-          if reagent_textureslots[slot] ~= texture then
-            if HasAction(slot) then
-              reagent_textureslots[slot] = texture
-              scanner:SetAction(slot)
-              local _, reagents = scanner:Find(reagent_capture)
-              if reagents then
-                reagent_slots[slot] = reagents
-                reagent_counts[reagents] = reagent_counts[reagents] or 0
-                updatecache[slot] = true
-              end
-            end
-          end
-        end
+        this.scan = 1
       end
     end)
 
-    -- limit bag events to one per second
+    -- limit events to one per second and smoothen action scanning
     reagentcounter:SetScript("OnUpdate", function()
+      -- scan one action slot per frame
+      if this.scan and this.scan <= 120 then
+        UpdateSlot(this.scan)
+        this.scan = this.scan + 1
+      end
+
+      -- trigger reagent count updates after action scans
+      if this.scan and this.scan >= 120 then
+        this.event = true
+        this.scan = nil
+      end
+
+      -- queue events to fire only once per second
+      if not this.event then return end
       if ( this.tick or 1) > GetTime() then return else this.tick = GetTime() + 1 end
 
-      if this.event then
-        for item in pairs(reagent_counts) do
-          reagent_counts[item] = GetItemCount(item)
-        end
-        for slot in pairs(reagent_slots) do
-          updatecache[slot] = true
-        end
-
-        this.event = nil
+      -- scan for all reagent item counts
+      for item in pairs(reagent_counts) do
+        reagent_counts[item] = GetItemCount(item)
       end
+
+      -- update all actionbar buttons
+      for slot in pairs(reagent_slots) do
+        updatecache[slot] = true
+      end
+
+      -- remove event trigger
+      this.event = nil
     end)
 
     function IsReagentAction(slot)

@@ -110,7 +110,7 @@ pfUI:RegisterSkin("Character", "vanilla:tbc", function ()
           local itemLevel = ShaguScore.Database[tonumber(itemID)] or 0
           local _, _, quality, _, _, _, _, _, itemSlot, _ = GetItemInfo(itemID)
           local score = ShaguScore:Calculate(itemSlot, quality, itemLevel)
-          if score > 0 and quality > 0 then
+          if score and score > 0 and quality and quality > 0 then
             local r,g,b = GetItemQualityColor(quality)
             slot.scoreText:SetText(score)
             slot.scoreText:SetTextColor(r, g, b, 1)
