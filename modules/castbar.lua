@@ -81,26 +81,28 @@ pfUI:RegisterModule("castbar", "vanilla:tbc", function ()
         this:SetAlpha(this:GetAlpha()-0.05)
       end
 
+      local channel = nil
       local name = this.unitstr and UnitName(this.unitstr) or this.unitname
+      local query = this.unitstr or this.unitname
       if not name then return end
 
-      local cast, nameSubtext, text, texture, startTime, endTime, isTradeSkill = UnitCastingInfo(this.unitstr or this.unitname)
-      if not cast then
-        -- scan for channel spells if no cast was found
-        cast, nameSubtext, text, texture, startTime, endTime, isTradeSkill = UnitChannelInfo(this.unitstr or this.unitname)
-      end
-
-      -- read enemy casts from SuperWoW if enabled
+      -- try to read cast and guid from SuperWoW (except for self casts)
       if superwow_active and this.unitstr and not UnitIsUnit(this.unitstr, 'player') then
         local _, guid = UnitExists(this.unitstr)
-        cast, nameSubtext, text, texture, startTime, endTime, isTradeSkill = UnitCastingInfo(guid)
+        query = guid or query
+      end
+
+      local cast, nameSubtext, text, texture, startTime, endTime, isTradeSkill = UnitCastingInfo(query)
+      if not cast then
+        -- scan for channel spells if no cast was found
+        channel, nameSubtext, text, texture, startTime, endTime, isTradeSkill = UnitChannelInfo(query)
+        cast = channel
       end
 
       if cast then
         local duration = endTime - startTime
         local max = duration / 1000
         local cur = GetTime() - startTime / 1000
-        local channel = UnitChannelInfo(name)
 
         this:SetAlpha(1)
 
