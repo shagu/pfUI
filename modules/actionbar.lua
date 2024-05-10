@@ -1612,7 +1612,7 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
         local _, reagents = scanner:Find(reagent_capture)
 
         -- update on reagent requirement changes
-        if reagent_slots[slot] ~= reagents then
+        if reagents and reagent_slots[slot] ~= reagents then
           reagent_counts[reagents] = reagent_counts[reagents] or 0
           reagent_slots[slot] = reagents
           updatecache[slot] = true
