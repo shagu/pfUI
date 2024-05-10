@@ -38,12 +38,14 @@ pfUI:RegisterModule("superwow", "vanilla", function ()
       local guid = arg1
 
       -- delete all cast entries of guid
-      libcast.db[guid].cast = nil
-      libcast.db[guid].rank = nil
-      libcast.db[guid].start = nil
-      libcast.db[guid].casttime = nil
-      libcast.db[guid].icon = nil
-      libcast.db[guid].channel = nil
+      if libcast.db[guid] then
+        libcast.db[guid].cast = nil
+        libcast.db[guid].rank = nil
+        libcast.db[guid].start = nil
+        libcast.db[guid].casttime = nil
+        libcast.db[guid].icon = nil
+        libcast.db[guid].channel = nil
+      end
     end
   end)
 end)
