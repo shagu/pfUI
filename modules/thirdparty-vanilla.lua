@@ -805,7 +805,11 @@ pfUI:RegisterModule("thirdparty-vanilla", "vanilla", function()
     local unitcast = CreateFrame("Frame")
     unitcast:RegisterEvent("UNIT_CASTEVENT")
     unitcast:SetScript("OnEvent", function()
-      if event == "UNIT_CASTEVENT" and arg3 == "START" then
+      if event == "UNIT_CASTEVENT" then
+        if arg3 == "MAINHAND" or arg3 == "OFFHAND" then
+			return
+		end
+
         -- human readable argument list
         local guid = arg1
         local target = arg2
@@ -813,6 +817,13 @@ pfUI:RegisterModule("thirdparty-vanilla", "vanilla", function()
         local spell_id = arg4
         local timer = arg5
         local start = GetTime()
+
+        if arg3 == "CAST" then
+			local currentCastInfo = libcast.db[guid]
+			if not currentCastInfo or spell_id ~= currentCastInfo.spell_id then
+				return
+			end
+		end
 
         -- get spell info from spell id
         local spell, icon, _
@@ -827,6 +838,7 @@ pfUI:RegisterModule("thirdparty-vanilla", "vanilla", function()
         -- add cast action to the database
         if not libcast.db[guid] then libcast.db[guid] = {} end
         libcast.db[guid].cast = spell
+        libcast.db[guid].spell_id = spell_id
         libcast.db[guid].rank = nil
         libcast.db[guid].start = GetTime()
         libcast.db[guid].casttime = timer
