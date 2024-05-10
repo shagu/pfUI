@@ -805,7 +805,7 @@ pfUI:RegisterModule("thirdparty-vanilla", "vanilla", function()
     local unitcast = CreateFrame("Frame")
     unitcast:RegisterEvent("UNIT_CASTEVENT")
     unitcast:SetScript("OnEvent", function()
-      if event == "UNIT_CASTEVENT" and arg3 == "START" then
+      if arg3 == "START" or arg3 == "CAST" or arg3 == "CHANNEL" then
         -- human readable argument list
         local guid = arg1
         local target = arg2
@@ -831,7 +831,7 @@ pfUI:RegisterModule("thirdparty-vanilla", "vanilla", function()
         libcast.db[guid].start = GetTime()
         libcast.db[guid].casttime = timer
         libcast.db[guid].icon = icon
-        libcast.db[guid].channel = false
+        libcast.db[guid].channel = event_type == "CHANNEL" or false
 
         -- write state variable
         superwow_active = true
