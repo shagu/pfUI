@@ -835,6 +835,16 @@ pfUI:RegisterModule("thirdparty-vanilla", "vanilla", function()
 
         -- write state variable
         superwow_active = true
+      elseif arg3 == "FAIL" then
+        local guid = arg1
+
+        -- delete all cast entries of guid
+        libcast.db[guid].cast = nil
+        libcast.db[guid].rank = nil
+        libcast.db[guid].start = nil
+        libcast.db[guid].casttime = nil
+        libcast.db[guid].icon = nil
+        libcast.db[guid].channel = nil
       end
     end)
   end)
