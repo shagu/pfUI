@@ -70,4 +70,5 @@
   <Include file="..\modules\totems.lua"/>
   <Include file="..\modules\macrotweak.lua"/>
   <Include file="..\modules\turtle-wow.lua"/>
+  <Include file="..\modules\superwow.lua"/>
 </Ui>
