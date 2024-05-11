@@ -98,8 +98,5 @@ function SlashCmdList.PFSWAPFOCUS(msg)
     TargetUnit(pfUI.uf.focus.guid)
     pfUI.uf.focus.unitname = currentUnitName
     pfUI.uf.focus.guid = currentUnitGUID
-  elseif exists and currentUnitName and pfUI.uf.focus.unitname then
-    TargetByName(pfUI.uf.focus.unitname)
-    pfUI.uf.focus.unitname = currentUnitName
   end
 end
