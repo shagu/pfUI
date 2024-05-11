@@ -29,6 +29,8 @@ function SlashCmdList.PFFOCUS(msg)
     pfUI.uf.focus.unitname = nil
     pfUI.uf.focus.label = nil
   end
+  local _, guid = UnitExists("target")
+  pfUI.uf.focus.guid = guid
 end
 
 SLASH_PFCLEARFOCUS1, SLASH_PFCLEARFOCUS2 = '/clearfocus', '/pfclearfocus'
@@ -49,7 +51,9 @@ function SlashCmdList.PFCASTFOCUS(msg)
   local skiptarget = false
   local player = UnitIsUnit("target", "player")
 
-  if pfUI.uf.focus.label and UnitIsUnit("target", pfUI.uf.focus.label .. pfUI.uf.focus.id) then
+  if pfUI.uf.focus.guid then
+    TargetUnit(pfUI.uf.focus.guid)
+  elseif pfUI.uf.focus.label and UnitIsUnit("target", pfUI.uf.focus.label .. pfUI.uf.focus.id) then
     skiptarget = true
   else
     pfScanActive = true
@@ -88,9 +92,14 @@ SLASH_PFSWAPFOCUS1, SLASH_PFSWAPFOCUS2 = '/swapfocus', '/pfswapfocus'
 function SlashCmdList.PFSWAPFOCUS(msg)
   if not pfUI.uf or not pfUI.uf.focus then return end
 
-  local oldunit = UnitExists("target") and strlower(UnitName("target"))
-  if oldunit and pfUI.uf.focus.unitname then
+  local currentUnitName = strlower(UnitName("target"))
+  local exists, currentUnitGUID = UnitExists("target")
+  if exists and currentUnitName and pfUI.uf.focus.guid then
+    TargetUnit(pfUI.uf.focus.guid)
+    pfUI.uf.focus.unitname = currentUnitName
+    pfUI.uf.focus.guid = currentUnitGUID
+  elseif exists and currentUnitName and pfUI.uf.focus.unitname then
     TargetByName(pfUI.uf.focus.unitname)
-    pfUI.uf.focus.unitname = oldunit
+    pfUI.uf.focus.unitname = currentUnitName
   end
 end
