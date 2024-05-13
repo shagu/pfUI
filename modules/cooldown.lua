@@ -18,9 +18,9 @@ pfUI:RegisterModule("cooldown", "vanilla:tbc", function ()
       end
     end
 
-    if not this.next then this.next = GetTime() + .1 end
+    if not this.next then this.next = GetTime() + .5 end
     if this.next > GetTime() then return end
-    this.next = GetTime() + .1
+    this.next = GetTime() + .5
 
     -- fix own alpha value (should be inherited, but somehow isn't always)
     this:SetAlpha(parent:GetAlpha())

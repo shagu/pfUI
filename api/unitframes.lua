@@ -27,7 +27,7 @@ local glow2 = {
 
 local maxdurations = {}
 local function BuffOnUpdate()
-  if ( this.tick or 1) > GetTime() then return else this.tick = GetTime() + .2 end
+  if ( this.tick or 1) > GetTime() then return else this.tick = GetTime() + .5 end
   local timeleft = GetPlayerBuffTimeLeft(GetPlayerBuff(PLAYER_BUFF_START_ID+this.id,"HELPFUL"))
   local texture = GetPlayerBuffTexture(GetPlayerBuff(PLAYER_BUFF_START_ID+this.id,"HELPFUL"))
   local start = 0
@@ -45,6 +45,7 @@ local function BuffOnUpdate()
 end
 
 local function TargetBuffOnUpdate()
+  if ( this.tick or 1) > GetTime() then return else this.tick = GetTime() + .5 end
   local name, rank, icon, count, duration, timeleft = _G.UnitBuff("target", this.id)
   if duration and timeleft then
     CooldownFrame_SetTimer(this.cd, GetTime() + timeleft - duration, duration, 1)
@@ -113,7 +114,7 @@ local function BuffOnClick()
 end
 
 local function DebuffOnUpdate()
-  if ( this.tick or 1) > GetTime() then return else this.tick = GetTime() + .2 end
+  if ( this.tick or 1) > GetTime() then return else this.tick = GetTime() + .5 end
   local timeleft = GetPlayerBuffTimeLeft(GetPlayerBuff(PLAYER_BUFF_START_ID+this.id,"HARMFUL"))
   local texture = GetPlayerBuffTexture(GetPlayerBuff(PLAYER_BUFF_START_ID+this.id,"HARMFUL"))
   local start = 0
@@ -154,7 +155,7 @@ end
 local visibilityscan = CreateFrame("Frame", "pfUnitFrameVisibility", UIParent)
 visibilityscan.frames = {}
 visibilityscan:SetScript("OnUpdate", function()
-  if ( this.limit or 1) > GetTime() then return else this.limit = GetTime() + .2 end
+  if ( this.limit or 1) > GetTime() then return else this.limit = GetTime() + 0.5 end
   for frame in pairs(this.frames) do frame:UpdateVisibility() end
 end)
 
@@ -188,6 +189,7 @@ end
 
 pfUI.uf.glow = CreateFrame("Frame")
 pfUI.uf.glow:SetScript("OnUpdate", function()
+  if ( this.tick or 1) > GetTime() then return else this.tick = GetTime() + .5 end
   local fpsmod = GetFramerate() / 30
   if not this.val or this.val >= .8 then
     this.mod = -0.01 / fpsmod
@@ -201,6 +203,7 @@ pfUI.uf.glow.mod = 0
 pfUI.uf.glow.val = 0
 
 function pfUI.uf.glow.UpdateGlowAnimation()
+  if ( this.tick or 1) > GetTime() then return else this.tick = GetTime() + .5 end
   this:SetAlpha(pfUI.uf.glow.val)
 end
 
@@ -909,6 +912,8 @@ function pfUI.uf.OnEvent()
 end
 
 function pfUI.uf.OnUpdate()
+  if ( this.tick or 1) > GetTime() then return else this.tick = GetTime() + .1 end
+
   -- update combat feedback
   if this.feedbackText then CombatFeedback_OnUpdate(arg1) end
 
@@ -1057,11 +1062,11 @@ function pfUI.uf.OnUpdate()
   end
 
   -- trigger eventless actions (online/offline/range)
-  if not this.lastTick then this.lastTick = GetTime() + (this.tick or .2) end
+  if not this.lastTick then this.lastTick = GetTime() + (this.tick or .5) end
   if this.lastTick and this.lastTick < GetTime() then
     local unitstr = this.label .. this.id
 
-    this.lastTick = GetTime() + (this.tick or .2)
+    this.lastTick = GetTime() + (this.tick or .5)
 
     -- target target has a huge delay, make sure to not tick during range checks
     -- by waiting for a stable name over three ticks otherwise aborting the update.

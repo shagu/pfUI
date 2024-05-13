@@ -736,6 +736,8 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
   end
 
   nameplates.OnUpdate = function(frame)
+    if ( this.tick or 1) > GetTime() then return else this.tick = GetTime() + .5 end
+
     local update
     local frame = frame or this
     local nameplate = frame.nameplate
@@ -759,12 +761,6 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     else
       frame:SetAlpha(.95)
       nameplate:SetAlpha(tonumber(C.nameplates.notargalpha))
-    end
-
-    -- use timer based updates
-    if not nameplate.tick or nameplate.tick < GetTime() then
-      nameplate.tick = GetTime() + .2
-      update = true
     end
 
     -- queue update on visual target update
