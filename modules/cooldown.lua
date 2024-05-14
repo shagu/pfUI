@@ -19,9 +19,8 @@ pfUI:RegisterModule("cooldown", "vanilla:tbc", function ()
       end
     end
 
-    if not this.next then this.next = GetTime() + .1 end
-    if this.next > GetTime() then return end
-    this.next = GetTime() + .1
+    -- only run every 0.1 seconds from here on
+    if ( this.tick or .1) > GetTime() then return else this.tick = GetTime() + .1 end
 
     -- fix own alpha value (should be inherited, but somehow isn't always)
     if this:GetAlpha() ~= parent:GetAlpha() then
