@@ -18,9 +18,9 @@ pfUI:RegisterModule("cooldown", "vanilla:tbc", function ()
       end
     end
 
-    if not this.next then this.next = GetTime() + .5 end
+    if not this.next then this.next = GetTime() + .1 end
     if this.next > GetTime() then return end
-    this.next = GetTime() + .5
+    this.next = GetTime() + .1
 
     -- fix own alpha value (should be inherited, but somehow isn't always)
     this:SetAlpha(parent:GetAlpha())
@@ -29,6 +29,10 @@ pfUI:RegisterModule("cooldown", "vanilla:tbc", function ()
       -- calculating remaining time as it should be
       local remaining = this.duration - (GetTime() - this.start)
       if remaining >= 0 then
+        -- slow down updates for long cds
+        if remaining > 5 then
+          if ( this.tick or 1) > GetTime() then return else this.tick = GetTime() + 1 end
+        end
         this.text:SetText(GetColoredTimeString(remaining))
       else
         this:Hide()
@@ -45,6 +49,10 @@ pfUI:RegisterModule("cooldown", "vanilla:tbc", function ()
       local remaining = cdEndTime - time
 
       if remaining >= 0 then
+        -- slow down updates for long cds
+        if remaining > 5 then
+          if ( this.tick or 1) > GetTime() then return else this.tick = GetTime() + 1 end
+        end
         this.text:SetText(GetColoredTimeString(remaining))
       else
         this:Hide()
