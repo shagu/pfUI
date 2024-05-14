@@ -6,14 +6,15 @@ pfUI:RegisterModule("cooldown", "vanilla:tbc", function ()
   local hourcolor   = {strsplit(",", C.appearance.cd.hourcolor)}
   local daycolor    = {strsplit(",", C.appearance.cd.daycolor)}
 
-  local parent
+  local parent, parent_name
   local function pfCooldownOnUpdate()
     parent = this:GetParent()
     if not parent then this:Hide() end
+    parent_name = parent:GetName()
 
     -- avoid to set cooldowns on invalid frames
-    if parent and parent:GetName() and _G[parent:GetName() .. "Cooldown"] then
-      if not _G[parent:GetName() .. "Cooldown"]:IsShown() then
+    if parent_name and _G[parent_name .. "Cooldown"] then
+      if not _G[parent_name .. "Cooldown"]:IsShown() then
         this:Hide()
       end
     end
