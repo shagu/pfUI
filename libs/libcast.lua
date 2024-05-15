@@ -274,12 +274,12 @@ libcast:SetScript("OnEvent", function()
     if libcast:RemoveAction(mob, spell) then return end
 
     -- You interrupt (.+)'s (.+).
-    mob, spell = cmatch(arg1, SPELLINTERRUPTSELFOTHER)
-    if libcast:RemoveAction(mob, spell) then return end
+    mob, _ = cmatch(arg1, SPELLINTERRUPTSELFOTHER)
+    if libcast:RemoveAction(mob, "INTERRUPT") then return end
 
     -- (.+) interrupts (.+)'s (.+).
-    _, mob, spell = cmatch(arg1, SPELLINTERRUPTOTHEROTHER)
-    if libcast:RemoveAction(mob, spell) then return end
+    _, mob, _ = cmatch(arg1, SPELLINTERRUPTOTHEROTHER)
+    if libcast:RemoveAction(mob, "INTERRUPT") then return end
   end
 end)
 
