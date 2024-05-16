@@ -14,6 +14,15 @@ pfUI:RegisterModule("turtle-wow", "vanilla", function ()
       table.insert(pfUI.autoshift.shapeshifts, "ability_druid_treeoflife")
     end
 
+    -- apply chat styles to hardcore chat
+    if pfUI.chat and pfUI.chat.left then
+      -- read and parse chat bracket settings
+      local left = "|r" .. string.sub(C.chat.text.bracket, 1, 1)
+      local right = string.sub(C.chat.text.bracket, 2, 2) .. "|r"
+      local default = " " .. "%s" .. "|r:" .. "\32"
+      _G.CHAT_HARDCORE_GET = left .. "H" .. right .. default
+    end
+
     -- disable turtle wow's map window implementation
     if pfUI.map and not Cartographer and not METAMAP_TITLE then
       _G.WorldMapFrame_Maximize()
