@@ -1611,6 +1611,9 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
         scanner:SetAction(slot)
         local _, reagents = scanner:Find(reagent_capture)
 
+        -- remove reagent counts if existing
+        reagents = reagents and string.gsub(reagents, " %((.+)%)", "")
+
         -- update on reagent requirement changes
         if reagents and reagent_slots[slot] ~= reagents then
           reagent_counts[reagents] = reagent_counts[reagents] or 0
