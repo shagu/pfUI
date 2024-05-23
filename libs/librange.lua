@@ -141,6 +141,8 @@ librange:SetScript("OnEvent", function()
   end
 end)
 
+local _, class = UnitClass("player")
+local druid = class == "DRUID"
 local target_event = TargetFrame_OnEvent
 local target_nop = function() return end
 
@@ -166,6 +168,7 @@ librange:SetScript("OnUpdate", function()
       if TradeFrame and TradeFrame:IsShown() then return nil end
       if PlayerFrame and PlayerFrame.inCombat then return nil end
       if PlayerFrame and PlayerFrame.wandCombat then return nil end
+      if druid and UnitPowerType("player") == 3 then return nil end
       if hascombopoints then return nil end
 
       _G.PlaySound = SoundOff
