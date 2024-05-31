@@ -115,9 +115,10 @@ function libspell.GetSpellInfo(index, bookType)
 
   if id then
     scanner:SetSpell(id, bookType)
-    local _, sec = scanner:Find(gsub(SPELL_CAST_TIME_SEC, "%%.3g", "%(.+%)"))
-    local _, min = scanner:Find(gsub(SPELL_CAST_TIME_MIN, "%%.3g", "%(.+%)"))
-    local _, range = scanner:Find(gsub(SPELL_RANGE, "%%s", "%(.+%)"))
+    local _, sec = scanner:Find(gsub(SPELL_CAST_TIME_SEC, "%%.3g", "%(.+%)"), false)
+    local _, min = scanner:Find(gsub(SPELL_CAST_TIME_MIN, "%%.3g", "%(.+%)"), false)
+    local _, range = scanner:Find(gsub(SPELL_RANGE, "%%s", "%(.+%)"), false)
+    
     castingTime = (tonumber(sec) or tonumber(min) or 0) * 1000
     if range then
       local _, _, min, max = string.find(range, "(.+)-(.+)")
