@@ -307,39 +307,68 @@ local function UpdateCache(spell, heal, crit)
 end
 
 -- Gather Data by User Actions
+
+local _cached_pfui_uf_mouseover -- will get cached upon first use in one of the hooks below
+
 hooksecurefunc("CastSpell", function(id, bookType)
   if not libpredict.sender.enabled then return end
-  local effect, rank = libspell.GetSpellInfo(id, bookType)
-  if not effect then return end
-  spell_queue[1] = effect
-  spell_queue[2] = effect.. ( rank or "" )
-  spell_queue[3] = UnitName("target") and UnitCanAssist("player", "target") and UnitName("target") or UnitName("player")
-end, true)
+  local effectRaw, rank = libspell.GetSpellInfo(id, bookType)
+  if not effectRaw then return end
 
+  _cached_pfui_uf_mouseover = _cached_pfui_uf_mouseover or pfUI.uf.mouseover or {} 
+  local pfui_uf_mouseover_unit = _cached_pfui_uf_mouseover.unit
+
+  spell_queue[1] = effectRaw
+  spell_queue[2] = effectRaw .. (rank or "")
+  spell_queue[3] = pfui_uf_mouseover_unit == "player"
+          and player
+          or (
+          (pfui_uf_mouseover_unit and UnitCanAssist("player", pfui_uf_mouseover_unit))
+                  and UnitName(pfui_uf_mouseover_unit) -- mouseover unit name
+                  or (UnitCanAssist("player", "target") and UnitName("target") or player) -- or default
+  )
+end, true)
+ 
 hooksecurefunc("CastSpellByName", function(effect, target)
   if not libpredict.sender.enabled then return end
-  local effect, rank = libspell.GetSpellInfo(effect)
-  if not effect then return end
-  local mouseover = pfUI and pfUI.uf and pfUI.uf.mouseover and pfUI.uf.mouseover.unit
-  mouseover = mouseover and UnitCanAssist("player", mouseover) and UnitName(mouseover)
+  local effectRaw, rank = libspell.GetSpellInfo(effect)
+  if not effectRaw then return end
 
-  local default = UnitName("target") and UnitCanAssist("player", "target") and UnitName("target") or UnitName("player")
+  _cached_pfui_uf_mouseover = _cached_pfui_uf_mouseover or pfUI.uf.mouseover or {}
+  local pfui_uf_mouseover_unit = _cached_pfui_uf_mouseover.unit
 
-  spell_queue[1] = effect
-  spell_queue[2] = effect.. ( rank or "" )
-  spell_queue[3] = mouseover or default
+  spell_queue[1] = effectRaw
+  spell_queue[2] = effectRaw .. (rank or "")
+  spell_queue[3] = pfui_uf_mouseover_unit == "player"
+          and player
+          or (
+          (pfui_uf_mouseover_unit and UnitCanAssist("player", pfui_uf_mouseover_unit))
+                  and UnitName(pfui_uf_mouseover_unit) -- mouseover unit name
+                  or (UnitCanAssist("player", "target") and UnitName("target") or player) -- or default
+  )
 end, true)
 
 local scanner = libtipscan:GetScanner("prediction")
 hooksecurefunc("UseAction", function(slot, target, selfcast)
   if not libpredict.sender.enabled then return end
   if GetActionText(slot) or not IsCurrentAction(slot) then return end
+
   scanner:SetAction(slot)
   local effect, rank = scanner:Line(1)
   if not effect then return end
+
+  _cached_pfui_uf_mouseover = _cached_pfui_uf_mouseover or pfUI.uf.mouseover or {}
+  local pfui_uf_mouseover_unit = _cached_pfui_uf_mouseover.unit
+
   spell_queue[1] = effect
-  spell_queue[2] = effect.. ( rank or "" )
-  spell_queue[3] = selfcast and UnitName("player") or UnitName("target") and UnitCanAssist("player", "target") and UnitName("target") or UnitName("player")
+  spell_queue[2] = effect .. (rank or "")
+  spell_queue[3] = (selfcast or pfui_uf_mouseover_unit == "player")
+          and player
+          or (
+          (pfui_uf_mouseover_unit and UnitCanAssist("player", pfui_uf_mouseover_unit))
+                  and UnitName(pfui_uf_mouseover_unit) -- mouseover unit name
+                  or (UnitCanAssist("player", "target") and UnitName("target") or player) -- or default
+  )
 end, true)
 
 libpredict.sender = CreateFrame("Frame", "pfPredictionSender", UIParent)
