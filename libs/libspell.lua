@@ -83,10 +83,12 @@ end
 --              [number]            Casting time of the spell in milliseconds
 --              [number]            Minimum range from the target required to cast the spell
 --              [number]            Maximum range from the target at which you can cast the spell
+--              [number]            The numeric spell-id of the spell
+--              [number]            The type of the spellbook that the spell is in
 local spellinfo = {}
 function libspell.GetSpellInfo(index, bookType)
   local cache = spellinfo[index]
-  if cache then return cache[1], cache[2], cache[3], cache[4], cache[5], cache[6] end
+  if cache then return cache[1], cache[2], cache[3], cache[4], cache[5], cache[6], cache[7], cache[8] end
 
   local name, rank, id
   local icon = ""
@@ -131,8 +133,8 @@ function libspell.GetSpellInfo(index, bookType)
     end
   end
 
-  spellinfo[index] = { name, rank, icon, castingTime, minRange, maxRange }
-  return name, rank, icon, castingTime, minRange, maxRange
+  spellinfo[index] = { name, rank, icon, castingTime, minRange, maxRange, id, bookType }
+  return name, rank, icon, castingTime, minRange, maxRange, id, bookType
 end
 
 -- Reset all spell caches whenever new spells are learned/unlearned
