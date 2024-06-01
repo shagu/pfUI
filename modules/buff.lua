@@ -211,19 +211,6 @@ pfUI:RegisterModule("buff", "vanilla:tbc", function ()
     return buff
   end
 
-  local function GetNumBuffs()
-    local mh, mhtime, mhcharge, oh, ohtime, ohcharge = GetWeaponEnchantInfo()
-    local offset = (mh and 1 or 0) + (oh and 1 or 0)
-
-    for i=1,32 do
-      local bid, untilCancelled = GetPlayerBuff(PLAYER_BUFF_START_ID+i, "HELPFUL")
-      if bid < 0 then
-        return i - 1 + offset
-      end
-    end
-    return 0 + offset
-  end
-
   pfUI.buff = CreateFrame("Frame", "pfGlobalBuffFrame", UIParent)
   pfUI.buff:RegisterEvent("PLAYER_AURAS_CHANGED")
   pfUI.buff:RegisterEvent("UNIT_INVENTORY_CHANGED")
