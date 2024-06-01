@@ -76,7 +76,7 @@ pfUI:RegisterModule("buffwatch", "vanilla:tbc", function ()
 
   local function GetBuffData(unit, id, type, skipTooltip)
     if unit == "player" then
-      local bid = GetPlayerBuff(PLAYER_BUFF_START_ID+id, type)
+      local bid = pfUI.api.GetPlayerBuffX(id, type)
       local stacks = GetPlayerBuffApplications(bid)
       local remaining = GetPlayerBuffTimeLeft(bid)
       local texture = GetPlayerBuffTexture(bid)
@@ -112,7 +112,7 @@ pfUI:RegisterModule("buffwatch", "vanilla:tbc", function ()
         DEFAULT_CHAT_FRAME:AddMessage("|cff33ffcc" .. skill .. "|r" .. T["is now blacklisted."])
       end
     elseif this.parent.unit == "player" then
-      CancelPlayerBuff(GetPlayerBuff(PLAYER_BUFF_START_ID+this.id,this.type))
+      CancelPlayerBuff(pfUI.api.GetPlayerBuffX(this.id,this.type))
     end
   end
 
@@ -120,7 +120,7 @@ pfUI:RegisterModule("buffwatch", "vanilla:tbc", function ()
     GameTooltip:SetOwner(this, "NONE")
 
     if this.unit == "player" then
-      GameTooltip:SetPlayerBuff(GetPlayerBuff(PLAYER_BUFF_START_ID+this.id,this.type))
+      GameTooltip:SetPlayerBuff(pfUI.api.GetPlayerBuffX(this.id,this.type))
     elseif this.type == "HARMFUL" then
       GameTooltip:SetUnitDebuff(this.unit, this.id)
     elseif this.type == "HELPFUL" then

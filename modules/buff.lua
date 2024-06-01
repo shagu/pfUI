@@ -17,7 +17,7 @@ pfUI:RegisterModule("buff", "vanilla:tbc", function ()
     else
       buff.id = buff.gid
     end
-    buff.bid = GetPlayerBuff(PLAYER_BUFF_START_ID+buff.id, buff.btype)
+    buff.bid = pfUI.api.GetPlayerBuffX(buff.id, buff.btype)
 
     if not buff.backdrop then
       CreateBackdrop(buff)
