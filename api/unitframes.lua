@@ -127,8 +127,9 @@ local function DebuffOnUpdate()
   end
 
   this.tick = now + .2
-  local timeleft = GetPlayerBuffTimeLeft(pfUI.api.GetPlayerBuffX(this.id,"HARMFUL"))
-  local texture = GetPlayerBuffTexture(pfUI.api.GetPlayerBuffX(this.id,"HARMFUL"))
+  local bid = pfUI.api.GetPlayerBuffX(this.id,"HARMFUL")
+  local timeleft = GetPlayerBuffTimeLeft(bid)
+  local texture = GetPlayerBuffTexture(bid)
   local start = 0
 
   if timeleft > 0 then
