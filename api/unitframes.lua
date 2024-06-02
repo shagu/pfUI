@@ -1556,6 +1556,7 @@ function pfUI.uf:RefreshUnit(unit, component)
       reposition = true
     end
 
+    local bid
     for i=1, unit.config.debufflimit do
       if not unit.debuffs[i] then break end
 
@@ -1568,9 +1569,10 @@ function pfUI.uf:RefreshUnit(unit, component)
       end
 
       if unit.label == "player" then
-        texture = GetPlayerBuffTexture(pfUI.api.GetPlayerBuffX(i, "HARMFUL"))
-        stacks = GetPlayerBuffApplications(pfUI.api.GetPlayerBuffX(i, "HARMFUL"))
-        dtype = GetPlayerBuffDispelType(pfUI.api.GetPlayerBuffX(i, "HARMFUL"))
+        bid = pfUI.api.GetPlayerBuffX(i, "HARMFUL")
+        texture = GetPlayerBuffTexture(bid)
+        stacks = GetPlayerBuffApplications(bid)
+        dtype = GetPlayerBuffDispelType(bid)
       else
         texture, stacks, dtype = UnitDebuff(unitstr, i)
       end
