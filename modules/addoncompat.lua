@@ -136,7 +136,12 @@ pfUI:RegisterModule("addoncompat", function ()
   local delay = CreateFrame("Frame")
   delay:SetScript("OnUpdate", function()
     -- throttle to to one query per .1 second
-    if ( this.tick or 1) > GetTime() then return else this.tick = GetTime() + .1 end
+    local now = GetTime()
+    if (this.tick or 1) > now then
+      return
+    end
+
+    this.tick = now + .1
 
     -- make sure the firstrun dialog has finished
     if pfUI.firstrun and pfUI.firstrun.steps then

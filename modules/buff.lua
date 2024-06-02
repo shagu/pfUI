@@ -120,9 +120,10 @@ pfUI:RegisterModule("buff", "vanilla:tbc", function ()
     buff.gid = i
 
     buff:SetScript("OnUpdate", function()
-      if not this.next then this.next = GetTime() + .1 end
-      if this.next > GetTime() then return end
-      this.next = GetTime() + .1
+      local now = GetTime()
+      if not this.next then this.next = now + .1 end
+      if this.next > now then return end
+      this.next = now + .1
 
       local timeleft = 0
       local stacks = 0

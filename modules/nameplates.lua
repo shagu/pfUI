@@ -138,11 +138,13 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
   local function PlateCacheDebuffs(self, unitstr, verify)
     if not self.debuffcache then self.debuffcache = {} end
 
+    local now
     for id = 1, 16 do
       local effect, _, texture, stacks, _, duration, timeleft = libdebuff:UnitDebuff(unitstr, id)
       if effect and timeleft then
-        local start = GetTime() - ( (duration or 0) - ( timeleft or 0) )
-        local stop = GetTime() + ( timeleft or 0 )
+        now = now or GetTime()
+        local start = now - ( (duration or 0) - ( timeleft or 0) )
+        local stop = now + ( timeleft or 0 )
         self.debuffcache[id] = self.debuffcache[id] or {}
         self.debuffcache[id].effect = effect
         self.debuffcache[id].texture = texture
@@ -684,6 +686,7 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
       end
 
       -- update all debuff icons
+      local now
       for i = 1, 16 do
         local effect, rank, texture, stacks, dtype, duration, timeleft
         if unitstr then
@@ -712,7 +715,8 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
           if duration and timeleft and debuffdurations then
             plate.debuffs[index].cd:SetAlpha(0)
             plate.debuffs[index].cd:Show()
-            CooldownFrame_SetTimer(plate.debuffs[index].cd, GetTime() + timeleft - duration, duration, 1)
+            now = now or GetTime()
+            CooldownFrame_SetTimer(plate.debuffs[index].cd, now + timeleft - duration, duration, 1)
           end
 
           index = index + 1
@@ -762,8 +766,9 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     end
 
     -- use timer based updates
-    if not nameplate.tick or nameplate.tick < GetTime() then
-      nameplate.tick = GetTime() + .2
+    local now = GetTime()
+    if not nameplate.tick or nameplate.tick < now then
+      nameplate.tick = now + .2
       update = true
     end
 
@@ -810,7 +815,7 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     if nameplate.debuffcache then
       -- delete timed out caches
       for id, data in pairs(nameplate.debuffcache) do
-        if not data.stop or data.stop < GetTime() then
+        if not data.stop or data.stop < now then
           nameplate.debuffcache[id] = nil
           trigger = true
         end
@@ -902,8 +907,8 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
       elseif cast then
         local duration = endTime - startTime
         nameplate.castbar:SetMinMaxValues(0,  duration/1000)
-        nameplate.castbar:SetValue(GetTime() - startTime/1000)
-        nameplate.castbar.text:SetText(round(startTime/1000 + duration/1000 - GetTime(),1))
+        nameplate.castbar:SetValue(now - startTime/1000)
+        nameplate.castbar.text:SetText(round(startTime/1000 + duration/1000 - now,1))
         if C.nameplates.spellname == "1" then
           nameplate.castbar.spell:SetText(cast)
         else

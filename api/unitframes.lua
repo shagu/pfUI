@@ -154,18 +154,26 @@ end
 local visibilityscan = CreateFrame("Frame", "pfUnitFrameVisibility", UIParent)
 visibilityscan.frames = {}
 visibilityscan:SetScript("OnUpdate", function()
-  if ( this.limit or 1) > GetTime() then return else this.limit = GetTime() + .2 end
-  for frame in pairs(this.frames) do frame:UpdateVisibility() end
+  local now = GetTime()
+  if (this.limit or 1) > GetTime() then
+    return
+  end
+
+  this.limit = now + .2
+  for frame in pairs(this.frames) do
+    frame:UpdateVisibility()
+  end
 end)
 
 local aggrodata = { }
 function pfUI.api.UnitHasAggro(unit)
-  if aggrodata[unit] and GetTime() < aggrodata[unit].check + 1 then
+  local now = GetTime()
+  if aggrodata[unit] and now < aggrodata[unit].check + 1 then
     return aggrodata[unit].state
   end
 
   aggrodata[unit] = aggrodata[unit] or { }
-  aggrodata[unit].check = GetTime()
+  aggrodata[unit].check = now
   aggrodata[unit].state = 0
 
   if UnitExists(unit) and UnitIsFriend(unit, "player") then
@@ -1057,11 +1065,13 @@ function pfUI.uf.OnUpdate()
   end
 
   -- trigger eventless actions (online/offline/range)
-  if not this.lastTick then this.lastTick = GetTime() + (this.tick or .2) end
-  if this.lastTick and this.lastTick < GetTime() then
+  local now = GetTime()
+  if not this.lastTick then this.lastTick = now + (this.tick or .2) end
+
+  if this.lastTick and this.lastTick < now then
     local unitstr = this.label .. this.id
 
-    this.lastTick = GetTime() + (this.tick or .2)
+    this.lastTick = now + (this.tick or .2)
 
     -- target target has a huge delay, make sure to not tick during range checks
     -- by waiting for a stable name over three ticks otherwise aborting the update.
@@ -1540,6 +1550,7 @@ function pfUI.uf:RefreshUnit(unit, component)
       reposition = true
     end
 
+    local now
     for i=1, unit.config.debufflimit do
       if not unit.debuffs[i] then break end
 
@@ -1572,11 +1583,13 @@ function pfUI.uf:RefreshUnit(unit, component)
 
         if unit:GetName() == "pfPlayer" then
           local timeleft = GetPlayerBuffTimeLeft(GetPlayerBuff(PLAYER_BUFF_START_ID+unit.debuffs[i].id, "HARMFUL"),"HARMFUL")
-          CooldownFrame_SetTimer(unit.debuffs[i].cd, GetTime(), timeleft, 1)
+          now = now or GetTime()          
+          CooldownFrame_SetTimer(unit.debuffs[i].cd, now, timeleft, 1)
         elseif libdebuff then
           local name, rank, texture, stacks, dtype, duration, timeleft = libdebuff:UnitDebuff(unitstr, i)
           if duration and timeleft then
-            CooldownFrame_SetTimer(unit.debuffs[i].cd, GetTime() + timeleft - duration, duration, 1)
+            now = now or GetTime()
+            CooldownFrame_SetTimer(unit.debuffs[i].cd, now + timeleft - duration, duration, 1)
           end
         end
 

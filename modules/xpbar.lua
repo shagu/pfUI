@@ -41,14 +41,16 @@ local function OnEnter(self)
   self:SetAlpha(1)
 
   if mode == "XP" then
+    local now = GetTime()
+    
     local xp, xpmax, exh = UnitXP("player"), UnitXPMax("player"), GetXPExhaustion()
     local xp_perc = round(xp / xpmax * 100)
     local remaining = xpmax - xp
     local remaining_perc = round(remaining / xpmax * 100)
     local exh_perc = GetXPExhaustion() and round(GetXPExhaustion() / xpmax * 100) or 0
-    local xp_persec = ((xp - data.startxp)/(GetTime() - data.starttime))
+    local xp_persec = ((xp - data.startxp)/(now - data.starttime))
     local session = UnitXP("player") - data.startxp
-    local avg_hour = floor(((UnitXP("player") - data.startxp) / (GetTime() - data.starttime)) * 60 * 60)
+    local avg_hour = floor(((UnitXP("player") - data.startxp) / (now - data.starttime)) * 60 * 60)
     local time_remaining = xp_persec > 0 and SecondsToTime(remaining/xp_persec) or 0
 
     -- fill gametooltip data
@@ -117,7 +119,13 @@ end
 
     if self.always then return end
     if self:GetAlpha() == 0 or MouseIsOver(self) then return end
-    if ( self.tick or 1) > GetTime() then return else self.tick = GetTime() + .01 end
+
+    local now = GetTime()
+    if (self.tick or 1) > now then
+      return
+    end
+
+    self.tick = now + .01
     self:SetAlpha(self:GetAlpha() - .05)
   end
 

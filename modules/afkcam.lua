@@ -163,7 +163,12 @@ pfUI:RegisterModule("afkcam", "vanilla:tbc", function ()
   end)
 
   delay:SetScript("OnUpdate", function()
-    if ( this.tick or 0) > GetTime() then return else this.tick = GetTime() + 1 end
+    local now = GetTime()
+    if (this.tick or 0) > now then
+      return      
+    end
+
+    this.tick = now + 1
 
     local name = UnitName("player")
     local cast = UnitCastingInfo(name)
@@ -171,10 +176,10 @@ pfUI:RegisterModule("afkcam", "vanilla:tbc", function ()
     if not this.delay then this.delay = 0 end
 
     if cast then
-      this.delay = GetTime() + 10
+      this.delay = now + 10
     end
 
-    if this.delay < GetTime() then
+    if this.delay < now then
       afkcam:start()
       this:Hide()
     end

@@ -19,7 +19,10 @@ pfUI:RegisterModule("totems", "vanilla:tbc", function ()
     -- there's no totem event in vanilla using ticks instead
     local eventemu = CreateFrame("Frame")
     eventemu:SetScript("OnUpdate", function()
-      if ( this.tick or 1) > GetTime() then return else this.tick = GetTime() + .5 end
+      local now = GetTime()
+      if (this.tick or 1) > now then return end
+
+      this.tick = now + .5
       totems:RefreshList()
     end)
   end

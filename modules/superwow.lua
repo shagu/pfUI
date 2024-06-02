@@ -7,7 +7,7 @@ pfUI:RegisterModule("superwow", "vanilla", function ()
     if arg3 == "START" or arg3 == "CAST" or arg3 == "CHANNEL" then
       -- human readable argument list
       local guid = arg1
-      local target = arg2
+      -- local target = arg2
       local event_type = arg3
       local spell_id = arg4
       local timer = arg5
@@ -27,7 +27,7 @@ pfUI:RegisterModule("superwow", "vanilla", function ()
       if not libcast.db[guid] then libcast.db[guid] = {} end
       libcast.db[guid].cast = spell
       libcast.db[guid].rank = nil
-      libcast.db[guid].start = GetTime()
+      libcast.db[guid].start = start
       libcast.db[guid].casttime = timer
       libcast.db[guid].icon = icon
       libcast.db[guid].channel = event_type == "CHANNEL" or false

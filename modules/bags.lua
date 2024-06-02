@@ -75,8 +75,13 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
   pfUI.bag.delay = { UpdateBag = {} }
 
   pfUI.bag:SetScript("OnUpdate", function()
-    -- update delayed ones every 0.1s
-    if ( this.tick or 1) > GetTime() then return else this.tick = GetTime() + .1 end
+    -- update delayed once every 0.1s
+    local now = GetTime()
+    if (this.tick or 1) > now then
+      return
+    end
+
+    this.tick = now + .1
 
     if this.delay.RefreshSpells then
       this.delay.RefreshSpells = nil

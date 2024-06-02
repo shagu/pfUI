@@ -14,8 +14,14 @@ pfUI:RegisterModule("hunterbar", "vanilla", function ()
   pfUI.hunterbar:SetScript("OnEvent", function()
     if event == "PLAYER_ENTERING_WORLD" then
       this.event = GetTime() + 3
-    elseif this.event and this.event < GetTime() + .2 then
-      this.event = GetTime() + .1
+      return
+    end
+    
+    if this.event then
+      local now = GetTime()
+      if this.event < now + .2 then
+        this.event = now + .1
+      end
     end
   end)
 

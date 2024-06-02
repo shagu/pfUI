@@ -1332,7 +1332,12 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
       -- info updater
       local f = CreateFrame("Frame", nil, this)
       f:SetScript("OnUpdate", function()
-        if ( this.tick or 0) > GetTime() then return else this.tick = GetTime() + 1 end
+        local now = GetTime()
+        if (this.tick or 0) > now then
+          return
+        end
+
+        this.tick = now + 1
 
         local parent = this:GetParent()
         local localversion  = tonumber(pfUI.version.major*10000 + pfUI.version.minor*100 + pfUI.version.fix)

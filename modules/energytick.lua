@@ -45,17 +45,20 @@ pfUI:RegisterModule("energytick", "vanilla:tbc", function ()
   end)
 
   energytick:SetScript("OnUpdate", function()
+    local now
     if this.target then
-      this.start, this.max = GetTime(), this.target
+      now = now or GetTime()
+      this.start, this.max = now, this.target
       this.target = nil
     end
 
     if not this.start then return end
 
-    this.current = GetTime() - this.start
+    now = now or GetTime()
+    this.current = now - this.start
 
     if this.current > this.max then
-      this.start, this.max, this.current = GetTime(), 2, 0
+      this.start, this.max, this.current = now, 2, 0
     end
 
     local pos = (C.unitframes.player.pwidth ~= "-1" and C.unitframes.player.pwidth or C.unitframes.player.width) * (this.current / this.max)

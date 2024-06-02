@@ -402,7 +402,12 @@ pfUI:RegisterModule("addonbuttons", "vanilla:tbc", function ()
   pfUI.addonbuttons.scanner = CreateFrame("Frame", "pfAddonButtonScanner", UIParent)
   pfUI.addonbuttons.scanner:SetScript("OnUpdate", function()
     -- throttle updates to once per 3 seconds
-    if ( this.tick or 1) > GetTime() then return else this.tick = GetTime() + 3 end
+    local now = GetTime()
+    if (this.tick or 1) > now then
+      return
+    end
+
+    this.tick = now + 3
 
     pfUI.addonbuttons:ProcessButtons()
     for k, v in pairs(pfUI.addonbuttons.overrides) do

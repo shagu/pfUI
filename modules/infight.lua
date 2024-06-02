@@ -1,7 +1,11 @@
 pfUI:RegisterModule("infight", "vanilla:tbc", function ()
   local function OnUpdate()
     if not this.infight and not this.aggro and not this.health then return end
-    if ( this.tick or 1) > GetTime() then return else this.tick = GetTime() + .1 end
+
+    local now = GetTime()
+    if (this.tick or 1) > now then return end
+
+    this.tick = now + .1
 
     if not this.fadeValue then  this.fadeValue = 1 end
     if this.fadeValue >= 0.3 then

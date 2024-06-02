@@ -45,13 +45,14 @@ pfUI:RegisterModule("roll", "vanilla:tbc", function ()
     local itemName = GetItemInfo(itemLink)
 
     -- delete obsolete tables
-    if pfUI.roll.cache[itemName] and pfUI.roll.cache[itemName]["TIMESTAMP"] < GetTime() - 60 then
+    local now = GetTime()
+    if pfUI.roll.cache[itemName] and pfUI.roll.cache[itemName]["TIMESTAMP"] < now - 60 then
       pfUI.roll.cache[itemName] = nil
     end
 
     -- initialize itemtable
     if not pfUI.roll.cache[itemName] then
-      pfUI.roll.cache[itemName] = { ["GREED"] = {}, ["NEED"] = {}, ["PASS"] = {}, ["TIMESTAMP"] = GetTime() }
+      pfUI.roll.cache[itemName] = { ["GREED"] = {}, ["NEED"] = {}, ["PASS"] = {}, ["TIMESTAMP"] = now }
     end
 
     -- ignore already listed names

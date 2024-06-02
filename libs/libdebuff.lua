@@ -251,23 +251,24 @@ function libdebuff:UnitDebuff(unit, id)
     effect = scanner:Line(1) or ""
   end
 
+  local now = GetTime()
   if libdebuff.objects[unitname] and libdebuff.objects[unitname][unitlevel] and libdebuff.objects[unitname][unitlevel][effect] then
     -- clean up cache
-    if libdebuff.objects[unitname][unitlevel][effect].duration and libdebuff.objects[unitname][unitlevel][effect].duration + libdebuff.objects[unitname][unitlevel][effect].start < GetTime() then
+    if libdebuff.objects[unitname][unitlevel][effect].duration and libdebuff.objects[unitname][unitlevel][effect].duration + libdebuff.objects[unitname][unitlevel][effect].start < now then
       libdebuff.objects[unitname][unitlevel][effect] = nil
     else
       duration = libdebuff.objects[unitname][unitlevel][effect].duration
-      timeleft = duration + libdebuff.objects[unitname][unitlevel][effect].start - GetTime()
+      timeleft = duration + libdebuff.objects[unitname][unitlevel][effect].start - now
     end
 
   -- no level data
   elseif libdebuff.objects[unitname] and libdebuff.objects[unitname][0] and libdebuff.objects[unitname][0][effect] then
     -- clean up cache
-    if libdebuff.objects[unitname][0][effect].duration and libdebuff.objects[unitname][0][effect].duration + libdebuff.objects[unitname][0][effect].start < GetTime() then
+    if libdebuff.objects[unitname][0][effect].duration and libdebuff.objects[unitname][0][effect].duration + libdebuff.objects[unitname][0][effect].start < now then
       libdebuff.objects[unitname][0][effect] = nil
     else
       duration = libdebuff.objects[unitname][0][effect].duration
-      timeleft = duration + libdebuff.objects[unitname][0][effect].start - GetTime()
+      timeleft = duration + libdebuff.objects[unitname][0][effect].start - now
     end
   end
 

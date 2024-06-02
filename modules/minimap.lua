@@ -109,7 +109,12 @@ pfUI:RegisterModule("minimap", "vanilla:tbc", function ()
   pfUI.minimapCoordinates = CreateFrame("Frame", "pfMinimapCoord", pfUI.minimap)
   pfUI.minimapCoordinates:SetScript("OnUpdate", function()
     -- update coords every 0.1 seconds
-    if ( this.tick or .1) > GetTime() then return else this.tick = GetTime() + .1 end
+    local now = GetTime()
+    if (this.tick or .1) > now then
+      return
+    end
+
+    this.tick = now + .1
 
     this.posX, this.posY = GetPlayerMapPosition("player")
     if this.posX ~= 0 and this.posY ~= 0 then

@@ -102,7 +102,9 @@ pfUI:RegisterModule("castbar", "vanilla:tbc", function ()
       if cast then
         local duration = endTime - startTime
         local max = duration / 1000
-        local cur = GetTime() - startTime / 1000
+
+        local now = GetTime()
+        local cur = now - startTime / 1000
 
         this:SetAlpha(1)
 
@@ -139,7 +141,7 @@ pfUI:RegisterModule("castbar", "vanilla:tbc", function ()
         end
 
         if channel then
-          cur = max + startTime/1000 - GetTime()
+          cur = max + startTime/1000 - now
         end
 
         cur = cur > max and max or cur

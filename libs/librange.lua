@@ -147,12 +147,13 @@ local target_event = TargetFrame_OnEvent
 local target_nop = function() return end
 
 librange:SetScript("OnUpdate", function()
-  if ( this.tick or 1) > GetTime() then
+  local now = GetTime()
+  if (this.tick or 1) > now then
     return
-  else
-    this.tick = GetTime() + this.interval
   end
 
+  this.tick = now + this.interval
+  
   -- skip invalid units
   while not this:NeedRangeScan(units[this.id]) and this.id <= numunits do
     this.id = this.id + 1

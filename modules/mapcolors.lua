@@ -2,8 +2,10 @@
 pfUI:RegisterModule("mapcolors", function ()
   pfUI.mapcolors = CreateFrame("Frame", nil, UIParent)
   pfUI.mapcolors:SetScript("OnUpdate", function()
-    -- throttle to to one item per .1 second
-    if ( this.tick or 1) > GetTime() then return else this.tick = GetTime() + .1 end
+    local now = GetTime() -- throttle to one item per .1 second
+    if (this.tick or 1) > now then return end
+
+    this.tick = now + .1
 
     local frame, icon
 

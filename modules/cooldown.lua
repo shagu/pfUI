@@ -20,16 +20,21 @@ pfUI:RegisterModule("cooldown", "vanilla:tbc", function ()
     end
 
     -- only run every 0.1 seconds from here on
-    if ( this.tick or .1) > GetTime() then return else this.tick = GetTime() + .1 end
+    local now = GetTime()
+    if (this.tick or .1) > now then
+      return
+    end
+
+    this.tick = now + .1
 
     -- fix own alpha value (should be inherited, but somehow isn't always)
     if this:GetAlpha() ~= parent:GetAlpha() then
       this:SetAlpha(parent:GetAlpha())
     end
 
-    if this.start < GetTime() then
+    if this.start < now then
       -- calculating remaining time as it should be
-      local remaining = this.duration - (GetTime() - this.start)
+      local remaining = this.duration - (now - this.start)
       if remaining >= 0 then
         this.text:SetText(GetColoredTimeString(remaining))
       else
@@ -39,7 +44,7 @@ pfUI:RegisterModule("cooldown", "vanilla:tbc", function ()
       -- I have absolutely no idea, but it works:
       -- https://github.com/Stanzilla/WoWUIBugs/issues/47
       local time = time()
-      local startupTime = time - GetTime()
+      local startupTime = time - GetTime() --better not to use the variable 'now' here
       -- just a simplification of: ((2^32) - (start * 1000)) / 1000
       local cdTime = (2 ^ 32) / 1000 - this.start
       local cdStartTime = startupTime - cdTime

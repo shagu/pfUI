@@ -59,7 +59,12 @@ pfUI:RegisterModule("panel", "vanilla:tbc", function()
         end
       end
       widget:SetScript("OnUpdate",function()
-        if ( this.tick or 1) > GetTime() then return else this.tick = GetTime() + 1 end
+        local now = GetTime()
+        if (this.tick or 1) > now then
+          return
+        end
+
+        this.tick = now + 1
 
         local h, m = GetGameTime()
         local noon = "AM"
@@ -96,8 +101,9 @@ pfUI:RegisterModule("panel", "vanilla:tbc", function()
       widget.timerFrame.text:SetFont(font, font_size, "OUTLINE")
       widget.timerFrame.text:SetAllPoints(widget.timerFrame)
       widget.timerFrame:SetScript("OnUpdate", function()
-          if not widget.timerFrame.Snapshot then widget.timerFrame.Snapshot = GetTime() end
-          widget.timerFrame.curTime = SecondsToTime(floor(GetTime() - widget.timerFrame.Snapshot))
+          local now = GetTime()
+          if not widget.timerFrame.Snapshot then widget.timerFrame.Snapshot = now end
+          widget.timerFrame.curTime = SecondsToTime(floor(now - widget.timerFrame.Snapshot))
           if widget.timerFrame.curTime ~= "" then
             widget.timerFrame.text:SetText("|c33cccccc" .. widget.timerFrame.curTime)
           else
@@ -128,10 +134,11 @@ pfUI:RegisterModule("panel", "vanilla:tbc", function()
         end
       end)
       widget.combat:SetScript("OnUpdate", function()
-        if not this.tick then this.tick = GetTime() end
-        if GetTime() <= this.tick + 1 then return else this.tick = GetTime() end
+        local now = GetTime()
+        if not this.tick then this.tick = now end
+        if now <= this.tick + 1 then return else this.tick = now end
         if this.combat then
-          pfUI.panel:OutputPanel("combat", "|cffffaaaa" .. SecondsToTime(ceil(GetTime() - this.combat)))
+          pfUI.panel:OutputPanel("combat", "|cffffaaaa" .. SecondsToTime(ceil(now - this.combat)))
         end
       end)
     end
