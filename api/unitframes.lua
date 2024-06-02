@@ -1556,11 +1556,11 @@ function pfUI.uf:RefreshUnit(unit, component)
       reposition = true
     end
 
-    local bid
+    local row, bid
     for i=1, unit.config.debufflimit do
       if not unit.debuffs[i] then break end
 
-      local row = floor((i-1) / unit.config.debuffperrow)
+      row = floor((i-1) / unit.config.debuffperrow)
 
       if reposition then
         unit.debuffs[i]:SetPoint(af, unit, unit.config.debuffs,
