@@ -115,7 +115,12 @@ pfUI:RegisterModule("easteregg", "vanilla:tbc", function ()
       local r,g,b = this.text:GetTextColor()
       this.text:SetTextColor(r+(math.random()-.5)/10, g+(math.random()-.5)/10, b+(math.random()-.5)/10,1)
 
-      if ( this.tick or 1) > GetTime() then return else this.tick = GetTime() + math.random() - .2 end
+      local now = GetTime()
+      if (this.tick or 1) > now then
+        return
+      end
+
+      this.tick = now + math.random() - .2
 
       local x,y = math.random(1, width), -1*math.random(1,height)
 
