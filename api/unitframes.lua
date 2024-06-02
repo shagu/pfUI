@@ -121,7 +121,12 @@ local function BuffOnClick()
 end
 
 local function DebuffOnUpdate()
-  if ( this.tick or 1) > GetTime() then return else this.tick = GetTime() + .2 end
+  local now = GetTime()
+  if (this.tick or 1) > now then
+    return
+  end
+
+  this.tick = now + .2
   local timeleft = GetPlayerBuffTimeLeft(pfUI.api.GetPlayerBuffX(this.id,"HARMFUL"))
   local texture = GetPlayerBuffTexture(pfUI.api.GetPlayerBuffX(this.id,"HARMFUL"))
   local start = 0
@@ -132,7 +137,8 @@ local function DebuffOnUpdate()
     elseif maxdurations[texture] and maxdurations[texture] < timeleft then
       maxdurations[texture] = timeleft
     end
-    start = GetTime() + timeleft - maxdurations[texture]
+
+    start = now + timeleft - maxdurations[texture]
   end
 
   CooldownFrame_SetTimer(this.cd, start, maxdurations[texture], timeleft > 0 and 1 or 0)
