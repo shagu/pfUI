@@ -155,7 +155,7 @@ local visibilityscan = CreateFrame("Frame", "pfUnitFrameVisibility", UIParent)
 visibilityscan.frames = {}
 visibilityscan:SetScript("OnUpdate", function()
   local now = GetTime()
-  if (this.limit or 1) > GetTime() then
+  if (this.limit or 1) > now then
     return
   end
 
