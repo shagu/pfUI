@@ -1198,10 +1198,11 @@ function pfUI.api.CreateInfoBox(text, time, parent, height)
     infobox:Hide()
 
     infobox:SetScript("OnUpdate", function()
-      local time = infobox.lastshow + infobox.duration - GetTime()
+      local now = GetTime()
+      local time = infobox.lastshow + infobox.duration - now
       infobox.timeout:SetValue(time)
 
-      if GetTime() > infobox.lastshow + infobox.duration then
+      if now > infobox.lastshow + infobox.duration then
         infobox:SetAlpha(infobox:GetAlpha()-0.05)
 
         if infobox:GetAlpha() <= 0.1 then
