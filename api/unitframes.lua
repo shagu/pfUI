@@ -1489,14 +1489,15 @@ function pfUI.uf:RefreshUnit(unit, component)
 
   -- Buffs
   if unit.buffs and ( component == "all" or component == "aura" ) then
-    local texture, stacks
+    local texture, stacks, bid
 
     for i=1, unit.config.bufflimit do
       if not unit.buffs[i] then break end
 
       if unit.label == "player" then
-        stacks = GetPlayerBuffApplications(pfUI.api.GetPlayerBuffX(i,"HELPFUL"))
-        texture = GetPlayerBuffTexture(pfUI.api.GetPlayerBuffX(i,"HELPFUL"))
+        bid = pfUI.api.GetPlayerBuffX(i,"HELPFUL")
+        stacks = GetPlayerBuffApplications(bid)
+        texture = GetPlayerBuffTexture(bid)
       else
         texture, stacks = pfUI.uf:DetectBuff(unitstr, i)
       end
