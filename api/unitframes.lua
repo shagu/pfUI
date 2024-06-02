@@ -33,8 +33,10 @@ local function BuffOnUpdate()
   end
 
   this.tick = now + .2
-  local timeleft = GetPlayerBuffTimeLeft(pfUI.api.GetPlayerBuffX(this.id,"HELPFUL"))
-  local texture = GetPlayerBuffTexture(pfUI.api.GetPlayerBuffX(this.id,"HELPFUL"))
+  
+  local bid = pfUI.api.GetPlayerBuffX(this.id,"HELPFUL")
+  local timeleft = GetPlayerBuffTimeLeft(bid)
+  local texture = GetPlayerBuffTexture(bid)
   local start = 0
 
   if timeleft > 0 then
