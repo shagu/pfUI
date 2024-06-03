@@ -374,13 +374,12 @@ libcast.customcast[strlower(multishot)] = function(begin, duration)
 end
 
 local function CastCustom(id, bookType, rawSpellName)
-  if not rawSpellName or GetSpellCooldown(id, bookType) == 0 then return end
-  
-  if not UnitCastingInfo(UnitName("player")) then
-    for custom, func in pairs(libcast.customcast) do
-      if strfind(strlower(rawSpellName), custom) or strlower(rawSpellName) == custom then
-        func(true)
-      end
+  if not rawSpellName or GetSpellCooldown(id, bookType) == 0 or UnitCastingInfo(player) then return end -- detect casting
+
+  rawSpellName = strlower(rawSpellName)
+  for custom, func in pairs(libcast.customcast) do
+    if strfind(rawSpellName, custom) or strlower(rawSpellName) == custom then
+      func(true)
     end
   end
 end
