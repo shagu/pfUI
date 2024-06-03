@@ -380,6 +380,7 @@ local function CastCustom(id, bookType, rawSpellName)
   for custom, func in pairs(libcast.customcast) do
     if strfind(rawSpellName, custom) ~= nil then
       func(true)
+      return
     end
   end
 end
