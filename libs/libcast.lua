@@ -406,13 +406,7 @@ hooksecurefunc("CastSpellByName", function(spellCasted, target)
   lastrank = rank
   lastcasttex = texture
 
-  for i=1,120 do
-    -- detect if any cast is ongoing
-    if IsCurrentAction(i) then
-      CastCustom(cachedId, cachedBookType, rawSpellName)
-      return
-    end
-  end
+  CastCustom(cachedId, cachedBookType, rawSpellName)
 end, true)
 
 hooksecurefunc("UseAction", function(slot, target, button)
