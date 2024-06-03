@@ -378,7 +378,7 @@ local function CastCustom(id, bookType, rawSpellName)
 
   rawSpellName = strlower(rawSpellName)
   for custom, func in pairs(libcast.customcast) do
-    if strfind(rawSpellName, custom) or strlower(rawSpellName) == custom then
+    if strfind(rawSpellName, custom) ~= nil then
       func(true)
     end
   end
