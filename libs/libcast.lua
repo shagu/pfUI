@@ -390,23 +390,23 @@ hooksecurefunc("UseContainerItem", function(id, index)
 end)
 
 hooksecurefunc("CastSpell", function(id, bookType)
-  local rawSpellName, rank, texture, _, _, _, cachedId, cachedBookType = libspell.GetSpellInfo(id, bookType)
-  if not rawSpellName or not cachedId then return end -- ignore if the spell is not found
+  local cachedRawSpellName, cachedRank, cachedTexture, _, _, _, cachedSpellId, cachedBookType = libspell.GetSpellInfo(id, bookType)
+  if not cachedRawSpellName or not cachedSpellId then return end -- ignore if the spell is not found
 
-  lastrank = rank
-  lastcasttex = texture
+  lastrank = cachedRank
+  lastcasttex = cachedTexture
 
-  CastCustom(cachedId, cachedBookType, rawSpellName)
+  CastCustom(cachedSpellId, cachedBookType, cachedRawSpellName)
 end, true)
 
 hooksecurefunc("CastSpellByName", function(spellCasted, target)
-  local rawSpellName, rank, texture, _, _, _, cachedId, cachedBookType = libspell.GetSpellInfo(spellCasted)
-  if not rawSpellName or not cachedId then return end -- ignore if the spell is not found
+  local cachedRawSpellName, cachedRank, cachedTexture, _, _, _, cachedSpellId, cachedBookType = libspell.GetSpellInfo(spellCasted)
+  if not cachedRawSpellName or not cachedSpellId then return end -- ignore if the spell is not found
 
-  lastrank = rank
-  lastcasttex = texture
+  lastrank = cachedRank
+  lastcasttex = cachedTexture
 
-  CastCustom(cachedId, cachedBookType, rawSpellName)
+  CastCustom(cachedSpellId, cachedBookType, cachedRawSpellName)
 end, true)
 
 hooksecurefunc("UseAction", function(slot, target, button)
