@@ -375,14 +375,11 @@ end
 
 local function CastCustom(id, bookType, rawSpellName)
   if not rawSpellName or GetSpellCooldown(id, bookType) == 0 or UnitCastingInfo(player) then return end -- detect casting
+  
+  local func = libcast.customcast[strlower(rawSpellName)]
+  if not func then return end
 
-  rawSpellName = strlower(rawSpellName)
-  for custom, func in pairs(libcast.customcast) do
-    if strfind(rawSpellName, custom) ~= nil then
-      func(true)
-      return
-    end
-  end
+  func(true)  
 end
 
 hooksecurefunc("UseContainerItem", function(id, index)
