@@ -1,49 +1,86 @@
 -- adds class colored circles on world and battlefield map
 pfUI:RegisterModule("mapcolors", function ()
+  local button_cache = {}
   local function Initialize(unit_button_name)
     local texture_size = tonumber(C.appearance.worldmap.groupcircles)
     for i=1, MAX_PARTY_MEMBERS do
-      local frame = _G[unit_button_name.."Party"..i]
-      frame.icon = _G[unit_button_name.."Party"..i.."Icon"]
+      local frame_name = unit_button_name.."Party"..i
+      local frame = _G[frame_name]
+      frame.icon = _G[frame_name.."Icon"]
       frame.icon:SetTexture(pfUI.media["img:circleparty"])
       frame.icon:SetVertexColor(.5, 1, .5)
       SetAllPointsOffset(frame.icon, frame, texture_size, -texture_size)
+      -- populate cache to default values
+      button_cache[frame_name] = {
+        r = .5, g = 1, b = .5
+      }
     end
     for i=1, MAX_RAID_MEMBERS do
-      local frame = _G[unit_button_name.."Raid"..i]
-      frame.icon = _G[unit_button_name.."Raid"..i.."Icon"]
+      local frame_name = unit_button_name.."Raid"..i
+      local frame = _G[frame_name]
+      frame.icon = _G[frame_name.."Icon"]
       frame.icon:SetTexture(pfUI.media["img:circleraid"])
       frame.icon:SetVertexColor(.5, 1, .5)
       SetAllPointsOffset(frame.icon, frame, texture_size, -texture_size)
+      -- populate cache to default values
+      button_cache[frame_name] = {
+        inParty = false,
+        r = .5, g = 1, b = .5
+      }
     end
   end
-  local function UpdateTexture(frame)
-    if UnitInParty(frame.unit) then
-      frame.icon:SetTexture(pfUI.media["img:circleparty"])
-    else
-      frame.icon:SetTexture(pfUI.media["img:circleraid"])
-    end
-  end
-  local function UpdateTextureColor(frame)
+  local function GetTextureColor(frame)
     if UnitExists(frame.unit) then
       local _, class = UnitClass(frame.unit)
       local color = RAID_CLASS_COLORS[class]
-      frame.icon:SetVertexColor(color.r, color.g, color.b)
+      return color.r, color.g, color.b
     else
-      frame.icon:SetVertexColor(.5, 1, .5)
+      return .5, 1, .5
     end
+  end
+  local function UpdateTexture(frame, inParty)
+    print('UpdateTexture', frame:GetName(), frame.unit, UnitName(frame.unit), UnitClass(frame.unit), inParty)
+    if inParty then
+      frame.icon:SetTexture(pfUI.media["img:circleparty"])
+    else
+      frame.icon:SetTexture(pfUI.media["img:circleraid"])
+    end
+  end
+  local function UpdateTextureColor(frame, r, g, b)
+    print('UpdateTextureColor', frame:GetName(), frame.unit, UnitName(frame.unit), UnitClass(frame.unit), r, g, b)
+    frame.icon:SetVertexColor(r, g, b)
   end
   local function UpdateUnitFrames(unit_button_name)
     if GetNumRaidMembers() > 0 then
       for i=1, MAX_RAID_MEMBERS do
-        local frame = _G[unit_button_name.."Raid"..i]
-        UpdateTexture(frame)
-        UpdateTextureColor(frame)
+        local frame_name = unit_button_name.."Raid"..i
+        local frame = _G[frame_name]
+        local cache = button_cache[frame_name]
+        if frame.unit then
+          local inParty = UnitInParty(frame.unit)
+          if inParty ~= cache.inParty then
+            cache.inParty = inParty
+            UpdateTexture(frame, cache.inParty)
+          end
+          local r, g, b = GetTextureColor(frame)
+          if r ~= cache.r or g ~= cache.g or b ~= cache.b then
+            cache.r, cache.g, cache.b = r, g, b
+            UpdateTextureColor(frame, cache.r, cache.g, cache.b)
+          end
+        end
       end
     elseif GetNumPartyMembers() > 0 then
       for i=1, MAX_PARTY_MEMBERS do
-        local frame = _G[unit_button_name.."Party"..i]
-        UpdateTextureColor(frame)
+        local frame_name = unit_button_name.."Party"..i
+        local frame = _G[frame_name]
+        local cache = button_cache[frame_name]
+        if frame.unit then
+          local r, g, b = GetTextureColor(frame)
+          if r ~= cache.r or g ~= cache.g or b ~= cache.b then
+            cache.r, cache.g, cache.b = r, g, b
+            UpdateTextureColor(frame, cache.r, cache.g, cache.b)
+          end
+        end
       end
     end
   end
@@ -85,10 +122,14 @@ pfUI:RegisterModule("mapcolors", function ()
   -- WorldMap
   Initialize('WorldMap')
   hooksecurefunc('WorldMapButton_OnUpdate', function()
+    -- throttle to to one item per 1 second
+    if ( this.tick or .5) > GetTime() then return else this.tick = GetTime() + .5 end
     UpdateUnitFrames('WorldMap')
   end)
   if C.appearance.worldmap.colornames == "1" then
     hooksecurefunc('WorldMapUnit_OnEnter', function()
+      -- throttle to to one item per 1 second
+      if ( this.tick or .5) > GetTime() then return else this.tick = GetTime() + .5 end
       UpdateUnitColors('WorldMap', WorldMapTooltip)
     end)
   end
@@ -96,10 +137,14 @@ pfUI:RegisterModule("mapcolors", function ()
   HookAddonOrVariable("Blizzard_BattlefieldMinimap", function()
     Initialize('BattlefieldMinimap')
     hooksecurefunc('BattlefieldMinimap_OnUpdate', function()
+      -- throttle to to one item per 1 second
+      if ( this.tick or .5) > GetTime() then return else this.tick = GetTime() + .5 end
       UpdateUnitFrames('BattlefieldMinimap')
     end)
     if C.appearance.worldmap.colornames == "1" then
       hooksecurefunc('BattlefieldMinimapUnit_OnEnter', function()
+        -- throttle to to one item per 1 second
+        if ( this.tick or .5) > GetTime() then return else this.tick = GetTime() + .5 end
         UpdateUnitColors('BattlefieldMinimap', GameTooltip)
       end)
     end
