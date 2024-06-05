@@ -378,13 +378,13 @@ local function CastCustom(id, bookType, rawSpellName, rank, texture, castingTime
 
   lastrank = rank
   lastcasttex = texture
-  
-  if GetSpellCooldown(id, bookType) == 0 or UnitCastingInfo("player") then return end -- detect casting
-  
+
   local func = libcast.customcast[strlower(rawSpellName)]
   if not func then return end
 
-  func(true)  
+  if GetSpellCooldown(id, bookType) == 0 or UnitCastingInfo(player) then return end -- detect casting
+
+  func(true)
 end
 
 hooksecurefunc("UseContainerItem", function(id, index)
