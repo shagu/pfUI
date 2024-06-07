@@ -27,7 +27,7 @@ FRIENDS_NAME_LOCATION = "ButtonTextLocation"
 COOLDOWN_FRAME_TYPE = "Cooldown"
 LOOT_BUTTON_FRAME_TYPE = "Button"
 
-PLAYER_BUFF_START_ID = 0
+PLAYER_BUFF_START_ID = 0 -- deprecated   kept around for 3rd party addons that might rely on it   should be removed completely in the future
 
 ACTIONBAR_SECURE_TEMPLATE_BAR = "SecureStateHeaderTemplate"
 ACTIONBAR_SECURE_TEMPLATE_BUTTON = "SecureActionButtonTemplate"

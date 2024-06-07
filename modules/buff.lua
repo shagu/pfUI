@@ -17,7 +17,7 @@ pfUI:RegisterModule("buff", "vanilla:tbc", function ()
     else
       buff.id = buff.gid
     end
-    buff.bid = GetPlayerBuff(PLAYER_BUFF_START_ID+buff.id, buff.btype)
+    buff.bid = pfUI.api.GetPlayerBuffX(buff.id, buff.btype)
 
     if not buff.backdrop then
       CreateBackdrop(buff)
@@ -209,19 +209,6 @@ pfUI:RegisterModule("buff", "vanilla:tbc", function ()
     RefreshBuffButton(buff)
 
     return buff
-  end
-
-  local function GetNumBuffs()
-    local mh, mhtime, mhcharge, oh, ohtime, ohcharge = GetWeaponEnchantInfo()
-    local offset = (mh and 1 or 0) + (oh and 1 or 0)
-
-    for i=1,32 do
-      local bid, untilCancelled = GetPlayerBuff(PLAYER_BUFF_START_ID+i, "HELPFUL")
-      if bid < 0 then
-        return i - 1 + offset
-      end
-    end
-    return 0 + offset
   end
 
   pfUI.buff = CreateFrame("Frame", "pfGlobalBuffFrame", UIParent)

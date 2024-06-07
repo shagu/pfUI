@@ -27,13 +27,14 @@ FRIENDS_NAME_LOCATION = "ButtonTextNameLocation"
 COOLDOWN_FRAME_TYPE = "Model"
 LOOT_BUTTON_FRAME_TYPE = "LootButton"
 
-PLAYER_BUFF_START_ID = -1
+PLAYER_BUFF_START_ID = -1  -- deprecated   kept around for 3rd party addons that might rely on it   should be removed completely in the future
 
 ACTIONBAR_SECURE_TEMPLATE_BAR = nil
 ACTIONBAR_SECURE_TEMPLATE_BUTTON = nil
 UNITFRAME_SECURE_TEMPLATE = nil
 
 --[[ Vanilla API Extensions ]]--
+
 function hooksecurefunc(name, func, append)
   if not _G[name] then return end
 
