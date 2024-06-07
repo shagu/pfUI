@@ -46,8 +46,8 @@ end
 -- return:      [number],[string]   spell index and spellbook id
 local spellindex = {}
 function libspell.GetSpellIndex(name, rank)
-  local name = string.lower(name)
-  local cache = spellindex[name..(rank or "")]
+  name = string.lower(name)
+  local cache = spellindex[name..(rank and ("("..rank..")") or "")]
   if cache then return cache[1], cache[2] end
 
   if not rank then rank = libspell.GetSpellMaxRank(name) end
@@ -58,7 +58,7 @@ function libspell.GetSpellIndex(name, rank)
     for id = offset + 1, offset + num do
       local spellName, spellRank = GetSpellName(id, bookType)
       if rank and rank == spellRank and name == string.lower(spellName) then
-        spellindex[name..rank] = { id, bookType }
+        spellindex[name.."("..rank..")"] = { id, bookType }
         return id, bookType
       elseif not rank and name == string.lower(spellName) then
         spellindex[name] = { id, bookType }
@@ -67,7 +67,7 @@ function libspell.GetSpellIndex(name, rank)
     end
   end
 
-  spellindex[name..(rank or "")] = { nil }
+  spellindex[name..(rank and ("("..rank..")") or "")] = { nil }
   return nil
 end
 
