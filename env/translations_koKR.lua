@@ -119,6 +119,7 @@ pfUI_translation["koKR"] = {
   ["Close"] = "닫기",
   ["Color Buff Stacks"] = nil,
   ["Color Debuff Stacks"] = nil,
+  ["Colorize player name on WorldMap and BattlefieldMinimap"] = nil,
   ["Colorize Unknown Classes"] = nil,
   ["Colors"] = nil,
   ["Combat"] = "전투",
