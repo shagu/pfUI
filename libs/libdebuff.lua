@@ -230,9 +230,9 @@ end, true)
 hooksecurefunc("UseAction", function(slot, target, button)
   if GetActionText(slot) or not IsCurrentAction(slot) then return end
   scanner:SetAction(slot)
-  local effect, rank = scanner:Line(1)
-  local duration = libdebuff:GetDuration(effect, rank)
-  libdebuff:AddPending(UnitName("target"), UnitLevel("target"), effect, duration)
+  local rawEffect, rank = scanner:Line(1)
+  local duration = libdebuff:GetDuration(rawEffect, rank)
+  libdebuff:AddPending(UnitName("target"), UnitLevel("target"), rawEffect, duration)
 end, true)
 
 function libdebuff:UnitDebuff(unit, id)
