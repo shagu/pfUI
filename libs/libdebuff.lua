@@ -218,16 +218,15 @@ end)
 
 -- Gather Data by User Actions
 hooksecurefunc("CastSpell", function(id, bookType)
-  local effect = GetSpellName(id, bookType)
-  local _, rank = libspell.GetSpellInfo(id, bookType)
-  local duration = libdebuff:GetDuration(effect, rank)
-  libdebuff:AddPending(UnitName("target"), UnitLevel("target"), effect, duration)
+  local rawEffect, rank = libspell.GetSpellInfo(id, bookType)
+  local duration = libdebuff:GetDuration(rawEffect, rank)
+  libdebuff:AddPending(UnitName("target"), UnitLevel("target"), rawEffect, duration)
 end, true)
 
 hooksecurefunc("CastSpellByName", function(effect, target)
-  local _, rank = libspell.GetSpellInfo(effect)
-  local duration = libdebuff:GetDuration(effect, rank)
-  libdebuff:AddPending(UnitName("target"), UnitLevel("target"), effect, duration)
+  local rawEffect, rank = libspell.GetSpellInfo(effect)
+  local duration = libdebuff:GetDuration(rawEffect, rank)
+  libdebuff:AddPending(UnitName("target"), UnitLevel("target"), rawEffect, duration)
 end, true)
 
 hooksecurefunc("UseAction", function(slot, target, button)
