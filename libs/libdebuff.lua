@@ -75,15 +75,13 @@ function libdebuff:UpdateUnits()
 end
 
 function libdebuff:AddPending(unit, unitlevel, effect, duration)
-  if not unit then return end
-  if not L["debuffs"][effect] then return end
+  if not unit or duration <= 0 then return end
+  if not L["debuffs"][effect] or libdebuff.pending[3] == effect then return end
 
-  if duration > 0 and libdebuff.pending[3] ~= effect then
-    libdebuff.pending[1] = unit
-    libdebuff.pending[2] = unitlevel or 0
-    libdebuff.pending[3] = effect
-    libdebuff.pending[4] = duration or libdebuff:GetDuration(effect)
-  end
+  libdebuff.pending[1] = unit
+  libdebuff.pending[2] = unitlevel or 0
+  libdebuff.pending[3] = effect
+  libdebuff.pending[4] = duration -- or libdebuff:GetDuration(effect)
 end
 
 function libdebuff:RemovePending()
