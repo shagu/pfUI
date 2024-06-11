@@ -75,15 +75,13 @@ function libdebuff:UpdateUnits()
 end
 
 function libdebuff:AddPending(unit, unitlevel, effect, duration)
-  if not unit then return end
-  if not L["debuffs"][effect] then return end
+  if not unit or duration <= 0 then return end
+  if not L["debuffs"][effect] or libdebuff.pending[3] == effect then return end
 
-  if duration > 0 and libdebuff.pending[3] ~= effect then
-    libdebuff.pending[1] = unit
-    libdebuff.pending[2] = unitlevel or 0
-    libdebuff.pending[3] = effect
-    libdebuff.pending[4] = duration or libdebuff:GetDuration(effect)
-  end
+  libdebuff.pending[1] = unit
+  libdebuff.pending[2] = unitlevel or 0
+  libdebuff.pending[3] = effect
+  libdebuff.pending[4] = duration -- or libdebuff:GetDuration(effect)
 end
 
 function libdebuff:RemovePending()
@@ -218,24 +216,23 @@ end)
 
 -- Gather Data by User Actions
 hooksecurefunc("CastSpell", function(id, bookType)
-  local effect = GetSpellName(id, bookType)
-  local _, rank = libspell.GetSpellInfo(id, bookType)
-  local duration = libdebuff:GetDuration(effect, rank)
-  libdebuff:AddPending(UnitName("target"), UnitLevel("target"), effect, duration)
+  local rawEffect, rank = libspell.GetSpellInfo(id, bookType)
+  local duration = libdebuff:GetDuration(rawEffect, rank)
+  libdebuff:AddPending(UnitName("target"), UnitLevel("target"), rawEffect, duration)
 end, true)
 
 hooksecurefunc("CastSpellByName", function(effect, target)
-  local _, rank = libspell.GetSpellInfo(effect)
-  local duration = libdebuff:GetDuration(effect, rank)
-  libdebuff:AddPending(UnitName("target"), UnitLevel("target"), effect, duration)
+  local rawEffect, rank = libspell.GetSpellInfo(effect)
+  local duration = libdebuff:GetDuration(rawEffect, rank)
+  libdebuff:AddPending(UnitName("target"), UnitLevel("target"), rawEffect, duration)
 end, true)
 
 hooksecurefunc("UseAction", function(slot, target, button)
   if GetActionText(slot) or not IsCurrentAction(slot) then return end
   scanner:SetAction(slot)
-  local effect, rank = scanner:Line(1)
-  local duration = libdebuff:GetDuration(effect, rank)
-  libdebuff:AddPending(UnitName("target"), UnitLevel("target"), effect, duration)
+  local rawEffect, rank = scanner:Line(1)
+  local duration = libdebuff:GetDuration(rawEffect, rank)
+  libdebuff:AddPending(UnitName("target"), UnitLevel("target"), rawEffect, duration)
 end, true)
 
 function libdebuff:UnitDebuff(unit, id)
