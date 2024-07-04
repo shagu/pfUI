@@ -1001,18 +1001,25 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
           end
         end)
 
-        frame.keys:SetScript("OnLeave", function ()
-          for bag=-2, 11 do
-            local bagsize = GetContainerNumSlots(bag)
-            if bag == -2 and pfUI.bag.showKeyring == true then bagsize = GetKeyRingSize() end
-            for slot=1, bagsize do
-                pfUI.bags[bag].slots[slot].frame:SetAlpha(1)
-            end
+        frame.search.edit:SetScript("OnLeave", function()
+          if GetMouseFocus() ~= this then
+            this:ClearFocus()
           end
         end)
 
         frame.search:SetScript("OnHide", function()
           frame.search.edit:SetText(T["Search"])
+          for bag = -2, 11 do
+            if pfUI.bags[bag] then
+              local bagsize = GetContainerNumSlots(bag)
+              if bag == -2 and pfUI.bag.showKeyring == true then bagsize = GetKeyRingSize() end
+              for slot = 1, bagsize do
+                if pfUI.bags[bag] then
+                  pfUI.bags[bag].slots[slot].frame:SetAlpha(1)
+                end
+              end
+            end
+          end
         end)
 
         frame.search.edit:SetScript("OnTextChanged", function()
