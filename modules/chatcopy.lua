@@ -108,6 +108,9 @@ pfUI:RegisterModule("chatcopy", "vanilla:tbc", function ()
 
         editbox:SetScript("OnEscapePressed", function ()
           this:ClearFocus()
+          this:GetParent():Hide()
+          pfChatCopyButton.icon:SetTexture("Interface\\Buttons\\UI-GuildButton-PublicNote-Disabled")
+          pfChatCopyButton.state = false
         end)
 
         scroll:SetScrollChild(editbox)
