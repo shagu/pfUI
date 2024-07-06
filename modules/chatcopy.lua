@@ -106,19 +106,17 @@ pfUI:RegisterModule("chatcopy", "vanilla:tbc", function ()
         editbox:SetMultiLine(true)
         editbox:SetMaxLetters(0)
 
-        local textHasBeenFocused = false
-
         editbox:SetScript("OnMouseDown", function()
-          textHasBeenFocused = true
+          editbox.hasFocus = true
         end)
 
         editbox:SetScript("OnEscapePressed", function()
-          if textHasBeenFocused then
-            this:HighlightText(0, 0)
-            this:ClearFocus()
-            textHasBeenFocused = false
+          if editbox.hasFocus then
+            editbox:HighlightText(0, 0)
+            editbox:ClearFocus()
+            editbox.hasFocus = false
           else
-            this:GetParent():Hide()
+            editbox:GetParent():Hide()
             pfChatCopyButton.icon:SetTexture("Interface\\Buttons\\UI-GuildButton-PublicNote-Disabled")
             pfChatCopyButton.state = false
           end
