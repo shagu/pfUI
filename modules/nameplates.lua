@@ -419,10 +419,11 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     local width = tonumber(C.nameplates.width)
     local debuffsize = tonumber(C.nameplates.debuffsize)
     local healthoffset = tonumber(C.nameplates.health.offset)
+    local nameplatesoffset = tonumber(C.nameplates.nameplateoffset)
 
     nameplate:SetWidth(plate_width)
     nameplate:SetHeight(plate_height)
-    nameplate:SetPoint("TOP", parent, "TOP", 0, 0)
+    nameplate:SetPoint("TOP", parent, "TOP", 0, nameplatesoffset)
 
     nameplate.name:SetFont(font, font_size, font_style)
 

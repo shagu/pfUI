@@ -733,6 +733,7 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("nameplates", "debuffs",     "blacklist",        "")
   pfUI:UpdateConfig("nameplates", "debuffs",     "showstacks",       "0")
   pfUI:UpdateConfig("nameplates", "debuffs",     "position",         "BOTTOM")
+  pfUI:UpdateConfig("nameplates", nil,           "nameplateoffset",      "0")
 
   pfUI:UpdateConfig("abuttons",   nil,           "enable",           "1")
   pfUI:UpdateConfig("abuttons",   nil,           "position",         "bottom")
