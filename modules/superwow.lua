@@ -23,6 +23,16 @@ pfUI:RegisterModule("superwow", "vanilla", function ()
       spell = spell or UNKNOWN
       icon = icon or "Interface\\Icons\\INV_Misc_QuestionMark"
 
+      -- skip on buff procs during cast
+      if event_type == "CAST" then
+        if not libcast.db[guid] or libcast.db[guid].cast ~= spell then
+          -- ignore casts without 'START' event, while there is already another cast.
+          -- those events can be for example a frost shield proc while casting frostbolt.
+          -- we want to keep the cast itself, so we simply skip those.
+          return
+        end
+      end
+
       -- add cast action to the database
       if not libcast.db[guid] then libcast.db[guid] = {} end
       libcast.db[guid].cast = spell

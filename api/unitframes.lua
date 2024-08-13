@@ -481,7 +481,7 @@ function pfUI.uf:UpdateConfig()
   end
 
   f.power:ClearAllPoints()
-  f.power:SetPoint(f.config.panchor, f.hp, relative_point, 0, -2*default_border - f.config.pspace * GetPerfectPixel())
+  f.power:SetPoint(f.config.panchor, f.hp, relative_point, f.config.poffx, -2*default_border - f.config.pspace + f.config.poffy * GetPerfectPixel())
   f.power:SetWidth((f.config.pwidth ~= "-1" and f.config.pwidth or f.config.width))
   f.power:SetHeight(f.config.pheight)
   if tonumber(f.config.pheight) < 0 then f.power:Hide() end

@@ -373,15 +373,18 @@ libcast.customcast[strlower(multishot)] = function(begin, duration)
   end
 end
 
-local function CastCustom(spell)
-  if not spell then return end
-  if not UnitCastingInfo(UnitName("player")) then
-    for custom, func in pairs(libcast.customcast) do
-      if strfind(strlower(spell), custom) or strlower(spell) == custom then
-        func(true)
-      end
-    end
-  end
+local function CastCustom(id, bookType, rawSpellName, rank, texture, castingTime)
+  if not id or not rawSpellName or not castingTime then return end -- ignore if the spell is not found or if it is instant-cast
+
+  lastrank = rank
+  lastcasttex = texture
+
+  local func = libcast.customcast[strlower(rawSpellName)]
+  if not func then return end
+
+  if GetSpellCooldown(id, bookType) == 0 or UnitCastingInfo(player) then return end -- detect casting
+
+  func(true)
 end
 
 hooksecurefunc("UseContainerItem", function(id, index)
@@ -389,36 +392,27 @@ hooksecurefunc("UseContainerItem", function(id, index)
 end)
 
 hooksecurefunc("CastSpell", function(id, bookType)
-  _, lastrank = libspell.GetSpellInfo(id, bookType)
-  lastcasttex = GetSpellTexture(id, bookType)
+  local cachedRawSpellName, cachedRank, cachedTexture, cachedCastingTime, _, _, cachedSpellId, cachedBookType = libspell.GetSpellInfo(id, bookType)
 
-  if GetSpellCooldown(id, bookType) ~= 0 then
-    local spellName = GetSpellName(id, bookType)
-    CastCustom(spellName)
-  end
+  CastCustom(cachedSpellId, cachedBookType, cachedRawSpellName, cachedRank, cachedTexture, cachedCastingTime)
 end, true)
 
-hooksecurefunc("CastSpellByName", function(spell, target)
-  _, lastrank = libspell.GetSpellInfo(spell)
+hooksecurefunc("CastSpellByName", function(spellCasted, target)
+  local cachedRawSpellName, cachedRank, cachedTexture, cachedCastingTime, _, _, cachedSpellId, cachedBookType = libspell.GetSpellInfo(spellCasted)
 
-  for i=1,120 do
-    -- detect if any cast is ongoing
-    if IsCurrentAction(i) then
-      CastCustom(spell)
-      return
-    end
-  end
+  CastCustom(cachedSpellId, cachedBookType, cachedRawSpellName, cachedRank, cachedTexture, cachedCastingTime)
 end, true)
 
 hooksecurefunc("UseAction", function(slot, target, button)
-  scanner:SetAction(slot)
-  local spellName, rank = scanner:Line(1)
-
-  lastcasttex = GetActionTexture(slot)
-  lastrank = rank
-
   if GetActionText(slot) or not IsCurrentAction(slot) then return end
-  CastCustom(spellName)
+  
+  scanner:SetAction(slot)
+  local rawSpellName, rank = scanner:Line(1)
+  if not rawSpellName then return end -- ignore if the spell is not found
+
+  local cachedRawSpellName, cachedRank, cachedTexture, cachedCastingTime, _, _, cachedSpellId, cachedBookType = libspell.GetSpellInfo(rawSpellName .. (rank and ("(" .. rank .. ")") or ""))
+
+  CastCustom(cachedSpellId, cachedBookType, cachedRawSpellName, cachedRank, cachedTexture, cachedCastingTime)
 end, true)
 
 -- add libcast to pfUI API

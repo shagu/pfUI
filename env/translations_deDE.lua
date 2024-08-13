@@ -119,6 +119,7 @@ pfUI_translation["deDE"] = {
   ["Close"] = nil,
   ["Color Buff Stacks"] = nil,
   ["Color Debuff Stacks"] = nil,
+  ["Colorize player name on WorldMap and BattlefieldMinimap"] = nil,
   ["Colorize Unknown Classes"] = nil,
   ["Colors"] = nil,
   ["Combat"] = nil,

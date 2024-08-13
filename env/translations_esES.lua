@@ -119,6 +119,7 @@ pfUI_translation["esES"] = {
   ["Close"] = "Cerrar",
   ["Color Buff Stacks"] = "Colorear pilas de beneficios",
   ["Color Debuff Stacks"] = "Colorear pilas de perjuicios",
+  ["Colorize player name on WorldMap and BattlefieldMinimap"] = nil,
   ["Colorize Unknown Classes"] = "Colorear clases desconocidas",
   ["Colors"] = "Colores",
   ["Combat"] = "Combate",

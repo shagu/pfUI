@@ -4,7 +4,7 @@ setfenv(1, pfUI:GetEnvironment())
 function pfUI:UpdateConfig(group, subgroup, entry, value)
   -- create empty config if not existing
   if not pfUI_config then
-    pfUI_config = {}
+    _G.pfUI_config = {}
   end
 
   -- check for missing config groups
@@ -178,6 +178,7 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("appearance", "worldmap",    "mapreveal_color",  ".4,.4,.4,1")
   pfUI:UpdateConfig("appearance", "worldmap",    "mapexploration",   "0")
   pfUI:UpdateConfig("appearance", "worldmap",    "groupcircles",     "3")
+  pfUI:UpdateConfig("appearance", "worldmap",    "colornames",       "1")
 
   pfUI:UpdateConfig("loot",       nil,           "autoresize",       "1")
   pfUI:UpdateConfig("loot",       nil,           "autopickup",       "1")
@@ -390,6 +391,8 @@ function pfUI:LoadConfig()
     pfUI:UpdateConfig("unitframes", unit,      "height",           "46")
     pfUI:UpdateConfig("unitframes", unit,      "pheight",          "10")
     pfUI:UpdateConfig("unitframes", unit,      "pwidth",           "-1")
+    pfUI:UpdateConfig("unitframes", unit,      "poffx",           "0")
+    pfUI:UpdateConfig("unitframes", unit,      "poffy",           "0")
     pfUI:UpdateConfig("unitframes", unit,      "portraitheight",   "-1")
     pfUI:UpdateConfig("unitframes", unit,      "portraitwidth",    "-1")
     pfUI:UpdateConfig("unitframes", unit,      "panchor",          "TOP")
