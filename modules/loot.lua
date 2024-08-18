@@ -715,7 +715,7 @@ pfUI:RegisterModule("loot", "vanilla:tbc", function ()
         local slot = arg1
         QueueFunction(function()
           ConfirmLootSlot(slot)
-		      StaticPopup_Hide("LOOT_BIND")
+          StaticPopup_Hide("LOOT_BIND")
         end)
       elseif event == "LOOT_OPENED" and pfUI.client <= 11200 then
         for i=1,GetNumLootItems() do
