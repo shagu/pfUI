@@ -713,10 +713,10 @@ pfUI:RegisterModule("loot", "vanilla:tbc", function ()
     if C.loot.autopickup == "1" and GetNumPartyMembers() == 0 and GetNumRaidMembers() == 0 then
       if event == "LOOT_BIND_CONFIRM" then
         local slot = arg1
-	      QueueFunction(function()
-		      ConfirmLootSlot(slot)
+        QueueFunction(function()
+          ConfirmLootSlot(slot)
 		      StaticPopup_Hide("LOOT_BIND")
-		    end)
+        end)
       elseif event == "LOOT_OPENED" and pfUI.client <= 11200 then
         for i=1,GetNumLootItems() do
           LootSlot(i)
