@@ -712,7 +712,7 @@ pfUI:RegisterModule("loot", "vanilla:tbc", function ()
     -- auto accept BoP loot in solo mode
     if C.loot.autopickup == "1" and GetNumPartyMembers() == 0 and GetNumRaidMembers() == 0 then
       if event == "LOOT_BIND_CONFIRM" then
-          pfUI.api.QueueFunction(ConfirmLootSlot, arg1)
+        pfUI.api.QueueFunction(ConfirmLootSlot, arg1)
       elseif event == "LOOT_OPENED" and pfUI.client <= 11200 then
         for i=1,GetNumLootItems() do
           LootSlot(i)
