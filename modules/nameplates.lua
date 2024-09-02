@@ -545,7 +545,22 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     end
 
     -- target indicator
-    if target and C.nameplates.targethighlight == "1" then
+    if superwow_active and C.nameplates.outcombatstate == "1" then
+      local guid = plate.parent:GetName(1) or ""
+      local target = guid.."target"
+
+      if UnitAffectingCombat(guid) then
+        if UnitIsUnit(target, "player") then
+          plate.health.backdrop:SetBackdropBorderColor(.7,.2,.3,1)
+        elseif UnitExists(target) or UnitIsPlayer(guid) then
+          plate.health.backdrop:SetBackdropBorderColor(.7,.7,.2,1)
+        else
+          plate.health.backdrop:SetBackdropBorderColor(.2,.7,.7,1)
+        end
+      else
+        plate.health.backdrop:SetBackdropBorderColor(.2,.2,.2,1)
+      end
+    elseif target and C.nameplates.targethighlight == "1" then
       plate.health.backdrop:SetBackdropBorderColor(plate.health.hlr, plate.health.hlg, plate.health.hlb, plate.health.hla)
     elseif C.nameplates.outfriendlynpc == "1" and unittype == "FRIENDLY_NPC" then
       plate.health.backdrop:SetBackdropBorderColor(.2,.7,.3,1)
