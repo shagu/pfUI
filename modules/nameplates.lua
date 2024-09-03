@@ -94,6 +94,28 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     return nil
   end
 
+  local function abbrevname(t)
+    return string.sub(t,1,1)..". "
+  end
+
+  local function GetNameString(name)
+    local abbrev = pfUI_config.unitframes.abbrevname == "1" or nil
+    local size = 20
+
+    -- first try to only abbreviate the first word
+    if abbrev and name and strlen(name) > size then
+      name = string.gsub(name, "^(%S+) ", abbrevname)
+    end
+
+    -- abbreviate all if it still doesn't fit
+    if abbrev and name and strlen(name) > size then
+      name = string.gsub(name, "(%S+) ", abbrevname)
+    end
+
+    return name
+  end
+
+
   local function GetUnitType(red, green, blue)
     if red > .9 and green < .2 and blue < .2 then
       return "ENEMY_NPC"
@@ -613,7 +635,7 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
       plate.totem:Hide()
     end
 
-    plate.name:SetText(name)
+    plate.name:SetText(GetNameString(name))
     plate.level:SetText(string.format("%s%s", level, (elitestrings[elite] or "")))
 
     if guild and C.nameplates.showguildname == "1" then
