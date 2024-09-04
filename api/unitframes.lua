@@ -601,8 +601,11 @@ function pfUI.uf:UpdateConfig()
   f.hpLeftText:SetJustifyH("LEFT")
   f.hpLeftText:SetParent(f.hp.bar)
   f.hpLeftText:ClearAllPoints()
-  f.hpLeftText:SetPoint("TOPLEFT",f.hp.bar, "TOPLEFT", 2*default_border, 1)
-  f.hpLeftText:SetPoint("BOTTOMRIGHT",f.hp.bar, "BOTTOMRIGHT", -2*default_border, 0)
+  -- f.hpLeftText:SetPoint("TOPLEFT",f.hp.bar, "TOPLEFT", 2*default_border, 1)
+  -- f.hpLeftText:SetPoint("BOTTOMRIGHT",f.hp.bar, "BOTTOMRIGHT", -2*default_border, 0)
+
+  f.hpLeftText:SetPoint("TOPLEFT",f.hp.bar, "TOPLEFT", 2*(default_border + f.config.txthpleftoffx), 1 + tonumber(f.config.txthpleftoffy))
+  f.hpLeftText:SetPoint("BOTTOMRIGHT",f.hp.bar, "BOTTOMRIGHT", -2*(default_border + f.config.txthpleftoffx), f.config.txthpleftoffy)
 
   f.hpRightText:SetFontObject(GameFontWhite)
   f.hpRightText:SetFont(fontname, fontsize, fontstyle)
