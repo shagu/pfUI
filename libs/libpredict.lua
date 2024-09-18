@@ -528,6 +528,10 @@ function libpredict:getHoTTime(unit, spell)
 	if unit == UNKNOWNOBJECT or unit == UNKOWNBEING then
 		return
  	end
+  if unit == "Group0" then
+    unit = "Player" --The player is always Group0, but the game only knows Player
+  end
+  unit = string.gsub(unit, "Group", "Party") --pfui frames are called GroupX but the units are called PartyX
 	local dbUnit = HoTs[UnitName(unit)]
 	if dbUnit and dbUnit[spell] and (dbUnit[spell].start + dbUnit[spell].dur) > GetTime() then
 		return dbUnit[spell].start, dbUnit[spell].dur
