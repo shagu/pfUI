@@ -1736,8 +1736,16 @@ function pfUI.uf:RefreshUnit(unit, component)
           -- match filter
           for _, filter in pairs(unit.indicators) do
             if filter == string.lower(texture) then
-              if string.lower(texture) == "interface\\icons\\spell_nature_rejuvenation" then --is this rejuv
-                local start, dur = libpredict:getRejuTime(string.gsub(unit:GetName(), "^pf", "")) --remove pf from pfraidX, get rejuv start and runtime
+              if string.lower(texture) == "interface\\icons\\spell_nature_rejuvenation" then --need to find a way to make this work for all 3 hots
+                local start, dur = libpredict:getHoTTime(string.gsub(unit:GetName(), "^pf", ""), "Reju") --remove pf from pfraidX, get rejuv start and runtime
+                if start and dur then
+                  timeleft = (start + dur) - GetTime()
+                end
+                pfUI.uf:AddIcon(unit, pos, texture, timeleft, count)
+                pos = pos + 1
+                break
+              elseif string.lower(texture) == "interface\\icons\\spell_holy_renew" then
+                local start, dur = libpredict:getHoTTime(string.gsub(unit:GetName(), "^pf", ""), "Renew") --remove pf from pfraidX, get rejuv start and runtime
                 if start and dur then
                   timeleft = (start + dur) - GetTime()
                 end

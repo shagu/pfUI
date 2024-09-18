@@ -94,9 +94,10 @@ function libpredict:ParseComm(sender, msg)
           if msgobj[i] then table.insert(target, msgobj[i]) end
         end
       end
-
+      
+      --Rejuvenation
       if msgobj[1] == "Reju" then
-        --msgobj1: spell msgobj2: targetName msgobj3: duration
+        --msgobj1: spell (shortened to "reju") msgobj2: targetName msgobj3: duration
         if not HoTs[msgobj[2]] then
           HoTs[msgobj[2]] = {}
         end
@@ -106,6 +107,20 @@ function libpredict:ParseComm(sender, msg)
           HoTs[msgobj[2]]["Reju"].dur = msgobj[3]
           HoTs[msgobj[2]]["Reju"].start = GetTime()
       end
+
+      --Renew
+      if msgobj[1] == "Renew" then
+        --msgobj1: spell msgobj2: targetName msgobj3: duration
+        if not HoTs[msgobj[2]] then
+          HoTs[msgobj[2]] = {}
+        end
+        if not HoTs[msgobj[2]]["Renew"] then
+          HoTs[msgobj[2]]["Renew"]= {}
+        end
+          HoTs[msgobj[2]]["Renew"].dur = msgobj[3]
+          HoTs[msgobj[2]]["Renew"].start = GetTime()
+      end
+
     elseif select and UnitCastingInfo then
       -- latest healcomm
       msgtype = tonumber(string.sub(msg, 1, 3))
@@ -498,13 +513,25 @@ libpredict.sender:SetScript("OnEvent", function()
   end
 end)
 
-function libpredict:getRejuTime(unit)
+--[[function libpredict:getRejuTime(unit)
 	if unit == UNKNOWNOBJECT or unit == UNKOWNBEING then
 		return
  	end
 	local dbUnit = HoTs[UnitName(unit)]
 	if dbUnit and dbUnit["Reju"] and (dbUnit["Reju"].start + dbUnit["Reju"].dur) > GetTime() then
 		return dbUnit["Reju"].start, dbUnit["Reju"].dur
+	else
+		return
+	end
+end]]--
+
+function libpredict:getHoTTime(unit, spell)
+	if unit == UNKNOWNOBJECT or unit == UNKOWNBEING then
+		return
+ 	end
+	local dbUnit = HoTs[UnitName(unit)]
+	if dbUnit and dbUnit[spell] and (dbUnit[spell].start + dbUnit[spell].dur) > GetTime() then
+		return dbUnit[spell].start, dbUnit[spell].dur
 	else
 		return
 	end
