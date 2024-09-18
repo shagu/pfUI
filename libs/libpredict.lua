@@ -18,9 +18,7 @@ setfenv(1, pfUI:GetEnvironment())
 if pfUI.api.libpredict then return end
 
 local senttarget
-local heals, ress, events = {}, {}, {}
-
-local HoTs = {}
+local heals, ress, events, HoTs = {}, {}, {}, {}
 
 local PRAYER_OF_HEALING
 do -- Prayer of Healing
