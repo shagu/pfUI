@@ -96,7 +96,7 @@ function libpredict:ParseComm(sender, msg)
       end
 
       if msgobj[1] == "Reju" then
-        print(msgobj[1] .. msgobj[2] .. msgobj[3])
+        --msgobj1: spell msgobj2: targetName msgobj3: duration
         if not HoTs[msgobj[2]] then
           HoTs[msgobj[2]] = {}
         end
