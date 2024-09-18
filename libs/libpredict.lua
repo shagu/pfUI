@@ -20,6 +20,11 @@ if pfUI.api.libpredict then return end
 local senttarget
 local heals, ress, events = {}, {}, {}
 
+local HoTs = { --regrowth was more complicated somehow, dont recall how
+  ["Renew"] = true;
+  ["Rejuvenation"] = true;
+}
+
 local PRAYER_OF_HEALING
 do -- Prayer of Healing
   local locales = {
@@ -88,6 +93,18 @@ function libpredict:ParseComm(sender, msg)
         for i=4,8 do
           if msgobj[i] then table.insert(target, msgobj[i]) end
         end
+      end
+
+      if msgobj[1] == "Reju" then
+        print(msgobj[1] .. msgobj[2] .. msgobj[3])
+        if not HoTs[msgobj[2]] then
+          HoTs[msgobj[2]] = {}
+        end
+        if not HoTs[msgobj[2]]["Reju"] then
+          HoTs[msgobj[2]]["Reju"]= {}
+        end
+          HoTs[msgobj[2]]["Reju"].dur = msgobj[3]
+          HoTs[msgobj[2]]["Reju"].start = GetTime()
       end
     elseif select and UnitCastingInfo then
       -- latest healcomm
@@ -480,5 +497,17 @@ libpredict.sender:SetScript("OnEvent", function()
     libpredict:HealStop(player)
   end
 end)
+
+function libpredict:getRejuTime(unit)
+	if unit == UNKNOWNOBJECT or unit == UNKOWNBEING then
+		return
+ 	end
+	local dbUnit = HoTs[UnitName(unit)]
+	if dbUnit and dbUnit["Reju"] and (dbUnit["Reju"].start + dbUnit["Reju"].dur) > GetTime() then
+		return dbUnit["Reju"].start, dbUnit["Reju"].dur
+	else
+		return
+	end
+end
 
 pfUI.api.libpredict = libpredict
