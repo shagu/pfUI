@@ -524,18 +524,6 @@ libpredict.sender:SetScript("OnEvent", function()
   end
 end)
 
---[[function libpredict:getRejuTime(unit)
-	if unit == UNKNOWNOBJECT or unit == UNKOWNBEING then
-		return
- 	end
-	local dbUnit = HoTs[UnitName(unit)]
-	if dbUnit and dbUnit["Reju"] and (dbUnit["Reju"].start + dbUnit["Reju"].dur) > GetTime() then
-		return dbUnit["Reju"].start, dbUnit["Reju"].dur
-	else
-		return
-	end
-end]]--
-
 function libpredict:getHoTTime(unit, spell)
 	if unit == UNKNOWNOBJECT or unit == UNKOWNBEING then
 		return
