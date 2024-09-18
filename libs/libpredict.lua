@@ -499,7 +499,7 @@ function libpredict:getHoTTime(unit, spell)
 		return
  	end
   if unit == "Group0" then
-    unit = "Player" --The player is always Group0, but the game only knows Player
+    unit = "Player" --The player's group frame is always Group0, but the game only knows Player
   end
   unit = string.gsub(unit, "Group", "Party") --pfui frames are called GroupX but the game's units are called PartyX
 	local dbUnit = HoTs[UnitName(unit)]
