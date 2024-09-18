@@ -1738,7 +1738,9 @@ function pfUI.uf:RefreshUnit(unit, component)
             if filter == string.lower(texture) then
               if string.lower(texture) == "interface\\icons\\spell_nature_rejuvenation" then --is this rejuv
                 local start, dur = libpredict:getRejuTime(string.gsub(unit:GetName(), "^pf", "")) --remove pf from pfraidX, get rejuv start and runtime
-                timeleft = (start + dur) - GetTime()
+                if start and dur then
+                  timeleft = (start + dur) - GetTime()
+                end
                 pfUI.uf:AddIcon(unit, pos, texture, timeleft, count)
                 pos = pos + 1
                 break
