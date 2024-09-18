@@ -20,10 +20,7 @@ if pfUI.api.libpredict then return end
 local senttarget
 local heals, ress, events = {}, {}, {}
 
-local HoTs = { --regrowth was more complicated somehow, dont recall how
-  ["Renew"] = true;
-  ["Rejuvenation"] = true;
-}
+local HoTs = {}
 
 local PRAYER_OF_HEALING
 do -- Prayer of Healing
@@ -119,6 +116,20 @@ function libpredict:ParseComm(sender, msg)
         end
           HoTs[msgobj[2]]["Renew"].dur = msgobj[3]
           HoTs[msgobj[2]]["Renew"].start = GetTime()
+      end
+
+      --Regrowth
+      if msgobj[1] == "Regr" then --this seems to only fire once the HoT applies so I think we can just use it like the other two 
+        --print(msgobj[1] .. msgobj[2] .. msgobj[3])
+        --msgobj1: spell msgobj2: targetName msgobj3: duration
+        if not HoTs[msgobj[2]] then
+          HoTs[msgobj[2]] = {}
+        end
+        if not HoTs[msgobj[2]]["Regr"] then
+          HoTs[msgobj[2]]["Regr"]= {}
+        end
+          HoTs[msgobj[2]]["Regr"].dur = msgobj[3]
+          HoTs[msgobj[2]]["Regr"].start = GetTime()
       end
 
     elseif select and UnitCastingInfo then

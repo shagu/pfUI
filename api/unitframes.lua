@@ -1736,16 +1736,24 @@ function pfUI.uf:RefreshUnit(unit, component)
           -- match filter
           for _, filter in pairs(unit.indicators) do
             if filter == string.lower(texture) then
-              if string.lower(texture) == "interface\\icons\\spell_nature_rejuvenation" then --need to find a way to make this work for all 3 hots
+              if string.lower(texture) == "interface\\icons\\spell_nature_rejuvenation" then --I'd like to do all 3 hots in one if statement later.
                 local start, dur = libpredict:getHoTTime(string.gsub(unit:GetName(), "^pf", ""), "Reju") --remove pf from pfraidX, get rejuv start and runtime
-                if start and dur then
+                if start and dur then --show the buff even if time is unknown, particularly important as pfUI seems to see the buff before healcomm/libpredict processing is done
                   timeleft = (start + dur) - GetTime()
                 end
                 pfUI.uf:AddIcon(unit, pos, texture, timeleft, count)
                 pos = pos + 1
                 break
               elseif string.lower(texture) == "interface\\icons\\spell_holy_renew" then
-                local start, dur = libpredict:getHoTTime(string.gsub(unit:GetName(), "^pf", ""), "Renew") --remove pf from pfraidX, get rejuv start and runtime
+                local start, dur = libpredict:getHoTTime(string.gsub(unit:GetName(), "^pf", ""), "Renew") 
+                if start and dur then
+                  timeleft = (start + dur) - GetTime()
+                end
+                pfUI.uf:AddIcon(unit, pos, texture, timeleft, count)
+                pos = pos + 1
+                break
+              elseif string.lower(texture) == "interface\\icons\\spell_nature_resistnature" then
+                local start, dur = libpredict:getHoTTime(string.gsub(unit:GetName(), "^pf", ""), "Regr")
                 if start and dur then
                   timeleft = (start + dur) - GetTime()
                 end
