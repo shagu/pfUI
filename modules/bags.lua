@@ -662,14 +662,14 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
   end
 
   function pfUI.bag:UpdateCooldowns()
+    local frame
     for bag=-2, 11 do
       local bagsize = GetContainerNumSlots(bag)
       if bag == -2 and pfUI.bag.showKeyring == true then bagsize = GetKeyRingSize() end
       for slot=1, bagsize do
-        if pfUI.bags[bag].slots[slot].frame.hasItem then
-          if _G[pfUI.bags[bag].slots[slot].frame:GetName() .. "Cooldown"] then
-            ContainerFrame_UpdateCooldown(bag, pfUI.bags[bag].slots[slot].frame)
-          end
+        frame = pfUI.bags[bag] and pfUI.bags[bag].slots[slot] and pfUI.bags[bag].slots[slot].frame
+        if frame and frame.hasItem and _G[frame:GetName() .. "Cooldown"] then
+          ContainerFrame_UpdateCooldown(bag, frame)
         end
       end
     end
