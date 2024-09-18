@@ -91,45 +91,17 @@ function libpredict:ParseComm(sender, msg)
           if msgobj[i] then table.insert(target, msgobj[i]) end
         end
       end
-      
-      --Rejuvenation
-      if msgobj[1] == "Reju" then
-        --msgobj1: spell (shortened to "reju") msgobj2: targetName msgobj3: duration
-        if not HoTs[msgobj[2]] then
-          HoTs[msgobj[2]] = {}
-        end
-        if not HoTs[msgobj[2]]["Reju"] then
-          HoTs[msgobj[2]]["Reju"]= {}
-        end
-          HoTs[msgobj[2]]["Reju"].dur = msgobj[3]
-          HoTs[msgobj[2]]["Reju"].start = GetTime()
-      end
 
-      --Renew
-      if msgobj[1] == "Renew" then
-        --msgobj1: spell msgobj2: targetName msgobj3: duration
+      if msgobj[1] == "Reju" or msgobj[1] == "Renew" or msgobj[1] == "Regr" then --HoTs
+        --msgobj1: spell ("reju"/"renew"/"regr") msgobj2: targetName msgobj3: duration
         if not HoTs[msgobj[2]] then
           HoTs[msgobj[2]] = {}
         end
-        if not HoTs[msgobj[2]]["Renew"] then
-          HoTs[msgobj[2]]["Renew"]= {}
+        if not HoTs[msgobj[2]][msgobj[1]] then
+          HoTs[msgobj[2]][msgobj[1]]= {}
         end
-          HoTs[msgobj[2]]["Renew"].dur = msgobj[3]
-          HoTs[msgobj[2]]["Renew"].start = GetTime()
-      end
-
-      --Regrowth
-      if msgobj[1] == "Regr" then --this seems to only fire once the HoT applies so I think we can just use it like the other two 
-        --print(msgobj[1] .. msgobj[2] .. msgobj[3])
-        --msgobj1: spell msgobj2: targetName msgobj3: duration
-        if not HoTs[msgobj[2]] then
-          HoTs[msgobj[2]] = {}
-        end
-        if not HoTs[msgobj[2]]["Regr"] then
-          HoTs[msgobj[2]]["Regr"]= {}
-        end
-          HoTs[msgobj[2]]["Regr"].dur = msgobj[3]
-          HoTs[msgobj[2]]["Regr"].start = GetTime()
+          HoTs[msgobj[2]][msgobj[1]].dur = msgobj[3]
+          HoTs[msgobj[2]][msgobj[1]].start = GetTime()
       end
 
     elseif select and UnitCastingInfo then
