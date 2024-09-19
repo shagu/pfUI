@@ -386,7 +386,7 @@ libpredict.sender:RegisterEvent("SPELLCAST_DELAYED")
 libpredict.sender:RegisterEvent("UNIT_INVENTORY_CHANGED")
 libpredict.sender:RegisterEvent("SKILL_LINES_CHANGED")
 
---the following code is copy pasted from healcomm-1.0
+--the following tooltip/setbonus code is taken from healcomm-1.0
 local healcommTip = CreateFrame("GameTooltip", "healcommTip", nil, "GameTooltipTemplate")
 healcommTip:SetOwner(WorldFrame, "ANCHOR_NONE")
 local function getSetBonus()
@@ -518,11 +518,12 @@ libpredict.sender:SetScript("OnEvent", function()
         local dur = getSetBonus() and 15 or 12
         libpredict.sender:SendHealCommMsg("Renew/"..spell_queue[3].."/"..dur.."/")
       elseif spell_queue[1] == "Regrowth" then
-        --TODO
+        local dur = 21
+        --todo, Canceling a Regrwoth cast sends a SpellCast_Stop event, however the hot doesn't get applied unless the cast is finished.
       end
       --libpredict.sender:SendHealCommMsg("Heal/" .. target .. "/" .. amount .. "/" .. casttime .. "/")
     else -- tbc
-      --TODO
+      --todo
     end
   end
 end)
