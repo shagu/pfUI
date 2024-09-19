@@ -386,6 +386,25 @@ libpredict.sender:RegisterEvent("SPELLCAST_DELAYED")
 libpredict.sender:RegisterEvent("UNIT_INVENTORY_CHANGED")
 libpredict.sender:RegisterEvent("SKILL_LINES_CHANGED")
 
+--the following code is copy pasted from healcomm-1.0
+local healcommTip = CreateFrame("GameTooltip", "healcommTip", nil, "GameTooltipTemplate")
+healcommTip:SetOwner(WorldFrame, "ANCHOR_NONE")
+local function getSetBonus()
+	healcommTip:SetInventoryItem("player", 1)
+	local text = "healcommTipTextLeft"..(healcommTip:NumLines() or 1)
+	local text = getglobal(text)
+	if text then
+		text = text:GetText()
+	else
+		return nil
+	end
+	if text == L["Set: Increases the duration of your Rejuvenation spell by 3 sec."] or text == L["Set: Increases the duration of your Renew spell by 3 sec."] then
+		return true
+	else
+		return nil
+	end
+end
+
 libpredict.sender:SetScript("OnEvent", function()
   if event == "CHAT_MSG_SPELL_SELF_BUFF" then -- vanilla
     local spell, _, heal = cmatch(arg1, HEALEDSELFOTHER) -- "Your %s heals %s for %d."
@@ -491,8 +510,26 @@ libpredict.sender:SetScript("OnEvent", function()
   elseif strfind(event, "SPELLCAST_STOP", 1) then
     if strfind(event, "UNIT_", 1) and arg1 ~= "player" then return end
     libpredict:HealStop(player)
+    if pfUI.client < 20000 then -- vanilla
+      if spell_queue[1] == "Rejuvenation" then
+        local dur = getSetBonus() and 15 or 12
+        libpredict.sender:SendHealCommMsg("Reju/"..spell_queue[3].."/"..dur.."/")
+      elseif spell_queue[1] == "Renew" then
+        local dur = getSetBonus() and 15 or 12
+        libpredict.sender:SendHealCommMsg("Renew/"..spell_queue[3].."/"..dur.."/")
+      elseif spell_queue[1] == "Regrowth" then
+        --TODO
+      end
+      --libpredict.sender:SendHealCommMsg("Heal/" .. target .. "/" .. amount .. "/" .. casttime .. "/")
+    else -- tbc
+      --TODO
+    end
   end
 end)
+
+
+
+
 
 function libpredict:getHoTTime(unit, spell)
 	if unit == UNKNOWNOBJECT or unit == UNKOWNBEING then
