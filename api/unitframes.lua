@@ -1737,25 +1737,25 @@ function pfUI.uf:RefreshUnit(unit, component)
           for _, filter in pairs(unit.indicators) do
             if filter == string.lower(texture) then
               if string.lower(texture) == "interface\\icons\\spell_nature_rejuvenation" then --I'd like to do all 3 hots in one if statement later. TODO: check TBC compatibility
-                local start, dur = libpredict:getHoTTime(unitstr, "Reju") --get rejuv start and runtime
-                if start and dur then --show the buff even if time is unknown, important as pfUI seems to see the buff before healcomm/libpredict processing is done
-                  timeleft = (start + dur) - GetTime()
+                local start, duration = libpredict:getHoTTime(unitstr, "Reju") --get rejuv start and runtime
+                if start and duration then --show the buff even if time is unknown, important as pfUI seems to see the buff before healcomm/libpredict processing is done
+                  timeleft = (start + duration) - GetTime()
                 end
                 pfUI.uf:AddIcon(unit, pos, texture, timeleft, count)
                 pos = pos + 1
                 break
               elseif string.lower(texture) == "interface\\icons\\spell_holy_renew" then
-                local start, dur = libpredict:getHoTTime(unitstr, "Renew") 
-                if start and dur then
-                  timeleft = (start + dur) - GetTime()
+                local start, duration = libpredict:getHoTTime(unitstr, "Renew") 
+                if start and duration then
+                  timeleft = (start + duration) - GetTime()
                 end
                 pfUI.uf:AddIcon(unit, pos, texture, timeleft, count)
                 pos = pos + 1
                 break
               elseif string.lower(texture) == "interface\\icons\\spell_nature_resistnature" then
-                local start, dur = libpredict:getHoTTime(unitstr, "Regr")
-                if start and dur then
-                  timeleft = (start + dur) - GetTime()
+                local start, duration = libpredict:getHoTTime(unitstr, "Regr")
+                if start and duration then
+                  timeleft = (start + duration) - GetTime()
                 end
                 pfUI.uf:AddIcon(unit, pos, texture, timeleft, count)
                 pos = pos + 1

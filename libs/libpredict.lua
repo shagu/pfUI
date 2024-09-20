@@ -18,7 +18,7 @@ setfenv(1, pfUI:GetEnvironment())
 if pfUI.api.libpredict then return end
 
 local senttarget
-local heals, ress, events, HoTs = {}, {}, {}, {}
+local heals, ress, events, hots = {}, {}, {}, {}
 
 local PRAYER_OF_HEALING
 do -- Prayer of Healing
@@ -90,16 +90,16 @@ function libpredict:ParseComm(sender, msg)
         end
       end
 
-      if msgobj[1] == "Reju" or msgobj[1] == "Renew" or msgobj[1] == "Regr" then --HoTs
+      if msgobj[1] == "Reju" or msgobj[1] == "Renew" or msgobj[1] == "Regr" then --hots
         --msgobj1: spell ("reju"/"renew"/"regr") msgobj2: targetName msgobj3: duration
-        if not HoTs[msgobj[2]] then
-          HoTs[msgobj[2]] = {}
+        if not hots[msgobj[2]] then
+          hots[msgobj[2]] = {}
         end
-        if not HoTs[msgobj[2]][msgobj[1]] then
-          HoTs[msgobj[2]][msgobj[1]]= {}
+        if not hots[msgobj[2]][msgobj[1]] then
+          hots[msgobj[2]][msgobj[1]]= {}
         end
-          HoTs[msgobj[2]][msgobj[1]].dur = msgobj[3]
-          HoTs[msgobj[2]][msgobj[1]].start = GetTime()
+          hots[msgobj[2]][msgobj[1]].duration = msgobj[3]
+          hots[msgobj[2]][msgobj[1]].start = GetTime()
       end
 
     elseif select and UnitCastingInfo then
@@ -386,23 +386,12 @@ libpredict.sender:RegisterEvent("SPELLCAST_DELAYED")
 libpredict.sender:RegisterEvent("UNIT_INVENTORY_CHANGED")
 libpredict.sender:RegisterEvent("SKILL_LINES_CHANGED")
 
---the following tooltip/setbonus code is taken from healcomm-1.0
-local healcommTip = CreateFrame("GameTooltip", "healcommTip", nil, "GameTooltipTemplate")
-healcommTip:SetOwner(WorldFrame, "ANCHOR_NONE")
+local scanner = libtipscan:GetScanner("hotsetbonus")
 local function getSetBonus()
-	healcommTip:SetInventoryItem("player", 1)
-	local text = "healcommTipTextLeft"..(healcommTip:NumLines() or 1)
-	local text = getglobal(text)
-	if text then
-		text = text:GetText()
-	else
-		return nil
-	end
-	if text == L["Set: Increases the duration of your Rejuvenation spell by 3 sec."] or text == L["Set: Increases the duration of your Renew spell by 3 sec."] then
-		return true
-	else
-		return nil
-	end
+    scanner:SetInventoryItem("player", 1)
+    if scanner:Find(L["Set: Increases the duration of your Rejuvenation spell by 3 sec."]) then return true end
+    if scanner:Find(L["Set: Increases the duration of your Renew spell by 3 sec."]) then return true end
+    return false
 end
 
 libpredict.sender:SetScript("OnEvent", function()
@@ -512,13 +501,13 @@ libpredict.sender:SetScript("OnEvent", function()
     libpredict:HealStop(player)
     if pfUI.client < 20000 then -- vanilla
       if spell_queue[1] == "Rejuvenation" then
-        local dur = getSetBonus() and 15 or 12
-        libpredict.sender:SendHealCommMsg("Reju/"..spell_queue[3].."/"..dur.."/")
+        local duration = getSetBonus() and 15 or 12
+        libpredict.sender:SendHealCommMsg("Reju/"..spell_queue[3].."/"..duration.."/")
       elseif spell_queue[1] == "Renew" then
-        local dur = getSetBonus() and 15 or 12
-        libpredict.sender:SendHealCommMsg("Renew/"..spell_queue[3].."/"..dur.."/")
+        local duration = getSetBonus() and 15 or 12
+        libpredict.sender:SendHealCommMsg("Renew/"..spell_queue[3].."/"..duration.."/")
       elseif spell_queue[1] == "Regrowth" then
-        local dur = 21
+        local duration = 21
         --todo, Canceling a Regrwoth cast sends a SpellCast_Stop event, however the hot doesn't get applied unless the cast is finished.
       end
       --libpredict.sender:SendHealCommMsg("Heal/" .. target .. "/" .. amount .. "/" .. casttime .. "/")
@@ -536,9 +525,9 @@ function libpredict:getHoTTime(unit, spell)
 	if unit == UNKNOWNOBJECT or unit == UNKOWNBEING then
 		return
  	end
-	local dbUnit = HoTs[UnitName(unit)]
-	if dbUnit and dbUnit[spell] and (dbUnit[spell].start + dbUnit[spell].dur) > GetTime() then
-		return dbUnit[spell].start, dbUnit[spell].dur
+	local dbUnit = hots[UnitName(unit)]
+	if dbUnit and dbUnit[spell] and (dbUnit[spell].start + dbUnit[spell].duration) > GetTime() then
+		return dbUnit[spell].start, dbUnit[spell].duration
 	else
 		return
 	end
