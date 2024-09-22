@@ -216,7 +216,7 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
     else
       if not pfUI.bag.right then pfUI.bag.right = CreateFrame("Frame", "pfBag", UIParent) end
       rowlength = tonumber(C.appearance.bags.bagrowlength)
-      anchor = { "BOTTOMRIGHT", (pfUI.chat and pfUI.chat.right or nil), "BOTTOMLEFT" }
+      anchor = { "BOTTOMRIGHT", (pfUI.chat and pfUI.chat.right or nil), "BOTTOMLEFT", "TOPRIGHT", "TOPLEFT" }
       cwidth = C.chat.right.width
       iterate = pfUI.BACKPACK
       frame = pfUI.bag.right
@@ -246,8 +246,13 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
       frame:SetPoint(anchor[1], anchor[2], anchor[1], 0, 0)
     elseif pfUI.chat then
       -- use chat frame as anchor if existing
-      frame:SetPoint(anchor[1], anchor[2], anchor[1], 0, 0)
-      frame:SetPoint(anchor[3], anchor[2], anchor[3], 0, 0)
+      if C.appearance.bags.abovechat == "0" then
+        frame:SetPoint(anchor[1], anchor[2], anchor[1], 0, 0)
+        frame:SetPoint(anchor[3], anchor[2], anchor[3], 0, 0)
+      else
+        frame:SetPoint(anchor[3], anchor[2], anchor[5], 0, 3*default_border)
+        frame:SetPoint(anchor[1], anchor[2], anchor[4], 0, 3*default_border)
+      end
     else
       -- align frame to UIParent if no anchor is available
       frame:SetPoint(anchor[1], UIParent, anchor[1], 5, 5)
