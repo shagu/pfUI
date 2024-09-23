@@ -1013,7 +1013,7 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
               if itemCount then
                 local itemLink = GetContainerItemLink(bag, slot)
                 local itemstring = string.sub(itemLink, string.find(itemLink, "%[")+1, string.find(itemLink, "%]")-1)
-                if strfind(strlower(itemstring), strlower(string.gsub(this:GetText(), "([^%w])", "%%%1"))) then
+                if strfind(strlower(itemstring), strlower(this:GetText()), 1, true) then
                   pfUI.bags[bag].slots[slot].frame:SetAlpha(1)
                 end
               end
