@@ -286,7 +286,7 @@ pfUI:RegisterModule("panel", "vanilla:tbc", function()
         end
         GameTooltip:AddDoubleLine("|cffffffff","")
         GameTooltip:AddDoubleLine(T["This Session"] .. ":", dmod .. CreateGoldString(math.abs(pfUI.panel.diffMoney)))
-        GameTooltip:AddDoubleLine(T["Total Gold"] .. ":", dmod .. CreateGoldString(totalgold))
+        GameTooltip:AddDoubleLine(T["Total Gold"] .. ":", CreateGoldString(totalgold))
         GameTooltip:Show()
       end
       widget:SetScript("OnEvent", function()
