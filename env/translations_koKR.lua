@@ -712,6 +712,7 @@ pfUI_translation["koKR"] = {
   ["Thick Outline"] = nil,
   ["Thirdparty"] = "서드파티",
   ["This Session"] = "이번 세션",
+  ["Total Gold"] = "총 금",
   ["Threshold To Trust Health Estimation"] = nil,
   ["Time"] = "시간",
   ["Timer"] = nil,

@@ -713,6 +713,7 @@ pfUI_translation["ruRU"] = {
   ["Thick Outline"] = "Толстый контурный", -- font style
   ["Thirdparty"] = "Другие аддоны",
   ["This Session"] = "Эта сессия",
+  ["Total Gold"] = "Всего золота",
   ["Threshold To Trust Health Estimation"] = "Точность подсчетов здоровья",
   ["Time"] = "Время",
   ["Timer"] = "Таймер",
