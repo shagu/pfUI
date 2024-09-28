@@ -787,6 +787,20 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
       nameplate.eventcache = nil
     end
 
+    -- reset strata cache on target change
+    if nameplate.istarget ~= target then
+      nameplate.target_strata = nil
+    end
+
+    -- keep target nameplate above others
+    if target and nameplate.target_strata ~= 1 then
+      nameplate:SetFrameStrata("LOW")
+      nameplate.target_strata = 1
+    elseif not target and nameplate.target_strata ~= 0 then
+      nameplate:SetFrameStrata("BACKGROUND")
+      nameplate.target_strata = 0
+    end
+
     -- cache target value
     nameplate.istarget = target
 
