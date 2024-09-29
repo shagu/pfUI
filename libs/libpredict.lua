@@ -386,11 +386,11 @@ libpredict.sender:RegisterEvent("SPELLCAST_DELAYED")
 libpredict.sender:RegisterEvent("UNIT_INVENTORY_CHANGED")
 libpredict.sender:RegisterEvent("SKILL_LINES_CHANGED")
 
-local scanner = libtipscan:GetScanner("hotsetbonus")
+local hotbonusscanner = libtipscan:GetScanner("hotsetbonus")
 local function getSetBonus()
-    scanner:SetInventoryItem("player", 1)
-    if scanner:Find(L["Set: Increases the duration of your Rejuvenation spell by 3 sec."]) then return true end
-    if scanner:Find(L["Set: Increases the duration of your Renew spell by 3 sec."]) then return true end
+  hotbonusscanner:SetInventoryItem("player", 1)
+    if hotbonusscanner:Find(L["Set: Increases the duration of your Rejuvenation spell by 3 sec."]) then return true end
+    if hotbonusscanner:Find(L["Set: Increases the duration of your Renew spell by 3 sec."]) then return true end
     return false
 end
 
@@ -510,7 +510,6 @@ libpredict.sender:SetScript("OnEvent", function()
         local duration = 21
         --todo, Canceling a Regrwoth cast sends a SpellCast_Stop event, however the hot doesn't get applied unless the cast is finished.
       end
-      --libpredict.sender:SendHealCommMsg("Heal/" .. target .. "/" .. amount .. "/" .. casttime .. "/")
     else -- tbc
       --todo
     end
