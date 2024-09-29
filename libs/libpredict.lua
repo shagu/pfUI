@@ -386,11 +386,11 @@ libpredict.sender:RegisterEvent("SPELLCAST_DELAYED")
 libpredict.sender:RegisterEvent("UNIT_INVENTORY_CHANGED")
 libpredict.sender:RegisterEvent("SKILL_LINES_CHANGED")
 
-local hotbonusscanner = libtipscan:GetScanner("hotsetbonus")
+local hotBonusScanner = libtipscan:GetScanner("hotsetbonus")
 local function getSetBonus()
-  hotbonusscanner:SetInventoryItem("player", 1)
-    if hotbonusscanner:Find(L["Set: Increases the duration of your Rejuvenation spell by 3 sec."]) then return true end
-    if hotbonusscanner:Find(L["Set: Increases the duration of your Renew spell by 3 sec."]) then return true end
+  hotBonusScanner:SetInventoryItem("player", 1)
+    if hotBonusScanner:Find(L["Set: Increases the duration of your Rejuvenation spell by 3 sec."]) then return true end
+    if hotBonusScanner:Find(L["Set: Increases the duration of your Renew spell by 3 sec."]) then return true end
     return false
 end
 
