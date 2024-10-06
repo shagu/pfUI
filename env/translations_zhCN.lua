@@ -715,6 +715,7 @@ pfUI_translation["zhCN"] = {
   ["Thick Outline"] = "粗轮廓",
   ["Thirdparty"] = "第三方插件接口",
   ["This Session"] = "本次登录收益",
+  ["Total Gold"] = "总黄金",
   ["Threshold To Trust Health Estimation"] = "信任生命值预估的阈值",
   ["Time"] = "时间",
   ["Timer"] = "计时器",

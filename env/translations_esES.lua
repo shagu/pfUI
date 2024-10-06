@@ -713,6 +713,7 @@ pfUI_translation["esES"] = {
   ["Thick Outline"] = "Contorno grueso",
   ["Thirdparty"] = "Terceros",
   ["This Session"] = "Esta sesión",
+  ["Total Gold"] = "Oro Total",
   ["Threshold To Trust Health Estimation"] = "Umbral para confiar en la estimación de salud",
   ["Time"] = "Tiempo",
   ["Timer"] = "Temporizador",
