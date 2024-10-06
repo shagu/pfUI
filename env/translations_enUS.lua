@@ -713,6 +713,7 @@ pfUI_translation["enUS"] = {
   ["Thick Outline"] = nil,
   ["Thirdparty"] = nil,
   ["This Session"] = nil,
+  ["Total Gold"] = nil,
   ["Threshold To Trust Health Estimation"] = nil,
   ["Time"] = nil,
   ["Timer"] = nil,

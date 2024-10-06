@@ -713,6 +713,7 @@ pfUI_translation["zhTW"] = {
   ["Thick Outline"] = nil,
   ["Thirdparty"] = "協力廠商外掛程式介面",
   ["This Session"] = "本次登錄收益",
+  ["Total Gold"] = "總金量",
   ["Threshold To Trust Health Estimation"] = nil,
   ["Time"] = "計時器",
   ["Timer"] = nil,

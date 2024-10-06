@@ -713,6 +713,7 @@ pfUI_translation["frFR"] = {
   ["Thick Outline"] = "Contour épais",
   ["Thirdparty"] = "Autres addons",
   ["This Session"] = "Session Actuelle",
+  ["Total Gold"] = "Or Total",
   ["Threshold To Trust Health Estimation"] = "Seuil de confiance pour l'estimation de la santé",
   ["Time"] = "Heure",
   ["Timer"] = nil,
