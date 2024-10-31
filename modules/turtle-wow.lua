@@ -131,6 +131,15 @@ pfUI:RegisterModule("turtle-wow", "vanilla", function ()
     end
   end)
 
+  -- rearrange twow's profession window additions
+  HookAddonOrVariable("Blizzard_TradeSkillUI", function()
+    if TradeSkillSkillCheckButton then
+      TradeSkillSkillCheckButton:SetPoint("TOPLEFT", 500, -2)
+      TradeSkillMatsCheckButton:SetPoint("TOPLEFT", 400, -2)
+      TradeSkillSearchBox:SetPoint("TOPLEFT", 20, -520)
+    end
+  end)
+
   -- add turtle-wow overlay values
   pfMapOverlayData = {
     ["Durotar"] = {"VALLEYOFTRIALS:215:215:355:320", "SENJINVILLAGE:160:190:474:384", "KOLKARCRAG:160:120:413:476", "ECHOISLES:200:240:549:427", "TIRAGARDEKEEP:190:180:462:286", "RAZORHILL:220:230:432:170", "RAZORMANEGROUNDS:230:230:301:189", "THUNDERRIDGE:190:200:327:60", "DRYGULCHRAVINE:210:160:427:78", "SKULLROCK:128:110:464:33", "ORGRIMMAR:445:160:244:0"},
