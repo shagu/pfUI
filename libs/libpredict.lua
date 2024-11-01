@@ -394,6 +394,17 @@ local function getSetBonus()
     return false
 end
 
+local regrowthCancel = false
+
+function libpredict.triggerRegrowth(target, duration)
+  if regrowthCancel == true then regrowthCancel = false return end -- if a SPELLCAST_INTERRUPTED event happened we abandon ship and reset regrowthCancel to false to not mess with future casts
+  libpredict.sender:SendHealCommMsg("Regr/"..target.."/"..duration.."/")
+end
+
+function libpredict.resetRegrowth() --Exists so we can enqueue resetting regrowthCancel
+  regrowthCancel = false
+end
+
 libpredict.sender:SetScript("OnEvent", function()
   if event == "CHAT_MSG_SPELL_SELF_BUFF" then -- vanilla
     local spell, _, heal = cmatch(arg1, HEALEDSELFOTHER) -- "Your %s heals %s for %d."
@@ -476,6 +487,8 @@ libpredict.sender:SetScript("OnEvent", function()
     end
   elseif strfind(event, "SPELLCAST_FAILED", 1) or strfind(event, "SPELLCAST_INTERRUPTED", 1) then
     if strfind(event, "UNIT_", 1) and arg1 ~= "player" then return end
+    regrowthCancel = true
+    QueueFunction(libpredict.resetRegrowth) --reset regrowthCancel to false on the next update so we don't mess with future casts.
     if libpredict.sender.healing then
       libpredict:HealStop(player)
       if pfUI.client < 20000 then -- vanilla
@@ -507,18 +520,14 @@ libpredict.sender:SetScript("OnEvent", function()
         local duration = getSetBonus() and 15 or 12
         libpredict.sender:SendHealCommMsg("Renew/"..spell_queue[3].."/"..duration.."/")
       elseif spell_queue[1] == "Regrowth" then
-        local duration = 21
-        --todo, Canceling a Regrwoth cast sends a SpellCast_Stop event, however the hot doesn't get applied unless the cast is finished.
+        local duration = 21 --Made this a variable even tho it is static in case future items mess with it
+        QueueFunction(libpredict.triggerRegrowth,spell_queue[3], duration) --SPELLCAST_STOP seem to fire before SPELLCAST_INTERRUPTED so we enqueue execution to be on the safe side
       end
     else -- tbc
       --todo
     end
   end
 end)
-
-
-
-
 
 function libpredict:getHoTTime(unit, spell)
 	if unit == UNKNOWNOBJECT or unit == UNKOWNBEING then
