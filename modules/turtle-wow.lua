@@ -134,9 +134,22 @@ pfUI:RegisterModule("turtle-wow", "vanilla", function ()
   -- rearrange twow's profession window additions
   HookAddonOrVariable("Blizzard_TradeSkillUI", function()
     if TradeSkillSkillCheckButton and pfUI_config["disabled"]["skin_Profession"] ~= "1" then
+      SkinCheckbox(TradeSkillSkillCheckButton)
+      TradeSkillSkillCheckButton:SetWidth(24)
+      TradeSkillSkillCheckButton:SetHeight(24)
+
+      SkinCheckbox(TradeSkillMatsCheckButton)
+      TradeSkillMatsCheckButton:SetWidth(24)
+      TradeSkillMatsCheckButton:SetHeight(24)
+
+      TradeSkillSearchBox:DisableDrawLayer("BACKGROUND")
+      CreateBackdrop(TradeSkillSearchBox, nil, nil, 1)
+
       TradeSkillSkillCheckButton:SetPoint("TOPLEFT", 500, -2)
       TradeSkillMatsCheckButton:SetPoint("TOPLEFT", 400, -2)
-      TradeSkillSearchBox:SetPoint("TOPLEFT", 20, -520)
+
+      TradeSkillSearchBox:ClearAllPoints()
+      TradeSkillSearchBox:SetPoint("TOP", TradeSkillFrame, "BOTTOM", 0, -8)
     end
   end)
 
