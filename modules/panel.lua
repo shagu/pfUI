@@ -520,6 +520,7 @@ pfUI:RegisterModule("panel", "vanilla:tbc", function()
       local widget = CreateFrame("Frame", "pfPanelWidgetAmmo", UIParent)
       widget:RegisterEvent("PLAYER_ENTERING_WORLD")
       widget:RegisterEvent("UNIT_INVENTORY_CHANGED")
+      widget:RegisterEvent("BAG_UPDATE")
       widget.Tooltip = function()
         if GetInventoryItemQuality("player", 0) then
           local ammo = GetInventoryItemCount("player", 0)
