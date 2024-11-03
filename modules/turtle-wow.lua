@@ -70,8 +70,10 @@ pfUI:RegisterModule("turtle-wow", "vanilla", function ()
         if conflagrate and arg2 then
           local name = UnitName("target")
           local level = UnitLevel("target")
-          local duration = libdebuff.objects[name][level]["Immolate"].duration
-          libdebuff:UpdateDuration(name, level, "Immolate", duration - 3)
+          if libdebuff.objects[name][level]["Immolate"] then
+            local duration = libdebuff.objects[name][level]["Immolate"].duration
+            libdebuff:UpdateDuration(name, level, "Immolate", duration - 3)
+          end
         end
       end
     end)
