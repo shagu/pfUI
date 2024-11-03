@@ -322,7 +322,7 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     nameplate.health.text:SetTextColor(1,1,1,1)
 
     nameplate.name = nameplate:CreateFontString(nil, "OVERLAY")
-    nameplate.name:SetPoint("TOP", nameplate, "TOP", 0, nameoffset)
+    nameplate.name:SetPoint("TOP", nameplate, "TOP", 0, 0)
 
     nameplate.glow = nameplate:CreateTexture(nil, "BACKGROUND")
     nameplate.glow:SetPoint("CENTER", nameplate.health, "CENTER", 0, 0)
@@ -1019,8 +1019,12 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
       local nameplate = self.nameplate
       local plate = C.nameplates["overlap"] == "1" and nameplate or parent
 
+      if C.nameplates["vertical_offset"] ~= "0" then
+        nameplate:SetPoint("TOP", plate, "TOP", 0, tonumber(C.nameplates["vertical_offset"]))
+      end
+
       -- replace clickhandler
-      if C.nameplates["overlap"] == "1" then
+      if C.nameplates["overlap"] == "1" or C.nameplates["vertical_offset"] ~= "0" then
         parent:SetFrameLevel(0)
         nameplate:SetScript("OnClick", function() parent:Click() end)
 
@@ -1040,6 +1044,7 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
 
       -- disable click event on frames
       if C.nameplates["clickthrough"] == "1" then
+        nameplate:EnableMouse(false)
         plate:EnableMouse(false)
       else
         plate:EnableMouse(true)
