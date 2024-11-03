@@ -1054,13 +1054,22 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     local hookOnUpdate = nameplates.OnUpdate
     nameplates.OnUpdate = function(self)
       if C.nameplates["overlap"] == "1" then
-        -- set parent to 1 pixel to have them overlap each other
-        this:SetWidth(1)
-        this:SetHeight(1)
+        if this:GetWidth() > 1 then
+          -- set parent to 1 pixel to have them overlap each other
+          this:SetWidth(1)
+          this:SetHeight(1)
+        end
       else
-        -- align parent plate to the actual size
-        this:SetWidth(this.nameplate:GetWidth() * UIParent:GetScale())
-        this:SetHeight(this.nameplate:GetHeight() * UIParent:GetScale())
+        if not this.nameplate.dwidth then
+          -- cache initial sizing value for comparison
+          this.nameplate.dwidth = floor(this.nameplate:GetWidth() * UIParent:GetScale())
+        end
+
+        if floor(this:GetWidth()) ~= this.nameplate.dwidth then
+          -- align parent plate to the actual size
+          this:SetWidth(this.nameplate:GetWidth() * UIParent:GetScale())
+          this:SetHeight(this.nameplate:GetHeight() * UIParent:GetScale())
+        end
       end
 
       -- disable click events while spell is targeting
