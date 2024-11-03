@@ -521,6 +521,11 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     local unittype = GetUnitType(red, green, blue) or "ENEMY_NPC"
     local font_size = C.nameplates.use_unitfonts == "1" and C.global.font_unit_size or C.global.font_size
 
+    -- use superwow unit guid as unitstr if possible
+    if superwow_active and not unitstr then
+      unitstr = plate.parent:GetName(1)
+    end
+
     -- ignore players with npc names if plate level is lower than player level
     if ulevel and ulevel > (level == "??" and -1 or level) then player = nil end
 
