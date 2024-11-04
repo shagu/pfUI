@@ -14,6 +14,12 @@ end)
 pfUI.uf.frames = {}
 pfUI.uf.delayed = {}
 
+-- slash command to toggle unitframe test mode
+_G.SLASH_PFTEST1, _G.SLASH_PFTEST2 = "/pftest", "/pfuftest"
+_G.SlashCmdList.PFTEST = function()
+  pfUI.uf.showall = not pfUI.uf.showall
+end
+
 local scanner
 local glow = {
   edgeFile = pfUI.media["img:glow"], edgeSize = 8,

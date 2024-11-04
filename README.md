@@ -39,6 +39,7 @@ This is **not** an addon-pack like [ShaguUI](http://shagu.org/ShaguUI/), however
     /castfocus    Same as /cast but for focus frame
     /clearfocus   Clears the Focus-Frame
     /swapfocus    Toggle Focus and Target-Frame
+    /pftest       Toggle pfUI Unitframe Test Mode
     /abp          Addon Button Panel
 
 ## Languages
