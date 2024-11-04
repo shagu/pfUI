@@ -390,8 +390,10 @@ local hotsetbonus = libtipscan:GetScanner("hotsetbonus")
 local regrowthCancel = false
 
 function libpredict.triggerRegrowth(target, duration)
-  if regrowthCancel == true then regrowthCancel = false return end -- if a SPELLCAST_INTERRUPTED event happened we abandon ship and reset regrowthCancel to false to not mess with future casts
-  libpredict.sender:SendHealCommMsg("Regr/"..target.."/"..duration.."/")
+  if regrowthCancel == true then regrowthCancel = false return end
+  local msg = "Regr/"..target.."/"..duration.."/"
+  libpredict.sender:SendHealCommMsg(msg)
+  libpredict:ParseComm(player, msg)
 end
 
 libpredict.sender:SetScript("OnEvent", function()
@@ -504,11 +506,15 @@ libpredict.sender:SetScript("OnEvent", function()
       if spell_queue[1] == "Rejuvenation" then
         hotsetbonus:SetInventoryItem("player", 1)
         local duration = hotsetbonus:Find(L["healduration"]["Rejuvenation"]) and 15 or 12
-        libpredict.sender:SendHealCommMsg("Reju/"..spell_queue[3].."/"..duration.."/")
+        local msg = "Reju/"..spell_queue[3].."/"..duration.."/"
+        libpredict.sender:SendHealCommMsg(msg)
+        libpredict:ParseComm(player, msg)
       elseif spell_queue[1] == "Renew" then
         hotsetbonus:SetInventoryItem("player", 1)
         local duration = hotsetbonus:Find(L["healduration"]["Renew"]) and 15 or 12
-        libpredict.sender:SendHealCommMsg("Renew/"..spell_queue[3].."/"..duration.."/")
+        local msg = "Renew/"..spell_queue[3].."/"..duration.."/"
+        libpredict.sender:SendHealCommMsg(msg)
+        libpredict:ParseComm(player, msg)
       elseif spell_queue[1] == "Regrowth" then
         local duration = 21 --Made this a variable even tho it is static in case future items mess with it
         regrowthCancel = false
