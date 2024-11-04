@@ -281,7 +281,6 @@ resetcache:SetScript("OnEvent", function()
   if event == "UNIT_INVENTORY_CHANGED" or "PLAYER_ENTERING_WORLD" then
     -- skip non-player events
     if arg1 and arg1 ~= "player" then return end
-    local setBonusCounter = 0
 
     local gear = ""
     for id = 1, 18 do
@@ -292,6 +291,8 @@ resetcache:SetScript("OnEvent", function()
     if gear == gear_string then return end
     gear_string = gear
 
+    local setBonusCounter
+    setBonusCounter = 0
     for i=1,10 do --there is no need to check slots above 10
       hotsetbonus:SetInventoryItem("player", i)
       if hotsetbonus:Find(L["healduration"]["Rejuvenation"]) then setBonusCounter = setBonusCounter + 1 end
@@ -300,10 +301,9 @@ resetcache:SetScript("OnEvent", function()
     setBonusCounter = 0
     for i =1,10 do
       hotsetbonus:SetInventoryItem("player", i)
-      if hotsetbonus:Find(L["healduration"]["Rejuvenation"]) then setBonusCounter = setBonusCounter + 1 end
+      if hotsetbonus:Find(L["healduration"]["Renew"]) then setBonusCounter = setBonusCounter + 1 end
     end
     renewDuration = setBonusCounter == 6 and 15 or 12
-    setBonusCounter = 0
   end
 
   -- flag all cached heals for renewal
