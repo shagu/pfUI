@@ -526,15 +526,15 @@ libpredict.sender:SetScript("OnEvent", function()
 end)
 
 function libpredict:getHoTTime(unit, spell)
-	if unit == UNKNOWNOBJECT or unit == UNKOWNBEING then
-		return
- 	end
-	local dbUnit = hots[UnitName(unit)]
-	if dbUnit and dbUnit[spell] and (dbUnit[spell].start + dbUnit[spell].duration) > GetTime() then
-		return dbUnit[spell].start, dbUnit[spell].duration
-	else
-		return
-	end
+  if unit == UNKNOWNOBJECT or unit == UNKOWNBEING then
+    return
+  end
+  local dbUnit = hots[UnitName(unit)]
+  if dbUnit and dbUnit[spell] and (dbUnit[spell].start + dbUnit[spell].duration) > GetTime() then
+    return dbUnit[spell].start, dbUnit[spell].duration
+  else
+    return
+  end
 end
 
 pfUI.api.libpredict = libpredict
