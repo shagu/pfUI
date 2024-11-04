@@ -8,7 +8,7 @@ pfUI:RegisterModule("castbar", "vanilla:tbc", function ()
     local cb = CreateFrame("Frame", name, parent or UIParent)
 
     cb:SetHeight(C.global.font_size * 1.5)
-    cb:SetFrameStrata("MEDIUM")
+    cb:SetFrameStrata("HIGH")
 
     cb.unitstr = unitstr
     cb.unitname = unitname
