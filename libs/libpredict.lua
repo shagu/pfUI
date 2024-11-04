@@ -91,17 +91,8 @@ function libpredict:ParseComm(sender, msg)
       end
 
       if msgobj[1] == "Reju" or msgobj[1] == "Renew" or msgobj[1] == "Regr" then --hots
-        --msgobj1: spell ("reju"/"renew"/"regr") msgobj2: targetName msgobj3: duration
-        if not hots[msgobj[2]] then
-          hots[msgobj[2]] = {}
-        end
-        if not hots[msgobj[2]][msgobj[1]] then
-          hots[msgobj[2]][msgobj[1]]= {}
-        end
-          hots[msgobj[2]][msgobj[1]].duration = msgobj[3]
-          hots[msgobj[2]][msgobj[1]].start = GetTime()
+        msgtype, target, heal, time = "Hot", msgobj[2], msgobj[1], msgobj[3]
       end
-
     elseif select and UnitCastingInfo then
       -- latest healcomm
       msgtype = tonumber(string.sub(msg, 1, 3))
@@ -164,6 +155,8 @@ function libpredict:ParseChatMessage(sender, msg, comm)
     end
   elseif msgtype == "Ress" then
     libpredict:Ress(sender, target)
+  elseif msgtype == "Hot" then
+    libpredict:Hot(sender, target, heal, time)
   end
 end
 
@@ -181,6 +174,14 @@ function libpredict:Heal(sender, target, amount, duration)
   heals[target] = heals[target] or {}
   heals[target][sender] = { amount, timeout }
   libpredict:AddEvent(timeout, target)
+end
+
+function libpredict:Hot(sender, target, spell, duration)
+  hots[target] = hots[target] or {}
+  hots[target][spell] = hots[target][spell] or {}
+
+  hots[target][spell].duration = duration
+  hots[target][spell].start = GetTime()
 end
 
 function libpredict:HealStop(sender)
@@ -391,9 +392,8 @@ local regrowthCancel = false
 
 function libpredict.triggerRegrowth(target, duration)
   if regrowthCancel == true then regrowthCancel = false return end
-  local msg = "Regr/"..target.."/"..duration.."/"
-  libpredict.sender:SendHealCommMsg(msg)
-  libpredict:ParseComm(player, msg)
+  libpredict:Hot(player, target, "Regr", duration)
+  libpredict.sender:SendHealCommMsg("Regr/"..target.."/"..duration.."/")
 end
 
 libpredict.sender:SetScript("OnEvent", function()
@@ -506,15 +506,13 @@ libpredict.sender:SetScript("OnEvent", function()
       if spell_queue[1] == "Rejuvenation" then
         hotsetbonus:SetInventoryItem("player", 1)
         local duration = hotsetbonus:Find(L["healduration"]["Rejuvenation"]) and 15 or 12
-        local msg = "Reju/"..spell_queue[3].."/"..duration.."/"
-        libpredict.sender:SendHealCommMsg(msg)
-        libpredict:ParseComm(player, msg)
+        libpredict:Hot(player, spell_queue[3], "Reju", duration)
+        libpredict.sender:SendHealCommMsg("Reju/"..spell_queue[3].."/"..duration.."/")
       elseif spell_queue[1] == "Renew" then
         hotsetbonus:SetInventoryItem("player", 1)
         local duration = hotsetbonus:Find(L["healduration"]["Renew"]) and 15 or 12
-        local msg = "Renew/"..spell_queue[3].."/"..duration.."/"
-        libpredict.sender:SendHealCommMsg(msg)
-        libpredict:ParseComm(player, msg)
+        libpredict:Hot(player, spell_queue[3], "Renew", duration)
+        libpredict.sender:SendHealCommMsg("Renew/"..spell_queue[3].."/"..duration.."/")
       elseif spell_queue[1] == "Regrowth" then
         local duration = 21 --Made this a variable even tho it is static in case future items mess with it
         regrowthCancel = false
