@@ -386,14 +386,7 @@ libpredict.sender:RegisterEvent("SPELLCAST_DELAYED")
 libpredict.sender:RegisterEvent("UNIT_INVENTORY_CHANGED")
 libpredict.sender:RegisterEvent("SKILL_LINES_CHANGED")
 
-local hotBonusScanner = libtipscan:GetScanner("hotsetbonus")
-local function getSetBonus()
-  hotBonusScanner:SetInventoryItem("player", 1)
-    if hotBonusScanner:Find(T["Set: Increases the duration of your Rejuvenation spell by 3 sec."]) then return true end
-    if hotBonusScanner:Find(T["Set: Increases the duration of your Renew spell by 3 sec."]) then return true end
-    return false
-end
-
+local hotsetbonus = libtipscan:GetScanner("hotsetbonus")
 local regrowthCancel = false
 
 function libpredict.triggerRegrowth(target, duration)
@@ -509,10 +502,12 @@ libpredict.sender:SetScript("OnEvent", function()
     libpredict:HealStop(player)
     if pfUI.client < 20000 then -- vanilla
       if spell_queue[1] == "Rejuvenation" then
-        local duration = getSetBonus() and 15 or 12
+        hotsetbonus:SetInventoryItem("player", 1)
+        local duration = hotsetbonus:Find(L["healduration"]["Rejuvenation"]) and 15 or 12
         libpredict.sender:SendHealCommMsg("Reju/"..spell_queue[3].."/"..duration.."/")
       elseif spell_queue[1] == "Renew" then
-        local duration = getSetBonus() and 15 or 12
+        hotsetbonus:SetInventoryItem("player", 1)
+        local duration = hotsetbonus:Find(L["healduration"]["Renew"]) and 15 or 12
         libpredict.sender:SendHealCommMsg("Renew/"..spell_queue[3].."/"..duration.."/")
       elseif spell_queue[1] == "Regrowth" then
         local duration = 21 --Made this a variable even tho it is static in case future items mess with it
