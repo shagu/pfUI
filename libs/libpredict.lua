@@ -262,6 +262,8 @@ local realm = GetRealmName()
 local player = UnitName("player")
 local cache, gear_string = {}, ""
 local resetcache = CreateFrame("Frame")
+local rejuvDuration, renewDuration = 12, 12 --default durations
+local hotsetbonus = libtipscan:GetScanner("hotsetbonus")
 resetcache:RegisterEvent("PLAYER_ENTERING_WORLD")
 resetcache:RegisterEvent("LEARNED_SPELL_IN_TAB")
 resetcache:RegisterEvent("CHARACTER_POINTS_CHANGED")
@@ -274,12 +276,12 @@ resetcache:SetScript("OnEvent", function()
     pfUI_cache["prediction"][realm][player] = pfUI_cache["prediction"][realm][player] or {}
     pfUI_cache["prediction"][realm][player]["heals"] = pfUI_cache["prediction"][realm][player]["heals"] or {}
     cache = pfUI_cache["prediction"][realm][player]["heals"]
-    return
   end
 
-  if event == "UNIT_INVENTORY_CHANGED" then
+  if event == "UNIT_INVENTORY_CHANGED" or "PLAYER_ENTERING_WORLD" then
     -- skip non-player events
     if arg1 and arg1 ~= "player" then return end
+    local setBonusCounter = 0
 
     local gear = ""
     for id = 1, 18 do
@@ -289,6 +291,19 @@ resetcache:SetScript("OnEvent", function()
     -- abort when inventory didn't change
     if gear == gear_string then return end
     gear_string = gear
+
+    for i=1,10 do --there is no need to check slots above 10
+      hotsetbonus:SetInventoryItem("player", i)
+      if hotsetbonus:Find(L["healduration"]["Rejuvenation"]) then setBonusCounter = setBonusCounter + 1 end
+    end
+    rejuvDuration = setBonusCounter == 8 and 15 or 12
+    setBonusCounter = 0
+    for i =1,10 do
+      hotsetbonus:SetInventoryItem("player", i)
+      if hotsetbonus:Find(L["healduration"]["Rejuvenation"]) then setBonusCounter = setBonusCounter + 1 end
+    end
+    renewDuration = setBonusCounter == 6 and 15 or 12
+    setBonusCounter = 0
   end
 
   -- flag all cached heals for renewal
@@ -387,7 +402,6 @@ libpredict.sender:RegisterEvent("SPELLCAST_DELAYED")
 libpredict.sender:RegisterEvent("UNIT_INVENTORY_CHANGED")
 libpredict.sender:RegisterEvent("SKILL_LINES_CHANGED")
 
-local hotsetbonus = libtipscan:GetScanner("hotsetbonus")
 local regrowthCancel = false
 
 function libpredict.triggerRegrowth(target, duration)
@@ -504,15 +518,11 @@ libpredict.sender:SetScript("OnEvent", function()
     libpredict:HealStop(player)
     if pfUI.client < 20000 then -- vanilla
       if spell_queue[1] == "Rejuvenation" then
-        hotsetbonus:SetInventoryItem("player", 1)
-        local duration = hotsetbonus:Find(L["healduration"]["Rejuvenation"]) and 15 or 12
-        libpredict:Hot(player, spell_queue[3], "Reju", duration)
-        libpredict.sender:SendHealCommMsg("Reju/"..spell_queue[3].."/"..duration.."/")
+        libpredict:Hot(player, spell_queue[3], "Reju", rejuvDuration)
+        libpredict.sender:SendHealCommMsg("Reju/"..spell_queue[3].."/"..rejuvDuration.."/")
       elseif spell_queue[1] == "Renew" then
-        hotsetbonus:SetInventoryItem("player", 1)
-        local duration = hotsetbonus:Find(L["healduration"]["Renew"]) and 15 or 12
-        libpredict:Hot(player, spell_queue[3], "Renew", duration)
-        libpredict.sender:SendHealCommMsg("Renew/"..spell_queue[3].."/"..duration.."/")
+        libpredict:Hot(player, spell_queue[3], "Renew", renewDuration)
+        libpredict.sender:SendHealCommMsg("Renew/"..spell_queue[3].."/"..renewDuration.."/")
       elseif spell_queue[1] == "Regrowth" then
         local duration = 21 --Made this a variable even tho it is static in case future items mess with it
         regrowthCancel = false
