@@ -184,9 +184,11 @@ function libpredict:Hot(sender, target, spell, duration)
   hots[target][spell].start = GetTime()
 
   -- update aura events of relevant unitframes
-  for _, frame in pairs(pfUI.uf.frames) do
-    if frame.namecache == target then
-      frame.update_aura = true
+  if pfUI and pfUI.uf and pfUI.uf.frames then
+    for _, frame in pairs(pfUI.uf.frames) do
+      if frame.namecache == target then
+        frame.update_aura = true
+      end
     end
   end
 end
