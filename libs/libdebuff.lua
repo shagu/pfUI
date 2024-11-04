@@ -61,6 +61,15 @@ function libdebuff:GetDuration(effect, rank)
   end
 end
 
+function libdebuff:UpdateDuration(unit, unitlevel, effect, duration)
+  if not unit or not effect or not duration then return end
+  unitlevel = unitlevel or 0
+
+  if libdebuff.objects[unit] and libdebuff.objects[unit][unitlevel] and libdebuff.objects[unit][unitlevel][effect] then
+    libdebuff.objects[unit][unitlevel][effect].duration = duration
+  end
+end
+
 function libdebuff:GetMaxRank(effect)
   local max = 0
   for id in pairs(L["debuffs"][effect]) do
