@@ -439,7 +439,7 @@ function pfUI.uf:UpdateConfig()
   f.alpha_outrange = tonumber(f.config.alpha_outrange)
   f.alpha_offline = tonumber(f.config.alpha_offline)
 
-  f:SetFrameStrata("BACKGROUND")
+  f:SetFrameStrata("MEDIUM")
 
   f.glow:SetFrameStrata("BACKGROUND")
   f.glow:SetFrameLevel(0)
