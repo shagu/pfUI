@@ -303,7 +303,7 @@ resetcache:SetScript("OnEvent", function()
       hotsetbonus:SetInventoryItem("player", i)
       if hotsetbonus:Find(L["healduration"]["Renew"]) then setBonusCounter = setBonusCounter + 1 end
     end
-    renewDuration = setBonusCounter == 6 and 15 or 12
+    renewDuration = setBonusCounter == 5 and 15 or 12
   end
 
   -- flag all cached heals for renewal
