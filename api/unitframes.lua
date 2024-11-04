@@ -1472,6 +1472,9 @@ function pfUI.uf:RefreshUnit(unit, component)
   local unitstr = unit.label..unit.id
   local rawborder, default_border = GetBorderSize("unitframes")
 
+  -- save current values
+  unit.namecache = UnitName(unitstr)
+
   -- Buffs
   if unit.buffs and ( component == "all" or component == "aura" ) then
     local texture, stacks
