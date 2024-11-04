@@ -208,7 +208,7 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
 
     if object == "bank" then
       if not pfUI.bag.left then pfUI.bag.left = CreateFrame("Frame", "pfBank", UIParent) end
-      anchor = { "BOTTOMLEFT", (pfUI.chat and pfUI.chat.left or nil), "BOTTOMRIGHT" }
+      anchor = { "BOTTOMLEFT", (pfUI.chat and pfUI.chat.left or nil), "BOTTOMRIGHT", "TOPLEFT", "TOPRIGHT" }
       rowlength = tonumber(C.appearance.bags.bankrowlength)
       cwidth = C.chat.left.width
       iterate = pfUI.BANK
@@ -216,7 +216,7 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
     else
       if not pfUI.bag.right then pfUI.bag.right = CreateFrame("Frame", "pfBag", UIParent) end
       rowlength = tonumber(C.appearance.bags.bagrowlength)
-      anchor = { "BOTTOMRIGHT", (pfUI.chat and pfUI.chat.right or nil), "BOTTOMLEFT" }
+      anchor = { "BOTTOMRIGHT", (pfUI.chat and pfUI.chat.right or nil), "BOTTOMLEFT", "TOPRIGHT", "TOPLEFT" }
       cwidth = C.chat.right.width
       iterate = pfUI.BACKPACK
       frame = pfUI.bag.right
@@ -246,8 +246,13 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
       frame:SetPoint(anchor[1], anchor[2], anchor[1], 0, 0)
     elseif pfUI.chat then
       -- use chat frame as anchor if existing
-      frame:SetPoint(anchor[1], anchor[2], anchor[1], 0, 0)
-      frame:SetPoint(anchor[3], anchor[2], anchor[3], 0, 0)
+      if C.appearance.bags.abovechat == "0" then
+        frame:SetPoint(anchor[1], anchor[2], anchor[1], 0, 0)
+        frame:SetPoint(anchor[3], anchor[2], anchor[3], 0, 0)
+      else
+        frame:SetPoint(anchor[3], anchor[2], anchor[5], 0, 3*default_border)
+        frame:SetPoint(anchor[1], anchor[2], anchor[4], 0, 3*default_border)
+      end
     else
       -- align frame to UIParent if no anchor is available
       frame:SetPoint(anchor[1], UIParent, anchor[1], 5, 5)
@@ -662,14 +667,14 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
   end
 
   function pfUI.bag:UpdateCooldowns()
+    local frame
     for bag=-2, 11 do
       local bagsize = GetContainerNumSlots(bag)
       if bag == -2 and pfUI.bag.showKeyring == true then bagsize = GetKeyRingSize() end
       for slot=1, bagsize do
-        if pfUI.bags[bag].slots[slot].frame.hasItem then
-          if _G[pfUI.bags[bag].slots[slot].frame:GetName() .. "Cooldown"] then
-            ContainerFrame_UpdateCooldown(bag, pfUI.bags[bag].slots[slot].frame)
-          end
+        frame = pfUI.bags[bag] and pfUI.bags[bag].slots[slot] and pfUI.bags[bag].slots[slot].frame
+        if frame and frame.hasItem and _G[frame:GetName() .. "Cooldown"] then
+          ContainerFrame_UpdateCooldown(bag, frame)
         end
       end
     end
@@ -1008,7 +1013,7 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
               if itemCount then
                 local itemLink = GetContainerItemLink(bag, slot)
                 local itemstring = string.sub(itemLink, string.find(itemLink, "%[")+1, string.find(itemLink, "%]")-1)
-                if strfind(strlower(itemstring), strlower(string.gsub(this:GetText(), "([^%w])", "%%%1"))) then
+                if strfind(strlower(itemstring), strlower(this:GetText()), 1, true) then
                   pfUI.bags[bag].slots[slot].frame:SetAlpha(1)
                 end
               end

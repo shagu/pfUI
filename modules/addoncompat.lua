@@ -46,6 +46,7 @@ pfUI:RegisterModule("addoncompat", function ()
     ["SmallerRollFrames"] = { always },
     ["EzDismount"] = { always },
     ["AddOnOrganizer"] = { always },
+    ["Prat"] = { always },
   }
 
   local require_reload

@@ -277,13 +277,16 @@ pfUI:RegisterModule("panel", "vanilla:tbc", function()
         GameTooltip:AddDoubleLine(T["Login"] .. ":", CreateGoldString(pfUI.panel.initMoney))
         GameTooltip:AddDoubleLine(T["Now"] .. ":", CreateGoldString(GetMoney()))
         GameTooltip:AddDoubleLine("|cffffffff","")
+        local totalgold = 0
         for name, gold in pairs(pfUI_cache["gold"][GetRealmName()]) do
+          totalgold = totalgold + gold
           if name ~= UnitName("player") then
             GameTooltip:AddDoubleLine(name .. ":", CreateGoldString(gold))
           end
         end
         GameTooltip:AddDoubleLine("|cffffffff","")
         GameTooltip:AddDoubleLine(T["This Session"] .. ":", dmod .. CreateGoldString(math.abs(pfUI.panel.diffMoney)))
+        GameTooltip:AddDoubleLine(T["Total Gold"] .. ":", CreateGoldString(totalgold))
         GameTooltip:Show()
       end
       widget:SetScript("OnEvent", function()
@@ -517,6 +520,7 @@ pfUI:RegisterModule("panel", "vanilla:tbc", function()
       local widget = CreateFrame("Frame", "pfPanelWidgetAmmo", UIParent)
       widget:RegisterEvent("PLAYER_ENTERING_WORLD")
       widget:RegisterEvent("UNIT_INVENTORY_CHANGED")
+      widget:RegisterEvent("BAG_UPDATE")
       widget.Tooltip = function()
         if GetInventoryItemQuality("player", 0) then
           local ammo = GetInventoryItemCount("player", 0)

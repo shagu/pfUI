@@ -47,7 +47,7 @@ pfUI:RegisterModule("tracking", "vanilla", function ()
   }
 
   pfUI.tracking = CreateFrame("Button", "pfUITracking", UIParent)
-  pfUI.tracking:SetFrameStrata("LOW")
+  pfUI.tracking:SetFrameStrata("HIGH")
   CreateBackdrop(pfUI.tracking, border)
   CreateBackdropShadow(pfUI.tracking)
 
