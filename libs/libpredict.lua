@@ -18,7 +18,7 @@ setfenv(1, pfUI:GetEnvironment())
 if pfUI.api.libpredict then return end
 
 local senttarget
-local heals, ress, events = {}, {}, {}
+local heals, ress, events, hots = {}, {}, {}, {}
 
 local PRAYER_OF_HEALING
 do -- Prayer of Healing
@@ -89,6 +89,19 @@ function libpredict:ParseComm(sender, msg)
           if msgobj[i] then table.insert(target, msgobj[i]) end
         end
       end
+
+      if msgobj[1] == "Reju" or msgobj[1] == "Renew" or msgobj[1] == "Regr" then --hots
+        --msgobj1: spell ("reju"/"renew"/"regr") msgobj2: targetName msgobj3: duration
+        if not hots[msgobj[2]] then
+          hots[msgobj[2]] = {}
+        end
+        if not hots[msgobj[2]][msgobj[1]] then
+          hots[msgobj[2]][msgobj[1]]= {}
+        end
+          hots[msgobj[2]][msgobj[1]].duration = msgobj[3]
+          hots[msgobj[2]][msgobj[1]].start = GetTime()
+      end
+
     elseif select and UnitCastingInfo then
       -- latest healcomm
       msgtype = tonumber(string.sub(msg, 1, 3))
@@ -373,6 +386,21 @@ libpredict.sender:RegisterEvent("SPELLCAST_DELAYED")
 libpredict.sender:RegisterEvent("UNIT_INVENTORY_CHANGED")
 libpredict.sender:RegisterEvent("SKILL_LINES_CHANGED")
 
+local hotBonusScanner = libtipscan:GetScanner("hotsetbonus")
+local function getSetBonus()
+  hotBonusScanner:SetInventoryItem("player", 1)
+    if hotBonusScanner:Find(T["Set: Increases the duration of your Rejuvenation spell by 3 sec."]) then return true end
+    if hotBonusScanner:Find(T["Set: Increases the duration of your Renew spell by 3 sec."]) then return true end
+    return false
+end
+
+local regrowthCancel = false
+
+function libpredict.triggerRegrowth(target, duration)
+  if regrowthCancel == true then regrowthCancel = false return end -- if a SPELLCAST_INTERRUPTED event happened we abandon ship and reset regrowthCancel to false to not mess with future casts
+  libpredict.sender:SendHealCommMsg("Regr/"..target.."/"..duration.."/")
+end
+
 libpredict.sender:SetScript("OnEvent", function()
   if event == "CHAT_MSG_SPELL_SELF_BUFF" then -- vanilla
     local spell, _, heal = cmatch(arg1, HEALEDSELFOTHER) -- "Your %s heals %s for %d."
@@ -455,6 +483,7 @@ libpredict.sender:SetScript("OnEvent", function()
     end
   elseif strfind(event, "SPELLCAST_FAILED", 1) or strfind(event, "SPELLCAST_INTERRUPTED", 1) then
     if strfind(event, "UNIT_", 1) and arg1 ~= "player" then return end
+    regrowthCancel = true
     if libpredict.sender.healing then
       libpredict:HealStop(player)
       if pfUI.client < 20000 then -- vanilla
@@ -478,7 +507,34 @@ libpredict.sender:SetScript("OnEvent", function()
   elseif strfind(event, "SPELLCAST_STOP", 1) then
     if strfind(event, "UNIT_", 1) and arg1 ~= "player" then return end
     libpredict:HealStop(player)
+    if pfUI.client < 20000 then -- vanilla
+      if spell_queue[1] == "Rejuvenation" then
+        local duration = getSetBonus() and 15 or 12
+        libpredict.sender:SendHealCommMsg("Reju/"..spell_queue[3].."/"..duration.."/")
+      elseif spell_queue[1] == "Renew" then
+        local duration = getSetBonus() and 15 or 12
+        libpredict.sender:SendHealCommMsg("Renew/"..spell_queue[3].."/"..duration.."/")
+      elseif spell_queue[1] == "Regrowth" then
+        local duration = 21 --Made this a variable even tho it is static in case future items mess with it
+        regrowthCancel = false
+        QueueFunction(libpredict.triggerRegrowth,spell_queue[3], duration) --SPELLCAST_STOP seem to fire before SPELLCAST_INTERRUPTED so we enqueue execution to be on the safe side
+      end
+    else -- tbc
+      --todo
+    end
   end
 end)
+
+function libpredict:getHoTTime(unit, spell)
+  if unit == UNKNOWNOBJECT or unit == UNKOWNBEING then
+    return
+  end
+  local dbUnit = hots[UnitName(unit)]
+  if dbUnit and dbUnit[spell] and (dbUnit[spell].start + dbUnit[spell].duration) > GetTime() then
+    return dbUnit[spell].start, dbUnit[spell].duration
+  else
+    return
+  end
+end
 
 pfUI.api.libpredict = libpredict
