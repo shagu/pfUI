@@ -516,10 +516,8 @@ function pfUI.uf:UpdateConfig()
     fontstyle = C.global.font_unit_style
   end
 
-  f.portrait:SetFrameStrata("LOW")
   f.portrait.tex:SetAllPoints(f.portrait)
   f.portrait.tex:SetTexCoord(.1, .9, .1, .9)
-  f.portrait.model:SetFrameStrata("LOW")
   f.portrait.model:SetAllPoints(f.portrait)
 
   if f.config.portrait == "bar" then
@@ -530,8 +528,6 @@ function pfUI.uf:UpdateConfig()
     if f.portrait.backdrop then f.portrait.backdrop:Hide() end
 
     -- place portrait below fonts
-    f.portrait:SetFrameStrata("BACKGROUND")
-    f.portrait.model:SetFrameStrata("BACKGROUND")
     f.portrait.model:SetFrameLevel(3)
 
     f.portrait:Show()
