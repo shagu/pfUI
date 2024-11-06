@@ -80,7 +80,7 @@ pfUI:RegisterModule("turtle-wow", "vanilla", function ()
 
     -- skin title dropdown menu
     -- taken from: https://github.com/doorknob6/pfUI-turtle/blob/master/skins/turtle/character.lua
-    if TWTitles and pfUI_config["disabled"]["skin_Character"] ~= "1" then
+    if TWTitles and pfUI.skin["Character"] and pfUI_config["disabled"]["skin_Character"] ~= "1" then
       CharacterLevelText:SetPoint("TOP", CharacterNameText, "BOTTOM", 0, -2)
       SkinDropDown(TWTitles)
       TWTitles:SetPoint("TOP", CharacterGuildText, "BOTTOM", 0, -2)
@@ -91,7 +91,7 @@ pfUI:RegisterModule("turtle-wow", "vanilla", function ()
 
   -- rearrange twow's profession window additions
   HookAddonOrVariable("Blizzard_TradeSkillUI", function()
-    if TradeSkillSkillCheckButton and pfUI_config["disabled"]["skin_Profession"] ~= "1" then
+    if TradeSkillSkillCheckButton and pfUI.skin["Profession"] and pfUI_config["disabled"]["skin_Profession"] ~= "1" then
       SkinCheckbox(TradeSkillSkillCheckButton)
       TradeSkillSkillCheckButton:SetWidth(24)
       TradeSkillSkillCheckButton:SetHeight(24)
