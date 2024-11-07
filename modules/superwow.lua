@@ -2,6 +2,33 @@
 -- https://github.com/balakethelock/SuperWoW
 
 pfUI:RegisterModule("superwow", "vanilla", function ()
+  if SetAutoloot and SpellInfo then
+    -- Turn every enchanting link that we create in the enchanting frame,
+    -- from "spell:" back into "enchant:". The enchant-version is what is
+    -- used by all unmodified game clients. This is required to generate
+    -- usable links for everyone from the enchant frame while having SuperWoW.
+    local HookGetCraftItemLink = GetCraftItemLink
+    _G.GetCraftItemLink = function(index)
+      local link = HookGetCraftItemLink(index)
+      return string.gsub(link, "spell:", "enchant:")
+    end
+
+    -- Convert every enchanting link that we receive into a
+    -- spell link, as for some reason SuperWoW can't handle
+    -- enchanting links at all and requires it to be a spell.
+    local HookSetItemRef = SetItemRef
+    _G.SetItemRef = function(link, text, button)
+      link = string.gsub(link, "enchant:", "spell:")
+      HookSetItemRef(link, text, button)
+    end
+
+    local HookGameTooltipSetHyperlink = GameTooltip.SetHyperlink
+    _G.GameTooltip.SetHyperlink = function(self, link)
+      link = string.gsub(link, "enchant:", "spell:")
+      HookGameTooltipSetHyperlink(self, link)
+    end
+  end
+
   local unitcast = CreateFrame("Frame")
   unitcast:RegisterEvent("UNIT_CASTEVENT")
   unitcast:SetScript("OnEvent", function()
