@@ -12,6 +12,11 @@ pfUI_locale["ruRU"]["class"] = {
   ["Разбойник"] = "ROGUE",
 }
 
+pfUI_locale["ruRU"]["healduration"] = {
+  ["Rejuvenation"] = "Увеличивает время действия \"Омоложения\" на 3 сек.",
+  ["Renew"] = "Продлевает действие \"Обновления\" на 3 сек.",
+}
+
 pfUI_locale["ruRU"]["bagtypes"] = {
   ["Колчан"] = "QUIVER",
   ["Сумка душ"] = "SOULBAG",

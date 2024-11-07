@@ -12,6 +12,11 @@ pfUI_locale["koKR"]["class"] = {
   ["도적"] = "ROGUE",
 }
 
+pfUI_locale["koKR"]["healduration"] = {
+  ["Rejuvenation"] = "회복의 지속시간이 3초만큼 증가합니다.",
+  ["Renew"] = "소생의 지속시간이 3초만큼 증가합니다.",
+}
+
 pfUI_locale["koKR"]["bagtypes"] = {
   ["화살통"] = "QUIVER",
   ["영혼의 가방"] = "SOULBAG",

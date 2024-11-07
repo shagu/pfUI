@@ -1009,13 +1009,17 @@ pfUI:RegisterModule("thirdparty-vanilla", "vanilla", function()
     if C.thirdparty.bcs.enable == "0" then return end
     StripTextures(BetterCharacterAttributesFrame)
 
-    SkinDropDown(PlayerStatFrameLeftDropDown, nil, nil, nil, true)
-    PlayerStatFrameLeftDropDown.backdrop:SetPoint("TOPLEFT", 19, -2)
-    PlayerStatFrameLeftDropDown.backdrop:SetPoint("BOTTOMRIGHT", -19, 7)
+    if PlayerStatFrameLeftDropDown then
+      SkinDropDown(PlayerStatFrameLeftDropDown, nil, nil, nil, true)
+      PlayerStatFrameLeftDropDown.backdrop:SetPoint("TOPLEFT", 19, -2)
+      PlayerStatFrameLeftDropDown.backdrop:SetPoint("BOTTOMRIGHT", -19, 7)
+    end
 
-    SkinDropDown(PlayerStatFrameRightDropDown, nil, nil, nil, true)
-    PlayerStatFrameRightDropDown.backdrop:SetPoint("TOPLEFT", 19, -2)
-    PlayerStatFrameRightDropDown.backdrop:SetPoint("BOTTOMRIGHT", -19, 7)
+    if PlayerStatFrameRightDropDown then
+      SkinDropDown(PlayerStatFrameRightDropDown, nil, nil, nil, true)
+      PlayerStatFrameRightDropDown.backdrop:SetPoint("TOPLEFT", 19, -2)
+      PlayerStatFrameRightDropDown.backdrop:SetPoint("BOTTOMRIGHT", -19, 7)
+    end
   end)
 
   HookAddonOrVariable("MyRolePlay", function()

@@ -12,6 +12,11 @@ pfUI_locale["enUS"]["class"] = {
   ["Rogue"] = "ROGUE",
 }
 
+pfUI_locale["enUS"]["healduration"] = {
+  ["Rejuvenation"] = "Increases the duration of your Rejuvenation spell by 3 sec.",
+  ["Renew"] = "Increases the duration of your Renew spell by 3 sec.",
+}
+
 pfUI_locale["enUS"]["bagtypes"] = {
   ["Quiver"] = "QUIVER",
   ["Soul Bag"] = "SOULBAG",

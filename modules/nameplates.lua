@@ -1031,7 +1031,7 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
       local plate = C.nameplates["overlap"] == "1" and nameplate or parent
 
       if C.nameplates["vertical_offset"] ~= "0" then
-        nameplate:SetPoint("TOP", plate, "TOP", 0, tonumber(C.nameplates["vertical_offset"]))
+        nameplate:SetPoint("TOP", parent, "TOP", 0, tonumber(C.nameplates["vertical_offset"]))
       end
 
       -- replace clickhandler

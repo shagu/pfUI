@@ -911,6 +911,7 @@ function pfUI.api.SkinCheckbox(frame, size)
 end
 
 function pfUI.api.SkinDropDown(frame, cr, cg, cb, useSmall)
+  if not frame then return end
   StripTextures(frame)
   CreateBackdrop(frame)
   frame.backdrop:SetPoint("TOPLEFT", 15, -1)

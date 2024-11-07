@@ -1857,6 +1857,7 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
     end)
 
     CreateGUIEntry(T["Minimap"], T["Minimap"], function()
+      CreateConfig(U["minimap"], T["Minimap Size (|cffffaaaaExperimental|r)"], C.appearance.minimap, "size")
       CreateConfig(nil, T["Enable Zone Text On Minimap Mouseover"], C.appearance.minimap, "mouseoverzone", "checkbox")
       CreateConfig(nil, T["Coordinates Location"], C.appearance.minimap, "coordsloc", "dropdown", pfUI.gui.dropdowns.minimap_cords_position)
       CreateConfig(nil, T["Show PvP Icon"], C.unitframes.player, "showPVPMinimap", "checkbox")
