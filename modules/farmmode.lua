@@ -116,7 +116,7 @@ pfUI:RegisterModule("farmmode", "vanilla:tbc", function ()
 
     -- save old minimap height
     if pfUI.minimap then
-      pfUI.minimap:SetHeight(140)
+      pfUI.minimap:SetHeight(this.mmoldsize)
       pfUI.minimap:SetAlpha(1)
       pfUI.farmmap.button:Hide()
     end
