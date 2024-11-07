@@ -1,5 +1,6 @@
 pfUI:RegisterModule("minimap", "vanilla:tbc", function ()
   local rawborder, border = GetBorderSize()
+  local size = tonumber(C.appearance.minimap.size) or 140
 
   if MiniMapWorldMapButton then MiniMapWorldMapButton:Hide() end
   if MinimapToggleButton then MinimapToggleButton:Hide() end
@@ -16,8 +17,6 @@ pfUI:RegisterModule("minimap", "vanilla:tbc", function ()
   CreateBackdropShadow(pfUI.minimap)
   pfUI.minimap:SetPoint("TOPRIGHT", UIParent, -border*2, -border*2)
   UpdateMovable(pfUI.minimap)
-  pfUI.minimap:SetWidth(140)
-  pfUI.minimap:SetHeight(140)
   pfUI.minimap:SetScript("OnShow", function()
     QueueFunction(ShowUIPanel, Minimap)
   end)
@@ -31,6 +30,18 @@ pfUI:RegisterModule("minimap", "vanilla:tbc", function ()
     if(arg1 > 0) then Minimap_ZoomIn() else Minimap_ZoomOut() end
   end)
 
+  pfUI.minimap.UpdateConfig = function(self)
+    size = tonumber(C.appearance.minimap.size) or 140
+
+    pfUI.minimap:SetWidth(size)
+    pfUI.minimap:SetHeight(size)
+
+    Minimap:SetWidth(size)
+    Minimap:SetHeight(size)
+  end
+
+  pfUI.minimap:UpdateConfig()
+
   hooksecurefunc("ToggleMinimap", function()
     if pfUI.farmmap and pfUI.farmmap:IsShown() then
       Minimap:Hide()
@@ -38,7 +49,7 @@ pfUI:RegisterModule("minimap", "vanilla:tbc", function ()
     end
 
     if Minimap:IsVisible() then
-      pfUI.minimap:SetHeight(140)
+      pfUI.minimap:SetHeight(size)
       pfUI.minimap:SetAlpha(1)
     else
       pfUI.minimap:SetHeight(-border-5)
