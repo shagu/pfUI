@@ -1,16 +1,7 @@
 -- Compatibility layer to use castbars provided by SuperWoW:
 -- https://github.com/balakethelock/SuperWoW
+
 pfUI:RegisterModule("superwow", "vanilla", function ()
-
-  -- Allow to click on AtlasLoot links while using SuperWoW
-  -- I don't know whats going on there, I just want to be able to
-  -- click those links in chat. I haven't analysed it any further.
-  local HookSetItemRef = SetItemRef
-  _G.SetItemRef = function(link, text, button)
-    link = string.gsub(link, "enchant:", "spell:")
-    HookSetItemRef(link, text, button)
-  end
-
   local unitcast = CreateFrame("Frame")
   unitcast:RegisterEvent("UNIT_CASTEVENT")
   unitcast:SetScript("OnEvent", function()
