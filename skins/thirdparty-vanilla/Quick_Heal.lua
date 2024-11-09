@@ -33,7 +33,7 @@ pfUI:RegisterSkin("Quick Heal", "vanilla", function ()
 
     QuickHealOverhealStatus:SetWidth(300)
     QuickHealOverhealStatus:SetHeight(13)
-    QuickHealOverhealStatus:SetPoint("CENTER", QuickHealHealingBar, "CENTER", 0, 10)
+    QuickHealOverhealStatus:SetPoint("CENTER", QuickHealHealingBar, "CENTER", 0, 5)
 
     QuickHealHealingBarStatusBar:SetWidth(186)
     QuickHealHealingBarStatusBar:SetHeight(13)
