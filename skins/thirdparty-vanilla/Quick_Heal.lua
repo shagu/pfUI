@@ -2,7 +2,6 @@ pfUI:RegisterSkin("Quick Heal", "vanilla", function ()
   HookAddonOrVariable("QuickHealHealingBar", function()
   -- To get more Glassic style:
   -- comment CreateBackdrop / CreateBackdropShadow
-  -- uncomment QuickHealHealingBarBackground:Hide()
 
     StripTextures(QuickHealHealingBar)
     CreateBackdrop(QuickHealHealingBar)
@@ -11,7 +10,6 @@ pfUI:RegisterSkin("Quick Heal", "vanilla", function ()
     QuickHealHealingBarStatusBar:SetStatusBarTexture(pfUI.media["img:bar"])
     QuickHealHealingBarStatusBar:SetStatusBarColor(0.0, 1.0, 0.0)
     QuickHealHealingBarStatusBar:SetBackdropColor(0.1, 0.1, 0.1, 0.8)
-    CreateBackdropShadow(QuickHealHealingBarStatusBar)
 
     QuickHealHealingBarStatusBarPost:SetStatusBarTexture(pfUI.media["img:bar"])
     QuickHealHealingBarStatusBarPost:SetStatusBarColor(0.0, 1.0, 0.0, 0.5)
