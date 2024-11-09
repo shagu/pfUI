@@ -43,4 +43,7 @@
   <Include file="..\skins\blizzard\arena.lua"/>
   <Include file="..\skins\blizzard\time_manager.lua"/>
   <Include file="..\skins\blizzard\lfg.lua"/>
+
+  <!-- thirdparty-vanilla -->
+  <Include file="..\skins\thirdparty-vanilla\Quick_Heal.lua"/>
 </Ui>
