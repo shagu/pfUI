@@ -789,6 +789,7 @@ pfUI:RegisterModule("panel", "vanilla:tbc", function()
 
   pfUI.panel.minimap = CreateFrame("Button", "pfPanelMinimap", UIParent)
   if pfUI.minimap then
+    pfUI.panel.minimap:SetWidth(pfUI.minimap:GetWidth())
     pfUI.panel.minimap:SetPoint("TOPLEFT", pfUI.minimap, "BOTTOMLEFT", 0 , -default_border*3)
     pfUI.panel.minimap:SetPoint("TOPRIGHT", pfUI.minimap, "BOTTOMRIGHT", 0 , default_border*3)
   else

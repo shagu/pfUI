@@ -2,7 +2,7 @@
 -- https://github.com/balakethelock/SuperWoW
 
 pfUI:RegisterModule("superwow", "vanilla", function ()
-  if SetAutoloot and SpellInfo then
+  if SetAutoloot and SpellInfo and not SUPERWOW_VERSION then
     -- Turn every enchanting link that we create in the enchanting frame,
     -- from "spell:" back into "enchant:". The enchant-version is what is
     -- used by all unmodified game clients. This is required to generate
@@ -27,6 +27,9 @@ pfUI:RegisterModule("superwow", "vanilla", function ()
       link = string.gsub(link, "enchant:", "spell:")
       HookGameTooltipSetHyperlink(self, link)
     end
+
+    DEFAULT_CHAT_FRAME:AddMessage("|cffffffaaAn old version of SuperWoW was detected. Please consider updating:")
+    DEFAULT_CHAT_FRAME:AddMessage("-> https://github.com/balakethelock/SuperWoW/releases/")
   end
 
   local unitcast = CreateFrame("Frame")
