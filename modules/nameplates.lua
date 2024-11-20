@@ -1041,13 +1041,19 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
       -- replace clickhandler
       if C.nameplates["overlap"] == "1" or C.nameplates["vertical_offset"] ~= "0" then
         parent:SetFrameLevel(0)
-        nameplate:SetScript("OnClick", function() parent:Click() end)
+        nameplate.health:SetScript("OnMouseDown", function()
+          if arg1 == "RightButton" and C.nameplates["rightclick"] == "1" then
+            nameplates.mouselook.OnMouseDown()
+          else
+            parent:Click(arg1)
+          end
+        end)
 
         parent:EnableMouse(false)
-        nameplate:EnableMouse(true)
+        nameplate.health:EnableMouse(true)
       else
         parent:EnableMouse(true)
-        nameplate:EnableMouse(false)
+        nameplate.health:EnableMouse(false)
       end
 
       -- enable mouselook on rightbutton down
@@ -1059,10 +1065,8 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
 
       -- disable click event on frames
       if C.nameplates["clickthrough"] == "1" then
-        nameplate:EnableMouse(false)
+        nameplate.health:EnableMouse(false)
         plate:EnableMouse(false)
-      else
-        plate:EnableMouse(true)
       end
     end
 
@@ -1088,9 +1092,9 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
       end
 
       -- disable click events while spell is targeting
-      local mouseEnabled = this.nameplate:IsMouseEnabled()
+      local mouseEnabled = this.nameplate.health:IsMouseEnabled()
       if C.nameplates["clickthrough"] == "0" and C.nameplates["overlap"] == "1" and SpellIsTargeting() == mouseEnabled then
-        this.nameplate:EnableMouse(not mouseEnabled)
+        this.nameplate.health:EnableMouse(not mouseEnabled)
       end
 
       hookOnUpdate(self)
@@ -1126,7 +1130,11 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
 
       -- run a usual nameplate rightclick action
       if not IsMouselooking() then
-        this.frame:Click("LeftButton")
+        if this.frame:GetObjectType() == "Button" then
+          this.frame:Click("LeftButton")
+        else
+          this.frame:GetParent():GetParent():Click("LeftButton")
+        end
         if UnitCanAttack("player", "target") and not nameplates.combat.inCombat then AttackTarget() end
         this:Hide()
         return
