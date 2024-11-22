@@ -22,19 +22,7 @@ pfUI:RegisterModule("pixelperfect", "vanilla:tbc", function ()
         UIParent:SetScale(.9)
       end
     else
-      -- apply pixel dependent scaling
-      local resolution = GetCVar("gxResolution")
-
-      for screenwidth, screenheight in gfind(resolution, "(.+)x(.+)") do
-        local screenheight = tonumber(screenheight) / 8
-        local scale = 768 / ( screenheight * conf )
-        scale = math.max(statics[conf] or 0, scale)
-
-        SetCVar("uiScale", scale)
-        SetCVar("useUiScale", 1)
-
-        UIParent:SetScale(scale)
-      end
+      UIParent:SetScale(statics[conf])
     end
   end
 
