@@ -22,7 +22,12 @@ pfUI:RegisterModule("pixelperfect", "vanilla:tbc", function ()
         UIParent:SetScale(.9)
       end
     else
-      UIParent:SetScale(statics[conf])
+      local scale = conf and statics[conf] or 1
+
+      SetCVar("uiScale", scale)
+      SetCVar("useUiScale", 1)
+
+      UIParent:SetScale(scale)
     end
   end
 
