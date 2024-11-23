@@ -359,6 +359,10 @@ pfUI:RegisterModule("chat", "vanilla:tbc", function ()
         frame:SetFading(false)
       end
 
+      if C.chat.global.maxlines ~= "128" then
+        frame:SetMaxLines(tonumber(C.chat.global.maxlines) or 128)
+      end
+
       if i == 3 and C.chat.right.enable == "1" then
         -- Loot & Spam
         local bottompadding = pfUI.panel and pfUI.panel.right:IsShown() and not pfUI_config.position["pfPanelRight"] and panelheight or default_border
