@@ -113,7 +113,7 @@ end)
       SkinSlider(slider)
     end
 
-    --SkinEditBox ???
+    -- skinEditBox ???
     local editboxes = {
       QuickHealConfig_NotificationChannelNameEditBox,
     }
