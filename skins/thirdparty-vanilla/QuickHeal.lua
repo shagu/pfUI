@@ -51,7 +51,7 @@ pfUI:RegisterSkin("QuickHeal", "vanilla", function ()
     QuickHealOverhealStatus_Text:SetPoint("BOTTOM", QuickHealOverhealStatus, "TOP", 0, 0)
 end)
 
-  pfUI.api.HookAddonOrVariable("QuickHeal", function()
+  HookAddonOrVariable("QuickHeal", function()
     local frames = {
       QuickHealConfig,
       QuickHeal_DownrankSlider
