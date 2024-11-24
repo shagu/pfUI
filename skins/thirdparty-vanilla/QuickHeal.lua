@@ -1,4 +1,4 @@
-pfUI:RegisterSkin("Quick Heal", "vanilla", function ()
+pfUI:RegisterSkin("QuickHeal", "vanilla", function ()
   HookAddonOrVariable("QuickHealHealingBar", function()
   -- To get more Glassic style comment CreateBackdrop
 
