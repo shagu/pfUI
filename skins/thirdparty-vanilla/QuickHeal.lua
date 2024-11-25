@@ -54,18 +54,19 @@ end)
   HookAddonOrVariable("QuickHeal", function()
     local frames = {
       QuickHealConfig,
-      QuickHeal_DownrankSlider
-      -- QuickHealConfig_GeneralOptionsFrame,
-      -- QuickHealConfig_MessagesAndNotificationFrame,
-      -- QuickHealConfig_HealingTargetFilterFrame,
-      -- MTListFrame,
-      -- MeleeDPSListFrame,
+      QuickHeal_DownrankSlider,
+      QuickHealConfig_NotificationChannelNameEditBox, -- -- skinEditBox ???
     }
     for _, frame in pairs(frames) do
       StripTextures(frame)
       CreateBackdrop(frame)
       CreateBackdropShadow(frame)
     end
+
+      QuickHealConfig_NotificationChannelNameEditBox:ClearAllPoints()
+      QuickHealConfig_NotificationChannelNameEditBox:SetWidth(133)
+      QuickHealConfig_NotificationChannelNameEditBox:SetHeight(22)
+      QuickHealConfig_NotificationChannelNameEditBox:SetPoint("TOPLEFT", QuickHealConfig, "TOPLEFT", 139, -110)
 
     local buttons = {
       QuickHealConfig_CloseButton,
@@ -113,21 +114,6 @@ end)
       SkinSlider(slider)
     end
 
-    -- skinEditBox ???
-    local editboxes = {
-      QuickHealConfig_NotificationChannelNameEditBox,
-    }
-    for _, editbox in pairs(editboxes) do
-      StripTextures(editbox)
-      CreateBackdrop(editbox)
-      CreateBackdropShadow(editbox)
-    end
-
-      QuickHealConfig_NotificationChannelNameEditBox:ClearAllPoints()
-      QuickHealConfig_NotificationChannelNameEditBox:SetWidth(133)
-      QuickHealConfig_NotificationChannelNameEditBox:SetHeight(22)
-      QuickHealConfig_NotificationChannelNameEditBox:SetPoint("TOPLEFT", QuickHealConfig, "TOPLEFT", 139, -110)
-
     local dropdowns = {
       QuickHealConfig_ComboBoxNotificationStyle,
       QuickHealConfig_ComboBoxMessageConfigure,
@@ -144,7 +130,7 @@ end)
             -- Adjust the position of each tab based on its index
             if i > 1 then
                 local previousTab = _G["QuickHealConfigTab" .. (i - 1)]
-                tab:SetPoint("TOPLEFT", previousTab, "TOPRIGHT", 3, 0)
+                tab:SetPoint("TOPLEFT", previousTab, "TOPRIGHT", 5, 0)
             end
           end
        end
