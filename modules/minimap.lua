@@ -141,7 +141,6 @@ pfUI:RegisterModule("minimap", "vanilla:tbc", function ()
 
   pfUI.minimapCoordinates:SetHeight(C.global.font_size)
   pfUI.minimapCoordinates:SetWidth(Minimap:GetWidth())
-  pfUI.minimapCoordinates:SetFrameStrata("BACKGROUND")
   pfUI.minimapCoordinates.text = pfUI.minimapCoordinates:CreateFontString("MinimapCoordinatesText", "LOW", "GameFontNormal")
   pfUI.minimapCoordinates.text:SetFont(pfUI.font_default, C.global.font_size, "OUTLINE")
   pfUI.minimapCoordinates.text:SetTextColor(1,1,1,1)

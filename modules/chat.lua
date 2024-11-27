@@ -814,6 +814,10 @@ pfUI:RegisterModule("chat", "vanilla:tbc", function ()
   end
 
   for i=1,NUM_CHAT_WINDOWS do
+    if C.chat.global.maxlines ~= "128" then
+      _G["ChatFrame"..i]:SetMaxLines(tonumber(C.chat.global.maxlines) or 128)
+    end
+
     if not _G["ChatFrame"..i].HookAddMessage then
       if C.chat.text.history == "1" then
         -- write history to chat
