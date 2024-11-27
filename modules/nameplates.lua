@@ -216,6 +216,7 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     -- update debuff positions
     local width = tonumber(C.nameplates.width)
     local debuffsize = tonumber(C.nameplates.debuffsize)
+    local debuffoffset = tonumber(C.nameplates.debuffoffset)
     local limit = floor(width / debuffsize)
     local font = C.nameplates.use_unitfonts == "1" and pfUI.font_unit or pfUI.font_default
     local font_size = C.nameplates.use_unitfonts == "1" and C.global.font_unit_size or C.global.font_size
@@ -223,9 +224,9 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
 
     local aligna, alignb, offs, space
     if C.nameplates.debuffs["position"] == "BOTTOM" then
-      aligna, alignb, offs, space = "TOPLEFT", "BOTTOMLEFT", -4, -1
+      aligna, alignb, offs, space = "TOPLEFT", "BOTTOMLEFT", -debuffoffset, -1
     else
-      aligna, alignb, offs, space = "BOTTOMLEFT", "TOPLEFT", 4, 1
+      aligna, alignb, offs, space = "BOTTOMLEFT", "TOPLEFT", debuffoffset, 1
     end
 
     nameplate.debuffs[i].stacks:SetFont(font, font_size, font_style)
