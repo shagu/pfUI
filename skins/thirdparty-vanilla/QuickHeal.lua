@@ -132,7 +132,7 @@ end)
                 local previousTab = _G["QuickHealConfigTab" .. (i - 1)]
                 tab:SetPoint("TOPLEFT", previousTab, "TOPRIGHT", 2, 0)
             else
-                tab:SetPoint("TOPLEFT", QuickHealConfig, "BOTTOMLEFT", 0, -2)
+                tab:SetPoint("TOPLEFT", QuickHealConfig, "BOTTOMLEFT", 0, -3)
             end
           end
        end
