@@ -225,7 +225,7 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     if C.nameplates.debuffs["position"] == "BOTTOM" then
       aligna, alignb, offs, space = "TOPLEFT", "BOTTOMLEFT", -4, -1
     else
-      aligna, alignb, offs, space = "BOTTOMLEFT", "TOPLEFT", 20, 1
+      aligna, alignb, offs, space = "BOTTOMLEFT", "TOPLEFT", 4, 1
     end
 
     nameplate.debuffs[i].stacks:SetFont(font, font_size, font_style)
