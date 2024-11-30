@@ -1236,7 +1236,6 @@ pfUI:RegisterModule("thirdparty-vanilla", "vanilla", function()
     SkinCheckbox(xpsp3_checkButton_notify_playSystemDefaultSound)
 
     local buttons = {
-      GameMenuButtonXPSP3,
       xpsp3_button_close,
       xpsp3_button_cameraHeight_raise,
       xpsp3_button_cameraHeight_lower,
