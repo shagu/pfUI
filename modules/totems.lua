@@ -1,5 +1,6 @@
 pfUI:RegisterModule("totems", "vanilla:tbc", function ()
   local _, class = UnitClass("player")
+  local _, build = GetBuildInfo()
 
   local slots = {
     [FIRE_TOTEM_SLOT]  = { r = .5, g = .2, b = .1 },
@@ -13,7 +14,7 @@ pfUI:RegisterModule("totems", "vanilla:tbc", function ()
   totems:RegisterEvent("PLAYER_ENTERING_WORLD")
   totems:RegisterEvent("CHAT_MSG_SPELL_SELF_BUFF")
   totems:SetScript("OnEvent", function(self)
-    if arg1 then
+    if arg1 and tonumber(build) >= 7205 then
       -- Check if the message contains the specific phrase related to Totemic Recall
       if string.find(arg1, "You gain") and string.find(arg1, "Mana from Totemic Recall") then
         totems:RefreshList(true)
