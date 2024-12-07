@@ -1,6 +1,13 @@
 pfUI:RegisterModule("totems", "vanilla:tbc", function ()
   local _, class = UnitClass("player")
+  
+  -- totem recall check game version and pass to totem timers
+  local totrecall = false
   local _, build = GetBuildInfo()
+  if tostring(build) >= 7205 then
+    totrecall = true
+  end
+
 
   local slots = {
     [FIRE_TOTEM_SLOT]  = { r = .5, g = .2, b = .1 },
@@ -14,10 +21,11 @@ pfUI:RegisterModule("totems", "vanilla:tbc", function ()
   totems:RegisterEvent("PLAYER_ENTERING_WORLD")
   totems:RegisterEvent("CHAT_MSG_SPELL_SELF_BUFF")
   totems:SetScript("OnEvent", function(self)
-    if arg1 and tonumber(build) >= 7205 then
+    if arg1 and totrecall then
       -- Check if the message contains the specific phrase related to Totemic Recall
+      -- Then call refresh with totrecall active to end on mana return
       if string.find(arg1, "You gain") and string.find(arg1, "Mana from Totemic Recall") then
-        totems:RefreshList(true)
+        totems:RefreshList(totrecall)
       end
     else
       -- Handle the case where there's no specific event
@@ -61,6 +69,7 @@ pfUI:RegisterModule("totems", "vanilla:tbc", function ()
   totems.RefreshList = function(self, totrecall)
     local count = 0
     for i = 1, MAX_TOTEMS do
+      -- first check, if totrecall true then just passes through to GetTotemInfo to kill totem timers
       if totrecall then
         GetTotemInfo(i, totrecall)
       end
