@@ -4,7 +4,7 @@ pfUI:RegisterModule("totems", "vanilla:tbc", function ()
   -- totem recall check game version and pass to totem timers
   local totrecall = false
   local _, build = GetBuildInfo()
-  if tostring(build) >= 7205 then
+  if tonumber(build) >= 7205 then
     totrecall = true
   end
 
