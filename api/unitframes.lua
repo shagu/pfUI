@@ -1411,7 +1411,7 @@ function pfUI.uf:RefreshIndicators(unit)
   end
 
   if unit.happinessIcon and unit:GetName() == "pfPet" then -- Happiness Icon
-    if unit.config.happinessicon == "0" then
+    if unit.config.happinessicon == "0" or UnitClass("player") == "Warlock" then
       unit.happinessIcon:Hide()
     else
       if UnitIsVisible("pet") then
