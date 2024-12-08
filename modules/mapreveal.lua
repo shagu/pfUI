@@ -71,11 +71,11 @@ pfUI:RegisterModule("mapreveal", "vanilla:tbc", function ()
   local explorecaches = {}
 
   local exploreEnter = function()
-    GameTooltip:ClearLines()
-    GameTooltip:SetOwner(this, "ANCHOR_TOP")
-    GameTooltip:AddLine(T["Exploration Point"]..":", .3, 1, .8)
-    GameTooltip:AddLine(this.name, 1, 1, 1)
-    GameTooltip:Show()
+    WorldMapTooltip:ClearLines()
+    WorldMapTooltip:SetOwner(this, "ANCHOR_TOP")
+    WorldMapTooltip:AddLine(T["Exploration Point"]..":", .3, 1, .8)
+    WorldMapTooltip:AddLine(this.name, 1, 1, 1)
+    WorldMapTooltip:Show()
 
     if not explorecaches[this.name] then return end
     if C.appearance.worldmap.mapreveal == "0" then return end
@@ -86,7 +86,7 @@ pfUI:RegisterModule("mapreveal", "vanilla:tbc", function ()
   end
 
   local exploreLeave = function()
-    GameTooltip:Hide()
+    WorldMapTooltip:Hide()
     if not explorecaches[this.name] then return end
     if C.appearance.worldmap.mapreveal == "0" then return end
     local r,g,b,a = GetStringColor(C.appearance.worldmap.mapreveal_color)
