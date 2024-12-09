@@ -83,9 +83,11 @@ local totems = {
   },
 }
 
-GetTotemInfo = function(id)
+GetTotemInfo = function(id, totrecall)
   if not active[id] or not active[id].name then return end
-  if active[id].start + active[id].duration - GetTime() < 0 then
+  
+  -- added totrecall trigger to clear timers if totemic recall used
+  if (active[id].start + active[id].duration - GetTime() < 0) or totrecall then
     libtotem:Clean(id)
     return nil
   end
