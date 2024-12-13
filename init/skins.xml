@@ -46,4 +46,5 @@
 
   <!-- thirdparty-vanilla -->
   <Include file="..\skins\thirdparty-vanilla\QuickHeal.lua"/>
+  <Include file="..\skins\thirdparty-vanilla\Decursive.lua"/>
 </Ui>
