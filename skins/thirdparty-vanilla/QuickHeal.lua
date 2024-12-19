@@ -130,9 +130,9 @@ end)
             -- Adjust the position of each tab based on its index
             if i > 1 then
                 local previousTab = _G["QuickHealConfigTab" .. (i - 1)]
-                tab:SetPoint("TOPLEFT", previousTab, "TOPRIGHT", 2, 0)
+                tab:SetPoint("TOPLEFT", previousTab, "TOPRIGHT", 3, 0)
             else
-                tab:SetPoint("TOPLEFT", QuickHealConfig, "BOTTOMLEFT", 0, -2)
+                tab:SetPoint("TOPLEFT", QuickHealConfig, "BOTTOMLEFT", 0, -3)
             end
           end
        end

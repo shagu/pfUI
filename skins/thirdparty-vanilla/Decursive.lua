@@ -251,7 +251,7 @@ pfUI:RegisterSkin("Decursive", "vanilla", function()
             button:SetPoint(i == 1 and "RIGHT" or "LEFT", 
                             i == 1 and mainBar or prevButton, 
                             i == 1 and "RIGHT" or "RIGHT", 
-                            i == 1 and 23 or 2, 0)
+                            i == 1 and 22 or 1, 0)
             prevButton = button
         end
 
