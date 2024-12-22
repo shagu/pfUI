@@ -43,6 +43,61 @@ pfUI:RegisterModule("turtle-wow", "vanilla", function ()
       WorldMapFrameTitle:Hide()
     end
 
+    if pfUI.panel and pfPanelWidgetClock then
+      pfPanelWidgetClock.Tooltip = function()
+        GameTooltip:ClearLines()
+        GameTooltip_SetDefaultAnchor(GameTooltip, this)
+        local servertime, zonetime, time
+        local zh, zm = GetGameTime()
+        local sh, sm = zh, zm
+
+        -- convert custom zonetime to servertime
+        SetMapToCurrentZone()
+        if GetCurrentMapContinent() == 1 then
+          sh = sh + 12
+          sh = sh >= 24 and sh - 24 or sh
+        end
+
+        -- perform am/pm calculations
+        if C.global.twentyfour == "0" then
+          local zn, sn = " AM", " AM"
+
+          if zh > 12 then
+            zh = zh - 12
+            zn = " PM"
+          end
+
+          if sh > 12 then
+            sh = sh - 12
+            sn = " PM"
+          end
+
+          time = date("%I:%M %p")
+          servertime = string.format("%.2d:%.2d %s", sh, sm, sn)
+          zonetime = string.format("%.2d:%.2d %s", zh, zm, zn)
+        else
+          time = date("%H:%M")
+          servertime = string.format("%.2d:%.2d", sh, sm)
+          zonetime = string.format("%.2d:%.2d", zh, zm)
+        end
+
+        -- create the tooltip
+        GameTooltip:AddLine("|cff555555" .. T["Time"])
+        GameTooltip:AddDoubleLine(T["Localtime"],  "|cffffffff" .. time)
+        GameTooltip:AddDoubleLine(T["Servertime"], "|cffffffff".. servertime)
+        GameTooltip:AddDoubleLine(T["Zonetime"], "|cffffffff".. zonetime)
+        GameTooltip:AddLine(" ")
+        if TimeManagerFrame then
+          GameTooltip:AddDoubleLine(T["Left Click"], "|cffffffff" .. T["Show/Hide TimeManager"])
+        else
+          GameTooltip:AddDoubleLine(T["Left Click"], "|cffffffff" .. T["Show/Hide Timer"])
+          GameTooltip:AddDoubleLine(T["Right Click"], "|cffffffff" .. T["Reset Timer"])
+        end
+        GameTooltip:Show()
+      end
+    end
+
+
     HookScript(libdebuff, "OnEvent", function()
       if event == "CHAT_MSG_SPELL_SELF_DAMAGE" then
         -- refresh paladin judgements on holy strike
