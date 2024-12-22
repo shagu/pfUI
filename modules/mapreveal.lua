@@ -48,7 +48,7 @@ pfUI:RegisterModule("mapreveal", "vanilla:tbc", function ()
   end
 
   local function unpack_hash(prefix, hash)
-    local _, stored_prefix, textureName, textureWidth, textureHeight, offsetX, offsetY, mapPointX, mapPointY, oldName
+    local _, stored_prefix, textureName, textureWidth, textureHeight, offsetX, offsetY, mapPointX, mapPointY, name
     _, _, stored_prefix, textureName, textureWidth, textureHeight, offsetX, offsetY = string.find(hash, "^([|]?)([^:]+):([^:]+):([^:]+):([^:]+):([^:]+)")
     if (not textureName or not offsetY) then
       return
@@ -60,22 +60,22 @@ pfUI:RegisterModule("mapreveal", "vanilla:tbc", function ()
       mapPointX = 0 mapPointY = 0
     end
     if (stored_prefix ~= "|") then
+      name = textureName
       textureName = string.format("%s%s",prefix,textureName)
-      oldName = textureName
     end
     -- coerce to number by addition; cheaper than tonumber()
-    return textureName, textureWidth + 0, textureHeight + 0, offsetX + 0, offsetY + 0, mapPointX + 0, mapPointY + 0, oldName
+    return textureName, textureWidth + 0, textureHeight + 0, offsetX + 0, offsetY + 0, mapPointX + 0, mapPointY + 0, name
   end
 
   local explores = {}
   local explorecaches = {}
 
   local exploreEnter = function()
-    GameTooltip:ClearLines()
-    GameTooltip:SetOwner(this, "ANCHOR_TOP")
-    GameTooltip:AddLine("Explore:", .3, 1, .8)
-    GameTooltip:AddLine(this.name, 1, 1, 1)
-    GameTooltip:Show()
+    WorldMapTooltip:ClearLines()
+    WorldMapTooltip:SetOwner(this, "ANCHOR_TOP")
+    WorldMapTooltip:AddLine(T["Exploration Point"]..":", .3, 1, .8)
+    WorldMapTooltip:AddLine(this.name, 1, 1, 1)
+    WorldMapTooltip:Show()
 
     if not explorecaches[this.name] then return end
     if C.appearance.worldmap.mapreveal == "0" then return end
@@ -86,7 +86,7 @@ pfUI:RegisterModule("mapreveal", "vanilla:tbc", function ()
   end
 
   local exploreLeave = function()
-    GameTooltip:Hide()
+    WorldMapTooltip:Hide()
     if not explorecaches[this.name] then return end
     if C.appearance.worldmap.mapreveal == "0" then return end
     local r,g,b,a = GetStringColor(C.appearance.worldmap.mapreveal_color)
@@ -138,7 +138,7 @@ pfUI:RegisterModule("mapreveal", "vanilla:tbc", function ()
       explore:SetScript("OnLeave", exploreLeave)
       explore:EnableMouse(true)
       explore:SetFrameLevel(255)
-      explore.name = name
+      explore.name = mapFileName .. " (" .. name .. ")"
       explore.tex = explore.tex or explore:CreateTexture("", "OVERLAY")
       explore.tex:SetBlendMode("ADD")
       explore.tex:SetTexCoord(.08, .92, .08, .92)

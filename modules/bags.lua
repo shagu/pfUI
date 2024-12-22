@@ -283,6 +283,7 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
     end
 
     local topspace = pfUI.bag.right.close:GetHeight() + default_border * 2
+    local bottomspace = pfUI.panel and pfUI.panel.right:IsShown() and pfUI.panel.right:GetHeight() + default_border or 16 + default_border
 
     for id, bag in pairs(iterate) do
       if not pfUI.bags[bag] then
@@ -314,8 +315,7 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
     end
 
     if x > 0 then y = y + 1 end
-    if pfUI.panel and pfUI.panel.right:IsShown() then topspace = topspace + pfUI.panel.right:GetHeight() end
-    frame:SetHeight( default_border*2 + y*(frame.button_size+default_border*3) + topspace)
+    frame:SetHeight( default_border*2 + y*(frame.button_size+default_border*3) + topspace + bottomspace)
 
     local chat = pfUI.chat and ( object == "bank" and pfUI.chat.left or pfUI.chat.right) or nil
 
@@ -966,6 +966,24 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
         end)
       end
 
+      -- gold string
+      if not frame.gold and (C.appearance.bags.movable == "1" or not pfUI.panel) then
+        frame.gold = CreateFrame("Frame", "pfBagGoldString", frame)
+        frame.gold:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -4, 1)
+        frame.gold:SetWidth(200)
+        frame.gold:SetHeight(18)
+        frame.gold:RegisterEvent("PLAYER_ENTERING_WORLD")
+        frame.gold:RegisterEvent("PLAYER_MONEY")
+        frame.gold:SetScript("OnEvent", function()
+          frame.gold.text:SetText(CreateGoldString(GetMoney()))
+        end)
+
+        frame.gold.text = frame.gold.text or frame.gold:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+        frame.gold.text:SetFontObject(GameFontWhite)
+        frame.gold.text:SetJustifyH("RIGHT")
+        frame.gold.text:SetAllPoints()
+      end
+
       -- bag search
       if not frame.search then
         frame.search = CreateFrame("Frame", "pfBagSearch", frame)
@@ -1090,7 +1108,6 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
           end
         end)
       end
-
     end
   end
 end)

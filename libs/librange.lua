@@ -161,6 +161,19 @@ librange:SetScript("OnUpdate", function()
   if this.id <= numunits and librange.slot then
     local unit = units[this.id]
     if not UnitIsUnit("target", unit) then
+      -- try to read distance via superwow first
+      if superwow_active then
+        local x1, y1, z1 = UnitPosition("player")
+        local x2, y2, z2 = UnitPosition(unit)
+        -- only continue if we got position values
+        if x1 and y1 and z1 and x2 and y2 and z2 then
+          local distance = ((x2 - x1)^2 + (y2 - y1)^2 + (z2 - z1)^2)^.5
+          unitdata[unit] = distance < 45 and 1 or 0
+          this.id = this.id + 1
+          return
+        end
+      end
+
       -- suspend for various conditions
       if pfUI.loot and pfUI.loot:IsShown() then return nil end
       if LootFrame and LootFrame:IsShown() then return nil end

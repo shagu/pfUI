@@ -1,4 +1,13 @@
 pfUI:RegisterModule("pixelperfect", "vanilla:tbc", function ()
+  -- pre-calculated min values
+  local statics = {
+    [4] = 1.4222222222222,
+    [5] = 1.1377777777778,
+    [6] = 0.94814814814815,
+    [7] = 0.81269841269841,
+    [8] = 0.71111111111111,
+  }
+
   -- pixel perfect
   local function pixelperfect()
     local conf = tonumber(C.global.pixelperfect)
@@ -13,18 +22,12 @@ pfUI:RegisterModule("pixelperfect", "vanilla:tbc", function ()
         UIParent:SetScale(.9)
       end
     else
-      -- apply pixel dependent scaling
-      local resolution = GetCVar("gxResolution")
+      local scale = conf and statics[conf] or 1
 
-      for screenwidth, screenheight in gfind(resolution, "(.+)x(.+)") do
-        local screenheight = tonumber(screenheight) / 8
-        local scale = 768 / ( screenheight * conf )
+      SetCVar("uiScale", scale)
+      SetCVar("useUiScale", 1)
 
-        SetCVar("uiScale", scale)
-        SetCVar("useUiScale", 1)
-
-        UIParent:SetScale(scale)
-      end
+      UIParent:SetScale(scale)
     end
   end
 
