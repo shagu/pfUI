@@ -1060,6 +1060,16 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
       plate:EnableMouse(clickable)
     end
 
+    local hookOnDataChanged = nameplates.OnDataChanged
+    nameplates.OnDataChanged = function(self, nameplate)
+      hookOnDataChanged(self, nameplate)
+
+      -- make sure to keep mouse events disabled on parent nameplate
+      if (C.nameplates["overlap"] == "1" or C.nameplates["vertical_offset"] ~= "0") then
+        nameplate.parent:EnableMouse(false)
+      end
+    end
+
     local hookOnUpdate = nameplates.OnUpdate
     nameplates.OnUpdate = function(self)
       if C.nameplates["overlap"] == "1" then
