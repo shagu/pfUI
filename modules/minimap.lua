@@ -119,7 +119,7 @@ pfUI:RegisterModule("minimap", "vanilla:tbc", function ()
   pfUI.minimapCoordinates = CreateFrame("Frame", "pfMinimapCoord", pfUI.minimap)
   pfUI.minimapCoordinates:SetScript("OnUpdate", function()
     -- update coords every 0.1 seconds
-    if C.appearance.minimap.minimapcoords ~= "off" and ( this.tick or .1) > GetTime() then return else this.tick = GetTime() + .1 end
+    if C.appearance.minimap.coordstext ~= "off" and ( this.tick or .1) > GetTime() then return else this.tick = GetTime() + .1 end
 
     this.posX, this.posY = GetPlayerMapPosition("player")
     if this.posX ~= 0 and this.posY ~= 0 then
@@ -152,7 +152,7 @@ pfUI:RegisterModule("minimap", "vanilla:tbc", function ()
     pfUI.minimapCoordinates.text:SetJustifyH("LEFT")
   end
 
-  if C.appearance.minimap.minimapcoords ~= "on" then
+  if C.appearance.minimap.coordstext ~= "on" then
     pfUI.minimapCoordinates:Hide()
   else
     pfUI.minimapCoordinates:Show()
@@ -171,7 +171,7 @@ pfUI:RegisterModule("minimap", "vanilla:tbc", function ()
   pfUI.minimapZone.text:SetJustifyH("CENTER")
 
   pfUI.minimapZone:SetScript("OnEvent", function()
-    if C.appearance.minimap.minimapcoords ~= "off" then
+    if C.appearance.minimap.coordstext ~= "off" then
       SetMapToCurrentZone()
       local pvp, _, arena = GetZonePVPInfo()
       if arena then
@@ -189,7 +189,7 @@ pfUI:RegisterModule("minimap", "vanilla:tbc", function ()
     end
   end)
 
-  if C.appearance.minimap.minimapzone ~= "on" then
+  if C.appearance.minimap.zonetext ~= "on" then
     pfUI.minimapZone:Hide()
   else
     pfUI.minimapZone:Show()
@@ -198,18 +198,18 @@ pfUI:RegisterModule("minimap", "vanilla:tbc", function ()
   -- Minimap hover event
   -- Update and toggle showing of coordinates and zone text on mouse enter/leave
   Minimap:SetScript("OnEnter", function()
-    if C.appearance.minimap.minimapcoords ~= "off" then
+    if C.appearance.minimap.coordstext ~= "off" then
       pfUI.minimapCoordinates:Show()
     end
-    if C.appearance.minimap.minimapzone ~= "off" then
+    if C.appearance.minimap.zonetext ~= "off" then
       pfUI.minimapZone:Show()
     end
   end)
   Minimap:SetScript("OnLeave", function()
-    if C.appearance.minimap.minimapzone ~= "on" then
+    if C.appearance.minimap.zonetext ~= "on" then
       pfUI.minimapCoordinates:Hide()
     end
-    if C.appearance.minimap.minimapcoords ~= "on" then
+    if C.appearance.minimap.coordstext ~= "on" then
       pfUI.minimapZone:Hide()
     end
   end)
