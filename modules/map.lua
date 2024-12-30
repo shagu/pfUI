@@ -39,6 +39,7 @@ pfUI:RegisterModule("map", "vanilla:tbc", function ()
 
     UIPanelWindows["WorldMapFrame"] = { area = "center" }
 
+    WorldMapFrame:SetFrameStrata("FULLSCREEN")
     WorldMapFrame:SetMovable(true)
     WorldMapFrame:EnableMouse(true)
     WorldMapFrame:RegisterForDrag("LeftButton")
