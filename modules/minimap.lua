@@ -206,10 +206,10 @@ pfUI:RegisterModule("minimap", "vanilla:tbc", function ()
     end
   end)
   Minimap:SetScript("OnLeave", function()
-    if C.appearance.minimap.zonetext ~= "on" then
+    if C.appearance.minimap.coordstext ~= "on" then
       pfUI.minimapCoordinates:Hide()
     end
-    if C.appearance.minimap.coordstext ~= "on" then
+    if C.appearance.minimap.zonetext ~= "on" then
       pfUI.minimapZone:Hide()
     end
   end)
