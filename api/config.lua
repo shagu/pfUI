@@ -1189,11 +1189,11 @@ function pfUI:MigrateConfig()
 
   -- migrate minimap zone and coords changes
   if checkversion(5, 4, 11) then
-    if pfUI_config.appearance.minimap.mouseoverzone then
+    if pfUI_config.appearance.minimap.mouseoverzone and not pfUI_config.appearance.minimap.zonetext then
       pfUI_config.appearance.minimap.zonetext = (pfUI_config.appearance.minimap.mouseoverzone == "0") and "off" or "mouseover"
       pfUI_config.appearance.minimap.mouseoverzone = nil
     end
-    if pfUI_config.appearance.minimap.coordsloc then
+    if pfUI_config.appearance.minimap.coordsloc and not pfUI_config.appearance.minimap.coordstext then
       if pfUI_config.appearance.minimap.coordsloc == "off" then
         pfUI_config.appearance.minimap.coordsloc = "bottomleft"
         pfUI_config.appearance.minimap.coordstext = "off"
