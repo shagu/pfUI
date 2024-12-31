@@ -1,5 +1,13 @@
 pfUI:RegisterModule("totems", "vanilla:tbc", function ()
   local _, class = UnitClass("player")
+  
+  -- totem recall check game version and pass to totem timers
+  local totrecall = false
+  local _, build = GetBuildInfo()
+  if tonumber(build) >= 7205 then
+    totrecall = true
+  end
+
 
   local slots = {
     [FIRE_TOTEM_SLOT]  = { r = .5, g = .2, b = .1 },
@@ -11,8 +19,18 @@ pfUI:RegisterModule("totems", "vanilla:tbc", function ()
   local totems = CreateFrame("Frame", "pfTotems", UIParent)
   totems:RegisterEvent("PLAYER_TOTEM_UPDATE")
   totems:RegisterEvent("PLAYER_ENTERING_WORLD")
+  totems:RegisterEvent("CHAT_MSG_SPELL_SELF_BUFF")
   totems:SetScript("OnEvent", function(self)
-    totems:RefreshList()
+    if arg1 and totrecall then
+      -- Check if the message contains the specific phrase related to Totemic Recall
+      -- Then call refresh with totrecall active to end on mana return
+      if string.find(arg1, "You gain") and string.find(arg1, "Mana from Totemic Recall") then
+        totems:RefreshList(totrecall)
+      end
+    else
+      -- Handle the case where there's no specific event
+      totems:RefreshList()
+    end
   end)
 
   if pfUI.client <= 11200 and class == "SHAMAN" then
@@ -48,9 +66,13 @@ pfUI:RegisterModule("totems", "vanilla:tbc", function ()
     end
   end
 
-  totems.RefreshList = function(self)
+  totems.RefreshList = function(self, totrecall)
     local count = 0
     for i = 1, MAX_TOTEMS do
+      -- first check, if totrecall true then just passes through to GetTotemInfo to kill totem timers
+      if totrecall then
+        GetTotemInfo(i, totrecall)
+      end
       local active, name, start, duration, icon = GetTotemInfo(i)
 
       if active and icon and icon ~= "" then
@@ -61,11 +83,10 @@ pfUI:RegisterModule("totems", "vanilla:tbc", function ()
         self.bar[count]:SetBackdropBorderColor(color.r, color.g, color.b)
         self.bar[count].icon:SetTexture(icon)
         self.bar[count].id = i
-
+  
         CooldownFrame_SetTimer(self.bar[count].cd, start, duration, 1)
       end
     end
-
     self:UpdateSize(count)
   end
 

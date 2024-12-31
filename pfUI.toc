@@ -4,8 +4,8 @@
 ## Notes: A complete user interface replacement.
 ## Notes-ruRU: Полная замена пользовательского интерфейса.
 ## Version: 5.4.11
-## SavedVariables: pfUI_profiles, pfUI_addon_profiles, pfUI_cache
-## SavedVariablesPerCharacter: pfUI_config, pfUI_init, pfUI_playerDB
+## SavedVariables: pfUI_profiles, pfUI_addon_profiles, pfUI_init
+## SavedVariablesPerCharacter: pfUI_playerDB, pfUI_config, pfUI_cache
 
 pfUI.lua
 
