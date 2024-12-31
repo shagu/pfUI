@@ -148,7 +148,7 @@ local modern = {
       ["texture"] = "Interface\\AddOns\\pfUI\\img\\bar_gradient",
     },
     ["minimap"] = {
-      ["coordsloc"] = "topleft",
+      ["coordsloc"] = "bottomleft",
     },
     ["border"] = {
       ["color"] = "0.1,0.1,0.1,1",
