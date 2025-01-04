@@ -171,7 +171,8 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("appearance", "bags",        "bagrowlength",     "10")
   pfUI:UpdateConfig("appearance", "bags",        "bankrowlength",    "10")
   pfUI:UpdateConfig("appearance", "minimap",     "size",            "140")
-  pfUI:UpdateConfig("appearance", "minimap",     "mouseoverzone",    "0")
+  pfUI:UpdateConfig("appearance", "minimap",     "zonetext",         "off")
+  pfUI:UpdateConfig("appearance", "minimap",     "coordstext",       "mouseover")
   pfUI:UpdateConfig("appearance", "minimap",     "coordsloc",        "bottomleft")
   pfUI:UpdateConfig("appearance", "minimap",     "tracking_size",    "16")
   pfUI:UpdateConfig("appearance", "minimap",     "tracking_pulse",   "1")
@@ -1183,6 +1184,22 @@ function pfUI:MigrateConfig()
     local unitframes = { "player", "target", "focus", "group", "grouptarget", "grouppet", "raid", "ttarget", "pet", "ptarget", "fallback", "tttarget" }
     for _, unitframe in pairs(unitframes) do
       pfUI_config.unitframes[unitframe].pbartexture = pfUI_config.unitframes[unitframe].bartexture
+    end
+  end
+
+  -- migrate minimap zone and coords changes
+  if checkversion(5, 4, 11) then
+    if pfUI_config.appearance.minimap.mouseoverzone and not pfUI_config.appearance.minimap.zonetext then
+      pfUI_config.appearance.minimap.zonetext = (pfUI_config.appearance.minimap.mouseoverzone == "0") and "off" or "mouseover"
+      pfUI_config.appearance.minimap.mouseoverzone = nil
+    end
+    if pfUI_config.appearance.minimap.coordsloc and not pfUI_config.appearance.minimap.coordstext then
+      if pfUI_config.appearance.minimap.coordsloc == "off" then
+        pfUI_config.appearance.minimap.coordsloc = "bottomleft"
+        pfUI_config.appearance.minimap.coordstext = "off"
+      else
+        pfUI_config.appearance.minimap.coordstext = "mouseover"
+      end
     end
   end
 

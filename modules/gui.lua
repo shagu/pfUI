@@ -1104,7 +1104,16 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
         "topright:" .. T["Top Right"],
         "bottomleft:" .. T["Bottom Left"],
         "bottomright:" .. T["Bottom Right"],
-        "off:" .. T["Disabled"]
+      },
+      ["minimap_cords_visibility"] = {
+        "mouseover:" .. T["Mouseover"],
+        "on:" .. T["Enable"],
+        "off:" .. T["Disable"]
+      },
+      ["minimap_zone_visibility"] = {
+        "mouseover:" .. T["Mouseover"],
+        "on:" .. T["Enable"],
+        "off:" .. T["Disable"]
       },
       ["positions"] = {
         "TOPLEFT:" .. T["Top Left"],
@@ -1858,7 +1867,8 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
 
     CreateGUIEntry(T["Minimap"], T["Minimap"], function()
       CreateConfig(U["minimap"], T["Minimap Size (|cffffaaaaExperimental|r)"], C.appearance.minimap, "size")
-      CreateConfig(nil, T["Enable Zone Text On Minimap Mouseover"], C.appearance.minimap, "mouseoverzone", "checkbox")
+      CreateConfig(nil, T["Zone Text On Minimap"], C.appearance.minimap, "zonetext", "dropdown", pfUI.gui.dropdowns.minimap_zone_visibility)
+      CreateConfig(nil, T["Coordinates On Minimap"], C.appearance.minimap, "coordstext", "dropdown", pfUI.gui.dropdowns.minimap_cords_visibility)
       CreateConfig(nil, T["Coordinates Location"], C.appearance.minimap, "coordsloc", "dropdown", pfUI.gui.dropdowns.minimap_cords_position)
       CreateConfig(nil, T["Show PvP Icon"], C.unitframes.player, "showPVPMinimap", "checkbox")
       CreateConfig(nil, T["Show Inactive Tracking"], C.appearance.minimap, "tracking_pulse", "checkbox")
