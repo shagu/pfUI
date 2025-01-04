@@ -15,6 +15,16 @@ pfUI:RegisterModule("totems", "vanilla:tbc", function ()
     totems:RefreshList()
   end)
 
+  local trecall = CreateFrame("Frame", "pfTotemsRecall", UIParent)
+  trecall:RegisterEvent("CHAT_MSG_SPELL_SELF_BUFF")
+  trecall:SetScript("OnEvent", function()
+    if arg1 and string.find(arg1, T["You gain (.+) Mana from Totemic Recall"]) then
+      for i = 1, 4 do
+        libtotem:Clean(i)
+      end
+    end
+  end)
+
   if pfUI.client <= 11200 and class == "SHAMAN" then
     -- there's no totem event in vanilla using ticks instead
     local eventemu = CreateFrame("Frame")
