@@ -856,7 +856,7 @@ pfUI:RegisterModule("thirdparty-vanilla", "vanilla", function()
 
     -- make theorycraft aware of pfUI bars
     for i=1,10 do
-      for j=1,10 do
+      for j=1,12 do
         TheoryCraft_SetUpButton(pfUI.bars[i][j]:GetName(), "Normal")
       end
     end
@@ -1238,5 +1238,5 @@ pfUI:RegisterModule("thirdparty-vanilla", "vanilla", function()
     SkinCheckbox(xpsp3_checkButton_notify_playSystemDefaultSound)
     SkinButton(xpsp3_button_close)
   end)
-    
+
 end)
