@@ -3,15 +3,16 @@ if not TargetHPText or not TargetHPPercText then return end
 
 pfUI:RegisterModule("turtle-wow", "vanilla", function ()
   -- turtle wow totemic recall clear totem indicators
-  local trecall = CreateFrame("Frame", "pfTotemsRecall", UIParent)
-  trecall:RegisterEvent("CHAT_MSG_SPELL_SELF_BUFF")
-  trecall:SetScript("OnEvent", function()
-    if arg1 and string.find(arg1, T["You gain (.+) Mana from Totemic Recall"]) then
-      for i = 1, 4 do
-        libtotem:Clean(i)
+  local _, class = UnitClass("player")
+  if class == "SHAMAN" then
+    local trecall = CreateFrame("Frame", "pfTotemsRecall", UIParent)
+    trecall:RegisterEvent("CHAT_MSG_SPELL_SELF_BUFF")
+    trecall:SetScript("OnEvent", function()
+      if arg1 and string.find(arg1, T["You gain (.+) Mana from Totemic Recall"]) then
+        for i = 1, 4 do libtotem:Clean(i) end
       end
-    end
-  end)
+    end)
+  end
 
   local delay = CreateFrame("Frame")
   delay:SetScript("OnUpdate", function()
