@@ -36,30 +36,40 @@ function SlashCmdList.PFCLEARFOCUS(msg)
   if pfUI.uf and pfUI.uf.focus then
     pfUI.uf.focus.unitname = nil
     pfUI.uf.focus.label = nil
+    pfUI.uf.focus.id = nil
+  end
+
+  if pfUI.uf and pfUI.uf.focustarget then
+    pfUI.uf.focustarget.unitname = nil
+    pfUI.uf.focustarget.label = nil
+    pfUI.uf.focustarget.id = nil
   end
 end
 
 SLASH_PFCASTFOCUS1, SLASH_PFCASTFOCUS2 = '/castfocus', '/pfcastfocus'
 function SlashCmdList.PFCASTFOCUS(msg)
-  if not pfUI.uf.focus or not pfUI.uf.focus:IsShown() or not pfUI.uf.focus.unitname then
+  if not pfUI.uf.focus or not pfUI.uf.focus:IsShown() then
     UIErrorsFrame:AddMessage(SPELL_FAILED_BAD_TARGETS, 1, 0, 0)
     return
   end
 
   local skiptarget = false
   local player = UnitIsUnit("target", "player")
+  local unitname = ""
 
   if pfUI.uf.focus.label and UnitIsUnit("target", pfUI.uf.focus.label .. pfUI.uf.focus.id) then
     skiptarget = true
   else
     pfScanActive = true
     if pfUI.uf.focus.label and pfUI.uf.focus.id then
+      unitname = UnitName(pfUI.uf.focus.label .. pfUI.uf.focus.id)
       TargetUnit(pfUI.uf.focus.label .. pfUI.uf.focus.id)
     else
+      unitname = pfUI.uf.focus.unitname
       TargetByName(pfUI.uf.focus.unitname, true)
     end
 
-    if strlower(UnitName("target")) ~= strlower(pfUI.uf.focus.unitname) then
+    if strlower(UnitName("target")) ~= strlower(unitname) then
       pfScanActive = nil
       TargetLastTarget()
       UIErrorsFrame:AddMessage(SPELL_FAILED_BAD_TARGETS, 1, 0, 0)
