@@ -2,14 +2,64 @@
 if not TargetHPText or not TargetHPPercText then return end
 
 pfUI:RegisterModule("turtle-wow", "vanilla", function ()
+  -- custom debuff durations
+  L["debuffs"]["Hand of Reckoning"] = {[0]=3.0}
+  L["debuffs"]['Insect Swarm'] = {[0]=18.0}
+  L["debuffs"]['Moonfire'] = {[1]=9.0,[2]=18.0,[3]=18.0,[4]=18.0,[5]=18.0,[6]=18.0,[7]=18.0,[8]=18.0,[9]=18.0,[10]=18.0,[0]=18.0}
+
+  -- add custom spell logic to libdebuff
+  HookScript(libdebuff, "OnEvent", function()
+    if event == "CHAT_MSG_SPELL_SELF_DAMAGE" then
+      -- refresh paladin judgements on holy strike
+      -- taken from: https://github.com/doorknob6/pfUI-turtle/blob/master/modules/debuffs.lua
+      local holystrike = string.find(string.sub(arg1,6,17), "Holy Strike")
+      --arg2 is spell dmg when it hits, nil when it misses
+      if holystrike and arg2 then
+        for seal in L["judgements"] do
+          local name = UnitName("target")
+          local level = UnitLevel("target")
+          if name and libdebuff.objects[name] then
+            if level and
+              libdebuff.objects[name][level] and
+              libdebuff.objects[name][level][seal] then
+              libdebuff:AddEffect(name, level, seal)
+            elseif libdebuff.objects[name][0] and
+              libdebuff.objects[name][0][seal] then
+              libdebuff:AddEffect(name, 0, seal)
+            end
+          end
+        end
+      end
+
+      -- refresh Immolate duration after cast Conflagrate
+      local conflagrate = string.find(string.sub(arg1,6,17), "Conflagrate")
+      --arg2 is spell dmg when it hits, nil when it misses
+      if conflagrate and arg2 then
+        local name = UnitName("target")
+        local level = UnitLevel("target")
+        if libdebuff.objects[name] and libdebuff.objects[name][level] and libdebuff.objects[name][level]["Immolate"] then
+          local duration = libdebuff.objects[name][level]["Immolate"].duration
+          libdebuff:UpdateDuration(name, level, "Immolate", duration - 3)
+        end
+      end
+    end
+  end)
+
+  -- turtle wow totemic recall clear totem indicators
+  local _, class = UnitClass("player")
+  if class == "SHAMAN" then
+    local trecall = CreateFrame("Frame", "pfTotemsRecall", UIParent)
+    trecall:RegisterEvent("CHAT_MSG_SPELL_SELF_BUFF")
+    trecall:SetScript("OnEvent", function()
+      if arg1 and string.find(arg1, T["You gain (.+) Mana from Totemic Recall"]) then
+        for i = 1, 4 do libtotem:Clean(i) end
+      end
+    end)
+  end
+
   local delay = CreateFrame("Frame")
   delay:SetScript("OnUpdate", function()
     this:Hide()
-
-    -- custom debuff durations
-    L["debuffs"]["Hand of Reckoning"] = {[0]=3.0}
-    L["debuffs"]['Insect Swarm'] = {[0]=18.0}
-    L["debuffs"]['Moonfire'] = {[1]=9.0,[2]=18.0,[3]=18.0,[4]=18.0,[5]=18.0,[6]=18.0,[7]=18.0,[8]=18.0,[9]=18.0,[10]=18.0,[0]=18.0}
 
     -- add tree of life druid form to autoshift
     if pfUI.autoshift then
@@ -96,44 +146,6 @@ pfUI:RegisterModule("turtle-wow", "vanilla", function ()
         GameTooltip:Show()
       end
     end
-
-
-    HookScript(libdebuff, "OnEvent", function()
-      if event == "CHAT_MSG_SPELL_SELF_DAMAGE" then
-        -- refresh paladin judgements on holy strike
-        -- taken from: https://github.com/doorknob6/pfUI-turtle/blob/master/modules/debuffs.lua
-        local holystrike = string.find(string.sub(arg1,6,17), "Holy Strike")
-        --arg2 is spell dmg when it hits, nil when it misses
-        if holystrike and arg2 then
-          for seal in L["judgements"] do
-            local name = UnitName("target")
-            local level = UnitLevel("target")
-            if name and libdebuff.objects[name] then
-              if level and
-                libdebuff.objects[name][level] and
-                libdebuff.objects[name][level][seal] then
-                libdebuff:AddEffect(name, level, seal)
-              elseif libdebuff.objects[name][0] and
-                libdebuff.objects[name][0][seal] then
-                libdebuff:AddEffect(name, 0, seal)
-              end
-            end
-          end
-        end
-
-        -- refresh Immolate duration after cast Conflagrate
-        local conflagrate = string.find(string.sub(arg1,6,17), "Conflagrate")
-        --arg2 is spell dmg when it hits, nil when it misses
-        if conflagrate and arg2 then
-          local name = UnitName("target")
-          local level = UnitLevel("target")
-          if libdebuff.objects[name] and libdebuff.objects[name][level] and libdebuff.objects[name][level]["Immolate"] then
-            local duration = libdebuff.objects[name][level]["Immolate"].duration
-            libdebuff:UpdateDuration(name, level, "Immolate", duration - 3)
-          end
-        end
-      end
-    end)
 
     -- skin title dropdown menu
     -- taken from: https://github.com/doorknob6/pfUI-turtle/blob/master/skins/turtle/character.lua

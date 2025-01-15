@@ -856,7 +856,7 @@ pfUI:RegisterModule("thirdparty-vanilla", "vanilla", function()
 
     -- make theorycraft aware of pfUI bars
     for i=1,10 do
-      for j=1,10 do
+      for j=1,12 do
         TheoryCraft_SetUpButton(pfUI.bars[i][j]:GetName(), "Normal")
       end
     end
@@ -1224,8 +1224,6 @@ pfUI:RegisterModule("thirdparty-vanilla", "vanilla", function()
   -- UnitXP SP3 compatibility
   -- https://github.com/allfoxwy/UnitXP_SP3
   HookAddonOrVariable("UnitXP_SP3_Addon", function()
-    -- skin main menu button
-    SkinButton(GameMenuButtonXPSP3)
     -- skin UnitXP SP3 window and elements
     StripTextures(xpsp3Frame)
     CreateBackdrop(xpsp3Frame)
@@ -1236,7 +1234,15 @@ pfUI:RegisterModule("thirdparty-vanilla", "vanilla", function()
     SkinCheckbox(xpsp3_checkButton_modernNameplate)
     SkinCheckbox(xpsp3_checkButton_notify_flashTaskbarIcon)
     SkinCheckbox(xpsp3_checkButton_notify_playSystemDefaultSound)
-    SkinButton(xpsp3_button_close)
+
+    local buttons = {
+      xpsp3_button_close,
+      xpsp3_button_cameraHeight_raise,
+      xpsp3_button_cameraHeight_lower,
+    }
+    for _, button in pairs(buttons) do
+      SkinButton(button)
+    end
   end)
-    
+
 end)
