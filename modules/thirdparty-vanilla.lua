@@ -1212,7 +1212,7 @@ pfUI:RegisterModule("thirdparty-vanilla", "vanilla", function()
     -- because it only attempts to add rarity borders which pfUI already does.
 
     -- make sure strata won't get touched again
-    PaperDollHook = function() return end
+    _G.PaperDollHook = function() return end
 
     -- restore original frame strata
     PaperDollFrame:SetFrameStrata("DIALOG")
