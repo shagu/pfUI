@@ -555,7 +555,8 @@ pfUI:RegisterModule("panel", "vanilla:tbc", function()
               if link then
                 local _, _, id = string.find(link, "item:(%d+):%d+:%d+:%d+")
                 if id == "6265" then
-                  count = count + 1
+                  local _, itemCount = GetContainerItemInfo(bag,slot)
+                  count = count + itemCount
                 end
               end
             end
