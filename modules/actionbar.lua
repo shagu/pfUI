@@ -582,6 +582,7 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
       -- display autocast
       if autocast then
         self.autocast:Show()
+        self.autocast:SetAlpha(self:GetAlpha() * 0.10)
       else
         self.autocast:Hide()
       end
