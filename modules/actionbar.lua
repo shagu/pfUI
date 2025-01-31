@@ -960,14 +960,30 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     -- setup page switch frame
     local pageswitch = CreateFrame("Frame", "pfActionBarPageSwitch", UIParent)
     pageswitch:SetScript("OnUpdate", function()
-      if C.bars.pagemaster == "1" then
+      local shiftbar = C.bars.pagemastershift
+      local ctrlbar = C.bars.pagemasterctrl
+      local altbar = C.bars.pagemasteralt
+
+      if shiftbar == "1" then
         if IsShiftKeyDown() then
           SwitchBar(shift)
           return
-        elseif IsControlKeyDown() then
+        else
+          SwitchBar(default)
+        end
+      end
+
+      if ctrlbar == "1" then
+        if IsControlKeyDown() then
           SwitchBar(ctrl)
           return
-        elseif IsAltKeyDown() then
+        else
+          SwitchBar(default)
+        end
+      end
+
+      if altbar == "1" then
+        if IsAltKeyDown() then
           SwitchBar(alt)
           return
         else
