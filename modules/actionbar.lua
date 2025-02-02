@@ -960,20 +960,34 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     -- setup page switch frame
     local pageswitch = CreateFrame("Frame", "pfActionBarPageSwitch", UIParent)
     pageswitch:SetScript("OnUpdate", function()
-      if C.bars.pagemaster == "1" then
+      -- a different block for each mod key
+      if C.bars.pagemastershift == "1" then
         if IsShiftKeyDown() then
           SwitchBar(shift)
           return
-        elseif IsControlKeyDown() then
+        else
+          SwitchBar(default)
+        end
+      end
+
+      if C.bars.pagemasterctrl == "1" then
+        if IsControlKeyDown() then
           SwitchBar(ctrl)
           return
-        elseif IsAltKeyDown() then
+        else
+          SwitchBar(default)
+        end
+      end
+
+      if C.bars.pagemasteralt == "1" then
+        if IsAltKeyDown() then
           SwitchBar(alt)
           return
         else
           SwitchBar(default)
         end
       end
+
 
       if C.bars.druidstealth == "1" then
         local stealth = IsCatStealth()
