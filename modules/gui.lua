@@ -2097,6 +2097,7 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
       CreateConfig(nil, T["Colors"], nil, nil, "header")
       CreateConfig(U["xpbar"], T["Experience Color"], C.panel.xp, "xp_color", "color")
       CreateConfig(U["xpbar"], T["Rested Color"], C.panel.xp, "rest_color", "color")
+      CreateConfig(U["xpbar"], T["Bar Texture"], C.panel.xp, "texture", "dropdown", pfUI.gui.dropdowns.uf_bartexture)
     end)
 
     CreateGUIEntry(T["XP Bar"], T["Reputation Bar"], function()
