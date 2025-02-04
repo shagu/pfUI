@@ -539,7 +539,9 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("bars",       nil,           "macroscan",        "1")
   pfUI:UpdateConfig("bars",       nil,           "reagents",         "1")
   pfUI:UpdateConfig("bars",       nil,           "hunterbar",        "0")
-  pfUI:UpdateConfig("bars",       nil,           "pagemaster",       "0")
+  pfUI:UpdateConfig("bars",       nil,           "pagemasteralt",    "0")
+  pfUI:UpdateConfig("bars",       nil,           "pagemastershift",  "0")
+  pfUI:UpdateConfig("bars",       nil,           "pagemasterctrl",   "0")
   pfUI:UpdateConfig("bars",       nil,           "druidstealth",     "0")
   pfUI:UpdateConfig("bars",       nil,           "showcastable",     "1")
   pfUI:UpdateConfig("bars",       nil,           "glowrange",        "1")
@@ -1201,6 +1203,15 @@ function pfUI:MigrateConfig()
       else
         pfUI_config.appearance.minimap.coordstext = "mouseover"
       end
+    end
+  end
+
+  -- migrate pagemaster to separate settings
+  if checkversion(5, 4, 15) then
+    if pfUI_config.bars.pagemaster == "1" then
+      pfUI_config.bars.pagemasteralt = "1"
+      pfUI_config.bars.pagemastershift = "1"
+      pfUI_config.bars.pagemasterctrl = "1"
     end
   end
 
