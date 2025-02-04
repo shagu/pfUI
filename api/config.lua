@@ -1210,6 +1210,7 @@ function pfUI:MigrateConfig()
   -- migrate pagemaster to separate settings
   if checkversion(5, 4, 15) then
     if pfUI_config.bars.pagemaster == "1" then
+      pfUI_config.bars.pagemaster = nil
       pfUI_config.bars.pagemasteralt = "1"
       pfUI_config.bars.pagemastershift = "1"
       pfUI_config.bars.pagemasterctrl = "1"
