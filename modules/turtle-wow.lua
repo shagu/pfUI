@@ -47,7 +47,7 @@ pfUI:RegisterModule("turtle-wow", "vanilla", function ()
 
   -- turtle wow totemic recall clear totem indicators
   local _, class = UnitClass("player")
-  if class == "SHAMAN" then
+  if libtotem and class == "SHAMAN" then
     local trecall = CreateFrame("Frame", "pfTotemsRecall", UIParent)
     trecall:RegisterEvent("CHAT_MSG_SPELL_SELF_BUFF")
     trecall:SetScript("OnEvent", function()
