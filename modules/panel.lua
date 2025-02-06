@@ -566,16 +566,6 @@ pfUI:RegisterModule("panel", "vanilla:tbc", function()
         pfUI.panel:OutputPanel("soulshard", T["Soulshards"] .. ": " .. count)
       end)
     end
-
-    do -- Hearthstone bind location
-      local widget = CreateFrame("Frame", "pfPanelBindLocation", UIParent)
-      widget:RegisterEvent("PLAYER_ENTERING_WORLD")
-      widget:RegisterEvent("CHAT_MSG_SYSTEM")
-      widget:SetScript("OnEvent", function()
-        local bindlocation = GetBindLocation()
-        pfUI.panel:OutputPanel("bindlocation", T["Hearthstone"] .. ": " .. bindlocation)
-      end)
-    end
   end
 
   pfUI.panel = {}
