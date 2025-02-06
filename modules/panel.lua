@@ -6,6 +6,24 @@ pfUI:RegisterModule("panel", "vanilla:tbc", function()
   local font_size = C.panel.use_unitfonts == "1" and C.global.font_unit_size or C.global.font_size
   local rawborder, default_border = GetBorderSize("panels")
 
+  local function bagSlotCount(itemid)
+    local total = 0
+    for bag=0,4 do
+      for slot=1,GetContainerNumSlots(bag) do
+        local link = GetContainerItemLink(bag,slot)
+        if link then
+          local _, _, id = string.find(link, "item:(%d+):%d+:%d+:%d+")
+          if id == itemid then
+            local _, itemCount = GetContainerItemInfo(bag,slot)
+            total = total + itemCount
+          end
+        end
+      end
+    end
+    return total
+  end
+
+
   do -- Widgets
     do -- Clock & Timer
       local widget = CreateFrame("Frame", "pfPanelWidgetClock",UIParent)
@@ -545,25 +563,50 @@ pfUI:RegisterModule("panel", "vanilla:tbc", function()
       widget:RegisterEvent("PLAYER_ENTERING_WORLD")
       widget:RegisterEvent("BAG_UPDATE")
       widget:SetScript("OnEvent", function()
-        local count = 0
         local _, class = UnitClass("player")
+        if class ~= "WARLOCK" then return end
 
-        if class == "WARLOCK" then
-          for bag=0,4 do
-            for slot=1,GetContainerNumSlots(bag) do
-              local link = GetContainerItemLink(bag,slot)
-              if link then
-                local _, _, id = string.find(link, "item:(%d+):%d+:%d+:%d+")
-                if id == "6265" then
-                  local _, itemCount = GetContainerItemInfo(bag,slot)
-                  count = count + itemCount
-                end
-              end
-            end
-          end
-        end
-
+        local count = 0
+        count = bagSlotCount("6265")
         pfUI.panel:OutputPanel("soulshard", T["Soulshards"] .. ": " .. count)
+      end)
+    end
+
+    do -- Flash Powder
+      local widget = CreateFrame("Frame", "pfPanelFlashPowder", UIParent)
+      widget:RegisterEvent("PLAYER_ENTERING_WORLD")
+      widget:RegisterEvent("BAG_UPDATE")
+      widget:SetScript("OnEvent", function()
+        local _, class = UnitClass("player")
+        if class ~= "ROGUE" then return end
+        
+        local count = 0
+        count = bagSlotCount("5140")
+        pfUI.panel:OutputPanel("flashpowder", T["Flash Powder"] .. ": " .. count)
+      end)
+    end
+
+    do -- Thistle Tea
+      local widget = CreateFrame("Frame", "pfPanelThistleTea", UIParent)
+      widget:RegisterEvent("PLAYER_ENTERING_WORLD")
+      widget:RegisterEvent("BAG_UPDATE")
+      widget:SetScript("OnEvent", function()
+        local _, class = UnitClass("player")
+        if class ~= "ROGUE" then return end
+
+        local count = 0
+        count = bagSlotCount("7676")
+        pfUI.panel:OutputPanel("thistletea", T["Thistle Tea"] .. ": " .. count)
+      end)
+    end
+
+    do -- Hearthstone bind location
+      local widget = CreateFrame("Frame", "pfPanelBindLocation", UIParent)
+      widget:RegisterEvent("PLAYER_ENTERING_WORLD")
+      widget:RegisterEvent("CHAT_MSG_SYSTEM")
+      widget:SetScript("OnEvent", function()
+        local bindlocation = GetBindLocation()
+        pfUI.panel:OutputPanel("bindlocation", T["Hearthstone"] .. ": " .. bindlocation)
       end)
     end
   end
