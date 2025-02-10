@@ -64,6 +64,7 @@ pfUI:RegisterModule("panel", "vanilla:tbc", function()
         local h, m = GetGameTime()
         local noon = "AM"
         local time = ""
+        local secondsenabled = C.global.seconds == "1"
         if C.global.twentyfour == "0" then
           if C.global.servertime == "1" then
             if h > 12 then
@@ -72,13 +73,21 @@ pfUI:RegisterModule("panel", "vanilla:tbc", function()
             end
             time = string.format("%.2d:%.2d %s", h, m, noon)
           else
-            time = date("%I:%M:%S %p")
+            if secondsenabled then
+              time = date("%I:%M:%S %p")
+            else
+              time = date("%I:%M %p")
+            end
           end
         else
           if C.global.servertime == "1" then
             time = string.format("%.2d:%.2d", h, m)
           else
-            time = date("%H:%M:%S")
+            if secondsenabled then
+              time = date("%H:%M:%S")
+            else
+              time = date("%H:%M")
+            end
           end
         end
         pfUI.panel:OutputPanel("time", time, widget.Tooltip, widget.Click)
