@@ -582,7 +582,54 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     end
 
     -- target indicator
-    if superwow_active and C.nameplates.outcombatstate == "1" then
+    if superwow_active and C.nameplates.agrostate == "1" then
+      local guid = plate.parent:GetName(1) or ""
+      local target = guid.."target"
+
+      if UnitAffectingCombat("player") and UnitAffectingCombat(guid) and not UnitCanAssist("player", guid) then
+        if UnitIsUnit(target, "player") then
+          plate.health.backdrop:SetBackdropBorderColor(0, 1, 0, 1)
+          plate.health:SetStatusBarColor(0, 1, 0, 1)
+        elseif UnitCastingInfo(guid) or UnitChannelInfo(guid) then
+        elseif UnitExists(target) then
+          if r ~= plate.cache.r or g ~= plate.cache.g or b ~= plate.cache.b then
+            plate.health:SetStatusBarColor(r, g, b, a)
+            plate.cache.r, plate.cache.g, plate.cache.b = r, g, b
+          end
+          if target and C.nameplates.targethighlight == "1" then
+            plate.health.backdrop:SetBackdropBorderColor(plate.health.hlr, plate.health.hlg, plate.health.hlb, plate.health.hla)
+          elseif C.nameplates.outfriendlynpc == "1" and unittype == "FRIENDLY_NPC" then
+            plate.health.backdrop:SetBackdropBorderColor(.2,.7,.3,1)
+          elseif C.nameplates.outfriendly == "1" and unittype == "FRIENDLY_PLAYER" then
+            plate.health.backdrop:SetBackdropBorderColor(.2,.3,.7,1)
+          elseif C.nameplates.outneutral == "1" and strfind(unittype, "NEUTRAL") then
+            plate.health.backdrop:SetBackdropBorderColor(.7,.7,.2,1)
+          elseif C.nameplates.outenemy == "1" and strfind(unittype, "ENEMY") then
+            plate.health.backdrop:SetBackdropBorderColor(.7,.2,.3,1)
+          else
+            plate.health.backdrop:SetBackdropBorderColor(er,eg,eb,ea)
+          end
+        end
+      else
+        if r ~= plate.cache.r or g ~= plate.cache.g or b ~= plate.cache.b then
+          plate.health:SetStatusBarColor(r, g, b, a)
+          plate.cache.r, plate.cache.g, plate.cache.b = r, g, b
+        end
+        if target and C.nameplates.targethighlight == "1" then
+          plate.health.backdrop:SetBackdropBorderColor(plate.health.hlr, plate.health.hlg, plate.health.hlb, plate.health.hla)
+        elseif C.nameplates.outfriendlynpc == "1" and unittype == "FRIENDLY_NPC" then
+          plate.health.backdrop:SetBackdropBorderColor(.2,.7,.3,1)
+        elseif C.nameplates.outfriendly == "1" and unittype == "FRIENDLY_PLAYER" then
+          plate.health.backdrop:SetBackdropBorderColor(.2,.3,.7,1)
+        elseif C.nameplates.outneutral == "1" and strfind(unittype, "NEUTRAL") then
+          plate.health.backdrop:SetBackdropBorderColor(.7,.7,.2,1)
+        elseif C.nameplates.outenemy == "1" and strfind(unittype, "ENEMY") then
+          plate.health.backdrop:SetBackdropBorderColor(.7,.2,.3,1)
+        else
+          plate.health.backdrop:SetBackdropBorderColor(er,eg,eb,ea)
+        end
+      end
+    elseif superwow_active and C.nameplates.outcombatstate == "1" then
       local guid = plate.parent:GetName(1) or ""
       local target = guid.."target"
 
