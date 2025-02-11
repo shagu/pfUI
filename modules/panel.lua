@@ -64,7 +64,7 @@ pfUI:RegisterModule("panel", "vanilla:tbc", function()
         local h, m = GetGameTime()
         local noon = "AM"
         local time = ""
-        local secondsenabled = C.global.seconds == "1"
+        local secondsenabled = C.panel.seconds == "1"
         if C.global.twentyfour == "0" then
           if C.global.servertime == "1" then
             if h > 12 then
