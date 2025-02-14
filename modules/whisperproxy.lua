@@ -63,7 +63,7 @@ pfUI:RegisterModule("whisperproxy", "vanilla", function ()
       SendChatMessage("[" .. arg2 .. "]: " .. arg1, "WHISPER", nil, forwardto)
     end
 
-    if arg2 == forwardto then
+    if strlower(arg2) == strlower(forwardto) then
       local isForward, _, name, message = string.find(arg1, "(.*): (.*)")
       if isForward then
         SendChatMessage(message, "WHISPER", nil, name)
