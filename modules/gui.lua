@@ -1873,6 +1873,7 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
       CreateConfig(nil, T["Show PvP Icon"], C.unitframes.player, "showPVPMinimap", "checkbox")
       CreateConfig(nil, T["Show Inactive Tracking"], C.appearance.minimap, "tracking_pulse", "checkbox")
       CreateConfig(nil, T["Tracking Icon Size"], C.appearance.minimap, "tracking_size")
+      CreateConfig(nil, T["Hide Addon Buttons On Combat"], C.appearance.minimap, "addon_buttons", "checkbox")
     end)
 
     CreateGUIEntry(T["Minimap"], T["Addon Buttons"], function()
