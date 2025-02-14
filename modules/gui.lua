@@ -1069,6 +1069,9 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
         "combat:" .. T["Combat Timer"],
         "ammo:" .. T["Ammo Counter"],
         "soulshard:" .. T["Soulshard Counter"],
+        "bindlocation:" .. T["Hearth"],
+        "thistletea:" .. T["Thistle Tea"],
+        "flashpowder:" .. T["Flash Powder"],
         "bagspace:" .. T["Bagspace"]
       },
       ["tooltip_position"] = {
