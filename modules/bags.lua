@@ -987,6 +987,7 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
       -- bag search
       if not frame.search then
         frame.search = CreateFrame("Frame", "pfBagSearch", frame)
+        frame.search.db = {}
         frame.search:SetHeight(12)
         frame.search:SetPoint("TOPLEFT", frame, "TOPLEFT", default_border, -default_border)
         frame.search:SetPoint("TOPRIGHT", frame.keys, "TOPLEFT", -default_border*3, -default_border)
@@ -1031,6 +1032,25 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
               if itemCount then
                 local itemLink = GetContainerItemLink(bag, slot)
                 local itemstring = string.sub(itemLink, string.find(itemLink, "%[")+1, string.find(itemLink, "%]")-1)
+
+                if C.appearance.bags.fulltext == "1" then
+                  if not frame.search.db[itemLink] then
+                    scanner:SetBagItem(bag, slot)
+                    local text = scanner:Text()
+
+                    local str = ""
+                    for k, v in pairs(text) do
+                      str = str .. (v[1] or "") .. (v[2] or "")
+                    end
+
+                    frame.search.db[itemLink] = strlower(str)
+                  end
+
+                  if strfind(frame.search.db[itemLink], strlower(this:GetText()), 1, true) then
+                    pfUI.bags[bag].slots[slot].frame:SetAlpha(1)
+                  end
+                end
+
                 if strfind(strlower(itemstring), strlower(this:GetText()), 1, true) then
                   pfUI.bags[bag].slots[slot].frame:SetAlpha(1)
                 end
