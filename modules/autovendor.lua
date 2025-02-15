@@ -41,7 +41,7 @@ pfUI:RegisterModule("autovendor", "vanilla:tbc", function ()
   autovendor:SetScript("OnShow", function()
     processed = {}
     this.count = 0
-    this.price = 0
+    this.gold = GetMoney()
   end)
 
   autovendor:SetScript("OnUpdate", function()
@@ -66,7 +66,6 @@ pfUI:RegisterModule("autovendor", "vanilla:tbc", function ()
     local _, _, id = string.find(GetContainerItemLink(bag, slot), "item:(%d+):%d+:%d+:%d+")
     if pfSellData[tonumber(id)] then
       local _, _, sell, buy = strfind(pfSellData[tonumber(id)], "(.*),(.*)")
-      this.price = this.price + ( sell * ( icount or 1 ) )
       this.count = this.count + 1
     end
 
@@ -80,7 +79,11 @@ pfUI:RegisterModule("autovendor", "vanilla:tbc", function ()
 
   autovendor:SetScript("OnHide", function()
     if this.count > 0 then
-      DEFAULT_CHAT_FRAME:AddMessage(T["Your vendor trash has been sold and you earned"] .. " " .. CreateGoldString(this.price))
+      local gold = this.gold
+      QueueFunction(function()
+        local income = GetMoney() - gold
+        DEFAULT_CHAT_FRAME:AddMessage(T["Your vendor trash has been sold and you earned"] .. " " .. CreateGoldString(income))
+      end)
     end
   end)
 
