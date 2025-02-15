@@ -1037,8 +1037,12 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
       local parent = self
       local nameplate = self.nameplate
       local plate = (C.nameplates["overlap"] == "1" or C.nameplates["vertical_offset"] ~= "0") and nameplate or parent
-      local clickable = C.nameplates["clickthrough"] ~= "1" and true or false
 
+      -- disable all clicks for now
+      parent:EnableMouse(false)
+      nameplate:EnableMouse(false)
+
+      -- adjust vertical offset
       if C.nameplates["vertical_offset"] ~= "0" then
         nameplate:SetPoint("TOP", parent, "TOP", 0, tonumber(C.nameplates["vertical_offset"]))
       end
@@ -1054,13 +1058,6 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
       else
         plate:SetScript("OnMouseDown", nil)
       end
-
-      -- disable all click events
-      parent:EnableMouse(false)
-      nameplate:EnableMouse(false)
-
-      -- make the actual plate clickable
-      plate:EnableMouse(clickable)
     end
 
     local hookOnDataChanged = nameplates.OnDataChanged
@@ -1075,6 +1072,18 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
 
     local hookOnUpdate = nameplates.OnUpdate
     nameplates.OnUpdate = function(self)
+      -- initialize shortcut variables
+      local plate = (C.nameplates["overlap"] == "1" or C.nameplates["vertical_offset"] ~= "0") and this.nameplate or this
+      local clickable = C.nameplates["clickthrough"] ~= "1" and true or false
+
+      -- disable all click events
+      if not clickable then
+        this:EnableMouse(false)
+        this.nameplate:EnableMouse(false)
+      else
+        plate:EnableMouse(clickable)
+      end
+
       if C.nameplates["overlap"] == "1" then
         if this:GetWidth() > 1 then
           -- set parent to 1 pixel to have them overlap each other
