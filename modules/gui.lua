@@ -2288,6 +2288,7 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
       CreateConfig(U["nameplates"], T["Always Show On Units With Missing HP"], C.nameplates, "fullhealth", "checkbox")
       CreateConfig(U["nameplates"], T["Always Show On Target Units"], C.nameplates, "target", "checkbox")
       CreateConfig(U["nameplates"], T["Vertical Healthbar"], C.nameplates, "verticalhealth", "checkbox")
+      CreateConfig(U["nameplates"], T["Overwrite Healthbar And Border Color With Agro State"], C.nameplates, "agrostate", "checkbox")
     end)
 
     CreateGUIEntry(T["Thirdparty"], T["Integrations"], function()
