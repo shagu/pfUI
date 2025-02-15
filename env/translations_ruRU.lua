@@ -268,6 +268,7 @@ pfUI_translation["ruRU"] = {
   ["Enable Energy Ticks"] = "Включить восполнение энергии",
   ["Enable Extended Guild Information"] = "Включить расширенную информацию о гильдии",
   ["Enable Frame Shadow"] = "Включить тень окон",
+  ["Enable Full-Text Search"] = nil,
   ["Enable Indicators"] = "Включить индикаторы",
   ["Enable Item Quality Color For Equipment Only"] = "Включить цвет качества предметов только для экипировки",
   ["Enable \"Loot & Spam\" Chat Window"] = "Включить окно чата \"Добыча & Спам\"",

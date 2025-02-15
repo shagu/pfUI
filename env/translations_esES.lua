@@ -268,6 +268,7 @@ pfUI_translation["esES"] = {
   ["Enable Energy Ticks"] = "Activar tics de energía",
   ["Enable Extended Guild Information"] = "Activar información de hermandad extendida",
   ["Enable Frame Shadow"] = "Activar sombra del marco",
+  ["Enable Full-Text Search"] = nil,
   ["Enable Indicators"] = "Activar indicadores",
   ["Enable Item Quality Color For Equipment Only"] = "Mostrar el color de calidad de objetos solo para equipo",
   ["Enable \"Loot & Spam\" Chat Window"] = "Activar ventana de chat \"Botín y spam\"",

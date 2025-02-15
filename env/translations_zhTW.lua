@@ -268,6 +268,7 @@ pfUI_translation["zhTW"] = {
   ["Enable Energy Ticks"] = "顯示能量刻度",
   ["Enable Extended Guild Information"] = "公會資訊擴展顯示",
   ["Enable Frame Shadow"] = "啟用框架陰影",
+  ["Enable Full-Text Search"] = nil,
   ["Enable Indicators"] = nil,
   ["Enable Item Quality Color For Equipment Only"] = "僅在裝備上顯示品質顏色",
   ["Enable \"Loot & Spam\" Chat Window"] = "啟用[拾取、綜合]聊天視窗",

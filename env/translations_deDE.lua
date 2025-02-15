@@ -268,6 +268,7 @@ pfUI_translation["deDE"] = {
   ["Enable Energy Ticks"] = nil,
   ["Enable Extended Guild Information"] = nil,
   ["Enable Frame Shadow"] = nil,
+  ["Enable Full-Text Search"] = nil,
   ["Enable Indicators"] = nil,
   ["Enable Item Quality Color For Equipment Only"] = nil,
   ["Enable \"Loot & Spam\" Chat Window"] = nil,

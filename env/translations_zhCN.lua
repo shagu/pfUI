@@ -268,6 +268,7 @@ pfUI_translation["zhCN"] = {
   ["Enable Energy Ticks"] = "显示能量刻度",
   ["Enable Extended Guild Information"] = "公会信息扩展显示",
   ["Enable Frame Shadow"] = "启用框架阴影",
+  ["Enable Full-Text Search"] = nil,
   ["Enable Indicators"] = "启用指示器",
   ["Enable Item Quality Color For Equipment Only"] = "仅在装备上显示品质颜色",
   ["Enable \"Loot & Spam\" Chat Window"] = "启用[拾取、综合]聊天窗口",

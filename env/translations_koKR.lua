@@ -268,6 +268,7 @@ pfUI_translation["koKR"] = {
   ["Enable Energy Ticks"] = "Energy Ticks 활성화",
   ["Enable Extended Guild Information"] = "길드 정보 확장 사용",
   ["Enable Frame Shadow"] = nil,
+  ["Enable Full-Text Search"] = nil,
   ["Enable Indicators"] = nil,
   ["Enable Item Quality Color For Equipment Only"] = "착용장비 전용  아이템품질 색상 활성화",
   ["Enable \"Loot & Spam\" Chat Window"] = "\"루팅 & 스팜\"채팅 창 사용",
