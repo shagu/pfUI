@@ -961,35 +961,21 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     -- setup page switch frame
     local pageswitch = CreateFrame("Frame", "pfActionBarPageSwitch", UIParent)
     pageswitch:SetScript("OnUpdate", function()
-      -- a different block for each mod key
-      if C.bars.pagemastershift == "1" then
-        if IsShiftKeyDown() then
-          SwitchBar(shift)
-          return
-        else
-          SwitchBar(default)
-        end
+      -- switch actionbar page depending on meta key that is pressed
+      if C.bars.pagemastershift == "1" and IsShiftKeyDown() then
+        SwitchBar(shift)
+        return
+      elseif C.bars.pagemasterctrl == "1" and IsControlKeyDown() then
+        SwitchBar(ctrl)
+        return
+      elseif C.bars.pagemasteralt == "1" and IsAltKeyDown() then
+        SwitchBar(alt)
+        return
+      elseif C.bars.pagemasteralt == "1" or C.bars.pagemasterctrl == "1" or C.bars.pagemastershift == "1" then
+        SwitchBar(default)
       end
 
-      if C.bars.pagemasterctrl == "1" then
-        if IsControlKeyDown() then
-          SwitchBar(ctrl)
-          return
-        else
-          SwitchBar(default)
-        end
-      end
-
-      if C.bars.pagemasteralt == "1" then
-        if IsAltKeyDown() then
-          SwitchBar(alt)
-          return
-        else
-          SwitchBar(default)
-        end
-      end
-
-
+      -- switch actionbar page if druid stealth is detected
       if C.bars.druidstealth == "1" then
         local stealth = IsCatStealth()
         if stealth and _G.CURRENT_ACTIONBAR_PAGE == 1 then
