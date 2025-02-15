@@ -32,6 +32,20 @@ pfUI:RegisterModule("superwow", "vanilla", function ()
     DEFAULT_CHAT_FRAME:AddMessage("-> https://github.com/balakethelock/SuperWoW/releases/")
   end
 
+  if SUPERWOW_VERSION == "1.5" then
+    QueueFunction(function()
+      local pfCombatText_AddMessage = _G.CombatText_AddMessage
+      _G.CombatText_AddMessage = function(message, a, b, c, d, e, f)
+        local match, _, hex = string.find(message, ".+ %[(0x.+)%]")
+        if hex and UnitName(hex) then
+          message = string.gsub(message, hex, UnitName(hex))
+        end
+
+        pfCombatText_AddMessage(message, a, b, c, d, e, f)
+      end
+    end)
+  end
+
   -- Add support for guid based focus frame
   if SUPERWOW_VERSION and pfUI.uf and pfUI.uf.focus then
     local focus = function(unitstr)
