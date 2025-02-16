@@ -668,7 +668,6 @@ pfUI:RegisterModule("panel", "vanilla:tbc", function()
     frame:SetHeight(C.global.font_size*1.5)
     CreateBackdrop(frame, default_border, nil)
     CreateBackdropShadow(frame)
-    UpdateMovable(frame)
     return frame
   end
 
@@ -710,6 +709,8 @@ pfUI:RegisterModule("panel", "vanilla:tbc", function()
     pfUI.panel.left:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", 5, 5)
   end
 
+  UpdateMovable(pfUI.panel.left)
+
   pfUI.panel.left.hide:SetScript("OnClick", function()
     if pfUI.chat.left:IsShown() then pfUI.chat.left:Hide() else pfUI.chat.left:Show() end
   end)
@@ -740,6 +741,8 @@ pfUI:RegisterModule("panel", "vanilla:tbc", function()
     pfUI.panel.right:SetWidth(C.chat.right.width)
     pfUI.panel.right:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", -5, 5)
   end
+
+  UpdateMovable(pfUI.panel.right)
 
   pfUI.panel.right.hide:SetScript("OnClick", function()
     if pfUI.chat.right:IsShown() then pfUI.chat.right:Hide() else pfUI.chat.right:Show() end
