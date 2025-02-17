@@ -567,11 +567,7 @@ pfUI:RegisterModule("panel", "vanilla:tbc", function()
       widget:RegisterEvent("PLAYER_ENTERING_WORLD")
       widget:RegisterEvent("CHAT_MSG_SYSTEM")
       widget:SetScript("OnEvent", function()
-        local bindlocation = nil
-        bindlocation = GetBindLocation()
-        if bindlocation ~= nil then
-          pfUI.panel:OutputPanel("bindlocation", T["Hearthstone"] .. ": " .. bindlocation)
-        end
+        pfUI.panel:OutputPanel("bindlocation", T["Hearthstone"] .. ": " .. (GetBindLocation() or T["Not Set"]))
       end)
     end
 
