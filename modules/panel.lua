@@ -567,8 +567,13 @@ pfUI:RegisterModule("panel", "vanilla:tbc", function()
       widget:RegisterEvent("PLAYER_ENTERING_WORLD")
       widget:RegisterEvent("CHAT_MSG_SYSTEM")
       widget:SetScript("OnEvent", function()
-        local bindlocation = GetBindLocation()
-        pfUI.panel:OutputPanel("bindlocation", T["Hearthstone"] .. ": " .. bindlocation)
+        local bindlocation = nil
+        bindlocation = GetBindLocation()
+        if bindlocation ~= nil then
+          pfUI.panel:OutputPanel("bindlocation", T["Hearthstone"] .. ": " .. bindlocation)
+        else
+          pfUI.panel:OutputPanel("bindlocation", T["Hearthstone"] .. ": " .. T["Not Set"])
+        end
       end)
     end
 
@@ -674,7 +679,7 @@ pfUI:RegisterModule("panel", "vanilla:tbc", function()
   end
 
   local function CreatePanel(panelname, default_border)
-    frame = CreateFrame("Frame", panelname, UIParent)
+    local frame = CreateFrame("Frame", panelname, UIParent)
     frame:SetFrameStrata("FULLSCREEN")
     frame:ClearAllPoints()
     frame:SetFrameStrata("DIALOG")
