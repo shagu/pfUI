@@ -11,6 +11,7 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
   }
 
   local combatstate = {
+    -- gets overwritten by user config
     ["NOTHREAT"] = { r = .7, g = .7, b = .2, a = 1 },
     ["THREAT"]   = { r = .7, g = .2, b = .2, a = 1 },
     ["CASTING"]  = { r = .7, g = .2, b = .7, a = 1 },
@@ -462,6 +463,11 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     local debuffsize = tonumber(C.nameplates.debuffsize)
     local healthoffset = tonumber(C.nameplates.health.offset)
     local orientation = C.nameplates.verticalhealth == "1" and "VERTICAL" or "HORIZONTAL"
+
+    local c = combatstate -- load combat state colors
+    c.THREAT.r, c.THREAT.g, c.THREAT.b, c.THREAT.a = GetStringColor(C.nameplates.combatthreat)
+    c.NOTHREAT.r, c.NOTHREAT.g, c.NOTHREAT.b, c.NOTHREAT.a = GetStringColor(C.nameplates.combatnothreat)
+    c.STUN.r, c.STUN.g, c.STUN.b, c.STUN.a = GetStringColor(C.nameplates.combatstun)
 
     nameplate:SetWidth(plate_width)
     nameplate:SetHeight(plate_height)
