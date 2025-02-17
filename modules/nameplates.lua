@@ -712,6 +712,23 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
       r, g, b, a = .5, .5, .5, .8
     end
 
+    if superwow_active and C.nameplates.agrostate == "1" then
+      local guid = plate.parent:GetName(1) or ""
+      local target = guid.."target" 
+
+      if UnitAffectingCombat("player") and UnitAffectingCombat(guid) and not UnitCanAssist("player", guid) then
+        if UnitIsUnit(target, "player") then
+          r, g, b, a = 0, 1, 0, 1
+          plate.health.backdrop:SetBackdropBorderColor(r, g, b, a) 
+        elseif UnitCastingInfo(guid) or UnitChannelInfo(guid) or not UnitExists(target) then
+          if plate.cache.r == 0 and plate.cache.g == 1 and plate.cache.b == 0 then 
+            r, g, b, a = 0, 1, 0, 1
+            plate.health.backdrop:SetBackdropBorderColor(r, g, b, a)
+          end
+        end
+      end
+    end
+      
     if r ~= plate.cache.r or g ~= plate.cache.g or b ~= plate.cache.b then
       plate.health:SetStatusBarColor(r, g, b, a)
       plate.cache.r, plate.cache.g, plate.cache.b = r, g, b
