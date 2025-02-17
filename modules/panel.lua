@@ -571,8 +571,6 @@ pfUI:RegisterModule("panel", "vanilla:tbc", function()
         bindlocation = GetBindLocation()
         if bindlocation ~= nil then
           pfUI.panel:OutputPanel("bindlocation", T["Hearthstone"] .. ": " .. bindlocation)
-        else
-          pfUI.panel:OutputPanel("bindlocation", T["Hearthstone"] .. ": " .. T["Not Set"])
         end
       end)
     end
