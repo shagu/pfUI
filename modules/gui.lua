@@ -2269,7 +2269,6 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
       CreateConfig(U["nameplates"], T["Red Border On Enemy Units"], C.nameplates, "outenemy", "checkbox")
       CreateConfig(U["nameplates"], T["Border Around Target Unit"], C.nameplates, "targethighlight", "checkbox")
       CreateConfig(U["nameplates"], T["Border Color Around Target Unit"], C.nameplates, "highlightcolor", "color")
-      CreateConfig(U["nameplates"], T["Overwrite Border Color With Combat State"], C.nameplates, "outcombatstate", "checkbox")
 
       CreateConfig(nil, T["Healthbar"], nil, nil, "header")
       CreateConfig(U["nameplates"], T["Healthbar Vertical Offset"], C.nameplates.health, "offset")
@@ -2288,6 +2287,10 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
       CreateConfig(U["nameplates"], T["Always Show On Units With Missing HP"], C.nameplates, "fullhealth", "checkbox")
       CreateConfig(U["nameplates"], T["Always Show On Target Units"], C.nameplates, "target", "checkbox")
       CreateConfig(U["nameplates"], T["Vertical Healthbar"], C.nameplates, "verticalhealth", "checkbox")
+
+      CreateConfig(nil, T["SuperWoW Settings"], nil, nil, "header")
+      CreateConfig(U["nameplates"], T["Overwrite Border Color With Combat State"], C.nameplates, "outcombatstate", "checkbox")
+      CreateConfig(U["nameplates"], T["Overwrite Health Color With Combat State"], C.nameplates, "barcombatstate", "checkbox")
     end)
 
     CreateGUIEntry(T["Thirdparty"], T["Integrations"], function()

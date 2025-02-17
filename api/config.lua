@@ -729,6 +729,7 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("nameplates", nil,           "showguildname",    "0")
 
   pfUI:UpdateConfig("nameplates", nil,           "outcombatstate",   "1")
+  pfUI:UpdateConfig("nameplates", nil,           "barcombatstate",   "0")
   pfUI:UpdateConfig("nameplates", nil,           "outfriendly",      "0")
   pfUI:UpdateConfig("nameplates", nil,           "outfriendlynpc",   "1")
   pfUI:UpdateConfig("nameplates", nil,           "outneutral",       "1")

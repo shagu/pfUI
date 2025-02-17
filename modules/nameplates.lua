@@ -586,9 +586,9 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
       local guid = plate.parent:GetName(1) or ""
       local target = guid.."target"
 
-      if UnitAffectingCombat(guid) then
+      if UnitAffectingCombat("player") and UnitAffectingCombat(guid) and not UnitCanAssist("player", guid) then
         if UnitIsUnit(target, "player") then
-          plate.health.backdrop:SetBackdropBorderColor(.7,.2,.3,1)
+          plate.health.backdrop:SetBackdropBorderColor(.7,.2,.2,1)
         elseif UnitExists(target) or UnitIsPlayer(guid) then
           plate.health.backdrop:SetBackdropBorderColor(.7,.7,.2,1)
         else
@@ -710,6 +710,21 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
 
     if superwow_active and unitstr and UnitIsTapped(unitstr) and not UnitIsTappedByPlayer(unitstr) then
       r, g, b, a = .5, .5, .5, .8
+    end
+
+    if superwow_active and C.nameplates.barcombatstate == "1" then
+      local guid = plate.parent:GetName(1) or ""
+      local target = guid.."target"
+
+      if UnitAffectingCombat("player") and UnitAffectingCombat(guid) and not UnitCanAssist("player", guid) then
+        if UnitIsUnit(target, "player") then
+          r, g, b, a = .7, .2, .2, 1
+        elseif UnitExists(target) or UnitIsPlayer(guid) then
+          r, g, b, a = .7, .7, .2, 1
+        else
+          r, g, b, a = .2, .7, .7, 1
+        end
+      end
     end
 
     if r ~= plate.cache.r or g ~= plate.cache.g or b ~= plate.cache.b then
