@@ -37,6 +37,25 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
   -- cache default border color
   local er, eg, eb, ea = GetStringColor(pfUI_config.appearance.border.color)
 
+  local function GetCombatStateColor(guid)
+    local target = guid.."target"
+    local color = false
+
+    if UnitAffectingCombat("player") and UnitAffectingCombat(guid) and not UnitCanAssist("player", guid) then
+      if C.nameplates.ccombatcasting == "1" and (UnitCastingInfo(guid) or UnitChannelInfo(guid)) then
+        color = combatstate.CASTING
+      elseif C.nameplates.ccombatthreat == "1" and UnitIsUnit(target, "player") then
+        color = combatstate.THREAT
+      elseif C.nameplates.ccombatnothreat == "1" and UnitExists(target) then
+        color = combatstate.NOTHREAT
+      elseif C.nameplates.ccombatstun == "1" and  not UnitIsPlayer(guid) then
+        color = combatstate.STUN
+      end
+    end
+
+    return color
+  end
+
   local function IsNamePlate(frame)
     if frame:GetObjectType() ~= NAMEPLATE_FRAMETYPE then return nil end
     regions = plate:GetRegions()
@@ -465,6 +484,7 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     local orientation = C.nameplates.verticalhealth == "1" and "VERTICAL" or "HORIZONTAL"
 
     local c = combatstate -- load combat state colors
+    c.CASTING.r, c.CASTING.g, c.CASTING.b, c.CASTING.a = GetStringColor(C.nameplates.combatcasting)
     c.THREAT.r, c.THREAT.g, c.THREAT.b, c.THREAT.a = GetStringColor(C.nameplates.combatthreat)
     c.NOTHREAT.r, c.NOTHREAT.g, c.NOTHREAT.b, c.NOTHREAT.a = GetStringColor(C.nameplates.combatnothreat)
     c.STUN.r, c.STUN.g, c.STUN.b, c.STUN.a = GetStringColor(C.nameplates.combatstun)
@@ -598,19 +618,10 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     -- target indicator
     if superwow_active and C.nameplates.outcombatstate == "1" then
       local guid = plate.parent:GetName(1) or ""
-      local target = guid.."target"
-      local color = combatstate.NONE
 
       -- determine color based on combat state
-      if UnitAffectingCombat("player") and UnitAffectingCombat(guid) and not UnitCanAssist("player", guid) then
-        if UnitIsUnit(target, "player") then
-          color = combatstate.THREAT
-        elseif UnitExists(target) or UnitIsPlayer(guid) then
-          color = combatstate.NOTHREAT
-        else
-          color = combatstate.STUN
-        end
-      end
+      local color = GetCombatStateColor(guid)
+      if not color then color = combatstate.NONE end
 
       -- set border color
       plate.health.backdrop:SetBackdropBorderColor(color.r, color.g, color.b, color.a)
@@ -731,20 +742,9 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
 
     if superwow_active and C.nameplates.barcombatstate == "1" then
       local guid = plate.parent:GetName(1) or ""
-      local target = guid.."target"
-      local color = combatstate.NONE
+      local color = GetCombatStateColor(guid)
 
-      -- determine color based on combat state
-      if UnitAffectingCombat("player") and UnitAffectingCombat(guid) and not UnitCanAssist("player", guid) then
-        if UnitIsUnit(target, "player") then
-          color = combatstate.THREAT
-        elseif UnitExists(target) or UnitIsPlayer(guid) then
-          color = combatstate.NOTHREAT
-        else
-          color = combatstate.STUN
-        end
-
-        -- override healthbar color
+      if color then
         r, g, b, a = color.r, color.g, color.b, color.a
       end
     end
