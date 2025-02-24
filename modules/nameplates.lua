@@ -48,7 +48,7 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
         color = combatstate.THREAT
       elseif C.nameplates.ccombatnothreat == "1" and UnitExists(target) then
         color = combatstate.NOTHREAT
-      elseif C.nameplates.ccombatstun == "1" and  not UnitIsPlayer(guid) then
+      elseif C.nameplates.ccombatstun == "1" and not UnitExists(target) and not UnitIsPlayer(guid) then
         color = combatstate.STUN
       end
     end
