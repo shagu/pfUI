@@ -575,6 +575,96 @@ pfUI:RegisterModule("panel", "vanilla:tbc", function()
         pfUI.panel:OutputPanel("soulshard", T["Soulshards"] .. ": " .. count)
       end)
     end
+
+    do -- Poisons
+      local widget = CreateFrame("Frame", "pfPanelPoisons", UIParent)
+      widget:RegisterEvent("PLAYER_ENTERING_WORLD")
+      widget:RegisterEvent("BAG_UPDATE")
+      widget:SetScript("OnEvent", function()
+        -- Check if the player is a Rogue
+        local _, class = UnitClass("player")
+        if class == "ROGUE" then
+          -- Tooltip builder function
+          local function TooltipLines(array, name)
+            if name then
+              for i = 1, 10 do  -- Iterate over all values in the array
+                if array[i] == nil then
+                  break
+                end
+                if array[i] > 0 then  -- Only show non-nil, non-zero values
+                  GameTooltip:AddDoubleLine(T[name] .. " " .. i .. ": ", "|cffffffff" .. array[i])
+                end
+              end
+            end
+          end
+
+          -- Tooltip display function
+          widget.Tooltip = function()
+             -- Poisons Data
+            local deadlypoisons = {}
+            deadlypoisons[1] = pfUI.api.GetItemCount("Deadly Poison")
+            deadlypoisons[2] = pfUI.api.GetItemCount("Deadly Poison II")
+            deadlypoisons[3] = pfUI.api.GetItemCount("Deadly Poison III")
+            deadlypoisons[4] = pfUI.api.GetItemCount("Deadly Poison IV")
+            deadlypoisons[5] = nil
+      
+            local instantpoisons = {}
+            instantpoisons[1] = pfUI.api.GetItemCount("Instant Poison")
+            instantpoisons[2] = pfUI.api.GetItemCount("Instant Poison II")
+            instantpoisons[3] = pfUI.api.GetItemCount("Instant Poison III")
+            instantpoisons[4] = pfUI.api.GetItemCount("Instant Poison IV")
+            instantpoisons[5] = pfUI.api.GetItemCount("Instant Poison V")
+            instantpoisons[6] = pfUI.api.GetItemCount("Instant Poison VI")
+            instantpoisons[7] = nil
+      
+            local cripplingpoisons = {}
+            cripplingpoisons[1] = pfUI.api.GetItemCount("Crippling Poison")
+            cripplingpoisons[2] = pfUI.api.GetItemCount("Crippling Poison II")
+            cripplingpoisons[3] = nil
+      
+            local mindnumbingpoisons = {}
+            mindnumbingpoisons[1] = pfUI.api.GetItemCount("Mind-numbing Poison")
+            mindnumbingpoisons[2] = pfUI.api.GetItemCount("Mind-numbing Poison II")
+            mindnumbingpoisons[3] = pfUI.api.GetItemCount("Mind-numbing Poison III")
+            mindnumbingpoisons[4] = nil
+      
+            local agitatingpoison = {}
+            agitatingpoison[1] = pfUI.api.GetItemCount("Agitating Poison")
+            agitatingpoison[2] = nil
+      
+            local corrosivepoison = {}
+            corrosivepoison[1] = pfUI.api.GetItemCount("Corrosive Poison")
+            corrosivepoison[2] = nil
+
+            -- build the tooltip and show it
+            GameTooltip:ClearLines()
+            GameTooltip_SetDefaultAnchor(GameTooltip, this)
+            GameTooltip:AddLine("Poisons")
+            GameTooltip:AddLine(" ")
+            
+            -- Add lines for each poison type
+            TooltipLines(instantpoisons, "Instant")
+            TooltipLines(deadlypoisons, "Deadly")
+            TooltipLines(cripplingpoisons, "Crippling")
+            TooltipLines(mindnumbingpoisons, "Mind Numbing")
+            TooltipLines(agitatingpoison, "Agitating")
+            TooltipLines(corrosivepoison, "Corrosive")
+            GameTooltip:Show()
+          end
+
+          widget:SetScript("OnEnter", function(self)
+            widget.Tooltip()  -- Show the tooltip on hover
+          end)
+
+          widget:SetScript("OnLeave", function(self)
+            GameTooltip:Hide()  -- Hide the tooltip when mouse leaves
+          end)
+
+          -- Output the panel to the UI
+          pfUI.panel:OutputPanel("roguepoisons", T["Poisons"], widget.Tooltip, widget.Click)
+        end
+      end)
+    end
   end
 
   pfUI.panel = {}
