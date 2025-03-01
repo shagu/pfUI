@@ -1069,6 +1069,7 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
         "combat:" .. T["Combat Timer"],
         "ammo:" .. T["Ammo Counter"],
         "soulshard:" .. T["Soulshard Counter"],
+        "roguepoisons:" .. T["Poisons"],
         "bagspace:" .. T["Bagspace"]
       },
       ["tooltip_position"] = {
