@@ -556,9 +556,9 @@ pfUI:RegisterModule("panel", "vanilla:tbc", function()
       widget:SetScript("OnEvent", function()
         local _, class = UnitClass("player")
         if class == "WARLOCK" then
-          local count = pfUI.api.GetItemCount("Soul Shard")
+          local count = pfUI.api.GetItemCount(T["Soul Shard"])
           pfUI.panel:OutputPanel("soulshard", T["Soulshards"] .. ": " .. count)
-        end 
+        end
       end)
     end
 
@@ -578,7 +578,7 @@ pfUI:RegisterModule("panel", "vanilla:tbc", function()
       widget:SetScript("OnEvent", function()
         local _, class = UnitClass("player")
         if class == "ROGUE" then
-          local count = pfUI.api.GetItemCount("Flash Powder")
+          local count = pfUI.api.GetItemCount(T["Flash Powder"])
           pfUI.panel:OutputPanel("flashpowder", T["Flash Powder"] .. ": " .. count)
         end
       end)
@@ -591,7 +591,7 @@ pfUI:RegisterModule("panel", "vanilla:tbc", function()
       widget:SetScript("OnEvent", function()
         local _, class = UnitClass("player")
         if class == "ROGUE" then
-          local count = pfUI.api.GetItemCount("Thistle Tea")
+          local count = pfUI.api.GetItemCount(T["Thistle Tea"])
           pfUI.panel:OutputPanel("thistletea", T["Thistle Tea"] .. ": " .. count)
         end
       end)
@@ -604,7 +604,7 @@ pfUI:RegisterModule("panel", "vanilla:tbc", function()
       widget:SetScript("OnEvent", function()
         local _, class = UnitClass("player")
         if class == "ROGUE" then
-          local count = pfUI.api.GetItemCount("Blinding Powder")
+          local count = pfUI.api.GetItemCount(T["Blinding Powder"])
           pfUI.panel:OutputPanel("blindpowder", T["Blinding Powder"] .. ": " .. count)
         end
       end)
