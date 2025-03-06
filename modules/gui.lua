@@ -1069,6 +1069,10 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
         "combat:" .. T["Combat Timer"],
         "ammo:" .. T["Ammo Counter"],
         "soulshard:" .. T["Soulshard Counter"],
+        "bindlocation:" .. T["Hearth"],
+        "thistletea:" .. T["Thistle Tea"],
+        "flashpowder:" .. T["Flash Powder"],
+        "blindpowder:" .. T["Blinding Powder"],
         "bagspace:" .. T["Bagspace"]
       },
       ["tooltip_position"] = {
@@ -1850,6 +1854,7 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
       CreateConfig(nil, T["Hide Chat When Bags Are Opened"], C.appearance.bags, "hidechat", "checkbox")
       CreateConfig(nil, T["Bagslots Per Row"], C.appearance.bags, "bagrowlength")
       CreateConfig(nil, T["Bankslots Per Row"], C.appearance.bags, "bankrowlength")
+      CreateConfig(nil, T["Enable Full-Text Search"], C.appearance.bags, "fulltext")
       CreateConfig(nil, T["Item Slot Size"], C.appearance.bags, "icon_size")
       CreateConfig(nil, T["Auto Sell Grey Items"], C.global, "autosell", "checkbox")
       CreateConfig(nil, T["Auto Repair Items"], C.global, "autorepair", "checkbox")
@@ -1873,6 +1878,7 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
       CreateConfig(nil, T["Show PvP Icon"], C.unitframes.player, "showPVPMinimap", "checkbox")
       CreateConfig(nil, T["Show Inactive Tracking"], C.appearance.minimap, "tracking_pulse", "checkbox")
       CreateConfig(nil, T["Tracking Icon Size"], C.appearance.minimap, "tracking_size")
+      CreateConfig(nil, T["Hide Addon Buttons On Combat"], C.appearance.minimap, "addon_buttons", "checkbox")
     end)
 
     CreateGUIEntry(T["Minimap"], T["Addon Buttons"], function()
@@ -1994,7 +2000,9 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
       CreateConfig(nil, T["Cooldown Text Size"], C.bars, "cd_size")
 
       CreateConfig(nil, T["Auto Paging"], nil, nil, "header")
-      CreateConfig(U["bars"], T["Switch Pages On Meta Key Press"], C.bars, "pagemaster", "checkbox")
+      CreateConfig(U["bars"], T["Switch Pages On Alt Key Press"], C.bars, "pagemasteralt", "checkbox")
+      CreateConfig(U["bars"], T["Switch Pages On Shift Key Press"], C.bars, "pagemastershift", "checkbox")
+      CreateConfig(U["bars"], T["Switch Pages On Ctrl Key Press"], C.bars, "pagemasterctrl", "checkbox")
       CreateConfig(U["bars"], T["Switch Pages On Druid Stealth"], C.bars, "druidstealth", "checkbox")
       CreateConfig(nil, T["Range Based Hunter Paging"], C.bars, "hunterbar", "checkbox", nil, nil, nil, nil, "vanilla")
     end)
@@ -2073,6 +2081,7 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
       CreateConfig(nil, T["Only Count Bagspace On Regular Bags"], C.panel.bag, "ignorespecial", "checkbox")
       CreateConfig(nil, T["Enable Micro Bar"], C.panel.micro, "enable", "checkbox")
       CreateConfig(nil, T["Enable 24h Clock"], C.global, "twentyfour", "checkbox")
+      CreateConfig(nil, T["Enable Seconds"], C.panel, "seconds", "checkbox")
       CreateConfig(nil, T["Servertime"], C.global, "servertime", "checkbox")
       CreateConfig(U["panel"], T["Show FPS and Latency Colors"], C.panel, "fpscolors", "checkbox")
 
@@ -2097,6 +2106,7 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
       CreateConfig(nil, T["Colors"], nil, nil, "header")
       CreateConfig(U["xpbar"], T["Experience Color"], C.panel.xp, "xp_color", "color")
       CreateConfig(U["xpbar"], T["Rested Color"], C.panel.xp, "rest_color", "color")
+      CreateConfig(U["xpbar"], T["Bar Texture"], C.panel.xp, "texture", "dropdown", pfUI.gui.dropdowns.uf_bartexture)
     end)
 
     CreateGUIEntry(T["XP Bar"], T["Reputation Bar"], function()
@@ -2263,7 +2273,6 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
       CreateConfig(U["nameplates"], T["Red Border On Enemy Units"], C.nameplates, "outenemy", "checkbox")
       CreateConfig(U["nameplates"], T["Border Around Target Unit"], C.nameplates, "targethighlight", "checkbox")
       CreateConfig(U["nameplates"], T["Border Color Around Target Unit"], C.nameplates, "highlightcolor", "color")
-      CreateConfig(U["nameplates"], T["Overwrite Border Color With Combat State"], C.nameplates, "outcombatstate", "checkbox")
 
       CreateConfig(nil, T["Healthbar"], nil, nil, "header")
       CreateConfig(U["nameplates"], T["Healthbar Vertical Offset"], C.nameplates.health, "offset")
@@ -2281,6 +2290,19 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
       CreateConfig(U["nameplates"], T["Hide Healthbar On Totems"], C.nameplates, "totems", "checkbox")
       CreateConfig(U["nameplates"], T["Always Show On Units With Missing HP"], C.nameplates, "fullhealth", "checkbox")
       CreateConfig(U["nameplates"], T["Always Show On Target Units"], C.nameplates, "target", "checkbox")
+      CreateConfig(U["nameplates"], T["Vertical Healthbar"], C.nameplates, "verticalhealth", "checkbox")
+
+      CreateConfig(nil, T["SuperWoW Settings"], nil, nil, "header")
+      CreateConfig(U["nameplates"], T["Overwrite Border Color With Combat State"], C.nameplates, "outcombatstate", "checkbox")
+      CreateConfig(U["nameplates"], T["Overwrite Health Color With Combat State"], C.nameplates, "barcombatstate", "checkbox")
+      CreateConfig(U["nameplates"], T["Overwrite If Unit Is Attacking You"], C.nameplates, "ccombatthreat", "checkbox")
+      CreateConfig(U["nameplates"], T["Overwrite If Unit Is Attacking Others"], C.nameplates, "ccombatnothreat", "checkbox")
+      CreateConfig(U["nameplates"], T["Overwrite If Unit Is Attacking No One"], C.nameplates, "ccombatstun", "checkbox")
+      CreateConfig(U["nameplates"], T["Overwrite If Unit Is Casting"], C.nameplates, "ccombatcasting", "checkbox")
+      CreateConfig(U["nameplates"], T["Unit Is Attacking You Color"], C.nameplates, "combatthreat", "color")
+      CreateConfig(U["nameplates"], T["Unit Is Attacking Others Color"], C.nameplates, "combatnothreat", "color")
+      CreateConfig(U["nameplates"], T["Unit Is Attacking No One Color"], C.nameplates, "combatstun", "color")
+      CreateConfig(U["nameplates"], T["Unit Is Casting Color"], C.nameplates, "combatcasting", "color")
     end)
 
     CreateGUIEntry(T["Thirdparty"], T["Integrations"], function()

@@ -49,6 +49,18 @@ pfUI:RegisterModule("addonbuttons", "vanilla:tbc", function ()
     end
   end)
 
+  -- hide flyout frame when entering combat
+  local pfUIAddonButtonHide = CreateFrame("Frame", nil, UIParent)
+  pfUIAddonButtonHide:RegisterEvent('PLAYER_REGEN_DISABLED')
+  pfUIAddonButtonHide:SetScript("OnEvent", function()
+    local enabled = C.appearance.minimap.addon_buttons == "1"
+    if enabled then
+      if pfUI.addonbuttons:IsShown() then
+        pfUI.addonbuttons:Hide()
+      end
+    end
+  end)
+
   pfUI.addonbuttons.buttons = {}
   pfUI.addonbuttons.overrides = {}
   pfUI.addonbuttons.last_updated = 0

@@ -164,6 +164,7 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("appearance", "bags",        "unusable_color",   ".9,.2,.2,1")
   pfUI:UpdateConfig("appearance", "bags",        "borderlimit",      "1")
   pfUI:UpdateConfig("appearance", "bags",        "borderonlygear",   "0")
+  pfUI:UpdateConfig("appearance", "bags",        "fulltext",         "1")
   pfUI:UpdateConfig("appearance", "bags",        "movable",          "0")
   pfUI:UpdateConfig("appearance", "bags",        "abovechat",        "0")
   pfUI:UpdateConfig("appearance", "bags",        "hidechat",         "0")
@@ -176,6 +177,7 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("appearance", "minimap",     "coordsloc",        "bottomleft")
   pfUI:UpdateConfig("appearance", "minimap",     "tracking_size",    "16")
   pfUI:UpdateConfig("appearance", "minimap",     "tracking_pulse",   "1")
+  pfUI:UpdateConfig("appearance", "minimap",     "addon_buttons",    "0")
   pfUI:UpdateConfig("appearance", "worldmap",    "tooltipsize",      "0")
   pfUI:UpdateConfig("appearance", "worldmap",    "mapreveal",        "0")
   pfUI:UpdateConfig("appearance", "worldmap",    "mapreveal_color",  ".4,.4,.4,1")
@@ -539,7 +541,9 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("bars",       nil,           "macroscan",        "1")
   pfUI:UpdateConfig("bars",       nil,           "reagents",         "1")
   pfUI:UpdateConfig("bars",       nil,           "hunterbar",        "0")
-  pfUI:UpdateConfig("bars",       nil,           "pagemaster",       "0")
+  pfUI:UpdateConfig("bars",       nil,           "pagemasteralt",    "0")
+  pfUI:UpdateConfig("bars",       nil,           "pagemastershift",  "0")
+  pfUI:UpdateConfig("bars",       nil,           "pagemasterctrl",   "0")
   pfUI:UpdateConfig("bars",       nil,           "druidstealth",     "0")
   pfUI:UpdateConfig("bars",       nil,           "showcastable",     "1")
   pfUI:UpdateConfig("bars",       nil,           "glowrange",        "1")
@@ -572,6 +576,7 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("panel",      nil,           "hide_rightchat",   "0")
   pfUI:UpdateConfig("panel",      nil,           "hide_minimap",     "0")
   pfUI:UpdateConfig("panel",      nil,           "hide_microbar",    "0")
+  pfUI:UpdateConfig("panel",      nil,           "seconds",          "1")
   pfUI:UpdateConfig("panel",      "left",        "left",             "guild")
   pfUI:UpdateConfig("panel",      "left",        "center",           "durability")
   pfUI:UpdateConfig("panel",      "left",        "right",            "friends")
@@ -593,6 +598,7 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("panel",      "xp",          "xp_position",      "RIGHT")
   pfUI:UpdateConfig("panel",      "xp",          "xp_color",         ".25,.25,1,1")
   pfUI:UpdateConfig("panel",      "xp",          "rest_color",       "1,.25,1,.5")
+  pfUI:UpdateConfig("panel",      "xp",          "texture",       "Interface\\AddOns\\pfUI\\img\\bar")
 
   pfUI:UpdateConfig("panel",      "xp",          "rep_always",       "0")
   pfUI:UpdateConfig("panel",      "xp",          "rep_display",      "REP")
@@ -692,6 +698,7 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("nameplates", nil,           "use_unitfonts",    "0")
   pfUI:UpdateConfig("nameplates", nil,           "legacy",           "0")
   pfUI:UpdateConfig("nameplates", nil,           "overlap",          "0")
+  pfUI:UpdateConfig("nameplates", nil,           "verticalhealth",   "0")
   pfUI:UpdateConfig("nameplates", nil,           "vertical_offset",  "0")
   pfUI:UpdateConfig("nameplates", nil,           "showcastbar",      "1")
   pfUI:UpdateConfig("nameplates", nil,           "targetcastbar",    "0")
@@ -722,6 +729,17 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("nameplates", nil,           "showguildname",    "0")
 
   pfUI:UpdateConfig("nameplates", nil,           "outcombatstate",   "1")
+  pfUI:UpdateConfig("nameplates", nil,           "barcombatstate",   "0")
+
+  pfUI:UpdateConfig("nameplates", nil,           "ccombatthreat",    "1")
+  pfUI:UpdateConfig("nameplates", nil,           "ccombatnothreat",  "1")
+  pfUI:UpdateConfig("nameplates", nil,           "ccombatstun",      "1")
+  pfUI:UpdateConfig("nameplates", nil,           "ccombatcasting",   "0")
+  pfUI:UpdateConfig("nameplates", nil,           "combatthreat",     ".7,.2,.2,1")
+  pfUI:UpdateConfig("nameplates", nil,           "combatnothreat",   ".7,.7,.2,1")
+  pfUI:UpdateConfig("nameplates", nil,           "combatstun",       ".2,.7,.7,1")
+  pfUI:UpdateConfig("nameplates", nil,           "combatcasting",    ".7,.2,.7,1")
+
   pfUI:UpdateConfig("nameplates", nil,           "outfriendly",      "0")
   pfUI:UpdateConfig("nameplates", nil,           "outfriendlynpc",   "1")
   pfUI:UpdateConfig("nameplates", nil,           "outneutral",       "1")
@@ -1200,6 +1218,16 @@ function pfUI:MigrateConfig()
       else
         pfUI_config.appearance.minimap.coordstext = "mouseover"
       end
+    end
+  end
+
+  -- migrate pagemaster to separate settings
+  if checkversion(5, 4, 15) then
+    if pfUI_config.bars.pagemaster == "1" then
+      pfUI_config.bars.pagemaster = nil
+      pfUI_config.bars.pagemasteralt = "1"
+      pfUI_config.bars.pagemastershift = "1"
+      pfUI_config.bars.pagemasterctrl = "1"
     end
   end
 

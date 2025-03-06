@@ -10,6 +10,15 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     ["FRIENDLY_PLAYER"] = { .2, .6, 1, .8 }
   }
 
+  local combatstate = {
+    -- gets overwritten by user config
+    ["NOTHREAT"] = { r = .7, g = .7, b = .2, a = 1 },
+    ["THREAT"]   = { r = .7, g = .2, b = .2, a = 1 },
+    ["CASTING"]  = { r = .7, g = .2, b = .7, a = 1 },
+    ["STUN"]     = { r = .2, g = .7, b = .7, a = 1 },
+    ["NONE"]     = { r = .2, g = .2, b = .2, a = 1 },
+  }
+
   local elitestrings = {
     ["elite"] = "+",
     ["rareelite"] = "R+",
@@ -27,6 +36,25 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
 
   -- cache default border color
   local er, eg, eb, ea = GetStringColor(pfUI_config.appearance.border.color)
+
+  local function GetCombatStateColor(guid)
+    local target = guid.."target"
+    local color = false
+
+    if UnitAffectingCombat("player") and UnitAffectingCombat(guid) and not UnitCanAssist("player", guid) then
+      if C.nameplates.ccombatcasting == "1" and (UnitCastingInfo(guid) or UnitChannelInfo(guid)) then
+        color = combatstate.CASTING
+      elseif C.nameplates.ccombatthreat == "1" and UnitIsUnit(target, "player") then
+        color = combatstate.THREAT
+      elseif C.nameplates.ccombatnothreat == "1" and UnitExists(target) then
+        color = combatstate.NOTHREAT
+      elseif C.nameplates.ccombatstun == "1" and not UnitExists(target) and not UnitIsPlayer(guid) then
+        color = combatstate.STUN
+      end
+    end
+
+    return color
+  end
 
   local function IsNamePlate(frame)
     if frame:GetObjectType() ~= NAMEPLATE_FRAMETYPE then return nil end
@@ -453,6 +481,13 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     local width = tonumber(C.nameplates.width)
     local debuffsize = tonumber(C.nameplates.debuffsize)
     local healthoffset = tonumber(C.nameplates.health.offset)
+    local orientation = C.nameplates.verticalhealth == "1" and "VERTICAL" or "HORIZONTAL"
+
+    local c = combatstate -- load combat state colors
+    c.CASTING.r, c.CASTING.g, c.CASTING.b, c.CASTING.a = GetStringColor(C.nameplates.combatcasting)
+    c.THREAT.r, c.THREAT.g, c.THREAT.b, c.THREAT.a = GetStringColor(C.nameplates.combatthreat)
+    c.NOTHREAT.r, c.NOTHREAT.g, c.NOTHREAT.b, c.NOTHREAT.a = GetStringColor(C.nameplates.combatnothreat)
+    c.STUN.r, c.STUN.g, c.STUN.b, c.STUN.a = GetStringColor(C.nameplates.combatstun)
 
     nameplate:SetWidth(plate_width)
     nameplate:SetHeight(plate_height)
@@ -460,11 +495,13 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
 
     nameplate.name:SetFont(font, font_size, font_style)
 
+    nameplate.health:SetOrientation(orientation)
     nameplate.health:SetPoint("TOP", nameplate.name, "BOTTOM", 0, healthoffset)
     nameplate.health:SetStatusBarTexture(hptexture)
     nameplate.health:SetWidth(C.nameplates.width)
     nameplate.health:SetHeight(C.nameplates.heighthealth)
     nameplate.health.hlr, nameplate.health.hlg, nameplate.health.hlb, nameplate.health.hla = hlr, hlg, hlb, hla
+
     CreateBackdrop(nameplate.health, default_border)
 
     nameplate.health.text:SetFont(font, font_size - 2, "OUTLINE")
@@ -581,19 +618,13 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     -- target indicator
     if superwow_active and C.nameplates.outcombatstate == "1" then
       local guid = plate.parent:GetName(1) or ""
-      local target = guid.."target"
 
-      if UnitAffectingCombat(guid) then
-        if UnitIsUnit(target, "player") then
-          plate.health.backdrop:SetBackdropBorderColor(.7,.2,.3,1)
-        elseif UnitExists(target) or UnitIsPlayer(guid) then
-          plate.health.backdrop:SetBackdropBorderColor(.7,.7,.2,1)
-        else
-          plate.health.backdrop:SetBackdropBorderColor(.2,.7,.7,1)
-        end
-      else
-        plate.health.backdrop:SetBackdropBorderColor(.2,.2,.2,1)
-      end
+      -- determine color based on combat state
+      local color = GetCombatStateColor(guid)
+      if not color then color = combatstate.NONE end
+
+      -- set border color
+      plate.health.backdrop:SetBackdropBorderColor(color.r, color.g, color.b, color.a)
     elseif target and C.nameplates.targethighlight == "1" then
       plate.health.backdrop:SetBackdropBorderColor(plate.health.hlr, plate.health.hlg, plate.health.hlb, plate.health.hla)
     elseif C.nameplates.outfriendlynpc == "1" and unittype == "FRIENDLY_NPC" then
@@ -707,6 +738,15 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
 
     if superwow_active and unitstr and UnitIsTapped(unitstr) and not UnitIsTappedByPlayer(unitstr) then
       r, g, b, a = .5, .5, .5, .8
+    end
+
+    if superwow_active and C.nameplates.barcombatstate == "1" then
+      local guid = plate.parent:GetName(1) or ""
+      local color = GetCombatStateColor(guid)
+
+      if color then
+        r, g, b, a = color.r, color.g, color.b, color.a
+      end
     end
 
     if r ~= plate.cache.r or g ~= plate.cache.g or b ~= plate.cache.b then
@@ -1034,8 +1074,12 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
       local parent = self
       local nameplate = self.nameplate
       local plate = (C.nameplates["overlap"] == "1" or C.nameplates["vertical_offset"] ~= "0") and nameplate or parent
-      local clickable = C.nameplates["clickthrough"] ~= "1" and true or false
 
+      -- disable all clicks for now
+      parent:EnableMouse(false)
+      nameplate:EnableMouse(false)
+
+      -- adjust vertical offset
       if C.nameplates["vertical_offset"] ~= "0" then
         nameplate:SetPoint("TOP", parent, "TOP", 0, tonumber(C.nameplates["vertical_offset"]))
       end
@@ -1051,13 +1095,6 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
       else
         plate:SetScript("OnMouseDown", nil)
       end
-
-      -- disable all click events
-      parent:EnableMouse(false)
-      nameplate:EnableMouse(false)
-
-      -- make the actual plate clickable
-      plate:EnableMouse(clickable)
     end
 
     local hookOnDataChanged = nameplates.OnDataChanged
@@ -1072,6 +1109,18 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
 
     local hookOnUpdate = nameplates.OnUpdate
     nameplates.OnUpdate = function(self)
+      -- initialize shortcut variables
+      local plate = (C.nameplates["overlap"] == "1" or C.nameplates["vertical_offset"] ~= "0") and this.nameplate or this
+      local clickable = C.nameplates["clickthrough"] ~= "1" and true or false
+
+      -- disable all click events
+      if not clickable then
+        this:EnableMouse(false)
+        this.nameplate:EnableMouse(false)
+      else
+        plate:EnableMouse(clickable)
+      end
+
       if C.nameplates["overlap"] == "1" then
         if this:GetWidth() > 1 then
           -- set parent to 1 pixel to have them overlap each other

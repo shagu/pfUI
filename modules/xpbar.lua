@@ -242,7 +242,7 @@ end
     CreateBackdropShadow(b)
 
     b.bar = b.bar or CreateFrame("StatusBar", nil, b)
-    b.bar:SetStatusBarTexture(pfUI.media["img:bar"])
+    b.bar:SetStatusBarTexture(pfUI.media[C.panel.xp.texture])
     b.bar:ClearAllPoints()
     b.bar:SetAllPoints(b)
     b.bar:SetFrameLevel(barLevel)
@@ -252,7 +252,7 @@ end
     b.bar:SetOrientation(b.mode)
 
     b.restedbar = b.restedbar or CreateFrame("StatusBar", nil, b)
-    b.restedbar:SetStatusBarTexture(pfUI.media["img:bar"])
+    b.restedbar:SetStatusBarTexture(pfUI.media[C.panel.xp.texture])
     b.restedbar:ClearAllPoints()
     b.restedbar:SetAllPoints(b)
     b.restedbar:SetFrameLevel(restedLevel)

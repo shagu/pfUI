@@ -375,7 +375,7 @@ function pfUI.uf:UpdateVisibility()
         end
       elseif self.label == "pettarget" then
         if not UnitIsVisible(unitstr) or not UnitExists("pet") then
-          self.frame:Hide()
+          self:Hide()
           return
         end
       end

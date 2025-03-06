@@ -64,6 +64,7 @@ pfUI:RegisterModule("panel", "vanilla:tbc", function()
         local h, m = GetGameTime()
         local noon = "AM"
         local time = ""
+        local secondsenabled = C.panel.seconds == "1"
         if C.global.twentyfour == "0" then
           if C.global.servertime == "1" then
             if h > 12 then
@@ -72,13 +73,21 @@ pfUI:RegisterModule("panel", "vanilla:tbc", function()
             end
             time = string.format("%.2d:%.2d %s", h, m, noon)
           else
-            time = date("%I:%M:%S %p")
+            if secondsenabled then
+              time = date("%I:%M:%S %p")
+            else
+              time = date("%I:%M %p")
+            end
           end
         else
           if C.global.servertime == "1" then
             time = string.format("%.2d:%.2d", h, m)
           else
-            time = date("%H:%M:%S")
+            if secondsenabled then
+              time = date("%H:%M:%S")
+            else
+              time = date("%H:%M")
+            end
           end
         end
         pfUI.panel:OutputPanel("time", time, widget.Tooltip, widget.Click)
@@ -545,24 +554,59 @@ pfUI:RegisterModule("panel", "vanilla:tbc", function()
       widget:RegisterEvent("PLAYER_ENTERING_WORLD")
       widget:RegisterEvent("BAG_UPDATE")
       widget:SetScript("OnEvent", function()
-        local count = 0
         local _, class = UnitClass("player")
-
         if class == "WARLOCK" then
-          for bag=0,4 do
-            for slot=1,GetContainerNumSlots(bag) do
-              local link = GetContainerItemLink(bag,slot)
-              if link then
-                local _, _, id = string.find(link, "item:(%d+):%d+:%d+:%d+")
-                if id == "6265" then
-                  count = count + 1
-                end
-              end
-            end
-          end
+          local count = pfUI.api.GetItemCount(T["Soul Shard"])
+          pfUI.panel:OutputPanel("soulshard", T["Soulshards"] .. ": " .. count)
         end
+      end)
+    end
 
-        pfUI.panel:OutputPanel("soulshard", T["Soulshards"] .. ": " .. count)
+    do -- Hearthstone bind location
+      local widget = CreateFrame("Frame", "pfPanelBindLocation", UIParent)
+      widget:RegisterEvent("PLAYER_ENTERING_WORLD")
+      widget:RegisterEvent("CHAT_MSG_SYSTEM")
+      widget:SetScript("OnEvent", function()
+        pfUI.panel:OutputPanel("bindlocation", T["Hearthstone"] .. ": " .. (GetBindLocation() or T["Not Set"]))
+      end)
+    end
+
+    do -- Flash Powder
+      local widget = CreateFrame("Frame", "pfPanelFlashPowder", UIParent)
+      widget:RegisterEvent("PLAYER_ENTERING_WORLD")
+      widget:RegisterEvent("BAG_UPDATE")
+      widget:SetScript("OnEvent", function()
+        local _, class = UnitClass("player")
+        if class == "ROGUE" then
+          local count = pfUI.api.GetItemCount(T["Flash Powder"])
+          pfUI.panel:OutputPanel("flashpowder", T["Flash Powder"] .. ": " .. count)
+        end
+      end)
+    end
+
+    do -- Thistle Tea
+      local widget = CreateFrame("Frame", "pfPanelThistleTea", UIParent)
+      widget:RegisterEvent("PLAYER_ENTERING_WORLD")
+      widget:RegisterEvent("BAG_UPDATE")
+      widget:SetScript("OnEvent", function()
+        local _, class = UnitClass("player")
+        if class == "ROGUE" then
+          local count = pfUI.api.GetItemCount(T["Thistle Tea"])
+          pfUI.panel:OutputPanel("thistletea", T["Thistle Tea"] .. ": " .. count)
+        end
+      end)
+    end
+
+    do -- Blinding Powder
+      local widget = CreateFrame("Frame", "pfPanelBlindingPowder", UIParent)
+      widget:RegisterEvent("PLAYER_ENTERING_WORLD")
+      widget:RegisterEvent("BAG_UPDATE")
+      widget:SetScript("OnEvent", function()
+        local _, class = UnitClass("player")
+        if class == "ROGUE" then
+          local count = pfUI.api.GetItemCount(T["Blinding Powder"])
+          pfUI.panel:OutputPanel("blindpowder", T["Blinding Powder"] .. ": " .. count)
+        end
       end)
     end
   end
@@ -611,10 +655,62 @@ pfUI:RegisterModule("panel", "vanilla:tbc", function()
     end
   end
 
+  local function CreatePanelButton(parent, width, location, tjustify)
+    local frame = CreateFrame("Button", nil, parent)
+    frame:SetFrameLevel(0)
+    frame:ClearAllPoints()
+    frame:SetWidth(width)
+    frame:SetHeight(parent:GetHeight())
+    frame:SetPoint(location, 0, 0)
+    frame.text = frame:CreateFontString("Status", "LOW", "GameFontNormal")
+    frame.text:ClearAllPoints()
+    frame.text:SetAllPoints(frame)
+    frame.text:SetPoint(location, 0, 0)
+    frame.text:SetJustifyH(tjustify)
+    frame.text:SetFont(font, font_size, "OUTLINE")
+    frame.text:SetFontObject(GameFontWhite)
+    return frame
+  end
 
-  pfUI.panel.left = CreateFrame("Frame", "pfPanelLeft", UIParent)
-  pfUI.panel.left:SetFrameStrata("FULLSCREEN")
-  pfUI.panel.left:ClearAllPoints()
+  local function CreatePanel(panelname, default_border)
+    local frame = CreateFrame("Frame", panelname, UIParent)
+    frame:SetFrameStrata("FULLSCREEN")
+    frame:ClearAllPoints()
+    frame:SetFrameStrata("DIALOG")
+    frame:SetHeight(C.global.font_size*1.5)
+    CreateBackdrop(frame, default_border, nil)
+    CreateBackdropShadow(frame)
+    return frame
+  end
+
+  local function CreatePanelHide(parent, leftright)
+    parent.hide = CreateFrame("Button", nil, parent)
+    parent.hide:SetFrameLevel(4)
+    parent.hide:SetPoint(leftright, parent.backdrop, leftright, 0, 0)
+    parent.hide:SetPoint("TOP", parent.backdrop, "TOP", 0, 0)
+    parent.hide:SetPoint("BOTTOM", parent.backdrop, "BOTTOM", 0, 0)
+    parent.hide:SetWidth(12)
+    return parent.hide
+  end
+
+  local function CreatePanelHideTexture(parent, framename, leftright)
+    SkinButton(parent)
+    parent:SetBackdropColor(0,0,0,0)
+
+    parent.texture = parent:CreateTexture(framename)
+    local imgstring = "img:" .. leftright
+    parent.texture:SetTexture(pfUI.media[imgstring])
+    parent.texture:SetPoint("CENTER", 0, 0)
+    parent.texture:SetWidth(8)
+    parent.texture:SetHeight(8)
+    parent.texture:SetVertexColor(.25,.25,.25,1)
+    return parent.texture
+  end
+
+  -- left panel
+  pfUI.panel.left = CreatePanel("pfPanelLeft", default_border)
+  pfUI.panel.left.hide = CreatePanelHide(pfUI.panel.left, "LEFT", -5)
+  pfUI.panel.left.hide.texture = CreatePanelHideTexture(pfUI.panel.left.hide, "pfPanelLeftHide", "left")
 
   if pfUI.chat then
     pfUI.panel.left:SetScale(pfUI.chat.left:GetScale())
@@ -625,19 +721,7 @@ pfUI:RegisterModule("panel", "vanilla:tbc", function()
     pfUI.panel.left:SetPoint("BOTTOMLEFT", UIParent, "BOTTOMLEFT", 5, 5)
   end
 
-  pfUI.panel.left:SetFrameStrata("DIALOG")
-  pfUI.panel.left:SetHeight(C.global.font_size*1.5)
-
-  CreateBackdrop(pfUI.panel.left, default_border, nil)
-  CreateBackdropShadow(pfUI.panel.left)
   UpdateMovable(pfUI.panel.left)
-
-  pfUI.panel.left.hide = CreateFrame("Button", nil, pfUI.panel.left)
-  pfUI.panel.left.hide:SetFrameLevel(4)
-  pfUI.panel.left.hide:SetPoint("LEFT", pfUI.panel.left.backdrop, "LEFT", 0, 0)
-  pfUI.panel.left.hide:SetPoint("TOP", pfUI.panel.left.backdrop, "TOP", 0, 0)
-  pfUI.panel.left.hide:SetPoint("BOTTOM", pfUI.panel.left.backdrop, "BOTTOM", 0, 0)
-  pfUI.panel.left.hide:SetWidth(12)
 
   pfUI.panel.left.hide:SetScript("OnClick", function()
     if pfUI.chat.left:IsShown() then pfUI.chat.left:Hide() else pfUI.chat.left:Show() end
@@ -645,54 +729,10 @@ pfUI:RegisterModule("panel", "vanilla:tbc", function()
 
   if not pfUI.chat then pfUI.panel.left.hide:Hide() end
 
-  SkinButton(pfUI.panel.left.hide)
-  pfUI.panel.left.hide:SetBackdropColor(0,0,0,0)
-
-  pfUI.panel.left.hide.texture = pfUI.panel.left.hide:CreateTexture("pfPanelLeftHide")
-  pfUI.panel.left.hide.texture:SetTexture(pfUI.media["img:left"])
-  pfUI.panel.left.hide.texture:SetPoint("CENTER", 0, 0)
-  pfUI.panel.left.hide.texture:SetWidth(8)
-  pfUI.panel.left.hide.texture:SetHeight(8)
-  pfUI.panel.left.hide.texture:SetVertexColor(.25,.25,.25,1)
-
-  pfUI.panel.left.left = CreateFrame("Button", nil, pfUI.panel.left)
-  pfUI.panel.left.left:SetFrameLevel(0)
-  pfUI.panel.left.left:ClearAllPoints()
-  pfUI.panel.left.left:SetWidth(115)
-  pfUI.panel.left.left:SetHeight(pfUI.panel.left:GetHeight())
-  pfUI.panel.left.left:SetPoint("LEFT", 0, 0)
-  pfUI.panel.left.left.text = pfUI.panel.left.left:CreateFontString("Status", "LOW", "GameFontNormal")
-  pfUI.panel.left.left.text:SetFont(font, font_size, "OUTLINE")
-  pfUI.panel.left.left.text:ClearAllPoints()
-  pfUI.panel.left.left.text:SetAllPoints(pfUI.panel.left.left)
-  pfUI.panel.left.left.text:SetPoint("CENTER", 0, 0)
-  pfUI.panel.left.left.text:SetFontObject(GameFontWhite)
-
-  pfUI.panel.left.center = CreateFrame("Button", nil, pfUI.panel.left)
-  pfUI.panel.left.center:SetFrameLevel(0)
-  pfUI.panel.left.center:ClearAllPoints()
-  pfUI.panel.left.center:SetWidth(115)
-  pfUI.panel.left.center:SetHeight(pfUI.panel.left:GetHeight())
-  pfUI.panel.left.center:SetPoint("CENTER", 0, 0)
-  pfUI.panel.left.center.text = pfUI.panel.left.center:CreateFontString("Status", "LOW", "GameFontNormal")
-  pfUI.panel.left.center.text:SetFont(font, font_size, "OUTLINE")
-  pfUI.panel.left.center.text:ClearAllPoints()
-  pfUI.panel.left.center.text:SetAllPoints(pfUI.panel.left.center)
-  pfUI.panel.left.center.text:SetPoint("CENTER", 0, 0)
-  pfUI.panel.left.center.text:SetFontObject(GameFontWhite)
-
-  pfUI.panel.left.right = CreateFrame("Button", nil, pfUI.panel.left)
-  pfUI.panel.left.right:SetFrameLevel(0)
-  pfUI.panel.left.right:ClearAllPoints()
-  pfUI.panel.left.right:SetWidth(115)
-  pfUI.panel.left.right:SetHeight(pfUI.panel.left:GetHeight())
-  pfUI.panel.left.right:SetPoint("RIGHT", 0, 0)
-  pfUI.panel.left.right.text = pfUI.panel.left.right:CreateFontString("Status", "LOW", "GameFontNormal")
-  pfUI.panel.left.right.text:SetFont(font, font_size, "OUTLINE")
-  pfUI.panel.left.right.text:ClearAllPoints()
-  pfUI.panel.left.right.text:SetAllPoints(pfUI.panel.left.right)
-  pfUI.panel.left.right.text:SetPoint("CENTER", 0, 0)
-  pfUI.panel.left.right.text:SetFontObject(GameFontWhite)
+  -- buttons for left panel
+  pfUI.panel.left.left = CreatePanelButton(pfUI.panel.left, 115, "LEFT", "CENTER")
+  pfUI.panel.left.center = CreatePanelButton(pfUI.panel.left, 115, "CENTER", "CENTER")
+  pfUI.panel.left.right = CreatePanelButton(pfUI.panel.left, 115, "RIGHT", "CENTER")
 
   if C.panel.left.left == "none"
   and C.panel.left.center == "none"
@@ -700,9 +740,11 @@ pfUI:RegisterModule("panel", "vanilla:tbc", function()
     pfUI.panel.left:Hide()
   end
 
-  pfUI.panel.right = CreateFrame("Frame", "pfPanelRight", UIParent)
-  pfUI.panel.right:SetFrameStrata("FULLSCREEN")
-  pfUI.panel.right:ClearAllPoints()
+  -- right panel
+  pfUI.panel.right = CreatePanel("pfPanelRight", default_border)
+  pfUI.panel.right.hide = CreatePanelHide(pfUI.panel.right, "RIGHT", 5)
+  pfUI.panel.right.hide.texture = CreatePanelHideTexture(pfUI.panel.right.hide, "pfPanelRightHide", "right")
+
   if pfUI.chat then
     pfUI.panel.right:SetScale(pfUI.chat.right:GetScale())
     pfUI.panel.right:SetWidth(tonumber(C.chat.right.width) - 4)
@@ -712,19 +754,7 @@ pfUI:RegisterModule("panel", "vanilla:tbc", function()
     pfUI.panel.right:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", -5, 5)
   end
 
-  pfUI.panel.right:SetFrameStrata("DIALOG")
-  pfUI.panel.right:SetHeight(C.global.font_size*1.5)
-
-  CreateBackdrop(pfUI.panel.right, default_border, nil)
-  CreateBackdropShadow(pfUI.panel.right)
   UpdateMovable(pfUI.panel.right)
-
-  pfUI.panel.right.hide = CreateFrame("Button", nil, pfUI.panel.right)
-  pfUI.panel.right.hide:SetFrameLevel(4)
-  pfUI.panel.right.hide:SetPoint("RIGHT", pfUI.panel.right.backdrop, "RIGHT", 0, 0)
-  pfUI.panel.right.hide:SetPoint("TOP", pfUI.panel.right.backdrop, "TOP", 0, 0)
-  pfUI.panel.right.hide:SetPoint("BOTTOM", pfUI.panel.right.backdrop, "BOTTOM", 0, 0)
-  pfUI.panel.right.hide:SetWidth(12)
 
   pfUI.panel.right.hide:SetScript("OnClick", function()
     if pfUI.chat.right:IsShown() then pfUI.chat.right:Hide() else pfUI.chat.right:Show() end
@@ -732,54 +762,10 @@ pfUI:RegisterModule("panel", "vanilla:tbc", function()
 
   if not pfUI.chat then pfUI.panel.right.hide:Hide() end
 
-  SkinButton(pfUI.panel.right.hide)
-  pfUI.panel.right.hide:SetBackdropColor(0,0,0,0)
-
-  pfUI.panel.right.hide.texture = pfUI.panel.right.hide:CreateTexture("pfPanelRightHide")
-  pfUI.panel.right.hide.texture:SetTexture(pfUI.media["img:right"])
-  pfUI.panel.right.hide.texture:SetPoint("CENTER", 0, 0)
-  pfUI.panel.right.hide.texture:SetWidth(8)
-  pfUI.panel.right.hide.texture:SetHeight(8)
-  pfUI.panel.right.hide.texture:SetVertexColor(.25,.25,.25,1)
-
-  pfUI.panel.right.left = CreateFrame("Button", nil, pfUI.panel.right)
-  pfUI.panel.right.left:SetFrameLevel(0)
-  pfUI.panel.right.left:ClearAllPoints()
-  pfUI.panel.right.left:SetWidth(115)
-  pfUI.panel.right.left:SetHeight(pfUI.panel.right:GetHeight())
-  pfUI.panel.right.left:SetPoint("LEFT", 0, 0)
-  pfUI.panel.right.left.text = pfUI.panel.right.left:CreateFontString("Status", "LOW", "GameFontNormal")
-  pfUI.panel.right.left.text:SetFont(font, font_size, "OUTLINE")
-  pfUI.panel.right.left.text:ClearAllPoints()
-  pfUI.panel.right.left.text:SetAllPoints(pfUI.panel.right.left)
-  pfUI.panel.right.left.text:SetPoint("CENTER", 0, 0)
-  pfUI.panel.right.left.text:SetFontObject(GameFontWhite)
-
-  pfUI.panel.right.center = CreateFrame("Button", nil, pfUI.panel.right)
-  pfUI.panel.right.center:SetFrameLevel(0)
-  pfUI.panel.right.center:ClearAllPoints()
-  pfUI.panel.right.center:SetWidth(115)
-  pfUI.panel.right.center:SetHeight(pfUI.panel.right:GetHeight())
-  pfUI.panel.right.center:SetPoint("CENTER", 0, 0)
-  pfUI.panel.right.center.text = pfUI.panel.right.center:CreateFontString("Status", "LOW", "GameFontNormal")
-  pfUI.panel.right.center.text:SetFont(font, font_size, "OUTLINE")
-  pfUI.panel.right.center.text:ClearAllPoints()
-  pfUI.panel.right.center.text:SetAllPoints(pfUI.panel.right.center)
-  pfUI.panel.right.center.text:SetPoint("CENTER", 0, 0)
-  pfUI.panel.right.center.text:SetFontObject(GameFontWhite)
-
-  pfUI.panel.right.right = CreateFrame("Button", nil, pfUI.panel.right)
-  pfUI.panel.right.right:SetFrameLevel(0)
-  pfUI.panel.right.right:ClearAllPoints()
-  pfUI.panel.right.right:SetWidth(115)
-  pfUI.panel.right.right:SetHeight(pfUI.panel.right:GetHeight())
-  pfUI.panel.right.right:SetPoint("RIGHT", 0, 0)
-  pfUI.panel.right.right.text = pfUI.panel.right.right:CreateFontString("Status", "LOW", "GameFontNormal")
-  pfUI.panel.right.right.text:SetFont(font, font_size, "OUTLINE")
-  pfUI.panel.right.right.text:ClearAllPoints()
-  pfUI.panel.right.right.text:SetAllPoints(pfUI.panel.right.right)
-  pfUI.panel.right.right.text:SetPoint("CENTER", 0, 0)
-  pfUI.panel.right.right.text:SetFontObject(GameFontWhite)
+  -- buttons for right panel
+  pfUI.panel.right.left = CreatePanelButton(pfUI.panel.right, 115, "LEFT", "CENTER")
+  pfUI.panel.right.center = CreatePanelButton(pfUI.panel.right, 115, "CENTER", "CENTER")
+  pfUI.panel.right.right = CreatePanelButton(pfUI.panel.right, 115, "RIGHT", "CENTER")
 
   if C.panel.right.left == "none"
   and C.panel.right.center == "none"
