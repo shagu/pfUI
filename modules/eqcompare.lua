@@ -5,6 +5,47 @@ pfUI:RegisterModule("eqcompare", "vanilla", function ()
   INVTYPE_FINGER_OTHER = INVTYPE_FINGER.."_other"
   INVTYPE_TRINKET_OTHER = INVTYPE_TRINKET.."_other"
 
+  local function AddHeader(tooltip)
+    local name = tooltip:GetName()
+    local sides = { "Left", "Right" }
+
+    -- shift all entries one line down
+    for i=tooltip:NumLines(), 1, -1 do
+      for _, side in pairs(sides) do
+        local current = _G[name.."Text"..side..i]
+        local below = _G[name.."Text"..side..i+1]
+
+        if current and current:IsShown() then
+          local text = current:GetText()
+          local r, g, b, a = current:GetTextColor()
+
+          if text and text ~= "" then
+            if tooltip:NumLines() < i+1 then
+              -- add new line if required
+              tooltip:AddLine(text, r, g, b, a)
+            else
+              -- update existing lines
+              below:SetText(text)
+              below:SetTextColor(r, g, b, a)
+              below:Show()
+
+              -- hide processed line
+              current:Hide()
+            end
+          end
+        end
+      end
+    end
+
+    -- add label to first line
+    _G[name.."TextLeft1"]:SetTextColor(.5, .5, .5, 1)
+    _G[name.."TextLeft1"]:SetText(CURRENTLY_EQUIPPED)
+    _G[name.."TextLeft1"]:Show()
+
+    -- update tooltip sizes
+    tooltip:Show()
+  end
+
   local slotTable = {
     [INVTYPE_2HWEAPON] = "MainHandSlot",
     [INVTYPE_BODY] = "ShirtSlot",
@@ -154,6 +195,7 @@ pfUI:RegisterModule("eqcompare", "vanilla", function ()
 
           ShoppingTooltip1:SetInventoryItem("player", slotID)
           ShoppingTooltip1:Show()
+          AddHeader(ShoppingTooltip1)
 
           -- second tooltip
           if slotTable[slotType .. "_other"] then
@@ -170,6 +212,7 @@ pfUI:RegisterModule("eqcompare", "vanilla", function ()
 
             ShoppingTooltip2:SetInventoryItem("player", slotID_other)
             ShoppingTooltip2:Show()
+            AddHeader(ShoppingTooltip2)
           end
           return true
         end
