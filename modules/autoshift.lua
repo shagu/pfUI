@@ -2,31 +2,7 @@ pfUI:RegisterModule("autoshift", "vanilla", function ()
   pfUI.autoshift = CreateFrame("Frame")
   pfUI.autoshift:RegisterEvent("UI_ERROR_MESSAGE")
 
-  pfUI.autoshift.lastError = ""
-  pfUI.autoshift.CastSpellByName = _G["CastSpellByName"]
   pfUI.autoshift.scanString = string.gsub(SPELL_FAILED_ONLY_SHAPESHIFT, "%%s", "(.+)")
-
-  function pfUI.autoshift:SwitchStance()
-    for stance in gfind(pfUI.autoshift.lastError, pfUI.autoshift.scanString) do
-      for _, stance in pairs({ strsplit(",", stance)}) do
-        pfUI.autoshift.CastSpellByName(string.gsub(stance,"^%s*(.-)%s*$", "%1"))
-      end
-    end
-    pfUI.autoshift.lastError = ""
-  end
-
-  hooksecurefunc("CastSpell", function(spellId, spellbookTabNum)
-    pfUI.autoshift:SwitchStance()
-  end)
-
-  hooksecurefunc("CastSpellByName", function(spellName, onSelf)
-    pfUI.autoshift:SwitchStance()
-  end)
-
-  hooksecurefunc("UseAction", function(slot, checkCursor, onSelf)
-    pfUI.autoshift:SwitchStance()
-  end)
-
   pfUI.autoshift.mounts = {
     -- deDE
     "^Erhöht Tempo um (.+)%%",
@@ -81,54 +57,62 @@ pfUI:RegisterModule("autoshift", "vanilla", function ()
   pfUI.autoshift.scanner = libtipscan:GetScanner("dismount")
 
   pfUI.autoshift:SetScript("OnEvent", function()
-      pfUI.autoshift.lastError = arg1
-      local CancelLater = nil
-
-      if arg1 == SPELL_FAILED_NOT_STANDING then
-        SitOrStand()
-        return
+    -- switch stance if required
+    for stances in string.gfind(arg1, pfUI.autoshift.scanString) do
+      for _, stance in pairs({ strsplit(",", stances)}) do
+        CastSpellByName(string.gsub(stance,"^%s*(.-)%s*$", "%1"))
       end
+    end
 
-      -- scan through buffs and cancel shapeshift/mount
-      for id, errorstring in pairs(pfUI.autoshift.errors) do
-        if arg1 == errorstring then
-          -- dont's cancel form when clicking on npcs while in combat
-          if arg1 == ERR_CANT_INTERACT_SHAPESHIFTED and UnitAffectingCombat("player") then
-            return
+    -- check if we need to stand up
+    if arg1 == SPELL_FAILED_NOT_STANDING then
+      SitOrStand()
+      return
+    end
+
+    -- delay shapeshift cancel
+    local CancelLater = nil
+
+    -- scan through buffs and cancel shapeshift/mount
+    for id, errorstring in pairs(pfUI.autoshift.errors) do
+      if arg1 == errorstring then
+        -- dont's cancel form when clicking on npcs while in combat
+        if arg1 == ERR_CANT_INTERACT_SHAPESHIFTED and UnitAffectingCombat("player") then
+          return
+        end
+
+        for i=0,31,1 do
+          -- detect mounts based on tooltip text
+          pfUI.autoshift.scanner:SetPlayerBuff(i)
+          for _, str in pairs(pfUI.autoshift.mounts) do
+            if pfUI.autoshift.scanner:Find(str) then
+              CancelPlayerBuff(i)
+              return
+            end
           end
 
-          for i=0,31,1 do
-            -- detect mounts based on tooltip text
-            pfUI.autoshift.scanner:SetPlayerBuff(i)
-            for _, str in pairs(pfUI.autoshift.mounts) do
-              if pfUI.autoshift.scanner:Find(str) then
-                CancelPlayerBuff(i)
-                return
-              end
-            end
-
-            -- detect shapeshift based on texture
-            local buff = GetPlayerBuffTexture(i)
-            if buff then
-              for id, bufftype in pairs(pfUI.autoshift.shapeshifts) do
-                if string.find(string.lower(buff), bufftype, 1) then
-                  if string.find(string.lower(buff), "spell_shadow_shadowform", 1) then
-                    -- only cancel shadow form if no other buff was hindering casting
-                    CancelLater = i
-                  else
-                    CancelPlayerBuff(i)
-                    return
-                  end
+          -- detect shapeshift based on texture
+          local buff = GetPlayerBuffTexture(i)
+          if buff then
+            for id, bufftype in pairs(pfUI.autoshift.shapeshifts) do
+              if string.find(string.lower(buff), bufftype, 1) then
+                if string.find(string.lower(buff), "spell_shadow_shadowform", 1) then
+                  -- only cancel shadow form if no other buff was hindering casting
+                  CancelLater = i
+                else
+                  CancelPlayerBuff(i)
+                  return
                 end
               end
             end
           end
+        end
 
-          -- if nothing else was found, cancel shadowform
-          if CancelLater then
-            CancelPlayerBuff(CancelLater)
-          end
+        -- if nothing else was found, cancel shadowform
+        if CancelLater then
+          CancelPlayerBuff(CancelLater)
         end
       end
-    end)
+    end
+  end)
 end)
