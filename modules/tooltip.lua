@@ -83,6 +83,14 @@ pfUI:RegisterModule("tooltip", "vanilla:tbc", function ()
     return pfUI.tooltip.unit
   end
 
+  pfUI.tooltip.dodge = {
+    "pfPanelRight", "pfChatRight"
+  }
+
+  if C.appearance.bags.movable == "0" then
+    table.insert(pfUI.tooltip.dodge, "pfBag")
+  end
+
   pfUI.tooltip:SetAllPoints()
   pfUI.tooltip:SetScript("OnShow", function()
       pfUI.tooltip:Update()
@@ -97,16 +105,10 @@ pfUI:RegisterModule("tooltip", "vanilla:tbc", function ()
         elseif C.tooltip.position == "chat" then
           local anchor = nil
 
-          if pfUI.panel and pfUI.panel.right:IsShown() then
-            anchor = pfUI.panel.right
-          end
-
-          if pfUI.chat and pfUI.chat.right:IsShown() then
-            anchor = pfUI.chat.right
-          end
-
-          if pfUI.bag and pfUI.bag.right and pfUI.bag.right:IsShown() and C.appearance.bags.movable == "0" then
-            anchor = pfUI.bag.right
+          for _, frame in pairs(pfUI.tooltip.dodge) do
+            if _G[frame] and _G[frame]:IsShown() then
+              anchor = _G[frame]
+            end
           end
 
           if anchor then
