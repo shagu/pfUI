@@ -2489,7 +2489,7 @@ function pfUI.uf:GetStatusValue(unit, pos)
   elseif config == "namehealthbreak" then
     local health = ceil(rhp - rhpmax)
     if UnitIsDead(unitstr) then
-      return unit:GetColor("health") .. DEAD
+      return unit:GetColor("unit") .. pfUI.uf:GetNameString(unitstr) .. "\n" .. unit:GetColor("health") .. DEAD
     elseif health == 0 then
       return unit:GetColor("unit") .. pfUI.uf:GetNameString(unitstr)
     else
