@@ -2103,7 +2103,7 @@ function pfUI.uf:AddIcon(frame, pos, icon, timeleft, stacks)
   frame.icon = frame.icon or CreateFrame("Frame", nil, frame)
 
   if not frame.icon[pos] then
-    frame.icon[pos] = CreateFrame("Frame", frame.icon)
+    frame.icon[pos] = CreateFrame("Frame", nil, frame.icon)
     frame.icon[pos]:SetParent(frame)
     frame.icon[pos].tex = frame.icon[pos]:CreateTexture("OVERLAY")
     frame.icon[pos].tex:SetAllPoints(frame.icon[pos])
