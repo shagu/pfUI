@@ -439,8 +439,11 @@ end
 libpredict.sender:SetScript("OnUpdate", function()
   -- trigger delayed regrowth timers
   if this.regrowth_timer and GetTime() > this.regrowth_timer  then
-    libpredict:Hot(player, this.regrowth_target, "Regr", 21)
-    libpredict.sender:SendHealCommMsg("Regr/"..this.regrowth_target.."/21/")
+    local target = this.regrowth_target or player
+    local duration = 21
+
+    libpredict:Hot(player, target, "Regr", duration)
+    libpredict.sender:SendHealCommMsg("Regr/"..target.."/"..duration.."/")
     this.regrowth_target = this.regrowth_target_next
     this.regrowth_timer = nil
   end
