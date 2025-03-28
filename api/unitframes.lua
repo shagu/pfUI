@@ -1744,17 +1744,17 @@ function pfUI.uf:RefreshUnit(unit, component)
             if filter == string.lower(texture) then
               if string.lower(texture) == "interface\\icons\\spell_nature_rejuvenation" then
                 local start, duration, prediction = libpredict:GetHotDuration(unitstr, "Reju")
-                pfUI.uf:AddIcon(unit, pos, texture, timeleft or prediction, count, start, duration)
+                pfUI.uf:AddIcon(unit, pos, texture, timeleft or prediction, count, tonumber(start), tonumber(duration))
                 pos = pos + 1
                 break
               elseif string.lower(texture) == "interface\\icons\\spell_holy_renew" then
                 local start, duration, prediction = libpredict:GetHotDuration(unitstr, "Renew")
-                pfUI.uf:AddIcon(unit, pos, texture, timeleft or prediction, count, start, duration)
+                pfUI.uf:AddIcon(unit, pos, texture, timeleft or prediction, count, tonumber(start), tonumber(duration))
                 pos = pos + 1
                 break
               elseif string.lower(texture) == "interface\\icons\\spell_nature_resistnature" then
                 local start, duration, prediction = libpredict:GetHotDuration(unitstr, "Regr")
-                pfUI.uf:AddIcon(unit, pos, texture, timeleft or prediction, count, start, duration)
+                pfUI.uf:AddIcon(unit, pos, texture, timeleft or prediction, count, tonumber(start), tonumber(duration))
                 pos = pos + 1
                 break
               else
