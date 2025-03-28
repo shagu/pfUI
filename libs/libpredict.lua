@@ -441,6 +441,7 @@ libpredict.sender:SetScript("OnUpdate", function()
   if this.regrowth_timer and GetTime() > this.regrowth_timer  then
     libpredict:Hot(player, this.regrowth_target, "Regr", 21)
     libpredict.sender:SendHealCommMsg("Regr/"..this.regrowth_target.."/21/")
+    this.regrowth_target = this.regrowth_target_next
     this.regrowth_timer = nil
   end
 end)
@@ -515,7 +516,11 @@ libpredict.sender:SetScript("OnEvent", function()
       local casttime = time
 
       if spell == REGROWTH then
-        this.regrowth_target = spell_queue[3]
+        if this.regrowth_timer then
+          this.regrowth_target_next = spell_queue[3]
+        else
+          this.regrowth_target = spell_queue[3]
+        end
       end
 
       if spell == PRAYER_OF_HEALING then
