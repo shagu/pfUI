@@ -469,6 +469,10 @@ libpredict.sender:SetScript("OnEvent", function()
       local amount = cache[spell_queue[2]][1]
       local casttime = time
 
+      if spell == "Regrowth" then
+        this.regrowth_target = spell_queue[3]
+      end
+
       if spell == PRAYER_OF_HEALING then
         target = sender
 
@@ -536,7 +540,6 @@ libpredict.sender:SetScript("OnEvent", function()
         libpredict:Hot(player, spell_queue[3], "Renew", renewDuration)
         libpredict.sender:SendHealCommMsg("Renew/"..spell_queue[3].."/"..renewDuration.."/")
       elseif spell_queue[1] == "Regrowth" then
-        this.regrowth_target = spell_queue[3]
         this.regrowth_timer = GetTime() + 0.3
       end
     else -- tbc
