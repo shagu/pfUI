@@ -1744,17 +1744,17 @@ function pfUI.uf:RefreshUnit(unit, component)
             if filter == string.lower(texture) then
               if string.lower(texture) == "interface\\icons\\spell_nature_rejuvenation" then
                 local start, duration, prediction = libpredict:GetHotDuration(unitstr, "Reju")
-                pfUI.uf:AddIcon(unit, pos, texture, timeleft or prediction, count)
+                pfUI.uf:AddIcon(unit, pos, texture, timeleft or prediction, count, start, duration)
                 pos = pos + 1
                 break
               elseif string.lower(texture) == "interface\\icons\\spell_holy_renew" then
                 local start, duration, prediction = libpredict:GetHotDuration(unitstr, "Renew")
-                pfUI.uf:AddIcon(unit, pos, texture, timeleft or prediction, count)
+                pfUI.uf:AddIcon(unit, pos, texture, timeleft or prediction, count, start, duration)
                 pos = pos + 1
                 break
               elseif string.lower(texture) == "interface\\icons\\spell_nature_resistnature" then
                 local start, duration, prediction = libpredict:GetHotDuration(unitstr, "Regr")
-                pfUI.uf:AddIcon(unit, pos, texture, timeleft or prediction, count)
+                pfUI.uf:AddIcon(unit, pos, texture, timeleft or prediction, count, start, duration)
                 pos = pos + 1
                 break
               else
@@ -2089,7 +2089,7 @@ function pfUI.uf:ClickAction(button)
   TargetUnit(unitstr)
 end
 
-function pfUI.uf:AddIcon(frame, pos, icon, timeleft, stacks)
+function pfUI.uf:AddIcon(frame, pos, icon, timeleft, stacks, start, duration)
   local showtime = frame.config.indicator_time == "1" and true or nil
   local showstacks = frame.config.indicator_stacks == "1" and true or nil
   local position = frame.config.indicator_pos or "TOPLEFT"
@@ -2135,7 +2135,9 @@ function pfUI.uf:AddIcon(frame, pos, icon, timeleft, stacks)
   end
 
   -- show remaining time if config is set
-  if showtime and timeleft and timeleft < 100 and iconsize > 9 then
+  if showtime and start and duration and timeleft < 100 and iconsize > 9 then
+    CooldownFrame_SetTimer(frame.icon[pos].cd, start, duration, 1)
+  elseif showtime and timeleft and timeleft < 100 and iconsize > 9 then
     CooldownFrame_SetTimer(frame.icon[pos].cd, GetTime(), timeleft, 1)
   else
     CooldownFrame_SetTimer(frame.icon[pos].cd, GetTime(), 0, 1)
