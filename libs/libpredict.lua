@@ -590,7 +590,7 @@ libpredict.sender:SetScript("OnEvent", function()
         libpredict:Hot(player, spell_queue[3], "Renew", renewDuration)
         libpredict.sender:SendHealCommMsg("Renew/"..spell_queue[3].."/"..renewDuration.."/")
       elseif spell_queue[1] == REGROWTH then
-        this.regrowth_timer = GetTime() + 0.3
+        this.regrowth_timer = GetTime() + 0.1
       end
     else -- tbc
       --todo
