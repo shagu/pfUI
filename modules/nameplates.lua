@@ -885,7 +885,7 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
 
     -- use timer based updates
     if not nameplate.tick or nameplate.tick < GetTime() then
-      nameplate.tick = GetTime() + .2
+      nameplate.tick = GetTime() + .25
       update = true
     end
 
