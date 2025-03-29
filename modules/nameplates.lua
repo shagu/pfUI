@@ -56,6 +56,10 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     return color
   end
 
+  local function DoNothing()
+    return
+  end
+
   local function IsNamePlate(frame)
     if frame:GetObjectType() ~= NAMEPLATE_FRAMETYPE then return nil end
     regions = plate:GetRegions()
@@ -233,7 +237,18 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     plate.debuffs[index].stacks:SetJustifyV("BOTTOM")
     plate.debuffs[index].stacks:SetTextColor(1,1,0)
 
-    plate.debuffs[index].cd = CreateFrame(COOLDOWN_FRAME_TYPE, plate.platename.."Debuff"..index.."Cooldown", plate.debuffs[index], "CooldownFrameTemplate")
+    if pfUI.client <= 11200 then
+      -- create a fake animation frame on vanilla to improve performance
+      plate.debuffs[index].cd = CreateFrame("Frame", plate.platename.."Debuff"..index.."Cooldown", plate.debuffs[index])
+      plate.debuffs[index].cd:SetScript("OnUpdate", CooldownFrame_OnUpdateModel)
+      plate.debuffs[index].cd.AdvanceTime = DoNothing
+      plate.debuffs[index].cd.SetSequence = DoNothing
+      plate.debuffs[index].cd.SetSequenceTime = DoNothing
+    else
+      -- use regular cooldown animation frames on burning crusade and later
+      plate.debuffs[index].cd = CreateFrame(COOLDOWN_FRAME_TYPE, plate.platename.."Debuff"..index.."Cooldown", plate.debuffs[index], "CooldownFrameTemplate")
+    end
+
     plate.debuffs[index].cd.pfCooldownStyleAnimation = 0
     plate.debuffs[index].cd.pfCooldownType = "ALL"
   end
