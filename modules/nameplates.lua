@@ -204,9 +204,7 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
         self.debuffcache[id].duration = duration or 0
         self.debuffcache[id].start = start
         self.debuffcache[id].stop = stop
-      elseif self.debuffcache[id] then
-        self.debuffcache[id] = nil
-        table.remove(self.debuffcache, id)
+        self.debuffcache[id].empty = nil
       end
     end
 
@@ -214,10 +212,16 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
   end
 
   local function PlateUnitDebuff(self, id)
+    -- break on unknown data
     if not self.debuffcache then return end
     if not self.debuffcache[id] then return end
     if not self.debuffcache[id].stop then return end
 
+    -- break on timeout debuffs
+    if self.debuffcache[id].empty then return end
+    if self.debuffcache[id].stop < GetTime() then return end
+
+    -- return cached debuff
     local c = self.debuffcache[id]
     return c.effect, c.rank, c.texture, c.stacks, c.dtype, c.duration, (c.stop - GetTime())
   end
@@ -919,7 +923,7 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
       update = true
     end
 
-    -- trigger update when name color changed
+    -- trigger update when level color changed
     local r, g, b = original.level:GetTextColor()
     r, g, b = r + .3, g + .3, b + .3
     if r + g + b ~= nameplate.cache.levelcolor then
@@ -930,25 +934,11 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
 
     -- scan for debuff timeouts
     if nameplate.debuffcache then
-      -- delete timed out caches
       for id, data in pairs(nameplate.debuffcache) do
-        if not data.stop or data.stop < GetTime() then
-          nameplate.debuffcache[id] = nil
-          trigger = true
+        if ( not data.stop or data.stop < GetTime() ) and not data.empty then
+          data.empty = true
+          update = true
         end
-      end
-
-      -- remove nil keys whenever a value was removed
-      if trigger then
-        local count = 1
-        for id, data in pairs(nameplate.debuffcache) do
-          if id ~= count then
-            nameplate.debuffcache[count] = nameplate.debuffcache[id]
-            nameplate.debuffcache[id] = nil
-          end
-          count = count + 1
-        end
-        update = true
       end
     end
 
