@@ -887,12 +887,6 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
       nameplate:SetAlpha(tonumber(C.nameplates.notargalpha))
     end
 
-    -- use timer based updates
-    if not nameplate.tick or nameplate.tick < GetTime() then
-      nameplate.tick = GetTime() + .25
-      update = true
-    end
-
     -- queue update on visual target update
     if nameplate.cache.target ~= target then
       nameplate.cache.target = target
@@ -942,9 +936,15 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
       end
     end
 
+    -- use timer based updates
+    if not nameplate.tick or nameplate.tick < GetTime() then
+      update = true
+    end
+
     -- run full updates if required
     if update then
       nameplates:OnDataChanged(nameplate)
+      nameplate.tick = GetTime() + .5
     end
 
     -- target zoom
