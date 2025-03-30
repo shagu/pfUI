@@ -194,7 +194,7 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
 
     for id = 1, 16 do
       local effect, _, texture, stacks, _, duration, timeleft = libdebuff:UnitDebuff(unitstr, id)
-      if effect and timeleft then
+      if effect and timeleft and timeleft > 0 then
         local start = GetTime() - ( (duration or 0) - ( timeleft or 0) )
         local stop = GetTime() + ( timeleft or 0 )
         self.debuffcache[id] = self.debuffcache[id] or {}
