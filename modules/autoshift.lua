@@ -26,6 +26,7 @@ pfUI:RegisterModule("autoshift", "vanilla", function ()
   pfUI.autoshift.shapeshifts = {
     "ability_racial_bearform", "ability_druid_catform", "ability_druid_travelform",
     "ability_druid_aquaticform", "spell_shadow_shadowform", "spell_nature_spiritwolf",
+	"ability_druid_stagform",
   }
 
   -- an agility buff exists which has the same icon as the moonkin form
