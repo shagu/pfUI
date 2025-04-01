@@ -3658,6 +3658,7 @@ pfUI_locale["enUS"]["icons"] = {
   ["Tranquility"] = "Spell_Nature_Tranquility",
   ["Tranquilizing Shot"] = "Spell_Nature_Drowsy",
   ["Trap Mastery"] = "Ability_Ensnare",
+  ["Swift Travel Form"] = "Ability_Druid_StagForm",
   ["Travel Form"] = "Ability_Druid_TravelForm",
   ["Tree of Life"] = "Ability_Druid_TreeofLife",
   ["Tremor Totem"] = "Spell_Nature_TremorTotem",
