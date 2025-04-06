@@ -17,16 +17,16 @@ pfUI:RegisterModule("eqcompare", "vanilla", function ()
 
         if current and current:IsShown() then
           local text = current:GetText()
-          local r, g, b, a = current:GetTextColor()
+          local r, g, b = current:GetTextColor()
 
           if text and text ~= "" then
             if tooltip:NumLines() < i+1 then
               -- add new line if required
-              tooltip:AddLine(text, r, g, b, a)
+              tooltip:AddLine(text, r, g, b, true)
             else
               -- update existing lines
               below:SetText(text)
-              below:SetTextColor(r, g, b, a)
+              below:SetTextColor(r, g, b)
               below:Show()
 
               -- hide processed line
