@@ -282,16 +282,25 @@ pfUI:RegisterModule("castbar", "vanilla:tbc", function ()
 
     -- make sure the castbar is set to the same name as the focus frame is
     HookScript(pfUI.castbar.focus, "OnUpdate", function()
+      -- try to detect the desired unitname
+      local unitname = pfUI.uf.focus.unitname
+      if not unitname and pfUI.uf.focus.label and pfUI.uf.focus.id then
+        unitname = UnitName(string.format("%s%s", pfUI.uf.focus.label, pfUI.uf.focus.id))
+      end
+
+      -- ensure to only use lowercase unitname
+      unitname = unitname and strlower(unitname)
+
       -- remove unitname when focus unit changed
-      if this.lastunit ~= pfUI.uf.focus.unitname then
-        this.lastunit = pfUI.uf.focus.unitname
+      if this.lastunit ~= unitname then
         pfUI.castbar.focus.unitname = nil
+        this.lastunit = unitname
       end
 
       -- attach a proper unitname as soon as we get a unitstr
       if not pfUI.castbar.focus.unitname and pfUI.uf.focus.unitname ~= "focus" and pfUI.uf.focus.label and pfUI.uf.focus.id then
         local unitstr = string.format("%s%s", pfUI.uf.focus.label, pfUI.uf.focus.id)
-        if UnitExists(unitstr) and strlower(UnitName(unitstr)) == pfUI.uf.focus.unitname then
+        if UnitExists(unitstr) and strlower(UnitName(unitstr)) == unitname then
           pfUI.castbar.focus.unitname = UnitName(unitstr)
         end
       end
