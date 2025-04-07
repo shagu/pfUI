@@ -855,6 +855,7 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     local name = original.name:GetText()
     local target = UnitExists("target") and frame:GetAlpha() == 1 or nil
     local mouseover = UnitExists("mouseover") and original.glow:IsShown() or nil
+    local namefightcolor = C.nameplates.namefightcolor == "1"
 
     -- trigger queued event update
     if nameplate.eventcache then
@@ -909,10 +910,15 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     local r, g, b = original.name:GetTextColor()
     if r + g + b ~= nameplate.cache.namecolor then
       nameplate.cache.namecolor = r + g + b
-      if r > .9 and g < .2 and b < .2 then
-        nameplate.name:SetTextColor(1,0.4,0.2,1) -- infight
+
+      if namefightcolor then
+        if r > .9 and g < .2 and b < .2 then
+          nameplate.name:SetTextColor(1,0.4,0.2,1) -- infight
+        else
+          nameplate.name:SetTextColor(r,g,b,1)
+        end
       else
-        nameplate.name:SetTextColor(r,g,b,1)
+        nameplate.name:SetTextColor(1,1,1,1)
       end
       update = true
     end
