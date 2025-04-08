@@ -1746,17 +1746,17 @@ function pfUI.uf:RefreshUnit(unit, component)
             if filter == string.lower(texture) then
               if string.lower(texture) == "interface\\icons\\spell_nature_rejuvenation" then
                 local start, duration, prediction = libpredict:GetHotDuration(unitstr, "Reju")
-                pfUI.uf:AddIcon(unit, pos, texture, timeleft or prediction, count)
+                pfUI.uf:AddIcon(unit, pos, texture, timeleft or prediction, count, tonumber(start), tonumber(duration))
                 pos = pos + 1
                 break
               elseif string.lower(texture) == "interface\\icons\\spell_holy_renew" then
                 local start, duration, prediction = libpredict:GetHotDuration(unitstr, "Renew")
-                pfUI.uf:AddIcon(unit, pos, texture, timeleft or prediction, count)
+                pfUI.uf:AddIcon(unit, pos, texture, timeleft or prediction, count, tonumber(start), tonumber(duration))
                 pos = pos + 1
                 break
               elseif string.lower(texture) == "interface\\icons\\spell_nature_resistnature" then
                 local start, duration, prediction = libpredict:GetHotDuration(unitstr, "Regr")
-                pfUI.uf:AddIcon(unit, pos, texture, timeleft or prediction, count)
+                pfUI.uf:AddIcon(unit, pos, texture, timeleft or prediction, count, tonumber(start), tonumber(duration))
                 pos = pos + 1
                 break
               else
@@ -2097,7 +2097,7 @@ function pfUI.uf:ClickAction(button)
   TargetUnit(unitstr)
 end
 
-function pfUI.uf:AddIcon(frame, pos, icon, timeleft, stacks)
+function pfUI.uf:AddIcon(frame, pos, icon, timeleft, stacks, start, duration)
   local showtime = frame.config.indicator_time == "1" and true or nil
   local showstacks = frame.config.indicator_stacks == "1" and true or nil
   local position = frame.config.indicator_pos or "TOPLEFT"
@@ -2111,7 +2111,7 @@ function pfUI.uf:AddIcon(frame, pos, icon, timeleft, stacks)
   frame.icon = frame.icon or CreateFrame("Frame", nil, frame)
 
   if not frame.icon[pos] then
-    frame.icon[pos] = CreateFrame("Frame", frame.icon)
+    frame.icon[pos] = CreateFrame("Frame", nil, frame.icon)
     frame.icon[pos]:SetParent(frame)
     frame.icon[pos].tex = frame.icon[pos]:CreateTexture("OVERLAY")
     frame.icon[pos].tex:SetAllPoints(frame.icon[pos])
@@ -2123,7 +2123,7 @@ function pfUI.uf:AddIcon(frame, pos, icon, timeleft, stacks)
     frame.icon[pos].cd = CreateFrame(COOLDOWN_FRAME_TYPE, nil, frame.icon[pos])
     frame.icon[pos].cd.pfCooldownStyleAnimation = 0
     frame.icon[pos].cd.pfCooldownType = "ALL"
-    frame.icon[pos].cd:SetAlpha(0)
+    frame.icon[pos].cd:SetFrameLevel(48)
   end
 
   -- update icon configuration
@@ -2143,7 +2143,9 @@ function pfUI.uf:AddIcon(frame, pos, icon, timeleft, stacks)
   end
 
   -- show remaining time if config is set
-  if showtime and timeleft and timeleft < 100 and iconsize > 9 then
+  if showtime and start and duration and timeleft < 100 and iconsize > 9 then
+    CooldownFrame_SetTimer(frame.icon[pos].cd, start, duration, 1)
+  elseif showtime and timeleft and timeleft < 100 and iconsize > 9 then
     CooldownFrame_SetTimer(frame.icon[pos].cd, GetTime(), timeleft, 1)
   else
     CooldownFrame_SetTimer(frame.icon[pos].cd, GetTime(), 0, 1)
@@ -2497,7 +2499,7 @@ function pfUI.uf:GetStatusValue(unit, pos)
   elseif config == "namehealthbreak" then
     local health = ceil(rhp - rhpmax)
     if UnitIsDead(unitstr) then
-      return unit:GetColor("health") .. DEAD
+      return unit:GetColor("unit") .. pfUI.uf:GetNameString(unitstr) .. "\n" .. unit:GetColor("health") .. DEAD
     elseif health == 0 then
       return unit:GetColor("unit") .. pfUI.uf:GetNameString(unitstr)
     else

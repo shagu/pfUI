@@ -717,7 +717,7 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("nameplates", nil,           "raidiconoffy",     "-5")
   pfUI:UpdateConfig("nameplates", nil,           "fullhealth",       "1")
   pfUI:UpdateConfig("nameplates", nil,           "target",           "1")
-
+  pfUI:UpdateConfig("nameplates", nil,           "namefightcolor",   "1")
   pfUI:UpdateConfig("nameplates", nil,           "enemynpc",         "0")
   pfUI:UpdateConfig("nameplates", nil,           "enemyplayer",      "0")
   pfUI:UpdateConfig("nameplates", nil,           "neutralnpc",       "0")

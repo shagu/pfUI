@@ -11,7 +11,12 @@ pfUI:RegisterModule("thirdparty", "vanilla:tbc", function()
   do -- addon dockframe
     pfUI.thirdparty.meters = CreateFrame("Frame")
     pfUI.thirdparty.meters:SetScript("OnEvent", function()
-      pfUI.thirdparty.meters.state = nil
+      if C.thirdparty.showmeter == "1" then
+        pfUI.thirdparty.meters.state = nil
+      else
+        pfUI.thirdparty.meters.state = true
+      end
+
       pfUI.thirdparty.meters:Toggle()
       this:UnregisterAllEvents()
     end)
@@ -42,10 +47,8 @@ pfUI:RegisterModule("thirdparty", "vanilla:tbc", function()
           end)
         end
 
-        -- toggle meter by default if configured
-        if C.thirdparty.showmeter == "1" then
-          self:RegisterEvent("PLAYER_ENTERING_WORLD")
-        end
+        -- show/hide meter on login by default
+        self:RegisterEvent("PLAYER_ENTERING_WORLD")
       end
     end
 

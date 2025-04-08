@@ -61,9 +61,34 @@ pfUI:RegisterModule("turtle-wow", "vanilla", function ()
   delay:SetScript("OnUpdate", function()
     this:Hide()
 
-    -- add tree of life druid form to autoshift
+    -- correct positions of new game menu layout
+    if GameMenuButtonShop and (GameMenuButtonPFUI or GameMenuButtonPFUIAddOns) then
+      -- calculate new offset for the shop button
+      local offset = 0
+      local offset = GameMenuButtonPFUI and offset + 22 or offset
+      local offset = GameMenuButtonPFUIAddOns and offset + 22 or offset
+      local offset = offset > 0 and offset + 22 or offset
+
+      -- move pfUI and addons to top position
+      GameMenuButtonShop:ClearAllPoints()
+      GameMenuButtonShop:SetPoint("TOP", 0, -offset)
+
+      -- restore turtle wow's custom menu layout
+      GameMenuButtonOptions:ClearAllPoints()
+      GameMenuButtonOptions:SetPoint("TOP", GameMenuButtonShop, "BOTTOM", 0, -16)
+
+      -- apply pfUI skin to the new shop button
+      if pfUI.skin["Game Menu"] and pfUI_config["disabled"]["skin_Game Menu"] ~= "1" then
+        local font = GameMenuButtonShop:GetFontString()
+        font:SetTextColor(1,1,1,1)
+        SkinButton(GameMenuButtonShop)
+      end
+    end
+
+    -- add druids tree of life and fast travel form to autoshift
     if pfUI.autoshift then
       table.insert(pfUI.autoshift.shapeshifts, "ability_druid_treeoflife")
+      table.insert(pfUI.autoshift.shapeshifts, "ability_druid_stagform")
     end
 
     -- apply chat styles to hardcore chat

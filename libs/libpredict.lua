@@ -35,6 +35,51 @@ do -- Prayer of Healing
   PRAYER_OF_HEALING = locales[GetLocale()] or locales["enUS"]
 end
 
+local REJUVENATION
+do -- Rejuvenation
+  local locales = {
+    ["deDE"] = "Verjüngung",
+    ["enUS"] = "Rejuvenation",
+    ["esES"] = "Rejuvenecimiento",
+    ["frFR"] = "Récupération",
+    ["koKR"] = "회복",
+    ["ruRU"] = "Омоложение",
+    ["zhCN"] = "回春术",
+  }
+
+  REJUVENATION = locales[GetLocale()] or locales["enUS"]
+end
+
+local RENEW
+do -- Renew
+  local locales = {
+    ["deDE"] = "Erneuerung",
+    ["enUS"] = "Renew",
+    ["esES"] = "Renovar",
+    ["frFR"] = "Rénovation",
+    ["koKR"] = "소생",
+    ["ruRU"] = "Обновление",
+    ["zhCN"] = "恢复",
+  }
+
+  RENEW = locales[GetLocale()] or locales["enUS"]
+end
+
+local REGROWTH
+do -- Regrowth
+  local locales = {
+    ["deDE"] = "Nachwachsen",
+    ["enUS"] = "Regrowth",
+    ["esES"] = "Recrecimiento",
+    ["frFR"] = "Rétablissement",
+    ["koKR"] = "재생",
+    ["ruRU"] = "Восстановление",
+    ["zhCN"] = "愈合",
+  }
+
+  REGROWTH = locales[GetLocale()] or locales["enUS"]
+end
+
 local libpredict = CreateFrame("Frame")
 libpredict:RegisterEvent("UNIT_HEALTH")
 libpredict:RegisterEvent("CHAT_MSG_ADDON")
@@ -391,6 +436,19 @@ libpredict.sender.SendResCommMsg = function(self, msg)
   SendAddonMessage("CTRA", msg, "BATTLEGROUND")
 end
 
+libpredict.sender:SetScript("OnUpdate", function()
+  -- trigger delayed regrowth timers
+  if this.regrowth_timer and GetTime() > this.regrowth_timer  then
+    local target = this.regrowth_target or player
+    local duration = 21
+
+    libpredict:Hot(player, target, "Regr", duration)
+    libpredict.sender:SendHealCommMsg("Regr/"..target.."/"..duration.."/")
+    this.regrowth_target = this.regrowth_target_next
+    this.regrowth_timer = nil
+  end
+end)
+
 -- tbc
 libpredict.sender:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 libpredict.sender:RegisterEvent("UNIT_SPELLCAST_START")
@@ -410,14 +468,6 @@ libpredict.sender:RegisterEvent("SPELLCAST_DELAYED")
 -- force cache updates
 libpredict.sender:RegisterEvent("UNIT_INVENTORY_CHANGED")
 libpredict.sender:RegisterEvent("SKILL_LINES_CHANGED")
-
-local regrowthCancel = false
-
-function libpredict.triggerRegrowth(target, duration)
-  if regrowthCancel == true then regrowthCancel = false return end
-  libpredict:Hot(player, target, "Regr", duration)
-  libpredict.sender:SendHealCommMsg("Regr/"..target.."/"..duration.."/")
-end
 
 libpredict.sender:SetScript("OnEvent", function()
   if event == "CHAT_MSG_SPELL_SELF_BUFF" then -- vanilla
@@ -468,6 +518,14 @@ libpredict.sender:SetScript("OnEvent", function()
       local amount = cache[spell_queue[2]][1]
       local casttime = time
 
+      if spell == REGROWTH then
+        if this.regrowth_timer then
+          this.regrowth_target_next = spell_queue[3]
+        else
+          this.regrowth_target = spell_queue[3]
+        end
+      end
+
       if spell == PRAYER_OF_HEALING then
         target = sender
 
@@ -501,7 +559,6 @@ libpredict.sender:SetScript("OnEvent", function()
     end
   elseif strfind(event, "SPELLCAST_FAILED", 1) or strfind(event, "SPELLCAST_INTERRUPTED", 1) then
     if strfind(event, "UNIT_", 1) and arg1 ~= "player" then return end
-    regrowthCancel = true
     if libpredict.sender.healing then
       libpredict:HealStop(player)
       if pfUI.client < 20000 then -- vanilla
@@ -517,6 +574,9 @@ libpredict.sender:SetScript("OnEvent", function()
       libpredict.sender:SendResCommMsg("RESNO " .. target)
       libpredict.sender.resurrecting = nil
     end
+    if spell_queue[1] == REGROWTH then
+      this.regrowth_timer = nil
+    end
   elseif event == "SPELLCAST_DELAYED" then
     if libpredict.sender.healing then
       libpredict:HealDelay(player, arg1)
@@ -526,16 +586,14 @@ libpredict.sender:SetScript("OnEvent", function()
     if strfind(event, "UNIT_", 1) and arg1 ~= "player" then return end
     libpredict:HealStop(player)
     if pfUI.client < 20000 then -- vanilla
-      if spell_queue[1] == "Rejuvenation" then
+      if spell_queue[1] == REJUVENATION then
         libpredict:Hot(player, spell_queue[3], "Reju", rejuvDuration)
         libpredict.sender:SendHealCommMsg("Reju/"..spell_queue[3].."/"..rejuvDuration.."/")
-      elseif spell_queue[1] == "Renew" then
+      elseif spell_queue[1] == RENEW then
         libpredict:Hot(player, spell_queue[3], "Renew", renewDuration)
         libpredict.sender:SendHealCommMsg("Renew/"..spell_queue[3].."/"..renewDuration.."/")
-      elseif spell_queue[1] == "Regrowth" then
-        local duration = 21 --Made this a variable even tho it is static in case future items mess with it
-        regrowthCancel = false
-        QueueFunction(libpredict.triggerRegrowth,spell_queue[3], duration) --SPELLCAST_STOP seem to fire before SPELLCAST_INTERRUPTED so we enqueue execution to be on the safe side
+      elseif spell_queue[1] == REGROWTH then
+        this.regrowth_timer = GetTime() + 0.1
       end
     else -- tbc
       --todo
