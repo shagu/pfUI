@@ -191,7 +191,7 @@ pfUI:RegisterModule("turtle-wow", "vanilla", function ()
     -- add locales
     pfUI_locale["enUS"]["customcast"]["TRUESHOT"] = "Steady Shot"
     pfUI_locale["zhCN"]["customcast"]["TRUESHOT"] = "稳固射击"
-    local trueshot = L["customcast"]["TRUESHOT"]
+    local trueshot = L["customcast"]["TRUESHOT"] or ""
 
     libcast.customcast[strlower(trueshot)] = function(begin, duration)
       if begin then
