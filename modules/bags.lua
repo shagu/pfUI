@@ -687,8 +687,11 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
       for slot=1, bagsize do
         if pfUI.bags[bag] and pfUI.bags[bag].slots[slot] and pfUI.bags[bag].slots[slot].frame:IsShown() then
           local _, _, locked, _ = GetContainerItemInfo(bag, slot)
-          SetItemButtonDesaturated(pfUI.bags[bag].slots[slot].frame, locked, 0.5, 0.5, 0.5)
-          if pfUI.unusable then pfUI.unusable:UpdateSlot(bag, slot) end
+          if pfUI.bags[bag].slots[slot].locked ~= locked then
+            SetItemButtonDesaturated(pfUI.bags[bag].slots[slot].frame, locked, 0.5, 0.5, 0.5)
+            if pfUI.unusable then pfUI.unusable:UpdateSlot(bag, slot) end
+            pfUI.bags[bag].slots[slot].locked = locked
+          end
         end
       end
     end
