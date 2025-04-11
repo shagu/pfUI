@@ -1,26 +1,19 @@
 pfUI:RegisterModule("unusable", "vanilla:tbc", function ()
   if not pfUI.bag then return end
-
   if C.appearance.bags.unusable ~= "1" then return end
 
-  pfUI.unusable = CreateFrame("Frame")
-  pfUI.unusable:RegisterEvent("PLAYER_LEVEL_UP")
-  pfUI.unusable:RegisterEvent("SKILL_LINES_CHANGED")
-  pfUI.unusable:RegisterEvent("ITEM_LOCK_CHANGED")
-  pfUI.unusable:RegisterEvent("ACTIONBAR_HIDEGRID")
-  pfUI.unusable:RegisterEvent("PLAYERBANKSLOTS_CHANGED")
-  pfUI.unusable:RegisterEvent("BANKFRAME_OPENED")
-  pfUI.unusable.cache = {}
+  pfUI.unusable = {}
 
   local scanner = libtipscan:GetScanner("unusable")
   local durability = string.gsub(DURABILITY_TEMPLATE, "%%[^%s]+", "(.+)")
   local r, g, b, a = strsplit(",", C.appearance.bags.unusable_color)
 
   function pfUI.unusable:UpdateSlot(bag, slot)
-    -- create bag cache and clear slot cache
-    self.cache[bag] = self.cache[bag] or {}
-    self.cache[bag][slot] = nil
+    -- break on invalid bag slots
+    if not pfUI.bags[bag] then return end
+    if not pfUI.bags[bag].slots[slot] then return end
 
+    -- add button shortcuts
     local frame = pfUI.bags[bag].slots[slot].frame
     local name = frame:GetName()
 
@@ -47,25 +40,17 @@ pfUI:RegisterModule("unusable", "vanilla:tbc", function ()
     _G.SetItemButtonTextureVertexColor(frame, r, g, b, a)
   end
 
-  function pfUI.unusable:UpdateCache()
-    local self = self or pfUI.unusable
-
-    -- iterate through all known caches
-    for bag, slots in pairs(self.cache) do
-      for slot, state in pairs(slots) do
-        pfUI.bag:UpdateSlot(bag, slot)
-      end
-    end
+  -- update on regular pfUI button updates
+  local HookUpdateSlot = pfUI.bag.UpdateSlot
+  pfUI.bag.UpdateSlot = function(self, bag, slot)
+    HookUpdateSlot(self, bag, slot)
+    pfUI.unusable:UpdateSlot(bag, slot)
   end
 
-  pfUI.unusable:SetScript("OnEvent", function()
-    -- update all cached buttons
-    if event == "PLAYERBANKSLOTS_CHANGED" or event == "BANKFRAME_OPENED" then
-      -- BankFrameItemButton_OnUpdate fires after UpdateSlot overriding changes
-      QueueFunction(this.UpdateCache, this)
-    else
-      -- regular button update
-      this:UpdateCache()
-    end
-  end)
+  -- update on bank frame itemlock updates
+  local HookBankFrameItemButton_UpdateLock = BankFrameItemButton_UpdateLock
+  _G.BankFrameItemButton_UpdateLock = function()
+    HookBankFrameItemButton_UpdateLock()
+    pfUI.unusable:UpdateSlot(-1, this:GetID())
+  end
 end)

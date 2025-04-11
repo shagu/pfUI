@@ -501,11 +501,6 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
       end
     end
 
-    -- update red color on unusable items
-    if pfUI.unusable then
-      pfUI.unusable:UpdateSlot(bag, slot)
-    end
-
     pfUI.bags[bag].slots[slot].frame:Show()
   end
 
