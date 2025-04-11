@@ -399,7 +399,9 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
         bagslot.cd.pfCooldownType = "ALL"
       end
 
-      CreateBackdrop(pfUI.bags[bag].slots[slot].frame, default_border)
+      if not pfUI.bags[bag].slots[slot].frame.backdrop then
+        CreateBackdrop(pfUI.bags[bag].slots[slot].frame, default_border)
+      end
 
       local highlight = pfUI.bags[bag].slots[slot].frame:GetHighlightTexture()
       highlight:SetTexture(.5, .5, .5, .5)
