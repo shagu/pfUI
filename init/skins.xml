@@ -45,6 +45,5 @@
   <Include file="..\skins\blizzard\lfg.lua"/>
 
   <!-- thirdparty-vanilla -->
-  <Include file="..\skins\thirdparty-vanilla\QuickHeal.lua"/>
-  <Include file="..\skins\thirdparty-vanilla\Decursive.lua"/>
+  <Include file="..\skins\Decursive.lua"/>
 </Ui>
