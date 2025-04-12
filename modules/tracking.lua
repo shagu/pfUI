@@ -160,6 +160,12 @@ pfUI:RegisterModule("tracking", "vanilla", function ()
                 state.spells[texture] = {
                   index = spellIndex,
                   name = GetSpellName(spellIndex, BOOKTYPE_SPELL),
+                  
+                  -- shows up as clickable ability for shaman on turtle. better way?
+                  if name == "Earthshaker Slam" then
+                    continue
+                  end
+                  
                   texture = spellTexture
                 }
             end
