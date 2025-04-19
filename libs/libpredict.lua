@@ -410,7 +410,7 @@ hooksecurefunc("CastSpellByName", function(effect, target)
 
   spell_queue[1] = effect
   spell_queue[2] = effect.. ( rank or "" )
-  spell_queue[3] = mouseover or default
+  spell_queue[3] = target and UnitName(target) or mouseover or default
 end, true)
 
 local scanner = libtipscan:GetScanner("prediction")
