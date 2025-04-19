@@ -399,18 +399,33 @@ hooksecurefunc("CastSpell", function(id, bookType)
   spell_queue[3] = UnitName("target") and UnitCanAssist("player", "target") and UnitName("target") or UnitName("player")
 end, true)
 
-hooksecurefunc("CastSpellByName", function(effect, target)
-  if not libpredict.sender.enabled then return end
-  local effect, rank = libspell.GetSpellInfo(effect)
-  if not effect then return end
-  local mouseover = pfUI and pfUI.uf and pfUI.uf.mouseover and pfUI.uf.mouseover.unit
-  mouseover = mouseover and UnitCanAssist("player", mouseover) and UnitName(mouseover)
+hooksecurefunc("CastSpellByName", function(effect, targetArg) -- Captures the optional target argument
+  -- ... standard checks ...
+  local effectName, rank = libspell.GetSpellInfo(effect)
+  if not effectName then return end
 
-  local default = UnitName("target") and UnitCanAssist("player", "target") and UnitName("target") or UnitName("player")
+  local determinedTargetName = nil
 
-  spell_queue[1] = effect
-  spell_queue[2] = effect.. ( rank or "" )
-  spell_queue[3] = mouseover or default
+  if targetArg then -- <--- THIS IS THE KEY CHECK
+    -- If a target unitID was explicitly passed (targetArg is not nil), use its name.
+    -- This ONLY happens when CleveRoids calls it in the "hasSuperwow" case.
+    determinedTargetName = UnitName(targetArg)
+  else
+    -- If no target was passed (targetArg is nil), use libpredict's original fallback logic.
+    -- This happens for normal casts or when CleveRoids calls it without Superwow.
+    local mouseoverUnit = pfUI and pfUI.uf and pfUI.uf.mouseover and pfUI.uf.mouseover.unit
+    local mouseoverName = mouseoverUnit and UnitCanAssist("player", mouseoverUnit) and UnitName(mouseoverUnit)
+    local defaultName = UnitName("target") and UnitCanAssist("player", "target") and UnitName("target") or UnitName("player")
+    determinedTargetName = mouseoverName or defaultName
+  end
+
+  -- ... update spell_queue[3] with determinedTargetName ...
+  if determinedTargetName then
+      spell_queue[1] = effectName
+      spell_queue[2] = effectName .. ( rank or "" )
+      spell_queue[3] = determinedTargetName
+  end
+
 end, true)
 
 local scanner = libtipscan:GetScanner("prediction")
