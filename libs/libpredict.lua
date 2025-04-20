@@ -408,9 +408,12 @@ hooksecurefunc("CastSpellByName", function(effect, target)
 
   local default = UnitName("target") and UnitCanAssist("player", "target") and UnitName("target") or UnitName("player")
 
+  target = target and type(target) == "string" and UnitName(target) or target
+  target = target and target == 1 and UnitName("player") or target
+
   spell_queue[1] = effect
   spell_queue[2] = effect.. ( rank or "" )
-  spell_queue[3] = target and UnitName(target) or mouseover or default
+  spell_queue[3] = target or mouseover or default
 end, true)
 
 local scanner = libtipscan:GetScanner("prediction")
