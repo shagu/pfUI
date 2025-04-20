@@ -2103,6 +2103,11 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
       CreateConfig(U["xpbar"], T["Aligned Position"], C.panel.xp, "xp_position", "dropdown", pfUI.gui.dropdowns.xp_position)
       CreateConfig(U["xpbar"], T["Don't overlap rested"], C.panel.xp, "dont_overlap", "checkbox")
 
+      CreateConfig(nil, T["Text"], nil, nil, "header")
+      CreateConfig(U["xpbar"], T["Show Text"], C.panel.xp, "xp_text", "checkbox")
+      CreateConfig(U["xpbar"], T["Vertical Text Offset"], C.panel.xp, "xp_text_off_y")
+      CreateConfig(U["xpbar"], T["Only Show On Mouse Over"], C.panel.xp, "xp_text_mouse", "checkbox")
+
       CreateConfig(nil, T["Colors"], nil, nil, "header")
       CreateConfig(U["xpbar"], T["Experience Color"], C.panel.xp, "xp_color", "color")
       CreateConfig(U["xpbar"], T["Rested Color"], C.panel.xp, "rest_color", "color")
@@ -2118,6 +2123,11 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
       CreateConfig(U["xpbar"], T["Orientation"], C.panel.xp, "rep_mode", "dropdown", pfUI.gui.dropdowns.orientation)
       CreateConfig(U["xpbar"], T["Frame Anchor"], C.panel.xp, "rep_anchor", "dropdown", pfUI.gui.dropdowns.xpanchors)
       CreateConfig(U["xpbar"], T["Aligned Position"], C.panel.xp, "rep_position", "dropdown", pfUI.gui.dropdowns.xp_position)
+
+      CreateConfig(nil, T["Text"], nil, nil, "header")
+      CreateConfig(U["xpbar"], T["Show Text"], C.panel.xp, "rep_text", "checkbox")
+      CreateConfig(U["xpbar"], T["Vertical Text Offset"], C.panel.xp, "rep_text_off_y")
+      CreateConfig(U["xpbar"], T["Only Show On Mouse Over"], C.panel.xp, "rep_text_mouse", "checkbox")
     end)
 
     CreateGUIEntry(T["Tooltip"], nil, function()

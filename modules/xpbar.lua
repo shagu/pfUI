@@ -115,6 +115,14 @@ end
   local function OnUpdate(self)
     local self = self or this
 
+    if self.text_mouse == "1" then
+      if MouseIsOver(self) then
+        self.bar.text:Show()
+      else
+        self.bar.text:Hide()
+      end
+    end
+
     if self.always then return end
     if self:GetAlpha() == 0 or MouseIsOver(self) then return end
     if ( self.tick or 1) > GetTime() then return else self.tick = GetTime() + .01 end
@@ -160,6 +168,13 @@ end
         self.restedbar:Hide()
       end
 
+      local text = "%s: %s%%"
+      local xp, xpmax, ex = UnitXP("player"), UnitXPMax("player"), GetXPExhaustion()
+      local xpperc = round(xp / xpmax * 100)
+      local experc = ex and round(ex / xpmax * 100) or 0
+      if ex then text = "%s: %s%% (%s%% %s)" end
+      self.bar.text:SetText(string.format(text, T["Experience"], xpperc, experc, T["Rested"]))
+
       self.tick = GetTime() + self.timeout
       return
     elseif mode == "PETXP" then
@@ -170,6 +185,11 @@ end
       local currXP, nextXP = GetPetExperience()
       self.bar:SetMinMaxValues(min(0, currXP), nextXP)
       self.bar:SetValue(currXP)
+
+      local text = "%s: %s%%"
+      local xpperc = nextXP and nextXP ~= 0 and round(currXP / nextXP * 100) or 0
+      self.bar.text:SetText(string.format(text, T["Pet Experience"], xpperc))
+
       self.tick = GetTime() + self.timeout
       return
     elseif mode == "REP" then
@@ -193,6 +213,11 @@ end
           else
             self.bar:SetStatusBarColor(.5,.5,.5,1)
           end
+
+          local text = "%s: %s%% (%s)"
+          local perc = round(barValue / barMax * 100)
+          local standing = GetText("FACTION_STANDING_LABEL"..standingID, gender)
+          self.bar.text:SetText(string.format(text, name, perc, standing))
 
           self.tick = GetTime() + self.timeout
           return
@@ -218,6 +243,9 @@ end
     b.anchor = t == "XP" and C.panel.xp.xp_anchor or C.panel.xp.rep_anchor
     b.position = t == "XP" and C.panel.xp.xp_position or C.panel.xp.rep_position
     b.display = t == "XP" and C.panel.xp.xp_display or C.panel.xp.rep_display
+    b.text = t == "XP" and C.panel.xp.xp_text or C.panel.xp.rep_text
+    b.text_off_y = t == "XP" and C.panel.xp.xp_text_off_y or C.panel.xp.rep_text_off_y
+    b.text_mouse = t == "XP" and C.panel.xp.xp_text_mouse or C.panel.xp.rep_text_mouse
 
     local barLevel, restedLevel = 0, 1
     if C.panel.xp.dont_overlap == "1" then
@@ -250,6 +278,17 @@ end
     local cr, cg, cb, ca = pfUI.api.GetStringColor(b.xp_color)
     b.bar:SetStatusBarColor(cr,cg,cb,ca)
     b.bar:SetOrientation(b.mode)
+
+    b.bar.text = b.bar.text or b.bar:CreateFontString()
+    b.bar.text:SetPoint("CENTER", b, "CENTER", 0, b.text_off_y)
+    b.bar.text:SetJustifyH("CENTER")
+    b.bar.text:SetFont(pfUI.font_default, C.global.font_size, "OUTLINE")
+
+    if b.text == "1" then
+      b.bar.text:Show()
+    else
+      b.bar.text:Hide()
+    end
 
     b.restedbar = b.restedbar or CreateFrame("StatusBar", nil, b)
     b.restedbar:SetStatusBarTexture(pfUI.media[C.panel.xp.texture])
