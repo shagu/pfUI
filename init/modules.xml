@@ -4,6 +4,7 @@
   <Include file="..\modules\hoverbind.lua"/>
   <Include file="..\modules\updatenotify.lua"/>
   <Include file="..\modules\actionbar.lua"/>
+  <Include file="..\modules\gryphons.lua"/>
   <Include file="..\modules\hunterbar.lua"/>
   <Include file="..\modules\chat.lua"/>
   <Include file="..\modules\whisperproxy.lua"/>
