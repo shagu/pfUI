@@ -399,26 +399,18 @@ hooksecurefunc("CastSpell", function(id, bookType)
   spell_queue[3] = UnitName("target") and UnitCanAssist("player", "target") and UnitName("target") or UnitName("player")
 end, true)
 
-hooksecurefunc("CastSpellByName", function(effect, targetArg)
+hooksecurefunc("CastSpellByName", function(effect, target)
+  if not libpredict.sender.enabled then return end
   local effect, rank = libspell.GetSpellInfo(effect)
   if not effect then return end
+  local mouseover = pfUI and pfUI.uf and pfUI.uf.mouseover and pfUI.uf.mouseover.unit
+  mouseover = mouseover and UnitCanAssist("player", mouseover) and UnitName(mouseover)
 
-  local determinedTargetName = nil
+  local default = UnitName("target") and UnitCanAssist("player", "target") and UnitName("target") or UnitName("player")
 
-  if targetArg then
-    determinedTargetName = UnitName(targetArg)
-  else
-    local mouseoverUnit = pfUI and pfUI.uf and pfUI.uf.mouseover and pfUI.uf.mouseover.unit
-    local mouseoverName = mouseoverUnit and UnitCanAssist("player", mouseoverUnit) and UnitName(mouseoverUnit)
-    local defaultName = UnitName("target") and UnitCanAssist("player", "target") and UnitName("target") or UnitName("player")
-    determinedTargetName = mouseoverName or defaultName
-  end
-
-  if determinedTargetName then
-      spell_queue[1] = effectName
-      spell_queue[2] = effectName .. ( rank or "" )
-      spell_queue[3] = determinedTargetName
-  end
+  spell_queue[1] = effect
+  spell_queue[2] = effect.. ( rank or "" )
+  spell_queue[3] = (target and type(target) == "string" and UnitName(target)) or mouseover or default
 end, true)
 
 local scanner = libtipscan:GetScanner("prediction")
