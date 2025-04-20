@@ -386,11 +386,8 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     self.spellslot = nil
     self.booktype = nil
     if macro then
-      local name, body, _
-      for slot = 1, 36 do
-        name, _, body = GetMacroInfo(slot)
-        if name == macro then break end
-      end
+      local slot = GetMacroIndexByName(macro)
+      local name, _, body = GetMacroInfo(slot)
 
       if name and body then
         local match
