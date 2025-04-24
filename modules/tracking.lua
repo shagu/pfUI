@@ -145,11 +145,17 @@ pfUI:RegisterModule("tracking", "vanilla", function ()
         -- scan for generic tracking icons
         for _, texture in pairs(knownTrackingSpellTextures["any"]) do
           if spellTexture and strfind(spellTexture, texture) and not state.spells[texture] then
-            state.spells[texture] = {
-              index = spellIndex,
-              name = GetSpellName(spellIndex, BOOKTYPE_SPELL),
-              texture = spellTexture
-            }
+            -- check for valid tracking spell. test against known bugged display
+            -- only loads table if spell name not blocked. better way to do this?
+            local validTracking = GetSpellName(spellIndex, BOOKTYPE_SPELL)
+            -- shaman spell on turtle earthshaker slam shows up and is clickable tracking icon
+            if validTracking ~= "Earthshaker Slam" then
+              state.spells[texture] = {
+                index = spellIndex,
+                name = validTracking,
+                texture = spellTexture
+              }
+            end
           end
         end
 
