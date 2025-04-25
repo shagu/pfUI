@@ -46,6 +46,95 @@ pfUI:RegisterModule("superwow", "vanilla", function ()
     end)
   end
 
+  -- Add support for druid mana bars
+  if SUPERWOW_VERSION and pfUI.uf and pfUI.uf.player and pfUI_config.unitframes.druidmanabar == "1" then
+    local parent = pfUI.uf.player.power.bar
+    local config = pfUI.uf.player.config
+    local mana = config.defcolor == "0" and config.manacolor or pfUI_config.unitframes.manacolor
+    local r, g, b, a = pfUI.api.strsplit(",", mana)
+    local rawborder, default_border = GetBorderSize("unitframes")
+    local _, class = UnitClass("player")
+    local width = config.pwidth ~= "-1" and config.pwidth or config.width
+
+    local fontname = pfUI.font_unit
+    local fontsize = tonumber(pfUI_config.global.font_unit_size)
+    local fontstyle = pfUI_config.global.font_unit_style
+
+    if config.customfont == "1" then
+      fontname = pfUI.media[config.customfont_name]
+      fontsize = tonumber(config.customfont_size)
+      fontstyle = config.customfont_style
+    end
+
+    local druidmana = CreateFrame("StatusBar", "pfDruidManaBar", UIParent)
+    druidmana:SetFrameStrata(parent:GetFrameStrata())
+    druidmana:SetFrameLevel(parent:GetFrameLevel() + 16)
+    druidmana:SetStatusBarTexture(pfUI.media[config.pbartexture])
+    druidmana:SetStatusBarColor(r, g, b, a)
+    druidmana:SetPoint("TOPLEFT", parent, "BOTTOMLEFT", 0, -2*default_border - config.pspace)
+    druidmana:SetPoint("TOPRIGHT", parent, "BOTTOMRIGHT", 0, -2*default_border - config.pspace)
+    druidmana:SetWidth(width)
+    druidmana:SetHeight(tonumber(pfUI_config.unitframes.druidmanaheight) or 6)
+    druidmana:EnableMouse(true)
+    druidmana:Hide()
+
+    UpdateMovable(druidmana)
+    CreateBackdrop(druidmana)
+    CreateBackdropShadow(druidmana)
+
+    druidmana:RegisterEvent("UNIT_MANA")
+    druidmana:RegisterEvent("UNIT_MAXMANA")
+    druidmana:RegisterEvent("UNIT_DISPLAYPOWER")
+    druidmana:SetScript("OnEvent", function()
+      if UnitPowerType("player") == 0 then
+        this:Hide()
+        return
+      end
+
+      local _, mana = UnitMana("player")
+      local _, max = UnitManaMax("player")
+      local perc = math.ceil(mana / max * 100)
+      if perc == 100 then
+        this.text:SetText(string.format("%s", Abbreviate(mana)))
+      else
+        this.text:SetText(string.format("%s - %s%%", Abbreviate(mana), perc))
+      end
+      this:SetMinMaxValues(0, max)
+      this:SetValue(mana)
+      this:Show()
+    end)
+
+    druidmana.text = druidmana:CreateFontString("Status", "OVERLAY", "GameFontNormalSmall")
+    druidmana.text:SetFontObject(GameFontWhite)
+    druidmana.text:SetFont(fontname, fontsize, fontstyle)
+    druidmana.text:SetPoint("RIGHT", -2*(default_border + config.txtpowerrightoffx), 0)
+    druidmana.text:SetPoint("LEFT", 2*(default_border + config.txtpowerrightoffx), 0)
+    druidmana.text:SetJustifyH("RIGHT")
+
+    if config["powercolor"] == "1" then
+      local r = ManaBarColor[0].r
+      local g = ManaBarColor[0].g
+      local b = ManaBarColor[0].b
+
+      if pfUI_config.unitframes.pastel == "1" then
+        druidmana.text:SetTextColor((r+.75)*.5, (g+.75)*.5, (b+.75)*.5, 1)
+      else
+        druidmana.text:SetTextColor(r, g, b, a)
+      end
+    end
+
+    if pfUI_config.unitframes.druidmanatext == "1" then
+      druidmana.text:Show()
+    else
+      druidmana.text:Hide()
+    end
+
+    if class ~= "DRUID" or _G.DruidManaBar then
+      druidmana:UnregisterAllEvents()
+      druidmana:Hide()
+    end
+  end
+
   -- Add support for guid based focus frame
   if SUPERWOW_VERSION and pfUI.uf and pfUI.uf.focus then
     local focus = function(unitstr)
