@@ -47,6 +47,8 @@ pfUI:RegisterModule("tracking", "vanilla", function ()
   }
 
   pfUI.tracking = CreateFrame("Button", "pfUITracking", UIParent)
+  pfUI.tracking.invalidSpells = {}
+
   pfUI.tracking:SetFrameStrata("HIGH")
   CreateBackdrop(pfUI.tracking, border)
   CreateBackdropShadow(pfUI.tracking)
@@ -122,6 +124,20 @@ pfUI:RegisterModule("tracking", "vanilla", function ()
       local _, _, offset, numSpells = GetSpellTabInfo(tabIndex)
       for spellIndex = offset + 1, offset + numSpells do
         local spellTexture = GetSpellTexture(spellIndex, BOOKTYPE_SPELL)
+        local spellName = GetSpellName(spellIndex, BOOKTYPE_SPELL)
+
+        -- disable and remove invalid spells
+        if pfUI.tracking.invalidSpells[spellName] then
+          -- delete all previously set bad spell icons
+          for _, texture in pairs(knownTrackingSpellTextures["any"]) do
+            if spellTexture and strfind(spellTexture, texture) then
+              state.spells[texture] = nil
+            end
+          end
+
+          -- unset current variable to stop here
+          spellTexture = nil
+        end
 
         -- scan for generic tracking icons
         for _, texture in pairs(knownTrackingSpellTextures["any"]) do
