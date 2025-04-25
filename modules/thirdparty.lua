@@ -235,17 +235,6 @@ pfUI:RegisterModule("thirdparty", "vanilla:tbc", function()
   -- Vanilla: https://github.com/shagu/ShaguDPS
   -- TBC: https://github.com/shagu/ShaguDPS
   HookAddonOrVariable("ShaguDPS", function()
-    local hookRefresh = ShaguDPSWindow.Refresh
-    ShaguDPSWindow.Refresh = function(arg1, arg2)
-      hookRefresh(arg1, arg2)
-
-      -- keep backdrop hidden
-      if C.thirdparty.shagudps.skin == "1" then
-        ShaguDPSWindow:SetBackdrop(nil)
-        ShaguDPSWindow.border:SetBackdrop(nil)
-      end
-    end
-
     local docktable = { "shagudps", "ShaguDPS", "ShaguDPSWindow",
       function() -- single
         ShaguDPSWindow:ClearAllPoints()
@@ -260,55 +249,83 @@ pfUI:RegisterModule("thirdparty", "vanilla:tbc", function()
       end,
       function() -- show
         ShaguDPS.config.visible = 1
-        ShaguDPSWindow.Refresh(true)
+        ShaguDPS.window.Refresh(true)
       end,
       function() -- hide
         ShaguDPS.config.visible = 0
-        ShaguDPSWindow.Refresh(true)
+        ShaguDPS.window.Refresh(true)
       end
     }
 
     pfUI.thirdparty.meters:RegisterMeter("damage", docktable)
 
     if C.thirdparty.shagudps.skin == "1" then
-      if ShaguDPSWindow then
-        local window = ShaguDPSWindow
-        local _, chat_border = GetBorderSize("chat")
+      local hookRefresh = ShaguDPS.window.Refresh
+      ShaguDPS.window.Refresh = function (arg1, arg2)
+        hookRefresh(arg1, arg2)
 
-        window.title:Hide()
-        window.title:SetPoint("TOPLEFT", 1, -1)
-        window.title:SetPoint("TOPRIGHT", -1, -1)
+        for wid=1,10 do
+          local window = ShaguDPS.window[wid]
 
-        CreateBackdrop(window, chat_border, nil, (C.thirdparty.chatbg == "1" and .8))
-        CreateBackdropShadow(window)
+          -- legacy single-window support
+          if wid == 1 and not window then
+            window = ShaguDPS.window
+          end
 
-        if C.thirdparty.chatbg == "1" and C.chat.global.custombg == "1" then
-          local r, g, b, a = strsplit(",", C.chat.global.background)
-          window.backdrop:SetBackdropColor(tonumber(r), tonumber(g), tonumber(b), tonumber(a))
+          if window then
+            local _, chat_border = GetBorderSize("chat")
 
-          local r, g, b, a = strsplit(",", C.chat.global.border)
-          window.backdrop:SetBackdropBorderColor(tonumber(r), tonumber(g), tonumber(b), tonumber(a))
-        end
+            window.title:Hide()
+            window.title:SetPoint("TOPLEFT", 1, -1)
+            window.title:SetPoint("TOPRIGHT", -1, -1)
 
-        -- skin buttons
-        window.btnAnnounce:SetWidth(14)
-        window.btnReset:SetWidth(14)
+            CreateBackdrop(window, chat_border, nil, (C.thirdparty.chatbg == "1" and .8))
+            CreateBackdropShadow(window)
 
-        local buttons = {
-          window.btnAnnounce, window.btnReset, window.btnSegment, window.btnMode,
-          window.btnDamage, window.btnDPS, window.btnHeal, window.btnHPS,
-          window.btnCurrent, window.btnOverall,
-        }
+            local hook = window.Refresh
+            if not window.pfRefreshHook then
+              window.pfRefreshHook = window.Refresh
+              window.Refresh = function(self, arg1, arg2)
+                window.pfRefreshHook(self, arg1, arg2)
 
-        for _, button in pairs(buttons) do
-          if button then
-            button:SetHeight(14)
-            CreateBackdrop(button, nil, true, .75)
-            button:SetBackdropBorderColor(.4,.4,.4,1)
+                -- keep backdrop hidden
+                if C.thirdparty.shagudps.skin == "1" then
+                  window:SetBackdrop(nil)
+                  window.border:SetBackdrop(nil)
+                end
+              end
+            end
+
+            if C.thirdparty.chatbg == "1" and C.chat.global.custombg == "1" then
+              local r, g, b, a = strsplit(",", C.chat.global.background)
+              window.backdrop:SetBackdropColor(tonumber(r), tonumber(g), tonumber(b), tonumber(a))
+
+              local r, g, b, a = strsplit(",", C.chat.global.border)
+              window.backdrop:SetBackdropBorderColor(tonumber(r), tonumber(g), tonumber(b), tonumber(a))
+            end
+
+            -- skin buttons
+            local buttons = {
+              window.btnAnnounce, window.btnReset, window.btnSegment, window.btnMode,
+              window.btnDamage, window.btnDPS, window.btnHeal, window.btnHPS,
+              window.btnCurrent, window.btnOverall, window.btnWindow, window.btnSettings,
+            }
+
+            for _, button in pairs(buttons) do
+              if button then
+                button:SetHeight(14)
+                CreateBackdrop(button, -1, true, .75)
+                button:SetBackdropBorderColor(.4,.4,.4,1)
+
+                if button:GetWidth() == 16 then
+                  button:SetWidth(14)
+                end
+              end
+            end
+
+            window.border:Hide()
           end
         end
-
-        window.border:Hide()
       end
     end
   end)
