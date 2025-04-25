@@ -100,6 +100,15 @@ pfUI:RegisterModule("turtle-wow", "vanilla", function ()
       _G.CHAT_HARDCORE_GET = left .. "H" .. right .. default
     end
 
+    -- disable some new spells from tracking frame
+    if pfUI.tracking then
+      pfUI.tracking.invalidSpells["Earthshaker Slam"] = true
+
+      -- reload spells and menu
+      pfUI.tracking:RefreshSpells()
+      pfUI.tracking:RefreshMenu()
+    end
+
     -- disable turtle wow's map window implementation
     if pfUI.map and not Cartographer and not METAMAP_TITLE then
       _G.WorldMapFrame_Maximize()
