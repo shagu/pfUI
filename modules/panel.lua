@@ -562,6 +562,19 @@ pfUI:RegisterModule("panel", "vanilla:tbc", function()
       end)
     end
 
+    do -- Shaman Ankh
+      local widget = CreateFrame("Frame", "pfPanelWidgetAnkh", UIParent)
+      widget:RegisterEvent("PLAYER_ENTERING_WORLD")
+      widget:RegisterEvent("BAG_UPDATE")
+      widget:SetScript("OnEvent", function()
+        local _, class = UnitClass("player")
+        if class == "SHAMAN" then
+          local count = pfUI.api.GetItemCount(T["Ankh"])
+          pfUI.panel:OutputPanel("ankh", T["Ankh"] .. ": " .. count)
+        end
+      end)
+    end
+
     do -- Hearthstone bind location
       local widget = CreateFrame("Frame", "pfPanelBindLocation", UIParent)
       widget:RegisterEvent("PLAYER_ENTERING_WORLD")

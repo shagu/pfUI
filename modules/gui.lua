@@ -1068,6 +1068,7 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
         "zone:" .. T["Zone Name"],
         "combat:" .. T["Combat Timer"],
         "ammo:" .. T["Ammo Counter"],
+        "ankh:" .. T["Ankh"],
         "soulshard:" .. T["Soulshard Counter"],
         "bindlocation:" .. T["Hearth"],
         "thistletea:" .. T["Thistle Tea"],
