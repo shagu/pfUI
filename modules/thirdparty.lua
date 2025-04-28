@@ -240,12 +240,14 @@ pfUI:RegisterModule("thirdparty", "vanilla:tbc", function()
         ShaguDPSWindow:ClearAllPoints()
         ShaguDPSWindow:SetAllPoints(pfUI.chat.right)
         ShaguDPSWindow:SetWidth(pfUI.chat.right:GetWidth())
+        if ShaguDPSWindow.Resize then ShaguDPSWindow:Resize() end
       end,
       function() -- dual
         ShaguDPSWindow:ClearAllPoints()
         ShaguDPSWindow:SetPoint("TOPLEFT", pfUI.chat.right, "TOP", 0, 0)
         ShaguDPSWindow:SetPoint("BOTTOMRIGHT", pfUI.chat.right, "BOTTOMRIGHT", 0, 0)
         ShaguDPSWindow:SetWidth(pfUI.chat.right:GetWidth() / 2)
+        if ShaguDPSWindow.Resize then ShaguDPSWindow:Resize() end
       end,
       function() -- show
         ShaguDPS.config.visible = 1
