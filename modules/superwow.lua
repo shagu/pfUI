@@ -66,7 +66,7 @@ pfUI:RegisterModule("superwow", "vanilla", function ()
       fontstyle = config.customfont_style
     end
 
-    local druidmana = CreateFrame("StatusBar", "pfDruidManaBar", UIParent)
+    local druidmana = CreateFrame("StatusBar", "pfDruidMana", UIParent)
     druidmana:SetFrameStrata(parent:GetFrameStrata())
     druidmana:SetFrameLevel(parent:GetFrameLevel() + 16)
     druidmana:SetStatusBarTexture(pfUI.media[config.pbartexture])
@@ -129,7 +129,7 @@ pfUI:RegisterModule("superwow", "vanilla", function ()
       druidmana.text:Hide()
     end
 
-    if class ~= "DRUID" or _G.DruidManaBar then
+    if class ~= "DRUID" then
       druidmana:UnregisterAllEvents()
       druidmana:Hide()
     end
