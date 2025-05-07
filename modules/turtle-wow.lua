@@ -246,6 +246,49 @@ pfUI:RegisterModule("turtle-wow", "vanilla", function ()
     end
   end
 
+  -- add skin to twow's talent inspect frame
+  if not (pfUI_config["disabled"] and pfUI_config["disabled"]["skin_Inspect"]  == "1") then
+    local initialized = false
+
+    HookAddonOrVariable("Blizzard_InspectUI", function()
+      hooksecurefunc("InspectFrame_Show", function()
+        -- break if theres nothing left to do
+        if initialized then return end
+
+        -- adjust ui positions
+        SkinTab(InspectFrameTab3)
+        InspectFrameTab3:ClearAllPoints()
+        InspectFrameTab3:SetPoint("LEFT", InspectFrameTab2, "RIGHT", GetBorderSize()*2 + 1, 0)
+        TWTalentFrameTab1:SetPoint("TOPLEFT", TWTalentFrameScrollFrame, "TOPLEFT", 2, TWTalentFrameTab1:GetHeight() + 4)
+
+        -- reload text position
+        InspectFrameTab3:Hide()
+        InspectFrameTab3:Show()
+
+        -- skin inspect window elements
+        StripTextures(InspectTalentsFrame)
+        StripTextures(TWTalentFrameScrollFrame)
+        SkinScrollbar(TWTalentFrameScrollFrameScrollBar)
+        for i = 1, 3 do
+          SkinTab(_G["TWTalentFrameTab"..i])
+        end
+
+        -- skin each talent button
+        for i = 1, MAX_NUM_TALENTS do
+          local talent = _G["TWTalentFrameTalent" .. i]
+          if talent then
+            StripTextures(talent)
+            SkinButton(talent, nil, nil, nil, _G["TWTalentFrameTalent" .. i .. "IconTexture"])
+            _G["TWTalentFrameTalent" .. i .. "Rank"]:SetFont(pfUI.font_default, C.global.font_size, "OUTLINE")
+          end
+        end
+
+        -- only run once
+        initialized = true
+      end, true)
+    end)
+  end
+
   -- rearrange twow's profession window additions
   HookAddonOrVariable("Blizzard_TradeSkillUI", function()
     if TradeSkillSkillCheckButton and pfUI.skin["Profession"] and pfUI_config["disabled"]["skin_Profession"] ~= "1" then
