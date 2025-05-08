@@ -1197,6 +1197,11 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
         "CENTER:" .. T["Center"],
         "RIGHT:" .. T["Right"],
       },
+      ["gryphons"] = {
+        "None:"..T["None"],
+        "Gryphon:"..T["Gryphon"],
+        "Lion:"..T["Lion"],
+      }
     }
 
     -- add locale dependent client fonts to the list
@@ -2011,6 +2016,16 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
       CreateConfig(U["bars"], T["Switch Pages On Ctrl Key Press"], C.bars, "pagemasterctrl", "checkbox")
       CreateConfig(U["bars"], T["Switch Pages On Druid Stealth"], C.bars, "druidstealth", "checkbox")
       CreateConfig(nil, T["Range Based Hunter Paging"], C.bars, "hunterbar", "checkbox", nil, nil, nil, nil, "vanilla")
+    end)
+
+    CreateGUIEntry(T["Actionbar"], T["Gryphons"], function()
+      CreateConfig(U["gryphons"], T["Texture"], C.bars.gryphons, "texture", "dropdown", pfUI.gui.dropdowns.gryphons)
+      CreateConfig(U["gryphons"], T["Color"], C.bars.gryphons, "color", "color")
+      CreateConfig(U["gryphons"], T["Left Anchor"], C.bars.gryphons, "anchor_left", "dropdown", pfUI.gui.dropdowns.xpanchors)
+      CreateConfig(U["gryphons"], T["Right Anchor"], C.bars.gryphons, "anchor_right", "dropdown", pfUI.gui.dropdowns.xpanchors)
+      CreateConfig(U["gryphons"], T["Size"], C.bars.gryphons, "size")
+      CreateConfig(U["gryphons"], T["Horizontal Offset"], C.bars.gryphons, "offset_h")
+      CreateConfig(U["gryphons"], T["Vertical Offset"], C.bars.gryphons, "offset_v")
     end)
 
     -- Shared Actionbar Settings
