@@ -1249,5 +1249,10 @@ function pfUI:MigrateConfig()
     end
   end
 
+  -- migrate cooldown font from unit_font to separate setting
+  if checkversion(5, 4, 19) then
+    pfUI_config.appearance.cd.font = pfUI_config.global.font_unit
+  end
+
   pfUI_config.version = pfUI.version.string
 end
