@@ -2069,6 +2069,9 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
         end
 
         CreateConfig(U["bars"], T["Icon Size"], C.bars["bar"..id], "icon_size")
+        CreateConfig(U["bars"], T["Enable Custom Icon Size Ratio"], C.bars["bar"..id], "icon_custom_ratio", "checkbox")
+        CreateConfig(U["bars"], T["Icon Width"], C.bars["bar"..id], "icon_width")
+        CreateConfig(U["bars"], T["Icon Height"], C.bars["bar"..id], "icon_height")
         CreateConfig(U["bars"], T["Spacing"], C.bars["bar"..id], "spacing", "dropdown", pfUI.gui.dropdowns.actionbarbuttons)
         CreateConfig(U["bars"], T["Layout"], C.bars["bar"..id], "formfactor", "dropdown", formfactors)
         CreateConfig(U["bars"], T["Bar Background"], C.bars["bar"..id], "background", "checkbox")
