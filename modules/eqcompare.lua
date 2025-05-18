@@ -1,4 +1,5 @@
 pfUI:RegisterModule("eqcompare", "vanilla", function ()
+  local sides = { "Left", "Right" }
   local loc = pfUI.cache["locale"]
   for key, value in pairs(L["itemtypes"]) do setglobal(key, value) end
   INVTYPE_WEAPON_OTHER = INVTYPE_WEAPON.."_other"
@@ -7,7 +8,6 @@ pfUI:RegisterModule("eqcompare", "vanilla", function ()
 
   local function AddHeader(tooltip)
     local name = tooltip:GetName()
-    local sides = { "Left", "Right" }
 
     -- shift all entries one line down
     for i=tooltip:NumLines(), 1, -1 do

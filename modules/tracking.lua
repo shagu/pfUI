@@ -47,6 +47,8 @@ pfUI:RegisterModule("tracking", "vanilla", function ()
   }
 
   pfUI.tracking = CreateFrame("Button", "pfUITracking", UIParent)
+  pfUI.tracking.invalidSpells = {}
+
   pfUI.tracking:SetFrameStrata("HIGH")
   CreateBackdrop(pfUI.tracking, border)
   CreateBackdropShadow(pfUI.tracking)
@@ -72,26 +74,7 @@ pfUI:RegisterModule("tracking", "vanilla", function ()
     end
 
     this:RefreshSpells()
-    local texture = GetTrackingTexture()
-    if texture and texture ~= state.texture then
-      state.texture = texture
-      this.pulse = nil
-      this.icon:SetTexture(texture)
-      this.icon:SetVertexColor(1,1,1,1)
-      this:Show()
-    elseif not texture then
-      state.texture = nil
-
-      if pulse and HasEntries(state.spells) then
-        this.pulse = true
-        this.icon:SetTexture("Interface\\Icons\\INV_Misc_QuestionMark")
-        this.icon:SetVertexColor(1,1,1,1)
-        this:Show()
-      else
-        this.pulse = nil
-        this:Hide()
-      end
-    end
+    this:RefreshMenu()
   end)
 
   pfUI.tracking:SetScript("OnUpdate", function()
@@ -141,6 +124,20 @@ pfUI:RegisterModule("tracking", "vanilla", function ()
       local _, _, offset, numSpells = GetSpellTabInfo(tabIndex)
       for spellIndex = offset + 1, offset + numSpells do
         local spellTexture = GetSpellTexture(spellIndex, BOOKTYPE_SPELL)
+        local spellName = GetSpellName(spellIndex, BOOKTYPE_SPELL)
+
+        -- disable and remove invalid spells
+        if pfUI.tracking.invalidSpells[spellName] then
+          -- delete all previously set bad spell icons
+          for _, texture in pairs(knownTrackingSpellTextures["any"]) do
+            if spellTexture and strfind(spellTexture, texture) then
+              state.spells[texture] = nil
+            end
+          end
+
+          -- unset current variable to stop here
+          spellTexture = nil
+        end
 
         -- scan for generic tracking icons
         for _, texture in pairs(knownTrackingSpellTextures["any"]) do
@@ -171,6 +168,29 @@ pfUI:RegisterModule("tracking", "vanilla", function ()
     -- remove humanoid tracking for non-cat druids
     if playerClass == "DRUID" and not isCatForm then
       state.spells["Ability_Tracking"] = nil
+    end
+  end
+
+  function pfUI.tracking:RefreshMenu()
+    local texture = GetTrackingTexture()
+    if texture and texture ~= state.texture then
+      state.texture = texture
+      pfUI.tracking.pulse = nil
+      pfUI.tracking.icon:SetTexture(texture)
+      pfUI.tracking.icon:SetVertexColor(1,1,1,1)
+      pfUI.tracking:Show()
+    elseif not texture then
+      state.texture = nil
+
+      if pulse and HasEntries(state.spells) then
+        pfUI.tracking.pulse = true
+        pfUI.tracking.icon:SetTexture("Interface\\Icons\\INV_Misc_QuestionMark")
+        pfUI.tracking.icon:SetVertexColor(1,1,1,1)
+        pfUI.tracking:Show()
+      else
+        pfUI.tracking.pulse = nil
+        pfUI.tracking:Hide()
+      end
     end
   end
 
