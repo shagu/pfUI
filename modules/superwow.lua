@@ -46,6 +46,44 @@ pfUI:RegisterModule("superwow", "vanilla", function ()
     end)
   end
 
+  -- Add native mouseover support
+  if SUPERWOW_VERSION and pfUI.uf and pfUI.uf.mouseover then
+    _G.SlashCmdList.PFCAST = function(msg)
+      local func = loadstring(msg or "")
+      local unit = "mouseover"
+
+      if not UnitExists(unit) then
+        local frame = GetMouseFocus()
+        if frame.label and frame.id then
+          unit = frame.label .. frame.id
+        elseif UnitExists("target") then
+          unit = "target"
+        elseif GetCVar("autoSelfCast") == "1" then
+          unit = "player"
+        else
+          return
+        end
+      end
+
+      if func then
+        -- set mouseover to target for script if needed
+        local switch_target = not UnitIsUnit("target", unit)
+        if switch_target then TargetUnit(unit) end
+        func()
+        if switch_target then TargetLastTarget() end
+      else
+        -- write temporary unit name
+        pfUI.uf.mouseover.unit = unit
+
+        -- cast spell to unitstr
+        CastSpellByName(msg, unit)
+
+        -- remove temporary mouseover unit
+        pfUI.uf.mouseover.unit = nil
+      end
+    end
+  end
+
   -- Add support for druid mana bars
   if SUPERWOW_VERSION and pfUI.uf and pfUI.uf.player and pfUI_config.unitframes.druidmanabar == "1" then
     local parent = pfUI.uf.player.power.bar
