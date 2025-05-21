@@ -6,14 +6,15 @@ pfUI:RegisterModule("combopoints", "vanilla:tbc", function ()
   ComboFrame:UnregisterAllEvents()
 
   local _, class = UnitClass("player")
-  local combo_size = C["unitframes"]["combosize"]
+  local combo_height = C["unitframes"]["comboheight"]
+  local combo_size = C["unitframes"]["combowidth"]
   pfUI.combopoints = {}
 
   for point = 1, 5 do
     pfUI.combopoints[point] = CreateFrame("Frame", "pfCombo" .. point, UIParent)
     pfUI.combopoints[point]:SetFrameStrata("HIGH")
     pfUI.combopoints[point]:SetWidth(combo_size)
-    pfUI.combopoints[point]:SetHeight(combo_size)
+    pfUI.combopoints[point]:SetHeight(combo_height)
     pfUI.combopoints[point]:Hide()
 
     if pfUI.uf.target then
