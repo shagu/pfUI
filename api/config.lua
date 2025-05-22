@@ -219,7 +219,8 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("unitframes", nil,           "druidmanaheight",  "2")
   pfUI:UpdateConfig("unitframes", nil,           "druidmanatext",    "0")
   pfUI:UpdateConfig("unitframes", nil,           "rangechecki",      "4")
-  pfUI:UpdateConfig("unitframes", nil,           "combosize",        "6")
+  pfUI:UpdateConfig("unitframes", nil,           "combowidth",       "6")
+  pfUI:UpdateConfig("unitframes", nil,           "comboheight",      "6")
   pfUI:UpdateConfig("unitframes", nil,           "abbrevnum",        "1")
   pfUI:UpdateConfig("unitframes", nil,           "abbrevname",       "1")
 
@@ -1247,6 +1248,16 @@ function pfUI:MigrateConfig()
       pfUI_config.bars.pagemasterctrl = "1"
     end
   end
+
+  -- migrate combopoint size to separate settings
+  if checkversion(5, 4, 18) then
+    if pfUI_config.unitframes.combosize then
+      pfUI_config.unitframes.combowidth = pfUI_config.unitframes.combosize
+      pfUI_config.unitframes.comboheight = pfUI_config.unitframes.combosize
+      pfUI_config.unitframes.combosize = nil
+    end
+  end
+
 
   pfUI_config.version = pfUI.version.string
 end
