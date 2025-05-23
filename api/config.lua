@@ -152,6 +152,7 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("appearance", "cd",          "foreign",          "0")
   pfUI:UpdateConfig("appearance", "cd",          "milliseconds",     "1")
   pfUI:UpdateConfig("appearance", "cd",          "hideanim",         "0")
+  pfUI:UpdateConfig("appearance", "cd",          "font",             "Interface\\AddOns\\pfUI\\fonts\\BigNoodleTitling.ttf")
   pfUI:UpdateConfig("appearance", "cd",          "dynamicsize",      "1")
   pfUI:UpdateConfig("appearance", "castbar",     "castbarcolor",     ".7,.7,.9,.8")
   pfUI:UpdateConfig("appearance", "castbar",     "channelcolor",     ".9,.9,.7,.8")
@@ -1247,6 +1248,11 @@ function pfUI:MigrateConfig()
       pfUI_config.bars.pagemastershift = "1"
       pfUI_config.bars.pagemasterctrl = "1"
     end
+  end
+
+  -- migrate cooldown font from unit_font to separate setting
+  if checkversion(5, 4, 18) then
+    pfUI_config.appearance.cd.font = pfUI_config.global.font_unit
   end
 
   -- migrate combopoint size to separate settings
