@@ -6,20 +6,21 @@ pfUI:RegisterModule("combopoints", "vanilla:tbc", function ()
   ComboFrame:UnregisterAllEvents()
 
   local _, class = UnitClass("player")
-  local combo_size = C["unitframes"]["combosize"]
+  local combo_width = C["unitframes"]["combowidth"]
+  local combo_height = C["unitframes"]["comboheight"]
   pfUI.combopoints = {}
 
   for point = 1, 5 do
     pfUI.combopoints[point] = CreateFrame("Frame", "pfCombo" .. point, UIParent)
     pfUI.combopoints[point]:SetFrameStrata("HIGH")
-    pfUI.combopoints[point]:SetWidth(combo_size)
-    pfUI.combopoints[point]:SetHeight(combo_size)
+    pfUI.combopoints[point]:SetWidth(combo_width)
+    pfUI.combopoints[point]:SetHeight(combo_height)
     pfUI.combopoints[point]:Hide()
 
     if pfUI.uf.target then
-      pfUI.combopoints[point]:SetPoint("TOPLEFT", pfUI.uf.target, "TOPRIGHT", border*3, -(point - 1) * (combo_size + border*3))
+      pfUI.combopoints[point]:SetPoint("TOPLEFT", pfUI.uf.target, "TOPRIGHT", border*3, -(point - 1) * (combo_height + border*3))
     else
-      pfUI.combopoints[point]:SetPoint("CENTER", UIParent, "CENTER", (point - 3) * (combo_size + border*3), 10 )
+      pfUI.combopoints[point]:SetPoint("CENTER", UIParent, "CENTER", (point - 3) * (combo_width + border*3), 10 )
     end
 
     pfUI.combopoints[point].tex = pfUI.combopoints[point]:CreateTexture("OVERLAY")
