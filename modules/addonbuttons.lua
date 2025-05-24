@@ -32,7 +32,6 @@ pfUI:RegisterModule("addonbuttons", "vanilla:tbc", function ()
 
   pfUI.addonbuttons = CreateFrame("Frame", "pfMinimapButtons", UIParent)
   pfUI.addonbuttons:SetFrameStrata("HIGH")
-  pfUI.addonbuttons:Hide()
   CreateBackdrop(pfUI.addonbuttons)
   CreateBackdropShadow(pfUI.addonbuttons)
 
@@ -49,27 +48,11 @@ pfUI:RegisterModule("addonbuttons", "vanilla:tbc", function ()
     end
   end)
 
-  -- hide flyout frame when entering combat
-  local pfUIAddonButtonHide = CreateFrame("Frame", nil, UIParent)
-  pfUIAddonButtonHide:RegisterEvent('PLAYER_REGEN_DISABLED')
-  pfUIAddonButtonHide:SetScript("OnEvent", function()
-    local enabled = C.appearance.minimap.addon_buttons == "1"
-    if enabled then
-      if pfUI.addonbuttons:IsShown() then
-        pfUI.addonbuttons:Hide()
-      end
-    end
-  end)
-
   pfUI.addonbuttons.buttons = {}
   pfUI.addonbuttons.overrides = {}
   pfUI.addonbuttons.last_updated = 0
   pfUI.addonbuttons.rows = 1
   pfUI.addonbuttons.max_button_size = 40
-
-  pfUI.addonbuttons:RegisterEvent("PLAYER_LOGIN")
-  pfUI.addonbuttons:RegisterEvent("PLAYER_REGEN_DISABLED")
-
 
   local function GetButtonSize()
     if C.abuttons.position == "bottom" or C.abuttons.position == "top" then
@@ -111,27 +94,32 @@ pfUI:RegisterModule("addonbuttons", "vanilla:tbc", function ()
   end
 
   local function IsButtonValid(frame)
-    if frame:GetName() ~= nil then
-      if frame:IsVisible() then
-        if frame:IsFrameType("Button") then
-          if frame:GetScript("OnClick") ~= nil or frame:GetScript("OnMouseDown") ~= nil or frame:GetScript("OnMouseUp") ~= nil then
-            if frame:GetHeight() < pfUI.addonbuttons.max_button_size and frame:GetWidth() < pfUI.addonbuttons.max_button_size then
-              if not TablePartialMatch(ignored_icons, frame:GetName()) then
-                return true
-              end
-            end
-          end
-        elseif frame:IsFrameType("Frame") and (strfind(strlower(frame:GetName()), "icon") or strfind(strlower(frame:GetName()), "button")) then
-          if frame:GetScript("OnMouseDown") ~= nil or frame:GetScript("OnMouseUp") ~= nil then
-            if frame:GetHeight() < pfUI.addonbuttons.max_button_size and frame:GetWidth() < pfUI.addonbuttons.max_button_size then
-              if not TablePartialMatch(ignored_icons, frame:GetName()) then
-                return true
-              end
-            end
-          end
-        end
+    -- ignore invalid and invisible frames
+    if not frame:GetName() then return false end
+    if not frame:IsVisible() then return false end
+
+    -- ignore frames with invalid sizes
+    if frame:GetHeight() > pfUI.addonbuttons.max_button_size then return false end
+    if frame:GetWidth() > pfUI.addonbuttons.max_button_size then return false end
+
+    -- ignore other frame types
+    if not frame:IsFrameType("Button") and not frame:IsFrameType("Frame") then return false end
+
+    -- ignore manually selected frames
+    if TablePartialMatch(ignored_icons, frame:GetName()) then return false end
+
+    -- check button/frame script handlers
+    if frame:IsFrameType("Button") then
+      if frame:GetScript("OnClick") or frame:GetScript("OnMouseDown") or frame:GetScript("OnMouseUp") then
+        return true
+      end
+    elseif frame:IsFrameType("Frame") and (strfind(strlower(frame:GetName()), "icon") or strfind(strlower(frame:GetName()), "button")) then
+      if frame:GetScript("OnMouseDown") or frame:GetScript("OnMouseUp") then
+        return true
       end
     end
+
+    -- ignore everything else
     return false
   end
 
@@ -398,44 +386,55 @@ pfUI:RegisterModule("addonbuttons", "vanilla:tbc", function ()
 
   function pfUI.addonbuttons:ProcessButtons()
     UpdatePanel()
-    for i, button_name in ipairs(pfUI.addonbuttons.buttons) do
-      if _G[button_name] then
+
+    local i = 1
+    for _, button_name in ipairs(pfUI.addonbuttons.buttons) do
+      if _G[button_name] and _G[button_name]:IsVisible() then
         BackupButton(_G[button_name])
         MoveButton(i, _G[button_name])
+        i = i + 1
       end
     end
   end
 
   function pfUI.addonbuttons:UpdateConfig()
     pfUI.addonbuttons:ProcessButtons()
-    pfUI.addonbuttons:GetScript("OnEvent")()
   end
 
-  pfUI.addonbuttons.scanner = CreateFrame("Frame", "pfAddonButtonScanner", UIParent)
-  pfUI.addonbuttons.scanner:SetScript("OnUpdate", function()
-    -- throttle updates to once per 3 seconds
-    if ( this.tick or 1) > GetTime() then return else this.tick = GetTime() + 3 end
-
+  pfUI.addonbuttons:SetScript("OnShow", function()
     pfUI.addonbuttons:ProcessButtons()
+  end)
+
+  pfUI.addonbuttons:SetScript("OnUpdate", function()
+    -- check if the panel should be shown by default
+    if not this.initialized then
+      if C.abuttons.showdefault == "1" and GetNumButtons() > 0 then
+        pfUI.addonbuttons:Show()
+      else
+        pfUI.addonbuttons:Hide()
+      end
+
+      -- update all buttons
+      pfUI.addonbuttons:ProcessButtons()
+      this.initialized = true
+    end
+
+    -- throttle updates to once per 5 seconds
+    if ( this.tick or 1) > GetTime() then return else this.tick = GetTime() + 5 end
+
+    -- reload/rescan minimap buttons
+    pfUI.addonbuttons:ProcessButtons()
+
+    -- re-apply addon button workarounds
     for k, v in pairs(pfUI.addonbuttons.overrides) do
       _G[k] = v
     end
   end)
 
+  pfUI.addonbuttons:RegisterEvent("PLAYER_REGEN_DISABLED")
   pfUI.addonbuttons:SetScript("OnEvent", function()
-    if event == "PLAYER_REGEN_DISABLED" then
-      if C.abuttons.hideincombat == "1" and pfUI.addonbuttons:IsShown() then
-        pfUI.addonbuttons:Hide()
-      end
-    else
-      pfUI.addonbuttons:ProcessButtons()
-      if event == "PLAYER_LOGIN" then
-        if C.abuttons.showdefault == "1" and GetNumButtons() > 0 then
-          pfUI.addonbuttons:Show()
-        else
-          pfUI.addonbuttons:Hide()
-        end
-      end
+    if C.abuttons.hideincombat == "1" and pfUI.addonbuttons:IsShown() then
+      pfUI.addonbuttons:Hide()
     end
   end)
 
@@ -443,5 +442,4 @@ pfUI:RegisterModule("addonbuttons", "vanilla:tbc", function ()
 
   _G.SLASH_PFABP1, _G.SLASH_PFABP2 = "/abp", "/pfabp"
   _G.SlashCmdList.PFABP = ManualAddOrRemove
-
 end)

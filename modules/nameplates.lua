@@ -552,7 +552,7 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     nameplate.castbar:SetPoint("TOPLEFT", nameplate.health, "BOTTOMLEFT", 0, -default_border*3)
     nameplate.castbar:SetPoint("TOPRIGHT", nameplate.health, "BOTTOMRIGHT", 0, -default_border*3)
     nameplate.castbar:SetHeight(C.nameplates.heightcast)
-    nameplate.castbar:SetStatusBarTexture(pfUI.media["img:bar"])
+    nameplate.castbar:SetStatusBarTexture(hptexture)
     nameplate.castbar:SetStatusBarColor(.9,.8,0,1)
     CreateBackdrop(nameplate.castbar, default_border)
 
