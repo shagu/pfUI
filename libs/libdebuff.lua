@@ -85,13 +85,16 @@ end
 
 function libdebuff:AddPending(unit, unitlevel, effect, duration, caster)
   if not unit or duration <= 0 then return end
-  if not L["debuffs"][effect] or libdebuff.pending[3] == effect then return end
+  if not L["debuffs"][effect] then return end
+  if libdebuff.pending[3] then return end
 
   libdebuff.pending[1] = unit
   libdebuff.pending[2] = unitlevel or 0
   libdebuff.pending[3] = effect
   libdebuff.pending[4] = duration -- or libdebuff:GetDuration(effect)
   libdebuff.pending[5] = caster
+
+  QueueFunction(libdebuff.PersistPending)
 end
 
 function libdebuff:RemovePending()
@@ -104,10 +107,12 @@ end
 
 function libdebuff:PersistPending(effect)
   if not libdebuff.pending[3] then return end
+
   if libdebuff.pending[3] == effect or ( effect == nil and libdebuff.pending[3] ) then
     libdebuff:AddEffect(libdebuff.pending[1], libdebuff.pending[2], libdebuff.pending[3], libdebuff.pending[4], libdebuff.pending[5])
-    libdebuff:RemovePending()
   end
+
+  libdebuff:RemovePending()
 end
 
 function libdebuff:RevertLastAction()
@@ -222,7 +227,7 @@ libdebuff:SetScript("OnEvent", function()
       end
     end
   elseif event == "SPELLCAST_STOP" then
-    QueueFunction(libdebuff.PersistPending)
+    libdebuff:PersistPending()
   end
 end)
 
