@@ -286,5 +286,26 @@ function libdebuff:UnitDebuff(unit, id)
   return effect, rank, texture, stacks, dtype, duration, timeleft, caster
 end
 
+local cache = {}
+function libdebuff:UnitOwnDebuff(unit, id)
+  -- clean cache
+  for k, v in pairs(cache) do cache[k] = nil end
+
+  -- detect own debuffs
+  local count = 1
+  for i=1,16 do
+    local effect, rank, texture, stacks, dtype, duration, timeleft, caster = libdebuff:UnitDebuff(unit, i)
+    if effect and not cache[effect] and caster and caster == "player" then
+      cache[effect] = true
+
+      if count == id then
+        return effect, rank, texture, stacks, dtype, duration, timeleft, caster
+      else
+        count = count + 1
+      end
+    end
+  end
+end
+
 -- add libdebuff to pfUI API
 pfUI.api.libdebuff = libdebuff
