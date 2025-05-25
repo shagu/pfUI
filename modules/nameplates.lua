@@ -196,7 +196,7 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
       local effect, _, texture, stacks, _, duration, timeleft
 
       if unitstr and C.nameplates.selfdebuff == "1" then
-        effect, rank, texture, stacks, dtype, duration, timeleft = libdebuff:UnitOwnDebuff(unitstr, i)
+        effect, _, texture, stacks, _, duration, timeleft = libdebuff:UnitOwnDebuff(unitstr, id)
       else
         effect, _, texture, stacks, _, duration, timeleft = libdebuff:UnitDebuff(unitstr, id)
       end
