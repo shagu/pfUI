@@ -186,11 +186,11 @@ do -- dropdown
   end
 
   local function ListButtonOnEnter()
-    this.button:SetBackdropBorderColor(this.button.cr,this.button.cg,this.button.cb,1)
+    this.button:SetBackdropBorderColor(this.button.cr,this.button.cg,this.button.cb,(this.button.ca or 1))
   end
 
   local function ListButtonOnLeave()
-    this.button:SetBackdropBorderColor(this.button.rr,this.button.rg,this.button.rb,1)
+    this.button:SetBackdropBorderColor(this.button.rr,this.button.rg,this.button.rb,(this.button.ra or 1))
   end
 
   local handlers = {
