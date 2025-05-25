@@ -1794,6 +1794,22 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
         CreateConfig(U[c], T["Show Timer Text"], C.unitframes[c], "cooldown_text", "checkbox")
         CreateConfig(U[c], T["Show Timer Animation"], C.unitframes[c], "cooldown_anim", "checkbox")
 
+        CreateConfig(U[c], T["Buffs"], nil, nil, "header")
+        CreateConfig(U[c], T["Buff Position"], C.unitframes[c], "buffs", "dropdown", pfUI.gui.dropdowns.uf_buff_position)
+        CreateConfig(U[c], T["Buff Size"], C.unitframes[c], "buffsize")
+        CreateConfig(U[c], T["Buff Limit"], C.unitframes[c], "bufflimit")
+        CreateConfig(U[c], T["Buffs Per Row"], C.unitframes[c], "buffperrow")
+
+        CreateConfig(U[c], T["Debuffs"], nil, nil, "header")
+        CreateConfig(U[c], T["Debuff Position"], C.unitframes[c], "debuffs", "dropdown", pfUI.gui.dropdowns.uf_buff_position)
+        CreateConfig(U[c], T["Debuff Size"], C.unitframes[c], "debuffsize")
+        CreateConfig(U[c], T["Debuff Limit"], C.unitframes[c], "debufflimit")
+        CreateConfig(U[c], T["Debuffs Per Row"], C.unitframes[c], "debuffperrow")
+
+        if c ~= "player" then
+          CreateConfig(U[c], T["Only Show Own Debuffs (|cffffaaaaExperimental|r)"], C.unitframes[c], "selfdebuff", "checkbox")
+        end
+
         CreateConfig(U[c], T["Combat/Aggro Indicators"], nil, nil, "header")
         CreateConfig(U[c], T["Display Aggro Indicator"], C.unitframes[c], "squareaggro", "checkbox")
         CreateConfig(U[c], T["Display Combat Indicator"], C.unitframes[c], "squarecombat", "checkbox")
@@ -1820,18 +1836,6 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
         CreateConfig(U[c], T["Only Class Dispellable"], C.unitframes[c], "debuff_ind_class", "checkbox")
         CreateConfig(U[c], T["Indicator Position"], C.unitframes[c], "debuff_ind_pos", "dropdown", pfUI.gui.dropdowns.positions)
         CreateConfig(U[c], T["Indicator Size"], C.unitframes[c], "debuff_ind_size", "dropdown", pfUI.gui.dropdowns.uf_debuff_indicator_size)
-
-        CreateConfig(U[c], T["Buffs"], nil, nil, "header")
-        CreateConfig(U[c], T["Buff Position"], C.unitframes[c], "buffs", "dropdown", pfUI.gui.dropdowns.uf_buff_position)
-        CreateConfig(U[c], T["Buff Size"], C.unitframes[c], "buffsize")
-        CreateConfig(U[c], T["Buff Limit"], C.unitframes[c], "bufflimit")
-        CreateConfig(U[c], T["Buffs Per Row"], C.unitframes[c], "buffperrow")
-
-        CreateConfig(U[c], T["Debuffs"], nil, nil, "header")
-        CreateConfig(U[c], T["Debuff Position"], C.unitframes[c], "debuffs", "dropdown", pfUI.gui.dropdowns.uf_buff_position)
-        CreateConfig(U[c], T["Debuff Size"], C.unitframes[c], "debuffsize")
-        CreateConfig(U[c], T["Debuff Limit"], C.unitframes[c], "debufflimit")
-        CreateConfig(U[c], T["Debuffs Per Row"], C.unitframes[c], "debuffperrow")
 
         CreateConfig(U[c], T["Overwrite Fonts"], nil, nil, "header")
         CreateConfig(U[c], T["Use Custom Font Settings"], C.unitframes[c], "customfont", "checkbox")
