@@ -224,9 +224,34 @@ pfUI:RegisterModule("superwow", "vanilla", function ()
     end
   end
 
-  local unitcast = CreateFrame("Frame")
-  unitcast:RegisterEvent("UNIT_CASTEVENT")
-  unitcast:SetScript("OnEvent", function()
+  -- Enhance libdebuff with SuperWoW data
+  local superdebuff = CreateFrame("Frame")
+  superdebuff:RegisterEvent("UNIT_CASTEVENT")
+  superdebuff:SetScript("OnEvent", function()
+    -- variable assignments
+    local caster, target, event, spell, duration = arg1, arg2, arg3, arg4
+
+    -- skip other caster and empty target events
+    local _, guid = UnitExists("player")
+    if caster ~= guid then return end
+    if event ~= "CAST" then return end
+    if not target or target == "" then return end
+
+    -- assign all required data
+    local unit = UnitName(target)
+    local unitlevel = UnitLevel(target)
+    local effect, rank = SpellInfo(spell)
+    local duration = libdebuff:GetDuration(effect, rank)
+    local caster = "player"
+
+    -- add effect to current debuff data
+    libdebuff:AddEffect(unit, unitlevel, effect, duration, caster)
+  end)
+
+  -- Enhance libcast with SuperWoW data
+  local supercast = CreateFrame("Frame")
+  supercast:RegisterEvent("UNIT_CASTEVENT")
+  supercast:SetScript("OnEvent", function()
     if arg3 == "START" or arg3 == "CAST" or arg3 == "CHANNEL" then
       -- human readable argument list
       local guid = arg1
