@@ -316,7 +316,7 @@ local realm = GetRealmName()
 local player = UnitName("player")
 local cache, gear_string = {}, ""
 local resetcache = CreateFrame("Frame")
-local rejuvDuration, renewDuration = 12, 12 --default durations
+local rejuvDuration, renewDuration = 12, 15 --default durations
 local hotsetbonus = libtipscan:GetScanner("hotsetbonus")
 resetcache:RegisterEvent("PLAYER_ENTERING_WORLD")
 resetcache:RegisterEvent("LEARNED_SPELL_IN_TAB")
@@ -352,12 +352,6 @@ resetcache:SetScript("OnEvent", function()
       if hotsetbonus:Find(L["healduration"]["Rejuvenation"]) then setBonusCounter = setBonusCounter + 1 end
     end
     rejuvDuration = setBonusCounter == 8 and 15 or 12
-    setBonusCounter = 0
-    for i =1,10 do
-      hotsetbonus:SetInventoryItem("player", i)
-      if hotsetbonus:Find(L["healduration"]["Renew"]) then setBonusCounter = setBonusCounter + 1 end
-    end
-    renewDuration = setBonusCounter == 5 and 15 or 12
   end
 
   -- flag all cached heals for renewal
