@@ -83,14 +83,18 @@ function libdebuff:UpdateUnits()
   pfUI.uf:RefreshUnit(pfUI.uf.target, "aura")
 end
 
-function libdebuff:AddPending(unit, unitlevel, effect, duration)
+function libdebuff:AddPending(unit, unitlevel, effect, duration, caster)
   if not unit or duration <= 0 then return end
-  if not L["debuffs"][effect] or libdebuff.pending[3] == effect then return end
+  if not L["debuffs"][effect] then return end
+  if libdebuff.pending[3] then return end
 
   libdebuff.pending[1] = unit
   libdebuff.pending[2] = unitlevel or 0
   libdebuff.pending[3] = effect
   libdebuff.pending[4] = duration -- or libdebuff:GetDuration(effect)
+  libdebuff.pending[5] = caster
+
+  QueueFunction(libdebuff.PersistPending)
 end
 
 function libdebuff:RemovePending()
@@ -98,14 +102,17 @@ function libdebuff:RemovePending()
   libdebuff.pending[2] = nil
   libdebuff.pending[3] = nil
   libdebuff.pending[4] = nil
+  libdebuff.pending[5] = nil
 end
 
 function libdebuff:PersistPending(effect)
   if not libdebuff.pending[3] then return end
+
   if libdebuff.pending[3] == effect or ( effect == nil and libdebuff.pending[3] ) then
-    libdebuff:AddEffect(libdebuff.pending[1], libdebuff.pending[2], libdebuff.pending[3], libdebuff.pending[4])
-    libdebuff:RemovePending()
+    libdebuff:AddEffect(libdebuff.pending[1], libdebuff.pending[2], libdebuff.pending[3], libdebuff.pending[4], libdebuff.pending[5])
   end
+
+  libdebuff:RemovePending()
 end
 
 function libdebuff:RevertLastAction()
@@ -114,7 +121,7 @@ function libdebuff:RevertLastAction()
   libdebuff:UpdateUnits()
 end
 
-function libdebuff:AddEffect(unit, unitlevel, effect, duration)
+function libdebuff:AddEffect(unit, unitlevel, effect, duration, caster)
   if not unit or not effect then return end
   unitlevel = unitlevel or 0
   if not libdebuff.objects[unit] then libdebuff.objects[unit] = {} end
@@ -128,6 +135,7 @@ function libdebuff:AddEffect(unit, unitlevel, effect, duration)
   libdebuff.objects[unit][unitlevel][effect].start_old = libdebuff.objects[unit][unitlevel][effect].start
   libdebuff.objects[unit][unitlevel][effect].start = GetTime()
   libdebuff.objects[unit][unitlevel][effect].duration = duration or libdebuff:GetDuration(effect)
+  libdebuff.objects[unit][unitlevel][effect].caster = caster
 
   libdebuff:UpdateUnits()
 end
@@ -150,7 +158,7 @@ end
 libdebuff.rp = { SPELLIMMUNESELFOTHER, IMMUNEDAMAGECLASSSELFOTHER,
   SPELLMISSSELFOTHER, SPELLRESISTSELFOTHER, SPELLEVADEDSELFOTHER,
   SPELLDODGEDSELFOTHER, SPELLDEFLECTEDSELFOTHER, SPELLREFLECTSELFOTHER,
-  SPELLPARRIEDSELFOTHER, SPELLLOGABSORBSELFOTHER }
+  SPELLPARRIEDSELFOTHER, SPELLLOGABSORBSELFOTHER, SPELLFAILCASTSELF }
 
 libdebuff.objects = {}
 libdebuff.pending = {}
@@ -219,7 +227,7 @@ libdebuff:SetScript("OnEvent", function()
       end
     end
   elseif event == "SPELLCAST_STOP" then
-    QueueFunction(libdebuff.PersistPending)
+    libdebuff:PersistPending()
   end
 end)
 
@@ -227,13 +235,13 @@ end)
 hooksecurefunc("CastSpell", function(id, bookType)
   local rawEffect, rank = libspell.GetSpellInfo(id, bookType)
   local duration = libdebuff:GetDuration(rawEffect, rank)
-  libdebuff:AddPending(UnitName("target"), UnitLevel("target"), rawEffect, duration)
+  libdebuff:AddPending(UnitName("target"), UnitLevel("target"), rawEffect, duration, "player")
 end, true)
 
 hooksecurefunc("CastSpellByName", function(effect, target)
   local rawEffect, rank = libspell.GetSpellInfo(effect)
   local duration = libdebuff:GetDuration(rawEffect, rank)
-  libdebuff:AddPending(UnitName("target"), UnitLevel("target"), rawEffect, duration)
+  libdebuff:AddPending(UnitName("target"), UnitLevel("target"), rawEffect, duration, "player")
 end, true)
 
 hooksecurefunc("UseAction", function(slot, target, button)
@@ -241,7 +249,7 @@ hooksecurefunc("UseAction", function(slot, target, button)
   scanner:SetAction(slot)
   local rawEffect, rank = scanner:Line(1)
   local duration = libdebuff:GetDuration(rawEffect, rank)
-  libdebuff:AddPending(UnitName("target"), UnitLevel("target"), rawEffect, duration)
+  libdebuff:AddPending(UnitName("target"), UnitLevel("target"), rawEffect, duration, "player")
 end, true)
 
 function libdebuff:UnitDebuff(unit, id)
@@ -250,6 +258,7 @@ function libdebuff:UnitDebuff(unit, id)
   local texture, stacks, dtype = UnitDebuff(unit, id)
   local duration, timeleft = nil, -1
   local rank = nil -- no backport
+  local caster = nil -- experimental
   local effect
 
   if texture then
@@ -264,6 +273,7 @@ function libdebuff:UnitDebuff(unit, id)
     else
       duration = libdebuff.objects[unitname][unitlevel][effect].duration
       timeleft = duration + libdebuff.objects[unitname][unitlevel][effect].start - GetTime()
+      caster = libdebuff.objects[unitname][unitlevel][effect].caster
     end
 
   -- no level data
@@ -274,10 +284,32 @@ function libdebuff:UnitDebuff(unit, id)
     else
       duration = libdebuff.objects[unitname][0][effect].duration
       timeleft = duration + libdebuff.objects[unitname][0][effect].start - GetTime()
+      caster = libdebuff.objects[unitname][0][effect].caster
     end
   end
 
-  return effect, rank, texture, stacks, dtype, duration, timeleft
+  return effect, rank, texture, stacks, dtype, duration, timeleft, caster
+end
+
+local cache = {}
+function libdebuff:UnitOwnDebuff(unit, id)
+  -- clean cache
+  for k, v in pairs(cache) do cache[k] = nil end
+
+  -- detect own debuffs
+  local count = 1
+  for i=1,16 do
+    local effect, rank, texture, stacks, dtype, duration, timeleft, caster = libdebuff:UnitDebuff(unit, i)
+    if effect and not cache[effect] and caster and caster == "player" then
+      cache[effect] = true
+
+      if count == id then
+        return effect, rank, texture, stacks, dtype, duration, timeleft, caster
+      else
+        count = count + 1
+      end
+    end
+  end
 end
 
 -- add libdebuff to pfUI API

@@ -186,11 +186,11 @@ do -- dropdown
   end
 
   local function ListButtonOnEnter()
-    this.button:SetBackdropBorderColor(this.button.cr,this.button.cg,this.button.cb,1)
+    this.button:SetBackdropBorderColor(this.button.cr,this.button.cg,this.button.cb,(this.button.ca or 1))
   end
 
   local function ListButtonOnLeave()
-    this.button:SetBackdropBorderColor(this.button.rr,this.button.rg,this.button.rb,1)
+    this.button:SetBackdropBorderColor(this.button.rr,this.button.rg,this.button.rb,(this.button.ra or 1))
   end
 
   local handlers = {
@@ -596,12 +596,12 @@ end
 
 local function SetHighlightEnter()
   if this.locked then return end
-  (this.backdrop or this):SetBackdropBorderColor(this.cr,this.cg,this.cb,1)
+  (this.backdrop or this):SetBackdropBorderColor(this.cr,this.cg,this.cb,(this.ca or 1))
 end
 
 local function SetHighlightLeave()
   if this.locked then return end
-  (this.backdrop or this):SetBackdropBorderColor(this.rr,this.rg,this.rb,1)
+  (this.backdrop or this):SetBackdropBorderColor(this.rr,this.rg,this.rb,(this.ra or 1))
 end
 
 function pfUI.api.SetHighlight(frame, cr, cg, cb)
@@ -612,8 +612,8 @@ function pfUI.api.SetHighlight(frame, cr, cg, cb)
     cr, cg, cb = color.r , color.g, color.b
   end
 
-  frame.cr, frame.cg, frame.cb = cr, cg, cb
-  frame.rr, frame.rg, frame.rb = GetStringColor(pfUI_config.appearance.border.color)
+  frame.cr, frame.cg, frame.cb = cr, cg, cb, ca
+  frame.rr, frame.rg, frame.rb, frame.ra = GetStringColor(pfUI_config.appearance.border.color)
 
   if not frame.pfEnterLeave then
     if not frame.HookScript then frame.HookScript = HookScript end

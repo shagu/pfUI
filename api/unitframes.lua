@@ -1513,6 +1513,7 @@ function pfUI.uf:RefreshUnit(unit, component)
     local texture, stacks, dtype
     local perrow = unit.config.debuffperrow
     local bperrow = unit.config.buffperrow
+    local selfdebuff = unit.config.selfdebuff
 
     local invert_h, invert_v, af
     if unit.config.debuffs == "TOPLEFT" then
@@ -1561,6 +1562,8 @@ function pfUI.uf:RefreshUnit(unit, component)
         texture = GetPlayerBuffTexture(GetPlayerBuff(PLAYER_BUFF_START_ID+i, "HARMFUL"))
         stacks = GetPlayerBuffApplications(GetPlayerBuff(PLAYER_BUFF_START_ID+i, "HARMFUL"))
         dtype = GetPlayerBuffDispelType(GetPlayerBuff(PLAYER_BUFF_START_ID+i, "HARMFUL"))
+      elseif selfdebuff == "1" then
+        _, _, texture, stacks, dtype = libdebuff:UnitOwnDebuff(unitstr, i)
       else
         texture, stacks, dtype = UnitDebuff(unitstr, i)
       end
@@ -1579,8 +1582,13 @@ function pfUI.uf:RefreshUnit(unit, component)
         if unit:GetName() == "pfPlayer" then
           local timeleft = GetPlayerBuffTimeLeft(GetPlayerBuff(PLAYER_BUFF_START_ID+unit.debuffs[i].id, "HARMFUL"),"HARMFUL")
           CooldownFrame_SetTimer(unit.debuffs[i].cd, GetTime(), timeleft, 1)
+        elseif libdebuff and selfdebuff == "1" then
+          local name, rank, texture, stacks, dtype, duration, timeleft, caster = libdebuff:UnitOwnDebuff(unitstr, i)
+          if duration and timeleft then
+            CooldownFrame_SetTimer(unit.debuffs[i].cd, GetTime() + timeleft - duration, duration, 1)
+          end
         elseif libdebuff then
-          local name, rank, texture, stacks, dtype, duration, timeleft = libdebuff:UnitDebuff(unitstr, i)
+          local name, rank, texture, stacks, dtype, duration, timeleft, caster = libdebuff:UnitDebuff(unitstr, i)
           if duration and timeleft then
             CooldownFrame_SetTimer(unit.debuffs[i].cd, GetTime() + timeleft - duration, duration, 1)
           end
