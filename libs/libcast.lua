@@ -290,26 +290,73 @@ end)
 local aimedshot = L["customcast"]["AIMEDSHOT"]
 local multishot = L["customcast"]["MULTISHOT"]
 
+-- qyj 补充，用于计算猎人射击技能施法时间
+libcast.tooltip = CreateFrame("GameTooltip", "pfUIThirdPartyLibcastTooltip", UIParent, "GameTooltipTemplate")
+
+libcast.getRangedWeaponOrignSpeed = function()
+  if not GetInventoryItemLink("player", 18) then return nil end
+
+  libcast.tooltip:SetOwner(UIParent, "ANCHOR_NONE");
+  libcast.tooltip:ClearLines()
+  libcast.tooltip:SetInventoryItem("player", 18)
+  for i=1,10 do
+    local textObj = getglobal(libcast.tooltip:GetName()..'TextRight'..i)
+    if textObj and textObj.GetText then
+      local text = textObj:GetText()
+      if text then
+        local _,_,speed = string.find(text, '速度[^1234567890.]*([1234567890.]+)')
+        if speed then
+          return tonumber(speed)
+        end
+        local _,_,speedEn = string.find(text, 'Speed.*([1234567890.]+)')
+        if speedEn then
+          return tonumber(speedEn)
+        end
+      end
+    end
+  end
+end
+
+libcast.getRangedHaste = function()
+  local originSpeed = libcast.getRangedWeaponOrignSpeed()
+  if originSpeed then
+    local rangedSpeed = UnitRangedDamage("player")
+    if rangedSpeed and rangedSpeed ~= 0 then
+      local ratio = rangedSpeed > originSpeed and 2 or 1
+      return originSpeed * ratio / rangedSpeed, ratio
+    end
+  end
+end
+-- qyj 补充完毕
+
 libcast.customcast = {}
 libcast.customcast[strlower(aimedshot)] = function(begin, duration)
   if begin then
-    local duration = duration or 3000
+    -- local duration = duration or 3000
+    local baseDuration = duration or 3000
 
-    for i=1,32 do
-      if UnitBuff("player", i) == "Interface\\Icons\\Racial_Troll_Berserk" then
-        local berserk = 0.3
-        if((UnitHealth("player")/UnitHealthMax("player")) >= 0.40) then
-          berserk = (1.30 - (UnitHealth("player") / UnitHealthMax("player"))) / 3
-        end
-        duration = duration / (1 + berserk)
-      elseif UnitBuff("player", i) == "Interface\\Icons\\Ability_Hunter_RunningShot" then
-        duration = duration / 1.4
-      elseif UnitBuff("player", i) == "Interface\\Icons\\Ability_Warrior_InnerRage" then
-        duration = duration / 1.3
-      elseif UnitBuff("player", i) == "Interface\\Icons\\Inv_Trinket_Naxxramas04" then
-        duration = duration / 1.2
+    -- for i=1,32 do
+    --   if UnitBuff("player", i) == "Interface\\Icons\\Racial_Troll_Berserk" then
+    --     local berserk = 0.3
+    --     if((UnitHealth("player")/UnitHealthMax("player")) >= 0.40) then
+    --       berserk = (1.30 - (UnitHealth("player") / UnitHealthMax("player"))) / 3
+    --     end
+    --     duration = duration / (1 + berserk)
+    --   elseif UnitBuff("player", i) == "Interface\\Icons\\Ability_Hunter_RunningShot" then
+    --     duration = duration / 1.4
+    --   elseif UnitBuff("player", i) == "Interface\\Icons\\Ability_Warrior_InnerRage" then
+    --     duration = duration / 1.3
+    --   elseif UnitBuff("player", i) == "Interface\\Icons\\Inv_Trinket_Naxxramas04" then
+    --     duration = duration / 1.2
+    --   end
+    -- end
+
+      local haste, ratio = libcast.getRangedHaste()
+      if haste ~= nil then
+        baseDuration = baseDuration / haste
       end
-    end
+
+      local finalDuration = baseDuration + 500 * (ratio or 1)
 
     local _,_, lag = GetNetStats()
     local start = GetTime() + lag/1000
@@ -318,7 +365,7 @@ libcast.customcast[strlower(aimedshot)] = function(begin, duration)
     libcast.db[player].cast = aimedshot
     libcast.db[player].rank = lastrank
     libcast.db[player].start = start
-    libcast.db[player].casttime = duration
+    libcast.db[player].casttime = finalDuration
     libcast.db[player].icon = "Interface\\Icons\\Inv_spear_07"
     libcast.db[player].channel = nil
   else
@@ -334,23 +381,24 @@ end
 
 libcast.customcast[strlower(multishot)] = function(begin, duration)
   if begin then
-    local duration = duration or 500
+    -- local duration = duration or 500
+    local fixedDuration = 500 -- 多重射击固定0.5秒施法
 
-    for i=1,32 do
-      if UnitBuff("player", i) == "Interface\\Icons\\Racial_Troll_Berserk" then
-        local berserk = 0.3
-        if((UnitHealth("player")/UnitHealthMax("player")) >= 0.40) then
-          berserk = (1.30 - (UnitHealth("player") / UnitHealthMax("player"))) / 3
-        end
-        duration = duration / (1 + berserk)
-      elseif UnitBuff("player", i) == "Interface\\Icons\\Ability_Hunter_RunningShot" then
-        duration = duration / 1.4
-      elseif UnitBuff("player", i) == "Interface\\Icons\\Ability_Warrior_InnerRage" then
-        duration = duration / 1.3
-      elseif UnitBuff("player", i) == "Interface\\Icons\\Inv_Trinket_Naxxramas04" then
-        duration = duration / 1.2
-      end
-    end
+    -- for i=1,32 do
+    --   if UnitBuff("player", i) == "Interface\\Icons\\Racial_Troll_Berserk" then
+    --     local berserk = 0.3
+    --     if((UnitHealth("player")/UnitHealthMax("player")) >= 0.40) then
+    --       berserk = (1.30 - (UnitHealth("player") / UnitHealthMax("player"))) / 3
+    --     end
+    --     duration = duration / (1 + berserk)
+    --   elseif UnitBuff("player", i) == "Interface\\Icons\\Ability_Hunter_RunningShot" then
+    --     duration = duration / 1.4
+    --   elseif UnitBuff("player", i) == "Interface\\Icons\\Ability_Warrior_InnerRage" then
+    --     duration = duration / 1.3
+    --   elseif UnitBuff("player", i) == "Interface\\Icons\\Inv_Trinket_Naxxramas04" then
+    --     duration = duration / 1.2
+    --   end
+    -- end
 
     local _,_, lag = GetNetStats()
     local start = GetTime() + lag/1000
@@ -359,7 +407,7 @@ libcast.customcast[strlower(multishot)] = function(begin, duration)
     libcast.db[player].cast = multishot
     libcast.db[player].rank = lastrank
     libcast.db[player].start = start
-    libcast.db[player].casttime = duration
+    libcast.db[player].casttime = fixedDuration
     libcast.db[player].icon = "Interface\\Icons\\Ability_upgrademoonglaive"
     libcast.db[player].channel = nil
   else
@@ -405,7 +453,7 @@ end, true)
 
 hooksecurefunc("UseAction", function(slot, target, button)
   if GetActionText(slot) or not IsCurrentAction(slot) then return end
-  
+
   scanner:SetAction(slot)
   local rawSpellName, rank = scanner:Line(1)
   if not rawSpellName then return end -- ignore if the spell is not found
