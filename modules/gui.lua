@@ -825,8 +825,8 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
         "frFR:French",
         "koKR:Korean",
         "ruRU:Russian",
-        "zhCN:Chinese (simplified; China)",
-        "zhTW:Chinese (traditional; Taiwan)",
+        "zhCN:Chinese (Simplified)",
+        "zhTW:Chinese (Traditional)",
         -- http://wowprogramming.com/docs/api/GetLocale
       },
       ["fonts"] = {
@@ -2241,7 +2241,7 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
       CreateConfig(nil, T["Generate Playerlinks"], C.chat.text, "playerlinks", "checkbox")
       CreateConfig(nil, T["Enable URL Detection"], C.chat.text, "detecturl", "checkbox")
       CreateConfig(nil, T["Enable Class Colors"], C.chat.text, "classcolor", "checkbox")
-      CreateConfig(nil, T["Who Search Unknown Classes"], C.chat.text, "whosearchunknown", "checkbox")
+      CreateConfig(nil, T["Who Search Unknown Classes (|cffffaaaaExperimental|r)"], C.chat.text, "whosearchunknown", "checkbox")
       CreateConfig(nil, T["Colorize Unknown Classes"], C.chat.text, "tintunknown", "checkbox")
       CreateConfig(nil, T["Unknown Class Color"], C.chat.text, "unknowncolor", "color")
       CreateConfig(nil, T["Left Chat Width"], C.chat.left, "width")
