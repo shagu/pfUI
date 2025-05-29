@@ -252,6 +252,29 @@ pfUI:RegisterModule("superwow", "vanilla", function ()
   local supercast = CreateFrame("Frame")
   supercast:RegisterEvent("UNIT_CASTEVENT")
   supercast:SetScript("OnEvent", function()
+    if not supercast.init then
+      -- disable combat parsing events in superwow mode
+      libcast:UnregisterEvent("CHAT_MSG_SPELL_SELF_DAMAGE")
+      libcast:UnregisterEvent("CHAT_MSG_SPELL_HOSTILEPLAYER_DAMAGE")
+      libcast:UnregisterEvent("CHAT_MSG_SPELL_HOSTILEPLAYER_BUFF")
+      libcast:UnregisterEvent("CHAT_MSG_SPELL_FRIENDLYPLAYER_DAMAGE")
+      libcast:UnregisterEvent("CHAT_MSG_SPELL_FRIENDLYPLAYER_BUFF")
+      libcast:UnregisterEvent("CHAT_MSG_SPELL_PERIODIC_HOSTILEPLAYER_BUFFS")
+      libcast:UnregisterEvent("CHAT_MSG_SPELL_PERIODIC_FRIENDLYPLAYER_BUFFS")
+      libcast:UnregisterEvent("CHAT_MSG_SPELL_PERIODIC_HOSTILEPLAYER_DAMAGE")
+      libcast:UnregisterEvent("CHAT_MSG_SPELL_PERIODIC_FRIENDLYPLAYER_DAMAGE")
+      libcast:UnregisterEvent("CHAT_MSG_SPELL_PERIODIC_SELF_DAMAGE")
+      libcast:UnregisterEvent("CHAT_MSG_SPELL_PARTY_DAMAGE")
+      libcast:UnregisterEvent("CHAT_MSG_SPELL_PARTY_BUFF")
+      libcast:UnregisterEvent("CHAT_MSG_SPELL_PERIODIC_PARTY_DAMAGE")
+      libcast:UnregisterEvent("CHAT_MSG_SPELL_PERIODIC_PARTY_BUFFS")
+      libcast:UnregisterEvent("CHAT_MSG_SPELL_PERIODIC_CREATURE_DAMAGE")
+      libcast:UnregisterEvent("CHAT_MSG_SPELL_PERIODIC_CREATURE_BUFFS")
+      libcast:UnregisterEvent("CHAT_MSG_SPELL_CREATURE_VS_CREATURE_DAMAGE")
+      libcast:UnregisterEvent("CHAT_MSG_SPELL_CREATURE_VS_CREATURE_BUFF")
+      supercast.init = true
+    end
+
     if arg3 == "START" or arg3 == "CAST" or arg3 == "CHANNEL" then
       -- human readable argument list
       local guid = arg1
