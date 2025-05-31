@@ -26,10 +26,13 @@ local scanner = libtipscan:GetScanner("libdebuff")
 local _, class = UnitClass("player")
 local lastspell
 
+libdebuff.objects = {}
+libdebuff.pending = {}
+
 function libdebuff:GetDuration(effect, rank)
   if L["debuffs"][effect] then
-    local rank = rank and tonumber((string.gsub(rank, RANK, ""))) or 0
-    local rank = L["debuffs"][effect][rank] and rank or libdebuff:GetMaxRank(effect)
+    rank = rank and tonumber((string.gsub(rank, RANK, ""))) or 0
+    rank = L["debuffs"][effect][rank] and rank or libdebuff:GetMaxRank(effect)
     local duration = L["debuffs"][effect][rank]
 
     if effect == L["dyndebuffs"]["Rupture"] then
@@ -123,6 +126,7 @@ end
 
 function libdebuff:AddEffect(unit, unitlevel, effect, duration, caster)
   if not unit or not effect then return end
+  effect = string.gsub(effect, " %(%d+%)", "") -- remove stack indication from effect name in order to display correct expiration time for things like Fire Vulnerability
   unitlevel = unitlevel or 0
   if not libdebuff.objects[unit] then libdebuff.objects[unit] = {} end
   if not libdebuff.objects[unit][unitlevel] then libdebuff.objects[unit][unitlevel] = {} end
@@ -145,6 +149,8 @@ libdebuff:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_HOSTILEPLAYER_DAMAGE")
 libdebuff:RegisterEvent("CHAT_MSG_SPELL_PERIODIC_CREATURE_DAMAGE")
 libdebuff:RegisterEvent("CHAT_MSG_SPELL_FAILED_LOCALPLAYER")
 libdebuff:RegisterEvent("CHAT_MSG_SPELL_SELF_DAMAGE")
+libdebuff:RegisterEvent("CHAT_MSG_SPELL_PARTY_DAMAGE")
+libdebuff:RegisterEvent("CHAT_MSG_SPELL_FRIENDLYPLAYER_DAMAGE")
 libdebuff:RegisterEvent("PLAYER_TARGET_CHANGED")
 libdebuff:RegisterEvent("SPELLCAST_STOP")
 libdebuff:RegisterEvent("UNIT_AURA")
@@ -159,9 +165,6 @@ libdebuff.rp = { SPELLIMMUNESELFOTHER, IMMUNEDAMAGECLASSSELFOTHER,
   SPELLMISSSELFOTHER, SPELLRESISTSELFOTHER, SPELLEVADEDSELFOTHER,
   SPELLDODGEDSELFOTHER, SPELLDEFLECTEDSELFOTHER, SPELLREFLECTSELFOTHER,
   SPELLPARRIEDSELFOTHER, SPELLLOGABSORBSELFOTHER, SPELLFAILCASTSELF }
-
-libdebuff.objects = {}
-libdebuff.pending = {}
 
 -- Gather Data by Events
 libdebuff:SetScript("OnEvent", function()
@@ -213,6 +216,20 @@ libdebuff:SetScript("OnEvent", function()
 
   -- Update Pending Spells
   elseif event == "CHAT_MSG_SPELL_FAILED_LOCALPLAYER" or event == "CHAT_MSG_SPELL_SELF_DAMAGE" then
+    -- update fire vulnerability
+    if arg1 then
+      spell, unit = cmatch(arg1, SPELLLOGSELFOTHER)
+
+      if not unit then
+        spell, unit = cmatch(arg1, SPELLLOGCRITSELFOTHER)
+      end
+
+      if unit and spell == "Scorch" then
+        local unitlevel = UnitName("target") == unit and UnitLevel("target") or 0
+        libdebuff:AddEffect(unit, unitlevel, "Fire Vulnerability")
+      end
+    end
+      
     -- Remove pending spell
     for _, msg in pairs(libdebuff.rp) do
       local effect = cmatch(arg1, msg)
@@ -224,6 +241,20 @@ libdebuff:SetScript("OnEvent", function()
         -- late removal of debuffs (e.g hunter arrows as they hit late)
         libdebuff:RevertLastAction()
         return
+      end
+    end
+  elseif event == "CHAT_MSG_SPELL_FRIENDLYPLAYER_DAMAGE" or event == "CHAT_MSG_SPELL_PARTY_DAMAGE" then
+    -- update fire vulnerability
+    if arg1 then
+      _, spell, unit = cmatch(arg1, SPELLLOGOTHEROTHER)
+
+      if not unit then
+        _, spell, unit = cmatch(arg1, SPELLLOGCRITOTHEROTHER)
+      end
+
+      if unit and spell == "Scorch" then
+        local unitlevel = UnitName("target") == unit and UnitLevel("target") or 0
+        libdebuff:AddEffect(unit, unitlevel, "Fire Vulnerability")
       end
     end
   elseif event == "SPELLCAST_STOP" then
