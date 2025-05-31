@@ -1237,8 +1237,12 @@ pfUI:RegisterModule("thirdparty-vanilla", "vanilla", function()
 
     local buttons = {
       xpsp3_button_close,
+      xpsp3_button_resetCamera,
       xpsp3_button_cameraHeight_raise,
       xpsp3_button_cameraHeight_lower,
+      xpsp3_button_cameraHorizontalDisplacement_leftPlayer,
+      xpsp3_button_cameraHorizontalDisplacement_rightPlayer,
+
     }
     for _, button in pairs(buttons) do
       SkinButton(button)
