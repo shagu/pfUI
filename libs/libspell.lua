@@ -46,6 +46,7 @@ end
 -- return:      [number],[string]   spell index and spellbook id
 local spellindex = {}
 function libspell.GetSpellIndex(name, rank)
+  if not name then return end
   name = string.lower(name)
   local cache = spellindex[name..(rank and ("("..rank..")") or "")]
   if cache then return cache[1], cache[2] end
@@ -120,7 +121,7 @@ function libspell.GetSpellInfo(index, bookType)
     local _, sec = scanner:Find(gsub(SPELL_CAST_TIME_SEC, "%%.3g", "%(.+%)"), false)
     local _, min = scanner:Find(gsub(SPELL_CAST_TIME_MIN, "%%.3g", "%(.+%)"), false)
     local _, range = scanner:Find(gsub(SPELL_RANGE, "%%s", "%(.+%)"), false)
-    
+
     castingTime = (tonumber(sec) or tonumber(min) or 0) * 1000
     if range then
       local _, _, min, max = string.find(range, "(.+)-(.+)")
