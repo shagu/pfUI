@@ -247,7 +247,7 @@ pfUI:RegisterModule("turtle-wow", "vanilla", function ()
   end
 
   -- add skin to twow's talent inspect frame
-  if not (pfUI_config["disabled"] and pfUI_config["disabled"]["skin_Inspect"]  == "1") then
+  if pfUI.skin["Inspect"] and pfUI_config["disabled"]["skin_Inspect"] ~= "1" then
     local initialized = false
 
     HookAddonOrVariable("Blizzard_InspectUI", function()
