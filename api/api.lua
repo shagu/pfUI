@@ -1079,10 +1079,10 @@ function pfUI.api.CreateBackdropShadow(f)
   f.backdrop_shadow = CreateFrame("Frame", nil, anchor)
   f.backdrop_shadow:SetFrameStrata("BACKGROUND")
   f.backdrop_shadow:SetFrameLevel(1)
-  f.backdrop_shadow:SetPoint("TOPLEFT", anchor, "TOPLEFT", -7, 7)
-  f.backdrop_shadow:SetPoint("BOTTOMRIGHT", anchor, "BOTTOMRIGHT", 7, -7)
+  f.backdrop_shadow:SetPoint("TOPLEFT", anchor, "TOPLEFT", -5, 5)
+  f.backdrop_shadow:SetPoint("BOTTOMRIGHT", anchor, "BOTTOMRIGHT", 5, -5)
   f.backdrop_shadow:SetBackdrop(pfUI.backdrop_shadow)
-  f.backdrop_shadow:SetBackdropBorderColor(0,0,0,tonumber(pfUI_config.appearance.border.shadow_intensity))
+  f.backdrop_shadow:SetBackdropBorderColor(0, 0, 0, tonumber(pfUI_config.appearance.border.shadow_intensity))
 end
 
 -- [ Bar Layout Options ] --
