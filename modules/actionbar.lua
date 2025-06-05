@@ -1439,11 +1439,11 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
         else
           bars[1].mergedBackdrop:Hide()
 
-          if C.bars.bar1.background == "1" then
-            bars[i].backdrop:Show()
+          if C.bars.bar1.background == "1" and bars[1].backdrop then
+            bars[1].backdrop:Show()
           end
 
-          if C.bars.bar6.background == "1" then
+          if C.bars.bar6.background == "1" and bars[6].backdrop then
             bars[6].backdrop:Show()
           end
         end
