@@ -58,7 +58,7 @@ pfUI:RegisterModule("cooldown", "vanilla:tbc", function ()
   local function pfCreateCoolDown(cooldown, start, duration)
     cooldown.pfCooldownText = CreateFrame("Frame", "pfCooldownFrame", cooldown:GetParent())
     cooldown.pfCooldownText:SetAllPoints(cooldown)
-    cooldown.pfCooldownText:SetFrameLevel(cooldown:GetParent():GetFrameLevel() + 1)
+    cooldown.pfCooldownText:SetFrameLevel(cooldown:GetParent():GetFrameLevel() + 2)
     cooldown.pfCooldownText.text = cooldown.pfCooldownText:CreateFontString("pfCooldownFrameText", "OVERLAY")
 
     if not cooldown.pfCooldownType then
