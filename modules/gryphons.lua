@@ -26,6 +26,7 @@ pfUI:RegisterModule("gryphons", "vanilla:tbc", function ()
       frame:SetWidth(size)
       frame:SetHeight(size)
       frame:SetPoint(relative, anchor, relative, (position == "right" and -1 or 1) * offset_h, offset_v)
+      frame:SetFrameLevel(128)
 
       frame.texture = frame.texture or frame:CreateTexture(nil, "OVERLAY")
       frame.texture:SetTexture(texture)
