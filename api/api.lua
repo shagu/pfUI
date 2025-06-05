@@ -1047,7 +1047,7 @@ function pfUI.api.CreateBackdrop(f, inset, legacy, transp, backdropSetting)
     if blizz then
       if not f.backdrop_border then
         local border = CreateFrame("Frame", nil, f)
-        border:SetFrameLevel(level + 1)
+        border:SetFrameLevel(level + 2)
         f.backdrop_border = border
 
         local hookSetBackdropBorderColor = f.backdrop.SetBackdropBorderColor
