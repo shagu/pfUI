@@ -146,12 +146,22 @@ pfUI:RegisterModule("turtle-wow", "vanilla", function ()
         if C.global.twentyfour == "0" then
           local zn, sn = " AM", " AM"
 
-          if zh > 12 then
+          if zh == 0 then
+            zh = 12
+            zn = " AM"
+          elseif zh == 12 then
+            zn = " PM"
+          elseif zh > 12 then
             zh = zh - 12
             zn = " PM"
           end
 
-          if sh > 12 then
+          if sh == 0 then
+            sh = 12
+            sn = " AM"
+          elseif sh == 12 then
+            sn = " PM"
+          elseif sh > 12 then
             sh = sh - 12
             sn = " PM"
           end
