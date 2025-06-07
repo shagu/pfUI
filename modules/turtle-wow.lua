@@ -148,7 +148,6 @@ pfUI:RegisterModule("turtle-wow", "vanilla", function ()
 
           if zh == 0 then
             zh = 12
-            zn = " AM"
           elseif zh == 12 then
             zn = " PM"
           elseif zh > 12 then
@@ -158,7 +157,6 @@ pfUI:RegisterModule("turtle-wow", "vanilla", function ()
 
           if sh == 0 then
             sh = 12
-            sn = " AM"
           elseif sh == 12 then
             sn = " PM"
           elseif sh > 12 then

@@ -17,7 +17,6 @@ pfUI:RegisterModule("panel", "vanilla:tbc", function()
         local servertime
         local time
         if C.global.twentyfour == "0" then
-          noon = " AM"
           if h == 0 then
             h = 12
           elseif h == 12 then
@@ -74,7 +73,6 @@ pfUI:RegisterModule("panel", "vanilla:tbc", function()
           if C.global.servertime == "1" then
             if h == 0 then
               h = 12
-              noon = "AM"
             elseif h == 12 then
               noon = "PM"
             elseif h > 12 then
