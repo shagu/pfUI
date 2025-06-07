@@ -127,16 +127,16 @@ pfUI:RegisterModule("chat", "vanilla:tbc", function ()
       ["fm"]="%s.%s.%s"},
   }
 
-  pfUI.chat.URLFuncs = {
-    ["WWW"] = function(a1,a2,a3) return pfUI.chat:FormatLink(pfUI.chat.URLPattern.WWW.fm,a1,a2,a3) end,
-    ["PROTOCOL"] = function(a1,a2) return pfUI.chat:FormatLink(pfUI.chat.URLPattern.PROTOCOL.fm,a1,a2) end,
-    ["EMAIL"] = function(a1,a2,a3,a4) return pfUI.chat:FormatLink(pfUI.chat.URLPattern.EMAIL.fm,a1,a2,a3,a4) end,
-    ["PORTIP"] = function(a1,a2,a3,a4,a5) return pfUI.chat:FormatLink(pfUI.chat.URLPattern.PORTIP.fm,a1,a2,a3,a4,a5) end,
-    ["IP"] = function(a1,a2,a3,a4) return pfUI.chat:FormatLink(pfUI.chat.URLPattern.IP.fm,a1,a2,a3,a4) end,
-    ["SHORTURL"] = function(a1,a2,a3) return pfUI.chat:FormatLink(pfUI.chat.URLPattern.SHORTURL.fm,a1,a2,a3) end,
-    ["URLIP"] = function(a1,a2,a3,a4) return pfUI.chat:FormatLink(pfUI.chat.URLPattern.URLIP.fm,a1,a2,a3,a4) end,
-    ["URL"] = function(a1,a2,a3) return pfUI.chat:FormatLink(pfUI.chat.URLPattern.URL.fm,a1,a2,a3) end,
-  }
+  pfUI.chat.URLFuncs = (function(urlPatternsSnapshot, pfuiChatSnapshot)
+    local funcs = {}
+    for patternName, _ in pairs(urlPatternsSnapshot) do
+      local patternNameSnapshot = patternName -- must snapshot
+      funcs[patternNameSnapshot] = function(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10)
+        return pfuiChatSnapshot:FormatLink(urlPatternsSnapshot[patternNameSnapshot].fm, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10)
+      end
+    end
+    return funcs
+  end)(pfUI.chat.URLPattern, pfUI.chat)
 
   -- url copy dialog
   function pfUI.chat:FormatLink(formatter,a1,a2,a3,a4,a5,a6,a7,a8,a9,a10)
