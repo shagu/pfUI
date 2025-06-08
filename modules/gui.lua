@@ -1046,6 +1046,17 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
         "powermiss:" .. T["Mana - Missing"],
         "powerminmax:" .. T["Mana - Min/Max"],
       },
+      ["uf_raidiconalign"] = {
+        "LEFT:" .. "Left",
+        "RIGHT:" .. "Right",
+        "TOP:" .. "Top",
+        "BOTTOM:" .. "Bottom",
+        "CENTER:" .. "Center",
+        "BOTTOMLEFT:" .. "Bottom Left",
+        "BOTTOMRIGHT:" .. "Bottom Right",
+        "TOPLEFT:" .. "Top Left",
+        "TOPRIGHT:" .. "Top Right",
+      },
       ["hpformat"] = {
         "percent:" .. T["Percent"],
         "cur:" .. T["Current HP"],
@@ -1737,6 +1748,9 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
           CreateConfig(U[c], T["Happiness Icon Size"], C.unitframes[c], "happinesssize")
         end
         CreateConfig(U[c], T["Show Raid Mark"], C.unitframes[c], "raidicon", "checkbox")
+        CreateConfig(U[c], T["Show Raid Mark"], C.unitframes[c], "raidiconalign", "dropdown", pfUI.gui.dropdowns.uf_raidiconalign)
+        CreateConfig(U[c], T["Raid Mark X-Offset"], C.unitframes[c], "raidiconoffx")
+        CreateConfig(U[c], T["Raid Mark Y-Offset"], C.unitframes[c], "raidiconoffy")
         CreateConfig(U[c], T["Raid Mark Size"], C.unitframes[c], "raidiconsize")
         CreateConfig(U[c], T["Heal Color"], C.unitframes[c], "healcolor", "color")
         CreateConfig(U[c], T["Display Overheal"], C.unitframes[c], "overhealperc", "dropdown", pfUI.gui.dropdowns.uf_overheal)
