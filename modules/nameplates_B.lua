@@ -514,10 +514,10 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     c.STUN.r, c.STUN.g, c.STUN.b, c.STUN.a = GetStringColor(C.nameplates.combatstun)
 
     -- Get name offset values from config
-    local nameOffsetX = tonumber(C.nameplates.nameoffsetx) or 0
-    local nameOffsetY = tonumber(C.nameplates.nameoffsety) or 0
-    local levelOffsetX = tonumber(C.nameplates.leveloffsetx) or 0
-    local levelOffsetY = tonumber(C.nameplates.leveloffsety) or 0
+    local nameOffsetX = tonumber(C.nameplates.nameoffsetx)
+    local nameOffsetY = tonumber(C.nameplates.nameoffsety)
+    local levelOffsetX = tonumber(C.nameplates.leveloffsetx)
+    local levelOffsetY = tonumber(C.nameplates.leveloffsety)
 
     nameplate:SetWidth(plate_width)
     nameplate:SetHeight(plate_height)
@@ -534,16 +534,14 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     nameplate.name:SetFont(font, font_size, font_style)
     nameplate.name:SetPoint("TOP", nameplate.health, "TOP", nameOffsetX, nameOffsetY)
 
-    DEFAULT_CHAT_FRAME:AddMessage("pfUI: Setting level offset to " .. levelOffsetX .. ", " .. levelOffsetY)
-    nameplate.level:SetFont(font, font_size, font_style)
-    nameplate.level:ClearAllPoints()
-    nameplate.level:SetPoint("TOP", nameplate.health, "LEFT", levelOffsetX, levelOffsetY)
     CreateBackdrop(nameplate.health, default_border)
 
     nameplate.health.text:SetFont(font, font_size - 2, "OUTLINE")
     nameplate.health.text:SetJustifyH(C.nameplates.hptextpos)
 
     nameplate.guild:SetFont(font, font_size, font_style)
+    nameplate.level:SetPoint("RIGHT", nameplate.health, "LEFT", levelOffsetX, levelOffsetY)
+
 
     nameplate.glow:SetWidth(C.nameplates.width + 60)
     nameplate.glow:SetHeight(C.nameplates.heighthealth + 30)
@@ -551,7 +549,10 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
 
     nameplate.raidicon:ClearAllPoints()
     nameplate.raidicon:SetPoint(C.nameplates.raidiconpos, nameplate.health, C.nameplates.raidiconpos, C.nameplates.raidiconoffx, C.nameplates.raidiconoffy)
+    nameplate.level:SetFont(font, font_size, font_style)
+    DEFAULT_CHAT_FRAME:AddMessage("Level offset: "..tostring(levelOffsetX).." "..tostring(levelOffsetY))
 
+    nameplate.level:SetPoint("RIGHT", nameplate.health, "LEFT", levelOffsetX, levelOffsetY)
 
     nameplate.raidicon:SetWidth(C.nameplates.raidiconsize)
     nameplate.raidicon:SetHeight(C.nameplates.raidiconsize)
@@ -690,9 +691,8 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
       plate.guild:Hide()
       plate.totem:Show()
     elseif HidePlate(unittype, name, (hpmax-hp == hpmin), target) then
-      DEFAULT_CHAT_FRAME:AddMessage("pfUI Hideplate: Setting level offset to -5, 0")
+      plate.level:SetPoint("RIGHT", plate.name, "LEFT", -3, 0)
       plate.name:SetParent(plate)
-      plate.level:SetParent(plate)
       plate.guild:SetPoint("BOTTOM", plate.name, "BOTTOM", -2, -(font_size + 2))
 
       plate.level:Show()
@@ -705,8 +705,8 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
       end
       plate.totem:Hide()
     else
+      plate.level:SetPoint("RIGHT", plate.health, "LEFT", -5, 0)
       plate.name:SetParent(plate.health)
-      plate.level:SetParent(plate.health)
       plate.guild:SetPoint("BOTTOM", plate.health, "BOTTOM", 0, -(font_size + 4))
 
       plate.level:Show()

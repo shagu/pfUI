@@ -1560,7 +1560,7 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
       CreateConfig(U["infight"], T["Enable Low Health Glow Effects On Screen Edges"], C.appearance.infight, "health", "checkbox")
       CreateConfig(U["infight"], T["Screen Edge Glow Intensity"], C.appearance.infight, "intensity", "dropdown", pfUI.gui.dropdowns.glowintensity)
     end)
-
+    	
     CreateGUIEntry(T["Settings"], T["Cooldown"], function()
       CreateConfig(U["buff"], T["Show Milliseconds When Timer Runs Out"], C.appearance.cd, "milliseconds", "checkbox")
       CreateConfig(nil, T["Cooldown Color (Less than 3 Sec)"], C.appearance.cd, "lowcolor", "color")
@@ -2294,6 +2294,14 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
       CreateConfig(U["nameplates"], T["Font Style"], C.nameplates.name, "fontstyle", "dropdown", pfUI.gui.dropdowns.fontstyle)
       CreateConfig(U["nameplates"], T["Replace Totems With Icons"], C.nameplates, "totemicons", "checkbox")
       CreateConfig(U["nameplates"], T["Show Guild Name"], C.nameplates, "showguildname", "checkbox")
+
+      CreateConfig(nil, T["Name Position"], nil, nil, "header")
+      CreateConfig(U["nameplates"], T["Name X-Offset"], C.nameplates, "nameoffsetx")
+      CreateConfig(U["nameplates"], T["Name Y-Offset"], C.nameplates, "nameoffsety")
+
+      CreateConfig(nil, T["Level Position"], nil, nil, "header")
+      CreateConfig(U["nameplates"], T["Level X-Offset"], C.nameplates, "leveloffsetx")
+      CreateConfig(U["nameplates"], T["Level Y-Offset"], C.nameplates, "leveloffsety")
 
       CreateConfig(nil, T["Raid Icon"], nil, nil, "header")
       CreateConfig(U["nameplates"], T["Raid Icon Position"], C.nameplates, "raidiconpos", "dropdown", pfUI.gui.dropdowns.positions)
