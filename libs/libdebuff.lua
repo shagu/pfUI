@@ -266,25 +266,19 @@ function libdebuff:UnitDebuff(unit, id)
     effect = scanner:Line(1) or ""
   end
 
-  if libdebuff.objects[unitname] and libdebuff.objects[unitname][unitlevel] and libdebuff.objects[unitname][unitlevel][effect] then
-    -- clean up cache
-    if libdebuff.objects[unitname][unitlevel][effect].duration and libdebuff.objects[unitname][unitlevel][effect].duration + libdebuff.objects[unitname][unitlevel][effect].start < GetTime() then
-      libdebuff.objects[unitname][unitlevel][effect] = nil
-    else
-      duration = libdebuff.objects[unitname][unitlevel][effect].duration
-      timeleft = duration + libdebuff.objects[unitname][unitlevel][effect].start - GetTime()
-      caster = libdebuff.objects[unitname][unitlevel][effect].caster
-    end
+  -- read level based debuff table
+  local data = libdebuff.objects[unitname] and libdebuff.objects[unitname][unitlevel]
+  data = data or libdebuff.objects[unitname] and libdebuff.objects[unitname][0]
 
-  -- no level data
-  elseif libdebuff.objects[unitname] and libdebuff.objects[unitname][0] and libdebuff.objects[unitname][0][effect] then
-    -- clean up cache
-    if libdebuff.objects[unitname][0][effect].duration and libdebuff.objects[unitname][0][effect].duration + libdebuff.objects[unitname][0][effect].start < GetTime() then
-      libdebuff.objects[unitname][0][effect] = nil
+  if data and data[effect] then
+    if data[effect].duration and data[effect].start and data[effect].duration + data[effect].start > GetTime() then
+      -- read valid debuff data
+      duration = data[effect].duration
+      timeleft = duration + data[effect].start - GetTime()
+      caster = data[effect].caster
     else
-      duration = libdebuff.objects[unitname][0][effect].duration
-      timeleft = duration + libdebuff.objects[unitname][0][effect].start - GetTime()
-      caster = libdebuff.objects[unitname][0][effect].caster
+      -- clean up invalid values
+      data[effect] = nil
     end
   end
 
