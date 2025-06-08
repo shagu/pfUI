@@ -15,10 +15,10 @@ pfUI:RegisterModule("uf_tukui", "vanilla:tbc", function ()
     -- adjust layout
     pfUI.uf.player:UpdateFrameSize()
     pfUI.uf.player:SetFrameStrata("LOW")
-    pfUI.uf.player:SetHeight(pfUI.uf.player:GetHeight() + 2*default_border + (C.global.font_size * 1.5) + pspacing)
+    pfUI.uf.player:SetHeight(pfUI.uf.player:GetHeight() + 2*default_border + (C.global.font_size * 1.25) + pspacing)
 
     pfUI.uf.player.caption = pfUI.uf.player.caption or CreateFrame("Frame", "pfPlayerCaption", pfUI.uf.player)
-    pfUI.uf.player.caption:SetHeight(C.global.font_size * 1.5)
+    pfUI.uf.player.caption:SetHeight(C.global.font_size * 1.25)
     pfUI.uf.player.caption:SetPoint("BOTTOMRIGHT",pfUI.uf.player, "BOTTOMRIGHT",0, 0)
     pfUI.uf.player.caption:SetPoint("BOTTOMLEFT",pfUI.uf.player, "BOTTOMLEFT",0, 0)
 
@@ -35,6 +35,7 @@ pfUI:RegisterModule("uf_tukui", "vanilla:tbc", function ()
     pfUI.uf.player.hpRightText:SetPoint("RIGHT",pfUI.uf.player.caption, "RIGHT", -default_border, 0)
 
     pfUI.castbar.player:SetAllPoints(pfUI.uf.player.caption)
+    pfUI.castbar.player:SetHeight(pfUI.uf.player.caption:GetHeight())
     UpdateMovable(pfUI.castbar.player, true)
     CreateBackdrop(pfUI.uf.player.caption, default_border)
     if pfUI.castbar.player.bar.backdrop_shadow then
@@ -56,10 +57,10 @@ pfUI:RegisterModule("uf_tukui", "vanilla:tbc", function ()
     -- adjust layout
     pfUI.uf.target:UpdateFrameSize()
     pfUI.uf.target:SetFrameStrata("LOW")
-    pfUI.uf.target:SetHeight(pfUI.uf.target:GetHeight() + 2*default_border + (C.global.font_size * 1.5) + tspacing)
+    pfUI.uf.target:SetHeight(pfUI.uf.target:GetHeight() + 2*default_border + (C.global.font_size * 1.25) + tspacing)
 
     pfUI.uf.target.caption = pfUI.uf.target.caption or CreateFrame("Frame", "pfTargetCaption", pfUI.uf.target)
-    pfUI.uf.target.caption:SetHeight(C.global.font_size * 1.5)
+    pfUI.uf.target.caption:SetHeight(C.global.font_size * 1.25)
     pfUI.uf.target.caption:SetPoint("BOTTOMRIGHT",pfUI.uf.target,"BOTTOMRIGHT", 0, 0)
     pfUI.uf.target.caption:SetPoint("BOTTOMLEFT",pfUI.uf.target,"BOTTOMLEFT", 0, 0)
 
@@ -76,6 +77,7 @@ pfUI:RegisterModule("uf_tukui", "vanilla:tbc", function ()
     pfUI.uf.target.hpRightText:SetPoint("RIGHT",pfUI.uf.target.caption, "RIGHT", -default_border, 0)
 
     pfUI.castbar.target:SetAllPoints(pfUI.uf.target.caption)
+    pfUI.castbar.target:SetHeight(pfUI.uf.target.caption:GetHeight())
     UpdateMovable(pfUI.castbar.target, true)
     CreateBackdrop(pfUI.uf.target.caption, default_border)
     if pfUI.castbar.target.bar.backdrop_shadow then

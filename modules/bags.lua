@@ -457,15 +457,13 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
     ContainerFrame_UpdateCooldown(bag, pfUI.bags[bag].slots[slot].frame)
 
     -- detect backdrop border color
-    if quality and quality > tonumber(C.appearance.bags.borderlimit) then
+    if texture and itype == "Quest" then
+      pfUI.bags[bag].slots[slot].frame.backdrop:SetBackdropBorderColor(1, .8, .2, .8)
+      pfUI.bags[bag].slots[slot].frame.qtext:SetText("?")
+    elseif texture and quality and quality > tonumber(C.appearance.bags.borderlimit) then
       pfUI.bags[bag].slots[slot].frame.backdrop:SetBackdropBorderColor(GetItemQualityColor(quality))
-    elseif texture then
-      if itype == "Quest" then
-        pfUI.bags[bag].slots[slot].frame.backdrop:SetBackdropBorderColor(1, .8, .2, .8)
-        pfUI.bags[bag].slots[slot].frame.qtext:SetText("?")
-      else
-        pfUI.bags[bag].slots[slot].frame.backdrop:SetBackdropBorderColor(.5,.5,.5,1)
-      end
+    elseif texture and quality then
+      pfUI.bags[bag].slots[slot].frame.backdrop:SetBackdropBorderColor(.5,.5,.5,1)
     else
       local bagtype = GetBagFamily(bag)
 
