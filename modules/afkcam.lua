@@ -99,7 +99,11 @@ pfUI:RegisterModule("afkcam", "vanilla:tbc", function ()
     local time = ""
     if C.global.twentyfour == "0" then
       if C.global.servertime == "1" then
-        if h > 12 then
+        if h == 0 then
+          h = 12
+        elseif h == 12 then
+          noon = "PM"
+        elseif h > 12 then
           h = h - 12
           noon = "PM"
         end
