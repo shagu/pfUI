@@ -694,7 +694,7 @@ function pfUI.uf:UpdateConfig()
 
   f.raidIcon:SetWidth(f.config.raidiconsize)
   f.raidIcon:SetHeight(f.config.raidiconsize)
-  f.raidIcon:SetPoint("TOP", f, "TOP", 0, 6)
+  f.raidIcon:SetPoint("CENTER", f, f.config.raidiconalign, f.config.raidiconoffx, f.config.raidiconoffy)
   f.raidIcon.texture:SetTexture(pfUI.media["img:raidicons"])
   f.raidIcon.texture:SetAllPoints(f.raidIcon)
   f.raidIcon:Hide()
