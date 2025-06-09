@@ -2602,12 +2602,10 @@ function pfUI.uf.GetColor(self, preset)
   end
 
   -- pastel
-  if C.unitframes.pastel == "1" then
-    if not (preset == "unit" and config["classcolor"] == "1" and UnitIsPlayer(unitstr)) then
-      r = ( r + .75 ) * .5
-      g = ( g + .75 ) * .5
-      b = ( b + .75 ) * .5
-    end
+  if C.unitframes.pastel == "1" and not (config["classcolor"] == "1" and UnitIsPlayer(unitstr)) then
+    r = ( r + .75 ) * .5
+    g = ( g + .75 ) * .5
+    b = ( b + .75 ) * .5
   end
 
   return rgbhex(r,g,b)
