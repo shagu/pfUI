@@ -35,8 +35,13 @@ pfUI:RegisterModule("uf_tukui", "vanilla:tbc", function ()
     pfUI.uf.player.hpRightText:SetPoint("RIGHT",pfUI.uf.player.caption, "RIGHT", -default_border, 0)
 
     pfUI.castbar.player:SetAllPoints(pfUI.uf.player.caption)
-    pfUI.castbar.player:SetHeight(pfUI.uf.player.caption:GetHeight())
     UpdateMovable(pfUI.castbar.player, true)
+
+    local _, anchor = pfUI.castbar.player:GetPoint()
+    if anchor and anchor == pfUI.uf.player.caption then
+      pfUI.castbar.player:SetHeight(pfUI.uf.player.caption:GetHeight())
+    end
+
     CreateBackdrop(pfUI.uf.player.caption, default_border)
     if pfUI.castbar.player.bar.backdrop_shadow then
       pfUI.castbar.player.bar.backdrop_shadow:Hide()
@@ -77,8 +82,13 @@ pfUI:RegisterModule("uf_tukui", "vanilla:tbc", function ()
     pfUI.uf.target.hpRightText:SetPoint("RIGHT",pfUI.uf.target.caption, "RIGHT", -default_border, 0)
 
     pfUI.castbar.target:SetAllPoints(pfUI.uf.target.caption)
-    pfUI.castbar.target:SetHeight(pfUI.uf.target.caption:GetHeight())
     UpdateMovable(pfUI.castbar.target, true)
+
+    local _, anchor = pfUI.castbar.target:GetPoint()
+    if anchor and anchor == pfUI.uf.target.caption then
+      pfUI.castbar.target:SetHeight(pfUI.uf.target.caption:GetHeight())
+    end
+
     CreateBackdrop(pfUI.uf.target.caption, default_border)
     if pfUI.castbar.target.bar.backdrop_shadow then
       pfUI.castbar.target.bar.backdrop_shadow:Hide()
