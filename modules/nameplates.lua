@@ -550,8 +550,6 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
 
     nameplate.raidicon:ClearAllPoints()
     nameplate.raidicon:SetPoint(C.nameplates.raidiconpos, nameplate.health, C.nameplates.raidiconpos, C.nameplates.raidiconoffx, C.nameplates.raidiconoffy)
-
-
     nameplate.raidicon:SetWidth(C.nameplates.raidiconsize)
     nameplate.raidicon:SetHeight(C.nameplates.raidiconsize)
 
