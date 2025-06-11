@@ -395,7 +395,6 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     nameplate.health.text:SetTextColor(1,1,1,1)
 
     nameplate.name = nameplate:CreateFontString(nil, "OVERLAY")
-    nameplate.name:SetPoint("TOP", nameplate, "TOP", 0, 0)
 
     nameplate.glow = nameplate:CreateTexture(nil, "BACKGROUND")
     nameplate.glow:SetPoint("CENTER", nameplate.health, "CENTER", 0, 0)
@@ -406,7 +405,6 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     nameplate.guild:SetPoint("BOTTOM", nameplate.health, "BOTTOM", 0, 0)
 
     nameplate.level = nameplate:CreateFontString(nil, "OVERLAY")
-    nameplate.level:SetPoint("RIGHT", nameplate.health, "LEFT", -3, 0)
 
     nameplate.raidicon:SetParent(nameplate.health)
     nameplate.raidicon:SetDrawLayer("OVERLAY")
@@ -515,19 +513,30 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     c.NOTHREAT.r, c.NOTHREAT.g, c.NOTHREAT.b, c.NOTHREAT.a = GetStringColor(C.nameplates.combatnothreat)
     c.STUN.r, c.STUN.g, c.STUN.b, c.STUN.a = GetStringColor(C.nameplates.combatstun)
 
+    -- Get name offset values from config
+    local nameOffsetX = tonumber(C.nameplates.nameoffsetx) or 0
+    local nameOffsetY = tonumber(C.nameplates.nameoffsety) or 0
+    local levelOffsetX = tonumber(C.nameplates.leveloffsetx) or 0
+    local levelOffsetY = tonumber(C.nameplates.leveloffsety) or 0
+
     nameplate:SetWidth(plate_width)
     nameplate:SetHeight(plate_height)
     nameplate:SetPoint("TOP", parent, "TOP", 0, 0)
 
-    nameplate.name:SetFont(font, font_size, font_style)
 
     nameplate.health:SetOrientation(orientation)
-    nameplate.health:SetPoint("TOP", nameplate.name, "BOTTOM", 0, healthoffset)
+    nameplate.health:SetPoint("TOP", nameplate, "BOTTOM", 0, healthoffset)
     nameplate.health:SetStatusBarTexture(hptexture)
     nameplate.health:SetWidth(C.nameplates.width)
     nameplate.health:SetHeight(C.nameplates.heighthealth)
     nameplate.health.hlr, nameplate.health.hlg, nameplate.health.hlb, nameplate.health.hla = hlr, hlg, hlb, hla
 
+    nameplate.name:SetFont(font, font_size, font_style)
+    nameplate.name:SetPoint("TOP", nameplate.health, "TOP", nameOffsetX, nameOffsetY)
+
+    nameplate.level:SetFont(font, font_size, font_style)
+    nameplate.level:ClearAllPoints()
+    nameplate.level:SetPoint("TOP", nameplate.health, "LEFT", levelOffsetX, levelOffsetY)
     CreateBackdrop(nameplate.health, default_border)
 
     nameplate.health.text:SetFont(font, font_size - 2, "OUTLINE")
@@ -541,7 +550,6 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
 
     nameplate.raidicon:ClearAllPoints()
     nameplate.raidicon:SetPoint(C.nameplates.raidiconpos, nameplate.health, C.nameplates.raidiconpos, C.nameplates.raidiconoffx, C.nameplates.raidiconoffy)
-    nameplate.level:SetFont(font, font_size, font_style)
     nameplate.raidicon:SetWidth(C.nameplates.raidiconsize)
     nameplate.raidicon:SetHeight(C.nameplates.raidiconsize)
 
@@ -679,8 +687,8 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
       plate.guild:Hide()
       plate.totem:Show()
     elseif HidePlate(unittype, name, (hpmax-hp == hpmin), target) then
-      plate.level:SetPoint("RIGHT", plate.name, "LEFT", -3, 0)
       plate.name:SetParent(plate)
+      plate.level:SetParent(plate)
       plate.guild:SetPoint("BOTTOM", plate.name, "BOTTOM", -2, -(font_size + 2))
 
       plate.level:Show()
@@ -693,8 +701,8 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
       end
       plate.totem:Hide()
     else
-      plate.level:SetPoint("RIGHT", plate.health, "LEFT", -5, 0)
       plate.name:SetParent(plate.health)
+      plate.level:SetParent(plate.health)
       plate.guild:SetPoint("BOTTOM", plate.health, "BOTTOM", 0, -(font_size + 4))
 
       plate.level:Show()
