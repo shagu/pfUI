@@ -10,8 +10,11 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     ["FRIENDLY_PLAYER"] = { .2, .6, 1, .8 }
   }
 
+  local offtanks = {}
+
   local combatstate = {
     -- gets overwritten by user config
+    ["OFFTANK"]  = { r = .7, g = .4, b = .2, a = 1 },
     ["NOTHREAT"] = { r = .7, g = .7, b = .2, a = 1 },
     ["THREAT"]   = { r = .7, g = .2, b = .2, a = 1 },
     ["CASTING"]  = { r = .7, g = .2, b = .7, a = 1 },
@@ -46,6 +49,8 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
         color = combatstate.CASTING
       elseif C.nameplates.ccombatthreat == "1" and UnitIsUnit(target, "player") then
         color = combatstate.THREAT
+      elseif C.nameplates.ccombatofftank == "1" and offtanks[strlower(UnitName(target))] then
+        color = combatstate.OFFTANK
       elseif C.nameplates.ccombatnothreat == "1" and UnitExists(target) then
         color = combatstate.NOTHREAT
       elseif C.nameplates.ccombatstun == "1" and not UnitExists(target) and not UnitIsPlayer(guid) then
@@ -513,7 +518,13 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
     c.CASTING.r, c.CASTING.g, c.CASTING.b, c.CASTING.a = GetStringColor(C.nameplates.combatcasting)
     c.THREAT.r, c.THREAT.g, c.THREAT.b, c.THREAT.a = GetStringColor(C.nameplates.combatthreat)
     c.NOTHREAT.r, c.NOTHREAT.g, c.NOTHREAT.b, c.NOTHREAT.a = GetStringColor(C.nameplates.combatnothreat)
+    c.OFFTANK.r, c.OFFTANK.g, c.OFFTANK.b, c.OFFTANK.a = GetStringColor(C.nameplates.combatofftank)
     c.STUN.r, c.STUN.g, c.STUN.b, c.STUN.a = GetStringColor(C.nameplates.combatstun)
+
+    offtanks = {}
+    for k, v in pairs({strsplit("#", C.nameplates.combatofftanks)}) do
+      offtanks[string.lower(v)] = true
+    end
 
     nameplate:SetWidth(plate_width)
     nameplate:SetHeight(plate_height)
