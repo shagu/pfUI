@@ -765,7 +765,7 @@ function pfUI:LoadConfig()
   pfUI:UpdateConfig("nameplates", nil,           "showguildname",    "0")
 
   pfUI:UpdateConfig("nameplates", nil,           "outcombatstate",   "1")
-  pfUI:UpdateConfig("nameplates", nil,           "barcombatstate",   "0")
+  pfUI:UpdateConfig("nameplates", nil,           "barcombatstate",   "1")
 
   pfUI:UpdateConfig("nameplates", nil,           "ccombatthreat",    "1")
   pfUI:UpdateConfig("nameplates", nil,           "ccombatofftank",   "1")
