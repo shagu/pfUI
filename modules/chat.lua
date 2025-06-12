@@ -368,10 +368,6 @@ pfUI:RegisterModule("chat", "vanilla:tbc", function ()
         frame:SetPoint("TOPLEFT", pfUI.chat.right ,"TOPLEFT", default_border, -panelheight)
         frame:SetPoint("BOTTOMRIGHT", pfUI.chat.right ,"BOTTOMRIGHT", -default_border, bottompadding)
         frame:Show()
-      elseif i == 2 and C.chat.global.combathide == "1" then
-        -- Combat Log
-        FCF_UnDockFrame(frame)
-        FCF_Close(frame)
       elseif frame.isDocked then
         -- Left Chat
         local bottompadding = pfUI.panel and pfUI.panel.left:IsShown() and not pfUI_config.position["pfPanelLeft"] and panelheight or default_border
@@ -389,6 +385,12 @@ pfUI:RegisterModule("chat", "vanilla:tbc", function ()
         FCF_UnDockFrame(frame)
         frame:SetParent(UIParent)
         tab:SetParent(UIParent)
+      end
+
+      -- Combat Log
+      if C.chat.global.combathide == "1" and frame.pfCombatLog then
+        FCF_UnDockFrame(frame)
+        FCF_Close(frame)
       end
 
       -- hide textures
