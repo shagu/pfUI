@@ -1070,6 +1070,7 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
         "ammo:" .. T["Ammo Counter"],
         "ankh:" .. T["Ankh"],
         "soulshard:" .. T["Soulshard Counter"],
+        "reagents:" .. T["Reagents"],
         "bindlocation:" .. T["Hearth"],
         "thistletea:" .. T["Thistle Tea"],
         "flashpowder:" .. T["Flash Powder"],
