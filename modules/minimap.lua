@@ -38,6 +38,12 @@ pfUI:RegisterModule("minimap", "vanilla:tbc", function ()
 
     Minimap:SetWidth(size)
     Minimap:SetHeight(size)
+    -- attempt to get minimap minimap
+    local minimaparrow = ({Minimap:GetChildren()})[9]
+    if(minimaparrow) then
+      local scale = tonumber(C.appearance.minimap.playerarrowscale) or 1.5
+      minimaparrow:SetScale(scale,scale)
+    end
   end
 
   pfUI.minimap:UpdateConfig()

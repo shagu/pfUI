@@ -1891,6 +1891,7 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
 
     CreateGUIEntry(T["Minimap"], T["Minimap"], function()
       CreateConfig(U["minimap"], T["Minimap Size (|cffffaaaaExperimental|r)"], C.appearance.minimap, "size")
+      CreateConfig(U["minimap"], T["Minimap Player Arrow Scale"], C.appearance.minimap, "playerarrowscale")
       CreateConfig(nil, T["Zone Text On Minimap"], C.appearance.minimap, "zonetext", "dropdown", pfUI.gui.dropdowns.minimap_zone_visibility)
       CreateConfig(nil, T["Coordinates On Minimap"], C.appearance.minimap, "coordstext", "dropdown", pfUI.gui.dropdowns.minimap_cords_visibility)
       CreateConfig(nil, T["Coordinates Location"], C.appearance.minimap, "coordsloc", "dropdown", pfUI.gui.dropdowns.minimap_cords_position)
