@@ -38,6 +38,22 @@ pfUI:RegisterModule("minimap", "vanilla:tbc", function ()
 
     Minimap:SetWidth(size)
     Minimap:SetHeight(size)
+
+    -- vanilla+tbc: do the best to detect the minimap arrow
+    local arrowscale = tonumber(C.appearance.minimap.arrowscale)
+    local minimaparrow = ({Minimap:GetChildren()})[9]
+    for k, v in pairs({Minimap:GetChildren()}) do
+      if v:IsObjectType("Model") and not v:GetName() then
+        if string.find(strlower(v:GetModel()), "interface\\minimap\\minimaparrow") then
+          minimaparrow = v
+          break
+        end
+      end
+    end
+
+    if minimaparrow then
+      minimaparrow:SetScale(arrowscale)
+    end
   end
 
   pfUI.minimap:UpdateConfig()
