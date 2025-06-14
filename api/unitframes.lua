@@ -2062,16 +2062,23 @@ function pfUI.uf:ClickAction(button)
       showmenu = nil
     else
       -- run click cast action
-      local tswitch = UnitIsUnit(unitstr, "target")
-      TargetUnit(unitstr)
+      local is_macro = string.find(this.clickactions[modstring], "^%/(.+)")
 
-      if string.find(this.clickactions[modstring], "^%/(.+)") then
-        RunMacroText(this.clickactions[modstring])
+      if superwow_active and not is_macro then
+        CastSpellByName(this.clickactions[modstring], unitstr)
       else
-        CastSpellByName(this.clickactions[modstring])
+        local tswitch = UnitIsUnit(unitstr, "target")
+        TargetUnit(unitstr)
+
+        if is_macro then
+          RunMacroText(this.clickactions[modstring])
+        else
+          CastSpellByName(this.clickactions[modstring])
+        end
+
+        if not tswitch then TargetLastTarget() end
       end
 
-      if not tswitch then TargetLastTarget() end
       return
     end
   end
