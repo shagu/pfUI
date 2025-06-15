@@ -579,6 +579,19 @@ function pfUI.uf:UpdateConfig()
     f.portrait:Hide()
   end
 
+  if f.group then
+    if f.config.raidgrouplabel == "1" then
+      f.group:Show()
+    else
+      f.group:Hide()
+    end
+
+    local xoff = tonumber(f.config.grouplabelxoff) or 0
+    local yoff = tonumber(f.config.grouplabelyoff) or 8
+    f.group:SetPoint("TOPLEFT", f, "BOTTOMLEFT", xoff, yoff)
+    f.group:SetPoint("TOPRIGHT", f, "BOTTOMRIGHT", xoff, yoff)
+  end
+
   if f.config.hitindicator == "1" then
     f.feedbackText:SetFont(pfUI.media[f.config.hitindicatorfont], f.config.hitindicatorsize, "OUTLINE")
     f.feedbackFontHeight = f.config.hitindicatorsize
@@ -1298,6 +1311,16 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
   f.portrait.model = CreateFrame("PlayerModel", "pfPortraitModel" .. f.label .. f.id, f.portrait)
   f.portrait.model.next = CreateFrame("PlayerModel", nil, nil)
   f.feedbackText = f:CreateFontString("pfHitIndicator" .. f.label .. f.id, "OVERLAY", "NumberFontNormalHuge")
+
+  if f.label == "raid" and math.mod(f.id, 5) == 1 then
+    local group = math.ceil(f.id/5)
+    f.group = f.group or f.hp.bar:CreateFontString("Status", "OVERLAY", "GameFontNormalSmall")
+    f.group:SetFont(pfUI.font_unit, 8, "OUTLINE")
+    f.group:SetTextColor(1,1,1,.8)
+    f.group:SetHeight(16)
+    f.group:SetText("Group " .. group)
+    f.group:Hide()
+  end
 
   f:Hide()
   f:UpdateConfig()
@@ -2062,16 +2085,23 @@ function pfUI.uf:ClickAction(button)
       showmenu = nil
     else
       -- run click cast action
-      local tswitch = UnitIsUnit(unitstr, "target")
-      TargetUnit(unitstr)
+      local is_macro = string.find(this.clickactions[modstring], "^%/(.+)")
 
-      if string.find(this.clickactions[modstring], "^%/(.+)") then
-        RunMacroText(this.clickactions[modstring])
+      if superwow_active and not is_macro then
+        CastSpellByName(this.clickactions[modstring], unitstr)
       else
-        CastSpellByName(this.clickactions[modstring])
+        local tswitch = UnitIsUnit(unitstr, "target")
+        TargetUnit(unitstr)
+
+        if is_macro then
+          RunMacroText(this.clickactions[modstring])
+        else
+          CastSpellByName(this.clickactions[modstring])
+        end
+
+        if not tswitch then TargetLastTarget() end
       end
 
-      if not tswitch then TargetLastTarget() end
       return
     end
   end

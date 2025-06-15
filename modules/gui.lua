@@ -1749,6 +1749,10 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
         CreateConfig(U[c], T["Display Overheal"], C.unitframes[c], "overhealperc", "dropdown", pfUI.gui.dropdowns.uf_overheal)
 
         if c == "raid" then
+          CreateConfig(U["raid"], T["Display Raid Group Label"], C.unitframes[c], "raidgrouplabel", "checkbox")
+          CreateConfig(U["raid"], T["Group Label X-Offset"], C.unitframes[c], "grouplabelxoff")
+          CreateConfig(U["raid"], T["Group Label Y-Offset"], C.unitframes[c], "grouplabelyoff")
+
           CreateConfig(U[c], T["Layout"], nil, nil, "header")
           CreateConfig(U["raid"], T["Raid Padding"], C.unitframes[c], "raidpadding")
           CreateConfig(U["raid"], T["Raid Layout"], C.unitframes[c], "raidlayout", "dropdown", pfUI.gui.dropdowns.uf_raidlayout)
@@ -1895,6 +1899,7 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
 
     CreateGUIEntry(T["Minimap"], T["Minimap"], function()
       CreateConfig(U["minimap"], T["Minimap Size (|cffffaaaaExperimental|r)"], C.appearance.minimap, "size")
+      CreateConfig(U["minimap"], T["Minimap Player Arrow Scale"], C.appearance.minimap, "arrowscale")
       CreateConfig(nil, T["Zone Text On Minimap"], C.appearance.minimap, "zonetext", "dropdown", pfUI.gui.dropdowns.minimap_zone_visibility)
       CreateConfig(nil, T["Coordinates On Minimap"], C.appearance.minimap, "coordstext", "dropdown", pfUI.gui.dropdowns.minimap_cords_visibility)
       CreateConfig(nil, T["Coordinates Location"], C.appearance.minimap, "coordsloc", "dropdown", pfUI.gui.dropdowns.minimap_cords_position)

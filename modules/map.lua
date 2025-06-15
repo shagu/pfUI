@@ -63,7 +63,17 @@ pfUI:RegisterModule("map", "vanilla:tbc", function ()
         end
 
         if IsControlKeyDown() then
-          scale = clamp(WorldMapFrame:GetScale() + arg1/10, 0.1, 2.0)
+          local oldscale = WorldMapFrame:GetScale()
+          local point, rel, relpoint, offx, offy = WorldMapFrame:GetPoint()
+          scale = clamp(oldscale + arg1/10, 0.1, 2.0)
+
+          -- recalculate world frame position based on old and new scale
+          if point == "TOPLEFT" and relpoint == "TOPLEFT" then
+            offx = offx*oldscale/scale
+            offy = offy*oldscale/scale
+            WorldMapFrame:SetPoint(point, rel, relpoint, offx, offy)
+          end
+
           WorldMapFrame:SetScale(scale)
           UpdateTooltipScale()
         end
