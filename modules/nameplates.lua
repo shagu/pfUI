@@ -51,6 +51,8 @@ pfUI:RegisterModule("nameplates", "vanilla:tbc", function ()
         color = combatstate.THREAT
       elseif C.nameplates.ccombatofftank == "1" and UnitName(target) and offtanks[strlower(UnitName(target))] then
         color = combatstate.OFFTANK
+      elseif C.nameplates.ccombatofftank == "1" and pfUI.uf and pfUI.uf.raid and pfUI.uf.raid.tankrole[UnitName(target)] then
+        color = combatstate.OFFTANK
       elseif C.nameplates.ccombatnothreat == "1" and UnitExists(target) then
         color = combatstate.NOTHREAT
       elseif C.nameplates.ccombatstun == "1" and not UnitExists(target) and not UnitIsPlayer(guid) then
