@@ -2020,34 +2020,35 @@ function pfUI.uf:EnableClickCast()
   for bid, button in pairs(buttons) do
     for modifier, mconf in pairs(modifiers) do
       local bconf = bid == 1 and "" or bid
-      if pfUI_config.unitframes["clickcast"..bconf..mconf] ~= "" then
+      local macro_text = pfUI_config.unitframes["clickcast"..bconf..mconf]
+      if macro_text ~= "" then
         -- prepare click casting
         if pfUI.client > 11200 then
           -- set attributes for tbc+
           local prefix = modifier == "" and "" or modifier .. "-"
 
           -- check for "/" in the beginning of the string, to detect macros
-          if string.sub(pfUI_config.unitframes["clickcast"..bconf..mconf], 1, 1) == "/" then
+          if string.sub(macro_text, 1, 1) == "/" then
             self:SetAttribute(prefix.."type"..bid, "macro")
-            self:SetAttribute(prefix.."macrotext"..bid, pfUI_config.unitframes["clickcast"..bconf..mconf])
+            self:SetAttribute(prefix.."macrotext"..bid, macro_text)
             self:SetAttribute(prefix.."spell"..bid, nil)
-          elseif string.find(pfUI_config.unitframes["clickcast"..bconf..mconf], "^target") then
+          elseif string.find(macro_text, "^target") then
             self:SetAttribute(prefix.."type"..bid, "target")
             self:SetAttribute(prefix.."macrotext"..bid, nil)
             self:SetAttribute(prefix.."spell"..bid, nil)
-          elseif string.find(pfUI_config.unitframes["clickcast"..bconf..mconf], "^menu") then
+          elseif string.find(macro_text, "^menu") then
             self:SetAttribute(prefix.."type"..bid, "showmenu")
             self:SetAttribute(prefix.."macrotext"..bid, nil)
             self:SetAttribute(prefix.."spell"..bid, nil)
           else
             self:SetAttribute(prefix.."type"..bid, "spell")
-            self:SetAttribute(prefix.."spell"..bid, pfUI_config.unitframes["clickcast"..bconf..mconf])
+            self:SetAttribute(prefix.."spell"..bid, macro_text)
             self:SetAttribute(prefix.."macro"..bid, nil)
           end
         else
           -- fill clickaction table for vanillla
           self.clickactions = self.clickactions or {}
-          self.clickactions[modifier..button] = pfUI_config.unitframes["clickcast"..bconf..mconf]
+          self.clickactions[modifier..button] = macro_text
         end
       end
     end
