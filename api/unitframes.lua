@@ -2027,7 +2027,7 @@ function pfUI.uf:EnableClickCast()
           local prefix = modifier == "" and "" or modifier .. "-"
 
           -- check for "/" in the beginning of the string, to detect macros
-          if string.find(pfUI_config.unitframes["clickcast"..bconf..mconf], "^%/(.+)") then
+          if string.sub(pfUI_config.unitframes["clickcast"..bconf..mconf], 1, 1) == "/" then
             self:SetAttribute(prefix.."type"..bid, "macro")
             self:SetAttribute(prefix.."macrotext"..bid, pfUI_config.unitframes["clickcast"..bconf..mconf])
             self:SetAttribute(prefix.."spell"..bid, nil)
