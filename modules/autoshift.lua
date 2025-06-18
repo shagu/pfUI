@@ -39,7 +39,7 @@ pfUI:RegisterModule("autoshift", "vanilla", function ()
   moonkin_scan:SetScript("OnEvent", function()
     local _, class = UnitClass("player")
     if class == "DRUID" then
-      local _,_,_,_,moonkin = GetTalentInfo(1,16)
+      local _,_,_,_,moonkin = GetTalentInfo(1,15)
       if moonkin == 1 then
         table.insert(pfUI.autoshift.shapeshifts, "spell_nature_forceofnature")
         moonkin_scan:UnregisterAllEvents()
