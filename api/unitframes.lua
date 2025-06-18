@@ -461,6 +461,8 @@ function pfUI.uf:UpdateConfig()
   f.combat:SetPoint(f.config.squarepos, 0, 0)
   f.combat:Hide()
 
+  f.portrait.ring:Hide()
+
   f.hp:ClearAllPoints()
   f.hp:SetPoint("TOP", 0, 0)
 
@@ -577,6 +579,27 @@ function pfUI.uf:UpdateConfig()
     f.portrait:Show()
   else
     f.portrait:Hide()
+  end
+
+  if f.config.portrait == "left" or f.config.portrait == "right" then
+    if f.config.portraitstyle == "blizzard" and C.unitframes.always2dportrait == "1" then
+      local width, height
+      if f.config.portraitwidth == "-1" and f.config.portraitheight == "-1" then
+         width = (self.config.height + spacing + self.config.pheight + 2 * default_border) / 4
+         height = width
+      else
+         width = f.config.portraitwidth / 4
+         height = f.config.portraitheight / 4
+      end
+      f.portrait.ring:SetPoint("TOPLEFT", f.portrait, "TOPLEFT", -width, height)
+      f.portrait.ring:SetPoint("BOTTOMRIGHT", f.portrait, "BOTTOMRIGHT", width, -height)
+      f.portrait.ring:Show()
+      f.portrait.tex:SetTexCoord(0, 1, 0, 1)
+
+      if f.portrait.backdrop then
+         f.portrait.backdrop:Hide()
+      end
+    end
   end
 
   if f.group then
@@ -1310,6 +1333,12 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
   f.portrait.tex = f.portrait:CreateTexture("pfPortraitTexture" .. f.label .. f.id, "OVERLAY")
   f.portrait.model = CreateFrame("PlayerModel", "pfPortraitModel" .. f.label .. f.id, f.portrait)
   f.portrait.model.next = CreateFrame("PlayerModel", nil, nil)
+  f.portrait.ring = CreateFrame("Frame", "pfPortraitRing" .. f.label .. f.id, f)
+  f.portrait.ring.tex = f.portrait.ring:CreateTexture("pfPortraitRingTexture" .. f.label .. f.id, "OVERLAY")
+  f.portrait.ring.tex:SetTexture("Interface\\AddOns\\pfUI\\img\\uf_ring")
+  f.portrait.ring.tex:SetAllPoints(f.portrait.ring)
+  f.portrait.ring.tex:SetVertexColor(pfUI.api.GetStringColor(C.appearance.border.color))
+  
   f.feedbackText = f:CreateFontString("pfHitIndicator" .. f.label .. f.id, "OVERLAY", "NumberFontNormalHuge")
 
   if f.label == "raid" and math.mod(f.id, 5) == 1 then
@@ -1867,8 +1896,8 @@ function pfUI.uf:RefreshUnit(unit, component)
         else
           unit.portrait.tex:Hide()
           unit.portrait.model:Show()
-          unit.portrait.model:SetModelScale(4.25)
-          unit.portrait.model:SetPosition(0, 0, -1)
+          unit.portrait.model:SetModelScale(1)
+          --unit.portrait.model:SetPosition(-1, 0, 0)
           unit.portrait.model:SetModel("Interface\\Buttons\\talktomequestionmark.mdx")
         end
       else
