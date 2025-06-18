@@ -2085,7 +2085,7 @@ function pfUI.uf:ClickAction(button)
       showmenu = nil
     else
       -- run click cast action
-      local is_macro = string.find(this.clickactions[modstring], "^%/(.+)")
+      local is_macro = string.sub(this.clickactions[modstring], 1, 1) == "/"
 
       if superwow_active and not is_macro then
         CastSpellByName(this.clickactions[modstring], unitstr)
