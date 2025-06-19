@@ -519,7 +519,6 @@ function pfUI.uf:UpdateConfig()
   end
 
   f.portrait.tex:SetAllPoints(f.portrait)
-  f.portrait.tex:SetTexCoord(.1, .9, .1, .9)
   f.portrait.model:SetAllPoints(f.portrait)
 
   if f.config.portrait == "bar" then
@@ -539,7 +538,7 @@ function pfUI.uf:UpdateConfig()
     if f.config.portraitwidth == "-1" and f.config.portraitheight == "-1" then
       f.portrait:SetPoint("TOPLEFT", f, "TOPLEFT", 0, 0)
     else
-      f.portrait:SetPoint("LEFT", f, "LEFT", -f.config.portraitwidth - 2*default_border - spacing, 0)
+      f.portrait:SetPoint("LEFT", f, "LEFT", -f.config.portraitwidth - 2*default_border - spacing - f.config.portraitoffset, 0)
     end
 
     f.hp:ClearAllPoints()
@@ -561,7 +560,7 @@ function pfUI.uf:UpdateConfig()
     if f.config.portraitwidth == "-1" and f.config.portraitheight == "-1" then
       f.portrait:SetPoint("TOPRIGHT", f, "TOPRIGHT", 0, 0)
     else
-      f.portrait:SetPoint("RIGHT", f, "RIGHT", f.config.portraitwidth + 2*default_border + spacing, 0)
+      f.portrait:SetPoint("RIGHT", f, "RIGHT", f.config.portraitwidth + 2*default_border + spacing + f.config.portraitoffset, 0)
     end
 
     f.hp:ClearAllPoints()
@@ -595,10 +594,14 @@ function pfUI.uf:UpdateConfig()
       f.portrait.ring:SetPoint("BOTTOMRIGHT", f.portrait, "BOTTOMRIGHT", width, -height)
       f.portrait.ring:Show()
       f.portrait.tex:SetTexCoord(0, 1, 0, 1)
+      f.portrait.tex:SetParent(f.portrait.ring)
 
       if f.portrait.backdrop then
          f.portrait.backdrop:Hide()
       end
+    else
+      f.portrait.tex:SetTexCoord(.1, .9, .1, .9)
+      f.portrait.tex:SetParent(f.portrait)
     end
   end
 
@@ -1330,15 +1333,16 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
   f.happinessIcon.texture = f.happinessIcon:CreateTexture(nil, "BACKGROUND")
 
   f.portrait = CreateFrame("Frame", "pfPortrait" .. f.label .. f.id, f)
-  f.portrait.tex = f.portrait:CreateTexture("pfPortraitTexture" .. f.label .. f.id, "OVERLAY")
+  f.portrait.tex = f.portrait:CreateTexture("pfPortraitTexture" .. f.label .. f.id, "ARTWORK")
   f.portrait.model = CreateFrame("PlayerModel", "pfPortraitModel" .. f.label .. f.id, f.portrait)
   f.portrait.model.next = CreateFrame("PlayerModel", nil, nil)
   f.portrait.ring = CreateFrame("Frame", "pfPortraitRing" .. f.label .. f.id, f)
+  f.portrait.ring:SetFrameLevel(f:GetFrameLevel() + 3)
   f.portrait.ring.tex = f.portrait.ring:CreateTexture("pfPortraitRingTexture" .. f.label .. f.id, "OVERLAY")
   f.portrait.ring.tex:SetTexture("Interface\\AddOns\\pfUI\\img\\uf_ring")
   f.portrait.ring.tex:SetAllPoints(f.portrait.ring)
   f.portrait.ring.tex:SetVertexColor(pfUI.api.GetStringColor(C.appearance.border.color))
-  
+
   f.feedbackText = f:CreateFontString("pfHitIndicator" .. f.label .. f.id, "OVERLAY", "NumberFontNormalHuge")
 
   if f.label == "raid" and math.mod(f.id, 5) == 1 then
