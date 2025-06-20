@@ -581,15 +581,16 @@ function pfUI.uf:UpdateConfig()
   end
 
   if f.config.portrait == "left" or f.config.portrait == "right" then
-    if f.config.portraitstyle == "blizzard" and C.unitframes.always2dportrait == "1" then
+    if f.config.portraitstyle == "blizzard" then
       local width, height
       if f.config.portraitwidth == "-1" and f.config.portraitheight == "-1" then
-         width = (self.config.height + spacing + self.config.pheight + 2 * default_border) / 4
-         height = width
+        width = (self.config.height + spacing + self.config.pheight + 2 * default_border) / 4
+        height = width
       else
-         width = f.config.portraitwidth / 4
-         height = f.config.portraitheight / 4
+        width = f.config.portraitwidth / 4
+        height = f.config.portraitheight / 4
       end
+
       f.portrait.ring:SetPoint("TOPLEFT", f.portrait, "TOPLEFT", -width, height)
       f.portrait.ring:SetPoint("BOTTOMRIGHT", f.portrait, "BOTTOMRIGHT", width, -height)
       f.portrait.ring:Show()
@@ -597,11 +598,20 @@ function pfUI.uf:UpdateConfig()
       f.portrait.tex:SetParent(f.portrait.ring)
 
       if f.portrait.backdrop then
-         f.portrait.backdrop:Hide()
+        f.portrait.backdrop:Hide()
+      end
+
+      if f.portrait.model:IsShown() then
+        f.portrait.model:ClearAllPoints()
+        f.portrait.model:SetPoint('TOPLEFT', f.portrait, 'TOPLEFT', width / 1.5, -height / 2)
+        f.portrait.model:SetPoint('BOTTOMRIGHT', f.portrait, 'BOTTOMRIGHT', -width / 1.5, height / 2.5)
+        f.portrait.model.bg:Show()
       end
     else
       f.portrait.tex:SetTexCoord(.1, .9, .1, .9)
       f.portrait.tex:SetParent(f.portrait)
+
+      f.portrait.model.bg:Hide()
     end
   end
 
@@ -1335,6 +1345,9 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
   f.portrait = CreateFrame("Frame", "pfPortrait" .. f.label .. f.id, f)
   f.portrait.tex = f.portrait:CreateTexture("pfPortraitTexture" .. f.label .. f.id, "ARTWORK")
   f.portrait.model = CreateFrame("PlayerModel", "pfPortraitModel" .. f.label .. f.id, f.portrait)
+  f.portrait.model.bg = f.portrait.model:CreateTexture("pfPortraitRingBackground" .. f.label .. f.id, "BACKGROUND")
+  f.portrait.model.bg:SetAllPoints(f.portrait)
+  f.portrait.model.bg:SetVertexColor(0, 0, 0, .7)
   f.portrait.model.next = CreateFrame("PlayerModel", nil, nil)
   f.portrait.ring = CreateFrame("Frame", "pfPortraitRing" .. f.label .. f.id, f)
   f.portrait.ring:SetFrameLevel(f:GetFrameLevel() + 3)
@@ -1342,6 +1355,8 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
   f.portrait.ring.tex:SetTexture("Interface\\AddOns\\pfUI\\img\\uf_ring")
   f.portrait.ring.tex:SetAllPoints(f.portrait.ring)
   f.portrait.ring.tex:SetVertexColor(pfUI.api.GetStringColor(C.appearance.border.color))
+
+  SetPortraitToTexture(f.portrait.model.bg, "Interface\\Tooltips\\UI-Tooltip-Background")
 
   f.feedbackText = f:CreateFontString("pfHitIndicator" .. f.label .. f.id, "OVERLAY", "NumberFontNormalHuge")
 
