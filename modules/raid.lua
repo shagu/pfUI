@@ -113,10 +113,11 @@ pfUI:RegisterModule("raid", "vanilla:tbc", function ()
   end)
 
   -- raid popup option to toggle tank role
-  local iupm = table.getn(UnitPopupMenus["RAID"])
-  for label, data in pairs(pfUI.uf.raid.tanksfirst) do
-    UnitPopupButtons[label] = { text = TEXT(data[1]), dist = 0 }
-    table.insert(UnitPopupMenus["RAID"], iupm-1, label)
+  for _, menu in pairs({"RAID", "PARTY"}) do
+    for label, data in pairs(pfUI.uf.raid.tanksfirst) do
+      UnitPopupButtons[label] = { text = TEXT(data[1]), dist = 0 }
+      table.insert(UnitPopupMenus[menu], 3, label)
+    end
   end
 
   hooksecurefunc("UnitPopup_OnClick", function()
