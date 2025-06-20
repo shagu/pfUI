@@ -949,6 +949,10 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
         "right:" .. T["Right"],
         "off:" .. T["Disabled"]
       },
+      ["uf_portrait_style"] = {
+         "default:" .. T["Default"],
+         "blizzard:" .. T["Blizzard"]
+      },
       ["uf_happiness"] = {
         "0:" .. T["Disabled"],
         "1:" .. T["Face"],
@@ -1724,6 +1728,8 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
         CreateConfig(U[c], T["Enable Aggro Glow"], C.unitframes[c], "glowaggro", "checkbox")
         CreateConfig(U[c], T["Enable Combat Glow"], C.unitframes[c], "glowcombat", "checkbox")
         CreateConfig(U[c], T["Portrait Position"], C.unitframes[c], "portrait", "dropdown", pfUI.gui.dropdowns.uf_portrait_position)
+        CreateConfig(U[c], T["Portrait Style"], C.unitframes[c], "portraitstyle", "dropdown", pfUI.gui.dropdowns.uf_portrait_style)
+        CreateConfig(U[c], T["Portrait Offset"], C.unitframes[c], "portraitoffset")
         CreateConfig(U[c], T["Portrait Width"], C.unitframes[c], "portraitwidth")
         CreateConfig(U[c], T["Portrait Height"], C.unitframes[c], "portraitheight")
         CreateConfig(U[c], T["Health Bar Texture"], C.unitframes[c], "bartexture", "dropdown", pfUI.gui.dropdowns.uf_bartexture)
