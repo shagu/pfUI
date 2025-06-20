@@ -1900,8 +1900,8 @@ function pfUI.uf:RefreshUnit(unit, component)
         else
           unit.portrait.tex:Hide()
           unit.portrait.model:Show()
-          unit.portrait.model:SetModelScale(1)
-          --unit.portrait.model:SetPosition(-1, 0, 0)
+          unit.portrait.model:SetModelScale(4.25)
+          unit.portrait.model:SetPosition(0, 0, -1)
           unit.portrait.model:SetModel("Interface\\Buttons\\talktomequestionmark.mdx")
         end
       else
