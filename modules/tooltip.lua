@@ -135,7 +135,11 @@ pfUI:RegisterModule("tooltip", "vanilla:tbc", function ()
     this.level = UnitLevel("mouseover")
   end)
 
-  pfUI.tooltipStatusBar.HP = pfUI.tooltipStatusBar:CreateFontString("Status", "DIALOG", "GameFontNormal")
+  pfUI.tooltipStatusBar.text = CreateFrame("Frame", nil, pfUI.tooltipStatusBar)
+  pfUI.tooltipStatusBar.text:SetFrameLevel(16)
+  pfUI.tooltipStatusBar.text:SetAllPoints()
+
+  pfUI.tooltipStatusBar.HP = pfUI.tooltipStatusBar.text:CreateFontString("Status", "OVERLAY", "GameFontNormal")
   pfUI.tooltipStatusBar.HP:SetAllPoints()
   pfUI.tooltipStatusBar.HP:SetNonSpaceWrap(false)
   pfUI.tooltipStatusBar.HP:SetFontObject(GameFontWhite)
