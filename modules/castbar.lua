@@ -83,7 +83,7 @@ pfUI:RegisterModule("castbar", "vanilla:tbc", function ()
       end
 
       local channel = nil
-      local query = this.unitstr and UnitName(this.unitstr) or this.unitname
+      local query = this.unitstr ~= "" and this.unitstr or this.unitname
       if not query then return end
 
       -- transform all non player unitstrings to unit guids
