@@ -1312,7 +1312,7 @@ function pfUI.uf:CreateUnitFrame(unit, id, config, tick)
   f.portrait.model.next = CreateFrame("PlayerModel", nil, nil)
   f.feedbackText = f:CreateFontString("pfHitIndicator" .. f.label .. f.id, "OVERLAY", "NumberFontNormalHuge")
 
-  if f.label == "raid" and math.mod(f.id, 5) == 1 then
+  if f.label == "raid" and mod(f.id, 5) == 1 then
     local group = math.ceil(f.id/5)
     f.group = f.group or f.hp.bar:CreateFontString("Status", "OVERLAY", "GameFontNormalSmall")
     f.group:SetFont(pfUI.font_unit, 8, "OUTLINE")
