@@ -83,11 +83,10 @@ pfUI:RegisterModule("castbar", "vanilla:tbc", function ()
       end
 
       local channel = nil
-      local name = this.unitstr and UnitName(this.unitstr) or this.unitname
-      local query = this.unitstr or this.unitname
-      if not name then return end
+      local query = this.unitstr and UnitName(this.unitstr) or this.unitname
+      if not query then return end
 
-      -- try to read cast and guid from SuperWoW (except for self casts)
+      -- transform all non player unitstrings to unit guids
       if superwow_active and this.unitstr and not UnitIsUnit(this.unitstr, 'player') then
         local _, guid = UnitExists(this.unitstr)
         query = guid or query
@@ -280,29 +279,21 @@ pfUI:RegisterModule("castbar", "vanilla:tbc", function ()
       pfUI.castbar.focus:SetHeight(C.castbar.focus.height)
     end
 
-    -- make sure the castbar is set to the same name as the focus frame is
+    -- keep unit values in sync with focus unitframe
     HookScript(pfUI.castbar.focus, "OnUpdate", function()
-      -- try to detect the desired unitname
-      local unitname = pfUI.uf.focus.unitname
-      if not unitname and pfUI.uf.focus.label and pfUI.uf.focus.id then
-        unitname = UnitName(string.format("%s%s", pfUI.uf.focus.label, pfUI.uf.focus.id))
-      end
+      if pfUI.uf.focus.unitname == "focus" then return end
+      if pfUI.uf.focus.unitname == "" then return end
 
-      -- ensure to only use lowercase unitname
-      unitname = unitname and strlower(unitname)
+      -- try to obtain a unitstr
+      pfUI.castbar.focus.unitstr = string.format("%s%s", (pfUI.uf.focus.label or ""), (pfUI.uf.focus.id or ""))
+      pfUI.castbar.focus.unitstr = pfUI.castbar.focus.unitstr == "" and nil or pfUI.castbar.focus.unitstr
 
-      -- remove unitname when focus unit changed
-      if this.lastunit ~= unitname then
-        pfUI.castbar.focus.unitname = nil
-        this.lastunit = unitname
-      end
-
-      -- attach a proper unitname as soon as we get a unitstr
-      if not pfUI.castbar.focus.unitname and pfUI.uf.focus.unitname ~= "focus" and pfUI.uf.focus.label and pfUI.uf.focus.id then
-        local unitstr = string.format("%s%s", pfUI.uf.focus.label, pfUI.uf.focus.id)
-        if UnitExists(unitstr) and strlower(UnitName(unitstr)) == unitname then
-          pfUI.castbar.focus.unitname = UnitName(unitstr)
-        end
+      if pfUI.castbar.focus.unitstr then
+        -- read non-lowercase unitname when possible
+        pfUI.castbar.focus.unitname = UnitName(pfUI.castbar.focus.unitstr) or pfUI.castbar.focus.unitname
+      elseif strlower(pfUI.castbar.focus.unitname) ~= strlower(pfUI.uf.focus.unitname) then
+        -- sync unitname with focus frame's lowercase value
+        pfUI.castbar.focus.unitname = pfUI.uf.focus.unitname
       end
     end)
 
