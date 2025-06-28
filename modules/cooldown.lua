@@ -77,7 +77,7 @@ pfUI:RegisterModule("cooldown", "vanilla:tbc", function ()
       size = math.max((height > 0 and height * .64 or 16), size)
     end
 
-    cooldown.pfCooldownText.text:SetFont(C.appearance.cd.font, size, "OUTLINE")
+    cooldown.pfCooldownText.text:SetFont(pfUI.media[C.appearance.cd.font], size, "OUTLINE")
     cooldown.pfCooldownText.text:SetPoint("CENTER", cooldown.pfCooldownText, "CENTER", 0, 0)
     cooldown.pfCooldownText:SetScript("OnUpdate", pfCooldownOnUpdate)
   end
