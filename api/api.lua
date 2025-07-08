@@ -715,6 +715,7 @@ end
 -- 'position'   [string]    where it should appear, takes the following:
 --                          "TOP", "RIGHT", "BOTTOM", "LEFT"
 function pfUI.api.AlignToPosition(frame, anchor, position, spacing)
+  if frame == anchor then return end
   frame:ClearAllPoints()
   if position == "TOP" and anchor then
     frame:SetPoint("BOTTOMLEFT", anchor, "TOPLEFT", 0, (spacing or 0))
