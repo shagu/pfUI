@@ -693,7 +693,7 @@ function pfUI.uf:UpdateConfig()
 
   f.pvpIcon:SetWidth(f.config.pvpiconsize)
   f.pvpIcon:SetHeight(f.config.pvpiconsize)
-  f.pvpIcon:SetPoint("CENTER", f, f.config.pvpiconalign, f.config.pvpiconoffx, f.config.pvpiconoffy)
+  f.pvpIcon:SetPoint(f.config.pvpiconalign, f, f.config.pvpiconalign, f.config.pvpiconoffx, f.config.pvpiconoffy)
   f.pvpIcon.texture:SetTexture(pfUI.media["img:pvp"])
   f.pvpIcon.texture:SetAllPoints(f.pvpIcon)
   f.pvpIcon.texture:SetVertexColor(1,1,1,.5)
