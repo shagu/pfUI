@@ -7,6 +7,66 @@ pfUI:RegisterModule("panel", "vanilla:tbc", function()
   local rawborder, default_border = GetBorderSize("panels")
 
   do -- Widgets
+    do -- Reagents
+      local printclass, uclass = UnitClass("player")
+      local widget = CreateFrame("Frame", "pfPanelReagents", UIParent)
+      widget:RegisterEvent("PLAYER_ENTERING_WORLD")
+      widget:RegisterEvent("BAG_UPDATE")
+
+      local reagents = {}
+      local items = {}
+
+      if uclass == "MAGE" then
+        items[1] = "Rune of Teleportation"
+        items[2] = "Rune of Portals"
+      end
+
+      if uclass == "WARLOCK" then
+        items[1] = "Soul Shard"
+      end
+
+      if uclass == "DRUID" then
+        items[1] = "Maple Seed"
+        items[2] = "Ashwood Seed"
+        items[3] = "Stranglethorn Seed"
+        items[4] = "Ironwood Seed"
+        items[5] = "Hornbeam Seed"
+      end
+
+      if uclass ==  "SHAMAN" then
+        items[1] = "Ankh"
+      end
+
+      -- Attach the tooltip function directly to the widget like the Gold panel
+      widget.Tooltip = function()
+        local reagents = {}
+        for _, itemName in ipairs(items) do
+          table.insert(reagents, { itemName, pfUI.api.GetItemCount(T[itemName]) })
+        end
+        GameTooltip:ClearLines()
+        GameTooltip_SetDefaultAnchor(GameTooltip, widget)
+        
+        GameTooltip:AddLine("|cff555555" .. (T[printclass] or printclass) .. " Reagents")
+
+        for _, row in ipairs(reagents) do
+          local name, count = row[1], row[2]
+          if count and count > 0 then
+            GameTooltip:AddDoubleLine(T[name], tostring(count), 1, 1, 1, 1, 1, 1)
+          end
+        end
+
+        GameTooltip:Show()
+      end
+
+      widget:SetScript("OnEvent", function()
+        pfUI.panel:OutputPanel("reagents", T["Reagents"], widget.Tooltip, widget.Click)
+      end)
+
+      widget:SetScript("OnLeave", function()
+        GameTooltip:Hide()
+      end)
+    end
+
     do -- Clock & Timer
       local widget = CreateFrame("Frame", "pfPanelWidgetClock",UIParent)
       widget.Tooltip = function()
@@ -582,6 +642,19 @@ pfUI:RegisterModule("panel", "vanilla:tbc", function()
         if class == "WARLOCK" then
           local count = pfUI.api.GetItemCount(T["Soul Shard"])
           pfUI.panel:OutputPanel("soulshard", T["Soulshards"] .. ": " .. count)
+        end
+      end)
+    end
+
+    do -- Shaman Ankh
+      local widget = CreateFrame("Frame", "pfPanelWidgetAnkh", UIParent)
+      widget:RegisterEvent("PLAYER_ENTERING_WORLD")
+      widget:RegisterEvent("BAG_UPDATE")
+      widget:SetScript("OnEvent", function()
+        local _, class = UnitClass("player")
+        if class == "SHAMAN" then
+          local count = pfUI.api.GetItemCount(T["Ankh"])
+          pfUI.panel:OutputPanel("ankh", T["Ankh"] .. ": " .. count)
         end
       end)
     end
