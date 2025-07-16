@@ -1419,7 +1419,7 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     -- share backdrop of main and top actionbar
     if bars[6] and bars[1] then
       bars[6].OnMove = bars[6].OnMove or function()
-        bars[1].mergedBackdrop = bars[1].mergedBackdrop or CreateFrame("Frame")
+        bars[1].mergedBackdrop = bars[1].mergedBackdrop or CreateFrame("Frame", nil, UIParent)
         bars[1].mergedBackdrop:SetPoint("TOPLEFT", bars[6], "TOPLEFT", 0, 0)
         bars[1].mergedBackdrop:SetPoint("BOTTOMRIGHT", bars[1], "BOTTOMRIGHT", 0, 0)
         CreateBackdrop(bars[1].mergedBackdrop)
