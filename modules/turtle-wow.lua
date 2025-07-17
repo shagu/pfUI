@@ -6,6 +6,7 @@ pfUI:RegisterModule("turtle-wow", "vanilla", function ()
   L["debuffs"]["Hand of Reckoning"] = {[0]=3.0}
   L["debuffs"]['Insect Swarm'] = {[0]=18.0}
   L["debuffs"]['Moonfire'] = {[1]=9.0,[2]=18.0,[3]=18.0,[4]=18.0,[5]=18.0,[6]=18.0,[7]=18.0,[8]=18.0,[9]=18.0,[10]=18.0,[0]=18.0}
+  L["debuffs"]['Deep Wound'] = {[0]=6.0}
 
   -- add custom spell logic to libdebuff
   HookScript(libdebuff, "OnEvent", function()
