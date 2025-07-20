@@ -481,7 +481,7 @@ function pfUI.uf:UpdateConfig()
   local custombgcolor = f.config.defcolor == "0" and f.config.custombgcolor or C.unitframes.custombgcolor
 
   if custombg == "1" then
-    local cr, cg, cb, ca = pfUI.api.strsplit(",", custombgcolor)
+    local cr, cg, cb, ca = GetStringColor(custombgcolor)
     cr, cg, cb, ca = tonumber(cr), tonumber(cg), tonumber(cb), tonumber(ca)
     f.hp.bar:SetStatusBarBackgroundTexture(cr,cg,cb,ca)
   end
@@ -500,7 +500,7 @@ function pfUI.uf:UpdateConfig()
   local custompbgcolor = f.config.defcolor == "0" and f.config.custompbgcolor or C.unitframes.custompbgcolor
 
   if custompbg == "1" then
-    local cr, cg, cb, ca = pfUI.api.strsplit(",", custompbgcolor)
+    local cr, cg, cb, ca = GetStringColor(custompbgcolor)
     cr, cg, cb, ca = tonumber(cr), tonumber(cg), tonumber(cb), tonumber(ca)
     f.power.bar:SetStatusBarBackgroundTexture(cr,cg,cb,ca)
   end
@@ -656,7 +656,7 @@ function pfUI.uf:UpdateConfig()
   f.incHeal:SetHeight(f.config.height)
   f.incHeal:SetWidth(f.config.width)
   f.incHeal.texture:SetTexture(pfUI.media["img:bar"])
-  local cr, cg, cb, ca = pfUI.api.strsplit(",", f.config.healcolor)
+  local cr, cg, cb, ca = GetStringColor(f.config.healcolor)
   cr, cg, cb, ca = tonumber(cr), tonumber(cg), tonumber(cb), tonumber(ca)
   f.incHeal.texture:SetVertexColor(cr, cg, cb, ca)
   f.incHeal:Hide()
@@ -1917,7 +1917,7 @@ function pfUI.uf:RefreshUnit(unit, component)
 
   local r, g, b, a = .2, .2, .2, 1
   if customfullhp == "1" and UnitHealth(unitstr) == UnitHealthMax(unitstr) then
-    r, g, b, a = pfUI.api.strsplit(",", customcolor)
+    r, g, b, a = GetStringColor(customcolor)
     custom_active = true
   elseif custom == "0" then
     if UnitIsPlayer(unitstr) then
@@ -1938,7 +1938,7 @@ function pfUI.uf:RefreshUnit(unit, component)
       if color then r, g, b = color.r, color.g, color.b end
     end
   elseif custom == "1"  then
-    r, g, b, a = pfUI.api.strsplit(",", customcolor)
+    r, g, b, a = GetStringColor(customcolor)
     custom_active = true
   elseif custom == "2" then
     if UnitHealthMax(unitstr) > 0 then
@@ -1955,7 +1955,7 @@ function pfUI.uf:RefreshUnit(unit, component)
   if customfade == "1" then
     -- fade custom color into default color
     local perc = UnitHealth(unitstr) / UnitHealthMax(unitstr)
-    local cr, cg, cb, ca = pfUI.api.strsplit(",", customcolor)
+    local cr, cg, cb, ca = GetStringColor(customcolor)
 
     r = (cr*perc) + (r*(1-perc))
     g = (cg*perc) + (g*(1-perc))
@@ -1973,14 +1973,15 @@ function pfUI.uf:RefreshUnit(unit, component)
   local r, g, b, a = .5, .5, .5, 1
   local utype = UnitPowerType(unitstr)
   if utype == 0 then
-    r, g, b, a = pfUI.api.strsplit(",", mana)
+    r, g, b, a = GetStringColor(mana)
   elseif utype == 1 then
-    r, g, b, a = pfUI.api.strsplit(",", rage)
+    r, g, b, a = GetStringColor(rage)
   elseif utype == 2 then
-    r, g, b, a = pfUI.api.strsplit(",", focus)
+    r, g, b, a = GetStringColor(focus)
   elseif utype == 3 then
-    r, g, b, a = pfUI.api.strsplit(",", energy)
+    r, g, b, a = GetStringColor(energy)
   end
+
   unit.power.bar:SetStatusBarColor(r, g, b, a)
 
   if UnitName(unitstr) then
@@ -2627,13 +2628,13 @@ function pfUI.uf.GetColor(self, preset)
     r, g, b = .5, .5, .5
     local utype = UnitPowerType(unitstr)
     if utype == 0 then
-      r, g, b, a = pfUI.api.strsplit(",", mana)
+      r, g, b, a = GetStringColor(mana)
     elseif utype == 1 then
-      r, g, b, a = pfUI.api.strsplit(",", rage)
+      r, g, b, a = GetStringColor(rage)
     elseif utype == 2 then
-      r, g, b, a = pfUI.api.strsplit(",", focus)
+      r, g, b, a = GetStringColor(focus)
     elseif utype == 3 then
-      r, g, b, a = pfUI.api.strsplit(",", energy)
+      r, g, b, a = GetStringColor(energy)
     end
   elseif preset == "level" and config["levelcolor"] == "1" then
     r = GetDifficultyColor(UnitLevel(unitstr)).r
