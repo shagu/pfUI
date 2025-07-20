@@ -204,6 +204,175 @@ local modern = {
   }
 }
 
+-- Nostalgia
+local nostalgia = {
+  ["chat"] = {
+    ["global"] = {
+      ["custombg"] = "1",
+      ["tabmouse"] = "1",
+      ["border"] = "0,0,0,0",
+      ["frameshadow"] = "0",
+      ["background"] = "0,0,0,0",
+    },
+    ["right"] = {
+      ["width"] = "330",
+    },
+    ["left"] = {
+      ["width"] = "330",
+    },
+  },
+  ["bars"] = {
+    ["bar3"] = {
+      ["enable"] = "0",
+    },
+    ["gryphons"] = {
+      ["anchor_right"] = "pfActionBarMain",
+      ["anchor_left"] = "pfActionBarMain",
+      ["texture"] = "Gryphon",
+    },
+    ["bar11"] = {
+      ["icon_size"] = "20",
+      ["background"] = "0",
+    },
+    ["font"] = "Fonts\\ARIALN.TTF",
+    ["bar6"] = {
+      ["icon_size"] = "26",
+      ["background"] = "0",
+    },
+    ["bar4"] = {
+      ["formfactor"] = "2 x 6",
+      ["autohide"] = "1",
+    },
+    ["bar1"] = {
+      ["icon_size"] = "26",
+      ["background"] = "0",
+    },
+    ["macro_size"] = "8",
+    ["bar5"] = {
+      ["enable"] = "0",
+    },
+    ["bar12"] = {
+      ["icon_size"] = "20",
+      ["background"] = "0",
+    },
+    ["count_size"] = "8",
+  },
+  ["panel"] = {
+    ["xp"] = {
+      ["xp_always"] = "1",
+      ["rep_position"] = "BOTTOM",
+      ["rep_display"] = "FLEX",
+      ["xp_anchor"] = "pfActionBarMain",
+      ["texture"] = "Interface\\AddOns\\pfUI\\img\\bar_gradient",
+      ["rep_anchor"] = "pfActionBarMain",
+      ["xp_mode"] = "HORIZONTAL",
+      ["xp_position"] = "BOTTOM",
+      ["rep_mode"] = "HORIZONTAL",
+    },
+  },
+  ["appearance"] = {
+    ["border"] = {
+      ["force_blizz"] = "1",
+      ["color"] = "0.7,0.7,0.7,1",
+      ["background"] = "0.1,0.1,0.1,0.7",
+    },
+  },
+  ["global"] = {
+    ["font_blizzard"] = "1",
+    ["font_unit"] = "Fonts\\ARIALN.TTF",
+    ["font_combat"] = "Fonts\\FRIZQT__.TTF",
+    ["font_unit_name"] = "Fonts\\FRIZQT__.TTF",
+    ["font_unit_size"] = "10",
+    ["font_default"] = "Fonts\\ARIALN.TTF",
+  },
+  ["unitframes"] = {
+    ["grouptarget"] = {
+      ["bartexture"] = "Interface\\AddOns\\pfUI\\img\\bar_gradient",
+      ["pbartexture"] = "Interface\\AddOns\\pfUI\\img\\bar_gradient",
+    },
+    ["ptarget"] = {
+      ["pbartexture"] = "Interface\\AddOns\\pfUI\\img\\bar_gradient",
+      ["bartexture"] = "Interface\\AddOns\\pfUI\\img\\bar_gradient",
+      ["portrait"] = "off",
+    },
+    ["target"] = {
+      ["buffsize"] = "18",
+      ["debuffsize"] = "18",
+      ["portraitwidth"] = "42",
+      ["portraitheight"] = "42",
+      ["txtpowerright"] = "powerdyn",
+      ["pbartexture"] = "Interface\\AddOns\\pfUI\\img\\bar_gradient",
+      ["bartexture"] = "Interface\\AddOns\\pfUI\\img\\bar_gradient",
+      ["width"] = "130",
+      ["portrait"] = "right",
+      ["pheight"] = "8",
+      ["height"] = "24",
+    },
+    ["player"] = {
+      ["buffsize"] = "18",
+      ["debuffsize"] = "18",
+      ["width"] = "130",
+      ["txtpowerright"] = "powerdyn",
+      ["portraitheight"] = "42",
+      ["bartexture"] = "Interface\\AddOns\\pfUI\\img\\bar_gradient",
+      ["portraitwidth"] = "42",
+      ["portrait"] = "left",
+      ["pheight"] = "8",
+      ["height"] = "24",
+      ["pbartexture"] = "Interface\\AddOns\\pfUI\\img\\bar_gradient",
+    },
+    ["focus"] = {
+      ["portraitwidth"] = "42",
+      ["portraitheight"] = "42",
+      ["pbartexture"] = "Interface\\AddOns\\pfUI\\img\\bar_gradient",
+      ["bartexture"] = "Interface\\AddOns\\pfUI\\img\\bar_gradient",
+      ["pheight"] = "8",
+      ["portrait"] = "left",
+      ["height"] = "24",
+    },
+    ["raid"] = {
+      ["verticalbar"] = "1",
+      ["bartexture"] = "Interface\\AddOns\\pfUI\\img\\bar_gradient",
+      ["pbartexture"] = "Interface\\AddOns\\pfUI\\img\\bar_gradient",
+      ["width"] = "40",
+    },
+    ["pet"] = {
+      ["pbartexture"] = "Interface\\AddOns\\pfUI\\img\\bar_gradient",
+      ["bartexture"] = "Interface\\AddOns\\pfUI\\img\\bar_gradient",
+      ["portrait"] = "off",
+    },
+    ["group"] = {
+      ["portraitwidth"] = "48",
+      ["portraitheight"] = "48",
+      ["pbartexture"] = "Interface\\AddOns\\pfUI\\img\\bar_gradient",
+      ["bartexture"] = "Interface\\AddOns\\pfUI\\img\\bar_gradient",
+      ["portrait"] = "left",
+    },
+    ["tttarget"] = {
+      ["pbartexture"] = "Interface\\AddOns\\pfUI\\img\\bar_gradient",
+      ["bartexture"] = "Interface\\AddOns\\pfUI\\img\\bar_gradient",
+      ["portrait"] = "off",
+      ["pheight"] = "4",
+      ["height"] = "15",
+    },
+    ["grouppet"] = {
+      ["bartexture"] = "Interface\\AddOns\\pfUI\\img\\bar_gradient",
+      ["pbartexture"] = "Interface\\AddOns\\pfUI\\img\\bar_gradient",
+    },
+    ["focustarget"] = {
+      ["pbartexture"] = "Interface\\AddOns\\pfUI\\img\\bar_gradient",
+      ["bartexture"] = "Interface\\AddOns\\pfUI\\img\\bar_gradient",
+      ["portrait"] = "off",
+    },
+    ["ttarget"] = {
+      ["pbartexture"] = "Interface\\AddOns\\pfUI\\img\\bar_gradient",
+      ["bartexture"] = "Interface\\AddOns\\pfUI\\img\\bar_gradient",
+      ["portrait"] = "off",
+      ["pheight"] = "6",
+    },
+  },
+}
+
 -- Legacy
 local legacy = {
   ["chat"] = {
@@ -443,15 +612,18 @@ local adapta = {
 
 -- assign profiles to userdata
 pfUI_profiles["Modern"] = modern
+pfUI_profiles["Nostalgia"] = nostalgia
 pfUI_profiles["Legacy"] = legacy
 pfUI_profiles["Adapta"] = adapta
 pfUI_profiles["Slim"] = slim
+
 
 -- overwrite core profiles in userdata
 local profile_loader = CreateFrame("Frame")
 profile_loader:RegisterEvent("VARIABLES_LOADED")
 profile_loader:SetScript("OnEvent", function()
   pfUI_profiles["Modern"] = modern
+  pfUI_profiles["Nostalgia"] = nostalgia
   pfUI_profiles["Legacy"] = legacy
   pfUI_profiles["Adapta"] = adapta
   pfUI_profiles["Slim"] = slim
