@@ -863,8 +863,8 @@ function pfUI.uf:UpdateConfig()
 end
 
 function pfUI.uf.OnShow()
-  pfUI.uf:RefreshUnit(this)
   pfUI.uf:RefreshUnit(this, "portrait")
+  pfUI.uf:RefreshUnit(this, "base")
 end
 
 function pfUI.uf.OnEvent()
@@ -934,6 +934,7 @@ function pfUI.uf.OnUpdate()
 
     -- clear update caches
     this.update_full = nil
+    this.update_base = nil
     this.update_aura = nil
     this.update_portrait = nil
     this.update_pvp = nil
@@ -942,16 +943,24 @@ function pfUI.uf.OnUpdate()
     if this.update_aura then
       pfUI.uf:RefreshUnit(this, "aura")
       this.update_aura = nil
+      this.update_base = true
     end
 
     if this.update_portrait then
       pfUI.uf:RefreshUnit(this, "portrait")
       this.update_portrait = nil
+      this.update_base = true
     end
 
     if this.update_pvp then
       pfUI.uf:RefreshUnit(this, "pvp")
       this.update_pvp = nil
+      this.update_base = true
+    end
+
+    if this.update_base then
+      pfUI.uf:RefreshUnit(this, "base")
+      this.update_base = nil
     end
   end
 
@@ -1499,7 +1508,7 @@ function pfUI.uf:RefreshUnit(unit, component)
   -- save current values
   unit.namecache = UnitName(unitstr)
 
-  -- Buffs
+  -- buffs
   if unit.buffs and ( component == "all" or component == "aura" ) then
     local texture, stacks
 
@@ -1529,7 +1538,7 @@ function pfUI.uf:RefreshUnit(unit, component)
     end
   end
 
-  -- Debuffs
+  -- debuffs
   if unit.debuffs and ( component == "all" or component == "aura" ) then
     local texture, stacks, dtype
     local perrow = unit.config.debuffperrow
@@ -1627,7 +1636,7 @@ function pfUI.uf:RefreshUnit(unit, component)
   end
 
   -- indicators
-  if component == "all" or ( component == "all" or component == "aura" ) then
+  if component == "all" or component == "aura" then
     if not unit.dispellable and unit.config.debuff_indicator ~= "0" then
       unit.dispellable = pfUI.uf:SetupDebuffFilter((unit.config.debuff_ind_class == "0" and true or nil))
     elseif not unit.dispellable then
@@ -1894,111 +1903,114 @@ function pfUI.uf:RefreshUnit(unit, component)
     end
   end
 
-  -- Unit HP/MP
-  local hp, hpmax = UnitHealth(unitstr), UnitHealthMax(unitstr)
-  local power, powermax = UnitMana(unitstr), UnitManaMax(unitstr)
+  -- base frame
+  if component == "all" or component == "base" then
+    -- Unit HP/MP
+    local hp, hpmax = UnitHealth(unitstr), UnitHealthMax(unitstr)
+    local power, powermax = UnitMana(unitstr), UnitManaMax(unitstr)
 
-  if unit.config.invert_healthbar == "1" then
-    hp = hpmax - hp
-  end
+    if unit.config.invert_healthbar == "1" then
+      hp = hpmax - hp
+    end
 
-  unit.hp.bar:SetMinMaxValues(0, hpmax, true)
-  unit.hp.bar:SetValue(hp)
+    unit.hp.bar:SetMinMaxValues(0, hpmax, true)
+    unit.hp.bar:SetValue(hp)
 
-  unit.power.bar:SetMinMaxValues(0, powermax, true)
-  unit.power.bar:SetValue(power)
+    unit.power.bar:SetMinMaxValues(0, powermax, true)
+    unit.power.bar:SetValue(power)
 
-  -- set healthbar color
-  local custom_active = nil
-  local customfullhp = unit.config.defcolor == "0" and unit.config.customfullhp or C.unitframes.customfullhp
-  local customcolor = unit.config.defcolor == "0" and unit.config.customcolor or C.unitframes.customcolor
-  local customfade = unit.config.defcolor == "0" and unit.config.customfade or C.unitframes.customfade
-  local custom = unit.config.defcolor == "0" and unit.config.custom or C.unitframes.custom
+    -- set healthbar color
+    local custom_active = nil
+    local customfullhp = unit.config.defcolor == "0" and unit.config.customfullhp or C.unitframes.customfullhp
+    local customcolor = unit.config.defcolor == "0" and unit.config.customcolor or C.unitframes.customcolor
+    local customfade = unit.config.defcolor == "0" and unit.config.customfade or C.unitframes.customfade
+    local custom = unit.config.defcolor == "0" and unit.config.custom or C.unitframes.custom
 
-  local r, g, b, a = .2, .2, .2, 1
-  if customfullhp == "1" and UnitHealth(unitstr) == UnitHealthMax(unitstr) then
-    r, g, b, a = GetStringColor(customcolor)
-    custom_active = true
-  elseif custom == "0" then
-    if UnitIsPlayer(unitstr) then
-      local _, class = UnitClass(unitstr)
-      local color = RAID_CLASS_COLORS[class]
-      if color then r, g, b = color.r, color.g, color.b end
-    elseif unit.label == "pet" then
-      local happiness = GetPetHappiness()
-      if happiness == 1 then
-        r, g, b = 1, 0, 0
-      elseif happiness == 2 then
-        r, g, b = 1, 1, 0
+    local r, g, b, a = .2, .2, .2, 1
+    if customfullhp == "1" and UnitHealth(unitstr) == UnitHealthMax(unitstr) then
+      r, g, b, a = GetStringColor(customcolor)
+      custom_active = true
+    elseif custom == "0" then
+      if UnitIsPlayer(unitstr) then
+        local _, class = UnitClass(unitstr)
+        local color = RAID_CLASS_COLORS[class]
+        if color then r, g, b = color.r, color.g, color.b end
+      elseif unit.label == "pet" then
+        local happiness = GetPetHappiness()
+        if happiness == 1 then
+          r, g, b = 1, 0, 0
+        elseif happiness == 2 then
+          r, g, b = 1, 1, 0
+        else
+          r, g, b = 0, 1, 0
+        end
       else
-        r, g, b = 0, 1, 0
+        local color = UnitReactionColor[UnitReaction(unitstr, "player")]
+        if color then r, g, b = color.r, color.g, color.b end
       end
-    else
-      local color = UnitReactionColor[UnitReaction(unitstr, "player")]
-      if color then r, g, b = color.r, color.g, color.b end
+    elseif custom == "1"  then
+      r, g, b, a = GetStringColor(customcolor)
+      custom_active = true
+    elseif custom == "2" then
+      if UnitHealthMax(unitstr) > 0 then
+        r, g, b = GetColorGradient(UnitHealth(unitstr) / UnitHealthMax(unitstr))
+      else
+        r, g, b = 0, 0, 0
+      end
     end
-  elseif custom == "1"  then
-    r, g, b, a = GetStringColor(customcolor)
-    custom_active = true
-  elseif custom == "2" then
-    if UnitHealthMax(unitstr) > 0 then
-      r, g, b = GetColorGradient(UnitHealth(unitstr) / UnitHealthMax(unitstr))
-    else
-      r, g, b = 0, 0, 0
+
+    if C.unitframes.pastel == "1" and not custom_active then
+      r, g, b = (r + .5) * .5, (g + .5) * .5, (b + .5) * .5
     end
-  end
 
-  if C.unitframes.pastel == "1" and not custom_active then
-    r, g, b = (r + .5) * .5, (g + .5) * .5, (b + .5) * .5
-  end
+    if customfade == "1" then
+      -- fade custom color into default color
+      local perc = UnitHealth(unitstr) / UnitHealthMax(unitstr)
+      local cr, cg, cb, ca = GetStringColor(customcolor)
 
-  if customfade == "1" then
-    -- fade custom color into default color
-    local perc = UnitHealth(unitstr) / UnitHealthMax(unitstr)
-    local cr, cg, cb, ca = GetStringColor(customcolor)
-
-    r = (cr*perc) + (r*(1-perc))
-    g = (cg*perc) + (g*(1-perc))
-    b = (cb*perc) + (b*(1-perc))
-  end
-
-  unit.hp.bar:SetStatusBarColor(r, g, b, a)
-
-  -- set powerbar color
-  local mana = unit.config.defcolor == "0" and unit.config.manacolor or C.unitframes.manacolor
-  local rage = unit.config.defcolor == "0" and unit.config.ragecolor or C.unitframes.ragecolor
-  local energy = unit.config.defcolor == "0" and unit.config.energycolor or C.unitframes.energycolor
-  local focus = unit.config.defcolor == "0" and unit.config.focuscolor or C.unitframes.focuscolor
-
-  local r, g, b, a = .5, .5, .5, 1
-  local utype = UnitPowerType(unitstr)
-  if utype == 0 then
-    r, g, b, a = GetStringColor(mana)
-  elseif utype == 1 then
-    r, g, b, a = GetStringColor(rage)
-  elseif utype == 2 then
-    r, g, b, a = GetStringColor(focus)
-  elseif utype == 3 then
-    r, g, b, a = GetStringColor(energy)
-  end
-
-  unit.power.bar:SetStatusBarColor(r, g, b, a)
-
-  if UnitName(unitstr) then
-    unit.hpLeftText:SetText(pfUI.uf:GetStatusValue(unit, "hpleft"))
-    unit.hpCenterText:SetText(pfUI.uf:GetStatusValue(unit, "hpcenter"))
-    unit.hpRightText:SetText(pfUI.uf:GetStatusValue(unit, "hpright"))
-
-    unit.powerLeftText:SetText(pfUI.uf:GetStatusValue(unit, "powerleft"))
-    unit.powerCenterText:SetText(pfUI.uf:GetStatusValue(unit, "powercenter"))
-    unit.powerRightText:SetText(pfUI.uf:GetStatusValue(unit, "powerright"))
-
-    if UnitIsTapped(unitstr) and not UnitIsTappedByPlayer(unitstr) then
-      unit.hp.bar:SetStatusBarColor(.5,.5,.5,.5)
+      r = (cr*perc) + (r*(1-perc))
+      g = (cg*perc) + (g*(1-perc))
+      b = (cb*perc) + (b*(1-perc))
     end
-  end
 
-  pfUI.uf:RefreshUnitState(unit)
+    unit.hp.bar:SetStatusBarColor(r, g, b, a)
+
+    -- set powerbar color
+    local mana = unit.config.defcolor == "0" and unit.config.manacolor or C.unitframes.manacolor
+    local rage = unit.config.defcolor == "0" and unit.config.ragecolor or C.unitframes.ragecolor
+    local energy = unit.config.defcolor == "0" and unit.config.energycolor or C.unitframes.energycolor
+    local focus = unit.config.defcolor == "0" and unit.config.focuscolor or C.unitframes.focuscolor
+
+    local r, g, b, a = .5, .5, .5, 1
+    local utype = UnitPowerType(unitstr)
+    if utype == 0 then
+      r, g, b, a = GetStringColor(mana)
+    elseif utype == 1 then
+      r, g, b, a = GetStringColor(rage)
+    elseif utype == 2 then
+      r, g, b, a = GetStringColor(focus)
+    elseif utype == 3 then
+      r, g, b, a = GetStringColor(energy)
+    end
+
+    unit.power.bar:SetStatusBarColor(r, g, b, a)
+
+    if UnitName(unitstr) then
+      unit.hpLeftText:SetText(pfUI.uf:GetStatusValue(unit, "hpleft"))
+      unit.hpCenterText:SetText(pfUI.uf:GetStatusValue(unit, "hpcenter"))
+      unit.hpRightText:SetText(pfUI.uf:GetStatusValue(unit, "hpright"))
+
+      unit.powerLeftText:SetText(pfUI.uf:GetStatusValue(unit, "powerleft"))
+      unit.powerCenterText:SetText(pfUI.uf:GetStatusValue(unit, "powercenter"))
+      unit.powerRightText:SetText(pfUI.uf:GetStatusValue(unit, "powerright"))
+
+      if UnitIsTapped(unitstr) and not UnitIsTappedByPlayer(unitstr) then
+        unit.hp.bar:SetStatusBarColor(.5,.5,.5,.5)
+      end
+    end
+
+    pfUI.uf:RefreshUnitState(unit)
+  end
 end
 
 local buttons = {
