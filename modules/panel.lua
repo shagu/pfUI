@@ -818,7 +818,7 @@ pfUI:RegisterModule("panel", "vanilla:tbc", function()
 
   pfUI.panel.minimap.text = pfUI.panel.minimap:CreateFontString("MinimapZoneText", "LOW", "GameFontNormal")
   pfUI.panel.minimap.text:SetFont(font, font_size, "OUTLINE")
-  pfUI.panel.minimap.text:SetPoint("CENTER", 0, 0)
+  pfUI.panel.minimap.text:SetAllPoints()
   pfUI.panel.minimap.text:SetFontObject(GameFontWhite)
 
   if C.panel.other.minimap == "none" then pfUI.panel.minimap:Hide() end
