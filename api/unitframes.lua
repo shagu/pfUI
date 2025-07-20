@@ -2619,10 +2619,22 @@ function pfUI.uf.GetColor(self, preset)
     end
 
   elseif preset == "power" and config["powercolor"] == "1" then
-    r = ManaBarColor[UnitPowerType(unitstr)].r
-    g = ManaBarColor[UnitPowerType(unitstr)].g
-    b = ManaBarColor[UnitPowerType(unitstr)].b
+    local mana = config.defcolor == "0" and config.manacolor or C.unitframes.manacolor
+    local rage = config.defcolor == "0" and config.ragecolor or C.unitframes.ragecolor
+    local energy = config.defcolor == "0" and config.energycolor or C.unitframes.energycolor
+    local focus = config.defcolor == "0" and config.focuscolor or C.unitframes.focuscolor
 
+    r, g, b = .5, .5, .5
+    local utype = UnitPowerType(unitstr)
+    if utype == 0 then
+      r, g, b, a = pfUI.api.strsplit(",", mana)
+    elseif utype == 1 then
+      r, g, b, a = pfUI.api.strsplit(",", rage)
+    elseif utype == 2 then
+      r, g, b, a = pfUI.api.strsplit(",", focus)
+    elseif utype == 3 then
+      r, g, b, a = pfUI.api.strsplit(",", energy)
+    end
   elseif preset == "level" and config["levelcolor"] == "1" then
     r = GetDifficultyColor(UnitLevel(unitstr)).r
     g = GetDifficultyColor(UnitLevel(unitstr)).g
