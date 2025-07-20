@@ -2631,9 +2631,7 @@ function pfUI.uf.GetColor(self, preset)
 
   -- pastel
   if C.unitframes.pastel == "1" then
-    r = ( r + .75 ) * .5
-    g = ( g + .75 ) * .5
-    b = ( b + .75 ) * .5
+    r, g, b = (r + .5) * .5, (g + .5) * .5, (b + .5) * .5
   end
 
   return rgbhex(r,g,b)
