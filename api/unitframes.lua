@@ -414,6 +414,7 @@ function pfUI.uf:UpdateFrameSize()
       -- use custom portrait size
       self.portrait:SetWidth(ptwidth)
       self.portrait:SetHeight(ptheight)
+      portrait = ptwidth + spacing + 2*default_border
     end
   end
 
@@ -534,11 +535,7 @@ function pfUI.uf:UpdateConfig()
   elseif f.config.portrait == "left" then
     f.portrait:SetParent(f)
     f.portrait:ClearAllPoints()
-    if f.config.portraitwidth == "-1" and f.config.portraitheight == "-1" then
-      f.portrait:SetPoint("TOPLEFT", f, "TOPLEFT", 0, 0)
-    else
-      f.portrait:SetPoint("LEFT", f, "LEFT", -f.config.portraitwidth - 2*default_border - spacing, 0)
-    end
+    f.portrait:SetPoint("LEFT", f, "LEFT", 0, 0)
 
     f.hp:ClearAllPoints()
     f.hp:SetPoint("TOPRIGHT", f, "TOPRIGHT", 0, 0)
@@ -556,11 +553,7 @@ function pfUI.uf:UpdateConfig()
   elseif f.config.portrait == "right" then
     f.portrait:SetParent(f)
     f.portrait:ClearAllPoints()
-    if f.config.portraitwidth == "-1" and f.config.portraitheight == "-1" then
-      f.portrait:SetPoint("TOPRIGHT", f, "TOPRIGHT", 0, 0)
-    else
-      f.portrait:SetPoint("RIGHT", f, "RIGHT", f.config.portraitwidth + 2*default_border + spacing, 0)
-    end
+    f.portrait:SetPoint("RIGHT", f, "RIGHT", 0, 0)
 
     f.hp:ClearAllPoints()
     f.hp:SetPoint("TOPLEFT", f, "TOPLEFT", 0, 0)
