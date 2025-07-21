@@ -228,6 +228,8 @@ local nostalgia = {
     ["gryphons"] = {
       ["anchor_right"] = "pfActionBarMain",
       ["anchor_left"] = "pfActionBarMain",
+      ["offset_h"] = "-60",
+      ["size"] = "80",
       ["texture"] = "Gryphon",
     },
     ["bar11"] = {
