@@ -256,6 +256,7 @@ pfUI:RegisterModule("share", "vanilla:tbc", function ()
     f:RegisterForDrag("LeftButton")
     f:SetScript("OnDragStart", function() f:StartMoving() end)
     f:SetScript("OnDragStop", function() f:StopMovingOrSizing() end)
+    f:SetFrameStrata("DIALOG")
 
     f:SetScript("OnShow", function()
       if pfUI.gui and pfUI.gui:IsShown() then
