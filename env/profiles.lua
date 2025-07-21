@@ -289,6 +289,7 @@ local nostalgia = {
     ["grouptarget"] = {
       ["bartexture"] = "Interface\\AddOns\\pfUI\\img\\bar_gradient",
       ["pbartexture"] = "Interface\\AddOns\\pfUI\\img\\bar_gradient",
+      ["width"] = "100",
     },
     ["ptarget"] = {
       ["pbartexture"] = "Interface\\AddOns\\pfUI\\img\\bar_gradient",
@@ -296,7 +297,9 @@ local nostalgia = {
       ["portrait"] = "off",
     },
     ["target"] = {
+      ["buffs"] = "TOPRIGHT",
       ["buffsize"] = "18",
+      ["debuffs"] = "TOPRIGHT",
       ["debuffsize"] = "18",
       ["portraitwidth"] = "42",
       ["portraitheight"] = "42",
@@ -342,8 +345,11 @@ local nostalgia = {
       ["portrait"] = "off",
     },
     ["group"] = {
-      ["portraitwidth"] = "48",
-      ["portraitheight"] = "48",
+      ["portraitheight"] = "42",
+      ["portraitwidth"] = "42",
+      ["pheight"] = "8",
+      ["width"] = "130",
+      ["height"] = "24",
       ["pbartexture"] = "Interface\\AddOns\\pfUI\\img\\bar_gradient",
       ["bartexture"] = "Interface\\AddOns\\pfUI\\img\\bar_gradient",
       ["portrait"] = "left",
@@ -358,6 +364,7 @@ local nostalgia = {
     ["grouppet"] = {
       ["bartexture"] = "Interface\\AddOns\\pfUI\\img\\bar_gradient",
       ["pbartexture"] = "Interface\\AddOns\\pfUI\\img\\bar_gradient",
+      ["width"] = "80",
     },
     ["focustarget"] = {
       ["pbartexture"] = "Interface\\AddOns\\pfUI\\img\\bar_gradient",
