@@ -273,11 +273,17 @@ local nostalgia = {
     },
   },
   ["appearance"] = {
+    ["castbar"] = {
+      ["texture"] = "Interface\\AddOns\\pfUI\\img\\bar_gradient",
+    },
     ["border"] = {
       ["force_blizz"] = "1",
       ["color"] = "0.7,0.7,0.7,1",
       ["background"] = "0.1,0.1,0.1,0.7",
     },
+  },
+  ["nameplates"] = {
+    ["healthtexture"] = "Interface\\AddOns\\pfUI\\img\\bar_gradient",
   },
   ["global"] = {
     ["font_blizzard"] = "1",
