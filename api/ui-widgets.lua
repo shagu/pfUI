@@ -680,9 +680,6 @@ function pfUI.api.SkinButton(button, cr, cg, cb, icon, disableHighlight)
 
   b:SetFont(pfUI.font_default, pfUI_config.global.font_size, "OUTLINE")
 
-  local text = b:GetFontString()
-  if text then text:SetAllPoints() end
-
   b.LockHighlight = function()
     b:SetBackdropBorderColor(cr,cg,cb,1)
     b.locked = true
