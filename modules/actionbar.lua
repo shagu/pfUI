@@ -987,6 +987,11 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
   local function CreateActionButton(parent, bar, button)
     -- load config
     local size = C.bars["bar"..bar].icon_size
+
+    local custom_icon_ratio = C.bars["bar"..bar].icon_custom_ratio
+    local width = C.bars["bar"..bar].icon_width
+    local height = C.bars["bar"..bar].icon_height
+
     local font = pfUI.media[C.bars.font]
     local font_offset = tonumber(C.bars.font_offset)
 
@@ -1206,8 +1211,13 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
 
     -- general appearance
     f.showempty = showempty == "1" and true or nil
-    f:SetHeight(size)
-    f:SetWidth(size)
+    if custom_icon_ratio == "1" then
+      f:SetHeight(height)
+      f:SetWidth(width)
+    else
+      f:SetHeight(size)
+      f:SetWidth(size)
+    end
     CreateBackdrop(f, border)
 
     return f
@@ -1224,6 +1234,9 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     local autohide = C.bars["bar"..i].autohide
     local hide_time = C.bars["bar"..i].hide_time
     local hide_combat = C.bars["bar"..i].hide_combat == "1" and true or nil
+    local custom_icon_ratio = C.bars["bar"..i].icon_custom_ratio
+    local width = C.bars["bar"..i].icon_width
+    local height = C.bars["bar"..i].icon_height
 
     local buttons = tonumber(C.bars["bar"..i].buttons) or 12
     if i == 11 and bars[i] then -- shapeshift buttons
@@ -1383,9 +1396,15 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
     end
 
     -- adjust actionbar size
-    BarLayoutSize(bars[i], buttons, formfactor, size, border, spacing)
-    bars[i]:SetWidth(bars[i]._size[1])
-    bars[i]:SetHeight(bars[i]._size[2])
+    if custom_icon_ratio == "1" then
+      BarLayoutSize(bars[i], buttons, formfactor, size, border, spacing, width, height)
+      bars[i]:SetWidth(bars[i]._custom_size[1])
+      bars[i]:SetHeight(bars[i]._custom_size[2])
+    else
+      BarLayoutSize(bars[i], buttons, formfactor, size, border, spacing)
+      bars[i]:SetWidth(bars[i]._size[1])
+      bars[i]:SetHeight(bars[i]._size[2])
+    end
     bars[i]:ClearAllPoints()
     if i == 1 then -- main
       bars[i]:SetPoint("BOTTOM", 0, 2*border)
