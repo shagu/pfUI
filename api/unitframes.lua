@@ -776,9 +776,14 @@ function pfUI.uf:UpdateConfig()
         af = "TOPRIGHT"
       end
 
-      f.buffs[i]:SetPoint(af, f, f.config.buffs,
-      invert_v * (i-1-row*perrow)*(2*default_border + f.config.buffsize + 1),
-      invert_h * (row*(2*default_border + f.config.buffsize + 1) + (2*default_border + 1)))
+      local anchor = f.config.portraitheight ~= "-1" and f.hp or f
+      if anchor == f.hp and (f.config.buffs == "BOTTOMLEFT" or f.config.buffs == "BOTTOMRIGHT") then
+        anchor = f.power
+      end
+      local multiply = C.appearance.border.force_blizz == "1" and 1 or 2
+      f.buffs[i]:SetPoint(af, anchor, f.config.buffs,
+      invert_v * (i-1-row*perrow)*(multiply*default_border + f.config.buffsize + 1),
+      invert_h * (row*(multiply*default_border + f.config.buffsize + 1) + (multiply*default_border + 1)))
 
       f.buffs[i]:SetWidth(f.config.buffsize)
       f.buffs[i]:SetHeight(f.config.buffsize)
@@ -1578,9 +1583,14 @@ function pfUI.uf:RefreshUnit(unit, component)
       local row = floor((i-1) / unit.config.debuffperrow)
 
       if reposition then
-        unit.debuffs[i]:SetPoint(af, unit, unit.config.debuffs,
-        invert_v * (i-1-row*perrow)*(2*default_border + unit.config.debuffsize + 1),
-        invert_h * ((row+buffrow)*(2*default_border + unit.config.debuffsize + 1) + (2*default_border + 1)))
+        local anchor = unit.config.portraitheight ~= "-1" and unit.hp or unit
+        if anchor == unit.hp and (unit.config.debuffs == "BOTTOMLEFT" or unit.config.debuffs == "BOTTOMRIGHT") then
+          anchor = unit.power
+        end
+        local multiply = C.appearance.border.force_blizz == "1" and 1 or 2
+        unit.debuffs[i]:SetPoint(af, anchor, unit.config.debuffs,
+        invert_v * (i-1-row*perrow)*(multiply*default_border + unit.config.debuffsize + 1),
+        invert_h * ((row+buffrow)*(multiply*default_border + unit.config.debuffsize + 1) + (multiply*default_border + 1)))
       end
 
       if unit.label == "player" then
