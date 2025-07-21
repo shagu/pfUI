@@ -74,7 +74,7 @@ pfUI:RegisterModule("buffwatch", "vanilla:tbc", function ()
     return anchor
   end
 
-  local function GetBuffData(unit, id, type, skipTooltip)
+  local function GetBuffData(unit, id, type, selfdebuff)
     if unit == "player" then
       local bid = GetPlayerBuff(PLAYER_BUFF_START_ID+id, type)
       local stacks = GetPlayerBuffApplications(bid)
@@ -82,12 +82,15 @@ pfUI:RegisterModule("buffwatch", "vanilla:tbc", function ()
       local texture = GetPlayerBuffTexture(bid)
       local name
 
-      if not skipTooltip and texture then
+      if texture then
         scanner:SetPlayerBuff(bid)
         name = scanner:Line(1)
       end
 
       return remaining, texture, name, stacks
+    elseif libdebuff and selfdebuff then
+      local name, rank, texture, stacks, dtype, duration, timeleft = libdebuff:UnitOwnDebuff(unit, id)
+      return timeleft, texture, name, stacks
     elseif libdebuff then
       local name, rank, texture, stacks, dtype, duration, timeleft = libdebuff:UnitDebuff(unit, id)
       return timeleft, texture, name, stacks
@@ -228,8 +231,10 @@ pfUI:RegisterModule("buffwatch", "vanilla:tbc", function ()
 
   local function RefreshBuffBarFrame(frame)
     -- reinitialize all active buffs
+    local selfdebuff = frame.config.selfdebuff == "1"
+
     for i=1,32 do
-      local timeleft, texture, name, stacks = GetBuffData(frame.unit, i, frame.type)
+      local timeleft, texture, name, stacks = GetBuffData(frame.unit, i, frame.type, selfdebuff)
       timeleft = timeleft or 0
 
       if texture and name and name ~= "" and BuffIsVisible(frame.config, name) then

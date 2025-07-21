@@ -433,6 +433,7 @@ local slim = {
     ["tdebuff"] = {
       ["enable"] = "1",
       ["height"] = "14",
+      ["selfdebuff"] = "1",
     },
   },
   ["chat"] = {
