@@ -751,7 +751,7 @@ function pfUI.uf:UpdateConfig()
       f.buffs[i].id = i
       f.buffs[i]:Hide()
 
-      f.buffs[i]:SetFrameLevel(20)
+      f.buffs[i]:SetFrameLevel(12)
       CreateBackdrop(f.buffs[i], default_border)
 
       f.buffs[i]:RegisterForClicks("RightButtonUp")
@@ -832,7 +832,7 @@ function pfUI.uf:UpdateConfig()
       f.debuffs[i].id = i
       f.debuffs[i]:Hide()
 
-      f.debuffs[i]:SetFrameLevel(20)
+      f.debuffs[i]:SetFrameLevel(12)
       CreateBackdrop(f.debuffs[i], default_border)
 
       f.debuffs[i]:RegisterForClicks("RightButtonUp")
