@@ -17,6 +17,14 @@ pfUI:RegisterModule("uf_tukui", "vanilla:tbc", function ()
     pfUI.uf.player:SetFrameStrata("LOW")
     pfUI.uf.player:SetHeight(pfUI.uf.player:GetHeight() + 2*default_border + (C.global.font_size * 1.25) + pspacing)
 
+    if pfUI.uf.player.config.portrait == "left" then
+      pfUI.uf.player.portrait:ClearAllPoints()
+      pfUI.uf.player.portrait:SetPoint("TOPLEFT", pfUI.uf.player, "TOPLEFT", 0, 0)
+    elseif pfUI.uf.player.config.portrait == "right" then
+      pfUI.uf.player.portrait:ClearAllPoints()
+      pfUI.uf.player.portrait:SetPoint("TOPRIGHT", pfUI.uf.player, "TOPRIGHT", 0, 0)
+    end
+
     pfUI.uf.player.caption = pfUI.uf.player.caption or CreateFrame("Frame", "pfPlayerCaption", pfUI.uf.player)
     pfUI.uf.player.caption:SetHeight(C.global.font_size * 1.25)
     pfUI.uf.player.caption:SetPoint("BOTTOMRIGHT",pfUI.uf.player, "BOTTOMRIGHT",0, 0)
@@ -63,6 +71,14 @@ pfUI:RegisterModule("uf_tukui", "vanilla:tbc", function ()
     pfUI.uf.target:UpdateFrameSize()
     pfUI.uf.target:SetFrameStrata("LOW")
     pfUI.uf.target:SetHeight(pfUI.uf.target:GetHeight() + 2*default_border + (C.global.font_size * 1.25) + tspacing)
+
+    if pfUI.uf.target.config.portrait == "left" then
+      pfUI.uf.target.portrait:ClearAllPoints()
+      pfUI.uf.target.portrait:SetPoint("TOPLEFT", pfUI.uf.target, "TOPLEFT", 0, 0)
+    elseif pfUI.uf.target.config.portrait == "right" then
+      pfUI.uf.target.portrait:ClearAllPoints()
+      pfUI.uf.target.portrait:SetPoint("TOPRIGHT", pfUI.uf.target, "TOPRIGHT", 0, 0)
+    end
 
     pfUI.uf.target.caption = pfUI.uf.target.caption or CreateFrame("Frame", "pfTargetCaption", pfUI.uf.target)
     pfUI.uf.target.caption:SetHeight(C.global.font_size * 1.25)
