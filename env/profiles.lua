@@ -6,10 +6,6 @@ local modern = {
       ["border"] = "0.1,0.1,0.1,0.5",
       ["background"] = "0.1,0.1,0.1,0.2",
     },
-    ["right"] = {
-      ["enable"] = "1",
-      ["alwaysshow"] = "1",
-    },
   },
   ["global"] = {
     ["font_unit"] = "Interface\\AddOns\\pfUI\\fonts\\Myriad-Pro.ttf",
@@ -394,11 +390,6 @@ local nostalgia = {
 
 -- Legacy
 local legacy = {
-  ["chat"] = {
-    ["right"] = {
-      ["enable"] = "1",
-    },
-  },
 }
 
 -- Slim
@@ -456,7 +447,6 @@ local slim = {
       ["width"] = "405",
     },
     ["right"] = {
-      ["enable"] = "1",
       ["height"] = "160",
       ["width"] = "405",
     },
@@ -906,7 +896,6 @@ local adapta = {
       ["width"] = "400",
     },
     ["right"] = {
-      ["enable"] = "1",
       ["height"] = "161",
       ["width"] = "400",
     },
