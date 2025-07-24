@@ -1413,9 +1413,18 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
         if C.global.profile and pfUI_profiles[C.global.profile] then
           CreateQuestionDialog(T["Load profile"] .. " '|cff33ffcc" .. C.global.profile .. "|r'?", function()
             local selp = C.global.profile
+            local rchat = C.chat.right.enable
+
+            -- load profile
             _G["pfUI_config"] = CopyTable(pfUI_profiles[C.global.profile])
+
+            -- restore values
+            pfUI:UpdateConfig("global", nil, "profile", selp)
+            pfUI:UpdateConfig("chat", "right", "enable", rchat)
+
+            -- add default values
             pfUI:LoadConfig()
-            C.global.profile = selp
+
             ReloadUI()
           end)
         end
