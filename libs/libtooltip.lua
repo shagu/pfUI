@@ -141,7 +141,7 @@ end
 
 local pfHookSetAuctionItem = GameTooltip.SetAuctionItem
 function GameTooltip.SetAuctionItem(self, atype, index)
-  _, libtooltip.itemCount = GetAuctionItemInfo(atype, index)
+  _, _, libtooltip.itemCount = GetAuctionItemInfo(atype, index)
   libtooltip.itemLink = GetAuctionItemLink(atype, index)
   return pfHookSetAuctionItem(self, atype, index)
 end
