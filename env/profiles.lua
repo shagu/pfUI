@@ -529,6 +529,289 @@ local slim = {
   },
 }
 
+-- Light
+local light = {
+  ["unitframes"] = {
+    ["grouptarget"] = {
+      ["pbartexture"] = "Interface\\AddOns\\pfUI\\img\\bar_tukui",
+      ["bartexture"] = "Interface\\AddOns\\pfUI\\img\\bar_tukui",
+      ["pspace"] = "1",
+      ["pheight"] = "2",
+      ["raidiconalign"] = "TOP",
+      ["height"] = "12",
+      ["raidiconoffy"] = "6",
+      ["width"] = "100",
+    },
+    ["ptarget"] = {
+      ["bartexture"] = "Interface\\AddOns\\pfUI\\img\\bar_tukui",
+      ["raidiconalign"] = "TOP",
+      ["raidiconoffy"] = "6",
+      ["pbartexture"] = "Interface\\AddOns\\pfUI\\img\\bar_tukui",
+    },
+    ["target"] = {
+      ["bartexture"] = "Interface\\AddOns\\pfUI\\img\\bar_tukui",
+      ["pspace"] = "1",
+      ["buffperrow"] = "9",
+      ["txthpcenter"] = "powerdyn",
+      ["raidiconalign"] = "TOP",
+      ["height"] = "16",
+      ["buffs"] = "TOPRIGHT",
+      ["raidiconoffy"] = "6",
+      ["selfdebuff"] = "1",
+      ["portrait"] = "right",
+      ["width"] = "160",
+      ["buffsize"] = "13.55",
+      ["pheight"] = "6",
+      ["pbartexture"] = "Interface\\AddOns\\pfUI\\img\\bar_tukui",
+    },
+    ["ttarget"] = {
+      ["bartexture"] = "Interface\\AddOns\\pfUI\\img\\bar_tukui",
+      ["pspace"] = "1",
+      ["raidiconalign"] = "TOP",
+      ["raidiconoffy"] = "6",
+      ["height"] = "7",
+      ["portrait"] = "off",
+      ["pbartexture"] = "Interface\\AddOns\\pfUI\\img\\bar_tukui",
+    },
+    ["layout"] = "tukui",
+    ["player"] = {
+      ["pbartexture"] = "Interface\\AddOns\\pfUI\\img\\bar_tukui",
+      ["bartexture"] = "Interface\\AddOns\\pfUI\\img\\bar_tukui",
+      ["pspace"] = "1",
+      ["custombg"] = "1",
+      ["buffperrow"] = "11",
+      ["portrait"] = "left",
+      ["txthpcenter"] = "powerdyn",
+      ["pheight"] = "6",
+      ["buffsize"] = "13.55",
+      ["custompbg"] = "1",
+      ["height"] = "16",
+      ["showPVP"] = "1",
+      ["debuffs"] = "TOPRIGHT",
+      ["width"] = "160",
+    },
+    ["focus"] = {
+      ["bartexture"] = "Interface\\AddOns\\pfUI\\img\\bar_tukui",
+      ["pspace"] = "1",
+      ["raidiconalign"] = "TOP",
+      ["buffsize"] = "11.45",
+      ["height"] = "24",
+      ["raidiconoffy"] = "6",
+      ["pbartexture"] = "Interface\\AddOns\\pfUI\\img\\bar_tukui",
+    },
+    ["raid"] = {
+      ["indicator_pos"] = "TOPRIGHT",
+      ["txthpleft"] = "none",
+      ["clickcast"] = "1",
+      ["customfullhp"] = "1",
+      ["pbartexture"] = "Interface\\AddOns\\pfUI\\img\\bar_tukui",
+      ["debuff_indicator"] = "3",
+      ["customfade"] = "1",
+      ["width"] = "42",
+      ["focuscolor"] = "0.6,0.4,0.2,1",
+      ["bartexture"] = "Interface\\AddOns\\pfUI\\img\\bar_tukui",
+      ["pspace"] = "1",
+      ["manacolor"] = "0.2,0.2,0.4,1",
+      ["ragecolor"] = "0.6,0.2,0.2,1",
+      ["txthpcenter"] = "namehealthbreak",
+      ["raidiconalign"] = "TOP",
+      ["height"] = "24",
+      ["raidiconoffy"] = "6",
+      ["txthpright"] = "none",
+      ["debuff_ind_pos"] = "BOTTOM",
+      ["debuff_ind_size"] = ".50",
+      ["customcolor"] = "0.1,0.1,0.1,1",
+      ["custom"] = "2",
+      ["glowaggro"] = "0",
+      ["raidpadding"] = "5",
+      ["energycolor"] = "0.6,0.4,0.2,1",
+    },
+    ["focuscolor"] = "0.7,0.6,0.4,1",
+    ["combowidth"] = "12",
+    ["ragecolor"] = "0.6,0.2,0.2,1",
+    ["pet"] = {
+      ["bufflimit"] = "16",
+      ["pheight"] = "3",
+      ["bartexture"] = "Interface\\AddOns\\pfUI\\img\\bar_tukui",
+      ["pspace"] = "1",
+      ["raidiconalign"] = "TOP",
+      ["buffsize"] = "9",
+      ["txtpowercenter"] = "healthdyn",
+      ["height"] = "7",
+      ["buffs"] = "BOTTOMLEFT",
+      ["raidiconoffy"] = "6",
+      ["debuffs"] = "BOTTOMRIGHT",
+      ["portrait"] = "off",
+      ["pbartexture"] = "Interface\\AddOns\\pfUI\\img\\bar_tukui",
+    },
+    ["custompbgcolor"] = "0.3,0.1,0.1,1",
+    ["comboheight"] = "5.10",
+    ["group"] = {
+      ["buffperrow"] = "14",
+      ["pbartexture"] = "Interface\\AddOns\\pfUI\\img\\bar_tukui",
+      ["bartexture"] = "Interface\\AddOns\\pfUI\\img\\bar_tukui",
+      ["pspace"] = "1",
+      ["raidiconalign"] = "TOP",
+      ["height"] = "24",
+      ["raidiconoffy"] = "6",
+      ["width"] = "140",
+    },
+    ["custombgcolor"] = "0.3,0.1,0.1,1",
+    ["tttarget"] = {
+      ["bartexture"] = "Interface\\AddOns\\pfUI\\img\\bar_tukui",
+      ["raidiconalign"] = "TOP",
+      ["raidiconoffy"] = "6",
+      ["pbartexture"] = "Interface\\AddOns\\pfUI\\img\\bar_tukui",
+    },
+    ["grouppet"] = {
+      ["pbartexture"] = "Interface\\AddOns\\pfUI\\img\\bar_tukui",
+      ["bartexture"] = "Interface\\AddOns\\pfUI\\img\\bar_tukui",
+      ["pspace"] = "-1",
+      ["pheight"] = "-1",
+      ["raidiconalign"] = "TOP",
+      ["height"] = "8",
+      ["raidiconoffy"] = "6",
+      ["width"] = "80",
+    },
+    ["manacolor"] = "0.4,0.5,0.7,1",
+    ["energycolor"] = "0.8,0.7,0.4,1",
+    ["focustarget"] = {
+      ["bartexture"] = "Interface\\AddOns\\pfUI\\img\\bar_tukui",
+      ["raidiconalign"] = "TOP",
+      ["raidiconoffy"] = "6",
+      ["pbartexture"] = "Interface\\AddOns\\pfUI\\img\\bar_tukui",
+    },
+    ["customcolor"] = "0.1,0.1,0.1,1",
+  },
+  ["chat"] = {
+    ["global"] = {
+      ["custombg"] = "1",
+      ["tabmouse"] = "1",
+      ["border"] = "0.6,0.6,0.6,0",
+      ["frameshadow"] = "0",
+      ["background"] = "0.1,0.1,0.1,0",
+    },
+    ["text"] = {
+      ["timecolor"] = "0.4,0.4,0.4,0.4",
+      ["timebracket"] = "",
+    },
+  },
+  ["panel"] = {
+    ["left"] = {
+      ["left"] = "exp",
+    },
+    ["xp"] = {
+      ["xp_always"] = "1",
+      ["rep_position"] = "TOP",
+      ["rep_display"] = "FLEX",
+      ["xp_anchor"] = "pfActionBarLeft",
+      ["rep_always"] = "1",
+      ["rep_mode"] = "HORIZONTAL",
+      ["xp_color"] = "0.6,0.6,0.6,1",
+      ["rep_anchor"] = "pfActionBarRight",
+      ["xp_mode"] = "HORIZONTAL",
+      ["xp_height"] = "4",
+      ["xp_position"] = "TOP",
+      ["rep_height"] = "4",
+      ["dont_overlap"] = "1",
+      ["rest_color"] = "0.4,0.4,0.4,0.5",
+    },
+  },
+  ["global"] = {
+    ["font_unit"] = "Interface\\AddOns\\pfUI\\fonts\\Myriad-Pro.ttf",
+    ["font_size"] = "11",
+    ["font_unit_size"] = "11",
+  },
+  ["castbar"] = {
+    ["player"] = {
+      ["showrank"] = "1",
+      ["showicon"] = "1",
+      ["height"] = "12",
+      ["showlag"] = "1",
+    },
+    ["target"] = {
+      ["height"] = "12",
+      ["showicon"] = "1",
+    },
+  },
+  ["appearance"] = {
+    ["cd"] = {
+      ["font"] = "Interface\\AddOns\\pfUI\\fonts\\Myriad-Pro.ttf",
+    },
+    ["castbar"] = {
+      ["texture"] = "Interface\\AddOns\\pfUI\\img\\bar_gradient",
+    },
+    ["bags"] = {
+      ["borderlimit"] = "0",
+    },
+    ["border"] = {
+      ["shadow"] = "1",
+      ["color"] = "0.4,0.4,0.4,1",
+      ["bags"] = "3",
+      ["chat"] = "3",
+      ["default"] = "2",
+      ["background"] = "0.1,0.1,0.1,1",
+    },
+  },
+  ["tooltip"] = {
+    ["statusbar"] = {
+      ["texture"] = "Interface\\AddOns\\pfUI\\img\\bar_gradient",
+    },
+  },
+  ["buffbar"] = {
+    ["pdebuff"] = {
+      ["height"] = "12",
+    },
+    ["pbuff"] = {
+      ["height"] = "12",
+      ["enable"] = "1",
+    },
+    ["tdebuff"] = {
+      ["selfdebuff"] = "1",
+      ["height"] = "12",
+      ["enable"] = "1",
+    },
+  },
+  ["thirdparty"] = {
+    ["chatbg"] = "0",
+    ["dpsmate"] = {
+      ["skin"] = "1",
+    },
+    ["swstats"] = {
+      ["skin"] = "1",
+    },
+    ["shagudps"] = {
+      ["skin"] = "1",
+    },
+  },
+  ["nameplates"] = {
+    ["combatofftank"] = "0.5,0,0.7,1",
+    ["selfdebuff"] = "1",
+    ["healthtexture"] = "Interface\\AddOns\\pfUI\\img\\bar_gradient",
+    ["heighthealth"] = "10",
+    ["health"] = {
+      ["offset"] = "10",
+    },
+  },
+  ["bars"] = {
+    ["bar3"] = {
+      ["formfactor"] = "12 x 1",
+      ["buttons"] = "6",
+    },
+    ["bar5"] = {
+      ["formfactor"] = "12 x 1",
+      ["buttons"] = "6",
+    },
+    ["bar11"] = {
+      ["spacing"] = "3",
+      ["background"] = "0",
+    },
+    ["bar4"] = {
+      ["enable"] = "0",
+    },
+  },
+}
+
 -- Adapta
 local adapta = {
   ["appearance"] = {
@@ -646,6 +929,7 @@ profile_loader:SetScript("OnEvent", function()
   pfUI_profiles["Nostalgia"] = nostalgia
   pfUI_profiles["Legacy"] = legacy
   pfUI_profiles["Adapta"] = adapta
+  pfUI_profiles["Light"] = light
   pfUI_profiles["Slim"] = slim
   this:UnregisterAllEvents()
 end)
