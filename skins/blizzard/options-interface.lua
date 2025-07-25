@@ -96,7 +96,6 @@ pfUI:RegisterSkin("Options - Interface", "vanilla", function ()
   UIOptionsFrame.backdrop:SetPoint("BOTTOMRIGHT", 0, 50)
   UIOptionsFrame:SetHitRectInsets(0,0,0,50)
 
-  local close = GetNoNameObject(UIOptionsFrame, "Button", nil, "UI-Panel-MinimizeButton-Up")
 
   -- increase button layer
   UIOptionsFrameTab1:SetFrameLevel(8)
@@ -104,9 +103,13 @@ pfUI:RegisterSkin("Options - Interface", "vanilla", function ()
   UIOptionsFrameDefaults:SetFrameLevel(8)
   UIOptionsFrameCancel:SetFrameLevel(8)
   UIOptionsFrameOkay:SetFrameLevel(8)
-  close:SetFrameLevel(8)
 
-  SkinCloseButton(close, UIOptionsFrame.backdrop, -6, -6)
+  local close = GetNoNameObject(UIOptionsFrame, "Button", nil, "UI-Panel-MinimizeButton-Up")
+  if close then
+    close:SetFrameLevel(8)
+    SkinCloseButton(close, UIOptionsFrame.backdrop, -6, -6)
+  end
+
   if UIOptionsFrameTitle then
     UIOptionsFrameTitle:ClearAllPoints()
     UIOptionsFrameTitle:SetPoint("TOP", UIOptionsFrame.backdrop, "TOP", 0, -10)
