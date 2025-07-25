@@ -1426,6 +1426,7 @@ pfUI:RegisterModule("actionbar", "vanilla:tbc", function ()
 
         local _, anchor, _ = bars[6]:GetPoint()
         if anchor == bars[1] and C.bars.bar1.enable == "1"
+          and C.bars.bar1.enable == "1" and C.bars.bar6.enable == "1"
           and C.bars.bar1.background == "1" and C.bars.bar6.background == "1"
           and C.bars.bar1.autohide == "0" and C.bars.bar6.autohide == "0"
           and C.bars.bar1.icon_size == C.bars.bar6.icon_size
