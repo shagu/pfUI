@@ -101,6 +101,16 @@ pfUI:RegisterModule("turtle-wow", "vanilla", function ()
       _G.CHAT_HARDCORE_GET = left .. "H" .. right .. default
     end
 
+    -- remove ignore dropdown menu from chat
+    if pfUI.chat then
+      for index, value in ipairs(UnitPopupMenus["FRIEND"]) do
+        if value == "IGNORE_PLAYER" then
+          UnitPopupMenus["FRIEND"][index] = nil
+          break
+        end
+      end
+    end
+
     -- disable some new spells from tracking frame
     if pfUI.tracking then
       pfUI.tracking.invalidSpells["Earthshaker Slam"] = true
