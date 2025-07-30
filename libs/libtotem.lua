@@ -158,13 +158,13 @@ hooksecurefunc("CastSpell", function(id, bookType)
   local name, rank, icon = libspell.GetSpellInfo(id, bookType)
   if not name then return end
   if libtotem:CheckAddQueue(name, rank, icon) then return end
-end, true)
+end)
 
 hooksecurefunc("CastSpellByName", function(effect, target)
   local name, rank, icon = libspell.GetSpellInfo(effect)
   if not name then return end
   if libtotem:CheckAddQueue(name, rank, icon) then return end
-end, true)
+end)
 
 local scanner = libtipscan:GetScanner("prediction")
 hooksecurefunc("UseAction", function(slot, target, selfcast)
@@ -174,4 +174,4 @@ hooksecurefunc("UseAction", function(slot, target, selfcast)
   local icon = GetActionTexture(slot)
   if not name then return end
   if libtotem:CheckAddQueue(name, rank, icon) then return end
-end, true)
+end)

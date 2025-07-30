@@ -15,7 +15,7 @@ pfUI:RegisterSkin("Auctionhouse", "vanilla:tbc", function ()
     hooksecurefunc("AuctionFrame_OnShow", function()
       AuctionFrame:ClearAllPoints()
       AuctionFrame:SetPoint("TOPLEFT", 10, -104)
-    end, 1)
+    end)
 
     StripTextures(AuctionFrame, true)
     CreateBackdrop(AuctionFrame, nil, nil, .75)
@@ -80,7 +80,7 @@ pfUI:RegisterSkin("Auctionhouse", "vanilla:tbc", function ()
         for i = 1, NUM_BROWSE_TO_DISPLAY do
           HandleIcon(_G["BrowseButton"..i.."Item"], _G["BrowseButton"..i.."ItemIconTexture"])
         end
-      end, 1)
+      end)
 
       SkinArrowButton(BrowsePrevPageButton, "left", 18)
       SkinArrowButton(BrowseNextPageButton, "right", 18)
@@ -149,7 +149,7 @@ pfUI:RegisterSkin("Auctionhouse", "vanilla:tbc", function ()
         for i = 1, NUM_BIDS_TO_DISPLAY do
           HandleIcon(_G["BidButton"..i.."Item"], _G["BidButton"..i.."ItemIconTexture"])
         end
-      end, 1)
+      end)
 
       SkinMoneyInputFrame(BidBidPrice)
       BidBidPrice:ClearAllPoints()
@@ -195,13 +195,13 @@ pfUI:RegisterSkin("Auctionhouse", "vanilla:tbc", function ()
         for i = 1, NUM_AUCTIONS_TO_DISPLAY do
           HandleIcon(_G["AuctionsButton"..i.."Item"], _G["AuctionsButton"..i.."ItemIconTexture"])
         end
-      end, 1)
+      end)
 
       SkinButton(AuctionsItemButton)
       hooksecurefunc("AuctionSellItemButton_OnEvent", function()
         if event ~= "NEW_AUCTION_UPDATE" then return end
         HandleIcon(AuctionsItemButton, AuctionsItemButton:GetNormalTexture())
-      end, 1)
+      end)
 
       SkinMoneyInputFrame(StartPrice)
       SkinMoneyInputFrame(BuyoutPrice)

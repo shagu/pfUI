@@ -216,7 +216,7 @@ pfUI:RegisterSkin("Profession", "vanilla:tbc", function ()
               end
             end
           end
-        end, true)
+        end)
       end
 
       -- Compatibility

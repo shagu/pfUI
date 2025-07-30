@@ -38,7 +38,7 @@ pfUI:RegisterSkin("Trainer", "vanilla:tbc", function ()
     SkinButton(ClassTrainerSkillIcon, nil, nil, nil, nil, true)
     hooksecurefunc("ClassTrainer_SetSelection", function()
       HandleIcon(ClassTrainerSkillIcon, ClassTrainerSkillIcon:GetNormalTexture())
-    end, 1)
+    end)
 
     StripTextures(ClassTrainerExpandButtonFrame)
     StripTextures(ClassTrainerCollapseAllButton)

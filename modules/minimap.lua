@@ -72,7 +72,7 @@ pfUI:RegisterModule("minimap", "vanilla:tbc", function ()
       pfUI.minimap:SetAlpha(0)
       Minimap:Hide()
     end
-  end, true)
+  end)
 
   -- battleground icon
   MiniMapBattlefieldFrame:ClearAllPoints()

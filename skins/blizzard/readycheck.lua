@@ -7,7 +7,7 @@ pfUI:RegisterSkin("Readycheck", "vanilla:tbc", function ()
     else -- vanilla
       update_func = "ReadyCheck_OnUpdate"
     end
-  
+
     StripTextures(ReadyCheckFrame, true)
     CreateBackdrop(ReadyCheckFrame, nil, nil, .75)
     CreateBackdropShadow(ReadyCheckFrame)
@@ -41,7 +41,7 @@ pfUI:RegisterSkin("Readycheck", "vanilla:tbc", function ()
     hooksecurefunc("ShowReadyCheck", function()
       max = ReadyCheckFrame.timer
       frame.bar:SetMinMaxValues(0, max)
-    end, 1)
+    end)
 
     hooksecurefunc(update_func, function()
       if not ReadyCheckFrame.timer then return end
@@ -50,6 +50,6 @@ pfUI:RegisterSkin("Readycheck", "vanilla:tbc", function ()
       frame.bar:SetStatusBarColor(GetColorGradient(perc))
       frame.bar:SetValue(ReadyCheckFrame.timer)
       frame.bar.text:SetText(round(ReadyCheckFrame.timer, 2))
-    end, 1)
+    end)
   end)
 end)

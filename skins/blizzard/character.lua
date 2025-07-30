@@ -142,7 +142,7 @@ pfUI:RegisterSkin("Character", "vanilla:tbc", function ()
             RefreshCharacterSlot(this)
           end
         end)
-        hooksecurefunc("PetTab_Update", RefreshPetPosition, 1)
+        hooksecurefunc("PetTab_Update", RefreshPetPosition)
         this.hooked = true
       end
     end)

@@ -63,7 +63,7 @@ pfUI:RegisterSkin("Merchant", "vanilla:tbc", function ()
       _G["MerchantItem"..i]:SetPoint("TOPLEFT", _G["MerchantItem"..i-2], "BOTTOMLEFT", 0, -15)
       end
     end
-  end, 1)
+  end)
 
   StripTextures(MerchantPrevPageButton)
   SkinArrowButton(MerchantPrevPageButton, "left", 18)

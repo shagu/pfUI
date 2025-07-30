@@ -27,7 +27,7 @@ pfUI:RegisterSkin("Quest Log", "vanilla:tbc", function ()
     hooksecurefunc("QuestLog_OnShow", function()
       QuestLogFrame:ClearAllPoints()
       QuestLogFrame:SetPoint("TOPLEFT", 10, -104)
-    end, 1)
+    end)
 
     QuestLogFrame:SetWidth(676)
     QuestLogFrame:SetHeight(440)
@@ -191,7 +191,7 @@ pfUI:RegisterSkin("Quest Log", "vanilla:tbc", function ()
           end
         end
       end
-    end, 1)
+    end)
   end
 
   do -- right pane

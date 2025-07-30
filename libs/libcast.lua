@@ -395,17 +395,17 @@ hooksecurefunc("CastSpell", function(id, bookType)
   local cachedRawSpellName, cachedRank, cachedTexture, cachedCastingTime, _, _, cachedSpellId, cachedBookType = libspell.GetSpellInfo(id, bookType)
 
   CastCustom(cachedSpellId, cachedBookType, cachedRawSpellName, cachedRank, cachedTexture, cachedCastingTime)
-end, true)
+end)
 
 hooksecurefunc("CastSpellByName", function(spellCasted, target)
   local cachedRawSpellName, cachedRank, cachedTexture, cachedCastingTime, _, _, cachedSpellId, cachedBookType = libspell.GetSpellInfo(spellCasted)
 
   CastCustom(cachedSpellId, cachedBookType, cachedRawSpellName, cachedRank, cachedTexture, cachedCastingTime)
-end, true)
+end)
 
 hooksecurefunc("UseAction", function(slot, target, button)
   if GetActionText(slot) or not IsCurrentAction(slot) then return end
-  
+
   scanner:SetAction(slot)
   local rawSpellName, rank = scanner:Line(1)
   if not rawSpellName then return end -- ignore if the spell is not found
@@ -413,7 +413,7 @@ hooksecurefunc("UseAction", function(slot, target, button)
   local cachedRawSpellName, cachedRank, cachedTexture, cachedCastingTime, _, _, cachedSpellId, cachedBookType = libspell.GetSpellInfo(rawSpellName .. (rank and ("(" .. rank .. ")") or ""))
 
   CastCustom(cachedSpellId, cachedBookType, cachedRawSpellName, cachedRank, cachedTexture, cachedCastingTime)
-end, true)
+end)
 
 -- add libcast to pfUI API
 pfUI.api.libcast = libcast

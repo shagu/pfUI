@@ -397,7 +397,7 @@ hooksecurefunc("CastSpell", function(id, bookType)
   spell_queue[1] = effect
   spell_queue[2] = effect.. ( rank or "" )
   spell_queue[3] = UnitName("target") and UnitCanAssist("player", "target") and UnitName("target") or UnitName("player")
-end, true)
+end)
 
 hooksecurefunc("CastSpellByName", function(effect, target)
   if not libpredict.sender.enabled then return end
@@ -414,7 +414,7 @@ hooksecurefunc("CastSpellByName", function(effect, target)
   spell_queue[1] = effect
   spell_queue[2] = effect.. ( rank or "" )
   spell_queue[3] = target or mouseover or default
-end, true)
+end)
 
 local scanner = libtipscan:GetScanner("prediction")
 hooksecurefunc("UseAction", function(slot, target, selfcast)
@@ -426,7 +426,7 @@ hooksecurefunc("UseAction", function(slot, target, selfcast)
   spell_queue[1] = effect
   spell_queue[2] = effect.. ( rank or "" )
   spell_queue[3] = selfcast and UnitName("player") or UnitName("target") and UnitCanAssist("player", "target") and UnitName("target") or UnitName("player")
-end, true)
+end)
 
 libpredict.sender = CreateFrame("Frame", "pfPredictionSender", UIParent)
 libpredict.sender.enabled = true

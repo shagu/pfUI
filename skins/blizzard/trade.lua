@@ -43,7 +43,7 @@ pfUI:RegisterSkin("Trade", "vanilla:tbc", function ()
 
   hooksecurefunc("TradeFrame_UpdateTargetItem", function(id)
     HandleIcon(_G["TradeRecipientItem"..id.."ItemButton"], _G["TradeRecipientItem"..id..'IconTexture'])
-  end, 1)
+  end)
 
   SkinMoneyInputFrame(TradePlayerInputMoneyFrame)
 

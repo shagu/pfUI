@@ -67,7 +67,7 @@ pfUI:RegisterSkin("Mailbox", "vanilla:tbc", function ()
               else
               SendMailPackageButton:SetBackdropBorderColor(GetStringColor(pfUI_config.appearance.border.color))
             end
-          end, 1)
+          end)
         end
       end)
       skin:RegisterEvent("MAIL_SHOW")

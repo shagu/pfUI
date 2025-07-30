@@ -426,7 +426,7 @@ pfUI:RegisterModule("loot", "vanilla:tbc", function ()
           end
         end
       end
-    end,true)
+    end)
   else
     pfUI.loot:RemoveMasterlootMenus()
     UIDropDownMenu_Initialize(GroupLootDropDown, GroupLootDropDown_Initialize, "MENU")

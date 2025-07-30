@@ -264,7 +264,7 @@ pfUI:RegisterSkin("Inspect", "vanilla", function ()
 
         UpdateSlots()
         QueueFunction(UpdateSlots)
-      end, 1)
+      end)
     end
 
     do -- Honor Tab

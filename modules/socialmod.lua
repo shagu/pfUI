@@ -66,7 +66,7 @@ pfUI:RegisterModule("socialmod", "vanilla:tbc", function ()
           end
         end
       end
-    end, true)
+    end)
   end
 
   do -- add colors to friend list
@@ -119,7 +119,7 @@ pfUI:RegisterModule("socialmod", "vanilla:tbc", function ()
           friendInfo:SetVertexColor(1,1,1,.4)
         end
       end
-    end, true)
+    end)
   end
 
   do -- add colors to who list
@@ -193,6 +193,6 @@ pfUI:RegisterModule("socialmod", "vanilla:tbc", function ()
         local color = GetDifficultyColor(level)
         _G["WhoFrameButton"..i.."Level"]:SetTextColor(color.r, color.g, color.b)
       end
-    end, true)
+    end)
   end
 end)

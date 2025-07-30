@@ -304,7 +304,7 @@ pfUI:RegisterModule("turtle-wow", "vanilla", function ()
 
         -- only run once
         initialized = true
-      end, true)
+      end)
     end)
   end
 

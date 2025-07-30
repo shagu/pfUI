@@ -536,7 +536,7 @@ pfUI:RegisterModule("thirdparty-vanilla", "vanilla", function()
         local colorstr = rgbhex(RAID_CLASS_COLORS[class].r, RAID_CLASS_COLORS[class].g, RAID_CLASS_COLORS[class].b, RAID_CLASS_COLORS[class].a)
         _G.WIM_ClassColors[wimclass] = gsub(colorstr, "^|cff", "")
       end
-    end, true)
+    end)
 
     -- convo menu
     CreateBackdrop(WIM_Icon_ToolTip, 0, nil, tonumber(C.tooltip.alpha))
@@ -560,7 +560,7 @@ pfUI:RegisterModule("thirdparty-vanilla", "vanilla", function()
           btn:SetText(btn_txt)
         end
       end
-    end, true)
+    end)
 
     if WIM_HistoryFrame then -- history frame
       CreateBackdrop(WIM_HistoryFrame, nil, nil, .8)
