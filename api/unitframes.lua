@@ -1137,7 +1137,9 @@ function pfUI.uf.OnLeave()
 end
 
 function pfUI.uf.OnClick()
-  if not this.label and this.unitname then
+  if not this.label and this.guid then
+    TargetUnit(this.guid)
+  elseif not this.label and this.unitname then
     TargetByName(this.unitname, true)
   else
     pfUI.uf:ClickAction(arg1)
@@ -2075,7 +2077,13 @@ end
 function pfUI.uf:ClickAction(button)
   local label = this.label or ""
   local id = this.id or ""
-  local unitstr = label .. id
+  local unitstr
+
+  if this.guid then
+    unitstr = this.guid
+  else
+    unitstr = label .. id
+  end
   local showmenu = button == "RightButton" and true or nil
   if SpellIsTargeting() and button == "RightButton" then
     SpellStopTargeting()
