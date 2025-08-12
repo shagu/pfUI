@@ -39,6 +39,7 @@ pfUI:RegisterModule("raid", "vanilla:tbc", function ()
     local layout = pfUI.uf.raid[1].config.raidlayout
     local padding = tonumber(pfUI.uf.raid[1].config.raidpadding)*GetPerfectPixel()
     local fill = pfUI.uf.raid[1].config.raidfill
+    local toptobottom = pfUI.uf.raid[1].config.raidtoptobottom
     local _, _, x, y = string.find(layout,"(.+)x(.+)")
     x, y = tonumber(x), tonumber(y)
 
@@ -52,11 +53,17 @@ pfUI:RegisterModule("raid", "vanilla:tbc", function ()
         i = i + 1
       end end
     else
+      local id
       for g=1, y do for r=1, x do
-        if pfUI.uf.raid[i] then
-          pfUI.uf.raid[i]:ClearAllPoints()
-          pfUI.uf.raid[i]:SetPoint("BOTTOMLEFT", (r-1)*(padding+width), (g-1)*(padding+height))
-          UpdateMovable(pfUI.uf.raid[i], true)
+        id = toptobottom and 41 - i or i
+        if pfUI.uf.raid[id] then
+          pfUI.uf.raid[id]:ClearAllPoints()
+          if toptobottom then
+            pfUI.uf.raid[id]:SetPoint("BOTTOMLEFT", (x-r)*(padding+width), (g-1)*(padding+height))
+          else 
+            pfUI.uf.raid[id]:SetPoint("BOTTOMLEFT", (r-1)*(padding+width), (g-1)*(padding+height))
+          end
+          UpdateMovable(pfUI.uf.raid[id], true)
         end
         i = i + 1
       end end
