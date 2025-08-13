@@ -55,7 +55,7 @@ pfUI:RegisterModule("raid", "vanilla:tbc", function ()
     else
       local id
       for g=1, y do for r=1, x do
-        id = toptobottom and 41 - i or i
+        id = toptobottom == "1" and 41 - i or i
         if pfUI.uf.raid[id] then
           pfUI.uf.raid[id]:ClearAllPoints()
           if toptobottom then
