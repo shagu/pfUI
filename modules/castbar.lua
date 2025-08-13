@@ -284,6 +284,14 @@ pfUI:RegisterModule("castbar", "vanilla:tbc", function ()
 
     -- keep unit values in sync with focus unitframe
     HookScript(pfUI.castbar.focus, "OnUpdate", function()
+      -- clear on empty focus frames
+      if pfUI.uf.focus.unitname == nil and pfUI.uf.focus.label == nil then
+        pfUI.castbar.focus.unitstr = nil
+        pfUI.castbar.focus.unitname = nil
+        return
+      end
+
+      -- skip on initial values
       if pfUI.uf.focus.unitname == "focus" then return end
       if pfUI.uf.focus.unitname == "" then return end
 
