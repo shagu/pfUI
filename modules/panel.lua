@@ -754,7 +754,10 @@ pfUI:RegisterModule("panel", "vanilla:tbc", function()
   if not pfUI.chat then pfUI.panel.left.hide:Hide() end
 
   -- buttons for left panel
-  local width = pfUI.panel.left:GetWidth()/3-2
+  local width = pfUI.panel.left:GetWidth() / 3 - 2
+  width = C.panel.left.left == "none" and C.panel.left.right == "none" and pfUI.panel.left:GetWidth() - 2 or width
+  width = C.panel.left.center == "none" and pfUI.panel.left:GetWidth() / 2 - 2 or width
+
   pfUI.panel.left.left = CreatePanelButton(pfUI.panel.left, width, "LEFT", "CENTER")
   pfUI.panel.left.center = CreatePanelButton(pfUI.panel.left, width, "CENTER", "CENTER")
   pfUI.panel.left.right = CreatePanelButton(pfUI.panel.left, width, "RIGHT", "CENTER")
@@ -788,7 +791,10 @@ pfUI:RegisterModule("panel", "vanilla:tbc", function()
   if not pfUI.chat then pfUI.panel.right.hide:Hide() end
 
   -- buttons for right panel
-  local width = pfUI.panel.right:GetWidth()/3-2
+  local width = pfUI.panel.right:GetWidth() / 3 - 2
+  width = C.panel.right.left == "none" and C.panel.right.right == "none" and pfUI.panel.right:GetWidth() - 2 or width
+  width = C.panel.right.center == "none" and pfUI.panel.right:GetWidth() / 2 - 2 or width
+
   pfUI.panel.right.left = CreatePanelButton(pfUI.panel.right, width, "LEFT", "CENTER")
   pfUI.panel.right.center = CreatePanelButton(pfUI.panel.right, width, "CENTER", "CENTER")
   pfUI.panel.right.right = CreatePanelButton(pfUI.panel.right, width, "RIGHT", "CENTER")
