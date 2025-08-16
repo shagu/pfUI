@@ -29,6 +29,7 @@ pfUI_locale["zhCN"]["itemtypes"] = {
   ["INVTYPE_GUN"] = "枪械",
   ["INVTYPE_CROSSBOW"] = "弩",
   ["INVTYPE_PROJECTILE"] = "弹药",
+  ["INVTYPE_QUEST"] = "任务",
 }
 
 pfUI_locale["zhCN"]["hunterpaging"] = {

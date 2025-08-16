@@ -29,6 +29,7 @@ pfUI_locale["enUS"]["itemtypes"] = {
   ["INVTYPE_GUN"] = "Gun",
   ["INVTYPE_CROSSBOW"] = "Crossbow",
   ["INVTYPE_PROJECTILE"] = "Projectile",
+  ["INVTYPE_QUEST"] = "Quest",
 }
 
 pfUI_locale["enUS"]["hunterpaging"] = {

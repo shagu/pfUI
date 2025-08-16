@@ -29,6 +29,7 @@ pfUI_locale["ruRU"]["itemtypes"] = {
   ["INVTYPE_GUN"] = "Огнестрельное",
   ["INVTYPE_CROSSBOW"] = "Арбалет",
   ["INVTYPE_PROJECTILE"] = "Боеприпасы",
+  ["INVTYPE_QUEST"] = "Задание",
 }
 
 pfUI_locale["ruRU"]["hunterpaging"] = {

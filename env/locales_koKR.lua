@@ -29,6 +29,7 @@ pfUI_locale["koKR"]["itemtypes"] = {
   ["INVTYPE_GUN"] = "총",
   ["INVTYPE_CROSSBOW"] = "석궁",
   ["INVTYPE_PROJECTILE"] = "투사체",
+  ["INVTYPE_QUEST"] = "퀘스트",
 }
 
 pfUI_locale["koKR"]["hunterpaging"] = {
