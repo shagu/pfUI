@@ -409,6 +409,7 @@ hooksecurefunc("CastSpellByName", function(effect, target)
   local default = UnitName("target") and UnitCanAssist("player", "target") and UnitName("target") or UnitName("player")
 
   target = target and type(target) == "string" and UnitName(target) or target
+  target = target and target == true and UnitName("player") or target
   target = target and target == 1 and UnitName("player") or target
 
   spell_queue[1] = effect
