@@ -1652,6 +1652,18 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
       CreateConfig(nil, T["Energy Color"], C.unitframes, "energycolor", "color")
       CreateConfig(nil, T["Focus Color"], C.unitframes, "focuscolor", "color")
 
+      CreateConfig(nil, T["Text Colors"], nil, nil, "header")
+      CreateConfig(function()
+        local val = this:GetChecked() and "1" or "0"
+        C.unitframes.custom_healthtext = val
+        C.unitframes.custom_powertext = val
+      end, T["Use Custom Text Colors"], C.unitframes, "custom_healthtext", "checkbox")
+      CreateConfig(nil, T["Health Text Color"], C.unitframes, "healthtext_color", "color")
+      CreateConfig(nil, T["Mana Text Color"], C.unitframes, "powertext_color_mana", "color")
+      CreateConfig(nil, T["Rage Text Color"], C.unitframes, "powertext_color_rage", "color")
+      CreateConfig(nil, T["Energy Text Color"], C.unitframes, "powertext_color_energy", "color")
+      CreateConfig(nil, T["Focus Text Color"], C.unitframes, "powertext_color_focus", "color")
+
       CreateConfig(nil, T["SuperWoW Settings"], nil, nil, "header")
       CreateConfig(nil, T["Show Druid Mana Bar"], C.unitframes, "druidmanabar", "checkbox", nil, nil, nil, nil, "vanilla" )
       CreateConfig(nil, T["Druid Mana Bar Height"], C.unitframes, "druidmanaheight", nil, nil, nil, nil, nil, "vanilla" )
@@ -1877,6 +1889,18 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
         CreateConfig(U[c], T["Rage Color"], C.unitframes[c], "ragecolor", "color")
         CreateConfig(U[c], T["Energy Color"], C.unitframes[c], "energycolor", "color")
         CreateConfig(U[c], T["Focus Color"], C.unitframes[c], "focuscolor", "color")
+
+        CreateConfig(U[c], T["Text Colors"], nil, nil, "header")
+        CreateConfig(function()
+          local val = this:GetChecked() and "1" or "0"
+          C.unitframes[c].custom_healthtext = val
+          C.unitframes[c].custom_powertext = val
+        end, T["Use Custom Text Colors"], C.unitframes[c], "custom_healthtext", "checkbox")
+        CreateConfig(U[c], T["Health Text Color"], C.unitframes[c], "healthtext_color", "color")
+        CreateConfig(U[c], T["Mana Text Color"], C.unitframes[c], "powertext_color_mana", "color")
+        CreateConfig(U[c], T["Rage Text Color"], C.unitframes[c], "powertext_color_rage", "color")
+        CreateConfig(U[c], T["Energy Text Color"], C.unitframes[c], "powertext_color_energy", "color")
+        CreateConfig(U[c], T["Focus Text Color"], C.unitframes[c], "powertext_color_focus", "color")
       end)
     end
 
