@@ -590,7 +590,7 @@ function pfUI.uf:UpdateConfig()
     f.feedbackFontHeight = f.config.hitindicatorsize
     f.feedbackStartTime = GetTime()
     if f.config.portrait == "bar" or f.config.portrait == "off" then
-      f.feedbackText:SetParent(f.hp.bar)
+      f.feedbackText:SetParent(f.texts)
       f.feedbackText:ClearAllPoints()
       f.feedbackText:SetPoint("CENTER", f.hp.bar, "CENTER")
     else
