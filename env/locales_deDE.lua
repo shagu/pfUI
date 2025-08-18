@@ -29,6 +29,7 @@ pfUI_locale["deDE"]["itemtypes"] = {
   ["INVTYPE_GUN"] = "Schusswaffe",
   ["INVTYPE_CROSSBOW"] = "Armbrust",
   ["INVTYPE_PROJECTILE"] = "Projektil",
+  ["INVTYPE_QUEST"] = "Quest",
 }
 
 pfUI_locale["deDE"]["hunterpaging"] = {

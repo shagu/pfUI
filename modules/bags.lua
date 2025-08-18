@@ -457,7 +457,7 @@ pfUI:RegisterModule("bags", "vanilla:tbc", function ()
     ContainerFrame_UpdateCooldown(bag, pfUI.bags[bag].slots[slot].frame)
 
     -- detect backdrop border color
-    if texture and itype == "Quest" then
+    if texture and itype == L["itemtypes"]["INVTYPE_QUEST"] then
       pfUI.bags[bag].slots[slot].frame.backdrop:SetBackdropBorderColor(1, .8, .2, .8)
       pfUI.bags[bag].slots[slot].frame.qtext:SetText("?")
     elseif texture and quality and quality > tonumber(C.appearance.bags.borderlimit) then
