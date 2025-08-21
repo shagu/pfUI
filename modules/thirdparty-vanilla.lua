@@ -1242,6 +1242,7 @@ pfUI:RegisterModule("thirdparty-vanilla", "vanilla", function()
     SkinCheckbox(xpsp3_checkButton_notify_flashTaskbarIcon)
     SkinCheckbox(xpsp3_checkButton_notify_playSystemDefaultSound)
     SkinCheckbox(xpsp3_checkButton_cameraPinHeight)
+    SkinCheckbox(xpsp3_checkButton_weatherAlwaysClear)
 
     SkinButton(xpsp3_button_cameraHeight_raise)
     SkinButton(xpsp3_button_cameraHeight_lower)
