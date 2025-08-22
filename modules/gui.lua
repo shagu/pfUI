@@ -1405,6 +1405,7 @@ pfUI:RegisterModule("gui", "vanilla:tbc", function ()
       CreateConfig(function() return end, T["Select profile"], C.global, "profile", "dropdown", function()
         local values = {}
         for name, config in pairs(pfUI_profiles) do table.insert(values, name) end
+        table.sort(values)
         return values
       end, false, "Profile")
 
