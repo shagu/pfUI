@@ -2598,6 +2598,35 @@ function pfUI.uf.GetColor(self, preset)
   local unitstr = self.label .. self.id
   local r, g, b = 1, 1, 1
 
+  -- Check for custom text colors first
+  if preset == "health" and (config["custom_healthtext"] == "1" or C.unitframes.custom_healthtext == "1") then
+    local color = config["defcolor"] == "0" and config["healthtext_color"] or C.unitframes.healthtext_color
+    r, g, b = GetStringColor(color)
+    return rgbhex(r,g,b)
+  elseif preset == "power" and (config["custom_powertext"] == "1" or C.unitframes.custom_powertext == "1") then
+    local ptype = UnitPowerType(unitstr)
+    local key
+    if ptype == 0 then
+      key = "powertext_color_mana"
+    elseif ptype == 1 then
+      key = "powertext_color_rage"
+    elseif ptype == 2 then
+      key = "powertext_color_focus"
+    elseif ptype == 3 then
+      key = "powertext_color_energy"
+    end
+
+    local color
+    if config["defcolor"] == "0" then
+      color = (key and config[key]) or config["powertext_color"]
+    else
+      color = (key and C.unitframes[key]) or C.unitframes.powertext_color
+    end
+
+    r, g, b = GetStringColor(color)
+    return rgbhex(r,g,b)
+  end
+
   if preset == "unit" and config["classcolor"] == "1" then
     if UnitIsPlayer(unitstr) then
       local _, class = UnitClass(unitstr)
