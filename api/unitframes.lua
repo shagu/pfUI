@@ -157,6 +157,31 @@ local function DebuffOnClick()
   end
 end
 
+local function getPowerColor(unitconfig, unitstr)
+  local mana = unitconfig.defcolor == "0" and unitconfig.manacolor or C.unitframes.manacolor
+  local rage = unitconfig.defcolor == "0" and unitconfig.ragecolor or C.unitframes.ragecolor
+  local energy = unitconfig.defcolor == "0" and unitconfig.energycolor or C.unitframes.energycolor
+  local focus = unitconfig.defcolor == "0" and unitconfig.focuscolor or C.unitframes.focuscolor
+
+  local r, g, b, a = .5, .5, .5, 1
+  local utype = UnitPowerType(unitstr)
+  if utype == 0 then
+    r, g, b, a = GetStringColor(mana)
+  elseif utype == 1 then
+    r, g, b, a = GetStringColor(rage)
+  elseif utype == 2 then
+    r, g, b, a = GetStringColor(focus)
+  elseif utype == 3 then
+    r, g, b, a = GetStringColor(energy)
+  end
+
+  return r, g, b, a
+end
+
+local function applyPastel(r,g,b)
+  r, g, b = (r + .5) * .5, (g + .5) * .5, (b + .5) * .5
+end
+
 local visibilityscan = CreateFrame("Frame", "pfUnitFrameVisibility", UIParent)
 visibilityscan.frames = {}
 visibilityscan:SetScript("OnUpdate", function()
@@ -1964,8 +1989,8 @@ function pfUI.uf:RefreshUnit(unit, component)
       end
     end
 
-    if C.unitframes.pastel == "1" and not custom_active then
-      r, g, b = (r + .5) * .5, (g + .5) * .5, (b + .5) * .5
+    if (C.unitframes.pastel == "1" and not custom_active) then
+      r, g, b = applyPastel(r, g, b)
     end
 
     if customfade == "1" then
@@ -1981,24 +2006,7 @@ function pfUI.uf:RefreshUnit(unit, component)
     unit.hp.bar:SetStatusBarColor(r, g, b, a)
 
     -- set powerbar color
-    local mana = unit.config.defcolor == "0" and unit.config.manacolor or C.unitframes.manacolor
-    local rage = unit.config.defcolor == "0" and unit.config.ragecolor or C.unitframes.ragecolor
-    local energy = unit.config.defcolor == "0" and unit.config.energycolor or C.unitframes.energycolor
-    local focus = unit.config.defcolor == "0" and unit.config.focuscolor or C.unitframes.focuscolor
-
-    local r, g, b, a = .5, .5, .5, 1
-    local utype = UnitPowerType(unitstr)
-    if utype == 0 then
-      r, g, b, a = GetStringColor(mana)
-    elseif utype == 1 then
-      r, g, b, a = GetStringColor(rage)
-    elseif utype == 2 then
-      r, g, b, a = GetStringColor(focus)
-    elseif utype == 3 then
-      r, g, b, a = GetStringColor(energy)
-    end
-
-    unit.power.bar:SetStatusBarColor(r, g, b, a)
+    unit.power.bar:SetStatusBarColor(getPowerColor(unit.config, unitstr))
 
     if UnitName(unitstr) then
       unit.hpLeftText:SetText(pfUI.uf:GetStatusValue(unit, "hpleft"))
@@ -2596,7 +2604,8 @@ function pfUI.uf.GetColor(self, preset)
   local config = self.config
 
   local unitstr = self.label .. self.id
-  local r, g, b = 1, 1, 1
+  local r, g, b, a = 1, 1, 1, 1
+  local apply_pastel = C.unitframes.pastel == "1"
 
   if preset == "unit" and config["classcolor"] == "1" then
     if UnitIsPlayer(unitstr) then
@@ -2637,18 +2646,20 @@ function pfUI.uf.GetColor(self, preset)
     end
 
   elseif preset == "power" and config["powercolor"] == "1" then
-    r = ManaBarColor[UnitPowerType(unitstr)].r
-    g = ManaBarColor[UnitPowerType(unitstr)].g
-    b = ManaBarColor[UnitPowerType(unitstr)].b
+    r, g, b, a = getPowerColor(config, unitstr)
+    apply_pastel = false -- Don't apply pastel on custom colors
+
   elseif preset == "level" and config["levelcolor"] == "1" then
     r = GetDifficultyColor(UnitLevel(unitstr)).r
     g = GetDifficultyColor(UnitLevel(unitstr)).g
     b = GetDifficultyColor(UnitLevel(unitstr)).b
+  else
+    apply_pastel = false -- Don't apply pastel on default color
   end
 
-  if C.unitframes.pastel == "1" then
-    r, g, b = (r + .75) * .5, (g + .75) * .5, (b + .75) * .5
+  if (apply_pastel) then
+    r, g, b = applyPastel(r, g, b)
   end
 
-  return rgbhex(r,g,b)
+  return rgbhex(r,g,b,a)
 end
