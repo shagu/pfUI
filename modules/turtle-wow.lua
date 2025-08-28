@@ -32,6 +32,16 @@ pfUI:RegisterModule("turtle-wow", "vanilla", function ()
         end
       end
 
+      -- refresh rip duration on ferocious bite
+      local match = string.find(arg1, "Ferocious Bite")
+      if match and arg2 then
+        local name = UnitName("target")
+        local level = UnitLevel("target")
+        if libdebuff.objects[name] and libdebuff.objects[name][level] and libdebuff.objects[name][level]["Rip"] then
+          libdebuff:AddEffect(name, level, "Rip")
+        end
+      end
+
       -- refresh Immolate duration after cast Conflagrate
       local conflagrate = string.find(string.sub(arg1,6,17), "Conflagrate")
       --arg2 is spell dmg when it hits, nil when it misses
