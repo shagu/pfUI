@@ -108,6 +108,23 @@ function pfUI.api.UnitHasBuff(unit, buff)
   return hasbuff
 end
 
+-- [ UnitHasDebuff ]
+-- Returns whether a unit has the given debuff or not.
+-- unit         [string]        A unit to query (string, unitID)
+-- debuff       [string]        The texture of the debuff.
+-- return:      [bool]          true if unit has debuff otherwise "nil"
+function pfUI.api.UnitHasDebuff(unit, debuff)
+  local hasdebuff = nil
+  for i=1,32 do
+    if UnitDebuff(unit, i) == debuff then
+      hasdebuff = true
+      break
+    end
+  end
+
+  return hasdebuff
+end
+
 -- [[ GetUnitColor ]]
 -- Returns an escape string for the unit aswell as the RGB values
 -- unit         [string]        the unitstring

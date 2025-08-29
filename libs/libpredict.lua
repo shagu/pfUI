@@ -295,6 +295,30 @@ function libpredict:UnitGetIncomingHeals(unit)
   return sumheal
 end
 
+function libpredict:UnitGetIncomingHeals(unit, sender)
+  if not unit or not UnitName(unit) then return 0 end
+  if UnitIsDeadOrGhost(unit) then return 0 end
+  local name = UnitName(unit)
+
+  local sumheal = 0
+  if not heals[name] then
+    return sumheal
+  else
+    for healer, amount in pairs(heals[name]) do
+      if amount[2] <= GetTime() then
+        heals[name][healer] = nil
+      else
+        -- If a sender is specified, only count their heals
+        if not sender or sender == healer then
+          sumheal = sumheal + amount[1]
+        end
+      end
+    end
+  end
+
+  return sumheal
+end
+
 function libpredict:UnitHasIncomingResurrection(unit)
   if not unit or not UnitName(unit) then return nil end
   local name = UnitName(unit)
